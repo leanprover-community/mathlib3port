@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_inner
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,11 +37,12 @@ include _i
 parallelepiped associated to any orthonormal basis. This is a rephrasing of
 `abs_volume_form_apply_of_orthonormal` in terms of measures. -/
 theorem Orientation.measure_orthonormal_basis (o : Orientation ℝ F (Fin n))
-    (b : OrthonormalBasis ι ℝ F) : o.volumeForm.Measure (parallelepiped b) = 1 := by
-  have e : ι ≃ Fin n := by 
+    (b : OrthonormalBasis ι ℝ F) : o.volumeForm.Measure (parallelepiped b) = 1 :=
+  by
+  have e : ι ≃ Fin n := by
     refine' Fintype.equivFinOfCardEq _
     rw [← _i.out, finrank_eq_card_basis b.to_basis]
-  have A : ⇑b = b.reindex e ∘ e := by 
+  have A : ⇑b = b.reindex e ∘ e := by
     ext x
     simp only [OrthonormalBasis.coe_reindex, Function.comp_apply, Equiv.symm_apply_apply]
   rw [A, parallelepiped_comp_equiv, AlternatingMap.measure_parallelepiped,
@@ -51,7 +52,8 @@ theorem Orientation.measure_orthonormal_basis (o : Orientation ℝ F (Fin n))
 /-- In an oriented inner product space, the measure coming from the canonical volume form
 associated to an orientation coincides with the volume. -/
 theorem Orientation.measure_eq_volume (o : Orientation ℝ F (Fin n)) :
-    o.volumeForm.Measure = volume := by
+    o.volumeForm.Measure = volume :=
+  by
   have A : o.volume_form.measure (stdOrthonormalBasis ℝ F).toBasis.parallelepiped = 1 :=
     Orientation.measure_orthonormal_basis o (stdOrthonormalBasis ℝ F)
   rw [add_haar_measure_unique o.volume_form.measure
@@ -65,7 +67,8 @@ end
 /-- The volume measure in a finite-dimensional inner product space gives measure `1` to the
 parallelepiped spanned by any orthonormal basis. -/
 theorem OrthonormalBasis.volume_parallelepiped (b : OrthonormalBasis ι ℝ F) :
-    volume (parallelepiped b) = 1 := by
+    volume (parallelepiped b) = 1 :=
+  by
   haveI : Fact (finrank ℝ F = finrank ℝ F) := ⟨rfl⟩
   let o := (stdOrthonormalBasis ℝ F).toBasis.Orientation
   rw [← o.measure_eq_volume]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Sébastien Gouëzel, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.interactive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -584,7 +584,7 @@ by apply_rules [add_le_add] with mono_rules
 ```
 -/
 unsafe def apply_rules (args : parse opt_pexpr_list) (attrs : parse with_ident_list) (n : Nat := 50)
-    (opt : ApplyCfg := {  }) : tactic Unit :=
+    (opt : ApplyCfg := { }) : tactic Unit :=
   tactic.apply_rules args attrs n opt
 #align tactic.interactive.apply_rules tactic.interactive.apply_rules
 

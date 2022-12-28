@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Moise, Yaël Dillies, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.inc_matrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,8 @@ theorem inc_matrix_apply_mul_inc_matrix_apply :
   simple_graph.inc_matrix_apply_mul_inc_matrix_apply SimpleGraph.inc_matrix_apply_mul_inc_matrix_apply
 
 theorem inc_matrix_apply_mul_inc_matrix_apply_of_not_adj (hab : a ≠ b) (h : ¬G.Adj a b) :
-    G.incMatrix R a e * G.incMatrix R b e = 0 := by
+    G.incMatrix R a e * G.incMatrix R b e = 0 :=
+  by
   rw [inc_matrix_apply_mul_inc_matrix_apply, Set.indicator_of_not_mem]
   rw [G.incidence_set_inter_incidence_set_of_not_adj h hab]
   exact Set.not_mem_empty e
@@ -103,12 +104,14 @@ theorem inc_matrix_of_mem_incidence_set (h : e ∈ G.incidenceSet a) : G.incMatr
 
 variable [Nontrivial R]
 
-theorem inc_matrix_apply_eq_zero_iff : G.incMatrix R a e = 0 ↔ e ∉ G.incidenceSet a := by
+theorem inc_matrix_apply_eq_zero_iff : G.incMatrix R a e = 0 ↔ e ∉ G.incidenceSet a :=
+  by
   simp only [inc_matrix_apply, Set.indicator_apply_eq_zero, Pi.one_apply, one_ne_zero]
   exact Iff.rfl
 #align simple_graph.inc_matrix_apply_eq_zero_iff SimpleGraph.inc_matrix_apply_eq_zero_iff
 
-theorem inc_matrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.incidenceSet a := by
+theorem inc_matrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.incidenceSet a :=
+  by
   convert one_ne_zero.ite_eq_left_iff
   infer_instance
 #align simple_graph.inc_matrix_apply_eq_one_iff SimpleGraph.inc_matrix_apply_eq_one_iff
@@ -125,13 +128,14 @@ theorem sum_inc_matrix_apply [DecidableEq α] [DecidableRel G.Adj] :
 #align simple_graph.sum_inc_matrix_apply SimpleGraph.sum_inc_matrix_apply
 
 theorem inc_matrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :
-    (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a a = G.degree a := by
+    (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a a = G.degree a :=
+  by
   rw [← sum_inc_matrix_apply]
   simp [Matrix.mul_apply, inc_matrix_apply', ← ite_and_mul_zero]
 #align simple_graph.inc_matrix_mul_transpose_diag SimpleGraph.inc_matrix_mul_transpose_diag
 
 theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.edgeSet → (∑ a, G.incMatrix R a e) = 2 := by
-  classical 
+  classical
     refine' e.ind _
     intro a b h
     rw [mem_edge_set] at h
@@ -151,7 +155,7 @@ theorem sum_inc_matrix_apply_of_not_mem_edge_set (h : e ∉ G.edgeSet) :
 
 theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :
     ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSet then 2 else 0 := by
-  classical 
+  classical
     simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mul,
       sum_boole, and_self_iff]
     split_ifs with h
@@ -177,7 +181,7 @@ variable [Fintype (Sym2 α)] [Semiring R] {a b : α} {e : Sym2 α}
 
 theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) :
     (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
-  classical 
+  classical
     simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply,
       Set.indicator_apply, Pi.one_apply, sum_boole]
     convert Nat.cast_one
@@ -190,7 +194,7 @@ theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) :
 theorem inc_matrix_mul_transpose [Fintype α] [DecidableEq α] [DecidableRel G.Adj] :
     G.incMatrix R ⬝ (G.incMatrix R)ᵀ = fun a b =>
       if a = b then G.degree a else if G.Adj a b then 1 else 0 :=
-  by 
+  by
   ext (a b)
   split_ifs with h h'
   · subst b

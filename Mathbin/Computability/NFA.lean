@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.NFA
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,14 +107,15 @@ def accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
 
 /-- `M.to_DFA` is an `DFA` constructed from a `NFA` `M` using the subset construction. The
   states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
-def toDFA : DFA α (Set σ) where 
+def toDFA : DFA α (Set σ) where
   step := M.stepSet
   start := M.start
   accept := { S | ∃ s ∈ S, s ∈ M.accept }
 #align NFA.to_DFA NFA.toDFA
 
 @[simp]
-theorem to_DFA_correct : M.toDFA.accepts = M.accepts := by
+theorem to_DFA_correct : M.toDFA.accepts = M.accepts :=
+  by
   ext x
   rw [accepts, DFA.accepts, eval, DFA.eval]
   change List.foldl _ _ _ ∈ { S | _ } ↔ _
@@ -127,7 +128,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧
           b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
-  by 
+  by
   rw [← to_DFA_correct] at hx⊢
   exact M.to_DFA.pumping_lemma hx hlen
 #align NFA.pumping_lemma NFA.pumping_lemma
@@ -138,8 +139,8 @@ namespace DFA
 
 /-- `M.to_NFA` is an `NFA` constructed from a `DFA` `M` by using the same start and accept
   states and a transition function which sends `s` with input `a` to the singleton `M.step s a`. -/
-def toNFA (M : DFA α σ') : NFA α
-      σ' where 
+def toNFA (M : DFA α σ') : NFA α σ'
+    where
   step s a := {M.step s a}
   start := {M.start}
   accept := M.accept
@@ -147,7 +148,8 @@ def toNFA (M : DFA α σ') : NFA α
 
 @[simp]
 theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
-    M.toNFA.evalFrom {start} s = {M.evalFrom start s} := by
+    M.toNFA.evalFrom {start} s = {M.evalFrom start s} :=
+  by
   change List.foldl M.to_NFA.step_set {start} s = {List.foldl M.step start s}
   induction' s with a s ih generalizing start
   · tauto
@@ -157,7 +159,8 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
 #align DFA.to_NFA_eval_from_match DFA.to_NFA_eval_from_match
 
 @[simp]
-theorem to_NFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts := by
+theorem to_NFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts :=
+  by
   ext x
   change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _
   rw [to_NFA_eval_from_match]

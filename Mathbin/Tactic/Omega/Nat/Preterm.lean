@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.preterm
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,8 @@ theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
 #align omega.nat.preterm.val_const Omega.Nat.Preterm.val_const
 
 @[simp]
-theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
+theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n :=
+  by
   simp only [val]; by_cases h1 : m = 1
   rw [if_pos h1, h1, one_mul]
   rw [if_neg h1, mul_comm]
@@ -105,16 +106,16 @@ in term `t`, the value of `t` under `v` and `w` are identical. -/
 theorem val_constant (v w : Nat → Nat) :
     ∀ t : Preterm, (∀ x < t.freshIndex, v x = w x) → t.val v = t.val w
   | &n, h1 => rfl
-  | m ** n, h1 => by 
+  | m ** n, h1 => by
     simp only [val_var]
     apply congr_arg fun y => m * y
     apply h1 _ (lt_add_one _)
-  | t +* s, h1 => by 
+  | t +* s, h1 => by
     simp only [val_add]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_left _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_right _ _))
     rw [ht, hs]
-  | t -* s, h1 => by 
+  | t -* s, h1 => by
     simp only [val_sub]
     have ht := val_constant t fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_left _ _))
     have hs := val_constant s fun x hx => h1 _ (lt_of_lt_of_le hx (le_max_right _ _))

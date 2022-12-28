@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.additive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem coe_mk (f h) : ⇑(mk f h : ι →ᵇᵃ[I₀] M) = f :=
   rfl
 #align box_integral.box_additive_map.coe_mk BoxIntegral.BoxAdditiveMap.coe_mk
 
-theorem coe_injective : Injective fun (f : ι →ᵇᵃ[I₀] M) x => f x := by
+theorem coe_injective : Injective fun (f : ι →ᵇᵃ[I₀] M) x => f x :=
+  by
   rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g)
   rfl
 #align box_integral.box_additive_map.coe_injective BoxIntegral.BoxAdditiveMap.coe_injective
@@ -139,7 +140,7 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
           ∀ {i x},
             x ∈ ioo (I.lower i) (I.upper i) →
               (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f = f I) :
-    ι →ᵇᵃ[I₀] M := by 
+    ι →ᵇᵃ[I₀] M := by
   refine' ⟨f, _⟩
   replace hf : ∀ I : box ι, ↑I ≤ I₀ → ∀ s, (∑ J in (split_many I s).boxes, f J) = f I
   · intro I hI s
@@ -161,8 +162,8 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
 /-- If `g : M → N` is an additive map and `f` is a box additive map, then `g ∘ f` is a box additive
 map. -/
 @[simps (config := { fullyApplied := false })]
-def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) :
-    ι →ᵇᵃ[I₀] N where 
+def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N
+    where
   toFun := g ∘ f
   sum_partition_boxes' I hI π hπ := by rw [← g.map_sum, f.sum_partition_boxes hI hπ]
 #align box_integral.box_additive_map.map BoxIntegral.BoxAdditiveMap.map
@@ -170,7 +171,8 @@ def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) :
 /-- If `f` is a box additive function on subboxes of `I` and `π₁`, `π₂` are two prepartitions of
 `I` that cover the same part of `I`, then `∑ J in π₁.boxes, f J = ∑ J in π₂.boxes, f J`. -/
 theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π₁ π₂ : Prepartition I}
-    (h : π₁.union = π₂.union) : (∑ J in π₁.boxes, f J) = ∑ J in π₂.boxes, f J := by
+    (h : π₁.union = π₂.union) : (∑ J in π₁.boxes, f J) = ∑ J in π₂.boxes, f J :=
+  by
   rcases exists_split_many_inf_eq_filter_of_finite {π₁, π₂} ((finite_singleton _).insert _) with
     ⟨s, hs⟩
   simp only [inf_split_many] at hs
@@ -217,7 +219,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroup G] (I₀ : Box (Fin (n + 1))) (
     Fin (n + 1) →ᵇᵃ[I₀] G :=
   ofMapSplitAdd (fun J : Box (Fin (n + 1)) => f (J.upper i) (J.face i) - f (J.lower i) (J.face i))
     I₀
-    (by 
+    (by
       intro J hJ j
       rw [WithTop.coe_le_coe] at hJ
       refine' i.succ_above_cases _ _ j

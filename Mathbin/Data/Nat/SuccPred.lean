@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.succ_pred
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,18 +29,18 @@ instance : SuccOrder ℕ :=
 
 -- so that Lean reads `nat.pred` through `pred_order.pred`
 @[reducible]
-instance : PredOrder ℕ where 
+instance : PredOrder ℕ where
   pred := pred
   pred_le := pred_le
-  min_of_le_pred a ha := by 
+  min_of_le_pred a ha := by
     cases a
     · exact isMin_bot
     · exact (not_succ_le_self _ ha).elim
-  le_pred_of_lt a b h := by 
+  le_pred_of_lt a b h := by
     cases b
     · exact (a.not_lt_zero h).elim
     · exact le_of_succ_le_succ h
-  le_of_pred_lt a b h := by 
+  le_of_pred_lt a b h := by
     cases a
     · exact b.zero_le
     · exact h
@@ -57,14 +57,14 @@ theorem pred_eq_pred : Order.pred = pred :=
 
 theorem succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n
   | 0 => rfl
-  | n + 1 => by 
+  | n + 1 => by
     rw [Function.iterate_succ', add_succ]
     exact congr_arg _ n.succ_iterate
 #align nat.succ_iterate Nat.succ_iterate
 
 theorem pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
   | 0 => rfl
-  | n + 1 => by 
+  | n + 1 => by
     rw [Function.iterate_succ', sub_succ]
     exact congr_arg _ n.pred_iterate
 #align nat.pred_iterate Nat.pred_iterate

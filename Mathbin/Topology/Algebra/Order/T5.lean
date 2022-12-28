@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.t5
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,15 +29,17 @@ variable {X : Type _} [LinearOrder X] [TopologicalSpace X] [OrderTopology X] {a 
 namespace Set
 
 @[simp]
-theorem ord_connected_component_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a ↔ s ∈ 𝓝 a := by
+theorem ord_connected_component_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a ↔ s ∈ 𝓝 a :=
+  by
   refine' ⟨fun h => mem_of_superset h ord_connected_component_subset, fun h => _⟩
   rcases exists_Icc_mem_subset_of_mem_nhds h with ⟨b, c, ha, ha', hs⟩
   exact mem_of_superset ha' (subset_ord_connected_component ha hs)
 #align set.ord_connected_component_mem_nhds Set.ord_connected_component_mem_nhds
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (closure t))
-    (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a := by
-  have hmem : tᶜ ∈ 𝓝[≥] a := by 
+    (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a :=
+  by
+  have hmem : tᶜ ∈ 𝓝[≥] a := by
     refine' mem_nhds_within_of_mem_nhds _
     rw [← mem_interior_iff_mem_nhds, interior_compl]
     exact disjoint_left.1 hd ha
@@ -64,7 +66,7 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (c
     · rcases mem_Union₂.1 (ord_connected_section_subset hx').2 with ⟨y, hyt, hxy⟩
       refine' subset_Union₂_of_subset y hyt (ord_connected.interval_subset inferInstance hxy _)
       refine' subset_ord_connected_component left_mem_interval hxy _
-      suffices c < y by 
+      suffices c < y by
         rw [interval_of_ge (hx.2.trans this).le]
         exact ⟨hx.2.le, this.le⟩
       refine' lt_of_not_le fun hyc => _
@@ -74,7 +76,8 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (c
   set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ord_separating_set_mem_nhds_within_Ici
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Iic (hd : Disjoint s (closure t))
-    (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a := by
+    (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a :=
+  by
   have hd' : Disjoint (of_dual ⁻¹' s) (closure <| of_dual ⁻¹' t) := hd
   have ha' : toDual a ∈ of_dual ⁻¹' s := ha
   simpa only [dual_ord_separating_set, dual_ord_connected_section] using
@@ -83,7 +86,8 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Iic (hd : Disjoint s (c
   set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ord_separating_set_mem_nhds_within_Iic
 
 theorem compl_section_ord_separating_set_mem_nhds (hd : Disjoint s (closure t)) (ha : a ∈ s) :
-    (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a := by
+    (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a :=
+  by
   rw [← nhds_left_sup_nhds_right, mem_sup]
   exact
     ⟨compl_section_ord_separating_set_mem_nhds_within_Iic hd ha,
@@ -94,7 +98,7 @@ theorem ord_t5_nhd_mem_nhds_set (hd : Disjoint s (closure t)) : ordT5Nhd s t ∈
   bUnion_mem_nhds_set fun x hx =>
     ord_connected_component_mem_nhds.2 <|
       inter_mem
-        (by 
+        (by
           rw [← mem_interior_iff_mem_nhds, interior_compl]
           exact disjoint_left.1 hd hx)
         (compl_section_ord_separating_set_mem_nhds hd hx)

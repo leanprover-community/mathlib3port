@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.closeds
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,9 +42,9 @@ namespace Closeds
 
 variable {α}
 
-instance : SetLike (Closeds α) α where 
+instance : SetLike (Closeds α) α where
   coe := Closeds.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     cases s
     cases t
     congr
@@ -73,9 +73,8 @@ theorem gc : GaloisConnection Closeds.closure (coe : Closeds α → Set α) := f
 #align topological_space.closeds.gc TopologicalSpace.Closeds.gc
 
 /-- The galois coinsertion between sets and opens. -/
-def gi :
-    GaloisInsertion (@Closeds.closure α _)
-      coe where 
+def gi : GaloisInsertion (@Closeds.closure α _) coe
+    where
   choice s hs := ⟨s, closure_eq_iff_is_closed.1 <| hs.antisymm subset_closure⟩
   gc := gc
   le_l_u _ := subset_closure
@@ -145,9 +144,10 @@ theorem coe_finset_inf (f : ι → Closeds α) (s : Finset ι) :
 #align topological_space.closeds.coe_finset_inf TopologicalSpace.Closeds.coe_finset_inf
 
 theorem infi_def {ι} (s : ι → Closeds α) :
-    (⨅ i, s i) = ⟨⋂ i, s i, is_closed_Inter fun i => (s i).2⟩ := by
+    (⨅ i, s i) = ⟨⋂ i, s i, is_closed_Inter fun i => (s i).2⟩ :=
+  by
   ext
-  simp only [infi, coe_Inf, bInter_range]
+  simp only [infᵢ, coe_Inf, bInter_range]
   rfl
 #align topological_space.closeds.infi_def TopologicalSpace.Closeds.infi_def
 
@@ -162,7 +162,7 @@ theorem coe_infi {ι} (s : ι → Closeds α) : ((⨅ i, s i : Closeds α) : Set
 #align topological_space.closeds.coe_infi TopologicalSpace.Closeds.coe_infi
 
 @[simp]
-theorem mem_infi {ι} {x : α} {s : ι → Closeds α} : x ∈ infi s ↔ ∀ i, x ∈ s i := by
+theorem mem_infi {ι} {x : α} {s : ι → Closeds α} : x ∈ infᵢ s ↔ ∀ i, x ∈ s i := by
   simp [← SetLike.mem_coe]
 #align topological_space.closeds.mem_infi TopologicalSpace.Closeds.mem_infi
 
@@ -172,10 +172,10 @@ theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ infₛ S ↔ ∀ s ∈ S
 #align topological_space.closeds.mem_Inf TopologicalSpace.Closeds.mem_Inf
 
 instance : Coframe (Closeds α) :=
-  { Closeds.completeLattice with 
+  { Closeds.completeLattice with
     inf := infₛ
     infi_sup_le_sup_Inf := fun a s =>
-      (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
+      (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_interᵢ₂]).le }
 
 /-- The term of `closeds α` corresponding to a singleton. -/
 @[simps]
@@ -217,9 +217,8 @@ variable (α)
 
 /-- `closeds.compl` as an `order_iso` to the order dual of `opens α`. -/
 @[simps]
-def Closeds.complOrderIso :
-    Closeds α ≃o (Opens
-          α)ᵒᵈ where 
+def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ
+    where
   toFun := OrderDual.toDual ∘ closeds.compl
   invFun := opens.compl ∘ OrderDual.ofDual
   left_inv s := by simp [closeds.compl_compl]
@@ -231,9 +230,8 @@ def Closeds.complOrderIso :
 
 /-- `opens.compl` as an `order_iso` to the order dual of `closeds α`. -/
 @[simps]
-def Opens.complOrderIso :
-    Opens α ≃o (Closeds
-          α)ᵒᵈ where 
+def Opens.complOrderIso : Opens α ≃o (Closeds α)ᵒᵈ
+    where
   toFun := OrderDual.toDual ∘ opens.compl
   invFun := closeds.compl ∘ OrderDual.ofDual
   left_inv s := by simp [opens.compl_compl]
@@ -248,7 +246,8 @@ variable {α}
 /-- in a `t1_space`, atoms of `closeds α` are precisely the `closeds.singleton`s. -/
 theorem Closeds.is_atom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, s = Closeds.singleton x :=
   by
-  have : IsAtom (s : Set α) ↔ IsAtom s := by
+  have : IsAtom (s : Set α) ↔ IsAtom s :=
+    by
     refine' closeds.gi.is_atom_iff' rfl (fun t ht => _) s
     obtain ⟨x, rfl⟩ := t.is_atom_iff.mp ht
     exact closure_singleton
@@ -259,7 +258,8 @@ theorem Closeds.is_atom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, 
 /-- in a `t1_space`, coatoms of `opens α` are precisely complements of singletons:
 `(closeds.singleton x).compl`. -/
 theorem Opens.is_coatom_iff [T1Space α] {s : Opens α} :
-    IsCoatom s ↔ ∃ x, s = (Closeds.singleton x).compl := by
+    IsCoatom s ↔ ∃ x, s = (Closeds.singleton x).compl :=
+  by
   rw [← s.compl_compl, ← is_atom_dual_iff_is_coatom]
   change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
   rw [(closeds.compl_order_iso α).is_atom_iff, closeds.is_atom_iff]
@@ -279,9 +279,9 @@ structure Clopens (α : Type _) [TopologicalSpace α] where
 
 namespace Clopens
 
-instance : SetLike (Clopens α) α where 
+instance : SetLike (Clopens α) α where
   coe s := s.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     cases s
     cases t
     congr

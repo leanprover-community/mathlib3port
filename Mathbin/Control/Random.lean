@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.random
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -281,8 +281,8 @@ end Fin
 
 open Nat
 
-instance natBoundedRandom :
-    BoundedRandom ℕ where randomR g inst x y hxy := do
+instance natBoundedRandom : BoundedRandom ℕ
+    where randomR g inst x y hxy := do
     let z ← @Fin.random g inst (succ <| y - x) _
     pure
         ⟨z + x, Nat.le_add_left _ _, by
@@ -292,8 +292,8 @@ instance natBoundedRandom :
 /-- This `bounded_random` interval generates integers between `x` and
 `y` by first generating a natural number between `0` and `y - x` and
 shifting the result appropriately. -/
-instance intBoundedRandom :
-    BoundedRandom ℤ where randomR g inst x y hxy := do
+instance intBoundedRandom : BoundedRandom ℤ
+    where randomR g inst x y hxy := do
     let ⟨z, h₀, h₁⟩ ← @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x) (by decide)
     pure
         ⟨z + x, Int.le_add_of_nonneg_left (Int.coe_nat_nonneg _),
@@ -305,8 +305,8 @@ instance intBoundedRandom :
 instance finRandom (n : ℕ) [NeZero n] : Random (Fin n) where Random g inst := @Fin.random g inst _ _
 #align fin_random finRandom
 
-instance finBoundedRandom (n : ℕ) :
-    BoundedRandom (Fin n) where randomR g inst (x y : Fin n) p := do
+instance finBoundedRandom (n : ℕ) : BoundedRandom (Fin n)
+    where randomR g inst (x y : Fin n) p := do
     let ⟨r, h, h'⟩ ← @Rand.randomR ℕ g inst _ _ x.val y.val p
     pure ⟨⟨r, lt_of_le_of_lt h' y⟩, h, h'⟩
 #align fin_bounded_random finBoundedRandom
@@ -319,21 +319,20 @@ def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Random (Fin n)
 #align random_fin_of_pos randomFinOfPos
 
 theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
-    n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) := by
+    n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) :=
+  by
   simp only [and_imp, Set.mem_Icc]; intro h₀ h₁
   constructor <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
       rw [Bool.of_nat_to_nat] at h₂ <;>
     exact h₂
 #align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_of_nat_mem_Icc_of_mem_Icc_to_nat
 
-instance :
-    Random
-      Bool where Random g inst :=
+instance : Random Bool
+    where Random g inst :=
     (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandom.randomR ℕ _ _ g inst 0 1 (Nat.zero_le _)
 
-instance :
-    BoundedRandom
-      Bool where randomR g _inst x y p :=
+instance : BoundedRandom Bool
+    where randomR g _inst x y p :=
     Subtype.map Bool.ofNat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
       @BoundedRandom.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.to_nat_le_to_nat p)
 
@@ -344,7 +343,8 @@ def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :=
-  have h' : ∀ a : Fin (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) := by
+  have h' : ∀ a : Fin (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) :=
+    by
     simp only [and_imp, Set.mem_Icc]; intro z h₀ h₁
     replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀
     replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁
@@ -357,7 +357,7 @@ open Nat
 instance randomBitvec (n : ℕ) : Random (Bitvec n) where Random _ inst := @Bitvec.random _ inst n
 #align random_bitvec randomBitvec
 
-instance boundedRandomBitvec (n : ℕ) :
-    BoundedRandom (Bitvec n) where randomR _ inst x y p := @Bitvec.randomR _ inst _ _ _ p
+instance boundedRandomBitvec (n : ℕ) : BoundedRandom (Bitvec n)
+    where randomR _ inst x y p := @Bitvec.randomR _ inst _ _ _ p
 #align bounded_random_bitvec boundedRandomBitvec
 

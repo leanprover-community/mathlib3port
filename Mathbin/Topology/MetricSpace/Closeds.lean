@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.closeds
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,9 +44,8 @@ variable {α : Type u} [EmetricSpace α] {s : Set α}
 
 /-- In emetric spaces, the Hausdorff edistance defines an emetric space structure
 on the type of closed subsets -/
-instance Closeds.emetricSpace :
-    EmetricSpace (Closeds
-        α) where 
+instance Closeds.emetricSpace : EmetricSpace (Closeds α)
+    where
   edist s t := hausdorffEdist (s : Set α) t
   edist_self s := Hausdorff_edist_self
   edist_comm s t := Hausdorff_edist_comm
@@ -57,7 +56,8 @@ instance Closeds.emetricSpace :
 
 /-- The edistance to a closed set depends continuously on the point and the set -/
 theorem continuous_inf_edist_Hausdorff_edist :
-    Continuous fun p : α × Closeds α => infEdist p.1 p.2 := by
+    Continuous fun p : α × Closeds α => infEdist p.1 p.2 :=
+  by
   refine' continuous_of_le_add_edist 2 (by simp) _
   rintro ⟨x, s⟩ ⟨y, t⟩
   calc
@@ -75,12 +75,13 @@ theorem continuous_inf_edist_Hausdorff_edist :
 
 /-- Subsets of a given closed subset form a closed set -/
 theorem is_closed_subsets_of_is_closed (hs : IsClosed s) :
-    IsClosed { t : Closeds α | (t : Set α) ⊆ s } := by
+    IsClosed { t : Closeds α | (t : Set α) ⊆ s } :=
+  by
   refine' is_closed_of_closure_subset fun t ht x hx => _
   -- t : closeds α,  ht : t ∈ closure {t : closeds α | t ⊆ s},
   -- x : α,  hx : x ∈ t
   -- goal : x ∈ s
-  have : x ∈ closure s := by 
+  have : x ∈ closure s := by
     refine' mem_closure_iff.2 fun ε εpos => _
     rcases mem_closure_iff.1 ht ε εpos with ⟨u, hu, Dtu⟩
     -- u : closeds α,  hu : u ∈ {t : closeds α | t ⊆ s},  hu' : edist t u < ε
@@ -129,9 +130,11 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       ∃ z : ∀ l, s (n + l), (z 0 : α) = x ∧ ∀ k, edist (z k : α) (z (k + 1) : α) ≤ B n / 2 ^ k :=
       by
       -- We prove existence of the sequence by induction.
-      have : ∀ (l) (z : s (n + l)), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l := by
+      have : ∀ (l) (z : s (n + l)), ∃ z' : s (n + l + 1), edist (z : α) z' ≤ B n / 2 ^ l :=
+        by
         intro l z
-        obtain ⟨z', z'_mem, hz'⟩ : ∃ z' ∈ s (n + l + 1), edist (z : α) z' < B n / 2 ^ l := by
+        obtain ⟨z', z'_mem, hz'⟩ : ∃ z' ∈ s (n + l + 1), edist (z : α) z' < B n / 2 ^ l :=
+          by
           refine' exists_edist_lt_of_Hausdorff_edist_lt _ _
           · exact s (n + l)
           · exact z.2
@@ -153,8 +156,8 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
       mem_Inter.2 fun k =>
         mem_closure_of_tendsto y_lim
           (by
-            simp only [exists_prop, Set.mem_Union, Filter.eventually_at_top, Set.mem_preimage,
-              Set.preimage_Union]
+            simp only [exists_prop, Set.mem_unionᵢ, Filter.eventually_at_top, Set.mem_preimage,
+              Set.preimage_unionᵢ]
             exact ⟨k, fun m hm => ⟨n + m, zero_add k ▸ add_le_add (zero_le n) hm, (z m).2⟩⟩)
     use this
     -- Then, we check that `y` is close to `x = z n`. This follows from the fact that `y`
@@ -173,7 +176,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
     have : x ∈ closure (⋃ m ≥ n, s m : Set α) := by apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
-    simp only [exists_prop, Set.mem_Union] at hz
+    simp only [exists_prop, Set.mem_unionᵢ] at hz
     rcases hz with ⟨m, ⟨m_ge_n, hm⟩⟩
     -- m : ℕ, m_ge_n : m ≥ n, hm : z ∈ s m
     have : Hausdorff_edist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_refl n)
@@ -218,7 +221,8 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
       ⟨s, fs, hs⟩
     -- s : set α,  fs : s.finite,  hs : univ ⊆ ⋃ (y : α) (H : y ∈ s), eball y δ
     -- we first show that any set is well approximated by a subset of `s`.
-    have main : ∀ u : Set α, ∃ (v : _)(_ : v ⊆ s), Hausdorff_edist u v ≤ δ := by
+    have main : ∀ u : Set α, ∃ (v : _)(_ : v ⊆ s), Hausdorff_edist u v ≤ δ :=
+      by
       intro u
       let v := { x : α | x ∈ s ∧ ∃ y ∈ u, edist x y < δ }
       exists v, (fun x hx => hx.1 : v ⊆ s)
@@ -252,16 +256,15 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
 
 /-- In an emetric space, the type of non-empty compact subsets is an emetric space,
 where the edistance is the Hausdorff edistance -/
-instance NonemptyCompacts.emetricSpace :
-    EmetricSpace
-      (NonemptyCompacts
-        α) where 
+instance NonemptyCompacts.emetricSpace : EmetricSpace (NonemptyCompacts α)
+    where
   edist s t := hausdorffEdist (s : Set α) t
   edist_self s := Hausdorff_edist_self
   edist_comm s t := Hausdorff_edist_comm
   edist_triangle s t u := Hausdorff_edist_triangle
   eq_of_edist_eq_zero s t h :=
-    nonempty_compacts.ext <| by
+    nonempty_compacts.ext <|
+      by
       have : closure (s : Set α) = closure t := Hausdorff_edist_zero_iff_closure_eq_closure.1 h
       rwa [s.is_compact.is_closed.closure_eq, t.is_compact.is_closed.closure_eq] at this
 #align emetric.nonempty_compacts.emetric_space Emetric.NonemptyCompacts.emetricSpace
@@ -275,11 +278,12 @@ theorem NonemptyCompacts.ToCloseds.uniform_embedding :
 
 /-- The range of `nonempty_compacts.to_closeds` is closed in a complete space -/
 theorem NonemptyCompacts.is_closed_in_closeds [CompleteSpace α] :
-    IsClosed (range <| @NonemptyCompacts.toCloseds α _ _) := by
+    IsClosed (range <| @NonemptyCompacts.toCloseds α _ _) :=
+  by
   have :
     range nonempty_compacts.to_closeds =
       { s : closeds α | (s : Set α).Nonempty ∧ IsCompact (s : Set α) } :=
-    by 
+    by
     ext s
     refine' ⟨_, fun h => ⟨⟨⟨s, h.2⟩, h.1⟩, closeds.ext rfl⟩⟩
     rintro ⟨s, hs, rfl⟩
@@ -325,7 +329,7 @@ instance NonemptyCompacts.complete_space [CompleteSpace α] : CompleteSpace (Non
 /-- In a compact space, the type of nonempty compact subsets is compact. This follows from
 the same statement for closed subsets -/
 instance NonemptyCompacts.compact_space [CompactSpace α] : CompactSpace (NonemptyCompacts α) :=
-  ⟨by 
+  ⟨by
     rw [nonempty_compacts.to_closeds.uniform_embedding.embedding.is_compact_iff_is_compact_image]
     rw [image_univ]
     exact nonempty_compacts.is_closed_in_closeds.is_compact⟩
@@ -353,7 +357,8 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       rcases exists_between εpos with ⟨δ, δpos, δlt⟩
       have δpos' : 0 < δ / 2 := Ennreal.half_pos δpos.ne'
       -- construct a map F associating to a point in α an approximating point in s, up to δ/2.
-      have Exy : ∀ x, ∃ y, y ∈ s ∧ edist x y < δ / 2 := by
+      have Exy : ∀ x, ∃ y, y ∈ s ∧ edist x y < δ / 2 :=
+        by
         intro x
         rcases mem_closure_iff.1 (s_dense x) (δ / 2) δpos' with ⟨y, ys, hy⟩
         exact ⟨y, ⟨ys, hy⟩⟩
@@ -366,7 +371,8 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       -- replace each center by a nearby approximation in `s`, giving a new set `b`
       let b := F '' a
       have : b.finite := af.image _
-      have tb : ∀ x ∈ t, ∃ y ∈ b, edist x y < δ := by
+      have tb : ∀ x ∈ t, ∃ y ∈ b, edist x y < δ :=
+        by
         intro x hx
         rcases mem_Union₂.1 (ta hx) with ⟨z, za, Dxz⟩
         exists F z, mem_image_of_mem _ za
@@ -379,13 +385,15 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }
       have : c.finite := ‹b.finite›.Subset fun x hx => hx.1
       -- points in `t` are well approximated by points in `c`
-      have tc : ∀ x ∈ t, ∃ y ∈ c, edist x y ≤ δ := by
+      have tc : ∀ x ∈ t, ∃ y ∈ c, edist x y ≤ δ :=
+        by
         intro x hx
         rcases tb x hx with ⟨y, yv, Dxy⟩
         have : y ∈ c := by simp [c, -mem_image] <;> exact ⟨yv, ⟨x, hx, Dxy⟩⟩
         exact ⟨y, this, le_of_lt Dxy⟩
       -- points in `c` are well approximated by points in `t`
-      have ct : ∀ y ∈ c, ∃ x ∈ t, edist y x ≤ δ := by
+      have ct : ∀ y ∈ c, ∃ x ∈ t, edist y x ≤ δ :=
+        by
         rintro y ⟨hy1, x, xt, Dyx⟩
         have : edist y x ≤ δ :=
           calc
@@ -400,7 +408,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       have hc : c.nonempty := nonempty_of_Hausdorff_edist_ne_top t.nonempty (ne_top_of_lt Dtc)
       -- let `d` be the version of `c` in the type `nonempty_compacts α`
       let d : nonempty_compacts α := ⟨⟨c, ‹c.finite›.IsCompact⟩, hc⟩
-      have : c ⊆ s := by 
+      have : c ⊆ s := by
         intro x hx
         rcases(mem_image _ _ _).1 hx.1 with ⟨y, ⟨ya, yx⟩⟩
         rw [← yx]
@@ -439,7 +447,7 @@ theorem NonemptyCompacts.dist_eq {x y : NonemptyCompacts α} :
 #align metric.nonempty_compacts.dist_eq Metric.NonemptyCompacts.dist_eq
 
 theorem lipschitzInfDistSet (x : α) : LipschitzWith 1 fun s : NonemptyCompacts α => infDist x s :=
-  LipschitzWith.ofLeAdd fun s t => by 
+  LipschitzWith.ofLeAdd fun s t => by
     rw [dist_comm]
     exact inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)
 #align metric.lipschitz_inf_dist_set Metric.lipschitzInfDistSet

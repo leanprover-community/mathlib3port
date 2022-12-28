@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.exp_deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ namespace Complex
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 ℂ]
 
 /-- The complex exponential is everywhere differentiable, with the derivative `exp x`. -/
-theorem hasDerivAtExp (x : ℂ) : HasDerivAt exp (exp x) x := by
+theorem hasDerivAtExp (x : ℂ) : HasDerivAt exp (exp x) x :=
+  by
   rw [has_deriv_at_iff_is_o_nhds_zero]
   have : (1 : ℕ) < 2 := by norm_num
   refine' (is_O.of_bound ‖exp x‖ _).trans_is_o (is_o_pow_id this)
@@ -62,9 +63,10 @@ theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
   | n + 1 => by rw [iterate_succ_apply, deriv_exp, iter_deriv_exp n]
 #align complex.iter_deriv_exp Complex.iter_deriv_exp
 
-theorem contDiffExp : ∀ {n}, ContDiff 𝕜 n exp := by
+theorem contDiffExp : ∀ {n}, ContDiff 𝕜 n exp :=
+  by
   refine' cont_diff_all_iff_nat.2 fun n => _
-  have : ContDiff ℂ (↑n) exp := by 
+  have : ContDiff ℂ (↑n) exp := by
     induction' n with n ihn
     · exact cont_diff_zero.2 continuous_exp
     · rw [cont_diff_succ_iff_deriv]

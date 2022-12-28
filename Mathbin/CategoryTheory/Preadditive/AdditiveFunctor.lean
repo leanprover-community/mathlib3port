@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.additive_functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,8 +68,8 @@ theorem coe_map_add_hom {X Y : C} : ⇑(F.mapAddHom : (X ⟶ Y) →+ _) = @map C
   rfl
 #align category_theory.functor.coe_map_add_hom CategoryTheory.Functor.coe_map_add_hom
 
-instance (priority := 100) preserves_zero_morphisms_of_additive :
-    PreservesZeroMorphisms F where map_zero' X Y := F.mapAddHom.map_zero
+instance (priority := 100) preserves_zero_morphisms_of_additive : PreservesZeroMorphisms F
+    where map_zero' X Y := F.mapAddHom.map_zero
 #align
   category_theory.functor.preserves_zero_morphisms_of_additive CategoryTheory.Functor.preserves_zero_morphisms_of_additive
 
@@ -135,12 +135,14 @@ open CategoryTheory.Limits
 open CategoryTheory.Preadditive
 
 instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
-    PreservesFiniteBiproducts
-      F where preserves J _ :=
-    { preserves := fun f =>
-        { preserves := fun b hb =>
+    PreservesFiniteBiproducts F
+    where preserves J _ :=
+    {
+      preserves := fun f =>
+        {
+          preserves := fun b hb =>
             is_bilimit_of_total _
-              (by 
+              (by
                 simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
                 dsimp only [map_bicone_X]
                 simp_rw [← F.map_id]
@@ -153,7 +155,8 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
 
 theorem additive_of_preserves_binary_biproducts [HasBinaryBiproducts C] [PreservesZeroMorphisms F]
     [PreservesBinaryBiproducts F] : Additive F :=
-  { map_add' := fun X Y f g => by
+  {
+    map_add' := fun X Y f g => by
       rw [biprod.add_eq_lift_id_desc, F.map_comp, ← biprod.lift_map_biprod, ←
         biprod.map_biprod_hom_desc, category.assoc, iso.inv_hom_id_assoc, F.map_id,
         biprod.add_eq_lift_id_desc] }
@@ -168,8 +171,8 @@ namespace Equivalence
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D]
 
-instance inverse_additive (e : C ≌ D) [e.Functor.Additive] :
-    e.inverse.Additive where map_add' X Y f g := by
+instance inverse_additive (e : C ≌ D) [e.Functor.Additive] : e.inverse.Additive
+    where map_add' X Y f g := by
     apply e.functor.map_injective
     simp
 #align category_theory.equivalence.inverse_additive CategoryTheory.Equivalence.inverse_additive

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.sheaf
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,22 +82,24 @@ variable (P : Cᵒᵖ ⥤ A) {X : C} (S : Sieve X) (R : Presieve X) (E : Aᵒᵖ
 @[simps]
 def conesEquivSieveCompatibleFamily :
     (S.arrows.diagram.op ⋙ P).cones.obj E ≃
-      { x : FamilyOfElements (P ⋙ coyoneda.obj E) S //
-        x.SieveCompatible } where 
+      { x : FamilyOfElements (P ⋙ coyoneda.obj E) S // x.SieveCompatible }
+    where
   toFun π :=
-    ⟨fun Y f h => π.app (op ⟨Over.mk f, h⟩), fun _ => by
+    ⟨fun Y f h => π.app (op ⟨Over.mk f, h⟩), fun _ =>
+      by
       intros
       apply (id_comp _).symm.trans
       dsimp
       convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp <;> rfl⟩
   invFun x :=
     { app := fun f => x.1 f.unop.1.Hom f.unop.2
-      naturality' := fun f f' g => by
+      naturality' := fun f f' g =>
+        by
         refine' Eq.trans _ (x.2 f.unop.1.Hom g.unop.left f.unop.2)
         erw [id_comp]
         congr
         rw [over.w g.unop] }
-  left_inv π := by 
+  left_inv π := by
     ext
     dsimp
     congr
@@ -105,7 +107,7 @@ def conesEquivSieveCompatibleFamily :
     ext
     symm
     apply costructured_arrow.eq_mk
-  right_inv x := by 
+  right_inv x := by
     ext
     rfl
 #align
@@ -115,8 +117,8 @@ variable {P S E} {x : FamilyOfElements (P ⋙ coyoneda.obj E) S} (hx : x.SieveCo
 
 /-- The cone corresponding to a sieve_compatible family of elements, dot notation enabled. -/
 @[simp]
-def CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone :
-    Cone (S.arrows.diagram.op ⋙ P) where 
+def CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone : Cone (S.arrows.diagram.op ⋙ P)
+    where
   x := E.unop
   π := (conesEquivSieveCompatibleFamily P S E).invFun ⟨x, hx⟩
 #align
@@ -125,17 +127,14 @@ def CategoryTheory.Presieve.FamilyOfElements.SieveCompatible.cone :
 /-- Cone morphisms from the cone corresponding to a sieve_compatible family to the natural
     cone associated to a sieve `S` and a presheaf `P` are in 1-1 correspondence with amalgamations
     of the family. -/
-def homEquivAmalgamation :
-    (hx.Cone ⟶ P.mapCone S.arrows.Cocone.op) ≃
-      { t //
-        x.IsAmalgamation
-          t } where 
+def homEquivAmalgamation : (hx.Cone ⟶ P.mapCone S.arrows.Cocone.op) ≃ { t // x.IsAmalgamation t }
+    where
   toFun l := ⟨l.Hom, fun Y f hf => l.w (op ⟨Over.mk f, hf⟩)⟩
   invFun t := ⟨t.1, fun f => t.2 f.unop.1.Hom f.unop.2⟩
-  left_inv l := by 
+  left_inv l := by
     ext
     rfl
-  right_inv t := by 
+  right_inv t := by
     ext
     rfl
 #align category_theory.presheaf.hom_equiv_amalgamation CategoryTheory.Presheaf.homEquivAmalgamation
@@ -147,7 +146,7 @@ variable (P S)
 theorem is_limit_iff_is_sheaf_for :
     Nonempty (IsLimit (P.mapCone S.arrows.Cocone.op)) ↔
       ∀ E : Aᵒᵖ, IsSheafFor (P ⋙ coyoneda.obj E) S :=
-  by 
+  by
   dsimp [is_sheaf_for]; simp_rw [compatible_iff_sieve_compatible]
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
   rw [Classical.nonempty_pi]; constructor
@@ -170,7 +169,7 @@ theorem is_limit_iff_is_sheaf_for :
 theorem subsingleton_iff_is_separated_for :
     (∀ c, Subsingleton (c ⟶ P.mapCone S.arrows.Cocone.op)) ↔
       ∀ E : Aᵒᵖ, IsSeparatedFor (P ⋙ coyoneda.obj E) S :=
-  by 
+  by
   constructor
   · intro hs E x t₁ t₂ h₁ h₂
     have hx := is_compatible_of_exists_amalgamation x ⟨t₁, h₁⟩
@@ -228,7 +227,7 @@ theorem is_sheaf_iff_is_limit_pretopology [HasPullbacks C] (K : Pretopology C) :
     IsSheaf (K.toGrothendieck C) P ↔
       ∀ ⦃X : C⦄ (R : Presieve X),
         R ∈ K X → Nonempty (IsLimit (P.mapCone (generate R).arrows.Cocone.op)) :=
-  by 
+  by
   dsimp [is_sheaf]
   simp_rw [is_sheaf_pretopology]
   exact
@@ -256,7 +255,8 @@ def IsSheaf.amalgamate {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X :
 theorem IsSheaf.amalgamate_map {A : Type u₂} [Category.{max v₁ u₁} A] {E : A} {X : C} {P : Cᵒᵖ ⥤ A}
     (hP : Presheaf.IsSheaf J P) (S : J.cover X) (x : ∀ I : S.arrow, E ⟶ P.obj (op I.y))
     (hx : ∀ I : S.Relation, x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) (I : S.arrow) :
-    hP.amalgamate S x hx ≫ P.map I.f.op = x _ := by
+    hP.amalgamate S x hx ≫ P.map I.f.op = x _ :=
+  by
   rcases I with ⟨Y, f, hf⟩
   apply
     @presieve.is_sheaf_for.valid_glue _ _ _ _ _ _ (hP _ _ S.condition) (fun Y f hf => x ⟨Y, f, hf⟩)
@@ -309,7 +309,7 @@ structure Hom (X Y : SheafCat J A) where
 #align category_theory.Sheaf.hom CategoryTheory.SheafCat.Hom
 
 @[simps]
-instance : Category (SheafCat J A) where 
+instance : Category (SheafCat J A) where
   Hom := Hom
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.val ≫ g.val⟩
@@ -325,8 +325,8 @@ end SheafCat
 
 /-- The inclusion functor from sheaves to presheaves. -/
 @[simps]
-def sheafToPresheaf : SheafCat J A ⥤
-      Cᵒᵖ ⥤ A where 
+def sheafToPresheaf : SheafCat J A ⥤ Cᵒᵖ ⥤ A
+    where
   obj := SheafCat.val
   map _ _ f := f.val
   map_id' X := rfl
@@ -357,7 +357,8 @@ def sheafOver {A : Type u₂} [Category.{v₂} A] {J : GrothendieckTopology C} (
 #align category_theory.sheaf_over CategoryTheory.sheafOver
 
 theorem is_sheaf_iff_is_sheaf_of_type (P : Cᵒᵖ ⥤ Type w) :
-    Presheaf.IsSheaf J P ↔ Presieve.IsSheaf J P := by
+    Presheaf.IsSheaf J P ↔ Presieve.IsSheaf J P :=
+  by
   constructor
   · intro hP
     refine' presieve.is_sheaf_iso J _ (hP PUnit)
@@ -380,10 +381,8 @@ theorem is_sheaf_iff_is_sheaf_of_type (P : Cᵒᵖ ⥤ Type w) :
 /-- The category of sheaves taking values in Type is the same as the category of set-valued sheaves.
 -/
 @[simps]
-def sheafEquivSheafOfTypes :
-    SheafCat J (Type w) ≌
-      SheafOfTypesCat
-        J where 
+def sheafEquivSheafOfTypes : SheafCat J (Type w) ≌ SheafOfTypesCat J
+    where
   Functor :=
     { obj := fun S => ⟨S.val, (is_sheaf_iff_is_sheaf_of_type _ _).1 S.2⟩
       map := fun S T f => ⟨f.val⟩ }
@@ -401,7 +400,8 @@ variable {J} {A}
 
 /-- If the empty sieve is a cover of `X`, then `F(X)` is terminal. -/
 def SheafCat.isTerminalOfBotCover (F : SheafCat J A) (X : C) (H : ⊥ ∈ J X) :
-    IsTerminal (F.1.obj (op X)) := by
+    IsTerminal (F.1.obj (op X)) :=
+  by
   apply (config := { instances := false }) is_terminal.of_unique
   intro Y
   choose t h using F.2 Y _ H (by tidy) (by tidy)
@@ -414,13 +414,12 @@ open Preadditive
 
 variable [Preadditive A] {P Q : SheafCat J A}
 
-instance sheafHomHasZsmul :
-    HasSmul ℤ
-      (P ⟶
-        Q) where smul n f :=
+instance sheafHomHasZsmul : HasSmul ℤ (P ⟶ Q)
+    where smul n f :=
     SheafCat.Hom.mk
       { app := fun U => n • f.1.app U
-        naturality' := fun U V i => by
+        naturality' := fun U V i =>
+          by
           induction' n using Int.induction_on with n ih n ih
           · simp only [zero_smul, comp_zero, zero_comp]
           ·
@@ -435,13 +434,11 @@ instance : Sub (P ⟶ Q) where sub f g := Sheaf.hom.mk <| f.1 - g.1
 
 instance : Neg (P ⟶ Q) where neg f := Sheaf.hom.mk <| -f.1
 
-instance sheafHomHasNsmul :
-    HasSmul ℕ
-      (P ⟶
-        Q) where smul n f :=
+instance sheafHomHasNsmul : HasSmul ℕ (P ⟶ Q)
+    where smul n f :=
     SheafCat.Hom.mk
       { app := fun U => n • f.1.app U
-        naturality' := fun U V i => by 
+        naturality' := fun U V i => by
           induction' n with n ih
           · simp only [zero_smul, comp_zero, zero_comp]
           ·
@@ -461,22 +458,22 @@ theorem SheafCat.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U +
 instance : AddCommGroup (P ⟶ Q) :=
   Function.Injective.addCommGroup (fun f : SheafCat.Hom P Q => f.1)
     (fun _ _ h => SheafCat.Hom.ext _ _ h) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => by 
+    (fun _ _ => by
       dsimp at *
       ext
       simpa [*] )
-    fun _ _ => by 
+    fun _ _ => by
     dsimp at *
     ext
     simpa [*]
 
-instance : Preadditive (SheafCat J
-        A) where 
+instance : Preadditive (SheafCat J A)
+    where
   homGroup P Q := inferInstance
-  add_comp' P Q R f f' g := by 
+  add_comp' P Q R f f' g := by
     ext
     simp
-  comp_add' P Q R f g g' := by 
+  comp_add' P Q R f g g' := by
     ext
     simp
 
@@ -506,19 +503,17 @@ variable (P : Cᵒᵖ ⥤ A)
 section MultiequalizerConditions
 
 /-- When `P` is a sheaf and `S` is a cover, the associated multifork is a limit. -/
-def isLimitOfIsSheaf {X : C} (S : J.cover X) (hP : IsSheaf J P) :
-    IsLimit
-      (S.Multifork
-        P) where 
+def isLimitOfIsSheaf {X : C} (S : J.cover X) (hP : IsSheaf J P) : IsLimit (S.Multifork P)
+    where
   lift := fun E : Multifork _ => hP.amalgamate S (fun I => E.ι _) fun I => E.condition _
-  fac' := by 
+  fac' := by
     rintro (E : multifork _) (a | b)
     · apply hP.amalgamate_map
     · rw [← E.w (walking_multicospan.hom.fst b), ←
         (S.multifork P).w (walking_multicospan.hom.fst b), ← assoc]
       congr 1
       apply hP.amalgamate_map
-  uniq' := by 
+  uniq' := by
     rintro (E : multifork _) m hm
     apply hP.hom_ext S
     intro I
@@ -528,7 +523,8 @@ def isLimitOfIsSheaf {X : C} (S : J.cover X) (hP : IsSheaf J P) :
 #align category_theory.presheaf.is_limit_of_is_sheaf CategoryTheory.Presheaf.isLimitOfIsSheaf
 
 theorem is_sheaf_iff_multifork :
-    IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), Nonempty (IsLimit (S.Multifork P)) := by
+    IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), Nonempty (IsLimit (S.Multifork P)) :=
+  by
   refine' ⟨fun hP X S => ⟨is_limit_of_is_sheaf _ _ _ hP⟩, _⟩
   intro h E X S hS x hx
   let T : J.cover X := ⟨S, hS⟩
@@ -550,7 +546,8 @@ theorem is_sheaf_iff_multifork :
   category_theory.presheaf.is_sheaf_iff_multifork CategoryTheory.Presheaf.is_sheaf_iff_multifork
 
 theorem is_sheaf_iff_multiequalizer [∀ (X : C) (S : J.cover X), HasMultiequalizer (S.index P)] :
-    IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), IsIso (S.toMultiequalizer P) := by
+    IsSheaf J P ↔ ∀ (X : C) (S : J.cover X), IsIso (S.toMultiequalizer P) :=
+  by
   rw [is_sheaf_iff_multifork]
   refine' forall₂_congr fun X S => ⟨_, _⟩
   · rintro ⟨h⟩
@@ -610,7 +607,8 @@ def secondMap : firstObj R P ⟶ secondObj R P :=
   Pi.lift fun fg => Pi.π _ _ ≫ P.map pullback.snd.op
 #align category_theory.presheaf.second_map CategoryTheory.Presheaf.secondMap
 
-theorem w : forkMap R P ≫ firstMap R P = forkMap R P ≫ secondMap R P := by
+theorem w : forkMap R P ≫ firstMap R P = forkMap R P ≫ secondMap R P :=
+  by
   apply limit.hom_ext
   rintro ⟨⟨Y, f, hf⟩, ⟨Z, g, hg⟩⟩
   simp only [first_map, second_map, fork_map, limit.lift_π, limit.lift_π_assoc, assoc, fan.mk_π_app,
@@ -631,7 +629,7 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
     [∀ J, PreservesLimitsOfShape (Discrete.{max v₁ u₁} J) s] (U : C) (R : Presieve U) :
     IsLimit (s.mapCone (Fork.ofι _ (w R P))) ≃
       IsLimit (Fork.ofι _ (Equalizer.Presieve.w (P ⋙ s) R)) :=
-  by 
+  by
   apply Equiv.trans (is_limit_map_cone_fork_equiv _ _) _
   apply (is_limit.postcompose_hom_equiv _ _).symm.trans (is_limit.equiv_iso_limit _)
   · apply nat_iso.of_components _ _
@@ -656,7 +654,8 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
   category_theory.presheaf.is_sheaf_for_is_sheaf_for' CategoryTheory.Presheaf.isSheafForIsSheafFor'
 
 /-- The equalizer definition of a sheaf given by `is_sheaf'` is equivalent to `is_sheaf`. -/
-theorem is_sheaf_iff_is_sheaf' : IsSheaf J P ↔ IsSheaf' J P := by
+theorem is_sheaf_iff_is_sheaf' : IsSheaf J P ↔ IsSheaf' J P :=
+  by
   constructor
   · intro h U R hR
     refine' ⟨_⟩
@@ -694,7 +693,8 @@ for the category of topological spaces, topological rings, etc since reflecting 
 hold.
 -/
 theorem is_sheaf_iff_is_sheaf_forget (s : A ⥤ Type max v₁ u₁) [HasLimits A] [PreservesLimits s]
-    [ReflectsIsomorphisms s] : IsSheaf J P ↔ IsSheaf J (P ⋙ s) := by
+    [ReflectsIsomorphisms s] : IsSheaf J P ↔ IsSheaf J (P ⋙ s) :=
+  by
   rw [is_sheaf_iff_is_sheaf', is_sheaf_iff_is_sheaf']
   apply forall_congr' fun U => _
   apply ball_congr fun R hR => _

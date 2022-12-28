@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul-Nicolas Madelaine, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.norm_cast
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,7 +210,8 @@ unsafe structure norm_cast_cache where
 #align norm_cast.norm_cast_cache norm_cast.norm_cast_cache
 
 /-- Empty `norm_cast_cache`. -/
-unsafe def empty_cache : norm_cast_cache where 
+unsafe def empty_cache : norm_cast_cache
+    where
   up := simp_lemmas.mk
   down := simp_lemmas.mk
   squash := simp_lemmas.mk
@@ -309,8 +310,8 @@ unsafe def mk_cache (attr : Thunk norm_cast_attr_ty) (names : List Name) : tacti
   let up ← up.add_simp `` ne_from_not_eq
   let down := cache.down
   let down ← down.add_simp `` coe_coe
-  pure
-      { up
+  pure {
+        up
         down
         squash := cache }
 #align norm_cast.mk_cache norm_cast.mk_cache
@@ -318,9 +319,8 @@ unsafe def mk_cache (attr : Thunk norm_cast_attr_ty) (names : List Name) : tacti
 /-- The `norm_cast` attribute.
 -/
 @[user_attribute]
-unsafe def norm_cast_attr :
-    user_attribute norm_cast_cache
-      (Option Label) where 
+unsafe def norm_cast_attr : user_attribute norm_cast_cache (Option Label)
+    where
   Name := `norm_cast
   descr := "attribute for norm_cast"
   parser :=
@@ -550,7 +550,7 @@ unsafe def coe_to_numeral (e : expr) : tactic (expr × expr) := do
 
 /-- A local variant on `simplify_top_down`. -/
 private unsafe def simplify_top_down' {α} (a : α) (pre : α → expr → tactic (α × expr × expr))
-    (e : expr) (cfg : SimpConfig := {  }) : tactic (α × expr × expr) :=
+    (e : expr) (cfg : SimpConfig := { }) : tactic (α × expr × expr) :=
   ext_simplify_core a cfg simp_lemmas.mk (fun _ => failed)
     (fun a _ _ _ e => do
       let (new_a, new_e, pr) ← pre a e
@@ -681,14 +681,14 @@ unsafe def norm_cast (loc : parse location) : tactic Unit := do
 -/
 unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Unit :=
   (decorate_error "rw_mod_cast failed:") do
-    let cfg_norm : SimpConfig := {  }
-    let cfg_rw : RewriteCfg := {  }
+    let cfg_norm : SimpConfig := { }
+    let cfg_rw : RewriteCfg := { }
     let ns ← loc.get_locals
     Monad.mapM'
         (fun r : rw_rule => do
           save_info r
           replace_at derive ns loc
-          rw ⟨[r], none⟩ loc {  })
+          rw ⟨[r], none⟩ loc { })
         rs
     replace_at derive ns loc
     skip

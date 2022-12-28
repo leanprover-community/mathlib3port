@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module field_theory.mv_polynomial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,8 @@ variable {σ : Type u} {K : Type v}
 variable (σ K) [Field K]
 
 theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠ ⊤) :
-    Function.Injective ((Ideal.Quotient.mk I).comp MvPolynomial.c) := by
+    Function.Injective ((Ideal.Quotient.mk I).comp MvPolynomial.c) :=
+  by
   refine' (injective_iff_map_eq_zero _).2 fun x hx => _
   rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem] at hx
   refine' by_contradiction fun hx0 => absurd (I.eq_top_iff_one.2 _) hI

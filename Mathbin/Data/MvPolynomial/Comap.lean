@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.comap
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,14 +48,16 @@ theorem comap_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (x : τ 
 #align mv_polynomial.comap_apply MvPolynomial.comap_apply
 
 @[simp]
-theorem comap_id_apply (x : σ → R) : comap (AlgHom.id R (MvPolynomial σ R)) x = x := by
+theorem comap_id_apply (x : σ → R) : comap (AlgHom.id R (MvPolynomial σ R)) x = x :=
+  by
   funext i
   simp only [comap, AlgHom.id_apply, id.def, aeval_X]
 #align mv_polynomial.comap_id_apply MvPolynomial.comap_id_apply
 
 variable (σ R)
 
-theorem comap_id : comap (AlgHom.id R (MvPolynomial σ R)) = id := by
+theorem comap_id : comap (AlgHom.id R (MvPolynomial σ R)) = id :=
+  by
   funext x
   exact comap_id_apply x
 #align mv_polynomial.comap_id MvPolynomial.comap_id
@@ -64,7 +66,8 @@ variable {σ R}
 
 theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) (x : υ → R) :
-    comap (g.comp f) x = comap f (comap g x) := by
+    comap (g.comp f) x = comap f (comap g x) :=
+  by
   funext i
   trans aeval x (aeval (fun i => g (X i)) (f (X i)))
   · apply eval₂_hom_congr rfl rfl
@@ -78,19 +81,21 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
 #align mv_polynomial.comap_comp_apply MvPolynomial.comap_comp_apply
 
 theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
-    (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) : comap (g.comp f) = comap f ∘ comap g := by
+    (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) : comap (g.comp f) = comap f ∘ comap g :=
+  by
   funext x
   exact comap_comp_apply _ _ _
 #align mv_polynomial.comap_comp MvPolynomial.comap_comp
 
 theorem comap_eq_id_of_eq_id (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R) (hf : ∀ φ, f φ = φ)
-    (x : σ → R) : comap f x = x := by 
+    (x : σ → R) : comap f x = x := by
   convert comap_id_apply x
   ext1 φ
   rw [hf, AlgHom.id_apply]
 #align mv_polynomial.comap_eq_id_of_eq_id MvPolynomial.comap_eq_id_of_eq_id
 
-theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘ f := by
+theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘ f :=
+  by
   ext i
   simp only [rename_X, comap_apply, aeval_X]
 #align mv_polynomial.comap_rename MvPolynomial.comap_rename
@@ -98,17 +103,17 @@ theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘
 /-- If two polynomial types over the same coefficient ring `R` are equivalent,
 there is a bijection between the types of functions from their variable types to `R`.
 -/
-noncomputable def comapEquiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
-    (τ → R) ≃ (σ → R) where 
+noncomputable def comapEquiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (τ → R) ≃ (σ → R)
+    where
   toFun := comap f
   invFun := comap f.symm
-  left_inv := by 
+  left_inv := by
     intro x
     rw [← comap_comp_apply]
     apply comap_eq_id_of_eq_id
     intro
     simp only [AlgHom.id_apply, AlgEquiv.comp_symm]
-  right_inv := by 
+  right_inv := by
     intro x
     rw [← comap_comp_apply]
     apply comap_eq_id_of_eq_id

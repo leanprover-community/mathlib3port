@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,8 @@ theorem to_Ico_mod_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) :
   add_to_Ico_div_zsmul_mem_Ico a hb x
 #align to_Ico_mod_mem_Ico to_Ico_mod_mem_Ico
 
-theorem to_Ico_mod_mem_Ico' {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x ∈ Set.Ico 0 b := by
+theorem to_Ico_mod_mem_Ico' {b : α} (hb : 0 < b) (x : α) : toIcoMod 0 hb x ∈ Set.Ico 0 b :=
+  by
   convert to_Ico_mod_mem_Ico 0 hb x
   exact (zero_add b).symm
 #align to_Ico_mod_mem_Ico' to_Ico_mod_mem_Ico'
@@ -172,7 +173,8 @@ theorem to_Ioc_div_zsmul_sub_to_Ioc_mod (a : α) {b : α} (hb : 0 < b) (x : α) 
 #align to_Ioc_div_zsmul_sub_to_Ioc_mod to_Ioc_div_zsmul_sub_to_Ioc_mod
 
 theorem to_Ico_mod_eq_iff {a b x y : α} (hb : 0 < b) :
-    toIcoMod a hb x = y ↔ a ≤ y ∧ y < a + b ∧ ∃ z : ℤ, y - x = z • b := by
+    toIcoMod a hb x = y ↔ a ≤ y ∧ y < a + b ∧ ∃ z : ℤ, y - x = z • b :=
+  by
   refine'
     ⟨fun h =>
       ⟨h ▸ left_le_to_Ico_mod a hb x, h ▸ to_Ico_mod_lt_right a hb x, toIcoDiv a hb x,
@@ -186,7 +188,8 @@ theorem to_Ico_mod_eq_iff {a b x y : α} (hb : 0 < b) :
 #align to_Ico_mod_eq_iff to_Ico_mod_eq_iff
 
 theorem to_Ioc_mod_eq_iff {a b x y : α} (hb : 0 < b) :
-    toIocMod a hb x = y ↔ a < y ∧ y ≤ a + b ∧ ∃ z : ℤ, y - x = z • b := by
+    toIocMod a hb x = y ↔ a < y ∧ y ≤ a + b ∧ ∃ z : ℤ, y - x = z • b :=
+  by
   refine'
     ⟨fun h =>
       ⟨h ▸ left_lt_to_Ioc_mod a hb x, h ▸ to_Ioc_mod_le_right a hb x, toIocDiv a hb x,
@@ -200,48 +203,56 @@ theorem to_Ioc_mod_eq_iff {a b x y : α} (hb : 0 < b) :
 #align to_Ioc_mod_eq_iff to_Ioc_mod_eq_iff
 
 @[simp]
-theorem to_Ico_div_apply_left (a : α) {b : α} (hb : 0 < b) : toIcoDiv a hb a = 0 := by
+theorem to_Ico_div_apply_left (a : α) {b : α} (hb : 0 < b) : toIcoDiv a hb a = 0 :=
+  by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
   simp [hb]
 #align to_Ico_div_apply_left to_Ico_div_apply_left
 
 @[simp]
-theorem to_Ioc_div_apply_left (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb a = 1 := by
+theorem to_Ioc_div_apply_left (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb a = 1 :=
+  by
   refine' (eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb _).symm
   simp [hb]
 #align to_Ioc_div_apply_left to_Ioc_div_apply_left
 
 @[simp]
-theorem to_Ico_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb a = a := by
+theorem to_Ico_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb a = a :=
+  by
   rw [to_Ico_mod_eq_iff hb]
   refine' ⟨le_refl _, lt_add_of_pos_right _ hb, 0, _⟩
   simp
 #align to_Ico_mod_apply_left to_Ico_mod_apply_left
 
 @[simp]
-theorem to_Ioc_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIocMod a hb a = a + b := by
+theorem to_Ioc_mod_apply_left (a : α) {b : α} (hb : 0 < b) : toIocMod a hb a = a + b :=
+  by
   rw [to_Ioc_mod_eq_iff hb]
   refine' ⟨lt_add_of_pos_right _ hb, le_refl _, 1, _⟩
   simp
 #align to_Ioc_mod_apply_left to_Ioc_mod_apply_left
 
-theorem to_Ico_div_apply_right (a : α) {b : α} (hb : 0 < b) : toIcoDiv a hb (a + b) = -1 := by
+theorem to_Ico_div_apply_right (a : α) {b : α} (hb : 0 < b) : toIcoDiv a hb (a + b) = -1 :=
+  by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
   simp [hb]
 #align to_Ico_div_apply_right to_Ico_div_apply_right
 
-theorem to_Ioc_div_apply_right (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb (a + b) = 0 := by
+theorem to_Ioc_div_apply_right (a : α) {b : α} (hb : 0 < b) : toIocDiv a hb (a + b) = 0 :=
+  by
   refine' (eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb _).symm
   simp [hb]
 #align to_Ioc_div_apply_right to_Ioc_div_apply_right
 
-theorem to_Ico_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb (a + b) = a := by
+theorem to_Ico_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIcoMod a hb (a + b) = a :=
+  by
   rw [to_Ico_mod_eq_iff hb]
   refine' ⟨le_refl _, lt_add_of_pos_right _ hb, -1, _⟩
   simp
 #align to_Ico_mod_apply_right to_Ico_mod_apply_right
 
-theorem to_Ioc_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIocMod a hb (a + b) = a + b := by
+theorem to_Ioc_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIocMod a hb (a + b) = a + b :=
+  by
   rw [to_Ioc_mod_eq_iff hb]
   refine' ⟨lt_add_of_pos_right _ hb, le_refl _, 0, _⟩
   simp
@@ -249,7 +260,8 @@ theorem to_Ioc_mod_apply_right (a : α) {b : α} (hb : 0 < b) : toIocMod a hb (a
 
 @[simp]
 theorem to_Ico_div_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIcoDiv a hb (x + m • b) = toIcoDiv a hb x - m := by
+    toIcoDiv a hb (x + m • b) = toIcoDiv a hb x - m :=
+  by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
   convert add_to_Ico_div_zsmul_mem_Ico a hb x using 1
   simp [sub_smul]
@@ -257,7 +269,8 @@ theorem to_Ico_div_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
 
 @[simp]
 theorem to_Ioc_div_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIocDiv a hb (x + m • b) = toIocDiv a hb x - m := by
+    toIocDiv a hb (x + m • b) = toIocDiv a hb x - m :=
+  by
   refine' (eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb _).symm
   convert add_to_Ioc_div_zsmul_mem_Ioc a hb x using 1
   simp [sub_smul]
@@ -287,14 +300,16 @@ theorem to_Ioc_div_sub_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
 
 @[simp]
 theorem to_Ico_div_add_right (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoDiv a hb (x + b) = toIcoDiv a hb x - 1 := by
+    toIcoDiv a hb (x + b) = toIcoDiv a hb x - 1 :=
+  by
   convert to_Ico_div_add_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ico_div_add_right to_Ico_div_add_right
 
 @[simp]
 theorem to_Ioc_div_add_right (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocDiv a hb (x + b) = toIocDiv a hb x - 1 := by
+    toIocDiv a hb (x + b) = toIocDiv a hb x - 1 :=
+  by
   convert to_Ioc_div_add_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ioc_div_add_right to_Ioc_div_add_right
@@ -311,20 +326,23 @@ theorem to_Ioc_div_add_left (a : α) {b : α} (hb : 0 < b) (x : α) :
 
 @[simp]
 theorem to_Ico_div_sub (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoDiv a hb (x - b) = toIcoDiv a hb x + 1 := by
+    toIcoDiv a hb (x - b) = toIcoDiv a hb x + 1 :=
+  by
   convert to_Ico_div_sub_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ico_div_sub to_Ico_div_sub
 
 @[simp]
 theorem to_Ioc_div_sub (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocDiv a hb (x - b) = toIocDiv a hb x + 1 := by
+    toIocDiv a hb (x - b) = toIocDiv a hb x + 1 :=
+  by
   convert to_Ioc_div_sub_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ioc_div_sub to_Ioc_div_sub
 
 theorem to_Ico_div_sub' (a : α) {b : α} (hb : 0 < b) (x y : α) :
-    toIcoDiv a hb (x - y) = toIcoDiv (a + y) hb x := by
+    toIcoDiv a hb (x - y) = toIcoDiv (a + y) hb x :=
+  by
   rw [eq_comm]
   apply eq_to_Ico_div_of_add_zsmul_mem_Ico
   rw [sub_add_eq_add_sub]
@@ -334,7 +352,8 @@ theorem to_Ico_div_sub' (a : α) {b : α} (hb : 0 < b) (x y : α) :
 #align to_Ico_div_sub' to_Ico_div_sub'
 
 theorem to_Ioc_div_sub' (a : α) {b : α} (hb : 0 < b) (x y : α) :
-    toIocDiv a hb (x - y) = toIocDiv (a + y) hb x := by
+    toIocDiv a hb (x - y) = toIocDiv (a + y) hb x :=
+  by
   rw [eq_comm]
   apply eq_to_Ioc_div_of_add_zsmul_mem_Ioc
   rw [sub_add_eq_add_sub]
@@ -354,7 +373,8 @@ theorem to_Ioc_div_add_right' (a : α) {b : α} (hb : 0 < b) (x y : α) :
 #align to_Ioc_div_add_right' to_Ioc_div_add_right'
 
 theorem to_Ico_div_neg (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoDiv a hb (-x) = 1 - toIocDiv (-a) hb x := by
+    toIcoDiv a hb (-x) = 1 - toIocDiv (-a) hb x :=
+  by
   suffices toIcoDiv a hb (-x) = -toIocDiv (-(a + b)) hb x by
     rwa [neg_add, ← sub_eq_add_neg, ← to_Ioc_div_add_right', to_Ioc_div_add_right, neg_sub] at this
   rw [eq_neg_iff_eq_neg, eq_comm]
@@ -373,14 +393,16 @@ theorem to_Ioc_div_neg (a : α) {b : α} (hb : 0 < b) (x : α) :
 
 @[simp]
 theorem to_Ico_mod_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIcoMod a hb (x + m • b) = toIcoMod a hb x := by
+    toIcoMod a hb (x + m • b) = toIcoMod a hb x :=
+  by
   rw [toIcoMod, to_Ico_div_add_zsmul, toIcoMod, sub_smul]
   abel
 #align to_Ico_mod_add_zsmul to_Ico_mod_add_zsmul
 
 @[simp]
 theorem to_Ioc_mod_add_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
-    toIocMod a hb (x + m • b) = toIocMod a hb x := by
+    toIocMod a hb (x + m • b) = toIocMod a hb x :=
+  by
   rw [toIocMod, to_Ioc_div_add_zsmul, toIocMod, sub_smul]
   abel
 #align to_Ioc_mod_add_zsmul to_Ioc_mod_add_zsmul
@@ -409,14 +431,16 @@ theorem to_Ioc_mod_sub_zsmul (a : α) {b : α} (hb : 0 < b) (x : α) (m : ℤ) :
 
 @[simp]
 theorem to_Ico_mod_add_right (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a hb (x + b) = toIcoMod a hb x := by
+    toIcoMod a hb (x + b) = toIcoMod a hb x :=
+  by
   convert to_Ico_mod_add_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ico_mod_add_right to_Ico_mod_add_right
 
 @[simp]
 theorem to_Ioc_mod_add_right (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a hb (x + b) = toIocMod a hb x := by
+    toIocMod a hb (x + b) = toIocMod a hb x :=
+  by
   convert to_Ioc_mod_add_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ioc_mod_add_right to_Ioc_mod_add_right
@@ -433,14 +457,16 @@ theorem to_Ioc_mod_add_left (a : α) {b : α} (hb : 0 < b) (x : α) :
 
 @[simp]
 theorem to_Ico_mod_sub (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a hb (x - b) = toIcoMod a hb x := by
+    toIcoMod a hb (x - b) = toIcoMod a hb x :=
+  by
   convert to_Ico_mod_sub_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ico_mod_sub to_Ico_mod_sub
 
 @[simp]
 theorem to_Ioc_mod_sub (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a hb (x - b) = toIocMod a hb x := by
+    toIocMod a hb (x - b) = toIocMod a hb x :=
+  by
   convert to_Ioc_mod_sub_zsmul a hb x 1
   exact (one_zsmul _).symm
 #align to_Ioc_mod_sub to_Ioc_mod_sub
@@ -466,19 +492,22 @@ theorem to_Ioc_mod_add_right' (a : α) {b : α} (hb : 0 < b) (x y : α) :
 #align to_Ioc_mod_add_right' to_Ioc_mod_add_right'
 
 theorem to_Ico_mod_neg (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a hb (-x) = b - toIocMod (-a) hb x := by
+    toIcoMod a hb (-x) = b - toIocMod (-a) hb x :=
+  by
   simp_rw [toIcoMod, toIocMod, to_Ico_div_neg, sub_smul, one_smul]
   abel
 #align to_Ico_mod_neg to_Ico_mod_neg
 
 theorem to_Ioc_mod_neg (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a hb (-x) = b - toIcoMod (-a) hb x := by
+    toIocMod a hb (-x) = b - toIcoMod (-a) hb x :=
+  by
   simp_rw [toIocMod, toIcoMod, to_Ioc_div_neg, sub_smul, one_smul]
   abel
 #align to_Ioc_mod_neg to_Ioc_mod_neg
 
 theorem to_Ico_mod_eq_to_Ico_mod (a : α) {b x y : α} (hb : 0 < b) :
-    toIcoMod a hb x = toIcoMod a hb y ↔ ∃ z : ℤ, y - x = z • b := by
+    toIcoMod a hb x = toIcoMod a hb y ↔ ∃ z : ℤ, y - x = z • b :=
+  by
   refine' ⟨fun h => ⟨toIcoDiv a hb x - toIcoDiv a hb y, _⟩, fun h => _⟩
   · conv_lhs =>
       rw [← to_Ico_mod_sub_to_Ico_div_zsmul a hb x, ← to_Ico_mod_sub_to_Ico_div_zsmul a hb y]
@@ -490,7 +519,8 @@ theorem to_Ico_mod_eq_to_Ico_mod (a : α) {b x y : α} (hb : 0 < b) :
 #align to_Ico_mod_eq_to_Ico_mod to_Ico_mod_eq_to_Ico_mod
 
 theorem to_Ioc_mod_eq_to_Ioc_mod (a : α) {b x y : α} (hb : 0 < b) :
-    toIocMod a hb x = toIocMod a hb y ↔ ∃ z : ℤ, y - x = z • b := by
+    toIocMod a hb x = toIocMod a hb y ↔ ∃ z : ℤ, y - x = z • b :=
+  by
   refine' ⟨fun h => ⟨toIocDiv a hb x - toIocDiv a hb y, _⟩, fun h => _⟩
   · conv_lhs =>
       rw [← to_Ioc_mod_sub_to_Ioc_div_zsmul a hb x, ← to_Ioc_mod_sub_to_Ioc_div_zsmul a hb y]
@@ -501,13 +531,15 @@ theorem to_Ioc_mod_eq_to_Ioc_mod (a : α) {b x y : α} (hb : 0 < b) :
     rw [hz, to_Ioc_mod_zsmul_add]
 #align to_Ioc_mod_eq_to_Ioc_mod to_Ioc_mod_eq_to_Ioc_mod
 
-theorem to_Ico_mod_eq_self {a b x : α} (hb : 0 < b) : toIcoMod a hb x = x ↔ a ≤ x ∧ x < a + b := by
+theorem to_Ico_mod_eq_self {a b x : α} (hb : 0 < b) : toIcoMod a hb x = x ↔ a ≤ x ∧ x < a + b :=
+  by
   rw [to_Ico_mod_eq_iff]
   refine' ⟨fun h => ⟨h.1, h.2.1⟩, fun h => ⟨h.1, h.2, 0, _⟩⟩
   simp
 #align to_Ico_mod_eq_self to_Ico_mod_eq_self
 
-theorem to_Ioc_mod_eq_self {a b x : α} (hb : 0 < b) : toIocMod a hb x = x ↔ a < x ∧ x ≤ a + b := by
+theorem to_Ioc_mod_eq_self {a b x : α} (hb : 0 < b) : toIocMod a hb x = x ↔ a < x ∧ x ≤ a + b :=
+  by
   rw [to_Ioc_mod_eq_iff]
   refine' ⟨fun h => ⟨h.1, h.2.1⟩, fun h => ⟨h.1, h.2, 0, _⟩⟩
   simp
@@ -515,28 +547,32 @@ theorem to_Ioc_mod_eq_self {a b x : α} (hb : 0 < b) : toIocMod a hb x = x ↔ a
 
 @[simp]
 theorem to_Ico_mod_to_Ico_mod (a₁ a₂ : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a₁ hb (toIcoMod a₂ hb x) = toIcoMod a₁ hb x := by
+    toIcoMod a₁ hb (toIcoMod a₂ hb x) = toIcoMod a₁ hb x :=
+  by
   rw [to_Ico_mod_eq_to_Ico_mod]
   exact ⟨-toIcoDiv a₂ hb x, self_sub_to_Ico_mod a₂ hb x⟩
 #align to_Ico_mod_to_Ico_mod to_Ico_mod_to_Ico_mod
 
 @[simp]
 theorem to_Ico_mod_to_Ioc_mod (a₁ a₂ : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a₁ hb (toIocMod a₂ hb x) = toIcoMod a₁ hb x := by
+    toIcoMod a₁ hb (toIocMod a₂ hb x) = toIcoMod a₁ hb x :=
+  by
   rw [to_Ico_mod_eq_to_Ico_mod]
   exact ⟨-toIocDiv a₂ hb x, self_sub_to_Ioc_mod a₂ hb x⟩
 #align to_Ico_mod_to_Ioc_mod to_Ico_mod_to_Ioc_mod
 
 @[simp]
 theorem to_Ioc_mod_to_Ioc_mod (a₁ a₂ : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a₁ hb (toIocMod a₂ hb x) = toIocMod a₁ hb x := by
+    toIocMod a₁ hb (toIocMod a₂ hb x) = toIocMod a₁ hb x :=
+  by
   rw [to_Ioc_mod_eq_to_Ioc_mod]
   exact ⟨-toIocDiv a₂ hb x, self_sub_to_Ioc_mod a₂ hb x⟩
 #align to_Ioc_mod_to_Ioc_mod to_Ioc_mod_to_Ioc_mod
 
 @[simp]
 theorem to_Ioc_mod_to_Ico_mod (a₁ a₂ : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a₁ hb (toIcoMod a₂ hb x) = toIocMod a₁ hb x := by
+    toIocMod a₁ hb (toIcoMod a₂ hb x) = toIocMod a₁ hb x :=
+  by
   rw [to_Ioc_mod_eq_to_Ioc_mod]
   exact ⟨-toIcoDiv a₂ hb x, self_sub_to_Ico_mod a₂ hb x⟩
 #align to_Ioc_mod_to_Ico_mod to_Ioc_mod_to_Ico_mod
@@ -552,15 +588,13 @@ theorem to_Ioc_mod_periodic (a : α) {b : α} (hb : 0 < b) : Function.Periodic (
 /-- `to_Ico_mod` as an equiv from the quotient. -/
 @[simps symmApply]
 def QuotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
-    α ⧸ AddSubgroup.zmultiples b ≃
-      Set.Ico a
-        (a +
-          b) where 
+    α ⧸ AddSubgroup.zmultiples b ≃ Set.Ico a (a + b)
+    where
   toFun x :=
     ⟨(to_Ico_mod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| to_Ico_mod_mem_Ico a hb⟩
   invFun := coe
   right_inv x := Subtype.ext <| (to_Ico_mod_eq_self hb).mpr x.Prop
-  left_inv x := by 
+  left_inv x := by
     induction x using QuotientAddGroup.induction_on'
     dsimp
     rw [QuotientAddGroup.eq_iff_sub_mem, to_Ico_mod_sub_self]
@@ -576,15 +610,13 @@ theorem QuotientAddGroup.equiv_Ico_mod_coe (a : α) {b : α} (hb : 0 < b) (x : �
 /-- `to_Ioc_mod` as an equiv  from the quotient. -/
 @[simps symmApply]
 def QuotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
-    α ⧸ AddSubgroup.zmultiples b ≃
-      Set.Ioc a
-        (a +
-          b) where 
+    α ⧸ AddSubgroup.zmultiples b ≃ Set.Ioc a (a + b)
+    where
   toFun x :=
     ⟨(to_Ioc_mod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| to_Ioc_mod_mem_Ioc a hb⟩
   invFun := coe
   right_inv x := Subtype.ext <| (to_Ioc_mod_eq_self hb).mpr x.Prop
-  left_inv x := by 
+  left_inv x := by
     induction x using QuotientAddGroup.induction_on'
     dsimp
     rw [QuotientAddGroup.eq_iff_sub_mem, to_Ioc_mod_sub_self]
@@ -604,7 +636,8 @@ section LinearOrderedField
 variable {α : Type _} [LinearOrderedField α] [FloorRing α]
 
 theorem to_Ico_div_eq_neg_floor (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoDiv a hb x = -⌊(x - a) / b⌋ := by
+    toIcoDiv a hb x = -⌊(x - a) / b⌋ :=
+  by
   refine' (eq_to_Ico_div_of_add_zsmul_mem_Ico hb _).symm
   rw [Set.mem_Ico, zsmul_eq_mul, Int.cast_neg, neg_mul, ← sub_nonneg, add_comm, add_sub_assoc,
     add_comm, ← sub_eq_add_neg]
@@ -614,7 +647,8 @@ theorem to_Ico_div_eq_neg_floor (a : α) {b : α} (hb : 0 < b) (x : α) :
 #align to_Ico_div_eq_neg_floor to_Ico_div_eq_neg_floor
 
 theorem to_Ioc_div_eq_floor (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocDiv a hb x = ⌊(a + b - x) / b⌋ := by
+    toIocDiv a hb x = ⌊(a + b - x) / b⌋ :=
+  by
   refine' (eq_to_Ioc_div_of_add_zsmul_mem_Ioc hb _).symm
   rw [Set.mem_Ioc, zsmul_eq_mul, ← sub_nonneg, sub_add_eq_sub_sub]
   refine' ⟨_, Int.sub_floor_div_mul_nonneg _ hb⟩
@@ -628,7 +662,8 @@ theorem to_Ico_div_zero_one (x : α) : toIcoDiv (0 : α) zero_lt_one x = -⌊x�
 #align to_Ico_div_zero_one to_Ico_div_zero_one
 
 theorem to_Ico_mod_eq_add_fract_mul (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIcoMod a hb x = a + Int.fract ((x - a) / b) * b := by
+    toIcoMod a hb x = a + Int.fract ((x - a) / b) * b :=
+  by
   rw [toIcoMod, to_Ico_div_eq_neg_floor, Int.fract]
   field_simp [hb.ne.symm]
   ring
@@ -639,7 +674,8 @@ theorem to_Ico_mod_eq_fract_mul {b : α} (hb : 0 < b) (x : α) :
 #align to_Ico_mod_eq_fract_mul to_Ico_mod_eq_fract_mul
 
 theorem to_Ioc_mod_eq_sub_fract_mul (a : α) {b : α} (hb : 0 < b) (x : α) :
-    toIocMod a hb x = a + b - Int.fract ((a + b - x) / b) * b := by
+    toIocMod a hb x = a + b - Int.fract ((a + b - x) / b) * b :=
+  by
   rw [toIocMod, to_Ioc_div_eq_floor, Int.fract]
   field_simp [hb.ne.symm]
   ring

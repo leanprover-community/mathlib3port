@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.real.cau_seq_completion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ instance : Ring Cauchy :=
 
 /-- `cau_seq.completion.of_rat` as a `ring_hom`  -/
 @[simps]
-def ofRatRingHom : β →+* Cauchy where 
+def ofRatRingHom : β →+* Cauchy where
   toFun := of_rat
   map_zero' := of_rat_zero
   map_one' := of_rat_one
@@ -219,7 +219,8 @@ theorem of_rat_rat_cast (q : ℚ) : ofRat (↑q : β) = (q : Cauchy) :=
 
 noncomputable instance : Inv Cauchy :=
   ⟨fun x =>
-    (Quotient.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg => by
+    (Quotient.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg =>
+      by
       have := lim_zero_congr fg
       by_cases hf : lim_zero f
       · simp [hf, this.1 hf, Setoid.refl]
@@ -251,13 +252,13 @@ theorem zero_ne_one : (0 : Cauchy) ≠ 1 := fun h => cau_seq_zero_ne_one <| mk_e
 #align cau_seq.completion.zero_ne_one CauSeq.Completion.zero_ne_one
 
 protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
-  (Quotient.induction_on x) fun f hf => by 
+  (Quotient.induction_on x) fun f hf => by
     simp at hf; simp [hf]
     exact Quotient.sound (CauSeq.inv_mul_cancel hf)
 #align cau_seq.completion.inv_mul_cancel CauSeq.Completion.inv_mul_cancel
 
 protected theorem mul_inv_cancel {x : Cauchy} : x ≠ 0 → x * x⁻¹ = 1 :=
-  (Quotient.induction_on x) fun f hf => by 
+  (Quotient.induction_on x) fun f hf => by
     simp at hf; simp [hf]
     exact Quotient.sound (CauSeq.mul_inv_cancel hf)
 #align cau_seq.completion.mul_inv_cancel CauSeq.Completion.mul_inv_cancel
@@ -268,7 +269,7 @@ theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
 
 /-- The Cauchy completion forms a division ring. -/
 noncomputable instance : DivisionRing Cauchy :=
-  { CauchyCat.ring with 
+  { CauchyCat.ring with
     inv := Inv.inv
     mul_inv_cancel := fun x => CauSeq.Completion.mul_inv_cancel
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩
@@ -286,8 +287,8 @@ theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := 
 The representative chosen is the one passed in the VM to `quot.mk`, so two cauchy sequences
 converging to the same number may be printed differently.
 -/
-unsafe instance [Repr β] :
-    Repr Cauchy where repr r :=
+unsafe instance [Repr β] : Repr Cauchy
+    where repr r :=
     let N := 10
     let seq := r.unquot
     "(sorry /- " ++ (", ".intercalate <| (List.range N).map <| repr ∘ seq) ++ ", ... -/)"
@@ -372,7 +373,8 @@ theorem lim_add (f g : CauSeq β abv) : lim f + lim g = lim (f + g) :=
 
 theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
   eq_lim_of_const_equiv <|
-    show LimZero (const abv (lim f * lim g) - f * g) by
+    show LimZero (const abv (lim f * lim g) - f * g)
+      by
       have h :
         const abv (lim f * lim g) - f * g =
           (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
@@ -398,7 +400,8 @@ theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ LimZero f :=
   ⟨fun h => by
     have hf := equiv_lim f <;> rw [h] at hf <;>
       exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
-    fun h => by
+    fun h =>
+    by
     have h₁ : f = f - const abv 0 := ext fun n => by simp [sub_apply, const_apply]
     rw [h₁] at h <;> exact lim_eq_of_equiv_const h⟩
 #align cau_seq.lim_eq_zero_iff CauSeq.lim_eq_zero_iff

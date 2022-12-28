@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.holder
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ theorem holderOnWithEmpty (C r : ℝ≥0) (f : X → Y) : HolderOnWith C r f ∅
 #align holder_on_with_empty holderOnWithEmpty
 
 @[simp]
-theorem holderOnWithSingleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderOnWith C r f {x} := by
+theorem holderOnWithSingleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderOnWith C r f {x} :=
+  by
   rintro a (rfl : a = x) b (rfl : b = a)
   rw [edist_self]
   exact zero_le _
@@ -120,7 +121,8 @@ theorem edist_le_of_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy :
 
 theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0}
     {f : X → Y} (hf : HolderOnWith Cf rf f s) (hst : MapsTo f s t) :
-    HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s := by
+    HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s :=
+  by
   intro x hx y hy
   rw [Ennreal.coe_mul, mul_comm rg, Nnreal.coe_mul, Ennreal.rpow_mul, mul_assoc, ←
     Ennreal.coe_rpow_of_nonneg _ rg.coe_nonneg, ← Ennreal.mul_rpow_of_nonneg _ _ rg.coe_nonneg]
@@ -135,7 +137,8 @@ theorem compHolderWith {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderO
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem uniform_continuous_on (hf : HolderOnWith C r f s) (h0 : 0 < r) :
-    UniformContinuousOn f s := by
+    UniformContinuousOn f s :=
+  by
   refine' Emetric.uniform_continuous_on_iff.2 fun ε εpos => _
   have : tendsto (fun d : ℝ≥0∞ => (C : ℝ≥0∞) * d ^ (r : ℝ)) (𝓝 0) (𝓝 0) :=
     Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.coe_ne_top h0
@@ -235,7 +238,8 @@ variable [PseudoMetricSpace X] [PseudoMetricSpace Y] {C r : ℝ≥0} {f : X → 
 namespace HolderWith
 
 theorem nndist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ≥0} (hd : nndist x y ≤ d) :
-    nndist (f x) (f y) ≤ C * d ^ (r : ℝ) := by
+    nndist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
+  by
   rw [← Ennreal.coe_le_coe, ← edist_nndist, Ennreal.coe_mul, ←
     Ennreal.coe_rpow_of_nonneg _ r.coe_nonneg]
   apply hf.edist_le_of_le
@@ -248,7 +252,8 @@ theorem nndist_le (hf : HolderWith C r f) (x y : X) :
 #align holder_with.nndist_le HolderWith.nndist_le
 
 theorem dist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ} (hd : dist x y ≤ d) :
-    dist (f x) (f y) ≤ C * d ^ (r : ℝ) := by
+    dist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
+  by
   lift d to ℝ≥0 using dist_nonneg.trans hd
   rw [dist_nndist] at hd⊢
   norm_cast  at hd⊢

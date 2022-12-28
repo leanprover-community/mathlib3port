@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.BoundedLattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,8 +55,8 @@ theorem coe_of (α : Type _) [Lattice α] [BoundedOrder α] : ↥(of α) = α :=
 instance : Inhabited BoundedLatticeCat :=
   ⟨of PUnit⟩
 
-instance : LargeCategory.{u}
-      BoundedLatticeCat where 
+instance : LargeCategory.{u} BoundedLatticeCat
+    where
   Hom X Y := BoundedLatticeHom X Y
   id X := BoundedLatticeHom.id X
   comp X Y Z f g := g.comp f
@@ -64,36 +64,31 @@ instance : LargeCategory.{u}
   comp_id' X Y := BoundedLatticeHom.id_comp
   assoc' W X Y Z _ _ _ := BoundedLatticeHom.comp_assoc _ _ _
 
-instance :
-    ConcreteCategory
-      BoundedLatticeCat where 
+instance : ConcreteCategory BoundedLatticeCat
+    where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
 
-instance hasForgetToBoundedOrder :
-    HasForget₂ BoundedLatticeCat
-      BoundedOrderCat where forget₂ :=
+instance hasForgetToBoundedOrder : HasForget₂ BoundedLatticeCat BoundedOrderCat
+    where forget₂ :=
     { obj := fun X => BoundedOrderCat.of X
       map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
 #align BoundedLattice.has_forget_to_BoundedOrder BoundedLatticeCat.hasForgetToBoundedOrder
 
-instance hasForgetToLattice :
-    HasForget₂ BoundedLatticeCat
-      LatticeCat where forget₂ :=
+instance hasForgetToLattice : HasForget₂ BoundedLatticeCat LatticeCat
+    where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toLatticeHom }
 #align BoundedLattice.has_forget_to_Lattice BoundedLatticeCat.hasForgetToLattice
 
-instance hasForgetToSemilatticeSup :
-    HasForget₂ BoundedLatticeCat
-      SemilatticeSupCat where forget₂ :=
+instance hasForgetToSemilatticeSup : HasForget₂ BoundedLatticeCat SemilatticeSupCat
+    where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toSupBotHom }
 #align BoundedLattice.has_forget_to_SemilatticeSup BoundedLatticeCat.hasForgetToSemilatticeSup
 
-instance hasForgetToSemilatticeInf :
-    HasForget₂ BoundedLatticeCat
-      SemilatticeInfCat where forget₂ :=
+instance hasForgetToSemilatticeInf : HasForget₂ BoundedLatticeCat SemilatticeInfCat
+    where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toInfTopHom }
 #align BoundedLattice.has_forget_to_SemilatticeInf BoundedLatticeCat.hasForgetToSemilatticeInf
@@ -146,22 +141,22 @@ theorem forget_SemilatticeInf_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
 /-- Constructs an equivalence between bounded lattices from an order isomorphism
 between them. -/
 @[simps]
-def Iso.mk {α β : BoundedLatticeCat.{u}} (e : α ≃o β) :
-    α ≅ β where 
+def Iso.mk {α β : BoundedLatticeCat.{u}} (e : α ≃o β) : α ≅ β
+    where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
 #align BoundedLattice.iso.mk BoundedLatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : BoundedLatticeCat ⥤
-      BoundedLatticeCat where 
+def dual : BoundedLatticeCat ⥤ BoundedLatticeCat
+    where
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
 #align BoundedLattice.dual BoundedLatticeCat.dual

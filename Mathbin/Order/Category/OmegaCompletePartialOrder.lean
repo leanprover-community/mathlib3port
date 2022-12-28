@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.category.omega_complete_partial_order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ namespace ωCPO
 
 open OmegaCompletePartialOrder
 
-instance : BundledHom
-      @ContinuousHom where 
+instance : BundledHom @ContinuousHom
+    where
   toFun := @ContinuousHom.Simps.apply
   id := @ContinuousHom.id
   comp := @ContinuousHom.comp
@@ -82,19 +82,17 @@ def product {J : Type v} (f : J → ωCPO.{v}) : Fan f :=
 #align ωCPO.has_products.product ωCPO.HasProducts.product
 
 /-- The pi-type is a limit cone for the product. -/
-def isProduct (J : Type v) (f : J → ωCPO) :
-    IsLimit
-      (product
-        f) where 
+def isProduct (J : Type v) (f : J → ωCPO) : IsLimit (product f)
+    where
   lift s :=
     ⟨⟨fun t j => s.π.app ⟨j⟩ t, fun x y h j => (s.π.app ⟨j⟩).Monotone h⟩, fun x =>
       funext fun j => (s.π.app ⟨j⟩).Continuous x⟩
-  uniq' s m w := by 
+  uniq' s m w := by
     ext (t j)
     change m t j = s.π.app ⟨j⟩ t
     rw [← w ⟨j⟩]
     rfl
-  fac' s j := by 
+  fac' s j := by
     cases j
     tidy
 #align ωCPO.has_products.is_product ωCPO.HasProducts.isProduct
@@ -107,7 +105,8 @@ end HasProducts
 instance omegaCompletePartialOrderEqualizer {α β : Type _} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f g : α →𝒄 β) :
     OmegaCompletePartialOrder { a : α // f a = g a } :=
-  (OmegaCompletePartialOrder.subtype _) fun c hc => by
+  (OmegaCompletePartialOrder.subtype _) fun c hc =>
+    by
     rw [f.continuous, g.continuous]
     congr 1
     ext
@@ -133,9 +132,10 @@ def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
   (Fork.IsLimit.mk' _) fun s =>
     ⟨{  toFun := fun x => ⟨s.ι x, by apply continuous_hom.congr_fun s.condition⟩
         monotone' := fun x y h => s.ι.Monotone h
-        cont := fun x => Subtype.ext (s.ι.Continuous x) }, by
+        cont := fun x => Subtype.ext (s.ι.Continuous x) },
+      by
       ext
-      rfl, fun m hm => by 
+      rfl, fun m hm => by
       ext
       apply continuous_hom.congr_fun hm⟩
 #align ωCPO.has_equalizers.is_equalizer ωCPO.HasEqualizers.isEqualizer

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.internal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,13 +57,15 @@ instance AddCommGroup.ofSubgroupOnRing [Ring R] [SetLike σ R] [AddSubgroupClass
 #align add_comm_group.of_subgroup_on_ring AddCommGroup.ofSubgroupOnRing
 
 theorem SetLike.algebra_map_mem_graded [Zero ι] [CommSemiring S] [Semiring R] [Algebra S R]
-    (A : ι → Submodule S R) [SetLike.HasGradedOne A] (s : S) : algebraMap S R s ∈ A 0 := by
+    (A : ι → Submodule S R) [SetLike.HasGradedOne A] (s : S) : algebraMap S R s ∈ A 0 :=
+  by
   rw [Algebra.algebra_map_eq_smul_one]
   exact (A 0).smul_mem s <| SetLike.one_mem_graded _
 #align set_like.algebra_map_mem_graded SetLike.algebra_map_mem_graded
 
 theorem SetLike.nat_cast_mem_graded [Zero ι] [AddMonoidWithOne R] [SetLike σ R]
-    [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.HasGradedOne A] (n : ℕ) : (n : R) ∈ A 0 := by
+    [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.HasGradedOne A] (n : ℕ) : (n : R) ∈ A 0 :=
+  by
   induction n
   · rw [Nat.cast_zero]
     exact zero_mem (A 0)
@@ -72,7 +74,8 @@ theorem SetLike.nat_cast_mem_graded [Zero ι] [AddMonoidWithOne R] [SetLike σ R
 #align set_like.nat_cast_mem_graded SetLike.nat_cast_mem_graded
 
 theorem SetLike.int_cast_mem_graded [Zero ι] [AddGroupWithOne R] [SetLike σ R]
-    [AddSubgroupClass σ R] (A : ι → σ) [SetLike.HasGradedOne A] (z : ℤ) : (z : R) ∈ A 0 := by
+    [AddSubgroupClass σ R] (A : ι → σ) [SetLike.HasGradedOne A] (z : ℤ) : (z : R) ∈ A 0 :=
+  by
   induction z
   · rw [Int.cast_of_nat]
     exact SetLike.nat_cast_mem_graded _ _
@@ -93,7 +96,7 @@ namespace SetLike
 instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetLike σ R]
     [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.HasGradedMul A] :
     DirectSum.GnonUnitalNonAssocSemiring fun i => A i :=
-  { SetLike.ghasMul A with 
+  { SetLike.ghasMul A with
     mul_zero := fun i j _ => Subtype.ext (mul_zero _)
     zero_mul := fun i j _ => Subtype.ext (zero_mul _)
     mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
@@ -103,7 +106,7 @@ instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetL
 /-- Build a `gsemiring` instance for a collection of additive submonoids. -/
 instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.Gsemiring fun i => A i :=
-  { SetLike.gmonoid A with 
+  { SetLike.gmonoid A with
     mul_zero := fun i j _ => Subtype.ext (mul_zero _)
     zero_mul := fun i j _ => Subtype.ext (zero_mul _)
     mul_add := fun i j _ _ _ => Subtype.ext (mul_add _ _ _)
@@ -122,7 +125,9 @@ instance gcommSemiring [AddCommMonoid ι] [CommSemiring R] [SetLike σ R] [AddSu
 /-- Build a `gring` instance for a collection of additive subgroups. -/
 instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ)
     [SetLike.GradedMonoid A] : DirectSum.Gring fun i => A i :=
-  { SetLike.gsemiring A with
+  {
+    SetLike.gsemiring
+      A with
     intCast := fun z => ⟨z, SetLike.int_cast_mem_graded _ _⟩
     int_cast_of_nat := fun n => Subtype.ext <| Int.cast_of_nat _
     int_cast_neg_succ_of_nat := fun n => Subtype.ext <| Int.cast_negSucc n }
@@ -160,14 +165,15 @@ theorem coe_mul_apply [AddMonoid ι] [SetLike.GradedMonoid A]
     ((r * r') n : R) =
       ∑ ij in (r.support ×ˢ r'.support).filter fun ij : ι × ι => ij.1 + ij.2 = n,
         r ij.1 * r' ij.2 :=
-  by 
+  by
   rw [mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
   simp_rw [coe_of_apply, ← Finset.sum_filter, SetLike.coe_ghas_mul]
 #align direct_sum.coe_mul_apply DirectSum.coe_mul_apply
 
 theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
     [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (n : ι) :
-    ((r * r') n : R) = r.Sum fun i ri => r'.Sum fun j rj => if i + j = n then ri * rj else 0 := by
+    ((r * r') n : R) = r.Sum fun i ri => r'.Sum fun j rj => if i + j = n then ri * rj else 0 :=
+  by
   simp only [mul_eq_dfinsupp_sum, Dfinsupp.sum_apply]
   iterate 2 rw [Dfinsupp.sum, AddSubmonoidClass.coe_finset_sum]; congr ; ext
   dsimp only; split_ifs
@@ -181,7 +187,7 @@ theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
 theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i)
     (r' : ⨁ i, A i) {j n : ι} (H : ∀ x : ι, i + x = n ↔ x = j) :
     ((of _ i r * r') n : R) = r * r' j := by
-  classical 
+  classical
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (Dfinsupp.sum_single_index _).trans
     swap
@@ -195,7 +201,7 @@ theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r
 
 theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i, A i) {i : ι}
     (r' : A i) {j n : ι} (H : ∀ x : ι, x + i = n ↔ x = j) : ((r * of _ i r') n : R) = r j * r' := by
-  classical 
+  classical
     rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
     apply (Dfinsupp.sum_single_index _).trans
     swap
@@ -227,7 +233,7 @@ variable [CanonicallyOrderedAddMonoid ι] [SetLike.GradedMonoid A]
 
 theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h : ¬i ≤ n) :
     ((of _ i r * r') n : R) = 0 := by
-  classical 
+  classical
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (Dfinsupp.sum_single_index _).trans
     swap
@@ -239,7 +245,7 @@ theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι)
 
 theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) (h : ¬i ≤ n) :
     ((r * of _ i r') n : R) = 0 := by
-  classical 
+  classical
     rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
     apply (Dfinsupp.sum_single_index _).trans
     swap
@@ -264,13 +270,15 @@ theorem coe_of_mul_apply_of_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) (h 
 #align direct_sum.coe_of_mul_apply_of_le DirectSum.coe_of_mul_apply_of_le
 
 theorem coe_mul_of_apply (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) [Decidable (i ≤ n)] :
-    ((r * of _ i r') n : R) = if i ≤ n then r (n - i) * r' else 0 := by
+    ((r * of _ i r') n : R) = if i ≤ n then r (n - i) * r' else 0 :=
+  by
   split_ifs
   exacts[coe_mul_of_apply_of_le _ _ _ n h, coe_mul_of_apply_of_not_le _ _ _ n h]
 #align direct_sum.coe_mul_of_apply DirectSum.coe_mul_of_apply
 
 theorem coe_of_mul_apply {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι) [Decidable (i ≤ n)] :
-    ((of _ i r * r') n : R) = if i ≤ n then r * r' (n - i) else 0 := by
+    ((of _ i r * r') n : R) = if i ≤ n then r * r' (n - i) else 0 :=
+  by
   split_ifs
   exacts[coe_of_mul_apply_of_le _ _ _ n h, coe_of_mul_apply_of_not_le _ _ _ n h]
 #align direct_sum.coe_of_mul_apply DirectSum.coe_of_mul_apply
@@ -286,10 +294,8 @@ namespace Submodule
 
 /-- Build a `galgebra` instance for a collection of `submodule`s. -/
 instance galgebra [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R] (A : ι → Submodule S R)
-    [SetLike.GradedMonoid A] :
-    DirectSum.Galgebra S fun i =>
-      A
-        i where 
+    [SetLike.GradedMonoid A] : DirectSum.Galgebra S fun i => A i
+    where
   toFun :=
     ((Algebra.linearMap S R).codRestrict (A 0) <| SetLike.algebra_map_mem_graded A).toAddMonoidHom
   map_one := Subtype.ext <| (algebraMap S R).map_one
@@ -308,13 +314,12 @@ theorem setLike.coe_galgebra_to_fun [AddMonoid ι] [CommSemiring S] [Semiring R]
 
 /-- A direct sum of powers of a submodule of an algebra has a multiplicative structure. -/
 instance nat_power_graded_monoid [CommSemiring S] [Semiring R] [Algebra S R] (p : Submodule S R) :
-    SetLike.GradedMonoid fun i : ℕ =>
-      p ^
-        i where 
-  one_mem := by 
+    SetLike.GradedMonoid fun i : ℕ => p ^ i
+    where
+  one_mem := by
     rw [← one_le, pow_zero]
     exact le_rfl
-  mul_mem i j p q hp hq := by 
+  mul_mem i j p q hp hq := by
     rw [pow_add]
     exact Submodule.mul_mem_mul hp hq
 #align submodule.nat_power_graded_monoid Submodule.nat_power_graded_monoid

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.stone_separation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,8 @@ edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z
 `z ∈ [x, y]`. -/
 theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ segment 𝕜 x y)
     (hu : u ∈ segment 𝕜 x p) (hv : v ∈ segment 𝕜 y q) :
-    ¬Disjoint (segment 𝕜 u v) (convexHull 𝕜 {p, q, z}) := by
+    ¬Disjoint (segment 𝕜 u v) (convexHull 𝕜 {p, q, z}) :=
+  by
   rw [not_disjoint_iff]
   obtain ⟨az, bz, haz, hbz, habz, rfl⟩ := hz
   obtain rfl | haz' := haz.eq_or_lt
@@ -56,22 +57,24 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
   · exact div_nonneg (mul_nonneg hbz hau) hab.le
   · rw [← add_div, div_self hab.ne']
   rw [smul_add, smul_add, add_add_add_comm, add_comm, ← mul_smul, ← mul_smul]
-  classical 
+  classical
     let w : Fin 3 → 𝕜 := ![az * av * bu, bz * au * bv, au * av]
     let z : Fin 3 → E := ![p, q, az • x + bz • y]
-    have hw₀ : ∀ i, 0 ≤ w i := by 
+    have hw₀ : ∀ i, 0 ≤ w i := by
       rintro i
       fin_cases i
       · exact mul_nonneg (mul_nonneg haz hav) hbu
       · exact mul_nonneg (mul_nonneg hbz hau) hbv
       · exact mul_nonneg hau hav
-    have hw : (∑ i, w i) = az * av + bz * au := by
+    have hw : (∑ i, w i) = az * av + bz * au :=
+      by
       trans az * av * bu + (bz * au * bv + au * av)
       · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
       rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add,
         mul_assoc, ← mul_add, mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu,
         habv, one_mul, mul_one]
-    have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := by
+    have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) :=
+      by
       rintro i
       fin_cases i <;> simp [z]
     convert
@@ -90,7 +93,8 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
 
 /-- **Stone's Separation Theorem** -/
 theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hst : Disjoint s t) :
-    ∃ C : Set E, Convex 𝕜 C ∧ Convex 𝕜 (Cᶜ) ∧ s ⊆ C ∧ t ⊆ Cᶜ := by
+    ∃ C : Set E, Convex 𝕜 C ∧ Convex 𝕜 (Cᶜ) ∧ s ⊆ C ∧ t ⊆ Cᶜ :=
+  by
   let S : Set (Set E) := { C | Convex 𝕜 C ∧ Disjoint C t }
   obtain ⟨C, hC, hsC, hCmax⟩ :=
     zorn_subset_nonempty S

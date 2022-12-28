@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.vector.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,14 +104,15 @@ theorem to_list_map {β : Type _} (v : Vector α n) (f : α → β) : (v.map f).
 #align vector.to_list_map Vector.to_list_map
 
 @[simp]
-theorem head_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).head = f v.head := by
+theorem head_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).head = f v.head :=
+  by
   obtain ⟨a, v', h⟩ := Vector.exists_eq_cons v
   rw [h, map_cons, head_cons, head_cons]
 #align vector.head_map Vector.head_map
 
 @[simp]
 theorem tail_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).tail = v.tail.map f :=
-  by 
+  by
   obtain ⟨a, v', h⟩ := Vector.exists_eq_cons v
   rw [h, map_cons, tail_cons, tail_cons]
 #align vector.tail_map Vector.tail_map
@@ -137,7 +138,8 @@ theorem nth_of_fn {n} (f : Fin n → α) (i) : nth (ofFn f) i = f i := by
 #align vector.nth_of_fn Vector.nth_of_fn
 
 @[simp]
-theorem of_fn_nth (v : Vector α n) : ofFn (nth v) = v := by
+theorem of_fn_nth (v : Vector α n) : ofFn (nth v) = v :=
+  by
   rcases v with ⟨l, rfl⟩
   apply to_list_injective
   change nth ⟨l, Eq.refl _⟩ with fun i => nth ⟨l, rfl⟩ i
@@ -177,7 +179,7 @@ theorem singleton_tail (v : Vector α 1) : v.tail = Vector.nil := by
 
 @[simp]
 theorem tail_of_fn {n : ℕ} (f : Fin n.succ → α) : tail (ofFn f) = ofFn fun i => f i.succ :=
-  (of_fn_nth _).symm.trans <| by 
+  (of_fn_nth _).symm.trans <| by
     congr
     funext i
     cases i
@@ -192,7 +194,8 @@ theorem to_list_empty (v : Vector α 0) : v.toList = [] :=
 /-- The list that makes up a `vector` made up of a single element,
 retrieved via `to_list`, is equal to the list of that single element. -/
 @[simp]
-theorem to_list_singleton (v : Vector α 1) : v.toList = [v.head] := by
+theorem to_list_singleton (v : Vector α 1) : v.toList = [v.head] :=
+  by
   rw [← v.cons_head_tail]
   simp only [to_list_cons, to_list_nil, cons_head, eq_self_iff_true, and_self_iff, singleton_tail]
 #align vector.to_list_singleton Vector.to_list_singleton
@@ -213,7 +216,8 @@ theorem map_id {n : ℕ} (v : Vector α n) : Vector.map id v = v :=
   Vector.eq _ _ (by simp only [List.map_id, Vector.to_list_map])
 #align vector.map_id Vector.map_id
 
-theorem nodup_iff_nth_inj {v : Vector α n} : v.toList.Nodup ↔ Function.Injective v.nth := by
+theorem nodup_iff_nth_inj {v : Vector α n} : v.toList.Nodup ↔ Function.Injective v.nth :=
+  by
   cases' v with l hl
   subst hl
   simp only [List.nodup_iff_nth_le_inj]
@@ -246,7 +250,8 @@ theorem to_list_reverse {v : Vector α n} : v.reverse.toList = v.toList.reverse 
 #align vector.to_list_reverse Vector.to_list_reverse
 
 @[simp]
-theorem reverse_reverse {v : Vector α n} : v.reverse.reverse = v := by
+theorem reverse_reverse {v : Vector α n} : v.reverse.reverse = v :=
+  by
   cases v
   simp [Vector.reverse]
 #align vector.reverse_reverse Vector.reverse_reverse
@@ -287,7 +292,8 @@ theorem last_def {v : Vector α (n + 1)} : v.last = v.nth (Fin.last n) :=
 #align vector.last_def Vector.last_def
 
 /-- The `last` element of a vector is the `head` of the `reverse` vector. -/
-theorem reverse_nth_zero {v : Vector α (n + 1)} : v.reverse.head = v.last := by
+theorem reverse_nth_zero {v : Vector α (n + 1)} : v.reverse.head = v.last :=
+  by
   have : 0 = v.to_list.length - 1 - n := by
     simp only [Nat.add_succ_sub_one, add_zero, to_list_length, tsub_self, List.length_reverse]
   rw [← nth_zero, last_def, nth_eq_nth_le, nth_eq_nth_le]
@@ -348,7 +354,8 @@ theorem to_list_scanl : (scanl f b v).toList = List.scanl f b v.toList :=
 and the mapped `f b x : β` as the last value.
 -/
 @[simp]
-theorem scanl_singleton (v : Vector α 1) : scanl f b v = b ::ᵥ f b v.head ::ᵥ nil := by
+theorem scanl_singleton (v : Vector α 1) : scanl f b v = b ::ᵥ f b v.head ::ᵥ nil :=
+  by
   rw [← cons_head_tail v]
   simp only [scanl_cons, scanl_nil, cons_head, singleton_tail]
 #align vector.scanl_singleton Vector.scanl_singleton
@@ -357,7 +364,8 @@ theorem scanl_singleton (v : Vector α 1) : scanl f b v = b ::ᵥ f b v.head ::�
 retrieved via `head`, is the starting value `b : β`.
 -/
 @[simp]
-theorem scanl_head : (scanl f b v).head = b := by
+theorem scanl_head : (scanl f b v).head = b :=
+  by
   cases n
   · have : v = nil := by simp only [eq_iff_true_of_subsingleton]
     simp only [this, scanl_nil, cons_head]
@@ -375,7 +383,8 @@ This lemma is the `nth` version of `scanl_cons`.
 -/
 @[simp]
 theorem scanl_nth (i : Fin n) :
-    (scanl f b v).nth i.succ = f ((scanl f b v).nth i.cast_succ) (v.nth i) := by
+    (scanl f b v).nth i.succ = f ((scanl f b v).nth i.cast_succ) (v.nth i) :=
+  by
   cases n
   · exact finZeroElim i
   induction' n with n hn generalizing b
@@ -451,7 +460,8 @@ and `h_cons` defines the inductive step using `∀ x : α, C w → C (x ::ᵥ w)
 This can be used as `induction v using vector.induction_on`. -/
 @[elab_as_elim]
 def inductionOn {C : ∀ {n : ℕ}, Vector α n → Sort _} {n : ℕ} (v : Vector α n) (h_nil : C nil)
-    (h_cons : ∀ {n : ℕ} {x : α} {w : Vector α n}, C w → C (x ::ᵥ w)) : C v := by
+    (h_cons : ∀ {n : ℕ} {x : α} {w : Vector α n}, C w → C (x ::ᵥ w)) : C v :=
+  by
   induction' n with n ih generalizing v
   · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
     exact h_nil
@@ -470,7 +480,7 @@ variable {β γ : Type _}
 @[elab_as_elim]
 def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Vector α n) (w : Vector β n)
     (h_nil : C nil nil) (h_cons : ∀ {n a b} {x : Vector α n} {y}, C x y → C (a ::ᵥ x) (b ::ᵥ y)) :
-    C v w := by 
+    C v w := by
   induction' n with n ih generalizing v w
   · rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
     rcases w with ⟨_ | ⟨-, -⟩, - | -⟩
@@ -489,7 +499,7 @@ def inductionOn₂ {C : ∀ {n}, Vector α n → Vector β n → Sort _} (v : Ve
 def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n → Sort _} (u : Vector α n)
     (v : Vector β n) (w : Vector γ n) (h_nil : C nil nil nil)
     (h_cons : ∀ {n a b c} {x : Vector α n} {y z}, C x y z → C (a ::ᵥ x) (b ::ᵥ y) (c ::ᵥ z)) :
-    C u v w := by 
+    C u v w := by
   induction' n with n ih generalizing u v w
   · rcases u with ⟨_ | ⟨-, -⟩, - | -⟩
     rcases v with ⟨_ | ⟨-, -⟩, - | -⟩
@@ -519,7 +529,7 @@ variable {a : α}
 /-- `v.insert_nth a i` inserts `a` into the vector `v` at position `i`
 (and shifting later components to the right). -/
 def insertNth (a : α) (i : Fin (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
-  ⟨v.1.insertNth i a, by 
+  ⟨v.1.insertNth i a, by
     rw [List.length_insert_nth, v.2]
     rw [v.2, ← Nat.succ_le_succ_iff]
     exact i.2⟩
@@ -543,7 +553,8 @@ theorem remove_nth_insert_nth {v : Vector α n} {i : Fin (n + 1)} :
 theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
     ∀ {i : Fin (n + 1)} {j : Fin (n + 2)},
       removeNth (j.succAbove i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
-  | ⟨i, hi⟩, ⟨j, hj⟩ => by
+  | ⟨i, hi⟩, ⟨j, hj⟩ =>
+    by
     dsimp [insert_nth, remove_nth, Fin.succAbove, Fin.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
@@ -564,7 +575,7 @@ theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
 theorem insert_nth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     ∀ v : Vector α n,
       (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
-  | ⟨l, hl⟩ => by 
+  | ⟨l, hl⟩ => by
     refine' Subtype.eq _
     simp only [insert_nth_val, Fin.coe_succ, Fin.castSucc, Fin.val_eq_coe, Fin.coe_cast_add]
     apply List.insert_nth_comm
@@ -606,7 +617,8 @@ theorem nth_update_nth_eq_if {v : Vector α n} {i j : Fin n} (a : α) :
 
 @[to_additive]
 theorem prod_update_nth [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
-    (v.updateNth i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod := by
+    (v.updateNth i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod :=
+  by
   refine' (List.prod_update_nth v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp_all
@@ -614,7 +626,8 @@ theorem prod_update_nth [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
 
 @[to_additive]
 theorem prod_update_nth' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
-    (v.updateNth i a).toList.Prod = v.toList.Prod * (v.nth i)⁻¹ * a := by
+    (v.updateNth i a).toList.Prod = v.toList.Prod * (v.nth i)⁻¹ * a :=
+  by
   refine' (List.prod_update_nth' v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp [this, nth_eq_nth_le, mul_assoc]
@@ -658,7 +671,8 @@ protected theorem traverse_def (f : α → F β) (x : α) :
   rintro ⟨xs, rfl⟩ <;> rfl
 #align vector.traverse_def Vector.traverse_def
 
-protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x := by
+protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x :=
+  by
   rintro ⟨x, rfl⟩; dsimp [Vector.traverse, cast]
   induction' x with x xs IH; · rfl
   simp! [IH]; rfl
@@ -699,14 +713,13 @@ protected theorem naturality {α β : Type _} (f : α → F β) :
 
 end Traverse
 
-instance : Traversable.{u}
-      (flip Vector n) where 
+instance : Traversable.{u} (flip Vector n)
+    where
   traverse := @Vector.traverse n
   map α β := @Vector.map.{u, u} α β n
 
-instance :
-    IsLawfulTraversable.{u}
-      (flip Vector n) where 
+instance : IsLawfulTraversable.{u} (flip Vector n)
+    where
   id_traverse := @Vector.id_traverse n
   comp_traverse := @Vector.comp_traverse n
   traverse_eq_map_id := @Vector.traverse_eq_map_id n

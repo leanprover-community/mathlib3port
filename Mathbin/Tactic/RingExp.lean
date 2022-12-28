@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen
 
 ! This file was ported from Lean 3 source module tactic.ring_exp
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,7 +273,7 @@ unsafe def ex.proof {et : ExType} (ps : ex et) : Option expr :=
 Intended for use in `ex.set_info`.
 -/
 unsafe def ex_info.set (i : ex_info) (o : Option expr) (pf : Option expr) : ex_info :=
-  { i with 
+  { i with
     orig := o.getOrElse i.pretty
     Proof := pf }
 #align tactic.ring_exp.ex_info.set tactic.ring_exp.ex_info.set
@@ -1613,7 +1613,7 @@ unsafe def run_ring_exp {α} (transp : Transparency) (e : expr) (mx : ring_exp_m
 /-- Repeatedly apply `eval_simple` on (sub)expressions. -/
 unsafe def normalize (transp : Transparency) (e : expr) : tactic (expr × expr) := do
   let (_, e', pf') ←
-    ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed)
+    ext_simplify_core () { } simp_lemmas.mk (fun _ => failed)
         (fun _ _ _ _ e => do
           let (e'', pf) ← run_ring_exp transp e <| eval_simple e
           guard ¬e'' == e

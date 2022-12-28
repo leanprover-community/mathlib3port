@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ universe u v
 instance : Nontrivial ℕ :=
   ⟨⟨0, 1, Nat.zero_ne_one⟩⟩
 
-instance : CommSemiring ℕ where 
+instance : CommSemiring ℕ where
   add := Nat.add
   add_assoc := Nat.add_assoc
   zero := Nat.zero
@@ -139,7 +139,8 @@ theorem and_forall_succ {p : ℕ → Prop} : (p 0 ∧ ∀ n, p (n + 1)) ↔ ∀ 
 #print Nat.or_exists_succ /-
 @[simp]
 theorem or_exists_succ {p : ℕ → Prop} : (p 0 ∨ ∃ n, p (n + 1)) ↔ ∃ n, p n :=
-  ⟨fun h => h.elim (fun h0 => ⟨0, h0⟩) fun ⟨n, hn⟩ => ⟨n + 1, hn⟩, by
+  ⟨fun h => h.elim (fun h0 => ⟨0, h0⟩) fun ⟨n, hn⟩ => ⟨n + 1, hn⟩,
+    by
     rintro ⟨_ | n, hn⟩
     exacts[Or.inl hn, Or.inr ⟨n, hn⟩]⟩
 #align nat.or_exists_succ Nat.or_exists_succ
@@ -229,7 +230,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Nat} {n : Nat}, Eq.{1} Nat (Max.max.{0} Nat Nat.instMaxNat (Nat.succ m) (Nat.succ n)) (Nat.succ (Max.max.{0} Nat Nat.instMaxNat m n))
 Case conversion may be inaccurate. Consider using '#align nat.max_succ_succ Nat.max_succ_succₓ'. -/
-theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) := by
+theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
+  by
   by_cases h1 : m ≤ n
   rw [max_eq_right h1, max_eq_right (succ_le_succ h1)]
   · rw [not_le] at h1
@@ -299,7 +301,8 @@ theorem succ_lt_succ_iff {m n : ℕ} : succ m < succ n ↔ m < n :=
 -/
 
 #print Nat.div_le_iff_le_mul_add_pred /-
-theorem div_le_iff_le_mul_add_pred {m n k : ℕ} (n0 : 0 < n) : m / n ≤ k ↔ m ≤ n * k + (n - 1) := by
+theorem div_le_iff_le_mul_add_pred {m n k : ℕ} (n0 : 0 < n) : m / n ≤ k ↔ m ≤ n * k + (n - 1) :=
+  by
   rw [← lt_succ_iff, div_lt_iff_lt_mul n0, succ_mul, mul_comm]
   cases n; · cases n0
   exact lt_succ_iff
@@ -327,7 +330,8 @@ lean 3 declaration is
 but is expected to have type
   forall {P : Nat -> Prop} {n : Nat}, Iff (Exists.{1} Nat (fun (m : Nat) => And (LT.lt.{0} Nat instLTNat m (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (P m))) (Or (Exists.{1} Nat (fun (m : Nat) => And (LT.lt.{0} Nat instLTNat m n) (P m))) (P n))
 Case conversion may be inaccurate. Consider using '#align nat.exists_lt_succ Nat.exists_lt_succₓ'. -/
-theorem exists_lt_succ {P : ℕ → Prop} {n : ℕ} : (∃ m < n + 1, P m) ↔ (∃ m < n, P m) ∨ P n := by
+theorem exists_lt_succ {P : ℕ → Prop} {n : ℕ} : (∃ m < n + 1, P m) ↔ (∃ m < n, P m) ∨ P n :=
+  by
   rw [← not_iff_not]
   push_neg
   exact forall_lt_succ
@@ -525,7 +529,7 @@ theorem leRecOn_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) :
 #print Nat.leRecOn_succ /-
 theorem leRecOn_succ {C : ℕ → Sort u} {n m} (h1 : n ≤ m) {h2 : n ≤ m + 1} {next} (x : C n) :
     (leRecOn h2 (@next) x : C (m + 1)) = next (leRecOn h1 (@next) x : C m) := by
-  conv => 
+  conv =>
     lhs
     rw [le_rec_on, Or.by_cases, dif_pos h1]
 #align nat.le_rec_on_succ Nat.leRecOn_succ
@@ -539,7 +543,8 @@ theorem leRecOn_succ' {C : ℕ → Sort u} {n} {h : n ≤ n + 1} {next} (x : C n
 
 #print Nat.leRecOn_trans /-
 theorem leRecOn_trans {C : ℕ → Sort u} {n m k} (hnm : n ≤ m) (hmk : m ≤ k) {next} (x : C n) :
-    (leRecOn (le_trans hnm hmk) (@next) x : C k) = leRecOn hmk (@next) (leRecOn hnm (@next) x) := by
+    (leRecOn (le_trans hnm hmk) (@next) x : C k) = leRecOn hmk (@next) (leRecOn hnm (@next) x) :=
+  by
   induction' hmk with k hmk ih; · rw [le_rec_on_self]
   rw [le_rec_on_succ (le_trans hnm hmk), ih, le_rec_on_succ]
 #align nat.le_rec_on_trans Nat.leRecOn_trans
@@ -556,7 +561,8 @@ theorem leRecOn_succ_left {C : ℕ → Sort u} {n m} (h1 : n ≤ m) (h2 : n + 1 
 
 #print Nat.leRecOn_injective /-
 theorem leRecOn_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀ n, C n → C (n + 1))
-    (Hnext : ∀ n, Function.Injective (next n)) : Function.Injective (leRecOn hnm next) := by
+    (Hnext : ∀ n, Function.Injective (next n)) : Function.Injective (leRecOn hnm next) :=
+  by
   induction' hnm with m hnm ih;
   · intro x y H
     rwa [le_rec_on_self, le_rec_on_self] at H
@@ -566,7 +572,8 @@ theorem leRecOn_injective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀
 
 #print Nat.leRecOn_surjective /-
 theorem leRecOn_surjective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : ∀ n, C n → C (n + 1))
-    (Hnext : ∀ n, Function.Surjective (next n)) : Function.Surjective (leRecOn hnm next) := by
+    (Hnext : ∀ n, Function.Surjective (next n)) : Function.Surjective (leRecOn hnm next) :=
+  by
   induction' hnm with m hnm ih;
   · intro x
     use x
@@ -593,7 +600,8 @@ def strongRecOn' {P : ℕ → Sort _} (n : ℕ) (h : ∀ n, (∀ m, m < n → P 
 
 #print Nat.strongRecOn'_beta /-
 theorem strongRecOn'_beta {P : ℕ → Sort _} {h} {n : ℕ} :
-    (strongRecOn' n h : P n) = h n fun m hmn => (strongRecOn' m h : P m) := by
+    (strongRecOn' n h : P n) = h n fun m hmn => (strongRecOn' m h : P m) :=
+  by
   simp only [strong_rec_on']
   rw [Nat.strongRec']
 #align nat.strong_rec_on_beta' Nat.strongRecOn'_beta
@@ -621,7 +629,8 @@ def decreasingInduction {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n
 #print Nat.decreasingInduction_self /-
 @[simp]
 theorem decreasingInduction_self {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {n : ℕ} (nn : n ≤ n)
-    (hP : P n) : (decreasingInduction h nn hP : P n) = hP := by
+    (hP : P n) : (decreasingInduction h nn hP : P n) = hP :=
+  by
   dsimp only [decreasing_induction]
   rw [le_rec_on_self]
 #align nat.decreasing_induction_self Nat.decreasingInduction_self
@@ -630,7 +639,8 @@ theorem decreasingInduction_self {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → 
 #print Nat.decreasingInduction_succ /-
 theorem decreasingInduction_succ {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m n : ℕ} (mn : m ≤ n)
     (msn : m ≤ n + 1) (hP : P (n + 1)) :
-    (decreasingInduction h msn hP : P m) = decreasingInduction h mn (h n hP) := by
+    (decreasingInduction h msn hP : P m) = decreasingInduction h mn (h n hP) :=
+  by
   dsimp only [decreasing_induction]
   rw [le_rec_on_succ]
 #align nat.decreasing_induction_succ Nat.decreasingInduction_succ
@@ -639,7 +649,8 @@ theorem decreasingInduction_succ {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → 
 #print Nat.decreasingInduction_succ' /-
 @[simp]
 theorem decreasingInduction_succ' {P : ℕ → Sort _} (h : ∀ n, P (n + 1) → P n) {m : ℕ}
-    (msm : m ≤ m + 1) (hP : P (m + 1)) : (decreasingInduction h msm hP : P m) = h m hP := by
+    (msm : m ≤ m + 1) (hP : P (m + 1)) : (decreasingInduction h msm hP : P m) = h m hP :=
+  by
   dsimp only [decreasing_induction]
   rw [le_rec_on_succ']
 #align nat.decreasing_induction_succ' Nat.decreasingInduction_succ'
@@ -650,7 +661,7 @@ theorem decreasingInduction_trans {P : ℕ → Sort _} (h : ∀ n, P (n + 1) →
     (mn : m ≤ n) (nk : n ≤ k) (hP : P k) :
     (decreasingInduction h (le_trans mn nk) hP : P m) =
       decreasingInduction h mn (decreasingInduction h nk hP) :=
-  by 
+  by
   induction' nk with k nk ih
   rw [decreasing_induction_self]
   rw [decreasing_induction_succ h (le_trans mn nk), ih, decreasing_induction_succ]
@@ -855,7 +866,8 @@ protected theorem mul_div_mul_right (a b : ℕ) {c : ℕ} (hc : 0 < c) : a * c /
 #align nat.mul_div_mul_right Nat.mul_div_mul_right
 
 #print Nat.lt_div_mul_add /-
-theorem lt_div_mul_add {a b : ℕ} (hb : 0 < b) : a < a / b * b + b := by
+theorem lt_div_mul_add {a b : ℕ} (hb : 0 < b) : a < a / b * b + b :=
+  by
   rw [← Nat.succ_mul, ← Nat.div_lt_iff_lt_mul hb]
   exact Nat.lt_succ_self _
 #align nat.lt_div_mul_add Nat.lt_div_mul_add
@@ -863,7 +875,8 @@ theorem lt_div_mul_add {a b : ℕ} (hb : 0 < b) : a < a / b * b + b := by
 
 #print Nat.div_left_inj /-
 @[simp]
-protected theorem div_left_inj {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b := by
+protected theorem div_left_inj {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b :=
+  by
   refine' ⟨fun h => _, congr_arg _⟩
   rw [← Nat.mul_div_cancel' hda, ← Nat.mul_div_cancel' hdb, h]
 #align nat.div_left_inj Nat.div_left_inj
@@ -873,7 +886,8 @@ protected theorem div_left_inj {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) : a
 
 
 #print Nat.mod_eq_iff_lt /-
-theorem mod_eq_iff_lt {a b : ℕ} (h : b ≠ 0) : a % b = a ↔ a < b := by
+theorem mod_eq_iff_lt {a b : ℕ} (h : b ≠ 0) : a % b = a ↔ a < b :=
+  by
   cases b; contradiction
   exact ⟨fun h => h.ge.trans_lt (mod_lt _ (succ_pos _)), mod_eq_of_lt⟩
 #align nat.mod_eq_iff_lt Nat.mod_eq_iff_lt
@@ -893,14 +907,16 @@ theorem div_add_mod (m k : ℕ) : k * (m / k) + m % k = m :=
 -/
 
 #print Nat.mod_add_div' /-
-theorem mod_add_div' (m k : ℕ) : m % k + m / k * k = m := by
+theorem mod_add_div' (m k : ℕ) : m % k + m / k * k = m :=
+  by
   rw [mul_comm]
   exact mod_add_div _ _
 #align nat.mod_add_div' Nat.mod_add_div'
 -/
 
 #print Nat.div_add_mod' /-
-theorem div_add_mod' (m k : ℕ) : m / k * k + m % k = m := by
+theorem div_add_mod' (m k : ℕ) : m / k * k + m % k = m :=
+  by
   rw [mul_comm]
   exact div_add_mod _ _
 #align nat.div_add_mod' Nat.div_add_mod'
@@ -941,8 +957,9 @@ protected theorem mul_dvd_mul_iff_right {a b c : ℕ} (hc : 0 < c) : a * c ∣ b
 
 #print Nat.mod_mod_of_dvd /-
 @[simp]
-theorem mod_mod_of_dvd (n : Nat) {m k : Nat} (h : m ∣ k) : n % k % m = n % m := by
-  conv => 
+theorem mod_mod_of_dvd (n : Nat) {m k : Nat} (h : m ∣ k) : n % k % m = n % m :=
+  by
+  conv =>
     rhs
     rw [← mod_add_div n k]
   rcases h with ⟨t, rfl⟩; rw [mul_assoc, add_mul_mod_self_left]
@@ -1032,7 +1049,8 @@ theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
 -/
 
 #print Nat.mul_div_le /-
-theorem mul_div_le (m n : ℕ) : n * (m / n) ≤ m := by
+theorem mul_div_le (m n : ℕ) : n * (m / n) ≤ m :=
+  by
   cases' Nat.eq_zero_or_pos n with n0 h
   · rw [n0, zero_mul]
     exact m.zero_le
@@ -1041,7 +1059,8 @@ theorem mul_div_le (m n : ℕ) : n * (m / n) ≤ m := by
 -/
 
 #print Nat.lt_mul_div_succ /-
-theorem lt_mul_div_succ (m : ℕ) {n : ℕ} (n0 : 0 < n) : m < n * (m / n + 1) := by
+theorem lt_mul_div_succ (m : ℕ) {n : ℕ} (n0 : 0 < n) : m < n * (m / n + 1) :=
+  by
   rw [mul_comm, ← Nat.div_lt_iff_lt_mul' n0]
   exact lt_succ_self _
 #align nat.lt_mul_div_succ Nat.lt_mul_div_succ
@@ -1072,7 +1091,8 @@ section Find
 variable {p q : ℕ → Prop} [DecidablePred p] [DecidablePred q]
 
 #print Nat.find_eq_iff /-
-theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.find h = m ↔ p m ∧ ∀ n < m, ¬p n := by
+theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.find h = m ↔ p m ∧ ∀ n < m, ¬p n :=
+  by
   constructor
   · rintro rfl
     exact ⟨Nat.find_spec h, fun _ => Nat.find_min h⟩
@@ -1139,7 +1159,8 @@ theorem find_le {h : ∃ n, p n} (hn : p n) : Nat.find h ≤ n :=
 
 #print Nat.find_comp_succ /-
 theorem find_comp_succ (h₁ : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h0 : ¬p 0) :
-    Nat.find h₁ = Nat.find h₂ + 1 := by
+    Nat.find h₁ = Nat.find h₂ + 1 :=
+  by
   refine' (find_eq_iff _).2 ⟨Nat.find_spec h₂, fun n hn => _⟩
   cases' n with n
   exacts[h0, @Nat.find_min (fun n => p (n + 1)) _ h₂ _ (succ_lt_succ_iff.1 hn)]
@@ -1200,7 +1221,8 @@ end FindGreatest
 
 #print Nat.decidableBallLt /-
 instance decidableBallLt (n : Nat) (P : ∀ k < n, Prop) :
-    ∀ [H : ∀ n h, Decidable (P n h)], Decidable (∀ n h, P n h) := by
+    ∀ [H : ∀ n h, Decidable (P n h)], Decidable (∀ n h, P n h) :=
+  by
   induction' n with n IH <;> intro <;> skip
   · exact is_true fun n => by decide
   cases' IH fun k h => P k (lt_succ_of_lt h) with h

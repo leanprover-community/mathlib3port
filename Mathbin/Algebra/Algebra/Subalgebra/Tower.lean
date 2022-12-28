@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.tower
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ variable [IsScalarTower R S A] [IsScalarTower R S B]
 `U` as an `R`-subalgebra of `A`. -/
 def restrictScalars (U : Subalgebra S A) : Subalgebra R A :=
   { U with
-    algebra_map_mem' := fun x => by 
+    algebra_map_mem' := fun x => by
       rw [algebra_map_apply R S A]
       exact U.algebra_map_mem _ }
 #align subalgebra.restrict_scalars Subalgebra.restrictScalars

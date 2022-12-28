@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
 
 ! This file was ported from Lean 3 source module data.set.intervals.group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,7 +274,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.nonempty_Ico_sdiff Set.nonempty_Ico_sdiffₓ'. -/
 /-- If we remove a smaller interval from a larger, the result is nonempty -/
 theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) :
-    Nonempty ↥(Ico x (x + dx) \ Ico y (y + dy)) := by
+    Nonempty ↥(Ico x (x + dx) \ Ico y (y + dy)) :=
+  by
   cases' lt_or_le x y with h' h'
   · use x
     simp [*, not_le.2 h']

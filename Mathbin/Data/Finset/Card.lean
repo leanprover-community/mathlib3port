@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.finset.card
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,8 @@ theorem card_singleton (a : α) : card ({a} : Finset α) = 1 :=
   card_singleton _
 #align finset.card_singleton Finset.card_singleton
 
-theorem card_singleton_inter [DecidableEq α] : ({a} ∩ s).card ≤ 1 := by
+theorem card_singleton_inter [DecidableEq α] : ({a} ∩ s).card ≤ 1 :=
+  by
   cases Finset.decidableMem a s
   · simp [Finset.singleton_inter_of_not_mem h]
   · simp [Finset.singleton_inter_of_mem h]
@@ -114,15 +115,15 @@ theorem card_insert_of_mem (h : a ∈ s) : card (insert a s) = s.card := by rw [
 
 theorem card_insert_le (a : α) (s : Finset α) : card (insert a s) ≤ s.card + 1 := by
   by_cases a ∈ s <;>
-    [· 
+    [·
       rw [insert_eq_of_mem h]
-      exact Nat.le_succ _,
-    rw [card_insert_of_not_mem h]]
+      exact Nat.le_succ _, rw [card_insert_of_not_mem h]]
 #align finset.card_insert_le Finset.card_insert_le
 
 /-- If `a ∈ s` is known, see also `finset.card_insert_of_mem` and `finset.card_insert_of_not_mem`.
 -/
-theorem card_insert_eq_ite : card (insert a s) = if a ∈ s then s.card else s.card + 1 := by
+theorem card_insert_eq_ite : card (insert a s) = if a ∈ s then s.card else s.card + 1 :=
+  by
   by_cases h : a ∈ s
   · rw [card_insert_of_mem h, if_pos h]
   · rw [card_insert_of_not_mem h, if_neg h]
@@ -151,7 +152,8 @@ theorem card_erase_le : (s.erase a).card ≤ s.card :=
   card_erase_le
 #align finset.card_erase_le Finset.card_erase_le
 
-theorem pred_card_le_card_erase : s.card - 1 ≤ (s.erase a).card := by
+theorem pred_card_le_card_erase : s.card - 1 ≤ (s.erase a).card :=
+  by
   by_cases h : a ∈ s
   · exact (card_erase_of_mem h).ge
   · rw [erase_eq_of_not_mem h]
@@ -213,7 +215,8 @@ namespace Finset
 variable {s t : Finset α} {f : α → β} {n : ℕ}
 
 @[simp]
-theorem length_to_list (s : Finset α) : s.toList.length = s.card := by
+theorem length_to_list (s : Finset α) : s.toList.length = s.card :=
+  by
   rw [to_list, ← Multiset.coe_card, Multiset.coe_to_list]
   rfl
 #align finset.length_to_list Finset.length_to_list
@@ -227,9 +230,10 @@ theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.image f).
 #align finset.card_image_of_inj_on Finset.card_image_of_inj_on
 
 theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.image f).card = s.card) : Set.InjOn f s :=
-  by 
+  by
   change (s.1.map f).dedup.card = s.1.card at H
-  have : (s.1.map f).dedup = s.1.map f := by
+  have : (s.1.map f).dedup = s.1.map f :=
+    by
     refine' Multiset.eq_of_le_of_card_le (Multiset.dedup_le _) _
     rw [H]
     simp only [Multiset.card_map]
@@ -275,7 +279,8 @@ theorem map_eq_of_subset {f : α ↪ α} (hs : s.map f ⊆ s) : s.map f = s :=
 #align finset.map_eq_of_subset Finset.map_eq_of_subset
 
 theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filter p).card = s.card) (x : α)
-    (hx : x ∈ s) : p x := by
+    (hx : x ∈ s) : p x :=
+  by
   rw [← eq_of_subset_of_card_le (s.filter_subset p) h.ge, mem_filter] at hx
   exact hx.2
 #align finset.filter_card_eq Finset.filter_card_eq
@@ -287,7 +292,7 @@ theorem card_lt_card (h : s ⊂ t) : s.card < t.card :=
 theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i, ∃ h : i < n, f i h = a)
     (hf' : ∀ (i) (h : i < n), f i h ∈ s)
     (f_inj : ∀ (i j) (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) : s.card = n := by
-  classical 
+  classical
     have : ∀ a : α, a ∈ s ↔ ∃ (i : _)(hi : i ∈ range n), f i (mem_range.1 hi) = a := fun a =>
       ⟨fun ha =>
         let ⟨i, hi, Eq⟩ := hf a ha
@@ -336,7 +341,7 @@ theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀ a ∈ s
 -/
 theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.card) {f : α → β}
     (hf : ∀ a ∈ s, f a ∈ t) : ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ f x = f y := by
-  classical 
+  classical
     by_contra' hz
     refine' hc.not_le (card_le_card_of_inj_on f hf _)
     intro x hx y hy
@@ -355,7 +360,7 @@ theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀ i < n, f i ∈ s)
 theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
     (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) :
     ∀ b ∈ t, ∃ a ha, b = f a ha := by
-  classical 
+  classical
     intro b hb
     have h : (s.attach.image fun a : { a // a ∈ s } => f a a.Prop).card = s.card :=
       @card_attach _ s ▸
@@ -422,7 +427,8 @@ theorem card_disjoint_union (h : Disjoint s t) : card (s ∪ t) = s.card + t.car
   card_union_eq h
 #align finset.card_disjoint_union Finset.card_disjoint_union
 
-theorem card_sdiff (h : s ⊆ t) : card (t \ s) = t.card - s.card := by
+theorem card_sdiff (h : s ⊆ t) : card (t \ s) = t.card - s.card :=
+  by
   suffices card (t \ s) = card (t \ s ∪ s) - s.card by rwa [sdiff_union_of_subset h] at this
   rw [card_disjoint_union sdiff_disjoint, add_tsub_cancel_right]
 #align finset.card_sdiff Finset.card_sdiff
@@ -455,16 +461,18 @@ theorem filter_card_add_filter_neg_card_eq_card (p : α → Prop) [DecidablePred
 inside it. -/
 theorem exists_intermediate_set {A B : Finset α} (i : ℕ) (h₁ : i + card B ≤ card A) (h₂ : B ⊆ A) :
     ∃ C : Finset α, B ⊆ C ∧ C ⊆ A ∧ card C = i + card B := by
-  classical 
+  classical
     rcases Nat.le.dest h₁ with ⟨k, _⟩
     clear h₁
     induction' k with k ih generalizing A
     · exact ⟨A, h₂, subset.refl _, h.symm⟩
-    have : (A \ B).Nonempty := by
+    have : (A \ B).Nonempty :=
+      by
       rw [← card_pos, card_sdiff h₂, ← h, Nat.add_right_comm, add_tsub_cancel_right, Nat.add_succ]
       apply Nat.succ_pos
     rcases this with ⟨a, ha⟩
-    have z : i + card B + k = card (erase A a) := by
+    have z : i + card B + k = card (erase A a) :=
+      by
       rw [card_erase_of_mem (mem_sdiff.1 ha).1, ← h]
       rfl
     rcases ih _ z with ⟨B', hB', B'subA', cards⟩
@@ -483,7 +491,8 @@ theorem exists_smaller_set (A : Finset α) (i : ℕ) (h₁ : i ≤ card A) :
 #align finset.exists_smaller_set Finset.exists_smaller_set
 
 theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finset α} {n : ℕ}
-    (hXY : 2 * n < (X ∪ Y).card) : ∃ C : Finset α, n < C.card ∧ (C ⊆ X ∨ C ⊆ Y) := by
+    (hXY : 2 * n < (X ∪ Y).card) : ∃ C : Finset α, n < C.card ∧ (C ⊆ X ∨ C ⊆ Y) :=
+  by
   have h₁ : (X ∩ (Y \ X)).card = 0 := finset.card_eq_zero.mpr (Finset.inter_sdiff_self X Y)
   have h₂ : (X ∪ Y).card = X.card + (Y \ X).card := by
     rw [← card_union_add_card_inter X (Y \ X), Finset.union_sdiff_self_eq_union, h₁, add_zero]
@@ -503,7 +512,8 @@ theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
-    (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
+    (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card :=
+  by
   constructor
   · rintro ⟨a, ha, rfl⟩
     exact ⟨subset_insert _ _, (card_insert_of_not_mem ha).symm⟩
@@ -517,7 +527,8 @@ theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     exact not_mem_sdiff_of_mem_right hs
 #align finset.exists_eq_insert_iff Finset.exists_eq_insert_iff
 
-theorem card_le_one : s.card ≤ 1 ↔ ∀ a ∈ s, ∀ b ∈ s, a = b := by
+theorem card_le_one : s.card ≤ 1 ↔ ∀ a ∈ s, ∀ b ∈ s, a = b :=
+  by
   obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
   · simp
   refine' (Nat.succ_le_of_lt (card_pos.2 ⟨x, hx⟩)).le_iff_eq.trans (card_eq_one.trans ⟨_, _⟩)
@@ -526,12 +537,14 @@ theorem card_le_one : s.card ≤ 1 ↔ ∀ a ∈ s, ∀ b ∈ s, a = b := by
   · exact fun h => ⟨x, eq_singleton_iff_unique_mem.2 ⟨hx, fun y hy => h _ hy _ hx⟩⟩
 #align finset.card_le_one Finset.card_le_one
 
-theorem card_le_one_iff : s.card ≤ 1 ↔ ∀ {a b}, a ∈ s → b ∈ s → a = b := by
+theorem card_le_one_iff : s.card ≤ 1 ↔ ∀ {a b}, a ∈ s → b ∈ s → a = b :=
+  by
   rw [card_le_one]
   tauto
 #align finset.card_le_one_iff Finset.card_le_one_iff
 
-theorem card_le_one_iff_subset_singleton [Nonempty α] : s.card ≤ 1 ↔ ∃ x : α, s ⊆ {x} := by
+theorem card_le_one_iff_subset_singleton [Nonempty α] : s.card ≤ 1 ↔ ∃ x : α, s ⊆ {x} :=
+  by
   refine' ⟨fun H => _, _⟩
   · obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
     · exact ⟨Classical.arbitrary α, empty_subset _⟩
@@ -546,19 +559,21 @@ theorem card_le_one_of_subsingleton [Subsingleton α] (s : Finset α) : s.card �
   Finset.card_le_one_iff.2 fun _ _ _ _ => Subsingleton.elim _ _
 #align finset.card_le_one_of_subsingleton Finset.card_le_one_of_subsingleton
 
-theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b := by
+theorem one_lt_card : 1 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b :=
+  by
   rw [← not_iff_not]
   push_neg
   exact card_le_one
 #align finset.one_lt_card Finset.one_lt_card
 
-theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ b := by
+theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ b :=
+  by
   rw [one_lt_card]
   simp only [exists_prop, exists_and_left]
 #align finset.one_lt_card_iff Finset.one_lt_card_iff
 
 theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
-  classical 
+  classical
     refine' ⟨fun h => _, _⟩
     · obtain ⟨c, hc⟩ := card_pos.mp (zero_lt_two.trans h)
       have : 1 < (s.erase c).card := by rwa [← add_lt_add_iff_right 1, card_erase_add_one hc]
@@ -576,7 +591,8 @@ theorem two_lt_card : 2 < s.card ↔ ∃ a ∈ s, ∃ b ∈ s, ∃ c ∈ s, a �
   simp_rw [two_lt_card_iff, exists_prop, exists_and_left]
 #align finset.two_lt_card Finset.two_lt_card
 
-theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧ b ≠ a := by
+theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧ b ≠ a :=
+  by
   obtain ⟨x, hx, y, hy, hxy⟩ := finset.one_lt_card.mp hs
   by_cases ha : y = a
   · exact ⟨x, hx, ne_of_ne_of_eq hxy ha⟩
@@ -592,7 +608,8 @@ theorem card_eq_succ [DecidableEq α] :
     fun ⟨a, t, hat, s_eq, n_eq⟩ => s_eq ▸ n_eq ▸ card_insert_of_not_mem hat⟩
 #align finset.card_eq_succ Finset.card_eq_succ
 
-theorem card_eq_two [DecidableEq α] : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {x, y} := by
+theorem card_eq_two [DecidableEq α] : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {x, y} :=
+  by
   constructor
   · rw [card_eq_succ]
     simp_rw [card_eq_one]
@@ -603,7 +620,8 @@ theorem card_eq_two [DecidableEq α] : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {
 #align finset.card_eq_two Finset.card_eq_two
 
 theorem card_eq_three [DecidableEq α] :
-    s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧ s = {x, y, z} := by
+    s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧ s = {x, y, z} :=
+  by
   constructor
   · rw [card_eq_succ]
     simp_rw [card_eq_two]
@@ -653,7 +671,8 @@ def strongInductionOn {p : Finset α → Sort _} (s : Finset α) :
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
-    s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
+    s.strong_induction_on H = H s fun t h => t.strong_induction_on H :=
+  by
   dsimp only [strong_induction_on]
   rw [strong_induction]
 #align finset.strong_induction_on_eq Finset.strong_induction_on_eq
@@ -704,7 +723,8 @@ def strongDownwardInductionOn {p : Finset α → Sort _} (s : Finset α)
 
 theorem strong_downward_induction_on_eq {p : Finset α → Sort _} (s : Finset α)
     (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) :
-    s.strongDownwardInductionOn H = H s fun t ht h => t.strongDownwardInductionOn H ht := by
+    s.strongDownwardInductionOn H = H s fun t ht h => t.strongDownwardInductionOn H ht :=
+  by
   dsimp only [strong_downward_induction_on]
   rw [strong_downward_induction]
 #align finset.strong_downward_induction_on_eq Finset.strong_downward_induction_on_eq

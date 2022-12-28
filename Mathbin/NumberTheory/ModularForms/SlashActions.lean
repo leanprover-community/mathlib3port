@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_actions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,8 +46,8 @@ class SlashAction (β G α γ : Type _) [Group G] [Zero α] [HasSmul γ α] [Add
 
 /-- Slash_action induced by a monoid homomorphism.-/
 def monoidHomSlashAction {β G H α γ : Type _} [Group G] [Zero α] [HasSmul γ α] [Add α] [Group H]
-    [SlashAction β G α γ] (h : H →* G) :
-    SlashAction β H α γ where 
+    [SlashAction β G α γ] (h : H →* G) : SlashAction β H α γ
+    where
   map k g := SlashAction.map γ k (h g)
   zero_slash k g := SlashAction.zero_slash k (h g)
   slash_one k a := by simp only [map_one, SlashAction.slash_one]
@@ -71,7 +71,7 @@ variable {Γ : Subgroup SL(2, ℤ)} {k : ℤ} (f : ℍ → ℂ)
 scoped notation:100 f " ∣[" k "]" γ:100 => ModularForm.slash k γ f
 
 theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) :
-    (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by 
+    (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by
   ext1
   simp_rw [slash, UpperHalfPlane.denom_cocycle A B x]
   have e3 : (A * B) • x = A • B • x := by convert UpperHalfPlane.mul_smul' A B x
@@ -91,7 +91,8 @@ theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) :
 #align modular_form.slash_right_action ModularForm.slash_right_action
 
 @[simp]
-theorem slash_add (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) : (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A := by
+theorem slash_add (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) : (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A :=
+  by
   ext1
   simp only [slash, Pi.add_apply, denom, coe_coe, zpow_neg]
   ring
@@ -105,7 +106,8 @@ theorem slash_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f :=
 variable {α : Type _} [HasSmul α ℂ] [IsScalarTower α ℂ ℂ]
 
 @[simp]
-theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : α) : (c • f) ∣[k]A = c • f ∣[k]A := by
+theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : α) : (c • f) ∣[k]A = c • f ∣[k]A :=
+  by
   simp_rw [← smul_one_smul ℂ c f, ← smul_one_smul ℂ c (f ∣[k]A)]
   ext1
   simp_rw [slash]
@@ -124,8 +126,8 @@ theorem zero_slash (k : ℤ) (A : GL(2, ℝ)⁺) : (0 : ℍ → ℂ) ∣[k]A = 0
   funext fun _ => by simp only [slash, Pi.zero_apply, zero_mul]
 #align modular_form.zero_slash ModularForm.zero_slash
 
-instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ)
-      ℂ where 
+instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ
+    where
   map := slash
   zero_slash := zero_slash
   slash_one := slash_one
@@ -161,7 +163,8 @@ local notation:73 f "∣[" k:0 "," A "]" => SlashAction.map ℂ k A f
 
 /-- The constant function 1 is invariant under any element of `SL(2, ℤ)`. -/
 @[simp]
-theorem is_invariant_one (A : SL(2, ℤ)) : (1 : ℍ → ℂ)∣[(0 : ℤ),A] = (1 : ℍ → ℂ) := by
+theorem is_invariant_one (A : SL(2, ℤ)) : (1 : ℍ → ℂ)∣[(0 : ℤ),A] = (1 : ℍ → ℂ) :=
+  by
   have : ((↑ₘ(A : GL(2, ℝ)⁺)).det : ℝ) = 1 := by
     simp only [coe_coe, Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix,
       Matrix.SpecialLinearGroup.det_coe]
@@ -174,7 +177,8 @@ theorem is_invariant_one (A : SL(2, ℤ)) : (1 : ℍ → ℂ)∣[(0 : ℤ),A] = 
   if for every matrix `γ ∈ Γ` we have `f(γ • z)= (c*z+d)^k f(z)` where `γ= ![![a, b], ![c, d]]`,
   and it acts on `ℍ` via Möbius transformations. -/
 theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → ℂ) (γ : Γ) (z : ℍ) :
-    (f∣[k,γ]) z = f z ↔ f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z := by
+    (f∣[k,γ]) z = f z ↔ f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z :=
+  by
   simp only [subgroup_slash, ModularForm.slash]
   convert inv_mul_eq_iff_eq_mul₀ _ using 2
   · rw [mul_comm]
@@ -186,19 +190,22 @@ theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → �
 #align modular_form.slash_action_eq'_iff ModularForm.slash_action_eq'_iff
 
 theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
-    (f * g)∣[k1 + k2,A] = ((↑ₘA).det : ℝ) • f∣[k1,A] * g∣[k2,A] := by
+    (f * g)∣[k1 + k2,A] = ((↑ₘA).det : ℝ) • f∣[k1,A] * g∣[k2,A] :=
+  by
   ext1
   simp only [SlashAction.map, slash, Matrix.GeneralLinearGroup.coe_det_apply, Subtype.val_eq_coe,
     Pi.mul_apply, Pi.smul_apply, Algebra.smul_mul_assoc, real_smul]
   set d : ℂ := ↑((↑ₘA).det : ℝ)
-  have h1 : d ^ (k1 + k2 - 1) = d * d ^ (k1 - 1) * d ^ (k2 - 1) := by
-    have : d ≠ 0 := by 
+  have h1 : d ^ (k1 + k2 - 1) = d * d ^ (k1 - 1) * d ^ (k2 - 1) :=
+    by
+    have : d ≠ 0 := by
       dsimp [d]
       norm_cast
       exact Matrix.gLPos.det_ne_zero A
     rw [← zpow_one_add₀ this, ← zpow_add₀ this]
     ring
-  have h22 : denom A x ^ (-(k1 + k2)) = denom A x ^ (-k1) * denom A x ^ (-k2) := by
+  have h22 : denom A x ^ (-(k1 + k2)) = denom A x ^ (-k1) * denom A x ^ (-k2) :=
+    by
     rw [Int.neg_add, zpow_add₀]
     exact UpperHalfPlane.denom_ne_zero A x
   rw [h1, h22]

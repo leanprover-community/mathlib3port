@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.cantor_normal_form
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ noncomputable def cNFRec (b : Ordinal) {C : Ordinal → Sort _} (H0 : C 0)
 
 @[simp]
 theorem CNF_rec_zero {C : Ordinal → Sort _} (b : Ordinal) (H0 : C 0)
-    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @cNFRec b C H0 H 0 = H0 := by
+    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @cNFRec b C H0 H 0 = H0 :=
+  by
   rw [CNF_rec, dif_pos rfl]
   rfl
 #align ordinal.CNF_rec_zero Ordinal.CNF_rec_zero
@@ -94,7 +95,8 @@ theorem zero_CNF {o : Ordinal} (ho : o ≠ 0) : cNF 0 o = [⟨0, o⟩] := by sim
 theorem one_CNF {o : Ordinal} (ho : o ≠ 0) : cNF 1 o = [⟨0, o⟩] := by simp [CNF_ne_zero ho]
 #align ordinal.one_CNF Ordinal.one_CNF
 
-theorem CNF_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : cNF b o = [⟨0, o⟩] := by
+theorem CNF_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : cNF b o = [⟨0, o⟩] :=
+  by
   rcases le_one_iff.1 hb with (rfl | rfl)
   · exact zero_CNF ho
   · exact one_CNF ho
@@ -107,7 +109,7 @@ theorem CNF_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) : cNF b o = [⟨0,
 /-- Evaluating the Cantor normal form of an ordinal returns the ordinal. -/
 theorem CNF_foldr (b o : Ordinal) : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + r) 0 = o :=
   cNFRec b
-    (by 
+    (by
       rw [CNF_zero]
       rfl)
     (fun o ho IH => by rw [CNF_ne_zero ho, List.foldr_cons, IH, div_add_mod]) o
@@ -115,7 +117,7 @@ theorem CNF_foldr (b o : Ordinal) : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + 
 
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
 theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o → x.1 ≤ log b o :=
-  by 
+  by
   refine' CNF_rec b _ (fun o ho H => _) o
   · rw [CNF_zero]
     exact False.elim
@@ -131,7 +133,8 @@ theorem CNF_fst_le {b o : Ordinal.{u}} {x : Ordinal × Ordinal} (h : x ∈ cNF b
 #align ordinal.CNF_fst_le Ordinal.CNF_fst_le
 
 /-- Every coefficient in a Cantor normal form is positive. -/
-theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o → 0 < x.2 := by
+theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o → 0 < x.2 :=
+  by
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
   · rcases eq_zero_or_pos b with (rfl | hb)
@@ -159,7 +162,8 @@ theorem CNF_snd_lt {b o : Ordinal.{u}} (hb : 1 < b) {x : Ordinal × Ordinal} :
 #align ordinal.CNF_snd_lt Ordinal.CNF_snd_lt
 
 /-- The exponents of the Cantor normal form are decreasing. -/
-theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) := by
+theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) :=
+  by
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
   · cases' le_or_lt b 1 with hb hb

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module field_theory.laurent
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,8 @@ open Classical nonZeroDivisors Polynomial
 
 variable {R : Type u} [CommRing R] [hdomain : IsDomain R] (r s : R) (p q : R[X]) (f : Ratfunc R)
 
-theorem taylor_mem_non_zero_divisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]⁰ := by
+theorem taylor_mem_non_zero_divisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]⁰ :=
+  by
   rw [mem_non_zero_divisors_iff]
   intro x hx
   have : x = taylor (r - r) x := by simp
@@ -108,12 +109,14 @@ theorem laurent_C (x : R) : laurent r (c x) = c x := by
 #align ratfunc.laurent_C Ratfunc.laurent_C
 
 @[simp]
-theorem laurent_at_zero : laurent 0 f = f := by
+theorem laurent_at_zero : laurent 0 f = f :=
+  by
   induction f using Ratfunc.induction_on
   simp
 #align ratfunc.laurent_at_zero Ratfunc.laurent_at_zero
 
-theorem laurent_laurent : laurent r (laurent s f) = laurent (r + s) f := by
+theorem laurent_laurent : laurent r (laurent s f) = laurent (r + s) f :=
+  by
   induction f using Ratfunc.induction_on
   simp_rw [laurent_div, taylor_taylor]
 #align ratfunc.laurent_laurent Ratfunc.laurent_laurent

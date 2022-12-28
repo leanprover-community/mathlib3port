@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.comma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,20 +45,22 @@ which is helpful for constructing a left adjoint to `G`.
 -/
 @[simps]
 def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) :
-    ((⊥_ StructuredArrow A G).right ⟶ B) ≃
-      (A ⟶ G.obj B) where 
+    ((⊥_ StructuredArrow A G).right ⟶ B) ≃ (A ⟶ G.obj B)
+    where
   toFun g := (⊥_ StructuredArrow A G).Hom ≫ G.map g
   invFun f := CommaMorphism.right (initial.to (StructuredArrow.mk f))
-  left_inv g := by
+  left_inv g :=
+    by
     let B' : structured_arrow A G := structured_arrow.mk ((⊥_ structured_arrow A G).Hom ≫ G.map g)
     let g' : ⊥_ structured_arrow A G ⟶ B' := structured_arrow.hom_mk g rfl
-    have : initial.to _ = g' := by 
+    have : initial.to _ = g' := by
       apply colimit.hom_ext
       rintro ⟨⟨⟩⟩
     change comma_morphism.right (initial.to B') = _
     rw [this]
     rfl
-  right_inv f := by
+  right_inv f :=
+    by
     let B' : structured_arrow A G :=
       { right := B
         Hom := f }
@@ -85,8 +87,8 @@ def adjunctionOfStructuredArrowInitials : leftAdjointOfStructuredArrowInitials G
   category_theory.adjunction_of_structured_arrow_initials CategoryTheory.adjunctionOfStructuredArrowInitials
 
 /-- If each structured arrow category on `G` has an initial object, `G` is a right adjoint. -/
-def isRightAdjointOfStructuredArrowInitials :
-    IsRightAdjoint G where 
+def isRightAdjointOfStructuredArrowInitials : IsRightAdjoint G
+    where
   left := _
   adj := adjunctionOfStructuredArrowInitials G
 #align
@@ -103,19 +105,17 @@ which is helpful for constructing a right adjoint to `G`.
 -/
 @[simps]
 def rightAdjointOfCostructuredArrowTerminalsAux (B : D) (A : C) :
-    (G.obj B ⟶ A) ≃
-      (B ⟶
-        (⊤_
-            CostructuredArrow G
-              A).left) where 
+    (G.obj B ⟶ A) ≃ (B ⟶ (⊤_ CostructuredArrow G A).left)
+    where
   toFun g := CommaMorphism.left (terminal.from (CostructuredArrow.mk g))
   invFun g := G.map g ≫ (⊤_ CostructuredArrow G A).Hom
   left_inv := by tidy
-  right_inv g := by
+  right_inv g :=
+    by
     let B' : costructured_arrow G A :=
       costructured_arrow.mk (G.map g ≫ (⊤_ costructured_arrow G A).Hom)
     let g' : B' ⟶ ⊤_ costructured_arrow G A := costructured_arrow.hom_mk g rfl
-    have : terminal.from _ = g' := by 
+    have : terminal.from _ = g' := by
       apply limit.hom_ext
       rintro ⟨⟨⟩⟩
     change comma_morphism.left (terminal.from B') = _
@@ -130,7 +130,7 @@ It is shown that it is a right adjoint in `adjunction_of_structured_arrow_initia
 -/
 def rightAdjointOfCostructuredArrowTerminals : C ⥤ D :=
   Adjunction.rightAdjointOfEquiv (rightAdjointOfCostructuredArrowTerminalsAux G) fun B₁ B₂ A f g =>
-    by 
+    by
     rw [← Equiv.eq_symm_apply]
     simp
 #align
@@ -145,8 +145,8 @@ def adjunctionOfCostructuredArrowTerminals : G ⊣ rightAdjointOfCostructuredArr
   category_theory.adjunction_of_costructured_arrow_terminals CategoryTheory.adjunctionOfCostructuredArrowTerminals
 
 /-- If each costructured arrow category on `G` has an terminal object, `G` is a left adjoint. -/
-def isLeftAdjointOfCostructuredArrowTerminals :
-    IsLeftAdjoint G where 
+def isLeftAdjointOfCostructuredArrowTerminals : IsLeftAdjoint G
+    where
   right := rightAdjointOfCostructuredArrowTerminals G
   adj := Adjunction.adjunctionOfEquivRight _ _
 #align
@@ -163,12 +163,10 @@ attribute [local tidy] tactic.discrete_cases
 /-- Given a left adjoint to `G`, we can construct an initial object in each structured arrow
 category on `G`. -/
 def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
-    IsInitial
-      (StructuredArrow.mk (h.Unit.app A) :
-        StructuredArrow A
-          G) where 
+    IsInitial (StructuredArrow.mk (h.Unit.app A) : StructuredArrow A G)
+    where
   desc B := StructuredArrow.homMk ((h.homEquiv _ _).symm B.x.Hom) (by tidy)
-  uniq' s m w := by 
+  uniq' s m w := by
     ext
     dsimp
     rw [Equiv.eq_symm_apply, adjunction.hom_equiv_unit]
@@ -178,12 +176,10 @@ def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
 /-- Given a right adjoint to `F`, we can construct a terminal object in each costructured arrow
 category on `F`. -/
 def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
-    IsTerminal
-      (CostructuredArrow.mk (h.counit.app A) :
-        CostructuredArrow F
-          A) where 
+    IsTerminal (CostructuredArrow.mk (h.counit.app A) : CostructuredArrow F A)
+    where
   lift B := CostructuredArrow.homMk (h.homEquiv _ _ B.x.Hom) (by tidy)
-  uniq' s m w := by 
+  uniq' s m w := by
     ext
     dsimp
     rw [h.eq_hom_equiv_apply, adjunction.hom_equiv_counit]

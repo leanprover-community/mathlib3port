@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.set.sigma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,8 @@ variable {ι ι' : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t�
   {u : Set (Σi, α i)} {x : Σi, α i} {i j : ι} {a : α i}
 
 @[simp]
-theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} := by
+theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} :=
+  by
   apply subset.antisymm
   · rintro _ ⟨b, rfl⟩
     simp
@@ -36,7 +37,7 @@ theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma
 #align set.range_sigma_mk Set.range_sigma_mk
 
 theorem preimage_image_sigma_mk_of_ne (h : i ≠ j) (s : Set (α j)) :
-    Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by 
+    Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
   ext x
   simp [h.symm]
 #align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigma_mk_of_ne
@@ -49,7 +50,8 @@ theorem image_sigma_mk_preimage_sigma_map_subset {β : ι' → Type _} (f : ι �
 
 theorem image_sigma_mk_preimage_sigma_map {β : ι' → Type _} {f : ι → ι'} (hf : Function.Injective f)
     (g : ∀ i, α i → β (f i)) (i : ι) (s : Set (β (f i))) :
-    Sigma.mk i '' (g i ⁻¹' s) = Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) := by
+    Sigma.mk i '' (g i ⁻¹' s) = Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) :=
+  by
   refine' (image_sigma_mk_preimage_sigma_map_subset f g i s).antisymm _
   rintro ⟨j, x⟩ ⟨y, hys, hxy⟩
   simp only [hf.eq_iff, Sigma.map] at hxy
@@ -190,7 +192,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.singleton_sigma Set.singleton_sigmaₓ'. -/
 @[simp]
 theorem singleton_sigma : ({i} : Set ι).Sigma t = Sigma.mk i '' t i :=
-  ext fun x => by 
+  ext fun x => by
     constructor
     · obtain ⟨j, a⟩ := x
       rintro ⟨rfl : j = i, ha⟩
@@ -207,7 +209,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sigma_singleton Set.sigma_singletonₓ'. -/
 @[simp]
 theorem sigma_singleton {a : ∀ i, α i} :
-    (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s := by
+    (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s :=
+  by
   ext ⟨x, y⟩
   simp [and_left_comm, eq_comm]
 #align set.sigma_singleton Set.sigma_singleton
@@ -251,7 +254,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s₁ : Set.{u2} ι} {s₂ : Set.{u2} ι} {t₁ : forall (i : ι), Set.{u1} (α i)} {t₂ : forall (i : ι), Set.{u1} (α i)}, Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Inter.inter.{max u2 u1} (Set.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Set.instInterSet_1.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) s₁ t₁) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) s₂ t₂)) (Set.Sigma.{u2, u1} ι (fun (i : ι) => α i) (Inter.inter.{u2} (Set.{u2} ι) (Set.instInterSet_1.{u2} ι) s₁ s₂) (fun (i : ι) => Inter.inter.{u1} (Set.{u1} (α i)) (Set.instInterSet_1.{u1} (α i)) (t₁ i) (t₂ i)))
 Case conversion may be inaccurate. Consider using '#align set.sigma_inter_sigma Set.sigma_inter_sigmaₓ'. -/
-theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i := by
+theorem sigma_inter_sigma : s₁.Sigma t₁ ∩ s₂.Sigma t₂ = (s₁ ∩ s₂).Sigma fun i => t₁ i ∩ t₂ i :=
+  by
   ext ⟨x, y⟩
   simp [and_assoc', and_left_comm]
 #align set.sigma_inter_sigma Set.sigma_inter_sigma

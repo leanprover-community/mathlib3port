@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,8 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
   by_cases dm1 : 1 ≤ dist α (j z a) * max (1 / ε) M
   · exact one_le_mul_of_one_le_of_one_le (d0 a) dm1
   · -- `j z a = z / (a + 1)`: we prove that this ratio is close to `α`
-    have : j z a ∈ closed_ball α ε := by
+    have : j z a ∈ closed_ball α ε :=
+      by
       refine' mem_closed_ball'.mp (le_trans _ ((one_div_le me0 e0).mpr (le_max_left _ _)))
       exact (le_div_iff me0).mpr (not_le.mp dm1).le
     -- use the "separation from `1`" (assumption `L`) for numerators,
@@ -167,7 +168,7 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     -- apply the Mean Value Theorem: the bound on the derivative comes from differentiability.
     refine'
       Convex.norm_image_sub_le_of_norm_deriv_le (fun _ _ => fR.differentiable_at)
-        (fun y h => by 
+        (fun y h => by
           rw [fR.deriv]
           exact hM _ h)
         (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)
@@ -210,7 +211,7 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x :=
     ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) := lx (r + f.nat_degree)
   have b0 : (0 : ℝ) < b :=
     zero_lt_one.trans
-      (by 
+      (by
         rw [← Int.cast_one]
         exact int.cast_lt.mpr b1)
   -- Prove that `b ^ f.nat_degree * abs (x - a / b)` is strictly smaller than itself

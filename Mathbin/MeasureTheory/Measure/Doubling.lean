@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.measure.doubling
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,11 +69,11 @@ theorem exists_measure_closed_ball_le_mul' :
 theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     ∃ C : ℝ≥0,
       ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (closedBall x (t * ε)) ≤ C * μ (closedBall x ε) :=
-  by 
+  by
   let C := doubling_constant μ
   have hμ :
     ∀ n : ℕ, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closed_ball x (2 ^ n * ε)) ≤ ↑(C ^ n) * μ (closed_ball x ε) :=
-    by 
+    by
     intro n
     induction' n with n ih
     · simp
@@ -119,7 +119,7 @@ theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
       0 < R ∧
         ∀ (x t r) (ht : t ∈ Ioc 0 K) (hr : r ≤ R),
           μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
-  by 
+  by
   have h := Classical.choose_spec (exists_eventually_forall_measure_closed_ball_le_mul μ K)
   rcases mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 h with ⟨R, Rpos, hR⟩
   refine' ⟨R, Rpos, fun x t r ht hr => _⟩
@@ -135,7 +135,8 @@ theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :
   is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scaling_constant_of_mul
 
 theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
-    ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) := by
+    ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
+  by
   filter_upwards [Classical.choose_spec
       (exists_eventually_forall_measure_closed_ball_le_mul μ K)] with r hr x
   exact (hr x K le_rfl).trans (Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl)

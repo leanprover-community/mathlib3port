@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.log_deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,10 +34,10 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
       invFun := log
       source := { z : ℂ | z.im ∈ Ioo (-π) π }
       target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 }
-      map_source' := by 
+      map_source' := by
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
         refine' (not_or_of_imp fun hz => _).symm
-        obtain rfl : y = 0 := by 
+        obtain rfl : y = 0 := by
           rw [exp_im] at hz
           simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
         rw [mem_set_of_eq, ← of_real_def, exp_of_real_re]
@@ -48,14 +48,14 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
         h.imp (fun h => le_of_lt h) id
       left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2)
       right_inv' := fun x hx =>
-        exp_log <| by 
+        exp_log <| by
           rintro rfl
           simpa [lt_irrefl] using hx }
     continuous_exp.ContinuousOn is_open_map_exp (is_open_Ioo.Preimage continuous_im)
 #align complex.exp_local_homeomorph Complex.expLocalHomeomorph
 
 theorem hasStrictDerivAtLog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
-  have h0 : x ≠ 0 := by 
+  have h0 : x ≠ 0 := by
     rintro rfl
     simpa [lt_irrefl] using h
   expLocalHomeomorph.hasStrictDerivAtSymm h h0 <| by
@@ -88,7 +88,8 @@ theorem HasStrictFderivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h
 #align has_strict_fderiv_at.clog HasStrictFderivAt.clog
 
 theorem HasStrictDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasStrictDerivAt f f' x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictDerivAt (fun t => log (f t)) (f' / f x) x := by
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasStrictDerivAt (fun t => log (f t)) (f' / f x) x :=
+  by
   rw [div_eq_inv_mul]
   exact (has_strict_deriv_at_log h₂).comp x h₁
 #align has_strict_deriv_at.clog HasStrictDerivAt.clog
@@ -104,7 +105,8 @@ theorem HasFderivAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} (h₁ : 
 #align has_fderiv_at.clog HasFderivAt.clog
 
 theorem HasDerivAt.clog {f : ℂ → ℂ} {f' x : ℂ} (h₁ : HasDerivAt f f' x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasDerivAt (fun t => log (f t)) (f' / f x) x := by
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasDerivAt (fun t => log (f t)) (f' / f x) x :=
+  by
   rw [div_eq_inv_mul]
   exact (has_strict_deriv_at_log h₂).HasDerivAt.comp x h₁
 #align has_deriv_at.clog HasDerivAt.clog
@@ -127,7 +129,8 @@ theorem HasFderivWithinAt.clog {f : E → ℂ} {f' : E →L[ℂ] ℂ} {s : Set E
 #align has_fderiv_within_at.clog HasFderivWithinAt.clog
 
 theorem HasDerivWithinAt.clog {f : ℂ → ℂ} {f' x : ℂ} {s : Set ℂ} (h₁ : HasDerivWithinAt f f' s x)
-    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasDerivWithinAt (fun t => log (f t)) (f' / f x) s x := by
+    (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) : HasDerivWithinAt (fun t => log (f t)) (f' / f x) s x :=
+  by
   rw [div_eq_inv_mul]
   exact (has_strict_deriv_at_log h₂).HasDerivAt.compHasDerivWithinAt x h₁
 #align has_deriv_within_at.clog HasDerivWithinAt.clog

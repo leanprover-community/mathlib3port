@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.extra_degeneracy
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,25 +98,24 @@ attribute [simp] s'_comp_ε s_comp_δ₀
 `F : C ⥤ D` is a functor, then `ed.map F` is an extra degeneracy for the
 augmented simplical object in `D` obtained by applying `F` to `X`. -/
 def map {D : Type _} [Category D] {X : SimplicialObject.Augmented C} (ed : ExtraDegeneracy X)
-    (F : C ⥤ D) :
-    ExtraDegeneracy (((whiskering _ _).obj F).obj
-        X) where 
+    (F : C ⥤ D) : ExtraDegeneracy (((whiskering _ _).obj F).obj X)
+    where
   s' := F.map ed.s'
   s n := F.map (ed.s n)
-  s'_comp_ε' := by 
+  s'_comp_ε' := by
     dsimp
     erw [comp_id, ← F.map_comp, ed.s'_comp_ε, F.map_id]
-  s₀_comp_δ₁' := by 
+  s₀_comp_δ₁' := by
     dsimp
     erw [comp_id, ← F.map_comp, ← F.map_comp, ed.s₀_comp_δ₁]
-  s_comp_δ₀' n := by 
+  s_comp_δ₀' n := by
     dsimp
     erw [← F.map_comp, ed.s_comp_δ₀, F.map_id]
-  s_comp_δ' n i := by 
+  s_comp_δ' n i := by
     dsimp
     erw [← F.map_comp, ← F.map_comp, ed.s_comp_δ]
     rfl
-  s_comp_σ' n i := by 
+  s_comp_σ' n i := by
     dsimp
     erw [← F.map_comp, ← F.map_comp, ed.s_comp_σ]
     rfl
@@ -126,27 +125,27 @@ def map {D : Type _} [Category D] {X : SimplicialObject.Augmented C} (ed : Extra
 /-- If `X` and `Y` are isomorphic augmented simplicial objects, then an extra
 degeneracy for `X` gives also an extra degeneracy for `Y` -/
 def ofIso {X Y : SimplicialObject.Augmented C} (e : X ≅ Y) (ed : ExtraDegeneracy X) :
-    ExtraDegeneracy
-      Y where 
+    ExtraDegeneracy Y
+    where
   s' := (point.mapIso e).inv ≫ ed.s' ≫ (drop.mapIso e).Hom.app (op [0])
   s n := (drop.mapIso e).inv.app (op [n]) ≫ ed.s n ≫ (drop.mapIso e).Hom.app (op [n + 1])
   s'_comp_ε' := by
     simpa only [functor.map_iso, assoc, w₀, ed.s'_comp_ε_assoc] using (point.map_iso e).inv_hom_id
-  s₀_comp_δ₁' := by 
+  s₀_comp_δ₁' := by
     have h := w₀ e.inv
     dsimp at h⊢
     simp only [assoc, ← simplicial_object.δ_naturality, ed.s₀_comp_δ₁_assoc, reassoc_of h]
-  s_comp_δ₀' n := by 
+  s_comp_δ₀' n := by
     have h := ed.s_comp_δ₀'
     dsimp at h⊢
     simpa only [assoc, ← simplicial_object.δ_naturality, reassoc_of h] using
       congr_app (drop.map_iso e).inv_hom_id (op [n])
-  s_comp_δ' n i := by 
+  s_comp_δ' n i := by
     have h := ed.s_comp_δ' n i
     dsimp at h⊢
     simp only [assoc, ← simplicial_object.δ_naturality, reassoc_of h, ←
       simplicial_object.δ_naturality_assoc]
-  s_comp_σ' n i := by 
+  s_comp_σ' n i := by
     have h := ed.s_comp_σ' n i
     dsimp at h⊢
     simp only [assoc, ← simplicial_object.σ_naturality, reassoc_of h, ←
@@ -179,7 +178,7 @@ theorem shift_fun_0 {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) : shiftFun
 
 @[simp]
 theorem shift_fun_succ {n : ℕ} {X : Type _} [Zero X] (f : Fin n → X) (i : Fin n) :
-    shiftFun f i.succ = f i := by 
+    shiftFun f i.succ = f i := by
   dsimp [shift_fun]
   split_ifs
   · exfalso
@@ -193,11 +192,11 @@ the monotone map which sends `0` to `0` and `i.succ` to `f.to_order_hom i`. -/
 def shift {n : ℕ} {Δ : SimplexCategory} (f : [n] ⟶ Δ) : [n + 1] ⟶ Δ :=
   SimplexCategory.Hom.mk
     { toFun := shiftFun f.toOrderHom
-      monotone' := fun i₁ i₂ hi => by 
+      monotone' := fun i₁ i₂ hi => by
         by_cases h₁ : i₁ = 0
         · subst h₁
           simp only [shift_fun_0, Fin.zero_le]
-        · have h₂ : i₂ ≠ 0 := by 
+        · have h₂ : i₂ ≠ 0 := by
             intro h₂
             subst h₂
             exact h₁ (le_antisymm hi (Fin.zero_le _))
@@ -210,23 +209,22 @@ def shift {n : ℕ} {Δ : SimplexCategory} (f : [n] ⟶ Δ) : [n + 1] ⟶ Δ :=
 /-- The obvious extra degeneracy on the standard simplex. -/
 @[protected]
 def extraDegeneracy (Δ : SimplexCategory) :
-    SimplicialObject.Augmented.ExtraDegeneracy
-      (standardSimplex.obj
-        Δ) where 
+    SimplicialObject.Augmented.ExtraDegeneracy (standardSimplex.obj Δ)
+    where
   s' x := SimplexCategory.Hom.mk (OrderHom.const _ 0)
   s n f := shift f
-  s'_comp_ε' := by 
+  s'_comp_ε' := by
     ext1 j
     fin_cases j
-  s₀_comp_δ₁' := by 
+  s₀_comp_δ₁' := by
     ext (x j)
     fin_cases j
     rfl
-  s_comp_δ₀' n := by 
+  s_comp_δ₀' n := by
     ext (φ i) : 4
     dsimp [simplicial_object.δ, SimplexCategory.δ, SSet.standardSimplex]
     simp only [shift_fun_succ]
-  s_comp_δ' n i := by 
+  s_comp_δ' n i := by
     ext (φ j) : 4
     dsimp [simplicial_object.δ, SimplexCategory.δ, SSet.standardSimplex]
     by_cases j = 0
@@ -235,7 +233,7 @@ def extraDegeneracy (Δ : SimplexCategory) :
     · cases' Fin.eq_succ_of_ne_zero h with k hk
       subst hk
       simp only [Fin.succ_succ_above_succ, shift_fun_succ]
-  s_comp_σ' n i := by 
+  s_comp_σ' n i := by
     ext (φ j) : 4
     dsimp [simplicial_object.σ, SimplexCategory.σ, SSet.standardSimplex]
     by_cases j = 0
@@ -281,7 +279,7 @@ noncomputable def ExtraDegeneracy.s (n : ℕ) :
   widePullback.lift (widePullback.base _)
     (fun i =>
       dite (i = 0) (fun h => widePullback.base _ ≫ S.section_) fun h => widePullback.π _ (i.pred h))
-    fun i => by 
+    fun i => by
     split_ifs
     · subst h
       simp only [assoc, split_epi.id, comp_id]
@@ -291,7 +289,8 @@ noncomputable def ExtraDegeneracy.s (n : ℕ) :
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_π_0 (n : ℕ) :
-    ExtraDegeneracy.s f S n ≫ widePullback.π _ 0 = widePullback.base _ ≫ S.section_ := by
+    ExtraDegeneracy.s f S n ≫ widePullback.π _ 0 = widePullback.base _ ≫ S.section_ :=
+  by
   dsimp [extra_degeneracy.s]
   simpa only [wide_pullback.lift_π]
 #align
@@ -299,7 +298,8 @@ theorem ExtraDegeneracy.s_comp_π_0 (n : ℕ) :
 
 @[simp]
 theorem ExtraDegeneracy.s_comp_π_succ (n : ℕ) (i : Fin (n + 1)) :
-    ExtraDegeneracy.s f S n ≫ widePullback.π _ i.succ = widePullback.π _ i := by
+    ExtraDegeneracy.s f S n ≫ widePullback.π _ i.succ = widePullback.π _ i :=
+  by
   dsimp [extra_degeneracy.s]
   simp only [wide_pullback.lift_π]
   split_ifs
@@ -318,14 +318,13 @@ theorem ExtraDegeneracy.s_comp_base (n : ℕ) :
   category_theory.arrow.augmented_cech_nerve.extra_degeneracy.s_comp_base CategoryTheory.Arrow.augmentedCechNerve.ExtraDegeneracy.s_comp_base
 
 /-- The augmented Čech nerve associated to a split epimorphism has an extra degeneracy. -/
-noncomputable def extraDegeneracy :
-    SimplicialObject.Augmented.ExtraDegeneracy
-      f.augmentedCechNerve where 
+noncomputable def extraDegeneracy : SimplicialObject.Augmented.ExtraDegeneracy f.augmentedCechNerve
+    where
   s' := S.section_ ≫ widePullback.lift f.Hom (fun i => 𝟙 _) fun i => by rw [id_comp]
   s n := ExtraDegeneracy.s f S n
   s'_comp_ε' := by
     simp only [augmented_cech_nerve_hom_app, assoc, wide_pullback.lift_base, split_epi.id]
-  s₀_comp_δ₁' := by 
+  s₀_comp_δ₁' := by
     dsimp [cech_nerve, simplicial_object.δ, SimplexCategory.δ]
     ext j
     · fin_cases j
@@ -333,12 +332,12 @@ noncomputable def extraDegeneracy :
     ·
       simpa only [assoc, wide_pullback.lift_base, split_epi.id, comp_id] using
         extra_degeneracy.s_comp_base f S 0
-  s_comp_δ₀' n := by 
+  s_comp_δ₀' n := by
     dsimp [cech_nerve, simplicial_object.δ, SimplexCategory.δ]
     ext j
     · simpa only [assoc, wide_pullback.lift_π, id_comp] using extra_degeneracy.s_comp_π_succ f S n j
     · simpa only [assoc, wide_pullback.lift_base, id_comp] using extra_degeneracy.s_comp_base f S n
-  s_comp_δ' n i := by 
+  s_comp_δ' n i := by
     dsimp [cech_nerve, simplicial_object.δ, SimplexCategory.δ]
     ext j
     · simp only [assoc, wide_pullback.lift_π]
@@ -357,7 +356,7 @@ noncomputable def extraDegeneracy :
       erw [extra_degeneracy.s_comp_base, extra_degeneracy.s_comp_base]
       dsimp
       simp only [wide_pullback.lift_base]
-  s_comp_σ' n i := by 
+  s_comp_σ' n i := by
     dsimp [cech_nerve, simplicial_object.σ, SimplexCategory.σ]
     ext j
     · simp only [assoc, wide_pullback.lift_π]
@@ -399,26 +398,26 @@ face map complex of `X` is an homotopy equivalence. -/
 noncomputable def homotopyEquiv {C : Type _} [Category C] [Preadditive C] [HasZeroObject C]
     {X : SimplicialObject.Augmented C} (ed : ExtraDegeneracy X) :
     HomotopyEquiv (AlgebraicTopology.AlternatingFaceMapComplex.obj (drop.obj X))
-      ((ChainComplex.single₀ C).obj
-        (point.obj X)) where 
+      ((ChainComplex.single₀ C).obj (point.obj X))
+    where
   Hom := alternatingFaceMapComplex.ε.app X
   inv := (ChainComplex.fromSingle₀Equiv _ _).invFun ed.s'
   homotopyInvHomId :=
     Homotopy.ofEq
-      (by 
+      (by
         ext
         exact ed.s'_comp_ε)
   homotopyHomInvId :=
-    { Hom := fun i j => by 
+    { Hom := fun i j => by
         by_cases i + 1 = j
         · exact (-ed.s i) ≫ eq_to_hom (by congr )
         · exact 0
-      zero' := fun i j hij => by 
+      zero' := fun i j hij => by
         split_ifs
         · exfalso
           exact hij h
         · simp only [eq_self_iff_true]
-      comm := fun i => by 
+      comm := fun i => by
         cases i
         · rw [Homotopy.prev_d_chain_complex, Homotopy.d_next_zero_chain_complex, zero_add]
           dsimp [ChainComplex.fromSingle₀Equiv, ChainComplex.toSingle₀Equiv]

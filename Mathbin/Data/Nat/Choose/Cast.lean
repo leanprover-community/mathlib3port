@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.choose.cast
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,8 @@ variable (K : Type _) [DivisionRing K] [CharZero K]
 
 namespace Nat
 
-theorem cast_choose {a b : ℕ} (h : a ≤ b) : (b.choose a : K) = b ! / (a ! * (b - a)!) := by
+theorem cast_choose {a b : ℕ} (h : a ≤ b) : (b.choose a : K) = b ! / (a ! * (b - a)!) :=
+  by
   have : ∀ {n : ℕ}, (n ! : K) ≠ 0 := fun n => Nat.cast_ne_zero.2 (factorial_ne_zero _)
   rw [eq_div_iff_mul_eq (mul_ne_zero this this)]
   rw_mod_cast [← mul_assoc, choose_mul_factorial_mul_factorial h]

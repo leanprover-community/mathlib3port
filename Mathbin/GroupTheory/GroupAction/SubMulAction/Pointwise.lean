@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,10 +31,8 @@ section One
 
 variable [Monoid R] [MulAction R M] [One M]
 
-instance :
-    One
-      (SubMulAction R
-        M) where one :=
+instance : One (SubMulAction R M)
+    where one :=
     { carrier := Set.range fun r : R => r • (1 : M)
       smul_mem' := fun r m ⟨r', hr'⟩ => hr' ▸ ⟨r * r', mul_smul _ _ _⟩ }
 
@@ -57,9 +55,8 @@ section Mul
 
 variable [Monoid R] [MulAction R M] [Mul M] [IsScalarTower R M M]
 
-instance :
-    Mul (SubMulAction R
-        M) where mul p q :=
+instance : Mul (SubMulAction R M)
+    where mul p q :=
     { carrier := Set.image2 (· * ·) p q
       smul_mem' := fun r m ⟨m₁, m₂, hm₁, hm₂, h⟩ =>
         h ▸ smul_mul_assoc r m₁ m₂ ▸ Set.mul_mem_mul (p.smul_mem _ hm₁) hm₂ }
@@ -79,11 +76,11 @@ section MulOneClass
 
 variable [Monoid R] [MulAction R M] [MulOneClass M] [IsScalarTower R M M] [SMulCommClass R M M]
 
-instance : MulOneClass (SubMulAction R
-        M) where 
+instance : MulOneClass (SubMulAction R M)
+    where
   mul := (· * ·)
   one := 1
-  mul_one a := by 
+  mul_one a := by
     ext
     simp only [mem_mul, mem_one, mul_smul_comm, exists_and_left, exists_exists_eq_and, mul_one]
     constructor
@@ -91,7 +88,7 @@ instance : MulOneClass (SubMulAction R
       exact smul_mem _ _ hy
     · intro hx
       exact ⟨x, hx, 1, one_smul _ _⟩
-  one_mul a := by 
+  one_mul a := by
     ext
     simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_left, exists_exists_eq_and, one_mul]
     refine' ⟨_, fun hx => ⟨1, x, hx, one_smul _ _⟩⟩
@@ -104,8 +101,8 @@ section Semigroup
 
 variable [Monoid R] [MulAction R M] [Semigroup M] [IsScalarTower R M M]
 
-instance : Semigroup (SubMulAction R
-        M) where 
+instance : Semigroup (SubMulAction R M)
+    where
   mul := (· * ·)
   mul_assoc a b c := SetLike.coe_injective (mul_assoc (_ : Set _) _ _)
 
@@ -116,7 +113,8 @@ section Monoid
 variable [Monoid R] [MulAction R M] [Monoid M] [IsScalarTower R M M] [SMulCommClass R M M]
 
 instance : Monoid (SubMulAction R M) :=
-  { SubMulAction.semigroup, SubMulAction.mulOneClass with
+  { SubMulAction.semigroup,
+    SubMulAction.mulOneClass with
     mul := (· * ·)
     one := 1 }
 
@@ -127,7 +125,7 @@ theorem coe_pow (p : SubMulAction R M) : ∀ {n : ℕ} (hn : n ≠ 0), ↑(p ^ n
 #align sub_mul_action.coe_pow SubMulAction.coe_pow
 
 theorem subset_coe_pow (p : SubMulAction R M) : ∀ {n : ℕ}, (p ^ n : Set M) ⊆ ↑(p ^ n)
-  | 0 => by 
+  | 0 => by
     rw [pow_zero, pow_zero]
     exact subset_coe_one
   | n + 1 => (coe_pow p n.succ_ne_zero).Superset

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module group_theory.perm.via_embedding
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,31 +26,51 @@ variable (e : Perm α) (ι : α ↪ β)
 
 open Classical
 
+#print Equiv.Perm.viaEmbedding /-
 /-- Noncomputable version of `equiv.perm.via_fintype_embedding` that does not assume `fintype` -/
 noncomputable def viaEmbedding : Perm β :=
   extendDomain e (ofInjective ι.1 ι.2)
 #align equiv.perm.via_embedding Equiv.Perm.viaEmbedding
+-/
 
-theorem via_embedding_apply (x : α) : e.viaEmbedding ι (ι x) = ι (e x) :=
+#print Equiv.Perm.viaEmbedding_apply /-
+theorem viaEmbedding_apply (x : α) : e.viaEmbedding ι (ι x) = ι (e x) :=
   extendDomain_apply_image e (ofInjective ι.1 ι.2) x
-#align equiv.perm.via_embedding_apply Equiv.Perm.via_embedding_apply
+#align equiv.perm.via_embedding_apply Equiv.Perm.viaEmbedding_apply
+-/
 
-theorem via_embedding_apply_of_not_mem (x : β) (hx : x ∉ Set.range ι) : e.viaEmbedding ι x = x :=
+#print Equiv.Perm.viaEmbedding_apply_of_not_mem /-
+theorem viaEmbedding_apply_of_not_mem (x : β) (hx : x ∉ Set.range ι) : e.viaEmbedding ι x = x :=
   extendDomain_apply_not_subtype e (ofInjective ι.1 ι.2) hx
-#align equiv.perm.via_embedding_apply_of_not_mem Equiv.Perm.via_embedding_apply_of_not_mem
+#align equiv.perm.via_embedding_apply_of_not_mem Equiv.Perm.viaEmbedding_apply_of_not_mem
+-/
 
+#print Equiv.Perm.viaEmbeddingHom /-
 /-- `via_embedding` as a group homomorphism -/
 noncomputable def viaEmbeddingHom : Perm α →* Perm β :=
   extendDomainHom (ofInjective ι.1 ι.2)
 #align equiv.perm.via_embedding_hom Equiv.Perm.viaEmbeddingHom
+-/
 
-theorem via_embedding_hom_apply : viaEmbeddingHom ι e = viaEmbedding e ι :=
+/- warning: equiv.perm.via_embedding_hom_apply -> Equiv.Perm.viaEmbeddingHom_apply is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.Perm.{succ u1} α) (ι : Function.Embedding.{succ u1, succ u2} α β), Eq.{succ u2} (Equiv.Perm.{succ u2} β) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (fun (_x : MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) => (Equiv.Perm.{succ u1} α) -> (Equiv.Perm.{succ u2} β)) (MonoidHom.hasCoeToFun.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.viaEmbeddingHom.{u1, u2} α β ι) e) (Equiv.Perm.viaEmbedding.{u1, u2} α β e ι)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} (e : Equiv.Perm.{succ u1} α) (ι : Function.Embedding.{succ u1, succ u2} α β), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Equiv.Perm.{succ u1} α) => Equiv.Perm.{succ u2} β) e) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.Perm.{succ u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Equiv.Perm.{succ u1} α) => Equiv.Perm.{succ u2} β) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (MulOneClass.toMul.{u2} (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β)))) (MonoidHom.monoidHomClass.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))))) (Equiv.Perm.viaEmbeddingHom.{u1, u2} α β ι) e) (Equiv.Perm.viaEmbedding.{u1, u2} α β e ι)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.via_embedding_hom_apply Equiv.Perm.viaEmbeddingHom_applyₓ'. -/
+theorem viaEmbeddingHom_apply : viaEmbeddingHom ι e = viaEmbedding e ι :=
   rfl
-#align equiv.perm.via_embedding_hom_apply Equiv.Perm.via_embedding_hom_apply
+#align equiv.perm.via_embedding_hom_apply Equiv.Perm.viaEmbeddingHom_apply
 
-theorem via_embedding_hom_injective : Function.Injective (viaEmbeddingHom ι) :=
+/- warning: equiv.perm.via_embedding_hom_injective -> Equiv.Perm.viaEmbeddingHom_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (ι : Function.Embedding.{succ u1, succ u2} α β), Function.Injective.{succ u1, succ u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (fun (_x : MonoidHom.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) => (Equiv.Perm.{succ u1} α) -> (Equiv.Perm.{succ u2} β)) (MonoidHom.hasCoeToFun.{u1, u2} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u2} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} β) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} β) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} β) (Equiv.Perm.permGroup.{u2} β))))) (Equiv.Perm.viaEmbeddingHom.{u1, u2} α β ι))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (ι : Function.Embedding.{succ u2, succ u1} α β), Function.Injective.{succ u2, succ u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Equiv.Perm.{succ u2} α) (fun (_x : Equiv.Perm.{succ u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Equiv.Perm.{succ u2} α) => Equiv.Perm.{succ u1} β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (MulOneClass.toMul.{u2} (Equiv.Perm.{succ u2} α) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α))))) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))) (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β)))) (MonoidHom.monoidHomClass.{u2, u1} (Equiv.Perm.{succ u2} α) (Equiv.Perm.{succ u1} β) (Monoid.toMulOneClass.{u2} (Equiv.Perm.{succ u2} α) (DivInvMonoid.toMonoid.{u2} (Equiv.Perm.{succ u2} α) (Group.toDivInvMonoid.{u2} (Equiv.Perm.{succ u2} α) (Equiv.Perm.permGroup.{u2} α)))) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} β) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} β) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} β) (Equiv.Perm.permGroup.{u1} β))))))) (Equiv.Perm.viaEmbeddingHom.{u2, u1} α β ι))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.via_embedding_hom_injective Equiv.Perm.viaEmbeddingHom_injectiveₓ'. -/
+theorem viaEmbeddingHom_injective : Function.Injective (viaEmbeddingHom ι) :=
   extendDomainHom_injective (ofInjective ι.1 ι.2)
-#align equiv.perm.via_embedding_hom_injective Equiv.Perm.via_embedding_hom_injective
+#align equiv.perm.via_embedding_hom_injective Equiv.Perm.viaEmbeddingHom_injective
 
 end Perm
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.G_delta
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ def IsGδ (s : Set α) : Prop :=
 
 /-- An open set is a Gδ set. -/
 theorem IsOpen.is_Gδ {s : Set α} (h : IsOpen s) : IsGδ s :=
-  ⟨{s}, by simp [h], countable_singleton _, (Set.sInter_singleton _).symm⟩
+  ⟨{s}, by simp [h], countable_singleton _, (Set.interₛ_singleton _).symm⟩
 #align is_open.is_Gδ IsOpen.is_Gδ
 
 @[simp]
@@ -81,7 +81,8 @@ theorem is_Gδ_Inter_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsO
 #align is_Gδ_Inter_of_open is_Gδ_Inter_of_open
 
 /-- The intersection of an encodable family of Gδ sets is a Gδ set. -/
-theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)) : IsGδ (⋂ i, s i) := by
+theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)) : IsGδ (⋂ i, s i) :=
+  by
   choose T hTo hTc hTs using hs
   obtain rfl : s = fun i => ⋂₀ T i := funext hTs
   refine' ⟨⋃ i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩
@@ -89,7 +90,8 @@ theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)
 #align is_Gδ_Inter is_Gδ_Inter
 
 theorem is_Gδ_bInter {s : Set ι} (hs : s.Countable) {t : ∀ i ∈ s, Set α}
-    (ht : ∀ i ∈ s, IsGδ (t i ‹_›)) : IsGδ (⋂ i ∈ s, t i ‹_›) := by
+    (ht : ∀ i ∈ s, IsGδ (t i ‹_›)) : IsGδ (⋂ i ∈ s, t i ‹_›) :=
+  by
   rw [bInter_eq_Inter]
   haveI := hs.to_encodable
   exact is_Gδ_Inter fun x => ht x x.2
@@ -100,13 +102,15 @@ theorem is_Gδ_sInter {S : Set (Set α)} (h : ∀ s ∈ S, IsGδ s) (hS : S.Coun
   simpa only [sInter_eq_bInter] using is_Gδ_bInter hS h
 #align is_Gδ_sInter is_Gδ_sInter
 
-theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) := by
+theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) :=
+  by
   rw [inter_eq_Inter]
   exact is_Gδ_Inter (Bool.forall_bool.2 ⟨ht, hs⟩)
 #align is_Gδ.inter IsGδ.inter
 
 /-- The union of two Gδ sets is a Gδ set. -/
-theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ t) := by
+theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ t) :=
+  by
   rcases hs with ⟨S, Sopen, Scount, rfl⟩
   rcases ht with ⟨T, Topen, Tcount, rfl⟩
   rw [sInter_union_sInter]
@@ -124,7 +128,8 @@ theorem is_Gδ_bUnion {s : Set ι} (hs : s.Finite) {f : ι → Set α} (h : ∀ 
 #align is_Gδ_bUnion is_Gδ_bUnion
 
 theorem IsClosed.is_Gδ {α} [UniformSpace α] [IsCountablyGenerated (𝓤 α)] {s : Set α}
-    (hs : IsClosed s) : IsGδ s := by
+    (hs : IsClosed s) : IsGδ s :=
+  by
   rcases(@uniformity_has_basis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
   rw [← hs.closure_eq, ← hU.bInter_bUnion_ball]
   refine' is_Gδ_bInter (to_countable _) fun n hn => IsOpen.is_Gδ _
@@ -139,7 +144,8 @@ theorem is_Gδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
   is_open_compl_singleton.IsGδ
 #align is_Gδ_compl_singleton is_Gδ_compl_singleton
 
-theorem Set.Countable.is_Gδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ) := by
+theorem Set.Countable.is_Gδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ) :=
+  by
   rw [← bUnion_of_singleton s, compl_Union₂]
   exact is_Gδ_bInter hs fun x _ => is_Gδ_compl_singleton x
 #align set.countable.is_Gδ_compl Set.Countable.is_Gδ_compl
@@ -160,7 +166,8 @@ open TopologicalSpace
 
 variable [FirstCountableTopology α]
 
-theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) := by
+theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) :=
+  by
   rcases(nhds_basis_opens a).exists_antitone_subbasis with ⟨U, hU, h_basis⟩
   rw [← bInter_basis_nhds h_basis.to_has_basis]
   exact is_Gδ_bInter (to_countable _) fun n hn => (hU n).2.IsGδ
@@ -184,7 +191,8 @@ variable [TopologicalSpace α]
 
 /-- The set of points where a function is continuous is a Gδ set. -/
 theorem is_Gδ_set_of_continuous_at [UniformSpace β] [IsCountablyGenerated (𝓤 β)] (f : α → β) :
-    IsGδ { x | ContinuousAt f x } := by
+    IsGδ { x | ContinuousAt f x } :=
+  by
   obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis
   simp only [Uniform.continuous_at_iff_prod, nhds_prod_eq]
   simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true,

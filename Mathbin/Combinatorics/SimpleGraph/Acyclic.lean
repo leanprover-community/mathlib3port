@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.acyclic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ structure IsTree : Prop where
 variable {G}
 
 theorem is_acyclic_iff_forall_adj_is_bridge :
-    G.IsAcyclic ↔ ∀ ⦃v w : V⦄, G.Adj v w → G.IsBridge ⟦(v, w)⟧ := by
+    G.IsAcyclic ↔ ∀ ⦃v w : V⦄, G.Adj v w → G.IsBridge ⟦(v, w)⟧ :=
+  by
   simp_rw [is_bridge_iff_adj_and_forall_cycle_not_mem]
   constructor
   · intro ha v w hvw
@@ -85,7 +86,7 @@ theorem is_acyclic_iff_forall_edge_is_bridge : G.IsAcyclic ↔ ∀ ⦃e⦄, e �
   simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.is_acyclic_iff_forall_edge_is_bridge
 
 theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p q : G.Path v w) :
-    p = q := by 
+    p = q := by
   obtain ⟨p, hp⟩ := p
   obtain ⟨q, hq⟩ := q
   simp only
@@ -110,7 +111,8 @@ theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p
       exact absurd (walk.fst_mem_support_of_mem_edges _ h) hp.2
 #align simple_graph.is_acyclic.path_unique SimpleGraph.IsAcyclic.path_unique
 
-theorem is_acyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) : G.IsAcyclic := by
+theorem is_acyclic_of_path_unique (h : ∀ (v w : V) (p q : G.Path v w), p = q) : G.IsAcyclic :=
+  by
   intro v c hc
   simp only [walk.is_cycle_def, Ne.def] at hc
   cases c
@@ -128,7 +130,7 @@ theorem is_acyclic_iff_path_unique : G.IsAcyclic ↔ ∀ ⦃v w : V⦄ (p q : G.
 
 theorem is_tree_iff_exists_unique_path :
     G.IsTree ↔ Nonempty V ∧ ∀ v w : V, ∃! p : G.Walk v w, p.IsPath := by
-  classical 
+  classical
     rw [is_tree_iff, is_acyclic_iff_path_unique]
     constructor
     · rintro ⟨hc, hu⟩

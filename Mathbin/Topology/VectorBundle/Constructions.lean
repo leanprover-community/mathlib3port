@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sébastien Gouëzel, Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.constructions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,15 +45,15 @@ namespace Bundle.Trivial
 variable (𝕜 : Type _) (B : Type _) (F : Type _) [NontriviallyNormedField 𝕜] [NormedAddCommGroup F]
   [NormedSpace 𝕜 F] [TopologicalSpace B]
 
-instance trivialization.is_linear :
-    (trivialization B F).is_linear 𝕜 where linear x hx := ⟨fun y z => rfl, fun c y => rfl⟩
-#align bundle.trivial.trivialization.is_linear Bundle.Trivial.trivialization.is_linear
+instance trivialization.isLinear : (trivialization B F).isLinear 𝕜
+    where linear x hx := ⟨fun y z => rfl, fun c y => rfl⟩
+#align bundle.trivial.trivialization.is_linear Bundle.Trivial.trivialization.isLinear
 
 variable {𝕜}
 
 theorem trivialization.coord_changeL (b : B) :
     (trivialization B F).coordChangeL 𝕜 (trivialization B F) b = ContinuousLinearEquiv.refl 𝕜 F :=
-  by 
+  by
   ext v
   rw [Trivialization.coord_changeL_apply']
   exacts[rfl, ⟨mem_univ _, mem_univ _⟩]
@@ -61,15 +61,13 @@ theorem trivialization.coord_changeL (b : B) :
 
 variable (𝕜)
 
-instance vectorBundle :
-    VectorBundle 𝕜 F
-      (Bundle.Trivial B
-        F) where 
-  trivialization_linear' := by 
+instance vectorBundle : VectorBundle 𝕜 F (Bundle.Trivial B F)
+    where
+  trivializationLinear' := by
     intro e he
     rw [eq_trivialization B F e]
     infer_instance
-  continuous_on_coord_change' := by 
+  continuous_on_coord_change' := by
     intro e e' he he'
     obtain rfl := eq_trivialization B F e
     obtain rfl := eq_trivialization B F e'
@@ -95,16 +93,15 @@ variable {F₁ E₁ F₂ E₂} [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module �
   [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜 (E₂ x)] (e₁ : Trivialization F₁ (π E₁))
   (e₂ : Trivialization F₂ (π E₂))
 
-instance prod.is_linear [e₁.is_linear 𝕜] [e₂.is_linear 𝕜] :
-    (e₁.Prod e₂).is_linear
-      𝕜 where linear := fun x ⟨h₁, h₂⟩ =>
-    (((e₁.linear 𝕜 h₁).mk' _).prod_map ((e₂.linear 𝕜 h₂).mk' _)).is_linear
-#align trivialization.prod.is_linear Trivialization.prod.is_linear
+instance prod.isLinear [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] : (e₁.Prod e₂).isLinear 𝕜
+    where linear := fun x ⟨h₁, h₂⟩ =>
+    (((e₁.linear 𝕜 h₁).mk' _).prod_map ((e₂.linear 𝕜 h₂).mk' _)).isLinear
+#align trivialization.prod.is_linear Trivialization.prod.isLinear
 
 variable {e₁ e₂} [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)]
   [FiberBundle F₁ E₁] [FiberBundle F₂ E₂]
 
-theorem prod_apply [e₁.is_linear 𝕜] [e₂.is_linear 𝕜] {x : B} (hx₁ : x ∈ e₁.baseSet)
+theorem prod_apply [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] {x : B} (hx₁ : x ∈ e₁.baseSet)
     (hx₂ : x ∈ e₂.baseSet) (v₁ : E₁ x) (v₂ : E₂ x) :
     prod e₁ e₂ ⟨x, (v₁, v₂)⟩ =
       ⟨x, e₁.continuousLinearEquivAt 𝕜 x hx₁ v₁, e₂.continuousLinearEquivAt 𝕜 x hx₂ v₂⟩ :=
@@ -121,13 +118,13 @@ variable [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜 (E₁ x)] [∀ x, A
 
 /-- The product of two vector bundles is a vector bundle. -/
 instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂ E₂] :
-    VectorBundle 𝕜 (F₁ × F₂)
-      (E₁ ×ᵇ
-        E₂) where 
-  trivialization_linear' := by 
+    VectorBundle 𝕜 (F₁ × F₂) (E₁ ×ᵇ E₂)
+    where
+  trivializationLinear' := by
     rintro _ ⟨e₁, e₂, he₁, he₂, rfl⟩; skip
     infer_instance
-  continuous_on_coord_change' := by
+  continuous_on_coord_change' :=
+    by
     rintro _ _ ⟨e₁, e₂, he₁, he₂, rfl⟩ ⟨e₁', e₂', he₁', he₂', rfl⟩; skip
     refine'
         (((continuous_on_coord_change 𝕜 e₁ e₁').mono _).prodMapL 𝕜
@@ -150,11 +147,11 @@ variable {𝕜 F₁ E₁ F₂ E₂}
 
 @[simp]
 theorem Trivialization.continuous_linear_equiv_at_prod {e₁ : Trivialization F₁ (π E₁)}
-    {e₂ : Trivialization F₂ (π E₂)} [e₁.is_linear 𝕜] [e₂.is_linear 𝕜] {x : B} (hx₁ : x ∈ e₁.baseSet)
+    {e₂ : Trivialization F₂ (π E₂)} [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] {x : B} (hx₁ : x ∈ e₁.baseSet)
     (hx₂ : x ∈ e₂.baseSet) :
     (e₁.Prod e₂).continuousLinearEquivAt 𝕜 x ⟨hx₁, hx₂⟩ =
       (e₁.continuousLinearEquivAt 𝕜 x hx₁).Prod (e₂.continuousLinearEquivAt 𝕜 x hx₂) :=
-  by 
+  by
   ext1
   funext v
   obtain ⟨v₁, v₂⟩ := v
@@ -181,20 +178,19 @@ variable {E F} [TopologicalSpace B'] [TopologicalSpace (TotalSpace E)] [Nontrivi
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B] [∀ x, AddCommMonoid (E x)]
   [∀ x, Module 𝕜 (E x)] {K : Type _} [ContinuousMapClass K B' B]
 
-instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.is_linear 𝕜] (f : K) :
-    (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).is_linear
-      𝕜 where linear x h := e.linear 𝕜 h
-#align trivialization.pullback_linear Trivialization.pullback_linear
+instance Trivialization.pullbackLinear (e : Trivialization F (π E)) [e.isLinear 𝕜] (f : K) :
+    (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).isLinear 𝕜
+    where linear x h := e.linear 𝕜 h
+#align trivialization.pullback_linear Trivialization.pullbackLinear
 
 instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E] [VectorBundle 𝕜 F E]
-    (f : K) :
-    VectorBundle 𝕜 F
-      ((f : B' → B) *ᵖ
-        E) where 
-  trivialization_linear' := by 
+    (f : K) : VectorBundle 𝕜 F ((f : B' → B) *ᵖ E)
+    where
+  trivializationLinear' := by
     rintro _ ⟨e, he, rfl⟩; skip
     infer_instance
-  continuous_on_coord_change' := by
+  continuous_on_coord_change' :=
+    by
     rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩; skip
     refine'
       ((continuous_on_coord_change 𝕜 e e').comp (map_continuous f).ContinuousOn fun b hb =>

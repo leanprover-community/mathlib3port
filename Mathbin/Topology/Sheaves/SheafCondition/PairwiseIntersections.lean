@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.pairwise_intersections
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,9 +113,8 @@ def pairwiseToOpensLeCoverMap :
 of open sets below some `U i`.
 -/
 @[simps]
-def pairwiseToOpensLeCover :
-    Pairwise ι ⥤ OpensLeCover
-        U where 
+def pairwiseToOpensLeCover : Pairwise ι ⥤ OpensLeCover U
+    where
   obj := pairwiseToOpensLeCoverObj U
   map V W i := pairwiseToOpensLeCoverMap U i
 #align
@@ -132,7 +131,8 @@ of all opens contained in some `U i`.
 -/
 instance : Functor.Final (pairwiseToOpensLeCover U) :=
   ⟨fun V =>
-    is_connected_of_zigzag fun A B => by
+    is_connected_of_zigzag fun A B =>
+      by
       rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;>
         dsimp at *
       · refine'
@@ -155,8 +155,7 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
                 Hom := (le_inf (b.le.trans inf_le_left) a.le).Hom },
               { left := ⟨⟨⟩⟩
                 right := single i'
-                Hom := (b.le.trans inf_le_left).Hom },
-              _], _, rfl⟩
+                Hom := (b.le.trans inf_le_left).Hom }, _], _, rfl⟩
         exact
           List.Chain.cons
             (Or.inr
@@ -177,8 +176,7 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
                 Hom := (a.le.trans inf_le_left).Hom },
               { left := ⟨⟨⟩⟩
                 right := pair i i'
-                Hom := (le_inf (a.le.trans inf_le_left) b.le).Hom },
-              _], _, rfl⟩
+                Hom := (le_inf (a.le.trans inf_le_left) b.le).Hom }, _], _, rfl⟩
         exact
           List.Chain.cons
             (Or.inl
@@ -202,8 +200,7 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
                 Hom := (le_inf (a.le.trans inf_le_left) (b.le.trans inf_le_left)).Hom },
               { left := ⟨⟨⟩⟩
                 right := single i'
-                Hom := (b.le.trans inf_le_left).Hom },
-              _], _, rfl⟩
+                Hom := (b.le.trans inf_le_left).Hom }, _], _, rfl⟩
         exact
           List.Chain.cons
             (Or.inl
@@ -226,11 +223,8 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
 /-- The diagram in `opens X` indexed by pairwise intersections from `U` is isomorphic
 (in fact, equal) to the diagram factored through `opens_le_cover U`.
 -/
-def pairwiseDiagramIso :
-    Pairwise.diagram U ≅
-      pairwiseToOpensLeCover U ⋙
-        fullSubcategoryInclusion
-          _ where 
+def pairwiseDiagramIso : Pairwise.diagram U ≅ pairwiseToOpensLeCover U ⋙ fullSubcategoryInclusion _
+    where
   Hom := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
   inv := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
 #align
@@ -302,7 +296,8 @@ to the reformulation in terms of the presheaf preserving the limit of the diagra
 consisting of the `U i` and `U i ⊓ U j`.
 -/
 theorem is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections :
-    F.IsSheaf ↔ F.IsSheafPreservesLimitPairwiseIntersections := by
+    F.IsSheaf ↔ F.IsSheafPreservesLimitPairwiseIntersections :=
+  by
   rw [is_sheaf_iff_is_sheaf_pairwise_intersections]
   constructor
   · intro h ι U
@@ -327,7 +322,7 @@ def interUnionPullbackCone :
     PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op)
       (F.1.map (homOfLe inf_le_right).op) :=
   PullbackCone.mk (F.1.map (homOfLe le_sup_left).op) (F.1.map (homOfLe le_sup_right).op)
-    (by 
+    (by
       rw [← F.1.map_comp, ← F.1.map_comp]
       congr )
 #align Top.sheaf.inter_union_pullback_cone TopCat.Sheaf.interUnionPullbackCone
@@ -356,11 +351,12 @@ variable
 /-- (Implementation).
 Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through `F(U ⊔ V)`.
 -/
-def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
+def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) :=
+  by
   let ι : ULift.{w} walking_pair → opens X := fun j => walking_pair.cases_on j.down U V
-  have hι : U ⊔ V = supᵢ ι := by 
+  have hι : U ⊔ V = supᵢ ι := by
     ext
-    rw [opens.coe_supr, Set.mem_Union]
+    rw [opens.coe_supr, Set.mem_unionᵢ]
     constructor
     · rintro (h | h)
       exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
@@ -394,7 +390,8 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
 #align Top.sheaf.inter_union_pullback_cone_lift TopCat.Sheaf.interUnionPullbackConeLift
 
 theorem inter_union_pullback_cone_lift_left :
-    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_left).op = s.fst := by
+    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_left).op = s.fst :=
+  by
   erw [category.assoc, ← F.1.map_comp]
   exact
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
@@ -403,7 +400,8 @@ theorem inter_union_pullback_cone_lift_left :
   Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.inter_union_pullback_cone_lift_left
 
 theorem inter_union_pullback_cone_lift_right :
-    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_right).op = s.snd := by
+    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_right).op = s.snd :=
+  by
   erw [category.assoc, ← F.1.map_comp]
   exact
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
@@ -412,11 +410,12 @@ theorem inter_union_pullback_cone_lift_right :
   Top.sheaf.inter_union_pullback_cone_lift_right TopCat.Sheaf.inter_union_pullback_cone_lift_right
 
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
-def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
+def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) :=
+  by
   let ι : ULift.{w} walking_pair → opens X := fun ⟨j⟩ => walking_pair.cases_on j U V
-  have hι : U ⊔ V = supᵢ ι := by 
+  have hι : U ⊔ V = supᵢ ι := by
     ext
-    rw [opens.coe_supr, Set.mem_Union]
+    rw [opens.coe_supr, Set.mem_unionᵢ]
     constructor
     · rintro (h | h)
       exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]

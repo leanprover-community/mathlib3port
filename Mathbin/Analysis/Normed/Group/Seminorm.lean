@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.seminorm
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,7 +145,8 @@ variable [Group E] [GroupSeminormClass F E] (f : F) (x y : E)
 include E
 
 @[to_additive]
-theorem map_div_le_add : f (x / y) ≤ f x + f y := by
+theorem map_div_le_add : f (x / y) ≤ f x + f y :=
+  by
   rw [div_eq_mul_inv, ← map_inv_eq_map f y]
   exact map_mul_le_add _ _ _
 #align map_div_le_add map_div_le_add
@@ -160,7 +161,8 @@ theorem le_map_add_map_div' : f x ≤ f y + f (y / x) := by
 #align le_map_add_map_div' le_map_add_map_div'
 
 @[to_additive]
-theorem abs_sub_map_le_div : |f x - f y| ≤ f (x / y) := by
+theorem abs_sub_map_le_div : |f x - f y| ≤ f (x / y) :=
+  by
   rw [abs_sub_le_iff, sub_le_iff_le_add', sub_le_iff_le_add']
   exact ⟨le_map_add_map_div _ _ _, le_map_add_map_div' _ _ _⟩
 #align abs_sub_map_le_div abs_sub_map_le_div
@@ -174,7 +176,7 @@ instance (priority := 100) GroupSeminormClass.toNonnegHomClass [Group E] [GroupS
   { ‹GroupSeminormClass F E› with
     map_nonneg := fun f a =>
       nonneg_of_mul_nonneg_right
-        (by 
+        (by
           rw [two_mul, ← map_one_eq_zero f, ← div_self' a]
           exact map_div_le_add _ _ _)
         two_pos }
@@ -193,7 +195,7 @@ theorem map_pos_of_ne_one (hx : x ≠ 1) : 0 < f x :=
 
 @[simp, to_additive]
 theorem map_eq_zero_iff_eq_one : f x = 0 ↔ x = 1 :=
-  ⟨eq_one_of_map_eq_zero _, by 
+  ⟨eq_one_of_map_eq_zero _, by
     rintro rfl
     exact map_one_eq_zero _⟩
 #align map_eq_zero_iff_eq_one map_eq_zero_iff_eq_one
@@ -215,9 +217,8 @@ section Group
 variable [Group E] [Group F] [Group G] {p q : GroupSeminorm E}
 
 @[to_additive]
-instance groupSeminormClass :
-    GroupSeminormClass (GroupSeminorm E)
-      E where 
+instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E
+    where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_one_eq_zero f := f.map_one'
@@ -338,8 +339,8 @@ instance : SemilatticeSup (GroupSeminorm E) :=
 /-- Composition of a group seminorm with a monoid homomorphism as a group seminorm. -/
 @[to_additive
       "Composition of an additive group seminorm with an additive monoid homomorphism as an\nadditive group seminorm."]
-def comp (p : GroupSeminorm E) (f : F →* E) :
-    GroupSeminorm F where 
+def comp (p : GroupSeminorm E) (f : F →* E) : GroupSeminorm F
+    where
   toFun x := p (f x)
   map_one' := by rw [f.map_one, map_one_eq_zero p]
   mul_le' _ _ := (congr_arg p <| f.map_mul _ _).trans_le <| map_mul_le_add p _ _
@@ -401,7 +402,7 @@ theorem comp_mul_le (f g : F →* E) : p.comp (f * g) ≤ p.comp f + p.comp g :=
 @[to_additive]
 theorem mul_bdd_below_range_add {p q : GroupSeminorm E} {x : E} :
     BddBelow (range fun y => p y + q (x / y)) :=
-  ⟨0, by 
+  ⟨0, by
     rintro _ ⟨x, rfl⟩
     dsimp
     positivity⟩
@@ -415,7 +416,8 @@ noncomputable instance : HasInf (GroupSeminorm E) :=
         cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun x => by positivity) fun r hr =>
           ⟨1, by rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zero]⟩
       mul_le' := fun x y =>
-        le_cinfi_add_cinfi fun u v => by
+        le_cinfi_add_cinfi fun u v =>
+          by
           refine' cinfi_le_of_le mul_bdd_below_range_add (u * v) _
           rw [mul_div_mul_comm, add_add_add_comm]
           exact add_le_add (map_mul_le_add p _ _) (map_mul_le_add q _ _)
@@ -430,7 +432,7 @@ theorem inf_apply : (p ⊓ q) x = ⨅ y, p y + q (x / y) :=
 
 @[to_additive]
 noncomputable instance : Lattice (GroupSeminorm E) :=
-  { GroupSeminorm.semilatticeSup with 
+  { GroupSeminorm.semilatticeSup with
     inf := (· ⊓ ·)
     inf_le_left := fun p q x =>
       cinfi_le_of_le mul_bdd_below_range_add x <| by rw [div_self', map_one_eq_zero q, add_zero]
@@ -453,7 +455,7 @@ variable [AddGroup E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ�
 instance [DecidableEq E] : One (AddGroupSeminorm E) :=
   ⟨{  toFun := fun x => if x = 0 then 0 else 1
       map_zero' := if_pos rfl
-      add_le' := fun x y => by 
+      add_le' := fun x y => by
         by_cases hx : x = 0
         · rw [if_pos hx, hx, zero_add, zero_add]
         · rw [if_neg hx]
@@ -471,7 +473,8 @@ instance : HasSmul R (AddGroupSeminorm E) :=
     { toFun := fun x => r • p x
       map_zero' := by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, map_zero, mul_zero]
-      add_le' := fun _ _ => by
+      add_le' := fun _ _ =>
+        by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact
           (mul_le_mul_of_nonneg_left (map_add_le_add _ _ _) <| Nnreal.coe_nonneg _).trans_eq
@@ -509,7 +512,7 @@ variable [Group E] [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 
 instance [DecidableEq E] : One (GroupSeminorm E) :=
   ⟨{  toFun := fun x => if x = 1 then 0 else 1
       map_one' := if_pos rfl
-      mul_le' := fun x y => by 
+      mul_le' := fun x y => by
         by_cases hx : x = 1
         · rw [if_pos hx, hx, one_mul, zero_add]
         · rw [if_neg hx]
@@ -529,7 +532,8 @@ instance : HasSmul R (GroupSeminorm E) :=
       map_one' := by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, map_one_eq_zero p,
           mul_zero]
-      mul_le' := fun _ _ => by
+      mul_le' := fun _ _ =>
+        by
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact
           (mul_le_mul_of_nonneg_left (map_mul_le_add p _ _) <| Nnreal.coe_nonneg _).trans_eq
@@ -571,8 +575,8 @@ section Group
 variable [Group E] [Group F] [Group G] {p q : GroupNorm E}
 
 @[to_additive]
-instance groupNormClass :
-    GroupNormClass (GroupNorm E) E where 
+instance groupNormClass : GroupNormClass (GroupNorm E) E
+    where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_one_eq_zero f := f.map_one'

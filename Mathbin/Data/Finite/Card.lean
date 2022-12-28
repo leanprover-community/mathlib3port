@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.finite.card
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,26 +38,30 @@ open Classical
 variable {α β γ : Type _}
 
 /-- There is (noncomputably) an equivalence between a finite type `α` and `fin (nat.card α)`. -/
-def Finite.equivFin (α : Type _) [Finite α] : α ≃ Fin (Nat.card α) := by
+def Finite.equivFin (α : Type _) [Finite α] : α ≃ Fin (Nat.card α) :=
+  by
   have := (Finite.exists_equiv_fin α).some_spec.some
   rwa [Nat.card_eq_of_equiv_fin this]
 #align finite.equiv_fin Finite.equivFin
 
 /-- Similar to `finite.equiv_fin` but with control over the term used for the cardinality. -/
-def Finite.equivFinOfCardEq [Finite α] {n : ℕ} (h : Nat.card α = n) : α ≃ Fin n := by
+def Finite.equivFinOfCardEq [Finite α] {n : ℕ} (h : Nat.card α = n) : α ≃ Fin n :=
+  by
   subst h
   apply Finite.equivFin
 #align finite.equiv_fin_of_card_eq Finite.equivFinOfCardEq
 
 theorem Nat.card_eq (α : Type _) :
-    Nat.card α = if h : Finite α then @Fintype.card α (Fintype.ofFinite α) else 0 := by
+    Nat.card α = if h : Finite α then @Fintype.card α (Fintype.ofFinite α) else 0 :=
+  by
   cases finite_or_infinite α
   · letI := Fintype.ofFinite α
     simp only [*, Nat.card_eq_fintype_card, dif_pos]
   · simp [*, not_finite_iff_infinite.mpr h]
 #align nat.card_eq Nat.card_eq
 
-theorem Finite.card_pos_iff [Finite α] : 0 < Nat.card α ↔ Nonempty α := by
+theorem Finite.card_pos_iff [Finite α] : 0 < Nat.card α ↔ Nonempty α :=
+  by
   haveI := Fintype.ofFinite α
   rw [Nat.card_eq_fintype_card, Fintype.card_pos_iff]
 #align finite.card_pos_iff Finite.card_pos_iff
@@ -72,18 +76,21 @@ theorem cast_card_eq_mk {α : Type _} [Finite α] : ↑(Nat.card α) = Cardinal.
   Cardinal.cast_to_nat_of_lt_aleph_0 (Cardinal.lt_aleph_0_of_finite α)
 #align finite.cast_card_eq_mk Finite.cast_card_eq_mk
 
-theorem card_eq [Finite α] [Finite β] : Nat.card α = Nat.card β ↔ Nonempty (α ≃ β) := by
+theorem card_eq [Finite α] [Finite β] : Nat.card α = Nat.card β ↔ Nonempty (α ≃ β) :=
+  by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofFinite β
   simp [Fintype.card_eq]
 #align finite.card_eq Finite.card_eq
 
-theorem card_le_one_iff_subsingleton [Finite α] : Nat.card α ≤ 1 ↔ Subsingleton α := by
+theorem card_le_one_iff_subsingleton [Finite α] : Nat.card α ≤ 1 ↔ Subsingleton α :=
+  by
   haveI := Fintype.ofFinite α
   simp [Fintype.card_le_one_iff_subsingleton]
 #align finite.card_le_one_iff_subsingleton Finite.card_le_one_iff_subsingleton
 
-theorem one_lt_card_iff_nontrivial [Finite α] : 1 < Nat.card α ↔ Nontrivial α := by
+theorem one_lt_card_iff_nontrivial [Finite α] : 1 < Nat.card α ↔ Nontrivial α :=
+  by
   haveI := Fintype.ofFinite α
   simp [Fintype.one_lt_card_iff_nontrivial]
 #align finite.one_lt_card_iff_nontrivial Finite.one_lt_card_iff_nontrivial
@@ -93,13 +100,14 @@ theorem one_lt_card [Finite α] [h : Nontrivial α] : 1 < Nat.card α :=
 #align finite.one_lt_card Finite.one_lt_card
 
 @[simp]
-theorem card_option [Finite α] : Nat.card (Option α) = Nat.card α + 1 := by
+theorem card_option [Finite α] : Nat.card (Option α) = Nat.card α + 1 :=
+  by
   haveI := Fintype.ofFinite α
   simp
 #align finite.card_option Finite.card_option
 
 theorem card_le_of_injective [Finite β] (f : α → β) (hf : Function.Injective f) :
-    Nat.card α ≤ Nat.card β := by 
+    Nat.card α ≤ Nat.card β := by
   haveI := Fintype.ofFinite β
   haveI := Fintype.ofInjective f hf
   simpa using Fintype.card_le_of_injective f hf
@@ -110,13 +118,14 @@ theorem card_le_of_embedding [Finite β] (f : α ↪ β) : Nat.card α ≤ Nat.c
 #align finite.card_le_of_embedding Finite.card_le_of_embedding
 
 theorem card_le_of_surjective [Finite α] (f : α → β) (hf : Function.Surjective f) :
-    Nat.card β ≤ Nat.card α := by 
+    Nat.card β ≤ Nat.card α := by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofSurjective f hf
   simpa using Fintype.card_le_of_surjective f hf
 #align finite.card_le_of_surjective Finite.card_le_of_surjective
 
-theorem card_eq_zero_iff [Finite α] : Nat.card α = 0 ↔ IsEmpty α := by
+theorem card_eq_zero_iff [Finite α] : Nat.card α = 0 ↔ IsEmpty α :=
+  by
   haveI := Fintype.ofFinite α
   simp [Fintype.card_eq_zero_iff]
 #align finite.card_eq_zero_iff Finite.card_eq_zero_iff
@@ -146,7 +155,7 @@ theorem card_le_of_surjective' {f : α → β} (hf : Function.Surjective f)
 
 /-- NB: `nat.card` is defined to be `0` for infinite types. -/
 theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) (h : Nat.card β = 0) :
-    Nat.card α = 0 := by 
+    Nat.card α = 0 := by
   cases finite_or_infinite β
   · haveI := card_eq_zero_iff.mp h
     haveI := Function.isEmpty f
@@ -166,7 +175,8 @@ theorem card_eq_zero_of_embedding [Nonempty α] (f : α ↪ β) (h : Nat.card α
   card_eq_zero_of_injective f.2 h
 #align finite.card_eq_zero_of_embedding Finite.card_eq_zero_of_embedding
 
-theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + Nat.card β := by
+theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + Nat.card β :=
+  by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofFinite β
   simp
@@ -180,13 +190,15 @@ theorem card_range_le [Finite α] (f : α → β) : Nat.card (Set.range f) ≤ N
   card_le_of_surjective _ Set.surjective_onto_range
 #align finite.card_range_le Finite.card_range_le
 
-theorem card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } ≤ Nat.card α := by
+theorem card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } ≤ Nat.card α :=
+  by
   haveI := Fintype.ofFinite α
   simpa using Fintype.card_subtype_le p
 #align finite.card_subtype_le Finite.card_subtype_le
 
 theorem card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) :
-    Nat.card { x // p x } < Nat.card α := by
+    Nat.card { x // p x } < Nat.card α :=
+  by
   haveI := Fintype.ofFinite α
   simpa using Fintype.card_subtype_lt hx
 #align finite.card_subtype_lt Finite.card_subtype_lt
@@ -195,7 +207,8 @@ end Finite
 
 namespace Set
 
-theorem card_union_le (s t : Set α) : Nat.card ↥(s ∪ t) ≤ Nat.card s + Nat.card t := by
+theorem card_union_le (s t : Set α) : Nat.card ↥(s ∪ t) ≤ Nat.card s + Nat.card t :=
+  by
   cases' _root_.finite_or_infinite ↥(s ∪ t) with h h
   · rw [finite_coe_iff, finite_union, ← finite_coe_iff, ← finite_coe_iff] at h
     cases h

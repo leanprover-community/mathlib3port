@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.squeeze
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,8 +26,8 @@ unsafe def loc.to_string : Loc → String
 #align loc.to_string loc.to_string
 
 /-- shift `pos` `n` columns to the left -/
-unsafe def pos.move_left (p : Pos) (n : ℕ) :
-    Pos where 
+unsafe def pos.move_left (p : Pos) (n : ℕ) : Pos
+    where
   line := p.line
   column := p.column - n
 #align pos.move_left pos.move_left
@@ -82,13 +82,8 @@ unsafe def struct.to_tactic_format (e : pexpr) : tactic format := do
 /-- Attribute containing a table that accumulates multiple `squeeze_simp` suggestions -/
 @[user_attribute]
 private unsafe def squeeze_loc_attr :
-    user_attribute Unit
-      (Option
-        (List
-          (Pos ×
-            String ×
-              List simp_arg_type ×
-                String))) where 
+    user_attribute Unit (Option (List (Pos × String × List simp_arg_type × String)))
+    where
   Name := `_squeeze_loc
   parser := fail "this attribute should not be used"
   descr := "table to accumulate multiple `squeeze_simp` suggestions"
@@ -133,7 +128,7 @@ unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_typ
 
 /-- translate a `pexpr` into a `simp` configuration -/
 unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
-  | none => pure ({  }, "")
+  | none => pure ({ }, "")
   | some cfg => do
     let e ← to_expr ``(($(cfg) : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg
@@ -142,7 +137,7 @@ unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
 
 /-- translate a `pexpr` into a `dsimp` configuration -/
 unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
-  | none => pure ({  }, "")
+  | none => pure ({ }, "")
   | some cfg => do
     let e ← to_expr ``(($(cfg) : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg

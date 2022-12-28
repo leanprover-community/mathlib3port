@@ -6,7 +6,7 @@ Authors: Simon Hudon
 Automation to construct `traversable` instances
 
 ! This file was ported from Lean 3 source module control.traversable.derive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -363,7 +363,7 @@ unsafe def get_equations_of (n : Name) : tactic (List pexpr) := do
 #align tactic.interactive.get_equations_of tactic.interactive.get_equations_of
 
 unsafe def derive_lawful_functor (pre : Option Name) : tactic Unit := do
-  let q(@IsLawfulFunctor $(f) $(d)) ← target
+  let q(@LawfulFunctor $(f) $(d)) ← target
   refine ``({ .. })
   let n := f.get_app_fn.const_name
   let rules r := [simp_arg_type.expr r, simp_arg_type.all_hyps]
@@ -457,14 +457,14 @@ unsafe def traversable_derive_handler : derive_handler :=
 #align tactic.interactive.traversable_derive_handler tactic.interactive.traversable_derive_handler
 
 unsafe def lawful_functor_derive_handler' (nspace : Option Name := none) : derive_handler :=
-  higher_order_derive_handler `` IsLawfulFunctor (derive_lawful_functor nspace)
+  higher_order_derive_handler `` LawfulFunctor (derive_lawful_functor nspace)
     [traversable_derive_handler' nspace] nspace fun n arg => mk_mapp n [arg, none]
 #align
   tactic.interactive.lawful_functor_derive_handler' tactic.interactive.lawful_functor_derive_handler'
 
 @[derive_handler]
 unsafe def lawful_functor_derive_handler : derive_handler :=
-  guard_class `` IsLawfulFunctor lawful_functor_derive_handler'
+  guard_class `` LawfulFunctor lawful_functor_derive_handler'
 #align
   tactic.interactive.lawful_functor_derive_handler tactic.interactive.lawful_functor_derive_handler
 

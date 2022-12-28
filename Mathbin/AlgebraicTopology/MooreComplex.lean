@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_topology.Moore_complex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ variable {X} {Y : SimplicialObject C} (f : X ⟶ Y)
 @[simps]
 def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _
-    (fun n => by 
+    (fun n => by
       refine' factor_thru _ (arrow _ ≫ f.app (op (SimplexCategory.mk n))) _
       cases n <;> dsimp
       · apply top_factors
@@ -145,7 +145,7 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
         rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ i (by simp))]
         slice_lhs 2 3 => erw [kernel_subobject_arrow_comp]
         simp)
-    fun n => by 
+    fun n => by
     cases n <;> dsimp
     · ext
       simp
@@ -168,17 +168,16 @@ The differentials are induced from `X.δ 0`,
 which maps each of these intersections of kernels to the next.
 -/
 @[simps]
-def normalizedMooreComplex :
-    SimplicialObject C ⥤ ChainComplex C
-        ℕ where 
+def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ
+    where
   obj := obj
   map X Y f := map f
-  map_id' X := by 
+  map_id' X := by
     ext n
     cases n <;>
       · dsimp
         simp
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     ext n
     cases n <;> simp
 #align algebraic_topology.normalized_Moore_complex AlgebraicTopology.normalizedMooreComplex

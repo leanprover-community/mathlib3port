@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,8 +87,8 @@ variable {m : MeasurableSpace α} [MeasurableSpace M] [HasSmul M α] [HasMeasura
 
 @[simp, to_additive]
 theorem measurePreservingSmul : MeasurePreserving ((· • ·) c) μ μ :=
-  { Measurable := measurableConstSmul c
-    map_eq := by 
+  { Measurable := measurable_const_smul c
+    map_eq := by
       ext1 s hs
       rw [map_apply (measurable_const_smul c) hs]
       exact smul_invariant_measure.measure_preimage_smul μ c hs }
@@ -256,8 +256,8 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "6"))
            ";"
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`h `c])
              []
              (Tactic.exact
@@ -291,7 +291,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
               "=>"
               (Term.app
                (Term.proj (Term.app `H [`c]) "." `measure_preimage_emb)
-               [(Term.app `measurableEmbeddingConstSmul [`c])]))))
+               [(Term.app `measurable_embedding_const_smul [`c])]))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
            ";"
@@ -326,8 +326,8 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            ";"
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `c `s `hs])
              []
              (Tactic.rwSeq
@@ -362,8 +362,8 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "6"))
           ";"
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`h `c])
             []
             (Tactic.exact
@@ -397,7 +397,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              "=>"
              (Term.app
               (Term.proj (Term.app `H [`c]) "." `measure_preimage_emb)
-              [(Term.app `measurableEmbeddingConstSmul [`c])]))))
+              [(Term.app `measurable_embedding_const_smul [`c])]))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
           ";"
@@ -432,8 +432,8 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           ";"
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `c `s `hs])
             []
             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") [])
@@ -446,8 +446,8 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.intro "intro" [`H `c `s `hs])
         []
         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") [])
@@ -575,7 +575,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
           exact fun H c => ⟨ measurable_const_smul c , H c ⟩
           tfae_have 7 → 4
           ;
-          exact fun H c => H c . measure_preimage_emb measurableEmbeddingConstSmul c
+          exact fun H c => H c . measure_preimage_emb measurable_embedding_const_smul c
           tfae_have 4 → 5
           ;
           exact fun H c s => by rw [ ← preimage_smul_inv ] apply H
@@ -694,7 +694,8 @@ theorem measure_eq_zero_iff_eq_empty_of_smul_invariant (hμ : μ ≠ 0) (hU : Is
 end IsMinimal
 
 theorem smul_ae_eq_self_of_mem_zpowers {x y : G} (hs : (x • s : Set α) =ᵐ[μ] s)
-    (hy : y ∈ Subgroup.zpowers x) : (y • s : Set α) =ᵐ[μ] s := by
+    (hy : y ∈ Subgroup.zpowers x) : (y • s : Set α) =ᵐ[μ] s :=
+  by
   obtain ⟨k, rfl⟩ := subgroup.mem_zpowers_iff.mp hy
   let e : α ≃ α := MulAction.toPermHom G α x
   have he : quasi_measure_preserving e μ μ := (measure_preserving_smul x μ).QuasiMeasurePreserving
@@ -707,13 +708,14 @@ theorem smul_ae_eq_self_of_mem_zpowers {x y : G} (hs : (x • s : Set α) =ᵐ[�
 theorem vadd_ae_eq_self_of_mem_zmultiples {G : Type _} [MeasurableSpace G] [AddGroup G]
     [AddAction G α] [VaddInvariantMeasure G α μ] [HasMeasurableVadd G α] {x y : G}
     (hs : (x +ᵥ s : Set α) =ᵐ[μ] s) (hy : y ∈ AddSubgroup.zmultiples x) :
-    (y +ᵥ s : Set α) =ᵐ[μ] s := by
+    (y +ᵥ s : Set α) =ᵐ[μ] s :=
+  by
   letI : MeasurableSpace (Multiplicative G) := (by infer_instance : MeasurableSpace G)
   letI : smul_invariant_measure (Multiplicative G) α μ :=
     ⟨fun g => vadd_invariant_measure.measure_preimage_vadd μ (Multiplicative.toAdd g)⟩
   letI : HasMeasurableSmul (Multiplicative G) α :=
-    { measurableConstSmul := fun g => measurable_const_vadd (Multiplicative.toAdd g)
-      measurableSmulConst := fun a =>
+    { measurable_const_smul := fun g => measurable_const_vadd (Multiplicative.toAdd g)
+      measurable_smul_const := fun a =>
         @measurable_vadd_const (Multiplicative G) α (by infer_instance : VAdd G α) _ _
           (by infer_instance : HasMeasurableVadd G α) a }
   exact @smul_ae_eq_self_of_mem_zpowers (Multiplicative G) α _ _ _ _ _ _ _ _ _ _ hs hy

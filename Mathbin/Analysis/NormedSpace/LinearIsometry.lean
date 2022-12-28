@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.linear_isometry
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,8 +148,8 @@ theorem to_linear_map_inj {f g : E →ₛₗᵢ[σ₁₂] E₂} : f.toLinearMap 
   to_linear_map_injective.eq_iff
 #align linear_isometry.to_linear_map_inj LinearIsometry.to_linear_map_inj
 
-instance : SemilinearIsometryClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E
-      E₂ where 
+instance : SemilinearIsometryClass (E →ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂
+    where
   coe f := f.toFun
   coe_injective' f g h := to_linear_map_injective (FunLike.coe_injective h)
   map_add f := map_add f.toLinearMap
@@ -427,7 +427,7 @@ theorem comp_assoc (f : E₃ →ₛₗᵢ[σ₃₄] E₄) (g : E₂ →ₛₗᵢ
 
 omit σ₁₃ σ₂₄ σ₁₄
 
-instance : Monoid (E →ₗᵢ[R] E) where 
+instance : Monoid (E →ₗᵢ[R] E) where
   one := id
   mul := comp
   mul_assoc := comp_assoc
@@ -457,7 +457,7 @@ end LinearIsometry
 /-- Construct a `linear_isometry` from a `linear_map` satisfying `isometry`. -/
 def LinearMap.toLinearIsometry (f : E →ₛₗ[σ₁₂] E₂) (hf : Isometry f) : E →ₛₗᵢ[σ₁₂] E₂ :=
   { f with
-    norm_map' := by 
+    norm_map' := by
       simp_rw [← dist_zero_right, ← f.map_zero]
       exact fun x => hf.dist_eq x _ }
 #align linear_map.to_linear_isometry LinearMap.toLinearIsometry
@@ -540,7 +540,7 @@ include σ₂₁
 @[nolint dangerous_instance]
 instance (priority := 100) [s : SemilinearIsometryEquivClass 𝓕 σ₁₂ E E₂] :
     SemilinearIsometryClass 𝓕 σ₁₂ E E₂ :=
-  { s with 
+  { s with
     coe := (coe : 𝓕 → E → E₂)
     coe_injective' := @FunLike.coe_injective 𝓕 _ _ _ }
 
@@ -563,12 +563,11 @@ theorem to_linear_equiv_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.toLinearEq
   to_linear_equiv_injective.eq_iff
 #align linear_isometry_equiv.to_linear_equiv_inj LinearIsometryEquiv.to_linear_equiv_inj
 
-instance :
-    SemilinearIsometryEquivClass (E ≃ₛₗᵢ[σ₁₂] E₂) σ₁₂ E
-      E₂ where 
+instance : SemilinearIsometryEquivClass (E ≃ₛₗᵢ[σ₁₂] E₂) σ₁₂ E E₂
+    where
   coe e := e.toFun
   inv e := e.invFun
-  coe_injective' f g h₁ h₂ := by 
+  coe_injective' f g h₁ h₂ := by
     cases' f with f' _
     cases' g with g' _
     cases f'
@@ -669,7 +668,8 @@ theorem coe_to_isometric : ⇑e.toIsometric = e :=
   rfl
 #align linear_isometry_equiv.coe_to_isometric LinearIsometryEquiv.coe_to_isometric
 
-theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.range e = Set.univ := by
+theorem range_eq_univ (e : E ≃ₛₗᵢ[σ₁₂] E₂) : Set.range e = Set.univ :=
+  by
   rw [← coe_to_isometric]
   exact Isometric.range_eq_univ _
 #align linear_isometry_equiv.range_eq_univ LinearIsometryEquiv.range_eq_univ
@@ -891,7 +891,7 @@ theorem trans_assoc (eEE₂ : E ≃ₛₗᵢ[σ₁₂] E₂) (eE₂E₃ : E₂ �
 
 omit σ₂₁ σ₃₁ σ₄₁ σ₃₂ σ₄₂ σ₄₃ σ₁₃ σ₂₄ σ₁₄
 
-instance : Group (E ≃ₗᵢ[R] E) where 
+instance : Group (E ≃ₗᵢ[R] E) where
   mul e₁ e₂ := e₂.trans e₁
   one := refl _ _
   inv := symm
@@ -1125,7 +1125,8 @@ noncomputable def ofSurjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Functi
 
 @[simp]
 theorem coe_of_surjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Function.Surjective f) :
-    ⇑(LinearIsometryEquiv.ofSurjective f hfr) = f := by
+    ⇑(LinearIsometryEquiv.ofSurjective f hfr) = f :=
+  by
   ext
   rfl
 #align linear_isometry_equiv.coe_of_surjective LinearIsometryEquiv.coe_of_surjective
@@ -1177,12 +1178,12 @@ variable (R E E₂ E₃)
 
 /-- The natural equivalence `(E × E₂) × E₃ ≃ E × (E₂ × E₃)` is a linear isometry. -/
 def prodAssoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=
-  { Equiv.prodAssoc E E₂ E₃ with 
+  { Equiv.prodAssoc E E₂ E₃ with
     toFun := Equiv.prodAssoc E E₂ E₃
     invFun := (Equiv.prodAssoc E E₂ E₃).symm
     map_add' := by simp
     map_smul' := by simp
-    norm_map' := by 
+    norm_map' := by
       rintro ⟨⟨e, f⟩, g⟩
       simp only [LinearEquiv.coe_mk, Equiv.prod_assoc_apply, Prod.norm_def, max_assoc] }
 #align linear_isometry_equiv.prod_assoc LinearIsometryEquiv.prodAssoc

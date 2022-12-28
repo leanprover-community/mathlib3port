@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sheaves.operations
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,18 +50,18 @@ structure SubmonoidPresheaf [∀ X : C, MulOneClass X] [∀ X Y : C, MonoidHomCl
 variable {F : X.Presheaf CommRingCat.{w}} (G : F.SubmonoidPresheaf)
 
 /-- The localization of a presheaf of `CommRing`s with respect to a `submonoid_presheaf`. -/
-protected noncomputable def SubmonoidPresheaf.localizationPresheaf :
-    X.Presheaf
-      CommRingCat where 
+protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf CommRingCat
+    where
   obj U := CommRingCat.of <| Localization (G.obj U)
   map U V i := CommRingCat.ofHom <| IsLocalization.map _ (F.map i) (G.map i)
-  map_id' U := by 
+  map_id' U := by
     apply IsLocalization.ring_hom_ext (G.obj U)
     any_goals dsimp; infer_instance
     refine' (IsLocalization.map_comp _).trans _
     rw [F.map_id]
     rfl
-  map_comp' U V W i j := by
+  map_comp' U V W i j :=
+    by
     refine' Eq.trans _ (IsLocalization.map_comp_map _ _).symm
     ext
     dsimp
@@ -72,9 +72,8 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf :
   Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
 
 /-- The map into the localization presheaf. -/
-def SubmonoidPresheaf.toLocalizationPresheaf :
-    F ⟶
-      G.localizationPresheaf where 
+def SubmonoidPresheaf.toLocalizationPresheaf : F ⟶ G.localizationPresheaf
+    where
   app U := CommRingCat.ofHom <| algebraMap (F.obj U) (Localization <| G.obj U)
   naturality' U V i := (IsLocalization.map_comp (G.map i)).symm
 #align
@@ -89,9 +88,10 @@ variable (F)
 sections whose restriction onto each stalk falls in the given submonoid. -/
 @[simps]
 noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)) :
-    F.SubmonoidPresheaf where 
+    F.SubmonoidPresheaf
+    where
   obj U := ⨅ x : unop U, Submonoid.comap (F.germ x) (S x)
-  map U V i := by 
+  map U V i := by
     intro s hs
     simp only [Submonoid.mem_comap, Submonoid.mem_infi] at hs⊢
     intro x
@@ -113,7 +113,8 @@ noncomputable def toTotalQuotientPresheaf : F ⟶ F.totalQuotientPresheaf :=
   SubmonoidPresheaf.toLocalizationPresheaf _ deriving Epi
 #align Top.presheaf.to_total_quotient_presheaf TopCat.Presheaf.toTotalQuotientPresheaf
 
-instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf := by
+instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf :=
+  by
   apply (config := { instances := false }) nat_trans.mono_of_mono_app
   intro U
   apply concrete_category.mono_of_injective

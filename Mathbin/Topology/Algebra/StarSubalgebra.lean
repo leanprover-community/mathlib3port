@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.algebra.star_subalgebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem closed_embedding_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ �
   { embedding_inclusion h with
     closed_range :=
       is_closed_induced_iff.2
-        ⟨S₁, hS₁, by 
+        ⟨S₁, hS₁, by
           convert (Set.range_subtype_map id _).symm
           rw [Set.image_id]
           rfl⟩ }
@@ -71,7 +71,8 @@ variable [TopologicalSpace B] [Semiring B] [Algebra R B] [StarRing B]
 
 /-- The closure of a star subalgebra in a topological star algebra as a star subalgebra. -/
 def topologicalClosure (s : StarSubalgebra R A) : StarSubalgebra R A :=
-  { s.toSubalgebra.topologicalClosure with
+  {
+    s.toSubalgebra.topologicalClosure with
     carrier := closure (s : Set A)
     star_mem' := fun a ha =>
       map_mem_closure continuous_star ha fun x => (star_mem : x ∈ s → star x ∈ s) }
@@ -134,15 +135,16 @@ theorem StarAlgHom.ext_topological_closure [T2Space B] {S : StarSubalgebra R A}
     (h :
       φ.comp (inclusion (le_topological_closure S)) =
         ψ.comp (inclusion (le_topological_closure S))) :
-    φ = ψ := by 
+    φ = ψ := by
   rw [FunLike.ext'_iff]
-  have : Dense (Set.range <| inclusion (le_topological_closure S)) := by
+  have : Dense (Set.range <| inclusion (le_topological_closure S)) :=
+    by
     refine' embedding_subtype_coe.to_inducing.dense_iff.2 fun x => _
     convert show ↑x ∈ closure (S : Set A) from x.prop
     rw [← Set.range_comp]
     exact
       Set.ext fun y =>
-        ⟨by 
+        ⟨by
           rintro ⟨y, rfl⟩
           exact y.prop, fun hy => ⟨⟨y, hy⟩, rfl⟩⟩
   refine' Continuous.ext_on this hφ hψ _
@@ -155,7 +157,8 @@ theorem StarAlgHomClass.ext_topological_closure [T2Space B] {F : Type _} {S : St
     (h :
       ∀ x : S,
         φ (inclusion (le_topological_closure S) x) = ψ ((inclusion (le_topological_closure S)) x)) :
-    φ = ψ := by
+    φ = ψ :=
+  by
   have : (φ : S.topological_closure →⋆ₐ[R] B) = (ψ : S.topological_closure →⋆ₐ[R] B) := by
     refine' StarAlgHom.ext_topological_closure hφ hψ (StarAlgHom.ext _) <;>
       simpa only [StarAlgHom.coe_comp, StarAlgHom.coe_coe] using h
@@ -221,18 +224,19 @@ theorem le_of_is_closed_of_mem {S : StarSubalgebra R A} (hS : IsClosed (S : Set 
 theorem closed_embedding_coe (x : A) : ClosedEmbedding (coe : elementalStarAlgebra R x → A) :=
   { induced := rfl
     inj := Subtype.coe_injective
-    closed_range := by 
+    closed_range := by
       convert elementalStarAlgebra.is_closed R x
       exact
         Set.ext fun y =>
-          ⟨by 
+          ⟨by
             rintro ⟨y, rfl⟩
             exact y.prop, fun hy => ⟨⟨y, hy⟩, rfl⟩⟩ }
 #align elemental_star_algebra.closed_embedding_coe elementalStarAlgebra.closed_embedding_coe
 
 theorem star_alg_hom_class_ext [T2Space B] {F : Type _} {a : A}
     [StarAlgHomClass F R (elementalStarAlgebra R a) B] {φ ψ : F} (hφ : Continuous φ)
-    (hψ : Continuous ψ) (h : φ ⟨a, self_mem R a⟩ = ψ ⟨a, self_mem R a⟩) : φ = ψ := by
+    (hψ : Continuous ψ) (h : φ ⟨a, self_mem R a⟩ = ψ ⟨a, self_mem R a⟩) : φ = ψ :=
+  by
   refine' StarAlgHomClass.ext_topological_closure hφ hψ fun x => adjoin_induction' x _ _ _ _ _
   exacts[fun y hy => by simpa only [set.mem_singleton_iff.mp hy] using h, fun r => by
     simp only [AlgHomClass.commutes], fun x y hx hy => by simp only [map_add, hx, hy],

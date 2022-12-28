@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.limits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,10 +54,8 @@ variable [MonoidalCategory.{v} C]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simps]
-instance limitLaxMonoidal :
-    LaxMonoidal fun F : J ⥤ C =>
-      limit
-        F where 
+instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F
+    where
   ε :=
     limit.lift _
       { x := _
@@ -67,43 +65,43 @@ instance limitLaxMonoidal :
       { x := limit F ⊗ limit G
         π :=
           { app := fun j => limit.π F j ⊗ limit.π G j
-            naturality' := fun j j' f => by 
+            naturality' := fun j j' f => by
               dsimp
               simp only [category.id_comp, ← tensor_comp, limit.w] } }
-  μ_natural' X Y X' Y' f g := by 
+  μ_natural' X Y X' Y' f g := by
     ext; dsimp
     simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.tensor_hom_app, limit.lift_map,
       nat_trans.comp_app, category.assoc, ← tensor_comp, lim_map_π]
-  associativity' X Y Z := by 
+  associativity' X Y Z := by
     ext; dsimp
     simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.associator_hom_app, limit.lift_map,
       nat_trans.comp_app, category.assoc]
     slice_lhs 2 2 => rw [← tensor_id_comp_id_tensor]
-    slice_lhs 1 2 => 
+    slice_lhs 1 2 =>
       rw [← comp_tensor_id, limit.lift_π]
       dsimp
     slice_lhs 1 2 => rw [tensor_id_comp_id_tensor]
     conv_lhs => rw [associator_naturality]
     conv_rhs => rw [← id_tensor_comp_tensor_id (limit.π (Y ⊗ Z) j)]
-    slice_rhs 2 3 => 
+    slice_rhs 2 3 =>
       rw [← id_tensor_comp, limit.lift_π]
       dsimp
     dsimp; simp
-  left_unitality' X := by 
+  left_unitality' X := by
     ext; dsimp
     simp
     conv_rhs => rw [← tensor_id_comp_id_tensor (limit.π X j)]
-    slice_rhs 1 2 => 
+    slice_rhs 1 2 =>
       rw [← comp_tensor_id]
       erw [limit.lift_π]
       dsimp
     slice_rhs 2 3 => rw [left_unitor_naturality]
     simp
-  right_unitality' X := by 
+  right_unitality' X := by
     ext; dsimp
     simp
     conv_rhs => rw [← id_tensor_comp_tensor_id _ (limit.π X j)]
-    slice_rhs 1 2 => 
+    slice_rhs 1 2 =>
       rw [← id_tensor_comp]
       erw [limit.lift_π]
       dsimp
@@ -149,7 +147,7 @@ theorem lim_lax_μ (F G : J ⥤ C) :
         { x := limit F ⊗ limit G
           π :=
             { app := fun j => limit.π F j ⊗ limit.π G j
-              naturality' := fun j j' f => by 
+              naturality' := fun j j' f => by
                 dsimp
                 simp only [category.id_comp, ← tensor_comp, limit.w] } } :=
   rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.fold
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ theorem fold_empty : (∅ : Finset α).fold op b f = b :=
 #align finset.fold_empty Finset.fold_empty
 
 @[simp]
-theorem fold_cons (h : a ∉ s) : (cons a s h).fold op b f = f a * s.fold op b f := by
+theorem fold_cons (h : a ∉ s) : (cons a s h).fold op b f = f a * s.fold op b f :=
+  by
   dsimp only [fold]
   rw [cons_val, Multiset.map_cons, fold_cons_left]
 #align finset.fold_cons Finset.fold_cons
@@ -87,7 +88,7 @@ theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
 
 theorem fold_const [Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
     Finset.fold op b (fun _ => c) s = if s = ∅ then b else op b c := by
-  classical 
+  classical
     induction' s using Finset.induction_on with x s hx IH
     · simp
     · simp only [Finset.fold_insert hx, IH, if_false, Finset.insert_ne_empty]
@@ -121,7 +122,8 @@ theorem fold_union_inter [DecidableEq α] {s₁ s₂ : Finset α} {b₁ b₂ : �
 
 @[simp]
 theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] :
-    (insert a s).fold op b f = f a * s.fold op b f := by
+    (insert a s).fold op b f = f a * s.fold op b f :=
+  by
   by_cases a ∈ s
   · rw [← insert_erase h]
     simp [← ha.assoc, hi.idempotent]
@@ -129,7 +131,8 @@ theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] :
 #align finset.fold_insert_idem Finset.fold_insert_idem
 
 theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : IsIdempotent β op] :
-    (image g s).fold op b f = s.fold op b (f ∘ g) := by
+    (image g s).fold op b f = s.fold op b (f ∘ g) :=
+  by
   induction' s using Finset.cons_induction with x xs hx ih
   · rw [fold_empty, image_empty, fold_empty]
   · haveI := Classical.decEq γ
@@ -143,7 +146,7 @@ theorem fold_ite' {g : α → β} (hb : op b b = b) (p : α → Prop) [Decidable
     Finset.fold op b (fun i => ite (p i) (f i) (g i)) s =
       op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
   by
-  classical 
+  classical
     induction' s using Finset.induction_on with x s hx IH
     · simp [hb]
     · simp only [Finset.filter_congr_decidable, Finset.fold_insert hx]
@@ -166,7 +169,7 @@ theorem fold_ite [IsIdempotent β op] {g : α → β} (p : α → Prop) [Decidab
 
 theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∧ r x z)
     {c : β} : r c (s.fold op b f) ↔ r c b ∧ ∀ x ∈ s, r c (f x) := by
-  classical 
+  classical
     apply Finset.induction_on s
     · simp
     clear s
@@ -190,7 +193,7 @@ theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op 
 
 theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∨ r x z)
     {c : β} : r c (s.fold op b f) ↔ r c b ∨ ∃ x ∈ s, r c (f x) := by
-  classical 
+  classical
     apply Finset.induction_on s
     · simp
     clear s
@@ -215,7 +218,8 @@ omit hc ha
 
 @[simp]
 theorem fold_union_empty_singleton [DecidableEq α] (s : Finset α) :
-    Finset.fold (· ∪ ·) ∅ singleton s = s := by
+    Finset.fold (· ∪ ·) ∅ singleton s = s :=
+  by
   apply Finset.induction_on s
   · simp only [fold_empty]
   · intro a s has ih
@@ -235,7 +239,8 @@ theorem le_fold_min : c ≤ s.fold min b f ↔ c ≤ b ∧ ∀ x ∈ s, c ≤ f 
   fold_op_rel_iff_and fun x y z => le_min_iff
 #align finset.le_fold_min Finset.le_fold_min
 
-theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ x ∈ s, f x ≤ c := by
+theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ x ∈ s, f x ≤ c :=
+  by
   show _ ≥ _ ↔ _
   apply fold_op_rel_iff_or
   intro x y z
@@ -247,7 +252,8 @@ theorem lt_fold_min : c < s.fold min b f ↔ c < b ∧ ∀ x ∈ s, c < f x :=
   fold_op_rel_iff_and fun x y z => lt_min_iff
 #align finset.lt_fold_min Finset.lt_fold_min
 
-theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ x ∈ s, f x < c := by
+theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ x ∈ s, f x < c :=
+  by
   show _ > _ ↔ _
   apply fold_op_rel_iff_or
   intro x y z
@@ -255,7 +261,8 @@ theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ x ∈ s, f x < c := b
   exact min_lt_iff
 #align finset.fold_min_lt Finset.fold_min_lt
 
-theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀ x ∈ s, f x ≤ c := by
+theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀ x ∈ s, f x ≤ c :=
+  by
   show _ ≥ _ ↔ _
   apply fold_op_rel_iff_and
   intro x y z
@@ -267,7 +274,8 @@ theorem le_fold_max : c ≤ s.fold max b f ↔ c ≤ b ∨ ∃ x ∈ s, c ≤ f 
   fold_op_rel_iff_or fun x y z => le_max_iff
 #align finset.le_fold_max Finset.le_fold_max
 
-theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀ x ∈ s, f x < c := by
+theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀ x ∈ s, f x < c :=
+  by
   show _ > _ ↔ _
   apply fold_op_rel_iff_and
   intro x y z

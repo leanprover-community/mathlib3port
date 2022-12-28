@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,8 @@ theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
     map_apply, Dmatrix.sub_apply]
 #align charmatrix_apply_ne charmatrix_apply_ne
 
-theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M := by
+theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M :=
+  by
   ext (k i j)
   simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
   by_cases h : i = j
@@ -84,7 +85,8 @@ theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix 
 #align mat_poly_equiv_charmatrix mat_poly_equiv_charmatrix
 
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
-    charmatrix (reindex e e M) = reindex e e (charmatrix M) := by
+    charmatrix (reindex e e M) = reindex e e (charmatrix M) :=
+  by
   ext (i j x)
   by_cases h : i = j
   all_goals simp [h]
@@ -97,7 +99,8 @@ def Matrix.charpoly (M : Matrix n n R) : R[X] :=
 #align matrix.charpoly Matrix.charpoly
 
 theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m)
-    (M : Matrix n n R) : (reindex e e M).charpoly = M.charpoly := by
+    (M : Matrix n n R) : (reindex e e M).charpoly = M.charpoly :=
+  by
   unfold Matrix.charpoly
   rw [charmatrix_reindex, Matrix.det_reindex_self]
 #align matrix.charpoly_reindex Matrix.charpoly_reindex

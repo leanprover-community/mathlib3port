@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Group.images
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ def factorThruImage : G ⟶ image f :=
   f.range_restrict
 #align AddCommGroup.factor_thru_image AddCommGroupCat.factorThruImage
 
-theorem image.fac : factorThruImage f ≫ image.ι f = f := by
+theorem image.fac : factorThruImage f ≫ image.ι f = f :=
+  by
   ext
   rfl
 #align AddCommGroup.image.fac AddCommGroupCat.image.fac
@@ -64,17 +65,16 @@ attribute [local simp] image.fac
 variable {f}
 
 /-- the universal property for the image factorisation -/
-noncomputable def image.lift (F' : MonoFactorisation f) :
-    image f ⟶
-      F'.i where 
+noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i
+    where
   toFun := (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : image f → F'.i)
-  map_zero' := by 
+  map_zero' := by
     haveI := F'.m_mono
     apply injective_of_mono F'.m
     change (F'.e ≫ F'.m) _ = _
     rw [F'.fac, AddMonoidHom.map_zero]
     exact (Classical.indefiniteDescription (fun y => f y = 0) _).2
-  map_add' := by 
+  map_add' := by
     intro x y
     haveI := F'.m_mono
     apply injective_of_mono F'.m
@@ -87,7 +87,8 @@ noncomputable def image.lift (F' : MonoFactorisation f) :
     rfl
 #align AddCommGroup.image.lift AddCommGroupCat.image.lift
 
-theorem image.lift_fac (F' : MonoFactorisation f) : image.lift F' ≫ F'.m = image.ι f := by
+theorem image.lift_fac (F' : MonoFactorisation f) : image.lift F' ≫ F'.m = image.ι f :=
+  by
   ext x
   change (F'.e ≫ F'.m) _ = _
   rw [F'.fac, (Classical.indefiniteDescription _ x.2).2]
@@ -97,8 +98,8 @@ theorem image.lift_fac (F' : MonoFactorisation f) : image.lift F' ≫ F'.m = ima
 end
 
 /-- the factorisation of any morphism in AddCommGroup through a mono. -/
-def monoFactorisation : MonoFactorisation
-      f where 
+def monoFactorisation : MonoFactorisation f
+    where
   i := image f
   m := image.ι f
   e := factorThruImage f
@@ -106,8 +107,8 @@ def monoFactorisation : MonoFactorisation
 
 /-- the factorisation of any morphism in AddCommGroup through a mono has the universal property of
 the image. -/
-noncomputable def isImage :
-    IsImage (monoFactorisation f) where 
+noncomputable def isImage : IsImage (monoFactorisation f)
+    where
   lift := image.lift
   lift_fac' := image.lift_fac
 #align AddCommGroup.is_image AddCommGroupCat.isImage

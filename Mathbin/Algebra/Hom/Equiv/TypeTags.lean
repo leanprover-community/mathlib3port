@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.type_tags
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,17 +30,15 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_equiv.to_multiplicative AddEquiv.toMultiplicativeₓ'. -/
 /-- Reinterpret `G ≃+ H` as `multiplicative G ≃* multiplicative H`. -/
 def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] :
-    G ≃+ H ≃
-      (Multiplicative G ≃*
-        Multiplicative
-          H) where 
+    G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H)
+    where
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by 
+  left_inv x := by
     ext
     rfl
-  right_inv x := by 
+  right_inv x := by
     ext
     rfl
 #align add_equiv.to_multiplicative AddEquiv.toMultiplicative
@@ -52,17 +50,14 @@ but is expected to have type
   forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : MulOneClass.{u1} G] [_inst_2 : MulOneClass.{u2} H], Equiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (MulEquiv.{u1, u2} G H (MulOneClass.toMul.{u1} G _inst_1) (MulOneClass.toMul.{u2} H _inst_2)) (AddEquiv.{u1, u2} (Additive.{u1} G) (Additive.{u2} H) (Additive.add.{u1} G (MulOneClass.toMul.{u1} G _inst_1)) (Additive.add.{u2} H (MulOneClass.toMul.{u2} H _inst_2)))
 Case conversion may be inaccurate. Consider using '#align mul_equiv.to_additive MulEquiv.toAdditiveₓ'. -/
 /-- Reinterpret `G ≃* H` as `additive G ≃+ additive H`. -/
-def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] :
-    G ≃* H ≃
-      (Additive G ≃+
-        Additive
-          H) where 
+def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] : G ≃* H ≃ (Additive G ≃+ Additive H)
+    where
   toFun f := ⟨f.toMonoidHom.toAdditive, f.symm.toMonoidHom.toAdditive, f.3, f.4, f.5⟩
   invFun f := ⟨f.toAddMonoidHom, f.symm.toAddMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by 
+  left_inv x := by
     ext
     rfl
-  right_inv x := by 
+  right_inv x := by
     ext
     rfl
 #align mul_equiv.to_additive MulEquiv.toAdditive
@@ -75,17 +70,15 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_equiv.to_multiplicative' AddEquiv.toMultiplicative'ₓ'. -/
 /-- Reinterpret `additive G ≃+ H` as `G ≃* multiplicative H`. -/
 def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] :
-    Additive G ≃+ H ≃
-      (G ≃*
-        Multiplicative
-          H) where 
+    Additive G ≃+ H ≃ (G ≃* Multiplicative H)
+    where
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by 
+  left_inv x := by
     ext
     rfl
-  right_inv x := by 
+  right_inv x := by
     ext
     rfl
 #align add_equiv.to_multiplicative' AddEquiv.toMultiplicative'
@@ -110,16 +103,15 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_equiv.to_multiplicative'' AddEquiv.toMultiplicative''ₓ'. -/
 /-- Reinterpret `G ≃+ additive H` as `multiplicative G ≃* H`. -/
 def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] :
-    G ≃+ Additive H ≃
-      (Multiplicative G ≃*
-        H) where 
+    G ≃+ Additive H ≃ (Multiplicative G ≃* H)
+    where
   toFun f :=
     ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
-  left_inv x := by 
+  left_inv x := by
     ext
     rfl
-  right_inv x := by 
+  right_inv x := by
     ext
     rfl
 #align add_equiv.to_multiplicative'' AddEquiv.toMultiplicative''

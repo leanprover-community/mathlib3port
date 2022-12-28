@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.partition
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,14 +64,15 @@ structure Partition (n : ℕ) where
 namespace Partition
 
 /-- A composition induces a partition (just convert the list to a multiset). -/
-def ofComposition (n : ℕ) (c : Composition n) :
-    Partition n where 
+def ofComposition (n : ℕ) (c : Composition n) : Partition n
+    where
   parts := c.blocks
   parts_pos i hi := c.blocks_pos hi
   parts_sum := by rw [Multiset.coe_sum, c.blocks_sum]
 #align nat.partition.of_composition Nat.Partition.ofComposition
 
-theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) := by
+theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
+  by
   rintro ⟨b, hb₁, hb₂⟩
   rcases Quotient.exists_rep b with ⟨b, rfl⟩
   refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
@@ -83,14 +84,15 @@ theorem of_composition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
 /-- Given a multiset which sums to `n`, construct a partition of `n` with the same multiset, but
 without the zeros.
 -/
-def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) :
-    Partition n where 
+def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n
+    where
   parts := l.filter (· ≠ 0)
   parts_pos i hi := Nat.pos_of_ne_zero <| by apply of_mem_filter hi
   parts_sum := by
     have lt : l.filter (· = 0) + l.filter (· ≠ 0) = l := filter_add_not _ l
     apply_fun Multiset.sum  at lt
-    have lz : (l.filter (· = 0)).Sum = 0 := by
+    have lz : (l.filter (· = 0)).Sum = 0 :=
+      by
       rw [Multiset.sum_eq_zero_iff]
       simp
     simpa [lz, hl] using lt

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.cancel.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,9 +87,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_ContravariantClass_leftₓ'. -/
 @[to_additive]
 instance OrderedCancelCommMonoid.to_ContravariantClass_left (M : Type _)
-    [OrderedCancelCommMonoid M] :
-    ContravariantClass M M (· * ·)
-      (· < ·) where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
+    [OrderedCancelCommMonoid M] : ContravariantClass M M (· * ·) (· < ·)
+    where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
 #align
   ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_ContravariantClass_left
 

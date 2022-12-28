@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.sigma.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : α -> Type.{u1}} {x₀ : Sigma.{u2, u1} α β} {x₁ : Sigma.{u2, u1} α β}, (Eq.{succ u2} α (Sigma.fst.{u2, u1} α β x₀) (Sigma.fst.{u2, u1} α β x₁)) -> (HEq.{succ u1} (β (Sigma.fst.{u2, u1} α β x₀)) (Sigma.snd.{u2, u1} α β x₀) (β (Sigma.fst.{u2, u1} α β x₁)) (Sigma.snd.{u2, u1} α β x₁)) -> (Eq.{max (succ u2) (succ u1)} (Sigma.{u2, u1} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align sigma.ext Sigma.extₓ'. -/
 @[ext]
-theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
+theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ :=
+  by
   cases x₀
   cases x₁
   cases h₀
@@ -104,7 +105,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : α -> Type.{u1}} {x₀ : Sigma.{u2, u1} α β} {x₁ : Sigma.{u2, u1} α β}, Iff (Eq.{max (succ u2) (succ u1)} (Sigma.{u2, u1} α β) x₀ x₁) (And (Eq.{succ u2} α (Sigma.fst.{u2, u1} α β x₀) (Sigma.fst.{u2, u1} α β x₁)) (HEq.{succ u1} (β (Sigma.fst.{u2, u1} α β x₀)) (Sigma.snd.{u2, u1} α β x₀) (β (Sigma.fst.{u2, u1} α β x₁)) (Sigma.snd.{u2, u1} α β x₁)))
 Case conversion may be inaccurate. Consider using '#align sigma.ext_iff Sigma.ext_iffₓ'. -/
-theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
+theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 :=
+  by
   cases x₀
   cases x₁
   exact Sigma.mk.inj_iff
@@ -172,7 +174,7 @@ Case conversion may be inaccurate. Consider using '#align function.injective.sig
 theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h₁ : Function.Injective f₁) (h₂ : ∀ a, Function.Injective (f₂ a)) :
     Function.Injective (Sigma.map f₁ f₂)
-  | ⟨i, x⟩, ⟨j, y⟩, h => by 
+  | ⟨i, x⟩, ⟨j, y⟩, h => by
     obtain rfl : i = j; exact h₁ (sigma.mk.inj_iff.mp h).1
     obtain rfl : x = y; exact h₂ i (sigma_mk_injective h)
     rfl
@@ -209,7 +211,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.surjective.sigma_map Function.Surjective.sigma_mapₓ'. -/
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h₁ : Function.Surjective f₁) (h₂ : ∀ a, Function.Surjective (f₂ a)) :
-    Function.Surjective (Sigma.map f₁ f₂) := by
+    Function.Surjective (Sigma.map f₁ f₂) :=
+  by
   simp only [Function.Surjective, Sigma.forall, h₁.forall]
   exact fun i => (h₂ _).forall.2 fun x => ⟨⟨i, x⟩, rfl⟩
 #align function.surjective.sigma_map Function.Surjective.sigma_map
@@ -378,7 +381,8 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : α -> Sort.{u1}} {x₀ : PSigma.{u2, u1} α β} {x₁ : PSigma.{u2, u1} α β}, (Eq.{u2} α (PSigma.fst.{u2, u1} α β x₀) (PSigma.fst.{u2, u1} α β x₁)) -> (HEq.{u1} (β (PSigma.fst.{u2, u1} α β x₀)) (PSigma.snd.{u2, u1} α β x₀) (β (PSigma.fst.{u2, u1} α β x₁)) (PSigma.snd.{u2, u1} α β x₁)) -> (Eq.{max (max 1 u2) u1} (PSigma.{u2, u1} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align psigma.ext PSigma.extₓ'. -/
 @[ext]
-theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
+theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ :=
+  by
   cases x₀
   cases x₁
   cases h₀
@@ -392,7 +396,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u2}} {β : α -> Sort.{u1}} {x₀ : PSigma.{u2, u1} α β} {x₁ : PSigma.{u2, u1} α β}, Iff (Eq.{max (max 1 u2) u1} (PSigma.{u2, u1} α β) x₀ x₁) (And (Eq.{u2} α (PSigma.fst.{u2, u1} α β x₀) (PSigma.fst.{u2, u1} α β x₁)) (HEq.{u1} (β (PSigma.fst.{u2, u1} α β x₀)) (PSigma.snd.{u2, u1} α β x₀) (β (PSigma.fst.{u2, u1} α β x₁)) (PSigma.snd.{u2, u1} α β x₁)))
 Case conversion may be inaccurate. Consider using '#align psigma.ext_iff PSigma.ext_iffₓ'. -/
-theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
+theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 :=
+  by
   cases x₀
   cases x₁
   exact PSigma.mk.inj_iff

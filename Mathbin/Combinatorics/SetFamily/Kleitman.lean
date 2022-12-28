@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.kleitman
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,8 @@ variable {ι α : Type _} [Fintype α] [DecidableEq α] [Nonempty α]
 each further intersecting family takes at most half of the sets that are in no previous family. -/
 theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset (Finset α))
     (hf : ∀ i ∈ s, (f i : Set (Finset α)).Intersecting) :
-    (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) := by
+    (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) :=
+  by
   obtain hs | hs := le_total (card α) s.card
   · rw [tsub_eq_zero_of_le hs, pow_zero]
     refine'
@@ -50,18 +51,19 @@ theorem Finset.card_bUnion_le_of_intersecting (s : Finset ι) (f : ι → Finset
     rw [card_compl, Fintype.card_finset, card_singleton]
   induction' s using Finset.cons_induction with i s hi ih generalizing f
   · simp
-  classical 
+  classical
     set f' : ι → Finset (Finset α) := fun j =>
       if hj : j ∈ cons i s hi then (hf j hj).exists_card_eq.some else ∅ with hf'
     have hf₁ :
       ∀ j,
         j ∈ cons i s hi →
           f j ⊆ f' j ∧ 2 * (f' j).card = 2 ^ card α ∧ (f' j : Set (Finset α)).Intersecting :=
-      by 
+      by
       rintro j hj
       simp_rw [hf', dif_pos hj, ← Fintype.card_finset]
       exact Classical.choose_spec (hf j hj).exists_card_eq
-    have hf₂ : ∀ j, j ∈ cons i s hi → IsUpperSet (f' j : Set (Finset α)) := by
+    have hf₂ : ∀ j, j ∈ cons i s hi → IsUpperSet (f' j : Set (Finset α)) :=
+      by
       refine' fun j hj => (hf₁ _ hj).2.2.is_upper_set' ((hf₁ _ hj).2.2.is_max_iff_card_eq.2 _)
       rw [Fintype.card_finset]
       exact (hf₁ _ hj).2.1

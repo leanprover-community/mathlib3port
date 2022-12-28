@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.integers
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ variable {R : Type u} {Γ₀ : Type v} [Ring R] [LinearOrderedCommGroupWithZero 
 variable (v : Valuation R Γ₀)
 
 /-- The ring of integers under a given valuation is the subring of elements with valuation ≤ 1. -/
-def integer : Subring R where 
+def integer : Subring R where
   carrier := { x | v x ≤ 1 }
   one_mem' := le_of_eq v.map_one
   mul_mem' x y hx hy := trans_rel_right (· ≤ ·) (v.map_mul x y) (mul_le_one' hx hy)
@@ -75,7 +75,8 @@ include hv
 
 theorem one_of_is_unit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
   let ⟨u, hu⟩ := hx
-  le_antisymm (hv.2 _) <| by
+  le_antisymm (hv.2 _) <|
+    by
     rw [← v.map_one, ← (algebraMap O R).map_one, ← u.mul_inv, ← mul_one (v (algebraMap O R x)), hu,
       (algebraMap O R).map_mul, v.map_mul]
     exact mul_le_mul_left' (hv.2 (u⁻¹ : Units O)) _
@@ -94,7 +95,8 @@ theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebr
     hv.1 <| hr1.trans hu⟩
 #align valuation.integers.is_unit_of_one Valuation.Integers.is_unit_of_one
 
-theorem le_of_dvd {x y : O} (h : x ∣ y) : v (algebraMap O R y) ≤ v (algebraMap O R x) := by
+theorem le_of_dvd {x y : O} (h : x ∣ y) : v (algebraMap O R y) ≤ v (algebraMap O R x) :=
+  by
   let ⟨z, hz⟩ := h
   rw [← mul_one (v (algebraMap O R x)), hz, RingHom.map_mul, v.map_mul]
   exact mul_le_mul_left' (hv.2 z) _
@@ -121,7 +123,8 @@ theorem dvd_of_le {x y : O} (h : v (algebraMap O F x) ≤ v (algebraMap O F y)) 
           (algebraMap O F).map_zero.symm ▸ (v.zero_iff.1 <| le_zero_iff.1 (v.map_zero ▸ hy ▸ h))
       hx.symm ▸ dvd_zero y)
     fun hy : algebraMap O F y ≠ 0 =>
-    have : v ((algebraMap O F y)⁻¹ * algebraMap O F x) ≤ 1 := by
+    have : v ((algebraMap O F y)⁻¹ * algebraMap O F x) ≤ 1 :=
+      by
       rw [← v.map_one, ← inv_mul_cancel hy, v.map_mul, v.map_mul]
       exact mul_le_mul_left' h _
     let ⟨z, hz⟩ := hv.3 this

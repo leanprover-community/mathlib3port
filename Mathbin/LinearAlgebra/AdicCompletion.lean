@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.adic_completion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,18 +92,13 @@ def HausdorffificationCat : Type _ :=
 
 /-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
 In fact, this is only complete if the ideal is finitely generated. -/
-def adicCompletion :
-    Submodule R
-      (∀ n : ℕ,
-        M ⧸
-          (I ^ n • ⊤ :
-            Submodule R
-              M)) where 
+def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule R M))
+    where
   carrier :=
     { f |
       ∀ {m n} (h : m ≤ n),
         liftq _ (mkq _)
-            (by 
+            (by
               rw [ker_mkq]
               exact smul_mono (Ideal.pow_le_pow h) le_rfl)
             (f n) =
@@ -125,7 +120,7 @@ variable {M}
 protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
     eq_of_sub_eq_zero <|
-      (h.haus (x - y)) fun n => by 
+      (h.haus (x - y)) fun n => by
         rw [Ideal.top_pow, top_smul]
         exact Smodeq.top⟩
 #align is_Hausdorff.subsingleton IsHausdorff.subsingleton
@@ -166,7 +161,8 @@ instance : IsHausdorff I (HausdorffificationCat I M) :=
   ⟨fun x =>
     (Quotient.inductionOn' x) fun x hx =>
       (Quotient.mk_eq_zero _).2 <|
-        (mem_infi _).2 fun n => by
+        (mem_infi _).2 fun n =>
+          by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
           simp only [sup_of_le_right (infᵢ_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
           rw [← this, map_smul'', mem_comap, map_top, range_mkq, ← Smodeq.zero]; exact hx n⟩
@@ -182,7 +178,8 @@ def lift (f : M →ₗ[R] N) : HausdorffificationCat I M →ₗ[R] N :=
     map_le_iff_le_comap.1 <|
       h.infi_pow_smul ▸
         le_infᵢ fun n =>
-          le_trans (map_mono <| infᵢ_le _ n) <| by
+          le_trans (map_mono <| infᵢ_le _ n) <|
+            by
             rw [map_smul'']
             exact smul_mono le_rfl le_top
 #align Hausdorffification.lift HausdorffificationCat.lift
@@ -205,7 +202,8 @@ end HausdorffificationCat
 
 namespace IsPrecomplete
 
-instance bot : IsPrecomplete (⊥ : Ideal R) M := by
+instance bot : IsPrecomplete (⊥ : Ideal R) M :=
+  by
   refine' ⟨fun f hf => ⟨f 1, fun n => _⟩⟩; cases n
   · rw [pow_zero, Ideal.one_eq_top, top_smul]
     exact Smodeq.top
@@ -215,7 +213,7 @@ instance bot : IsPrecomplete (⊥ : Ideal R) M := by
 
 instance top : IsPrecomplete (⊤ : Ideal R) M :=
   ⟨fun f hf =>
-    ⟨0, fun n => by 
+    ⟨0, fun n => by
       rw [Ideal.top_pow, top_smul]
       exact Smodeq.top⟩⟩
 #align is_precomplete.top IsPrecomplete.top
@@ -229,10 +227,8 @@ end IsPrecomplete
 namespace adicCompletion
 
 /-- The canonical linear map to the completion. -/
-def of :
-    M →ₗ[R]
-      adicCompletion I
-        M where 
+def of : M →ₗ[R] adicCompletion I M
+    where
   toFun x := ⟨fun n => mkq _ x, fun m n hmn => rfl⟩
   map_add' x y := rfl
   map_smul' c x := rfl
@@ -244,9 +240,8 @@ theorem of_apply (x : M) (n : ℕ) : (of I M x).1 n = mkq _ x :=
 #align adic_completion.of_apply adicCompletion.of_apply
 
 /-- Linearly evaluating a sequence in the completion at a given input. -/
-def eval (n : ℕ) :
-    adicCompletion I M →ₗ[R]
-      M ⧸ (I ^ n • ⊤ : Submodule R M) where 
+def eval (n : ℕ) : adicCompletion I M →ₗ[R] M ⧸ (I ^ n • ⊤ : Submodule R M)
+    where
   toFun f := f.1 n
   map_add' f g := rfl
   map_smul' c f := rfl
@@ -288,7 +283,7 @@ variable (I M)
 instance : IsHausdorff I (adicCompletion I M) :=
   ⟨fun x hx =>
     ext fun n =>
-      smul_induction_on (Smodeq.zero.1 <| hx n)
+      smulInductionOn (Smodeq.zero.1 <| hx n)
         (fun r hr x _ =>
           ((eval I M n).map_smul r x).symm ▸
             Quotient.inductionOn' (eval I M n x) fun x => Smodeq.zero.2 <| smul_mem_smul hr mem_top)
@@ -312,13 +307,15 @@ open BigOperators
 
 open Finset
 
-theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson := by
+theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
+  by
   intro x hx
   rw [← Ideal.neg_mem_iff, Ideal.mem_jacobson_bot]
   intro y
   rw [add_comm]
   let f : ℕ → R := fun n => ∑ i in range n, (x * y) ^ i
-  have hf : ∀ m n, m ≤ n → f m ≡ f n [SMOD I ^ m • (⊤ : Submodule R R)] := by
+  have hf : ∀ m n, m ≤ n → f m ≡ f n [SMOD I ^ m • (⊤ : Submodule R R)] :=
+    by
     intro m n h
     simp only [f, Algebra.id.smul_eq_mul, Ideal.mul_top, Smodeq.sub_mem]
     rw [← add_tsub_cancel_of_le h, Finset.sum_range_add, ← sub_sub, sub_self, zero_sub, neg_mem_iff]
@@ -335,7 +332,8 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     specialize hL n
     rw [Smodeq.sub_mem, Algebra.id.smul_eq_mul, Ideal.mul_top] at hL⊢
     rw [sub_zero]
-    suffices (1 - x * y) * f n - 1 ∈ I ^ n by
+    suffices (1 - x * y) * f n - 1 ∈ I ^ n
+      by
       convert Ideal.sub_mem _ this (Ideal.mul_mem_left _ (1 + -(x * y)) hL) using 1
       ring
     cases n

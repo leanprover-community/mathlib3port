@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.torus_integral
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,8 @@ it to every n axis. -/
 def torusMap (c : ℂⁿ) (R : ℝⁿ) : ℝⁿ → ℂⁿ := fun θ i => c i + R i * exp (θ i * I)
 #align torus_map torusMap
 
-theorem torus_map_sub_center (c : ℂⁿ) (R : ℝⁿ) (θ : ℝⁿ) : torusMap c R θ - c = torusMap 0 R θ := by
+theorem torus_map_sub_center (c : ℂⁿ) (R : ℝⁿ) (θ : ℝⁿ) : torusMap c R θ - c = torusMap 0 R θ :=
+  by
   ext1 i
   simp [torusMap]
 #align torus_map_sub_center torus_map_sub_center
@@ -113,7 +114,8 @@ theorem torus_map_eq_center_iff {c : ℂⁿ} {R : ℝⁿ} {θ : ℝⁿ} : torusM
 #align torus_map_eq_center_iff torus_map_eq_center_iff
 
 @[simp]
-theorem torus_map_zero_radius (c : ℂⁿ) : torusMap c 0 = const ℝⁿ c := by
+theorem torus_map_zero_radius (c : ℂⁿ) : torusMap c 0 = const ℝⁿ c :=
+  by
   ext1
   rw [torus_map_eq_center_iff.2 rfl]
 #align torus_map_zero_radius torus_map_zero_radius
@@ -155,7 +157,8 @@ protected theorem sub (hf : TorusIntegrable f c R) (hg : TorusIntegrable g c R) 
   hf.sub hg
 #align torus_integrable.sub TorusIntegrable.sub
 
-theorem torusIntegrableZeroRadius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegrable f c 0 := by
+theorem torusIntegrableZeroRadius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegrable f c 0 :=
+  by
   rw [TorusIntegrable, torus_map_zero_radius]
   apply torus_integrable_const (f c) c 0
 #align torus_integrable.torus_integrable_zero_radius TorusIntegrable.torusIntegrableZeroRadius
@@ -164,7 +167,7 @@ theorem torusIntegrableZeroRadius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegra
 theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
     IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ))
       (Icc (0 : ℝⁿ) fun _ => 2 * π) volume :=
-  by 
+  by
   refine' (hf.norm.const_mul (∏ i, |R i|)).mono' _ _
   · refine' (Continuous.aeStronglyMeasurable _).smul hf.1
     exact
@@ -225,7 +228,7 @@ theorem norm_torus_integral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (to
     ‖∯ x in T(c, R), f x‖ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C :=
   calc
     ‖∯ x in T(c, R), f x‖ ≤ (∏ i, |R i|) * C * (volume (Icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
-      (norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSetIcc) fun θ hθ =>
+      (norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurable_set_Icc) fun θ hθ =>
         calc
           ‖(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)‖ =
               (∏ i : Fin n, |R i|) * ‖f (torusMap c R θ)‖ :=
@@ -250,13 +253,14 @@ theorem torus_integral_dim0 (f : ℂ⁰ → E) (c : ℂ⁰) (R : ℝ⁰) : (∯ 
 /-- In dimension one, `torus_integral` is the same as `circle_integral`
 (up to the natural equivalence between `ℂ` and `fin 1 → ℂ`). -/
 theorem torus_integral_dim1 (f : ℂ¹ → E) (c : ℂ¹) (R : ℝ¹) :
-    (∯ x in T(c, R), f x) = ∮ z in C(c 0, R 0), f fun _ => z := by
+    (∯ x in T(c, R), f x) = ∮ z in C(c 0, R 0), f fun _ => z :=
+  by
   have : ((fun (x : ℝ) (b : Fin 1) => x) ⁻¹' Icc 0 fun _ => 2 * π) = Icc 0 (2 * π) :=
     (OrderIso.funUnique (Fin 1) ℝ).symm.preimage_Icc _ _
   simp only [torusIntegral, circleIntegral, intervalIntegral.integral_of_le real.two_pi_pos.le,
     measure.restrict_congr_set Ioc_ae_eq_Icc, deriv_circle_map, Fin.prod_univ_one, ←
     ((volume_preserving_fun_unique (Fin 1) ℝ).symm _).set_integral_preimage_emb
-      (MeasurableEquiv.measurableEmbedding _),
+      (MeasurableEquiv.measurable_embedding _),
     this, MeasurableEquiv.fun_unique_symm_apply]
   simp only [torusMap, circleMap, zero_add]
   rcongr
@@ -268,7 +272,7 @@ theorem torus_integral_succ_above {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R :
     (i : Fin (n + 1)) :
     (∯ x in T(c, R), f x) =
       ∮ x in C(c i, R i), ∯ y in T(c ∘ i.succAbove, R ∘ i.succAbove), f (i.insertNth x y) :=
-  by 
+  by
   set e : ℝ × ℝⁿ ≃ᵐ ℝⁿ⁺¹ := (MeasurableEquiv.piFinSuccAboveEquiv (fun _ => ℝ) i).symm
   have hem : measure_preserving e :=
     (volume_preserving_pi_fin_succ_above_equiv (fun j : Fin (n + 1) => ℝ) i).symm _
@@ -276,10 +280,10 @@ theorem torus_integral_succ_above {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R :
     ((OrderIso.piFinSuccAboveIso (fun _ => ℝ) i).symm.preimage_Icc _ _).trans (Icc_prod_eq _ _)
   rw [torusIntegral, ← hem.map_eq, set_integral_map_equiv, heπ, measure.volume_eq_prod,
     set_integral_prod, circle_integral_def_Icc]
-  · refine' set_integral_congr measurableSetIcc fun θ hθ => _
+  · refine' set_integral_congr measurable_set_Icc fun θ hθ => _
     simp only [torusIntegral, ← integral_smul, deriv_circle_map, i.prod_univ_succ_above _,
       smul_smul, torusMap, circle_map_zero]
-    refine' set_integral_congr measurableSetIcc fun Θ hΘ => _
+    refine' set_integral_congr measurable_set_Icc fun Θ hΘ => _
     simp only [MeasurableEquiv.pi_fin_succ_above_equiv_symm_apply, i.insert_nth_apply_same,
       i.insert_nth_apply_succ_above, (· ∘ ·)]
     congr 2

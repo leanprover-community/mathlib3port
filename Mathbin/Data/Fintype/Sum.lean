@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.sum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,8 +25,8 @@ variable {α β : Type _}
 
 open Finset
 
-instance (α : Type u) (β : Type v) [Fintype α] [Fintype β] :
-    Fintype (Sum α β) where 
+instance (α : Type u) (β : Type v) [Fintype α] [Fintype β] : Fintype (Sum α β)
+    where
   elems := univ.disjSum univ
   complete := by rintro (_ | _) <;> simp
 
@@ -49,7 +49,8 @@ def fintypeOfFintypeNe (a : α) (h : Fintype { b // b ≠ a }) : Fintype α :=
 #align fintype_of_fintype_ne fintypeOfFintypeNe
 
 theorem image_subtype_ne_univ_eq_image_erase [Fintype α] (k : β) (b : α → β) :
-    image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).erase k := by
+    image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).erase k :=
+  by
   apply subset_antisymm
   · rw [image_subset_iff]
     intro i _
@@ -63,7 +64,8 @@ theorem image_subtype_ne_univ_eq_image_erase [Fintype α] (k : β) (b : α → �
 
 theorem image_subtype_univ_ssubset_image_univ [Fintype α] (k : β) (b : α → β)
     (hk : k ∈ image b univ) (p : β → Prop) [DecidablePred p] (hp : ¬p k) :
-    image (fun i : { a // p (b a) } => b ↑i) univ ⊂ image b univ := by
+    image (fun i : { a // p (b a) } => b ↑i) univ ⊂ image b univ :=
+  by
   constructor
   · intro x hx
     rcases mem_image.1 hx with ⟨y, _, hy⟩
@@ -83,7 +85,7 @@ can be extended to a bijection between `α` and `t`. -/
 theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
     (hαt : Fintype.card α = t.card) {s : Finset α} {f : α → β} (hfst : s.image f ⊆ t)
     (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
-  classical 
+  classical
     induction' s using Finset.induction with a s has H generalizing f
     · obtain ⟨e⟩ : Nonempty (α ≃ ↥t) := by rwa [← Fintype.card_eq, Fintype.card_coe]
       use e
@@ -110,7 +112,7 @@ can be extended to a bijection between `α` and `t`. -/
 theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
     (hαt : Fintype.card α = t.card) {s : Set α} {f : α → β} (hfst : s.MapsTo f t)
     (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
-  classical 
+  classical
     let s' : Finset α := s.to_finset
     have hfst' : s'.image f ⊆ t := by simpa [← Finset.coe_subset] using hfst
     have hfs' : Set.InjOn f s' := by simpa using hfs
@@ -123,7 +125,7 @@ theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
 theorem Fintype.card_subtype_or (p q : α → Prop) [Fintype { x // p x }] [Fintype { x // q x }]
     [Fintype { x // p x ∨ q x }] :
     Fintype.card { x // p x ∨ q x } ≤ Fintype.card { x // p x } + Fintype.card { x // q x } := by
-  classical 
+  classical
     convert Fintype.card_le_of_embedding (subtypeOrLeftEmbedding p q)
     rw [Fintype.card_sum]
 #align fintype.card_subtype_or Fintype.card_subtype_or
@@ -131,7 +133,7 @@ theorem Fintype.card_subtype_or (p q : α → Prop) [Fintype { x // p x }] [Fint
 theorem Fintype.card_subtype_or_disjoint (p q : α → Prop) (h : Disjoint p q) [Fintype { x // p x }]
     [Fintype { x // q x }] [Fintype { x // p x ∨ q x }] :
     Fintype.card { x // p x ∨ q x } = Fintype.card { x // p x } + Fintype.card { x // q x } := by
-  classical 
+  classical
     convert Fintype.card_congr (subtypeOrEquiv p q h)
     simp
 #align fintype.card_subtype_or_disjoint Fintype.card_subtype_or_disjoint
@@ -141,7 +143,8 @@ section
 open Classical
 
 @[simp]
-theorem infinite_sum : Infinite (Sum α β) ↔ Infinite α ∨ Infinite β := by
+theorem infinite_sum : Infinite (Sum α β) ↔ Infinite α ∨ Infinite β :=
+  by
   refine' ⟨fun H => _, fun H => H.elim (@Sum.infinite_of_left α β) (@Sum.infinite_of_right α β)⟩
   contrapose! H; haveI := fintypeOfNotInfinite H.1; haveI := fintypeOfNotInfinite H.2
   exact Infinite.false

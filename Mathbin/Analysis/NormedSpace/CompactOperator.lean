@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.normed_space.compact_operator
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem is_compact_operator_iff_exists_mem_nhds_image_subset_compact (f : M₁ �
 
 theorem is_compact_operator_iff_exists_mem_nhds_is_compact_closure_image [T2Space M₂]
     (f : M₁ → M₂) : IsCompactOperator f ↔ ∃ V ∈ (𝓝 0 : Filter M₁), IsCompact (closure <| f '' V) :=
-  by 
+  by
   rw [is_compact_operator_iff_exists_mem_nhds_image_subset_compact]
   exact
     ⟨fun ⟨V, hV, K, hK, hKV⟩ => ⟨V, hV, is_compact_closure_of_subset_compact hK hKV⟩,
@@ -254,9 +254,8 @@ variable (σ₁₄ M₁ M₄)
 
 /-- The submodule of compact continuous linear maps. -/
 def compactOperator [Module R₁ M₁] [Module R₄ M₄] [HasContinuousConstSmul R₄ M₄]
-    [TopologicalAddGroup M₄] :
-    Submodule R₄ (M₁ →SL[σ₁₄]
-        M₄) where 
+    [TopologicalAddGroup M₄] : Submodule R₄ (M₁ →SL[σ₁₄] M₄)
+    where
   carrier := { f | IsCompactOperator f }
   add_mem' f g hf hg := hf.add hg
   zero_mem' := is_compact_operator_zero
@@ -272,7 +271,8 @@ variable {R₁ R₂ R₃ : Type _} [Semiring R₁] [Semiring R₂] [Semiring R�
   [TopologicalSpace M₃] [AddCommMonoid M₁] [Module R₁ M₁]
 
 theorem IsCompactOperator.comp_clm [AddCommMonoid M₂] [Module R₂ M₂] {f : M₂ → M₃}
-    (hf : IsCompactOperator f) (g : M₁ →SL[σ₁₂] M₂) : IsCompactOperator (f ∘ g) := by
+    (hf : IsCompactOperator f) (g : M₁ →SL[σ₁₂] M₂) : IsCompactOperator (f ∘ g) :=
+  by
   have := g.continuous.tendsto 0
   rw [map_zero] at this
   rcases hf with ⟨K, hK, hKf⟩
@@ -280,7 +280,8 @@ theorem IsCompactOperator.comp_clm [AddCommMonoid M₂] [Module R₂ M₂] {f : 
 #align is_compact_operator.comp_clm IsCompactOperator.comp_clm
 
 theorem IsCompactOperator.continuous_comp {f : M₁ → M₂} (hf : IsCompactOperator f) {g : M₂ → M₃}
-    (hg : Continuous g) : IsCompactOperator (g ∘ f) := by
+    (hg : Continuous g) : IsCompactOperator (g ∘ f) :=
+  by
   rcases hf with ⟨K, hK, hKf⟩
   refine' ⟨g '' K, hK.image hg, mem_of_superset hKf _⟩
   nth_rw 2 [preimage_comp]
@@ -356,7 +357,8 @@ variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [Nontrivia
 
 @[continuity]
 theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) :
-    Continuous f := by
+    Continuous f :=
+  by
   letI : UniformSpace M₂ := TopologicalAddGroup.toUniformSpace _
   haveI : UniformAddGroup M₂ := topological_add_comm_group_is_uniform
   -- Since `f` is linear, we only need to show that it is continuous at zero.
@@ -374,7 +376,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   have hcnz : c ≠ 0 := ne_zero_of_norm_ne_zero (hr.trans hc).Ne.symm
   -- We have `f ⁻¹' ((σ₁₂ c⁻¹) • K) = c⁻¹ • f ⁻¹' K ∈ 𝓝 0`. Thus, showing that
   -- `(σ₁₂ c⁻¹) • K ⊆ U` is enough to deduce that `f ⁻¹' U ∈ 𝓝 0`.
-  suffices (σ₁₂ <| c⁻¹) • K ⊆ U by 
+  suffices (σ₁₂ <| c⁻¹) • K ⊆ U by
     refine' mem_of_superset _ this
     have : IsUnit c⁻¹ := hcnz.is_unit.inv
     rwa [mem_map, preimage_smul_setₛₗ _ _ _ f this, set_smul_mem_nhds_zero_iff (inv_ne_zero hcnz)]
@@ -424,11 +426,13 @@ theorem is_closed_set_of_is_compact_operator {𝕜₁ 𝕜₂ : Type _} [Nontriv
     [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
     [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
     [HasContinuousConstSmul 𝕜₂ M₂] [T2Space M₂] [CompleteSpace M₂] :
-    IsClosed { f : M₁ →SL[σ₁₂] M₂ | IsCompactOperator f } := by
+    IsClosed { f : M₁ →SL[σ₁₂] M₂ | IsCompactOperator f } :=
+  by
   refine' is_closed_of_closure_subset _
   rintro u hu
   rw [mem_closure_iff_nhds_zero] at hu
-  suffices TotallyBounded (u '' Metric.closedBall 0 1) by
+  suffices TotallyBounded (u '' Metric.closedBall 0 1)
+    by
     change IsCompactOperator (u : M₁ →ₛₗ[σ₁₂] M₂)
     rw [is_compact_operator_iff_is_compact_closure_image_closed_ball (u : M₁ →ₛₗ[σ₁₂] M₂)
         zero_lt_one]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.function.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,12 +130,13 @@ theorem id_def : @id α = fun x => x :=
 
 #print Function.hfunext /-
 theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f : ∀ a, β a} {f' : ∀ a, β' a}
-    (hα : α = α') (h : ∀ a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' := by
+    (hα : α = α') (h : ∀ a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' :=
+  by
   subst hα
-  have : ∀ a, HEq (f a) (f' a) := by 
+  have : ∀ a, HEq (f a) (f' a) := by
     intro a
     exact h a a (HEq.refl a)
-  have : β = β' := by 
+  have : β = β' := by
     funext a
     exact type_eq_of_heq (this a)
   subst this
@@ -298,7 +299,8 @@ Case conversion may be inaccurate. Consider using '#align function.injective.dit
 theorem Injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a } → β}
     {f' : { a : α // ¬p a } → β} (hf : Injective f) (hf' : Injective f')
     (im_disj : ∀ {x x' : α} {hx : p x} {hx' : ¬p x'}, f ⟨x, hx⟩ ≠ f' ⟨x', hx'⟩) :
-    Function.Injective fun x => if h : p x then f ⟨x, h⟩ else f' ⟨x, h⟩ := fun x₁ x₂ h => by
+    Function.Injective fun x => if h : p x then f ⟨x, h⟩ else f' ⟨x, h⟩ := fun x₁ x₂ h =>
+  by
   dsimp only at h
   by_cases h₁ : p x₁ <;> by_cases h₂ : p x₂
   · rw [dif_pos h₁, dif_pos h₂] at h
@@ -449,7 +451,8 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β}, (forall (g₁ : β -> Prop) (g₂ : β -> Prop), (Eq.{max 1 u2} (α -> Prop) (Function.comp.{u2, u1, 1} α β Prop g₁ f) (Function.comp.{u2, u1, 1} α β Prop g₂ f)) -> (Eq.{max 1 u1} (β -> Prop) g₁ g₂)) -> (Function.Surjective.{u2, u1} α β f)
 Case conversion may be inaccurate. Consider using '#align function.surjective_of_right_cancellable_Prop Function.surjective_of_right_cancellable_Propₓ'. -/
 theorem surjective_of_right_cancellable_Prop (h : ∀ g₁ g₂ : β → Prop, g₁ ∘ f = g₂ ∘ f → g₁ = g₂) :
-    Surjective f := by
+    Surjective f :=
+  by
   specialize h (fun _ => True) (fun y => ∃ x, f x = y) (funext fun x => _)
   · simp only [(· ∘ ·), exists_apply_eq_apply]
   · intro y
@@ -547,14 +550,16 @@ theorem cantor_injective {α : Type _} (f : Set α → α) : ¬Function.Injectiv
 #print Function.not_surjective_Type /-
 /-- There is no surjection from `α : Type u` into `Type u`. This theorem
   demonstrates why `Type : Type` would be inconsistent in Lean. -/
-theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjective f := by
+theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjective f :=
+  by
   intro hf
   let T : Type max u v := Sigma f
   cases' hf (Set T) with U hU
   let g : Set T → T := fun s => ⟨U, cast hU.symm s⟩
-  have hg : injective g := by 
+  have hg : injective g := by
     intro s t h
-    suffices cast hU (g s).2 = cast hU (g t).2 by
+    suffices cast hU (g s).2 = cast hU (g t).2
+      by
       simp only [cast_cast, cast_eq] at this
       assumption
     · congr
@@ -746,7 +751,7 @@ Case conversion may be inaccurate. Consider using '#align function.partial_inv_o
 theorem partialInv_of_injective {α β} {f : α → β} (I : Injective f) : IsPartialInv f (partialInv f)
   | a, b =>
     ⟨fun h =>
-      if h' : ∃ a, f a = b then by 
+      if h' : ∃ a, f a = b then by
         rw [partial_inv, dif_pos h'] at h
         injection h with h; subst h
         apply Classical.choose_spec h'
@@ -970,7 +975,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.update_apply Function.update_applyₓ'. -/
 /-- On non-dependent functions, `function.update` can be expressed as an `ite` -/
 theorem update_apply {β : Sort _} (f : α → β) (a' : α) (b : β) (a : α) :
-    update f a' b a = if a = a' then b else f a := by
+    update f a' b a = if a = a' then b else f a :=
+  by
   dsimp only [update]
   congr
   funext
@@ -993,7 +999,8 @@ theorem surjective_eval {α : Sort u} {β : α → Sort v} [h : ∀ a, Nonempty 
 -/
 
 #print Function.update_injective /-
-theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') := fun v v' h => by
+theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') := fun v v' h =>
+  by
   have := congr_fun h a'
   rwa [update_same, update_same] at this
 #align function.update_injective Function.update_injective
@@ -1009,7 +1016,8 @@ theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.forall_update_iff /-
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
-    (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) := by
+    (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) :=
+  by
   rw [← and_forall_ne a, update_same]
   simp (config := { contextual := true })
 #align function.forall_update_iff Function.forall_update_iff
@@ -1018,7 +1026,8 @@ theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.exists_update_iff /-
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
-    (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
+    (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) :=
+  by
   rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
   simp [not_and_or]
 #align function.exists_update_iff Function.exists_update_iff
@@ -1122,7 +1131,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.apply_update Function.apply_updateₓ'. -/
 theorem apply_update {ι : Sort _} [DecidableEq ι] {α β : ι → Sort _} (f : ∀ i, α i → β i)
     (g : ∀ i, α i) (i : ι) (v : α i) (j : ι) :
-    f j (update g i v j) = update (fun k => f k (g k)) i (f i v) j := by
+    f j (update g i v j) = update (fun k => f k (g k)) i (f i v) j :=
+  by
   by_cases h : j = i
   · subst j
     simp
@@ -1137,7 +1147,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.apply_update₂ Function.apply_update₂ₓ'. -/
 theorem apply_update₂ {ι : Sort _} [DecidableEq ι] {α β γ : ι → Sort _} (f : ∀ i, α i → β i → γ i)
     (g : ∀ i, α i) (h : ∀ i, β i) (i : ι) (v : α i) (w : β i) (j : ι) :
-    f j (update g i v j) (update h i w j) = update (fun k => f k (g k) (h k)) i (f i v w) j := by
+    f j (update g i v j) (update h i w j) = update (fun k => f k (g k) (h k)) i (f i v w) j :=
+  by
   by_cases h : j = i
   · subst j
     simp
@@ -1162,7 +1173,8 @@ but is expected to have type
   forall {α : Sort.{u2}} [_inst_3 : DecidableEq.{u2} α] {β : α -> Sort.{u1}} {a : α} {b : α}, (Ne.{u2} α a b) -> (forall (v : β a) (w : β b) (f : forall (a : α), β a), Eq.{imax u2 u1} (forall (a : α), β a) (Function.update.{u2, u1} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) (Function.update.{u2, u1} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) f a v) b w) (Function.update.{u2, u1} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) (Function.update.{u2, u1} α (fun (a : α) => β a) (fun (a : α) (b : α) => _inst_3 a b) f b w) a v))
 Case conversion may be inaccurate. Consider using '#align function.update_comm Function.update_commₓ'. -/
 theorem update_comm {α} [DecidableEq α] {β : α → Sort _} {a b : α} (h : a ≠ b) (v : β a) (w : β b)
-    (f : ∀ a, β a) : update (update f a v) b w = update (update f b w) a v := by
+    (f : ∀ a, β a) : update (update f a v) b w = update (update f b w) a v :=
+  by
   funext c; simp only [update]
   by_cases h₁ : c = b <;> by_cases h₂ : c = a <;> try simp [h₁, h₂]
   cases h (h₂.symm.trans h₁)
@@ -1176,7 +1188,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.update_idem Function.update_idemₓ'. -/
 @[simp]
 theorem update_idem {α} [DecidableEq α] {β : α → Sort _} {a : α} (v w : β a) (f : ∀ a, β a) :
-    update (update f a v) a w = update f a w := by
+    update (update f a v) a w = update f a w :=
+  by
   funext b
   by_cases b = a <;> simp [update, h]
 #align function.update_idem Function.update_idem
@@ -1221,7 +1234,8 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (f : α -> β) (g : α -> γ) (e' : β -> γ) (b : β) [_inst_1 : Decidable (Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b))], Eq.{u1} γ (Function.extend.{u3, u2, u1} α β γ f g e' b) (dite.{u1} γ (Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b)) _inst_1 (fun (h : Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b)) => g (Classical.choose.{u3} α (fun (a : α) => Eq.{u2} β (f a) b) h)) (fun (h : Not (Exists.{u3} α (fun (a : α) => Eq.{u2} β (f a) b))) => e' b))
 Case conversion may be inaccurate. Consider using '#align function.extend_def Function.extend_defₓ'. -/
 theorem extend_def (f : α → β) (g : α → γ) (e' : β → γ) (b : β) [Decidable (∃ a, f a = b)] :
-    extend f g e' b = if h : ∃ a, f a = b then g (Classical.choose h) else e' b := by
+    extend f g e' b = if h : ∃ a, f a = b then g (Classical.choose h) else e' b :=
+  by
   unfold extend
   congr
 #align function.extend_def Function.extend_def
@@ -1233,7 +1247,8 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> β} {g : α -> γ}, (Function.FactorsThrough.{u3, u2, u1} α β γ g f) -> (forall (e' : β -> γ) (a : α), Eq.{u1} γ (Function.extend.{u3, u2, u1} α β γ f g e' (f a)) (g a))
 Case conversion may be inaccurate. Consider using '#align function.factors_through.extend_apply Function.FactorsThrough.extend_applyₓ'. -/
 theorem FactorsThrough.extend_apply {g : α → γ} (hf : g.FactorsThrough f) (e' : β → γ) (a : α) :
-    extend f g e' (f a) = g a := by
+    extend f g e' (f a) = g a :=
+  by
   simp only [extend_def, dif_pos, exists_apply_eq_apply]
   exact hf (Classical.choose_spec (exists_apply_eq_apply f a))
 #align function.factors_through.extend_apply Function.FactorsThrough.extend_apply
@@ -1276,7 +1291,8 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> β} {δ : Sort.{u4}} {g : α -> γ}, (Function.FactorsThrough.{u3, u2, u1} α β γ g f) -> (forall (F : γ -> δ) (e' : β -> γ) (b : β), Eq.{u4} δ (F (Function.extend.{u3, u2, u1} α β γ f g e' b)) (Function.extend.{u3, u2, u4} α β δ f (Function.comp.{u3, u1, u4} α γ δ F g) (Function.comp.{u2, u1, u4} β γ δ F e') b))
 Case conversion may be inaccurate. Consider using '#align function.factors_through.apply_extend Function.FactorsThrough.apply_extendₓ'. -/
 theorem FactorsThrough.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g f) (F : γ → δ)
-    (e' : β → γ) (b : β) : F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b := by
+    (e' : β → γ) (b : β) : F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b :=
+  by
   by_cases hb : ∃ a, f a = b
   · cases' hb with a ha
     subst b
@@ -1306,7 +1322,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> β}, (Function.Injective.{u3, u2} α β f) -> (forall (e' : β -> γ), Function.Injective.{imax u3 u1, imax u2 u1} (α -> γ) (β -> γ) (fun (g : α -> γ) => Function.extend.{u3, u2, u1} α β γ f g e'))
 Case conversion may be inaccurate. Consider using '#align function.extend_injective Function.extend_injectiveₓ'. -/
-theorem extend_injective (hf : Injective f) (e' : β → γ) : Injective fun g => extend f g e' := by
+theorem extend_injective (hf : Injective f) (e' : β → γ) : Injective fun g => extend f g e' :=
+  by
   intro g₁ g₂ hg
   refine' funext fun x => _
   have H := congr_fun hg (f x)

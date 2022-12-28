@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.opposite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,9 +28,8 @@ variable (C : Type _) [Category C] [Abelian C]
 attribute [local instance]
   has_finite_limits_of_has_equalizers_and_finite_products has_finite_colimits_of_has_coequalizers_and_finite_coproducts
 
-instance :
-    Abelian
-      Cᵒᵖ where 
+instance : Abelian Cᵒᵖ
+    where
   normalMonoOfMono X Y f m := normal_mono_of_normal_epi_unop _ (normal_epi_of_epi f.unop)
   normalEpiOfEpi X Y f m := normal_epi_of_normal_mono_unop _ (normal_mono_of_mono f.unop)
 
@@ -42,22 +41,21 @@ variable {C} {X Y : C} (f : X ⟶ Y) {A B : Cᵒᵖ} (g : A ⟶ B)
 -- (The abelian case is probably sufficient for most applications.)
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]
-def kernelOpUnop :
-    (kernel f.op).unop ≅
-      cokernel
-        f where 
+def kernelOpUnop : (kernel f.op).unop ≅ cokernel f
+    where
   Hom := (kernel.lift f.op (cokernel.π f).op <| by simp [← op_comp]).unop
   inv :=
-    cokernel.desc f (kernel.ι f.op).unop <| by
+    cokernel.desc f (kernel.ι f.op).unop <|
+      by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
       simp
-  hom_inv_id' := by 
+  hom_inv_id' := by
     rw [← unop_id, ← (cokernel.desc f _ _).unop_op, ← unop_comp]
     congr 1
     dsimp
     ext
     simp [← op_comp]
-  inv_hom_id' := by 
+  inv_hom_id' := by
     dsimp
     ext
     simp [← unop_comp]
@@ -67,22 +65,21 @@ def kernelOpUnop :
 -- (The abelian case is probably sufficient for most applications.)
 /-- The cokernel of `f.op` is the opposite of `kernel f`. -/
 @[simps]
-def cokernelOpUnop :
-    (cokernel f.op).unop ≅
-      kernel
-        f where 
+def cokernelOpUnop : (cokernel f.op).unop ≅ kernel f
+    where
   Hom :=
-    kernel.lift f (cokernel.π f.op).unop <| by
+    kernel.lift f (cokernel.π f.op).unop <|
+      by
       rw [← f.unop_op, ← unop_comp, f.unop_op]
       simp
   inv := (cokernel.desc f.op (kernel.ι f).op <| by simp [← op_comp]).unop
-  hom_inv_id' := by 
+  hom_inv_id' := by
     rw [← unop_id, ← (kernel.lift f _ _).unop_op, ← unop_comp]
     congr 1
     dsimp
     ext
     simp [← op_comp]
-  inv_hom_id' := by 
+  inv_hom_id' := by
     dsimp
     ext
     simp [← unop_comp]

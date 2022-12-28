@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.preadditive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,23 +82,22 @@ instance tensoring_right_additive (X : C) : ((tensoringRight C).obj X).Additive 
 /-- A faithful additive monoidal functor to a monoidal preadditive category
 ensures that the domain is monoidal preadditive. -/
 def monoidalPreadditiveOfFaithful {D : Type _} [Category D] [Preadditive D] [MonoidalCategory D]
-    (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] :
-    MonoidalPreadditive
-      D where 
-  tensor_zero' := by 
+    (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] : MonoidalPreadditive D
+    where
+  tensor_zero' := by
     intros
     apply F.to_functor.map_injective
     simp [F.map_tensor]
-  zero_tensor' := by 
+  zero_tensor' := by
     intros
     apply F.to_functor.map_injective
     simp [F.map_tensor]
-  tensor_add' := by 
+  tensor_add' := by
     intros
     apply F.to_functor.map_injective
     simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
       monoidal_preadditive.tensor_add]
-  add_tensor' := by 
+  add_tensor' := by
     intros
     apply F.to_functor.map_injective
     simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
@@ -110,7 +109,8 @@ open BigOperators
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
-    (f ⊗ ∑ j in s, g j) = ∑ j in s, f ⊗ g j := by
+    (f ⊗ ∑ j in s, g j) = ∑ j in s, f ⊗ g j :=
+  by
   rw [← tensor_id_comp_id_tensor]
   let tQ := (((tensoring_left C).obj Q).mapAddHom : (R ⟶ S) →+ _)
   change _ ≫ tQ _ = _
@@ -122,7 +122,8 @@ theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
-    (∑ j in s, g j) ⊗ f = ∑ j in s, g j ⊗ f := by
+    (∑ j in s, g j) ⊗ f = ∑ j in s, g j ⊗ f :=
+  by
   rw [← tensor_id_comp_id_tensor]
   let tQ := (((tensoring_right C).obj P).mapAddHom : (R ⟶ S) →+ _)
   change tQ _ ≫ _ = _
@@ -136,26 +137,26 @@ variable {C}
 -- In a closed monoidal category, this would hold because
 -- `tensor_left X` is a left adjoint and hence preserves all colimits.
 -- In any case it is true in any preadditive category.
-instance (X : C) :
-    PreservesFiniteBiproducts
-      (tensorLeft
-        X) where preserves J _ :=
-    { preserves := fun f =>
-        { preserves := fun b i =>
+instance (X : C) : PreservesFiniteBiproducts (tensorLeft X)
+    where preserves J _ :=
+    {
+      preserves := fun f =>
+        {
+          preserves := fun b i =>
             is_bilimit_of_total _
-              (by 
+              (by
                 dsimp
                 simp only [← tensor_comp, category.comp_id, ← tensor_sum, ← tensor_id,
                   is_bilimit.total i]) } }
 
-instance (X : C) :
-    PreservesFiniteBiproducts
-      (tensorRight
-        X) where preserves J _ :=
-    { preserves := fun f =>
-        { preserves := fun b i =>
+instance (X : C) : PreservesFiniteBiproducts (tensorRight X)
+    where preserves J _ :=
+    {
+      preserves := fun f =>
+        {
+          preserves := fun b i =>
             is_bilimit_of_total _
-              (by 
+              (by
                 dsimp
                 simp only [← tensor_comp, category.comp_id, ← sum_tensor, ← tensor_id,
                   is_bilimit.total i]) } }
@@ -172,7 +173,8 @@ def leftDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : X ⊗ ⨁ f �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
-    (leftDistributor X f).Hom = ∑ j : J, (𝟙 X ⊗ biproduct.π f j) ≫ biproduct.ι _ j := by
+    (leftDistributor X f).Hom = ∑ j : J, (𝟙 X ⊗ biproduct.π f j) ≫ biproduct.ι _ j :=
+  by
   ext; dsimp [tensor_left, left_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 #align category_theory.left_distributor_hom CategoryTheory.left_distributor_hom
@@ -180,7 +182,8 @@ theorem left_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
-    (leftDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (𝟙 X ⊗ biproduct.ι f j) := by
+    (leftDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (𝟙 X ⊗ biproduct.ι f j) :=
+  by
   ext; dsimp [tensor_left, left_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 #align category_theory.left_distributor_inv CategoryTheory.left_distributor_inv
@@ -190,7 +193,7 @@ theorem left_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
 theorem left_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (asIso (𝟙 X) ⊗ leftDistributor Y f) ≪≫ leftDistributor X _ =
       (α_ X Y (⨁ f)).symm ≪≫ leftDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => α_ X Y _ :=
-  by 
+  by
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.trans_hom, iso.symm_hom,
     as_iso_hom, comp_zero, comp_dite, preadditive.sum_comp, preadditive.comp_sum, tensor_sum,
@@ -213,7 +216,8 @@ def rightDistributor {J : Type} [Fintype J] (X : C) (f : J → C) : (⨁ f) ⊗ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
-    (rightDistributor X f).Hom = ∑ j : J, (biproduct.π f j ⊗ 𝟙 X) ≫ biproduct.ι _ j := by
+    (rightDistributor X f).Hom = ∑ j : J, (biproduct.π f j ⊗ 𝟙 X) ≫ biproduct.ι _ j :=
+  by
   ext; dsimp [tensor_right, right_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 #align category_theory.right_distributor_hom CategoryTheory.right_distributor_hom
@@ -221,7 +225,8 @@ theorem right_distributor_hom {J : Type} [Fintype J] (X : C) (f : J → C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
-    (rightDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (biproduct.ι f j ⊗ 𝟙 X) := by
+    (rightDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (biproduct.ι f j ⊗ 𝟙 X) :=
+  by
   ext; dsimp [tensor_right, right_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 #align category_theory.right_distributor_inv CategoryTheory.right_distributor_inv
@@ -231,7 +236,7 @@ theorem right_distributor_inv {J : Type} [Fintype J] (X : C) (f : J → C) :
 theorem right_distributor_assoc {J : Type} [Fintype J] (X Y : C) (f : J → C) :
     (rightDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ (⨁ f) X Y ≪≫ rightDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => (α_ _ X Y).symm :=
-  by 
+  by
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.symm_hom, iso.trans_hom,
     as_iso_hom, comp_zero, comp_dite, preadditive.sum_comp, preadditive.comp_sum, sum_tensor,
@@ -252,7 +257,7 @@ theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y :
       α_ X (⨁ f) Y ≪≫
         (asIso (𝟙 X) ⊗ rightDistributor Y _) ≪≫
           leftDistributor X _ ≪≫ biproduct.mapIso fun j => (α_ _ _ _).symm :=
-  by 
+  by
   ext
   simp only [category.comp_id, category.assoc, eq_to_hom_refl, iso.symm_hom, iso.trans_hom,
     as_iso_hom, comp_zero, comp_dite, preadditive.sum_comp, preadditive.comp_sum, sum_tensor,

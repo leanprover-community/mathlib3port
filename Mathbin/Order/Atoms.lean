@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.atoms
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,14 +179,16 @@ section PartialOrder
 variable [PartialOrder α] {a b : α}
 
 @[simp]
-theorem Set.Ici.is_atom_iff {b : Set.Ici a} : IsAtom b ↔ a ⋖ b := by
+theorem Set.Ici.is_atom_iff {b : Set.Ici a} : IsAtom b ↔ a ⋖ b :=
+  by
   rw [← bot_covby_iff]
   refine' (Set.OrdConnected.apply_covby_apply_iff (OrderEmbedding.subtype fun c => a ≤ c) _).symm
   simpa only [OrderEmbedding.subtype_apply, Subtype.range_coe_subtype] using Set.ord_connected_Ici
 #align set.Ici.is_atom_iff Set.Ici.is_atom_iff
 
 @[simp]
-theorem Set.Iic.is_coatom_iff {a : Set.Iic b} : IsCoatom a ↔ ↑a ⋖ b := by
+theorem Set.Iic.is_coatom_iff {a : Set.Iic b} : IsCoatom a ↔ ↑a ⋖ b :=
+  by
   rw [← covby_top_iff]
   refine' (Set.OrdConnected.apply_covby_apply_iff (OrderEmbedding.subtype fun c => c ≤ b) _).symm
   simpa only [OrderEmbedding.subtype_apply, Subtype.range_coe_subtype] using Set.ord_connected_Iic
@@ -358,7 +360,7 @@ instance is_coatomistic_dual [h : IsAtomistic α] : IsCoatomistic αᵒᵈ :=
 variable [IsAtomistic α]
 
 instance (priority := 100) : IsAtomic α :=
-  ⟨fun b => by 
+  ⟨fun b => by
     rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
@@ -371,19 +373,22 @@ section IsAtomistic
 variable [IsAtomistic α]
 
 @[simp]
-theorem Sup_atoms_le_eq (b : α) : supₛ { a : α | IsAtom a ∧ a ≤ b } = b := by
+theorem Sup_atoms_le_eq (b : α) : supₛ { a : α | IsAtom a ∧ a ≤ b } = b :=
+  by
   rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
   exact le_antisymm (supₛ_le fun _ => And.right) (supₛ_le_supₛ fun a ha => ⟨hs a ha, le_supₛ ha⟩)
 #align Sup_atoms_le_eq Sup_atoms_le_eq
 
 @[simp]
-theorem Sup_atoms_eq_top : supₛ { a : α | IsAtom a } = ⊤ := by
+theorem Sup_atoms_eq_top : supₛ { a : α | IsAtom a } = ⊤ :=
+  by
   refine' Eq.trans (congr rfl (Set.ext fun x => _)) (Sup_atoms_le_eq ⊤)
   exact (and_iff_left le_top).symm
 #align Sup_atoms_eq_top Sup_atoms_eq_top
 
 theorem le_iff_atom_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, IsAtom c → c ≤ a → c ≤ b :=
-  ⟨fun ab c hc ca => le_trans ca ab, fun h => by
+  ⟨fun ab c hc ca => le_trans ca ab, fun h =>
+    by
     rw [← Sup_atoms_le_eq a, ← Sup_atoms_le_eq b]
     exact supₛ_le_supₛ fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
 #align le_iff_atom_le_imp le_iff_atom_le_imp
@@ -399,7 +404,7 @@ instance is_atomistic_dual [h : IsCoatomistic α] : IsAtomistic αᵒᵈ :=
 variable [IsCoatomistic α]
 
 instance (priority := 100) : IsCoatomic α :=
-  ⟨fun b => by 
+  ⟨fun b => by
     rcases eq_Inf_coatoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
@@ -417,7 +422,8 @@ class IsSimpleOrder (α : Type _) [LE α] [BoundedOrder α] extends Nontrivial �
 export IsSimpleOrder (eq_bot_or_eq_top)
 
 theorem is_simple_order_iff_is_simple_order_order_dual [LE α] [BoundedOrder α] :
-    IsSimpleOrder α ↔ IsSimpleOrder αᵒᵈ := by
+    IsSimpleOrder α ↔ IsSimpleOrder αᵒᵈ :=
+  by
   constructor <;> intro i <;> haveI := i
   ·
     exact
@@ -429,7 +435,8 @@ theorem is_simple_order_iff_is_simple_order_order_dual [LE α] [BoundedOrder α]
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
 #align is_simple_order_iff_is_simple_order_order_dual is_simple_order_iff_is_simple_order_order_dual
 
-theorem IsSimpleOrder.bot_ne_top [LE α] [BoundedOrder α] [IsSimpleOrder α] : (⊥ : α) ≠ (⊤ : α) := by
+theorem IsSimpleOrder.bot_ne_top [LE α] [BoundedOrder α] [IsSimpleOrder α] : (⊥ : α) ≠ (⊤ : α) :=
+  by
   obtain ⟨a, b, h⟩ := exists_pair_ne α
   rcases eq_bot_or_eq_top a with (rfl | rfl) <;> rcases eq_bot_or_eq_top b with (rfl | rfl) <;>
     first |simpa|simpa using h.symm
@@ -443,11 +450,11 @@ instance {α} [LE α] [BoundedOrder α] [IsSimpleOrder α] : IsSimpleOrder αᵒ
   is_simple_order_iff_is_simple_order_order_dual.1 (by infer_instance)
 
 /-- A simple `bounded_order` induces a preorder. This is not an instance to prevent loops. -/
-protected def IsSimpleOrder.preorder {α} [LE α] [BoundedOrder α] [IsSimpleOrder α] :
-    Preorder α where 
+protected def IsSimpleOrder.preorder {α} [LE α] [BoundedOrder α] [IsSimpleOrder α] : Preorder α
+    where
   le := (· ≤ ·)
   le_refl a := by rcases eq_bot_or_eq_top a with (rfl | rfl) <;> simp
-  le_trans a b c := by 
+  le_trans a b c := by
     rcases eq_bot_or_eq_top a with (rfl | rfl)
     · simp
     · rcases eq_bot_or_eq_top b with (rfl | rfl)
@@ -458,7 +465,10 @@ protected def IsSimpleOrder.preorder {α} [LE α] [BoundedOrder α] [IsSimpleOrd
 /-- A simple partial ordered `bounded_order` induces a linear order.
 This is not an instance to prevent loops. -/
 protected def IsSimpleOrder.linearOrder [DecidableEq α] : LinearOrder α :=
-  { (inferInstance : PartialOrder α) with
+  {
+    (inferInstance :
+      PartialOrder
+        α) with
     le_total := fun a b => by rcases eq_bot_or_eq_top a with (rfl | rfl) <;> simp
     decidableLe := fun a b =>
       if ha : a = ⊥ then isTrue (ha.le.trans bot_le)
@@ -541,8 +551,8 @@ variable [DecidableEq α] [PartialOrder α] [BoundedOrder α] [IsSimpleOrder α]
 
 /-- Every simple lattice is isomorphic to `bool`, regardless of order. -/
 @[simps]
-def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α] :
-    α ≃ Bool where 
+def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α] : α ≃ Bool
+    where
   toFun x := x = ⊤
   invFun x := cond x ⊤ ⊥
   left_inv x := by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top]
@@ -552,7 +562,8 @@ def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α]
 /-- Every simple lattice over a partial order is order-isomorphic to `bool`. -/
 def orderIsoBool : α ≃o Bool :=
   { equivBool with
-    map_rel_iff' := fun a b => by
+    map_rel_iff' := fun a b =>
+      by
       rcases eq_bot_or_eq_top a with (rfl | rfl)
       · simp [bot_ne_top]
       · rcases eq_bot_or_eq_top b with (rfl | rfl)
@@ -563,12 +574,14 @@ def orderIsoBool : α ≃o Bool :=
 /-- A simple `bounded_order` is also a `boolean_algebra`. -/
 protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α] [IsSimpleOrder α] :
     BooleanAlgebra α :=
-  { show BoundedOrder α by infer_instance, IsSimpleOrder.distribLattice with
+  { show BoundedOrder α by infer_instance,
+    IsSimpleOrder.distribLattice with
     compl := fun x => if x = ⊥ then ⊤ else ⊥
     sdiff := fun x y => if x = ⊤ ∧ y = ⊥ then ⊤ else ⊥
     sdiff_eq := fun x y => by
       rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, SDiff.sdiff, compl]
-    inf_compl_le_bot := fun x => by
+    inf_compl_le_bot := fun x =>
+      by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp
       · simp only [top_inf_eq]
@@ -584,24 +597,26 @@ open Classical
 
 /-- A simple `bounded_order` is also complete. -/
 protected noncomputable def completeLattice : CompleteLattice α :=
-  { (inferInstance : Lattice α), (inferInstance : BoundedOrder α) with
+  { (inferInstance : Lattice α),
+    (inferInstance : BoundedOrder
+        α) with
     sup := fun s => if ⊤ ∈ s then ⊤ else ⊥
     inf := fun s => if ⊥ ∈ s then ⊥ else ⊤
-    le_Sup := fun s x h => by 
+    le_Sup := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
       · rw [if_pos h]
-    Sup_le := fun s x h => by 
+    Sup_le := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_neg]
         intro con
         exact bot_ne_top (eq_top_iff.2 (h ⊤ con))
       · exact le_top
-    Inf_le := fun s x h => by 
+    Inf_le := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_pos h]
       · exact le_top
-    le_Inf := fun s x h => by 
+    le_Inf := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
       · rw [if_neg]
@@ -611,13 +626,16 @@ protected noncomputable def completeLattice : CompleteLattice α :=
 
 /-- A simple `bounded_order` is also a `complete_boolean_algebra`. -/
 protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :=
-  { IsSimpleOrder.completeLattice, IsSimpleOrder.booleanAlgebra with
-    infi_sup_le_sup_Inf := fun x s => by
+  { IsSimpleOrder.completeLattice,
+    IsSimpleOrder.booleanAlgebra with
+    infi_sup_le_sup_Inf := fun x s =>
+      by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_sup_eq, ← infₛ_eq_infᵢ]
         exact le_rfl
       · simp only [top_sup_eq, le_top]
-    inf_Sup_le_supr_inf := fun x s => by
+    inf_Sup_le_supr_inf := fun x s =>
+      by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_inf_eq, bot_le]
       · simp only [top_inf_eq, ← supₛ_eq_supᵢ]
@@ -683,7 +701,8 @@ namespace OrderEmbedding
 variable [PartialOrder α] [PartialOrder β]
 
 theorem is_atom_of_map_bot_of_image [OrderBot α] [OrderBot β] (f : β ↪o α) (hbot : f ⊥ = ⊥) {b : β}
-    (hb : IsAtom (f b)) : IsAtom b := by
+    (hb : IsAtom (f b)) : IsAtom b :=
+  by
   simp only [← bot_covby_iff] at hb⊢
   exact Covby.of_image f (hbot.symm ▸ hb)
 #align order_embedding.is_atom_of_map_bot_of_image OrderEmbedding.is_atom_of_map_bot_of_image
@@ -707,7 +726,8 @@ theorem is_atom_of_u_bot [OrderBot α] [OrderBot β] {l : α → β} {u : β →
 
 theorem is_atom_iff [OrderBot α] [IsAtomic α] [OrderBot β] {l : α → β} {u : β → α}
     (gi : GaloisInsertion l u) (hbot : u ⊥ = ⊥) (h_atom : ∀ a, IsAtom a → u (l a) = a) (a : α) :
-    IsAtom (l a) ↔ IsAtom a := by
+    IsAtom (l a) ↔ IsAtom a :=
+  by
   refine' ⟨fun hla => _, fun ha => gi.is_atom_of_u_bot hbot ((h_atom a ha).symm ▸ ha)⟩
   obtain ⟨a', ha', hab'⟩ :=
     (eq_bot_or_exists_atom_le (u (l a))).resolve_left (hbot ▸ fun h => hla.1 (gi.u_injective h))
@@ -734,7 +754,8 @@ theorem is_coatom_of_image [OrderTop α] [OrderTop β] {l : α → β} {u : β �
 
 theorem is_coatom_iff [OrderTop α] [IsCoatomic α] [OrderTop β] {l : α → β} {u : β → α}
     (gi : GaloisInsertion l u) (h_coatom : ∀ a : α, IsCoatom a → u (l a) = a) (b : β) :
-    IsCoatom (u b) ↔ IsCoatom b := by
+    IsCoatom (u b) ↔ IsCoatom b :=
+  by
   refine' ⟨fun hb => gi.is_coatom_of_image hb, fun hb => _⟩
   obtain ⟨a, ha, hab⟩ :=
     (eq_top_or_exists_le_coatom (u b)).resolve_left fun h =>
@@ -846,7 +867,7 @@ variable [ComplementedLattice α]
 
 theorem is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular [IsAtomic α] :
     IsCoatomic α :=
-  ⟨fun x => by 
+  ⟨fun x => by
     rcases exists_is_compl x with ⟨y, xy⟩
     apply (eq_bot_or_exists_atom_le y).imp _ _
     · rintro rfl
@@ -878,9 +899,10 @@ theorem is_atom_singleton (x : α) : IsAtom ({x} : Set α) :=
   ⟨singleton_ne_empty _, fun s hs => ssubset_singleton_iff.mp hs⟩
 #align set.is_atom_singleton Set.is_atom_singleton
 
-theorem is_atom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} := by
+theorem is_atom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} :=
+  by
   refine'
-    ⟨_, by 
+    ⟨_, by
       rintro ⟨x, rfl⟩
       exact is_atom_singleton x⟩
   rw [is_atom_iff, bot_eq_empty, ← nonempty_iff_ne_empty]
@@ -899,20 +921,18 @@ theorem is_coatom_singleton_compl (x : α) : IsCoatom ({x}ᶜ : Set α) :=
   (is_coatom_iff ({x}ᶜ)).mpr ⟨x, rfl⟩
 #align set.is_coatom_singleton_compl Set.is_coatom_singleton_compl
 
-instance :
-    IsAtomistic
-      (Set
-        α) where eq_Sup_atoms s :=
-    ⟨(fun x => {x}) '' s, by rw [Sup_eq_sUnion, sUnion_image, bUnion_of_singleton], by
+instance : IsAtomistic (Set α)
+    where eq_Sup_atoms s :=
+    ⟨(fun x => {x}) '' s, by rw [Sup_eq_sUnion, sUnion_image, bUnion_of_singleton],
+      by
       rintro - ⟨x, hx, rfl⟩
       exact is_atom_singleton x⟩
 
-instance :
-    IsCoatomistic
-      (Set
-        α) where eq_Inf_coatoms s :=
+instance : IsCoatomistic (Set α)
+    where eq_Inf_coatoms s :=
     ⟨(fun x => {x}ᶜ) '' sᶜ, by
-      rw [Inf_eq_sInter, sInter_image, ← compl_Union₂, bUnion_of_singleton, compl_compl], by
+      rw [Inf_eq_sInter, sInter_image, ← compl_Union₂, bUnion_of_singleton, compl_compl],
+      by
       rintro - ⟨x, hx, rfl⟩
       exact is_coatom_singleton_compl x⟩
 

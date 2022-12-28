@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.regular.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,7 +173,8 @@ Case conversion may be inaccurate. Consider using '#align is_right_regular.of_mu
 element, then `b` is right-regular. -/
 @[to_additive
       "If an element `b` becomes add-right-regular after adding to it on the right a\nadd-right-regular element, then `b` is add-right-regular."]
-theorem IsRightRegular.of_mul (ab : IsRightRegular (b * a)) : IsRightRegular b := by
+theorem IsRightRegular.of_mul (ab : IsRightRegular (b * a)) : IsRightRegular b :=
+  by
   refine' fun x y xy => ab (_ : x * (b * a) = y * (b * a))
   rw [← mul_assoc, ← mul_assoc]
   exact congr_fun (congr_arg (· * ·) xy) a
@@ -206,7 +207,8 @@ are regular. -/
 @[to_additive
       "Two elements `a` and `b` are add-regular if and only if both sums `a + b` and `b + a`\nare add-regular."]
 theorem isRegular_mul_and_mul_iff :
-    IsRegular (a * b) ∧ IsRegular (b * a) ↔ IsRegular a ∧ IsRegular b := by
+    IsRegular (a * b) ∧ IsRegular (b * a) ↔ IsRegular a ∧ IsRegular b :=
+  by
   refine' ⟨_, _⟩
   · rintro ⟨ab, ba⟩
     exact
@@ -291,7 +293,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : MulZeroClass.{u1} R], Iff (Not (IsLeftRegular.{u1} R (MulZeroClass.toMul.{u1} R _inst_1) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R _inst_1))))) (Nontrivial.{u1} R)
 Case conversion may be inaccurate. Consider using '#align not_is_left_regular_zero_iff not_isLeftRegular_zero_iffₓ'. -/
 /-- In a non-trivial `mul_zero_class`, the `0` element is not left-regular. -/
-theorem not_isLeftRegular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R := by
+theorem not_isLeftRegular_zero_iff : ¬IsLeftRegular (0 : R) ↔ Nontrivial R :=
+  by
   rw [nontrivial_iff, not_iff_comm, isLeftRegular_zero_iff_subsingleton, subsingleton_iff]
   push_neg
   exact Iff.rfl
@@ -315,7 +318,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : MulZeroClass.{u1} R], Iff (Not (IsRightRegular.{u1} R (MulZeroClass.toMul.{u1} R _inst_1) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R _inst_1))))) (Nontrivial.{u1} R)
 Case conversion may be inaccurate. Consider using '#align not_is_right_regular_zero_iff not_isRightRegular_zero_iffₓ'. -/
 /-- In a non-trivial `mul_zero_class`, the `0` element is not right-regular. -/
-theorem not_isRightRegular_zero_iff : ¬IsRightRegular (0 : R) ↔ Nontrivial R := by
+theorem not_isRightRegular_zero_iff : ¬IsRightRegular (0 : R) ↔ Nontrivial R :=
+  by
   rw [nontrivial_iff, not_iff_comm, isRightRegular_zero_iff_subsingleton, subsingleton_iff]
   push_neg
   exact Iff.rfl
@@ -340,7 +344,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : MulZeroClass.{u1} R] {a : R} [_inst_2 : Nontrivial.{u1} R], (IsLeftRegular.{u1} R (MulZeroClass.toMul.{u1} R _inst_1) a) -> (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align is_left_regular.ne_zero IsLeftRegular.ne_zeroₓ'. -/
 /-- A left-regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
-theorem IsLeftRegular.ne_zero [Nontrivial R] (la : IsLeftRegular a) : a ≠ 0 := by
+theorem IsLeftRegular.ne_zero [Nontrivial R] (la : IsLeftRegular a) : a ≠ 0 :=
+  by
   rintro rfl
   rcases exists_pair_ne R with ⟨x, y, xy⟩
   refine' xy (la _)
@@ -354,7 +359,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : MulZeroClass.{u1} R] {a : R} [_inst_2 : Nontrivial.{u1} R], (IsRightRegular.{u1} R (MulZeroClass.toMul.{u1} R _inst_1) a) -> (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroClass.toZero.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align is_right_regular.ne_zero IsRightRegular.ne_zeroₓ'. -/
 /-- A right-regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
-theorem IsRightRegular.ne_zero [Nontrivial R] (ra : IsRightRegular a) : a ≠ 0 := by
+theorem IsRightRegular.ne_zero [Nontrivial R] (ra : IsRightRegular a) : a ≠ 0 :=
+  by
   rintro rfl
   rcases exists_pair_ne R with ⟨x, y, xy⟩
   refine' xy (ra (_ : x * 0 = y * 0))
@@ -437,7 +443,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_regular_mul_iff isRegular_mul_iffₓ'. -/
 /-- A product is regular if and only if the factors are. -/
 @[to_additive "A sum is add-regular if and only if the summands are."]
-theorem isRegular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b := by
+theorem isRegular_mul_iff : IsRegular (a * b) ↔ IsRegular a ∧ IsRegular b :=
+  by
   refine' Iff.trans _ isRegular_mul_and_mul_iff
   refine' ⟨fun ab => ⟨ab, by rwa [mul_comm]⟩, fun rab => rab.1⟩
 #align is_regular_mul_iff isRegular_mul_iff
@@ -458,7 +465,7 @@ Case conversion may be inaccurate. Consider using '#align is_left_regular_of_mul
 @[to_additive "An element admitting a left additive opposite is add-left-regular."]
 theorem isLeftRegular_of_mul_eq_one (h : b * a = 1) : IsLeftRegular a :=
   @IsLeftRegular.of_mul R _ _ _
-    (by 
+    (by
       rw [h]
       exact is_regular_one.left)
 #align is_left_regular_of_mul_eq_one isLeftRegular_of_mul_eq_one
@@ -473,14 +480,14 @@ Case conversion may be inaccurate. Consider using '#align is_right_regular_of_mu
 @[to_additive "An element admitting a right additive opposite is add-right-regular."]
 theorem isRightRegular_of_mul_eq_one (h : a * b = 1) : IsRightRegular a :=
   IsRightRegular.of_mul
-    (by 
+    (by
       rw [h]
       exact is_regular_one.right)
 #align is_right_regular_of_mul_eq_one isRightRegular_of_mul_eq_one
 
 /- warning: units.is_regular -> Units.isRegular is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] (a : Units.{u1} R _inst_1), IsRegular.{u1} R (MulOneClass.toHasMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} R _inst_1) R (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} R _inst_1) R (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} R _inst_1) R (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} R _inst_1) R (Units.val.{u1} R _inst_1)))) a)
+  forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] (a : Units.{u1} R _inst_1), IsRegular.{u1} R (MulOneClass.toHasMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} R _inst_1) R (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} R _inst_1) R (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} R _inst_1) R (coeBase.{succ u1, succ u1} (Units.{u1} R _inst_1) R (Units.hasCoe.{u1} R _inst_1)))) a)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] (a : Units.{u1} R _inst_1), IsRegular.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (Units.val.{u1} R _inst_1 a)
 Case conversion may be inaccurate. Consider using '#align units.is_regular Units.isRegularₓ'. -/
@@ -498,7 +505,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit.is_regular IsUnit.isRegularₓ'. -/
 /-- A unit in a monoid is regular. -/
 @[to_additive "An additive unit in an additive monoid is add-regular."]
-theorem IsUnit.isRegular (ua : IsUnit a) : IsRegular a := by
+theorem IsUnit.isRegular (ua : IsUnit a) : IsRegular a :=
+  by
   rcases ua with ⟨a, rfl⟩
   exact Units.isRegular a
 #align is_unit.is_regular IsUnit.isRegular

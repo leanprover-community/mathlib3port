@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.finset.pimage
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,12 +75,14 @@ theorem coe_pimage : (s.pimage f : Set β) = f.image s :=
 
 @[simp]
 theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some <| f x).Dom] :
-    (s.pimage fun x => Part.some (f x)) = s.image f := by
+    (s.pimage fun x => Part.some (f x)) = s.image f :=
+  by
   ext
   simp [eq_comm]
 #align finset.pimage_some Finset.pimage_some
 
-theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f = t.pimage g := by
+theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f = t.pimage g :=
+  by
   subst s
   ext y
   simp (config := { contextual := true }) [h₂]
@@ -90,7 +92,7 @@ theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f
 theorem pimage_eq_image_filter :
     s.pimage f =
       (filter (fun x => (f x).Dom) s).attach.image fun x => (f x).get (mem_filter.1 x.coe_prop).2 :=
-  by 
+  by
   ext x
   simp [Part.mem_eq, And.exists, -exists_prop]
 #align finset.pimage_eq_image_filter Finset.pimage_eq_image_filter
@@ -100,7 +102,7 @@ theorem pimage_union [DecidableEq α] : (s ∪ t).pimage f = s.pimage f ∪ t.pi
 #align finset.pimage_union Finset.pimage_union
 
 @[simp]
-theorem pimage_empty : pimage f ∅ = ∅ := by 
+theorem pimage_empty : pimage f ∅ = ∅ := by
   ext
   simp
 #align finset.pimage_empty Finset.pimage_empty

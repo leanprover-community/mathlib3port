@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.linear
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,17 +52,17 @@ attribute [simp] monoidal_linear.tensor_smul monoidal_linear.smul_tensor
 
 variable {C} [MonoidalLinear R C]
 
-instance tensor_left_linear (X : C) : (tensorLeft X).Linear R where
-#align category_theory.tensor_left_linear CategoryTheory.tensor_left_linear
+instance tensorLeftLinear (X : C) : (tensorLeft X).Linear R where
+#align category_theory.tensor_left_linear CategoryTheory.tensorLeftLinear
 
-instance tensor_right_linear (X : C) : (tensorRight X).Linear R where
-#align category_theory.tensor_right_linear CategoryTheory.tensor_right_linear
+instance tensorRightLinear (X : C) : (tensorRight X).Linear R where
+#align category_theory.tensor_right_linear CategoryTheory.tensorRightLinear
 
-instance tensoring_left_linear (X : C) : ((tensoringLeft C).obj X).Linear R where
-#align category_theory.tensoring_left_linear CategoryTheory.tensoring_left_linear
+instance tensoringLeftLinear (X : C) : ((tensoringLeft C).obj X).Linear R where
+#align category_theory.tensoring_left_linear CategoryTheory.tensoringLeftLinear
 
-instance tensoring_right_linear (X : C) : ((tensoringRight C).obj X).Linear R where
-#align category_theory.tensoring_right_linear CategoryTheory.tensoring_right_linear
+instance tensoringRightLinear (X : C) : ((tensoringRight C).obj X).Linear R where
+#align category_theory.tensoring_right_linear CategoryTheory.tensoringRightLinear
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -70,15 +70,14 @@ instance tensoring_right_linear (X : C) : ((tensoringRight C).obj X).Linear R wh
 ensures that the domain is linear monoidal. -/
 def monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Linear R D]
     [MonoidalCategory D] [MonoidalPreadditive D] (F : MonoidalFunctor D C) [Faithful F.toFunctor]
-    [F.toFunctor.Additive] [F.toFunctor.Linear R] :
-    MonoidalLinear R
-      D where 
-  tensor_smul' := by 
+    [F.toFunctor.Additive] [F.toFunctor.Linear R] : MonoidalLinear R D
+    where
+  tensor_smul' := by
     intros
     apply F.to_functor.map_injective
     simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r g, F.map_tensor,
       monoidal_linear.tensor_smul, linear.smul_comp, linear.comp_smul]
-  smul_tensor' := by 
+  smul_tensor' := by
     intros
     apply F.to_functor.map_injective
     simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r f, F.map_tensor,

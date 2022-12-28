@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -676,7 +676,7 @@ theorem strictAnti_of_le_iff_le [Preorder α] [Preorder β] {f : α → β}
 
 #print injective_of_lt_imp_ne /-
 theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) :
-    Injective f := by 
+    Injective f := by
   intro x y hxy
   contrapose hxy
   cases' Ne.lt_or_lt hxy with hxy hxy
@@ -730,7 +730,8 @@ theorem StrictAnti.isMin_of_apply (hf : StrictAnti f) (ha : IsMax (f a)) : IsMin
 protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x)
     (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → f x < g y) :
-    StrictMono fun x => if p x then f x else g x := by
+    StrictMono fun x => if p x then f x else g x :=
+  by
   intro x y h
   by_cases hy : p y
   · have hx : p x := hp h hy
@@ -976,7 +977,8 @@ theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s)
 #print StrictMonoOn.eq_iff_eq /-
 theorem StrictMonoOn.eq_iff_eq (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     f a = f b ↔ a = b :=
-  ⟨fun h => le_antisymm ((hf.le_iff_le ha hb).mp h.le) ((hf.le_iff_le hb ha).mp h.ge), by
+  ⟨fun h => le_antisymm ((hf.le_iff_le ha hb).mp h.le) ((hf.le_iff_le hb ha).mp h.ge),
+    by
     rintro rfl
     rfl⟩
 #align strict_mono_on.eq_iff_eq StrictMonoOn.eq_iff_eq
@@ -1127,7 +1129,7 @@ downright. -/
 theorem not_monotone_not_antitone_iff_exists_le_le :
     ¬Monotone f ∧ ¬Antitone f ↔
       ∃ a b c, a ≤ b ∧ b ≤ c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
-  by 
+  by
   simp_rw [Monotone, Antitone, not_forall, not_le]
   refine' Iff.symm ⟨_, _⟩
   · rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩
@@ -1161,7 +1163,7 @@ downright. -/
 theorem not_monotone_not_antitone_iff_exists_lt_lt :
     ¬Monotone f ∧ ¬Antitone f ↔
       ∃ a b c, a < b ∧ b < c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
-  by 
+  by
   simp_rw [not_monotone_not_antitone_iff_exists_le_le, ← and_assoc']
   refine'
         exists₃_congr fun a b c =>
@@ -1214,7 +1216,7 @@ variable [Preorder α]
 #print Nat.rel_of_forall_rel_succ_of_le_of_lt /-
 theorem Nat.rel_of_forall_rel_succ_of_le_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β} {a : ℕ}
     (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b < c) : r (f b) (f c) :=
-  by 
+  by
   induction' hbc with k b_lt_k r_b_k
   exacts[h _ hab, trans r_b_k (h _ (hab.trans_lt b_lt_k).le)]
 #align nat.rel_of_forall_rel_succ_of_le_of_lt Nat.rel_of_forall_rel_succ_of_le_of_lt
@@ -1269,7 +1271,8 @@ namespace Nat
 #print Nat.exists_strictMono' /-
 /-- If `α` is a preorder with no maximal elements, then there exists a strictly monotone function
 `ℕ → α` with any prescribed value of `f 0`. -/
-theorem exists_strictMono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, StrictMono f ∧ f 0 = a := by
+theorem exists_strictMono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, StrictMono f ∧ f 0 = a :=
+  by
   have := fun x : α => exists_gt x
   choose g hg
   exact ⟨fun n => Nat.recOn n a fun _ => g, strictMono_nat_of_lt_succ fun n => hg _, rfl⟩
@@ -1308,7 +1311,8 @@ end Nat
 
 #print Int.rel_of_forall_rel_succ_of_lt /-
 theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℤ → β}
-    (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℤ⦄ (hab : a < b) : r (f a) (f b) := by
+    (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℤ⦄ (hab : a < b) : r (f a) (f b) :=
+  by
   rcases hab.dest with ⟨n, rfl⟩; clear hab
   induction' n with n ihn
   · rw [Int.ofNat_one]
@@ -1377,7 +1381,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.exists_strict_mono Int.exists_strictMonoₓ'. -/
 /-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
 monotone function `f : ℤ → α`. -/
-theorem exists_strictMono : ∃ f : ℤ → α, StrictMono f := by
+theorem exists_strictMono : ∃ f : ℤ → α, StrictMono f :=
+  by
   inhabit α
   rcases Nat.exists_strictMono' (default : α) with ⟨f, hf, hf₀⟩
   rcases Nat.exists_strictAnti' (default : α) with ⟨g, hg, hg₀⟩
@@ -1409,7 +1414,8 @@ end Int
 /-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
 theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x)
-    (h2 : x < f (n + 1)) (a : ℕ) : f a ≠ x := by
+    (h2 : x < f (n + 1)) (a : ℕ) : f a ≠ x :=
+  by
   rintro rfl
   exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_nat Monotone.ne_of_lt_of_lt_nat
@@ -1419,7 +1425,8 @@ theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ)
 /-- If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α}
-    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℕ) : f a ≠ x := by
+    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℕ) : f a ≠ x :=
+  by
   rintro rfl
   exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_nat
@@ -1434,7 +1441,8 @@ Case conversion may be inaccurate. Consider using '#align monotone.ne_of_lt_of_l
 /-- If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
 theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x)
-    (h2 : x < f (n + 1)) (a : ℤ) : f a ≠ x := by
+    (h2 : x < f (n + 1)) (a : ℤ) : f a ≠ x :=
+  by
   rintro rfl
   exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_int Monotone.ne_of_lt_of_lt_int
@@ -1448,7 +1456,8 @@ Case conversion may be inaccurate. Consider using '#align antitone.ne_of_lt_of_l
 /-- If `f` is an antitone function from `ℤ` to a preorder and `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α}
-    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℤ) : f a ≠ x := by
+    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℤ) : f a ≠ x :=
+  by
   rintro rfl
   exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_int Antitone.ne_of_lt_of_lt_int
@@ -1527,7 +1536,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u3} β] [_inst_3 : Preorder.{u4} γ] [_inst_4 : Preorder.{u1} δ] {f : α -> γ} {g : β -> δ}, (StrictMono.{u2, u4} α γ (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 f) -> (StrictMono.{u3, u1} β δ (PartialOrder.toPreorder.{u3} β _inst_2) _inst_4 g) -> (StrictMono.{max u3 u2, max u1 u4} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ) (Prod.instPreorderProd.{u2, u3} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u3} β _inst_2)) (Prod.instPreorderProd.{u4, u1} γ δ _inst_3 _inst_4) (Prod.map.{u2, u4, u3, u1} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align strict_mono.prod_map StrictMono.prod_mapₓ'. -/
 theorem StrictMono.prod_map (hf : StrictMono f) (hg : StrictMono g) : StrictMono (Prod.map f g) :=
-  fun a b => by 
+  fun a b => by
   simp_rw [Prod.lt_iff]
   exact Or.imp (And.imp hf.imp hg.monotone.imp) (And.imp hf.monotone.imp hg.imp)
 #align strict_mono.prod_map StrictMono.prod_map
@@ -1539,7 +1548,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} {δ : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u3} β] [_inst_3 : Preorder.{u4} γ] [_inst_4 : Preorder.{u1} δ] {f : α -> γ} {g : β -> δ}, (StrictAnti.{u2, u4} α γ (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 f) -> (StrictAnti.{u3, u1} β δ (PartialOrder.toPreorder.{u3} β _inst_2) _inst_4 g) -> (StrictAnti.{max u3 u2, max u1 u4} (Prod.{u2, u3} α β) (Prod.{u4, u1} γ δ) (Prod.instPreorderProd.{u2, u3} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u3} β _inst_2)) (Prod.instPreorderProd.{u4, u1} γ δ _inst_3 _inst_4) (Prod.map.{u2, u4, u3, u1} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align strict_anti.prod_map StrictAnti.prod_mapₓ'. -/
 theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti (Prod.map f g) :=
-  fun a b => by 
+  fun a b => by
   simp_rw [Prod.lt_iff]
   exact Or.imp (And.imp hf.imp hg.antitone.imp) (And.imp hf.antitone.imp hg.imp)
 #align strict_anti.prod_map StrictAnti.prod_map

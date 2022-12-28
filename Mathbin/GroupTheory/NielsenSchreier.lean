@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module group_theory.nielsen_schreier
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,13 +106,12 @@ purposes.
 Analogous to the fact that a covering space of a graph is a graph. (A free groupoid is like a graph,
 and a groupoid of elements is like a covering space.) -/
 instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulAction G A] :
-    IsFreeGroupoid
-      (ActionCategory G
-        A) where 
+    IsFreeGroupoid (ActionCategory G A)
+    where
   quiverGenerators :=
     ⟨fun a b => { e : IsFreeGroup.Generators G // IsFreeGroup.of e • a.back = b.back }⟩
   of a b e := ⟨IsFreeGroup.of e, e.property⟩
-  unique_lift := by 
+  unique_lift := by
     intro X _ f
     let f' : fgp.generators G → (A → X) ⋊[mulAutArrow] G := fun e =>
       ⟨fun b => @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, fgp.of e⟩
@@ -129,7 +128,7 @@ instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulActio
       cases inv_smul_eq_iff.mpr h.symm
       rfl
     · intro E hE
-      have : curry E = F' := by 
+      have : curry E = F' := by
         apply uF'
         intro e
         ext
@@ -191,7 +190,8 @@ def loopOfHom {a b : G} (p : a ⟶ b) : EndCat (root' T) :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetrify T a b) :
-    loopOfHom T (of e) = 𝟙 (root' T) := by
+    loopOfHom T (of e) = 𝟙 (root' T) :=
+  by
   rw [loop_of_hom, ← category.assoc, is_iso.comp_inv_eq, category.id_comp]
   cases H
   · rw [tree_hom_eq T (path.cons default ⟨Sum.inl e, H⟩), hom_of_path]
@@ -204,14 +204,14 @@ theorem loop_of_hom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymme
 /-- Since a hom gives a loop, any homomorphism from the vertex group at the root
     extends to a functor on the whole groupoid. -/
 @[simps]
-def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) :
-    G ⥤ SingleObj X where 
+def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) : G ⥤ SingleObj X
+    where
   obj _ := ()
   map a b p := f (loopOfHom T p)
-  map_id' := by 
+  map_id' := by
     intro a
     rw [loop_of_hom, category.id_comp, is_iso.hom_inv_id, ← End.one_def, f.map_one, id_as_one]
-  map_comp' := by 
+  map_comp' := by
     intros
     rw [comp_as_mul, ← f.map_mul]
     simp only [is_iso.inv_hom_id_assoc, loop_of_hom, End.mul_def, category.assoc]
@@ -224,13 +224,14 @@ def functorOfMonoidHom {X} [Monoid X] (f : EndCat (root' T) →* X) :
 def endIsFree : IsFreeGroup (EndCat (root' T)) :=
   IsFreeGroup.ofUniqueLift ((wide_subquiver_equiv_set_total <| wideSubquiverSymmetrify T)ᶜ : Set _)
     (fun e => loopOfHom T (of e.val.Hom))
-    (by 
+    (by
       intro X _ f
       let f' : labelling (generators G) X := fun a b e =>
         if h : e ∈ wide_subquiver_symmetrify T a b then 1 else f ⟨⟨a, b, e⟩, h⟩
       rcases unique_lift f' with ⟨F', hF', uF'⟩
       refine' ⟨F'.map_End _, _, _⟩
-      · suffices ∀ {x y} (q : x ⟶ y), F'.map (loop_of_hom T q) = (F'.map q : X) by
+      · suffices ∀ {x y} (q : x ⟶ y), F'.map (loop_of_hom T q) = (F'.map q : X)
+          by
           rintro ⟨⟨a, b, e⟩, h⟩
           rw [functor.map_End_apply, this, hF']
           exact dif_neg h
@@ -272,7 +273,8 @@ private def symgen {G : Type u} [Groupoid.{v} G] [IsFreeGroupoid G] :
 /-- If there exists a morphism `a → b` in a free groupoid, then there also exists a zigzag
 from `a` to `b` in the generating quiver. -/
 theorem path_nonempty_of_hom {G} [Groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G} :
-    Nonempty (a ⟶ b) → Nonempty (Path (symgen a) (symgen b)) := by
+    Nonempty (a ⟶ b) → Nonempty (Path (symgen a) (symgen b)) :=
+  by
   rintro ⟨p⟩
   rw [← @weakly_connected_component.eq (generators G), eq_comm, ← free_group.of_injective.eq_iff, ←
     mul_inv_eq_one]

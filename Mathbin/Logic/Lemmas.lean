@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module logic.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ theorem ite_ite_distrib_right : ite p (ite q a b) c = ite q (ite p a c) (ite p b
 -/
 
 theorem PropCat.forall {f : Prop → Prop} : (∀ p, f p) ↔ f True ∧ f False :=
-  ⟨fun h => ⟨h _, h _⟩, by 
+  ⟨fun h => ⟨h _, h _⟩, by
     rintro ⟨h₁, h₀⟩ p
     by_cases hp : p <;> simp only [hp] <;> assumption⟩
 #align Prop.forall PropCat.forall

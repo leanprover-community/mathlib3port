@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.partition_of_unity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,8 @@ continuous on `U` and sends each `y ∈ U` to a point of `t y`. Then there exist
 `exists_continuous_forall_mem_convex_of_local_const`. -/
 theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
     (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) :
-    ∃ g : C(X, E), ∀ x, g x ∈ t x := by
+    ∃ g : C(X, E), ∀ x, g x ∈ t x :=
+  by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
     PartitionOfUnity.exists_is_subordinate is_closed_univ (fun x => interior (U x))

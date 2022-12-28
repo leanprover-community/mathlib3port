@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,8 @@ open Nat
 
 namespace Int
 
-theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) := by
+theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) :=
+  by
   by_cases h : m ≥ n
   · exact le_of_eq (Int.ofNat_sub h).symm
   · simp [le_of_not_ge h, coe_nat_le]
@@ -46,17 +47,20 @@ theorem succ_coe_nat_pos (n : ℕ) : 0 < (n : ℤ) + 1 :=
 
 variable {a b : ℤ} {n : ℕ}
 
-theorem nat_abs_eq_iff_sq_eq {a b : ℤ} : a.natAbs = b.natAbs ↔ a ^ 2 = b ^ 2 := by
+theorem nat_abs_eq_iff_sq_eq {a b : ℤ} : a.natAbs = b.natAbs ↔ a ^ 2 = b ^ 2 :=
+  by
   rw [sq, sq]
   exact nat_abs_eq_iff_mul_self_eq
 #align int.nat_abs_eq_iff_sq_eq Int.nat_abs_eq_iff_sq_eq
 
-theorem nat_abs_lt_iff_sq_lt {a b : ℤ} : a.natAbs < b.natAbs ↔ a ^ 2 < b ^ 2 := by
+theorem nat_abs_lt_iff_sq_lt {a b : ℤ} : a.natAbs < b.natAbs ↔ a ^ 2 < b ^ 2 :=
+  by
   rw [sq, sq]
   exact nat_abs_lt_iff_mul_self_lt
 #align int.nat_abs_lt_iff_sq_lt Int.nat_abs_lt_iff_sq_lt
 
-theorem nat_abs_le_iff_sq_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a ^ 2 ≤ b ^ 2 := by
+theorem nat_abs_le_iff_sq_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a ^ 2 ≤ b ^ 2 :=
+  by
   rw [sq, sq]
   exact nat_abs_le_iff_mul_self_le
 #align int.nat_abs_le_iff_sq_le Int.nat_abs_le_iff_sq_le
@@ -122,7 +126,8 @@ This lemma is orphaned from `data.int.bitwise` as it also requires material from
 attribute [local simp] Int.zero_div
 
 @[simp]
-theorem div2_bit (b n) : div2 (bit b n) = n := by
+theorem div2_bit (b n) : div2 (bit b n) = n :=
+  by
   rw [bit_val, div2_val, add_comm, Int.add_mul_ediv_left, (_ : (_ / 2 : ℤ) = 0), zero_add]
   cases b
   · simp

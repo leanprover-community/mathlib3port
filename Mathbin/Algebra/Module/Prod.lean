@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.prod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,9 +22,9 @@ variable {R : Type _} {S : Type _} {M : Type _} {N : Type _}
 
 namespace Prod
 
-instance smulWithZero [Zero R] [Zero M] [Zero N] [SmulWithZero R M] [SmulWithZero R N] :
-    SmulWithZero R (M × N) :=
-  { Prod.hasSmul with 
+instance smulWithZero [Zero R] [Zero M] [Zero N] [SMulWithZero R M] [SMulWithZero R N] :
+    SMulWithZero R (M × N) :=
+  { Prod.hasSmul with
     smul_zero := fun r => Prod.ext (smul_zero _) (smul_zero _)
     zero_smul := fun ⟨m, n⟩ => Prod.ext (zero_smul _ _) (zero_smul _ _) }
 #align prod.smul_with_zero Prod.smulWithZero
@@ -38,7 +38,8 @@ instance mulActionWithZero [MonoidWithZero R] [Zero M] [Zero N] [MulActionWithZe
 
 instance {r : Semiring R} [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N] :
     Module R (M × N) :=
-  { Prod.distribMulAction with
+  {
+    Prod.distribMulAction with
     add_smul := fun a p₁ p₂ => mk.inj_iff.mpr ⟨add_smul _ _ _, add_smul _ _ _⟩
     zero_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨zero_smul _ _, zero_smul _ _⟩ }
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module category_theory.closed.functor_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,13 +40,10 @@ def closedIhom (F : D ⥤ C) : (D ⥤ C) ⥤ D ⥤ C :=
 /-- Auxiliary definition for `category_theory.monoidal_closed.functor_closed`.
 The unit for the adjunction `(tensor_left F) ⊣ (ihom F)`. -/
 @[simps]
-def closedUnit (F : D ⥤ C) :
-    𝟭 (D ⥤ C) ⟶
-      tensorLeft F ⋙
-        closedIhom
-          F where app G :=
+def closedUnit (F : D ⥤ C) : 𝟭 (D ⥤ C) ⟶ tensorLeft F ⋙ closedIhom F
+    where app G :=
     { app := fun X => (ihom.coev (F.obj X)).app (G.obj X)
-      naturality' := by 
+      naturality' := by
         intro X Y f
         dsimp
         simp only [ihom.coev_naturality, closed_ihom_obj_map, monoidal.tensor_obj_map]
@@ -58,13 +55,10 @@ def closedUnit (F : D ⥤ C) :
 /-- Auxiliary definition for `category_theory.monoidal_closed.functor_closed`.
 The counit for the adjunction `(tensor_left F) ⊣ (ihom F)`. -/
 @[simps]
-def closedCounit (F : D ⥤ C) :
-    closedIhom F ⋙ tensorLeft F ⟶
-      𝟭
-        (D ⥤
-          C) where app G :=
+def closedCounit (F : D ⥤ C) : closedIhom F ⋙ tensorLeft F ⟶ 𝟭 (D ⥤ C)
+    where app G :=
     { app := fun X => (ihom.ev (F.obj X)).app (G.obj X)
-      naturality' := by 
+      naturality' := by
         intro X Y f
         dsimp
         simp only [closed_ihom_obj_map, pre_comm_ihom_map]
@@ -75,8 +69,8 @@ def closedCounit (F : D ⥤ C) :
 /-- If `C` is a monoidal closed category and `D` is groupoid, then every functor `F : D ⥤ C` is
 closed in the functor category `F : D ⥤ C` with the pointwise monoidal structure. -/
 @[simps]
-instance closed (F : D ⥤ C) :
-    Closed F where isAdj :=
+instance closed (F : D ⥤ C) : Closed F
+    where isAdj :=
     { right := closedIhom F
       adj :=
         Adjunction.mkOfUnitCounit

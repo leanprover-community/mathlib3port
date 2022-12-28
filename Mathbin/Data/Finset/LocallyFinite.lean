@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.locally_finite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,9 @@ for some ideas.
 -/
 
 
-open BigOperators
+open Function OrderDual
+
+open BigOperators FinsetInterval
 
 variable {ι α : Type _}
 
@@ -194,37 +196,44 @@ theorem Ioo_subset_Ioo_right (h : b₁ ≤ b₂) : ioo a b₁ ⊆ ioo a b₂ :=
   Ioo_subset_Ioo le_rfl h
 #align finset.Ioo_subset_Ioo_right Finset.Ioo_subset_Ioo_right
 
-theorem Ico_subset_Ioo_left (h : a₁ < a₂) : ico a₂ b ⊆ ioo a₁ b := by
+theorem Ico_subset_Ioo_left (h : a₁ < a₂) : ico a₂ b ⊆ ioo a₁ b :=
+  by
   rw [← coe_subset, coe_Ico, coe_Ioo]
   exact Set.Ico_subset_Ioo_left h
 #align finset.Ico_subset_Ioo_left Finset.Ico_subset_Ioo_left
 
-theorem Ioc_subset_Ioo_right (h : b₁ < b₂) : ioc a b₁ ⊆ ioo a b₂ := by
+theorem Ioc_subset_Ioo_right (h : b₁ < b₂) : ioc a b₁ ⊆ ioo a b₂ :=
+  by
   rw [← coe_subset, coe_Ioc, coe_Ioo]
   exact Set.Ioc_subset_Ioo_right h
 #align finset.Ioc_subset_Ioo_right Finset.Ioc_subset_Ioo_right
 
-theorem Icc_subset_Ico_right (h : b₁ < b₂) : icc a b₁ ⊆ ico a b₂ := by
+theorem Icc_subset_Ico_right (h : b₁ < b₂) : icc a b₁ ⊆ ico a b₂ :=
+  by
   rw [← coe_subset, coe_Icc, coe_Ico]
   exact Set.Icc_subset_Ico_right h
 #align finset.Icc_subset_Ico_right Finset.Icc_subset_Ico_right
 
-theorem Ioo_subset_Ico_self : ioo a b ⊆ ico a b := by
+theorem Ioo_subset_Ico_self : ioo a b ⊆ ico a b :=
+  by
   rw [← coe_subset, coe_Ioo, coe_Ico]
   exact Set.Ioo_subset_Ico_self
 #align finset.Ioo_subset_Ico_self Finset.Ioo_subset_Ico_self
 
-theorem Ioo_subset_Ioc_self : ioo a b ⊆ ioc a b := by
+theorem Ioo_subset_Ioc_self : ioo a b ⊆ ioc a b :=
+  by
   rw [← coe_subset, coe_Ioo, coe_Ioc]
   exact Set.Ioo_subset_Ioc_self
 #align finset.Ioo_subset_Ioc_self Finset.Ioo_subset_Ioc_self
 
-theorem Ico_subset_Icc_self : ico a b ⊆ icc a b := by
+theorem Ico_subset_Icc_self : ico a b ⊆ icc a b :=
+  by
   rw [← coe_subset, coe_Ico, coe_Icc]
   exact Set.Ico_subset_Icc_self
 #align finset.Ico_subset_Icc_self Finset.Ico_subset_Icc_self
 
-theorem Ioc_subset_Icc_self : ioc a b ⊆ icc a b := by
+theorem Ioc_subset_Icc_self : ioc a b ⊆ icc a b :=
+  by
   rw [← coe_subset, coe_Ioc, coe_Icc]
   exact Set.Ioc_subset_Icc_self
 #align finset.Ioc_subset_Icc_self Finset.Ioc_subset_Icc_self
@@ -251,13 +260,13 @@ theorem Icc_subset_Ioc_iff (h₁ : a₁ ≤ b₁) : icc a₁ b₁ ⊆ ioc a₂ b
 
 --TODO: `Ico_subset_Ioo_iff`, `Ioc_subset_Ioo_iff`
 theorem Icc_ssubset_Icc_left (hI : a₂ ≤ b₂) (ha : a₂ < a₁) (hb : b₁ ≤ b₂) : icc a₁ b₁ ⊂ icc a₂ b₂ :=
-  by 
+  by
   rw [← coe_ssubset, coe_Icc, coe_Icc]
   exact Set.Icc_ssubset_Icc_left hI ha hb
 #align finset.Icc_ssubset_Icc_left Finset.Icc_ssubset_Icc_left
 
 theorem Icc_ssubset_Icc_right (hI : a₂ ≤ b₂) (ha : a₂ ≤ a₁) (hb : b₁ < b₂) :
-    icc a₁ b₁ ⊂ icc a₂ b₂ := by 
+    icc a₁ b₁ ⊂ icc a₂ b₂ := by
   rw [← coe_ssubset, coe_Icc, coe_Icc]
   exact Set.Icc_ssubset_Icc_right hI ha hb
 #align finset.Icc_ssubset_Icc_right Finset.Icc_ssubset_Icc_right
@@ -288,7 +297,7 @@ def Set.fintypeOfMemBounds {s : Set α} [DecidablePred (· ∈ s)] (ha : a ∈ l
 #align set.fintype_of_mem_bounds Set.fintypeOfMemBounds
 
 theorem BddBelow.finite_of_bdd_above {s : Set α} (h₀ : BddBelow s) (h₁ : BddAbove s) : s.Finite :=
-  by 
+  by
   let ⟨a, ha⟩ := h₀
   let ⟨b, hb⟩ := h₁
   classical exact ⟨Set.fintypeOfMemBounds ha hb⟩
@@ -307,7 +316,7 @@ theorem Ico_filter_lt_of_right_le [DecidablePred (· < c)] (hbc : b ≤ c) :
 #align finset.Ico_filter_lt_of_right_le Finset.Ico_filter_lt_of_right_le
 
 theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
-    (ico a b).filter (· < c) = ico a c := by 
+    (ico a b).filter (· < c) = ico a c := by
   ext x
   rw [mem_filter, mem_Ico, mem_Ico, and_right_comm]
   exact and_iff_left_of_imp fun h => h.2.trans_le hcb
@@ -324,7 +333,7 @@ theorem Ico_filter_le_of_right_le {a b : α} [DecidablePred ((· ≤ ·) b)] :
 #align finset.Ico_filter_le_of_right_le Finset.Ico_filter_le_of_right_le
 
 theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (hac : a ≤ c) :
-    (ico a b).filter ((· ≤ ·) c) = ico c b := by 
+    (ico a b).filter ((· ≤ ·) c) = ico c b := by
   ext x
   rw [mem_filter, mem_Ico, mem_Ico, and_comm', and_left_comm]
   exact and_iff_right_of_imp fun h => hac.trans h.1
@@ -348,25 +357,29 @@ theorem Iic_filter_lt_of_lt_right {α} [Preorder α] [LocallyFiniteOrderBot α] 
 variable (a b) [Fintype α]
 
 theorem filter_lt_lt_eq_Ioo [DecidablePred fun j => a < j ∧ j < b] :
-    (univ.filter fun j => a < j ∧ j < b) = ioo a b := by
+    (univ.filter fun j => a < j ∧ j < b) = ioo a b :=
+  by
   ext
   simp
 #align finset.filter_lt_lt_eq_Ioo Finset.filter_lt_lt_eq_Ioo
 
 theorem filter_lt_le_eq_Ioc [DecidablePred fun j => a < j ∧ j ≤ b] :
-    (univ.filter fun j => a < j ∧ j ≤ b) = ioc a b := by
+    (univ.filter fun j => a < j ∧ j ≤ b) = ioc a b :=
+  by
   ext
   simp
 #align finset.filter_lt_le_eq_Ioc Finset.filter_lt_le_eq_Ioc
 
 theorem filter_le_lt_eq_Ico [DecidablePred fun j => a ≤ j ∧ j < b] :
-    (univ.filter fun j => a ≤ j ∧ j < b) = ico a b := by
+    (univ.filter fun j => a ≤ j ∧ j < b) = ico a b :=
+  by
   ext
   simp
 #align finset.filter_le_lt_eq_Ico Finset.filter_le_lt_eq_Ico
 
 theorem filter_le_le_eq_Icc [DecidablePred fun j => a ≤ j ∧ j ≤ b] :
-    (univ.filter fun j => a ≤ j ∧ j ≤ b) = icc a b := by
+    (univ.filter fun j => a ≤ j ∧ j ≤ b) = icc a b :=
+  by
   ext
   simp
 #align finset.filter_le_le_eq_Icc Finset.filter_le_le_eq_Icc
@@ -449,12 +462,14 @@ theorem BddBelow.finite {s : Set α} (hs : BddBelow s) : s.Finite :=
 
 variable [Fintype α]
 
-theorem filter_lt_eq_Ioi [DecidablePred ((· < ·) a)] : univ.filter ((· < ·) a) = ioi a := by
+theorem filter_lt_eq_Ioi [DecidablePred ((· < ·) a)] : univ.filter ((· < ·) a) = ioi a :=
+  by
   ext
   simp
 #align finset.filter_lt_eq_Ioi Finset.filter_lt_eq_Ioi
 
-theorem filter_le_eq_Ici [DecidablePred ((· ≤ ·) a)] : univ.filter ((· ≤ ·) a) = ici a := by
+theorem filter_le_eq_Ici [DecidablePred ((· ≤ ·) a)] : univ.filter ((· ≤ ·) a) = ici a :=
+  by
   ext
   simp
 #align finset.filter_le_eq_Ici Finset.filter_le_eq_Ici
@@ -474,12 +489,14 @@ theorem BddAbove.finite {s : Set α} (hs : BddAbove s) : s.Finite :=
 
 variable [Fintype α]
 
-theorem filter_gt_eq_Iio [DecidablePred (· < a)] : univ.filter (· < a) = iio a := by
+theorem filter_gt_eq_Iio [DecidablePred (· < a)] : univ.filter (· < a) = iio a :=
+  by
   ext
   simp
 #align finset.filter_gt_eq_Iio Finset.filter_gt_eq_Iio
 
-theorem filter_ge_eq_Iic [DecidablePred (· ≤ a)] : univ.filter (· ≤ a) = iic a := by
+theorem filter_ge_eq_Iic [DecidablePred (· ≤ a)] : univ.filter (· ≤ a) = iic a :=
+  by
   ext
   simp
 #align finset.filter_ge_eq_Iic Finset.filter_ge_eq_Iic
@@ -599,7 +616,7 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
 #align finset.Ico_filter_le_left Finset.Ico_filter_le_left
 
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).card - 1 := by
-  classical 
+  classical
     by_cases h : a ≤ b
     · rw [← Ico_insert_right h, card_insert_of_not_mem right_not_mem_Ico]
       exact (Nat.add_sub_cancel _ _).symm
@@ -611,7 +628,7 @@ theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (ioc a b).card = (icc a b).car
 #align finset.card_Ioc_eq_card_Icc_sub_one Finset.card_Ioc_eq_card_Icc_sub_one
 
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by
-  classical 
+  classical
     by_cases h : a ≤ b
     · obtain rfl | h' := h.eq_or_lt
       · rw [Ioo_self, Ico_self, card_empty]
@@ -624,7 +641,8 @@ theorem card_Ioo_eq_card_Ioc_sub_one (a b : α) : (ioo a b).card = (ioc a b).car
   @card_Ioo_eq_card_Ico_sub_one αᵒᵈ _ _ _ _
 #align finset.card_Ioo_eq_card_Ioc_sub_one Finset.card_Ioo_eq_card_Ioc_sub_one
 
-theorem card_Ioo_eq_card_Icc_sub_two (a b : α) : (ioo a b).card = (icc a b).card - 2 := by
+theorem card_Ioo_eq_card_Icc_sub_two (a b : α) : (ioo a b).card = (icc a b).card - 2 :=
+  by
   rw [card_Ioo_eq_card_Ico_sub_one, card_Ico_eq_card_Icc_sub_one]
   rfl
 #align finset.card_Ioo_eq_card_Icc_sub_two Finset.card_Ioo_eq_card_Icc_sub_two
@@ -640,13 +658,15 @@ section OrderTop
 variable [LocallyFiniteOrderTop α]
 
 @[simp]
-theorem Ici_erase [DecidableEq α] (a : α) : (ici a).erase a = ioi a := by
+theorem Ici_erase [DecidableEq α] (a : α) : (ici a).erase a = ioi a :=
+  by
   ext
   simp_rw [Finset.mem_erase, mem_Ici, mem_Ioi, lt_iff_le_and_ne, and_comm', ne_comm]
 #align finset.Ici_erase Finset.Ici_erase
 
 @[simp]
-theorem Ioi_insert [DecidableEq α] (a : α) : insert a (ioi a) = ici a := by
+theorem Ioi_insert [DecidableEq α] (a : α) : insert a (ioi a) = ici a :=
+  by
   ext
   simp_rw [Finset.mem_insert, mem_Ici, mem_Ioi, le_iff_lt_or_eq, or_comm', eq_comm]
 #align finset.Ioi_insert Finset.Ioi_insert
@@ -671,13 +691,15 @@ section OrderBot
 variable [LocallyFiniteOrderBot α]
 
 @[simp]
-theorem Iic_erase [DecidableEq α] (b : α) : (iic b).erase b = iio b := by
+theorem Iic_erase [DecidableEq α] (b : α) : (iic b).erase b = iio b :=
+  by
   ext
   simp_rw [Finset.mem_erase, mem_Iic, mem_Iio, lt_iff_le_and_ne, and_comm']
 #align finset.Iic_erase Finset.Iic_erase
 
 @[simp]
-theorem Iio_insert [DecidableEq α] (b : α) : insert b (iio b) = iic b := by
+theorem Iio_insert [DecidableEq α] (b : α) : insert b (iio b) = iic b :=
+  by
   ext
   simp_rw [Finset.mem_insert, mem_Iic, mem_Iio, le_iff_lt_or_eq, or_comm']
 #align finset.Iio_insert Finset.Iio_insert
@@ -722,7 +744,8 @@ theorem Ioc_union_Ioc_eq_Ioc {a b c : α} (h₁ : a ≤ b) (h₂ : b ≤ c) : io
   by rw [← coe_inj, coe_union, coe_Ioc, coe_Ioc, coe_Ioc, Set.Ioc_union_Ioc_eq_Ioc h₁ h₂]
 #align finset.Ioc_union_Ioc_eq_Ioc Finset.Ioc_union_Ioc_eq_Ioc
 
-theorem Ico_subset_Ico_union_Ico {a b c : α} : ico a c ⊆ ico a b ∪ ico b c := by
+theorem Ico_subset_Ico_union_Ico {a b c : α} : ico a c ⊆ ico a b ∪ ico b c :=
+  by
   rw [← coe_subset, coe_union, coe_Ico, coe_Ico, coe_Ico]
   exact Set.Ico_subset_Ico_union_Ico
 #align finset.Ico_subset_Ico_union_Ico Finset.Ico_subset_Ico_union_Ico
@@ -743,34 +766,38 @@ theorem Ico_inter_Ico {a b c d : α} : ico a b ∩ ico c d = ico (max a c) (min 
 #align finset.Ico_inter_Ico Finset.Ico_inter_Ico
 
 @[simp]
-theorem Ico_filter_lt (a b c : α) : ((ico a b).filter fun x => x < c) = ico a (min b c) := by
+theorem Ico_filter_lt (a b c : α) : ((ico a b).filter fun x => x < c) = ico a (min b c) :=
+  by
   cases le_total b c
   · rw [Ico_filter_lt_of_right_le h, min_eq_left h]
   · rw [Ico_filter_lt_of_le_right h, min_eq_right h]
 #align finset.Ico_filter_lt Finset.Ico_filter_lt
 
 @[simp]
-theorem Ico_filter_le (a b c : α) : ((ico a b).filter fun x => c ≤ x) = ico (max a c) b := by
+theorem Ico_filter_le (a b c : α) : ((ico a b).filter fun x => c ≤ x) = ico (max a c) b :=
+  by
   cases le_total a c
   · rw [Ico_filter_le_of_left_le h, max_eq_right h]
   · rw [Ico_filter_le_of_le_left h, max_eq_left h]
 #align finset.Ico_filter_le Finset.Ico_filter_le
 
 @[simp]
-theorem Ioo_filter_lt (a b c : α) : (ioo a b).filter (· < c) = ioo a (min b c) := by
+theorem Ioo_filter_lt (a b c : α) : (ioo a b).filter (· < c) = ioo a (min b c) :=
+  by
   ext
   simp [and_assoc']
 #align finset.Ioo_filter_lt Finset.Ioo_filter_lt
 
 @[simp]
 theorem Iio_filter_lt {α} [LinearOrder α] [LocallyFiniteOrderBot α] (a b : α) :
-    (iio a).filter (· < b) = iio (min a b) := by 
+    (iio a).filter (· < b) = iio (min a b) := by
   ext
   simp [and_assoc']
 #align finset.Iio_filter_lt Finset.Iio_filter_lt
 
 @[simp]
-theorem Ico_diff_Ico_left (a b c : α) : ico a b \ ico a c = ico (max a c) b := by
+theorem Ico_diff_Ico_left (a b c : α) : ico a b \ ico a c = ico (max a c) b :=
+  by
   cases le_total a c
   · ext x
     rw [mem_sdiff, mem_Ico, mem_Ico, mem_Ico, max_eq_right h, and_right_comm, not_and, not_lt]
@@ -779,7 +806,8 @@ theorem Ico_diff_Ico_left (a b c : α) : ico a b \ ico a c = ico (max a c) b := 
 #align finset.Ico_diff_Ico_left Finset.Ico_diff_Ico_left
 
 @[simp]
-theorem Ico_diff_Ico_right (a b c : α) : ico a b \ ico c b = ico a (min b c) := by
+theorem Ico_diff_Ico_right (a b c : α) : ico a b \ ico c b = ico a (min b c) :=
+  by
   cases le_total b c
   · rw [Ico_eq_empty_of_le h, sdiff_empty, min_eq_left h]
   · ext x
@@ -792,10 +820,177 @@ end LocallyFiniteOrder
 variable [Fintype α] [LocallyFiniteOrderTop α] [LocallyFiniteOrderBot α]
 
 theorem Ioi_disj_union_Iio (a : α) :
-    (ioi a).disjUnion (iio a) (disjoint_Ioi_Iio a) = ({a} : Finset α)ᶜ := by
+    (ioi a).disjUnion (iio a) (disjoint_Ioi_Iio a) = ({a} : Finset α)ᶜ :=
+  by
   ext
   simp [eq_comm]
 #align finset.Ioi_disj_union_Iio Finset.Ioi_disj_union_Iio
+
+end LinearOrder
+
+section Lattice
+
+variable [Lattice α] [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
+
+theorem interval_to_dual (a b : α) : [toDual a, toDual b] = [a, b].map toDual.toEmbedding :=
+  Icc_to_dual _ _
+#align finset.interval_to_dual Finset.interval_to_dual
+
+@[simp]
+theorem interval_of_le (h : a ≤ b) : [a, b] = icc a b := by
+  rw [interval, inf_eq_left.2 h, sup_eq_right.2 h]
+#align finset.interval_of_le Finset.interval_of_le
+
+@[simp]
+theorem interval_of_ge (h : b ≤ a) : [a, b] = icc b a := by
+  rw [interval, inf_eq_right.2 h, sup_eq_left.2 h]
+#align finset.interval_of_ge Finset.interval_of_ge
+
+theorem interval_swap (a b : α) : [a, b] = [b, a] := by rw [interval, interval, inf_comm, sup_comm]
+#align finset.interval_swap Finset.interval_swap
+
+@[simp]
+theorem interval_self : [a, a] = {a} := by simp [interval]
+#align finset.interval_self Finset.interval_self
+
+@[simp]
+theorem nonempty_interval : Finset.Nonempty [a, b] :=
+  nonempty_Icc.2 inf_le_sup
+#align finset.nonempty_interval Finset.nonempty_interval
+
+theorem Icc_subset_interval : icc a b ⊆ [a, b] :=
+  Icc_subset_Icc inf_le_left le_sup_right
+#align finset.Icc_subset_interval Finset.Icc_subset_interval
+
+theorem Icc_subset_interval' : icc b a ⊆ [a, b] :=
+  Icc_subset_Icc inf_le_right le_sup_left
+#align finset.Icc_subset_interval' Finset.Icc_subset_interval'
+
+@[simp]
+theorem left_mem_interval : a ∈ [a, b] :=
+  mem_Icc.2 ⟨inf_le_left, le_sup_left⟩
+#align finset.left_mem_interval Finset.left_mem_interval
+
+@[simp]
+theorem right_mem_interval : b ∈ [a, b] :=
+  mem_Icc.2 ⟨inf_le_right, le_sup_right⟩
+#align finset.right_mem_interval Finset.right_mem_interval
+
+theorem mem_interval_of_le (ha : a ≤ x) (hb : x ≤ b) : x ∈ [a, b] :=
+  Icc_subset_interval <| mem_Icc.2 ⟨ha, hb⟩
+#align finset.mem_interval_of_le Finset.mem_interval_of_le
+
+theorem mem_interval_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
+  Icc_subset_interval' <| mem_Icc.2 ⟨hb, ha⟩
+#align finset.mem_interval_of_ge Finset.mem_interval_of_ge
+
+theorem interval_subset_interval (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] :=
+  by
+  rw [mem_interval] at h₁ h₂
+  exact Icc_subset_Icc (le_inf h₁.1 h₂.1) (sup_le h₁.2 h₂.2)
+#align finset.interval_subset_interval Finset.interval_subset_interval
+
+theorem interval_subset_Icc (ha : a₁ ∈ icc a₂ b₂) (hb : b₁ ∈ icc a₂ b₂) : [a₁, b₁] ⊆ icc a₂ b₂ :=
+  by
+  rw [mem_Icc] at ha hb
+  exact Icc_subset_Icc (le_inf ha.1 hb.1) (sup_le ha.2 hb.2)
+#align finset.interval_subset_Icc Finset.interval_subset_Icc
+
+theorem interval_subset_interval_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a₂, b₂] ∧ b₁ ∈ [a₂, b₂] :=
+  ⟨fun h => ⟨h left_mem_interval, h right_mem_interval⟩, fun h => interval_subset_interval h.1 h.2⟩
+#align finset.interval_subset_interval_iff_mem Finset.interval_subset_interval_iff_mem
+
+theorem interval_subset_interval_iff_le' :
+    [a₁, b₁] ⊆ [a₂, b₂] ↔ a₂ ⊓ b₂ ≤ a₁ ⊓ b₁ ∧ a₁ ⊔ b₁ ≤ a₂ ⊔ b₂ :=
+  Icc_subset_Icc_iff inf_le_sup
+#align finset.interval_subset_interval_iff_le' Finset.interval_subset_interval_iff_le'
+
+theorem interval_subset_interval_right (h : x ∈ [a, b]) : [x, b] ⊆ [a, b] :=
+  interval_subset_interval h right_mem_interval
+#align finset.interval_subset_interval_right Finset.interval_subset_interval_right
+
+theorem interval_subset_interval_left (h : x ∈ [a, b]) : [a, x] ⊆ [a, b] :=
+  interval_subset_interval left_mem_interval h
+#align finset.interval_subset_interval_left Finset.interval_subset_interval_left
+
+end Lattice
+
+section DistribLattice
+
+variable [DistribLattice α] [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
+
+theorem eq_of_mem_interval_of_mem_interval : a ∈ [b, c] → b ∈ [a, c] → a = b :=
+  by
+  simp_rw [mem_interval]
+  exact Set.eq_of_mem_interval_of_mem_interval
+#align finset.eq_of_mem_interval_of_mem_interval Finset.eq_of_mem_interval_of_mem_interval
+
+theorem eq_of_mem_interval_of_mem_interval' : b ∈ [a, c] → c ∈ [a, b] → b = c :=
+  by
+  simp_rw [mem_interval]
+  exact Set.eq_of_mem_interval_of_mem_interval'
+#align finset.eq_of_mem_interval_of_mem_interval' Finset.eq_of_mem_interval_of_mem_interval'
+
+theorem interval_injective_right (a : α) : Injective fun b => [b, a] := fun b c h =>
+  by
+  rw [ext_iff] at h
+  exact eq_of_mem_interval_of_mem_interval ((h _).1 left_mem_interval) ((h _).2 left_mem_interval)
+#align finset.interval_injective_right Finset.interval_injective_right
+
+theorem interval_injective_left (a : α) : Injective (interval a) := by
+  simpa only [interval_swap] using interval_injective_right a
+#align finset.interval_injective_left Finset.interval_injective_left
+
+end DistribLattice
+
+section LinearOrder
+
+variable [LinearOrder α] [LocallyFiniteOrder α] {a a₁ a₂ b b₁ b₂ c x : α}
+
+theorem Icc_min_max : icc (min a b) (max a b) = [a, b] :=
+  rfl
+#align finset.Icc_min_max Finset.Icc_min_max
+
+theorem interval_of_not_le (h : ¬a ≤ b) : [a, b] = icc b a :=
+  interval_of_ge <| le_of_not_ge h
+#align finset.interval_of_not_le Finset.interval_of_not_le
+
+theorem interval_of_not_ge (h : ¬b ≤ a) : [a, b] = icc a b :=
+  interval_of_le <| le_of_not_ge h
+#align finset.interval_of_not_ge Finset.interval_of_not_ge
+
+theorem interval_eq_union : [a, b] = icc a b ∪ icc b a :=
+  coe_injective <| by
+    push_cast
+    exact Set.interval_eq_union
+#align finset.interval_eq_union Finset.interval_eq_union
+
+theorem mem_interval' : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a ≤ b := by simp [interval_eq_union]
+#align finset.mem_interval' Finset.mem_interval'
+
+theorem not_mem_interval_of_lt : c < a → c < b → c ∉ [a, b] :=
+  by
+  rw [mem_interval]
+  exact Set.not_mem_interval_of_lt
+#align finset.not_mem_interval_of_lt Finset.not_mem_interval_of_lt
+
+theorem not_mem_interval_of_gt : a < c → b < c → c ∉ [a, b] :=
+  by
+  rw [mem_interval]
+  exact Set.not_mem_interval_of_gt
+#align finset.not_mem_interval_of_gt Finset.not_mem_interval_of_gt
+
+theorem interval_subset_interval_iff_le :
+    [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ :=
+  interval_subset_interval_iff_le'
+#align finset.interval_subset_interval_iff_le Finset.interval_subset_interval_iff_le
+
+/-- A sort of triangle inequality. -/
+theorem interval_subset_interval_union_interval : [a, c] ⊆ [a, b] ∪ [b, c] :=
+  coe_subset.1 <| by
+    push_cast
+    exact Set.interval_subset_interval_union_interval
+#align finset.interval_subset_interval_union_interval Finset.interval_subset_interval_union_interval
 
 end LinearOrder
 
@@ -805,56 +1000,56 @@ variable [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder 
 
 @[simp]
 theorem map_add_left_Icc (a b c : α) : (icc a b).map (addLeftEmbedding c) = icc (c + a) (c + b) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Icc, coe_Icc]
   exact Set.image_const_add_Icc _ _ _
 #align finset.map_add_left_Icc Finset.map_add_left_Icc
 
 @[simp]
 theorem map_add_right_Icc (a b c : α) : (icc a b).map (addRightEmbedding c) = icc (a + c) (b + c) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Icc, coe_Icc]
   exact Set.image_add_const_Icc _ _ _
 #align finset.map_add_right_Icc Finset.map_add_right_Icc
 
 @[simp]
 theorem map_add_left_Ico (a b c : α) : (ico a b).map (addLeftEmbedding c) = ico (c + a) (c + b) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Ico, coe_Ico]
   exact Set.image_const_add_Ico _ _ _
 #align finset.map_add_left_Ico Finset.map_add_left_Ico
 
 @[simp]
 theorem map_add_right_Ico (a b c : α) : (ico a b).map (addRightEmbedding c) = ico (a + c) (b + c) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Ico, coe_Ico]
   exact Set.image_add_const_Ico _ _ _
 #align finset.map_add_right_Ico Finset.map_add_right_Ico
 
 @[simp]
 theorem map_add_left_Ioc (a b c : α) : (ioc a b).map (addLeftEmbedding c) = ioc (c + a) (c + b) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Ioc, coe_Ioc]
   exact Set.image_const_add_Ioc _ _ _
 #align finset.map_add_left_Ioc Finset.map_add_left_Ioc
 
 @[simp]
 theorem map_add_right_Ioc (a b c : α) : (ioc a b).map (addRightEmbedding c) = ioc (a + c) (b + c) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Ioc, coe_Ioc]
   exact Set.image_add_const_Ioc _ _ _
 #align finset.map_add_right_Ioc Finset.map_add_right_Ioc
 
 @[simp]
 theorem map_add_left_Ioo (a b c : α) : (ioo a b).map (addLeftEmbedding c) = ioo (c + a) (c + b) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Ioo, coe_Ioo]
   exact Set.image_const_add_Ioo _ _ _
 #align finset.map_add_left_Ioo Finset.map_add_left_Ioo
 
 @[simp]
 theorem map_add_right_Ioo (a b c : α) : (ioo a b).map (addRightEmbedding c) = ioo (a + c) (b + c) :=
-  by 
+  by
   rw [← coe_inj, coe_map, coe_Ioo, coe_Ioo]
   exact Set.image_add_const_Ioo _ _ _
 #align finset.map_add_right_Ioo Finset.map_add_right_Ioo
@@ -862,46 +1057,54 @@ theorem map_add_right_Ioo (a b c : α) : (ioo a b).map (addRightEmbedding c) = i
 variable [DecidableEq α]
 
 @[simp]
-theorem image_add_left_Icc (a b c : α) : (icc a b).image ((· + ·) c) = icc (c + a) (c + b) := by
+theorem image_add_left_Icc (a b c : α) : (icc a b).image ((· + ·) c) = icc (c + a) (c + b) :=
+  by
   rw [← map_add_left_Icc, map_eq_image]
   rfl
 #align finset.image_add_left_Icc Finset.image_add_left_Icc
 
 @[simp]
-theorem image_add_left_Ico (a b c : α) : (ico a b).image ((· + ·) c) = ico (c + a) (c + b) := by
+theorem image_add_left_Ico (a b c : α) : (ico a b).image ((· + ·) c) = ico (c + a) (c + b) :=
+  by
   rw [← map_add_left_Ico, map_eq_image]
   rfl
 #align finset.image_add_left_Ico Finset.image_add_left_Ico
 
 @[simp]
-theorem image_add_left_Ioc (a b c : α) : (ioc a b).image ((· + ·) c) = ioc (c + a) (c + b) := by
+theorem image_add_left_Ioc (a b c : α) : (ioc a b).image ((· + ·) c) = ioc (c + a) (c + b) :=
+  by
   rw [← map_add_left_Ioc, map_eq_image]
   rfl
 #align finset.image_add_left_Ioc Finset.image_add_left_Ioc
 
 @[simp]
-theorem image_add_left_Ioo (a b c : α) : (ioo a b).image ((· + ·) c) = ioo (c + a) (c + b) := by
+theorem image_add_left_Ioo (a b c : α) : (ioo a b).image ((· + ·) c) = ioo (c + a) (c + b) :=
+  by
   rw [← map_add_left_Ioo, map_eq_image]
   rfl
 #align finset.image_add_left_Ioo Finset.image_add_left_Ioo
 
 @[simp]
-theorem image_add_right_Icc (a b c : α) : (icc a b).image (· + c) = icc (a + c) (b + c) := by
+theorem image_add_right_Icc (a b c : α) : (icc a b).image (· + c) = icc (a + c) (b + c) :=
+  by
   rw [← map_add_right_Icc, map_eq_image]
   rfl
 #align finset.image_add_right_Icc Finset.image_add_right_Icc
 
-theorem image_add_right_Ico (a b c : α) : (ico a b).image (· + c) = ico (a + c) (b + c) := by
+theorem image_add_right_Ico (a b c : α) : (ico a b).image (· + c) = ico (a + c) (b + c) :=
+  by
   rw [← map_add_right_Ico, map_eq_image]
   rfl
 #align finset.image_add_right_Ico Finset.image_add_right_Ico
 
-theorem image_add_right_Ioc (a b c : α) : (ioc a b).image (· + c) = ioc (a + c) (b + c) := by
+theorem image_add_right_Ioc (a b c : α) : (ioc a b).image (· + c) = ioc (a + c) (b + c) :=
+  by
   rw [← map_add_right_Ioc, map_eq_image]
   rfl
 #align finset.image_add_right_Ioc Finset.image_add_right_Ioc
 
-theorem image_add_right_Ioo (a b c : α) : (ioo a b).image (· + c) = ioo (a + c) (b + c) := by
+theorem image_add_right_Ioo (a b c : α) : (ioo a b).image (· + c) = ioo (a + c) (b + c) :=
+  by
   rw [← map_add_right_Ioo, map_eq_image]
   rfl
 #align finset.image_add_right_Ioo Finset.image_add_right_Ioo
@@ -911,7 +1114,8 @@ end OrderedCancelAddCommMonoid
 @[to_additive]
 theorem prod_prod_Ioi_mul_eq_prod_prod_off_diag [Fintype ι] [LinearOrder ι]
     [LocallyFiniteOrderTop ι] [LocallyFiniteOrderBot ι] [CommMonoid α] (f : ι → ι → α) :
-    (∏ i, ∏ j in ioi i, f j i * f i j) = ∏ i, ∏ j in {i}ᶜ, f j i := by
+    (∏ i, ∏ j in ioi i, f j i * f i j) = ∏ i, ∏ j in {i}ᶜ, f j i :=
+  by
   simp_rw [← Ioi_disj_union_Iio, prod_disj_union, prod_mul_distrib]
   congr 1
   rw [prod_sigma', prod_sigma']

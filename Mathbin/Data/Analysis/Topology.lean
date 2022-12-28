@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.analysis.topology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,7 +162,8 @@ protected theorem is_open [TopologicalSpace α] (F : Realizer α) (s : F.σ) : I
 #align ctop.realizer.is_open Ctop.Realizer.is_open
 
 theorem ext' [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ}
-    (H : ∀ a s, s ∈ 𝓝 a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s) : F.toTopsp = T := by
+    (H : ∀ a s, s ∈ 𝓝 a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s) : F.toTopsp = T :=
+  by
   refine' eq_of_nhds_eq_nhds fun x => _
   ext s
   rw [mem_nhds_to_topsp, H]
@@ -279,7 +280,7 @@ def Compact.Realizer [TopologicalSpace α] (s : Set α) :=
 #align compact.realizer Compact.Realizer
 
 instance [TopologicalSpace α] : Inhabited (Compact.Realizer (∅ : Set α)) :=
-  ⟨fun f F x h hF => by 
+  ⟨fun f F x h hF => by
     cases h _
     rw [← F.eq, eq_bot_iff]
     exact fun s _ => ⟨x, hF.trans s.empty_subset⟩⟩

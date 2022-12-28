@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology_resolution
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,8 @@ def ofTensorAux : (G →₀ k) ⊗[k] ((Fin n → G) →₀ k) →ₗ[k] (Fin (n
 variable {k G n}
 
 theorem to_tensor_aux_single (f : Gⁿ⁺¹) (m : k) :
-    toTensorAux k G n (single f m) = single (f 0) m ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) 1 := by
+    toTensorAux k G n (single f m) = single (f 0) m ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) 1 :=
+  by
   simp only [to_tensor_aux, lift_apply, sum_single_index, TensorProduct.smul_tmul']
   · simp
 #align
@@ -138,7 +139,8 @@ theorem of_tensor_aux_comm_of_mul_action (g h : G) (x : Gⁿ) :
 #align
   group_cohomology.resolution.of_tensor_aux_comm_of_mul_action GroupCohomology.Resolution.of_tensor_aux_comm_of_mul_action
 
-theorem to_tensor_aux_left_inv (x : Gⁿ⁺¹ →₀ k) : ofTensorAux _ _ _ (toTensorAux _ _ _ x) = x := by
+theorem to_tensor_aux_left_inv (x : Gⁿ⁺¹ →₀ k) : ofTensorAux _ _ _ (toTensorAux _ _ _ x) = x :=
+  by
   refine'
     LinearMap.ext_iff.1
       (@Finsupp.lhom_ext _ _ _ k _ _ _ _ _
@@ -152,7 +154,8 @@ theorem to_tensor_aux_left_inv (x : Gⁿ⁺¹ →₀ k) : ofTensorAux _ _ _ (toT
   group_cohomology.resolution.to_tensor_aux_left_inv GroupCohomology.Resolution.to_tensor_aux_left_inv
 
 theorem to_tensor_aux_right_inv (x : (G →₀ k) ⊗[k] (Gⁿ →₀ k)) :
-    toTensorAux _ _ _ (ofTensorAux _ _ _ x) = x := by
+    toTensorAux _ _ _ (ofTensorAux _ _ _ x) = x :=
+  by
   refine' TensorProduct.induction_on x (by simp) (fun y z => _) fun z w hz hw => by simp [hz, hw]
   rw [← Finsupp.sum_single y, Finsupp.sum, TensorProduct.sum_tmul]
   simp only [Finset.smul_sum, LinearMap.map_sum]
@@ -177,12 +180,8 @@ by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) sending `(g₀, ..., gₙ)` to
 def toTensor :
     RepCat.ofMulAction k G (Fin (n + 1) → G) ⟶
       RepCat.of
-        ((Representation.ofMulAction k G G).tprod
-          (1 :
-            G →*
-              Module.EndCat k
-                ((Fin n → G) →₀
-                  k))) where 
+        ((Representation.ofMulAction k G G).tprod (1 : G →* Module.EndCat k ((Fin n → G) →₀ k)))
+    where
   hom := toTensorAux k G n
   comm' g := by ext <;> exact to_tensor_aux_of_mul_action _ _
 #align group_cohomology.resolution.to_tensor GroupCohomology.Resolution.toTensor
@@ -193,10 +192,10 @@ by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) to `k[Gⁿ⁺¹]` sending `g �
 def ofTensor :
     RepCat.of
         ((Representation.ofMulAction k G G).tprod (1 : G →* Module.EndCat k ((Fin n → G) →₀ k))) ⟶
-      RepCat.ofMulAction k G
-        (Fin (n + 1) → G) where 
+      RepCat.ofMulAction k G (Fin (n + 1) → G)
+    where
   hom := ofTensorAux k G n
-  comm' g := by 
+  comm' g := by
     ext
     congr 1
     exact of_tensor_aux_comm_of_mul_action _ _ _
@@ -234,7 +233,7 @@ def equivTensor :
         ((Representation.ofMulAction k G G).tprod (1 : Representation k G ((Fin n → G) →₀ k))) :=
   ActionCat.mkIso
     (LinearEquiv.toModuleIso
-      { toTensorAux k G n with 
+      { toTensorAux k G n with
         invFun := ofTensorAux k G n
         left_inv := to_tensor_aux_left_inv
         right_inv := fun x => by convert to_tensor_aux_right_inv x })
@@ -260,7 +259,8 @@ def ofMulActionBasisAux :
     MonoidAlgebra k G ⊗[k] ((Fin n → G) →₀ k) ≃ₗ[MonoidAlgebra k G]
       (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
   { (RepCat.equivalenceModuleMonoidAlgebra.1.mapIso (equivTensor k G n).symm).toLinearEquiv with
-    map_smul' := fun r x => by
+    map_smul' := fun r x =>
+      by
       rw [RingHom.id_apply, LinearEquiv.to_fun_eq_coe, ← LinearEquiv.map_smul]
       congr 1
       refine' x.induction_on _ (fun x y => _) fun y z hy hz => _
@@ -294,11 +294,8 @@ end GroupCohomology.resolution
 variable (G)
 
 /-- The simplicial `G`-set sending `[n]` to `Gⁿ⁺¹` equipped with the diagonal action of `G`. -/
-def classifyingSpaceUniversalCover [Monoid G] :
-    SimplicialObject
-      (ActionCat (Type u) <|
-        MonCat.of
-          G) where 
+def classifyingSpaceUniversalCover [Monoid G] : SimplicialObject (ActionCat (Type u) <| MonCat.of G)
+    where
   obj n := ActionCat.ofMulAction G (Fin (n.unop.len + 1) → G)
   map m n f :=
     { hom := fun x => x ∘ f.unop.toOrderHom
@@ -318,7 +315,8 @@ isomorphic to `EG`, the universal cover of the classifying space of `G` as a sim
 def cechNerveTerminalFromIso :
     cechNerveTerminalFrom (ActionCat.ofMulAction G G) ≅ classifyingSpaceUniversalCover G :=
   (NatIso.ofComponents fun n => limit.isoLimitCone (ActionCat.ofMulActionLimitCone _ _))
-    fun m n f => by
+    fun m n f =>
+    by
     refine' is_limit.hom_ext (ActionCat.ofMulActionLimitCone.{u, 0} _ _).2 fun j => _
     dsimp only [cech_nerve_terminal_from, pi.lift]
     dsimp
@@ -361,7 +359,8 @@ def extraDegeneracyAugmentedCechNerve :
 
 /-- The universal cover of the classifying space of `G` as a simplicial set, augmented by the map
 from `fin 1 → G` to the terminal object in `Type u`, has an extra degeneracy. -/
-def extraDegeneracyCompForgetAugmented : ExtraDegeneracy (compForgetAugmented G) := by
+def extraDegeneracyCompForgetAugmented : ExtraDegeneracy (compForgetAugmented G) :=
+  by
   refine'
     extra_degeneracy.of_iso (_ : (arrow.mk <| terminal.from G).augmentedCechNerve ≅ _)
       (extra_degeneracy_augmented_cech_nerve G)
@@ -442,7 +441,8 @@ theorem X_projective (G : Type u) [Group G] (n : ℕ) :
 
 /-- Simpler expression for the differential in the standard resolution of `k` as a
 `G`-representation. It sends `(g₀, ..., gₙ₊₁) ↦ ∑ (-1)ⁱ • (g₀, ..., ĝᵢ, ..., gₙ₊₁)`. -/
-theorem d_eq (n : ℕ) : ((GroupCohomology.resolution k G).d (n + 1) n).hom = d k G (n + 1) := by
+theorem d_eq (n : ℕ) : ((GroupCohomology.resolution k G).d (n + 1) n).hom = d k G (n + 1) :=
+  by
   ext (x y)
   dsimp [GroupCohomology.resolution]
   simpa [← @int_cast_smul k, simplicial_object.δ]
@@ -488,12 +488,10 @@ def forget₂ToModuleHomotopyEquiv :
   group_cohomology.resolution.forget₂_to_Module_homotopy_equiv GroupCohomology.resolution.forget₂ToModuleHomotopyEquiv
 
 /-- The hom of `k`-linear `G`-representations `k[G¹] → k` sending `∑ nᵢgᵢ ↦ ∑ nᵢ`. -/
-def ε :
-    RepCat.ofMulAction k G (Fin 1 → G) ⟶
-      RepCat.of
-        Representation.trivial where 
+def ε : RepCat.ofMulAction k G (Fin 1 → G) ⟶ RepCat.of Representation.trivial
+    where
   hom := Finsupp.total _ _ _ fun f => (1 : k)
-  comm' g := by 
+  comm' g := by
     ext
     show
       Finsupp.total (Fin 1 → G) k k (fun f => (1 : k)) (Finsupp.mapDomain _ (Finsupp.single _ _)) =
@@ -505,7 +503,8 @@ def ε :
 a trivial `G`-representation, and the complex which is `k` at 0 and 0 everywhere else, acts as
 `∑ nᵢgᵢ ↦ ∑ nᵢ : k[G¹] → k` at 0. -/
 theorem forget₂_to_Module_homotopy_equiv_f_0_eq :
-    (forget₂ToModuleHomotopyEquiv k G).1.f 0 = (forget₂ (RepCat k G) _).map (ε k G) := by
+    (forget₂ToModuleHomotopyEquiv k G).1.f 0 = (forget₂ (RepCat k G) _).map (ε k G) :=
+  by
   show (HomotopyEquiv.hom _ ≫ HomotopyEquiv.hom _ ≫ HomotopyEquiv.hom _).f 0 = _
   simp only [HomologicalComplex.comp_f]
   convert category.id_comp _
@@ -529,7 +528,8 @@ theorem forget₂_to_Module_homotopy_equiv_f_0_eq :
 #align
   group_cohomology.resolution.forget₂_to_Module_homotopy_equiv_f_0_eq GroupCohomology.resolution.forget₂_to_Module_homotopy_equiv_f_0_eq
 
-theorem d_comp_ε : (GroupCohomology.resolution k G).d 1 0 ≫ ε k G = 0 := by
+theorem d_comp_ε : (GroupCohomology.resolution k G).d 1 0 ≫ ε k G = 0 :=
+  by
   ext1
   refine' LinearMap.ext fun x => _
   have : (forget₂_to_Module k G).d 1 0 ≫ (forget₂ (RepCat k G) (ModuleCat.{u} k)).map (ε k G) = 0 :=
@@ -552,7 +552,7 @@ theorem ε_to_single₀_comp_eq :
     ((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G) ≫
         (ChainComplex.single₀MapHomologicalComplex _).hom.app _ =
       (forget₂ToModuleHomotopyEquiv k G).hom :=
-  by 
+  by
   refine' ChainComplex.to_single₀_ext _ _ _
   dsimp
   rw [category.comp_id]
@@ -561,7 +561,8 @@ theorem ε_to_single₀_comp_eq :
   group_cohomology.resolution.ε_to_single₀_comp_eq GroupCohomology.resolution.ε_to_single₀_comp_eq
 
 theorem quasiIsoOfForget₂εToSingle₀ :
-    QuasiIso (((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G)) := by
+    QuasiIso (((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G)) :=
+  by
   have h : QuasiIso (forget₂_to_Module_homotopy_equiv k G).hom := HomotopyEquiv.toQuasiIso _
   rw [← ε_to_single₀_comp_eq k G] at h
   haveI := h

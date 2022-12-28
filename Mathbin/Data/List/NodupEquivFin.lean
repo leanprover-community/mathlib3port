@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.nodup_equiv_fin
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,9 +54,8 @@ variable [DecidableEq α]
 /-- If `l` has no duplicates, then `list.nth_le` defines an equivalence between `fin (length l)` and
 the set of elements of `l`. -/
 @[simps]
-def nthLeEquiv (l : List α) (H : Nodup l) :
-    Fin (length l) ≃
-      { x // x ∈ l } where 
+def nthLeEquiv (l : List α) (H : Nodup l) : Fin (length l) ≃ { x // x ∈ l }
+    where
   toFun i := ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
   invFun x := ⟨indexOf (↑x) l, index_of_lt_length.2 x.2⟩
   left_inv i := by simp [H]
@@ -69,8 +68,8 @@ an equivalence between `fin l.length` and `α`.
 See `list.nodup.nth_le_bijection_of_forall_mem_list` for a version without
 decidable equality. -/
 @[simps]
-def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
-    Fin l.length ≃ α where 
+def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) : Fin l.length ≃ α
+    where
   toFun i := l.nthLe i i.2
   invFun a := ⟨_, index_of_lt_length.2 (h a)⟩
   left_inv i := by simp [nd]
@@ -95,9 +94,8 @@ variable [DecidableEq α]
 
 /-- If `l` is a list sorted w.r.t. `(<)`, then `list.nth_le` defines an order isomorphism between
 `fin (length l)` and the set of elements of `l`. -/
-def nthLeIso (l : List α) (H : Sorted (· < ·) l) :
-    Fin (length l) ≃o { x //
-        x ∈ l } where 
+def nthLeIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x ∈ l }
+    where
   toEquiv := H.Nodup.nthLeEquiv l
   map_rel_iff' i j := H.nth_le_strict_mono.le_iff_le
 #align list.sorted.nth_le_iso List.Sorted.nthLeIso
@@ -123,7 +121,8 @@ any element of `l` found at index `ix` can be found at index `f ix` in `l'`,
 then `sublist l l'`.
 -/
 theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ)
-    (hf : ∀ ix : ℕ, l.nth ix = l'.nth (f ix)) : l <+ l' := by
+    (hf : ∀ ix : ℕ, l.nth ix = l'.nth (f ix)) : l <+ l' :=
+  by
   induction' l with hd tl IH generalizing l' f
   · simp
   have : some hd = _ := hf 0
@@ -132,7 +131,8 @@ theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ)
   let f' : ℕ ↪o ℕ :=
     OrderEmbedding.ofMapLeIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by
       simp [tsub_le_tsub_iff_right, Nat.succ_le_iff, Nat.lt_succ_iff]
-  have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).nth (f' ix) := by
+  have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).nth (f' ix) :=
+    by
     intro ix
     simp [List.nth_drop, add_tsub_cancel_of_le, Nat.succ_le_iff, ← hf]
   rw [← List.take_append_drop (f 0 + 1) l', ← List.singleton_append]
@@ -146,7 +146,8 @@ there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
 -/
 theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
-    l <+ l' ↔ ∃ f : ℕ ↪o ℕ, ∀ ix : ℕ, l.nth ix = l'.nth (f ix) := by
+    l <+ l' ↔ ∃ f : ℕ ↪o ℕ, ∀ ix : ℕ, l.nth ix = l'.nth (f ix) :=
+  by
   constructor
   · intro H
     induction' H with xs ys y H IH xs ys x H IH
@@ -173,11 +174,12 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
     l <+ l' ↔
       ∃ f : Fin l.length ↪o Fin l'.length,
         ∀ ix : Fin l.length, l.nthLe ix ix.is_lt = l'.nthLe (f ix) (f ix).is_lt :=
-  by 
+  by
   rw [sublist_iff_exists_order_embedding_nth_eq]
   constructor
   · rintro ⟨f, hf⟩
-    have h : ∀ {i : ℕ} (h : i < l.length), f i < l'.length := by
+    have h : ∀ {i : ℕ} (h : i < l.length), f i < l'.length :=
+      by
       intro i hi
       specialize hf i
       rw [nth_le_nth hi, eq_comm, nth_eq_some] at hf
@@ -220,7 +222,7 @@ theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
       ∃ (n : ℕ)(hn : n < l.length)(m : ℕ)(hm : m < l.length)(h : n < m),
         x = l.nthLe n hn ∧ x = l.nthLe m hm :=
   by
-  classical 
+  classical
     rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist,
       sublist_iff_exists_fin_order_embedding_nth_le_eq]
     constructor

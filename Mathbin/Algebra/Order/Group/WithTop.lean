@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.with_top
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,10 +28,11 @@ variable [LinearOrderedAddCommGroup α] {a b c d : α}
 
 #print WithTop.linearOrderedAddCommGroupWithTop /-
 instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWithTop (WithTop α) :=
-  { WithTop.linearOrderedAddCommMonoidWithTop, Option.nontrivial with
+  { WithTop.linearOrderedAddCommMonoidWithTop,
+    Option.nontrivial with
     neg := Option.map fun a : α => -a
     neg_top := @Option.map_none _ _ fun a : α => -a
-    add_neg_cancel := by 
+    add_neg_cancel := by
       rintro (a | a) ha
       · exact (ha rfl).elim
       · exact with_top.coe_add.symm.trans (WithTop.coe_eq_coe.2 (add_neg_self a)) }

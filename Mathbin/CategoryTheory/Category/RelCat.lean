@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.category.Rel
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ instance RelCat.inhabited : Inhabited RelCat := by unfold Rel <;> infer_instance
 
 #print CategoryTheory.rel /-
 /-- The category of types with binary relations as morphisms. -/
-instance rel : LargeCategory RelCat where 
+instance rel : LargeCategory RelCat
+    where
   Hom X Y := X → Y → Prop
   id X x y := x = y
   comp X Y Z f g x z := ∃ y, f x y ∧ g y z

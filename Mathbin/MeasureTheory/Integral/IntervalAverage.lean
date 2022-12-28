@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_average
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ theorem interval_average_symm (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x)
 #align interval_average_symm interval_average_symm
 
 theorem interval_average_eq (f : ℝ → E) (a b : ℝ) :
-    (⨍ x in a..b, f x) = (b - a)⁻¹ • ∫ x in a..b, f x := by
+    (⨍ x in a..b, f x) = (b - a)⁻¹ • ∫ x in a..b, f x :=
+  by
   cases' le_or_lt a b with h h
   ·
     rw [set_average_eq, interval_oc_of_le h, Real.volume_Ioc, intervalIntegral.integral_of_le h,

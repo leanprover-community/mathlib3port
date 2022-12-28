@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.linear.linear_functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,33 +74,32 @@ section InducedCategory
 variable {C : Type _} {D : Type _} [Category D] [Preadditive D] [CategoryTheory.Linear R D]
   (F : C → D)
 
-instance induced_functor_linear : Functor.Linear R (inducedFunctor F) where
-#align category_theory.functor.induced_functor_linear CategoryTheory.Functor.induced_functor_linear
+instance inducedFunctorLinear : Functor.Linear R (inducedFunctor F) where
+#align category_theory.functor.induced_functor_linear CategoryTheory.Functor.inducedFunctorLinear
 
 end InducedCategory
 
-instance full_subcategory_inclusion_linear {C : Type _} [Category C] [Preadditive C]
+instance fullSubcategoryInclusionLinear {C : Type _} [Category C] [Preadditive C]
     [CategoryTheory.Linear R C] (Z : C → Prop) : (fullSubcategoryInclusion Z).Linear R where
 #align
-  category_theory.functor.full_subcategory_inclusion_linear CategoryTheory.Functor.full_subcategory_inclusion_linear
+  category_theory.functor.full_subcategory_inclusion_linear CategoryTheory.Functor.fullSubcategoryInclusionLinear
 
 section
 
 variable {R} {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
   [Additive F]
 
-instance nat_linear : F.Linear ℕ where map_smul' X Y f r := F.mapAddHom.map_nsmul f r
-#align category_theory.functor.nat_linear CategoryTheory.Functor.nat_linear
+instance natLinear : F.Linear ℕ where map_smul' X Y f r := F.mapAddHom.map_nsmul f r
+#align category_theory.functor.nat_linear CategoryTheory.Functor.natLinear
 
-instance int_linear :
-    F.Linear
-      ℤ where map_smul' X Y f r := (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_zsmul f r
-#align category_theory.functor.int_linear CategoryTheory.Functor.int_linear
+instance intLinear : F.Linear ℤ
+    where map_smul' X Y f r := (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_zsmul f r
+#align category_theory.functor.int_linear CategoryTheory.Functor.intLinear
 
 variable [CategoryTheory.Linear ℚ C] [CategoryTheory.Linear ℚ D]
 
-instance rat_linear : F.Linear ℚ where map_smul' X Y f r := F.mapAddHom.toRatLinearMap.map_smul r f
-#align category_theory.functor.rat_linear CategoryTheory.Functor.rat_linear
+instance ratLinear : F.Linear ℚ where map_smul' X Y f r := F.mapAddHom.toRatLinearMap.map_smul r f
+#align category_theory.functor.rat_linear CategoryTheory.Functor.ratLinear
 
 end
 
@@ -111,12 +110,11 @@ namespace Equivalence
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Linear R C] [Preadditive D]
   [Linear R D]
 
-instance inverse_linear (e : C ≌ D) [e.Functor.Additive] [e.Functor.Linear R] :
-    e.inverse.Linear
-      R where map_smul' X Y r f := by 
+instance inverseLinear (e : C ≌ D) [e.Functor.Additive] [e.Functor.Linear R] : e.inverse.Linear R
+    where map_smul' X Y r f := by
     apply e.functor.map_injective
     simp
-#align category_theory.equivalence.inverse_linear CategoryTheory.Equivalence.inverse_linear
+#align category_theory.equivalence.inverse_linear CategoryTheory.Equivalence.inverseLinear
 
 end Equivalence
 

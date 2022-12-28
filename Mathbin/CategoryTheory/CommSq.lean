@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.comm_sq
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,8 +111,8 @@ restate_axiom fac_right'
 /-- A `lift_struct` for a commutative square gives a `lift_struct` for the
 corresponding square in the opposite category. -/
 @[simps]
-def op {sq : CommSq f i p g} (l : LiftStruct sq) :
-    LiftStruct sq.op where 
+def op {sq : CommSq f i p g} (l : LiftStruct sq) : LiftStruct sq.op
+    where
   l := l.l.op
   fac_left' := by rw [← op_comp, l.fac_right]
   fac_right' := by rw [← op_comp, l.fac_left]
@@ -122,8 +122,8 @@ def op {sq : CommSq f i p g} (l : LiftStruct sq) :
 gives a `lift_struct` for the corresponding square in the original category. -/
 @[simps]
 def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} {sq : CommSq f i p g}
-    (l : LiftStruct sq) : LiftStruct
-      sq.unop where 
+    (l : LiftStruct sq) : LiftStruct sq.unop
+    where
   l := l.l.unop
   fac_left' := by rw [← unop_comp, l.fac_right]
   fac_right' := by rw [← unop_comp, l.fac_left]
@@ -132,8 +132,8 @@ def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B �
 /-- Equivalences of `lift_struct` for a square and the corresponding square
 in the opposite category. -/
 @[simps]
-def opEquiv (sq : CommSq f i p g) :
-    LiftStruct sq ≃ LiftStruct sq.op where 
+def opEquiv (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.op
+    where
   toFun := op
   invFun := unop
   left_inv := by tidy
@@ -143,8 +143,8 @@ def opEquiv (sq : CommSq f i p g) :
 /-- Equivalences of `lift_struct` for a square in the oppositive category and
 the corresponding square in the original category. -/
 def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
-    (sq : CommSq f i p g) :
-    LiftStruct sq ≃ LiftStruct sq.unop where 
+    (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.unop
+    where
   toFun := unop
   invFun := op
   left_inv := by tidy
@@ -155,7 +155,7 @@ end LiftStruct
 
 instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] :
     Subsingleton (LiftStruct sq) :=
-  ⟨fun l₁ l₂ => by 
+  ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_epi i, lift_struct.fac_left]⟩
 #align
@@ -163,7 +163,7 @@ instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] :
 
 instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] :
     Subsingleton (LiftStruct sq) :=
-  ⟨fun l₁ l₂ => by 
+  ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_mono p, lift_struct.fac_right]⟩
 #align
@@ -186,18 +186,21 @@ theorem mk' (l : sq.LiftStruct) : HasLift sq :=
 
 variable (sq)
 
-theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct := by
+theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct :=
+  by
   constructor
   exacts[fun h => h.exists_lift, fun h => mk h]
 #align category_theory.comm_sq.has_lift.iff CategoryTheory.CommSq.HasLift.iff
 
-theorem iff_op : HasLift sq ↔ HasLift sq.op := by
+theorem iff_op : HasLift sq ↔ HasLift sq.op :=
+  by
   rw [Iff, Iff]
   exact Nonempty.congr (lift_struct.op_equiv sq).toFun (lift_struct.op_equiv sq).invFun
 #align category_theory.comm_sq.has_lift.iff_op CategoryTheory.CommSq.HasLift.iff_op
 
 theorem iff_unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
-    (sq : CommSq f i p g) : HasLift sq ↔ HasLift sq.unop := by
+    (sq : CommSq f i p g) : HasLift sq ↔ HasLift sq.unop :=
+  by
   rw [Iff, Iff]
   exact Nonempty.congr (lift_struct.unop_equiv sq).toFun (lift_struct.unop_equiv sq).invFun
 #align category_theory.comm_sq.has_lift.iff_unop CategoryTheory.CommSq.HasLift.iff_unop

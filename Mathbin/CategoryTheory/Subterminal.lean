@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.subterminal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,8 @@ theorem IsSubterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) 
 The converse of `is_subterminal.mono_is_terminal_from`.
 -/
 theorem is_subterminal_of_mono_is_terminal_from {T : C} (hT : IsTerminal T) [Mono (hT.from A)] :
-    IsSubterminal A := fun Z f g => by
+    IsSubterminal A := fun Z f g =>
+  by
   rw [← cancel_mono (hT.from A)]
   apply hT.hom_ext
 #align
@@ -83,7 +84,8 @@ theorem is_subterminal_of_mono_is_terminal_from {T : C} (hT : IsTerminal T) [Mon
 The converse of `is_subterminal.mono_terminal_from`.
 -/
 theorem is_subterminal_of_mono_terminal_from [HasTerminal C] [Mono (terminal.from A)] :
-    IsSubterminal A := fun Z f g => by
+    IsSubterminal A := fun Z f g =>
+  by
   rw [← cancel_mono (terminal.from A)]
   apply Subsingleton.elim
 #align
@@ -102,7 +104,7 @@ The converse of `is_subterminal_of_is_iso_diag`.
 -/
 theorem IsSubterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
   ⟨⟨Limits.prod.fst,
-      ⟨by simp, by 
+      ⟨by simp, by
         rw [is_subterminal.def] at hA
         tidy⟩⟩⟩
 #align category_theory.is_subterminal.is_iso_diag CategoryTheory.IsSubterminal.is_iso_diag
@@ -111,14 +113,16 @@ theorem IsSubterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] 
 The converse of `is_subterminal.is_iso_diag`.
 -/
 theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : IsSubterminal A :=
-  fun Z f g => by
+  fun Z f g =>
+  by
   have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd := by simp [← cancel_epi (diag A)]
   rw [← prod.lift_fst f g, this, prod.lift_snd]
 #align category_theory.is_subterminal_of_is_iso_diag CategoryTheory.is_subterminal_of_is_iso_diag
 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
 @[simps]
-def IsSubterminal.isoDiag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A := by
+def IsSubterminal.isoDiag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A :=
+  by
   letI := is_subterminal.is_iso_diag hA
   apply (as_iso (diag A)).symm
 #align category_theory.is_subterminal.iso_diag CategoryTheory.IsSubterminal.isoDiag
@@ -152,17 +156,14 @@ The category of subterminal objects is equivalent to the category of monomorphis
 object (which is in turn equivalent to the subobjects of the terminal object).
 -/
 @[simps]
-def subterminalsEquivMonoOverTerminal [HasTerminal C] :
-    Subterminals C ≌
-      MonoOver
-        (⊤_
-          C) where 
+def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoOver (⊤_ C)
+    where
   Functor :=
     { obj := fun X => ⟨Over.mk (terminal.from X.1), X.2.mono_terminal_from⟩
       map := fun X Y f => MonoOver.homMk f (by ext1 ⟨⟨⟩⟩) }
   inverse :=
     { obj := fun X =>
-        ⟨X.obj.left, fun Z f g => by 
+        ⟨X.obj.left, fun Z f g => by
           rw [← cancel_mono X.arrow]
           apply Subsingleton.elim⟩
       map := fun X Y f => f.1 }

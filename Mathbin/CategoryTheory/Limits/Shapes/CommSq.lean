@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.comm_sq
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -284,7 +284,8 @@ noncomputable def isoPullback (h : IsPullback fst snd f g) [HasPullback f g] : P
 
 @[simp]
 theorem iso_pullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] :
-    h.isoPullback.Hom ≫ pullback.fst = fst := by
+    h.isoPullback.Hom ≫ pullback.fst = fst :=
+  by
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
 #align
@@ -292,7 +293,8 @@ theorem iso_pullback_hom_fst (h : IsPullback fst snd f g) [HasPullback f g] :
 
 @[simp]
 theorem iso_pullback_hom_snd (h : IsPullback fst snd f g) [HasPullback f g] :
-    h.isoPullback.Hom ≫ pullback.snd = snd := by
+    h.isoPullback.Hom ≫ pullback.snd = snd :=
+  by
   dsimp [iso_pullback, cone, comm_sq.cone]
   simp
 #align
@@ -420,14 +422,16 @@ noncomputable def isoPushout (h : IsPushout f g inl inr) [HasPushout f g] : P �
 
 @[simp]
 theorem inl_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
-    pushout.inl ≫ h.isoPushout.inv = inl := by
+    pushout.inl ≫ h.isoPushout.inv = inl :=
+  by
   dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
 #align category_theory.is_pushout.inl_iso_pushout_inv CategoryTheory.IsPushout.inl_iso_pushout_inv
 
 @[simp]
 theorem inr_iso_pushout_inv (h : IsPushout f g inl inr) [HasPushout f g] :
-    pushout.inr ≫ h.isoPushout.inv = inr := by
+    pushout.inr ≫ h.isoPushout.inv = inr :=
+  by
   dsimp [iso_pushout, cocone, comm_sq.cocone]
   simp
 #align category_theory.is_pushout.inr_iso_pushout_inv CategoryTheory.IsPushout.inr_iso_pushout_inv
@@ -571,7 +575,8 @@ theorem ofHasBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
 #align category_theory.is_pullback.of_has_biproduct CategoryTheory.IsPullback.ofHasBiproduct
 
 theorem inlSnd' {b : BinaryBicone X Y} (h : b.IsBilimit) :
-    IsPullback b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) := by
+    IsPullback b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) :=
+  by
   refine' of_right _ (by simp) (of_is_bilimit h)
   simp
 #align category_theory.is_pullback.inl_snd' CategoryTheory.IsPullback.inlSnd'
@@ -594,7 +599,8 @@ theorem inlSnd (X Y : C) [HasBinaryBiproduct X Y] :
 #align category_theory.is_pullback.inl_snd CategoryTheory.IsPullback.inlSnd
 
 theorem inrFst' {b : BinaryBicone X Y} (h : b.IsBilimit) :
-    IsPullback b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) := by
+    IsPullback b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) :=
+  by
   apply flip
   refine' of_bot _ (by simp) (of_is_bilimit h)
   simp
@@ -618,7 +624,8 @@ theorem inrFst (X Y : C) [HasBinaryBiproduct X Y] :
 #align category_theory.is_pullback.inr_fst CategoryTheory.IsPullback.inrFst
 
 theorem ofIsBilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) :
-    IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr := by
+    IsPullback (0 : 0 ⟶ X) (0 : 0 ⟶ Y) b.inl b.inr :=
+  by
   refine' is_pullback.of_right _ (by simp) (is_pullback.inl_snd' h).flip
   simp
 #align category_theory.is_pullback.of_is_bilimit' CategoryTheory.IsPullback.ofIsBilimit'
@@ -688,7 +695,8 @@ theorem zeroRight (X : C) : IsPushout (0 : X ⟶ 0) (𝟙 X) (0 : 0 ⟶ 0) (0 : 
   { w := by simp
     is_colimit' :=
       ⟨{  desc := fun s => 0
-          fac' := fun s => by
+          fac' := fun s =>
+            by
             have c :=
               @pushout_cocone.coequalizer_ext _ _ _ _ _ _ _ s _ 0 (𝟙 _) (by simp)
                 (by simpa using pushout_cocone.condition s)
@@ -786,7 +794,8 @@ theorem ofHasBiproduct (X Y : C) [HasBinaryBiproduct X Y] :
 #align category_theory.is_pushout.of_has_biproduct CategoryTheory.IsPushout.ofHasBiproduct
 
 theorem inlSnd' {b : BinaryBicone X Y} (h : b.IsBilimit) :
-    IsPushout b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) := by
+    IsPushout b.inl (0 : X ⟶ 0) b.snd (0 : 0 ⟶ Y) :=
+  by
   apply flip
   refine' of_right _ (by simp) (of_is_bilimit h)
   simp
@@ -809,7 +818,8 @@ theorem inlSnd (X Y : C) [HasBinaryBiproduct X Y] :
 #align category_theory.is_pushout.inl_snd CategoryTheory.IsPushout.inlSnd
 
 theorem inrFst' {b : BinaryBicone X Y} (h : b.IsBilimit) :
-    IsPushout b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) := by
+    IsPushout b.inr (0 : Y ⟶ 0) b.fst (0 : 0 ⟶ X) :=
+  by
   refine' of_bot _ (by simp) (of_is_bilimit h)
   simp
 #align category_theory.is_pushout.inr_fst' CategoryTheory.IsPushout.inrFst'
@@ -831,7 +841,8 @@ theorem inrFst (X Y : C) [HasBinaryBiproduct X Y] :
 #align category_theory.is_pushout.inr_fst CategoryTheory.IsPushout.inrFst
 
 theorem ofIsBilimit' {b : BinaryBicone X Y} (h : b.IsBilimit) :
-    IsPushout b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) := by
+    IsPushout b.fst b.snd (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
+  by
   refine' is_pushout.of_right _ (by simp) (is_pushout.inl_snd' h)
   simp
 #align category_theory.is_pushout.of_is_bilimit' CategoryTheory.IsPushout.ofIsBilimit'
@@ -892,7 +903,8 @@ variable {X Y Z : C} {f f' : X ⟶ Y} {g g' : Y ⟶ Z}
 
 /-- If `f : X ⟶ Y`, `g g' : Y ⟶ Z` forms a pullback square, then `f` is the equalizer of
 `g` and `g'`. -/
-noncomputable def IsPullback.isLimitFork (H : IsPullback f f g g') : IsLimit (Fork.ofι f H.w) := by
+noncomputable def IsPullback.isLimitFork (H : IsPullback f f g g') : IsLimit (Fork.ofι f H.w) :=
+  by
   fapply fork.is_limit.mk
   · exact fun s => H.is_limit.lift (pullback_cone.mk s.ι s.ι s.condition)
   · exact fun s => H.is_limit.fac _ walking_cospan.left
@@ -904,7 +916,7 @@ noncomputable def IsPullback.isLimitFork (H : IsPullback f f g g') : IsLimit (Fo
 /-- If `f f' : X ⟶ Y`, `g : Y ⟶ Z` forms a pushout square, then `g` is the coequalizer of
 `f` and `f'`. -/
 noncomputable def IsPushout.isLimitFork (H : IsPushout f f' g g) : IsColimit (Cofork.ofπ g H.w) :=
-  by 
+  by
   fapply cofork.is_colimit.mk
   · exact fun s => H.is_colimit.desc (pushout_cocone.mk s.π s.π s.condition)
   · exact fun s => H.is_colimit.fac _ walking_span.left
@@ -1020,7 +1032,8 @@ theorem Functor.mapIsPullback [PreservesLimit (cospan h i) F] (s : IsPullback f 
 #align category_theory.functor.map_is_pullback CategoryTheory.Functor.mapIsPullback
 
 theorem Functor.mapIsPushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
-    IsPushout (F.map f) (F.map g) (F.map h) (F.map i) := by
+    IsPushout (F.map f) (F.map g) (F.map h) (F.map i) :=
+  by
   refine'
     is_pushout.of_is_colimit' (F.map_comm_sq s.to_comm_sq)
       (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)
@@ -1037,7 +1050,8 @@ alias functor.map_is_pullback ← is_pullback.map
 alias functor.map_is_pushout ← is_pushout.map
 
 theorem IsPullback.ofMap [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
-    (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i := by
+    (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=
+  by
   refine' ⟨⟨e⟩, ⟨is_limit_of_reflects F <| _⟩⟩
   refine'
     (is_limit.equiv_of_nat_iso_of_iso (cospan_comp_iso F h i) _ _ (walking_cospan.ext _ _ _)).symm
@@ -1058,7 +1072,8 @@ theorem IsPullback.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesLim
 #align category_theory.is_pullback.map_iff CategoryTheory.IsPullback.map_iff
 
 theorem IsPushout.ofMap [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
-    (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i := by
+    (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i :=
+  by
   refine' ⟨⟨e⟩, ⟨is_colimit_of_reflects F <| _⟩⟩
   refine'
     (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)).symm

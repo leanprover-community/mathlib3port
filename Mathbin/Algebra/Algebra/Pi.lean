@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,10 @@ variable (I f)
 
 instance algebra {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] :
     Algebra R (∀ i : I, f i) :=
-  { (Pi.ringHom fun i => algebraMap R (f i) : R →+* ∀ i : I, f i) with
+  {
+    (Pi.ringHom fun i => algebraMap R (f i) :
+      R →+* ∀ i : I,
+          f i) with
     commutes' := fun a f => by ext; simp [Algebra.commutes]
     smul_def' := fun a f => by ext; simp [Algebra.smul_def] }
 #align pi.algebra Pi.algebra
@@ -67,7 +70,7 @@ etc. -/
 @[simps]
 def evalAlgHom {r : CommSemiring R} [∀ i, Semiring (f i)] [∀ i, Algebra R (f i)] (i : I) :
     (∀ i, f i) →ₐ[R] f i :=
-  { Pi.evalRingHom f i with 
+  { Pi.evalRingHom f i with
     toFun := fun f => f i
     commutes' := fun r => rfl }
 #align pi.eval_alg_hom Pi.evalAlgHom
@@ -78,7 +81,7 @@ variable (A B : Type _) [CommSemiring R] [Semiring B] [Algebra R B]
 etc. -/
 @[simps]
 def constAlgHom : B →ₐ[R] A → B :=
-  { Pi.constRingHom A B with 
+  { Pi.constRingHom A B with
     toFun := Function.const _
     commutes' := fun r => rfl }
 #align pi.const_alg_hom Pi.constAlgHom
@@ -116,9 +119,9 @@ variable [Algebra R A] [Algebra R B]
 `R`-algebra homomorphism `f` between `A` and `B`. -/
 @[simps]
 protected def compLeft (f : A →ₐ[R] B) (I : Type _) : (I → A) →ₐ[R] I → B :=
-  { f.toRingHom.compLeft I with 
+  { f.toRingHom.compLeft I with
     toFun := fun h => f ∘ h
-    commutes' := fun c => by 
+    commutes' := fun c => by
       ext
       exact f.commutes' c }
 #align alg_hom.comp_left AlgHom.compLeft
@@ -137,10 +140,12 @@ This is the `alg_equiv` version of `equiv.Pi_congr_right`, and the dependent ver
 def piCongrRight {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R] [∀ i, Semiring (A₁ i)]
     [∀ i, Semiring (A₂ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)]
     (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (∀ i, A₁ i) ≃ₐ[R] ∀ i, A₂ i :=
-  { @RingEquiv.piCongrRight ι A₁ A₂ _ _ fun i => (e i).toRingEquiv with
+  {
+    @RingEquiv.piCongrRight ι A₁ A₂ _ _ fun i =>
+      (e i).toRingEquiv with
     toFun := fun x j => e j (x j)
     invFun := fun x j => (e j).symm (x j)
-    commutes' := fun r => by 
+    commutes' := fun r => by
       ext i
       simp }
 #align alg_equiv.Pi_congr_right AlgEquiv.piCongrRight

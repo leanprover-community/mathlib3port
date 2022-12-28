@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.state
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,14 +50,16 @@ open StateM
 
 variable {S : Type u} [State S]
 
-theorem turn_bound_ne_zero_of_left_move {s t : S} (m : t ∈ l s) : turnBound s ≠ 0 := by
+theorem turn_bound_ne_zero_of_left_move {s t : S} (m : t ∈ l s) : turnBound s ≠ 0 :=
+  by
   intro h
   have t := state.left_bound m
   rw [h] at t
   exact Nat.not_succ_le_zero _ t
 #align pgame.turn_bound_ne_zero_of_left_move Pgame.turn_bound_ne_zero_of_left_move
 
-theorem turn_bound_ne_zero_of_right_move {s t : S} (m : t ∈ r s) : turnBound s ≠ 0 := by
+theorem turn_bound_ne_zero_of_right_move {s t : S} (m : t ∈ r s) : turnBound s ≠ 0 :=
+  by
   intro h
   have t := state.right_bound m
   rw [h] at t
@@ -92,7 +94,7 @@ def ofStateAux : ∀ (n : ℕ) (s : S) (h : turnBound s ≤ n), Pgame
 def ofStateAuxRelabelling :
     ∀ (s : S) (n m : ℕ) (hn : turnBound s ≤ n) (hm : turnBound s ≤ m),
       Relabelling (ofStateAux n s hn) (ofStateAux m s hm)
-  | s, 0, 0, hn, hm => by 
+  | s, 0, 0, hn, hm => by
     dsimp [Pgame.ofStateAux]
     fconstructor; rfl; rfl
     · intro i
@@ -103,7 +105,7 @@ def ofStateAuxRelabelling :
       dsimp at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
-  | s, 0, m + 1, hn, hm => by 
+  | s, 0, m + 1, hn, hm => by
     dsimp [Pgame.ofStateAux]
     fconstructor; rfl; rfl
     · intro i
@@ -114,7 +116,7 @@ def ofStateAuxRelabelling :
       dsimp at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hn)
-  | s, n + 1, 0, hn, hm => by 
+  | s, n + 1, 0, hn, hm => by
     dsimp [Pgame.ofStateAux]
     fconstructor; rfl; rfl
     · intro i
@@ -125,7 +127,7 @@ def ofStateAuxRelabelling :
       dsimp at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
-  | s, n + 1, m + 1, hn, hm => by 
+  | s, n + 1, m + 1, hn, hm => by
     dsimp [Pgame.ofStateAux]
     fconstructor; rfl; rfl
     · intro i
@@ -171,7 +173,7 @@ def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
       (ofStateAux (n - 1) ((leftMovesOfStateAux n h) t : S)
         (turn_bound_of_left ((leftMovesOfStateAux n h) t).2 (n - 1)
           (Nat.le_trans h le_tsub_add))) :=
-  by 
+  by
   induction n
   · have t' := (left_moves_of_state_aux 0 h) t
     exfalso
@@ -183,7 +185,8 @@ def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
 has itself been constructed using `of`.
 -/
 def relabellingMoveLeft (s : S) (t : LeftMoves (ofState s)) :
-    Relabelling (moveLeft (ofState s) t) (ofState ((leftMovesOfState s).toFun t : S)) := by
+    Relabelling (moveLeft (ofState s) t) (ofState ((leftMovesOfState s).toFun t : S)) :=
+  by
   trans
   apply relabelling_move_left_aux
   apply of_state_aux_relabelling
@@ -198,7 +201,7 @@ def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
       (ofStateAux (n - 1) ((rightMovesOfStateAux n h) t : S)
         (turn_bound_of_right ((rightMovesOfStateAux n h) t).2 (n - 1)
           (Nat.le_trans h le_tsub_add))) :=
-  by 
+  by
   induction n
   · have t' := (right_moves_of_state_aux 0 h) t
     exfalso
@@ -210,20 +213,23 @@ def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
 has itself been constructed using `of`.
 -/
 def relabellingMoveRight (s : S) (t : RightMoves (ofState s)) :
-    Relabelling (moveRight (ofState s) t) (ofState ((rightMovesOfState s).toFun t : S)) := by
+    Relabelling (moveRight (ofState s) t) (ofState ((rightMovesOfState s).toFun t : S)) :=
+  by
   trans
   apply relabelling_move_right_aux
   apply of_state_aux_relabelling
 #align pgame.relabelling_move_right Pgame.relabellingMoveRight
 
 instance fintypeLeftMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) :
-    Fintype (LeftMoves (ofStateAux n s h)) := by
+    Fintype (LeftMoves (ofStateAux n s h)) :=
+  by
   apply Fintype.ofEquiv _ (left_moves_of_state_aux _ _).symm
   infer_instance
 #align pgame.fintype_left_moves_of_state_aux Pgame.fintypeLeftMovesOfStateAux
 
 instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) :
-    Fintype (RightMoves (ofStateAux n s h)) := by
+    Fintype (RightMoves (ofStateAux n s h)) :=
+  by
   apply Fintype.ofEquiv _ (right_moves_of_state_aux _ _).symm
   infer_instance
 #align pgame.fintype_right_moves_of_state_aux Pgame.fintypeRightMovesOfStateAux
@@ -231,11 +237,11 @@ instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) :
 instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short (ofStateAux n s h)
   | 0, s, h =>
     Short.mk'
-      (fun i => by 
+      (fun i => by
         have i := (left_moves_of_state_aux _ _).toFun i
         exfalso
         exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp h))
-      fun j => by 
+      fun j => by
       have j := (right_moves_of_state_aux _ _).toFun j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp h)
@@ -247,7 +253,8 @@ instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short 
       shortOfRelabelling (relabellingMoveRightAux (n + 1) h j).symm (short_of_state_aux n _)
 #align pgame.short_of_state_aux Pgame.shortOfStateAux
 
-instance shortOfState (s : S) : Short (ofState s) := by
+instance shortOfState (s : S) : Short (ofState s) :=
+  by
   dsimp [Pgame.ofState]
   infer_instance
 #align pgame.short_of_state Pgame.shortOfState

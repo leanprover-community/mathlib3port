@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.ring_hom_properties
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ theorem RespectsIso.of_restrict_morphism_restrict_iff (hP : RingHom.RespectsIso 
           ((X.restrict ((Opens.map f.1.base).obj _).OpenEmbedding).of_restrict V.OpenEmbedding ≫
               f ∣_ Y.basicOpen r).op) ↔
       P (Localization.awayMap (SchemeCat.Γ.map (X.of_restrict U.OpenEmbedding ≫ f).op) r) :=
-  by 
+  by
   subst e
   convert (hP.is_localization_away_iff _ _ _ _).symm
   rotate_left
@@ -129,7 +129,8 @@ theorem RespectsIso.of_restrict_morphism_restrict_iff (hP : RingHom.RespectsIso 
 
 theorem StableUnderBaseChange.ΓPullbackFst (hP : StableUnderBaseChange @P) (hP' : RespectsIso @P)
     {X Y S : SchemeCat} [IsAffine X] [IsAffine Y] [IsAffine S] (f : X ⟶ S) (g : Y ⟶ S)
-    (H : P (SchemeCat.Γ.map g.op)) : P (SchemeCat.Γ.map (pullback.fst : pullback f g ⟶ _).op) := by
+    (H : P (SchemeCat.Γ.map g.op)) : P (SchemeCat.Γ.map (pullback.fst : pullback f g ⟶ _).op) :=
+  by
   rw [←
     preserves_pullback.iso_inv_fst AffineScheme.forget_to_Scheme (AffineScheme.of_hom f)
       (AffineScheme.of_hom g),
@@ -168,7 +169,8 @@ abbrev affineLocally : MorphismProperty SchemeCat :=
 variable {P}
 
 theorem source_affine_locally_respects_iso (h₁ : RingHom.RespectsIso @P) :
-    (sourceAffineLocally @P).toProperty.RespectsIso := by
+    (sourceAffineLocally @P).toProperty.RespectsIso :=
+  by
   apply affine_target_morphism_property.respects_iso_mk
   · introv H U
     rw [← h₁.cancel_right_is_iso _ (Scheme.Γ.map (Scheme.restrict_map_iso e.inv U.1).Hom.op), ←
@@ -192,7 +194,7 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
     affineLocally (@P) f ↔
       ∀ (U : Y.affineOpens) (V : X.affineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1),
         P (f.appLe e) :=
-  by 
+  by
   apply forall_congr'
   intro U
   delta source_affine_locally
@@ -202,7 +204,7 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
   · intro H V e
     let U' := (opens.map f.val.base).obj U.1
     have e' : U'.open_embedding.is_open_map.functor.obj ((opens.map U'.inclusion).obj V.1) = V.1 :=
-      by 
+      by
       ext1
       refine' set.image_preimage_eq_inter_range.trans (set.inter_eq_left_iff_subset.mpr _)
       convert e
@@ -242,7 +244,7 @@ theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsI
         ((X.restrict ((Opens.map f.1.base).obj <| Y.basicOpen r).OpenEmbedding).of_restrict
               U.1.OpenEmbedding ≫
             f ∣_ Y.basicOpen r).op) :=
-  by 
+  by
   specialize H ⟨_, U.2.image_is_open_immersion (X.of_restrict _)⟩
   convert (h₁.of_restrict_morphism_restrict_iff _ _ _ _ _).mpr _ using 1
   pick_goal 5
@@ -257,7 +259,7 @@ theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsI
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (V «expr = » (opens.map f.val.base).obj (Y.basic_open r.val)) -/
 theorem sourceAffineLocallyIsLocal (h₁ : RingHom.RespectsIso @P)
     (h₂ : RingHom.LocalizationPreserves @P) (h₃ : RingHom.OfLocalizationSpan @P) :
-    (sourceAffineLocally @P).IsLocal := by 
+    (sourceAffineLocally @P).IsLocal := by
   constructor
   · exact source_affine_locally_respects_iso h₁
   · introv H U
@@ -288,7 +290,8 @@ theorem source_affine_locally_of_source_open_cover_aux (h₁ : RingHom.RespectsI
     (h₃ : RingHom.OfLocalizationSpanTarget @P) {X Y : SchemeCat} (f : X ⟶ Y) (U : X.affineOpens)
     (s : Set (X.Presheaf.obj (op U.1))) (hs : Ideal.span s = ⊤)
     (hs' : ∀ r : s, P (SchemeCat.Γ.map (X.of_restrict (X.basicOpen r.1).OpenEmbedding ≫ f).op)) :
-    P (SchemeCat.Γ.map (X.of_restrict U.1.OpenEmbedding ≫ f).op) := by
+    P (SchemeCat.Γ.map (X.of_restrict U.1.OpenEmbedding ≫ f).op) :=
+  by
   apply_fun Ideal.map (X.presheaf.map (eq_to_hom U.1.open_embedding_obj_top).op)  at hs
   rw [Ideal.map_span, Ideal.map_top] at hs
   apply h₃ _ _ hs
@@ -326,7 +329,8 @@ theorem source_affine_locally_of_source_open_cover_aux (h₁ : RingHom.RespectsI
 
 theorem isOpenImmersionCompOfSourceAffineLocally (h₁ : RingHom.RespectsIso @P) {X Y Z : SchemeCat}
     [IsAffine X] [IsAffine Z] (f : X ⟶ Y) [IsOpenImmersion f] (g : Y ⟶ Z)
-    (h₂ : sourceAffineLocally (@P) g) : P (SchemeCat.Γ.map (f ≫ g).op) := by
+    (h₂ : sourceAffineLocally (@P) g) : P (SchemeCat.Γ.map (f ≫ g).op) :=
+  by
   rw [←
     h₁.cancel_right_is_iso _
       (Scheme.Γ.map (is_open_immersion.iso_of_range_eq (Y.of_restrict _) f _).Hom.op),
@@ -351,7 +355,8 @@ include hP
 
 theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine Y]
     (𝒰 : X.OpenCover) [∀ i, IsAffine (𝒰.obj i)] (H : ∀ i, P (SchemeCat.Γ.map (𝒰.map i ≫ f).op)) :
-    sourceAffineLocally (@P) f := by
+    sourceAffineLocally (@P) f :=
+  by
   let S i :=
     (⟨⟨Set.range (𝒰.map i).1.base, (𝒰.is_open i).base_open.open_range⟩,
         range_is_affine_open_of_open_immersion (𝒰.map i)⟩ :
@@ -385,7 +390,7 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
     exact source_affine_locally_of_source_open_cover_aux hP.respects_iso hP.2 _ _ _ hs hs'
   · rw [Set.eq_univ_iff_forall]
     intro x
-    rw [Set.mem_Union]
+    rw [Set.mem_unionᵢ]
     exact ⟨⟨_, 𝒰.f x, rfl⟩, 𝒰.covers x⟩
   · rintro ⟨_, i, rfl⟩
     specialize H i
@@ -524,8 +529,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg])
              []
              (Tactic.skip "skip")
@@ -589,8 +594,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
              []
              (Tactic.skip "skip")
@@ -599,8 +604,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H])
              []
              (Tactic.refine'
@@ -612,8 +617,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -650,8 +655,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `U `g (Term.hole "_") `hg])
             []
             (Tactic.skip "skip")
@@ -715,8 +720,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
             []
             (Tactic.skip "skip")
@@ -725,8 +730,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H])
             []
             (Tactic.refine'
@@ -738,8 +743,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -769,8 +774,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Std.Tactic.rintro
          "rintro"
          [(Std.Tactic.RCases.rintroPat.one
@@ -1008,8 +1013,8 @@ theorem
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `U `g `hg `V])
              []
              (Tactic.skip "skip")
@@ -1049,8 +1054,8 @@ theorem
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
              []
              (Tactic.skip "skip")
@@ -1059,8 +1064,8 @@ theorem
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H])
              []
              (Tactic.refine'
@@ -1069,8 +1074,8 @@ theorem
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -1118,16 +1123,16 @@ theorem
                 (Term.hole "_")]
                "⟩"))
              []
-             (tactic___
-              (cdotTk (patternIgnore (token.«·» "·")))
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
               [(Tactic.intro "intro" [`i])
                []
                (Tactic.dsimp "dsimp" [] [] [] [] [])
                []
                (Tactic.tacticInfer_instance "infer_instance")])
              []
-             (tactic___
-              (cdotTk (patternIgnore (token.«·» "·")))
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
               [(Tactic.intro "intro" [`i])
                []
                (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
@@ -1182,8 +1187,8 @@ theorem
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `U `g `hg `V])
             []
             (Tactic.skip "skip")
@@ -1223,8 +1228,8 @@ theorem
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `𝒰 (Term.hole "_") `i])
             []
             (Tactic.skip "skip")
@@ -1233,8 +1238,8 @@ theorem
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H])
             []
             (Tactic.refine'
@@ -1243,8 +1248,8 @@ theorem
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -1292,16 +1297,16 @@ theorem
                (Term.hole "_")]
               "⟩"))
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.intro "intro" [`i])
               []
               (Tactic.dsimp "dsimp" [] [] [] [] [])
               []
               (Tactic.tacticInfer_instance "infer_instance")])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.intro "intro" [`i])
               []
               (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
@@ -1349,8 +1354,8 @@ theorem
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Std.Tactic.rintro
          "rintro"
          [(Std.Tactic.RCases.rintroPat.one
@@ -1398,16 +1403,16 @@ theorem
            (Term.hole "_")]
           "⟩"))
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Tactic.intro "intro" [`i])
           []
           (Tactic.dsimp "dsimp" [] [] [] [] [])
           []
           (Tactic.tacticInfer_instance "infer_instance")])
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Tactic.intro "intro" [`i])
           []
           (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
@@ -1449,8 +1454,8 @@ theorem
           []
           (Tactic.tacticInfer_instance "infer_instance")])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.intro "intro" [`i])
         []
         (Tactic.specialize "specialize" (Term.app `h𝒰 [(Term.proj `i "." (fieldIdx "1"))]))
@@ -1687,8 +1692,8 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.intro "intro" [`i])
         []
         (Tactic.dsimp "dsimp" [] [] [] [] [])
@@ -1967,7 +1972,8 @@ theorem affine_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : Scheme
   ring_hom.property_is_local.affine_open_cover_iff RingHom.PropertyIsLocal.affine_open_cover_iff
 
 theorem source_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} X) :
-    affineLocally (@P) f ↔ ∀ i, affineLocally (@P) (𝒰.map i ≫ f) := by
+    affineLocally (@P) f ↔ ∀ i, affineLocally (@P) (𝒰.map i ≫ f) :=
+  by
   constructor
   · intro H i U
     rw [morphism_restrict_comp]
@@ -1991,7 +1997,8 @@ theorem source_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : Scheme
   ring_hom.property_is_local.source_open_cover_iff RingHom.PropertyIsLocal.source_open_cover_iff
 
 theorem affine_locally_of_is_open_immersion (hP : RingHom.PropertyIsLocal @P) {X Y : SchemeCat}
-    (f : X ⟶ Y) [hf : IsOpenImmersion f] : affineLocally (@P) f := by
+    (f : X ⟶ Y) [hf : IsOpenImmersion f] : affineLocally (@P) f :=
+  by
   intro U
   haveI H : is_affine _ := U.2
   rw [← category.comp_id (f ∣_ U)]
@@ -2013,8 +2020,10 @@ theorem affine_locally_of_comp
       ∀ {R S T : Type u} [CommRing R] [CommRing S] [CommRing T],
         ∀ (f : R →+* S) (g : S →+* T), P (g.comp f) → P g)
     {X Y Z : SchemeCat} {f : X ⟶ Y} {g : Y ⟶ Z} (h : affineLocally (@P) (f ≫ g)) :
-    affineLocally (@P) f := by
-  let 𝒰 : ∀ i, ((Z.affine_cover.pullback_cover (f ≫ g)).obj i).OpenCover := by
+    affineLocally (@P) f :=
+  by
+  let 𝒰 : ∀ i, ((Z.affine_cover.pullback_cover (f ≫ g)).obj i).OpenCover :=
+    by
     intro i
     refine' Scheme.open_cover.bind _ fun i => Scheme.affine_cover _
     apply
@@ -2022,11 +2031,11 @@ theorem affine_locally_of_comp
         (pullback_right_pullback_fst_iso g (Z.affine_cover.map i) f).Hom
     apply Scheme.pullback.open_cover_of_right
     exact (pullback g (Z.affine_cover.map i)).affineCover
-  have h𝒰 : ∀ i j, is_affine ((𝒰 i).obj j) := by 
+  have h𝒰 : ∀ i j, is_affine ((𝒰 i).obj j) := by
     dsimp
     infer_instance
   let 𝒰' := (Z.affine_cover.pullback_cover g).bind fun i => Scheme.affine_cover _
-  have h𝒰' : ∀ i, is_affine (𝒰'.obj i) := by 
+  have h𝒰' : ∀ i, is_affine (𝒰'.obj i) := by
     dsimp
     infer_instance
   rw [hP.affine_open_cover_iff f 𝒰' fun i => Scheme.affine_cover _]
@@ -2044,9 +2053,11 @@ theorem affine_locally_of_comp
 #align
   ring_hom.property_is_local.affine_locally_of_comp RingHom.PropertyIsLocal.affine_locally_of_comp
 
-theorem affine_locally_stable_under_composition : (affineLocally @P).StableUnderComposition := by
+theorem affine_locally_stable_under_composition : (affineLocally @P).StableUnderComposition :=
+  by
   intro X Y S f g hf hg
-  let 𝒰 : ∀ i, ((S.affine_cover.pullback_cover (f ≫ g)).obj i).OpenCover := by
+  let 𝒰 : ∀ i, ((S.affine_cover.pullback_cover (f ≫ g)).obj i).OpenCover :=
+    by
     intro i
     refine' Scheme.open_cover.bind _ fun i => Scheme.affine_cover _
     apply

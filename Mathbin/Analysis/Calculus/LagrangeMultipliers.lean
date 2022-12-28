@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.lagrange_multipliers
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,10 +45,12 @@ at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, an
 a complete space, then the linear map `x ↦ (f' x, φ' x)` is not surjective. -/
 theorem IsLocalExtrOn.range_ne_top_of_has_strict_fderiv_at
     (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
-    (hφ' : HasStrictFderivAt φ φ' x₀) : LinearMap.range (f'.Prod φ') ≠ ⊤ := by
+    (hφ' : HasStrictFderivAt φ φ' x₀) : LinearMap.range (f'.Prod φ') ≠ ⊤ :=
+  by
   intro htop
   set fφ := fun x => (f x, φ x)
-  have A : map φ (𝓝[f ⁻¹' {f x₀}] x₀) = 𝓝 (φ x₀) := by
+  have A : map φ (𝓝[f ⁻¹' {f x₀}] x₀) = 𝓝 (φ x₀) :=
+    by
     change map (Prod.snd ∘ fφ) (𝓝[fφ ⁻¹' { p | p.1 = f x₀ }] x₀) = 𝓝 (φ x₀)
     rw [← map_map, nhdsWithin, map_inf_principal_preimage, (hf'.prod hφ').map_nhds_eq_of_surj htop]
     exact map_snd_nhds_within _
@@ -63,7 +65,8 @@ a complete space, then there exist `Λ : dual ℝ F` and `Λ₀ : ℝ` such that
 theorem IsLocalExtrOn.exists_linear_map_of_has_strict_fderiv_at
     (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
     (hφ' : HasStrictFderivAt φ φ' x₀) :
-    ∃ (Λ : Module.Dual ℝ F)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 := by
+    ∃ (Λ : Module.Dual ℝ F)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 :=
+  by
   rcases Submodule.exists_le_ker_of_lt_top _
       (lt_top_iff_ne_top.2 <| hextr.range_ne_top_of_has_strict_fderiv_at hf' hφ') with
     ⟨Λ', h0, hΛ'⟩
@@ -87,7 +90,8 @@ at `x₀`, and both `f : E → ℝ` and `φ` are strictly differentiable at `x�
 `a b : ℝ` such that `(a, b) ≠ 0` and `a • f' + b • φ' = 0`. -/
 theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at_1d {f : E → ℝ} {f' : E →L[ℝ] ℝ}
     (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
-    (hφ' : HasStrictFderivAt φ φ' x₀) : ∃ a b : ℝ, (a, b) ≠ 0 ∧ a • f' + b • φ' = 0 := by
+    (hφ' : HasStrictFderivAt φ φ' x₀) : ∃ a b : ℝ, (a, b) ≠ 0 ∧ a • f' + b • φ' = 0 :=
+  by
   obtain ⟨Λ, Λ₀, hΛ, hfΛ⟩ := hextr.exists_linear_map_of_has_strict_fderiv_at hf' hφ'
   refine' ⟨Λ 1, Λ₀, _, _⟩
   · contrapose! hΛ
@@ -113,7 +117,8 @@ states `¬linear_independent ℝ _` instead of existence of `Λ` and `Λ₀`. -/
 theorem IsLocalExtrOn.exists_multipliers_of_has_strict_fderiv_at {ι : Type _} [Fintype ι]
     {f : ι → E → ℝ} {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
-    ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 := by
+    ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 :=
+  by
   letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀
   · simpa only [Function.funext_iff] using hextr
@@ -139,7 +144,8 @@ that states existence of Lagrange multipliers `Λ` and `Λ₀` instead of using
 theorem IsLocalExtrOn.linear_dependent_of_has_strict_fderiv_at {ι : Type _} [Finite ι]
     {f : ι → E → ℝ} {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
     (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
-    ¬LinearIndependent ℝ (Option.elim' φ' f' : Option ι → E →L[ℝ] ℝ) := by
+    ¬LinearIndependent ℝ (Option.elim' φ' f' : Option ι → E →L[ℝ] ℝ) :=
+  by
   cases nonempty_fintype ι
   rw [Fintype.linear_independent_iff]; push_neg
   rcases hextr.exists_multipliers_of_has_strict_fderiv_at hf' hφ' with ⟨Λ, Λ₀, hΛ, hΛf⟩

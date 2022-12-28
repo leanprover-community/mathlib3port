@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.taylor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,8 +35,8 @@ open Polynomial
 variable {R : Type _} [Semiring R] (r : R) (f : R[X])
 
 /-- The Taylor expansion of a polynomial `f` at `r`. -/
-def taylor (r : R) : R[X] →ₗ[R]
-      R[X] where 
+def taylor (r : R) : R[X] →ₗ[R] R[X]
+    where
   toFun f := f.comp (X + c r)
   map_add' f g := add_comp
   map_smul' c f := by simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply]
@@ -55,7 +55,8 @@ theorem taylor_C (x : R) : taylor r (c x) = c x := by simp only [taylor_apply, C
 #align polynomial.taylor_C Polynomial.taylor_C
 
 @[simp]
-theorem taylor_zero' : taylor (0 : R) = LinearMap.id := by
+theorem taylor_zero' : taylor (0 : R) = LinearMap.id :=
+  by
   ext
   simp only [taylor_apply, add_zero, comp_X, _root_.map_zero, LinearMap.id_comp,
     Function.comp_apply, LinearMap.coe_comp]
@@ -75,7 +76,8 @@ theorem taylor_monomial (i : ℕ) (k : R) : taylor r (monomial i k) = c k * (X +
 
 /-- The `k`th coefficient of `polynomial.taylor r f` is `(polynomial.hasse_deriv k f).eval r`. -/
 theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasseDeriv n f).eval r :=
-  show (lcoeff R n).comp (taylor r) f = (leval r).comp (hasseDeriv n) f by
+  show (lcoeff R n).comp (taylor r) f = (leval r).comp (hasseDeriv n) f
+    by
     congr 1; clear f; ext i
     simp only [leval_apply, mul_one, one_mul, eval_monomial, LinearMap.comp_apply, coeff_C_mul,
       hasse_deriv_monomial, taylor_apply, monomial_comp, C_1, (commute_X (C r)).add_pow i,
@@ -97,7 +99,8 @@ theorem taylor_coeff_one : (taylor r f).coeff 1 = f.derivative.eval r := by
 #align polynomial.taylor_coeff_one Polynomial.taylor_coeff_one
 
 @[simp]
-theorem nat_degree_taylor (p : R[X]) (r : R) : natDegree (taylor r p) = natDegree p := by
+theorem nat_degree_taylor (p : R[X]) (r : R) : natDegree (taylor r p) = natDegree p :=
+  by
   refine' map_nat_degree_eq_nat_degree _ _
   nontriviality R
   intro n c c0
@@ -129,7 +132,8 @@ theorem taylor_eval_sub {R} [CommRing R] (r : R) (f : R[X]) (s : R) :
     (taylor r f).eval (s - r) = f.eval s := by rw [taylor_eval, sub_add_cancel]
 #align polynomial.taylor_eval_sub Polynomial.taylor_eval_sub
 
-theorem taylor_injective {R} [CommRing R] (r : R) : Function.Injective (taylor r) := by
+theorem taylor_injective {R} [CommRing R] (r : R) : Function.Injective (taylor r) :=
+  by
   intro f g h
   apply_fun taylor (-r)  at h
   simpa only [taylor_apply, comp_assoc, add_comp, X_comp, C_comp, C_neg, neg_add_cancel_right,
@@ -137,7 +141,8 @@ theorem taylor_injective {R} [CommRing R] (r : R) : Function.Injective (taylor r
 #align polynomial.taylor_injective Polynomial.taylor_injective
 
 theorem eq_zero_of_hasse_deriv_eq_zero {R} [CommRing R] (f : R[X]) (r : R)
-    (h : ∀ k, (hasseDeriv k f).eval r = 0) : f = 0 := by
+    (h : ∀ k, (hasseDeriv k f).eval r = 0) : f = 0 :=
+  by
   apply taylor_injective r
   rw [LinearMap.map_zero]
   ext k

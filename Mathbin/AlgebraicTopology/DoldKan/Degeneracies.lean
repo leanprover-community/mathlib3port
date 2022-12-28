@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.degeneracies
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
     HigherFacesVanish q
       (φ ≫
         X.σ ⟨b, by simpa only [hnbq, Nat.lt_succ_iff, le_add_iff_nonneg_right] using zero_le q⟩) :=
-  fun j hj => by
+  fun j hj =>
+  by
   rw [assoc, simplicial_object.δ_comp_σ_of_gt', Fin.pred_succ, v.comp_δ_eq_zero_assoc _ _ hj,
     zero_comp]
   · intro hj'
@@ -57,7 +58,8 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
   algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
 theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
-    X.σ i ≫ (p q).f (n + 1) = 0 := by
+    X.σ i ≫ (p q).f (n + 1) = 0 :=
+  by
   induction' q with q hq generalizing i hi
   · exfalso
     have h := Fin.is_lt i
@@ -66,7 +68,8 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
     · unfold P
       simp only [HomologicalComplex.comp_f, ← assoc]
       rw [hq i h, zero_comp]
-    · have hi' : n = (i : ℕ) + q := by
+    · have hi' : n = (i : ℕ) + q :=
+        by
         cases' le_iff_exists_add.mp hi with j hj
         rw [← Nat.lt_succ_iff, Nat.succ_eq_add_one, add_assoc, hj, not_lt, add_le_iff_nonpos_right,
           nonpos_iff_eq_zero] at h
@@ -104,7 +107,8 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
           simp only [Nat.succ_eq_add_one] at hi'
           obtain ⟨k, hk⟩ := Nat.le.dest (nat.lt_succ_iff.mp (Fin.is_lt j))
           rw [add_comm] at hk
-          have hi'' : i = Fin.castSucc ⟨i, by linarith⟩ := by
+          have hi'' : i = Fin.castSucc ⟨i, by linarith⟩ :=
+            by
             ext
             simp only [Fin.cast_succ_mk, Fin.eta]
           have eq :=
@@ -121,14 +125,16 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
 
 @[simp, reassoc.1]
 theorem σ_comp_P_infty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
-    X.σ i ≫ pInfty.f (n + 1) = 0 := by
+    X.σ i ≫ pInfty.f (n + 1) = 0 :=
+  by
   rw [P_infty_f, σ_comp_P_eq_zero X i]
   simp only [le_add_iff_nonneg_left, zero_le]
 #align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_P_infty
 
 @[reassoc.1]
 theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
-    (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ pInfty.f n = 0 := by
+    (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ pInfty.f n = 0 :=
+  by
   rw [SimplexCategory.mono_iff_injective] at hθ
   cases n
   · exfalso

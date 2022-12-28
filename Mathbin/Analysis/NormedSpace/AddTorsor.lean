@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,8 @@ variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace �
 open AffineMap
 
 theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
-    IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) := by
+    IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) :=
+  by
   rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩); · simp [is_closed_singleton]
   rw [← (Isometric.vaddConst x).toHomeomorph.symm.is_closed_image,
     AffineSubspace.coe_direction_eq_vsub_set_right hx]
@@ -59,7 +60,8 @@ theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) :
 
 @[simp]
 theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
-    dist (lineMap p₁ p₂ c₁) (lineMap p₁ p₂ c₂) = dist c₁ c₂ * dist p₁ p₂ := by
+    dist (lineMap p₁ p₂ c₁) (lineMap p₁ p₂ c₂) = dist c₁ c₂ * dist p₁ p₂ :=
+  by
   rw [dist_comm p₁ p₂]
   simp only [line_map_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul,
     vsub_eq_sub]
@@ -128,7 +130,8 @@ theorem dist_right_midpoint (p₁ p₂ : P) : dist p₂ (midpoint 𝕜 p₁ p₂
 #align dist_right_midpoint dist_right_midpoint
 
 theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
-    dist (midpoint 𝕜 p₁ p₂) (midpoint 𝕜 p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / ‖(2 : 𝕜)‖ := by
+    dist (midpoint 𝕜 p₁ p₂) (midpoint 𝕜 p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / ‖(2 : 𝕜)‖ :=
+  by
   rw [dist_eq_norm_vsub V, dist_eq_norm_vsub V, dist_eq_norm_vsub V, midpoint_vsub_midpoint] <;>
     try infer_instance
   rw [midpoint_eq_smul_add, norm_smul, invOf_eq_inv, norm_inv, ← div_eq_inv_mul]
@@ -151,7 +154,8 @@ theorem antilipschitzWithLineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
 variable (𝕜)
 
 theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy : y ∈ interior s) :
-    ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s := by
+    ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s :=
+  by
   rw [(NormedAddCommGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
   cases' eq_or_ne y x with h h
   · use 1
@@ -165,8 +169,10 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
 #align eventually_homothety_mem_of_mem_interior eventually_homothety_mem_of_mem_interior
 
 theorem eventually_homothety_image_subset_of_finite_subset_interior (x : Q) {s : Set Q} {t : Set Q}
-    (ht : t.Finite) (h : t ⊆ interior s) : ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ '' t ⊆ s := by
-  suffices ∀ y ∈ t, ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s by
+    (ht : t.Finite) (h : t ⊆ interior s) : ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ '' t ⊆ s :=
+  by
+  suffices ∀ y ∈ t, ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s
+    by
     simp_rw [Set.image_subset_iff]
     exact (Filter.eventually_all_finite ht).mpr this
   intro y hy

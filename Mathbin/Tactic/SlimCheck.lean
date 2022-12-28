@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.slim_check
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -214,11 +214,12 @@ Options:
   the proposition
 * `set_option trace.slim_check.success true`: print the tested samples that satisfy a property
 -/
-unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
+unsafe def slim_check (cfg : SlimCheckCfg := { }) : tactic Unit := do
   let tgt ← retrieve <| tactic.revert_all >> target
   let tgt' := tactic.add_decorations tgt
   let cfg :=
-    { cfg with
+    {
+      cfg with
       traceDiscarded := cfg.traceDiscarded || is_trace_enabled_for `slim_check.discarded
       traceShrink := cfg.traceShrink || is_trace_enabled_for `slim_check.shrink.steps
       traceShrinkCandidates :=

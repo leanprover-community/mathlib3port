@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module algebra.char_p.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ theorem CharP.add_order_of_one (R) [Semiring R] : CharP R (addOrderOf (1 : R)) :
 #align char_p.add_order_of_one CharP.add_order_of_one
 
 theorem CharP.int_cast_eq_zero_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a : ℤ) :
-    (a : R) = 0 ↔ (p : ℤ) ∣ a := by
+    (a : R) = 0 ↔ (p : ℤ) ∣ a :=
+  by
   rcases lt_trichotomy a 0 with (h | rfl | h)
   · rw [← neg_eq_zero, ← Int.cast_neg, ← dvd_neg]
     lift -a to ℕ using neg_nonneg.mpr (le_of_lt h) with b
@@ -162,13 +163,14 @@ theorem Nat.cast_ring_char : (ringChar R : R) = 0 := by rw [ringChar.spec]
 end ringChar
 
 theorem add_pow_char_of_commute [Semiring R] {p : ℕ} [Fact p.Prime] [CharP R p] (x y : R)
-    (h : Commute x y) : (x + y) ^ p = x ^ p + y ^ p := by
+    (h : Commute x y) : (x + y) ^ p = x ^ p + y ^ p :=
+  by
   rw [Commute.add_pow h, Finset.sum_range_succ_comm, tsub_self, pow_zero, Nat.choose_self]
   rw [Nat.cast_one, mul_one, mul_one]; congr 1
   convert Finset.sum_eq_single 0 _ _
   · simp only [mul_one, one_mul, Nat.choose_zero_right, tsub_zero, Nat.cast_one, pow_zero]
   · intro b h1 h2
-    suffices (p.choose b : R) = 0 by 
+    suffices (p.choose b : R) = 0 by
       rw [this]
       simp
     rw [CharP.cast_eq_zero_iff R p]
@@ -181,20 +183,23 @@ theorem add_pow_char_of_commute [Semiring R] {p : ℕ} [Fact p.Prime] [CharP R p
 #align add_pow_char_of_commute add_pow_char_of_commute
 
 theorem add_pow_char_pow_of_commute [Semiring R] {p : ℕ} [Fact p.Prime] [CharP R p] {n : ℕ}
-    (x y : R) (h : Commute x y) : (x + y) ^ p ^ n = x ^ p ^ n + y ^ p ^ n := by
+    (x y : R) (h : Commute x y) : (x + y) ^ p ^ n = x ^ p ^ n + y ^ p ^ n :=
+  by
   induction n; · simp
   rw [pow_succ', pow_mul, pow_mul, pow_mul, n_ih]
   apply add_pow_char_of_commute; apply Commute.pow_pow h
 #align add_pow_char_pow_of_commute add_pow_char_pow_of_commute
 
 theorem sub_pow_char_of_commute [Ring R] {p : ℕ} [Fact p.Prime] [CharP R p] (x y : R)
-    (h : Commute x y) : (x - y) ^ p = x ^ p - y ^ p := by
+    (h : Commute x y) : (x - y) ^ p = x ^ p - y ^ p :=
+  by
   rw [eq_sub_iff_add_eq, ← add_pow_char_of_commute _ _ _ (Commute.sub_left h rfl)]
   simp; repeat' infer_instance
 #align sub_pow_char_of_commute sub_pow_char_of_commute
 
 theorem sub_pow_char_pow_of_commute [Ring R] {p : ℕ} [Fact p.Prime] [CharP R p] {n : ℕ} (x y : R)
-    (h : Commute x y) : (x - y) ^ p ^ n = x ^ p ^ n - y ^ p ^ n := by
+    (h : Commute x y) : (x - y) ^ p ^ n = x ^ p ^ n - y ^ p ^ n :=
+  by
   induction n; · simp
   rw [pow_succ', pow_mul, pow_mul, pow_mul, n_ih]
   apply sub_pow_char_of_commute; apply Commute.pow_pow h
@@ -224,8 +229,9 @@ theorem eq_iff_modeq_int [Ring R] (p : ℕ) [CharP R p] (a b : ℤ) : (a : R) = 
   rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modeq_iff_dvd]
 #align eq_iff_modeq_int eq_iff_modeq_int
 
-theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1 : R) ≠ (1 : R) := by
-  suffices (2 : R) ≠ 0 by 
+theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1 : R) ≠ (1 : R) :=
+  by
+  suffices (2 : R) ≠ 0 by
     symm
     rw [Ne.def, ← sub_eq_zero, sub_neg_eq_add]
     exact this
@@ -238,14 +244,14 @@ theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1
 #align char_p.neg_one_ne_one CharP.neg_one_ne_one
 
 theorem CharP.neg_one_pow_char [CommRing R] (p : ℕ) [CharP R p] [Fact p.Prime] :
-    (-1 : R) ^ p = -1 := by 
+    (-1 : R) ^ p = -1 := by
   rw [eq_neg_iff_add_eq_zero]
   nth_rw 2 [← one_pow p]
   rw [← add_pow_char, add_left_neg, zero_pow (Fact.out (Nat.Prime p)).Pos]
 #align char_p.neg_one_pow_char CharP.neg_one_pow_char
 
 theorem CharP.neg_one_pow_char_pow [CommRing R] (p n : ℕ) [CharP R p] [Fact p.Prime] :
-    (-1 : R) ^ p ^ n = -1 := by 
+    (-1 : R) ^ p ^ n = -1 := by
   rw [eq_neg_iff_add_eq_zero]
   nth_rw 2 [← one_pow (p ^ n)]
   rw [← add_pow_char_pow, add_left_neg, zero_pow (pow_pos (Fact.out (Nat.Prime p)).Pos _)]
@@ -264,7 +270,7 @@ variable [CommSemiring R] {S : Type v} [CommSemiring S] (f : R →* S) (g : R �
   [Fact p.Prime] [CharP R p] [CharP S p] (x y : R)
 
 /-- The frobenius map that sends x to x^p -/
-def frobenius : R →+* R where 
+def frobenius : R →+* R where
   toFun x := x ^ p
   map_one' := one_pow p
   map_mul' x y := mul_pow x y p
@@ -278,7 +284,8 @@ theorem frobenius_def : frobenius R p x = x ^ p :=
   rfl
 #align frobenius_def frobenius_def
 
-theorem iterate_frobenius (n : ℕ) : (frobenius R p^[n]) x = x ^ p ^ n := by
+theorem iterate_frobenius (n : ℕ) : (frobenius R p^[n]) x = x ^ p ^ n :=
+  by
   induction n; · simp
   rw [Function.iterate_succ', pow_succ', pow_mul, Function.comp_apply, frobenius_def, n_ih]
 #align iterate_frobenius iterate_frobenius
@@ -370,7 +377,8 @@ end CommRing
 end frobenius
 
 theorem frobenius_inj [CommRing R] [IsReduced R] (p : ℕ) [Fact p.Prime] [CharP R p] :
-    Function.Injective (frobenius R p) := fun x h H => by
+    Function.Injective (frobenius R p) := fun x h H =>
+  by
   rw [← sub_eq_zero] at H⊢
   rw [← frobenius_sub] at H
   exact IsReduced.eq_zero _ ⟨_, H⟩
@@ -379,7 +387,7 @@ theorem frobenius_inj [CommRing R] [IsReduced R] (p : ℕ) [Fact p.Prime] [CharP
 /-- If `ring_char R = 2`, where `R` is a finite reduced commutative ring,
 then every `a : R` is a square. -/
 theorem is_square_of_char_two' {R : Type _} [Finite R] [CommRing R] [IsReduced R] [CharP R 2]
-    (a : R) : IsSquare a := by 
+    (a : R) : IsSquare a := by
   cases nonempty_fintype R
   exact
     Exists.imp (fun b h => pow_two b ▸ Eq.symm h)
@@ -404,7 +412,8 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
 #align char_p.cast_eq_mod CharP.cast_eq_mod
 
 /-- The characteristic of a finite ring cannot be zero. -/
-theorem char_ne_zero_of_finite (p : ℕ) [CharP R p] [Finite R] : p ≠ 0 := by
+theorem char_ne_zero_of_finite (p : ℕ) [CharP R p] [Finite R] : p ≠ 0 :=
+  by
   rintro rfl
   haveI : CharZero R := char_p_to_char_zero R
   cases nonempty_fintype R
@@ -423,7 +432,8 @@ variable [CommRing R] [IsReduced R] {R}
 
 @[simp]
 theorem pow_prime_pow_mul_eq_one_iff (p k m : ℕ) [Fact p.Prime] [CharP R p] (x : R) :
-    x ^ (p ^ k * m) = 1 ↔ x ^ m = 1 := by
+    x ^ (p ^ k * m) = 1 ↔ x ^ m = 1 :=
+  by
   induction' k with k hk
   · rw [pow_zero, one_mul]
   · refine' ⟨fun h => _, fun h => _⟩
@@ -520,7 +530,8 @@ theorem false_of_nontrivial_of_char_one [Nontrivial R] [CharP R 1] : False :=
   false_of_nontrivial_of_subsingleton R
 #align char_p.false_of_nontrivial_of_char_one CharP.false_of_nontrivial_of_char_one
 
-theorem ring_char_ne_one [Nontrivial R] : ringChar R ≠ 1 := by
+theorem ring_char_ne_one [Nontrivial R] : ringChar R ≠ 1 :=
+  by
   intro h
   apply zero_ne_one' R
   symm
@@ -546,7 +557,8 @@ section
 /-- We have `2 ≠ 0` in a nontrivial ring whose characteristic is not `2`. -/
 @[protected]
 theorem Ring.two_ne_zero {R : Type _} [NonAssocSemiring R] [Nontrivial R] (hR : ringChar R ≠ 2) :
-    (2 : R) ≠ 0 := by
+    (2 : R) ≠ 0 :=
+  by
   rw [Ne.def, (by norm_cast : (2 : R) = (2 : ℕ)), ringChar.spec, Nat.dvd_prime Nat.prime_two]
   exact mt (or_iff_left hR).mp CharP.ring_char_ne_one
 #align ring.two_ne_zero Ring.two_ne_zero
@@ -576,7 +588,9 @@ variable (R) [NonAssocRing R] [Fintype R] (n : ℕ)
 
 theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0 → i = 0) :
     CharP R n :=
-  { cast_eq_zero_iff := by
+  {
+    cast_eq_zero_iff :=
+      by
       have H : (n : R) = 0 := by rw [← hn, CharP.cast_card_eq_zero]
       intro k
       constructor
@@ -591,12 +605,13 @@ theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i < n, (i : R) = 0
 #align char_p_of_ne_zero char_p_of_ne_zero
 
 theorem char_p_of_prime_pow_injective (R) [Ring R] [Fintype R] (p : ℕ) [hp : Fact p.Prime] (n : ℕ)
-    (hn : Fintype.card R = p ^ n) (hR : ∀ i ≤ n, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) := by
+    (hn : Fintype.card R = p ^ n) (hR : ∀ i ≤ n, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) :=
+  by
   obtain ⟨c, hc⟩ := CharP.exists R
   skip
   have hcpn : c ∣ p ^ n := by rw [← CharP.cast_eq_zero_iff R c, ← hn, CharP.cast_card_eq_zero]
   obtain ⟨i, hi, hc⟩ : ∃ i ≤ n, c = p ^ i := by rwa [Nat.dvd_prime_pow hp.1] at hcpn
-  obtain rfl : i = n := by 
+  obtain rfl : i = n := by
     apply hR i hi
     rw [← Nat.cast_pow, ← hc, CharP.cast_eq_zero]
   rwa [← hc]
@@ -610,10 +625,8 @@ variable (S : Type v) [Semiring R] [Semiring S] (p q : ℕ) [CharP R p]
 
 /-- The characteristic of the product of rings is the least common multiple of the
 characteristics of the two rings. -/
-instance [CharP S q] :
-    CharP (R × S)
-      (Nat.lcm p
-        q) where cast_eq_zero_iff := by
+instance [CharP S q] : CharP (R × S) (Nat.lcm p q)
+    where cast_eq_zero_iff := by
     simp [Prod.ext_iff, CharP.cast_eq_zero_iff R p, CharP.cast_eq_zero_iff S q, Nat.lcm_dvd_iff]
 
 /-- The characteristic of the product of two rings of the same characteristic
@@ -628,13 +641,15 @@ section
 /-- If two integers from `{0, 1, -1}` result in equal elements in a ring `R`
 that is nontrivial and of characteristic not `2`, then they are equal. -/
 theorem Int.cast_inj_on_of_ring_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R]
-    (hR : ringChar R ≠ 2) : ({0, 1, -1} : Set ℤ).InjOn (coe : ℤ → R) := by
+    (hR : ringChar R ≠ 2) : ({0, 1, -1} : Set ℤ).InjOn (coe : ℤ → R) :=
+  by
   intro a ha b hb h
   apply eq_of_sub_eq_zero
   by_contra hf
   change a = 0 ∨ a = 1 ∨ a = -1 at ha
   change b = 0 ∨ b = 1 ∨ b = -1 at hb
-  have hh : a - b = 1 ∨ b - a = 1 ∨ a - b = 2 ∨ b - a = 2 := by
+  have hh : a - b = 1 ∨ b - a = 1 ∨ a - b = 2 ∨ b - a = 2 :=
+    by
     rcases ha with (ha | ha | ha) <;> rcases hb with (hb | hb | hb)
     pick_goal 5
     pick_goal 9

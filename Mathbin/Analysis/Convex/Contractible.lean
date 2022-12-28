@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.contractible
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,8 @@ variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [HasC
 
 /-- A non-empty star convex set is a contractible space. -/
 protected theorem StarConvex.contractible_space (h : StarConvex ℝ x s) (hne : s.Nonempty) :
-    ContractibleSpace s := by
+    ContractibleSpace s :=
+  by
   refine'
     (contractible_iff_id_nullhomotopic _).2
       ⟨⟨x, h.mem hne⟩, ⟨⟨⟨fun p => ⟨p.1.1 • x + (1 - p.1.1) • p.2, _⟩, _⟩, fun x => _, fun x => _⟩⟩⟩

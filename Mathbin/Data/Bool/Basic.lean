@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.bool.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -511,7 +511,7 @@ Case conversion may be inaccurate. Consider using '#align bool.bnot_inj Bool.not
 theorem not_inj : ∀ {a b : Bool}, !a = !b → a = b := by decide
 #align bool.bnot_inj Bool.not_inj
 
-instance : LinearOrder Bool where 
+instance : LinearOrder Bool where
   le a b := a = ff ∨ b = tt
   le_refl := by decide
   le_trans := by decide
@@ -520,12 +520,12 @@ instance : LinearOrder Bool where
   decidableLe := inferInstance
   DecidableEq := inferInstance
   max := or
-  max_def := by 
+  max_def := by
     funext x y
     revert x y
     exact by decide
   min := and
-  min_def := by 
+  min_def := by
     funext x y
     revert x y
     exact by decide
@@ -605,7 +605,8 @@ def ofNat (n : ℕ) : Bool :=
 #align bool.of_nat Bool.ofNat
 -/
 
-theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m := by
+theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
+  by
   simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
   · subst m
     have h := le_antisymm h (Nat.zero_le _)
@@ -625,7 +626,8 @@ theorem of_nat_to_nat (b : Bool) : ofNat (toNat b) = b := by
 #print Bool.injective_iff /-
 @[simp]
 theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔ f false ≠ f true :=
-  ⟨fun Hinj Heq => ff_ne_tt (Hinj Heq), fun H x y hxy => by
+  ⟨fun Hinj Heq => ff_ne_tt (Hinj Heq), fun H x y hxy =>
+    by
     cases x <;> cases y
     exacts[rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩
 #align bool.injective_iff Bool.injective_iff

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.hull
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,9 +44,10 @@ variable (𝕜) [AddCommMonoid E] [AddCommMonoid F] [Module 𝕜 E] [Module 𝕜
 /-- The convex hull of a set `s` is the minimal convex set that includes `s`. -/
 def convexHull : ClosureOperator (Set E) :=
   ClosureOperator.mk₃ (fun s => ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t) (Convex 𝕜)
-    (fun s => Set.subset_Inter fun t => Set.subset_Inter fun hst => Set.subset_Inter fun ht => hst)
+    (fun s =>
+      Set.subset_interᵢ fun t => Set.subset_interᵢ fun hst => Set.subset_interᵢ fun ht => hst)
     (fun s => convex_Inter fun t => convex_Inter fun ht => convex_Inter id) fun s t hst ht =>
-    Set.Inter_subset_of_subset t <| Set.Inter_subset_of_subset hst <| Set.Inter_subset _ ht
+    Set.interᵢ_subset_of_subset t <| Set.interᵢ_subset_of_subset hst <| Set.interᵢ_subset _ ht
 #align convex_hull convexHull
 
 variable (s : Set E)
@@ -97,7 +98,8 @@ theorem convex_hull_empty : convexHull 𝕜 (∅ : Set E) = ∅ :=
 #align convex_hull_empty convex_hull_empty
 
 @[simp]
-theorem convex_hull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ := by
+theorem convex_hull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ :=
+  by
   constructor
   · intro h
     rw [← Set.subset_empty_iff, ← h]
@@ -107,7 +109,8 @@ theorem convex_hull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ := by
 #align convex_hull_empty_iff convex_hull_empty_iff
 
 @[simp]
-theorem convex_hull_nonempty_iff : (convexHull 𝕜 s).Nonempty ↔ s.Nonempty := by
+theorem convex_hull_nonempty_iff : (convexHull 𝕜 s).Nonempty ↔ s.Nonempty :=
+  by
   rw [nonempty_iff_ne_empty, nonempty_iff_ne_empty, Ne.def, Ne.def]
   exact not_congr convex_hull_empty_iff
 #align convex_hull_nonempty_iff convex_hull_nonempty_iff
@@ -126,7 +129,8 @@ theorem convex_hull_singleton (x : E) : convexHull 𝕜 ({x} : Set E) = {x} :=
 #align convex_hull_singleton convex_hull_singleton
 
 @[simp]
-theorem convex_hull_pair (x y : E) : convexHull 𝕜 {x, y} = segment 𝕜 x y := by
+theorem convex_hull_pair (x y : E) : convexHull 𝕜 {x, y} = segment 𝕜 x y :=
+  by
   refine'
     (convex_hull_min _ <| convex_segment _ _).antisymm
       (segment_subset_convex_hull (mem_insert _ _) <| mem_insert_of_mem _ <| mem_singleton _)
@@ -145,7 +149,8 @@ theorem convex_hull_convex_hull_union_right (s t : Set E) :
 #align convex_hull_convex_hull_union_right convex_hull_convex_hull_union_right
 
 theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Convex 𝕜 s) (x : E) :
-    Convex 𝕜 (s \ {x}) ↔ x ∉ convexHull 𝕜 (s \ {x}) := by
+    Convex 𝕜 (s \ {x}) ↔ x ∉ convexHull 𝕜 (s \ {x}) :=
+  by
   constructor
   · rintro hsx hx
     rw [hsx.convex_hull_eq] at hx
@@ -154,7 +159,8 @@ theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Co
   suffices h : s \ {x} = convexHull 𝕜 (s \ {x}); · convert convex_convex_hull 𝕜 _
   exact
     subset.antisymm (subset_convex_hull 𝕜 _) fun y hy =>
-      ⟨convex_hull_min (diff_subset _ _) hs hy, by
+      ⟨convex_hull_min (diff_subset _ _) hs hy,
+        by
         rintro (rfl : y = x)
         exact hx hy⟩
 #align
@@ -172,7 +178,7 @@ theorem IsLinearMap.convex_hull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s
 
 theorem LinearMap.convex_hull_image (f : E →ₗ[𝕜] F) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
-  f.is_linear.convex_hull_image s
+  f.isLinear.convex_hull_image s
 #align linear_map.convex_hull_image LinearMap.convex_hull_image
 
 end AddCommMonoid
@@ -198,7 +204,7 @@ section AddCommGroup
 variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] (s : Set E)
 
 theorem AffineMap.image_convex_hull (f : E →ᵃ[𝕜] F) : f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) :=
-  by 
+  by
   apply Set.Subset.antisymm
   · rw [Set.image_subset_iff]
     refine' convex_hull_min _ ((convex_convex_hull 𝕜 (⇑f '' s)).affine_preimage f)
@@ -215,13 +221,15 @@ theorem convex_hull_subset_affine_span : convexHull 𝕜 s ⊆ (affineSpan 𝕜 
 #align convex_hull_subset_affine_span convex_hull_subset_affine_span
 
 @[simp]
-theorem affine_span_convex_hull : affineSpan 𝕜 (convexHull 𝕜 s) = affineSpan 𝕜 s := by
+theorem affine_span_convex_hull : affineSpan 𝕜 (convexHull 𝕜 s) = affineSpan 𝕜 s :=
+  by
   refine' le_antisymm _ (affine_span_mono 𝕜 (subset_convex_hull 𝕜 s))
   rw [affine_span_le]
   exact convex_hull_subset_affine_span s
 #align affine_span_convex_hull affine_span_convex_hull
 
-theorem convex_hull_neg (s : Set E) : convexHull 𝕜 (-s) = -convexHull 𝕜 s := by
+theorem convex_hull_neg (s : Set E) : convexHull 𝕜 (-s) = -convexHull 𝕜 s :=
+  by
   simp_rw [← image_neg]
   exact (AffineMap.image_convex_hull _ <| -1).symm
 #align convex_hull_neg convex_hull_neg

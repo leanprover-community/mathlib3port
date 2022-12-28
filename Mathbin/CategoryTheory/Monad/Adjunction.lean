@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.adjunction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,15 +46,15 @@ namespace Adjunction
 the category `C`.
 -/
 @[simps]
-def toMonad (h : L ⊣ R) : Monad C where 
+def toMonad (h : L ⊣ R) : Monad C where
   toFunctor := L ⋙ R
   η' := h.Unit
   μ' := whiskerRight (whiskerLeft L h.counit) R
-  assoc' X := by 
+  assoc' X := by
     dsimp
     rw [← R.map_comp]
     simp
-  right_unit' X := by 
+  right_unit' X := by
     dsimp
     rw [← R.map_comp]
     simp
@@ -64,16 +64,16 @@ def toMonad (h : L ⊣ R) : Monad C where
 the category `D`.
 -/
 @[simps]
-def toComonad (h : L ⊣ R) : Comonad
-      D where 
+def toComonad (h : L ⊣ R) : Comonad D
+    where
   toFunctor := R ⋙ L
   ε' := h.counit
   δ' := whiskerRight (whiskerLeft R h.Unit) L
-  coassoc' X := by 
+  coassoc' X := by
     dsimp
     rw [← L.map_comp]
     simp
-  right_counit' X := by 
+  right_counit' X := by
     dsimp
     rw [← L.map_comp]
     simp
@@ -83,10 +83,10 @@ def toComonad (h : L ⊣ R) : Comonad
 @[simps]
 def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
   MonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy))
-    (fun X => by 
+    (fun X => by
       dsimp
       simp)
-    fun X => by 
+    fun X => by
     dsimp
     simp
 #align category_theory.adjunction.adj_to_monad_iso CategoryTheory.Adjunction.adjToMonadIso
@@ -95,10 +95,10 @@ def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
 @[simps]
 def adjToComonadIso (G : Comonad C) : G.adj.toComonad ≅ G :=
   ComonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy))
-    (fun X => by 
+    (fun X => by
       dsimp
       simp)
-    fun X => by 
+    fun X => by
     dsimp
     simp
 #align category_theory.adjunction.adj_to_comonad_iso CategoryTheory.Adjunction.adjToComonadIso
@@ -112,18 +112,18 @@ We later show that this is full when `R` is full, faithful when `R` is faithful,
 and essentially surjective when `R` is reflective.
 -/
 @[simps]
-def Monad.comparison (h : L ⊣ R) :
-    D ⥤ h.toMonad.Algebra where 
+def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra
+    where
   obj X :=
     { a := R.obj X
       a := R.map (h.counit.app X)
-      assoc' := by 
+      assoc' := by
         dsimp
         rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]
         rfl }
   map X Y f :=
     { f := R.map f
-      h' := by 
+      h' := by
         dsimp
         rw [← R.map_comp, adjunction.counit_naturality, R.map_comp] }
 #align category_theory.monad.comparison CategoryTheory.Monad.comparison
@@ -131,9 +131,8 @@ def Monad.comparison (h : L ⊣ R) :
 /-- The underlying object of `(monad.comparison R).obj X` is just `R.obj X`.
 -/
 @[simps]
-def Monad.comparisonForget (h : L ⊣ R) :
-    Monad.comparison h ⋙ h.toMonad.forget ≅
-      R where 
+def Monad.comparisonForget (h : L ⊣ R) : Monad.comparison h ⋙ h.toMonad.forget ≅ R
+    where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.monad.comparison_forget CategoryTheory.Monad.comparisonForget
@@ -142,18 +141,14 @@ theorem Monad.left_comparison (h : L ⊣ R) : L ⋙ Monad.comparison h = h.toMon
   rfl
 #align category_theory.monad.left_comparison CategoryTheory.Monad.left_comparison
 
-instance [Faithful R] (h : L ⊣ R) :
-    Faithful
-      (Monad.comparison
-        h) where map_injective' X Y f g w := R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
+instance [Faithful R] (h : L ⊣ R) : Faithful (Monad.comparison h)
+    where map_injective' X Y f g w := R.map_injective (congr_arg Monad.Algebra.Hom.f w : _)
 
-instance (T : Monad C) :
-    Full (Monad.comparison T.adj) where preimage X Y f := ⟨f.f, by simpa using f.h⟩
+instance (T : Monad C) : Full (Monad.comparison T.adj)
+    where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
-instance (T : Monad C) :
-    EssSurj
-      (Monad.comparison
-        T.adj) where mem_ess_image X :=
+instance (T : Monad C) : EssSurj (Monad.comparison T.adj)
+    where mem_ess_image X :=
     ⟨{  a := X.a
         a := X.a
         unit' := by simpa using X.unit
@@ -165,19 +160,18 @@ sending objects `X : C` to Eilenberg-Moore coalgebras for `L ⋙ R` with underly
 `L.obj X`.
 -/
 @[simps]
-def Comonad.comparison (h : L ⊣ R) :
-    C ⥤
-      h.toComonad.Coalgebra where 
+def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra
+    where
   obj X :=
     { a := L.obj X
       a := L.map (h.Unit.app X)
-      coassoc' := by 
+      coassoc' := by
         dsimp
         rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]
         rfl }
   map X Y f :=
     { f := L.map f
-      h' := by 
+      h' := by
         dsimp
         rw [← L.map_comp]
         simp }
@@ -187,8 +181,8 @@ def Comonad.comparison (h : L ⊣ R) :
 -/
 @[simps]
 def Comonad.comparisonForget {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R) :
-    Comonad.comparison h ⋙ h.toComonad.forget ≅
-      L where 
+    Comonad.comparison h ⋙ h.toComonad.forget ≅ L
+    where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.comonad.comparison_forget CategoryTheory.Comonad.comparisonForget
@@ -198,20 +192,16 @@ theorem Comonad.left_comparison (h : L ⊣ R) : R ⋙ Comonad.comparison h = h.t
 #align category_theory.comonad.left_comparison CategoryTheory.Comonad.left_comparison
 
 instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) :
-    Faithful
-      (Comonad.comparison
-        h) where map_injective' X Y f g w :=
-    L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
+    Faithful (Comonad.comparison h)
+    where map_injective' X Y f g w := L.map_injective (congr_arg Comonad.Coalgebra.Hom.f w : _)
 #align
   category_theory.comonad.comparison_faithful_of_faithful CategoryTheory.Comonad.comparison_faithful_of_faithful
 
-instance (G : Comonad C) :
-    Full (Comonad.comparison G.adj) where preimage X Y f := ⟨f.f, by simpa using f.h⟩
+instance (G : Comonad C) : Full (Comonad.comparison G.adj)
+    where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
-instance (G : Comonad C) :
-    EssSurj
-      (Comonad.comparison
-        G.adj) where mem_ess_image X :=
+instance (G : Comonad C) : EssSurj (Comonad.comparison G.adj)
+    where mem_ess_image X :=
     ⟨{  a := X.a
         a := X.a
         counit' := by simpa using X.counit
@@ -239,7 +229,8 @@ noncomputable instance (G : Comonad C) : ComonadicLeftAdjoint G.forget :=
   ⟨(Equivalence.ofFullyFaithfullyEssSurj _ : IsEquivalence (Comonad.comparison G.adj))⟩
 
 -- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
-instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofRightAdjoint R).toMonad.μ := by
+instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofRightAdjoint R).toMonad.μ :=
+  by
   dsimp
   infer_instance
 #align category_theory.μ_iso_of_reflective CategoryTheory.μ_iso_of_reflective
@@ -253,7 +244,7 @@ namespace Reflective
 instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
     IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.a) :=
   ⟨⟨X.a,
-      ⟨X.Unit, by 
+      ⟨X.Unit, by
         dsimp only [functor.id_obj]
         rw [← (adjunction.of_right_adjoint R).unit_naturality]
         dsimp only [functor.comp_obj, adjunction.to_monad_coe]
@@ -262,7 +253,8 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
         simp⟩⟩⟩
 
 instance comparison_ess_surj [Reflective R] :
-    EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) := by
+    EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) :=
+  by
   refine' ⟨fun X => ⟨(left_adjoint R).obj X.a, ⟨_⟩⟩⟩
   symm
   refine' monad.algebra.iso_mk _ _
@@ -285,8 +277,8 @@ end Reflective
 -- see Note [lower instance priority]
 /-- Any reflective inclusion has a monadic right adjoint.
     cf Prop 5.3.3 of [Riehl][riehl2017] -/
-noncomputable instance (priority := 100) monadicOfReflective [Reflective R] :
-    MonadicRightAdjoint R where eqv := Equivalence.ofFullyFaithfullyEssSurj _
+noncomputable instance (priority := 100) monadicOfReflective [Reflective R] : MonadicRightAdjoint R
+    where eqv := Equivalence.ofFullyFaithfullyEssSurj _
 #align category_theory.monadic_of_reflective CategoryTheory.monadicOfReflective
 
 end CategoryTheory

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.Module
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f 
       ∀ x : LinearMap.ker g,
         h (cokernel.π (imageToKernel _ _ w) (toKernelSubobject x)) =
           k (cokernel.π (imageToKernel _ _ w) (toKernelSubobject x))) :
-    h = k := by 
+    h = k := by
   refine' cokernel_funext fun n => _
   -- Gosh it would be nice if `equiv_rw` could directly use an isomorphism, or an enriched `≃`.
   equiv_rw(kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv  at n
@@ -58,7 +58,8 @@ abbrev toCycles {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
 
 @[ext]
 theorem cycles_ext {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} {x y : C.cycles i}
-    (w : (C.cycles i).arrow x = (C.cycles i).arrow y) : x = y := by
+    (w : (C.cycles i).arrow x = (C.cycles i).arrow y) : x = y :=
+  by
   apply_fun (C.cycles i).arrow using (ModuleCat.mono_iff_injective _).mp (cycles C i).arrow_mono
   exact w
 #align Module.cycles_ext ModuleCat.cycles_ext
@@ -67,7 +68,8 @@ attribute [local instance] concrete_category.has_coe_to_sort
 
 @[simp]
 theorem cycles_map_to_cycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom i)) :
-    (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ := by
+    (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ :=
+  by
   ext
   simp
 #align Module.cycles_map_to_cycles ModuleCat.cycles_map_to_cycles

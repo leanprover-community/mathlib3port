@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.spectrum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [NormedRing E] [StarRin
   [NormedAlgebra 𝕜 E] [CompleteSpace E]
 
 theorem unitary.spectrum_subset_circle (u : unitary E) : spectrum 𝕜 (u : E) ⊆ Metric.sphere 0 1 :=
-  by 
+  by
   nontriviality E
   refine' fun k hk => mem_sphere_zero_iff_norm.mpr (le_antisymm _ _)
   · simpa only [CstarRing.norm_coe_unitary u] using norm_le_norm_of_mem hk
@@ -64,7 +64,8 @@ variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [St
 local notation "↑ₐ" => algebraMap ℂ A
 
 theorem IsSelfAdjoint.spectral_radius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
-    spectralRadius ℂ a = ‖a‖₊ := by
+    spectralRadius ℂ a = ‖a‖₊ :=
+  by
   have hconst : tendsto (fun n : ℕ => (‖a‖₊ : ℝ≥0∞)) at_top _ := tendsto_const_nhds
   refine' tendsto_nhds_unique _ hconst
   convert
@@ -76,12 +77,13 @@ theorem IsSelfAdjoint.spectral_radius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
 #align is_self_adjoint.spectral_radius_eq_nnnorm IsSelfAdjoint.spectral_radius_eq_nnnorm
 
 theorem IsStarNormal.spectral_radius_eq_nnnorm (a : A) [IsStarNormal a] :
-    spectralRadius ℂ a = ‖a‖₊ := by
+    spectralRadius ℂ a = ‖a‖₊ :=
+  by
   refine' (Ennreal.pow_strict_mono two_ne_zero).Injective _
   have heq :
     (fun n : ℕ => (‖(a⋆ * a) ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞)) =
       (fun x => x ^ 2) ∘ fun n : ℕ => (‖a ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞) :=
-    by 
+    by
     funext
     rw [Function.comp_apply, ← rpow_nat_cast, ← rpow_mul, mul_comm, rpow_mul, rpow_nat_cast, ←
       coe_pow, sq, ← nnnorm_star_mul_self, Commute.mul_pow (star_comm_self' a), star_pow]
@@ -95,7 +97,8 @@ theorem IsStarNormal.spectral_radius_eq_nnnorm (a : A) [IsStarNormal a] :
 
 /-- Any element of the spectrum of a selfadjoint is real. -/
 theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) {z : ℂ}
-    (hz : z ∈ spectrum ℂ a) : z = z.re := by
+    (hz : z ∈ spectrum ℂ a) : z = z.re :=
+  by
   let Iu := Units.mk0 I I_ne_zero
   have : exp ℂ (I • z) ∈ spectrum ℂ (exp ℂ (I • a)) := by
     simpa only [Units.smul_def, Units.val_mk0] using
@@ -117,7 +120,8 @@ theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] (a : selfAdjoint A) {z
 /-- The spectrum of a selfadjoint is real -/
 theorem IsSelfAdjoint.coe_re_map_spectrum [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) :
     spectrum ℂ a = (coe ∘ re '' spectrum ℂ a : Set ℂ) :=
-  le_antisymm (fun z hz => ⟨z, hz, (ha.mem_spectrum_eq_re hz).symm⟩) fun z => by
+  le_antisymm (fun z hz => ⟨z, hz, (ha.mem_spectrum_eq_re hz).symm⟩) fun z =>
+    by
     rintro ⟨z, hz, rfl⟩
     simpa only [(ha.mem_spectrum_eq_re hz).symm, Function.comp_apply] using hz
 #align is_self_adjoint.coe_re_map_spectrum IsSelfAdjoint.coe_re_map_spectrum
@@ -139,7 +143,8 @@ variable {F A B : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
 include hF
 
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
-theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ := by
+theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ :=
+  by
   suffices ∀ s : A, IsSelfAdjoint s → ‖φ s‖₊ ≤ ‖s‖₊ by
     exact
       nonneg_le_nonneg_of_sq_le_sq zero_le'
@@ -182,11 +187,11 @@ include hF
 
 /-- This instance is provided instead of `star_alg_hom_class` to avoid type class inference loops.
 See note [lower instance priority] -/
-noncomputable instance (priority := 100) :
-    StarHomClass F A ℂ where 
+noncomputable instance (priority := 100) : StarHomClass F A ℂ
+    where
   coe φ := φ
   coe_injective' := FunLike.coe_injective'
-  map_star φ a := by 
+  map_star φ a := by
     suffices hsa : ∀ s : selfAdjoint A, (φ s)⋆ = φ s
     · rw [← real_part_add_I_smul_imaginary_part a]
       simp only [map_add, map_smul, star_add, star_smul, hsa, selfAdjoint.star_coe_eq]

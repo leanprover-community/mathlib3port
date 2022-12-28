@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Jesse Michael Han
 
 ! This file was ported from Lean 3 source module tactic.finish
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -470,7 +470,7 @@ private unsafe def add_hinst_lemmas_from_pexprs (md : Transparency) (lhs_lemma :
 SMT state and will repeatedly use `ematch` (using `ematch` lemmas in the environment,
 universally quantified assumptions, and the supplied lemmas `ps`) and congruence closure.
 -/
-unsafe def done (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit := do
+unsafe def done (ps : List pexpr) (cfg : AutoConfig := { }) : tactic Unit := do
   trace_state_if_enabled `auto.done "entering done"
   contradiction <|>
       solve1 do
@@ -582,7 +582,7 @@ unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : Aut
 /-- `clarify` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.at_most_one`.
 -/
-unsafe def clarify (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) :
+unsafe def clarify (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := { }) :
     tactic Unit :=
   safe_core s ps cfg CaseOption.at_most_one
 #align auto.clarify auto.clarify
@@ -590,7 +590,7 @@ unsafe def clarify (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoC
 /-- `safe` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.accept`.
 -/
-unsafe def safe (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) :
+unsafe def safe (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := { }) :
     tactic Unit :=
   safe_core s ps cfg CaseOption.accept
 #align auto.safe auto.safe
@@ -598,7 +598,7 @@ unsafe def safe (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConf
 /-- `finish` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.force`.
 -/
-unsafe def finish (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) :
+unsafe def finish (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := { }) :
     tactic Unit :=
   safe_core s ps cfg CaseOption.force
 #align auto.finish auto.finish
@@ -631,7 +631,7 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 `clarify` will fail if it produces more than one goal.
 -/
 unsafe def clarify (hs : parse simp_arg_list)
-    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := {  }) :
+    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := { }) :
     tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.clarify s (ps []) cfg
@@ -653,7 +653,7 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 `safe` ignores the number of goals it produces, and should never fail.
 -/
 unsafe def safe (hs : parse simp_arg_list)
-    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := {  }) :
+    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := { }) :
     tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.safe s (ps []) cfg
@@ -675,7 +675,7 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 `finish` will fail if it does not close the goal.
 -/
 unsafe def finish (hs : parse simp_arg_list)
-    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := {  }) :
+    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := { }) :
     tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.finish s (ps []) cfg

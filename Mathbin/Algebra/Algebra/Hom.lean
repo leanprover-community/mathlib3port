@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.hom
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,11 +70,9 @@ instance (priority := 100) {F : Type _} [AlgHomClass F R A B] : LinearMapClass F
     map_smulₛₗ := fun f r x => by
       simp only [Algebra.smul_def, map_mul, commutes, RingHom.id_apply] }
 
-instance {F : Type _} [AlgHomClass F R A B] :
-    CoeTC F
-      (A →ₐ[R]
-        B) where coe f :=
-    { (f : A →+* B) with 
+instance {F : Type _} [AlgHomClass F R A B] : CoeTC F (A →ₐ[R] B)
+    where coe f :=
+    { (f : A →+* B) with
       toFun := f
       commutes' := AlgHomClass.commutes f }
 
@@ -105,10 +103,10 @@ theorem to_fun_eq_coe (f : A →ₐ[R] B) : f.toFun = f :=
   rfl
 #align alg_hom.to_fun_eq_coe AlgHom.to_fun_eq_coe
 
-instance : AlgHomClass (A →ₐ[R] B) R A
-      B where 
+instance : AlgHomClass (A →ₐ[R] B) R A B
+    where
   coe := toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     cases f
     cases g
     congr
@@ -254,7 +252,7 @@ protected theorem map_bit1 (x) : φ (bit1 x) = bit1 (φ x) :=
 
 /-- If a `ring_hom` is `R`-linear, then it is an `alg_hom`. -/
 def mk' (f : A →+* B) (h : ∀ (c : R) (x), f (c • x) = c • f x) : A →ₐ[R] B :=
-  { f with 
+  { f with
     toFun := f
     commutes' := fun c => by simp only [Algebra.algebra_map_eq_smul_one, h, f.map_one] }
 #align alg_hom.mk' AlgHom.mk'
@@ -325,7 +323,7 @@ theorem comp_assoc (φ₁ : C →ₐ[R] D) (φ₂ : B →ₐ[R] C) (φ₃ : A �
 #align alg_hom.comp_assoc AlgHom.comp_assoc
 
 /-- R-Alg ⥤ R-Mod -/
-def toLinearMap : A →ₗ[R] B where 
+def toLinearMap : A →ₗ[R] B where
   toFun := φ
   map_add' := map_add _
   map_smul' := map_smul _
@@ -355,7 +353,7 @@ theorem to_linear_map_id : toLinearMap (AlgHom.id R A) = LinearMap.id :=
 @[simps]
 def ofLinearMap (f : A →ₗ[R] B) (map_one : f 1 = 1) (map_mul : ∀ x y, f (x * y) = f x * f y) :
     A →ₐ[R] B :=
-  { f.toAddMonoidHom with 
+  { f.toAddMonoidHom with
     toFun := f
     map_one' := map_one
     map_mul' := map_mul
@@ -364,14 +362,16 @@ def ofLinearMap (f : A →ₗ[R] B) (map_one : f 1 = 1) (map_mul : ∀ x y, f (x
 
 @[simp]
 theorem of_linear_map_to_linear_map (map_one) (map_mul) :
-    ofLinearMap φ.toLinearMap map_one map_mul = φ := by
+    ofLinearMap φ.toLinearMap map_one map_mul = φ :=
+  by
   ext
   rfl
 #align alg_hom.of_linear_map_to_linear_map AlgHom.of_linear_map_to_linear_map
 
 @[simp]
 theorem to_linear_map_of_linear_map (f : A →ₗ[R] B) (map_one) (map_mul) :
-    toLinearMap (ofLinearMap f map_one map_mul) = f := by
+    toLinearMap (ofLinearMap f map_one map_mul) = f :=
+  by
   ext
   rfl
 #align alg_hom.to_linear_map_of_linear_map AlgHom.to_linear_map_of_linear_map
@@ -392,7 +392,7 @@ theorem map_list_prod (s : List A) : φ s.Prod = (s.map φ).Prod :=
 #align alg_hom.map_list_prod AlgHom.map_list_prod
 
 @[simps (config := { attrs := [] }) mul one]
-instance end : Monoid (A →ₐ[R] A) where 
+instance end : Monoid (A →ₐ[R] A) where
   mul := comp
   mul_assoc ϕ ψ χ := rfl
   one := AlgHom.id R A
@@ -463,7 +463,7 @@ variable {R S : Type _}
 
 /-- Reinterpret a `ring_hom` as an `ℕ`-algebra homomorphism. -/
 def toNatAlgHom [Semiring R] [Semiring S] (f : R →+* S) : R →ₐ[ℕ] S :=
-  { f with 
+  { f with
     toFun := f
     commutes' := fun n => by simp }
 #align ring_hom.to_nat_alg_hom RingHom.toNatAlgHom
@@ -499,8 +499,8 @@ theorem AlgHom.to_ring_hom_to_rat_alg_hom [Ring R] [Ring S] [Algebra ℚ R] [Alg
 
 /-- The equivalence between `ring_hom` and `ℚ`-algebra homomorphisms. -/
 @[simps]
-def RingHom.equivRatAlgHom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S] :
-    (R →+* S) ≃ (R →ₐ[ℚ] S) where 
+def RingHom.equivRatAlgHom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S] : (R →+* S) ≃ (R →ₐ[ℚ] S)
+    where
   toFun := RingHom.toRatAlgHom
   invFun := AlgHom.toRingHom
   left_inv := RingHom.to_rat_alg_hom_to_ring_hom
@@ -540,7 +540,9 @@ This is a stronger version of `mul_semiring_action.to_ring_hom` and
 `distrib_mul_action.to_linear_map`. -/
 @[simps]
 def toAlgHom (m : M) : A →ₐ[R] A :=
-  { MulSemiringAction.toRingHom _ _ m with
+  {
+    MulSemiringAction.toRingHom _ _
+      m with
     toFun := fun a => m • a
     commutes' := smul_algebra_map _ }
 #align mul_semiring_action.to_alg_hom MulSemiringAction.toAlgHom

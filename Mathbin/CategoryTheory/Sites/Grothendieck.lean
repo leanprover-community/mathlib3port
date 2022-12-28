@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 
 ! This file was ported from Lean 3 source module category_theory.sites.grothendieck
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ the projection `.sieves`.
 -/
 @[ext]
 theorem ext {J₁ J₂ : GrothendieckTopology C} (h : (J₁ : ∀ X : C, Set (Sieve X)) = J₂) : J₁ = J₂ :=
-  by 
+  by
   cases J₁
   cases J₂
   congr
@@ -138,7 +138,8 @@ theorem covering_of_eq_top : S = ⊤ → S ∈ J X := fun h => h.symm ▸ J.top_
 See <https://stacks.math.columbia.edu/tag/00Z5> (2), or discussion after [MM92] Chapter III,
 Section 2, Definition 1.
 -/
-theorem superset_covering (Hss : S ≤ R) (sjx : S ∈ J X) : R ∈ J X := by
+theorem superset_covering (Hss : S ≤ R) (sjx : S ∈ J X) : R ∈ J X :=
+  by
   apply J.transitive sjx R fun Y f hf => _
   apply covering_of_eq_top
   rw [← top_le_iff, ← S.pullback_eq_top_of_mem hf]
@@ -151,7 +152,8 @@ theorem superset_covering (Hss : S ≤ R) (sjx : S ∈ J X) : R ∈ J X := by
 See <https://stacks.math.columbia.edu/tag/00Z5> (1), or [MM92] Chapter III,
 Section 2, Definition 1 (iv).
 -/
-theorem intersection_covering (rj : R ∈ J X) (sj : S ∈ J X) : R ⊓ S ∈ J X := by
+theorem intersection_covering (rj : R ∈ J X) (sj : S ∈ J X) : R ⊓ S ∈ J X :=
+  by
   apply J.transitive rj _ fun Y f Hf => _
   rw [sieve.pullback_inter, R.pullback_eq_top_of_mem Hf]
   simp [sj]
@@ -188,14 +190,15 @@ theorem covering_iff_covers_id (S : Sieve X) : S ∈ J X ↔ J.Covers S (𝟙 X)
   category_theory.grothendieck_topology.covering_iff_covers_id CategoryTheory.GrothendieckTopology.covering_iff_covers_id
 
 /-- The maximality axiom in 'arrow' form: Any arrow `f` in `S` is covered by `S`. -/
-theorem arrow_max (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f := by
+theorem arrow_max (f : Y ⟶ X) (S : Sieve X) (hf : S f) : J.Covers S f :=
+  by
   rw [covers, (sieve.pullback_eq_top_iff_mem f).1 hf]
   apply J.top_mem
 #align category_theory.grothendieck_topology.arrow_max CategoryTheory.GrothendieckTopology.arrow_max
 
 /-- The stability axiom in 'arrow' form: If `S` covers `f` then `S` covers `g ≫ f` for any `g`. -/
 theorem arrow_stable (f : Y ⟶ X) (S : Sieve X) (h : J.Covers S f) {Z : C} (g : Z ⟶ Y) :
-    J.Covers S (g ≫ f) := by 
+    J.Covers S (g ≫ f) := by
   rw [covers_iff] at h⊢
   simp [h, sieve.pullback_comp]
 #align
@@ -205,7 +208,8 @@ theorem arrow_stable (f : Y ⟶ X) (S : Sieve X) (h : J.Covers S f) {Z : C} (g :
 `R`, then `R` covers `f`.
 -/
 theorem arrow_trans (f : Y ⟶ X) (S R : Sieve X) (h : J.Covers S f) :
-    (∀ {Z : C} (g : Z ⟶ X), S g → J.Covers R g) → J.Covers R f := by
+    (∀ {Z : C} (g : Z ⟶ X), S g → J.Covers R g) → J.Covers R f :=
+  by
   intro k
   apply J.transitive h
   intro Z g hg
@@ -227,13 +231,14 @@ also known as the indiscrete, coarse, or chaotic topology.
 See [MM92] Chapter III, Section 2, example (a), or
 https://en.wikipedia.org/wiki/Grothendieck_topology#The_discrete_and_indiscrete_topologies
 -/
-def trivial : GrothendieckTopology C where 
+def trivial : GrothendieckTopology C where
   sieves X := {⊤}
   top_mem' X := rfl
-  pullback_stable' X Y S f hf := by 
+  pullback_stable' X Y S f hf := by
     rw [Set.mem_singleton_iff] at hf⊢
     simp [hf]
-  transitive' X S hS R hR := by
+  transitive' X S hS R hR :=
+    by
     rw [Set.mem_singleton_iff, ← sieve.id_mem_iff_eq_top] at hS
     simpa using hR hS
 #align category_theory.grothendieck_topology.trivial CategoryTheory.GrothendieckTopology.trivial
@@ -242,8 +247,8 @@ def trivial : GrothendieckTopology C where
 
 See https://en.wikipedia.org/wiki/Grothendieck_topology#The_discrete_and_indiscrete_topologies.
 -/
-def discrete : GrothendieckTopology
-      C where 
+def discrete : GrothendieckTopology C
+    where
   sieves X := Set.univ
   top_mem' := by simp
   pullback_stable' X Y f := by simp
@@ -258,10 +263,8 @@ theorem trivial_covering : S ∈ trivial C X ↔ S = ⊤ :=
   category_theory.grothendieck_topology.trivial_covering CategoryTheory.GrothendieckTopology.trivial_covering
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z6> -/
-instance :
-    LE
-      (GrothendieckTopology
-        C) where le J₁ J₂ := (J₁ : ∀ X : C, Set (Sieve X)) ≤ (J₂ : ∀ X : C, Set (Sieve X))
+instance : LE (GrothendieckTopology C)
+    where le J₁ J₂ := (J₁ : ∀ X : C, Set (Sieve X)) ≤ (J₂ : ∀ X : C, Set (Sieve X))
 
 theorem le_def {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ ↔ (J₁ : ∀ X : C, Set (Sieve X)) ≤ J₂ :=
   Iff.rfl
@@ -269,30 +272,30 @@ theorem le_def {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ ↔ (J₁ : 
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z6> -/
 instance : PartialOrder (GrothendieckTopology C) :=
-  { GrothendieckTopology.hasLe with
+  {
+    GrothendieckTopology.hasLe with
     le_refl := fun J₁ => le_def.mpr le_rfl
     le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃)
     le_antisymm := fun J₁ J₂ h₁₂ h₂₁ => GrothendieckTopology.ext (le_antisymm h₁₂ h₂₁) }
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
-instance :
-    InfSet
-      (GrothendieckTopology
-        C) where inf T :=
+instance : InfSet (GrothendieckTopology C)
+    where inf T :=
     { sieves := infₛ (sieves '' T)
-      top_mem' := by 
+      top_mem' := by
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         simp
-      pullback_stable' := by 
+      pullback_stable' := by
         rintro X Y S hS f _ ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         apply J.pullback_stable _ (f _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩)
-      transitive' := by 
+      transitive' := by
         rintro X S hS R h _ ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         apply
           J.transitive (hS _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩) _ fun Y f hf => h hf _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩ }
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
-theorem is_glb_Inf (s : Set (GrothendieckTopology C)) : IsGLB s (infₛ s) := by
+theorem is_glb_Inf (s : Set (GrothendieckTopology C)) : IsGLB s (infₛ s) :=
+  by
   refine' @IsGLB.of_image _ _ _ _ sieves _ _ _ _
   · intros
     rfl
@@ -305,13 +308,13 @@ definitionally equal to the bottom and top respectively.
 -/
 instance : CompleteLattice (GrothendieckTopology C) :=
   CompleteLattice.copy (completeLatticeOfInf _ is_glb_Inf) _ rfl (discrete C)
-    (by 
+    (by
       apply le_antisymm
       · exact @CompleteLattice.le_top _ (completeLatticeOfInf _ is_glb_Inf) (discrete C)
       · intro X S hS
         apply Set.mem_univ)
     (trivial C)
-    (by 
+    (by
       apply le_antisymm
       · intro X S hS
         rw [trivial_covering] at hS
@@ -361,16 +364,15 @@ theorem top_covers (S : Sieve X) (f : Y ⟶ X) : (⊤ : GrothendieckTopology C).
 
 See https://ncatlab.org/nlab/show/dense+topology, or [MM92] Chapter III, Section 2, example (e).
 -/
-def dense :
-    GrothendieckTopology
-      C where 
+def dense : GrothendieckTopology C
+    where
   sieves X S := ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f)
   top_mem' X Y f := ⟨Y, 𝟙 Y, ⟨⟩⟩
-  pullback_stable' := by 
+  pullback_stable' := by
     intro X Y S h H Z f
     rcases H (f ≫ h) with ⟨W, g, H'⟩
     exact ⟨W, g, by simpa⟩
-  transitive' := by 
+  transitive' := by
     intro X S H₁ R H₂ Y f
     rcases H₁ f with ⟨Z, g, H₃⟩
     rcases H₂ H₃ (𝟙 Z) with ⟨W, h, H₄⟩
@@ -402,17 +404,16 @@ For the pullback stability condition, we need the right Ore condition to hold.
 
 See https://ncatlab.org/nlab/show/atomic+site, or [MM92] Chapter III, Section 2, example (f).
 -/
-def atomic (hro : RightOreCondition C) :
-    GrothendieckTopology
-      C where 
+def atomic (hro : RightOreCondition C) : GrothendieckTopology C
+    where
   sieves X S := ∃ (Y : _)(f : Y ⟶ X), S f
   top_mem' X := ⟨_, 𝟙 _, ⟨⟩⟩
-  pullback_stable' := by 
+  pullback_stable' := by
     rintro X Y S h ⟨Z, f, hf⟩
     rcases hro h f with ⟨W, g, k, comm⟩
     refine' ⟨_, g, _⟩
     simp [comm, hf]
-  transitive' := by 
+  transitive' := by
     rintro X S ⟨Y, f, hf⟩ R h
     rcases h hf with ⟨Z, g, hg⟩
     exact ⟨_, _, hg⟩
@@ -451,12 +452,15 @@ theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ (f : Y ⟶ X), S f ↔ T f) : S =
 #align category_theory.grothendieck_topology.cover.ext CategoryTheory.GrothendieckTopology.Cover.ext
 
 instance : OrderTop (J.cover X) :=
-  { (inferInstance : Preorder _) with 
+  { (inferInstance : Preorder _) with
     top := ⟨⊤, J.top_mem _⟩
     le_top := fun S Y f h => by tauto }
 
 instance : SemilatticeInf (J.cover X) :=
-  { (inferInstance : Preorder _) with
+  {
+    (inferInstance :
+      Preorder
+        _) with
     inf := fun S T => ⟨S ⊓ T, J.intersection_covering S.condition T.condition⟩
     le_antisymm := fun S T h1 h2 => (ext _ _) fun Y f => ⟨h1 _, h2 _⟩
     inf_le_left := fun S T Y f hf => hf.1
@@ -596,7 +600,7 @@ def bind {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : J.cover X 
 
 /-- The canonical moprhism from `S.bind T` to `T`. -/
 def bindToBase {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : S.bind T ⟶ S :=
-  hom_of_le <| by 
+  hom_of_le <| by
     rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩
     rw [← h3]
     apply sieve.downward_closed
@@ -666,7 +670,7 @@ theorem Arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover 
 -- We place this definition here as it will be used in `sheaf.lean` as well.
 /-- To every `S : J.cover X` and presheaf `P`, associate a `multicospan_index`. -/
 def index {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D) :
-    Limits.MulticospanIndex D where 
+    Limits.MulticospanIndex D where
   L := S.arrow
   R := S.Relation
   fstTo I := I.fst
@@ -686,7 +690,7 @@ using this.
 abbrev multifork {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒᵖ ⥤ D) :
     Limits.Multifork (S.index P) :=
   Limits.Multifork.ofι _ (P.obj (Opposite.op X)) (fun I => P.map I.f.op)
-    (by 
+    (by
       intro I
       dsimp [index]
       simp only [← P.map_comp, ← op_comp, I.w])
@@ -700,7 +704,7 @@ noncomputable abbrev toMultiequalizer {D : Type w} [Category.{max v u} D] (S : J
     (P : Cᵒᵖ ⥤ D) [Limits.HasMultiequalizer (S.index P)] :
     P.obj (Opposite.op X) ⟶ Limits.multiequalizer (S.index P) :=
   Limits.multiequalizer.lift _ _ (fun I => P.map I.f.op)
-    (by 
+    (by
       intro I
       dsimp only [index, relation.fst, relation.snd]
       simp only [← P.map_comp, ← op_comp, I.w])
@@ -711,8 +715,8 @@ end Cover
 
 /-- Pull back a cover along a morphism. -/
 @[simps obj]
-def pullback (f : Y ⟶ X) :
-    J.cover X ⥤ J.cover Y where 
+def pullback (f : Y ⟶ X) : J.cover X ⥤ J.cover Y
+    where
   obj S := S.pullback f
   map S T f := (Sieve.pullback_monotone _ f.le).Hom
 #align category_theory.grothendieck_topology.pullback CategoryTheory.GrothendieckTopology.pullback

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.disjointed
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ theorem disjointed_succ (f : ℕ → α) (n : ℕ) : disjointed f (n + 1) = f (n
   rfl
 #align disjointed_succ disjointed_succ
 
-theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) := by
+theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
+  by
   rintro f n
   cases n
   · rfl
@@ -74,7 +75,8 @@ theorem disjointed_le (f : ℕ → α) : disjointed f ≤ f :=
   disjointed_le_id f
 #align disjointed_le disjointed_le
 
-theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed f) := by
+theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed f) :=
+  by
   refine' (Symmetric.pairwise_on Disjoint.symm _).2 fun m n h => _
   cases n
   · exact (Nat.not_lt_zero _ h).elim
@@ -94,7 +96,7 @@ enough to define/prove it for `f n` and being able to extend through diffs. -/
 def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i)) :
     ∀ ⦃n⦄, p (f n) → p (disjointed f n)
   | 0 => id
-  | n + 1 => fun h => by 
+  | n + 1 => fun h => by
     suffices H : ∀ k, p (f (n + 1) \ partialSups f k)
     · exact H n
     rintro k
@@ -116,7 +118,8 @@ theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
 #align monotone.disjointed_eq Monotone.disjointed_eq
 
 @[simp]
-theorem partial_sups_disjointed (f : ℕ → α) : partialSups (disjointed f) = partialSups f := by
+theorem partial_sups_disjointed (f : ℕ → α) : partialSups (disjointed f) = partialSups f :=
+  by
   ext n
   induction' n with k ih
   · rw [partial_sups_zero, partial_sups_zero, disjointed_zero]
@@ -126,7 +129,8 @@ theorem partial_sups_disjointed (f : ℕ → α) : partialSups (disjointed f) = 
 /-- `disjointed f` is the unique sequence that is pairwise disjoint and has the same partial sups
 as `f`. -/
 theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d))
-    (hsups : partialSups d = partialSups f) : d = disjointed f := by
+    (hsups : partialSups d = partialSups f) : d = disjointed f :=
+  by
   ext n
   cases n
   · rw [← partial_sups_zero d, hsups, partial_sups_zero, disjointed_zero]
@@ -153,7 +157,8 @@ theorem supr_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n 
   supr_eq_supr_of_partial_sups_eq_partial_sups (partial_sups_disjointed f)
 #align supr_disjointed supr_disjointed
 
-theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, f iᶜ := by
+theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, f iᶜ :=
+  by
   cases n
   · rw [disjointed_zero, eq_comm, inf_eq_left]
     simp_rw [le_infᵢ_iff]
@@ -182,7 +187,8 @@ theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) : disjointed f 
 #align disjointed_eq_inter_compl disjointed_eq_inter_compl
 
 theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n)
-    [∀ x n, Decidable (x ∈ s n)] (n : ℕ) : (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n := by
+    [∀ x n, Decidable (x ∈ s n)] (n : ℕ) : (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n :=
+  by
   ext x
   simp [Nat.find_eq_iff, disjointed_eq_inter_compl]
 #align preimage_find_eq_disjointed preimage_find_eq_disjointed

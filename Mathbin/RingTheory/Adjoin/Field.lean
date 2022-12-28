@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.field
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
     (∀ x ∈ s, IsIntegral F x ∧ Polynomial.Splits (algebraMap F L) (minpoly F x)) →
       Nonempty (Algebra.adjoin F (↑s : Set K) →ₐ[F] L) :=
   by
-  classical 
+  classical
     refine' Finset.induction_on s (fun H => _) fun a s has ih H => _
     · rw [coe_empty, Algebra.adjoin_empty]
       exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
@@ -74,7 +74,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
     letI := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
     haveI : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
       ((Submodule.fg_iff_finite_dimensional _).1
-          (fg_adjoin_of_finite s.finite_to_set H3)).of_subalgebra_to_submodule
+          (fgAdjoinOfFinite s.finite_to_set H3)).of_subalgebra_to_submodule
     letI := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
     have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := is_integral_of_is_scalar_tower H1
     have H6 :

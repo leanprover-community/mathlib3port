@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.finset.nat_antidiagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem antidiagonal_succ (n : ℕ) :
         ((antidiagonal n).map
           (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ (Function.Embedding.refl _)))
         (by simp) :=
-  by 
+  by
   apply eq_of_veq
   rw [cons_val, map_val]
   · apply Multiset.Nat.antidiagonal_succ
@@ -69,7 +69,7 @@ theorem antidiagonal_succ' (n : ℕ) :
         ((antidiagonal n).map
           (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩))
         (by simp) :=
-  by 
+  by
   apply eq_of_veq
   rw [cons_val, map_val]
   exact Multiset.Nat.antidiagonal_succ'
@@ -84,7 +84,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
                 ⟨Nat.succ, Nat.succ_injective⟩)) <|
           by simp)
         (by simp) :=
-  by 
+  by
   simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', Finset.map_cons, map_map]
   rfl
 #align finset.nat.antidiagonal_succ_succ' Finset.Nat.antidiagonal_succ_succ'
@@ -96,26 +96,30 @@ theorem map_swap_antidiagonal {n : ℕ} :
 
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
 theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n)
-    (hq : q ∈ antidiagonal n) : p = q ↔ p.fst = q.fst := by
+    (hq : q ∈ antidiagonal n) : p = q ↔ p.fst = q.fst :=
+  by
   refine' ⟨congr_arg Prod.fst, fun h => Prod.ext h ((add_right_inj q.fst).mp _)⟩
   rw [mem_antidiagonal] at hp hq
   rw [hq, ← h, hp]
 #align finset.nat.antidiagonal_congr Finset.Nat.antidiagonal_congr
 
-theorem antidiagonal.fst_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.1 ≤ n := by
+theorem antidiagonal.fst_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.1 ≤ n :=
+  by
   rw [le_iff_exists_add]
   use kl.2
   rwa [mem_antidiagonal, eq_comm] at hlk
 #align finset.nat.antidiagonal.fst_le Finset.Nat.antidiagonal.fst_le
 
-theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.2 ≤ n := by
+theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) : kl.2 ≤ n :=
+  by
   rw [le_iff_exists_add]
   use kl.1
   rwa [mem_antidiagonal, eq_comm, add_comm] at hlk
 #align finset.nat.antidiagonal.snd_le Finset.Nat.antidiagonal.snd_le
 
 theorem filter_fst_eq_antidiagonal (n m : ℕ) :
-    filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ := by
+    filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ :=
+  by
   ext ⟨x, y⟩
   simp only [mem_filter, nat.mem_antidiagonal]
   split_ifs with h h
@@ -126,8 +130,10 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
 #align finset.nat.filter_fst_eq_antidiagonal Finset.Nat.filter_fst_eq_antidiagonal
 
 theorem filter_snd_eq_antidiagonal (n m : ℕ) :
-    filter (fun x : ℕ × ℕ => x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ := by
-  have : (fun x : ℕ × ℕ => x.snd = m) ∘ Prod.swap = fun x : ℕ × ℕ => x.fst = m := by
+    filter (fun x : ℕ × ℕ => x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ :=
+  by
+  have : (fun x : ℕ × ℕ => x.snd = m) ∘ Prod.swap = fun x : ℕ × ℕ => x.fst = m :=
+    by
     ext
     simp
   rw [← map_swap_antidiagonal]
@@ -139,11 +145,11 @@ section EquivProd
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
     `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps]
-def sigmaAntidiagonalEquivProd :
-    (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ where 
+def sigmaAntidiagonalEquivProd : (Σn : ℕ, antidiagonal n) ≃ ℕ × ℕ
+    where
   toFun x := x.2
   invFun x := ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩
-  left_inv := by 
+  left_inv := by
     rintro ⟨n, ⟨k, l⟩, h⟩
     rw [mem_antidiagonal] at h
     exact Sigma.subtype_ext h rfl

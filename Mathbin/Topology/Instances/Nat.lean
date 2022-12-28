@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.nat
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,8 @@ theorem dist_cast_real (x y : ℕ) : dist (x : ℝ) y = dist x y :=
   rfl
 #align nat.dist_cast_real Nat.dist_cast_real
 
-theorem pairwise_one_le_dist : Pairwise fun m n : ℕ => 1 ≤ dist m n := by
+theorem pairwise_one_le_dist : Pairwise fun m n : ℕ => 1 ≤ dist m n :=
+  by
   intro m n hne
   rw [← dist_coe_int]
   apply Int.pairwise_one_le_dist
@@ -65,7 +66,8 @@ theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' closedBall (x : �
   rfl
 #align nat.preimage_closed_ball Nat.preimage_closed_ball
 
-theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
+theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ :=
+  by
   rcases le_or_lt 0 r with (hr | hr)
   · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr
@@ -73,17 +75,17 @@ theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - 
     apply (Icc_eq_empty _).symm
     rw [not_le]
     calc
-      ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by 
+      ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by
         apply floor_mono
         linarith
-      _ < ⌈↑x - r⌉₊ := by 
+      _ < ⌈↑x - r⌉₊ := by
         rw [floor_coe, Nat.lt_ceil]
         linarith
       
 #align nat.closed_ball_eq_Icc Nat.closed_ball_eq_Icc
 
 instance : ProperSpace ℕ :=
-  ⟨by 
+  ⟨by
     intro x r
     rw [closed_ball_eq_Icc]
     exact (Set.finite_Icc _ _).IsCompact⟩

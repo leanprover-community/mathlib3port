@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.bertrand
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,11 +54,13 @@ namespace Bertrand
 This is not best possible: it actually holds for 464 ≤ x.
 -/
 theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
-    x * (2 * x) ^ sqrt (2 * x) * 4 ^ (2 * x / 3) ≤ 4 ^ x := by
+    x * (2 * x) ^ sqrt (2 * x) * 4 ^ (2 * x / 3) ≤ 4 ^ x :=
+  by
   let f : ℝ → ℝ := fun x => log x + sqrt (2 * x) * log (2 * x) - log 4 / 3 * x
   have hf' : ∀ x, 0 < x → 0 < x * (2 * x) ^ sqrt (2 * x) / 4 ^ (x / 3) := fun x h =>
     div_pos (mul_pos h (rpow_pos_of_pos (mul_pos two_pos h) _)) (rpow_pos_of_pos four_pos _)
-  have hf : ∀ x, 0 < x → f x = log (x * (2 * x) ^ sqrt (2 * x) / 4 ^ (x / 3)) := by
+  have hf : ∀ x, 0 < x → f x = log (x * (2 * x) ^ sqrt (2 * x) / 4 ^ (x / 3)) :=
+    by
     intro x h5
     have h6 := mul_pos (zero_lt_two' ℝ) h5
     have h7 := rpow_pos_of_pos h6 (sqrt (2 * x))
@@ -77,7 +79,8 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
                 (convex_Ioi 0.5))).sub
           ((convex_on_id (convex_Ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
       norm_num1
-  suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0 by
+  suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0
+    by
     obtain ⟨x1, x2, h1, h2, h0, h3, h4⟩ := this
     exact (h.right_le_of_le_left'' h1 ((h1.trans h2).trans_le h0) h2 h0 (h4.trans h3)).trans h4
   refine' ⟨18, 512, by norm_num1, by norm_num1, le_trans (by norm_num1) n_large, _, _⟩
@@ -100,7 +103,8 @@ open Nat
 /-- The inequality which contradicts Bertrand's postulate, for large enough `n`.
 -/
 theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
-    n * (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) ≤ 4 ^ n := by
+    n * (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) ≤ 4 ^ n :=
+  by
   rw [← @cast_le ℝ]
   simp only [cast_bit0, cast_add, cast_one, cast_mul, cast_pow, ← Real.rpow_nat_cast]
   have n_pos : 0 < n := (by decide : 0 < 512).trans_le n_large
@@ -120,7 +124,8 @@ factorization of the central binomial coefficent only has factors at most `2 * n
 -/
 theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n)
     (no_prime : ¬∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) :
-    centralBinom n = ∏ p in Finset.range (2 * n / 3 + 1), p ^ (centralBinom n).factorization p := by
+    centralBinom n = ∏ p in Finset.range (2 * n / 3 + 1), p ^ (centralBinom n).factorization p :=
+  by
   refine' (Eq.trans _ n.prod_pow_factorization_central_binom).symm
   apply Finset.prod_subset
   · exact Finset.range_subset.2 (add_le_add_right (Nat.div_le_self _ _) _)
@@ -144,12 +149,14 @@ The bound splits the prime factors of `central_binom n` into those
 -/
 theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
     (no_prime : ¬∃ p : ℕ, Nat.Prime p ∧ n < p ∧ p ≤ 2 * n) :
-    centralBinom n ≤ (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) := by
+    centralBinom n ≤ (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) :=
+  by
   have n_pos : 0 < n := (Nat.zero_le _).trans_lt n_big
   have n2_pos : 1 ≤ 2 * n := mul_pos (zero_lt_two' ℕ) n_pos
   let S := (Finset.range (2 * n / 3 + 1)).filter Nat.Prime
   let f x := x ^ n.central_binom.factorization x
-  have : (∏ x : ℕ in S, f x) = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x := by
+  have : (∏ x : ℕ in S, f x) = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x :=
+    by
     refine' Finset.prod_filter_of_ne fun p hp h => _
     contrapose! h
     dsimp only [f]
@@ -199,7 +206,8 @@ for each number ≤ n.
 -/
 theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Prime p)
     (covering : p ≤ 2 * q) (H : n < q → ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) (hn : n < p) :
-    ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n := by
+    ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n :=
+  by
   by_cases p ≤ 2 * n; · exact ⟨p, prime_p, hn, h⟩
   exact H (lt_of_mul_lt_mul_left' (lt_of_lt_of_le (not_le.1 h) covering))
 #align nat.exists_prime_lt_and_le_two_mul_succ Nat.exists_prime_lt_and_le_two_mul_succ

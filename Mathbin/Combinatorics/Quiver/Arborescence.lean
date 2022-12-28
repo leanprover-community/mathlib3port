@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.arborescence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,12 +71,12 @@ instance {V : Type u} [Quiver V] [Arborescence V] (b : V) : Unique (Path (root V
 noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V → ℕ)
     (height_lt : ∀ ⦃a b⦄, (a ⟶ b) → height a < height b)
     (unique_arrow : ∀ ⦃a b c : V⦄ (e : a ⟶ c) (f : b ⟶ c), a = b ∧ HEq e f)
-    (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) :
-    Arborescence V where 
+    (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) : Arborescence V
+    where
   root := r
   uniquePath b :=
     ⟨Classical.inhabited_of_nonempty
-        (by 
+        (by
           rcases show ∃ n, height b < n from ⟨_, Nat.lt.base _⟩ with ⟨n, hn⟩
           induction' n with n ih generalizing b
           · exact False.elim (Nat.not_lt_zero _ hn)
@@ -85,12 +85,13 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
           · rcases ih a (lt_of_lt_of_le (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
             exact ⟨p.cons e⟩),
       by
-      have height_le : ∀ {a b}, path a b → height a ≤ height b := by
+      have height_le : ∀ {a b}, path a b → height a ≤ height b :=
+        by
         intro a b p
         induction' p with b c p e ih
         rfl
         exact le_of_lt (lt_of_le_of_lt ih (height_lt e))
-      suffices ∀ p q : path r b, p = q by 
+      suffices ∀ p q : path r b, p = q by
         intro p
         apply this
       intro p q
@@ -140,15 +141,15 @@ def geodesicSubtree : WideSubquiver V := fun a b =>
 #print Quiver.geodesicArborescence /-
 noncomputable instance geodesicArborescence : Arborescence (geodesicSubtree r) :=
   arborescenceMk r (fun a => (shortestPath r a).length)
-    (by 
+    (by
       rintro a b ⟨e, p, h⟩
       rw [h, path.length_cons, Nat.lt_succ_iff]
       apply shortest_path_spec)
-    (by 
+    (by
       rintro a b c ⟨e, p, h⟩ ⟨f, q, j⟩
       cases h.symm.trans j
       constructor <;> rfl)
-    (by 
+    (by
       intro b
       rcases hp : shortest_path r b with (_ | ⟨p, e⟩)
       · exact Or.inl rfl

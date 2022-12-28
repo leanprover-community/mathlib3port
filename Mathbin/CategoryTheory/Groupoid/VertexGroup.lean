@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.vertex_group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,8 +43,8 @@ variable {C : Type u} [Groupoid C]
 
 /-- The vertex group at `c`. -/
 @[simps]
-instance vertexGroup (c : C) :
-    Group (c ⟶ c) where 
+instance vertexGroup (c : C) : Group (c ⟶ c)
+    where
   mul := fun x y : c ⟶ c => x ≫ y
   mul_assoc := Category.assoc
   one := 𝟙 c
@@ -64,8 +64,8 @@ theorem vertexGroup.inv_eq_inv (c : C) (γ : c ⟶ c) : γ⁻¹ = CategoryTheory
 its endpoints.
 -/
 @[simps]
-def vertexGroupIsomOfMap {c d : C} (f : c ⟶ d) :
-    (c ⟶ c) ≃* (d ⟶ d) where 
+def vertexGroupIsomOfMap {c d : C} (f : c ⟶ d) : (c ⟶ c) ≃* (d ⟶ d)
+    where
   toFun γ := inv f ≫ γ ≫ f
   invFun δ := f ≫ δ ≫ inv f
   left_inv γ := by
@@ -89,7 +89,7 @@ def vertexGroupIsomOfPath {c d : C} (p : Quiver.Path c d) : (c ⟶ c) ≃* (d �
 /-- A functor defines a morphism of vertex group. -/
 @[simps]
 def CategoryTheory.Functor.mapVertexGroup {D : Type v} [Groupoid D] (φ : C ⥤ D) (c : C) :
-    (c ⟶ c) →* (φ.obj c ⟶ φ.obj c) where 
+    (c ⟶ c) →* (φ.obj c ⟶ φ.obj c) where
   toFun := φ.map
   map_one' := φ.map_id c
   map_mul' := φ.map_comp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.tfae
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,22 +41,23 @@ open BigOperators
 theorem exists_maximal_ideal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) (h' : (maximalIdeal R).IsPrincipal) (I : Ideal R) (hI : I ≠ ⊥) :
     ∃ n : ℕ, I = maximalIdeal R ^ n := by
-  classical 
+  classical
     obtain ⟨x, hx : _ = Ideal.span _⟩ := h'
     by_cases hI' : I = ⊤
     · use 0
       rw [pow_zero, hI', Ideal.one_eq_top]
     have H : ∀ r : R, ¬IsUnit r ↔ x ∣ r := fun r =>
       (set_like.ext_iff.mp hx r).trans Ideal.mem_span_singleton
-    have : x ≠ 0 := by 
+    have : x ≠ 0 := by
       rintro rfl
       apply Ring.ne_bot_of_is_maximal_of_not_is_field (maximal_ideal.is_maximal R) h
       simp [hx]
     have hx' := DiscreteValuationRing.irreducible_of_span_eq_maximal_ideal x this hx
-    have H' : ∀ r : R, r ≠ 0 → r ∈ nonunits R → ∃ n : ℕ, Associated (x ^ n) r := by
+    have H' : ∀ r : R, r ≠ 0 → r ∈ nonunits R → ∃ n : ℕ, Associated (x ^ n) r :=
+      by
       intro r hr₁ hr₂
       obtain ⟨f, hf₁, rfl, hf₂⟩ := (WfDvdMonoid.not_unit_iff_exists_factors_eq r hr₁).mp hr₂
-      have : ∀ b ∈ f, Associated x b := by 
+      have : ∀ b ∈ f, Associated x b := by
         intro b hb
         exact Irreducible.associated_of_dvd hx' (hf₁ b hb) ((H b).mp (hf₁ b hb).1)
       clear hr₁ hr₂ hf₁
@@ -70,8 +71,10 @@ theorem exists_maximal_ideal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing
         use n + 1
         rw [pow_add, Multiset.prod_cons, mul_comm, pow_one]
         exact Associated.mul_mul (this _ (Multiset.mem_cons_self _ _)) hn
-    have : ∃ n : ℕ, x ^ n ∈ I := by
-      obtain ⟨r, hr₁, hr₂⟩ : ∃ r : R, r ∈ I ∧ r ≠ 0 := by
+    have : ∃ n : ℕ, x ^ n ∈ I :=
+      by
+      obtain ⟨r, hr₁, hr₂⟩ : ∃ r : R, r ∈ I ∧ r ≠ 0 :=
+        by
         by_contra h
         push_neg  at h
         apply hI
@@ -99,19 +102,21 @@ theorem exists_maximal_ideal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing
       exact Nat.find_spec this
 #align exists_maximal_ideal_pow_eq_of_principal exists_maximal_ideal_pow_eq_of_principal
 
-theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain R]
-    [IsDedekindDomain R] : (maximalIdeal R).IsPrincipal := by
-  classical 
+theorem maximalIdealIsPrincipalOfIsDedekindDomain [LocalRing R] [IsDomain R] [IsDedekindDomain R] :
+    (maximalIdeal R).IsPrincipal := by
+  classical
     by_cases ne_bot : maximal_ideal R = ⊥
     · rw [ne_bot]
       infer_instance
-    obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximal_ideal R, a ≠ (0 : R) := by
+    obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ maximal_ideal R, a ≠ (0 : R) :=
+      by
       by_contra h'
       push_neg  at h'
       apply ne_bot
       rwa [eq_bot_iff]
     have hle : Ideal.span {a} ≤ maximal_ideal R := by rwa [Ideal.span_le, Set.singleton_subset_iff]
-    have : (Ideal.span {a}).radical = maximal_ideal R := by
+    have : (Ideal.span {a}).radical = maximal_ideal R :=
+      by
       rw [Ideal.radical_eq_Inf]
       apply le_antisymm
       · exact infₛ_le ⟨hle, inferInstance⟩
@@ -120,7 +125,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
             (eq_maximal_ideal <| IsDedekindDomain.dimension_le_one _ (fun e => ha₂ _) hI.2).ge
         rw [← Ideal.span_singleton_eq_bot, eq_bot_iff, ← e]
         exact hI.1
-    have : ∃ n, maximal_ideal R ^ n ≤ Ideal.span {a} := by
+    have : ∃ n, maximal_ideal R ^ n ≤ Ideal.span {a} :=
+      by
       rw [← this]
       apply Ideal.exists_radical_pow_le_of_fg
       exact IsNoetherian.noetherian _
@@ -128,18 +134,20 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
     · have := Nat.find_spec this
       rw [hn, pow_zero, Ideal.one_eq_top] at this
       exact (Ideal.IsMaximal.ne_top inferInstance (eq_top_iff.mpr <| this.trans hle)).elim
-    obtain ⟨b, hb₁, hb₂⟩ : ∃ b ∈ maximal_ideal R ^ n, ¬b ∈ Ideal.span {a} := by
+    obtain ⟨b, hb₁, hb₂⟩ : ∃ b ∈ maximal_ideal R ^ n, ¬b ∈ Ideal.span {a} :=
+      by
       by_contra h'
       push_neg  at h'
       rw [Nat.find_eq_iff] at hn
       exact hn.2 n n.lt_succ_self fun x hx => not_not.mp (h' x hx)
-    have hb₃ : ∀ m ∈ maximal_ideal R, ∃ k : R, k * a = b * m := by
+    have hb₃ : ∀ m ∈ maximal_ideal R, ∃ k : R, k * a = b * m :=
+      by
       intro m hm
       rw [← Ideal.mem_span_singleton']
       apply Nat.find_spec this
       rw [hn, pow_succ']
       exact Ideal.mul_mem_mul hb₁ hm
-    have hb₄ : b ≠ 0 := by 
+    have hb₄ : b ≠ 0 := by
       rintro rfl
       apply hb₂
       exact zero_mem _
@@ -159,7 +167,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
       · apply Submodule.Fg.map
         exact IsNoetherian.noetherian _
     · have :
-        (M.map (DistribMulAction.toLinearMap R K x)).comap (Algebra.ofId R K).toLinearMap = ⊤ := by
+        (M.map (DistribMulAction.toLinearMap R K x)).comap (Algebra.ofId R K).toLinearMap = ⊤ :=
+        by
         by_contra h
         apply hx
         rintro m' ⟨m, hm, rfl : algebraMap R K m = m'⟩
@@ -167,7 +176,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
         have hk' : x * algebraMap R K m = algebraMap R K k := by
           rw [← mul_div_right_comm, ← map_mul, ← hk, map_mul, mul_div_cancel _ ha₃]
         exact ⟨k, le_maximal_ideal h ⟨_, ⟨_, hm, rfl⟩, hk'⟩, hk'.symm⟩
-      obtain ⟨y, hy₁, hy₂⟩ : ∃ y ∈ maximal_ideal R, b * y = a := by
+      obtain ⟨y, hy₁, hy₂⟩ : ∃ y ∈ maximal_ideal R, b * y = a :=
+        by
         rw [Ideal.eq_top_iff_one, Submodule.mem_comap] at this
         obtain ⟨_, ⟨y, hy, rfl⟩, hy' : x * algebraMap R K y = algebraMap R K 1⟩ := this
         rw [map_one, ← mul_div_right_comm, div_eq_one_iff_eq ha₃, ← map_mul] at hy'
@@ -180,8 +190,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
         rw [← mul_left_cancel₀ hb₄ hk, mul_comm]
         exact ideal.mem_span_singleton'.mpr ⟨_, rfl⟩
       · rwa [Submodule.span_le, Set.singleton_subset_iff]
-#align
-  maximal_ideal_is_principal_of_is_dedekind_domain maximal_ideal_is_principal_of_is_dedekind_domain
+#align maximal_ideal_is_principal_of_is_dedekind_domain maximalIdealIsPrincipalOfIsDedekindDomain
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -278,14 +287,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                []
                (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" [])
                  []
                  (Std.Tactic.tacticHaveI_
@@ -302,10 +311,10 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     ":="
                     `ufm_of_gcd_of_wf_dvd_monoid)))
                  []
-                 (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+                 (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Std.Tactic.obtain
                     "obtain"
                     [(Std.Tactic.RCases.rcasesPatMed
@@ -348,14 +357,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                    []
                    (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩"))])
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Tactic.exact "exact" `ValuationRing.unique_irreducible)])])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" [`H])
                  []
                  (Tactic.exact
@@ -377,8 +386,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                []
                (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
@@ -420,18 +429,16 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                []
                (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" [`h])
                  []
-                 (Tactic.exact
-                  "exact"
-                  (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))])
+                 (Tactic.exact "exact" (Term.app `maximalIdealIsPrincipalOfIsDedekindDomain [`R]))])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
@@ -484,8 +491,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                  []
                  (Tactic.constructor "constructor")
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Tactic.intro "intro" [`e])
                    []
                    (Tactic.rwSeq
@@ -506,8 +513,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                      `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
                      [(Term.app `maximal_ideal [`R])]))
                    []
-                   (tactic___
-                    (cdotTk (patternIgnore (token.«·» "·")))
+                   (tactic__
+                    (cdotTk (patternIgnore (token.«· » "·")))
                     [(Tactic.exact
                       "exact"
                       (Term.anonymousCtor
@@ -520,8 +527,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                          [`hx.symm])]
                        "⟩"))])
                    []
-                   (tactic___
-                    (cdotTk (patternIgnore (token.«·» "·")))
+                   (tactic__
+                    (cdotTk (patternIgnore (token.«· » "·")))
                     [(Mathlib.Tactic.Conv.convLHS
                       "conv_lhs"
                       []
@@ -550,8 +557,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                        "]")
                       [])])
                    []
-                   (tactic___
-                    (cdotTk (patternIgnore (token.«·» "·")))
+                   (tactic__
+                    (cdotTk (patternIgnore (token.«· » "·")))
                     [(Tactic.rwSeq
                       "rw"
                       []
@@ -573,8 +580,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                      []
                      (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")]))])])
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Tactic.refine'
                     "refine'"
                     (Term.fun
@@ -637,8 +644,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                []
                (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
@@ -666,8 +673,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                  []
                  (Mathlib.Tactic.tacticSwap "swap")
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Tactic.rwSeq
                     "rw"
                     []
@@ -757,12 +764,12 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                         []
                         (Tactic.apply "apply" (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
                         []
-                        (tactic___
-                         (cdotTk (patternIgnore (token.«·» "·")))
+                        (tactic__
+                         (cdotTk (patternIgnore (token.«· » "·")))
                          [(Tactic.tacticInfer_instance "infer_instance")])
                         []
-                        (tactic___
-                         (cdotTk (patternIgnore (token.«·» "·")))
+                        (tactic__
+                         (cdotTk (patternIgnore (token.«· » "·")))
                          [(Tactic.refine'
                            "refine'"
                            (Term.app
@@ -771,8 +778,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                               `ideal.mem_span_singleton'.mpr
                               [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))])
                         []
-                        (tactic___
-                         (cdotTk (patternIgnore (token.«·» "·")))
+                        (tactic__
+                         (cdotTk (patternIgnore (token.«· » "·")))
                          [(Tactic.tacticHave_
                            "have"
                            (Term.haveDecl
@@ -876,16 +883,16 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                []
                (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.exact
                   "exact"
                   (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.rwSeq
                   "rw"
                   []
@@ -903,8 +910,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                   [`hI ":"]
                   («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Tactic.subst "subst" [`hI])
                    []
                    (Mathlib.Tactic.tacticLeft "left")
@@ -916,8 +923,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                   [`hJ ":"]
                   («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Tactic.subst "subst" [`hJ])
                    []
                    (Mathlib.Tactic.tacticRight "right")
@@ -962,14 +969,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                   []
                   ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Mathlib.Tactic.tacticLeft "left")
                    []
                    (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
                  []
-                 (tactic___
-                  (cdotTk (patternIgnore (token.«·» "·")))
+                 (tactic__
+                  (cdotTk (patternIgnore (token.«· » "·")))
                   [(Mathlib.Tactic.tacticRight "right")
                    []
                    (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
@@ -1008,14 +1015,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
               []
               (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" [])
                 []
                 (Std.Tactic.tacticHaveI_
@@ -1031,10 +1038,10 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                    ":="
                    `ufm_of_gcd_of_wf_dvd_monoid)))
                 []
-                (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+                (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Std.Tactic.obtain
                    "obtain"
                    [(Std.Tactic.RCases.rcasesPatMed
@@ -1077,14 +1084,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                   []
                   (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩"))])
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Tactic.exact "exact" `ValuationRing.unique_irreducible)])])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" [`H])
                 []
                 (Tactic.exact
@@ -1106,8 +1113,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
               []
               (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Std.Tactic.rintro
                  "rintro"
                  [(Std.Tactic.RCases.rintroPat.one
@@ -1149,18 +1156,16 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
               []
               (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" [`h])
                 []
-                (Tactic.exact
-                 "exact"
-                 (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))])
+                (Tactic.exact "exact" (Term.app `maximalIdealIsPrincipalOfIsDedekindDomain [`R]))])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Std.Tactic.rintro
                  "rintro"
                  [(Std.Tactic.RCases.rintroPat.one
@@ -1209,8 +1214,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                 []
                 (Tactic.constructor "constructor")
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Tactic.intro "intro" [`e])
                   []
                   (Tactic.rwSeq
@@ -1231,8 +1236,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
                     [(Term.app `maximal_ideal [`R])]))
                   []
-                  (tactic___
-                   (cdotTk (patternIgnore (token.«·» "·")))
+                  (tactic__
+                   (cdotTk (patternIgnore (token.«· » "·")))
                    [(Tactic.exact
                      "exact"
                      (Term.anonymousCtor
@@ -1245,8 +1250,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                         [`hx.symm])]
                       "⟩"))])
                   []
-                  (tactic___
-                   (cdotTk (patternIgnore (token.«·» "·")))
+                  (tactic__
+                   (cdotTk (patternIgnore (token.«· » "·")))
                    [(Mathlib.Tactic.Conv.convLHS
                      "conv_lhs"
                      []
@@ -1275,8 +1280,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                       "]")
                      [])])
                   []
-                  (tactic___
-                   (cdotTk (patternIgnore (token.«·» "·")))
+                  (tactic__
+                   (cdotTk (patternIgnore (token.«· » "·")))
                    [(Tactic.rwSeq
                      "rw"
                      []
@@ -1298,8 +1303,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     []
                     (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")]))])])
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Tactic.refine'
                    "refine'"
                    (Term.fun
@@ -1362,8 +1367,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
               []
               (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Std.Tactic.rintro
                  "rintro"
                  [(Std.Tactic.RCases.rintroPat.one
@@ -1391,8 +1396,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                 []
                 (Mathlib.Tactic.tacticSwap "swap")
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Tactic.rwSeq
                    "rw"
                    []
@@ -1482,12 +1487,12 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                        []
                        (Tactic.apply "apply" (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
                        []
-                       (tactic___
-                        (cdotTk (patternIgnore (token.«·» "·")))
+                       (tactic__
+                        (cdotTk (patternIgnore (token.«· » "·")))
                         [(Tactic.tacticInfer_instance "infer_instance")])
                        []
-                       (tactic___
-                        (cdotTk (patternIgnore (token.«·» "·")))
+                       (tactic__
+                        (cdotTk (patternIgnore (token.«· » "·")))
                         [(Tactic.refine'
                           "refine'"
                           (Term.app
@@ -1496,8 +1501,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                              `ideal.mem_span_singleton'.mpr
                              [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))])
                        []
-                       (tactic___
-                        (cdotTk (patternIgnore (token.«·» "·")))
+                       (tactic__
+                        (cdotTk (patternIgnore (token.«· » "·")))
                         [(Tactic.tacticHave_
                           "have"
                           (Term.haveDecl
@@ -1598,16 +1603,16 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
               []
               (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.exact
                  "exact"
                  (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.rwSeq
                  "rw"
                  []
@@ -1625,8 +1630,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                  [`hI ":"]
                  («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Tactic.subst "subst" [`hI])
                   []
                   (Mathlib.Tactic.tacticLeft "left")
@@ -1638,8 +1643,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                  [`hJ ":"]
                  («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Tactic.subst "subst" [`hJ])
                   []
                   (Mathlib.Tactic.tacticRight "right")
@@ -1684,14 +1689,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                  []
                  ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Mathlib.Tactic.tacticLeft "left")
                   []
                   (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
                 []
-                (tactic___
-                 (cdotTk (patternIgnore (token.«·» "·")))
+                (tactic__
+                 (cdotTk (patternIgnore (token.«· » "·")))
                  [(Mathlib.Tactic.tacticRight "right")
                   []
                   (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
@@ -1711,14 +1716,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [])
             []
             (Std.Tactic.tacticHaveI_
@@ -1734,10 +1739,10 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                ":="
                `ufm_of_gcd_of_wf_dvd_monoid)))
             []
-            (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible)
+            (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible)
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Std.Tactic.obtain
                "obtain"
                [(Std.Tactic.RCases.rcasesPatMed
@@ -1780,14 +1785,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
               []
               (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`p "," `hp₁] "⟩"))])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.exact "exact" `ValuationRing.unique_irreducible)])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H])
             []
             (Tactic.exact
@@ -1809,8 +1814,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -1852,18 +1857,16 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "5"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`h])
             []
-            (Tactic.exact
-             "exact"
-             (Term.app `maximal_ideal_is_principal_of_is_dedekind_domain [`R]))])
+            (Tactic.exact "exact" (Term.app `maximalIdealIsPrincipalOfIsDedekindDomain [`R]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "6"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -1910,8 +1913,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
             []
             (Tactic.constructor "constructor")
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.intro "intro" [`e])
               []
               (Tactic.rwSeq
@@ -1932,8 +1935,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                 `Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
                 [(Term.app `maximal_ideal [`R])]))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.exact
                  "exact"
                  (Term.anonymousCtor
@@ -1946,8 +1949,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     [`hx.symm])]
                   "⟩"))])
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Mathlib.Tactic.Conv.convLHS
                  "conv_lhs"
                  []
@@ -1976,8 +1979,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                   "]")
                  [])])
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.rwSeq
                  "rw"
                  []
@@ -1999,8 +2002,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                 []
                 (Tactic.exact "exact" (Term.app `le_refl [(Term.hole "_")]))])])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.refine'
                "refine'"
                (Term.fun
@@ -2063,8 +2066,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
           []
           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "5"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -2092,8 +2095,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
             []
             (Mathlib.Tactic.tacticSwap "swap")
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.rwSeq
                "rw"
                []
@@ -2181,12 +2184,12 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                    []
                    (Tactic.apply "apply" (Term.app `sub_mem [(Term.hole "_") (Term.hole "_")]))
                    []
-                   (tactic___
-                    (cdotTk (patternIgnore (token.«·» "·")))
+                   (tactic__
+                    (cdotTk (patternIgnore (token.«· » "·")))
                     [(Tactic.tacticInfer_instance "infer_instance")])
                    []
-                   (tactic___
-                    (cdotTk (patternIgnore (token.«·» "·")))
+                   (tactic__
+                    (cdotTk (patternIgnore (token.«· » "·")))
                     [(Tactic.refine'
                       "refine'"
                       (Term.app
@@ -2195,8 +2198,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                          `ideal.mem_span_singleton'.mpr
                          [(Term.anonymousCtor "⟨" [`c "," `rfl] "⟩")])]))])
                    []
-                   (tactic___
-                    (cdotTk (patternIgnore (token.«·» "·")))
+                   (tactic__
+                    (cdotTk (patternIgnore (token.«· » "·")))
                     [(Tactic.tacticHave_
                       "have"
                       (Term.haveDecl
@@ -2294,14 +2297,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "7"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.exact "exact" (Term.app `exists_maximal_ideal_pow_eq_of_principal [`R `h]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.rwSeq
              "rw"
              []
@@ -2319,8 +2322,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
              [`hI ":"]
              («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.subst "subst" [`hI])
               []
               (Mathlib.Tactic.tacticLeft "left")
@@ -2332,8 +2335,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
              [`hJ ":"]
              («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.subst "subst" [`hJ])
               []
               (Mathlib.Tactic.tacticRight "right")
@@ -2378,14 +2381,14 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
              []
              ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Mathlib.Tactic.tacticLeft "left")
               []
               (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Mathlib.Tactic.tacticRight "right")
               []
               (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
@@ -2396,8 +2399,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.rwSeq
          "rw"
          []
@@ -2415,8 +2418,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
          [`hI ":"]
          («term_=_» `I "=" (Order.BoundedOrder.«term⊥» "⊥")))
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Tactic.subst "subst" [`hI])
           []
           (Mathlib.Tactic.tacticLeft "left")
@@ -2428,8 +2431,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
          [`hJ ":"]
          («term_=_» `J "=" (Order.BoundedOrder.«term⊥» "⊥")))
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Tactic.subst "subst" [`hJ])
           []
           (Mathlib.Tactic.tacticRight "right")
@@ -2474,20 +2477,20 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
          []
          ["with" [(Lean.binderIdent `h') (Lean.binderIdent `h')]])
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Mathlib.Tactic.tacticLeft "left")
           []
           (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Mathlib.Tactic.tacticRight "right")
           []
           (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Mathlib.Tactic.tacticRight "right")
         []
         (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
@@ -2512,8 +2515,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Mathlib.Tactic.tacticLeft "left")
         []
         (Tactic.exact "exact" (Term.app `Ideal.pow_le_pow [`h']))])
@@ -2636,8 +2639,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.subst "subst" [`hJ])
         []
         (Mathlib.Tactic.tacticRight "right")
@@ -2678,8 +2681,8 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.subst "subst" [`hI])
         []
         (Mathlib.Tactic.tacticLeft "left")
@@ -2798,7 +2801,7 @@ theorem
               intro
                 haveI := IsBezout.toGcdDomain R
                 haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wf_dvd_monoid
-                apply DiscreteValuationRing.of_ufd_of_unique_irreducible
+                apply DiscreteValuationRing.ofUfdOfUniqueIrreducible
                 ·
                   obtain ⟨ x , hx₁ , hx₂ ⟩ := Ring.exists_not_is_unit_of_not_is_field h
                     obtain ⟨ p , hp₁ , hp₂ ⟩ := WfDvdMonoid.exists_irreducible_factor hx₂ hx₁
@@ -2830,7 +2833,7 @@ theorem
                       h₁
                     ⟩
             tfae_have 3 → 5
-            · intro h exact maximal_ideal_is_principal_of_is_dedekind_domain R
+            · intro h exact maximalIdealIsPrincipalOfIsDedekindDomain R
             tfae_have 5 → 6
             ·
               rintro ⟨ x , hx ⟩

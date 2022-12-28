@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.eisenstein_criterion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ namespace EisensteinCriterionAux
 theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
     (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
     map (mk P) f = c ((mk P) f.leadingCoeff) * X ^ f.natDegree :=
-  Polynomial.ext fun n => by 
+  Polynomial.ext fun n => by
     by_cases hf0 : f = 0; · simp [hf0]
     rcases lt_trichotomy (↑n) (degree f) with (h | h | h)
     · erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
@@ -70,7 +70,8 @@ theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : R[X]}
   polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_X_pow
 
 theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : R[X]}
-    (hu : ∀ x : R, c x ∣ p * q → IsUnit x) (hpm : p.natDegree = 0) : IsUnit p := by
+    (hu : ∀ x : R, c x ∣ p * q → IsUnit x) (hpm : p.natDegree = 0) : IsUnit p :=
+  by
   rw [eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm), is_unit_C]
   refine' hu _ _
   rw [← eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm)]
@@ -95,13 +96,14 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
   have hf : f.map (mk P) = c (mk P (leadingCoeff f)) * X ^ natDegree f :=
     map_eq_C_mul_X_pow_of_forall_coeff_mem hfP
   have hfd0 : 0 < f.natDegree := WithBot.coe_lt_coe.1 (lt_of_lt_of_le hfd0 degree_le_nat_degree)
-  ⟨mt degree_eq_zero_of_is_unit fun h => by simp_all only [lt_irrefl], by
+  ⟨mt degree_eq_zero_of_is_unit fun h => by simp_all only [lt_irrefl],
+    by
     rintro p q rfl
     rw [Polynomial.map_mul] at hf
     rcases mul_eq_mul_prime_pow
         (show Prime (X : Polynomial (R ⧸ P)) from monic_X.prime_of_degree_eq_one degree_X) hf with
       ⟨m, n, b, c, hmnd, hbc, hp, hq⟩
-    have hmn : 0 < m → 0 < n → False := by 
+    have hmn : 0 < m → 0 < n → False := by
       intro hm0 hn0
       refine' h0 _
       rw [coeff_zero_eq_eval_zero, eval_mul, sq]
@@ -111,12 +113,14 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
     have hpql0 : (mk P) (p * q).leadingCoeff ≠ 0 := by rwa [Ne.def, eq_zero_iff_mem]
     have hp0 : p ≠ 0 := fun h => by simp_all only [zero_mul, eq_self_iff_true, not_true, Ne.def]
     have hq0 : q ≠ 0 := fun h => by simp_all only [eq_self_iff_true, not_true, Ne.def, mul_zero]
-    have hbc0 : degree b = 0 ∧ degree c = 0 := by
+    have hbc0 : degree b = 0 ∧ degree c = 0 :=
+      by
       apply_fun degree  at hbc
       rwa [degree_C hpql0, degree_mul, eq_comm, Nat.WithBot.add_eq_zero_iff] at hbc
     have hmp : m ≤ nat_degree p := le_nat_degree_of_map_eq_mul_X_pow hP hp hbc0.1
     have hnq : n ≤ nat_degree q := le_nat_degree_of_map_eq_mul_X_pow hP hq hbc0.2
-    have hpmqn : p.nat_degree = m ∧ q.nat_degree = n := by
+    have hpmqn : p.nat_degree = m ∧ q.nat_degree = n :=
+      by
       rw [nat_degree_mul hp0 hq0] at hmnd
       clear * - hmnd hmp hnq
       contrapose hmnd

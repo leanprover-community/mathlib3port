@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.lex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ The definition is given for any relation `r`, not only strict orders. -/
 inductive Lex (r : α → α → Prop) : List α → List α → Prop
   | nil {a l} : lex [] (a :: l)
   | cons {a l₁ l₂} (h : lex l₁ l₂) : lex (a :: l₁) (a :: l₂)
-  | rel {a₁ l₁ a₂ l₂} (h : r a₁ a₂) : lex (a₁ :: l₁) (a₂ :: l₂)
+  | Rel {a₁ l₁ a₂ l₂} (h : r a₁ a₂) : lex (a₁ :: l₁) (a₂ :: l₂)
 #align list.lex List.Lex
 -/
 
@@ -78,15 +78,16 @@ instance isOrderConnected (r : α → α → Prop) [IsOrderConnected α r] [IsTr
   ⟨fun l₁ =>
     match l₁ with
     | _, [], c :: l₃, nil => Or.inr nil
-    | _, [], c :: l₃, rel _ => Or.inr nil
+    | _, [], c :: l₃, Rel _ => Or.inr nil
     | _, [], c :: l₃, cons _ => Or.inr nil
     | _, b :: l₂, c :: l₃, nil => Or.inl nil
-    | a :: l₁, b :: l₂, c :: l₃, rel h => (IsOrderConnected.conn _ b _ h).imp rel rel
-    | a :: l₁, b :: l₂, _ :: l₃, cons h => by
+    | a :: l₁, b :: l₂, c :: l₃, Rel h => (IsOrderConnected.conn _ b _ h).imp rel rel
+    | a :: l₁, b :: l₂, _ :: l₃, cons h =>
+      by
       rcases trichotomous_of r a b with (ab | rfl | ab)
-      · exact Or.inl (rel ab)
+      · exact Or.inl (Rel ab)
       · exact (_match _ l₂ _ h).imp cons cons
-      · exact Or.inr (rel ab)⟩
+      · exact Or.inr (Rel ab)⟩
 #align list.lex.is_order_connected List.Lex.isOrderConnected
 -/
 
@@ -97,11 +98,11 @@ instance isTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrich
     | [], [] => Or.inr (Or.inl rfl)
     | [], b :: l₂ => Or.inl nil
     | a :: l₁, [] => Or.inr (Or.inr nil)
-    | a :: l₁, b :: l₂ => by 
+    | a :: l₁, b :: l₂ => by
       rcases trichotomous_of r a b with (ab | rfl | ab)
-      · exact Or.inl (rel ab)
+      · exact Or.inl (Rel ab)
       · exact (_match l₁ l₂).imp cons (Or.imp (congr_arg _) cons)
-      · exact Or.inr (Or.inr (rel ab))⟩
+      · exact Or.inr (Or.inr (Rel ab))⟩
 #align list.lex.is_trichotomous List.Lex.isTrichotomous
 -/
 
@@ -127,7 +128,7 @@ instance isStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder α r] :
 instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
   | l₁, [] => is_false fun h => by cases h
   | [], b :: l₂ => isTrue Lex.nil
-  | a :: l₁, b :: l₂ => by 
+  | a :: l₁, b :: l₂ => by
     haveI := DecidableRel l₁ l₂
     refine' decidable_of_iff (r a b ∨ a = b ∧ lex r l₁ l₂) ⟨fun h => _, fun h => _⟩
     · rcases h with (h | ⟨rfl, h⟩)
@@ -143,7 +144,7 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
 theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} (t), Lex r s₁ s₂ → Lex r s₁ (s₂ ++ t)
   | _, _, t, nil => nil
   | _, _, t, cons h => cons (append_right _ h)
-  | _, _, t, rel r => rel r
+  | _, _, t, Rel r => rel r
 #align list.lex.append_right List.Lex.append_right
 -/
 
@@ -158,21 +159,22 @@ theorem append_left (R : α → α → Prop) {t₁ t₂} (h : Lex R t₁ t₂) :
 theorem imp {r s : α → α → Prop} (H : ∀ a b, r a b → s a b) : ∀ l₁ l₂, Lex r l₁ l₂ → Lex s l₁ l₂
   | _, _, nil => nil
   | _, _, cons h => cons (imp _ _ h)
-  | _, _, rel r => rel (H _ _ r)
+  | _, _, Rel r => rel (H _ _ r)
 #align list.lex.imp List.Lex.imp
 -/
 
 #print List.Lex.to_ne /-
 theorem to_ne : ∀ {l₁ l₂ : List α}, Lex (· ≠ ·) l₁ l₂ → l₁ ≠ l₂
   | _, _, cons h, e => to_ne h (List.cons.inj e).2
-  | _, _, rel r, e => r (List.cons.inj e).1
+  | _, _, Rel r, e => r (List.cons.inj e).1
 #align list.lex.to_ne List.Lex.to_ne
 -/
 
 #print Decidable.List.Lex.ne_iff /-
 theorem Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) :
     Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ :=
-  ⟨to_ne, fun h => by
+  ⟨to_ne, fun h =>
+    by
     induction' l₁ with a l₁ IH generalizing l₂ <;> cases' l₂ with b l₂
     · contradiction
     · apply nil
@@ -181,7 +183,7 @@ theorem Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : le
       · subst b
         apply cons
         exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
-      · exact rel ab⟩
+      · exact Rel ab⟩
 #align decidable.list.lex.ne_iff Decidable.List.Lex.ne_iff
 -/
 

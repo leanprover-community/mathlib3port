@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 
 ! This file was ported from Lean 3 source module control.functor.multivariate
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,8 @@ section Liftp'
 variable (F)
 
 theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α)
-    (h₀ : f ⊚ g = id) (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u := by
+    (h₀ : f ⊚ g = id) (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u :=
+  by
   constructor <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u, use g <$$> u]
   · apply (h₁ u).mp h₂
   · apply (h₁ _).mpr _
@@ -184,7 +185,8 @@ private def g :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) :
-    Liftp' (predLast' _ p) x ↔ Liftp (PredLast _ p) x := by
+    Liftp' (predLast' _ p) x ↔ Liftp (PredLast _ p) x :=
+  by
   dsimp only [liftp, liftp']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
   · ext (i⟨x, _⟩)
@@ -222,7 +224,8 @@ private def g :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem liftr_last_rel_iff (x y : F (α ::: β)) :
-    Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y := by
+    Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y :=
+  by
   dsimp only [liftr, liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
   · ext (i⟨x, _⟩) : 2

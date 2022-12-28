@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.range
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,14 +67,16 @@ theorem range_add (a b : ℕ) : range (a + b) = range a + (range b).map fun x =>
 #align multiset.range_add Multiset.range_add
 
 theorem range_disjoint_map_add (a : ℕ) (m : Multiset ℕ) :
-    (range a).Disjoint (m.map fun x => a + x) := by
+    (range a).Disjoint (m.map fun x => a + x) :=
+  by
   intro x hxa hxb
   rw [range, mem_coe, List.mem_range] at hxa
   obtain ⟨c, _, rfl⟩ := mem_map.1 hxb
   exact (self_le_add_right _ _).not_lt hxa
 #align multiset.range_disjoint_map_add Multiset.range_disjoint_map_add
 
-theorem range_add_eq_union (a b : ℕ) : range (a + b) = range a ∪ (range b).map fun x => a + x := by
+theorem range_add_eq_union (a b : ℕ) : range (a + b) = range a ∪ (range b).map fun x => a + x :=
+  by
   rw [range_add, add_eq_union_iff_disjoint]
   apply range_disjoint_map_add
 #align multiset.range_add_eq_union Multiset.range_add_eq_union

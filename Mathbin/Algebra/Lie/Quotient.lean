@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.quotient
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ instance lieQuotientLieModule : LieModule R L (M ⧸ N) :=
 #align lie_submodule.quotient.lie_quotient_lie_module LieSubmodule.Quotient.lieQuotientLieModule
 
 instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
-  ⟨by 
+  ⟨by
     intro x y
     apply Quotient.liftOn₂' x y fun x' y' => mk ⁅x', y'⁆
     intro x₁ x₂ y₁ y₂ h₁ h₂
@@ -139,32 +139,30 @@ theorem mk_bracket (x y : L) : mk ⁅x, y⁆ = ⁅(mk x : L ⧸ I), (mk y : L �
   rfl
 #align lie_submodule.quotient.mk_bracket LieSubmodule.Quotient.mk_bracket
 
-instance lieQuotientLieRing :
-    LieRing
-      (L ⧸
-        I) where 
-  add_lie := by 
+instance lieQuotientLieRing : LieRing (L ⧸ I)
+    where
+  add_lie := by
     intro x' y' z'
     apply Quotient.inductionOn₃' x' y' z'
     intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply add_lie
-  lie_add := by 
+  lie_add := by
     intro x' y' z'
     apply Quotient.inductionOn₃' x' y' z'
     intro x y z
     repeat' first |rw [is_quotient_mk]|rw [← mk_bracket]|rw [← Submodule.Quotient.mk_add]
     apply congr_arg
     apply lie_add
-  lie_self := by 
+  lie_self := by
     intro x'
     apply Quotient.inductionOn' x'
     intro x
     rw [is_quotient_mk, ← mk_bracket]
     apply congr_arg
     apply lie_self
-  leibniz_lie := by 
+  leibniz_lie := by
     intro x' y' z'
     apply Quotient.inductionOn₃' x' y' z'
     intro x y z
@@ -173,8 +171,8 @@ instance lieQuotientLieRing :
     apply leibniz_lie
 #align lie_submodule.quotient.lie_quotient_lie_ring LieSubmodule.Quotient.lieQuotientLieRing
 
-instance lieQuotientLieAlgebra :
-    LieAlgebra R (L ⧸ I) where lie_smul := by 
+instance lieQuotientLieAlgebra : LieAlgebra R (L ⧸ I)
+    where lie_smul := by
     intro t x' y'
     apply Quotient.inductionOn₂' x' y'
     intro x y
@@ -186,7 +184,7 @@ instance lieQuotientLieAlgebra :
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/
 @[simps]
 def mk' : M →ₗ⁅R,L⁆ M ⧸ N :=
-  { N.toSubmodule.mkq with 
+  { N.toSubmodule.mkq with
     toFun := mk
     map_lie' := fun r m => rfl }
 #align lie_submodule.quotient.mk' LieSubmodule.Quotient.mk'
@@ -197,7 +195,7 @@ theorem mk_eq_zero {m : M} : mk' N m = 0 ↔ m ∈ N :=
 #align lie_submodule.quotient.mk_eq_zero LieSubmodule.Quotient.mk_eq_zero
 
 @[simp]
-theorem mk'_ker : (mk' N).ker = N := by 
+theorem mk'_ker : (mk' N).ker = N := by
   ext
   simp
 #align lie_submodule.quotient.mk'_ker LieSubmodule.Quotient.mk'_ker
@@ -231,9 +229,11 @@ variable (f : L →ₗ⁅R⁆ L')
 /-- The first isomorphism theorem for morphisms of Lie algebras. -/
 @[simps]
 noncomputable def quotKerEquivRange : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
-  { (f : L →ₗ[R] L').quotKerEquivRange with
+  {
+    (f : L →ₗ[R]
+          L').quotKerEquivRange with
     toFun := (f : L →ₗ[R] L').quotKerEquivRange
-    map_lie' := by 
+    map_lie' := by
       rintro ⟨x⟩ ⟨y⟩
       rw [← SetLike.coe_eq_coe, LieSubalgebra.coe_bracket]
       simp only [Submodule.Quotient.quot_mk_eq_mk, LinearMap.quot_ker_equiv_range_apply_mk, ←

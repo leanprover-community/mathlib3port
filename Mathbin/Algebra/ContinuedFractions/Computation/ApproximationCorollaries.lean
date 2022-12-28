@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.approximation_corollaries
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ variable [Archimedean K]
 open Nat
 
 theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v - (of v).convergents n| < ε :=
-  by 
+  by
   intro ε ε_pos
   -- use the archimedean property to obtian a suitable N
   rcases(exists_nat_gt (1 / ε) : ∃ N' : ℕ, 1 / ε < N') with ⟨N', one_div_ε_lt_N'⟩
@@ -123,7 +123,8 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
     have zero_lt_B : 0 < B :=
       haveI : (0 : K) < fib (n + 1) := by exact_mod_cast fib_pos n.zero_lt_succ
       lt_of_lt_of_le this B_ineq
-    have zero_lt_mul_conts : 0 < B * nB := by
+    have zero_lt_mul_conts : 0 < B * nB :=
+      by
       have : 0 < nB :=
         haveI : (0 : K) < fib (n + 2) := by exact_mod_cast fib_pos (n + 1).zero_lt_succ
         lt_of_lt_of_le this nB_ineq
@@ -131,7 +132,8 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
     suffices : 1 < ε * (B * nB)
     exact (div_lt_iff zero_lt_mul_conts).elimRight this
     -- use that `N ≥ n` was obtained from the archimedean property to show the following
-    have one_lt_ε_mul_N : 1 < ε * n := by
+    have one_lt_ε_mul_N : 1 < ε * n :=
+      by
       have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).elimLeft one_div_ε_lt_N'
       have : (N' : K) ≤ N := by exact_mod_cast le_max_left _ _
       have : ε * N' ≤ ε * n :=

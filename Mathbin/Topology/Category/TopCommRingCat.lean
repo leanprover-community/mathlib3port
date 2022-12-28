@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.TopCommRing
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ instance : CoeSort TopCommRingCat (Type u) :=
 
 attribute [instance] is_comm_ring is_topological_space is_topological_ring
 
-instance :
-    Category TopCommRingCat.{u} where 
+instance : Category TopCommRingCat.{u}
+    where
   Hom R S := { f : R →+* S // Continuous f }
   id R := ⟨RingHom.id R, by obviously⟩
   -- TODO remove obviously?
@@ -55,13 +55,12 @@ instance :
       cases g
       dsimp; apply Continuous.comp <;> assumption⟩
 
-instance :
-    ConcreteCategory
-      TopCommRingCat.{u} where 
+instance : ConcreteCategory TopCommRingCat.{u}
+    where
   forget :=
     { obj := fun R => R
       map := fun R S f => f.val }
-  forget_faithful := {  }
+  forget_faithful := { }
 
 /-- Construct a bundled `TopCommRing` from the underlying type and the appropriate typeclasses. -/
 def of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] : TopCommRingCat :=
@@ -118,10 +117,8 @@ instance forget_to_Top_topological_ring (R : TopCommRingCat) :
 /-- The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.
 -/
-instance :
-    ReflectsIsomorphisms
-      (forget₂ TopCommRingCat.{u}
-        TopCat.{u}) where reflects X Y f _ := by 
+instance : ReflectsIsomorphisms (forget₂ TopCommRingCat.{u} TopCat.{u})
+    where reflects X Y f _ := by
     skip
     -- We have an isomorphism in `Top`,
     let i_Top := as_iso ((forget₂ TopCommRingCat TopCat).map f)
@@ -130,9 +127,9 @@ instance :
     -- Putting these together we obtain the isomorphism we're after:
     exact
       ⟨⟨⟨e_Ring.symm, i_Top.inv.2⟩,
-          ⟨by 
+          ⟨by
             ext x
-            exact e_Ring.left_inv x, by 
+            exact e_Ring.left_inv x, by
             ext x
             exact e_Ring.right_inv x⟩⟩⟩
 

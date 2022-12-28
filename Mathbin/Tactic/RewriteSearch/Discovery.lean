@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.rewrite_search.discovery
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,8 +53,8 @@ private unsafe def rules_from_hyps : tactic (List (expr × Bool)) := do
 
 /-- Use this attribute to make `rewrite_search` use this definition during search. -/
 @[user_attribute]
-unsafe def rewrite_search_attr :
-    user_attribute where 
+unsafe def rewrite_search_attr : user_attribute
+    where
   Name := `rewrite
   descr := "declare that this definition should be considered by `rewrite_search`"
 #align tactic.rewrite_search.rewrite_search_attr tactic.rewrite_search.rewrite_search_attr

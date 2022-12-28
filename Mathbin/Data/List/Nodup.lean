@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.list.nodup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,8 @@ theorem not_nodup_pair (a : α) : ¬Nodup [a, a] :=
 #align list.not_nodup_pair List.not_nodup_pair
 
 theorem nodup_iff_sublist {l : List α} : Nodup l ↔ ∀ a, ¬[a, a] <+ l :=
-  ⟨fun d a h => not_nodup_pair a (d.Sublist h), by
+  ⟨fun d a h => not_nodup_pair a (d.Sublist h),
+    by
     induction' l with a l IH <;> intro h; · exact nodup_nil
     exact
       (IH fun a s => h a <| sublist_cons_of_sublist _ s).cons fun al =>
@@ -106,7 +107,8 @@ theorem Nodup.nth_le_inj_iff {l : List α} (h : Nodup l) {i j : ℕ} (hi : i < l
 #align list.nodup.nth_le_inj_iff List.Nodup.nth_le_inj_iff
 
 theorem nodup_iff_nth_ne_nth {l : List α} :
-    l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.nth i ≠ l.nth j := by
+    l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.nth i ≠ l.nth j :=
+  by
   rw [nodup_iff_nth_le_inj]
   simp only [nth_le_eq_iff, some_nth_le_eq]
   constructor <;> rintro h i j h₁ h₂
@@ -119,7 +121,8 @@ theorem nodup_iff_nth_ne_nth {l : List α} :
 #align list.nodup_iff_nth_ne_nth List.nodup_iff_nth_ne_nth
 
 theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
-    l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
+    l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x :=
+  by
   induction' l with hd tl hl
   · simp
   · specialize hl h.of_cons
@@ -134,7 +137,8 @@ theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
 #align list.nodup.ne_singleton_iff List.Nodup.ne_singleton_iff
 
 theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length)
-    (hm : m < xs.length) (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodup xs := by
+    (hm : m < xs.length) (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodup xs :=
+  by
   rw [nodup_iff_nth_le_inj]
   simp only [exists_prop, exists_and_right, not_forall]
   exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
@@ -169,7 +173,8 @@ theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : Nodup l
 #align list.count_eq_one_of_mem List.count_eq_one_of_mem
 
 theorem count_eq_of_nodup [DecidableEq α] {a : α} {l : List α} (d : Nodup l) :
-    count a l = if a ∈ l then 1 else 0 := by
+    count a l = if a ∈ l then 1 else 0 :=
+  by
   split_ifs with h
   · exact count_eq_one_of_mem d h
   · exact count_eq_zero_of_not_mem h
@@ -227,7 +232,8 @@ theorem Nodup.map_on {f : α → β} (H : ∀ x ∈ l, ∀ y ∈ l, f x = f y �
 #align list.nodup.map_on List.Nodup.map_on
 
 theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : Nodup (map f l)) :
-    ∀ ⦃x⦄, x ∈ l → ∀ ⦃y⦄, y ∈ l → f x = f y → x = y := by
+    ∀ ⦃x⦄, x ∈ l → ∀ ⦃y⦄, y ∈ l → f x = f y → x = y :=
+  by
   induction' l with hd tl ih
   · simp
   · simp only [map, nodup_cons, mem_map, not_exists, not_and, ← Ne.def] at d
@@ -291,7 +297,8 @@ theorem nodup_reverse {l : List α} : Nodup (reverse l) ↔ Nodup l :=
 #align list.nodup_reverse List.nodup_reverse
 
 theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
-    l.erase a = filter (· ≠ a) l := by
+    l.erase a = filter (· ≠ a) l :=
+  by
   induction' d with b l m d IH; · rfl
   by_cases b = a
   · subst h
@@ -339,7 +346,8 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
     (l₁.product l₂).Nodup :=
   nodup_bind.2
     ⟨fun a ma => d₂.map <| left_inverse.injective fun b => (rfl : (a, b).2 = b),
-      d₁.imp fun a₁ a₂ n x h₁ h₂ => by
+      d₁.imp fun a₁ a₂ n x h₁ h₂ =>
+        by
         rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
         rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
         exact n rfl⟩
@@ -1097,7 +1105,8 @@ theorem Nodup.insert [DecidableEq α] (h : l.Nodup) : (insert a l).Nodup :=
   else by rw [insert_of_not_mem h', nodup_cons] <;> constructor <;> assumption
 #align list.nodup.insert List.Nodup.insert
 
-theorem Nodup.union [DecidableEq α] (l₁ : List α) (h : Nodup l₂) : (l₁ ∪ l₂).Nodup := by
+theorem Nodup.union [DecidableEq α] (l₁ : List α) (h : Nodup l₂) : (l₁ ∪ l₂).Nodup :=
+  by
   induction' l₁ with a l₁ ih generalizing l₂
   · exact h
   · exact (ih h).insert
@@ -1110,7 +1119,8 @@ theorem Nodup.inter [DecidableEq α] (l₂ : List α) : Nodup l₁ → Nodup (l�
 theorem Nodup.diff_eq_filter [DecidableEq α] :
     ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diff l₂ = l₁.filter (· ∉ l₂)
   | l₁, [], hl₁ => by simp
-  | l₁, a :: l₂, hl₁ => by
+  | l₁, a :: l₂, hl₁ =>
+    by
     rw [diff_cons, (hl₁.erase _).diff_eq_filter, hl₁.erase_eq_filter, filter_filter]
     simp only [mem_cons_iff, not_or, and_comm]
 #align list.nodup.diff_eq_filter List.Nodup.diff_eq_filter
@@ -1134,7 +1144,7 @@ protected theorem Nodup.update_nth :
 theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α → β) (x : α) (y : β) :
     l.map (Function.update f x y) =
       if x ∈ l then (l.map f).updateNth (l.indexOf x) y else l.map f :=
-  by 
+  by
   induction' l with hd tl ihl; · simp
   rw [nodup_cons] at hl
   simp only [mem_cons_iff, map, ihl hl.2]
@@ -1146,7 +1156,7 @@ theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α �
 
 theorem Nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)
     (h : ∀ a ∈ l, ∀ b ∈ l, a ≠ b → r a b) : l.Pairwise r := by
-  classical 
+  classical
     refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h
     intro x hx
     rw [nodup_iff_count_le_one] at hl
@@ -1160,7 +1170,7 @@ theorem Nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (h
 
 @[simp]
 theorem Nodup.pairwise_coe [IsSymm α r] (hl : l.Nodup) : { a | a ∈ l }.Pairwise r ↔ l.Pairwise r :=
-  by 
+  by
   induction' l with a l ih
   · simp
   rw [List.nodup_cons] at hl

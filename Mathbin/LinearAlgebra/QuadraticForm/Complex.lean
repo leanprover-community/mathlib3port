@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.complex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,9 +33,10 @@ sum of squares, i.e. `weighted_sum_squares` with weights 1 or 0. -/
 noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     Isometry (weightedSumSquares ℂ w')
       (weightedSumSquares ℂ (fun i => if w' i = 0 then 0 else 1 : ι → ℂ)) :=
-  by 
+  by
   let w i := if h : w' i = 0 then (1 : Units ℂ) else Units.mk0 (w' i) h
-  have hw' : ∀ i : ι, (w i : ℂ) ^ (-(1 / 2 : ℂ)) ≠ 0 := by
+  have hw' : ∀ i : ι, (w i : ℂ) ^ (-(1 / 2 : ℂ)) ≠ 0 :=
+    by
     intro i hi
     exact (w i).NeZero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
   convert
@@ -63,7 +64,8 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   have hww' : w' j = w j := by simp only [w, dif_neg h, Units.val_mk0]
   simp only [hww', one_mul]
   change v j * v j = ↑(w j) * (v j * ↑(w j) ^ (-(1 / 2 : ℂ)) * (v j * ↑(w j) ^ (-(1 / 2 : ℂ))))
-  suffices v j * v j = w j ^ (-(1 / 2 : ℂ)) * w j ^ (-(1 / 2 : ℂ)) * w j * v j * v j by
+  suffices v j * v j = w j ^ (-(1 / 2 : ℂ)) * w j ^ (-(1 / 2 : ℂ)) * w j * v j * v j
+    by
     rw [this]
     ring
   rw [← Complex.cpow_add _ _ (w j).NeZero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul],
@@ -73,8 +75,10 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
 noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ) :
-    Isometry (weightedSumSquares ℂ w) (weightedSumSquares ℂ (1 : ι → ℂ)) := by
-  have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 := by
+    Isometry (weightedSumSquares ℂ w) (weightedSumSquares ℂ (1 : ι → ℂ)) :=
+  by
+  have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 :=
+    by
     ext i : 1
     exact dif_neg (w i).NeZero
   have := isometry_sum_squares (coe ∘ w)
@@ -84,19 +88,19 @@ noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ
 
 /-- A nondegenerate quadratic form on the complex numbers is equivalent to
 the sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
-theorem equivalent_sum_squares {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
+theorem equivalentSumSquares {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (Q : QuadraticForm ℂ M) (hQ : (associated Q).Nondegenerate) :
     Equivalent Q (weightedSumSquares ℂ (1 : Fin (FiniteDimensional.finrank ℂ M) → ℂ)) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares_units_of_nondegenerate' hQ
   ⟨hw₁.trans (isometrySumSquaresUnits w)⟩
-#align quadratic_form.equivalent_sum_squares QuadraticForm.equivalent_sum_squares
+#align quadratic_form.equivalent_sum_squares QuadraticForm.equivalentSumSquares
 
 /-- All nondegenerate quadratic forms on the complex numbers are equivalent. -/
-theorem complex_equivalent {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
+theorem complexEquivalent {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (Q₁ Q₂ : QuadraticForm ℂ M) (hQ₁ : (associated Q₁).Nondegenerate)
     (hQ₂ : (associated Q₂).Nondegenerate) : Equivalent Q₁ Q₂ :=
-  (Q₁.equivalent_sum_squares hQ₁).trans (Q₂.equivalent_sum_squares hQ₂).symm
-#align quadratic_form.complex_equivalent QuadraticForm.complex_equivalent
+  (Q₁.equivalentSumSquares hQ₁).trans (Q₂.equivalentSumSquares hQ₂).symm
+#align quadratic_form.complex_equivalent QuadraticForm.complexEquivalent
 
 end QuadraticForm
 

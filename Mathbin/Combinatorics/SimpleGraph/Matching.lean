@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.matching
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,8 @@ noncomputable def IsMatching.toEdge {M : Subgraph G} (h : M.IsMatching) (v : M.v
 #align simple_graph.subgraph.is_matching.to_edge SimpleGraph.Subgraph.IsMatching.toEdge
 
 theorem IsMatching.to_edge_eq_of_adj {M : Subgraph G} (h : M.IsMatching) {v w : V}
-    (hv : v ∈ M.verts) (hvw : M.Adj v w) : h.toEdge ⟨v, hv⟩ = ⟨⟦(v, w)⟧, hvw⟩ := by
+    (hv : v ∈ M.verts) (hvw : M.Adj v w) : h.toEdge ⟨v, hv⟩ = ⟨⟦(v, w)⟧, hvw⟩ :=
+  by
   simp only [is_matching.to_edge, Subtype.mk_eq_mk]
   congr
   exact ((h (M.edge_vert hvw)).some_spec.2 w hvw).symm
@@ -73,7 +74,7 @@ theorem IsMatching.to_edge_eq_of_adj {M : Subgraph G} (h : M.IsMatching) {v w : 
   simple_graph.subgraph.is_matching.to_edge_eq_of_adj SimpleGraph.Subgraph.IsMatching.to_edge_eq_of_adj
 
 theorem IsMatching.toEdge.surjective {M : Subgraph G} (h : M.IsMatching) :
-    Function.Surjective h.toEdge := by 
+    Function.Surjective h.toEdge := by
   rintro ⟨e, he⟩
   refine' Sym2.ind (fun x y he => _) e he
   exact ⟨⟨x, M.edge_vert he⟩, h.to_edge_eq_of_adj _ he⟩
@@ -94,7 +95,8 @@ def IsPerfectMatching : Prop :=
   M.IsMatching ∧ M.IsSpanning
 #align simple_graph.subgraph.is_perfect_matching SimpleGraph.Subgraph.IsPerfectMatching
 
-theorem IsMatching.support_eq_verts {M : Subgraph G} (h : M.IsMatching) : M.support = M.verts := by
+theorem IsMatching.support_eq_verts {M : Subgraph G} (h : M.IsMatching) : M.support = M.verts :=
+  by
   refine' M.support_subset_verts.antisymm fun v hv => _
   obtain ⟨w, hvw, -⟩ := h hv
   exact ⟨_, hvw⟩
@@ -108,14 +110,15 @@ theorem is_matching_iff_forall_degree {M : Subgraph G} [∀ v : V, Fintype (M.ne
 
 theorem IsMatching.even_card {M : Subgraph G} [Fintype M.verts] (h : M.IsMatching) :
     Even M.verts.toFinset.card := by
-  classical 
+  classical
     rw [is_matching_iff_forall_degree] at h
     use M.coe.edge_finset.card
     rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
     simp [h, Finset.card_univ]
 #align simple_graph.subgraph.is_matching.even_card SimpleGraph.Subgraph.IsMatching.even_card
 
-theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v w := by
+theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v w :=
+  by
   refine' ⟨_, fun hm => ⟨fun v hv => hm v, fun v => _⟩⟩
   · rintro ⟨hm, hs⟩ v
     exact hm (hs v)

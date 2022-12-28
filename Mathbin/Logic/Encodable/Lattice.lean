@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module logic.encodable.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,8 @@ namespace Encodable
 variable {α : Type _} {β : Type _} [Encodable β]
 
 theorem supr_decode₂ [CompleteLattice α] (f : β → α) :
-    (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by
+    (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b :=
+  by
   rw [supᵢ_comm]
   simp [mem_decode₂]
 #align encodable.supr_decode₂ Encodable.supr_decode₂
@@ -44,16 +45,17 @@ theorem Union_decode₂ (f : β → Set α) : (⋃ (i : ℕ) (b ∈ decode₂ β
 theorem Union_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C ∅) (H1 : ∀ b, C (f b)) {n} :
     C (⋃ b ∈ decode₂ β n, f b) :=
   match decode₂ β n with
-  | none => by 
+  | none => by
     simp
     apply H0
-  | some b => by 
+  | some b => by
     convert H1 b
     simp [ext_iff]
 #align encodable.Union_decode₂_cases Encodable.Union_decode₂_cases
 
 theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint on f)) :
-    Pairwise (Disjoint on fun i => ⋃ b ∈ decode₂ β i, f b) := by
+    Pairwise (Disjoint on fun i => ⋃ b ∈ decode₂ β i, f b) :=
+  by
   rintro i j ij
   refine' disjoint_left.mpr fun x => _
   suffices ∀ a, encode a = i → x ∈ f a → ∀ b, encode b = j → x ∉ f b by simpa [decode₂_eq_some]

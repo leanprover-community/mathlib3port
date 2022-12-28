@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.essentially_small
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,8 @@ noncomputable def equivSmallModel (C : Type u) [Category.{v} C] [EssentiallySmal
 #align category_theory.equiv_small_model CategoryTheory.equivSmallModel
 
 theorem essentially_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
-    (e : C ≌ D) : EssentiallySmall.{w} C ↔ EssentiallySmall.{w} D := by
+    (e : C ≌ D) : EssentiallySmall.{w} C ↔ EssentiallySmall.{w} D :=
+  by
   fconstructor
   · rintro ⟨S, 𝒮, ⟨f⟩⟩
     skip
@@ -99,7 +100,8 @@ instance (C : Type u) [Category.{v} C] [LocallySmall.{w} C] (X Y : C) : Small (X
   LocallySmall.hom_small X Y
 
 theorem locally_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
-    (e : C ≌ D) : LocallySmall.{w} C ↔ LocallySmall.{w} D := by
+    (e : C ≌ D) : LocallySmall.{w} C ↔ LocallySmall.{w} D :=
+  by
   fconstructor
   · rintro ⟨L⟩
     fconstructor
@@ -115,8 +117,8 @@ theorem locally_small_congr {C : Type u} [Category.{v} C] {D : Type u'} [Categor
     exact equiv_of_fully_faithful e.functor
 #align category_theory.locally_small_congr CategoryTheory.locally_small_congr
 
-instance (priority := 100) locally_small_self (C : Type u) [Category.{v} C] :
-    LocallySmall.{v} C where
+instance (priority := 100) locally_small_self (C : Type u) [Category.{v} C] : LocallySmall.{v} C
+    where
 #align category_theory.locally_small_self CategoryTheory.locally_small_self
 
 instance (priority := 100) locally_small_of_essentially_small (C : Type u) [Category.{v} C]
@@ -165,26 +167,24 @@ end
 variable (C) [LocallySmall.{w} C]
 
 @[simps]
-noncomputable instance :
-    Category.{w}
-      (ShrinkHoms
-        C) where 
+noncomputable instance : Category.{w} (ShrinkHoms C)
+    where
   Hom X Y := Shrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)
   id X := equivShrink _ (𝟙 (fromShrinkHoms X))
   comp X Y Z f g := equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
-noncomputable def functor :
-    C ⥤ ShrinkHoms C where 
+noncomputable def functor : C ⥤ ShrinkHoms C
+    where
   obj X := toShrinkHoms X
   map X Y f := equivShrink (X ⟶ Y) f
 #align category_theory.shrink_homs.functor CategoryTheory.ShrinkHoms.functor
 
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
-noncomputable def inverse :
-    ShrinkHoms C ⥤ C where 
+noncomputable def inverse : ShrinkHoms C ⥤ C
+    where
   obj X := fromShrinkHoms X
   map X Y f := (equivShrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)).symm f
 #align category_theory.shrink_homs.inverse CategoryTheory.ShrinkHoms.inverse

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.extr_closure
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,8 @@ protected theorem IsExtrOn.closure (h : IsExtrOn f s a) (hc : ContinuousOn f (cl
 #align is_extr_on.closure IsExtrOn.closure
 
 protected theorem IsLocalMaxOn.closure (h : IsLocalMaxOn f s a) (hc : ContinuousOn f (closure s)) :
-    IsLocalMaxOn f (closure s) a := by
+    IsLocalMaxOn f (closure s) a :=
+  by
   rcases mem_nhds_within.1 h with ⟨U, Uo, aU, hU⟩
   refine' mem_nhds_within.2 ⟨U, Uo, aU, _⟩
   rintro x ⟨hxU, hxs⟩

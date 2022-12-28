@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.option
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,8 +57,10 @@ namespace Fintype
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ β → P α → P β)
     (h_empty : P PEmpty) (h_option : ∀ {α} [Fintype α] [DecidableEq α], P α → P (Option α))
-    (α : Type u) [Fintype α] [DecidableEq α] : Trunc (P α) := by
-  suffices ∀ n : ℕ, Trunc (P (ULift <| Fin n)) by
+    (α : Type u) [Fintype α] [DecidableEq α] : Trunc (P α) :=
+  by
+  suffices ∀ n : ℕ, Trunc (P (ULift <| Fin n))
+    by
     apply Trunc.bind (this (Fintype.card α))
     intro h
     apply Trunc.map _ (Fintype.truncEquivFin α)
@@ -86,7 +88,8 @@ that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 theorem induction_empty_option {P : ∀ (α : Type u) [Fintype α], Prop}
     (of_equiv : ∀ (α β) [Fintype β] (e : α ≃ β), @P α (@Fintype.ofEquiv α β ‹_› e.symm) → @P β ‹_›)
     (h_empty : P PEmpty) (h_option : ∀ (α) [Fintype α], P α → P (Option α)) (α : Type u)
-    [Fintype α] : P α := by
+    [Fintype α] : P α :=
+  by
   obtain ⟨p⟩ :=
     @trunc_rec_empty_option (fun α => ∀ h, @P α h) (fun α β e hα hβ => @of_equiv α β hβ e (hα _))
       (fun _i => by convert h_empty) _ α _ (Classical.decEq α)
@@ -102,7 +105,7 @@ end Fintype
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α ≃ β → P α → P β)
     (h_empty : P PEmpty) (h_option : ∀ {α} [Fintype α], P α → P (Option α)) (α : Type u)
-    [Finite α] : P α := by 
+    [Finite α] : P α := by
   cases nonempty_fintype α
   refine' Fintype.induction_empty_option _ _ _ α
   exacts[fun α β _ => of_equiv, h_empty, @h_option]

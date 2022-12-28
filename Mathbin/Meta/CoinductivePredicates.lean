@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl (CMU)
 
 ! This file was ported from Lean 3 source module meta.coinductive_predicates
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,7 +15,8 @@ section
 universe u
 
 @[user_attribute]
-unsafe def monotonicity : user_attribute where 
+unsafe def monotonicity : user_attribute
+    where
   Name := `monotonicity
   descr := "Monotonicity rules for predicates"
 #align monotonicity monotonicity
@@ -566,7 +567,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
             NewGoals := NewGoals.all }
     let g
       ←-- analyse relation
-          List.head <$>
+          List.headI <$>
           get_goals
     let List.cons _ m_is ← return <| mvars.dropWhile fun v => v.2 ≠ g
     let tgt ← target
@@ -584,7 +585,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
               let t ← infer_type x
               mk_mapp `eq [t, x, y]
         let rel ← mk_exists_lst bs eqs
-        exact (rel is)
+        exact (Rel is)
     -- prove predicate
         solve1
         do

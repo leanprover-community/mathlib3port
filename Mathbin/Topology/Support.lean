@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.support
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem tsupport_mul_subset_right {α : Type _} [MulZeroClass α] {f g : X → �
 
 end One
 
-theorem tsupport_smul_subset_left {M α} [TopologicalSpace X] [Zero M] [Zero α] [SmulWithZero M α]
+theorem tsupport_smul_subset_left {M α} [TopologicalSpace X] [Zero M] [Zero α] [SMulWithZero M α]
     (f : X → M) (g : X → α) : (tsupport fun x => f x • g x) ⊆ tsupport f :=
   closure_mono <| support_smul_subset_left f g
 #align tsupport_smul_subset_left tsupport_smul_subset_left
@@ -172,7 +172,8 @@ theorem has_compact_mul_support_iff_eventually_eq :
 
 @[to_additive]
 theorem HasCompactMulSupport.is_compact_range [TopologicalSpace β] (h : HasCompactMulSupport f)
-    (hf : Continuous f) : IsCompact (range f) := by
+    (hf : Continuous f) : IsCompact (range f) :=
+  by
   cases' range_eq_image_mul_tsupport_or f with h2 h2 <;> rw [h2]
   exacts[h.image hf, (h.image hf).insert 1]
 #align has_compact_mul_support.is_compact_range HasCompactMulSupport.is_compact_range
@@ -203,7 +204,8 @@ theorem has_compact_mul_support_comp_left (hg : ∀ {x}, g x = 1 ↔ x = 1) :
 
 @[to_additive]
 theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f) {g : α' → α}
-    (hg : ClosedEmbedding g) : HasCompactMulSupport (f ∘ g) := by
+    (hg : ClosedEmbedding g) : HasCompactMulSupport (f ∘ g) :=
+  by
   rw [has_compact_mul_support_def, Function.mul_support_comp_eq_preimage]
   refine' is_compact_of_is_closed_subset (hg.is_compact_preimage hf) is_closed_closure _
   rw [hg.to_embedding.closure_eq_preimage_closure_image]
@@ -213,7 +215,8 @@ theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f)
 @[to_additive]
 theorem HasCompactMulSupport.comp₂_left (hf : HasCompactMulSupport f)
     (hf₂ : HasCompactMulSupport f₂) (hm : m 1 1 = 1) :
-    HasCompactMulSupport fun x => m (f x) (f₂ x) := by
+    HasCompactMulSupport fun x => m (f x) (f₂ x) :=
+  by
   rw [has_compact_mul_support_iff_eventually_eq] at hf hf₂⊢
   filter_upwards [hf, hf₂] using fun x hx hx₂ => by simp_rw [hx, hx₂, Pi.one_apply, hm]
 #align has_compact_mul_support.comp₂_left HasCompactMulSupport.comp₂_left
@@ -240,30 +243,33 @@ variable [TopologicalSpace α] [MonoidWithZero R] [AddMonoid M] [DistribMulActio
 
 variable {f : α → R} {f' : α → M} {x : α}
 
-theorem HasCompactSupport.smul_left (hf : HasCompactSupport f') : HasCompactSupport (f • f') := by
+theorem HasCompactSupport.smul_left (hf : HasCompactSupport f') : HasCompactSupport (f • f') :=
+  by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
 #align has_compact_support.smul_left HasCompactSupport.smul_left
 
 end DistribMulAction
 
-section SmulWithZero
+section SMulWithZero
 
-variable [TopologicalSpace α] [Zero R] [Zero M] [SmulWithZero R M]
+variable [TopologicalSpace α] [Zero R] [Zero M] [SMulWithZero R M]
 
 variable {f : α → R} {f' : α → M} {x : α}
 
-theorem HasCompactSupport.smul_right (hf : HasCompactSupport f) : HasCompactSupport (f • f') := by
+theorem HasCompactSupport.smul_right (hf : HasCompactSupport f) : HasCompactSupport (f • f') :=
+  by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, zero_smul]
 #align has_compact_support.smul_right HasCompactSupport.smul_right
 
-theorem HasCompactSupport.smul_left' (hf : HasCompactSupport f') : HasCompactSupport (f • f') := by
+theorem HasCompactSupport.smul_left' (hf : HasCompactSupport f') : HasCompactSupport (f • f') :=
+  by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.smul_apply', hx, Pi.zero_apply, smul_zero]
 #align has_compact_support.smul_left' HasCompactSupport.smul_left'
 
-end SmulWithZero
+end SMulWithZero
 
 section MulZeroClass
 
@@ -271,12 +277,14 @@ variable [TopologicalSpace α] [MulZeroClass β]
 
 variable {f f' : α → β} {x : α}
 
-theorem HasCompactSupport.mul_right (hf : HasCompactSupport f) : HasCompactSupport (f * f') := by
+theorem HasCompactSupport.mul_right (hf : HasCompactSupport f) : HasCompactSupport (f * f') :=
+  by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, zero_mul]
 #align has_compact_support.mul_right HasCompactSupport.mul_right
 
-theorem HasCompactSupport.mul_left (hf : HasCompactSupport f') : HasCompactSupport (f * f') := by
+theorem HasCompactSupport.mul_left (hf : HasCompactSupport f') : HasCompactSupport (f * f') :=
+  by
   rw [has_compact_support_iff_eventually_eq] at hf⊢
   refine' hf.mono fun x hx => by simp_rw [Pi.mul_apply, hx, Pi.zero_apply, mul_zero]
 #align has_compact_support.mul_left HasCompactSupport.mul_left
@@ -297,9 +305,9 @@ theorem exists_finset_nhd_mul_support_subset {f : ι → X → R}
     (ho : ∀ i, IsOpen (U i)) (x : X) :
     ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i),
       ∀ z ∈ n, (mulSupport fun i => f i z) ⊆ is :=
-  by 
+  by
   obtain ⟨n, hn, hnf⟩ := hlf x
-  classical 
+  classical
     let is := hnf.to_finset.filter fun i => x ∈ U i
     let js := hnf.to_finset.filter fun j => x ∉ U j
     refine'
@@ -311,12 +319,13 @@ theorem exists_finset_nhd_mul_support_subset {f : ι → X → R}
           IsClosed.compl_mem_nhds (is_closed_mul_tsupport _)
             (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
     · exact (bInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
-    · have hzn : z ∈ n := by 
+    · have hzn : z ∈ n := by
         rw [inter_assoc] at hz
         exact mem_of_mem_inter_left hz
       replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
       simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
-      suffices (mul_support fun i => f i z) ⊆ hnf.to_finset by
+      suffices (mul_support fun i => f i z) ⊆ hnf.to_finset
+        by
         refine' hnf.to_finset.subset_coe_filter_of_subset_forall _ this fun i hi => _
         specialize hz i ⟨z, ⟨hi, hzn⟩⟩
         contrapose hz

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Arthur Paulino
 
 ! This file was ported from Lean 3 source module tactic.lint.misc
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,8 +107,8 @@ private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option Stri
 -- else none
 /-- A linter for checking whether illegal constants (≥, >) appear in a declaration's type. -/
 @[linter]
-unsafe def linter.ge_or_gt :
-    linter where 
+unsafe def linter.ge_or_gt : linter
+    where
   test := ge_or_gt_in_statement
   auto_decls := false
   no_errors_found := "Not using ≥/> in declarations."
@@ -147,8 +147,8 @@ private unsafe def dup_namespace (d : declaration) : tactic (Option String) :=
 
 /-- A linter for checking whether a declaration has a namespace twice consecutively in its name. -/
 @[linter]
-unsafe def linter.dup_namespace :
-    linter where 
+unsafe def linter.dup_namespace : linter
+    where
   test := dup_namespace
   auto_decls := false
   no_errors_found := "No declarations have a duplicate namespace."
@@ -219,8 +219,8 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
 
 /-- A linter object for checking for unused arguments. This is in the default linter set. -/
 @[linter]
-unsafe def linter.unused_arguments :
-    linter where 
+unsafe def linter.unused_arguments : linter
+    where
   test := unused_arguments
   auto_decls := false
   no_errors_found := "No unused arguments."
@@ -249,8 +249,8 @@ private unsafe def doc_blame_report_thm : declaration → tactic (Option String)
 
 /-- A linter for checking definition doc strings -/
 @[linter]
-unsafe def linter.doc_blame :
-    linter where 
+unsafe def linter.doc_blame : linter
+    where
   test d :=
     condM (not <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none)
   auto_decls := false
@@ -259,8 +259,8 @@ unsafe def linter.doc_blame :
 #align linter.doc_blame linter.doc_blame
 
 /-- A linter for checking theorem doc strings. This is not in the default linter set. -/
-unsafe def linter.doc_blame_thm :
-    linter where 
+unsafe def linter.doc_blame_thm : linter
+    where
   test := doc_blame_report_thm
   auto_decls := false
   no_errors_found := "No theorems are missing documentation."
@@ -303,8 +303,8 @@ private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option String
 /-- A linter for checking whether the correct declaration constructor (definition or theorem)
 has been used. -/
 @[linter]
-unsafe def linter.def_lemma :
-    linter where 
+unsafe def linter.def_lemma : linter
+    where
   test := incorrect_def_lemma
   auto_decls := false
   no_errors_found := "All declarations correctly marked as def/lemma."
@@ -323,7 +323,8 @@ unsafe def check_type (d : declaration) : tactic (Option String) :=
 
 /-- A linter for missing checking whether statements of declarations are well-typed. -/
 @[linter]
-unsafe def linter.check_type : linter where 
+unsafe def linter.check_type : linter
+    where
   test := check_type
   auto_decls := false
   no_errors_found :=
@@ -390,7 +391,8 @@ unsafe def check_univs (d : declaration) : tactic (Option String) := do
 
 /-- A linter for checking that there are no bad `max u v` universe levels. -/
 @[linter]
-unsafe def linter.check_univs : linter where 
+unsafe def linter.check_univs : linter
+    where
   test := check_univs
   auto_decls := false
   no_errors_found := "All declarations have good universe levels."
@@ -427,7 +429,7 @@ unsafe def syn_taut (d : declaration) : tactic (Option String) :=
 
 /-- A linter for checking that declarations aren't syntactic tautologies. -/
 @[linter]
-unsafe def linter.syn_taut : linter where 
+unsafe def linter.syn_taut : linter where
   test := syn_taut
   auto_decls := false
   -- many false positives with this enabled
@@ -506,8 +508,8 @@ unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option String) 
 /-- A linter for checking that declarations don't have unused term mode have statements. We do not
 tag this as `@[linter]` so that it is not in the default linter set as it is slow and an uncommon
 problem. -/
-unsafe def linter.unused_haves_suffices :
-    linter where 
+unsafe def linter.unused_haves_suffices : linter
+    where
   test := has_unused_haves_suffices
   auto_decls := false
   no_errors_found := "No declarations have unused term mode have statements."
@@ -547,8 +549,8 @@ unsafe def unprintable_interactive (d : declaration) : tactic (Option String) :=
 
 /-- A linter for checking that interactive tactics have parser documentation. -/
 @[linter]
-unsafe def linter.unprintable_interactive :
-    linter where 
+unsafe def linter.unprintable_interactive : linter
+    where
   test := unprintable_interactive
   auto_decls := true
   no_errors_found := "No tactics are unprintable."
@@ -605,8 +607,8 @@ unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option String) := do
 /-- A linter for checking if variables appearing on both sides of an iff are explicit. Ideally, such
 variables should be implicit instead.
 -/
-unsafe def linter.explicit_vars_of_iff :
-    linter where 
+unsafe def linter.explicit_vars_of_iff : linter
+    where
   test := explicit_vars_of_iff
   auto_decls := false
   no_errors_found := "No explicit variables on both sides of iff"

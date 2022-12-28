@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sam van Gool, Jake Levinson
 
 ! This file was ported from Lean 3 source module topology.sheaves.locally_surjective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,8 @@ variable [Limits.HasColimits C] [Limits.PreservesFilteredColimits (forget C)]
 /-- An equivalent condition for a map of presheaves to be locally surjective
 is for all the induced maps on stalks to be surjective. -/
 theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
-    IsLocallySurjective T ↔ ∀ x : X, Function.Surjective ((stalkFunctor C x).map T) := by
+    IsLocallySurjective T ↔ ∀ x : X, Function.Surjective ((stalkFunctor C x).map T) :=
+  by
   constructor <;> intro hT
   · /- human proof:
         Let g ∈ Γₛₜ 𝒢 x be a germ. Represent it on an open set U ⊆ X
@@ -109,7 +110,7 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
     -- rfl : ℱ.germ x s = s_x
     have key_W :=
       𝒢.germ_eq x hxV hxU (T.app _ s) t
-        (by 
+        (by
           convert hs_x
           symm
           convert stalk_functor_map_germ_apply _ _ _ s)

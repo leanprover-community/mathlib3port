@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.semiring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,8 +72,8 @@ theorem down_ssubset_down {s t : SetSemiring α} : s.down ⊂ t.down ↔ s < t :
   Iff.rfl
 #align set_semiring.down_ssubset_down SetSemiring.down_ssubset_down
 
-instance : AddCommMonoid
-      (SetSemiring α) where 
+instance : AddCommMonoid (SetSemiring α)
+    where
   add s t := (s.down ∪ t.down).up
   zero := (∅ : Set α).up
   add_assoc := union_assoc
@@ -92,7 +92,8 @@ section Mul
 variable [Mul α]
 
 instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
-  { SetSemiring.addCommMonoid with
+  {
+    SetSemiring.addCommMonoid with
     mul := fun s t => (image2 (· * ·) s.down t.down).up
     zero_mul := fun s => empty_mul
     mul_zero := fun s => mul_empty
@@ -118,7 +119,8 @@ instance covariant_class_mul_right :
 end Mul
 
 instance [MulOneClass α] : NonAssocSemiring (SetSemiring α) :=
-  { SetSemiring.nonUnitalNonAssocSemiring, Set.mulOneClass with
+  { SetSemiring.nonUnitalNonAssocSemiring,
+    Set.mulOneClass with
     one := 1
     mul := (· * ·) }
 
@@ -140,8 +142,8 @@ instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
 
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/
-def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) :
-    SetSemiring α →+* SetSemiring β where 
+def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α →+* SetSemiring β
+    where
   toFun := image f
   map_zero' := image_empty _
   map_one' := by rw [image_one, map_one, singleton_one]

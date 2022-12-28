@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.simply_connected
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem simply_connected_def (X : Type _) [TopologicalSpace X] :
 theorem simply_connected_iff_unique_homotopic (X : Type _) [TopologicalSpace X] :
     SimplyConnectedSpace X ↔
       Nonempty X ∧ ∀ x y : X, Nonempty (Unique (Path.Homotopic.Quotient x y)) :=
-  by 
+  by
   rw [simply_connected_def, equiv_punit_iff_unique]
   rfl
 #align simply_connected_iff_unique_homotopic simply_connected_iff_unique_homotopic
@@ -60,7 +60,7 @@ variable {X : Type _} [TopologicalSpace X] [SimplyConnectedSpace X]
 instance (x y : X) : Subsingleton (Path.Homotopic.Quotient x y) :=
   @Unique.subsingleton _
     (Nonempty.some
-      (by 
+      (by
         rw [simply_connected_iff_unique_homotopic] at *
         tauto))
 
@@ -77,8 +77,8 @@ theorem pathsHomotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p�
 #align simply_connected_space.paths_homotopic SimplyConnectedSpace.pathsHomotopic
 
 instance (priority := 100) ofContractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :
-    SimplyConnectedSpace
-      Y where equiv_unit :=
+    SimplyConnectedSpace Y
+    where equiv_unit :=
     let H : TopCat.of Y ≃ₕ TopCat.of Unit := (ContractibleSpace.hequiv_unit Y).some
     ⟨(FundamentalGroupoidFunctor.equivOfHomotopyEquiv H).trans
         FundamentalGroupoid.punitEquivDiscretePunit⟩
@@ -93,9 +93,9 @@ attribute [local instance] Path.Homotopic.setoid
 theorem simply_connected_iff_paths_homotopic {Y : Type _} [TopologicalSpace Y] :
     SimplyConnectedSpace Y ↔
       PathConnectedSpace Y ∧ ∀ x y : Y, Subsingleton (Path.Homotopic.Quotient x y) :=
-  ⟨by 
+  ⟨by
     intro
-    constructor <;> infer_instance, fun h => by 
+    constructor <;> infer_instance, fun h => by
     cases h; rw [simply_connected_iff_unique_homotopic]
     exact ⟨inferInstance, fun x y => ⟨uniqueOfSubsingleton ⟦PathConnectedSpace.somePath x y⟧⟩⟩⟩
 #align simply_connected_iff_paths_homotopic simply_connected_iff_paths_homotopic
@@ -104,7 +104,7 @@ theorem simply_connected_iff_paths_homotopic {Y : Type _} [TopologicalSpace Y] :
 theorem simply_connected_iff_paths_homotopic' {Y : Type _} [TopologicalSpace Y] :
     SimplyConnectedSpace Y ↔
       PathConnectedSpace Y ∧ ∀ {x y : Y} (p₁ p₂ : Path x y), Path.Homotopic p₁ p₂ :=
-  by 
+  by
   convert simply_connected_iff_paths_homotopic
   simp [Path.Homotopic.Quotient, Setoid.eq_top_iff]; rfl
 #align simply_connected_iff_paths_homotopic' simply_connected_iff_paths_homotopic'

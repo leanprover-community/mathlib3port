@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.discriminant
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,8 @@ variable [IsCyclotomicExtension {n} ℚ K]
 /-- The discriminant of the power basis given by a primitive root of unity `ζ` is the same as the
 discriminant of the power basis given by `ζ - 1`. -/
 theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
-    discr ℚ (hζ.PowerBasis ℚ).Basis = discr ℚ (hζ.subOnePowerBasis ℚ).Basis := by
+    discr ℚ (hζ.PowerBasis ℚ).Basis = discr ℚ (hζ.subOnePowerBasis ℚ).Basis :=
+  by
   haveI : NumberField K := NumberField.mk
   have H₁ : (aeval (hζ.power_basis ℚ).gen) (X - 1 : ℤ[X]) = (hζ.sub_one_power_basis ℚ).gen := by
     simp
@@ -72,9 +73,9 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
     (hk : p ^ (k + 1) ≠ 2) :
     discr K (hζ.PowerBasis K).Basis =
       (-1) ^ ((p ^ (k + 1) : ℕ).totient / 2) * p ^ ((p : ℕ) ^ k * ((p - 1) * (k + 1) - 1)) :=
-  by 
+  by
   haveI hne := IsCyclotomicExtension.ne_zero' (p ^ (k + 1)) K L
-  have hp2 : p = 2 → 1 ≤ k := by 
+  have hp2 : p = 2 → 1 ≤ k := by
     intro hp
     refine' one_le_iff_ne_zero.2 fun h => _
     rw [h, hp, zero_add, pow_one] at hk
@@ -118,7 +119,8 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
     simp only [aeval_add, aeval_mul, minpoly.aeval, zero_mul, add_zero, aeval_nat_cast,
       _root_.map_sub, aeval_one, aeval_X_pow] at H
     replace H := congr_arg (Algebra.norm K) H
-    have hnorm : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = p ^ (p : ℕ) ^ k := by
+    have hnorm : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = p ^ (p : ℕ) ^ k :=
+      by
       by_cases hp : p = 2
       · exact hζ.pow_sub_one_norm_prime_pow_of_one_le hirr rfl.le (hp2 hp)
       · exact hζ.pow_sub_one_norm_prime_ne_two hirr rfl.le hp
@@ -158,7 +160,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) (hirr : Irreducible (cyclotomic (↑(p ^ k) : ℕ) K)) :
     discr K (hζ.PowerBasis K).Basis =
       (-1) ^ ((p ^ k : ℕ).totient / 2) * p ^ ((p : ℕ) ^ (k - 1) * ((p - 1) * k - 1)) :=
-  by 
+  by
   cases k
   · simp only [coe_basis, pow_zero, power_basis_gen, totient_one, mul_zero, mul_one,
       show 1 / 2 = 0 by rfl, discr, trace_matrix]
@@ -171,7 +173,8 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
     · infer_instance
     · exact hcycl
   · by_cases hk : p ^ (k + 1) = 2
-    · have hp : p = 2 := by
+    · have hp : p = 2 :=
+        by
         rw [← PNat.coe_inj, PNat.coe_bit0, PNat.one_coe, PNat.pow_coe, ← pow_one 2] at hk
         replace hk :=
           eq_of_prime_pow_eq (prime_iff.1 hp.out) (prime_iff.1 Nat.prime_two) (succ_pos _) hk
@@ -200,7 +203,8 @@ less cumbersome to use than `is_cyclotomic_extension.discr_prime_pow`. -/
 theorem discr_prime_pow_eq_unit_mul_pow [IsCyclotomicExtension {p ^ k} K L]
     [hp : Fact (p : ℕ).Prime] (hζ : IsPrimitiveRoot ζ ↑(p ^ k))
     (hirr : Irreducible (cyclotomic (↑(p ^ k) : ℕ) K)) :
-    ∃ (u : ℤˣ)(n : ℕ), discr K (hζ.PowerBasis K).Basis = u * p ^ n := by
+    ∃ (u : ℤˣ)(n : ℕ), discr K (hζ.PowerBasis K).Basis = u * p ^ n :=
+  by
   rw [discr_prime_pow hζ hirr]
   by_cases heven : Even ((p ^ k : ℕ).totient / 2)
   · refine' ⟨1, (p : ℕ) ^ (k - 1) * ((p - 1) * k - 1), by simp [heven.neg_one_pow]⟩
@@ -215,8 +219,10 @@ theorem discr_prime_pow_eq_unit_mul_pow [IsCyclotomicExtension {p ^ k} K L]
 `irreducible (cyclotomic p K)`. -/
 theorem discr_odd_prime [IsCyclotomicExtension {p} K L] [hp : Fact (p : ℕ).Prime]
     (hζ : IsPrimitiveRoot ζ p) (hirr : Irreducible (cyclotomic p K)) (hodd : p ≠ 2) :
-    discr K (hζ.PowerBasis K).Basis = (-1) ^ (((p : ℕ) - 1) / 2) * p ^ ((p : ℕ) - 2) := by
-  have : IsCyclotomicExtension {p ^ (0 + 1)} K L := by
+    discr K (hζ.PowerBasis K).Basis = (-1) ^ (((p : ℕ) - 1) / 2) * p ^ ((p : ℕ) - 2) :=
+  by
+  have : IsCyclotomicExtension {p ^ (0 + 1)} K L :=
+    by
     rw [zero_add, pow_one]
     infer_instance
   have hζ' : IsPrimitiveRoot ζ ↑(p ^ (0 + 1)) := by simpa using hζ

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sean Leather, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finmap
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,8 @@ open Alist
 /-- Lift a permutation-respecting function on `alist` to `finmap`. -/
 @[elab_as_elim]
 def liftOn {γ} (s : Finmap β) (f : Alist β → γ)
-    (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ := by
+    (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ :=
+  by
   refine'
     (Quotient.liftOn s.1 (fun l => (⟨_, fun nd => f ⟨l, nd⟩⟩ : Part γ)) fun l₁ l₂ p =>
             Part.ext' (perm_nodupkeys p) _ :
@@ -117,7 +118,8 @@ def liftOn₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
       ∀ a₁ b₁ a₂ b₂ : Alist β,
         a₁.entries ~ a₂.entries → b₁.entries ~ b₂.entries → f a₁ b₁ = f a₂ b₂) :
     γ :=
-  liftOn s₁ (fun l₁ => liftOn s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (Perm.refl _) p) fun a₁ a₂ p => by
+  liftOn s₁ (fun l₁ => liftOn s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (Perm.refl _) p) fun a₁ a₂ p =>
+    by
     have H' : f a₁ = f a₂ := funext fun _ => H _ _ _ _ p (Perm.refl _)
     simp only [H']
 #align finmap.lift_on₂ Finmap.liftOn₂
@@ -302,7 +304,8 @@ theorem mem_of_lookup_eq_some {a : α} {b : β a} {s : Finmap β} (h : s.lookup 
 #align finmap.mem_of_lookup_eq_some Finmap.mem_of_lookup_eq_some
 
 theorem ext_lookup {s₁ s₂ : Finmap β} : (∀ x, s₁.lookup x = s₂.lookup x) → s₁ = s₂ :=
-  (induction_on₂ s₁ s₂) fun s₁ s₂ h => by
+  (induction_on₂ s₁ s₂) fun s₁ s₂ h =>
+    by
     simp only [Alist.lookup, lookup_to_finmap] at h
     rw [Alist.to_finmap_eq]
     apply lookup_ext s₁.nodupkeys s₂.nodupkeys
@@ -348,7 +351,7 @@ def foldl {δ : Type w} (f : δ → ∀ a, β a → δ)
 /-- `any f s` returns `tt` iff there exists a value `v` in `s` such that `f v = tt`. -/
 def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
   s.foldl (fun x y z => x ∨ f y z)
-    (by 
+    (by
       intros
       simp [or_right_comm])
     false
@@ -357,7 +360,7 @@ def any (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
 /-- `all f s` returns `tt` iff `f v = tt` for all values `v` in `s`. -/
 def all (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
   s.foldl (fun x y z => x ∧ f y z)
-    (by 
+    (by
       intros
       simp [and_right_comm])
     false
@@ -477,12 +480,13 @@ theorem to_finmap_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 #align finmap.to_finmap_cons Finmap.to_finmap_cons
 
 theorem mem_list_to_finmap (a : α) (xs : List (Sigma β)) :
-    a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs := by
+    a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs :=
+  by
   induction' xs with x xs <;> [skip, cases x] <;>
       simp only [to_finmap_cons, *, not_mem_empty, exists_or, not_mem_nil, to_finmap_nil,
         exists_false, mem_cons_iff, mem_insert, exists_and_left] <;>
     apply or_congr _ Iff.rfl
-  conv => 
+  conv =>
     lhs
     rw [← and_true_iff (a = x_fst)]
   apply and_congr_right
@@ -546,7 +550,8 @@ theorem lookup_union_right {a} {s₁ s₂ : Finmap β} : a ∉ s₁ → lookup a
 #align finmap.lookup_union_right Finmap.lookup_union_right
 
 theorem lookup_union_left_of_not_in {a} {s₁ s₂ : Finmap β} (h : a ∉ s₂) :
-    lookup a (s₁ ∪ s₂) = lookup a s₁ := by
+    lookup a (s₁ ∪ s₂) = lookup a s₁ :=
+  by
   by_cases h' : a ∈ s₁
   · rw [lookup_union_left h']
   · rw [lookup_union_right h', lookup_eq_none.mpr h, lookup_eq_none.mpr h']
@@ -588,7 +593,7 @@ theorem union_empty {s₁ : Finmap β} : s₁ ∪ ∅ = s₁ :=
 
 theorem erase_union_singleton (a : α) (b : β a) (s : Finmap β) (h : s.lookup a = some b) :
     s.erase a ∪ singleton a b = s :=
-  ext_lookup fun x => by 
+  ext_lookup fun x => by
     by_cases h' : x = a
     · subst a
       rw [lookup_union_right not_mem_erase_self, lookup_singleton_eq, h]
@@ -634,14 +639,14 @@ theorem disjoint_union_right (x y z : Finmap β) :
 #align finmap.disjoint_union_right Finmap.disjoint_union_right
 
 theorem union_comm_of_disjoint {s₁ s₂ : Finmap β} : Disjoint s₁ s₂ → s₁ ∪ s₂ = s₂ ∪ s₁ :=
-  (induction_on₂ s₁ s₂) fun s₁ s₂ => by 
+  (induction_on₂ s₁ s₂) fun s₁ s₂ => by
     intro h
     simp only [Alist.to_finmap_eq, union_to_finmap, Alist.union_comm_of_disjoint h]
 #align finmap.union_comm_of_disjoint Finmap.union_comm_of_disjoint
 
 theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' : Disjoint s₂ s₃) :
     s₁ ∪ s₃ = s₂ ∪ s₃ ↔ s₁ = s₂ :=
-  ⟨fun h'' => by 
+  ⟨fun h'' => by
     apply ext_lookup
     intro x
     have : (s₁ ∪ s₃).lookup x = (s₂ ∪ s₃).lookup x := h'' ▸ rfl
@@ -649,8 +654,7 @@ theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' :
     · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
     · by_cases hs₂ : x ∈ s₂
       · rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
-      · rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂],
-    fun h => h ▸ rfl⟩
+      · rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂], fun h => h ▸ rfl⟩
 #align finmap.union_cancel Finmap.union_cancel
 
 end

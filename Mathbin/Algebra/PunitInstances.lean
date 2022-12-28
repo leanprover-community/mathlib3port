@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.punit_instances
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,8 +71,8 @@ instance : CancelCommMonoidWithZero PUnit := by
   refine' { PUnit.commRing with .. } <;> intros <;> exact Subsingleton.elim _ _
 
 instance : NormalizedGcdMonoid PUnit := by
-  refine'
-        { gcd := fun _ _ => star
+  refine' {
+          gcd := fun _ _ => star
           lcm := fun _ _ => star
           normUnit := fun x => 1
           gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elim _ _⟩
@@ -133,7 +133,7 @@ instance : SMulCommClass R S PUnit :=
 instance [HasSmul R S] : IsScalarTower R S PUnit :=
   ⟨fun _ _ _ => rfl⟩
 
-instance [Zero R] : SmulWithZero R PUnit := by
+instance [Zero R] : SMulWithZero R PUnit := by
   refine' { PUnit.hasSmul with .. } <;> intros <;> exact Subsingleton.elim _ _
 
 instance [Monoid R] : MulAction R PUnit := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich
 
 ! This file was ported from Lean 3 source module measure_theory.measure.sub
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,17 +79,19 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
   let measure_sub : Measure α :=
     @MeasureTheory.Measure.ofMeasurable α _
       (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t) (by simp)
-      (by 
+      (by
         intro g h_meas h_disj; simp only; rw [Ennreal.tsum_sub]
         repeat' rw [← MeasureTheory.measure_Union h_disj h_meas]
         exacts[MeasureTheory.measure_ne_top _ _, fun i => h₂ _ (h_meas _)])
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
-  · have h_measure_sub_add : ν + measure_sub = μ := by
+  · have h_measure_sub_add : ν + measure_sub = μ :=
+      by
       ext (t h_t_measurable_set)
       simp only [Pi.add_apply, coe_add]
       rw [MeasureTheory.Measure.of_measurable_apply _ h_t_measurable_set, add_comm,
         tsub_add_cancel_of_le (h₂ t h_t_measurable_set)]
-    have h_measure_sub_eq : μ - ν = measure_sub := by
+    have h_measure_sub_eq : μ - ν = measure_sub :=
+      by
       rw [MeasureTheory.Measure.sub_def]
       apply le_antisymm
       · apply @infₛ_le (Measure α) measure.complete_semilattice_Inf
@@ -102,13 +104,15 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
     apply measure.of_measurable_apply _ h₁
 #align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_apply
 
-theorem sub_add_cancel_of_le [IsFiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ := by
+theorem sub_add_cancel_of_le [IsFiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ :=
+  by
   ext (s h_s_meas)
   rw [add_apply, sub_apply h_s_meas h₁, tsub_add_cancel_of_le (h₁ s h_s_meas)]
 #align measure_theory.measure.sub_add_cancel_of_le MeasureTheory.Measure.sub_add_cancel_of_le
 
 theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
-    (μ - ν).restrict s = μ.restrict s - ν.restrict s := by
+    (μ - ν).restrict s = μ.restrict s - ν.restrict s :=
+  by
   repeat' rw [sub_def]
   have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, measure.le_add_right le_rfl⟩
   rw [restrict_Inf_eq_Inf_restrict h_nonempty h_meas_s]

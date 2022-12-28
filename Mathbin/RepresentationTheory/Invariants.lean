@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.invariants
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,8 @@ noncomputable def average : MonoidAlgebra k G :=
 -/
 @[simp]
 theorem mul_average_left (g : G) :
-    (Finsupp.single g 1 * average k G : MonoidAlgebra k G) = average k G := by
+    (Finsupp.single g 1 * average k G : MonoidAlgebra k G) = average k G :=
+  by
   simp only [mul_one, Finset.mul_sum, Algebra.mul_smul_comm, average, MonoidAlgebra.of_apply,
     Finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
@@ -57,7 +58,8 @@ theorem mul_average_left (g : G) :
 /-- `average k G` is invariant under right multiplication by elements of `G`.
 -/
 @[simp]
-theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k G := by
+theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k G :=
+  by
   simp only [mul_one, Finset.sum_mul, Algebra.smul_mul_assoc, average, MonoidAlgebra.of_apply,
     Finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
@@ -79,8 +81,8 @@ variable (ρ : Representation k G V)
 
 /-- The subspace of invariants, consisting of the vectors fixed by all elements of `G`.
 -/
-def invariants :
-    Submodule k V where 
+def invariants : Submodule k V
+    where
   carrier := setOf fun v => ∀ g : G, ρ g v = v
   zero_mem' g := by simp only [map_zero]
   add_mem' v w hv hw g := by simp only [hv g, hw g, map_add]
@@ -91,7 +93,8 @@ def invariants :
 theorem mem_invariants (v : V) : v ∈ invariants ρ ↔ ∀ g : G, ρ g v = v := by rfl
 #align representation.mem_invariants Representation.mem_invariants
 
-theorem invariants_eq_inter : (invariants ρ).carrier = ⋂ g : G, Function.fixedPoints (ρ g) := by
+theorem invariants_eq_inter : (invariants ρ).carrier = ⋂ g : G, Function.fixedPoints (ρ g) :=
+  by
   ext
   simp [Function.IsFixedPt]
 #align representation.invariants_eq_inter Representation.invariants_eq_inter
@@ -114,14 +117,15 @@ theorem average_map_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun
 
 /-- The `average_map` acts as the identity on the subspace of invariants.
 -/
-theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v := by
+theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v :=
+  by
   rw [mem_invariants] at hv
   simp [average, map_sum, hv, Finset.card_univ, nsmul_eq_smul_cast k _ v, smul_smul]
 #align representation.average_map_id Representation.average_map_id
 
-theorem is_proj_average_map : LinearMap.IsProj ρ.invariants ρ.averageMap :=
+theorem isProjAverageMap : LinearMap.IsProj ρ.invariants ρ.averageMap :=
   ⟨ρ.average_map_invariant, ρ.average_map_id⟩
-#align representation.is_proj_average_map Representation.is_proj_average_map
+#align representation.is_proj_average_map Representation.isProjAverageMap
 
 end Invariants
 
@@ -136,7 +140,8 @@ section RepCat
 variable {k : Type u} [CommRing k] {G : GroupCat.{u}}
 
 theorem mem_invariants_iff_comm {X Y : RepCat k G} (f : X.V →ₗ[k] Y.V) (g : G) :
-    (linHom X.ρ Y.ρ) g f = f ↔ f.comp (X.ρ g) = (Y.ρ g).comp f := by
+    (linHom X.ρ Y.ρ) g f = f ↔ f.comp (X.ρ g) = (Y.ρ g).comp f :=
+  by
   dsimp
   erw [← ρ_Aut_apply_inv]
   rw [← LinearMap.comp_assoc, ← ModuleCat.comp_def, ← ModuleCat.comp_def, iso.inv_comp_eq,
@@ -147,18 +152,16 @@ theorem mem_invariants_iff_comm {X Y : RepCat k G} (f : X.V →ₗ[k] Y.V) (g : 
 /-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
 homomorphisms from `X` to `Y` -/
 @[simps]
-def invariantsEquivRepHom (X Y : RepCat k G) :
-    (linHom X.ρ Y.ρ).invariants ≃ₗ[k]
-      X ⟶
-        Y where 
+def invariantsEquivRepHom (X Y : RepCat k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y
+    where
   toFun f := ⟨f.val, fun g => (mem_invariants_iff_comm _ g).1 (f.property g)⟩
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := ⟨f.hom, fun g => (mem_invariants_iff_comm _ g).2 (f.comm g)⟩
-  left_inv _ := by 
+  left_inv _ := by
     ext
     rfl
-  right_inv _ := by 
+  right_inv _ := by
     ext
     rfl
 #align representation.lin_hom.invariants_equiv_Rep_hom Representation.linHom.invariantsEquivRepHom
@@ -171,7 +174,8 @@ variable {k : Type u} [Field k] {G : GroupCat.{u}}
 
 /-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
 homomorphisms from `X` to `Y` -/
-def invariantsEquivFdRepHom (X Y : FdRep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y := by
+def invariantsEquivFdRepHom (X Y : FdRep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y :=
+  by
   rw [← FdRep.forget₂_ρ, ← FdRep.forget₂_ρ]
   exact lin_hom.invariants_equiv_Rep_hom _ _ ≪≫ₗ FdRep.forget₂HomLinearEquiv X Y
 #align

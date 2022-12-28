@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,8 @@ variable {α}
 is just multiplication with `-1`. -/
 theorem TopologicalSemiring.has_continuous_neg_of_mul [TopologicalSpace α] [NonAssocRing α]
     [HasContinuousMul α] : HasContinuousNeg α :=
-  { continuous_neg := by
+  {
+    continuous_neg := by
       simpa using (continuous_const.mul continuous_id : Continuous fun x : α => -1 * x) }
 #align topological_semiring.has_continuous_neg_of_mul TopologicalSemiring.has_continuous_neg_of_mul
 
@@ -172,29 +173,28 @@ instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)]
     TopologicalSemiring (∀ b, C b) where
 
 instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)]
-    [∀ b, NonUnitalNonAssocRing (C b)] [∀ b, TopologicalRing (C b)] :
-    TopologicalRing (∀ b, C b) where
+    [∀ b, NonUnitalNonAssocRing (C b)] [∀ b, TopologicalRing (C b)] : TopologicalRing (∀ b, C b)
+    where
 
 section MulOpposite
 
 open MulOpposite
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousAdd α] :
-    HasContinuousAdd
-      αᵐᵒᵖ where continuous_add :=
+    HasContinuousAdd αᵐᵒᵖ
+    where continuous_add :=
     continuous_induced_rng.2 <|
       (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :
     TopologicalSemiring αᵐᵒᵖ where
 
-instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] :
-    HasContinuousNeg
-      αᵐᵒᵖ where continuous_neg :=
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] : HasContinuousNeg αᵐᵒᵖ
+    where continuous_neg :=
     continuous_induced_rng.2 <| (@continuous_neg α _ _ _).comp continuous_unop
 
-instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] :
-    TopologicalRing αᵐᵒᵖ where
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵐᵒᵖ
+    where
 
 end MulOpposite
 
@@ -203,8 +203,8 @@ section AddOpposite
 open AddOpposite
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousMul α] :
-    HasContinuousMul
-      αᵃᵒᵖ where continuous_mul := by
+    HasContinuousMul αᵃᵒᵖ
+    where continuous_mul := by
     convert
       continuous_op.comp <|
         (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
@@ -212,8 +212,8 @@ instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousMul 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :
     TopologicalSemiring αᵃᵒᵖ where
 
-instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] :
-    TopologicalRing αᵃᵒᵖ where
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵃᵒᵖ
+    where
 
 end AddOpposite
 
@@ -224,10 +224,12 @@ variable {R : Type _} [NonUnitalNonAssocRing R] [TopologicalSpace R]
 theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
     (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
-    (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0) : TopologicalRing R := by
+    (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0) : TopologicalRing R :=
+  by
   refine' { ‹TopologicalAddGroup R› with .. }
   have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by simp
-  have hadd : tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) := by
+  have hadd : tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) :=
+    by
     rw [← nhds_prod_eq]
     convert continuous_add.tendsto ((0 : R), (0 : R))
     rw [zero_add]
@@ -240,7 +242,7 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
       ((fun x : R => x + x₀ * y₀) ∘
         (fun p : R × R => p.1 + p.2) ∘ fun p : R × R => (p.1 * y₀ + x₀ * p.2, p.1 * p.2))
       (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) <| 𝓝 0)
-    by 
+    by
     convert this using 1
     · ext
       simp only [comp_app, mul_add, add_mul]
@@ -324,7 +326,9 @@ variable {α : Type _} [TopologicalSpace α] [Ring α] [TopologicalRing α]
 
 /-- The closure of an ideal in a topological ring as an ideal. -/
 def Ideal.closure (S : Ideal α) : Ideal α :=
-  { AddSubmonoid.topologicalClosure S.toAddSubmonoid with
+  {
+    AddSubmonoid.topologicalClosure
+      S.toAddSubmonoid with
     carrier := closure S
     smul_mem' := fun c x hx =>
       (map_mem_closure (mul_left_continuous _) hx) fun a => S.mul_mem_left c }
@@ -355,7 +359,8 @@ instance topologicalRingQuotientTopology : TopologicalSpace (α ⧸ N) :=
 -- note for the reader: in the following, `mk` is `ideal.quotient.mk`, the canonical map `R → R/I`.
 variable [TopologicalRing α]
 
-theorem QuotientRing.is_open_map_coe : IsOpenMap (mk N) := by
+theorem QuotientRing.is_open_map_coe : IsOpenMap (mk N) :=
+  by
   intro s s_op
   change IsOpen (mk N ⁻¹' (mk N '' s))
   rw [quotient_ring_saturate]
@@ -413,7 +418,8 @@ instance inhabited {α : Type u} [Ring α] : Inhabited (RingTopology α) :=
 #align ring_topology.inhabited RingTopology.inhabited
 
 @[ext]
-theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by
+theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g :=
+  by
   ext
   rw [h]
 #align ring_topology.ext' RingTopology.ext'
@@ -429,19 +435,19 @@ local notation "cont" => @Continuous _ _
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
   let Inf_S' := infₛ (to_topological_space '' S)
   { toTopologicalSpace := Inf_S'
-    continuous_add := by 
+    continuous_add := by
       apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id
-    continuous_mul := by 
+    continuous_mul := by
       apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_mul h_continuous_id
-    continuous_neg := by 
+    continuous_neg := by
       apply continuous_Inf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
@@ -457,12 +463,13 @@ The infimum of a collection of ring topologies is the topology generated by all 
 The supremum of two ring topologies `s` and `t` is the infimum of the family of all ring topologies
 contained in the intersection of `s` and `t`. -/
 instance : CompleteSemilatticeInf (RingTopology α) :=
-  { RingTopology.partialOrder with 
+  { RingTopology.partialOrder with
     inf := defInf
-    Inf_le := fun S a haS => by
+    Inf_le := fun S a haS =>
+      by
       apply topological_space.complete_lattice.Inf_le
       use a, ⟨haS, rfl⟩
-    le_Inf := by 
+    le_Inf := by
       intro S a hab
       apply topological_space.complete_lattice.le_Inf
       rintro _ ⟨b, hbS, rfl⟩
@@ -478,7 +485,8 @@ def coinduced {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → �
 #align ring_topology.coinduced RingTopology.coinduced
 
 theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → β) :
-    cont t (coinduced f).toTopologicalSpace f := by
+    cont t (coinduced f).toTopologicalSpace f :=
+  by
   rw [continuous_iff_coinduced_le]
   refine' le_infₛ _
   rintro _ ⟨t', ht', rfl⟩
@@ -486,26 +494,25 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β
 #align ring_topology.coinduced_continuous RingTopology.coinduced_continuous
 
 /-- The forgetful functor from ring topologies on `a` to additive group topologies on `a`. -/
-def toAddGroupTopology (t : RingTopology α) :
-    AddGroupTopology α where 
+def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α
+    where
   toTopologicalSpace := t.toTopologicalSpace
   to_topological_add_group :=
     @TopologicalRing.to_topological_add_group _ _ t.toTopologicalSpace t.to_topological_ring
 #align ring_topology.to_add_group_topology RingTopology.toAddGroupTopology
 
 /-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
-def toAddGroupTopology.orderEmbedding :
-    OrderEmbedding (RingTopology α)
-      (AddGroupTopology α) where 
+def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGroupTopology α)
+    where
   toFun t := t.toAddGroupTopology
-  inj' := by 
+  inj' := by
     intro t₁ t₂ h_eq
     dsimp only at h_eq
     ext
     have h_t₁ : t₁.to_topological_space = t₁.to_add_group_topology.to_topological_space := rfl
     rw [h_t₁, h_eq]
     rfl
-  map_rel_iff' := by 
+  map_rel_iff' := by
     intro t₁ t₂
     rw [embedding.coe_fn_mk]
     have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by rfl
@@ -515,4 +522,20 @@ def toAddGroupTopology.orderEmbedding :
   ring_topology.to_add_group_topology.order_embedding RingTopology.toAddGroupTopology.orderEmbedding
 
 end RingTopology
+
+section AbsoluteValue
+
+/-- Construct an absolute value on a semiring `T` from an absolute value on a semiring `R`
+and an injective ring homomorphism `f : T →+* R` -/
+def AbsoluteValue.comp {R S T : Type _} [Semiring T] [Semiring R] [OrderedSemiring S]
+    (v : AbsoluteValue R S) {f : T →+* R} (hf : Function.Injective f) : AbsoluteValue T S
+    where
+  toFun := v ∘ f
+  map_mul' := by simp only [Function.comp_apply, map_mul, eq_self_iff_true, forall_const]
+  nonneg' := by simp only [v.nonneg, forall_const]
+  eq_zero' := by simp only [map_eq_zero_iff f hf, v.eq_zero, forall_const, iff_self_iff]
+  add_le' := by simp only [Function.comp_apply, map_add, v.add_le, forall_const]
+#align absolute_value.comp AbsoluteValue.comp
+
+end AbsoluteValue
 

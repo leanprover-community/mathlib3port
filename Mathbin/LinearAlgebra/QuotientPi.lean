@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient_pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ theorem pi_quotient_lift_mk [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule 
 @[simp]
 theorem pi_quotient_lift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
     (q : Submodule R N) (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (i)
-    (x : Ms i ⧸ p i) : piQuotientLift p q f hf (Pi.single i x) = mapq _ _ (f i) (hf i) x := by
+    (x : Ms i ⧸ p i) : piQuotientLift p q f hf (Pi.single i x) = mapq _ _ (f i) (hf i) x :=
+  by
   simp_rw [pi_quotient_lift, lsum_apply, sum_apply, comp_apply, proj_apply]
   rw [Finset.sum_eq_single i]
   · rw [Pi.single_eq_same]
@@ -71,7 +72,7 @@ theorem pi_quotient_lift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submod
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
     (hf : ∀ i, p i ≤ ker (f i)) : (∀ i, Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i, Ns i :=
   ((pi Set.univ p).liftq (LinearMap.pi fun i => (f i).comp (proj i))) fun x hx =>
-    mem_ker.mpr <| by 
+    mem_ker.mpr <| by
       ext i
       simpa using hf i (mem_pi.mp hx i (Set.mem_univ i))
 #align submodule.quotient_pi_lift Submodule.quotientPiLift
@@ -87,14 +88,16 @@ theorem quotient_pi_lift_mk (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →
 @[simps]
 def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
     ((∀ i, Ms i) ⧸ pi Set.univ p) ≃ₗ[R] ∀ i, Ms i ⧸ p i :=
-  { quotientPiLift p (fun i => (p i).mkq) fun i => by simp with
+  {
+    quotientPiLift p (fun i => (p i).mkq) fun i => by
+      simp with
     toFun := quotientPiLift p (fun i => (p i).mkq) fun i => by simp
     invFun := piQuotientLift p (pi Set.univ p) single fun i => le_comap_single_pi p
     left_inv := fun x =>
       Quotient.inductionOn' x fun x' => by
         simp_rw [Quotient.mk'_eq_mk, quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk,
           lsum_single, id_apply]
-    right_inv := by 
+    right_inv := by
       rw [Function.rightInverse_iff_comp, ← coe_comp, ← @id_coe R]
       refine' congr_arg _ (pi_ext fun i x => Quotient.inductionOn' x fun x' => funext fun j => _)
       rw [comp_apply, pi_quotient_lift_single, Quotient.mk'_eq_mk, mapq_apply, quotient_pi_lift_mk,

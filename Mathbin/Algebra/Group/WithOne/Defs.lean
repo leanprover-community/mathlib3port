@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,8 +179,8 @@ protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 �
 -- `with_one.mul_one_class._proof_{1,2}` have an ill-typed statement after `with_one` is made
 -- irreducible.
 @[to_additive]
-instance [Mul α] : MulOneClass (WithOne
-        α) where 
+instance [Mul α] : MulOneClass (WithOne α)
+    where
   mul := (· * ·)
   one := 1
   one_mul := show ∀ x : WithOne α, 1 * x = x from (Option.liftOrGet_isLeftId _).1
@@ -226,7 +226,8 @@ theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
 -/
 
 instance [Mul α] : MulZeroClass (WithZero α) :=
-  { WithZero.hasZero with
+  {
+    WithZero.hasZero with
     mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂
     zero_mul := fun a => rfl
     mul_zero := fun a => by cases a <;> rfl }
@@ -264,7 +265,7 @@ theorem mul_zero {α : Type u} [Mul α] (a : WithZero α) : a * 0 = 0 := by case
 #align with_zero.mul_zero WithZero.mul_zero
 
 instance [Mul α] : NoZeroDivisors (WithZero α) :=
-  ⟨by 
+  ⟨by
     rintro (a | a) (b | b) h
     exacts[Or.inl rfl, Or.inl rfl, Or.inr rfl, Option.noConfusion h]⟩
 
@@ -286,7 +287,8 @@ instance [CommSemigroup α] : CommSemigroup (WithZero α) :=
       | some a, some b => congr_arg some (mul_comm _ _) }
 
 instance [MulOneClass α] : MulZeroOneClass (WithZero α) :=
-  { WithZero.mulZeroClass, WithZero.hasOne with
+  { WithZero.mulZeroClass,
+    WithZero.hasOne with
     one_mul := fun a =>
       match a with
       | none => rfl
@@ -311,7 +313,8 @@ theorem coe_pow [One α] [Pow α ℕ] {a : α} (n : ℕ) : ↑(a ^ n : α) = (�
 -/
 
 instance [Monoid α] : MonoidWithZero (WithZero α) :=
-  { WithZero.mulZeroOneClass, WithZero.semigroupWithZero with
+  { WithZero.mulZeroOneClass,
+    WithZero.semigroupWithZero with
     npow := fun n x => x ^ n
     npow_zero' := fun x =>
       match x with
@@ -378,7 +381,8 @@ theorem coe_zpow [DivInvMonoid α] {a : α} (n : ℤ) : ↑(a ^ n : α) = (↑a 
 -/
 
 instance [DivInvMonoid α] : DivInvMonoid (WithZero α) :=
-  { WithZero.hasDiv, WithZero.hasInv, WithZero.monoidWithZero with
+  { WithZero.hasDiv, WithZero.hasInv,
+    WithZero.monoidWithZero with
     div_eq_mul_inv := fun a b =>
       match a, b with
       | none, _ => rfl
@@ -402,7 +406,8 @@ instance [DivInvOneMonoid α] : DivInvOneMonoid (WithZero α) :=
   { WithZero.divInvMonoid, WithZero.invOneClass with }
 
 instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
-  { WithZero.divInvMonoid, WithZero.hasInvolutiveInv with
+  { WithZero.divInvMonoid,
+    WithZero.hasInvolutiveInv with
     mul_inv_rev := fun a b =>
       match a, b with
       | none, none => rfl
@@ -426,9 +431,10 @@ variable [Group α]
 
 /-- if `G` is a group then `with_zero G` is a group with zero. -/
 instance : GroupWithZero (WithZero α) :=
-  { WithZero.monoidWithZero, WithZero.divInvMonoid, WithZero.nontrivial with
+  { WithZero.monoidWithZero, WithZero.divInvMonoid,
+    WithZero.nontrivial with
     inv_zero := inv_zero
-    mul_inv_cancel := fun a ha => by 
+    mul_inv_cancel := fun a ha => by
       lift a to α using ha
       norm_cast
       apply mul_right_inv }
@@ -439,10 +445,11 @@ instance [CommGroup α] : CommGroupWithZero (WithZero α) :=
   { WithZero.groupWithZero, WithZero.commMonoidWithZero with }
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
-  { WithZero.addMonoid, WithZero.hasOne with
+  { WithZero.addMonoid,
+    WithZero.hasOne with
     natCast := fun n => if n = 0 then 0 else (n.cast : α)
     nat_cast_zero := rfl
-    nat_cast_succ := fun n => by 
+    nat_cast_succ := fun n => by
       cases n
       show (((1 : ℕ) : α) : WithZero α) = 0 + 1; · rw [Nat.cast_one, coe_one, zero_add]
       show (((n + 2 : ℕ) : α) : WithZero α) = ((n + 1 : ℕ) : α) + 1
@@ -451,11 +458,11 @@ instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
 instance [Semiring α] : Semiring (WithZero α) :=
   { WithZero.addMonoidWithOne, WithZero.addCommMonoid, WithZero.mulZeroClass,
     WithZero.monoidWithZero with
-    left_distrib := fun a b c => by 
+    left_distrib := fun a b c => by
       cases' a with a; · rfl
       cases' b with b <;> cases' c with c <;> try rfl
       exact congr_arg some (left_distrib _ _ _)
-    right_distrib := fun a b c => by 
+    right_distrib := fun a b c => by
       cases' c with c
       · change (a + b) * 0 = a * 0 + b * 0
         simp

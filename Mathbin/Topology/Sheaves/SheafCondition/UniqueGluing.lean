@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.unique_gluing
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ as being equalized by the arrows `left_res` and `right_res` of the equalizer dia
 -/
 theorem compatible_iff_left_res_eq_right_res (sf : piOpens F U) :
     IsCompatible F U ((piOpensIsoSectionsFamily F U).Hom sf) ↔ leftRes F U sf = rightRes F U sf :=
-  by 
+  by
   constructor <;> intro h
   · ext ⟨i, j⟩
     rw [left_res, types.limit.lift_π_apply', fan.mk_π_app, right_res, types.limit.lift_π_apply',
@@ -139,7 +139,8 @@ equalizer diagram).
 -/
 @[simp]
 theorem is_gluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supᵢ U))) :
-    IsGluing F U ((piOpensIsoSectionsFamily F U).Hom sf) s ↔ res F U s = sf := by
+    IsGluing F U ((piOpensIsoSectionsFamily F U).Hom sf) s ↔ res F U s = sf :=
+  by
   constructor <;> intro h
   · ext ⟨i⟩
     rw [res, types.limit.lift_π_apply', fan.mk_π_app]
@@ -153,13 +154,15 @@ theorem is_gluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supᵢ U))) :
 /-- The "equalizer" sheaf condition can be obtained from the sheaf condition
 in terms of unique gluings.
 -/
-theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) : F.IsSheaf := by
+theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) : F.IsSheaf :=
+  by
   rw [is_sheaf_iff_is_sheaf_equalizer_products]
   intro ι U
   refine' ⟨fork.is_limit.mk' _ _⟩
   intro s
   have h_compatible :
-    ∀ x : s.X, F.is_compatible U ((F.pi_opens_iso_sections_family U).Hom (s.ι x)) := by
+    ∀ x : s.X, F.is_compatible U ((F.pi_opens_iso_sections_family U).Hom (s.ι x)) :=
+    by
     intro x
     rw [compatible_iff_left_res_eq_right_res]
     convert congr_fun s.condition x
@@ -180,7 +183,8 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
 /-- The sheaf condition in terms of unique gluings can be obtained from the usual
 "equalizer" sheaf condition.
 -/
-theorem is_sheaf_unique_gluing_of_is_sheaf_types (Fsh : F.IsSheaf) : F.IsSheafUniqueGluing := by
+theorem is_sheaf_unique_gluing_of_is_sheaf_types (Fsh : F.IsSheaf) : F.IsSheafUniqueGluing :=
+  by
   rw [is_sheaf_iff_is_sheaf_equalizer_products] at Fsh
   intro ι U sf hsf
   let sf' := (pi_opens_iso_sections_family F U).inv sf
@@ -261,7 +265,8 @@ which can be more convenient in practice.
 -/
 theorem exists_unique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ supᵢ U)
     (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompatible F.1 U sf) :
-    ∃! s : F.1.obj (op V), ∀ i : ι, F.1.map (iUV i).op s = sf i := by
+    ∃! s : F.1.obj (op V), ∀ i : ι, F.1.map (iUV i).op s = sf i :=
+  by
   have V_eq_supr_U : V = supᵢ U := le_antisymm hcover (supᵢ_le fun i => (iUV i).le)
   obtain ⟨gl, gl_spec, gl_uniq⟩ := F.exists_unique_gluing U sf h
   refine' ⟨F.1.map (eq_to_hom V_eq_supr_U).op gl, _, _⟩
@@ -277,9 +282,11 @@ theorem exists_unique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcove
 
 @[ext]
 theorem eq_of_locally_eq (s t : F.1.obj (op (supᵢ U)))
-    (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t := by
+    (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t :=
+  by
   let sf : ∀ i : ι, F.1.obj (op (U i)) := fun i => F.1.map (opens.le_supr U i).op s
-  have sf_compatible : is_compatible _ U sf := by
+  have sf_compatible : is_compatible _ U sf :=
+    by
     intro i j
     simp_rw [← comp_apply, ← F.1.map_comp]
     rfl
@@ -298,7 +305,8 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (supᵢ U)))
 which can be more convenient in practice.
 -/
 theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ supᵢ U)
-    (s t : F.1.obj (op V)) (h : ∀ i, F.1.map (iUV i).op s = F.1.map (iUV i).op t) : s = t := by
+    (s t : F.1.obj (op V)) (h : ∀ i, F.1.map (iUV i).op s = F.1.map (iUV i).op t) : s = t :=
+  by
   have V_eq_supr_U : V = supᵢ U := le_antisymm hcover (supᵢ_le fun i => (iUV i).le)
   suffices F.1.map (eq_to_hom V_eq_supr_U.symm).op s = F.1.map (eq_to_hom V_eq_supr_U.symm).op t by
     convert congr_arg (F.1.map (eq_to_hom V_eq_supr_U).op) this <;>
@@ -313,7 +321,7 @@ theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : 
 theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : U₂ ⟶ V) (hcover : V ≤ U₁ ⊔ U₂)
     (s t : F.1.obj (op V)) (h₁ : F.1.map i₁.op s = F.1.map i₁.op t)
     (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by
-  classical 
+  classical
     fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
     · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
     · refine' le_trans hcover _

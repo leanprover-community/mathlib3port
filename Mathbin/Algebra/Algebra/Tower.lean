@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.tower
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,9 +43,8 @@ on the `R`-module `M`.
 
 This is a stronger version of `distrib_mul_action.to_linear_map`, and could also have been
 called `algebra.to_module_End`. -/
-def lsmul :
-    A →ₐ[R] Module.EndCat R
-        M where 
+def lsmul : A →ₐ[R] Module.EndCat R M
+    where
   toFun := DistribMulAction.toLinearMap R M
   map_one' := LinearMap.ext fun _ => one_smul A _
   map_mul' a b := LinearMap.ext <| smul_assoc a b
@@ -196,7 +195,8 @@ namespace AlgHom
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrictScalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
   { (f : A →+* B) with
-    commutes' := fun r => by
+    commutes' := fun r =>
+      by
       rw [algebra_map_apply R S A, algebra_map_apply R S B]
       exact f.commutes (algebraMap R S r) }
 #align alg_hom.restrict_scalars AlgHom.restrictScalars
@@ -227,7 +227,8 @@ namespace AlgEquiv
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrictScalars (f : A ≃ₐ[S] B) : A ≃ₐ[R] B :=
   { (f : A ≃+* B) with
-    commutes' := fun r => by
+    commutes' := fun r =>
+      by
       rw [algebra_map_apply R S A, algebra_map_apply R S B]
       exact f.commutes (algebraMap R S r) }
 #align alg_equiv.restrict_scalars AlgEquiv.restrictScalars
@@ -262,7 +263,8 @@ variable {R A} [CommSemiring R] [Semiring A] [Algebra R A]
 variable {M} [AddCommMonoid M] [Module A M] [Module R M] [IsScalarTower R A M]
 
 theorem span_restrict_scalars_eq_span_of_surjective (h : Function.Surjective (algebraMap R A))
-    (s : Set M) : (Submodule.span A s).restrictScalars R = Submodule.span R s := by
+    (s : Set M) : (Submodule.span A s).restrictScalars R = Submodule.span R s :=
+  by
   refine' le_antisymm (fun x hx => _) (Submodule.span_subset_span _ _ _)
   refine' Submodule.span_induction hx _ _ _ _
   · exact fun x hx => Submodule.subset_span hx
@@ -299,13 +301,13 @@ open IsScalarTower
 theorem smul_mem_span_smul_of_mem {s : Set S} {t : Set A} {k : S} (hks : k ∈ span R s) {x : A}
     (hx : x ∈ t) : k • x ∈ span R (s • t) :=
   span_induction hks (fun c hc => subset_span <| Set.mem_smul.2 ⟨c, x, hc, hx, rfl⟩)
-    (by 
+    (by
       rw [zero_smul]
       exact zero_mem _)
-    (fun c₁ c₂ ih₁ ih₂ => by 
+    (fun c₁ c₂ ih₁ ih₂ => by
       rw [add_smul]
       exact add_mem ih₁ ih₂)
-    fun b c hc => by 
+    fun b c hc => by
     rw [IsScalarTower.smul_assoc]
     exact smul_mem _ _ hc
 #align submodule.smul_mem_span_smul_of_mem Submodule.smul_mem_span_smul_of_mem
@@ -315,10 +317,10 @@ variable [SMulCommClass R S A]
 theorem smul_mem_span_smul {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S} {x : A}
     (hx : x ∈ span R t) : k • x ∈ span R (s • t) :=
   span_induction hx (fun x hx => smul_mem_span_smul_of_mem (hs.symm ▸ mem_top) hx)
-    (by 
+    (by
       rw [smul_zero]
       exact zero_mem _)
-    (fun x y ihx ihy => by 
+    (fun x y ihx ihy => by
       rw [smul_add]
       exact add_mem ihx ihy)
     fun c x hx => smul_comm c k x ▸ smul_mem _ _ hx
@@ -327,14 +329,14 @@ theorem smul_mem_span_smul {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S}
 theorem smul_mem_span_smul' {s : Set S} (hs : span R s = ⊤) {t : Set A} {k : S} {x : A}
     (hx : x ∈ span R (s • t)) : k • x ∈ span R (s • t) :=
   span_induction hx
-    (fun x hx => by 
+    (fun x hx => by
       let ⟨p, q, hp, hq, hpq⟩ := Set.mem_smul.1 hx
       rw [← hpq, smul_smul]
       exact smul_mem_span_smul_of_mem (hs.symm ▸ mem_top) hq)
-    (by 
+    (by
       rw [smul_zero]
       exact zero_mem _)
-    (fun x y ihx ihy => by 
+    (fun x y ihx ihy => by
       rw [smul_add]
       exact add_mem ihx ihy)
     fun c x hx => smul_comm c k x ▸ smul_mem _ _ hx
@@ -374,7 +376,8 @@ theorem span_algebra_map_image_of_tower {S T : Type _} [CommSemiring S] [Semirin
 
 theorem map_mem_span_algebra_map_image {S T : Type _} [CommSemiring S] [Semiring T] [Algebra R S]
     [Algebra R T] [Algebra S T] [IsScalarTower R S T] (x : S) (a : Set S)
-    (hx : x ∈ Submodule.span R a) : algebraMap S T x ∈ Submodule.span R (algebraMap S T '' a) := by
+    (hx : x ∈ Submodule.span R a) : algebraMap S T x ∈ Submodule.span R (algebraMap S T '' a) :=
+  by
   rw [span_algebra_map_image_of_tower, mem_map]
   exact ⟨x, hx, rfl⟩
 #align submodule.map_mem_span_algebra_map_image Submodule.map_mem_span_algebra_map_image

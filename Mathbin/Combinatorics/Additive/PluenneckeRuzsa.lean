@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, George Shakan
 
 ! This file was ported from Lean 3 source module combinatorics.additive.pluennecke_ruzsa
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ variable {α : Type _} [CommGroup α] [DecidableEq α] {A B C : Finset α}
 @[to_additive card_sub_mul_le_card_sub_mul_card_sub
       "**Ruzsa's triangle inequality**. Subtraction version."]
 theorem card_div_mul_le_card_div_mul_card_div (A B C : Finset α) :
-    (A / C).card * B.card ≤ (A / B).card * (B / C).card := by
+    (A / C).card * B.card ≤ (A / B).card * (B / C).card :=
+  by
   rw [← card_product (A / B), ← mul_one (Finset.product _ _).card]
   refine'
     card_mul_le_card_mul (fun b ac => ac.1 * ac.2 = b) (fun x hx => _) fun x hx =>
@@ -61,7 +62,8 @@ theorem card_div_mul_le_card_div_mul_card_div (A B C : Finset α) :
 @[to_additive card_sub_mul_le_card_add_mul_card_add
       "**Ruzsa's triangle inequality**. Sub-add-add version."]
 theorem card_div_mul_le_card_mul_mul_card_mul (A B C : Finset α) :
-    (A / C).card * B.card ≤ (A * B).card * (B * C).card := by
+    (A / C).card * B.card ≤ (A * B).card * (B * C).card :=
+  by
   rw [← div_inv_eq_mul, ← card_inv B, ← card_inv (B * C), mul_inv, ← div_eq_mul_inv]
   exact card_div_mul_le_card_div_mul_card_div _ _ _
 #align finset.card_div_mul_le_card_mul_mul_card_mul Finset.card_div_mul_le_card_mul_mul_card_mul
@@ -70,7 +72,8 @@ theorem card_div_mul_le_card_mul_mul_card_mul (A B C : Finset α) :
 @[to_additive card_add_mul_le_card_sub_mul_card_add
       "**Ruzsa's triangle inequality**. Add-sub-sub version."]
 theorem card_mul_mul_le_card_div_mul_card_mul (A B C : Finset α) :
-    (A * C).card * B.card ≤ (A / B).card * (B * C).card := by
+    (A * C).card * B.card ≤ (A / B).card * (B * C).card :=
+  by
   rw [← div_inv_eq_mul, ← div_inv_eq_mul B]
   exact card_div_mul_le_card_div_mul_card_div _ _ _
 #align finset.card_mul_mul_le_card_div_mul_card_mul Finset.card_mul_mul_le_card_div_mul_card_mul
@@ -79,7 +82,8 @@ theorem card_mul_mul_le_card_div_mul_card_mul (A B C : Finset α) :
 @[to_additive card_add_mul_le_card_add_mul_card_sub
       "**Ruzsa's triangle inequality**. Add-add-sub version."]
 theorem card_mul_mul_le_card_mul_mul_card_div (A B C : Finset α) :
-    (A * C).card * B.card ≤ (A * B).card * (B / C).card := by
+    (A * C).card * B.card ≤ (A * B).card * (B / C).card :=
+  by
   rw [← div_inv_eq_mul, div_eq_mul_inv B]
   exact card_div_mul_le_card_mul_mul_card_mul _ _ _
 #align finset.card_mul_mul_le_card_mul_mul_card_div Finset.card_mul_mul_le_card_mul_mul_card_div
@@ -88,21 +92,24 @@ theorem card_mul_mul_le_card_mul_mul_card_div (A B C : Finset α) :
 @[to_additive]
 theorem mul_pluennecke_petridis (C : Finset α)
     (hA : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card) :
-    (A * B * C).card * A.card ≤ (A * B).card * (A * C).card := by
+    (A * B * C).card * A.card ≤ (A * B).card * (A * C).card :=
+  by
   induction' C using Finset.induction_on with x C hc ih
   · simp
   set A' := A ∩ (A * C / {x}) with hA'
   set C' := insert x C with hC'
   have h₀ : A' * {x} = A * {x} ∩ (A * C) := by
     rw [hA', inter_mul_singleton, (is_unit_singleton x).div_mul_cancel]
-  have h₁ : A * B * C' = A * B * C ∪ (A * B * {x}) \ (A' * B * {x}) := by
+  have h₁ : A * B * C' = A * B * C ∪ (A * B * {x}) \ (A' * B * {x}) :=
+    by
     rw [hC', insert_eq, union_comm, mul_union]
     refine' (sup_sdiff_eq_sup _).symm
     rw [mul_right_comm, mul_right_comm A, h₀]
     exact mul_subset_mul_right (inter_subset_right _ _)
   have h₂ : A' * B * {x} ⊆ A * B * {x} :=
     mul_subset_mul_right (mul_subset_mul_right <| inter_subset_left _ _)
-  have h₃ : (A * B * C').card ≤ (A * B * C).card + (A * B).card - (A' * B).card := by
+  have h₃ : (A * B * C').card ≤ (A * B * C).card + (A * B).card - (A' * B).card :=
+    by
     rw [h₁]
     refine' (card_union_le _ _).trans_eq _
     rw [card_sdiff h₂, ← add_tsub_assoc_of_le (card_le_of_subset h₂), card_mul_singleton,
@@ -123,7 +130,8 @@ theorem mul_pluennecke_petridis (C : Finset α)
 @[to_additive]
 private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
     (h : ∀ A' ∈ B.powerset.erase ∅, ((A * C).card : ℚ≥0) / ↑A.card ≤ (A' * C).card / ↑A'.card) :
-    ∀ (A') (_ : A' ⊆ A), (A * C).card * A'.card ≤ (A' * C).card * A.card := by
+    ∀ (A') (_ : A' ⊆ A), (A * C).card * A'.card ≤ (A' * C).card * A.card :=
+  by
   rintro A' hAA'
   obtain rfl | hA' := A'.eq_empty_or_nonempty
   · simp
@@ -138,7 +146,8 @@ private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
 @[to_additive card_add_mul_card_le_card_add_mul_card_add
       "**Ruzsa's triangle inequality**. Addition version."]
 theorem card_mul_mul_card_le_card_mul_mul_card_mul (A B C : Finset α) :
-    (A * C).card * B.card ≤ (A * B).card * (B * C).card := by
+    (A * C).card * B.card ≤ (A * B).card * (B * C).card :=
+  by
   obtain rfl | hB := B.eq_empty_or_nonempty
   · simp
   have hB' : B ∈ B.powerset.erase ∅ := mem_erase_of_ne_of_mem hB.ne_empty (mem_powerset_self _)
@@ -163,21 +172,24 @@ theorem card_mul_mul_card_le_card_mul_mul_card_mul (A B C : Finset α) :
 
 /-- **Ruzsa's triangle inequality**. Add-sub-sub version. -/
 theorem card_mul_mul_le_card_div_mul_card_div (A B C : Finset α) :
-    (A * C).card * B.card ≤ (A / B).card * (B / C).card := by
+    (A * C).card * B.card ≤ (A / B).card * (B / C).card :=
+  by
   rw [div_eq_mul_inv, ← card_inv B, ← card_inv (B / C), inv_div', div_inv_eq_mul]
   exact card_mul_mul_card_le_card_mul_mul_card_mul _ _ _
 #align finset.card_mul_mul_le_card_div_mul_card_div Finset.card_mul_mul_le_card_div_mul_card_div
 
 /-- **Ruzsa's triangle inequality**. Sub-add-sub version. -/
 theorem card_div_mul_le_card_mul_mul_card_div (A B C : Finset α) :
-    (A / C).card * B.card ≤ (A * B).card * (B / C).card := by
+    (A / C).card * B.card ≤ (A * B).card * (B / C).card :=
+  by
   rw [div_eq_mul_inv, div_eq_mul_inv]
   exact card_mul_mul_card_le_card_mul_mul_card_mul _ _ _
 #align finset.card_div_mul_le_card_mul_mul_card_div Finset.card_div_mul_le_card_mul_mul_card_div
 
 /-- **Ruzsa's triangle inequality**. Sub-sub-add version. -/
 theorem card_div_mul_le_card_div_mul_card_mul (A B C : Finset α) :
-    (A / C).card * B.card ≤ (A / B).card * (B * C).card := by
+    (A / C).card * B.card ≤ (A / B).card * (B * C).card :=
+  by
   rw [← div_inv_eq_mul, div_eq_mul_inv]
   exact card_mul_mul_le_card_div_mul_card_div _ _ _
 #align finset.card_div_mul_le_card_div_mul_card_mul Finset.card_div_mul_le_card_div_mul_card_mul
@@ -185,7 +197,8 @@ theorem card_div_mul_le_card_div_mul_card_mul (A B C : Finset α) :
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B : Finset α}
     (hAB : ∀ (A') (_ : A' ⊆ A), (A + B).card * A'.card ≤ (A' + B).card * A.card) (n : ℕ) :
-    ((A + n • B).card : ℚ≥0) ≤ ((A + B).card / A.card) ^ n * A.card := by
+    ((A + n • B).card : ℚ≥0) ≤ ((A + B).card / A.card) ^ n * A.card :=
+  by
   obtain rfl | hA := A.eq_empty_or_nonempty
   · simp
   induction' n with n ih
@@ -200,7 +213,8 @@ theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 @[to_additive]
 theorem card_mul_pow_le (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card)
-    (n : ℕ) : ((A * B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card := by
+    (n : ℕ) : ((A * B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card :=
+  by
   obtain rfl | hA := A.eq_empty_or_nonempty
   · simp
   induction' n with n ih
@@ -217,7 +231,8 @@ than the division version because we cannot use a double counting argument. -/
 @[to_additive
       "The **Plünnecke-Ruzsa inequality**. Addition version. Note that this is genuinely\nharder than the subtraction version because we cannot use a double counting argument."]
 theorem card_pow_div_pow_le (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
-    ((B ^ m / B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ (m + n) * A.card := by
+    ((B ^ m / B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ (m + n) * A.card :=
+  by
   have hA' : A ∈ A.powerset.erase ∅ := mem_erase_of_ne_of_mem hA.ne_empty (mem_powerset_self _)
   obtain ⟨C, hC, hCA⟩ :=
     exists_min_image (A.powerset.erase ∅) (fun C => (C * B).card / C.card : _ → ℚ≥0) ⟨A, hA'⟩
@@ -244,7 +259,8 @@ theorem card_pow_div_pow_le (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
 /-- The **Plünnecke-Ruzsa inequality**. Subtraction version. -/
 @[to_additive "The **Plünnecke-Ruzsa inequality**. Subtraction version."]
 theorem card_pow_div_pow_le' (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
-    ((B ^ m / B ^ n).card : ℚ≥0) ≤ ((A / B).card / A.card) ^ (m + n) * A.card := by
+    ((B ^ m / B ^ n).card : ℚ≥0) ≤ ((A / B).card / A.card) ^ (m + n) * A.card :=
+  by
   rw [← card_inv, inv_div', ← inv_pow, ← inv_pow, div_eq_mul_inv A]
   exact card_pow_div_pow_le hA _ _ _
 #align finset.card_pow_div_pow_le' Finset.card_pow_div_pow_le'

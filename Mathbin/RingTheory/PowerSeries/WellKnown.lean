@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.power_series.well_known
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,8 @@ theorem constant_coeff_inv_units_sub (u : Rˣ) : constantCoeff R (invUnitsSub u)
 #align power_series.constant_coeff_inv_units_sub PowerSeries.constant_coeff_inv_units_sub
 
 @[simp]
-theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 := by
+theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 :=
+  by
   ext (_ | n)
   · simp
   · simp [n.succ_ne_zero, pow_succ]
@@ -59,7 +60,8 @@ theorem inv_units_sub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by
 #align power_series.inv_units_sub_mul_sub PowerSeries.inv_units_sub_mul_sub
 
 theorem map_inv_units_sub (f : R →+* S) (u : Rˣ) :
-    map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) := by
+    map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) :=
+  by
   ext
   simp [← map_pow]
 #align power_series.map_inv_units_sub PowerSeries.map_inv_units_sub
@@ -95,7 +97,8 @@ theorem coeff_exp : coeff A n (exp A) = algebraMap ℚ A (1 / n !) :=
 #align power_series.coeff_exp PowerSeries.coeff_exp
 
 @[simp]
-theorem constant_coeff_exp : constantCoeff A (exp A) = 1 := by
+theorem constant_coeff_exp : constantCoeff A (exp A) = 1 :=
+  by
   rw [← coeff_zero_eq_constant_coeff_apply, coeff_exp]
   simp
 #align power_series.constant_coeff_exp PowerSeries.constant_coeff_exp
@@ -122,19 +125,20 @@ theorem coeff_cos_bit1 : coeff A (bit1 n) (cos A) = 0 := by
 #align power_series.coeff_cos_bit1 PowerSeries.coeff_cos_bit1
 
 @[simp]
-theorem map_exp : map (f : A →+* A') (exp A) = exp A' := by
+theorem map_exp : map (f : A →+* A') (exp A) = exp A' :=
+  by
   ext
   simp
 #align power_series.map_exp PowerSeries.map_exp
 
 @[simp]
-theorem map_sin : map f (sin A) = sin A' := by 
+theorem map_sin : map f (sin A) = sin A' := by
   ext
   simp [sin, apply_ite f]
 #align power_series.map_sin PowerSeries.map_sin
 
 @[simp]
-theorem map_cos : map f (cos A) = cos A' := by 
+theorem map_cos : map f (cos A) = cos A' := by
   ext
   simp [cos, apply_ite f]
 #align power_series.map_cos PowerSeries.map_cos
@@ -149,7 +153,8 @@ variable {A : Type _} [CommRing A]
 
 /-- Shows that $e^{aX} * e^{bX} = e^{(a + b)X}$ -/
 theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
-    rescale a (exp A) * rescale b (exp A) = rescale (a + b) (exp A) := by
+    rescale a (exp A) * rescale b (exp A) = rescale (a + b) (exp A) :=
+  by
   ext
   simp only [coeff_mul, exp, rescale, coeff_mk, coe_mk, factorial,
     nat.sum_antidiagonal_eq_sum_range_succ_mk, add_pow, sum_mul]
@@ -181,7 +186,8 @@ theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * evalNegHom (exp A) = 1 
 #align power_series.exp_mul_exp_neg_eq_one PowerSeries.exp_mul_exp_neg_eq_one
 
 /-- Shows that $(e^{X})^k = e^{kX}$. -/
-theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (k : A) (exp A) := by
+theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (k : A) (exp A) :=
+  by
   induction' k with k h
   ·
     simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
@@ -195,7 +201,7 @@ $\sum_{k = 0}^{n - 1} (e^{X})^k = \sum_{p = 0}^{\infty} \sum_{k = 0}^{n - 1} \fr
 theorem exp_pow_sum [Algebra ℚ A] (n : ℕ) :
     ((Finset.range n).Sum fun k => exp A ^ k) =
       PowerSeries.mk fun p => (Finset.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
-  by 
+  by
   simp only [exp_pow_eq_rescale_exp, rescale]
   ext
   simp only [one_div, coeff_mk, coe_mk, coeff_exp, factorial, LinearMap.map_sum]

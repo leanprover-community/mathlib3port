@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.n_comp_gamma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,11 +40,11 @@ variable {C : Type _} [Category C] [Preadditive C]
 
 theorem P_infty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : SimplexCategory}
     (i : Δ' ⟶ [n]) [hi : Mono i] (h₁ : Δ'.len ≠ n) (h₂ : ¬Isδ₀ i) : pInfty.f n ≫ X.map i.op = 0 :=
-  by 
+  by
   induction' Δ' using SimplexCategory.rec with m
   obtain ⟨k, hk⟩ :=
     Nat.exists_eq_add_of_lt
-      (len_lt_of_mono i fun h => by 
+      (len_lt_of_mono i fun h => by
         rw [← h] at h₁
         exact h₁ rfl)
   simp only [len_mk] at hk
@@ -53,7 +53,7 @@ theorem P_infty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : 
     subst hk
     obtain ⟨j, rfl⟩ := eq_δ_of_mono i
     rw [is_δ₀.iff] at h₂
-    have h₃ : 1 ≤ (j : ℕ) := by 
+    have h₃ : 1 ≤ (j : ℕ) := by
       by_contra
       exact h₂ (by simpa only [Fin.ext_iff, not_le, Nat.lt_one_iff] using h)
     exact (higher_faces_vanish.of_P (m + 1) m).comp_δ_eq_zero j h₂ (by linarith)
@@ -61,12 +61,14 @@ theorem P_infty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : 
     clear h₂ hi
     subst hk
     obtain ⟨j₁, i, rfl⟩ :=
-      eq_comp_δ_of_not_surjective i fun h => by
+      eq_comp_δ_of_not_surjective i fun h =>
+        by
         have h' := len_le_of_epi (SimplexCategory.epi_iff_surjective.2 h)
         dsimp at h'
         linarith
     obtain ⟨j₂, i, rfl⟩ :=
-      eq_comp_δ_of_not_surjective i fun h => by
+      eq_comp_δ_of_not_surjective i fun h =>
+        by
         have h' := len_le_of_epi (SimplexCategory.epi_iff_surjective.2 h)
         dsimp at h'
         linarith
@@ -82,7 +84,7 @@ theorem P_infty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : 
       by_contra
       exact
         hj₁
-          (by 
+          (by
             simp only [Fin.ext_iff, Fin.coe_zero]
             linarith)
 #align
@@ -93,7 +95,7 @@ theorem Γ₀_obj_termwise_map_mono_comp_P_infty (X : SimplicialObject C) {Δ Δ
     (i : Δ ⟶ Δ') [Mono i] :
     Γ₀.Obj.Termwise.mapMono (AlternatingFaceMapComplex.obj X) i ≫ pInfty.f Δ.len =
       pInfty.f Δ'.len ≫ X.map i.op :=
-  by 
+  by
   induction' Δ using SimplexCategory.rec with n
   induction' Δ' using SimplexCategory.rec with n'
   dsimp
@@ -116,7 +118,7 @@ theorem Γ₀_obj_termwise_map_mono_comp_P_infty (X : SimplicialObject C) {Δ Δ
     · intro b hb hb'
       rw [preadditive.comp_zsmul]
       erw [P_infty_comp_map_mono_eq_zero X (SimplexCategory.δ b) h
-          (by 
+          (by
             rw [is_δ₀.iff]
             exact hb'),
         zsmul_zero]
@@ -140,14 +142,13 @@ namespace Γ₂N₁
 
 /-- The natural transformation `N₁ ⋙ Γ₂ ⟶ to_karoubi (simplicial_object C)`. -/
 @[simps]
-def natTrans :
-    (n₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ ⟶
-      toKaroubi
-        _ where 
+def natTrans : (n₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ ⟶ toKaroubi _
+    where
   app X :=
     { f :=
         { app := fun Δ => (Γ₀.splitting K[X]).desc Δ fun A => pInfty.f A.1.unop.len ≫ X.map A.e.op
-          naturality' := fun Δ Δ' θ => by
+          naturality' := fun Δ Δ' θ =>
+            by
             apply (Γ₀.splitting K[X]).hom_ext'
             intro A
             change _ ≫ (Γ₀.obj K[X]).map θ ≫ _ = _
@@ -159,13 +160,13 @@ def natTrans :
             congr 2
             simp only [eq_to_hom_refl, id_comp, comp_id, ← op_comp]
             exact Quiver.Hom.unop_inj (A.fac_pull θ) }
-      comm := by 
+      comm := by
         apply (Γ₀.splitting K[X]).hom_ext
         intro n
         dsimp [N₁]
         simp only [← splitting.ι_summand_id, splitting.ι_desc, comp_id, splitting.ι_desc_assoc,
           assoc, P_infty_f_idem_assoc] }
-  naturality' X Y f := by 
+  naturality' X Y f := by
     ext1
     apply (Γ₀.splitting K[X]).hom_ext
     intro n
@@ -205,7 +206,7 @@ end Γ₂N₂
 theorem compatibility_Γ₂N₁_Γ₂N₂_nat_trans (X : SimplicialObject C) :
     Γ₂N₁.natTrans.app X =
       (compatibilityΓ₂N₁Γ₂N₂.app X).inv ≫ Γ₂N₂.natTrans.app ((toKaroubi _).obj X) :=
-  by 
+  by
   rw [← cancel_epi (compatibility_Γ₂N₁_Γ₂N₂.app X).Hom, iso.hom_inv_id_assoc]
   exact
     congr_app
@@ -216,7 +217,8 @@ theorem compatibility_Γ₂N₁_Γ₂N₂_nat_trans (X : SimplicialObject C) :
   algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans
 
 theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :
-    n₂Γ₂.inv.app (n₂.obj P) ≫ n₂.map (Γ₂N₂.natTrans.app P) = 𝟙 (n₂.obj P) := by
+    n₂Γ₂.inv.app (n₂.obj P) ≫ n₂.map (Γ₂N₂.natTrans.app P) = 𝟙 (n₂.obj P) :=
+  by
   ext n
   have eq₁ :
     (N₂Γ₂.inv.app (N₂.obj P)).f.f n =
@@ -227,7 +229,7 @@ theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :
     (Γ₀.splitting (N₂.obj P).x).ιSummand (splitting.index_set.id (op [n])) ≫
         (N₂.map (Γ₂N₂.nat_trans.app P)).f.f n =
       P_infty.f n ≫ P.p.app (op [n]) :=
-    by 
+    by
     dsimp [N₂]
     simp only [Γ₂N₂.nat_trans_app_f_app, P_infty_on_Γ₀_splitting_summand_eq_self_assoc,
       functor.comp_map, compatibility_Γ₂N₁_Γ₂N₂_hom, nat_trans.comp_app, eq_to_hom_app, assoc,
@@ -247,16 +249,19 @@ theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :
 theorem identity_N₂ :
     ((𝟙 (n₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ n₂Γ₂.inv) ≫ Γ₂N₂.nat_trans ◫ 𝟙 n₂ : N₂ ⟶ N₂) =
       𝟙 n₂ :=
-  by 
+  by
   ext P : 2
   dsimp
   rw [Γ₂.map_id, N₂.map_id, comp_id, id_comp, identity_N₂_objectwise P]
 #align algebraic_topology.dold_kan.identity_N₂ AlgebraicTopology.DoldKan.identity_N₂
 
-instance : IsIso (Γ₂N₂.natTrans : (n₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ _ ⟶ _) := by
-  have : ∀ P : karoubi (simplicial_object C), is_iso (Γ₂N₂.nat_trans.app P) := by
+instance : IsIso (Γ₂N₂.natTrans : (n₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ _ ⟶ _) :=
+  by
+  have : ∀ P : karoubi (simplicial_object C), is_iso (Γ₂N₂.nat_trans.app P) :=
+    by
     intro P
-    have : is_iso (N₂.map (Γ₂N₂.nat_trans.app P)) := by
+    have : is_iso (N₂.map (Γ₂N₂.nat_trans.app P)) :=
+      by
       have h := identity_N₂_objectwise P
       erw [hom_comp_eq_id] at h
       rw [h]
@@ -264,8 +269,10 @@ instance : IsIso (Γ₂N₂.natTrans : (n₂ : Karoubi (SimplicialObject C) ⥤ 
     exact is_iso_of_reflects_iso _ N₂
   apply nat_iso.is_iso_of_is_iso_app
 
-instance : IsIso (Γ₂N₁.natTrans : (n₁ : SimplicialObject C ⥤ _) ⋙ _ ⟶ _) := by
-  have : ∀ X : simplicial_object C, is_iso (Γ₂N₁.nat_trans.app X) := by
+instance : IsIso (Γ₂N₁.natTrans : (n₁ : SimplicialObject C ⥤ _) ⋙ _ ⟶ _) :=
+  by
+  have : ∀ X : simplicial_object C, is_iso (Γ₂N₁.nat_trans.app X) :=
+    by
     intro X
     rw [compatibility_Γ₂N₁_Γ₂N₂_nat_trans]
     infer_instance

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 /-- The identity lax monoidal functor. -/
 @[simps]
 def id : LaxMonoidalFunctor.{v₁, v₁} C C :=
-  { 𝟭 C with 
+  { 𝟭 C with
     ε := 𝟙 _
     μ := fun X Y => 𝟙 _ }
 #align category_theory.lax_monoidal_functor.id CategoryTheory.LaxMonoidalFunctor.id
@@ -225,9 +225,10 @@ theorem map_tensor {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem map_left_unitor (X : C) :
-    F.map (λ_ X).Hom = inv (F.μ (𝟙_ C) X) ≫ (inv F.ε ⊗ 𝟙 (F.obj X)) ≫ (λ_ (F.obj X)).Hom := by
+    F.map (λ_ X).Hom = inv (F.μ (𝟙_ C) X) ≫ (inv F.ε ⊗ 𝟙 (F.obj X)) ≫ (λ_ (F.obj X)).Hom :=
+  by
   simp only [lax_monoidal_functor.left_unitality]
-  slice_rhs 2 3 => 
+  slice_rhs 2 3 =>
     rw [← comp_tensor_id]
     simp
   simp
@@ -236,9 +237,10 @@ theorem map_left_unitor (X : C) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem map_right_unitor (X : C) :
-    F.map (ρ_ X).Hom = inv (F.μ X (𝟙_ C)) ≫ (𝟙 (F.obj X) ⊗ inv F.ε) ≫ (ρ_ (F.obj X)).Hom := by
+    F.map (ρ_ X).Hom = inv (F.μ X (𝟙_ C)) ≫ (𝟙 (F.obj X) ⊗ inv F.ε) ≫ (ρ_ (F.obj X)).Hom :=
+  by
   simp only [lax_monoidal_functor.right_unitality]
-  slice_rhs 2 3 => 
+  slice_rhs 2 3 =>
     rw [← id_tensor_comp]
     simp
   simp
@@ -249,10 +251,10 @@ theorem map_right_unitor (X : C) :
 noncomputable def μNatIso :
     Functor.prod F.toFunctor F.toFunctor ⋙ tensor D ≅ tensor C ⋙ F.toFunctor :=
   NatIso.ofComponents
-    (by 
+    (by
       intros
       apply F.μ_iso)
-    (by 
+    (by
       intros
       apply F.to_lax_monoidal_functor.μ_natural)
 #align category_theory.monoidal_functor.μ_nat_iso CategoryTheory.MonoidalFunctor.μNatIso
@@ -291,7 +293,8 @@ theorem ε_hom_inv_id : F.ε ≫ F.εIso.inv = 𝟙 _ :=
 @[simps]
 noncomputable def commTensorLeft (X : C) :
     F.toFunctor ⋙ tensorLeft (F.toFunctor.obj X) ≅ tensorLeft X ⋙ F.toFunctor :=
-  NatIso.ofComponents (fun Y => F.μIso X Y) fun Y Z f => by
+  NatIso.ofComponents (fun Y => F.μIso X Y) fun Y Z f =>
+    by
     convert F.μ_natural' (𝟙 _) f
     simp
 #align
@@ -301,7 +304,8 @@ noncomputable def commTensorLeft (X : C) :
 @[simps]
 noncomputable def commTensorRight (X : C) :
     F.toFunctor ⋙ tensorRight (F.toFunctor.obj X) ≅ tensorRight X ⋙ F.toFunctor :=
-  NatIso.ofComponents (fun Y => F.μIso Y X) fun Y Z f => by
+  NatIso.ofComponents (fun Y => F.μIso Y X) fun Y Z f =>
+    by
     convert F.μ_natural' f (𝟙 _)
     simp
 #align
@@ -316,7 +320,7 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 /-- The identity monoidal functor. -/
 @[simps]
 def id : MonoidalFunctor.{v₁, v₁} C C :=
-  { 𝟭 C with 
+  { 𝟭 C with
     ε := 𝟙 _
     μ := fun X Y => 𝟙 _ }
 #align category_theory.monoidal_functor.id CategoryTheory.MonoidalFunctor.id
@@ -342,14 +346,15 @@ variable (F : LaxMonoidalFunctor.{v₁, v₂} C D) (G : LaxMonoidalFunctor.{v₂
 /-- The composition of two lax monoidal functors is again lax monoidal. -/
 @[simps]
 def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
-  { F.toFunctor ⋙ G.toFunctor with 
+  { F.toFunctor ⋙ G.toFunctor with
     ε := G.ε ≫ G.map F.ε
     μ := fun X Y => G.μ (F.obj X) (F.obj Y) ≫ G.map (F.μ X Y)
-    μ_natural' := fun _ _ _ _ f g => by
+    μ_natural' := fun _ _ _ _ f g =>
+      by
       simp only [functor.comp_map, assoc]
       rw [← category.assoc, lax_monoidal_functor.μ_natural, category.assoc, ← map_comp, ← map_comp,
         ← lax_monoidal_functor.μ_natural]
-    associativity' := fun X Y Z => by 
+    associativity' := fun X Y Z => by
       dsimp
       rw [id_tensor_comp]
       slice_rhs 3 4 => rw [← G.to_functor.map_id, G.μ_natural]
@@ -359,13 +364,13 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       rw [category.assoc, category.assoc, category.assoc, category.assoc, category.assoc, ←
         G.to_functor.map_comp, ← G.to_functor.map_comp, ← G.to_functor.map_comp, ←
         G.to_functor.map_comp, F.associativity]
-    left_unitality' := fun X => by 
+    left_unitality' := fun X => by
       dsimp
       rw [G.left_unitality, comp_tensor_id, category.assoc, category.assoc]
       apply congr_arg
       rw [F.left_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ←
         lax_monoidal_functor.μ_natural, nat_trans.id_app, map_id, ← category.assoc, map_comp]
-    right_unitality' := fun X => by 
+    right_unitality' := fun X => by
       dsimp
       rw [G.right_unitality, id_tensor_comp, category.assoc, category.assoc]
       apply congr_arg
@@ -391,7 +396,7 @@ attribute [local simp] μ_natural associativity left_unitality right_unitality
 /-- The cartesian product of two lax monoidal functors is lax monoidal. -/
 @[simps]
 def prod : LaxMonoidalFunctor (B × D) (C × E) :=
-  { F.toFunctor.Prod G.toFunctor with 
+  { F.toFunctor.Prod G.toFunctor with
     ε := (ε F, ε G)
     μ := fun X Y => (μ F X.1 Y.1, μ G X.2 Y.2) }
 #align category_theory.lax_monoidal_functor.prod CategoryTheory.LaxMonoidalFunctor.prod
@@ -405,7 +410,7 @@ variable (C)
 /-- The diagonal functor as a monoidal functor. -/
 @[simps]
 def diag : MonoidalFunctor C (C × C) :=
-  { Functor.diag C with 
+  { Functor.diag C with
     ε := 𝟙 _
     μ := fun X Y => 𝟙 _ }
 #align category_theory.monoidal_functor.diag CategoryTheory.MonoidalFunctor.diag
@@ -429,13 +434,15 @@ theorem prod'_to_functor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor
   category_theory.lax_monoidal_functor.prod'_to_functor CategoryTheory.LaxMonoidalFunctor.prod'_to_functor
 
 @[simp]
-theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) := by
+theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) :=
+  by
   dsimp [prod']
   simp
 #align category_theory.lax_monoidal_functor.prod'_ε CategoryTheory.LaxMonoidalFunctor.prod'_ε
 
 @[simp]
-theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) := by
+theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) :=
+  by
   dsimp [prod']
   simp
 #align category_theory.lax_monoidal_functor.prod'_μ CategoryTheory.LaxMonoidalFunctor.prod'_μ
@@ -449,11 +456,13 @@ variable (F : MonoidalFunctor.{v₁, v₂} C D) (G : MonoidalFunctor.{v₂, v₃
 /-- The composition of two monoidal functors is again monoidal. -/
 @[simps]
 def comp : MonoidalFunctor.{v₁, v₃} C E :=
-  { F.toLaxMonoidalFunctor.comp G.toLaxMonoidalFunctor with
-    ε_is_iso := by 
+  {
+    F.toLaxMonoidalFunctor.comp
+      G.toLaxMonoidalFunctor with
+    ε_is_iso := by
       dsimp
       infer_instance
-    μ_is_iso := by 
+    μ_is_iso := by
       dsimp
       infer_instance }
 #align category_theory.monoidal_functor.comp CategoryTheory.MonoidalFunctor.comp
@@ -476,7 +485,9 @@ variable (F : MonoidalFunctor.{v₀, v₁} B C) (G : MonoidalFunctor.{v₂, v₃
 /-- The cartesian product of two monoidal functors is monoidal. -/
 @[simps]
 def prod : MonoidalFunctor (B × D) (C × E) :=
-  { F.toLaxMonoidalFunctor.Prod G.toLaxMonoidalFunctor with
+  {
+    F.toLaxMonoidalFunctor.Prod
+      G.toLaxMonoidalFunctor with
     ε_is_iso := (is_iso_prod_iff C E).mpr ⟨ε_is_iso F, ε_is_iso G⟩
     μ_is_iso := fun X Y => (is_iso_prod_iff C E).mpr ⟨μ_is_iso F X.1 Y.1, μ_is_iso G X.2 Y.2⟩ }
 #align category_theory.monoidal_functor.prod CategoryTheory.MonoidalFunctor.prod
@@ -512,7 +523,7 @@ structure as well.
 -/
 @[simps]
 noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F.toFunctor ⊣ G) :
-    LaxMonoidalFunctor D C where 
+    LaxMonoidalFunctor D C where
   toFunctor := G
   ε := h.homEquiv _ _ (inv F.ε)
   μ X Y := h.homEquiv _ (X ⊗ Y) (inv (F.μ (G.obj X) (G.obj Y)) ≫ (h.counit.app X ⊗ h.counit.app Y))
@@ -520,7 +531,8 @@ noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F
     rw [← h.hom_equiv_naturality_left, ← h.hom_equiv_naturality_right, Equiv.apply_eq_iff_eq, assoc,
       is_iso.eq_inv_comp, ← F.to_lax_monoidal_functor.μ_natural_assoc, is_iso.hom_inv_id_assoc, ←
       tensor_comp, adjunction.counit_naturality, adjunction.counit_naturality, tensor_comp]
-  associativity' X Y Z := by
+  associativity' X Y Z :=
+    by
     rw [← h.hom_equiv_naturality_right, ← h.hom_equiv_naturality_left, ←
       h.hom_equiv_naturality_left, ← h.hom_equiv_naturality_left, Equiv.apply_eq_iff_eq, ←
       cancel_epi (F.to_lax_monoidal_functor.μ (G.obj X ⊗ G.obj Y) (G.obj Z)), ←
@@ -551,13 +563,13 @@ noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F
 /-- If a monoidal functor `F` is an equivalence of categories then its inverse is also monoidal. -/
 @[simps]
 noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
-    MonoidalFunctor D
-      C where 
+    MonoidalFunctor D C
+    where
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
-  ε_is_iso := by 
+  ε_is_iso := by
     dsimp [equivalence.to_adjunction]
     infer_instance
-  μ_is_iso X Y := by 
+  μ_is_iso X Y := by
     dsimp [equivalence.to_adjunction]
     infer_instance
 #align category_theory.monoidal_inverse CategoryTheory.monoidalInverse

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.maschke
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,8 @@ section
 
 include h
 
-theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v := by
+theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v :=
+  by
   dsimp [conjugate]
   simp only [← i.map_smul, h, ← mul_smul, single_mul_single, mul_one, mul_left_inv]
   change (1 : MonoidAlgebra k G) • v = v
@@ -115,14 +116,15 @@ def sumOfConjugates : W →ₗ[k] V :=
 /-- In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
 -/
 def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
-  MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v => by
+  MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v =>
+    by
     simp only [sum_of_conjugates,
       LinearMap.sum_apply,-- We have a `module (monoid_algebra k G)` instance but are working with `finsupp`s,
         -- so help the elaborator unfold everything correctly.
         @Finset.smul_sum
         (MonoidAlgebra k G)]
     dsimp [conjugate]
-    conv_lhs => 
+    conv_lhs =>
       rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]
       simp only [mulRightEmbedding]
     simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_one, Function.Embedding.coeFn_mk,
@@ -144,7 +146,8 @@ def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
 
 include h
 
-theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) (i v) = v := by
+theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) (i v) = v :=
+  by
   rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant,
     equivariant_of_linear_of_comm_apply, sum_of_conjugates]
   rw [LinearMap.sum_apply]
@@ -184,7 +187,8 @@ variable {W : Type u} [AddCommGroup W] [Module k W] [Module (MonoidAlgebra k G) 
 variable [IsScalarTower k (MonoidAlgebra k G) W]
 
 theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf : f.ker = ⊥) :
-    ∃ g : W →ₗ[MonoidAlgebra k G] V, g.comp f = LinearMap.id := by
+    ∃ g : W →ₗ[MonoidAlgebra k G] V, g.comp f = LinearMap.id :=
+  by
   obtain ⟨φ, hφ⟩ :=
     (f.restrict_scalars k).exists_left_inverse_of_injective
       (by simp only [hf, Submodule.restrict_scalars_bot, LinearMap.ker_restrict_scalars])

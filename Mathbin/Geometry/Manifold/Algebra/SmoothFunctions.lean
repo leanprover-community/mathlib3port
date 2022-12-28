@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.smooth_functions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,8 @@ instance semigroup {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace
 @[to_additive]
 instance monoid {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
     [HasSmoothMul I' G] : Monoid C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.semigroup, SmoothMap.hasOne with
+  { SmoothMap.semigroup,
+    SmoothMap.hasOne with
     one_mul := fun a => by ext <;> exact one_mul _
     mul_one := fun a => by ext <;> exact mul_one _ }
 #align smooth_map.monoid SmoothMap.monoid
@@ -88,8 +89,8 @@ instance monoid {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.",
   simps]
 def coeFnMonoidHom {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
-    [HasSmoothMul I' G] :
-    C^∞⟮I, N; I', G⟯ →* N → G where 
+    [HasSmoothMul I' G] : C^∞⟮I, N; I', G⟯ →* N → G
+    where
   toFun := coeFn
   map_one' := coe_one
   map_mul' := coe_mul
@@ -104,7 +105,7 @@ instance commMonoid {G : Type _} [CommMonoid G] [TopologicalSpace G] [ChartedSpa
 @[to_additive]
 instance group {G : Type _} [Group G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G] :
     Group C^∞⟮I, N; I', G⟯ :=
-  { SmoothMap.monoid with 
+  { SmoothMap.monoid with
     inv := fun f => ⟨fun x => (f x)⁻¹, f.Smooth.inv⟩
     mul_left_inv := fun a => by ext <;> exact mul_left_inv _
     div := fun f g => ⟨f / g, f.Smooth.div g.Smooth⟩
@@ -143,7 +144,8 @@ under pointwise multiplication.
 
 instance semiring {R : Type _} [Semiring R] [TopologicalSpace R] [ChartedSpace H' R]
     [SmoothRing I' R] : Semiring C^∞⟮I, N; I', R⟯ :=
-  { SmoothMap.addCommMonoid, SmoothMap.monoid with
+  { SmoothMap.addCommMonoid,
+    SmoothMap.monoid with
     left_distrib := fun a b c => by ext <;> exact left_distrib _ _ _
     right_distrib := fun a b c => by ext <;> exact right_distrib _ _ _
     zero_mul := fun a => by ext <;> exact zero_mul _
@@ -212,7 +214,9 @@ instance module {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
 @[simps]
 def coeFnLinearMap {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
     C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →ₗ[𝕜] N → V :=
-  { (coeFnAddMonoidHom : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →+ _) with
+  {
+    (coeFnAddMonoidHom : C^∞⟮I, N; 𝓘(𝕜, V), V⟯ →+
+        _) with
     toFun := coeFn
     map_smul' := coe_smul }
 #align smooth_map.coe_fn_linear_map SmoothMap.coeFnLinearMap
@@ -232,10 +236,8 @@ inherit an algebra structure.
 variable {A : Type _} [NormedRing A] [NormedAlgebra 𝕜 A] [SmoothRing 𝓘(𝕜, A) A]
 
 /-- Smooth constant functions as a `ring_hom`. -/
-def c :
-    𝕜 →+*
-      C^∞⟮I, N; 𝓘(𝕜, A),
-        A⟯ where 
+def c : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯
+    where
   toFun := fun c : 𝕜 => ⟨fun x => (algebraMap 𝕜 A) c, smoothConst⟩
   map_one' := by ext x <;> exact (algebraMap 𝕜 A).map_one
   map_mul' c₁ c₂ := by ext x <;> exact (algebraMap 𝕜 A).map_mul _ _
@@ -244,7 +246,8 @@ def c :
 #align smooth_map.C SmoothMap.c
 
 instance algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
-  { SmoothMap.semiring with
+  {
+    SmoothMap.semiring with
     smul := fun r f => ⟨r • f, smoothConst.smul f.Smooth⟩
     toRingHom := SmoothMap.c
     commutes' := fun c f => by ext x <;> exact Algebra.commutes' _ _
@@ -253,8 +256,8 @@ instance algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
 
 /-- Coercion to a function as an `alg_hom`. -/
 @[simps]
-def coeFnAlgHom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →ₐ[𝕜]
-      N → A where 
+def coeFnAlgHom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →ₐ[𝕜] N → A
+    where
   toFun := coeFn
   commutes' r := rfl
   -- `..(smooth_map.coe_fn_ring_hom : C^∞⟮I, N; 𝓘(𝕜, A), A⟯ →+* _)` times out for some reason
@@ -288,8 +291,8 @@ theorem smul_comp' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] (f :
 #align smooth_map.smul_comp' SmoothMap.smul_comp'
 
 instance module' {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
-    Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯
-      C^∞⟮I, N; 𝓘(𝕜, V), V⟯ where 
+    Module C^∞⟮I, N; 𝓘(𝕜), 𝕜⟯ C^∞⟮I, N; 𝓘(𝕜, V), V⟯
+    where
   smul := (· • ·)
   smul_add c f g := by ext x <;> exact smul_add (c x) (f x) (g x)
   add_smul c₁ c₂ f := by ext x <;> exact add_smul (c₁ x) (c₂ x) (f x)

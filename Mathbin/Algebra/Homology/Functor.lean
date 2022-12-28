@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.homology.functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,9 +37,8 @@ variable {ι : Type _} {c : ComplexShape ι}
 /-- A complex of functors gives a functor to complexes. -/
 @[simps obj map]
 def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
-    T ⥤
-      HomologicalComplex V
-        c where 
+    T ⥤ HomologicalComplex V c
+    where
   obj t :=
     { x := fun i => (C.x i).obj t
       d := fun i j => (C.d i j).app t
@@ -47,18 +46,18 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
         have := C.d_comp_d i j k
         rw [nat_trans.ext_iff, Function.funext_iff] at this
         exact this t
-      shape' := fun i j h => by 
+      shape' := fun i j h => by
         have := C.shape _ _ h
         rw [nat_trans.ext_iff, Function.funext_iff] at this
         exact this t }
   map t₁ t₂ h :=
     { f := fun i => (C.x i).map h
       comm' := fun i j hij => NatTrans.naturality _ _ }
-  map_id' t := by 
+  map_id' t := by
     ext i
     dsimp
     rw [(C.X i).map_id]
-  map_comp' t₁ t₂ t₃ h₁ h₂ := by 
+  map_comp' t₁ t₂ t₃ h₁ h₂ := by
     ext i
     dsimp
     rw [functor.map_comp]
@@ -68,14 +67,14 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
 /-- The functorial version of `homological_complex.as_functor`. -/
 @[simps]
 def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
-    HomologicalComplex (T ⥤ V) c ⥤
-      T ⥤ HomologicalComplex V c where 
+    HomologicalComplex (T ⥤ V) c ⥤ T ⥤ HomologicalComplex V c
+    where
   obj C := C.asFunctor
   map C D f :=
     { app := fun t =>
         { f := fun i => (f.f i).app t
           comm' := fun i j w => NatTrans.congr_app (f.comm i j) t }
-      naturality' := fun t t' g => by 
+      naturality' := fun t t' g => by
         ext i
         exact (f.f i).naturality g }
 #align

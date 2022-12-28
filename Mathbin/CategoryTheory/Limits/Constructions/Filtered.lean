@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.filtered
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ attribute [local tidy] tactic.case_bash
 /-- If `C` has finite coproducts, a functor `discrete α ⥤ C` lifts to a functor
     `finset (discrete α) ⥤ C` by taking coproducts. -/
 @[simps]
-def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) :
-    Finset (Discrete α) ⥤ C where 
+def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) : Finset (Discrete α) ⥤ C
+    where
   obj s := ∐ fun x : s => F.obj x
   map s t h := Sigma.desc fun y => Sigma.ι (fun x : t => F.obj x) ⟨y, h.down.down y.2⟩
 #align
@@ -54,9 +54,8 @@ def liftToFinset [HasFiniteCoproducts C] (F : Discrete α ⥤ C) :
     type. -/
 @[simps]
 def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize.{w, w} C]
-    [DecidableEq α] (F : Discrete α ⥤ C) :
-    ColimitCocone
-      F where 
+    [DecidableEq α] (F : Discrete α ⥤ C) : ColimitCocone F
+    where
   Cocone :=
     { x := colimit (liftToFinset F)
       ι :=
@@ -68,7 +67,7 @@ def liftToFinsetColimitCocone [HasFiniteCoproducts C] [HasFilteredColimitsOfSize
         colimit.desc (liftToFinset F)
           { x := s.x
             ι := { app := fun t => Sigma.desc fun x => s.ι.app x } }
-      uniq' := fun s m h => by 
+      uniq' := fun s m h => by
         ext (t⟨⟨j, hj⟩⟩)
         convert h j using 1
         · simp [← colimit.w (lift_to_finset F) ⟨⟨Finset.singleton_subset_iff.2 hj⟩⟩]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.simp
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,7 +215,7 @@ Here are some tips depending on the error raised by the linter:
 
 /-- A linter for simp lemmas whose lhs is not in simp-normal form, and which hence never fire. -/
 @[linter]
-unsafe def linter.simp_nf : linter where 
+unsafe def linter.simp_nf : linter where
   test := simp_nf_linter
   auto_decls := true
   no_errors_found := "All left-hand sides of simp lemmas are in simp-normal form."
@@ -242,8 +242,8 @@ private unsafe def simp_var_head (d : declaration) : tactic (Option String) := d
 and which hence never fire.
 -/
 @[linter]
-unsafe def linter.simp_var_head :
-    linter where 
+unsafe def linter.simp_var_head : linter
+    where
   test := simp_var_head
   auto_decls := true
   no_errors_found := "No left-hand sides of a simp lemma has a variable as head symbol."
@@ -277,7 +277,7 @@ private unsafe def simp_comm (d : declaration) : tactic (Option String) := do
 
 /-- A linter for commutativity lemmas that are marked simp. -/
 @[linter]
-unsafe def linter.simp_comm : linter where 
+unsafe def linter.simp_comm : linter where
   test := simp_comm
   auto_decls := true
   no_errors_found := "No commutativity lemma is marked simp."

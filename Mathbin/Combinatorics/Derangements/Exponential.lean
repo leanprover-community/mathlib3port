@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson, Patrick Massot
 
 ! This file was ported from Lean 3 source module combinatorics.derangements.exponential
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,8 @@ theorem num_derangements_tendsto_inv_e :
   -- this isn't entirely obvious, since we have to ensure that asc_factorial and
   -- factorial interact in the right way, e.g., that k ≤ n always
   let s : ℕ → ℝ := fun n => ∑ k in Finset.range n, (-1 : ℝ) ^ k / k.factorial
-  suffices ∀ n : ℕ, (numDerangements n : ℝ) / n.factorial = s (n + 1) by
+  suffices ∀ n : ℕ, (numDerangements n : ℝ) / n.factorial = s (n + 1)
+    by
     simp_rw [this]
     -- shift the function by 1, and then use the fact that the partial sums
     -- converge to the infinite sum

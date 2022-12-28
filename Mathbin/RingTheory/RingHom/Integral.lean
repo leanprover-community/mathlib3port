@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.integral
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,12 +24,14 @@ open TensorProduct
 open TensorProduct Algebra.TensorProduct
 
 theorem is_integral_stable_under_composition :
-    StableUnderComposition fun R S _ _ f => f.is_integral := by
+    StableUnderComposition fun R S _ _ f => f.is_integral :=
+  by
   introv R hf hg
   exact RingHom.is_integral_trans _ _ hf hg
 #align ring_hom.is_integral_stable_under_composition RingHom.is_integral_stable_under_composition
 
-theorem is_integral_respects_iso : RespectsIso fun R S _ _ f => f.is_integral := by
+theorem is_integral_respects_iso : RespectsIso fun R S _ _ f => f.is_integral :=
+  by
   apply is_integral_stable_under_composition.respects_iso
   introv x
   skip
@@ -38,7 +40,8 @@ theorem is_integral_respects_iso : RespectsIso fun R S _ _ f => f.is_integral :=
 #align ring_hom.is_integral_respects_iso RingHom.is_integral_respects_iso
 
 theorem is_integral_stable_under_base_change :
-    StableUnderBaseChange fun R S _ _ f => f.is_integral := by
+    StableUnderBaseChange fun R S _ _ f => f.is_integral :=
+  by
   refine' stable_under_base_change.mk _ is_integral_respects_iso _
   introv h x
   skip

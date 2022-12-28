@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.rat.nnrat
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,7 +266,8 @@ theorem coe_sum {s : Finset α} {f : α → ℚ≥0} : ↑(∑ a in s, f a) = �
 #align nnrat.coe_sum Nnrat.coe_sum
 
 theorem to_nnrat_sum_of_nonneg {s : Finset α} {f : α → ℚ} (hf : ∀ a, a ∈ s → 0 ≤ f a) :
-    (∑ a in s, f a).toNnrat = ∑ a in s, (f a).toNnrat := by
+    (∑ a in s, f a).toNnrat = ∑ a in s, (f a).toNnrat :=
+  by
   rw [← coe_inj, coe_sum, Rat.coe_to_nnrat _ (Finset.sum_nonneg hf)]
   exact Finset.sum_congr rfl fun x hxs => by rw [Rat.coe_to_nnrat _ (hf x hxs)]
 #align nnrat.to_nnrat_sum_of_nonneg Nnrat.to_nnrat_sum_of_nonneg
@@ -277,7 +278,8 @@ theorem coe_prod {s : Finset α} {f : α → ℚ≥0} : ↑(∏ a in s, f a) = �
 #align nnrat.coe_prod Nnrat.coe_prod
 
 theorem to_nnrat_prod_of_nonneg {s : Finset α} {f : α → ℚ} (hf : ∀ a ∈ s, 0 ≤ f a) :
-    (∏ a in s, f a).toNnrat = ∏ a in s, (f a).toNnrat := by
+    (∏ a in s, f a).toNnrat = ∏ a in s, (f a).toNnrat :=
+  by
   rw [← coe_inj, coe_prod, Rat.coe_to_nnrat _ (Finset.prod_nonneg hf)]
   exact Finset.prod_congr rfl fun x hxs => by rw [Rat.coe_to_nnrat _ (hf x hxs)]
 #align nnrat.to_nnrat_prod_of_nonneg Nnrat.to_nnrat_prod_of_nonneg
@@ -350,7 +352,8 @@ theorem to_nnrat_le_to_nnrat_iff (hp : 0 ≤ p) : toNnrat q ≤ toNnrat p ↔ q 
 #align rat.to_nnrat_le_to_nnrat_iff Rat.to_nnrat_le_to_nnrat_iff
 
 @[simp]
-theorem to_nnrat_lt_to_nnrat_iff' : toNnrat q < toNnrat p ↔ q < p ∧ 0 < p := by
+theorem to_nnrat_lt_to_nnrat_iff' : toNnrat q < toNnrat p ↔ q < p ∧ 0 < p :=
+  by
   simp [← coe_lt_coe, to_nnrat, lt_irrefl]
   exact lt_trans'
 #align rat.to_nnrat_lt_to_nnrat_iff' Rat.to_nnrat_lt_to_nnrat_iff'
@@ -403,14 +406,16 @@ theorem to_nnrat_bit1 (hq : 0 ≤ q) : toNnrat (bit1 q) = bit1 (toNnrat q) :=
   (to_nnrat_add (by simp [hq]) zero_le_one).trans <| by simp [to_nnrat_one, bit1, hq]
 #align rat.to_nnrat_bit1 Rat.to_nnrat_bit1
 
-theorem to_nnrat_mul (hp : 0 ≤ p) : toNnrat (p * q) = toNnrat p * toNnrat q := by
+theorem to_nnrat_mul (hp : 0 ≤ p) : toNnrat (p * q) = toNnrat p * toNnrat q :=
+  by
   cases' le_total 0 q with hq hq
   · ext <;> simp [to_nnrat, hp, hq, max_eq_left, mul_nonneg]
   · have hpq := mul_nonpos_of_nonneg_of_nonpos hp hq
     rw [to_nnrat_eq_zero.2 hq, to_nnrat_eq_zero.2 hpq, mul_zero]
 #align rat.to_nnrat_mul Rat.to_nnrat_mul
 
-theorem to_nnrat_inv (q : ℚ) : toNnrat q⁻¹ = (toNnrat q)⁻¹ := by
+theorem to_nnrat_inv (q : ℚ) : toNnrat q⁻¹ = (toNnrat q)⁻¹ :=
+  by
   obtain hq | hq := le_total q 0
   · rw [to_nnrat_eq_zero.mpr hq, inv_zero, to_nnrat_eq_zero.mpr (inv_nonpos.mpr hq)]
   · nth_rw 1 [← Rat.coe_to_nnrat q hq]
@@ -474,13 +479,14 @@ theorem ext_num_denom (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
 #align nnrat.ext_num_denom Nnrat.ext_num_denom
 
 theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
-  ⟨by 
+  ⟨by
     rintro rfl
     exact ⟨rfl, rfl⟩, fun h => ext_num_denom h.1 h.2⟩
 #align nnrat.ext_num_denom_iff Nnrat.ext_num_denom_iff
 
 @[simp]
-theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q := by
+theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q :=
+  by
   ext1
   rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,
     Int.natAbs_of_nonneg (Rat.num_nonneg_iff_zero_le.2 q.prop)]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module category_theory.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,8 +44,8 @@ universe v v' w u u'
 /- The `@[to_additive]` attribute is just a hint that expressions involving this instance can
   still be additivized. -/
 @[to_additive CategoryTheory.types]
-instance types : LargeCategory (Type
-        u) where 
+instance types : LargeCategory (Type u)
+    where
   Hom a b := a → b
   id a := id
   comp _ _ _ f g := g ∘ f
@@ -190,8 +190,8 @@ def uliftTrivial (V : Type u) : ULift.{u} V ≅ V := by tidy
 /-- The functor embedding `Type u` into `Type (max u v)`.
 Write this as `ulift_functor.{5 2}` to get `Type 2 ⥤ Type 5`.
 -/
-def uliftFunctor : Type u ⥤ Type
-        max u v where 
+def uliftFunctor : Type u ⥤ Type max u v
+    where
   obj X := ULift.{v} X
   map X Y f := fun x : ULift.{v} X => ULift.up (f x.down)
 #align category_theory.ulift_functor CategoryTheory.uliftFunctor
@@ -205,9 +205,8 @@ theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) :
 instance uliftFunctorFull : Full.{u} uliftFunctor where preimage X Y f x := (f (ULift.up x)).down
 #align category_theory.ulift_functor_full CategoryTheory.uliftFunctorFull
 
-instance ulift_functor_faithful :
-    Faithful
-      uliftFunctor where map_injective' X Y f g p :=
+instance ulift_functor_faithful : Faithful uliftFunctor
+    where map_injective' X Y f g p :=
     funext fun x =>
       congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
 #align category_theory.ulift_functor_faithful CategoryTheory.ulift_functor_faithful
@@ -232,7 +231,8 @@ theorem hom_of_element_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfEle
 
 See <https://stacks.math.columbia.edu/tag/003C>.
 -/
-theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
+theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
+  by
   constructor
   · intro H x x' h
     skip
@@ -249,7 +249,8 @@ theorem injective_of_mono {X Y : Type u} (f : X ⟶ Y) [hf : Mono f] : Function.
 
 See <https://stacks.math.columbia.edu/tag/003C>.
 -/
-theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
+theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
+  by
   constructor
   · rintro ⟨H⟩
     refine' Function.surjective_of_right_cancellable_Prop fun g₁ g₂ hg => _
@@ -268,15 +269,15 @@ section
 
 /-- `of_type_functor m` converts from Lean's `Type`-based `category` to `category_theory`. This
 allows us to use these functors in category theory. -/
-def ofTypeFunctor (m : Type u → Type v) [Functor m] [IsLawfulFunctor m] :
-    Type u ⥤ Type v where 
+def ofTypeFunctor (m : Type u → Type v) [Functor m] [LawfulFunctor m] : Type u ⥤ Type v
+    where
   obj := m
   map α β := Functor.map
   map_id' α := Functor.map_id
-  map_comp' α β γ f g := funext fun a => IsLawfulFunctor.comp_map f g _
+  map_comp' α β γ f g := funext fun a => LawfulFunctor.comp_map f g _
 #align category_theory.of_type_functor CategoryTheory.ofTypeFunctor
 
-variable (m : Type u → Type v) [Functor m] [IsLawfulFunctor m]
+variable (m : Type u → Type v) [Functor m] [LawfulFunctor m]
 
 @[simp]
 theorem of_type_functor_obj : (ofTypeFunctor m).obj = m :=
@@ -303,7 +304,7 @@ variable {X Y : Type u}
 /-- Any equivalence between types in the same universe gives
 a categorical isomorphism between those types.
 -/
-def toIso (e : X ≃ Y) : X ≅ Y where 
+def toIso (e : X ≃ Y) : X ≅ Y where
   Hom := e.toFun
   inv := e.invFun
   hom_inv_id' := funext e.left_inv
@@ -332,7 +333,7 @@ variable {X Y : Type u}
 
 /-- Any isomorphism between types gives an equivalence.
 -/
-def toEquiv (i : X ≅ Y) : X ≃ Y where 
+def toEquiv (i : X ≅ Y) : X ≃ Y where
   toFun := i.Hom
   invFun := i.inv
   left_inv x := congr_fun i.hom_inv_id x
@@ -370,10 +371,8 @@ theorem is_iso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function
     IsIso.of_iso (Equiv.ofBijective f b).toIso
 #align category_theory.is_iso_iff_bijective CategoryTheory.is_iso_iff_bijective
 
-instance :
-    SplitEpiCategory
-      (Type
-        u) where is_split_epi_of_epi X Y f hf :=
+instance : SplitEpiCategory (Type u)
+    where is_split_epi_of_epi X Y f hf :=
     IsSplitEpi.mk'
       { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf
         id' := funext <| Function.right_inverse_surj_inv <| (epi_iff_surjective f).1 hf }
@@ -385,8 +384,8 @@ end CategoryTheory
 /-- Equivalences (between types in the same universe) are the same as (isomorphic to) isomorphisms
 of types. -/
 @[simps]
-def equivIsoIso {X Y : Type u} :
-    X ≃ Y ≅ X ≅ Y where 
+def equivIsoIso {X Y : Type u} : X ≃ Y ≅ X ≅ Y
+    where
   Hom e := e.toIso
   inv i := i.toEquiv
 #align equiv_iso_iso equivIsoIso

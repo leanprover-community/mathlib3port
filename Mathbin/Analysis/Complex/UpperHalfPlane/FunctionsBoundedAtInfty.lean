@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.functions_bounded_at_infty
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,8 @@ theorem at_im_infty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im
   Filter.HasBasis.comap UpperHalfPlane.im Filter.at_top_basis
 #align upper_half_plane.at_im_infty_basis UpperHalfPlane.at_im_infty_basis
 
-theorem at_im_infty_mem (S : Set ℍ) : S ∈ at_im_infty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S := by
+theorem at_im_infty_mem (S : Set ℍ) : S ∈ at_im_infty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S :=
+  by
   simp only [at_im_infty, Filter.mem_comap', Filter.mem_at_top_sets, ge_iff_le, Set.mem_setOf_eq,
     UpperHalfPlane.coe_im]
   refine' ⟨fun ⟨a, h⟩ => ⟨a, fun z hz => h (im z) hz rfl⟩, _⟩
@@ -86,7 +87,8 @@ theorem bounded_mem (f : ℍ → ℂ) :
 #align upper_half_plane.bounded_mem UpperHalfPlane.bounded_mem
 
 theorem zero_at_im_infty (f : ℍ → ℂ) :
-    IsZeroAtImInfty f ↔ ∀ ε : ℝ, 0 < ε → ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ ε := by
+    IsZeroAtImInfty f ↔ ∀ ε : ℝ, 0 < ε → ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ ε :=
+  by
   rw [is_zero_at_im_infty, zero_at_filter, tendsto_iff_forall_eventually_mem]
   constructor
   · simp_rw [Filter.Eventually, at_im_infty_mem]
@@ -100,7 +102,7 @@ theorem zero_at_im_infty (f : ℍ → ℂ) :
     obtain ⟨A, hA⟩ := h (ε / 2) h11
     use A
     intro z hz
-    have hzs : f z ∈ s := by 
+    have hzs : f z ∈ s := by
       apply h2
       simp only [mem_ball_zero_iff, norm_eq_abs]
       apply lt_of_le_of_lt (hA z hz)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.W
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,8 @@ instance WPath.inhabited (x : P.last.W) {i} [I : Inhabited (P.drop.B x.head i)] 
 
 /-- Specialized destructor on `W_path` -/
 def wPathCasesOn {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
-    (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : P.WPath ⟨a, f⟩ ⟹ α := by
+    (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : P.WPath ⟨a, f⟩ ⟹ α :=
+  by
   intro i x; cases x
   case root _ _ i c => exact g' i c
   case child _ _ i j c => exact g j i c
@@ -118,7 +119,7 @@ theorem comp_W_path_cases_on {α β : Typevec n} (h : α ⟹ β) {a : P.A} {f : 
 tree whereas, for a given `a : A`, `B a` is a valid path in tree `a` so
 that `Wp.obj α` is made of a tree and a function from its valid paths to
 the values it contains  -/
-def wp : Mvpfunctor n where 
+def wp : Mvpfunctor n where
   A := P.last.W
   B := P.WPath
 #align mvpfunctor.Wp Mvpfunctor.wp
@@ -205,7 +206,8 @@ def wRec {α : Typevec n} {C : Type _}
 theorem W_rec_eq {α : Typevec n} {C : Type _}
     (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A)
     (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
-    P.wRec g (P.wMk a f' f) = g a f' f fun i => P.wRec g (f i) := by
+    P.wRec g (P.wMk a f' f) = g a f' f fun i => P.wRec g (f i) :=
+  by
   rw [W_mk, W_rec]; dsimp; rw [Wp_rec_eq]
   dsimp only [W_path_dest_left_W_path_cases_on, W_path_dest_right_W_path_cases_on]
   congr <;> ext1 i <;> cases f i <;> rfl
@@ -216,7 +218,7 @@ theorem W_ind {α : Typevec n} {C : P.W α → Prop}
     (ih :
       ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α),
         (∀ i, C (f i)) → C (P.wMk a f' f)) :
-    ∀ x, C x := by 
+    ∀ x, C x := by
   intro x; cases' x with a f
   apply @Wp_ind n P α fun a f => C ⟨a, f⟩; dsimp
   intro a f f' ih'
@@ -244,9 +246,11 @@ theorem W_mk_eq {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P
 #align mvpfunctor.W_mk_eq Mvpfunctor.W_mk_eq
 
 theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a ⟹ α)
-    (f : P.last.B a → P.W α) : g <$$> P.wMk a f' f = P.wMk a (g ⊚ f') fun i => g <$$> f i := by
+    (f : P.last.B a → P.W α) : g <$$> P.wMk a f' f = P.wMk a (g ⊚ f') fun i => g <$$> f i :=
+  by
   show _ = P.W_mk a (g ⊚ f') (Mvfunctor.map g ∘ f)
-  have : Mvfunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩ := by
+  have : Mvfunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩ :=
+    by
     ext i : 1
     dsimp [Function.comp]
     cases f i

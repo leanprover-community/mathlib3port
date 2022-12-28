@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.instances.rat_lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,13 +51,15 @@ theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
   interior_eq_empty_iff_dense_compl.1 (interior_compact_eq_empty hs)
 #align rat.dense_compl_compact Rat.dense_compl_compact
 
-instance cocompact_inf_nhds_ne_bot : NeBot (cocompact ℚ ⊓ 𝓝 p) := by
+instance cocompact_inf_nhds_ne_bot : NeBot (cocompact ℚ ⊓ 𝓝 p) :=
+  by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).ne_bot_iff.2 _
   rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩; rw [inter_comm]
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
 #align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_ne_bot
 
-theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) := by
+theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) :=
+  by
   intro H
   rcases exists_seq_tendsto (cocompact ℚ ⊓ 𝓝 0) with ⟨x, hx⟩
   rw [tendsto_inf] at hx; rcases hx with ⟨hxc, hx0⟩
@@ -66,7 +68,8 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
   exact hn (Or.inr ⟨n, rfl⟩)
 #align rat.not_countably_generated_cocompact Rat.not_countably_generated_cocompact
 
-theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) := by
+theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) :=
+  by
   intro
   have : is_countably_generated (comap (coe : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
   rw [Alexandroff.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this
@@ -74,17 +77,20 @@ theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated 
 #align
   rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
 
-theorem not_first_countable_topology_alexandroff : ¬FirstCountableTopology ℚ∞ := by
+theorem not_first_countable_topology_alexandroff : ¬FirstCountableTopology ℚ∞ :=
+  by
   intro
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
 #align rat.not_first_countable_topology_alexandroff Rat.not_first_countable_topology_alexandroff
 
-theorem not_second_countable_topology_alexandroff : ¬SecondCountableTopology ℚ∞ := by
+theorem not_second_countable_topology_alexandroff : ¬SecondCountableTopology ℚ∞ :=
+  by
   intro
   exact not_first_countable_topology_alexandroff inferInstance
 #align rat.not_second_countable_topology_alexandroff Rat.not_second_countable_topology_alexandroff
 
-instance : TotallyDisconnectedSpace ℚ := by
+instance : TotallyDisconnectedSpace ℚ :=
+  by
   refine' ⟨fun s hsu hs x hx y hy => _⟩; clear hsu
   by_contra' H : x ≠ y
   wlog hlt : x < y := H.lt_or_lt using x y, y x

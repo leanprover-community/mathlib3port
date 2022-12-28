@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.compact_open
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,8 @@ section Functorial
 variable (g : C(β, γ))
 
 private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsOpen u) :
-    ContinuousMap.comp g ⁻¹' CompactOpen.gen s u = CompactOpen.gen s (g ⁻¹' u) := by
+    ContinuousMap.comp g ⁻¹' CompactOpen.gen s u = CompactOpen.gen s (g ⁻¹' u) :=
+  by
   ext ⟨f, _⟩
   change g ∘ f '' s ⊆ u ↔ f '' s ⊆ g ⁻¹' u
   rw [image_comp, image_subset_iff]
@@ -113,7 +114,8 @@ theorem continuous_comp : Continuous (ContinuousMap.comp g : C(α, β) → C(α,
 variable (f : C(α, β))
 
 private theorem image_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsOpen u) :
-    (fun g : C(β, γ) => g.comp f) ⁻¹' CompactOpen.gen s u = CompactOpen.gen (f '' s) u := by
+    (fun g : C(β, γ) => g.comp f) ⁻¹' CompactOpen.gen s u = CompactOpen.gen (f '' s) u :=
+  by
   ext ⟨g, _⟩
   change g ∘ f '' s ⊆ u ↔ g '' (f '' s) ⊆ u
   rw [Set.image_comp]
@@ -121,7 +123,8 @@ private theorem image_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsO
 
 /-- C(-, γ) is a functor. -/
 theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(α, γ)) :=
-  continuous_generated_from fun m ⟨s, hs, u, hu, hm⟩ => by
+  continuous_generated_from fun m ⟨s, hs, u, hu, hm⟩ =>
+    by
     rw [hm, image_gen f hs hu]
     exact ContinuousMap.is_open_gen (hs.image f.2) hu
 #align continuous_map.continuous_comp_left ContinuousMap.continuous_comp_left
@@ -132,9 +135,9 @@ theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(�
 theorem continuous_comp' [LocallyCompactSpace β] :
     Continuous fun x : C(α, β) × C(β, γ) => x.2.comp x.1 :=
   continuous_generated_from
-    (by 
+    (by
       rintro M ⟨K, hK, U, hU, rfl⟩
-      conv => 
+      conv =>
         congr
         rw [compact_open.gen, preimage_set_of_eq]
         congr
@@ -197,7 +200,7 @@ theorem continuous_coe' [LocallyCompactSpace α] : @Continuous C(α, β) (α →
 #align continuous_map.continuous_coe' ContinuousMap.continuous_coe'
 
 instance [T2Space β] : T2Space C(α, β) :=
-  ⟨by 
+  ⟨by
     intro f₁ f₂ h
     obtain ⟨x, hx⟩ := not_forall.mp (mt (FunLike.ext f₁ f₂) h)
     obtain ⟨u, v, hu, hv, hxu, hxv, huv⟩ := t2_separation hx
@@ -218,7 +221,7 @@ section InfInduced
 theorem compact_open_le_induced (s : Set α) :
     (ContinuousMap.compactOpen : TopologicalSpace C(α, β)) ≤
       TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
-  by 
+  by
   simp only [induced_generate_from_eq, ContinuousMap.compactOpen]
   apply generate_from_mono
   rintro b ⟨a, ⟨c, hc, u, hu, rfl⟩, rfl⟩
@@ -235,7 +238,7 @@ theorem compact_open_eq_Inf_induced :
     (ContinuousMap.compactOpen : TopologicalSpace C(α, β)) =
       ⨅ (s : Set α) (hs : IsCompact s),
         TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
-  by 
+  by
   refine' le_antisymm _ _
   · refine' le_infᵢ₂ _
     exact fun s hs => compact_open_le_induced s
@@ -252,13 +255,15 @@ theorem compact_open_eq_Inf_induced :
 
 /-- For any subset `s` of `α`, the restriction of continuous functions to `s` is continuous as a
 function from `C(α, β)` to `C(s, β)` with their respective compact-open topologies. -/
-theorem continuous_restrict (s : Set α) : Continuous fun F : C(α, β) => F.restrict s := by
+theorem continuous_restrict (s : Set α) : Continuous fun F : C(α, β) => F.restrict s :=
+  by
   rw [continuous_iff_le_induced]
   exact compact_open_le_induced s
 #align continuous_map.continuous_restrict ContinuousMap.continuous_restrict
 
 theorem nhds_compact_open_eq_Inf_nhds_induced (f : C(α, β)) :
-    𝓝 f = ⨅ (s) (hs : IsCompact s), (𝓝 (f.restrict s)).comap (ContinuousMap.restrict s) := by
+    𝓝 f = ⨅ (s) (hs : IsCompact s), (𝓝 (f.restrict s)).comap (ContinuousMap.restrict s) :=
+  by
   rw [compact_open_eq_Inf_induced]
   simp [nhds_infi, nhds_induced]
 #align
@@ -274,7 +279,7 @@ theorem tendsto_compact_open_iff_forall {ι : Type _} {l : Filter ι} (F : ι �
     (f : C(α, β)) :
     Filter.Tendsto F l (𝓝 f) ↔
       ∀ (s) (hs : IsCompact s), Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
-  by 
+  by
   rw [compact_open_eq_Inf_induced]
   simp [nhds_infi, nhds_induced, Filter.tendsto_comap_iff]
 #align continuous_map.tendsto_compact_open_iff_forall ContinuousMap.tendsto_compact_open_iff_forall
@@ -285,7 +290,7 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
     {ι : Type _} {l : Filter ι} [Filter.NeBot l] (F : ι → C(α, β)) :
     (∃ f, Filter.Tendsto F l (𝓝 f)) ↔
       ∀ (s : Set α) (hs : IsCompact s), ∃ f, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 f) :=
-  by 
+  by
   constructor
   · rintro ⟨f, hf⟩ s hs
     exact ⟨f.restrict s, tendsto_compact_open_restrict hf s⟩
@@ -296,7 +301,7 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
     have h :
       ∀ (s₁) (hs₁ : IsCompact s₁) (s₂) (hs₂ : IsCompact s₂) (x : α) (hxs₁ : x ∈ s₁) (hxs₂ : x ∈ s₂),
         f s₁ hs₁ ⟨x, hxs₁⟩ = f s₂ hs₂ ⟨x, hxs₂⟩ :=
-      by 
+      by
       rintro s₁ hs₁ s₂ hs₂ x hxs₁ hxs₂
       haveI := is_compact_iff_compact_space.mp hs₁
       haveI := is_compact_iff_compact_space.mp hs₂
@@ -305,7 +310,8 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
       exact tendsto_nhds_unique h₁ h₂
     -- So glue the `f s hs` together and prove that this glued function `f₀` is a limit on each
     -- compact set `s`
-    have hs : ∀ x : α, ∃ (s : _)(hs : IsCompact s), s ∈ 𝓝 x := by
+    have hs : ∀ x : α, ∃ (s : _)(hs : IsCompact s), s ∈ 𝓝 x :=
+      by
       intro x
       obtain ⟨s, hs, hs'⟩ := exists_compact_mem_nhds x
       exact ⟨s, hs, hs'⟩
@@ -337,7 +343,7 @@ theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×
 
 -- The coevaluation map β → C(α, β × α) is continuous (always).
 theorem continuous_coev : Continuous (coev α β) :=
-  continuous_generated_from <| by 
+  continuous_generated_from <| by
     rintro _ ⟨s, sc, u, uo, rfl⟩
     rw [is_open_iff_forall_mem_open]
     intro y hy
@@ -362,7 +368,8 @@ def curry' (f : C(α × β, γ)) (a : α) : C(β, γ) :=
 
 /-- If a map `α × β → γ` is continuous, then its curried form `α → C(β, γ)` is continuous. -/
 theorem continuous_curry' (f : C(α × β, γ)) : Continuous (curry' f) :=
-  have hf : curry' f = ContinuousMap.comp f ∘ coev _ _ := by
+  have hf : curry' f = ContinuousMap.comp f ∘ coev _ _ :=
+    by
     ext
     rfl
   hf ▸ Continuous.comp (continuous_comp f) continuous_coev
@@ -371,7 +378,8 @@ theorem continuous_curry' (f : C(α × β, γ)) : Continuous (curry' f) :=
 /-- To show continuity of a map `α → C(β, γ)`, it suffices to show that its uncurried form
     `α × β → γ` is continuous. -/
 theorem continuous_of_continuous_uncurry (f : α → C(β, γ))
-    (h : Continuous (Function.uncurry fun x y => f x y)) : Continuous f := by
+    (h : Continuous (Function.uncurry fun x y => f x y)) : Continuous f :=
+  by
   convert continuous_curry' ⟨_, h⟩
   ext
   rfl
@@ -387,7 +395,8 @@ def curry (f : C(α × β, γ)) : C(α, C(β, γ)) :=
 
 /-- The currying process is a continuous map between function spaces. -/
 theorem continuous_curry [LocallyCompactSpace (α × β)] :
-    Continuous (curry : C(α × β, γ) → C(α, C(β, γ))) := by
+    Continuous (curry : C(α × β, γ) → C(α, C(β, γ))) :=
+  by
   apply continuous_of_continuous_uncurry
   apply continuous_of_continuous_uncurry
   rw [← Homeomorph.comp_continuous_iff' (Homeomorph.prodAssoc _ _ _).symm]
@@ -416,7 +425,8 @@ def uncurry [LocallyCompactSpace β] (f : C(α, C(β, γ))) : C(α × β, γ) :=
 
 /-- The uncurrying process is a continuous map between function spaces. -/
 theorem continuous_uncurry [LocallyCompactSpace α] [LocallyCompactSpace β] :
-    Continuous (uncurry : C(α, C(β, γ)) → C(α × β, γ)) := by
+    Continuous (uncurry : C(α, C(β, γ)) → C(α × β, γ)) :=
+  by
   apply continuous_of_continuous_uncurry
   rw [← Homeomorph.comp_continuous_iff' (Homeomorph.prodAssoc _ _ _)]
   apply Continuous.comp continuous_eval' (Continuous.prod_map continuous_eval' continuous_id) <;>
@@ -457,12 +467,12 @@ def curry [LocallyCompactSpace α] [LocallyCompactSpace β] : C(α × β, γ) �
 #align homeomorph.curry Homeomorph.curry
 
 /-- If `α` has a single element, then `β` is homeomorphic to `C(α, β)`. -/
-def continuousMapOfUnique [Unique α] :
-    β ≃ₜ C(α, β) where 
+def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β)
+    where
   toFun := const α
   invFun f := f default
   left_inv a := rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     rw [Unique.eq_default a]
     rfl
@@ -489,14 +499,16 @@ variable {X₀ X Y Z : Type _} [TopologicalSpace X₀] [TopologicalSpace X] [Top
   [TopologicalSpace Z] [LocallyCompactSpace Y] {f : X₀ → X}
 
 theorem QuotientMap.continuous_lift_prod_left (hf : QuotientMap f) {g : X × Y → Z}
-    (hg : Continuous fun p : X₀ × Y => g (f p.1, p.2)) : Continuous g := by
+    (hg : Continuous fun p : X₀ × Y => g (f p.1, p.2)) : Continuous g :=
+  by
   let Gf : C(X₀, C(Y, Z)) := ContinuousMap.curry ⟨_, hg⟩
-  have h : ∀ x : X, Continuous fun y => g (x, y) := by
+  have h : ∀ x : X, Continuous fun y => g (x, y) :=
+    by
     intro x
     obtain ⟨x₀, rfl⟩ := hf.surjective x
     exact (Gf x₀).Continuous
   let G : X → C(Y, Z) := fun x => ⟨_, h x⟩
-  have : Continuous G := by 
+  have : Continuous G := by
     rw [hf.continuous_iff]
     exact Gf.continuous
   convert ContinuousMap.continuous_uncurry_of_continuous ⟨G, this⟩
@@ -506,7 +518,8 @@ theorem QuotientMap.continuous_lift_prod_left (hf : QuotientMap f) {g : X × Y �
 #align quotient_map.continuous_lift_prod_left QuotientMap.continuous_lift_prod_left
 
 theorem QuotientMap.continuous_lift_prod_right (hf : QuotientMap f) {g : Y × X → Z}
-    (hg : Continuous fun p : Y × X₀ => g (p.1, f p.2)) : Continuous g := by
+    (hg : Continuous fun p : Y × X₀ => g (p.1, f p.2)) : Continuous g :=
+  by
   have : Continuous fun p : X₀ × Y => g ((Prod.swap p).1, f (Prod.swap p).2) :=
     hg.comp continuous_swap
   have : Continuous fun p : X₀ × Y => (g ∘ Prod.swap) (f p.1, p.2) := this

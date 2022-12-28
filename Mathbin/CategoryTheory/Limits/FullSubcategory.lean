@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.full_subcategory
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,10 +113,8 @@ def createsLimitFullSubcategoryInclusionOfClosed (h : ClosedUnderLimitsOfShape J
 
 /-- If `P` is closed under limits of shape `J`, then the inclusion creates such limits. -/
 def createsLimitsOfShapeFullSubcategoryInclusion (h : ClosedUnderLimitsOfShape J P)
-    [HasLimitsOfShape J C] :
-    CreatesLimitsOfShape J
-      (fullSubcategoryInclusion
-        P) where CreatesLimit F := createsLimitFullSubcategoryInclusionOfClosed h F
+    [HasLimitsOfShape J C] : CreatesLimitsOfShape J (fullSubcategoryInclusion P)
+    where CreatesLimit F := createsLimitFullSubcategoryInclusionOfClosed h F
 #align
   category_theory.limits.creates_limits_of_shape_full_subcategory_inclusion CategoryTheory.Limits.createsLimitsOfShapeFullSubcategoryInclusion
 
@@ -144,10 +142,8 @@ def createsColimitFullSubcategoryInclusionOfClosed (h : ClosedUnderColimitsOfSha
 
 /-- If `P` is closed under colimits of shape `J`, then the inclusion creates such colimits. -/
 def createsColimitsOfShapeFullSubcategoryInclusion (h : ClosedUnderColimitsOfShape J P)
-    [HasColimitsOfShape J C] :
-    CreatesColimitsOfShape J
-      (fullSubcategoryInclusion
-        P) where CreatesColimit F := createsColimitFullSubcategoryInclusionOfClosed h F
+    [HasColimitsOfShape J C] : CreatesColimitsOfShape J (fullSubcategoryInclusion P)
+    where CreatesColimit F := createsColimitFullSubcategoryInclusionOfClosed h F
 #align
   category_theory.limits.creates_colimits_of_shape_full_subcategory_inclusion CategoryTheory.Limits.createsColimitsOfShapeFullSubcategoryInclusion
 

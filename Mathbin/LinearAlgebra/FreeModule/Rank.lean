@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.rank
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,8 @@ theorem rank_prod' (N : Type v) [AddCommGroup N] [Module R N] [Module.Free R N] 
 @[simp]
 theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroup (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
-    Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
+    Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
+  by
   let B i := choose_basis R (M i)
   let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i
   simp [← b.mk_eq_dim'', fun i => (B i).mk_eq_dim'']
@@ -81,7 +82,8 @@ theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGr
 @[simp]
 theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι, AddCommGroup (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
-    Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
+    Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
+  by
   cases nonempty_fintype ι
   rw [← (DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]
 #align module.free.rank_pi_finite Module.Free.rank_pi_finite
@@ -89,7 +91,8 @@ theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι
 /-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
 @[simp]
 theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
-    Module.rank R (Matrix m n R) = lift.{max v w u, v} (#m) * lift.{max v w u, w} (#n) := by
+    Module.rank R (Matrix m n R) = lift.{max v w u, v} (#m) * lift.{max v w u, w} (#n) :=
+  by
   cases nonempty_fintype m
   cases nonempty_fintype n
   have h := (Matrix.stdBasis R m n).mk_eq_dim
@@ -124,7 +127,8 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 /-- The rank of `M ⊗[R] N` is `(module.rank R M).lift * (module.rank R N).lift`. -/
 @[simp]
 theorem rank_tensor_product :
-    Module.rank R (M ⊗[R] N) = lift.{w, v} (Module.rank R M) * lift.{v, w} (Module.rank R N) := by
+    Module.rank R (M ⊗[R] N) = lift.{w, v} (Module.rank R M) * lift.{v, w} (Module.rank R N) :=
+  by
   let ιM := choose_basis_index R M
   let ιN := choose_basis_index R N
   have h₁ := LinearEquiv.lift_dim_eq (TensorProduct.congr (repr R M) (repr R N))

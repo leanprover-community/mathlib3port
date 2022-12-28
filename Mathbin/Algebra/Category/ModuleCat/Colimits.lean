@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.colimits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,8 +113,8 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
 
 /-- The setoid corresponding to module expressions modulo module relations and identifications.
 -/
-def colimitSetoid : Setoid (Prequotient
-        F) where 
+def colimitSetoid : Setoid (Prequotient F)
+    where
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 #align Module.colimits.colimit_setoid ModuleCat.Colimits.colimitSetoid
@@ -127,17 +127,17 @@ def ColimitType : Type max u v w :=
   Quotient (colimitSetoid F)deriving Inhabited
 #align Module.colimits.colimit_type ModuleCat.Colimits.ColimitType
 
-instance : AddCommGroup (ColimitType
-        F) where 
+instance : AddCommGroup (ColimitType F)
+    where
   zero := Quot.mk _ zero
-  neg := by 
+  neg := by
     fapply @Quot.lift
     · intro x
       exact Quot.mk _ (neg x)
     · intro x x' r
       apply Quot.sound
       exact relation.neg_1 _ _ r
-  add := by 
+  add := by
     fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
     · intro x
       fapply @Quot.lift
@@ -153,25 +153,25 @@ instance : AddCommGroup (ColimitType
       apply Quot.sound
       · exact relation.add_1 _ _ _ r
       · rfl
-  zero_add x := by 
+  zero_add x := by
     induction x
     dsimp
     apply Quot.sound
     apply relation.zero_add
     rfl
-  add_zero x := by 
+  add_zero x := by
     induction x
     dsimp
     apply Quot.sound
     apply relation.add_zero
     rfl
-  add_left_neg x := by 
+  add_left_neg x := by
     induction x
     dsimp
     apply Quot.sound
     apply relation.add_left_neg
     rfl
-  add_comm x y := by 
+  add_comm x y := by
     induction x
     induction y
     dsimp
@@ -179,7 +179,7 @@ instance : AddCommGroup (ColimitType
     apply relation.add_comm
     rfl
     rfl
-  add_assoc x y z := by 
+  add_assoc x y z := by
     induction x
     induction y
     induction z
@@ -190,30 +190,28 @@ instance : AddCommGroup (ColimitType
     rfl
     rfl
 
-instance :
-    Module R
-      (ColimitType
-        F) where 
-  smul s := by 
+instance : Module R (ColimitType F)
+    where
+  smul s := by
     fapply @Quot.lift
     · intro x
       exact Quot.mk _ (smul s x)
     · intro x x' r
       apply Quot.sound
       exact relation.smul_1 s _ _ r
-  one_smul x := by 
+  one_smul x := by
     induction x
     dsimp
     apply Quot.sound
     apply relation.one_smul
     rfl
-  mul_smul s t x := by 
+  mul_smul s t x := by
     induction x
     dsimp
     apply Quot.sound
     apply relation.mul_smul
     rfl
-  smul_add s x y := by 
+  smul_add s x y := by
     induction x
     induction y
     dsimp
@@ -222,13 +220,13 @@ instance :
     rfl
     rfl
   smul_zero s := by apply Quot.sound; apply relation.smul_zero
-  add_smul s t x := by 
+  add_smul s t x := by
     induction x
     dsimp
     apply Quot.sound
     apply relation.add_smul
     rfl
-  zero_smul x := by 
+  zero_smul x := by
     induction x
     dsimp
     apply Quot.sound
@@ -267,10 +265,10 @@ def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
 #align Module.colimits.cocone_fun ModuleCat.Colimits.coconeFun
 
 /-- The group homomorphism from a given module in the diagram to the colimit module. -/
-def coconeMorphism (j : J) :
-    F.obj j ⟶ colimit F where 
+def coconeMorphism (j : J) : F.obj j ⟶ colimit F
+    where
   toFun := coconeFun F j
-  map_smul' := by 
+  map_smul' := by
     intros
     apply Quot.sound
     apply relation.smul
@@ -279,7 +277,8 @@ def coconeMorphism (j : J) :
 
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
-    F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
+    F.map f ≫ coconeMorphism F j' = coconeMorphism F j :=
+  by
   ext
   apply Quot.sound
   apply Relation.Map
@@ -287,13 +286,14 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x :=
+  by
   rw [← cocone_naturality F f]
   rfl
 #align Module.colimits.cocone_naturality_components ModuleCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit module. -/
-def colimitCocone : Cocone F where 
+def colimitCocone : Cocone F where
   x := colimit F
   ι := { app := coconeMorphism F }
 #align Module.colimits.colimit_cocone ModuleCat.Colimits.colimitCocone
@@ -309,7 +309,8 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
 #align Module.colimits.desc_fun_lift ModuleCat.Colimits.descFunLift
 
 /-- The function from the colimit module to the cone point of any other cocone. -/
-def descFun (s : Cocone F) : ColimitType F → s.x := by
+def descFun (s : Cocone F) : ColimitType F → s.x :=
+  by
   fapply Quot.lift
   · exact desc_fun_lift F s
   · intro x y r
@@ -363,18 +364,18 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
 #align Module.colimits.desc_fun ModuleCat.Colimits.descFun
 
 /-- The group homomorphism from the colimit module to the cone point of any other cocone. -/
-def descMorphism (s : Cocone F) :
-    colimit F ⟶ s.x where 
+def descMorphism (s : Cocone F) : colimit F ⟶ s.x
+    where
   toFun := descFun F s
   map_smul' s x := by induction x <;> rfl
   map_add' x y := by induction x <;> induction y <;> rfl
 #align Module.colimits.desc_morphism ModuleCat.Colimits.descMorphism
 
 /-- Evidence that the proposed colimit is the colimit. -/
-def colimitCoconeIsColimit :
-    IsColimit (colimitCocone F) where 
+def colimitCoconeIsColimit : IsColimit (colimitCocone F)
+    where
   desc s := descMorphism F s
-  uniq' s m w := by 
+  uniq' s m w := by
     ext
     induction x
     induction x
@@ -389,11 +390,10 @@ def colimitCoconeIsColimit :
     rfl
 #align Module.colimits.colimit_cocone_is_colimit ModuleCat.Colimits.colimitCoconeIsColimit
 
-instance has_colimits_Module :
-    HasColimits
-      (ModuleCat.{max v u}
-        R) where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F =>
+instance has_colimits_Module : HasColimits (ModuleCat.{max v u} R)
+    where HasColimitsOfShape J 𝒥 :=
+    {
+      HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.big_operators
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,8 @@ theorem Fin.prod_univ_eq_prod_range [CommMonoid α] (f : ℕ → α) (n : ℕ) :
 
 @[to_additive]
 theorem Finset.prod_fin_eq_prod_range [CommMonoid β] {n : ℕ} (c : Fin n → β) :
-    (∏ i, c i) = ∏ i in Finset.range n, if h : i < n then c ⟨i, h⟩ else 1 := by
+    (∏ i, c i) = ∏ i in Finset.range n, if h : i < n then c ⟨i, h⟩ else 1 :=
+  by
   rw [← Fin.prod_univ_eq_prod_range, Finset.prod_congr rfl]
   rintro ⟨i, hi⟩ _
   simp only [Fin.coe_eq_val, hi, dif_pos]
@@ -229,7 +230,8 @@ theorem Finset.prod_fin_eq_prod_range [CommMonoid β] {n : ℕ} (c : Fin n → �
 
 @[to_additive]
 theorem Finset.prod_to_finset_eq_subtype {M : Type _} [CommMonoid M] [Fintype α] (p : α → Prop)
-    [DecidablePred p] (f : α → M) : (∏ a in { x | p x }.toFinset, f a) = ∏ a : Subtype p, f a := by
+    [DecidablePred p] (f : α → M) : (∏ a in { x | p x }.toFinset, f a) = ∏ a : Subtype p, f a :=
+  by
   rw [← Finset.prod_subtype]
   simp
 #align finset.prod_to_finset_eq_subtype Finset.prod_to_finset_eq_subtype
@@ -242,7 +244,8 @@ theorem Finset.prod_fiberwise [DecidableEq β] [Fintype β] [CommMonoid γ] (s :
 
 @[to_additive]
 theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommMonoid γ] (f : α → β)
-    (g : α → γ) : (∏ b : β, ∏ a : { a // f a = b }, g (a : α)) = ∏ a, g a := by
+    (g : α → γ) : (∏ b : β, ∏ a : { a // f a = b }, g (a : α)) = ∏ a, g a :=
+  by
   rw [← (Equiv.sigmaFiberEquiv f).prod_comp, ← univ_sigma_univ, prod_sigma]
   rfl
 #align fintype.prod_fiberwise Fintype.prod_fiberwise
@@ -250,7 +253,7 @@ theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommM
 theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoid β]
     (f : ∀ (a : α) (ha : p a), β) (g : ∀ (a : α) (ha : ¬p a), β) :
     (∏ a, dite (p a) (f a) (g a)) = (∏ a : { a // p a }, f a a.2) * ∏ a : { a // ¬p a }, g a a.2 :=
-  by 
+  by
   simp only [prod_dite, attach_eq_univ]
   congr 1
   · convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // p x } => f x x.2

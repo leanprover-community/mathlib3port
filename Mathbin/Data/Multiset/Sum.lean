@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.multiset.sum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,8 @@ theorem mem_disj_sum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ 
 #align multiset.mem_disj_sum Multiset.mem_disj_sum
 
 @[simp]
-theorem inl_mem_disj_sum : inl a ∈ s.disjSum t ↔ a ∈ s := by
+theorem inl_mem_disj_sum : inl a ∈ s.disjSum t ↔ a ∈ s :=
+  by
   rw [mem_disj_sum, or_iff_left]
   simp only [exists_eq_right]
   rintro ⟨b, _, hb⟩
@@ -63,7 +64,8 @@ theorem inl_mem_disj_sum : inl a ∈ s.disjSum t ↔ a ∈ s := by
 #align multiset.inl_mem_disj_sum Multiset.inl_mem_disj_sum
 
 @[simp]
-theorem inr_mem_disj_sum : inr b ∈ s.disjSum t ↔ b ∈ t := by
+theorem inr_mem_disj_sum : inr b ∈ s.disjSum t ↔ b ∈ t :=
+  by
   rw [mem_disj_sum, or_iff_right]
   simp only [exists_eq_right]
   rintro ⟨a, _, ha⟩
@@ -102,7 +104,8 @@ theorem disj_sum_strict_mono_right (s : Multiset α) :
   disj_sum_lt_disj_sum_of_le_of_lt le_rfl
 #align multiset.disj_sum_strict_mono_right Multiset.disj_sum_strict_mono_right
 
-protected theorem Nodup.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup := by
+protected theorem Nodup.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup :=
+  by
   refine' ((hs.map inl_injective).add_iff <| ht.map inr_injective).2 fun x hs ht => _
   rw [Multiset.mem_map] at hs ht
   obtain ⟨a, _, rfl⟩ := hs

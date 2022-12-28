@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module number_theory.von_mangoldt
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,8 @@ theorem von_mangoldt_apply_one : Λ 1 = 0 := by simp [von_mangoldt_apply]
 #align nat.arithmetic_function.von_mangoldt_apply_one Nat.ArithmeticFunction.von_mangoldt_apply_one
 
 @[simp]
-theorem von_mangoldt_nonneg {n : ℕ} : 0 ≤ Λ n := by
+theorem von_mangoldt_nonneg {n : ℕ} : 0 ≤ Λ n :=
+  by
   rw [von_mangoldt_apply]
   split_ifs
   · exact Real.log_nonneg (one_le_cast.2 (Nat.min_fac_pos n))
@@ -96,7 +97,8 @@ theorem von_mangoldt_apply_prime {p : ℕ} (hp : p.Prime) : Λ p = Real.log p :=
 #align
   nat.arithmetic_function.von_mangoldt_apply_prime Nat.ArithmeticFunction.von_mangoldt_apply_prime
 
-theorem von_mangoldt_ne_zero_iff {n : ℕ} : Λ n ≠ 0 ↔ IsPrimePow n := by
+theorem von_mangoldt_ne_zero_iff {n : ℕ} : Λ n ≠ 0 ↔ IsPrimePow n :=
+  by
   rcases eq_or_ne n 1 with (rfl | hn); · simp [not_is_prime_pow_one]
   exact (Real.log_pos (one_lt_cast.2 (min_fac_prime hn).one_lt)).ne'.ite_ne_right_iff
 #align
@@ -113,7 +115,8 @@ theorem von_mangoldt_eq_zero_iff {n : ℕ} : Λ n = 0 ↔ ¬IsPrimePow n :=
 
 open BigOperators
 
-theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n := by
+theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
+  by
   refine' rec_on_prime_coprime _ _ _ n
   · simp
   · intro p k hp
@@ -135,7 +138,8 @@ theorem von_mangoldt_mul_zeta : Λ * ζ = log := by
 #align nat.arithmetic_function.von_mangoldt_mul_zeta Nat.ArithmeticFunction.von_mangoldt_mul_zeta
 
 @[simp]
-theorem zeta_mul_von_mangoldt : (ζ : ArithmeticFunction ℝ) * Λ = log := by
+theorem zeta_mul_von_mangoldt : (ζ : ArithmeticFunction ℝ) * Λ = log :=
+  by
   rw [mul_comm]
   simp
 #align nat.arithmetic_function.zeta_mul_von_mangoldt Nat.ArithmeticFunction.zeta_mul_von_mangoldt
@@ -147,24 +151,26 @@ theorem log_mul_moebius_eq_von_mangoldt : log * μ = Λ := by
   nat.arithmetic_function.log_mul_moebius_eq_von_mangoldt Nat.ArithmeticFunction.log_mul_moebius_eq_von_mangoldt
 
 @[simp]
-theorem moebius_mul_log_eq_von_mangoldt : (μ : ArithmeticFunction ℝ) * log = Λ := by
+theorem moebius_mul_log_eq_von_mangoldt : (μ : ArithmeticFunction ℝ) * log = Λ :=
+  by
   rw [mul_comm]
   simp
 #align
   nat.arithmetic_function.moebius_mul_log_eq_von_mangoldt Nat.ArithmeticFunction.moebius_mul_log_eq_von_mangoldt
 
-theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * log d) = -Λ n := by
+theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * log d) = -Λ n :=
+  by
   simp only [← log_mul_moebius_eq_von_mangoldt, mul_comm log, mul_apply, log_apply, int_coe_apply, ←
     Finset.sum_neg_distrib, neg_mul_eq_mul_neg]
   rw [sum_divisors_antidiagonal fun i j => (μ i : ℝ) * -Real.log j]
   have :
     (∑ i : ℕ in n.divisors, (μ i : ℝ) * -Real.log (n / i : ℕ)) =
       ∑ i : ℕ in n.divisors, (μ i : ℝ) * Real.log i - μ i * Real.log n :=
-    by 
+    by
     apply sum_congr rfl
     simp only [and_imp, Int.cast_eq_zero, mul_eq_mul_left_iff, Ne.def, neg_inj, mem_divisors]
     intro m mn hn
-    have : (m : ℝ) ≠ 0 := by 
+    have : (m : ℝ) ≠ 0 := by
       rw [cast_ne_zero]
       rintro rfl
       exact hn (by simpa using mn)
@@ -176,7 +182,7 @@ theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * 
 
 theorem von_mangoldt_le_log : ∀ {n : ℕ}, Λ n ≤ Real.log (n : ℝ)
   | 0 => by simp
-  | n + 1 => by 
+  | n + 1 => by
     rw [← von_mangoldt_sum]
     exact single_le_sum (fun _ _ => von_mangoldt_nonneg) (mem_divisors_self _ n.succ_ne_zero)
 #align nat.arithmetic_function.von_mangoldt_le_log Nat.ArithmeticFunction.von_mangoldt_le_log

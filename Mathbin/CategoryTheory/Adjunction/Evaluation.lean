@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.evaluation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,32 +36,30 @@ variable [∀ a b : C, HasCoproductsOfShape (a ⟶ b) D]
 
 /-- The left adjoint of evaluation. -/
 @[simps]
-def evaluationLeftAdjoint (c : C) :
-    D ⥤
-      C ⥤
-        D where 
+def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D
+    where
   obj d :=
     { obj := fun t => ∐ fun i : c ⟶ t => d
       map := fun u v f => sigma.desc fun g => (Sigma.ι fun _ => d) <| g ≫ f
-      map_id' := by 
+      map_id' := by
         intros ; ext ⟨j⟩; simp only [cofan.mk_ι_app, colimit.ι_desc, category.comp_id]
         congr 1; rw [category.comp_id]
-      map_comp' := by 
+      map_comp' := by
         intros ; ext; simp only [cofan.mk_ι_app, colimit.ι_desc_assoc, colimit.ι_desc]
         congr 1; rw [category.assoc] }
   map d₁ d₂ f :=
     { app := fun e => sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h
-      naturality' := by 
+      naturality' := by
         intros
         ext
         dsimp
         simp }
-  map_id' := by 
+  map_id' := by
     intros
     ext (x⟨j⟩)
     dsimp
     simp
-  map_comp' := by 
+  map_comp' := by
     intros
     ext
     dsimp
@@ -76,12 +74,12 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
         { toFun := fun f => Sigma.ι (fun _ => d) (𝟙 _) ≫ f.app c
           invFun := fun f =>
             { app := fun e => sigma.desc fun h => f ≫ F.map h
-              naturality' := by 
+              naturality' := by
                 intros
                 ext
                 dsimp
                 simp }
-          left_inv := by 
+          left_inv := by
             intro f
             ext (x⟨g⟩)
             dsimp
@@ -89,15 +87,15 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
               evaluation_left_adjoint_obj_map, colimit.ι_desc_assoc, cofan.mk_ι_app]
             congr 2
             rw [category.id_comp]
-          right_inv := fun f => by 
+          right_inv := fun f => by
             dsimp
             simp }
-      hom_equiv_naturality_left_symm' := by 
+      hom_equiv_naturality_left_symm' := by
         intros
         ext
         dsimp
         simp
-      hom_equiv_naturality_right' := by 
+      hom_equiv_naturality_right' := by
         intros
         dsimp
         simp }
@@ -107,7 +105,8 @@ instance evaluationIsRightAdjoint (c : C) : IsRightAdjoint ((evaluation _ D).obj
   ⟨_, evaluationAdjunctionRight _ _⟩
 #align category_theory.evaluation_is_right_adjoint CategoryTheory.evaluationIsRightAdjoint
 
-theorem NatTrans.mono_iff_mono_app {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ ∀ c, Mono (η.app c) := by
+theorem NatTrans.mono_iff_mono_app {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ ∀ c, Mono (η.app c) :=
+  by
   constructor
   · intro h c
     exact (inferInstance : mono (((evaluation _ _).obj c).map η))
@@ -123,34 +122,32 @@ variable [∀ a b : C, HasProductsOfShape (a ⟶ b) D]
 
 /-- The right adjoint of evaluation. -/
 @[simps]
-def evaluationRightAdjoint (c : C) :
-    D ⥤
-      C ⥤
-        D where 
+def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D
+    where
   obj d :=
     { obj := fun t => ∏ fun i : t ⟶ c => d
       map := fun u v f => pi.lift fun g => Pi.π _ <| f ≫ g
-      map_id' := by 
+      map_id' := by
         intros ; ext ⟨j⟩; dsimp
         simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
         congr ; simp
-      map_comp' := by 
+      map_comp' := by
         intros ; ext ⟨j⟩; dsimp
         simp only [limit.lift_π, fan.mk_π_app, category.assoc]
         congr 1; simp }
   map d₁ d₂ f :=
     { app := fun t => pi.lift fun g => Pi.π _ g ≫ f
-      naturality' := by 
+      naturality' := by
         intros
         ext
         dsimp
         simp }
-  map_id' := by 
+  map_id' := by
     intros
     ext (x⟨j⟩)
     dsimp
     simp
-  map_comp' := by 
+  map_comp' := by
     intros
     ext
     dsimp
@@ -164,16 +161,16 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
     { homEquiv := fun F d =>
         { toFun := fun f =>
             { app := fun t => pi.lift fun g => F.map g ≫ f
-              naturality' := by 
+              naturality' := by
                 intros
                 ext
                 dsimp
                 simp }
           invFun := fun f => f.app _ ≫ Pi.π _ (𝟙 _)
-          left_inv := fun f => by 
+          left_inv := fun f => by
             dsimp
             simp
-          right_inv := by 
+          right_inv := by
             intro f
             ext (x⟨g⟩)
             dsimp
@@ -181,11 +178,11 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
               fan.mk_π_app]
             congr
             rw [category.comp_id] }
-      hom_equiv_naturality_left_symm' := by 
+      hom_equiv_naturality_left_symm' := by
         intros
         dsimp
         simp
-      hom_equiv_naturality_right' := by 
+      hom_equiv_naturality_right' := by
         intros
         ext
         dsimp
@@ -196,7 +193,8 @@ instance evaluationIsLeftAdjoint (c : C) : IsLeftAdjoint ((evaluation _ D).obj c
   ⟨_, evaluationAdjunctionLeft _ _⟩
 #align category_theory.evaluation_is_left_adjoint CategoryTheory.evaluationIsLeftAdjoint
 
-theorem NatTrans.epi_iff_epi_app {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀ c, Epi (η.app c) := by
+theorem NatTrans.epi_iff_epi_app {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀ c, Epi (η.app c) :=
+  by
   constructor
   · intro h c
     exact (inferInstance : epi (((evaluation _ _).obj c).map η))

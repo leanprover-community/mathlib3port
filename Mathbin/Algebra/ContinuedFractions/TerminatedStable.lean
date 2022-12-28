@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.terminated_stable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,17 +32,20 @@ theorem terminatedStable (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n)
 variable [DivisionRing K]
 
 theorem continuants_aux_stable_step_of_terminated (terminated_at_n : g.TerminatedAt n) :
-    g.continuantsAux (n + 2) = g.continuantsAux (n + 1) := by
+    g.continuantsAux (n + 2) = g.continuantsAux (n + 1) :=
+  by
   rw [terminated_at_iff_s_none] at terminated_at_n
   simp only [terminated_at_n, continuants_aux]
 #align
   generalized_continued_fraction.continuants_aux_stable_step_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_step_of_terminated
 
 theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m)
-    (terminated_at_n : g.TerminatedAt n) : g.continuantsAux m = g.continuantsAux (n + 1) := by
+    (terminated_at_n : g.TerminatedAt n) : g.continuantsAux m = g.continuantsAux (n + 1) :=
+  by
   induction' succ_n_le_m with m succ_n_le_m IH
   · rfl
-  · have : g.continuants_aux (m + 1) = g.continuants_aux m := by
+  · have : g.continuants_aux (m + 1) = g.continuants_aux m :=
+      by
       have : n ≤ m - 1 := Nat.le_pred_of_lt succ_n_le_m
       have : g.terminated_at (m - 1) := terminated_stable this terminated_at_n
       have stable_step : g.continuants_aux (m - 1 + 2) = g.continuants_aux (m - 1 + 1) :=
@@ -56,26 +59,30 @@ theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m)
   generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_of_terminated
 
 theorem convergents'_aux_stable_step_of_terminated {s : Seq <| Pair K}
-    (terminated_at_n : s.TerminatedAt n) : convergents'Aux s (n + 1) = convergents'Aux s n := by
+    (terminated_at_n : s.TerminatedAt n) : convergents'Aux s (n + 1) = convergents'Aux s n :=
+  by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
   case zero => simp only [convergents'_aux, terminated_at_n, Seq.head]
-  case succ => 
+  case succ =>
     cases' s_head_eq : s.head with gp_head
     case none => simp only [convergents'_aux, s_head_eq]
-    case some =>
+    case
+      some =>
       have : s.tail.terminated_at n := by simp only [Seq.TerminatedAt, s.nth_tail, terminated_at_n]
       simp only [convergents'_aux, s_head_eq, IH this]
 #align
   generalized_continued_fraction.convergents'_aux_stable_step_of_terminated GeneralizedContinuedFraction.convergents'_aux_stable_step_of_terminated
 
 theorem convergents'_aux_stable_of_terminated {s : Seq <| Pair K} (n_le_m : n ≤ m)
-    (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n := by
+    (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n :=
+  by
   induction' n_le_m with m n_le_m IH generalizing s
   · rfl
   · cases' s_head_eq : s.head with gp_head
     case none => cases n <;> simp only [convergents'_aux, s_head_eq]
-    case some =>
+    case
+      some =>
       have : convergents'_aux s (n + 1) = convergents'_aux s n :=
         convergents'_aux_stable_step_of_terminated terminated_at_n
       rw [← this]

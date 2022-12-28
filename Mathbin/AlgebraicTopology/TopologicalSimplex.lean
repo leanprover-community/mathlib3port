@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.topological_simplex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,8 @@ theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ�
 
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
-  ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j, by
+  ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j,
+    by
     simp only [Finset.filter_congr_decidable, Finset.sum_congr, to_Top_obj, Set.mem_setOf]
     rw [← Finset.sum_bUnion]
     convert g.2
@@ -79,16 +80,16 @@ theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous
 
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
 @[simps]
-def toTop : SimplexCategory ⥤
-      TopCat where 
+def toTop : SimplexCategory ⥤ TopCat
+    where
   obj x := TopCat.of x.toTopObj
   map x y f := ⟨toTopMap f⟩
-  map_id' := by 
+  map_id' := by
     intro x
     ext (f i) : 3
     change (finset.univ.filter fun k => k = i).Sum _ = _
     simp [Finset.sum_filter]
-  map_comp' := by 
+  map_comp' := by
     intro x y z f g
     ext (h i) : 3
     dsimp

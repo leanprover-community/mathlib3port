@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.spectrum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem eigenvector_matrix_inv_apply (i j : n) :
   matrix.is_hermitian.eigenvector_matrix_inv_apply Matrix.IsHermitian.eigenvector_matrix_inv_apply
 
 theorem conj_transpose_eigenvector_matrix_inv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix :=
-  by 
+  by
   ext (i j)
   rw [conj_transpose_apply, eigenvector_matrix_inv_apply, eigenvector_matrix_apply, star_star]
 #align
@@ -105,7 +105,8 @@ diagonalized by a change of basis.
 
 For the spectral theorem on linear maps, see `diagonalization_basis_apply_self_apply`. -/
 theorem spectral_theorem :
-    hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv := by
+    hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv :=
+  by
   rw [eigenvector_matrix_inv, PiLp.basis_to_matrix_basis_fun_mul]
   ext (i j)
   have : LinearMap.IsSymmetric _ := is_hermitian_iff_is_symmetric.1 hA
@@ -127,7 +128,7 @@ theorem spectral_theorem :
 theorem eigenvalues_eq (i : n) :
     hA.Eigenvalues i =
       IsROrC.re (star (hA.eigenvectorMatrixᵀ i) ⬝ᵥ A.mulVec (hA.eigenvectorMatrixᵀ i)) :=
-  by 
+  by
   have := hA.spectral_theorem
   rw [← Matrix.mul_inv_eq_iff_eq_mul_of_invertible] at this
   have := congr_arg IsROrC.re (congr_fun (congr_fun this i) i)
@@ -137,7 +138,8 @@ theorem eigenvalues_eq (i : n) :
 #align matrix.is_hermitian.eigenvalues_eq Matrix.IsHermitian.eigenvalues_eq
 
 /-- The determinant of a hermitian matrix is the product of its eigenvalues. -/
-theorem det_eq_prod_eigenvalues : det A = ∏ i, hA.Eigenvalues i := by
+theorem det_eq_prod_eigenvalues : det A = ∏ i, hA.Eigenvalues i :=
+  by
   apply mul_left_cancel₀ (det_ne_zero_of_left_inverse (eigenvector_matrix_mul_inv hA))
   rw [← det_mul, spectral_theorem, det_mul, mul_comm, det_diagonal]
 #align matrix.is_hermitian.det_eq_prod_eigenvalues Matrix.IsHermitian.det_eq_prod_eigenvalues

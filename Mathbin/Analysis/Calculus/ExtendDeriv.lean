@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.extend_deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
     suffices
       ∀ p : E × E,
         p ∈ closure ((B ∩ s) ×ˢ (B ∩ s)) → ‖f p.2 - f p.1 - (f' p.2 - f' p.1)‖ ≤ ε * ‖p.2 - p.1‖
-      by 
+      by
       rw [closure_prod_eq] at this
       intro y y_in
       apply this ⟨x, y⟩
@@ -75,11 +75,12 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
       exact ⟨this ⟨mem_ball_self δ_pos, hx⟩, this y_in⟩
     have key :
       ∀ p : E × E, p ∈ (B ∩ s) ×ˢ (B ∩ s) → ‖f p.2 - f p.1 - (f' p.2 - f' p.1)‖ ≤ ε * ‖p.2 - p.1‖ :=
-      by 
+      by
       rintro ⟨u, v⟩ ⟨u_in, v_in⟩
       have conv : Convex ℝ (B ∩ s) := (convex_ball _ _).inter s_conv
       have diff : DifferentiableOn ℝ f (B ∩ s) := f_diff.mono (inter_subset_right _ _)
-      have bound : ∀ z ∈ B ∩ s, ‖fderivWithin ℝ f (B ∩ s) z - f'‖ ≤ ε := by
+      have bound : ∀ z ∈ B ∩ s, ‖fderivWithin ℝ f (B ∩ s) z - f'‖ ≤ ε :=
+        by
         intro z z_in
         convert le_of_lt (hδ _ z_in.2 z_in.1)
         have op : IsOpen (B ∩ s) := is_open_ball.inter s_open
@@ -88,7 +89,8 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
       simpa using conv.norm_image_sub_le_of_norm_fderiv_within_le' diff bound u_in v_in
     rintro ⟨u, v⟩ uv_in
     refine' ContinuousWithinAt.closure_le uv_in _ _ key
-    have f_cont' : ∀ y ∈ closure s, ContinuousWithinAt (f - f') s y := by
+    have f_cont' : ∀ y ∈ closure s, ContinuousWithinAt (f - f') s y :=
+      by
       intro y y_in
       exact tendsto.sub (f_cont y y_in) f'.cont.continuous_within_at
     all_goals
@@ -99,7 +101,8 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
       apply ContinuousWithinAt.mono _ this
       simp only [ContinuousWithinAt]
     rw [nhds_within_prod_eq]
-    · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by
+    · have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) :=
+        by
         intros
         abel
       simp only [this]
@@ -130,7 +133,8 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
   have t_conv : Convex ℝ t := convex_Ioo a b
   have t_open : IsOpen t := is_open_Ioo
   have t_closure : closure t = Icc a b := closure_Ioo ab.ne
-  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y := by
+  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y :=
+    by
     rw [t_closure]
     intro y hy
     by_cases h : y = a
@@ -138,14 +142,16 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
       exact f_lim.mono ts
     · have : y ∈ s := sab ⟨lt_of_le_of_ne hy.1 (Ne.symm h), hy.2⟩
       exact (f_diff.continuous_on y this).mono ts
-  have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) := by
+  have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) :=
+    by
     simp only [deriv_fderiv.symm]
     exact
       tendsto.comp
         (isBoundedBilinearMapSmulRight : IsBoundedBilinearMap ℝ _).continuous_right.ContinuousAt
         (tendsto_nhds_within_mono_left Ioo_subset_Ioi_self f_lim')
   -- now we can apply `has_fderiv_at_boundary_of_differentiable`
-  have : HasDerivWithinAt f e (Icc a b) a := by
+  have : HasDerivWithinAt f e (Icc a b) a :=
+    by
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Ici <| left_mem_Ico.2 ab)
@@ -168,7 +174,8 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
   have t_conv : Convex ℝ t := convex_Ioo b a
   have t_open : IsOpen t := is_open_Ioo
   have t_closure : closure t = Icc b a := closure_Ioo (ne_of_lt ba)
-  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y := by
+  have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y :=
+    by
     rw [t_closure]
     intro y hy
     by_cases h : y = a
@@ -176,14 +183,16 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
       exact f_lim.mono ts
     · have : y ∈ s := sab ⟨hy.1, lt_of_le_of_ne hy.2 h⟩
       exact (f_diff.continuous_on y this).mono ts
-  have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) := by
+  have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) :=
+    by
     simp only [deriv_fderiv.symm]
     exact
       tendsto.comp
         (isBoundedBilinearMapSmulRight : IsBoundedBilinearMap ℝ _).continuous_right.ContinuousAt
         (tendsto_nhds_within_mono_left Ioo_subset_Iio_self f_lim')
   -- now we can apply `has_fderiv_at_boundary_of_differentiable`
-  have : HasDerivWithinAt f e (Icc b a) a := by
+  have : HasDerivWithinAt f e (Icc b a) a :=
+    by
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Iic <| right_mem_Ioc.2 ba)
@@ -195,8 +204,10 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
 theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
     (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y) (hf : ContinuousAt f x)
-    (hg : ContinuousAt g x) : HasDerivAt f (g x) x := by
-  have A : HasDerivWithinAt f (g x) (Ici x) x := by
+    (hg : ContinuousAt g x) : HasDerivAt f (g x) x :=
+  by
+  have A : HasDerivWithinAt f (g x) (Ici x) x :=
+    by
     have diff : DifferentiableOn ℝ f (Ioi x) := fun y hy =>
       (f_diff y (ne_of_gt hy)).DifferentiableAt.DifferentiableWithinAt
     -- next line is the nontrivial bit of this proof, appealing to differentiability
@@ -207,7 +218,8 @@ theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
     apply this.congr' _
     apply mem_of_superset self_mem_nhds_within fun y hy => _
     exact (f_diff y (ne_of_gt hy)).deriv.symm
-  have B : HasDerivWithinAt f (g x) (Iic x) x := by
+  have B : HasDerivWithinAt f (g x) (Iic x) x :=
+    by
     have diff : DifferentiableOn ℝ f (Iio x) := fun y hy =>
       (f_diff y (ne_of_lt hy)).DifferentiableAt.DifferentiableWithinAt
     -- next line is the nontrivial bit of this proof, appealing to differentiability
@@ -227,7 +239,8 @@ theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
 theorem hasDerivAtOfHasDerivAtOfNe' {f g : ℝ → E} {x : ℝ}
     (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y) (hf : ContinuousAt f x)
-    (hg : ContinuousAt g x) (y : ℝ) : HasDerivAt f (g y) y := by
+    (hg : ContinuousAt g x) (y : ℝ) : HasDerivAt f (g y) y :=
+  by
   rcases eq_or_ne y x with (rfl | hne)
   · exact hasDerivAtOfHasDerivAtOfNe f_diff hf hg
   · exact f_diff y hne

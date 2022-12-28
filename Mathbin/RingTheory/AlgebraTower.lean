@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.algebra_tower
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,10 +119,12 @@ variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A}
     (hb : LinearIndependent R b) (hc : LinearIndependent S c) :
-    LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 := by
+    LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 :=
+  by
   rw [linear_independent_iff'] at hb hc; rw [linear_independent_iff'']; rintro s g hg hsg ⟨i, k⟩
   by_cases hik : (i, k) ∈ s
-  · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 := by
+  · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 :=
+      by
       rw [← hsg]
       exact
         ((Finset.sum_subset Finset.subset_product) fun p _ hp =>
@@ -156,7 +158,7 @@ theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S)
 
 @[simp]
 theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (ij) :
-    (b.smul c) ij = b ij.1 • c ij.2 := by 
+    (b.smul c) ij = b ij.1 • c ij.2 := by
   obtain ⟨i, j⟩ := ij
   rw [Basis.apply_eq_iff]
   ext ⟨i', j'⟩
@@ -204,22 +206,20 @@ def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrictDomain B).toRingHom.
 variable {B}
 
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
-def algHomEquivSigma :
-    (C →ₐ[A] D) ≃
-      Σf : B →ₐ[A] D,
-        @AlgHom B C D _ _ _ _
-          f.toRingHom.toAlgebra where 
+def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra
+    where
   toFun f := ⟨f.restrictDomain B, f.extendScalars B⟩
   invFun fg :=
     let alg := fg.1.toRingHom.toAlgebra
     fg.2.restrictScalars A
-  left_inv f := by 
+  left_inv f := by
     dsimp only
     ext
     rfl
-  right_inv := by 
+  right_inv := by
     rintro ⟨⟨f, _, _, _, _, _⟩, g, _, _, _, _, hg⟩
-    obtain rfl : f = fun x => g (algebraMap B C x) := by
+    obtain rfl : f = fun x => g (algebraMap B C x) :=
+      by
       ext
       exact (hg x).symm
     rfl

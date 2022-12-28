@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,8 +33,8 @@ variable (m : Type u → Type u) [Monad m] [LawfulMonad m]
 /-- A lawful `control.monad` gives a category theory `monad` on the category of types.
 -/
 @[simps]
-def ofTypeMonad : Monad (Type
-        u) where 
+def ofTypeMonad : Monad (Type u)
+    where
   toFunctor := ofTypeFunctor m
   η' := ⟨@pure m _, fun α β f => (LawfulApplicative.map_comp_pure f).symm⟩
   μ' := ⟨@joinM m _, fun α β (f : α → β) => funext fun a => joinM_map_map f a⟩
@@ -47,16 +47,13 @@ def ofTypeMonad : Monad (Type
 category-theoretic version, provided the monad is lawful.
 -/
 @[simps]
-def eq :
-    KleisliCat m ≌
-      Kleisli
-        (of_type_monad
-          m) where 
+def eq : KleisliCat m ≌ Kleisli (of_type_monad m)
+    where
   Functor :=
     { obj := fun X => X
       map := fun X Y f => f
       map_id' := fun X => rfl
-      map_comp' := fun X Y Z f g => by 
+      map_comp' := fun X Y Z f g => by
         unfold_projs
         ext
         dsimp
@@ -65,12 +62,12 @@ def eq :
     { obj := fun X => X
       map := fun X Y f => f
       map_id' := fun X => rfl
-      map_comp' := fun X Y Z f g => by 
+      map_comp' := fun X Y Z f g => by
         unfold_projs
         ext
         dsimp
         simp [joinM, seq_bind_eq] }
-  unitIso := by 
+  unitIso := by
     refine' nat_iso.of_components (fun X => iso.refl X) fun X Y f => _
     change f >=> pure = pure >=> f
     simp [functor_norm]

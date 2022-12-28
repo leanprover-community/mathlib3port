@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module field_theory.finite.trace
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,9 +26,10 @@ namespace FiniteField
 
 /-- The trace map from a finite field to its prime field is nongedenerate. -/
 theorem trace_to_zmod_nondegenerate (F : Type _) [Field F] [Finite F] {a : F} (ha : a ≠ 0) :
-    ∃ b : F, Algebra.trace (Zmod (ringChar F)) F (a * b) ≠ 0 := by
+    ∃ b : F, Algebra.trace (Zmod (ringChar F)) F (a * b) ≠ 0 :=
+  by
   haveI : Fact (ringChar F).Prime := ⟨CharP.char_is_prime F _⟩
-  have htr := trace_form_nondegenerate (Zmod (ringChar F)) F a
+  have htr := traceFormNondegenerate (Zmod (ringChar F)) F a
   simp_rw [Algebra.trace_form_apply] at htr
   by_contra' hf
   exact ha (htr hf)

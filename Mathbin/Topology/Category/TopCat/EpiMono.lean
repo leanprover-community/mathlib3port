@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.category.Top.epi_mono
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,8 +27,10 @@ open TopCat
 
 namespace TopCat
 
-theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
-  suffices epi f ↔ epi ((forget TopCat).map f) by
+theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
+  by
+  suffices epi f ↔ epi ((forget TopCat).map f)
+    by
     rw [this, CategoryTheory.epi_iff_surjective]
     rfl
   constructor
@@ -37,8 +39,10 @@ theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function
   · apply functor.epi_of_epi_map
 #align Top.epi_iff_surjective TopCat.epi_iff_surjective
 
-theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
-  suffices mono f ↔ mono ((forget TopCat).map f) by
+theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
+  by
+  suffices mono f ↔ mono ((forget TopCat).map f)
+    by
     rw [this, CategoryTheory.mono_iff_injective]
     rfl
   constructor

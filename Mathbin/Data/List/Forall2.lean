@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.list.forall2
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ theorem forall₂_refl [IsRefl α Rₐ] (l : List α) : Forall₂ Rₐ l l :=
 #align list.forall₂_refl List.forall₂_refl
 
 @[simp]
-theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = ·) := by
+theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = ·) :=
+  by
   funext a b; apply propext
   constructor
   · intro h
@@ -188,7 +189,8 @@ theorem forall₂_zip : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → ∀ {a b}, (a
 
 theorem forall₂_iff_zip {l₁ l₂} :
     Forall₂ R l₁ l₂ ↔ length l₁ = length l₂ ∧ ∀ {a b}, (a, b) ∈ zip l₁ l₂ → R a b :=
-  ⟨fun h => ⟨Forall₂.length_eq h, @forall₂_zip _ _ _ _ _ h⟩, fun h => by
+  ⟨fun h => ⟨Forall₂.length_eq h, @forall₂_zip _ _ _ _ _ h⟩, fun h =>
+    by
     cases' h with h₁ h₂
     induction' l₁ with a l₁ IH generalizing l₂
     · cases length_eq_zero.1 h₁.symm
@@ -210,14 +212,16 @@ theorem forall₂_drop : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall�
 #align list.forall₂_drop List.forall₂_drop
 
 theorem forall₂_take_append (l : List α) (l₁ : List β) (l₂ : List β) (h : Forall₂ R l (l₁ ++ l₂)) :
-    Forall₂ R (List.take (length l₁) l) l₁ := by
+    Forall₂ R (List.take (length l₁) l) l₁ :=
+  by
   have h' : Forall₂ R (take (length l₁) l) (take (length l₁) (l₁ ++ l₂)) :=
     forall₂_take (length l₁) h
   rwa [take_left] at h'
 #align list.forall₂_take_append List.forall₂_take_append
 
 theorem forall₂_drop_append (l : List α) (l₁ : List β) (l₂ : List β) (h : Forall₂ R l (l₁ ++ l₂)) :
-    Forall₂ R (List.drop (length l₁) l) l₂ := by
+    Forall₂ R (List.drop (length l₁) l) l₂ :=
+  by
   have h' : Forall₂ R (drop (length l₁) l) (drop (length l₁) (l₁ ++ l₂)) :=
     forall₂_drop (length l₁) h
   rwa [drop_left] at h'
@@ -240,7 +244,8 @@ theorem rel_append : (Forall₂ R ⇒ Forall₂ R ⇒ Forall₂ R) append append
 
 theorem rel_reverse : (Forall₂ R ⇒ Forall₂ R) reverse reverse
   | [], [], forall₂.nil => Forall₂.nil
-  | a :: as, b :: bs, forall₂.cons h₁ h₂ => by
+  | a :: as, b :: bs, forall₂.cons h₁ h₂ =>
+    by
     simp only [reverse_cons]
     exact rel_append (rel_reverse h₂) (forall₂.cons h₁ forall₂.nil)
 #align list.rel_reverse List.rel_reverse
@@ -248,7 +253,7 @@ theorem rel_reverse : (Forall₂ R ⇒ Forall₂ R) reverse reverse
 @[simp]
 theorem forall₂_reverse_iff {l₁ l₂} : Forall₂ R (reverse l₁) (reverse l₂) ↔ Forall₂ R l₁ l₂ :=
   Iff.intro
-    (fun h => by 
+    (fun h => by
       rw [← reverse_reverse l₁, ← reverse_reverse l₂]
       exact rel_reverse h)
     fun h => rel_reverse h
@@ -310,7 +315,8 @@ inductive SublistForall₂ (R : α → β → Prop) : List α → List β → Pr
 #align list.sublist_forall₂ List.SublistForall₂
 
 theorem sublist_forall₂_iff {l₁ : List α} {l₂ : List β} :
-    SublistForall₂ R l₁ l₂ ↔ ∃ l, Forall₂ R l₁ l ∧ l <+ l₂ := by
+    SublistForall₂ R l₁ l₂ ↔ ∃ l, Forall₂ R l₁ l ∧ l <+ l₂ :=
+  by
   constructor <;> intro h
   · induction' h with _ a b l1 l2 rab rll ih b l1 l2 hl ih
     · exact ⟨nil, forall₂.nil, nil_sublist _⟩
@@ -333,7 +339,7 @@ instance SublistForall₂.is_refl [IsRefl α Rₐ] : IsRefl (List α) (SublistFo
 #align list.sublist_forall₂.is_refl List.SublistForall₂.is_refl
 
 instance SublistForall₂.is_trans [IsTrans α Rₐ] : IsTrans (List α) (SublistForall₂ Rₐ) :=
-  ⟨fun a b c => by 
+  ⟨fun a b c => by
     revert a b
     induction' c with _ _ ih
     · rintro _ _ h1 (_ | _ | _)

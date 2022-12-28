@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Chris Hughes, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module data.list.min_max
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem foldl_arg_aux_eq_none : l.foldl (argAux r) o = none ↔ l = [] ∧ o = n
 
 private theorem foldl_arg_aux_mem (l) : ∀ a m : α, m ∈ foldl (argAux r) (some a) l → m ∈ a :: l :=
   List.reverseRecOn l (by simp [eq_comm])
-    (by 
+    (by
       intro tl hd ih a m
       simp only [foldl_append, foldl_cons, foldl_nil, arg_aux]
       cases hf : foldl (arg_aux r) (some a) tl
@@ -69,7 +69,8 @@ theorem arg_aux_self (hr₀ : Irreflexive r) (a : α) : argAux r (some a) a = a 
 #align list.arg_aux_self List.arg_aux_self
 
 theorem not_of_mem_foldl_arg_aux (hr₀ : Irreflexive r) (hr₁ : Transitive r) :
-    ∀ {a m : α} {o : Option α}, a ∈ l → m ∈ foldl (argAux r) o l → ¬r a m := by
+    ∀ {a m : α} {o : Option α}, a ∈ l → m ∈ foldl (argAux r) o l → ¬r a m :=
+  by
   induction' l using List.reverseRecOn with tl a ih
   · exact fun _ _ _ h => absurd h <| not_mem_nil _
   intro b m o hb ho
@@ -182,7 +183,8 @@ theorem le_of_mem_argmin : a ∈ l → m ∈ argmin f l → f m ≤ f a :=
 theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     argmax f (a :: l) =
       Option.casesOn (argmax f l) (some a) fun c => if f a < f c then some c else some a :=
-  (List.reverseRecOn l rfl) fun hd tl ih => by
+  (List.reverseRecOn l rfl) fun hd tl ih =>
+    by
     rw [← cons_append, argmax_concat, ih, argmax_concat]
     cases' h : argmax f hd with m
     · simp [h]
@@ -205,7 +207,8 @@ variable [DecidableEq α]
 theorem index_of_argmax :
     ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOf m ≤ l.indexOf a
   | [], m, _, _, _, _ => by simp
-  | hd :: tl, m, hm, a, ha, ham => by
+  | hd :: tl, m, hm, a, ha, ham =>
+    by
     simp only [index_of_cons, argmax_cons, Option.mem_def] at hm⊢
     cases h : argmax f tl
     · rw [h] at hm
@@ -230,7 +233,8 @@ theorem index_of_argmin :
 theorem mem_argmax_iff :
     m ∈ argmax f l ↔
       m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
-  ⟨fun hm => ⟨argmax_mem hm, fun a ha => le_of_mem_argmax ha hm, fun _ => index_of_argmax hm⟩, by
+  ⟨fun hm => ⟨argmax_mem hm, fun a ha => le_of_mem_argmax ha hm, fun _ => index_of_argmax hm⟩,
+    by
     rintro ⟨hml, ham, hma⟩
     cases' harg : argmax f l with n
     · simp_all
@@ -324,7 +328,8 @@ theorem minimum_not_lt_of_mem : a ∈ l → (minimum l : WithTop α) = m → ¬a
   not_lt_of_mem_argmin
 #align list.minimum_not_lt_of_mem List.minimum_not_lt_of_mem
 
-theorem not_lt_maximum_of_mem' (ha : a ∈ l) : ¬maximum l < (a : WithBot α) := by
+theorem not_lt_maximum_of_mem' (ha : a ∈ l) : ¬maximum l < (a : WithBot α) :=
+  by
   cases h : l.maximum
   · simp_all
   · simp_rw [WithBot.some_eq_coe, WithBot.coe_lt_coe, not_lt_maximum_of_mem ha h, not_false_iff]
@@ -340,7 +345,8 @@ section LinearOrder
 
 variable [LinearOrder α] {l : List α} {a m : α}
 
-theorem maximum_concat (a : α) (l : List α) : maximum (l ++ [a]) = max (maximum l) a := by
+theorem maximum_concat (a : α) (l : List α) : maximum (l ++ [a]) = max (maximum l) a :=
+  by
   simp only [maximum, argmax_concat, id]
   cases h : argmax id l
   · exact (max_eq_right bot_le).symm
@@ -376,7 +382,8 @@ theorem minimum_cons (a : α) (l : List α) : minimum (a :: l) = min a (minimum 
   @maximum_cons αᵒᵈ _ _ _
 #align list.minimum_cons List.minimum_cons
 
-theorem maximum_eq_coe_iff : maximum l = m ↔ m ∈ l ∧ ∀ a ∈ l, a ≤ m := by
+theorem maximum_eq_coe_iff : maximum l = m ↔ m ∈ l ∧ ∀ a ∈ l, a ≤ m :=
+  by
   unfold_coes
   simp only [maximum, argmax_eq_some_iff, id]
   constructor
@@ -403,7 +410,8 @@ section OrderBot
 variable [OrderBot α] {l : List α}
 
 @[simp]
-theorem foldr_max_of_ne_nil (h : l ≠ []) : ↑(l.foldr max ⊥) = l.maximum := by
+theorem foldr_max_of_ne_nil (h : l ≠ []) : ↑(l.foldr max ⊥) = l.maximum :=
+  by
   induction' l with hd tl IH
   · contradiction
   · rw [maximum_cons, foldr, WithBot.coe_max]
@@ -412,13 +420,15 @@ theorem foldr_max_of_ne_nil (h : l ≠ []) : ↑(l.foldr max ⊥) = l.maximum :=
     · simp [IH h]
 #align list.foldr_max_of_ne_nil List.foldr_max_of_ne_nil
 
-theorem max_le_of_forall_le (l : List α) (a : α) (h : ∀ x ∈ l, x ≤ a) : l.foldr max ⊥ ≤ a := by
+theorem max_le_of_forall_le (l : List α) (a : α) (h : ∀ x ∈ l, x ≤ a) : l.foldr max ⊥ ≤ a :=
+  by
   induction' l with y l IH
   · simp
   · simpa [h y (mem_cons_self _ _)] using IH fun x hx => h x <| mem_cons_of_mem _ hx
 #align list.max_le_of_forall_le List.max_le_of_forall_le
 
-theorem le_max_of_le {l : List α} {a x : α} (hx : x ∈ l) (h : a ≤ x) : a ≤ l.foldr max ⊥ := by
+theorem le_max_of_le {l : List α} {a x : α} (hx : x ∈ l) (h : a ≤ x) : a ≤ l.foldr max ⊥ :=
+  by
   induction' l with y l IH
   · exact absurd hx (not_mem_nil _)
   · obtain rfl | hl := hx

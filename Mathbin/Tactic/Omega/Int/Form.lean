@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.int.form
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,8 @@ theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q 
   apply Exists.imp h1 h2
 #align omega.int.preform.sat_of_implies_of_sat Omega.Int.Preform.sat_of_implies_of_sat
 
-theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
+theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q :=
+  by
   constructor <;> intro h1
   · cases' h1 with v h1
     cases' h1 with h1 h1 <;> [left, right] <;> refine' ⟨v, _⟩ <;> assumption
@@ -142,7 +143,8 @@ theorem univ_close_of_valid {p : Preform} : ∀ {m v}, p.valid → UnivClose p v
   | m + 1, v, h1 => fun i => univ_close_of_valid h1
 #align omega.int.univ_close_of_valid Omega.Int.univ_close_of_valid
 
-theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
+theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid :=
+  by
   simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
   rw [not_exists_not]; intro h; assumption
 #align omega.int.valid_of_unsat_not Omega.Int.valid_of_unsat_not

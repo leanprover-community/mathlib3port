@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module analysis.complex.arg
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,8 @@ variable {x y : ℂ}
 
 namespace Complex
 
-theorem same_ray_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg := by
+theorem same_ray_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg :=
+  by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
   rcases eq_or_ne y 0 with (rfl | hy)
@@ -41,7 +42,8 @@ theorem same_ray_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg := 
   rw [mul_comm, eq_comm]
 #align complex.same_ray_iff Complex.same_ray_iff
 
-theorem same_ray_iff_arg_div_eq_zero : SameRay ℝ x y ↔ arg (x / y) = 0 := by
+theorem same_ray_iff_arg_div_eq_zero : SameRay ℝ x y ↔ arg (x / y) = 0 :=
+  by
   rw [← Real.Angle.to_real_zero, ← arg_coe_angle_eq_iff_eq_to_real, same_ray_iff]
   by_cases hx : x = 0; · simp [hx]
   by_cases hy : y = 0; · simp [hy]

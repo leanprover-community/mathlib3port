@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module data.list.func
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ Case conversion may be inaccurate. Consider using '#align list.func.length_set L
 -- set
 theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.length (m + 1)
   | 0, [] => rfl
-  | 0, a :: as => by 
+  | 0, a :: as => by
     rw [max_eq_left]
     rfl
     simp [Nat.le_add_right]
@@ -141,7 +141,7 @@ theorem get_eq_default_of_le : ∀ (k : ℕ) {as : List α}, as.length ≤ k →
   | 0, [], h1 => rfl
   | 0, a :: as, h1 => by cases h1
   | k + 1, [], h1 => rfl
-  | k + 1, a :: as, h1 => by 
+  | k + 1, a :: as, h1 => by
     apply get_eq_default_of_le k
     rw [← Nat.succ_le_succ_iff]; apply h1
 #align list.func.get_eq_default_of_le List.Func.get_eq_default_of_le
@@ -164,7 +164,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.func.eq_get_of_mem [anonymous]ₓ'. -/
 theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h
-  | b :: as, h => by 
+  | b :: as, h => by
     rw [mem_cons_iff] at h; cases h
     · exists 0
       intro d
@@ -178,7 +178,7 @@ theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀
 theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as ∈ as
   | _, [], h1 => by cases h1
   | 0, a :: as, _ => Or.inl rfl
-  | n + 1, a :: as, h1 => by 
+  | n + 1, a :: as, h1 => by
     apply Or.inr; unfold get
     apply mem_get_of_le
     apply Nat.lt_of_succ_lt_succ h1
@@ -189,7 +189,7 @@ theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as
 theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default → get n as ∈ as
   | _, [], h1 => by exfalso; apply h1; rw [get_nil]
   | 0, a :: as, h1 => Or.inl rfl
-  | n + 1, a :: as, h1 => by 
+  | n + 1, a :: as, h1 => by
     unfold get
     apply Or.inr (mem_get_of_ne_zero _)
     apply h1
@@ -199,14 +199,15 @@ theorem mem_get_of_ne_zero : ∀ {n : ℕ} {as : List α}, get n as ≠ default 
 #print List.Func.get_set_eq_of_ne /-
 theorem get_set_eq_of_ne {a : α} :
     ∀ {as : List α} (k : ℕ) (m : ℕ), m ≠ k → get m (as {k ↦ a}) = get m as
-  | as, 0, m, h1 => by 
+  | as, 0, m, h1 => by
     cases m
     contradiction
     cases as <;> simp only [Set, get, get_nil]
-  | as, k + 1, m, h1 => by 
+  | as, k + 1, m, h1 => by
     cases as <;> cases m
     simp only [Set, get]
-    · have h3 : get m (nil {k ↦ a}) = default := by
+    · have h3 : get m (nil {k ↦ a}) = default :=
+        by
         rw [get_set_eq_of_ne k m, get_nil]
         intro hc
         apply h1
@@ -225,7 +226,8 @@ theorem get_map {f : α → β} :
     ∀ {n : ℕ} {as : List α}, n < as.length → get n (as.map f) = f (get n as)
   | _, [], h => by cases h
   | 0, a :: as, h => rfl
-  | n + 1, a :: as, h1 => by
+  | n + 1, a :: as, h1 =>
+    by
     have h2 : n < length as := by
       rw [← Nat.succ_le_iff, ← Nat.lt_succ_iff]
       apply h1
@@ -235,7 +237,8 @@ theorem get_map {f : α → β} :
 
 #print List.Func.get_map' /-
 theorem get_map' {f : α → β} {n : ℕ} {as : List α} :
-    f default = default → get n (as.map f) = f (get n as) := by
+    f default = default → get n (as.map f) = f (get n as) :=
+  by
   intro h1; by_cases h2 : n < as.length
   · apply get_map h2
   · rw [not_lt] at h2
@@ -247,7 +250,8 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} :
 
 #print List.Func.forall_val_of_forall_mem /-
 theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
-    p default → (∀ x ∈ as, p x) → ∀ n, p (get n as) := by
+    p default → (∀ x ∈ as, p x) → ∀ n, p (get n as) :=
+  by
   intro h1 h2 n
   by_cases h3 : n < as.length
   · apply h2 _ (mem_get_of_le h3)
@@ -284,7 +288,7 @@ theorem eq_of_equiv : ∀ {as1 as2 : List α}, as1.length = as2.length → Equiv
   | [], [], h1, h2 => rfl
   | _ :: _, [], h1, h2 => by cases h1
   | [], _ :: _, h1, h2 => by cases h1
-  | a1 :: as1, a2 :: as2, h1, h2 => by 
+  | a1 :: as1, a2 :: as2, h1, h2 => by
     congr
     · apply h2 0
     have h3 : as1.length = as2.length := by simpa [add_left_inj, add_comm, length] using h1
@@ -308,7 +312,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.func.get_neg List.Func.get_negₓ'. -/
 -- neg
 @[simp]
-theorem get_neg [AddGroup α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (neg as) = -@get α ⟨0⟩ k as := by
+theorem get_neg [AddGroup α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (neg as) = -@get α ⟨0⟩ k as :=
+  by
   unfold neg
   rw [@get_map' α α ⟨0⟩]
   apply neg_zero
@@ -344,7 +349,8 @@ theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f default defa
     ∀ (k : Nat) (as : List α) (bs : List β), get k (pointwise f as bs) = f (get k as) (get k bs)
   | k, [], [] => by simp only [h1, get_nil, pointwise, get]
   | 0, [], b :: bs => by simp only [get_pointwise, get_nil, pointwise, get, Nat.zero_eq, map]
-  | k + 1, [], b :: bs => by
+  | k + 1, [], b :: bs =>
+    by
     have : get k (map (f default) bs) = f default (get k bs) := by
       simpa [nil_pointwise, get_nil] using get_pointwise k [] bs
     simpa [get, get_nil, pointwise, map]
@@ -385,7 +391,8 @@ Case conversion may be inaccurate. Consider using '#align list.func.get_add List
 -- add
 @[simp]
 theorem get_add {α : Type u} [AddMonoid α] {k : ℕ} {xs ys : List α} :
-    @get α ⟨0⟩ k (add xs ys) = @get α ⟨0⟩ k xs + @get α ⟨0⟩ k ys := by
+    @get α ⟨0⟩ k (add xs ys) = @get α ⟨0⟩ k xs + @get α ⟨0⟩ k ys :=
+  by
   apply get_pointwise
   apply zero_add
 #align list.func.get_add List.Func.get_add
@@ -409,7 +416,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddMonoid.toZero.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (List.nil.{u1} α) as) as
 Case conversion may be inaccurate. Consider using '#align list.func.nil_add List.Func.nil_addₓ'. -/
 @[simp]
-theorem nil_add {α : Type u} [AddMonoid α] (as : List α) : add [] as = as := by
+theorem nil_add {α : Type u} [AddMonoid α] (as : List α) : add [] as = as :=
+  by
   rw [add, @nil_pointwise α α α ⟨0⟩ ⟨0⟩]
   apply Eq.trans _ (map_id as)
   congr with x
@@ -423,7 +431,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (as : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddMonoid.toZero.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) as (List.nil.{u1} α)) as
 Case conversion may be inaccurate. Consider using '#align list.func.add_nil List.Func.add_nilₓ'. -/
 @[simp]
-theorem add_nil {α : Type u} [AddMonoid α] (as : List α) : add as [] = as := by
+theorem add_nil {α : Type u} [AddMonoid α] (as : List α) : add as [] = as :=
+  by
   rw [add, @pointwise_nil α α α ⟨0⟩ ⟨0⟩]
   apply Eq.trans _ (map_id as)
   congr with x
@@ -437,7 +446,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddMonoid.{u1} α] (f : α -> α) (g : α -> α) {as : List.{u1} α}, Eq.{succ u1} (List.{u1} α) (List.Func.add.{u1} α (AddMonoid.toZero.{u1} α _inst_1) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1)) (List.map.{u1, u1} α α f as) (List.map.{u1, u1} α α g as)) (List.map.{u1, u1} α α (fun (x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α _inst_1))) (f x) (g x)) as)
 Case conversion may be inaccurate. Consider using '#align list.func.map_add_map List.Func.map_add_mapₓ'. -/
 theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α} :
-    add (as.map f) (as.map g) = as.map fun x => f x + g x := by
+    add (as.map f) (as.map g) = as.map fun x => f x + g x :=
+  by
   apply @eq_of_equiv _ (⟨0⟩ : Inhabited α)
   · rw [length_map, length_add, max_eq_left, length_map]
     apply le_of_eq
@@ -460,7 +470,8 @@ Case conversion may be inaccurate. Consider using '#align list.func.get_sub List
 -- sub
 @[simp]
 theorem get_sub {α : Type u} [AddGroup α] {k : ℕ} {xs ys : List α} :
-    @get α ⟨0⟩ k (sub xs ys) = @get α ⟨0⟩ k xs - @get α ⟨0⟩ k ys := by
+    @get α ⟨0⟩ k (sub xs ys) = @get α ⟨0⟩ k xs - @get α ⟨0⟩ k ys :=
+  by
   apply get_pointwise
   apply sub_zero
 #align list.func.get_sub List.Func.get_sub
@@ -484,7 +495,8 @@ but is expected to have type
   forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (NegZeroClass.toZero.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) (SubNegMonoid.toSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) (List.nil.{0} α) as) (List.Func.neg.{0} α (NegZeroClass.toNeg.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) as)
 Case conversion may be inaccurate. Consider using '#align list.func.nil_sub List.Func.nil_subₓ'. -/
 @[simp]
-theorem nil_sub {α : Type} [AddGroup α] (as : List α) : sub [] as = neg as := by
+theorem nil_sub {α : Type} [AddGroup α] (as : List α) : sub [] as = neg as :=
+  by
   rw [sub, nil_pointwise]
   congr with x
   rw [zero_sub]
@@ -497,7 +509,8 @@ but is expected to have type
   forall {α : Type} [_inst_1 : AddGroup.{0} α] (as : List.{0} α), Eq.{1} (List.{0} α) (List.Func.sub.{0} α (NegZeroClass.toZero.{0} α (SubNegZeroMonoid.toNegZeroClass.{0} α (SubtractionMonoid.toSubNegZeroMonoid.{0} α (AddGroup.toSubtractionMonoid.{0} α _inst_1)))) (SubNegMonoid.toSub.{0} α (AddGroup.toSubNegMonoid.{0} α _inst_1)) as (List.nil.{0} α)) as
 Case conversion may be inaccurate. Consider using '#align list.func.sub_nil List.Func.sub_nilₓ'. -/
 @[simp]
-theorem sub_nil {α : Type} [AddGroup α] (as : List α) : sub as [] = as := by
+theorem sub_nil {α : Type} [AddGroup α] (as : List α) : sub as [] = as :=
+  by
   rw [sub, pointwise_nil]
   apply Eq.trans _ (map_id as)
   congr with x

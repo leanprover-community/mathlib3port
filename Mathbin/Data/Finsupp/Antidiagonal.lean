@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.finsupp.antidiagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ def antidiagonal (f : α →₀ ℕ) : Finset ((α →₀ ℕ) × (α →₀ ℕ
 
 @[simp]
 theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ ℕ)} :
-    p ∈ antidiagonal f ↔ p.1 + p.2 = f := by
+    p ∈ antidiagonal f ↔ p.1 + p.2 = f :=
+  by
   rcases p with ⟨p₁, p₂⟩
   simp [antidiagonal, antidiagonal', ← and_assoc, ← finsupp.to_multiset.apply_eq_iff_eq]
 #align finsupp.mem_antidiagonal Finsupp.mem_antidiagonal
@@ -56,7 +57,8 @@ theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α �
 
 theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.1 = g)] :
-    ((antidiagonal f).filter fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ := by
+    ((antidiagonal f).filter fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ :=
+  by
   ext ⟨a, b⟩
   suffices a = g → (a + b = f ↔ g ≤ f ∧ b = f - g) by
     simpa [apply_ite ((· ∈ ·) (a, b)), ← and_assoc, @and_right_comm _ (a = _), and_congr_left_iff]
@@ -70,7 +72,8 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
 
 theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.2 = g)] :
-    ((antidiagonal f).filter fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ := by
+    ((antidiagonal f).filter fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ :=
+  by
   ext ⟨a, b⟩
   suffices b = g → (a + b = f ↔ g ≤ f ∧ a = f - g) by
     simpa [apply_ite ((· ∈ ·) (a, b)), ← and_assoc, and_congr_left_iff]

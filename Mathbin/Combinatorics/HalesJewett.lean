@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.hales_jewett
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,8 +98,8 @@ def IsMono {α ι κ} (C : (ι → α) → κ) (l : Line α ι) : Prop :=
 #align combinatorics.line.is_mono Combinatorics.Line.IsMono
 
 /-- The diagonal line. It is the identity at every coordinate. -/
-def diagonal (α ι) [Nonempty ι] :
-    Line α ι where 
+def diagonal (α ι) [Nonempty ι] : Line α ι
+    where
   idxFun _ := none
   proper := ⟨Classical.arbitrary ι, rfl⟩
 #align combinatorics.line.diagonal Combinatorics.Line.diagonal
@@ -137,29 +137,29 @@ instance {α ι κ} (C : (ι → Option α) → κ) : Inhabited (ColorFocused C)
 
 /-- A function `f : α → α'` determines a function `line α ι → line α' ι`. For a coordinate `i`,
 `l.map f` is the identity at `i` if `l` is, and constantly `f y` if `l` is constantly `y` at `i`. -/
-def map {α α' ι} (f : α → α') (l : Line α ι) :
-    Line α' ι where 
+def map {α α' ι} (f : α → α') (l : Line α ι) : Line α' ι
+    where
   idxFun i := (l.idxFun i).map f
   proper := ⟨l.proper.some, by rw [l.proper.some_spec, Option.map_none']⟩
 #align combinatorics.line.map Combinatorics.Line.map
 
 /-- A point in `ι → α` and a line in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
-def vertical {α ι ι'} (v : ι → α) (l : Line α ι') :
-    Line α (Sum ι ι') where 
+def vertical {α ι ι'} (v : ι → α) (l : Line α ι') : Line α (Sum ι ι')
+    where
   idxFun := Sum.elim (some ∘ v) l.idxFun
   proper := ⟨Sum.inr l.proper.some, l.proper.some_spec⟩
 #align combinatorics.line.vertical Combinatorics.Line.vertical
 
 /-- A line in `ι → α` and a point in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
-def horizontal {α ι ι'} (l : Line α ι) (v : ι' → α) :
-    Line α (Sum ι ι') where 
+def horizontal {α ι ι'} (l : Line α ι) (v : ι' → α) : Line α (Sum ι ι')
+    where
   idxFun := Sum.elim l.idxFun (some ∘ v)
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 #align combinatorics.line.horizontal Combinatorics.Line.horizontal
 
 /-- One line in `ι → α` and one in `ι' → α` together determine a line in `ι ⊕ ι' → α`. -/
-def prod {α ι ι'} (l : Line α ι) (l' : Line α ι') :
-    Line α (Sum ι ι') where 
+def prod {α ι ι'} (l : Line α ι) (l' : Line α ι') : Line α (Sum ι ι')
+    where
   idxFun := Sum.elim l.idxFun l'.idxFun
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 #align combinatorics.line.prod Combinatorics.Line.prod
@@ -183,21 +183,21 @@ theorem map_apply {α α' ι} (f : α → α') (l : Line α ι) (x : α) : l.map
 
 @[simp]
 theorem vertical_apply {α ι ι'} (v : ι → α) (l : Line α ι') (x : α) :
-    l.vertical v x = Sum.elim v (l x) := by 
+    l.vertical v x = Sum.elim v (l x) := by
   funext i
   cases i <;> rfl
 #align combinatorics.line.vertical_apply Combinatorics.Line.vertical_apply
 
 @[simp]
 theorem horizontal_apply {α ι ι'} (l : Line α ι) (v : ι' → α) (x : α) :
-    l.horizontal v x = Sum.elim (l x) v := by 
+    l.horizontal v x = Sum.elim (l x) v := by
   funext i
   cases i <;> rfl
 #align combinatorics.line.horizontal_apply Combinatorics.Line.horizontal_apply
 
 @[simp]
 theorem prod_apply {α ι ι'} (l : Line α ι) (l' : Line α ι') (x : α) :
-    l.Prod l' x = Sum.elim (l x) (l' x) := by 
+    l.Prod l' x = Sum.elim (l x) (l' x) := by
   funext i
   cases i <;> rfl
 #align combinatorics.line.prod_apply Combinatorics.Line.prod_apply
@@ -236,7 +236,8 @@ private theorem exists_mono_in_high_dimension' :
       -- Later we'll need `α` to be nonempty. So we first deal with the trivial case where `α` is empty.
       -- Then `option α` has only one element, so any line is monochromatic.
       by_cases h : Nonempty α
-      on_goal 2 =>
+      on_goal
+        2 =>
         refine' ⟨Unit, inferInstance, fun C => ⟨diagonal _ _, C fun _ => none, _⟩⟩
         rintro (_ | ⟨a⟩); rfl; exact (h ⟨a⟩).elim
       -- The key idea is to show that for every `r`, in high dimension we can either find
@@ -276,7 +277,8 @@ private theorem exists_mono_in_high_dimension' :
       -- `C'` is a `κ`-coloring of `ι → α`.
       obtain ⟨l', C', hl'⟩ := hι'
       -- If `C'` has a monochromatic line, then so does `C`. We use this in two places below.
-      have mono_of_mono : (∃ l, is_mono C' l) → ∃ l, is_mono C l := by
+      have mono_of_mono : (∃ l, is_mono C' l) → ∃ l, is_mono C l :=
+        by
         rintro ⟨l, c, hl⟩
         refine' ⟨l.horizontal (some ∘ l' (Classical.arbitrary α)), c, fun x => _⟩
         rw [line.horizontal_apply, ← hl, ← hl']
@@ -334,7 +336,8 @@ end Line
 /-- A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
 monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
 theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finset M) [Finite κ]
-    (C : M → κ) : ∃ a > 0, ∃ (b : M)(c : κ), ∀ s ∈ S, C (a • s + b) = c := by
+    (C : M → κ) : ∃ a > 0, ∃ (b : M)(c : κ), ∀ s ∈ S, C (a • s + b) = c :=
+  by
   obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ
   skip
   specialize hι fun v => C <| ∑ i, v i

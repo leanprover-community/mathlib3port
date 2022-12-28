@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.epi_mono
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,17 +72,13 @@ instance epi_as_hom''_mkq (U : Submodule R X) : Epi (↿U.mkq) :=
   (epi_iff_range_eq_top _).mpr <| Submodule.range_mkq _
 #align Module.epi_as_hom''_mkq ModuleCat.epi_as_hom''_mkq
 
-instance forget_preserves_epimorphisms :
-    (forget
-        (ModuleCat.{v}
-          R)).PreservesEpimorphisms where preserves X Y f hf := by
+instance forget_preserves_epimorphisms : (forget (ModuleCat.{v} R)).PreservesEpimorphisms
+    where preserves X Y f hf := by
     rwa [forget_map_eq_coe, CategoryTheory.epi_iff_surjective, ← epi_iff_surjective]
 #align Module.forget_preserves_epimorphisms ModuleCat.forget_preserves_epimorphisms
 
-instance forget_preserves_monomorphisms :
-    (forget
-        (ModuleCat.{v}
-          R)).PreservesMonomorphisms where preserves X Y f hf := by
+instance forget_preserves_monomorphisms : (forget (ModuleCat.{v} R)).PreservesMonomorphisms
+    where preserves X Y f hf := by
     rwa [forget_map_eq_coe, CategoryTheory.mono_iff_injective, ← mono_iff_injective]
 #align Module.forget_preserves_monomorphisms ModuleCat.forget_preserves_monomorphisms
 

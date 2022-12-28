@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.S_integer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,8 @@ variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R]
 /-- The `R`-subalgebra of `S`-integers of `K`. -/
 @[simps]
 def integer : Subalgebra R K :=
-  { (⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring).copy
+  {
+    (⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring).copy
         { x : K | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation x ≤ 1 } <|
       Set.ext fun _ => by simpa only [SetLike.mem_coe, Subring.mem_infi] with
     algebra_map_mem' := fun x v _ => v.valuation_le_one x }
@@ -112,27 +113,25 @@ theorem unit_valuation_eq_one (x : S.Unit K) {v : HeightOneSpectrum R} (hv : v �
 
 /-- The group of `S`-units is the group of units of the ring of `S`-integers. -/
 @[simps]
-def unitEquivUnitsInteger :
-    S.Unit K ≃*
-      (S.integer
-          K)ˣ where 
+def unitEquivUnitsInteger : S.Unit K ≃* (S.integer K)ˣ
+    where
   toFun x :=
     ⟨⟨x, fun v hv => (x.property v hv).le⟩, ⟨↑x⁻¹, fun v hv => (x⁻¹.property v hv).le⟩,
       Subtype.ext x.val.val_inv, Subtype.ext x.val.inv_val⟩
   invFun x :=
     ⟨(Units.mk0 x) fun hx => x.NeZero ((Subring.coe_eq_zero_iff _).mp hx), fun v hv =>
       eq_one_of_one_le_mul_left (x.val.property v hv) (x.inv.property v hv) <|
-        Eq.ge <| by 
+        Eq.ge <| by
           rw [← map_mul]
           convert v.valuation.map_one
           exact subtype.mk_eq_mk.mp x.val_inv⟩
-  left_inv _ := by 
+  left_inv _ := by
     ext
     rfl
-  right_inv _ := by 
+  right_inv _ := by
     ext
     rfl
-  map_mul' _ _ := by 
+  map_mul' _ _ := by
     ext
     rfl
 #align set.unit_equiv_units_integer Set.unitEquivUnitsInteger

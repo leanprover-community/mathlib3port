@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.prop_instances
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ Instances on `Prop` such as `distrib_lattice`, `bounded_order`, `linear_order`.
 #print Prop.distribLattice /-
 /-- Propositions form a distributive lattice. -/
 instance Prop.distribLattice : DistribLattice Prop :=
-  { Prop.partialOrder with 
+  { Prop.partialOrder with
     sup := Or
     le_sup_left := @Or.inl
     le_sup_right := @Or.inr
@@ -42,8 +42,8 @@ instance Prop.distribLattice : DistribLattice Prop :=
 
 #print Prop.boundedOrder /-
 /-- Propositions form a bounded order. -/
-instance Prop.boundedOrder : BoundedOrder
-      Prop where 
+instance Prop.boundedOrder : BoundedOrder Prop
+    where
   top := True
   le_top a Ha := True.intro
   bot := False
@@ -73,9 +73,9 @@ theorem Prop.top_eq_true : (⊤ : Prop) = True :=
 
 #print Prop.le_is_total /-
 instance Prop.le_is_total : IsTotal Prop (· ≤ ·) :=
-  ⟨fun p q => by 
+  ⟨fun p q => by
     change (p → q) ∨ (q → p)
-    tauto!⟩
+    tauto⟩
 #align Prop.le_is_total Prop.le_is_total
 -/
 
@@ -105,7 +105,8 @@ variable {ι : Type _} {α' : ι → Type _} [∀ i, PartialOrder (α' i)]
 
 #print Pi.disjoint_iff /-
 theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
-    Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) := by
+    Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) :=
+  by
   constructor
   · intro h i x hf hg
     refine'
@@ -152,7 +153,8 @@ theorem Prop.codisjoint_iff {P Q : Prop} : Codisjoint P Q ↔ P ∨ Q :=
 
 #print Prop.isCompl_iff /-
 @[simp]
-theorem Prop.isCompl_iff {P Q : Prop} : IsCompl P Q ↔ ¬(P ↔ Q) := by
+theorem Prop.isCompl_iff {P Q : Prop} : IsCompl P Q ↔ ¬(P ↔ Q) :=
+  by
   rw [isCompl_iff, Prop.disjoint_iff, Prop.codisjoint_iff, not_iff]
   tauto
 #align Prop.is_compl_iff Prop.isCompl_iff

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.strict
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,8 +67,8 @@ attribute [simp]
 
 -- see Note [lower instance priority]
 /-- Category structure on a strict bicategory -/
-instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] :
-    Category B where 
+instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Category B
+    where
   id_comp' a b := Bicategory.Strict.id_comp
   comp_id' a b := Bicategory.Strict.comp_id
   assoc' a b c d := Bicategory.Strict.assoc
@@ -80,7 +80,8 @@ variable {B}
 
 @[simp]
 theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g = h) :
-    f ◁ eqToHom η = eqToHom (congr_arg₂ (· ≫ ·) rfl η) := by
+    f ◁ eqToHom η = eqToHom (congr_arg₂ (· ≫ ·) rfl η) :=
+  by
   cases η
   simp only [whisker_left_id, eq_to_hom_refl]
 #align
@@ -88,7 +89,8 @@ theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g
 
 @[simp]
 theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
-    eqToHom η ▷ h = eqToHom (congr_arg₂ (· ≫ ·) η rfl) := by
+    eqToHom η ▷ h = eqToHom (congr_arg₂ (· ≫ ·) η rfl) :=
+  by
   cases η
   simp only [id_whisker_right, eq_to_hom_refl]
 #align

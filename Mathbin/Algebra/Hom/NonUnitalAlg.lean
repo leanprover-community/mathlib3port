@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.hom.non_unital_alg
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,10 +99,9 @@ instance (priority := 100) {F : Type _} [NonUnitalAlgHomClass F R A B] : LinearM
 
 instance {F R A B : Type _} [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
     [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [NonUnitalAlgHomClass F R A B] :
-    CoeTC F
-      (A →ₙₐ[R]
-        B) where coe f :=
-    { (f : A →ₙ+* B) with 
+    CoeTC F (A →ₙₐ[R] B)
+    where coe f :=
+    { (f : A →ₙ+* B) with
       toFun := f
       map_smul' := map_smul f }
 
@@ -138,8 +137,8 @@ theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn :
   rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
 #align non_unital_alg_hom.coe_injective NonUnitalAlgHom.coe_injective
 
-instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A
-      B where 
+instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B
+    where
   coe := toFun
   coe_injective' := coe_injective
   map_smul f := f.map_smul'
@@ -153,7 +152,7 @@ theorem ext {f g : A →ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
 #align non_unital_alg_hom.ext NonUnitalAlgHom.ext
 
 theorem ext_iff {f g : A →ₙₐ[R] B} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by 
+  ⟨by
     rintro rfl x
     rfl, ext⟩
 #align non_unital_alg_hom.ext_iff NonUnitalAlgHom.ext_iff
@@ -168,7 +167,8 @@ theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄) : ((⟨f, h₁, h₂, h₃, h
 #align non_unital_alg_hom.coe_mk NonUnitalAlgHom.coe_mk
 
 @[simp]
-theorem mk_coe (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) : (⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) = f := by
+theorem mk_coe (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) : (⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) = f :=
+  by
   ext
   rfl
 #align non_unital_alg_hom.mk_coe NonUnitalAlgHom.mk_coe
@@ -202,20 +202,23 @@ theorem coe_to_mul_hom (f : A →ₙₐ[R] B) : ((f : A →ₙ* B) : A → B) = 
 #align non_unital_alg_hom.coe_to_mul_hom NonUnitalAlgHom.coe_to_mul_hom
 
 theorem to_distrib_mul_action_hom_injective {f g : A →ₙₐ[R] B}
-    (h : (f : A →+[R] B) = (g : A →+[R] B)) : f = g := by
+    (h : (f : A →+[R] B) = (g : A →+[R] B)) : f = g :=
+  by
   ext a
   exact DistribMulActionHom.congr_fun h a
 #align
   non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distrib_mul_action_hom_injective
 
-theorem to_mul_hom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g := by
+theorem to_mul_hom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g :=
+  by
   ext a
   exact MulHom.congr_fun h a
 #align non_unital_alg_hom.to_mul_hom_injective NonUnitalAlgHom.to_mul_hom_injective
 
 @[norm_cast]
 theorem coe_distrib_mul_action_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
-    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ := by
+    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ :=
+  by
   ext
   rfl
 #align
@@ -223,7 +226,8 @@ theorem coe_distrib_mul_action_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h�
 
 @[norm_cast]
 theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
-    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ := by
+    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ :=
+  by
   ext
   rfl
 #align non_unital_alg_hom.coe_mul_hom_mk NonUnitalAlgHom.coe_mul_hom_mk
@@ -313,7 +317,7 @@ variable (R A B)
 
 /-- The first projection of a product is a non-unital alg_hom. -/
 @[simps]
-def fst : A × B →ₙₐ[R] A where 
+def fst : A × B →ₙₐ[R] A where
   toFun := Prod.fst
   map_zero' := rfl
   map_add' x y := rfl
@@ -323,7 +327,7 @@ def fst : A × B →ₙₐ[R] A where
 
 /-- The second projection of a product is a non-unital alg_hom. -/
 @[simps]
-def snd : A × B →ₙₐ[R] B where 
+def snd : A × B →ₙₐ[R] B where
   toFun := Prod.snd
   map_zero' := rfl
   map_add' x y := rfl
@@ -335,8 +339,8 @@ variable {R A B}
 
 /-- The prod of two morphisms is a morphism. -/
 @[simps]
-def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) :
-    A →ₙₐ[R] B × C where 
+def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C
+    where
   toFun := Pi.prod f g
   map_zero' := by simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
   map_add' x y := by simp only [Pi.prod, Prod.mk_add_mk, map_add]
@@ -366,9 +370,8 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 /-- Taking the product of two maps with the same domain is equivalent to taking the product of
 their codomains. -/
 @[simps]
-def prodEquiv :
-    (A →ₙₐ[R] B) × (A →ₙₐ[R] C) ≃
-      (A →ₙₐ[R] B × C) where 
+def prodEquiv : (A →ₙₐ[R] B) × (A →ₙₐ[R] C) ≃ (A →ₙₐ[R] B × C)
+    where
   toFun f := f.1.Prod f.2
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   left_inv f := by ext <;> rfl

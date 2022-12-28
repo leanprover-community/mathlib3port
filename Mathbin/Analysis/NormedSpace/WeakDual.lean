@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.weak_dual
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,7 +147,7 @@ def continuousLinearMapToWeakDual : Dual 𝕜 E →L[𝕜] WeakDual 𝕜 E :=
 theorem dual_norm_topology_le_weak_dual_topology :
     (by infer_instance : TopologicalSpace (Dual 𝕜 E)) ≤
       (by infer_instance : TopologicalSpace (WeakDual 𝕜 E)) :=
-  by 
+  by
   convert to_weak_dual_continuous.le_induced
   exact induced_id.symm
 #align
@@ -207,7 +207,8 @@ theorem polar_def (s : Set E) : polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈
 
 /-- The polar `polar 𝕜 s` of a set `s : E` is a closed subset when the weak star topology
 is used. -/
-theorem is_closed_polar (s : Set E) : IsClosed (polar 𝕜 s) := by
+theorem is_closed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
+  by
   simp only [polar_def, set_of_forall]
   exact is_closed_bInter fun x hx => is_closed_Iic.preimage (WeakBilin.eval_continuous _ _).norm
 #align weak_dual.is_closed_polar WeakDual.is_closed_polar

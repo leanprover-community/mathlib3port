@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.dot_product
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,8 @@ variable {R : Type v} [Semiring R] {n : Type w} [Fintype n]
 
 @[simp]
 theorem dot_product_std_basis_eq_mul [DecidableEq n] (v : n → R) (c : R) (i : n) :
-    dotProduct v (LinearMap.stdBasis R (fun _ => R) i c) = v i * c := by
+    dotProduct v (LinearMap.stdBasis R (fun _ => R) i c) = v i * c :=
+  by
   rw [dot_product, Finset.sum_eq_single i, LinearMap.std_basis_same]
   exact fun _ _ hb => by rw [LinearMap.std_basis_ne _ _ _ _ hb, mul_zero]
   exact fun hi => False.elim (hi <| Finset.mem_univ _)
@@ -51,7 +52,8 @@ theorem dot_product_std_basis_one [DecidableEq n] (v : n → R) (i : n) :
   rw [dot_product_std_basis_eq_mul, mul_one]
 #align matrix.dot_product_std_basis_one Matrix.dot_product_std_basis_one
 
-theorem dot_product_eq (v w : n → R) (h : ∀ u, dotProduct v u = dotProduct w u) : v = w := by
+theorem dot_product_eq (v w : n → R) (h : ∀ u, dotProduct v u = dotProduct w u) : v = w :=
+  by
   funext x
   classical rw [← dot_product_std_basis_one v x, ← dot_product_std_basis_one w x, h]
 #align matrix.dot_product_eq Matrix.dot_product_eq

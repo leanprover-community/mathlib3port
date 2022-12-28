@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.int.parity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,12 +42,12 @@ theorem even_iff : Even n ↔ n % 2 = 0 :=
 #align int.even_iff Int.even_iff
 
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
-  ⟨fun ⟨m, hm⟩ => by 
+  ⟨fun ⟨m, hm⟩ => by
     rw [hm, add_mod]
     norm_num, fun h =>
     ⟨n / 2,
       (mod_add_div n 2).symm.trans
-        (by 
+        (by
           rw [h]
           abel)⟩⟩
 #align int.odd_iff Int.odd_iff
@@ -77,13 +77,15 @@ theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [← two_mul, exists_or, ← Odd, ← Even] using even_or_odd n
 #align int.even_or_odd' Int.even_or_odd'
 
-theorem even_xor_odd (n : ℤ) : Xor' (Even n) (Odd n) := by
+theorem even_xor_odd (n : ℤ) : Xor' (Even n) (Odd n) :=
+  by
   cases' even_or_odd n with h
   · exact Or.inl ⟨h, even_iff_not_odd.mp h⟩
   · exact Or.inr ⟨h, odd_iff_not_even.mp h⟩
 #align int.even_xor_odd Int.even_xor_odd
 
-theorem even_xor_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
+theorem even_xor_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
+  by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
   ·
     simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
@@ -121,7 +123,8 @@ theorem even_add' : Even (m + n) ↔ (Odd m ↔ Odd n) := by
 theorem not_even_bit1 (n : ℤ) : ¬Even (bit1 n) := by simp [bit1, parity_simps]
 #align int.not_even_bit1 Int.not_even_bit1
 
-theorem two_not_dvd_two_mul_add_one (n : ℤ) : ¬2 ∣ 2 * n + 1 := by
+theorem two_not_dvd_two_mul_add_one (n : ℤ) : ¬2 ∣ 2 * n + 1 :=
+  by
   simp [add_mod]
   rfl
 #align int.two_not_dvd_two_mul_add_one Int.two_not_dvd_two_mul_add_one
@@ -157,7 +160,8 @@ theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
 #align int.odd.of_mul_right Int.Odd.of_mul_right
 
 @[parity_simps]
-theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
+theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 :=
+  by
   induction' n with n ih <;> simp [*, even_mul, pow_succ]
   tauto
 #align int.even_pow Int.even_pow
@@ -186,7 +190,8 @@ theorem odd_sub' : Odd (m - n) ↔ (Odd n ↔ Even m) := by
   rw [odd_iff_not_even, even_sub, not_iff, not_iff_comm, odd_iff_not_even]
 #align int.odd_sub' Int.odd_sub'
 
-theorem even_mul_succ_self (n : ℤ) : Even (n * (n + 1)) := by
+theorem even_mul_succ_self (n : ℤ) : Even (n * (n + 1)) :=
+  by
   rw [even_mul]
   convert n.even_or_odd
   simp [parity_simps]
@@ -217,7 +222,8 @@ alias nat_abs_odd ↔ _ _root_.odd.nat_abs
 
 attribute [protected] Even.nat_abs Odd.nat_abs
 
-theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣ a + b ∨ 4 ∣ a - b := by
+theorem four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) : 4 ∣ a + b ∨ 4 ∣ a - b :=
+  by
   obtain ⟨m, rfl⟩ := ha
   obtain ⟨n, rfl⟩ := hb
   obtain h | h := Int.even_or_odd (m + n)
@@ -247,20 +253,23 @@ theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
   Int.ediv_mul_cancel (even_iff_two_dvd.mp h)
 #align int.div_two_mul_two_of_even Int.div_two_mul_two_of_even
 
-theorem two_mul_div_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by
+theorem two_mul_div_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n :=
+  by
   rintro ⟨c, rfl⟩
   rw [mul_comm]
   convert Int.div_add_mod' _ _
   simpa [Int.add_emod]
 #align int.two_mul_div_two_add_one_of_odd Int.two_mul_div_two_add_one_of_odd
 
-theorem div_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n := by
+theorem div_two_mul_two_add_one_of_odd : Odd n → n / 2 * 2 + 1 = n :=
+  by
   rintro ⟨c, rfl⟩
   convert Int.div_add_mod' _ _
   simpa [Int.add_emod]
 #align int.div_two_mul_two_add_one_of_odd Int.div_two_mul_two_add_one_of_odd
 
-theorem add_one_div_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n := by
+theorem add_one_div_two_mul_two_of_odd : Odd n → 1 + n / 2 * 2 = n :=
+  by
   rintro ⟨c, rfl⟩
   rw [add_comm]
   convert Int.div_add_mod' _ _

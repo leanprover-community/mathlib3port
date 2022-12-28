@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ideals
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,8 +87,8 @@ variable (R)
 
 /-- Given a topological ring `R` and `s : set X`, construct the ideal in `C(X, R)` of functions
 which vanish on the complement of `s`. -/
-def idealOfSet (s : Set X) :
-    Ideal C(X, R) where 
+def idealOfSet (s : Set X) : Ideal C(X, R)
+    where
   carrier := { f : C(X, R) | ∀ x ∈ sᶜ, f x = 0 }
   add_mem' f g hf hg x hx := by simp only [hf x hx, hg x hx, coe_add, Pi.add_apply, add_zero]
   zero_mem' _ _ := rfl
@@ -96,8 +96,9 @@ def idealOfSet (s : Set X) :
 #align continuous_map.ideal_of_set ContinuousMap.idealOfSet
 
 theorem ideal_of_set_closed [LocallyCompactSpace X] [T2Space R] (s : Set X) :
-    IsClosed (idealOfSet R s : Set C(X, R)) := by
-  simp only [ideal_of_set, Submodule.coe_set_mk, Set.set_of_forall]
+    IsClosed (idealOfSet R s : Set C(X, R)) :=
+  by
+  simp only [ideal_of_set, Submodule.coe_set_mk, Set.setOf_forall]
   exact
     is_closed_Inter fun x =>
       is_closed_Inter fun hx => is_closed_eq (continuous_eval_const' x) continuous_const
@@ -111,7 +112,7 @@ theorem mem_ideal_of_set {s : Set X} {f : C(X, R)} :
 #align continuous_map.mem_ideal_of_set ContinuousMap.mem_ideal_of_set
 
 theorem not_mem_ideal_of_set {s : Set X} {f : C(X, R)} : f ∉ idealOfSet R s ↔ ∃ x ∈ sᶜ, f x ≠ 0 :=
-  by 
+  by
   simp_rw [mem_ideal_of_set, exists_prop]
   push_neg
 #align continuous_map.not_mem_ideal_of_set ContinuousMap.not_mem_ideal_of_set
@@ -128,13 +129,15 @@ theorem not_mem_set_of_ideal {I : Ideal C(X, R)} {x : X} :
 #align continuous_map.not_mem_set_of_ideal ContinuousMap.not_mem_set_of_ideal
 
 theorem mem_set_of_ideal {I : Ideal C(X, R)} {x : X} :
-    x ∈ setOfIdeal I ↔ ∃ f ∈ I, (f : C(X, R)) x ≠ 0 := by
+    x ∈ setOfIdeal I ↔ ∃ f ∈ I, (f : C(X, R)) x ≠ 0 :=
+  by
   simp_rw [set_of_ideal, Set.mem_compl_iff, Set.mem_setOf, exists_prop]
   push_neg
 #align continuous_map.mem_set_of_ideal ContinuousMap.mem_set_of_ideal
 
-theorem set_of_ideal_open [T2Space R] (I : Ideal C(X, R)) : IsOpen (setOfIdeal I) := by
-  simp only [set_of_ideal, Set.set_of_forall, is_open_compl_iff]
+theorem set_of_ideal_open [T2Space R] (I : Ideal C(X, R)) : IsOpen (setOfIdeal I) :=
+  by
+  simp only [set_of_ideal, Set.setOf_forall, is_open_compl_iff]
   exact
     is_closed_Inter fun f =>
       is_closed_Inter fun hf => is_closed_eq (map_continuous f) continuous_const
@@ -167,7 +170,8 @@ theorem mem_ideal_of_set_compl_singleton (x : X) (f : C(X, R)) :
 
 variable (X R)
 
-theorem ideal_gc : GaloisConnection (setOfIdeal : Ideal C(X, R) → Set X) (idealOfSet R) := by
+theorem ideal_gc : GaloisConnection (setOfIdeal : Ideal C(X, R) → Set X) (idealOfSet R) :=
+  by
   refine' fun I s => ⟨fun h f hf => _, fun h x hx => _⟩
   · by_contra h'
     rcases not_mem_ideal_of_set.mp h' with ⟨x, hx, hfx⟩
@@ -220,7 +224,8 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
   -- Let `t := {x : X | ε / 2 ≤ ‖f x‖₊}}` which is closed and disjoint from `set_of_ideal I`.
   set t := { x : X | ε / 2 ≤ ‖f x‖₊ }
   have ht : IsClosed t := is_closed_le continuous_const (map_continuous f).nnnorm
-  have htI : Disjoint t (set_of_ideal Iᶜ) := by
+  have htI : Disjoint t (set_of_ideal Iᶜ) :=
+    by
     refine' set.subset_compl_iff_disjoint_left.mp fun x hx => _
     simpa only [t, Set.mem_setOf, Set.mem_compl_iff, not_le] using
       (nnnorm_eq_zero.mpr (mem_ideal_of_set.mp hf hx)).trans_lt (half_pos hε)
@@ -229,7 +234,8 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
     Indeed, then `‖f - f * ↑g‖ ≤ ‖f * (1 - ↑g)‖ ≤ ⨆ ‖f * (1 - ↑g) x‖`. When `x ∉ t`, `‖f x‖ < ε / 2`
     and `‖(1 - ↑g) x‖ ≤ 1`, and when `x ∈ t`, `(1 - ↑g) x = 0`, and clearly `f * ↑g ∈ I`. -/
   suffices
-    ∃ g : C(X, ℝ≥0), (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g ∈ I ∧ (∀ x, g x ≤ 1) ∧ t.eq_on g 1 by
+    ∃ g : C(X, ℝ≥0), (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g ∈ I ∧ (∀ x, g x ≤ 1) ∧ t.eq_on g 1
+    by
     obtain ⟨g, hgI, hg, hgt⟩ := this
     refine' ⟨f * (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g, I.mul_mem_left f hgI, _⟩
     rw [nndist_eq_nnnorm]
@@ -267,7 +273,8 @@ theorem ideal_of_set_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
     `fₓ x ≠ 0` for some `fₓ ∈ I` and so `λ y, ‖(star fₓ * fₓ) y‖₊` is strictly posiive in a
     neighborhood of `y`. Moreover, `(‖(star fₓ * fₓ) y‖₊ : 𝕜) = (star fₓ * fₓ) y`, so composition of
     this map with the natural embedding is just `star fₓ * fₓ ∈ I`. -/
-  have : ∃ g' : C(X, ℝ≥0), (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g' ∈ I ∧ ∀ x ∈ t, 0 < g' x := by
+  have : ∃ g' : C(X, ℝ≥0), (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g' ∈ I ∧ ∀ x ∈ t, 0 < g' x :=
+    by
     refine'
       @IsCompact.induction_on _ _ _ ht.is_compact
         (fun s =>
@@ -329,7 +336,8 @@ theorem ideal_of_set_of_ideal_is_closed {I : Ideal C(X, 𝕜)} (hI : IsClosed (I
 variable (𝕜)
 
 @[simp]
-theorem set_of_ideal_of_set_eq_interior (s : Set X) : setOfIdeal (idealOfSet 𝕜 s) = interior s := by
+theorem set_of_ideal_of_set_eq_interior (s : Set X) : setOfIdeal (idealOfSet 𝕜 s) = interior s :=
+  by
   refine'
     Set.Subset.antisymm
       ((set_of_ideal_open (ideal_of_set 𝕜 s)).subset_interior_iff.mpr fun x hx =>
@@ -362,9 +370,8 @@ variable (X)
 /-- The Galois insertion `continuous_map.opens_of_ideal : ideal C(X, 𝕜) → opens X` and
 `λ s, continuous_map.ideal_of_set ↑s`. -/
 @[simps]
-def idealOpensGi :
-    GaloisInsertion (opensOfIdeal : Ideal C(X, 𝕜) → Opens X) fun s =>
-      idealOfSet 𝕜 s where 
+def idealOpensGi : GaloisInsertion (opensOfIdeal : Ideal C(X, 𝕜) → Opens X) fun s => idealOfSet 𝕜 s
+    where
   choice I hI := opensOfIdeal I.closure
   gc I s := ideal_gc X 𝕜 I s
   le_l_u s := (set_of_ideal_of_set_of_is_open 𝕜 s.Prop).ge
@@ -379,7 +386,8 @@ def idealOpensGi :
 variable {X}
 
 theorem ideal_of_set_is_maximal_iff (s : Opens X) :
-    (idealOfSet 𝕜 (s : Set X)).IsMaximal ↔ IsCoatom s := by
+    (idealOfSet 𝕜 (s : Set X)).IsMaximal ↔ IsCoatom s :=
+  by
   rw [Ideal.is_maximal_def]
   refine' (ideal_opens_gi X 𝕜).is_coatom_iff (fun I hI => _) s
   rw [← Ideal.is_maximal_def] at hI
@@ -387,16 +395,17 @@ theorem ideal_of_set_is_maximal_iff (s : Opens X) :
   exact ideal_of_set_of_ideal_is_closed inferInstance
 #align continuous_map.ideal_of_set_is_maximal_iff ContinuousMap.ideal_of_set_is_maximal_iff
 
-theorem ideal_of_compl_singleton_is_maximal (x : X) : (idealOfSet 𝕜 ({x}ᶜ : Set X)).IsMaximal :=
+theorem idealOfComplSingletonIsMaximal (x : X) : (idealOfSet 𝕜 ({x}ᶜ : Set X)).IsMaximal :=
   (ideal_of_set_is_maximal_iff 𝕜 (Closeds.singleton x).compl).mpr <|
     Opens.is_coatom_iff.mpr ⟨x, rfl⟩
 #align
-  continuous_map.ideal_of_compl_singleton_is_maximal ContinuousMap.ideal_of_compl_singleton_is_maximal
+  continuous_map.ideal_of_compl_singleton_is_maximal ContinuousMap.idealOfComplSingletonIsMaximal
 
 variable {𝕜}
 
 theorem set_of_ideal_eq_compl_singleton (I : Ideal C(X, 𝕜)) [hI : I.IsMaximal] :
-    ∃ x : X, setOfIdeal I = {x}ᶜ := by
+    ∃ x : X, setOfIdeal I = {x}ᶜ :=
+  by
   have h : (ideal_of_set 𝕜 (set_of_ideal I)).IsMaximal :=
     (ideal_of_set_of_ideal_is_closed (inferInstance : IsClosed (I : Set C(X, 𝕜)))).symm ▸ hI
   obtain ⟨x, hx⟩ := opens.is_coatom_iff.1 ((ideal_of_set_is_maximal_iff 𝕜 (opens_of_ideal I)).1 h)
@@ -404,7 +413,8 @@ theorem set_of_ideal_eq_compl_singleton (I : Ideal C(X, 𝕜)) [hI : I.IsMaximal
 #align continuous_map.set_of_ideal_eq_compl_singleton ContinuousMap.set_of_ideal_eq_compl_singleton
 
 theorem ideal_is_maximal_iff (I : Ideal C(X, 𝕜)) [hI : IsClosed (I : Set C(X, 𝕜))] :
-    I.IsMaximal ↔ ∃ x : X, idealOfSet 𝕜 ({x}ᶜ) = I := by
+    I.IsMaximal ↔ ∃ x : X, idealOfSet 𝕜 ({x}ᶜ) = I :=
+  by
   refine'
     ⟨_, fun h =>
       let ⟨x, hx⟩ := h
@@ -437,16 +447,14 @@ variable [Nontrivial 𝕜] [NoZeroDivisors 𝕜]
 
 /-- The natural continuous map from a locally compact topological space `X` to the
 `character_space 𝕜 C(X, 𝕜)` which sends `x : X` to point evaluation at `x`. -/
-def continuousMapEval :
-    C(X,
-      characterSpace 𝕜
-        C(X,
-          𝕜)) where 
+def continuousMapEval : C(X, characterSpace 𝕜 C(X, 𝕜))
+    where
   toFun x :=
     ⟨{  toFun := fun f => f x
         map_add' := fun f g => rfl
         map_smul' := fun z f => rfl
-        cont := continuous_eval_const' x }, by
+        cont := continuous_eval_const' x },
+      by
       rw [character_space.eq_set_map_one_map_mul]
       exact ⟨rfl, fun f g => rfl⟩⟩
   continuous_to_fun := Continuous.subtype_mk (continuous_of_continuous_eval map_continuous) _
@@ -462,7 +470,8 @@ end ContinuousMapEval
 
 variable [CompactSpace X] [T2Space X] [IsROrC 𝕜]
 
-theorem continuous_map_eval_bijective : Bijective (continuousMapEval X 𝕜) := by
+theorem continuous_map_eval_bijective : Bijective (continuousMapEval X 𝕜) :=
+  by
   refine' ⟨fun x y hxy => _, fun φ => _⟩
   · contrapose! hxy
     haveI := @normalOfCompactT2 X _ _ _

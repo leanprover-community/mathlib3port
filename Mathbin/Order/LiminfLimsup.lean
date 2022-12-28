@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.liminf_limsup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,8 @@ theorem IsBounded.is_bounded_under {q : β → β → Prop} {u : α → β}
 #align filter.is_bounded.is_bounded_under Filter.IsBounded.is_bounded_under
 
 theorem not_is_bounded_under_of_tendsto_at_top [Preorder β] [NoMaxOrder β] {f : α → β}
-    {l : Filter α} [l.ne_bot] (hf : Tendsto f l atTop) : ¬IsBoundedUnder (· ≤ ·) l f := by
+    {l : Filter α} [l.ne_bot] (hf : Tendsto f l atTop) : ¬IsBoundedUnder (· ≤ ·) l f :=
+  by
   rintro ⟨b, hb⟩
   rw [eventually_map] at hb
   obtain ⟨b', h⟩ := exists_gt b
@@ -141,7 +142,8 @@ theorem not_is_bounded_under_of_tendsto_at_bot [Preorder β] [NoMinOrder β] {f 
 #align filter.not_is_bounded_under_of_tendsto_at_bot Filter.not_is_bounded_under_of_tendsto_at_bot
 
 theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α → β}
-    (hf : IsBoundedUnder (· ≤ ·) cofinite f) : BddAbove (range f) := by
+    (hf : IsBoundedUnder (· ≤ ·) cofinite f) : BddAbove (range f) :=
+  by
   rcases hf with ⟨b, hb⟩
   haveI : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bddAbove_union]
@@ -156,7 +158,8 @@ theorem IsBoundedUnder.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α �
   filter.is_bounded_under.bdd_below_range_of_cofinite Filter.IsBoundedUnder.bdd_below_range_of_cofinite
 
 theorem IsBoundedUnder.bdd_above_range [SemilatticeSup β] {f : ℕ → β}
-    (hf : IsBoundedUnder (· ≤ ·) atTop f) : BddAbove (range f) := by
+    (hf : IsBoundedUnder (· ≤ ·) atTop f) : BddAbove (range f) :=
+  by
   rw [← Nat.cofinite_eq_at_top] at hf
   exact hf.bdd_above_range_of_cofinite
 #align filter.is_bounded_under.bdd_above_range Filter.IsBoundedUnder.bdd_above_range
@@ -408,7 +411,8 @@ theorem bliminf_true (f : Filter β) (u : β → α) : (bliminf u f fun x => Tru
 #align filter.bliminf_true Filter.bliminf_true
 
 theorem blimsup_eq_limsup_subtype {f : Filter β} {u : β → α} {p : β → Prop} :
-    blimsup u f p = limsup (u ∘ (coe : { x | p x } → β)) (comap coe f) := by
+    blimsup u f p = limsup (u ∘ (coe : { x | p x } → β)) (comap coe f) :=
+  by
   simp only [blimsup_eq, limsup_eq, Function.comp_apply, eventually_comap, SetCoe.forall,
     Subtype.coe_mk, mem_set_of_eq]
   congr
@@ -643,14 +647,15 @@ theorem Liminf_principal {s : Set α} (h : BddBelow s) (hs : s.Nonempty) : limin
 #align filter.Liminf_principal Filter.Liminf_principal
 
 theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
-    (h : ∀ᶠ a in f, u a = v a) : limsup u f = limsup v f := by
+    (h : ∀ᶠ a in f, u a = v a) : limsup u f = limsup v f :=
+  by
   rw [limsup_eq]
   congr with b
   exact eventually_congr (h.mono fun x hx => by simp [hx])
 #align filter.limsup_congr Filter.limsup_congr
 
 theorem blimsup_congr {f : Filter β} {u v : β → α} {p : β → Prop} (h : ∀ᶠ a in f, p a → u a = v a) :
-    blimsup u f p = blimsup v f p := by 
+    blimsup u f p = blimsup v f p := by
   rw [blimsup_eq]
   congr with b
   refine' eventually_congr (h.mono fun x hx => ⟨fun h₁ h₂ => _, fun h₁ h₂ => _⟩)
@@ -717,7 +722,8 @@ theorem bliminf_false {f : Filter β} {u : β → α} : (bliminf u f fun x => Fa
 #align filter.bliminf_false Filter.bliminf_false
 
 /-- Same as limsup_const applied to `⊥` but without the `ne_bot f` assumption -/
-theorem limsup_const_bot {f : Filter β} : limsup (fun x : β => (⊥ : α)) f = (⊥ : α) := by
+theorem limsup_const_bot {f : Filter β} : limsup (fun x : β => (⊥ : α)) f = (⊥ : α) :=
+  by
   rw [limsup_eq, eq_bot_iff]
   exact infₛ_le (eventually_of_forall fun x => le_rfl)
 #align filter.limsup_const_bot Filter.limsup_const_bot
@@ -786,11 +792,12 @@ theorem HasBasis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : 
 #align filter.has_basis.limsup_eq_infi_supr Filter.HasBasis.limsup_eq_infi_supr
 
 theorem blimsup_eq_infi_bsupr {f : Filter β} {p : β → Prop} {u : β → α} :
-    blimsup u f p = ⨅ s ∈ f, ⨆ (b) (hb : p b ∧ b ∈ s), u b := by
+    blimsup u f p = ⨅ s ∈ f, ⨆ (b) (hb : p b ∧ b ∈ s), u b :=
+  by
   refine' le_antisymm (infₛ_le_infₛ _) (infi_le_iff.mpr fun a ha => le_Inf_iff.mpr fun a' ha' => _)
   · rintro - ⟨s, rfl⟩
     simp only [mem_set_of_eq, le_infᵢ_iff]
-    conv => 
+    conv =>
       congr
       ext
       rw [Imp.swap]
@@ -839,7 +846,8 @@ theorem bliminf_eq_supr_binfi_of_nat {p : ℕ → Prop} {u : ℕ → α} :
 #align filter.bliminf_eq_supr_binfi_of_nat Filter.bliminf_eq_supr_binfi_of_nat
 
 theorem limsup_eq_Inf_Sup {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
-    limsup a F = infₛ ((fun I => supₛ (a '' I)) '' F.sets) := by
+    limsup a F = infₛ ((fun I => supₛ (a '' I)) '' F.sets) :=
+  by
   refine' le_antisymm _ _
   · rw [limsup_eq]
     refine' infₛ_le_infₛ fun x hx => _
@@ -860,7 +868,7 @@ theorem liminf_eq_Sup_Inf {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a
 
 @[simp]
 theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : liminf (fun i => f (i + k)) atTop = liminf f atTop :=
-  by 
+  by
   simp_rw [liminf_eq_supr_infi_of_nat]
   exact supᵢ_infᵢ_ge_nat_add f k
 #align filter.liminf_nat_add Filter.liminf_nat_add
@@ -871,10 +879,11 @@ theorem limsup_nat_add (f : ℕ → α) (k : ℕ) : limsup (fun i => f (i + k)) 
 #align filter.limsup_nat_add Filter.limsup_nat_add
 
 theorem liminf_le_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α} {u : α → β} {x : β}
-    (h : ∃ᶠ a in f, u a ≤ x) : liminf u f ≤ x := by
+    (h : ∃ᶠ a in f, u a ≤ x) : liminf u f ≤ x :=
+  by
   rw [liminf_eq]
   refine' supₛ_le fun b hb => _
-  have hbx : ∃ᶠ a in f, b ≤ x := by 
+  have hbx : ∃ᶠ a in f, b ≤ x := by
     revert h
     rw [← not_imp_not, not_frequently, not_frequently]
     exact fun h => hb.mp (h.mono fun a hbx hba hax => hbx (hba.trans hax))
@@ -890,7 +899,8 @@ theorem le_limsup_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α}
 `a : α` is a fixed point. -/
 @[simp]
 theorem CompleteLatticeHom.apply_limsup_iterate (f : CompleteLatticeHom α α) (a : α) :
-    f (limsup (fun n => (f^[n]) a) atTop) = limsup (fun n => (f^[n]) a) atTop := by
+    f (limsup (fun n => (f^[n]) a) atTop) = limsup (fun n => (f^[n]) a) atTop :=
+  by
   rw [limsup_eq_infi_supr_of_nat', map_infi]
   simp_rw [_root_.map_supr, ← Function.comp_apply f, ← Function.iterate_succ' f, ← Nat.add_succ]
   conv_rhs => rw [infᵢ_split _ ((· < ·) (0 : ℕ))]
@@ -966,7 +976,8 @@ theorem bliminf_or_le_inf : (bliminf u f fun x => p x ∨ q x) ≤ bliminf u f p
 #align filter.bliminf_or_le_inf Filter.bliminf_or_le_inf
 
 theorem OrderIso.apply_blimsup [CompleteLattice γ] (e : α ≃o γ) :
-    e (blimsup u f p) = blimsup (e ∘ u) f p := by
+    e (blimsup u f p) = blimsup (e ∘ u) f p :=
+  by
   simp only [blimsup_eq, map_Inf, Function.comp_apply]
   congr
   ext c
@@ -980,7 +991,8 @@ theorem OrderIso.apply_bliminf [CompleteLattice γ] (e : α ≃o γ) :
 #align filter.order_iso.apply_bliminf Filter.OrderIso.apply_bliminf
 
 theorem SupHom.apply_blimsup_le [CompleteLattice γ] (g : SupHom α γ) :
-    g (blimsup u f p) ≤ blimsup (g ∘ u) f p := by
+    g (blimsup u f p) ≤ blimsup (g ∘ u) f p :=
+  by
   simp only [blimsup_eq_infi_bsupr]
   refine' ((OrderHomClass.mono g).map_infi₂_le _).trans _
   simp only [_root_.map_supr]
@@ -998,7 +1010,8 @@ section CompleteDistribLattice
 variable [CompleteDistribLattice α] {f : Filter β} {p q : β → Prop} {u : β → α}
 
 @[simp]
-theorem blimsup_or_eq_sup : (blimsup u f fun x => p x ∨ q x) = blimsup u f p ⊔ blimsup u f q := by
+theorem blimsup_or_eq_sup : (blimsup u f fun x => p x ∨ q x) = blimsup u f p ⊔ blimsup u f q :=
+  by
   refine' le_antisymm _ blimsup_sup_le_or
   simp only [blimsup_eq, infₛ_sup_eq, sup_infₛ_eq, le_infᵢ₂_iff, mem_set_of_eq]
   refine' fun a' ha' a ha => infₛ_le ((ha.And ha').mono fun b h hb => _)
@@ -1010,7 +1023,8 @@ theorem bliminf_or_eq_inf : (bliminf u f fun x => p x ∨ q x) = bliminf u f p �
   @blimsup_or_eq_sup αᵒᵈ β _ f p q u
 #align filter.bliminf_or_eq_inf Filter.bliminf_or_eq_inf
 
-theorem sup_limsup [NeBot f] (a : α) : a ⊔ limsup u f = limsup (fun x => a ⊔ u x) f := by
+theorem sup_limsup [NeBot f] (a : α) : a ⊔ limsup u f = limsup (fun x => a ⊔ u x) f :=
+  by
   simp only [limsup_eq_infi_supr, supᵢ_sup_eq, sup_infᵢ₂_eq]
   congr ; ext s; congr ; ext hs; congr
   exact (bsupᵢ_const (nonempty_of_mem hs)).symm
@@ -1020,7 +1034,8 @@ theorem inf_liminf [NeBot f] (a : α) : a ⊓ liminf u f = liminf (fun x => a �
   @sup_limsup αᵒᵈ β _ f _ _ _
 #align filter.inf_liminf Filter.inf_liminf
 
-theorem sup_liminf (a : α) : a ⊔ liminf u f = liminf (fun x => a ⊔ u x) f := by
+theorem sup_liminf (a : α) : a ⊔ liminf u f = liminf (fun x => a ⊔ u x) f :=
+  by
   simp only [liminf_eq_supr_infi]
   rw [sup_comm, bsupᵢ_sup (⟨univ, univ_mem⟩ : ∃ i : Set β, i ∈ f)]
   simp_rw [infᵢ₂_sup_eq, @sup_comm _ _ a]
@@ -1044,7 +1059,8 @@ theorem liminf_compl : liminf u fᶜ = limsup (compl ∘ u) f := by
   simp only [limsup_eq_infi_supr, liminf_eq_supr_infi, compl_infᵢ, compl_supᵢ]
 #align filter.liminf_compl Filter.liminf_compl
 
-theorem limsup_sdiff (a : α) : limsup u f \ a = limsup (fun b => u b \ a) f := by
+theorem limsup_sdiff (a : α) : limsup u f \ a = limsup (fun b => u b \ a) f :=
+  by
   simp only [limsup_eq_infi_supr, sdiff_eq]
   rw [binfᵢ_inf (⟨univ, univ_mem⟩ : ∃ i : Set β, i ∈ f)]
   simp_rw [inf_comm, inf_supᵢ₂_eq, inf_comm]
@@ -1054,12 +1070,14 @@ theorem liminf_sdiff [NeBot f] (a : α) : liminf u f \ a = liminf (fun b => u b 
   simp only [sdiff_eq, @inf_comm _ _ _ (aᶜ), inf_liminf]
 #align filter.liminf_sdiff Filter.liminf_sdiff
 
-theorem sdiff_limsup [NeBot f] (a : α) : a \ limsup u f = liminf (fun b => a \ u b) f := by
+theorem sdiff_limsup [NeBot f] (a : α) : a \ limsup u f = liminf (fun b => a \ u b) f :=
+  by
   rw [← compl_inj_iff]
   simp only [sdiff_eq, liminf_compl, (· ∘ ·), compl_inf, compl_compl, sup_limsup]
 #align filter.sdiff_limsup Filter.sdiff_limsup
 
-theorem sdiff_liminf (a : α) : a \ liminf u f = limsup (fun b => a \ u b) f := by
+theorem sdiff_liminf (a : α) : a \ liminf u f = limsup (fun b => a \ u b) f :=
+  by
   rw [← compl_inj_iff]
   simp only [sdiff_eq, limsup_compl, (· ∘ ·), compl_inf, compl_compl, sup_liminf]
 #align filter.sdiff_liminf Filter.sdiff_liminf
@@ -1080,7 +1098,8 @@ theorem cofinite.blimsup_set_eq : blimsup s cofinite p = { x | { n | p n ∧ x �
   · exact hx.mono fun i hi => ⟨hi.1, fun hit => h (hit hi.2)⟩
 #align filter.cofinite.blimsup_set_eq Filter.cofinite.blimsup_set_eq
 
-theorem cofinite.bliminf_set_eq : bliminf s cofinite p = { x | { n | p n ∧ x ∉ s n }.Finite } := by
+theorem cofinite.bliminf_set_eq : bliminf s cofinite p = { x | { n | p n ∧ x ∉ s n }.Finite } :=
+  by
   rw [← compl_inj_iff]
   simpa only [bliminf_eq_supr_binfi, compl_infᵢ, compl_supᵢ, ← blimsup_eq_infi_bsupr,
     cofinite.blimsup_set_eq]
@@ -1100,7 +1119,8 @@ theorem cofinite.liminf_set_eq : liminf s cofinite = { x | { n | x ∉ s n }.Fin
 
 theorem exists_forall_mem_of_has_basis_mem_blimsup {l : Filter β} {b : ι → Set β} {q : ι → Prop}
     (hl : l.HasBasis q b) {u : β → Set α} {p : β → Prop} {x : α} (hx : x ∈ blimsup u l p) :
-    ∃ f : { i | q i } → β, ∀ i, x ∈ u (f i) ∧ p (f i) ∧ f i ∈ b i := by
+    ∃ f : { i | q i } → β, ∀ i, x ∈ u (f i) ∧ p (f i) ∧ f i ∈ b i :=
+  by
   rw [blimsup_eq_infi_bsupr] at hx
   simp only [supr_eq_Union, infi_eq_Inter, mem_Inter, mem_Union, exists_prop] at hx
   choose g hg hg' using hx
@@ -1112,7 +1132,8 @@ theorem exists_forall_mem_of_has_basis_mem_blimsup {l : Filter β} {b : ι → S
 
 theorem exists_forall_mem_of_has_basis_mem_blimsup' {l : Filter β} {b : ι → Set β}
     (hl : l.HasBasis (fun _ => True) b) {u : β → Set α} {p : β → Prop} {x : α}
-    (hx : x ∈ blimsup u l p) : ∃ f : ι → β, ∀ i, x ∈ u (f i) ∧ p (f i) ∧ f i ∈ b i := by
+    (hx : x ∈ blimsup u l p) : ∃ f : ι → β, ∀ i, x ∈ u (f i) ∧ p (f i) ∧ f i ∈ b i :=
+  by
   obtain ⟨f, hf⟩ := exists_forall_mem_of_has_basis_mem_blimsup hl hx
   exact ⟨fun i => f ⟨i, trivial⟩, fun i => hf ⟨i, trivial⟩⟩
 #align
@@ -1127,7 +1148,8 @@ theorem frequently_lt_of_lt_Limsup {f : Filter α} [ConditionallyCompleteLinearO
     (hf : f.IsCobounded (· ≤ ·) := by
       run_tac
         is_bounded_default)
-    (h : a < limsup f) : ∃ᶠ n in f, a < n := by
+    (h : a < limsup f) : ∃ᶠ n in f, a < n :=
+  by
   contrapose! h
   simp only [not_frequently, not_lt] at h
   exact Limsup_le_of_le hf h
@@ -1148,7 +1170,8 @@ theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearO
     (hu : f.IsBoundedUnder (· ≥ ·) u := by
       run_tac
         is_bounded_default) :
-    ∀ᶠ a in f, b < u a := by
+    ∀ᶠ a in f, b < u a :=
+  by
   obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c : β | ∀ᶠ n : α in f, c ≤ u n }), b < c :=
     exists_lt_of_lt_cSup hu h
   exact hc.mono fun x hx => lt_of_lt_of_le hbc hx
@@ -1170,7 +1193,7 @@ theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β]
     (hu : f.IsBoundedUnder (· ≤ ·) u := by
       run_tac
         is_bounded_default) :
-    b ≤ limsup u f := by 
+    b ≤ limsup u f := by
   revert hu_le
   rw [← not_imp_not, not_frequently]
   simp_rw [← lt_iff_not_ge]
@@ -1193,7 +1216,8 @@ theorem frequently_lt_of_lt_limsup {α β} [ConditionallyCompleteLinearOrder β]
     (hu : f.IsCoboundedUnder (· ≤ ·) u := by
       run_tac
         is_bounded_default)
-    (h : b < limsup u f) : ∃ᶠ x in f, b < u x := by
+    (h : b < limsup u f) : ∃ᶠ x in f, b < u x :=
+  by
   contrapose! h
   apply Limsup_le_of_le hu
   simpa using h
@@ -1219,7 +1243,8 @@ open Filter
 
 theorem Monotone.is_bounded_under_le_comp [Nonempty β] [LinearOrder β] [Preorder γ] [NoMaxOrder γ]
     {g : β → γ} {f : α → β} {l : Filter α} (hg : Monotone g) (hg' : Tendsto g atTop atTop) :
-    IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f := by
+    IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f :=
+  by
   refine' ⟨_, fun h => h.IsBoundedUnder hg⟩
   rintro ⟨c, hc⟩; rw [eventually_map] at hc
   obtain ⟨b, hb⟩ : ∃ b, ∀ a ≥ b, c < g a := eventually_at_top.1 (hg'.eventually_gt_at_top c)
@@ -1255,7 +1280,8 @@ theorem GaloisConnection.l_limsup_le [ConditionallyCompleteLattice β]
     (hv_co : f.IsCoboundedUnder (· ≤ ·) v := by
       run_tac
         is_bounded_default) :
-    l (limsup v f) ≤ limsup (fun x => l (v x)) f := by
+    l (limsup v f) ≤ limsup (fun x => l (v x)) f :=
+  by
   refine' le_Limsup_of_le hlv fun c hc => _
   rw [Filter.eventually_map] at hc
   simp_rw [gc _ _] at hc⊢
@@ -1280,7 +1306,8 @@ theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [Conditiona
     (hgu_co : f.IsCoboundedUnder (· ≤ ·) fun x => g (u x) := by
       run_tac
         is_bounded_default) :
-    g (limsup u f) = limsup (fun x => g (u x)) f := by
+    g (limsup u f) = limsup (fun x => g (u x)) f :=
+  by
   refine' le_antisymm (g.to_galois_connection.l_limsup_le hgu hu_co) _
   rw [← g.symm.symm_apply_apply <| limsup (fun x => g (u x)) f, g.symm_symm]
   refine' g.monotone _

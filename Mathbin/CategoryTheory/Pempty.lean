@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.pempty
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,8 +32,7 @@ def emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
     { obj := PEmpty.elim ∘ discrete.as
       map := fun x => x.as.elim }
     { obj := PEmpty.elim ∘ discrete.as
-      map := fun x => x.as.elim }
-    (by tidy) (by tidy)
+      map := fun x => x.as.elim } (by tidy) (by tidy)
 #align category_theory.functor.empty_equivalence CategoryTheory.Functor.emptyEquivalence
 
 /-- The canonical functor out of the empty category. -/

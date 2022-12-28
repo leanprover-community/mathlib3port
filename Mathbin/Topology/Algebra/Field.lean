@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.field
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem units_embedding [InducedUnits R] : Embedding (coe : Rˣ → R) :=
 #align topological_ring.units_embedding TopologicalRing.units_embedding
 
 instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuousMul Rˣ :=
-  ⟨by 
+  ⟨by
     let mulR := fun p : R × R => p.1 * p.2
     let mulRx := fun p : Rˣ × Rˣ => p.1 * p.2
     have key : coe ∘ mulRx = mulR ∘ fun p => (p.1.val, p.2.val) := rfl
@@ -125,7 +125,7 @@ variable [TopologicalDivisionRing K]
 
 theorem units_top_group : TopologicalGroup Kˣ :=
   { TopologicalRing.top_monoid_units K with
-    continuous_inv := by 
+    continuous_inv := by
       rw [continuous_iff_continuous_at]
       intro x
       rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, ←
@@ -150,9 +150,10 @@ variable {α : Type _} [Field α] [TopologicalSpace α] [TopologicalDivisionRing
 /-- The (topological-space) closure of a subfield of a topological field is
 itself a subfield. -/
 def Subfield.topologicalClosure (K : Subfield α) : Subfield α :=
-  { K.toSubring.topologicalClosure with
+  {
+    K.toSubring.topologicalClosure with
     carrier := closure (K : Set α)
-    inv_mem' := by 
+    inv_mem' := by
       intro x hx
       by_cases h : x = 0
       · rwa [h, inv_zero, ← h]
@@ -195,11 +196,11 @@ variable {𝕜 : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalRing �
 The map `λ x, a * x + b`, as a homeomorphism from `𝕜` (a topological field) to itself, when `a ≠ 0`.
 -/
 @[simps]
-def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) :
-    𝕜 ≃ₜ 𝕜 where 
+def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜
+    where
   toFun x := a * x + b
   invFun y := (y - b) / a
-  left_inv x := by 
+  left_inv x := by
     simp only [add_sub_cancel]
     exact mul_div_cancel_left x h
   right_inv y := by simp [mul_div_cancel' _ h]

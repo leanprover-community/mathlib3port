@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.const_mul_action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,8 +158,8 @@ variable [TopologicalSpace α]
 variable [Monoid M] [MulAction M α] [HasContinuousConstSmul M α]
 
 @[to_additive]
-instance Units.has_continuous_const_smul :
-    HasContinuousConstSmul Mˣ α where continuous_const_smul m := (continuous_const_smul (m : M) : _)
+instance Units.has_continuous_const_smul : HasContinuousConstSmul Mˣ α
+    where continuous_const_smul m := (continuous_const_smul (m : M) : _)
 #align units.has_continuous_const_smul Units.has_continuous_const_smul
 
 @[to_additive]
@@ -213,8 +213,8 @@ theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ 
 /-- The homeomorphism given by scalar multiplication by a given element of a group `Γ` acting on
   `T` is a homeomorphism from `T` to itself. -/
 @[to_additive]
-def Homeomorph.smul (γ : G) :
-    α ≃ₜ α where 
+def Homeomorph.smul (γ : G) : α ≃ₜ α
+    where
   toEquiv := MulAction.toPerm γ
   continuous_to_fun := continuous_const_smul γ
   continuous_inv_fun := continuous_const_smul γ⁻¹
@@ -311,7 +311,8 @@ theorem interior_smul₀ {c : G₀} (hc : c ≠ 0) (s : Set α) : interior (c �
 #align interior_smul₀ interior_smul₀
 
 theorem closure_smul₀ {E} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpace E] [T1Space E]
-    [HasContinuousConstSmul G₀ E] (c : G₀) (s : Set E) : closure (c • s) = c • closure s := by
+    [HasContinuousConstSmul G₀ E] (c : G₀) (s : Set E) : closure (c • s) = c • closure s :=
+  by
   rcases eq_or_ne c 0 with (rfl | hc)
   · rcases eq_empty_or_nonempty s with (rfl | hs)
     · simp
@@ -339,7 +340,8 @@ The lemma that `smul` is a closed map in the first argument (for a normed space 
 normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dimension`. -/
 theorem is_closed_map_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoid M] [TopologicalSpace M]
     [T1Space M] [Module 𝕜 M] [HasContinuousConstSmul 𝕜 M] (c : 𝕜) :
-    IsClosedMap fun x : M => c • x := by
+    IsClosedMap fun x : M => c • x :=
+  by
   rcases eq_or_ne c 0 with (rfl | hne)
   · simp only [zero_smul]
     exact is_closed_map_const
@@ -452,7 +454,8 @@ export ProperlyDiscontinuousVadd (finite_disjoint_inter_image)
 @[to_additive
       "The quotient map by a group action is open, i.e. the quotient by a group\naction is an open quotient. "]
 theorem is_open_map_quotient_mk_mul [HasContinuousConstSmul Γ T] :
-    IsOpenMap (Quotient.mk'' : T → Quotient (MulAction.orbitRel Γ T)) := by
+    IsOpenMap (Quotient.mk'' : T → Quotient (MulAction.orbitRel Γ T)) :=
+  by
   intro U hU
   rw [is_open_coinduced, MulAction.quotient_preimage_image_eq_union_mul U]
   exact is_open_Union fun γ => (Homeomorph.smul γ).IsOpenMap U hU
@@ -462,7 +465,8 @@ theorem is_open_map_quotient_mk_mul [HasContinuousConstSmul Γ T] :
 @[to_additive "The quotient by a discontinuous group action of a locally compact t2\nspace is t2."]
 instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space T]
     [LocallyCompactSpace T] [HasContinuousConstSmul Γ T] [ProperlyDiscontinuousSmul Γ T] :
-    T2Space (Quotient (MulAction.orbitRel Γ T)) := by
+    T2Space (Quotient (MulAction.orbitRel Γ T)) :=
+  by
   set Q := Quotient (MulAction.orbitRel Γ T)
   rw [t2_space_iff_nhds]
   let f : T → Q := Quotient.mk''
@@ -479,7 +483,8 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
   let U₀ := U₀₀ ∩ K₀
   let V₀₀ := ⋂ γ ∈ bad_Γ_set, v γ
   let V₀ := V₀₀ ∩ L₀
-  have U_nhds : f '' U₀ ∈ 𝓝 (f x₀) := by
+  have U_nhds : f '' U₀ ∈ 𝓝 (f x₀) :=
+    by
     apply f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr fun γ hγ => _) K₀_in)
     exact (continuous_const_smul _).ContinuousAt (hu γ)
   have V_nhds : f '' V₀ ∈ 𝓝 (f y₀) :=
@@ -512,14 +517,15 @@ variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ α] [TopologicalSp
 
 /-- Scalar multiplication preserves neighborhoods. -/
 theorem set_smul_mem_nhds_smul {c : G₀} {s : Set α} {x : α} (hs : s ∈ 𝓝 x) (hc : c ≠ 0) :
-    c • s ∈ 𝓝 (c • x : α) := by 
+    c • s ∈ 𝓝 (c • x : α) := by
   rw [mem_nhds_iff] at hs⊢
   obtain ⟨U, hs', hU, hU'⟩ := hs
   exact ⟨c • U, Set.smul_set_mono hs', hU.smul₀ hc, Set.smul_mem_smul_set hU'⟩
 #align set_smul_mem_nhds_smul set_smul_mem_nhds_smul
 
 theorem set_smul_mem_nhds_smul_iff {c : G₀} {s : Set α} {x : α} (hc : c ≠ 0) :
-    c • s ∈ 𝓝 (c • x : α) ↔ s ∈ 𝓝 x := by
+    c • s ∈ 𝓝 (c • x : α) ↔ s ∈ 𝓝 x :=
+  by
   refine' ⟨fun h => _, fun h => set_smul_mem_nhds_smul h hc⟩
   rw [← inv_smul_smul₀ hc x, ← inv_smul_smul₀ hc s]
   exact set_smul_mem_nhds_smul h (inv_ne_zero hc)
@@ -533,7 +539,8 @@ variable {G₀ : Type _} [GroupWithZero G₀] [AddMonoid α] [DistribMulAction G
   [HasContinuousConstSmul G₀ α]
 
 theorem set_smul_mem_nhds_zero_iff {s : Set α} {c : G₀} (hc : c ≠ 0) :
-    c • s ∈ 𝓝 (0 : α) ↔ s ∈ 𝓝 (0 : α) := by
+    c • s ∈ 𝓝 (0 : α) ↔ s ∈ 𝓝 (0 : α) :=
+  by
   refine' Iff.trans _ (set_smul_mem_nhds_smul_iff hc)
   rw [smul_zero]
 #align set_smul_mem_nhds_zero_iff set_smul_mem_nhds_zero_iff

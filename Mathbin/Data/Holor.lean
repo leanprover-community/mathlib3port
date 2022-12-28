@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module data.holor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,7 +175,8 @@ def assocLeft : Holor α (ds₁ ++ (ds₂ ++ ds₃)) → Holor α (ds₁ ++ ds�
 
 theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     x ⊗ y ⊗ z = (x ⊗ (y ⊗ z)).assocLeft :=
-  funext fun t : HolorIndex (ds₁ ++ ds₂ ++ ds₃) => by
+  funext fun t : HolorIndex (ds₁ ++ ds₂ ++ ds₃) =>
+    by
     rw [assoc_left]
     unfold mul
     rw [mul_assoc]
@@ -263,7 +264,8 @@ theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d ::
 #align holor.slice_zero Holor.slice_zero
 
 theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β)
-    (f : β → Holor α (d :: ds)) : (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid := by
+    (f : β → Holor α (d :: ds)) : (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid :=
+  by
   letI := Classical.decEq β
   refine' Finset.induction_on s _ _
   · simp [slice_zero]
@@ -278,7 +280,7 @@ theorem sum_unit_vec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
     (∑ i in (Finset.range d).attach,
         unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.Prop))) =
       x :=
-  by 
+  by
   apply slice_eq _ _ _
   ext (i hid)
   rw [← slice_sum]
@@ -310,13 +312,14 @@ inductive CprankMax [Mul α] [AddMonoid α] : ℕ → ∀ {ds}, Holor α ds → 
     CprankMax1 x → cprank_max n y → cprank_max (n + 1) (x + y)
 #align holor.cprank_max Holor.CprankMax
 
-theorem cprank_max_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CprankMax 1 x := by
+theorem cprank_max_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CprankMax 1 x :=
+  by
   have h := CprankMax.succ 0 x 0 (CprankMax1.nil x) CprankMax.zero
   rwa [add_zero x, zero_add] at h
 #align holor.cprank_max_nil Holor.cprank_max_nil
 
 theorem cprank_max_1 [Monoid α] [AddMonoid α] {x : Holor α ds} (h : CprankMax1 x) : CprankMax 1 x :=
-  by 
+  by
   have h' := CprankMax.succ 0 x 0 h CprankMax.zero
   rwa [zero_add, add_zero] at h'
 #align holor.cprank_max_1 Holor.cprank_max_1
@@ -325,7 +328,8 @@ theorem cprank_max_add [Monoid α] [AddMonoid α] :
     ∀ {m : ℕ} {n : ℕ} {x : Holor α ds} {y : Holor α ds},
       CprankMax m x → CprankMax n y → CprankMax (m + n) (x + y)
   | 0, n, x, y, cprank_max.zero, hy => by simp [hy]
-  | m + 1, n, _, y, cprank_max.succ k x₁ x₂ hx₁ hx₂, hy => by
+  | m + 1, n, _, y, cprank_max.succ k x₁ x₂ hx₁ hx₂, hy =>
+    by
     simp only [add_comm, add_assoc]
     apply cprank_max.succ
     · assumption
@@ -335,7 +339,8 @@ theorem cprank_max_add [Monoid α] [AddMonoid α] :
 theorem cprank_max_mul [Ring α] :
     ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CprankMax n y → CprankMax n (x ⊗ y)
   | 0, x, _, cprank_max.zero => by simp [mul_zero x, cprank_max.zero]
-  | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ => by
+  | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ =>
+    by
     rw [mul_left_distrib]
     rw [Nat.add_comm]
     apply cprank_max_add
@@ -347,12 +352,13 @@ theorem cprank_max_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holo
     (∀ x ∈ s, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) :=
   letI := Classical.decEq β
   Finset.induction_on s (by simp [cprank_max.zero])
-    (by 
+    (by
       intro x s(h_x_notin_s : x ∉ s)ih h_cprank
       simp only [Finset.sum_insert h_x_notin_s, Finset.card_insert_of_not_mem h_x_notin_s]
       rw [Nat.right_distrib]
       simp only [Nat.one_mul, Nat.add_comm]
-      have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) := by
+      have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) :=
+        by
         apply ih
         intro (x : β)(h_x_in_s : x ∈ s)
         simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
@@ -361,7 +367,8 @@ theorem cprank_max_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holo
 
 theorem cprank_max_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CprankMax ds.Prod x
   | [], x => cprank_max_nil x
-  | d :: ds, x => by
+  | d :: ds, x =>
+    by
     have h_summands :
       ∀ i : { x // x ∈ Finset.range d },
         CprankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) :=

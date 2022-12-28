@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.regular_expressions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,8 @@ theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by
   induction x <;> simp [rmatch, match_epsilon, *]
 #align regular_expression.one_rmatch_iff RegularExpression.one_rmatch_iff
 
-theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] := by
+theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] :=
+  by
   cases' x with _ x
   decide
   cases x
@@ -224,7 +225,8 @@ theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] :
 #align regular_expression.char_rmatch_iff RegularExpression.char_rmatch_iff
 
 theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) :
-    (P + Q).rmatch x ↔ P.rmatch x ∨ Q.rmatch x := by
+    (P + Q).rmatch x ↔ P.rmatch x ∨ Q.rmatch x :=
+  by
   induction' x with _ _ ih generalizing P Q
   · simp only [rmatch, match_epsilon, Bool.or_coe_iff]
   · repeat' rw [rmatch]
@@ -233,7 +235,8 @@ theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) :
 #align regular_expression.add_rmatch_iff RegularExpression.add_rmatch_iff
 
 theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
-    (P * Q).rmatch x ↔ ∃ t u : List α, x = t ++ u ∧ P.rmatch t ∧ Q.rmatch u := by
+    (P * Q).rmatch x ↔ ∃ t u : List α, x = t ++ u ∧ P.rmatch t ∧ Q.rmatch u :=
+  by
   induction' x with a x ih generalizing P Q
   · rw [rmatch, match_epsilon]
     constructor
@@ -280,8 +283,9 @@ theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
 
 theorem star_rmatch_iff (P : RegularExpression α) :
     ∀ x : List α, (star P).rmatch x ↔ ∃ S : List (List α), x = S.join ∧ ∀ t ∈ S, t ≠ [] ∧ P.rmatch t
-  | x => by
-    have A : ∀ m n : ℕ, n < m + n + 1 := by 
+  | x =>
+    by
+    have A : ∀ m n : ℕ, n < m + n + 1 := by
       intro m n
       convert add_lt_add_of_le_of_lt (add_le_add (zero_le m) (le_refl n)) zero_lt_one
       simp
@@ -295,7 +299,8 @@ theorem star_rmatch_iff (P : RegularExpression α) :
         tauto
       · rw [rmatch, deriv, mul_rmatch_iff]
         rintro ⟨t, u, hs, ht, hu⟩
-        have hwf : u.length < (List.cons a x).length := by
+        have hwf : u.length < (List.cons a x).length :=
+          by
           rw [hs, List.length_cons, List.length_append]
           apply A
         rw [IH _ hwf] at hu
@@ -324,7 +329,8 @@ theorem star_rmatch_iff (P : RegularExpression α) :
             rw [rmatch] at helem
             convert helem.2
             exact hsum.1
-          · have hwf : U.join.length < (List.cons a x).length := by
+          · have hwf : U.join.length < (List.cons a x).length :=
+              by
               rw [hsum.1, hsum.2]
               simp only [List.length_append, List.length_join, List.length]
               apply A
@@ -337,28 +343,29 @@ theorem star_rmatch_iff (P : RegularExpression α) :
 
 @[simp]
 theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches :=
-  by 
+  by
   intro x
   induction P generalizing x
-  all_goals 
+  all_goals
     try rw [zero_def]
     try rw [one_def]
     try rw [plus_def]
     try rw [comp_def]
     rw [matches]
-  case zero => 
+  case zero =>
     rw [zero_rmatch]
     tauto
-  case epsilon => 
+  case epsilon =>
     rw [one_rmatch_iff]
     rfl
-  case char => 
+  case char =>
     rw [char_rmatch_iff]
     rfl
-  case plus _ _ ih₁ ih₂ => 
+  case plus _ _ ih₁ ih₂ =>
     rw [add_rmatch_iff, ih₁, ih₂]
     rfl
-  case comp P Q ih₁ ih₂ =>
+  case
+    comp P Q ih₁ ih₂ =>
     simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_left, Set.mem_image2,
       Set.image_prod]
     constructor
@@ -370,10 +377,10 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
       rw [← ih₁] at hmatch₁
       rw [← ih₂] at hmatch₂
       exact ⟨x, y, hsum.symm, hmatch₁, hmatch₂⟩
-  case star _ ih => 
+  case star _ ih =>
     rw [star_rmatch_iff, Language.star_def_nonempty]
     constructor
-    all_goals 
+    all_goals
       rintro ⟨S, hx, hS⟩
       refine' ⟨S, hx, _⟩
       intro y
@@ -384,7 +391,8 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
       tauto
 #align regular_expression.rmatch_iff_matches RegularExpression.rmatch_iff_matches
 
-instance (P : RegularExpression α) : DecidablePred P.matches := by
+instance (P : RegularExpression α) : DecidablePred P.matches :=
+  by
   intro x
   change Decidable (x ∈ P.matches)
   rw [← rmatch_iff_matches]
@@ -436,12 +444,12 @@ theorem matches_map (f : α → β) :
     ∀ P : RegularExpression α, (P.map f).matches = Language.map f P.matches
   | 0 => (map_zero _).symm
   | 1 => (map_one _).symm
-  | Char a => by 
+  | Char a => by
     rw [eq_comm]
     exact image_singleton
   | R + S => by simp only [matches_map, map, matches_add, map_add]
   | R * S => by simp only [matches_map, map, matches_mul, map_mul]
-  | star R => by 
+  | star R => by
     simp_rw [map, matches, matches_map]
     rw [Language.star_eq_supr_pow, Language.star_eq_supr_pow]
     simp_rw [← map_pow]

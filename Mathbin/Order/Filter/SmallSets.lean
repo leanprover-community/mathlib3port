@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.small_sets
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,8 @@ def smallSets (l : Filter α) : Filter (Set α) :=
   l.lift' powerset
 #align filter.small_sets Filter.smallSets
 
-theorem small_sets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) := by
+theorem small_sets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) :=
+  by
   simp_rw [generate_eq_binfi, small_sets, infᵢ_image]
   rfl
 #align filter.small_sets_eq_generate Filter.small_sets_eq_generate
@@ -118,7 +119,7 @@ theorem comap_small_sets (l : Filter β) (f : α → Set β) :
   comap_lift'_eq
 #align filter.comap_small_sets Filter.comap_small_sets
 
-theorem small_sets_infi {f : ι → Filter α} : (infi f).smallSets = ⨅ i, (f i).smallSets :=
+theorem small_sets_infi {f : ι → Filter α} : (infᵢ f).smallSets = ⨅ i, (f i).smallSets :=
   lift'_infi_of_map_univ powerset_inter powerset_univ
 #align filter.small_sets_infi Filter.small_sets_infi
 
@@ -131,7 +132,8 @@ instance small_sets_ne_bot (l : Filter α) : NeBot l.smallSets :=
 #align filter.small_sets_ne_bot Filter.small_sets_ne_bot
 
 theorem Tendsto.small_sets_mono {s t : α → Set β} (ht : Tendsto t la lb.smallSets)
-    (hst : ∀ᶠ x in la, s x ⊆ t x) : Tendsto s la lb.smallSets := by
+    (hst : ∀ᶠ x in la, s x ⊆ t x) : Tendsto s la lb.smallSets :=
+  by
   rw [tendsto_small_sets_iff] at ht⊢
   exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => subset.trans hst ht)
 #align filter.tendsto.small_sets_mono Filter.Tendsto.small_sets_mono

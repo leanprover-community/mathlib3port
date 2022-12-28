@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.special_functions.exponential
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ variable {𝕂 𝔸 : Type _} [NontriviallyNormedField 𝕂] [NormedRing 𝔸] [
 /-- The exponential in a Banach-algebra `𝔸` over a normed field `𝕂` has strict Fréchet-derivative
 `1 : 𝔸 →L[𝕂] 𝔸` at zero, as long as it converges on a neighborhood of zero. -/
 theorem hasStrictFderivAtExpZeroOfRadiusPos (h : 0 < (expSeries 𝕂 𝔸).radius) :
-    HasStrictFderivAt (exp 𝕂) (1 : 𝔸 →L[𝕂] 𝔸) 0 := by
+    HasStrictFderivAt (exp 𝕂) (1 : 𝔸 →L[𝕂] 𝔸) 0 :=
+  by
   convert (hasFpowerSeriesAtExpZeroOfRadiusPos h).HasStrictFderivAt
   ext x
   change x = expSeries 𝕂 𝔸 1 fun _ => x
@@ -88,13 +89,14 @@ characteristic zero has Fréchet-derivative `exp 𝕂 x • 1 : 𝔸 →L[𝕂] 
 disk of convergence. -/
 theorem hasFderivAtExpOfMemBall [CharZero 𝕂] {x : 𝔸}
     (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
-    HasFderivAt (exp 𝕂) (exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸) x := by
+    HasFderivAt (exp 𝕂) (exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
+  by
   have hpos : 0 < (expSeries 𝕂 𝔸).radius := (zero_le _).trans_lt hx
   rw [has_fderiv_at_iff_is_o_nhds_zero]
   suffices
     (fun h => exp 𝕂 x * (exp 𝕂 (0 + h) - exp 𝕂 0 - ContinuousLinearMap.id 𝕂 𝔸 h)) =ᶠ[𝓝 0] fun h =>
       exp 𝕂 (x + h) - exp 𝕂 x - exp 𝕂 x • ContinuousLinearMap.id 𝕂 𝔸 h
-    by 
+    by
     refine' (is_o.const_mul_left _ _).congr' this (eventually_eq.refl _ _)
     rw [← has_fderiv_at_iff_is_o_nhds_zero]
     exact hasFderivAtExpZeroOfRadiusPos hpos
@@ -216,7 +218,8 @@ end DerivROrC
 
 section Complex
 
-theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ := by
+theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ :=
+  by
   refine' funext fun x => _
   rw [Complex.exp, exp_eq_tsum_div]
   exact
@@ -227,7 +230,8 @@ end Complex
 
 section Real
 
-theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ := by
+theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ :=
+  by
   refine' funext fun x => _
   rw [Real.exp, Complex.exp_eq_exp_ℂ, ← exp_ℝ_ℂ_eq_exp_ℂ_ℂ, exp_eq_tsum, exp_eq_tsum_div, ←
     re_to_complex, ← re_clm_apply, re_clm.map_tsum (exp_series_summable' (x : ℂ))]

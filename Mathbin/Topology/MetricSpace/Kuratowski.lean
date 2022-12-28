@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.kuratowski
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,8 @@ variable {f g : ℓ_infty_ℝ} {n : ℕ} {C : ℝ} [MetricSpace α] (x : ℕ →
 a fixed countable set, if this set is dense. This map is given in `Kuratowski_embedding`,
 without density assumptions. -/
 def embeddingOfSubset : ℓ_infty_ℝ :=
-  ⟨fun n => dist a (x n) - dist (x 0) (x n), by
+  ⟨fun n => dist a (x n) - dist (x 0) (x n),
+    by
     apply memℓpInfty
     use dist a (x 0)
     rintro - ⟨n, rfl⟩
@@ -55,7 +56,8 @@ theorem embedding_of_subset_coe : embeddingOfSubset x a n = dist a (x n) - dist 
 
 /-- The embedding map is always a semi-contraction. -/
 theorem embedding_of_subset_dist_le (a b : α) :
-    dist (embeddingOfSubset x a) (embeddingOfSubset x b) ≤ dist a b := by
+    dist (embeddingOfSubset x a) (embeddingOfSubset x b) ≤ dist a b :=
+  by
   refine' lp.norm_le_of_forall_le dist_nonneg fun n => _
   simp only [lp.coe_fn_sub, Pi.sub_apply, embedding_of_subset_coe, Real.dist_eq]
   convert abs_dist_sub_le a b (x n) using 2
@@ -66,7 +68,8 @@ theorem embedding_of_subset_dist_le (a b : α) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add_left, ",", expr le_abs_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
-theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubset x) := by
+theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubset x) :=
+  by
   refine' Isometry.ofDistEq fun a b => _
   refine' (embedding_of_subset_dist_le x a b).antisymm (le_of_forall_pos_le_add fun e epos => _)
   -- First step: find n with dist a (x n) < e
@@ -77,7 +80,8 @@ theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubs
   have :=
     calc
       dist a b ≤ dist a (x n) + dist (x n) b := dist_triangle _ _ _
-      _ = 2 * dist a (x n) + (dist b (x n) - dist a (x n)) := by
+      _ = 2 * dist a (x n) + (dist b (x n) - dist a (x n)) :=
+        by
         simp [dist_comm]
         ring
       _ ≤ 2 * dist a (x n) + |dist b (x n) - dist a (x n)| := by
@@ -87,7 +91,8 @@ theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubs
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr hn.le, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error";
         norm_num
-      _ ≤ 2 * (e / 2) + dist (embedding_of_subset x b) (embedding_of_subset x a) := by
+      _ ≤ 2 * (e / 2) + dist (embedding_of_subset x b) (embedding_of_subset x a) :=
+        by
         have :
           |embedding_of_subset x b n - embedding_of_subset x a n| ≤
             dist (embedding_of_subset x b) (embedding_of_subset x a) :=
@@ -104,7 +109,8 @@ theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubs
 
 /-- Every separable metric space embeds isometrically in `ℓ_infty_ℝ`. -/
 theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] :
-    ∃ f : α → ℓ_infty_ℝ, Isometry f := by
+    ∃ f : α → ℓ_infty_ℝ, Isometry f :=
+  by
   cases' (univ : Set α).eq_empty_or_nonempty with h h
   · use fun _ => 0
     intro x
@@ -137,9 +143,8 @@ protected theorem kuratowskiEmbedding.isometry (α : Type u) [MetricSpace α] [S
 
 /-- Version of the Kuratowski embedding for nonempty compacts -/
 def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α]
-    [Nonempty α] :
-    NonemptyCompacts
-      ℓ_infty_ℝ where 
+    [Nonempty α] : NonemptyCompacts ℓ_infty_ℝ
+    where
   carrier := range (kuratowskiEmbedding α)
   is_compact' := is_compact_range (kuratowskiEmbedding.isometry α).Continuous
   nonempty' := range_nonempty _

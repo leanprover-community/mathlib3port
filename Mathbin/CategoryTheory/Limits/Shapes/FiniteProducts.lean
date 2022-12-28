@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.finite_products
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,8 @@ instance (priority := 10) hasFiniteProductsOfHasFiniteLimits [HasFiniteLimits C]
   category_theory.limits.has_finite_products_of_has_finite_limits CategoryTheory.Limits.hasFiniteProductsOfHasFiniteLimits
 
 instance hasLimitsOfShapeDiscrete [HasFiniteProducts C] (ι : Type w) [Finite ι] :
-    HasLimitsOfShape (Discrete ι) C := by
+    HasLimitsOfShape (Discrete ι) C :=
+  by
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_products.out C n
   exact has_limits_of_shape_of_equivalence (discrete.equivalence e.symm)
@@ -79,7 +80,8 @@ class HasFiniteCoproducts : Prop where
 attribute [class] has_finite_coproducts
 
 instance hasColimitsOfShapeDiscrete [HasFiniteCoproducts C] (ι : Type w) [Finite ι] :
-    HasColimitsOfShape (Discrete ι) C := by
+    HasColimitsOfShape (Discrete ι) C :=
+  by
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_coproducts.out C n
   exact has_colimits_of_shape_of_equivalence (discrete.equivalence e.symm)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.PartialFun
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,8 +62,8 @@ theorem coe_of (X : Type _) : ↥(of X) = X :=
 instance : Inhabited PartialFunCat :=
   ⟨Type _⟩
 
-instance largeCategory :
-    LargeCategory.{u} PartialFunCat where 
+instance largeCategory : LargeCategory.{u} PartialFunCat
+    where
   Hom := Pfun
   id := Pfun.id
   comp X Y Z f g := g.comp f
@@ -74,8 +74,8 @@ instance largeCategory :
 
 /-- Constructs a partial function isomorphism between types from an equivalence between them. -/
 @[simps]
-def Iso.mk {α β : PartialFunCat.{u}} (e : α ≃ β) :
-    α ≅ β where 
+def Iso.mk {α β : PartialFunCat.{u}} (e : α ≃ β) : α ≅ β
+    where
   Hom := e
   inv := e.symm
   hom_inv_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.symm_comp_self
@@ -85,7 +85,8 @@ def Iso.mk {α β : PartialFunCat.{u}} (e : α ≃ β) :
 end PartialFunCat
 
 /-- The forgetful functor from `Type` to `PartialFun` which forgets that the maps are total. -/
-def typeToPartialFun : Type u ⥤ PartialFunCat where 
+def typeToPartialFun : Type u ⥤ PartialFunCat
+    where
   obj := id
   map := @Pfun.lift
   map_comp' _ _ _ _ _ := Pfun.coe_comp _ _
@@ -97,14 +98,15 @@ instance : Faithful typeToPartialFun :=
 /-- The functor which deletes the point of a pointed type. In return, this makes the maps partial.
 This the computable part of the equivalence `PartialFun_equiv_Pointed`. -/
 @[simps map]
-def pointedToPartialFun :
-    PointedCat.{u} ⥤ PartialFunCat where 
+def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat
+    where
   obj X := { x : X // x ≠ X.point }
   map X Y f := Pfun.toSubtype _ f.toFun ∘ Subtype.val
   map_id' X :=
     Pfun.ext fun a b => Pfun.mem_to_subtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
   map_comp' X Y Z f g :=
-    Pfun.ext fun a c => by
+    Pfun.ext fun a c =>
+      by
       refine' (pfun.mem_to_subtype_iff.trans _).trans part.mem_bind_iff.symm
       simp_rw [Pfun.mem_to_subtype_iff, Subtype.exists]
       refine'
@@ -146,7 +148,7 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
                 right_inv := fun a => by
                   simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
           fun X Y f =>
-          Pfun.ext fun a b => by 
+          Pfun.ext fun a b => by
             unfold_projs
             dsimp
             rw [Part.bind_some]
@@ -165,7 +167,8 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
                   (Option.recOn a (dif_pos rfl)) fun a =>
                     (dif_neg a.2).trans <| by
                       simp only [Option.elim', Subtype.val_eq_coe, Subtype.coe_eta]
-                right_inv := fun a => by
+                right_inv := fun a =>
+                  by
                   change Option.elim' _ _ (dite _ _ _) = _
                   split_ifs
                   · rw [h]
@@ -175,7 +178,8 @@ noncomputable def partialFunEquivPointed : PartialFunCat.{u} ≌ PointedCat := b
           fun X Y f =>
           PointedCat.Hom.ext _ _ <|
             funext fun a =>
-              (Option.recOn a f.map_point.symm) fun a => by
+              (Option.recOn a f.map_point.symm) fun a =>
+                by
                 unfold_projs
                 dsimp
                 change Option.elim' _ _ _ = _

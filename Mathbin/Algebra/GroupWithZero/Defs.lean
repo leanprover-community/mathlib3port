@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,25 +73,17 @@ section IsLeftCancelMulZero
 
 variable [Mul M₀] [Zero M₀] [IsLeftCancelMulZero M₀] {a b c : M₀}
 
-/- warning: mul_left_cancel₀ -> mul_left_cancel₀ is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : Mul.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ _inst_1 _inst_2] {a : M₀} {b : M₀} {c : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ _inst_2)))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ _inst_1) a b) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ _inst_1) a c)) -> (Eq.{succ u1} M₀ b c)
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {_inst_2 : M₀} {_inst_3 : M₀} {a : M₀}, (Ne.{succ u1} M₀ _inst_2 (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) _inst_2 _inst_3) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) _inst_2 a)) -> (Eq.{succ u1} M₀ _inst_3 a)
-Case conversion may be inaccurate. Consider using '#align mul_left_cancel₀ mul_left_cancel₀ₓ'. -/
+#print mul_left_cancel₀ /-
 theorem mul_left_cancel₀ (ha : a ≠ 0) (h : a * b = a * c) : b = c :=
   IsLeftCancelMulZero.mul_left_cancel_of_ne_zero ha h
 #align mul_left_cancel₀ mul_left_cancel₀
+-/
 
-/- warning: mul_right_injective₀ -> mul_right_injective₀ is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : Mul.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsLeftCancelMulZero.{u1} M₀ _inst_1 _inst_2] {a : M₀}, (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ _inst_2)))) -> (Function.Injective.{succ u1, succ u1} M₀ M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ _inst_1) a))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {_inst_2 : M₀}, (Ne.{succ u1} M₀ _inst_2 (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Function.Injective.{succ u1, succ u1} M₀ M₀ ((fun (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.526 : M₀) (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.528 : M₀) => HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.526 x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.528) _inst_2))
-Case conversion may be inaccurate. Consider using '#align mul_right_injective₀ mul_right_injective₀ₓ'. -/
+#print mul_right_injective₀ /-
 theorem mul_right_injective₀ (ha : a ≠ 0) : Function.Injective ((· * ·) a) := fun b c =>
   mul_left_cancel₀ ha
 #align mul_right_injective₀ mul_right_injective₀
+-/
 
 end IsLeftCancelMulZero
 
@@ -107,25 +99,17 @@ section IsRightCancelMulZero
 
 variable [Mul M₀] [Zero M₀] [IsRightCancelMulZero M₀] {a b c : M₀}
 
-/- warning: mul_right_cancel₀ -> mul_right_cancel₀ is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : Mul.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ _inst_1 _inst_2] {a : M₀} {b : M₀} {c : M₀}, (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ _inst_2)))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ _inst_1) a b) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ _inst_1) c b)) -> (Eq.{succ u1} M₀ a c)
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {_inst_2 : M₀} {_inst_3 : M₀} {a : M₀}, (Ne.{succ u1} M₀ _inst_3 (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Eq.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) _inst_2 _inst_3) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a _inst_3)) -> (Eq.{succ u1} M₀ _inst_2 a)
-Case conversion may be inaccurate. Consider using '#align mul_right_cancel₀ mul_right_cancel₀ₓ'. -/
+#print mul_right_cancel₀ /-
 theorem mul_right_cancel₀ (hb : b ≠ 0) (h : a * b = c * b) : a = c :=
   IsRightCancelMulZero.mul_right_cancel_of_ne_zero hb h
 #align mul_right_cancel₀ mul_right_cancel₀
+-/
 
-/- warning: mul_left_injective₀ -> mul_left_injective₀ is a dubious translation:
-lean 3 declaration is
-  forall {M₀ : Type.{u1}} [_inst_1 : Mul.{u1} M₀] [_inst_2 : Zero.{u1} M₀] [_inst_3 : IsRightCancelMulZero.{u1} M₀ _inst_1 _inst_2] {b : M₀}, (Ne.{succ u1} M₀ b (OfNat.ofNat.{u1} M₀ 0 (OfNat.mk.{u1} M₀ 0 (Zero.zero.{u1} M₀ _inst_2)))) -> (Function.Injective.{succ u1, succ u1} M₀ M₀ (fun (a : M₀) => HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ _inst_1) a b))
-but is expected to have type
-  forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀] {_inst_2 : M₀}, (Ne.{succ u1} M₀ _inst_2 (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) -> (Function.Injective.{succ u1, succ u1} M₀ M₀ (fun (a : M₀) => HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))) a _inst_2))
-Case conversion may be inaccurate. Consider using '#align mul_left_injective₀ mul_left_injective₀ₓ'. -/
+#print mul_left_injective₀ /-
 theorem mul_left_injective₀ (hb : b ≠ 0) : Function.Injective fun a => a * b := fun a c =>
   mul_right_cancel₀ hb
 #align mul_left_injective₀ mul_left_injective₀
+-/
 
 end IsRightCancelMulZero
 
@@ -240,13 +224,11 @@ class CancelCommMonoidWithZero (M₀ : Type _) extends CommMonoidWithZero M₀ w
 #align cancel_comm_monoid_with_zero CancelCommMonoidWithZero
 -/
 
-#print CancelCommMonoidWithZero.toCancelMonoidWithZero /-
 instance (priority := 100) CancelCommMonoidWithZero.toCancelMonoidWithZero
     [h : CancelCommMonoidWithZero M₀] : CancelMonoidWithZero M₀ :=
   { h, @IsLeftCancelMulZero.to_is_right_cancel_mul_zero M₀ _ _ { h with } with }
 #align
   cancel_comm_monoid_with_zero.to_cancel_monoid_with_zero CancelCommMonoidWithZero.toCancelMonoidWithZero
--/
 
 #print GroupWithZero /-
 /-- A type `G₀` is a “group with zero” if it is a monoid with zero element (distinct from `1`)
@@ -310,7 +292,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ne_zero.one NeZero.oneₓ'. -/
 /-- In a nontrivial monoid with zero, zero and one are different. -/
 instance NeZero.one : NeZero (1 : M₀) :=
-  ⟨by 
+  ⟨by
     intro h
     rcases exists_pair_ne M₀ with ⟨x, y, hx⟩
     apply hx
@@ -334,7 +316,7 @@ Case conversion may be inaccurate. Consider using '#align pullback_nonzero pullb
 theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) :
     Nontrivial M₀' :=
   ⟨⟨0, 1,
-      mt (congr_arg f) <| by 
+      mt (congr_arg f) <| by
         rw [zero, one]
         exact zero_ne_one⟩⟩
 #align pullback_nonzero pullback_nonzero

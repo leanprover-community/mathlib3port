@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.ring.ulift
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring α] :
 
 instance nonAssocSemiring [NonAssocSemiring α] : NonAssocSemiring (ULift α) := by
   refine_struct
-      { ULift.addMonoidWithOne with 
+      { ULift.addMonoidWithOne with
         zero := (0 : ULift α)
         one := 1
         add := (· + ·)
@@ -75,7 +75,7 @@ instance nonUnitalSemiring [NonUnitalSemiring α] : NonUnitalSemiring (ULift α)
 
 instance semiring [Semiring α] : Semiring (ULift α) := by
   refine_struct
-      { ULift.addMonoidWithOne with 
+      { ULift.addMonoidWithOne with
         zero := (0 : ULift α)
         one := 1
         add := (· + ·)
@@ -87,8 +87,8 @@ instance semiring [Semiring α] : Semiring (ULift α) := by
 
 /-- The ring equivalence between `ulift α` and `α`.
 -/
-def ringEquiv [NonUnitalNonAssocSemiring α] :
-    ULift α ≃+* α where 
+def ringEquiv [NonUnitalNonAssocSemiring α] : ULift α ≃+* α
+    where
   toFun := ULift.down
   invFun := ULift.up
   map_mul' x y := rfl
@@ -108,7 +108,7 @@ instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemirin
 
 instance commSemiring [CommSemiring α] : CommSemiring (ULift α) := by
   refine_struct
-      { ULift.semiring with 
+      { ULift.semiring with
         zero := (0 : ULift α)
         one := 1
         add := (· + ·)
@@ -144,7 +144,7 @@ instance nonUnitalRing [NonUnitalRing α] : NonUnitalRing (ULift α) := by
 
 instance nonAssocRing [NonAssocRing α] : NonAssocRing (ULift α) := by
   refine_struct
-      { ULift.addGroupWithOne with 
+      { ULift.addGroupWithOne with
         zero := (0 : ULift α)
         one := 1
         add := (· + ·)
@@ -158,7 +158,8 @@ instance nonAssocRing [NonAssocRing α] : NonAssocRing (ULift α) := by
 
 instance ring [Ring α] : Ring (ULift α) := by
   refine_struct
-      { ULift.semiring, ULift.addGroupWithOne with
+      { ULift.semiring,
+        ULift.addGroupWithOne with
         zero := (0 : ULift α)
         one := 1
         add := (· + ·)
@@ -195,14 +196,17 @@ theorem rat_cast_down [HasRatCast α] (n : ℚ) : ULift.down (n : ULift α) = n 
   rfl
 #align ulift.rat_cast_down ULift.rat_cast_down
 
-instance field [Field α] : Field (ULift α) := by
-  have of_rat_mk : ∀ a b h1 h2, ((⟨a, b, h1, h2⟩ : ℚ) : ULift α) = ↑a * (↑b)⁻¹ := by
+instance field [Field α] : Field (ULift α) :=
+  by
+  have of_rat_mk : ∀ a b h1 h2, ((⟨a, b, h1, h2⟩ : ℚ) : ULift α) = ↑a * (↑b)⁻¹ :=
+    by
     intro a b h1 h2
     ext
     rw [rat_cast_down, mul_down, inv_down, nat_cast_down, int_cast_down]
     exact Field.rat_cast_mk a b h1 h2
   refine_struct
-      { @ULift.nontrivial α _, ULift.commRing with
+      { @ULift.nontrivial α _,
+        ULift.commRing with
         zero := (0 : ULift α)
         inv := Inv.inv
         div := Div.div

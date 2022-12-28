@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.extrema
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ open Classical TopologicalSpace
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) :
-    IsMinOn f (Icc a b) a := by 
+    IsMinOn f (Icc a b) a := by
   rintro c hc
   dsimp only [mem_set_of_eq]
   rw [IsLocalMinOn, nhds_within_Icc_eq_nhds_within_Ici a_lt_b] at h_local_min
@@ -55,7 +55,8 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
 /-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s : a ∈ s)
-    (h_localmin : IsLocalMinOn f s a) (h_conv : ConvexOn ℝ s f) : IsMinOn f s a := by
+    (h_localmin : IsLocalMinOn f s a) (h_conv : ConvexOn ℝ s f) : IsMinOn f s a :=
+  by
   intro x x_in_s
   let g : ℝ →ᵃ[ℝ] E := AffineMap.lineMap a x
   have hg0 : g 0 = a := AffineMap.line_map_apply_zero a x
@@ -63,10 +64,12 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s :
   have hgc : Continuous g := AffineMap.line_map_continuous
   have h_maps : maps_to g (Icc 0 1) s := by
     simpa only [maps_to', ← segment_eq_image_line_map] using h_conv.1.segment_subset a_in_s x_in_s
-  have fg_local_min_on : IsLocalMinOn (f ∘ g) (Icc 0 1) 0 := by
+  have fg_local_min_on : IsLocalMinOn (f ∘ g) (Icc 0 1) 0 :=
+    by
     rw [← hg0] at h_localmin
     exact h_localmin.comp_continuous_on h_maps hgc.continuous_on (left_mem_Icc.2 zero_le_one)
-  have fg_min_on : IsMinOn (f ∘ g) (Icc 0 1 : Set ℝ) 0 := by
+  have fg_min_on : IsMinOn (f ∘ g) (Icc 0 1 : Set ℝ) 0 :=
+    by
     refine' IsMinOn.of_is_local_min_on_of_convex_on_Icc one_pos fg_local_min_on _
     exact (h_conv.comp_affine_map g).Subset h_maps (convex_Icc 0 1)
   simpa only [hg0, hg1, comp_app, mem_set_of_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)

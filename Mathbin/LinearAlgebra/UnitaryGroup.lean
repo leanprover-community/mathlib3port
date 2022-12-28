@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module linear_algebra.unitary_group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,19 +67,19 @@ variable {n : Type u} [DecidableEq n] [Fintype n]
 variable {α : Type v} [CommRing α] [StarRing α]
 
 theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 :=
-  by 
+  by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
   simpa only [mul_eq_mul, mul_eq_one_comm] using hA
 #align matrix.mem_unitary_group_iff Matrix.mem_unitary_group_iff
 
 theorem mem_unitary_group_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 :=
-  by 
+  by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
   rwa [mul_eq_mul, mul_eq_one_comm] at hA
 #align matrix.mem_unitary_group_iff' Matrix.mem_unitary_group_iff'
 
 theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) :
-    A.det ∈ unitary α := by 
+    A.det ∈ unitary α := by
   constructor
   · simpa [star, det_transpose] using congr_arg det hA.1
   · simpa [star, det_transpose] using congr_arg det hA.2
@@ -165,7 +165,7 @@ end CoeLemmas
 
 /-- `to_linear_equiv A` is matrix multiplication of vectors by `A`, as a linear equivalence. -/
 def toLinearEquiv (A : unitaryGroup n α) : (n → α) ≃ₗ[α] n → α :=
-  { Matrix.toLin' A with 
+  { Matrix.toLin' A with
     invFun := toLin' A⁻¹
     left_inv := fun x =>
       calc
@@ -189,14 +189,16 @@ theorem coe_to_GL (A : unitaryGroup n α) : ↑(toGL A) = toLin' A :=
 #align matrix.unitary_group.coe_to_GL Matrix.unitaryGroup.coe_to_GL
 
 @[simp]
-theorem to_GL_one : toGL (1 : unitaryGroup n α) = 1 := by
+theorem to_GL_one : toGL (1 : unitaryGroup n α) = 1 :=
+  by
   ext1 v i
   rw [coe_to_GL, to_lin'_one]
   rfl
 #align matrix.unitary_group.to_GL_one Matrix.unitaryGroup.to_GL_one
 
 @[simp]
-theorem to_GL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B := by
+theorem to_GL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B :=
+  by
   ext1 v i
   rw [coe_to_GL, to_lin'_mul]
   rfl
@@ -223,13 +225,15 @@ abbrev orthogonalGroup :=
 #align matrix.orthogonal_group Matrix.orthogonalGroup
 
 theorem mem_orthogonal_group_iff {A : Matrix n n β} :
-    A ∈ Matrix.orthogonalGroup n β ↔ A * star A = 1 := by
+    A ∈ Matrix.orthogonalGroup n β ↔ A * star A = 1 :=
+  by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
   simpa only [mul_eq_mul, mul_eq_one_comm] using hA
 #align matrix.mem_orthogonal_group_iff Matrix.mem_orthogonal_group_iff
 
 theorem mem_orthogonal_group_iff' {A : Matrix n n β} :
-    A ∈ Matrix.orthogonalGroup n β ↔ star A * A = 1 := by
+    A ∈ Matrix.orthogonalGroup n β ↔ star A * A = 1 :=
+  by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
   rwa [mul_eq_mul, mul_eq_one_comm] at hA
 #align matrix.mem_orthogonal_group_iff' Matrix.mem_orthogonal_group_iff'

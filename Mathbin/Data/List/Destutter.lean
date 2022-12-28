@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.list.destutter
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,8 @@ theorem destutter'_singleton : [b].destutter' R a = if R a b then [a, b] else [a
   split_ifs <;> simp! [h]
 #align list.destutter'_singleton List.destutter'_singleton
 
-theorem destutter'_sublist (a) : l.destutter' R a <+ a :: l := by
+theorem destutter'_sublist (a) : l.destutter' R a <+ a :: l :=
+  by
   induction' l with b l hl generalizing a
   · simp
   rw [destutter']
@@ -73,7 +74,8 @@ theorem destutter'_sublist (a) : l.destutter' R a <+ a :: l := by
   · exact (hl a).trans ((l.sublist_cons b).cons_cons a)
 #align list.destutter'_sublist List.destutter'_sublist
 
-theorem mem_destutter' (a) : a ∈ l.destutter' R a := by
+theorem mem_destutter' (a) : a ∈ l.destutter' R a :=
+  by
   induction' l with b l hl
   · simp
   rw [destutter']
@@ -84,7 +86,7 @@ theorem mem_destutter' (a) : a ∈ l.destutter' R a := by
 
 theorem destutter'_is_chain : ∀ l : List α, ∀ {a b}, R a b → (l.destutter' R b).Chain R a
   | [], a, b, h => chain_singleton.mpr h
-  | c :: l, a, b, h => by 
+  | c :: l, a, b, h => by
     rw [destutter']
     split_ifs with hbc
     · rw [chain_cons]
@@ -92,7 +94,8 @@ theorem destutter'_is_chain : ∀ l : List α, ∀ {a b}, R a b → (l.destutter
     · exact destutter'_is_chain l h
 #align list.destutter'_is_chain List.destutter'_is_chain
 
-theorem destutter'_is_chain' (a) : (l.destutter' R a).Chain' R := by
+theorem destutter'_is_chain' (a) : (l.destutter' R a).Chain' R :=
+  by
   induction' l with b l hl generalizing a
   · simp
   rw [destutter']
@@ -101,7 +104,8 @@ theorem destutter'_is_chain' (a) : (l.destutter' R a).Chain' R := by
   · exact hl a
 #align list.destutter'_is_chain' List.destutter'_is_chain'
 
-theorem destutter'_of_chain (h : l.Chain R a) : l.destutter' R a = a :: l := by
+theorem destutter'_of_chain (h : l.Chain R a) : l.destutter' R a = a :: l :=
+  by
   induction' l with b l hb generalizing a
   · simp
   obtain ⟨h, hc⟩ := chain_cons.mp h
@@ -110,7 +114,7 @@ theorem destutter'_of_chain (h : l.Chain R a) : l.destutter' R a = a :: l := by
 
 @[simp]
 theorem destutter'_eq_self_iff (a) : l.destutter' R a = a :: l ↔ l.Chain R a :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rw [← chain', ← h]
     exact l.destutter'_is_chain' R a, destutter'_of_chain _ _⟩
 #align list.destutter'_eq_self_iff List.destutter'_eq_self_iff

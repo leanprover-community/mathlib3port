@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.surjective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,20 +27,23 @@ open TensorProduct Algebra.TensorProduct
 local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y =>
   Function.Surjective f
 
-theorem surjective_stable_under_composition : StableUnderComposition surjective := by
+theorem surjective_stable_under_composition : StableUnderComposition surjective :=
+  by
   introv R hf hg
   exact hg.comp hf
 #align ring_hom.surjective_stable_under_composition RingHom.surjective_stable_under_composition
 
-theorem surjective_respects_iso : RespectsIso surjective := by
+theorem surjective_respects_iso : RespectsIso surjective :=
+  by
   apply surjective_stable_under_composition.respects_iso
   intros
   exact e.surjective
 #align ring_hom.surjective_respects_iso RingHom.surjective_respects_iso
 
-theorem surjective_stable_under_base_change : StableUnderBaseChange surjective := by
+theorem surjective_stable_under_base_change : StableUnderBaseChange surjective :=
+  by
   refine' stable_under_base_change.mk _ surjective_respects_iso _
-  classical 
+  classical
     introv h x
     skip
     induction' x using TensorProduct.induction_on with x y x y ex ey
@@ -55,7 +58,8 @@ theorem surjective_stable_under_base_change : StableUnderBaseChange surjective :
 
 open BigOperators
 
-theorem surjective_of_localization_span : OfLocalizationSpan surjective := by
+theorem surjective_of_localization_span : OfLocalizationSpan surjective :=
+  by
   introv R hs H
   skip
   letI := f.to_algebra
@@ -64,7 +68,7 @@ theorem surjective_of_localization_span : OfLocalizationSpan surjective := by
   rintro x -
   obtain ⟨l, hl⟩ :=
     (Finsupp.mem_span_iff_total R s 1).mp
-      (show _ ∈ Ideal.span s by 
+      (show _ ∈ Ideal.span s by
         rw [hs]
         trivial)
   fapply

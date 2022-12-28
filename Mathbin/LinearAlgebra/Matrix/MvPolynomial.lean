@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.mv_polynomial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ variable (m R)
 
 /-- In a nontrivial ring, `matrix.mv_polynomial_X m m R` has non-zero determinant. -/
 theorem det_mv_polynomial_X_ne_zero [DecidableEq m] [Fintype m] [CommRing R] [Nontrivial R] :
-    det (mvPolynomialX m m R) ≠ 0 := by 
+    det (mvPolynomialX m m R) ≠ 0 := by
   intro h_det
   have := congr_arg Matrix.det (mv_polynomial_X_map_matrix_eval (1 : Matrix m m R))
   rw [det_one, ← RingHom.map_det, h_det, RingHom.map_zero] at this

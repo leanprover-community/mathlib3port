@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.projective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ open ModuleCat
 
 /-- The categorical notion of projective object agrees with the explicit module-theoretic notion. -/
 theorem IsProjective.iff_projective {R : Type u} [Ring R] {P : Type max u v} [AddCommGroup P]
-    [Module R P] : Module.Projective R P ↔ Projective (ModuleCat.of R P) := by
+    [Module R P] : Module.Projective R P ↔ Projective (ModuleCat.of R P) :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · letI : Module.Projective R ↥(ModuleCat.of R P) := h
     exact
@@ -56,10 +57,8 @@ theorem projective_of_free {ι : Type _} (b : Basis ι R M) : Projective M :=
 
 /-- The category of modules has enough projectives, since every module is a quotient of a free
     module. -/
-instance Module_enough_projectives :
-    EnoughProjectives
-      (ModuleCat.{max u v}
-        R) where presentation M :=
+instance Module_enough_projectives : EnoughProjectives (ModuleCat.{max u v} R)
+    where presentation M :=
     ⟨{  P := ModuleCat.of R (M →₀ R)
         Projective := projective_of_free Finsupp.basisSingleOne
         f := Finsupp.basisSingleOne.constr ℕ id

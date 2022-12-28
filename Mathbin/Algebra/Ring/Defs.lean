@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -569,8 +569,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocRing.{u1} α], HasDistribNeg.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α _inst_1)
 Case conversion may be inaccurate. Consider using '#align non_unital_non_assoc_ring.to_has_distrib_neg NonUnitalNonAssocRing.toHasDistribNegₓ'. -/
-instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg :
-    HasDistribNeg α where 
+instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg α
+    where
   neg := Neg.neg
   neg_neg := neg_neg
   neg_mul a b := eq_neg_of_add_eq_zero_left <| by rw [← right_distrib, add_left_neg, zero_mul]
@@ -687,7 +687,9 @@ variable [Ring α] {a b c d e : α}
 -- A (unital, associative) ring is a not-necessarily-unital ring 
 -- see Note [lower instance priority]
 instance (priority := 100) Ring.toNonUnitalRing : NonUnitalRing α :=
-  { ‹Ring α› with
+  {
+    ‹Ring
+        α› with
     zero_mul := fun a =>
       add_left_cancel <| show 0 * a + 0 * a = 0 * a + 0 by rw [← add_mul, zero_add, add_zero]
     mul_zero := fun a =>
@@ -699,7 +701,9 @@ instance (priority := 100) Ring.toNonUnitalRing : NonUnitalRing α :=
 -- A (unital, associative) ring is a not-necessarily-associative ring 
 -- see Note [lower instance priority]
 instance (priority := 100) Ring.toNonAssocRing : NonAssocRing α :=
-  { ‹Ring α› with
+  {
+    ‹Ring
+        α› with
     zero_mul := fun a =>
       add_left_cancel <| show 0 * a + 0 * a = 0 * a + 0 by rw [← add_mul, zero_add, add_zero]
     mul_zero := fun a =>
@@ -744,7 +748,7 @@ class CommRing (α : Type u) extends Ring α, CommMonoid α
 #print CommRing.toCommSemiring /-
 -- see Note [lower instance priority]
 instance (priority := 100) CommRing.toCommSemiring [s : CommRing α] : CommSemiring α :=
-  { s with 
+  { s with
     mul_zero := mul_zero
     zero_mul := zero_mul }
 #align comm_ring.to_comm_semiring CommRing.toCommSemiring
@@ -753,7 +757,7 @@ instance (priority := 100) CommRing.toCommSemiring [s : CommRing α] : CommSemir
 #print CommRing.toNonUnitalCommRing /-
 -- see Note [lower instance priority]
 instance (priority := 100) CommRing.toNonUnitalCommRing [s : CommRing α] : NonUnitalCommRing α :=
-  { s with 
+  { s with
     mul_zero := mul_zero
     zero_mul := zero_mul }
 #align comm_ring.to_non_unital_comm_ring CommRing.toNonUnitalCommRing

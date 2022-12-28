@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.category.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,14 +173,16 @@ infixr:80 " =≫ " => eq_whisker
 infixr:80 " ≫= " => whisker_eq
 
 #print CategoryTheory.eq_of_comp_left_eq /-
-theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} (h : Y ⟶ Z), f ≫ h = g ≫ h) : f = g := by
+theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} (h : Y ⟶ Z), f ≫ h = g ≫ h) : f = g :=
+  by
   convert w (𝟙 Y)
   tidy
 #align category_theory.eq_of_comp_left_eq CategoryTheory.eq_of_comp_left_eq
 -/
 
 #print CategoryTheory.eq_of_comp_right_eq /-
-theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ f = h ≫ g) : f = g := by
+theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ f = h ≫ g) : f = g :=
+  by
   convert w (𝟙 Y)
   tidy
 #align category_theory.eq_of_comp_right_eq CategoryTheory.eq_of_comp_right_eq
@@ -201,14 +203,16 @@ theorem eq_of_comp_right_eq' (f g : Y ⟶ Z)
 -/
 
 #print CategoryTheory.id_of_comp_left_id /-
-theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X := by
+theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X :=
+  by
   convert w (𝟙 X)
   tidy
 #align category_theory.id_of_comp_left_id CategoryTheory.id_of_comp_left_id
 -/
 
 #print CategoryTheory.id_of_comp_right_id /-
-theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f = g) : f = 𝟙 X := by
+theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f = g) : f = 𝟙 X :=
+  by
   convert w (𝟙 X)
   tidy
 #align category_theory.id_of_comp_right_id CategoryTheory.id_of_comp_right_id
@@ -281,21 +285,24 @@ theorem cancel_mono (f : X ⟶ Y) [Mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f �
 -/
 
 #print CategoryTheory.cancel_epi_id /-
-theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y := by
+theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y :=
+  by
   convert cancel_epi f
   simp
 #align category_theory.cancel_epi_id CategoryTheory.cancel_epi_id
 -/
 
 #print CategoryTheory.cancel_mono_id /-
-theorem cancel_mono_id (f : X ⟶ Y) [Mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X := by
+theorem cancel_mono_id (f : X ⟶ Y) [Mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X :=
+  by
   convert cancel_mono f
   simp
 #align category_theory.cancel_mono_id CategoryTheory.cancel_mono_id
 -/
 
 #print CategoryTheory.epi_comp /-
-theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [Epi f] (g : Y ⟶ Z) [Epi g] : Epi (f ≫ g) := by
+theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [Epi f] (g : Y ⟶ Z) [Epi g] : Epi (f ≫ g) :=
+  by
   constructor; intro Z a b w
   apply (cancel_epi g).1
   apply (cancel_epi f).1
@@ -304,7 +311,8 @@ theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [Epi f] (g : Y ⟶ Z) [Epi g] : Epi (
 -/
 
 #print CategoryTheory.mono_comp /-
-theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [Mono f] (g : Y ⟶ Z) [Mono g] : Mono (f ≫ g) := by
+theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [Mono f] (g : Y ⟶ Z) [Mono g] : Mono (f ≫ g) :=
+  by
   constructor; intro Z a b w
   apply (cancel_mono f).1
   apply (cancel_mono g).1
@@ -313,7 +321,8 @@ theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [Mono f] (g : Y ⟶ Z) [Mono g] : Mo
 -/
 
 #print CategoryTheory.mono_of_mono /-
-theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : Mono f := by
+theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : Mono f :=
+  by
   constructor; intro Z a b w
   replace w := congr_arg (fun k => k ≫ g) w
   dsimp at w
@@ -324,14 +333,15 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : 
 
 #print CategoryTheory.mono_of_mono_fac /-
 theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [Mono h] (w : f ≫ g = h) :
-    Mono f := by 
+    Mono f := by
   subst h
   exact mono_of_mono f g
 #align category_theory.mono_of_mono_fac CategoryTheory.mono_of_mono_fac
 -/
 
 #print CategoryTheory.epi_of_epi /-
-theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi g := by
+theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi g :=
+  by
   constructor; intro Z a b w
   replace w := congr_arg (fun k => f ≫ k) w
   dsimp at w
@@ -357,8 +367,8 @@ variable [Category.{v} C]
 universe u'
 
 #print CategoryTheory.uliftCategory /-
-instance uliftCategory :
-    Category.{v} (ULift.{u'} C) where 
+instance uliftCategory : Category.{v} (ULift.{u'} C)
+    where
   Hom X Y := X.down ⟶ Y.down
   id X := 𝟙 X.down
   comp _ _ _ f g := f ≫ g

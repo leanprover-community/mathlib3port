@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.normal_mono.equalizers
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ irreducible_def pullbackOfMono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] 
         
   HasLimit.mk
     { Cone :=
-        PullbackCone.mk a' b' <| by 
+        PullbackCone.mk a' b' <| by
           simp at ha' hb'
           rw [ha', hb']
       IsLimit :=
@@ -78,17 +78,18 @@ irreducible_def pullbackOfMono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] 
                   _ = 0 ≫ limits.prod.snd := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_mono a).1 <| by 
+            (cancel_mono a).1 <| by
               rw [kernel_fork.ι_of_ι] at ha'
               simp [ha', pullback_cone.condition s])
           (fun s =>
-            (cancel_mono b).1 <| by 
+            (cancel_mono b).1 <| by
               rw [kernel_fork.ι_of_ι] at hb'
               simp [hb'])
           fun s m h₁ h₂ =>
           (cancel_mono (kernel.ι (prod.lift f g))).1 <|
             calc
-              m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a := by
+              m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a :=
+                by
                 congr
                 exact ha'.symm
               _ = PullbackCone.fst s ≫ a := by rw [← category.assoc, h₁]
@@ -160,7 +161,8 @@ end
 /-- If a zero morphism is a cokernel of `f`, then `f` is an epimorphism. -/
 theorem epi_of_zero_cokernel {X Y : C} (f : X ⟶ Y) (Z : C)
     (l : IsColimit (CokernelCofork.ofπ (0 : Y ⟶ Z) (show f ≫ 0 = 0 by simp))) : Epi f :=
-  ⟨fun P u v huv => by
+  ⟨fun P u v huv =>
+    by
     obtain ⟨W, w, hw, hl⟩ := normal_mono_of_mono (equalizer.ι u v)
     obtain ⟨m, hm⟩ := equalizer.lift' f huv
     have hwf : f ≫ w = 0 := by rw [← hm, category.assoc, hw, comp_zero]
@@ -219,7 +221,7 @@ irreducible_def pushoutOfEpi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Ep
         
   HasColimit.mk
     { Cocone :=
-        PushoutCocone.mk a' b' <| by 
+        PushoutCocone.mk a' b' <| by
           simp only [cofork.π_of_π] at ha' hb'
           rw [ha', hb']
       IsColimit :=
@@ -243,17 +245,18 @@ irreducible_def pushoutOfEpi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Ep
                   _ = coprod.inr ≫ 0 := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
-            (cancel_epi a).1 <| by 
+            (cancel_epi a).1 <| by
               rw [cokernel_cofork.π_of_π] at ha'
               simp [reassoc_of ha', pushout_cocone.condition s])
           (fun s =>
-            (cancel_epi b).1 <| by 
+            (cancel_epi b).1 <| by
               rw [cokernel_cofork.π_of_π] at hb'
               simp [reassoc_of hb'])
           fun s m h₁ h₂ =>
           (cancel_epi (cokernel.π (coprod.desc f g))).1 <|
             calc
-              cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m := by
+              cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m :=
+                by
                 congr
                 exact ha'.symm
               _ = a ≫ PushoutCocone.inl s := by rw [category.assoc, h₁]
@@ -327,7 +330,8 @@ end
 /-- If a zero morphism is a kernel of `f`, then `f` is a monomorphism. -/
 theorem mono_of_zero_kernel {X Y : C} (f : X ⟶ Y) (Z : C)
     (l : IsLimit (KernelFork.ofι (0 : Z ⟶ X) (show 0 ≫ f = 0 by simp))) : Mono f :=
-  ⟨fun P u v huv => by
+  ⟨fun P u v huv =>
+    by
     obtain ⟨W, w, hw, hl⟩ := normal_epi_of_epi (coequalizer.π u v)
     obtain ⟨m, hm⟩ := coequalizer.desc' f huv
     have hwf : w ≫ f = 0 := by rw [← hm, reassoc_of hw, zero_comp]

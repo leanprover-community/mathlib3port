@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.multiset.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ
 theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a}
     (h : a ≠ a') :
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) :=
-  by 
+  by
   apply hfunext rfl
   rintro a'' _ rfl
   refine' hfunext (by rw [cons_swap]) fun ha₁ ha₂ _ => _
@@ -70,7 +70,7 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
   m.recOn {Pi.empty δ}
     (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
-    (by 
+    (by
       intro a a' m n
       by_cases eq : a = a'
       · subst Eq
@@ -119,7 +119,7 @@ theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
 protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
     Nodup s → (∀ a ∈ s, Nodup (t a)) → Nodup (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
-    (by 
+    (by
       intro a s ih hs ht
       have has : a ∉ s := by simp at hs <;> exact hs.1
       have hs : nodup s := by simp at hs <;> exact hs.2
@@ -137,7 +137,8 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
 
 @[simp]
 theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
-    (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f := by
+    (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f :=
+  by
   ext (a' h')
   by_cases a' = a
   · subst h
@@ -146,7 +147,8 @@ theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a')
 #align multiset.pi.cons_ext Multiset.pi.cons_ext
 
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
-    ∀ f : ∀ a ∈ m, δ a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a := by
+    ∀ f : ∀ a ∈ m, δ a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a :=
+  by
   intro f
   induction' m using Multiset.induction_on with a m ih
   · simpa using show f = pi.empty δ by funext a ha <;> exact ha.elim

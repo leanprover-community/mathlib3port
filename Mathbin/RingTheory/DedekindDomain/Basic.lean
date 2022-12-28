@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ namespace Ring
 theorem DimensionLeOne.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] :
     DimensionLeOne A := fun p nonzero prime =>
   haveI := Prime
-  IsPrime.to_maximal_ideal nonzero
+  IsPrime.toMaximalIdeal nonzero
 #align ring.dimension_le_one.principal_ideal_ring Ring.DimensionLeOne.principal_ideal_ring
 
 theorem DimensionLeOne.is_integral_closure (B : Type _) [CommRing B] [IsDomain B] [Nontrivial R]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.average
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,8 @@ theorem average_eq_integral [IsProbabilityMeasure μ] (f : α → E) : (⨍ x, f
 
 @[simp]
 theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) :
-    ((μ univ).toReal • ⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
+    ((μ univ).toReal • ⨍ x, f x ∂μ) = ∫ x, f x ∂μ :=
+  by
   cases' eq_or_ne μ 0 with hμ hμ
   · rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
   · rw [average_eq, smul_inv_smul₀]
@@ -150,7 +151,8 @@ theorem average_pair {f : α → E} {g : α → F} (hfi : Integrable f μ) (hgi 
 #align measure_theory.average_pair MeasureTheory.average_pair
 
 theorem measure_smul_set_average (f : α → E) {s : Set α} (h : μ s ≠ ∞) :
-    ((μ s).toReal • ⨍ x in s, f x ∂μ) = ∫ x in s, f x ∂μ := by
+    ((μ s).toReal • ⨍ x in s, f x ∂μ) = ∫ x in s, f x ∂μ :=
+  by
   haveI := Fact.mk h.lt_top
   rw [← measure_smul_average, restrict_apply_univ]
 #align measure_theory.measure_smul_set_average MeasureTheory.measure_smul_set_average
@@ -160,7 +162,7 @@ theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht
     (⨍ x in s ∪ t, f x ∂μ) =
       (((μ s).toReal / ((μ s).toReal + (μ t).toReal)) • ⨍ x in s, f x ∂μ) +
         ((μ t).toReal / ((μ s).toReal + (μ t).toReal)) • ⨍ x in t, f x ∂μ :=
-  by 
+  by
   haveI := Fact.mk hsμ.lt_top; haveI := Fact.mk htμ.lt_top
   rw [restrict_union₀ hd ht, average_add_measure hfs hft, restrict_apply_univ, restrict_apply_univ]
 #align measure_theory.average_union MeasureTheory.average_union
@@ -168,7 +170,8 @@ theorem average_union {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht
 theorem average_union_mem_open_segment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t)
     (ht : NullMeasurableSet t μ) (hs₀ : μ s ≠ 0) (ht₀ : μ t ≠ 0) (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞)
     (hfs : IntegrableOn f s μ) (hft : IntegrableOn f t μ) :
-    (⨍ x in s ∪ t, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in t, f x ∂μ) := by
+    (⨍ x in s ∪ t, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in t, f x ∂μ) :=
+  by
   replace hs₀ : 0 < (μ s).toReal; exact Ennreal.to_real_pos hs₀ hsμ
   replace ht₀ : 0 < (μ t).toReal; exact Ennreal.to_real_pos ht₀ htμ
   refine'
@@ -179,7 +182,8 @@ theorem average_union_mem_open_segment {f : α → E} {s t : Set α} (hd : AeDis
 theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t)
     (ht : NullMeasurableSet t μ) (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞) (hfs : IntegrableOn f s μ)
     (hft : IntegrableOn f t μ) :
-    (⨍ x in s ∪ t, f x ∂μ) ∈ [⨍ x in s, f x ∂μ -[ℝ] ⨍ x in t, f x ∂μ] := by
+    (⨍ x in s ∪ t, f x ∂μ) ∈ [⨍ x in s, f x ∂μ -[ℝ] ⨍ x in t, f x ∂μ] :=
+  by
   by_cases hse : μ s = 0
   · rw [← ae_eq_empty] at hse
     rw [restrict_congr_set (hse.union eventually_eq.rfl), empty_union]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.reflexive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 instance (B : D) :
     IsReflexivePair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
   IsReflexivePair.mk' (F.map (adj.Unit.app (G.obj B)))
-    (by 
+    (by
       rw [← F.map_comp, adj.right_triangle_components]
       apply F.map_id)
     adj.left_triangle_components
@@ -150,14 +150,16 @@ attribute [instance] has_reflexive_coequalizers.has_coeq
 attribute [instance] has_coreflexive_equalizers.has_eq
 
 theorem has_coequalizer_of_common_section [HasReflexiveCoequalizers C] {A B : C} {f g : A ⟶ B}
-    (r : B ⟶ A) (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : HasCoequalizer f g := by
+    (r : B ⟶ A) (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : HasCoequalizer f g :=
+  by
   letI := is_reflexive_pair.mk' r rf rg
   infer_instance
 #align
   category_theory.limits.has_coequalizer_of_common_section CategoryTheory.Limits.has_coequalizer_of_common_section
 
 theorem has_equalizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C} {f g : A ⟶ B}
-    (r : B ⟶ A) (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g := by
+    (r : B ⟶ A) (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g :=
+  by
   letI := is_coreflexive_pair.mk' r fr gr
   infer_instance
 #align

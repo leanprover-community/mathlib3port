@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.regular.pow
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,8 @@ theorem IsLeftRegular.pow (n : ℕ) (rla : IsLeftRegular a) : IsLeftRegular (a ^
 #align is_left_regular.pow IsLeftRegular.pow
 
 /-- Any power of a right-regular element is right-regular. -/
-theorem IsRightRegular.pow (n : ℕ) (rra : IsRightRegular a) : IsRightRegular (a ^ n) := by
+theorem IsRightRegular.pow (n : ℕ) (rra : IsRightRegular a) : IsRightRegular (a ^ n) :=
+  by
   rw [IsRightRegular, ← mul_right_iterate]
   exact rra.iterate n
 #align is_right_regular.pow IsRightRegular.pow
@@ -46,7 +47,8 @@ theorem IsRegular.pow (n : ℕ) (ra : IsRegular a) : IsRegular (a ^ n) :=
 #align is_regular.pow IsRegular.pow
 
 /-- An element `a` is left-regular if and only if a positive power of `a` is left-regular. -/
-theorem IsLeftRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsLeftRegular (a ^ n) ↔ IsLeftRegular a := by
+theorem IsLeftRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsLeftRegular (a ^ n) ↔ IsLeftRegular a :=
+  by
   refine' ⟨_, IsLeftRegular.pow n⟩
   rw [← Nat.succ_pred_eq_of_pos n0, pow_succ']
   exact IsLeftRegular.of_mul
@@ -54,7 +56,7 @@ theorem IsLeftRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsLeftRegular (a ^ n) ↔
 
 /-- An element `a` is right-regular if and only if a positive power of `a` is right-regular. -/
 theorem IsRightRegular.pow_iff {n : ℕ} (n0 : 0 < n) : IsRightRegular (a ^ n) ↔ IsRightRegular a :=
-  by 
+  by
   refine' ⟨_, IsRightRegular.pow n⟩
   rw [← Nat.succ_pred_eq_of_pos n0, pow_succ]
   exact IsRightRegular.of_mul

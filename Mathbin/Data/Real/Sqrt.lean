@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.sqrt
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,7 +204,8 @@ theorem sqrt_mul_self (h : 0 ≤ x) : sqrt (x * x) = x :=
   (mul_self_inj_of_nonneg (sqrt_nonneg _) h).1 (mul_self_sqrt (mul_self_nonneg _))
 #align real.sqrt_mul_self Real.sqrt_mul_self
 
-theorem sqrt_eq_cases : sqrt x = y ↔ y * y = x ∧ 0 ≤ y ∨ x < 0 ∧ y = 0 := by
+theorem sqrt_eq_cases : sqrt x = y ↔ y * y = x ∧ 0 ≤ y ∨ x < 0 ∧ y = 0 :=
+  by
   constructor
   · rintro rfl
     cases' le_or_lt 0 x with hle hlt
@@ -271,7 +272,8 @@ theorem sqrt_lt_sqrt_iff_of_pos (hy : 0 < y) : sqrt x < sqrt y ↔ x < y := by
   rw [sqrt, sqrt, Nnreal.coe_lt_coe, Nnreal.sqrt_lt_sqrt_iff, to_nnreal_lt_to_nnreal_iff hy]
 #align real.sqrt_lt_sqrt_iff_of_pos Real.sqrt_lt_sqrt_iff_of_pos
 
-theorem sqrt_le_sqrt (h : x ≤ y) : sqrt x ≤ sqrt y := by
+theorem sqrt_le_sqrt (h : x ≤ y) : sqrt x ≤ sqrt y :=
+  by
   rw [sqrt, sqrt, Nnreal.coe_le_coe, Nnreal.sqrt_le_sqrt_iff]
   exact to_nnreal_le_to_nnreal h
 #align real.sqrt_le_sqrt Real.sqrt_le_sqrt
@@ -285,7 +287,8 @@ theorem sqrt_le_left (hy : 0 ≤ y) : sqrt x ≤ y ↔ x ≤ y ^ 2 := by
     Real.to_nnreal_le_to_nnreal_iff (mul_self_nonneg y), sq]
 #align real.sqrt_le_left Real.sqrt_le_left
 
-theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by
+theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 :=
+  by
   rw [← and_iff_right_of_imp fun h => (sqrt_nonneg x).trans h, and_congr_right_iff]
   exact sqrt_le_left
 #align real.sqrt_le_iff Real.sqrt_le_iff
@@ -312,7 +315,8 @@ theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y := by
   rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
 #align real.abs_le_sqrt Real.abs_le_sqrt
 
-theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y := by
+theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y :=
+  by
   constructor
   · simpa only [abs_le] using abs_le_sqrt
   · rw [← abs_le, ← sq_abs]
@@ -395,7 +399,8 @@ theorem sqrt_div (hx : 0 ≤ x) (y : ℝ) : sqrt (x / y) = sqrt x / sqrt y := by
 #align real.sqrt_div Real.sqrt_div
 
 @[simp]
-theorem div_sqrt : x / sqrt x = sqrt x := by
+theorem div_sqrt : x / sqrt x = sqrt x :=
+  by
   cases le_or_lt x 0
   · rw [sqrt_eq_zero'.mpr h, div_zero]
   · rw [div_eq_iff (sqrt_ne_zero'.mpr h), mul_self_sqrt h.le]
@@ -423,20 +428,23 @@ theorem lt_sqrt_of_sq_lt (h : x ^ 2 < y) : x < sqrt y :=
   (sq_lt.mp h).2
 #align real.lt_sqrt_of_sq_lt Real.lt_sqrt_of_sq_lt
 
-theorem lt_sq_of_sqrt_lt {x y : ℝ} (h : sqrt x < y) : x < y ^ 2 := by
+theorem lt_sq_of_sqrt_lt {x y : ℝ} (h : sqrt x < y) : x < y ^ 2 :=
+  by
   have hy := x.sqrt_nonneg.trans_lt h
   rwa [← sqrt_lt_sqrt_iff_of_pos (sq_pos_of_pos hy), sqrt_sq hy.le]
 #align real.lt_sq_of_sqrt_lt Real.lt_sq_of_sqrt_lt
 
 /-- The natural square root is at most the real square root -/
-theorem nat_sqrt_le_real_sqrt {a : ℕ} : ↑(Nat.sqrt a) ≤ Real.sqrt ↑a := by
+theorem nat_sqrt_le_real_sqrt {a : ℕ} : ↑(Nat.sqrt a) ≤ Real.sqrt ↑a :=
+  by
   rw [Real.le_sqrt (Nat.cast_nonneg _) (Nat.cast_nonneg _)]
   norm_cast
   exact Nat.sqrt_le' a
 #align real.nat_sqrt_le_real_sqrt Real.nat_sqrt_le_real_sqrt
 
 /-- The real square root is at most the natural square root plus one -/
-theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1 := by
+theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1 :=
+  by
   rw [Real.sqrt_le_iff]
   constructor
   · norm_cast
@@ -447,7 +455,8 @@ theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1
 
 instance : StarOrderedRing ℝ :=
   { Real.orderedAddCommGroup with
-    nonneg_iff := fun r => by
+    nonneg_iff := fun r =>
+      by
       refine'
         ⟨fun hr => ⟨sqrt r, show r = sqrt r * sqrt r by rw [← sqrt_mul hr, sqrt_mul_self hr]⟩, _⟩
       rintro ⟨s, rfl⟩

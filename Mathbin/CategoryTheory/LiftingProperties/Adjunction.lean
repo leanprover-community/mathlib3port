@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.lifting_properties.adjunction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,27 +43,25 @@ include sq
 map is of the form `G.map i` and the right map is `p` has an "adjoint" commutative
 square whose left map is `i` and whose right map is `F.map p`. -/
 theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ _ v) :=
-  ⟨by 
+  ⟨by
     simp only [adjunction.hom_equiv_unit, assoc, ← F.map_comp, sq.w]
     rw [F.map_comp, adjunction.unit_naturality_assoc]⟩
 #align category_theory.comm_sq.right_adjoint CategoryTheory.CommSq.right_adjoint
 
 /-- The liftings of a commutative are in bijection with the liftings of its (right)
 adjoint square. -/
-def rightAdjointLiftStructEquiv :
-    sq.LiftStruct ≃
-      (sq.rightAdjoint
-          adj).LiftStruct where 
+def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftStruct
+    where
   toFun l :=
     { l := adj.homEquiv _ _ l.l
       fac_left' := by rw [← adj.hom_equiv_naturality_left, l.fac_left]
       fac_right' := by rw [← adjunction.hom_equiv_naturality_right, l.fac_right] }
   invFun l :=
     { l := (adj.homEquiv _ _).symm l.l
-      fac_left' := by 
+      fac_left' := by
         rw [← adjunction.hom_equiv_naturality_left_symm, l.fac_left]
         apply (adj.hom_equiv _ _).left_inv
-      fac_right' := by 
+      fac_right' := by
         rw [← adjunction.hom_equiv_naturality_right_symm, l.fac_right]
         apply (adj.hom_equiv _ _).left_inv }
   left_inv := by tidy
@@ -72,13 +70,15 @@ def rightAdjointLiftStructEquiv :
   category_theory.comm_sq.right_adjoint_lift_struct_equiv CategoryTheory.CommSq.rightAdjointLiftStructEquiv
 
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
-theorem right_adjoint_has_lift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq := by
+theorem right_adjoint_has_lift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq :=
+  by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
 #align
   category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_has_lift_iff
 
-instance [HasLift sq] : HasLift (sq.rightAdjoint adj) := by
+instance [HasLift sq] : HasLift (sq.rightAdjoint adj) :=
+  by
   rw [right_adjoint_has_lift_iff]
   infer_instance
 
@@ -95,27 +95,25 @@ include sq
 map is of the form `i` and the right map is `F.map p` has an "adjoint" commutative
 square whose left map is `G.map i` and whose right map is `p`. -/
 theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homEquiv _ _).symm v) :=
-  ⟨by 
+  ⟨by
     simp only [adjunction.hom_equiv_counit, assoc, ← G.map_comp_assoc, ← sq.w]
     rw [G.map_comp, assoc, adjunction.counit_naturality]⟩
 #align category_theory.comm_sq.left_adjoint CategoryTheory.CommSq.left_adjoint
 
 /-- The liftings of a commutative are in bijection with the liftings of its (left)
 adjoint square. -/
-def leftAdjointLiftStructEquiv :
-    sq.LiftStruct ≃
-      (sq.leftAdjoint
-          adj).LiftStruct where 
+def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStruct
+    where
   toFun l :=
     { l := (adj.homEquiv _ _).symm l.l
       fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left]
       fac_right' := by rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
   invFun l :=
     { l := (adj.homEquiv _ _) l.l
-      fac_left' := by 
+      fac_left' := by
         rw [← adj.hom_equiv_naturality_left, l.fac_left]
         apply (adj.hom_equiv _ _).right_inv
-      fac_right' := by 
+      fac_right' := by
         rw [← adj.hom_equiv_naturality_right, l.fac_right]
         apply (adj.hom_equiv _ _).right_inv }
   left_inv := by tidy
@@ -124,13 +122,15 @@ def leftAdjointLiftStructEquiv :
   category_theory.comm_sq.left_adjoint_lift_struct_equiv CategoryTheory.CommSq.leftAdjointLiftStructEquiv
 
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
-theorem left_adjoint_has_lift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq := by
+theorem left_adjoint_has_lift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq :=
+  by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
 #align
   category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_has_lift_iff
 
-instance [HasLift sq] : HasLift (sq.leftAdjoint adj) := by
+instance [HasLift sq] : HasLift (sq.leftAdjoint adj) :=
+  by
   rw [left_adjoint_has_lift_iff]
   infer_instance
 
@@ -141,7 +141,8 @@ end CommSq
 namespace Adjunction
 
 theorem has_lifting_property_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ B) (p : X ⟶ Y) :
-    HasLiftingProperty (G.map i) p ↔ HasLiftingProperty i (F.map p) := by
+    HasLiftingProperty (G.map i) p ↔ HasLiftingProperty i (F.map p) :=
+  by
   constructor <;> intro <;> constructor <;> intro f g sq
   · rw [← sq.left_adjoint_has_lift_iff adj]
     infer_instance

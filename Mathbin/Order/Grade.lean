@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Vladimir Ivanov
 
 ! This file was ported from Lean 3 source module order.grade
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,8 +228,8 @@ end PartialOrder
 
 variable [Preorder 𝕆] [Preorder ℙ] [Preorder α] [Preorder β]
 
-instance Preorder.toGradeBoundedOrder :
-    GradeBoundedOrder α α where 
+instance Preorder.toGradeBoundedOrder : GradeBoundedOrder α α
+    where
   grade := id
   is_min_grade _ := id
   is_max_grade _ := id
@@ -245,8 +245,8 @@ theorem grade_self (a : α) : grade α a = a :=
 /-! #### Dual -/
 
 
-instance [GradeOrder 𝕆 α] :
-    GradeOrder 𝕆ᵒᵈ αᵒᵈ where 
+instance [GradeOrder 𝕆 α] : GradeOrder 𝕆ᵒᵈ αᵒᵈ
+    where
   grade := to_dual ∘ grade 𝕆 ∘ of_dual
   grade_strict_mono := grade_strict_mono.dual
   covby_grade a b h := (h.ofDual.grade _).toDual
@@ -277,8 +277,8 @@ theorem grade_of_dual [GradeOrder 𝕆 α] (a : αᵒᵈ) : grade 𝕆 (ofDual a
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
 def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f)
-    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
-    GradeOrder ℙ α where 
+    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder ℙ α
+    where
   grade := f ∘ grade 𝕆
   grade_strict_mono := hf.comp grade_strict_mono
   covby_grade a b h := hcovby _ _ <| h.grade _
@@ -313,8 +313,8 @@ def GradeBoundedOrder.liftLeft [GradeBoundedOrder 𝕆 α] (f : 𝕆 → ℙ) (h
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
 def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMono f)
-    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) :
-    GradeOrder 𝕆 α where 
+    (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder 𝕆 α
+    where
   grade := grade 𝕆 ∘ f
   grade_strict_mono := grade_strict_mono.comp hf
   covby_grade a b h := (hcovby _ _ h).grade _
@@ -362,7 +362,7 @@ inferrable. -/
 @[reducible]
 def GradeMinOrder.finToNat (n : ℕ) [GradeMinOrder (Fin n) α] : GradeMinOrder ℕ α :=
   (GradeMinOrder.liftLeft (_ : Fin n → ℕ) Fin.coe_strict_mono fun _ _ => Covby.coe_fin) fun a h =>
-    by 
+    by
     cases n
     · exact ((@Fin.elim0 fun _ => False) <| grade (Fin 0) a).elim
     rw [h.eq_bot, Fin.bot_eq_zero]

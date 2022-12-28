@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.center
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ variable (M : Type _) [Monoid M]
 /-- The center of a monoid `M` is the set of elements that commute with everything in `M` -/
 @[to_additive
       "The center of a monoid `M` is the set of elements that commute with everything in\n`M`"]
-def center : Submonoid M where 
+def center : Submonoid M where
   carrier := Set.center M
   one_mem' := Set.one_mem_center M
   mul_mem' a b := Set.mul_mem_center
@@ -73,8 +73,8 @@ instance : CommMonoid (center M) :=
   { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
 
 /-- The center of a monoid acts commutatively on that monoid. -/
-instance center.smul_comm_class_left :
-    SMulCommClass (center M) M M where smul_comm m x y := (Commute.left_comm (m.Prop x) y).symm
+instance center.smul_comm_class_left : SMulCommClass (center M) M M
+    where smul_comm m x y := (Commute.left_comm (m.Prop x) y).symm
 #align submonoid.center.smul_comm_class_left Submonoid.center.smul_comm_class_left
 
 /-- The center of a monoid acts commutatively on that monoid. -/

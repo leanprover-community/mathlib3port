@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.prod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,9 +189,8 @@ instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarT
   ⟨fun x y z => mk.inj_iff.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 
 @[to_additive]
-instance [SMulCommClass M N α] [SMulCommClass M N β] :
-    SMulCommClass M N
-      (α × β) where smul_comm r s x := mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
+instance [SMulCommClass M N α] [SMulCommClass M N β] : SMulCommClass M N (α × β)
+    where smul_comm r s x := mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩
 
 @[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] :
@@ -250,10 +249,8 @@ instance isScalarTowerBoth [Mul N] [Mul P] [HasSmul M N] [HasSmul M P] [IsScalar
 #align prod.is_scalar_tower_both Prod.isScalarTowerBoth
 
 @[to_additive]
-instance {m : Monoid M} [MulAction M α] [MulAction M β] :
-    MulAction M
-      (α ×
-        β) where 
+instance {m : Monoid M} [MulAction M α] [MulAction M β] : MulAction M (α × β)
+    where
   mul_smul a₁ a₂ p := mk.inj_iff.mpr ⟨mul_smul _ _ _, mul_smul _ _ _⟩
   one_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨one_smul _ _, one_smul _ _⟩
 
@@ -268,10 +265,8 @@ instance {R M N : Type _} {r : Monoid R} [AddMonoid M] [AddMonoid N] [DistribMul
   { Prod.distribSmul with }
 
 instance {R M N : Type _} {r : Monoid R} [Monoid M] [Monoid N] [MulDistribMulAction R M]
-    [MulDistribMulAction R N] :
-    MulDistribMulAction R
-      (M ×
-        N) where 
+    [MulDistribMulAction R N] : MulDistribMulAction R (M × N)
+    where
   smul_mul a p₁ p₂ := mk.inj_iff.mpr ⟨smul_mul' _ _ _, smul_mul' _ _ _⟩
   smul_one a := mk.inj_iff.mpr ⟨smul_one _, smul_one _⟩
 
@@ -291,7 +286,7 @@ Case conversion may be inaccurate. Consider using '#align smul_mul_hom smulMulHo
 /-- Scalar multiplication as a multiplicative homomorphism. -/
 @[simps]
 def smulMulHom [Monoid α] [Mul β] [MulAction α β] [IsScalarTower α β β] [SMulCommClass α β β] :
-    α × β →ₙ* β where 
+    α × β →ₙ* β where
   toFun a := a.1 • a.2
   map_mul' a b := (smul_mul_smul _ _ _ _).symm
 #align smul_mul_hom smulMulHom

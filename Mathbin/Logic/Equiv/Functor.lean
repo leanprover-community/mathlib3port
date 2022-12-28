@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module logic.equiv.functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,10 +35,10 @@ open Equiv
 
 namespace Functor
 
-variable (f : Type u → Type v) [Functor f] [IsLawfulFunctor f]
+variable (f : Type u → Type v) [Functor f] [LawfulFunctor f]
 
 /-- Apply a functor to an `equiv`. -/
-def mapEquiv (h : α ≃ β) : f α ≃ f β where 
+def mapEquiv (h : α ≃ β) : f α ≃ f β where
   toFun := map h
   invFun := map h.symm
   left_inv x := by simp [map_map]
@@ -47,7 +47,7 @@ def mapEquiv (h : α ≃ β) : f α ≃ f β where
 
 /- warning: functor.map_equiv_apply -> Functor.map_equiv_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : IsLawfulFunctor.{u1, u2} f _inst_1] (h : Equiv.{succ u1, succ u1} α β) (x : f α), Eq.{succ u2} (f β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (f α) (f β)) (fun (_x : Equiv.{succ u2, succ u2} (f α) (f β)) => (f α) -> (f β)) (Equiv.hasCoeToFun.{succ u2, succ u2} (f α) (f β)) (Functor.mapEquiv.{u1, u2} α β f _inst_1 _inst_2 h) x) (Functor.map.{u1, u2} f _inst_1 α β (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α β) (fun (_x : Equiv.{succ u1, succ u1} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u1} α β) h) x)
+  forall {α : Type.{u1}} {β : Type.{u1}} (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : LawfulFunctor.{u1, u2} f _inst_1] (h : Equiv.{succ u1, succ u1} α β) (x : f α), Eq.{succ u2} (f β) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (f α) (f β)) (fun (_x : Equiv.{succ u2, succ u2} (f α) (f β)) => (f α) -> (f β)) (Equiv.hasCoeToFun.{succ u2, succ u2} (f α) (f β)) (Functor.mapEquiv.{u1, u2} α β f _inst_1 _inst_2 h) x) (Functor.map.{u1, u2} f _inst_1 α β (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α β) (fun (_x : Equiv.{succ u1, succ u1} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u1} α β) h) x)
 but is expected to have type
   forall (α : Type.{u1} -> Type.{u2}) [β : Functor.{u1, u2} α] [f : LawfulFunctor.{u1, u2} α β] {_inst_1 : Type.{u1}} {_inst_2 : Type.{u1}} (h : Equiv.{succ u1, succ u1} _inst_1 _inst_2) (x : α _inst_1), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α _inst_1) => α _inst_2) x) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (α _inst_1) (α _inst_2)) (α _inst_1) (fun (_x : α _inst_1) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α _inst_1) => α _inst_2) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (α _inst_1) (α _inst_2)) (α _inst_1) (α _inst_2) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (α _inst_1) (α _inst_2)) (α _inst_1) (α _inst_2) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (α _inst_1) (α _inst_2)))) (Functor.map_equiv.{u1, u2} α β f _inst_1 _inst_2 h) x) (Functor.map.{u1, u2} α β _inst_1 _inst_2 (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} _inst_1 _inst_2) _inst_1 (fun (_x : _inst_1) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : _inst_1) => _inst_2) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} _inst_1 _inst_2) _inst_1 _inst_2 (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} _inst_1 _inst_2) _inst_1 _inst_2 (Equiv.instEquivLikeEquiv.{succ u1, succ u1} _inst_1 _inst_2))) h) x)
 Case conversion may be inaccurate. Consider using '#align functor.map_equiv_apply Functor.map_equiv_applyₓ'. -/
@@ -58,7 +58,7 @@ theorem map_equiv_apply (h : α ≃ β) (x : f α) : (mapEquiv f h : f α ≃ f 
 
 /- warning: functor.map_equiv_symm_apply -> Functor.map_equiv_symm_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u1}} (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : IsLawfulFunctor.{u1, u2} f _inst_1] (h : Equiv.{succ u1, succ u1} α β) (y : f β), Eq.{succ u2} (f α) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (f β) (f α)) (fun (_x : Equiv.{succ u2, succ u2} (f β) (f α)) => (f β) -> (f α)) (Equiv.hasCoeToFun.{succ u2, succ u2} (f β) (f α)) (Equiv.symm.{succ u2, succ u2} (f α) (f β) (Functor.mapEquiv.{u1, u2} α β f _inst_1 _inst_2 h)) y) (Functor.map.{u1, u2} f _inst_1 β α (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} β α) (fun (_x : Equiv.{succ u1, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} β α) (Equiv.symm.{succ u1, succ u1} α β h)) y)
+  forall {α : Type.{u1}} {β : Type.{u1}} (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : LawfulFunctor.{u1, u2} f _inst_1] (h : Equiv.{succ u1, succ u1} α β) (y : f β), Eq.{succ u2} (f α) (coeFn.{succ u2, succ u2} (Equiv.{succ u2, succ u2} (f β) (f α)) (fun (_x : Equiv.{succ u2, succ u2} (f β) (f α)) => (f β) -> (f α)) (Equiv.hasCoeToFun.{succ u2, succ u2} (f β) (f α)) (Equiv.symm.{succ u2, succ u2} (f α) (f β) (Functor.mapEquiv.{u1, u2} α β f _inst_1 _inst_2 h)) y) (Functor.map.{u1, u2} f _inst_1 β α (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} β α) (fun (_x : Equiv.{succ u1, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} β α) (Equiv.symm.{succ u1, succ u1} α β h)) y)
 but is expected to have type
   forall (α : Type.{u1} -> Type.{u2}) [β : Functor.{u1, u2} α] [f : LawfulFunctor.{u1, u2} α β] {_inst_1 : Type.{u1}} {_inst_2 : Type.{u1}} (h : Equiv.{succ u1, succ u1} _inst_1 _inst_2) (y : α _inst_2), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α _inst_2) => α _inst_1) y) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (α _inst_2) (α _inst_1)) (α _inst_2) (fun (_x : α _inst_2) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α _inst_2) => α _inst_1) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (α _inst_2) (α _inst_1)) (α _inst_2) (α _inst_1) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (α _inst_2) (α _inst_1)) (α _inst_2) (α _inst_1) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (α _inst_2) (α _inst_1)))) (Equiv.symm.{succ u2, succ u2} (α _inst_1) (α _inst_2) (Functor.map_equiv.{u1, u2} α β f _inst_1 _inst_2 h)) y) (Functor.map.{u1, u2} α β _inst_2 _inst_1 (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} _inst_2 _inst_1) _inst_2 (fun (_x : _inst_2) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : _inst_2) => _inst_1) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} _inst_2 _inst_1) _inst_2 _inst_1 (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} _inst_2 _inst_1) _inst_2 _inst_1 (Equiv.instEquivLikeEquiv.{succ u1, succ u1} _inst_2 _inst_1))) (Equiv.symm.{succ u1, succ u1} _inst_1 _inst_2 h)) y)
 Case conversion may be inaccurate. Consider using '#align functor.map_equiv_symm_apply Functor.map_equiv_symm_applyₓ'. -/
@@ -69,10 +69,11 @@ theorem map_equiv_symm_apply (h : α ≃ β) (y : f β) :
 #align functor.map_equiv_symm_apply Functor.map_equiv_symm_apply
 
 @[simp]
-theorem map_equiv_refl : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) := by
+theorem map_equiv_refl : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) :=
+  by
   ext x
   simp only [map_equiv_apply, refl_apply]
-  exact IsLawfulFunctor.id_map x
+  exact LawfulFunctor.id_map x
 #align functor.map_equiv_refl Functor.map_equiv_refl
 
 end Functor
@@ -82,8 +83,8 @@ namespace Bifunctor
 variable {α' β' : Type v} (F : Type u → Type v → Type w) [Bifunctor F] [IsLawfulBifunctor F]
 
 /-- Apply a bifunctor to a pair of `equiv`s. -/
-def mapEquiv (h : α ≃ β) (h' : α' ≃ β') :
-    F α α' ≃ F β β' where 
+def mapEquiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β'
+    where
   toFun := bimap h h'
   invFun := bimap h.symm h'.symm
   left_inv x := by simp [bimap_bimap, id_bimap]
@@ -103,7 +104,8 @@ theorem map_equiv_symm_apply (h : α ≃ β) (h' : α' ≃ β') (y : F β β') :
 #align bifunctor.map_equiv_symm_apply Bifunctor.map_equiv_symm_apply
 
 @[simp]
-theorem map_equiv_refl_refl : mapEquiv F (Equiv.refl α) (Equiv.refl α') = Equiv.refl (F α α') := by
+theorem map_equiv_refl_refl : mapEquiv F (Equiv.refl α) (Equiv.refl α') = Equiv.refl (F α α') :=
+  by
   ext x
   simp [id_bimap]
 #align bifunctor.map_equiv_refl_refl Bifunctor.map_equiv_refl_refl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ variable {T α}
 namespace CompleteType
 
 instance : SetLike (T.CompleteType α) L[[α]].Sentence :=
-  ⟨fun p => p.toTheory, fun p q h => by 
+  ⟨fun p => p.toTheory, fun p q h => by
     cases p
     cases q
     congr ⟩
@@ -91,8 +91,10 @@ theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence}
   first_order.language.Theory.complete_type.mem_of_models FirstOrder.Language.TheoryCat.CompleteType.mem_of_models
 
 theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈ p ↔ ¬φ ∈ p :=
-  ⟨fun hf ht => by
-    have h : ¬is_satisfiable ({φ, φ.not} : L[[α]].TheoryCat) := by
+  ⟨fun hf ht =>
+    by
+    have h : ¬is_satisfiable ({φ, φ.not} : L[[α]].TheoryCat) :=
+      by
       rintro ⟨@⟨_, _, h, _⟩⟩
       simp only [model_iff, mem_insert_iff, mem_singleton_iff, forall_eq_or_imp, forall_eq] at h
       exact h.2 h.1
@@ -112,7 +114,7 @@ theorem compl_set_of_mem {φ : L[[α]].Sentence} :
 theorem set_of_subset_eq_empty_iff (S : L[[α]].TheoryCat) :
     { p : T.CompleteType α | S ⊆ ↑p } = ∅ ↔
       ¬((L.lhomWithConstants α).onTheory T ∪ S).IsSatisfiable :=
-  by 
+  by
   rw [iff_not_comm, ← not_nonempty_iff_eq_empty, not_not, Set.Nonempty]
   refine'
     ⟨fun h =>
@@ -127,7 +129,8 @@ theorem set_of_subset_eq_empty_iff (S : L[[α]].TheoryCat) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_of_mem_eq_univ_iff (φ : L[[α]].Sentence) :
-    { p : T.CompleteType α | φ ∈ p } = univ ↔ (L.lhomWithConstants α).onTheory T ⊨ φ := by
+    { p : T.CompleteType α | φ ∈ p } = univ ↔ (L.lhomWithConstants α).onTheory T ⊨ φ :=
+  by
   rw [models_iff_not_satisfiable, ← compl_empty_iff, compl_set_of_mem, ← set_of_subset_eq_empty_iff]
   simp
 #align
@@ -138,7 +141,8 @@ theorem set_of_subset_eq_univ_iff (S : L[[α]].TheoryCat) :
     { p : T.CompleteType α | S ⊆ ↑p } = univ ↔
       ∀ φ, φ ∈ S → (L.lhomWithConstants α).onTheory T ⊨ φ :=
   by
-  have h : { p : T.complete_type α | S ⊆ ↑p } = ⋂₀ ((fun φ => { p | φ ∈ p }) '' S) := by
+  have h : { p : T.complete_type α | S ⊆ ↑p } = ⋂₀ ((fun φ => { p | φ ∈ p }) '' S) :=
+    by
     ext
     simp [subset_def]
   simp_rw [h, sInter_eq_univ, ← set_of_mem_eq_univ_iff]
@@ -148,7 +152,8 @@ theorem set_of_subset_eq_univ_iff (S : L[[α]].TheoryCat) :
 #align
   first_order.language.Theory.complete_type.set_of_subset_eq_univ_iff FirstOrder.Language.TheoryCat.CompleteType.set_of_subset_eq_univ_iff
 
-theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable := by
+theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable :=
+  by
   rw [← is_satisfiable_on_Theory_iff (Lhom_with_constants_injective L α)]
   rw [nonempty_iff_univ_nonempty, nonempty_iff_ne_empty, Ne.def, not_iff_comm, ←
     union_empty ((L.Lhom_with_constants α).onTheory T), ← set_of_subset_eq_empty_iff]
@@ -160,14 +165,16 @@ instance : Nonempty (CompleteType ∅ α) :=
   nonempty_iff.2 (is_satisfiable_empty L)
 
 theorem Inter_set_of_subset {ι : Type _} (S : ι → L[[α]].TheoryCat) :
-    (⋂ i : ι, { p : T.CompleteType α | S i ⊆ p }) = { p | (⋃ i : ι, S i) ⊆ p } := by
+    (⋂ i : ι, { p : T.CompleteType α | S i ⊆ p }) = { p | (⋃ i : ι, S i) ⊆ p } :=
+  by
   ext
   simp only [mem_Inter, mem_set_of_eq, Union_subset_iff]
 #align
   first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.TheoryCat.CompleteType.Inter_set_of_subset
 
 theorem to_list_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentence} :
-    t.toList.foldr (· ⊓ ·) ⊤ ∈ p ↔ (t : L[[α]].TheoryCat) ⊆ ↑p := by
+    t.toList.foldr (· ⊓ ·) ⊤ ∈ p ↔ (t : L[[α]].TheoryCat) ⊆ ↑p :=
+  by
   simp_rw [subset_def, ← SetLike.mem_coe, p.is_maximal.mem_iff_models, models_sentence_iff,
     sentence.realize, formula.realize, bounded_formula.realize_foldr_inf, Finset.mem_to_list]
   exact ⟨fun h φ hφ M => h _ _ hφ, fun h M φ hφ => h _ hφ _⟩

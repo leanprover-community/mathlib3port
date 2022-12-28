@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module category_theory.quotient
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,8 +99,8 @@ theorem comp_mk {a b c : Quotient r} (f : a.as ⟶ b.as) (g : b.as ⟶ c.as) :
   rfl
 #align category_theory.quotient.comp_mk CategoryTheory.Quotient.comp_mk
 
-instance category : Category (Quotient
-        r) where 
+instance category : Category (Quotient r)
+    where
   Hom := Hom r
   id a := Quot.mk _ (𝟙 a.as)
   comp := comp r
@@ -108,26 +108,24 @@ instance category : Category (Quotient
 
 /-- The functor from a category to its quotient. -/
 @[simps]
-def functor : C ⥤ Quotient r where 
+def functor : C ⥤ Quotient r where
   obj a := { as := a }
   map _ _ f := Quot.mk _ f
 #align category_theory.quotient.functor CategoryTheory.Quotient.functor
 
 noncomputable instance : Full (functor r) where preimage X Y f := Quot.out f
 
-instance :
-    EssSurj
-      (functor
-        r) where mem_ess_image Y :=
+instance : EssSurj (functor r)
+    where mem_ess_image Y :=
     ⟨Y.as,
       ⟨eqToIso
-          (by 
+          (by
             ext
             rfl)⟩⟩
 
 protected theorem induction {P : ∀ {a b : Quotient r}, (a ⟶ b) → Prop}
     (h : ∀ {x y : C} (f : x ⟶ y), P ((functor r).map f)) : ∀ {a b : Quotient r} (f : a ⟶ b), P f :=
-  by 
+  by
   rintro ⟨x⟩ ⟨y⟩ ⟨f⟩
   exact h f
 #align category_theory.quotient.induction CategoryTheory.Quotient.induction
@@ -138,7 +136,8 @@ protected theorem sound {a b : C} {f₁ f₂ : a ⟶ b} (h : r f₁ f₂) :
 #align category_theory.quotient.sound CategoryTheory.Quotient.sound
 
 theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) :
-    (functor r).map f = (functor r).map f' ↔ r f f' := by
+    (functor r).map f = (functor r).map f' ↔ r f f' :=
+  by
   constructor
   · erw [Quot.eq]
     intro h
@@ -161,20 +160,21 @@ include H
 
 /-- The induced functor on the quotient category. -/
 @[simps]
-def lift : Quotient r ⥤ D where 
+def lift : Quotient r ⥤ D where
   obj a := F.obj a.as
   map a b hf :=
     Quot.liftOn hf (fun f => F.map f)
-      (by 
+      (by
         rintro _ _ ⟨_, _, _, _, h⟩
         simp [H _ _ _ _ h])
   map_id' a := F.map_id a.as
-  map_comp' := by 
+  map_comp' := by
     rintro a b c ⟨f⟩ ⟨g⟩
     exact F.map_comp f g
 #align category_theory.quotient.lift CategoryTheory.Quotient.lift
 
-theorem lift_spec : functor r ⋙ lift r F H = F := by
+theorem lift_spec : functor r ⋙ lift r F H = F :=
+  by
   apply Functor.ext; rotate_left
   · rintro X
     rfl
@@ -182,7 +182,8 @@ theorem lift_spec : functor r ⋙ lift r F H = F := by
     simp
 #align category_theory.quotient.lift_spec CategoryTheory.Quotient.lift_spec
 
-theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H := by
+theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H :=
+  by
   subst_vars
   apply functor.hext
   · rintro X
@@ -214,7 +215,8 @@ theorem lift.is_lift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X
 #align category_theory.quotient.lift.is_lift_inv CategoryTheory.Quotient.lift.is_lift_inv
 
 theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) :
-    (lift r F H).map ((functor r).map f) = F.map f := by
+    (lift r F H).map ((functor r).map f) = F.map f :=
+  by
   rw [← nat_iso.naturality_1 (lift.is_lift r F H)]
   dsimp
   simp

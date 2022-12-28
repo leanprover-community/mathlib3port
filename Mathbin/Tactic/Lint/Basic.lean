@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,9 +49,8 @@ attribute [local instance] reflect_name_list
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Defines the user attribute `nolint` for skipping `#lint` -/
 @[user_attribute]
-unsafe def nolint_attr :
-    user_attribute (name_map (List Name))
-      (List Name) where 
+unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name)
+    where
   Name := "nolint"
   descr := "Do not report this declaration in any of the tests of `#lint`"
   after_set :=
@@ -117,8 +116,8 @@ A linter `linter.my_new_linter` is referred to as `my_new_linter` (without the `
 when used in `#lint`.
 -/
 @[user_attribute]
-unsafe def linter_attr :
-    user_attribute Unit Unit where 
+unsafe def linter_attr : user_attribute Unit Unit
+    where
   Name := "linter"
   descr := "Use this declaration as a linting test in #lint"
   after_set := some fun nm _ _ => mk_const nm >>= infer_type >>= unify q(linter)

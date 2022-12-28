@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.HeytAlg
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,9 +48,8 @@ theorem coe_of (α : Type _) [HeytingAlgebra α] : ↥(of α) = α :=
 instance : Inhabited HeytAlgCat :=
   ⟨of PUnit⟩
 
-instance bundledHom :
-    BundledHom
-      HeytingHom where 
+instance bundledHom : BundledHom HeytingHom
+    where
   toFun α β [HeytingAlgebra α] [HeytingAlgebra β] := (coeFn : HeytingHom α β → α → β)
   id := HeytingHom.id
   comp := @HeytingHom.comp
@@ -60,23 +59,22 @@ instance bundledHom :
 deriving instance LargeCategory, ConcreteCategory for HeytAlgCat
 
 @[simps]
-instance hasForgetToLattice :
-    HasForget₂ HeytAlgCat
-      BoundedDistribLatticeCat where forget₂ :=
+instance hasForgetToLattice : HasForget₂ HeytAlgCat BoundedDistribLatticeCat
+    where forget₂ :=
     { obj := fun X => BoundedDistribLatticeCat.of X
       map := fun X Y f => (f : BoundedLatticeHom X Y) }
 #align HeytAlg.has_forget_to_Lattice HeytAlgCat.hasForgetToLattice
 
 /-- Constructs an isomorphism of Heyting algebras from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : HeytAlgCat.{u}} (e : α ≃o β) :
-    α ≅ β where 
+def Iso.mk {α β : HeytAlgCat.{u}} (e : α ≃o β) : α ≅ β
+    where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
 #align HeytAlg.iso.mk HeytAlgCat.Iso.mk

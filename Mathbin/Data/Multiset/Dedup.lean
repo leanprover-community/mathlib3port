@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.dedup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,8 @@ theorem dedup_idempotent {m : Multiset α} : m.dedup.dedup = m.dedup :=
 
 @[simp]
 theorem dedup_bind_dedup [DecidableEq β] (m : Multiset α) (f : α → Multiset β) :
-    (m.dedup.bind f).dedup = (m.bind f).dedup := by
+    (m.dedup.bind f).dedup = (m.bind f).dedup :=
+  by
   ext x
   simp_rw [count_dedup, mem_bind, mem_dedup]
 #align multiset.dedup_bind_dedup Multiset.dedup_bind_dedup
@@ -128,7 +129,8 @@ theorem dedup_map_dedup_eq [DecidableEq β] (f : α → β) (s : Multiset α) :
 #align multiset.dedup_map_dedup_eq Multiset.dedup_map_dedup_eq
 
 @[simp]
-theorem dedup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).dedup = s.dedup := by
+theorem dedup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).dedup = s.dedup :=
+  by
   ext a
   by_cases h : a ∈ s <;> simp [h, h0]
 #align multiset.dedup_nsmul Multiset.dedup_nsmul
@@ -141,7 +143,7 @@ end Multiset
 
 theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup)
     (hn : n ≠ 0) : s ≤ n • t ↔ s ≤ t := by
-  classical 
+  classical
     rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]
     simp [hn]
 #align multiset.nodup.le_nsmul_iff_le Multiset.Nodup.le_nsmul_iff_le

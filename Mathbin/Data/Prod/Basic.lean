@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.prod.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,7 +195,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (a : α), Function.Injective.{succ u1, max (succ u2) (succ u1)} β (Prod.{u2, u1} α β) (Prod.mk.{u2, u1} α β a)
 Case conversion may be inaccurate. Consider using '#align prod.mk.inj_left Prod.mk.inj_leftₓ'. -/
-theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
+theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) :=
+  by
   intro b₁ b₂ h
   simpa only [true_and_iff, Prod.mk.inj_iff, eq_self_iff_true] using h
 #align prod.mk.inj_left Prod.mk.inj_left
@@ -207,7 +208,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (b : β), Function.Injective.{succ u2, max (succ u2) (succ u1)} α (Prod.{u2, u1} α β) (fun (a : α) => Prod.mk.{u2, u1} α β a b)
 Case conversion may be inaccurate. Consider using '#align prod.mk.inj_right Prod.mk.inj_rightₓ'. -/
 theorem mk.inj_right {α β : Type _} (b : β) :
-    Function.Injective (fun a => Prod.mk a b : α → α × β) := by
+    Function.Injective (fun a => Prod.mk a b : α → α × β) :=
+  by
   intro b₁ b₂ h
   · simpa only [and_true_iff, eq_self_iff_true, mk.inj_iff] using h
 #align prod.mk.inj_right Prod.mk.inj_right
@@ -576,7 +578,7 @@ instance isTotal_left {r : α → α → Prop} {s : β → β → Prop} [IsTotal
 #print Prod.isTotal_right /-
 instance isTotal_right {r : α → α → Prop} {s : β → β → Prop} [IsTrichotomous α r] [IsTotal β s] :
     IsTotal (α × β) (Lex r s) :=
-  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by 
+  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
     · exact (total_of s a b).imp (lex.right _) (lex.right _)
@@ -586,7 +588,7 @@ instance isTotal_right {r : α → α → Prop} {s : β → β → Prop} [IsTric
 
 instance is_trichotomous [IsTrichotomous α r] [IsTrichotomous β s] :
     IsTrichotomous (α × β) (Lex r s) :=
-  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by 
+  ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
     · exact (trichotomous_of s a b).imp3 (lex.right _) (congr_arg _) (lex.right _)

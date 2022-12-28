@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jake Levinson
 
 ! This file was ported from Lean 3 source module combinatorics.young.semistandard_tableau
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,11 +62,10 @@ structure Ssyt (μ : YoungDiagram) where
 
 namespace Ssyt
 
-instance funLike {μ : YoungDiagram} :
-    FunLike (Ssyt μ) ℕ fun _ => ℕ →
-        ℕ where 
+instance funLike {μ : YoungDiagram} : FunLike (Ssyt μ) ℕ fun _ => ℕ → ℕ
+    where
   coe := Ssyt.entry
-  coe_injective' T T' h := by 
+  coe_injective' T T' h := by
     cases T
     cases T'
     congr
@@ -84,15 +83,15 @@ theorem to_fun_eq_coe {μ : YoungDiagram} {T : Ssyt μ} : T.entry = (T : ℕ →
 
 @[ext]
 theorem ext {μ : YoungDiagram} {T T' : Ssyt μ} (h : ∀ i j, T i j = T' i j) : T = T' :=
-  FunLike.ext T T' fun x => by 
+  FunLike.ext T T' fun x => by
     funext
     apply h
 #align ssyt.ext Ssyt.ext
 
 /-- Copy of an `ssyt μ` with a new `entry` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) :
-    Ssyt μ where 
+protected def copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : Ssyt μ
+    where
   entry := entry'
   row_weak' _ _ _ := h.symm ▸ T.row_weak'
   col_strict' _ _ _ := h.symm ▸ T.col_strict'
@@ -125,22 +124,23 @@ theorem zeros {μ : YoungDiagram} (T : Ssyt μ) {i j : ℕ} (not_cell : (i, j) �
 #align ssyt.zeros Ssyt.zeros
 
 theorem row_weak_of_le {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j1 ≤ j2)
-    (cell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 := by
+    (cell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 :=
+  by
   cases eq_or_lt_of_le hj
   subst h
   exact T.row_weak h cell
 #align ssyt.row_weak_of_le Ssyt.row_weak_of_le
 
 theorem col_weak {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 ≤ i2) (cell : (i2, j) ∈ μ) :
-    T i1 j ≤ T i2 j := by 
+    T i1 j ≤ T i2 j := by
   cases eq_or_lt_of_le hi
   subst h
   exact le_of_lt (T.col_strict h cell)
 #align ssyt.col_weak Ssyt.col_weak
 
 /-- The "highest weight" SSYT of a given shape is has all i's in row i, for each i. -/
-def highestWeight (μ : YoungDiagram) :
-    Ssyt μ where 
+def highestWeight (μ : YoungDiagram) : Ssyt μ
+    where
   entry i j := if (i, j) ∈ μ then i else 0
   row_weak' i j1 j2 hj hcell := by
     rw [if_pos hcell, if_pos (μ.up_left_mem (by rfl) (le_of_lt hj) hcell)]

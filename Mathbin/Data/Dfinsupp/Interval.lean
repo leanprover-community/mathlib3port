@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.dfinsupp.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ variable [DecidableEq ι] [∀ i, Zero (α i)] {s : Finset ι} {f : Π₀ i, α 
 /-- Finitely supported product of finsets. -/
 def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
   (s.pi t).map
-    ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2, by
+    ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2,
+      by
       refine' (mk_injective _).comp fun f g h => _
       ext (i hi)
       convert congr_fun h ⟨i, hi⟩⟩
@@ -48,7 +49,8 @@ theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) :
 
 variable [∀ i, DecidableEq (α i)]
 
-theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
+theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
+  by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_mk_subset, fun i hi => _⟩
@@ -64,7 +66,8 @@ theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ 
 -/
 @[simp]
 theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.support ⊆ s) :
-    f ∈ s.Dfinsupp t ↔ ∀ i, f i ∈ t i := by
+    f ∈ s.Dfinsupp t ↔ ∀ i, f i ∈ t i :=
+  by
   refine'
     mem_dfinsupp_iff.trans
       (forall_and_distrib.symm.trans <|
@@ -89,8 +92,8 @@ section BundledSingleton
 variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.singleton` bundled as a `dfinsupp`. -/
-def singleton (f : Π₀ i, α i) :
-    Π₀ i, Finset (α i) where 
+def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i)
+    where
   toFun i := {f i}
   support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
 #align dfinsupp.singleton Dfinsupp.singleton
@@ -107,14 +110,15 @@ variable [∀ i, Zero (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFinite
   {f g : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
-def rangeIcc (f g : Π₀ i, α i) :
-    Π₀ i, Finset (α i) where 
+def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i)
+    where
   toFun i := icc (f i) (g i)
   support' :=
     f.support'.bind fun fs =>
       g.support'.map fun gs =>
         ⟨fs + gs, fun i =>
-          or_iff_not_imp_left.2 fun h => by
+          or_iff_not_imp_left.2 fun h =>
+            by
             have hf : f i = 0 :=
               (fs.prop i).resolve_left
                 (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_right _ _) h)
@@ -135,7 +139,8 @@ theorem mem_range_Icc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g
 #align dfinsupp.mem_range_Icc_apply_iff Dfinsupp.mem_range_Icc_apply_iff
 
 theorem support_range_Icc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
-    (f.rangeIcc g).support ⊆ f.support ∪ g.support := by
+    (f.rangeIcc g).support ⊆ f.support ∪ g.support :=
+  by
   refine' fun x hx => _
   by_contra
   refine' not_mem_support_iff.2 _ hx
@@ -162,7 +167,8 @@ theorem mem_pi {f : Π₀ i, Finset (α i)} {g : Π₀ i, α i} : g ∈ f.pi ↔
 #align dfinsupp.mem_pi Dfinsupp.mem_pi
 
 @[simp]
-theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i).card := by
+theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i).card :=
+  by
   rw [pi, card_dfinsupp]
   exact Finset.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]
 #align dfinsupp.card_pi Dfinsupp.card_pi
@@ -177,7 +183,8 @@ variable [∀ i, PartialOrder (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFinite
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
   LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g)
-    fun f g x => by
+    fun f g x =>
+    by
     refine' (mem_dfinsupp_iff_of_support_subset <| support_range_Icc_subset).trans _
     simp_rw [mem_range_Icc_apply_iff, forall_and]
     rfl

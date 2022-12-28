@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.nontrivial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ theorem exists_pair_ne (α : Type _) [Nontrivial α] : ∃ x y : α, x ≠ y :=
 
 #print Decidable.exists_ne /-
 -- See Note [decidable namespace]
-protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) : ∃ y, y ≠ x := by
+protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) : ∃ y, y ≠ x :=
+  by
   rcases exists_pair_ne α with ⟨y, y', h⟩
   by_cases hx : x = y
   · rw [← hx] at h
@@ -83,7 +84,8 @@ theorem nontrivial_of_lt [Preorder α] (x y : α) (h : x < y) : Nontrivial α :=
 -/
 
 #print exists_pair_lt /-
-theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrder α] : ∃ x y : α, x < y := by
+theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrder α] : ∃ x y : α, x < y :=
+  by
   rcases exists_pair_ne α with ⟨x, y, hxy⟩
   cases lt_or_gt_of_ne hxy <;> exact ⟨_, _, h⟩
 #align exists_pair_lt exists_pair_lt
@@ -123,7 +125,7 @@ instance (priority := 500) Nontrivial.to_nonempty [Nontrivial α] : Nonempty α 
 #align nontrivial.to_nonempty Nontrivial.to_nonempty
 -/
 
-attribute [instance] nonempty_of_inhabited
+attribute [instance] instNonempty
 
 /-- An inhabited type is either nontrivial, or has a unique element. -/
 noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
@@ -132,7 +134,7 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
   else
     PSum.inr
       { default := default
-        uniq := fun x : α => by 
+        uniq := fun x : α => by
           change x = default
           contrapose! h
           use x, default }
@@ -140,14 +142,15 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
 
 #print subsingleton_iff /-
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
-  ⟨by 
+  ⟨by
     intro h
     exact Subsingleton.elim, fun h => ⟨h⟩⟩
 #align subsingleton_iff subsingleton_iff
 -/
 
 #print not_nontrivial_iff_subsingleton /-
-theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α := by
+theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α :=
+  by
   rw [nontrivial_iff, subsingleton_iff]
   push_neg
   rfl
@@ -169,7 +172,8 @@ theorem not_subsingleton (α) [h : Nontrivial α] : ¬Subsingleton α :=
 
 #print subsingleton_or_nontrivial /-
 /-- A type is either a subsingleton or nontrivial. -/
-theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α := by
+theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivial α :=
+  by
   rw [← not_nontrivial_iff_subsingleton, or_comm']
   exact Classical.em _
 #align subsingleton_or_nontrivial subsingleton_or_nontrivial
@@ -183,7 +187,8 @@ theorem false_of_nontrivial_of_subsingleton (α : Type _) [Nontrivial α] [Subsi
 -/
 
 #print Option.nontrivial /-
-instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
+instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) :=
+  by
   inhabit α
   use none, some default
 #align option.nontrivial Option.nontrivial
@@ -205,11 +210,12 @@ protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
 #print Function.Surjective.nontrivial /-
 /-- Pullback a `nontrivial` instance along a surjective function. -/
 protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
-    (hf : Function.Surjective f) : Nontrivial α := by
+    (hf : Function.Surjective f) : Nontrivial α :=
+  by
   rcases exists_pair_ne β with ⟨x, y, h⟩
   rcases hf x with ⟨x', hx'⟩
   rcases hf y with ⟨y', hy'⟩
-  have : x' ≠ y' := by 
+  have : x' ≠ y' := by
     contrapose! h
     rw [← hx', ← hy', h]
   exact ⟨⟨x', y', this⟩⟩
@@ -225,7 +231,8 @@ Case conversion may be inaccurate. Consider using '#align function.injective.exi
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
 protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}
-    (hf : Function.Injective f) (y : β) : ∃ x, f x ≠ y := by
+    (hf : Function.Injective f) (y : β) : ∃ x, f x ≠ y :=
+  by
   rcases exists_pair_ne α with ⟨x₁, x₂, hx⟩
   by_cases h : f x₂ = y
   · exact ⟨x₁, (hf.ne_iff' h).2 hx⟩

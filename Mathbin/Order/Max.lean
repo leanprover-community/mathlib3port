@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.max
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_max_order_of_left noMaxOrder_of_leftₓ'. -/
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by 
+  ⟨fun ⟨a, b⟩ => by
     obtain ⟨c, h⟩ := exists_gt a
     exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
 #align no_max_order_of_left noMaxOrder_of_left
@@ -133,7 +133,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_max_order_of_right noMaxOrder_of_rightₓ'. -/
 instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by 
+  ⟨fun ⟨a, b⟩ => by
     obtain ⟨c, h⟩ := exists_gt b
     exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
 #align no_max_order_of_right noMaxOrder_of_right
@@ -145,7 +145,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_min_order_of_left noMinOrder_of_leftₓ'. -/
 instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by 
+  ⟨fun ⟨a, b⟩ => by
     obtain ⟨c, h⟩ := exists_lt a
     exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
 #align no_min_order_of_left noMinOrder_of_left
@@ -157,19 +157,19 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_min_order_of_right noMinOrder_of_rightₓ'. -/
 instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α × β) :=
-  ⟨fun ⟨a, b⟩ => by 
+  ⟨fun ⟨a, b⟩ => by
     obtain ⟨c, h⟩ := exists_lt b
     exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
 #align no_min_order_of_right noMinOrder_of_right
 
 instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMaxOrder (π i)] : NoMaxOrder (∀ i, π i) :=
   ⟨fun a => by
-    classical 
+    classical
       obtain ⟨b, hb⟩ := exists_gt (a <| Classical.arbitrary _)
       exact ⟨_, lt_update_self_iff.2 hb⟩⟩
 
 instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMinOrder (π i)] : NoMinOrder (∀ i, π i) :=
-  ⟨fun a => by 
+  ⟨fun a => by
     obtain ⟨b, hb⟩ := exists_lt (a <| Classical.arbitrary _)
     exact ⟨_, update_lt_self_iff.2 hb⟩⟩
 
@@ -187,7 +187,8 @@ instance (priority := 100) NoMaxOrder.to_no_top_order (α : Type _) [Preorder α
 
 #print NoBotOrder.to_noMinOrder /-
 theorem NoBotOrder.to_noMinOrder (α : Type _) [LinearOrder α] [NoBotOrder α] : NoMinOrder α :=
-  { exists_lt := by 
+  {
+    exists_lt := by
       convert fun a : α => exists_not_ge a
       simp_rw [not_le] }
 #align no_bot_order.to_no_min_order NoBotOrder.to_noMinOrder
@@ -195,7 +196,8 @@ theorem NoBotOrder.to_noMinOrder (α : Type _) [LinearOrder α] [NoBotOrder α] 
 
 #print NoTopOrder.to_noMaxOrder /-
 theorem NoTopOrder.to_noMaxOrder (α : Type _) [LinearOrder α] [NoTopOrder α] : NoMaxOrder α :=
-  { exists_gt := by 
+  {
+    exists_gt := by
       convert fun a : α => exists_not_le a
       simp_rw [not_le] }
 #align no_top_order.to_no_max_order NoTopOrder.to_noMaxOrder

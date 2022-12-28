@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_measurable_order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
             ∃ u v,
               MeasurableSet u ∧
                 MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
-    AeMeasurable f μ := by 
+    AeMeasurable f μ := by
   haveI : Encodable s := s_count.to_encodable
   have h' :
     ∀ p q,
@@ -52,7 +52,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
         MeasurableSet u ∧
           MeasurableSet v ∧
             { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
-    by 
+    by
     intro p q
     by_cases H : p ∈ s ∧ q ∈ s ∧ p < q
     · rcases h p H.1 q H.2.1 H.2.2 with ⟨u, v, hu, hv, h'u, h'v, hμ⟩
@@ -64,26 +64,29 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       exact (H ps qs pq).elim
   choose! u v huv using h'
   let u' : β → Set α := fun p => ⋂ q ∈ s ∩ Ioi p, u p q
-  have u'_meas : ∀ i, MeasurableSet (u' i) := by 
+  have u'_meas : ∀ i, MeasurableSet (u' i) := by
     intro i
     exact MeasurableSet.bInter (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
   let f' : α → β := fun x => ⨅ i : s, piecewise (u' i) (fun x => (i : β)) (fun x => (⊤ : β)) x
-  have f'_meas : Measurable f' := by 
-    apply measurableInfi
-    exact fun i => Measurable.piecewise (u'_meas i) measurableConst measurableConst
+  have f'_meas : Measurable f' := by
+    apply measurable_infi
+    exact fun i => Measurable.piecewise (u'_meas i) measurable_const measurable_const
   let t := ⋃ (p : s) (q : s ∩ Ioi p), u' p ∩ v p q
   have μt : μ t ≤ 0 :=
     calc
-      μ t ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u' p ∩ v p q) := by
+      μ t ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u' p ∩ v p q) :=
+        by
         refine' (measure_Union_le _).trans _
         apply Ennreal.tsum_le_tsum fun p => _
         apply measure_Union_le _
         exact (s_count.mono (inter_subset_left _ _)).to_subtype
-      _ ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u p q ∩ v p q) := by
+      _ ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u p q ∩ v p q) :=
+        by
         apply Ennreal.tsum_le_tsum fun p => _
         refine' Ennreal.tsum_le_tsum fun q => measure_mono _
         exact inter_subset_inter_left _ (bInter_subset_of_mem q.2)
-      _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) := by
+      _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) :=
+        by
         congr
         ext1 p
         congr
@@ -91,8 +94,9 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
         exact (huv p q).2.2.2.2 p.2 q.2.1 q.2.2
       _ = 0 := by simp only [tsum_zero]
       
-  have ff' : ∀ᵐ x ∂μ, f x = f' x := by
-    have : ∀ᵐ x ∂μ, x ∉ t := by 
+  have ff' : ∀ᵐ x ∂μ, f x = f' x :=
+    by
+    have : ∀ᵐ x ∂μ, x ∉ t := by
       have : μ t = 0 := le_antisymm μt bot_le
       change μ _ = 0
       convert this
@@ -134,7 +138,8 @@ theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : Me
             MeasurableSet u ∧
               MeasurableSet v ∧
                 { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
-    AeMeasurable f μ := by
+    AeMeasurable f μ :=
+  by
   obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ :
     ∃ s : Set ℝ≥0∞, s.Countable ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
     Ennreal.exists_countable_dense_no_zero_top

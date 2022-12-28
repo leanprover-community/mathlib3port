@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.open_mapping
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,8 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
   let ray : E → ℂ → E := fun z t => z₀ + t • z
   let gray : E → ℂ → ℂ := fun z => g ∘ ray z
   obtain ⟨r, hr, hgr⟩ := is_open_iff.mp (is_open_analytic_at ℂ g) z₀ hg
-  have h1 : ∀ z ∈ sphere (0 : E) 1, AnalyticOn ℂ (gray z) (ball 0 r) := by
+  have h1 : ∀ z ∈ sphere (0 : E) 1, AnalyticOn ℂ (gray z) (ball 0 r) :=
+    by
     refine' fun z hz t ht => AnalyticAt.comp _ _
     · exact hgr (by simpa [ray, norm_smul, mem_sphere_zero_iff_norm.mp hz] using ht)
     ·
@@ -145,7 +146,8 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     refine' (eq_or_ne z z₀).casesOn (congr_arg g) fun h' => _
     replace h' : ‖z - z₀‖ ≠ 0 := by simpa only [Ne.def, norm_eq_zero, sub_eq_zero]
     let w : E := ‖z - z₀‖⁻¹ • (z - z₀)
-    have h3 : ∀ t ∈ ball (0 : ℂ) r, gray w t = g z₀ := by
+    have h3 : ∀ t ∈ ball (0 : ℂ) r, gray w t = g z₀ :=
+      by
       have e1 : IsPreconnected (ball (0 : ℂ) r) := (convex_ball 0 r).IsPreconnected
       have e2 : w ∈ sphere (0 : E) 1 := by simp [w, norm_smul, h']
       specialize h1 w e2
@@ -175,7 +177,8 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
 is analytic on a connected set `U`, then either it is constant on `U`, or it is open on `U` (in the
 sense that it maps any open set contained in `U` to an open set in `ℂ`). -/
 theorem AnalyticOn.is_constant_or_is_open (hg : AnalyticOn ℂ g U) (hU : IsPreconnected U) :
-    (∃ w, ∀ z ∈ U, g z = w) ∨ ∀ (s) (_ : s ⊆ U), IsOpen s → IsOpen (g '' s) := by
+    (∃ w, ∀ z ∈ U, g z = w) ∨ ∀ (s) (_ : s ⊆ U), IsOpen s → IsOpen (g '' s) :=
+  by
   by_cases ∃ z₀ ∈ U, ∀ᶠ z in 𝓝 z₀, g z = g z₀
   · obtain ⟨z₀, hz₀, h⟩ := h
     exact Or.inl ⟨g z₀, hg.eq_on_of_preconnected_of_eventually_eq analyticOnConst hU hz₀ h⟩

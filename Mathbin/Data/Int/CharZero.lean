@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.char_zero
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,13 +30,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cast_eq_zero Int.cast_eq_zeroₓ'. -/
 @[simp]
 theorem cast_eq_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) = 0 ↔ n = 0 :=
-  ⟨fun h => by 
+  ⟨fun h => by
     cases n
     · rw [Int.cast_of_nat] at h
       exact congr_arg coe (Nat.cast_eq_zero.1 h)
     · rw [cast_neg_succ_of_nat, neg_eq_zero, Nat.cast_eq_zero] at h
-      contradiction,
-    fun h => by rw [h, cast_zero]⟩
+      contradiction, fun h => by rw [h, cast_zero]⟩
 #align int.cast_eq_zero Int.cast_eq_zero
 
 /- warning: int.cast_inj -> Int.cast_inj is a dubious translation:
@@ -78,7 +77,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cast_div_char_zero Int.cast_div_charZeroₓ'. -/
 @[simp, norm_cast]
 theorem cast_div_charZero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) :
-    ((m / n : ℤ) : k) = m / n := by
+    ((m / n : ℤ) : k) = m / n :=
+  by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp [Int.div_zero]
   · exact cast_div n_dvd (cast_ne_zero.mpr hn)
@@ -90,7 +90,7 @@ end Int
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] (f : RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_1))], Function.Injective.{1, succ u1} Int α (coeFn.{succ u1, succ u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) (fun (_x : RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) => Int -> α) (RingHom.hasCoeToFun.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) f)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] (f : RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_1))], Function.Injective.{1, succ u1} Int α (FunLike.coe.{succ u1, 1, succ u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : Int) => α) _x) (MulHomClass.toFunLike.{u1, 0, u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int α (NonUnitalNonAssocSemiring.toMul.{0} Int (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)))) (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1))) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1) (RingHom.instRingHomClassRingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1))))) f)
+  forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] (f : RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α _inst_1))], Function.Injective.{1, succ u1} Int α (FunLike.coe.{succ u1, 1, succ u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Int) => α) _x) (MulHomClass.toFunLike.{u1, 0, u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int α (NonUnitalNonAssocSemiring.toMul.{0} Int (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)))) (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1))) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1) (RingHom.instRingHomClassRingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1))))) f)
 Case conversion may be inaccurate. Consider using '#align ring_hom.injective_int RingHom.injective_intₓ'. -/
 theorem RingHom.injective_int {α : Type _} [NonAssocRing α] (f : ℤ →+* α) [CharZero α] :
     Function.Injective f :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.traversable.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,11 +62,11 @@ variable (f : β → γ)
 #print Traversable.PureTransformation /-
 /-- The natural applicative transformation from the identity functor
 to `F`, defined by `pure : Π {α}, α → F α`. -/
-def PureTransformation :
-    ApplicativeTransformation id F where 
+def PureTransformation : ApplicativeTransformation id F
+    where
   app := @pure F _
   preserves_pure' α x := rfl
-  preserves_seq' α β f x := by 
+  preserves_seq' α β f x := by
     simp only [map_pure, seq_pure]
     rfl
 #align traversable.pure_transformation Traversable.PureTransformation
@@ -92,7 +92,8 @@ theorem map_eq_traverse_id : map f = @traverse t _ _ _ _ _ (id.mk ∘ f) :=
 #align traversable.map_eq_traverse_id Traversable.map_eq_traverse_id
 
 #print Traversable.map_traverse /-
-theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g) x := by
+theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g) x :=
+  by
   rw [@map_eq_traverse_id t _ _ _ _ f]
   refine' (comp_traverse (id.mk ∘ f) g x).symm.trans _
   congr ; apply comp.applicative_comp_id
@@ -101,7 +102,8 @@ theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g
 
 #print Traversable.traverse_map /-
 theorem traverse_map (f : β → F γ) (g : α → β) (x : t α) :
-    traverse f (g <$> x) = traverse (f ∘ g) x := by
+    traverse f (g <$> x) = traverse (f ∘ g) x :=
+  by
   rw [@map_eq_traverse_id t _ _ _ _ g]
   refine' (comp_traverse f (id.mk ∘ g) x).symm.trans _
   congr ; apply comp.applicative_id_comp
@@ -150,7 +152,8 @@ but is expected to have type
   forall {t : Type.{u1} -> Type.{u1}} [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {α : Type.{u1}}, Eq.{succ u1} ((t α) -> (Id.{u1} (t α))) (Traversable.traverse.{u1} t _inst_1 Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) α α (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) α)) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) (t α))
 Case conversion may be inaccurate. Consider using '#align traversable.traverse_id Traversable.traverse_idₓ'. -/
 @[functor_norm]
-theorem traverse_id : traverse id.mk = (id.mk : t α → id (t α)) := by
+theorem traverse_id : traverse id.mk = (id.mk : t α → id (t α)) :=
+  by
   ext
   exact id_traverse _
 #align traversable.traverse_id Traversable.traverse_id
@@ -165,7 +168,7 @@ Case conversion may be inaccurate. Consider using '#align traversable.traverse_c
 theorem traverse_comp (g : α → F β) (h : β → G γ) :
     traverse (comp.mk ∘ map h ∘ g) =
       (comp.mk ∘ map (traverse h) ∘ traverse g : t α → Comp F G (t γ)) :=
-  by 
+  by
   ext
   exact comp_traverse _ _ _
 #align traversable.traverse_comp Traversable.traverse_comp
@@ -176,7 +179,8 @@ lean 3 declaration is
 but is expected to have type
   forall {t : Type.{u1} -> Type.{u1}} [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {β : Type.{u1}} {γ : Type.{u1}} (f : β -> γ), Eq.{succ u1} ((t β) -> (Id.{u1} (t γ))) (Traversable.traverse.{u1} t _inst_1 Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) β γ (Function.comp.{succ u1, succ u1, succ u1} β γ (Id.{u1} γ) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) γ) f)) (Function.comp.{succ u1, succ u1, succ u1} (t β) (t γ) (Id.{u1} (t γ)) (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) (t γ)) (Functor.map.{u1, u1} t (Traversable.toFunctor.{u1} t _inst_1) β γ f))
 Case conversion may be inaccurate. Consider using '#align traversable.traverse_eq_map_id' Traversable.traverse_eq_map_id'ₓ'. -/
-theorem traverse_eq_map_id' (f : β → γ) : traverse (id.mk ∘ f) = id.mk ∘ (map f : t β → t γ) := by
+theorem traverse_eq_map_id' (f : β → γ) : traverse (id.mk ∘ f) = id.mk ∘ (map f : t β → t γ) :=
+  by
   ext
   exact traverse_eq_map_id _ _
 #align traversable.traverse_eq_map_id' Traversable.traverse_eq_map_id'
@@ -184,7 +188,8 @@ theorem traverse_eq_map_id' (f : β → γ) : traverse (id.mk ∘ f) = id.mk ∘
 #print Traversable.traverse_map' /-
 -- @[functor_norm]
 theorem traverse_map' (g : α → β) (h : β → G γ) :
-    traverse (h ∘ g) = (traverse h ∘ map g : t α → G (t γ)) := by
+    traverse (h ∘ g) = (traverse h ∘ map g : t α → G (t γ)) :=
+  by
   ext
   rw [comp_app, traverse_map]
 #align traversable.traverse_map' Traversable.traverse_map'
@@ -192,7 +197,8 @@ theorem traverse_map' (g : α → β) (h : β → G γ) :
 
 #print Traversable.map_traverse' /-
 theorem map_traverse' (g : α → G β) (h : β → γ) :
-    traverse (map h ∘ g) = (map (map h) ∘ traverse g : t α → G (t γ)) := by
+    traverse (map h ∘ g) = (map (map h) ∘ traverse g : t α → G (t γ)) :=
+  by
   ext
   rw [comp_app, map_traverse]
 #align traversable.map_traverse' Traversable.map_traverse'
@@ -200,7 +206,8 @@ theorem map_traverse' (g : α → G β) (h : β → γ) :
 
 #print Traversable.naturality_pf /-
 theorem naturality_pf (η : ApplicativeTransformation F G) (f : α → F β) :
-    traverse (@η _ ∘ f) = @η _ ∘ (traverse f : t α → F (t β)) := by
+    traverse (@η _ ∘ f) = @η _ ∘ (traverse f : t α → F (t β)) :=
+  by
   ext
   rw [comp_app, naturality]
 #align traversable.naturality_pf Traversable.naturality_pf

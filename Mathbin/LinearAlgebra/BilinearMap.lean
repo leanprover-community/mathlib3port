@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_map
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,10 +83,8 @@ See `mk₂'` and `mk₂` for the linear case. -/
 def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n)
     (H2 : ∀ (c : R) (m n), f (c • m) n = ρ₁₂ c • f m n)
     (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
-    (H4 : ∀ (c : S) (m n), f m (c • n) = σ₁₂ c • f m n) :
-    M →ₛₗ[ρ₁₂]
-      N →ₛₗ[σ₁₂]
-        P where 
+    (H4 : ∀ (c : S) (m n), f m (c • n) = σ₁₂ c • f m n) : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P
+    where
   toFun m :=
     { toFun := f m
       map_add' := H3 m
@@ -192,8 +190,8 @@ theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂
 #align linear_map.map_sum₂ LinearMap.map_sum₂
 
 /-- Restricting a bilinear map in the second entry -/
-def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) :
-    M →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P where 
+def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) : M →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P
+    where
   toFun m := (f m).domRestrict q
   map_add' m₁ m₂ := LinearMap.ext fun _ => by simp only [map_add, dom_restrict_apply, add_apply]
   map_smul' c m :=
@@ -266,9 +264,8 @@ variable (R M N P)
 
 /-- Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map `M → N → P`,
 change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
-def lflip :
-    (M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P) →ₗ[R₃]
-      N →ₛₗ[σ₂₃] M →ₛₗ[σ₁₃] P where 
+def lflip : (M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P) →ₗ[R₃] N →ₛₗ[σ₂₃] M →ₛₗ[σ₁₃] P
+    where
   toFun := flip
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -363,7 +360,8 @@ theorem compl₂_apply (g : Q →ₛₗ[σ₄₂] N) (m : M) (q : Q) : f.compl�
 omit σ₄₃
 
 @[simp]
-theorem compl₂_id : f.compl₂ LinearMap.id = f := by
+theorem compl₂_id : f.compl₂ LinearMap.id = f :=
+  by
   ext
   rw [compl₂_apply, id_coe, id.def]
 #align linear_map.compl₂_id LinearMap.compl₂_id
@@ -382,14 +380,16 @@ theorem compl₁₂_apply (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →
 #align linear_map.compl₁₂_apply LinearMap.compl₁₂_apply
 
 @[simp]
-theorem compl₁₂_id_id (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) : f.compl₁₂ LinearMap.id LinearMap.id = f := by
+theorem compl₁₂_id_id (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) : f.compl₁₂ LinearMap.id LinearMap.id = f :=
+  by
   ext
   simp_rw [compl₁₂_apply, id_coe, id.def]
 #align linear_map.compl₁₂_id_id LinearMap.compl₁₂_id_id
 
 theorem compl₁₂_inj {f₁ f₂ : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} {g : Qₗ →ₗ[R] Mₗ} {g' : Qₗ' →ₗ[R] Nₗ}
     (hₗ : Function.Surjective g) (hᵣ : Function.Surjective g') :
-    f₁.compl₁₂ g g' = f₂.compl₁₂ g g' ↔ f₁ = f₂ := by
+    f₁.compl₁₂ g g' = f₂.compl₁₂ g g' ↔ f₁ = f₂ :=
+  by
   constructor <;> intro h
   · -- B₁.comp l r = B₂.comp l r → B₁ = B₂
     ext (x y)
@@ -398,8 +398,7 @@ theorem compl₁₂_inj {f₁ f₂ : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} {g : Q�
     cases' hᵣ y with y' hy
     subst hy
     convert LinearMap.congr_fun₂ h x' y'
-  ·
-    -- B₁ = B₂ → B₁.comp l r = B₂.comp l r
+  ·-- B₁ = B₂ → B₁.comp l r = B₂.comp l r
     subst h
 #align linear_map.compl₁₂_inj LinearMap.compl₁₂_inj
 
@@ -468,7 +467,7 @@ Version for semi-bilinear maps, see `sum_repr_mul_repr_mul` for the bilinear ver
 theorem sum_repr_mul_repr_mulₛₗ {B : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (x y) :
     ((b₁.repr x).Sum fun i xi => (b₂.repr y).Sum fun j yj => ρ₁₂ xi • σ₁₂ yj • B (b₁ i) (b₂ j)) =
       B x y :=
-  by 
+  by
   conv_rhs => rw [← b₁.total_repr x, ← b₂.total_repr y]
   simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smulₛₗ₂,
     LinearMap.map_smulₛₗ]
@@ -480,7 +479,7 @@ Version for bilinear maps, see `sum_repr_mul_repr_mulₛₗ` for the semi-biline
 theorem sum_repr_mul_repr_mul {B : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} (x y) :
     ((b₁'.repr x).Sum fun i xi => (b₂'.repr y).Sum fun j yj => xi • yj • B (b₁' i) (b₂' j)) =
       B x y :=
-  by 
+  by
   conv_rhs => rw [← b₁'.total_repr x, ← b₂'.total_repr y]
   simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smul₂,
     LinearMap.map_smul]

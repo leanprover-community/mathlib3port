@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.intervals.monoid
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} M] [_inst_2 : ExistsAddOfLE.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1)))))) (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)))] (a : M) (d : M), Set.BijOn.{u1, u1} M M (fun (_x : M) => HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) _x d) (Set.Ici.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) a) (Set.Ici.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) a d))
 Case conversion may be inaccurate. Consider using '#align set.Ici_add_bij Set.Ici_add_bijₓ'. -/
-theorem Ici_add_bij : BijOn (· + d) (Ici a) (Ici (a + d)) := by
+theorem Ici_add_bij : BijOn (· + d) (Ici a) (Ici (a + d)) :=
+  by
   refine'
     ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, (add_left_injective d).InjOn _, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ici.mp h)
@@ -48,7 +49,8 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} M] [_inst_2 : ExistsAddOfLE.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1)))))) (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)))] (a : M) (d : M), Set.BijOn.{u1, u1} M M (fun (_x : M) => HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) _x d) (Set.Ioi.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) a) (Set.Ioi.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) a d))
 Case conversion may be inaccurate. Consider using '#align set.Ioi_add_bij Set.Ioi_add_bijₓ'. -/
-theorem Ioi_add_bij : BijOn (· + d) (Ioi a) (Ioi (a + d)) := by
+theorem Ioi_add_bij : BijOn (· + d) (Ioi a) (Ioi (a + d)) :=
+  by
   refine'
     ⟨fun x h => add_lt_add_right (mem_Ioi.mp h) _, fun _ _ _ _ h => add_right_cancel h, fun _ h =>
       _⟩
@@ -63,7 +65,8 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} M] [_inst_2 : ExistsAddOfLE.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1)))))) (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)))] (a : M) (b : M) (d : M), Set.BijOn.{u1, u1} M M (fun (_x : M) => HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) _x d) (Set.Icc.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) a b) (Set.Icc.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) a d) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) b d))
 Case conversion may be inaccurate. Consider using '#align set.Icc_add_bij Set.Icc_add_bijₓ'. -/
-theorem Icc_add_bij : BijOn (· + d) (Icc a b) (Icc (a + d) (b + d)) := by
+theorem Icc_add_bij : BijOn (· + d) (Icc a b) (Icc (a + d) (b + d)) :=
+  by
   rw [← Ici_inter_Iic, ← Ici_inter_Iic]
   exact
     (Ici_add_bij a d).inter_maps_to (fun x hx => add_le_add_right hx _) fun x hx =>
@@ -76,7 +79,8 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} M] [_inst_2 : ExistsAddOfLE.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1)))))) (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)))] (a : M) (b : M) (d : M), Set.BijOn.{u1, u1} M M (fun (_x : M) => HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) _x d) (Set.Ioo.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) a b) (Set.Ioo.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) a d) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) b d))
 Case conversion may be inaccurate. Consider using '#align set.Ioo_add_bij Set.Ioo_add_bijₓ'. -/
-theorem Ioo_add_bij : BijOn (· + d) (Ioo a b) (Ioo (a + d) (b + d)) := by
+theorem Ioo_add_bij : BijOn (· + d) (Ioo a b) (Ioo (a + d) (b + d)) :=
+  by
   rw [← Ioi_inter_Iio, ← Ioi_inter_Iio]
   exact
     (Ioi_add_bij a d).inter_maps_to (fun x hx => add_lt_add_right hx _) fun x hx =>
@@ -89,7 +93,8 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} M] [_inst_2 : ExistsAddOfLE.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1)))))) (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)))] (a : M) (b : M) (d : M), Set.BijOn.{u1, u1} M M (fun (_x : M) => HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) _x d) (Set.Ioc.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) a b) (Set.Ioc.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) a d) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) b d))
 Case conversion may be inaccurate. Consider using '#align set.Ioc_add_bij Set.Ioc_add_bijₓ'. -/
-theorem Ioc_add_bij : BijOn (· + d) (Ioc a b) (Ioc (a + d) (b + d)) := by
+theorem Ioc_add_bij : BijOn (· + d) (Ioc a b) (Ioc (a + d) (b + d)) :=
+  by
   rw [← Ioi_inter_Iic, ← Ioi_inter_Iic]
   exact
     (Ioi_add_bij a d).inter_maps_to (fun x hx => add_le_add_right hx _) fun x hx =>
@@ -102,7 +107,8 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : OrderedCancelAddCommMonoid.{u1} M] [_inst_2 : ExistsAddOfLE.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1)))))) (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)))] (a : M) (b : M) (d : M), Set.BijOn.{u1, u1} M M (fun (_x : M) => HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) _x d) (Set.Ico.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) a b) (Set.Ico.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelAddCommMonoid.toPartialOrder.{u1} M _inst_1)) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) a d) (HAdd.hAdd.{u1, u1, u1} M M M (instHAdd.{u1} M (AddZeroClass.toAdd.{u1} M (AddMonoid.toAddZeroClass.{u1} M (AddRightCancelMonoid.toAddMonoid.{u1} M (AddCancelMonoid.toAddRightCancelMonoid.{u1} M (CancelCommMonoid.toAddCancelMonoid.{u1} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} M _inst_1))))))) b d))
 Case conversion may be inaccurate. Consider using '#align set.Ico_add_bij Set.Ico_add_bijₓ'. -/
-theorem Ico_add_bij : BijOn (· + d) (Ico a b) (Ico (a + d) (b + d)) := by
+theorem Ico_add_bij : BijOn (· + d) (Ico a b) (Ico (a + d) (b + d)) :=
+  by
   rw [← Ici_inter_Iio, ← Ici_inter_Iio]
   exact
     (Ici_add_bij a d).inter_maps_to (fun x hx => add_lt_add_right hx _) fun x hx =>

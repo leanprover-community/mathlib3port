@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.polynomial.group_ring_action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,11 +32,12 @@ variable (R : Type _) [Semiring R]
 variable {M}
 
 theorem smul_eq_map [MulSemiringAction M R] (m : M) :
-    (· • ·) m = map (MulSemiringAction.toRingHom M R m) := by
+    (· • ·) m = map (MulSemiringAction.toRingHom M R m) :=
+  by
   suffices
     DistribMulAction.toAddMonoidHom R[X] m =
       (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom
-    by 
+    by
     ext1 r
     exact AddMonoidHom.congr_fun this r
   ext (n r) : 2
@@ -47,7 +48,7 @@ theorem smul_eq_map [MulSemiringAction M R] (m : M) :
 variable (M)
 
 noncomputable instance [MulSemiringAction M R] : MulSemiringAction M R[X] :=
-  { Polynomial.distribMulAction with 
+  { Polynomial.distribMulAction with
     smul := (· • ·)
     smul_one := fun m =>
       (smul_eq_map R m).symm ▸ Polynomial.map_one (MulSemiringAction.toRingHom M R m)
@@ -133,8 +134,8 @@ variable {Q : Type _} [CommSemiring Q] [MulSemiringAction M Q]
 open Polynomial
 
 /-- An equivariant map induces an equivariant map on polynomials. -/
-protected noncomputable def polynomial (g : P →+*[M] Q) :
-    P[X] →+*[M] Q[X] where 
+protected noncomputable def polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X]
+    where
   toFun := map g
   map_smul' m p :=
     Polynomial.induction_on p

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Bhavik Mehta, Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.nat.choose.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem choose_succ_succ (n k : ℕ) : choose (succ n) (succ k) = choose n k + c
 theorem choose_eq_zero_of_lt : ∀ {n k}, n < k → choose n k = 0
   | _, 0, hk => absurd hk (by decide)
   | 0, k + 1, hk => choose_zero_succ _
-  | n + 1, k + 1, hk => by 
+  | n + 1, k + 1, hk => by
     have hnk : n < k := lt_of_succ_lt_succ hk
     have hnk1 : n < k + 1 := lt_of_succ_lt hk
     rw [choose_succ_succ, choose_eq_zero_of_lt hnk, choose_eq_zero_of_lt hnk1]
@@ -106,7 +106,8 @@ theorem choose_one_right (n : ℕ) : choose n 1 = n := by induction n <;> simp [
 
 #print Nat.triangle_succ /-
 -- The `n+1`-st triangle number is `n` more than the `n`-th triangle number
-theorem triangle_succ (n : ℕ) : (n + 1) * (n + 1 - 1) / 2 = n * (n - 1) / 2 + n := by
+theorem triangle_succ (n : ℕ) : (n + 1) * (n + 1 - 1) / 2 = n * (n - 1) / 2 + n :=
+  by
   rw [← add_mul_div_left, mul_comm 2 n, ← mul_add, add_tsub_cancel_right, mul_comm]
   cases n <;> rfl; apply zero_lt_succ
 #align nat.triangle_succ Nat.triangle_succ
@@ -114,7 +115,8 @@ theorem triangle_succ (n : ℕ) : (n + 1) * (n + 1 - 1) / 2 = n * (n - 1) / 2 + 
 
 #print Nat.choose_two_right /-
 /-- `choose n 2` is the `n`-th triangle number. -/
-theorem choose_two_right (n : ℕ) : choose n 2 = n * (n - 1) / 2 := by
+theorem choose_two_right (n : ℕ) : choose n 2 = n * (n - 1) / 2 :=
+  by
   induction' n with n ih
   simp
   · rw [triangle_succ n]
@@ -154,7 +156,7 @@ theorem succ_mul_choose_eq : ∀ n k, succ n * choose n k = choose (succ n) (suc
 theorem choose_mul_factorial_mul_factorial : ∀ {n k}, k ≤ n → choose n k * k ! * (n - k)! = n !
   | 0, _, hk => by simp [Nat.eq_zero_of_le_zero hk]
   | n + 1, 0, hk => by simp
-  | n + 1, succ k, hk => by 
+  | n + 1, succ k, hk => by
     cases' lt_or_eq_of_le hk with hk₁ hk₁
     · have h : choose n k * k.succ ! * (n - k)! = (k + 1) * n ! := by
         rw [← choose_mul_factorial_mul_factorial (le_of_succ_le_succ hk)] <;>
@@ -175,7 +177,8 @@ theorem choose_mul_factorial_mul_factorial : ∀ {n k}, k ≤ n → choose n k *
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr factorial_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 #print Nat.choose_mul /-
 theorem choose_mul {n k s : ℕ} (hkn : k ≤ n) (hsk : s ≤ k) :
-    n.choose k * k.choose s = n.choose s * (n - s).choose (k - s) := by
+    n.choose k * k.choose s = n.choose s * (n - s).choose (k - s) :=
+  by
   have h : (n - k)! * (k - s)! * s ! ≠ 0 := by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr factorial_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
@@ -200,7 +203,8 @@ theorem choose_mul {n k s : ℕ} (hkn : k ≤ n) (hsk : s ≤ k) :
 
 #print Nat.choose_eq_factorial_div_factorial /-
 theorem choose_eq_factorial_div_factorial {n k : ℕ} (hk : k ≤ n) :
-    choose n k = n ! / (k ! * (n - k)!) := by
+    choose n k = n ! / (k ! * (n - k)!) :=
+  by
   rw [← choose_mul_factorial_mul_factorial hk, mul_assoc]
   exact (mul_div_left _ (mul_pos (factorial_pos _) (factorial_pos _))).symm
 #align nat.choose_eq_factorial_div_factorial Nat.choose_eq_factorial_div_factorial
@@ -227,7 +231,8 @@ theorem factorial_mul_factorial_dvd_factorial {n k : ℕ} (hk : k ≤ n) : k ! *
 -/
 
 #print Nat.factorial_mul_factorial_dvd_factorial_add /-
-theorem factorial_mul_factorial_dvd_factorial_add (i j : ℕ) : i ! * j ! ∣ (i + j)! := by
+theorem factorial_mul_factorial_dvd_factorial_add (i j : ℕ) : i ! * j ! ∣ (i + j)! :=
+  by
   convert factorial_mul_factorial_dvd_factorial (le.intro rfl)
   rw [add_tsub_cancel_left]
 #align nat.factorial_mul_factorial_dvd_factorial_add Nat.factorial_mul_factorial_dvd_factorial_add
@@ -242,7 +247,8 @@ theorem choose_symm {n k : ℕ} (hk : k ≤ n) : choose n (n - k) = choose n k :
 -/
 
 #print Nat.choose_symm_of_eq_add /-
-theorem choose_symm_of_eq_add {n a b : ℕ} (h : n = a + b) : Nat.choose n a = Nat.choose n b := by
+theorem choose_symm_of_eq_add {n a b : ℕ} (h : n = a + b) : Nat.choose n a = Nat.choose n b :=
+  by
   convert Nat.choose_symm (Nat.le_add_left _ _)
   rw [add_tsub_cancel_right]
 #align nat.choose_symm_of_eq_add Nat.choose_symm_of_eq_add
@@ -255,14 +261,16 @@ theorem choose_symm_add {a b : ℕ} : choose (a + b) a = choose (a + b) b :=
 -/
 
 #print Nat.choose_symm_half /-
-theorem choose_symm_half (m : ℕ) : choose (2 * m + 1) (m + 1) = choose (2 * m + 1) m := by
+theorem choose_symm_half (m : ℕ) : choose (2 * m + 1) (m + 1) = choose (2 * m + 1) m :=
+  by
   apply choose_symm_of_eq_add
   rw [add_comm m 1, add_assoc 1 m m, add_comm (2 * m) 1, two_mul m]
 #align nat.choose_symm_half Nat.choose_symm_half
 -/
 
 #print Nat.choose_succ_right_eq /-
-theorem choose_succ_right_eq (n k : ℕ) : choose n (k + 1) * (k + 1) = choose n k * (n - k) := by
+theorem choose_succ_right_eq (n k : ℕ) : choose n (k + 1) * (k + 1) = choose n k * (n - k) :=
+  by
   have e : (n + 1) * choose n k = choose n k * (k + 1) + choose n (k + 1) * (k + 1)
   rw [← right_distrib, ← choose_succ_succ, succ_mul_choose_eq]
   rw [← tsub_eq_of_eq_add_rev e, mul_comm, ← mul_tsub, add_tsub_add_eq_tsub_right]
@@ -278,7 +286,8 @@ theorem choose_succ_self_right : ∀ n : ℕ, (n + 1).choose n = n + 1
 -/
 
 #print Nat.choose_mul_succ_eq /-
-theorem choose_mul_succ_eq (n k : ℕ) : n.choose k * (n + 1) = (n + 1).choose k * (n + 1 - k) := by
+theorem choose_mul_succ_eq (n k : ℕ) : n.choose k * (n + 1) = (n + 1).choose k * (n + 1 - k) :=
+  by
   induction' k with k ih; · simp
   obtain hk | hk := le_or_lt (k + 1) (n + 1)
   ·
@@ -290,7 +299,8 @@ theorem choose_mul_succ_eq (n k : ℕ) : n.choose k * (n + 1) = (n + 1).choose k
 
 #print Nat.ascFactorial_eq_factorial_mul_choose /-
 theorem ascFactorial_eq_factorial_mul_choose (n k : ℕ) :
-    n.ascFactorial k = k ! * (n + k).choose k := by
+    n.ascFactorial k = k ! * (n + k).choose k :=
+  by
   rw [mul_comm]
   apply mul_right_cancel₀ (factorial_ne_zero (n + k - k))
   rw [choose_mul_factorial_mul_factorial, add_tsub_cancel_right, ← factorial_mul_asc_factorial,
@@ -307,7 +317,8 @@ theorem factorial_dvd_ascFactorial (n k : ℕ) : k ! ∣ n.ascFactorial k :=
 
 #print Nat.choose_eq_asc_factorial_div_factorial /-
 theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) :
-    (n + k).choose k = n.ascFactorial k / k ! := by
+    (n + k).choose k = n.ascFactorial k / k ! :=
+  by
   apply mul_left_cancel₀ (factorial_ne_zero k)
   rw [← asc_factorial_eq_factorial_mul_choose]
   exact (Nat.mul_div_cancel' <| factorial_dvd_asc_factorial _ _).symm
@@ -315,7 +326,8 @@ theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) :
 -/
 
 #print Nat.descFactorial_eq_factorial_mul_choose /-
-theorem descFactorial_eq_factorial_mul_choose (n k : ℕ) : n.descFactorial k = k ! * n.choose k := by
+theorem descFactorial_eq_factorial_mul_choose (n k : ℕ) : n.descFactorial k = k ! * n.choose k :=
+  by
   obtain h | h := Nat.lt_or_ge n k
   · rw [desc_factorial_eq_zero_iff_lt.2 h, choose_eq_zero_of_lt h, mul_zero]
   rw [mul_comm]
@@ -331,7 +343,8 @@ theorem factorial_dvd_descFactorial (n k : ℕ) : k ! ∣ n.descFactorial k :=
 -/
 
 #print Nat.choose_eq_descFactorial_div_factorial /-
-theorem choose_eq_descFactorial_div_factorial (n k : ℕ) : n.choose k = n.descFactorial k / k ! := by
+theorem choose_eq_descFactorial_div_factorial (n k : ℕ) : n.choose k = n.descFactorial k / k ! :=
+  by
   apply mul_left_cancel₀ (factorial_ne_zero k)
   rw [← desc_factorial_eq_factorial_mul_choose]
   exact (Nat.mul_div_cancel' <| factorial_dvd_desc_factorial _ _).symm
@@ -344,7 +357,7 @@ theorem choose_eq_descFactorial_div_factorial (n k : ℕ) : n.choose k = n.descF
 #print Nat.choose_le_succ_of_lt_half_left /-
 /-- Show that `nat.choose` is increasing for small values of the right argument. -/
 theorem choose_le_succ_of_lt_half_left {r n : ℕ} (h : r < n / 2) : choose n r ≤ choose n (r + 1) :=
-  by 
+  by
   refine' le_of_mul_le_mul_right _ (lt_tsub_iff_left.mpr (lt_of_lt_of_le h (n.div_le_self 2)))
   rw [← choose_succ_right_eq]
   apply Nat.mul_le_mul_left
@@ -365,7 +378,8 @@ private theorem choose_le_middle_of_le_half_left {n r : ℕ} (hr : r ≤ n / 2) 
 
 #print Nat.choose_le_middle /-
 /-- `choose n r` is maximised when `r` is `n/2`. -/
-theorem choose_le_middle (r n : ℕ) : choose n r ≤ choose n (n / 2) := by
+theorem choose_le_middle (r n : ℕ) : choose n r ≤ choose n (n / 2) :=
+  by
   cases' le_or_gt r n with b b
   · cases' le_or_lt r (n / 2) with a h
     · apply choose_le_middle_of_le_half_left a
@@ -390,7 +404,8 @@ theorem choose_le_succ (a c : ℕ) : choose a c ≤ choose a.succ c := by
 -/
 
 #print Nat.choose_le_add /-
-theorem choose_le_add (a b c : ℕ) : choose a c ≤ choose (a + b) c := by
+theorem choose_le_add (a b c : ℕ) : choose a c ≤ choose (a + b) c :=
+  by
   induction' b with b_n b_ih
   · simp
   exact le_trans b_ih (choose_le_succ (a + b_n) c)
@@ -459,7 +474,8 @@ theorem multichoose_succ_succ (n k : ℕ) :
 
 #print Nat.multichoose_one /-
 @[simp]
-theorem multichoose_one (k : ℕ) : multichoose 1 k = 1 := by
+theorem multichoose_one (k : ℕ) : multichoose 1 k = 1 :=
+  by
   induction' k with k IH; · simp
   simp [multichoose_succ_succ 0 k, IH]
 #align nat.multichoose_one Nat.multichoose_one
@@ -467,7 +483,8 @@ theorem multichoose_one (k : ℕ) : multichoose 1 k = 1 := by
 
 #print Nat.multichoose_two /-
 @[simp]
-theorem multichoose_two (k : ℕ) : multichoose 2 k = k + 1 := by
+theorem multichoose_two (k : ℕ) : multichoose 2 k = k + 1 :=
+  by
   induction' k with k IH; · simp
   simp [multichoose_succ_succ 1 k, IH]
   rw [add_comm]
@@ -476,7 +493,8 @@ theorem multichoose_two (k : ℕ) : multichoose 2 k = k + 1 := by
 
 #print Nat.multichoose_one_right /-
 @[simp]
-theorem multichoose_one_right (n : ℕ) : multichoose n 1 = n := by
+theorem multichoose_one_right (n : ℕ) : multichoose n 1 = n :=
+  by
   induction' n with n IH; · simp
   simp [multichoose_succ_succ n 0, IH]
 #align nat.multichoose_one_right Nat.multichoose_one_right
@@ -486,7 +504,8 @@ theorem multichoose_one_right (n : ℕ) : multichoose n 1 = n := by
 theorem multichoose_eq : ∀ n k : ℕ, multichoose n k = (n + k - 1).choose k
   | _, 0 => by simp
   | 0, k + 1 => by simp
-  | n + 1, k + 1 => by
+  | n + 1, k + 1 =>
+    by
     rw [multichoose_succ_succ, add_comm, Nat.succ_add_sub_one, ← add_assoc, Nat.choose_succ_succ]
     simp [multichoose_eq]
 #align nat.multichoose_eq Nat.multichoose_eq

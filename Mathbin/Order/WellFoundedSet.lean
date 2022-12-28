@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.well_founded_set
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ section AnyRel
 variable {s t : Set α} {x y : α}
 
 theorem well_founded_on_iff :
-    s.WellFoundedOn r ↔ WellFounded fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s := by
+    s.WellFoundedOn r ↔ WellFounded fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
+  by
   have f : RelEmbedding (fun (a : s) (b : s) => r a b) fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
     ⟨⟨coe, Subtype.coe_injective⟩, fun a b => by simp⟩
   refine' ⟨fun h => _, f.well_founded⟩
@@ -91,7 +92,8 @@ theorem well_founded_on_iff :
 namespace WellFoundedOn
 
 protected theorem induction (hs : s.WellFoundedOn r) (hx : x ∈ s) {P : α → Prop}
-    (hP : ∀ y ∈ s, (∀ z ∈ s, r z y → P z) → P y) : P x := by
+    (hP : ∀ y ∈ s, (∀ z ∈ s, r z y → P z) → P y) : P x :=
+  by
   let Q : s → Prop := fun y => P y
   change Q ⟨x, hx⟩
   refine' WellFounded.induction hs ⟨x, hx⟩ _
@@ -99,7 +101,7 @@ protected theorem induction (hs : s.WellFoundedOn r) (hx : x ∈ s) {P : α → 
 #align set.well_founded_on.induction Set.WellFoundedOn.induction
 
 protected theorem mono (h : t.WellFoundedOn r') (hle : r ≤ r') (hst : s ⊆ t) : s.WellFoundedOn r :=
-  by 
+  by
   rw [well_founded_on_iff] at *
   refine' Subrelation.wf (fun x y xy => _) h
   exact ⟨hle _ _ xy.1, hst xy.2.1, hst xy.2.2⟩
@@ -174,8 +176,8 @@ open Relation
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.refine'
               "refine'"
               (Term.fun
@@ -210,21 +212,21 @@ open Relation
                  (Term.proj `refl_trans_gen_iff_eq_or_trans_gen "." (fieldIdx "1"))
                  [(Term.proj `b "." (fieldIdx "2"))])]])
              []
-             (tactic___
-              (cdotTk (patternIgnore (token.«·» "·")))
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
               [(Std.Tactic.tacticRwa__
                 "rwa"
                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
                 [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])
              []
-             (tactic___
-              (cdotTk (patternIgnore (token.«·» "·")))
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
               [(Tactic.exact "exact" (Term.app `h.inv [`h']))])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.exact
               "exact"
               (Term.fun
@@ -241,8 +243,8 @@ open Relation
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.refine'
               "refine'"
               (Term.fun
@@ -299,8 +301,8 @@ open Relation
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.refine'
              "refine'"
              (Term.fun
@@ -335,21 +337,21 @@ open Relation
                 (Term.proj `refl_trans_gen_iff_eq_or_trans_gen "." (fieldIdx "1"))
                 [(Term.proj `b "." (fieldIdx "2"))])]])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Std.Tactic.tacticRwa__
                "rwa"
                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
                [(Tactic.location "at" (Tactic.locationHyp [`h] []))])])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.exact "exact" (Term.app `h.inv [`h']))])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.exact
              "exact"
              (Term.fun
@@ -366,8 +368,8 @@ open Relation
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.refine'
              "refine'"
              (Term.fun
@@ -417,8 +419,8 @@ open Relation
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.refine'
          "refine'"
          (Term.fun
@@ -819,17 +821,15 @@ section IsStrictOrder
 
 variable [IsStrictOrder α r] {s t : Set α}
 
-instance IsStrictOrder.subset :
-    IsStrictOrder α fun a b : α =>
-      r a b ∧
-        a ∈ s ∧ b ∈
-            s where 
+instance IsStrictOrder.subset : IsStrictOrder α fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s
+    where
   to_is_irrefl := ⟨fun a con => irrefl_of r a con.1⟩
   to_is_trans := ⟨fun a b c ab bc => ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩
 #align set.is_strict_order.subset Set.IsStrictOrder.subset
 
 theorem well_founded_on_iff_no_descending_seq :
-    s.WellFoundedOn r ↔ ∀ f : ((· > ·) : ℕ → ℕ → Prop) ↪r r, ¬∀ n, f n ∈ s := by
+    s.WellFoundedOn r ↔ ∀ f : ((· > ·) : ℕ → ℕ → Prop) ↪r r, ¬∀ n, f n ∈ s :=
+  by
   simp only [well_founded_on_iff, RelEmbedding.well_founded_iff_no_descending_seq, ← not_exists, ←
     not_nonempty_iff, not_iff_not]
   constructor
@@ -843,7 +843,8 @@ theorem well_founded_on_iff_no_descending_seq :
 #align set.well_founded_on_iff_no_descending_seq Set.well_founded_on_iff_no_descending_seq
 
 theorem WellFoundedOn.union (hs : s.WellFoundedOn r) (ht : t.WellFoundedOn r) :
-    (s ∪ t).WellFoundedOn r := by
+    (s ∪ t).WellFoundedOn r :=
+  by
   rw [well_founded_on_iff_no_descending_seq] at *
   rintro f hf
   rcases Nat.exists_subseq_of_forall_mem_union f hf with ⟨g, hg | hg⟩
@@ -944,7 +945,8 @@ theorem partially_well_ordered_on_empty (r : α → α → Prop) : PartiallyWell
 #align set.partially_well_ordered_on_empty Set.partially_well_ordered_on_empty
 
 theorem PartiallyWellOrderedOn.union (hs : s.PartiallyWellOrderedOn r)
-    (ht : t.PartiallyWellOrderedOn r) : (s ∪ t).PartiallyWellOrderedOn r := by
+    (ht : t.PartiallyWellOrderedOn r) : (s ∪ t).PartiallyWellOrderedOn r :=
+  by
   rintro f hf
   rcases Nat.exists_subseq_of_forall_mem_union f hf with ⟨g, hgs | hgt⟩
   · rcases hs _ hgs with ⟨m, n, hlt, hr⟩
@@ -961,7 +963,8 @@ theorem partially_well_ordered_on_union :
 #align set.partially_well_ordered_on_union Set.partially_well_ordered_on_union
 
 theorem PartiallyWellOrderedOn.image_of_monotone_on (hs : s.PartiallyWellOrderedOn r)
-    (hf : ∀ a₁ ∈ s, ∀ a₂ ∈ s, r a₁ a₂ → r' (f a₁) (f a₂)) : (f '' s).PartiallyWellOrderedOn r' := by
+    (hf : ∀ a₁ ∈ s, ∀ a₂ ∈ s, r a₁ a₂ → r' (f a₁) (f a₂)) : (f '' s).PartiallyWellOrderedOn r' :=
+  by
   intro g' hg'
   choose g hgs heq using hg'
   obtain rfl : f ∘ g = g'; exact funext HEq
@@ -971,7 +974,8 @@ theorem PartiallyWellOrderedOn.image_of_monotone_on (hs : s.PartiallyWellOrdered
   set.partially_well_ordered_on.image_of_monotone_on Set.PartiallyWellOrderedOn.image_of_monotone_on
 
 theorem IsAntichain.finite_of_partially_well_ordered_on (ha : IsAntichain r s)
-    (hp : s.PartiallyWellOrderedOn r) : s.Finite := by
+    (hp : s.PartiallyWellOrderedOn r) : s.Finite :=
+  by
   refine' not_infinite.1 fun hi => _
   obtain ⟨m, n, hmn, h⟩ := hp (fun n => hi.nat_embedding _ n) fun n => (hi.nat_embedding _ n).2
   exact
@@ -986,7 +990,7 @@ section IsRefl
 variable [IsRefl α r]
 
 protected theorem Finite.partially_well_ordered_on (hs : s.Finite) : s.PartiallyWellOrderedOn r :=
-  by 
+  by
   intro f hf
   obtain ⟨m, n, hmn, h⟩ := hs.exists_lt_map_eq_of_forall_mem hf
   exact ⟨m, n, hmn, h.subst <| refl (f m)⟩
@@ -1016,7 +1020,8 @@ protected theorem PartiallyWellOrderedOn.insert (h : PartiallyWellOrderedOn s r)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem partially_well_ordered_on_iff_finite_antichains [IsSymm α r] :
-    s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite := by
+    s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite :=
+  by
   refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
   rintro hs f hf
   by_contra' H
@@ -1039,7 +1044,8 @@ theorem partially_well_ordered_on_iff_finite_antichains [IsSymm α r] :
 variable [IsTrans α r]
 
 theorem PartiallyWellOrderedOn.exists_monotone_subseq (h : s.PartiallyWellOrderedOn r) (f : ℕ → α)
-    (hf : ∀ n, f n ∈ s) : ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) := by
+    (hf : ∀ n, f n ∈ s) : ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
+  by
   obtain ⟨g, h1 | h2⟩ := exists_increasing_or_nonincreasing_subseq r f
   · refine' ⟨g, fun m n hle => _⟩
     obtain hlt | rfl := hle.lt_or_eq
@@ -1054,7 +1060,7 @@ theorem partially_well_ordered_on_iff_exists_monotone_subseq :
     s.PartiallyWellOrderedOn r ↔
       ∀ f : ℕ → α, (∀ n, f n ∈ s) → ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
   by
-  classical 
+  classical
     constructor <;> intro h f hf
     · exact h.exists_monotone_subseq f hf
     · obtain ⟨g, gmon⟩ := h f hf
@@ -1065,7 +1071,8 @@ theorem partially_well_ordered_on_iff_exists_monotone_subseq :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem PartiallyWellOrderedOn.prod {t : Set β} (hs : PartiallyWellOrderedOn s r)
     (ht : PartiallyWellOrderedOn t r') :
-    PartiallyWellOrderedOn (s ×ˢ t) fun x y : α × β => r x.1 y.1 ∧ r' x.2 y.2 := by
+    PartiallyWellOrderedOn (s ×ˢ t) fun x y : α × β => r x.1 y.1 ∧ r' x.2 y.2 :=
+  by
   intro f hf
   obtain ⟨g₁, h₁⟩ := hs.exists_monotone_subseq (Prod.fst ∘ f) fun n => (hf n).1
   obtain ⟨m, n, hlt, hle⟩ := ht (Prod.snd ∘ f ∘ g₁) fun n => (hf _).2
@@ -1075,7 +1082,8 @@ protected theorem PartiallyWellOrderedOn.prod {t : Set β} (hs : PartiallyWellOr
 end IsRefl
 
 theorem PartiallyWellOrderedOn.well_founded_on [IsPreorder α r] (h : s.PartiallyWellOrderedOn r) :
-    s.WellFoundedOn fun a b => r a b ∧ ¬r b a := by
+    s.WellFoundedOn fun a b => r a b ∧ ¬r b a :=
+  by
   letI : Preorder α :=
     { le := r
       le_refl := refl_of r
@@ -1229,7 +1237,8 @@ section LinearOrder
 
 variable [LinearOrder α] {s : Set α}
 
-protected theorem IsWf.is_pwo (hs : s.IsWf) : s.IsPwo := by
+protected theorem IsWf.is_pwo (hs : s.IsWf) : s.IsPwo :=
+  by
   intro f hf
   lift f to ℕ → s using hf
   have hrange : (range f).Nonempty := range_nonempty _
@@ -1365,7 +1374,8 @@ theorem IsWf.min_le_min_of_subset {hs : s.IsWf} {hsn : s.Nonempty} {ht : t.IsWf}
 #align set.is_wf.min_le_min_of_subset Set.IsWf.min_le_min_of_subset
 
 theorem IsWf.min_union (hs : s.IsWf) (hsn : s.Nonempty) (ht : t.IsWf) (htn : t.Nonempty) :
-    (hs.union ht).min (union_nonempty.2 (Or.intro_left _ hsn)) = min (hs.min hsn) (ht.min htn) := by
+    (hs.union ht).min (union_nonempty.2 (Or.intro_left _ hsn)) = min (hs.min hsn) (ht.min htn) :=
+  by
   refine'
     le_antisymm
       (le_min (is_wf.min_le_min_of_subset (subset_union_left _ _))
@@ -1412,7 +1422,7 @@ def IsMinBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ
 noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α)
     (hf : IsBadSeq r s f) :
     { g : ℕ → α // (∀ m : ℕ, m < n → f m = g m) ∧ IsBadSeq r s g ∧ IsMinBadSeq r rk s n g } := by
-  classical 
+  classical
     have h : ∃ (k : ℕ)(g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
       ⟨_, f, fun _ _ => rfl, hf, rfl⟩
     obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
@@ -1423,9 +1433,11 @@ noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (
   set.partially_well_ordered_on.min_bad_seq_of_bad_seq Set.PartiallyWellOrderedOn.minBadSeqOfBadSeq
 
 theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) (s : Set α) :
-    (∃ f, IsBadSeq r s f) → ∃ f, IsBadSeq r s f ∧ ∀ n, IsMinBadSeq r rk s n f := by
+    (∃ f, IsBadSeq r s f) → ∃ f, IsBadSeq r s f ∧ ∀ n, IsMinBadSeq r rk s n f :=
+  by
   rintro ⟨f0, hf0 : is_bad_seq r s f0⟩
-  let fs : ∀ n : ℕ, { f : ℕ → α // is_bad_seq r s f ∧ is_min_bad_seq r rk s n f } := by
+  let fs : ∀ n : ℕ, { f : ℕ → α // is_bad_seq r s f ∧ is_min_bad_seq r rk s n f } :=
+    by
     refine' Nat.rec _ _
     ·
       exact
@@ -1434,7 +1446,8 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
       exact fun n fn =>
         ⟨(min_bad_seq_of_bad_seq r rk s (n + 1) fn.1 fn.2.1).1,
           (min_bad_seq_of_bad_seq r rk s (n + 1) fn.1 fn.2.1).2.2⟩
-  have h : ∀ m n, m ≤ n → (fs m).1 m = (fs n).1 m := by
+  have h : ∀ m n, m ≤ n → (fs m).1 m = (fs n).1 m :=
+    by
     intro m n mn
     obtain ⟨k, rfl⟩ := exists_add_of_le mn
     clear mn
@@ -1454,7 +1467,8 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
   set.partially_well_ordered_on.exists_min_bad_of_exists_bad Set.PartiallyWellOrderedOn.exists_min_bad_of_exists_bad
 
 theorem iff_not_exists_is_min_bad_seq (rk : α → ℕ) {s : Set α} :
-    s.PartiallyWellOrderedOn r ↔ ¬∃ f, IsBadSeq r s f ∧ ∀ n, IsMinBadSeq r rk s n f := by
+    s.PartiallyWellOrderedOn r ↔ ¬∃ f, IsBadSeq r s f ∧ ∀ n, IsMinBadSeq r rk s n f :=
+  by
   rw [iff_forall_not_is_bad_seq, ← not_exists, not_congr]
   constructor
   · apply exists_min_bad_of_exists_bad
@@ -1469,7 +1483,8 @@ theorem iff_not_exists_is_min_bad_seq (rk : α → ℕ) {s : Set α} :
   `list.sublist_forall₂ r l₁ l₂` whenever `l₁` related pointwise by `r` to a sublist of `l₂`.  -/
 theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [IsRefl α r] [IsTrans α r]
     {s : Set α} (h : s.PartiallyWellOrderedOn r) :
-    { l : List α | ∀ x, x ∈ l → x ∈ s }.PartiallyWellOrderedOn (List.SublistForall₂ r) := by
+    { l : List α | ∀ x, x ∈ l → x ∈ s }.PartiallyWellOrderedOn (List.SublistForall₂ r) :=
+  by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨as, has⟩)
   · apply partially_well_ordered_on.mono (Finset.partially_well_ordered_on {List.nil})
     · intro l hl
@@ -1481,7 +1496,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   rintro ⟨f, hf1, hf2⟩
   have hnil : ∀ n, f n ≠ List.nil := fun n con =>
     hf1.2 n n.succ n.lt_succ_self (con.symm ▸ List.SublistForall₂.nil)
-  obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.head ∘ f) _
+  obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.headI ∘ f) _
   swap;
   · simp only [Set.range_subset_iff, Function.comp_apply]
     exact fun n => hf1.1 n _ (List.head_mem_self (hnil n))
@@ -1528,13 +1543,14 @@ Some generalizations would be possible based on this proof, to include cases whe
 partially well ordered, and also to consider the case of `set.partially_well_ordered_on` instead of
 `set.is_pwo`. -/
 theorem Pi.is_pwo {α : ι → Type _} [∀ i, LinearOrder (α i)] [∀ i, IsWellOrder (α i) (· < ·)]
-    [Finite ι] (s : Set (∀ i, α i)) : s.IsPwo := by
+    [Finite ι] (s : Set (∀ i, α i)) : s.IsPwo :=
+  by
   cases nonempty_fintype ι
   suffices
     ∀ s : Finset ι,
       ∀ f : ℕ → ∀ s, α s,
         ∃ g : ℕ ↪o ℕ, ∀ ⦃a b : ℕ⦄, a ≤ b → ∀ (x : ι) (hs : x ∈ s), (f ∘ g) a x ≤ (f ∘ g) b x
-    by 
+    by
     refine' is_pwo_iff_exists_monotone_subseq.2 fun f hf => _
     simpa only [Finset.mem_univ, true_imp_iff] using this Finset.univ f
   refine' Finset.cons_induction _ _

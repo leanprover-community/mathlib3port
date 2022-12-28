@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.monoid_localization
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,8 @@ def r (S : Submonoid M) : Con (M × S) :=
 submonoid of `M`, whose quotient is the localization of `M` at `S`. -/
 @[to_additive
       "An alternate form of the congruence relation on `M × S`, `M` a `comm_monoid` and\n`S` a submonoid of `M`, whose quotient is the localization of `M` at `S`."]
-def r' : Con (M × S) := by
+def r' : Con (M × S) :=
+  by
   refine'
     { R := fun a b : M × S => ∃ c : S, a.1 * b.2 * c = b.1 * a.2 * c
       iseqv := ⟨fun a => ⟨1, rfl⟩, fun a b ⟨c, hc⟩ => ⟨c, hc.symm⟩, _⟩.. }
@@ -142,10 +143,10 @@ def r' : Con (M × S) := by
     simp only [Submonoid.coe_mul]
     calc
       a.1 * c.2 * (b.2 * t₁ * t₂) = a.1 * b.2 * t₁ * c.2 * t₂ := by ac_rfl
-      _ = b.1 * c.2 * t₂ * a.2 * t₁ := by 
+      _ = b.1 * c.2 * t₂ * a.2 * t₁ := by
         rw [ht₁]
         ac_rfl
-      _ = c.1 * a.2 * (b.2 * t₁ * t₂) := by 
+      _ = c.1 * a.2 * (b.2 * t₁ * t₂) := by
         rw [ht₂]
         ac_rfl
       
@@ -153,7 +154,8 @@ def r' : Con (M × S) := by
     use t₁ * t₂
     calc
       a.1 * c.1 * (b.2 * d.2) * (t₁ * t₂) = a.1 * b.2 * t₁ * (c.1 * d.2 * t₂) := by ac_rfl
-      _ = b.1 * d.1 * (a.2 * c.2) * (t₁ * t₂) := by
+      _ = b.1 * d.1 * (a.2 * c.2) * (t₁ * t₂) :=
+        by
         rw [ht₁, ht₂]
         ac_rfl
       
@@ -166,7 +168,8 @@ equivalently as an infimum (see `localization.r`) or explicitly
       "The additive congruence relation used to localize an `add_comm_monoid` at a\nsubmonoid can be expressed equivalently as an infimum (see `add_localization.r`) or\nexplicitly (see `add_localization.r'`)."]
 theorem r_eq_r' : r S = r' S :=
   le_antisymm (infₛ_le fun _ => ⟨1, by simp⟩) <|
-    le_infₛ fun b H ⟨p, q⟩ y ⟨t, ht⟩ => by
+    le_infₛ fun b H ⟨p, q⟩ y ⟨t, ht⟩ =>
+      by
       rw [← mul_one (p, q), ← mul_one y]
       refine' b.trans (b.mul (b.refl _) (H (y.2 * t))) _
       convert b.symm (b.mul (b.refl y) (H (q * t))) using 1
@@ -233,7 +236,7 @@ protected irreducible_def npow : ℕ → Localization S → Localization S :=
 attribute [local semireducible] Localization.mul Localization.one Localization.npow
 
 @[to_additive]
-instance : CommMonoid (Localization S) where 
+instance : CommMonoid (Localization S) where
   mul := (· * ·)
   one := 1
   mul_assoc :=
@@ -276,7 +279,7 @@ def rec {p : Localization S → Sort u} (f : ∀ (a : M) (b : S), p (mk a b))
         (Eq.ndrec (f a b) (mk_eq_mk_iff.mpr h) : p (mk c d)) = f c d)
     (x) : p x :=
   Quot.rec (fun y => Eq.ndrec (f y.1 y.2) (Prod.mk.eta : (y.1, y.2) = y))
-    (fun y z h => by 
+    (fun y z h => by
       cases y
       cases z
       exact H h)
@@ -374,7 +377,7 @@ theorem r_of_eq {x y : M × S} (h : y.1 * x.2 = x.1 * y.2) : r S x y :=
 #align localization.r_of_eq Localization.r_of_eq
 
 @[to_additive]
-theorem mk_self (a : S) : mk (a : M) a = 1 := by 
+theorem mk_self (a : S) : mk (a : M) a = 1 := by
   symm
   rw [← mk_one, mk_eq_mk_iff]
   exact one_rel a
@@ -389,7 +392,7 @@ protected irreducible_def smul [HasSmul R M] [IsScalarTower R M M] (c : R) (z : 
   Localization S :=
   (Localization.liftOn z fun a b => mk (c • a) b) fun a a' b b' h =>
     mk_eq_mk_iff.2
-      (by 
+      (by
         cases' b with b hb
         cases' b' with b' hb'
         rw [r_eq_r'] at h⊢
@@ -398,33 +401,29 @@ protected irreducible_def smul [HasSmul R M] [IsScalarTower R M M] (c : R) (z : 
         simp only [smul_mul_assoc, ht])
 #align localization.smul Localization.smul
 
-instance [HasSmul R M] [IsScalarTower R M M] :
-    HasSmul R (Localization S) where smul := Localization.smul
+instance [HasSmul R M] [IsScalarTower R M M] : HasSmul R (Localization S)
+    where smul := Localization.smul
 
 theorem smul_mk [HasSmul R M] [IsScalarTower R M M] (c : R) (a b) :
-    c • (mk a b : Localization S) = mk (c • a) b := by
+    c • (mk a b : Localization S) = mk (c • a) b :=
+  by
   unfold HasSmul.smul Localization.smul
   apply lift_on_mk
 #align localization.smul_mk Localization.smul_mk
 
 instance [HasSmul R₁ M] [HasSmul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M]
-    [SMulCommClass R₁ R₂ M] :
-    SMulCommClass R₁ R₂
-      (Localization
-        S) where smul_comm s t :=
+    [SMulCommClass R₁ R₂ M] : SMulCommClass R₁ R₂ (Localization S)
+    where smul_comm s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_comm s t r]
 
 instance [HasSmul R₁ M] [HasSmul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M] [HasSmul R₁ R₂]
-    [IsScalarTower R₁ R₂ M] :
-    IsScalarTower R₁ R₂
-      (Localization
-        S) where smul_assoc s t :=
+    [IsScalarTower R₁ R₂ M] : IsScalarTower R₁ R₂ (Localization S)
+    where smul_assoc s t :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, smul_assoc s t r]
 
 instance smul_comm_class_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] :
-    SMulCommClass R (Localization S)
-      (Localization
-        S) where smul_comm s :=
+    SMulCommClass R (Localization S) (Localization S)
+    where smul_comm s :=
     Localization.ind <|
       Prod.rec fun r₁ x₁ =>
         Localization.ind <|
@@ -433,9 +432,8 @@ instance smul_comm_class_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] 
 #align localization.smul_comm_class_right Localization.smul_comm_class_right
 
 instance is_scalar_tower_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] :
-    IsScalarTower R (Localization S)
-      (Localization
-        S) where smul_assoc s :=
+    IsScalarTower R (Localization S) (Localization S)
+    where smul_assoc s :=
     Localization.ind <|
       Prod.rec fun r₁ x₁ =>
         Localization.ind <|
@@ -443,31 +441,26 @@ instance is_scalar_tower_right {R : Type _} [HasSmul R M] [IsScalarTower R M M] 
 #align localization.is_scalar_tower_right Localization.is_scalar_tower_right
 
 instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [IsScalarTower R M M] [IsScalarTower Rᵐᵒᵖ M M]
-    [IsCentralScalar R M] :
-    IsCentralScalar R
-      (Localization
-        S) where op_smul_eq_smul s :=
+    [IsCentralScalar R M] : IsCentralScalar R (Localization S)
+    where op_smul_eq_smul s :=
     Localization.ind <| Prod.rec fun r x => by simp only [smul_mk, op_smul_eq_smul]
 
-instance [Monoid R] [MulAction R M] [IsScalarTower R M M] :
-    MulAction R
-      (Localization
-        S) where 
+instance [Monoid R] [MulAction R M] [IsScalarTower R M M] : MulAction R (Localization S)
+    where
   one_smul :=
     Localization.ind <|
-      Prod.rec <| by 
+      Prod.rec <| by
         intros
         simp only [Localization.smul_mk, one_smul]
   mul_smul s₁ s₂ :=
     Localization.ind <|
-      Prod.rec <| by 
+      Prod.rec <| by
         intros
         simp only [Localization.smul_mk, mul_smul]
 
 instance [Monoid R] [MulDistribMulAction R M] [IsScalarTower R M M] :
-    MulDistribMulAction R
-      (Localization
-        S) where 
+    MulDistribMulAction R (Localization S)
+    where
   smul_one s := by simp only [← Localization.mk_one, Localization.smul_mk, smul_one]
   smul_mul s x y :=
     Localization.induction_on₂ x y <|
@@ -488,7 +481,7 @@ namespace MonoidHom
 def toLocalizationMap (f : M →* N) (H1 : ∀ y : S, IsUnit (f y))
     (H2 : ∀ z, ∃ x : M × S, z * f x.2 = f x.1) (H3 : ∀ x y, f x = f y ↔ ∃ c : S, x * c = y * c) :
     Submonoid.LocalizationMap S N :=
-  { f with 
+  { f with
     map_units' := H1
     surj' := H2
     eq_iff_exists' := H3 }
@@ -507,7 +500,8 @@ abbrev toMap (f : LocalizationMap S N) :=
 #align submonoid.localization_map.to_map Submonoid.LocalizationMap.toMap
 
 @[ext, to_additive]
-theorem ext {f g : LocalizationMap S N} (h : ∀ x, f.toMap x = g.toMap x) : f = g := by
+theorem ext {f g : LocalizationMap S N} (h : ∀ x, f.toMap x = g.toMap x) : f = g :=
+  by
   rcases f with ⟨⟨⟩⟩
   rcases g with ⟨⟨⟩⟩
   simp only
@@ -616,7 +610,8 @@ variable (f : LocalizationMap S N)
 
 @[to_additive]
 theorem map_right_cancel {x y} {c : S} (h : f.toMap (c * x) = f.toMap (c * y)) :
-    f.toMap x = f.toMap y := by
+    f.toMap x = f.toMap y :=
+  by
   rw [f.to_map.map_mul, f.to_map.map_mul] at h
   cases' f.map_units c with u hu
   rw [← hu] at h
@@ -783,7 +778,8 @@ variable {g : M →* P}
 `g : M →* P` such that `g(S) ⊆ units P`, `f x = f y → g x = g y` for all `x y : M`. -/
 @[to_additive
       "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M` and a map\nof `add_comm_monoid`s `g : M →+ P` such that `g(S) ⊆ add_units P`, `f x = f y → g x = g y`\nfor all `x y : M`."]
-theorem eq_of_eq (hg : ∀ y : S, IsUnit (g y)) {x y} (h : f.toMap x = f.toMap y) : g x = g y := by
+theorem eq_of_eq (hg : ∀ y : S, IsUnit (g y)) {x y} (h : f.toMap x = f.toMap y) : g x = g y :=
+  by
   obtain ⟨c, hc⟩ := f.eq_iff_exists.1 h
   rw [← mul_one (g x), ← IsUnit.mul_liftRight_inv (g.restrict S) hg c]
   show _ * (g c * _) = _
@@ -808,12 +804,12 @@ variable (hg : ∀ y : S, IsUnit (g y))
 `z = f x * (f y)⁻¹`. -/
 @[to_additive
       "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M` and a map\nof `add_comm_monoid`s `g : M →+ P` such that `g y` is invertible for all `y : S`, the homomorphism\ninduced from `N` to `P` sending `z : N` to `g x - g y`, where `(x, y) : M × S` are such that\n`z = f x - f y`."]
-noncomputable def lift :
-    N →*
-      P where 
+noncomputable def lift : N →* P
+    where
   toFun z := g (f.sec z).1 * ↑(IsUnit.liftRight (g.restrict S) hg (f.sec z).2)⁻¹
   map_one' := by rw [mul_inv_left, mul_one] <;> exact f.eq_of_eq hg (by rw [← sec_spec, one_mul])
-  map_mul' x y := by
+  map_mul' x y :=
+    by
     rw [mul_inv_left hg, ← mul_assoc, ← mul_assoc, mul_inv_right hg, mul_comm _ (g (f.sec y).1), ←
       mul_assoc, ← mul_assoc, mul_inv_right hg]
     repeat' rw [← g.map_mul]
@@ -848,7 +844,8 @@ theorem lift_spec (z v) : f.lift hg z = v ↔ g (f.sec z).1 = g (f.sec z).2 * v 
 `z * f y = f x`. -/
 @[to_additive
       "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M`, if\nan `add_comm_monoid` map `g : M →+ P` induces a map `f.lift hg : N →+ P` then for all\n`z : N, v w : P`, we have `f.lift hg z + w = v ↔ g x + w = g y + v`, where `x : M, y ∈ S` are such\nthat `z + f y = f x`."]
-theorem lift_spec_mul (z w v) : f.lift hg z * w = v ↔ g (f.sec z).1 * w = g (f.sec z).2 * v := by
+theorem lift_spec_mul (z w v) : f.lift hg z * w = v ↔ g (f.sec z).1 * w = g (f.sec z).2 * v :=
+  by
   rw [mul_comm]
   show _ * (_ * _) = _ ↔ _
   rw [← mul_assoc, mul_inv_left hg, mul_comm]
@@ -893,7 +890,8 @@ theorem lift_comp : (f.lift hg).comp f.toMap = g := by ext <;> exact f.lift_eq h
 #align submonoid.localization_map.lift_comp Submonoid.LocalizationMap.lift_comp
 
 @[simp, to_additive]
-theorem lift_of_comp (j : N →* P) : f.lift (f.is_unit_comp j) = j := by
+theorem lift_of_comp (j : N →* P) : f.lift (f.is_unit_comp j) = j :=
+  by
   ext
   rw [lift_spec]
   show j _ = j _ * _
@@ -902,14 +900,15 @@ theorem lift_of_comp (j : N →* P) : f.lift (f.is_unit_comp j) = j := by
 
 @[to_additive]
 theorem epic_of_localization_map {j k : N →* P} (h : ∀ a, j.comp f.toMap a = k.comp f.toMap a) :
-    j = k := by 
+    j = k := by
   rw [← f.lift_of_comp j, ← f.lift_of_comp k]
   congr 1 with x; exact h x
 #align
   submonoid.localization_map.epic_of_localization_map Submonoid.LocalizationMap.epic_of_localization_map
 
 @[to_additive]
-theorem lift_unique {j : N →* P} (hj : ∀ x, j (f.toMap x) = g x) : f.lift hg = j := by
+theorem lift_unique {j : N →* P} (hj : ∀ x, j (f.toMap x) = g x) : f.lift hg = j :=
+  by
   ext
   rw [lift_spec, ← hj, ← hj, ← j.map_mul]
   apply congr_arg
@@ -928,10 +927,11 @@ induced by `k`. -/
   to_additive
       "Given two localization maps `f : M →+ N, k : M →+ P` for a submonoid `S ⊆ M`,\nthe hom from `P` to `N` induced by `f` is left inverse to the hom from `N` to `P`\ninduced by `k`."]
 theorem lift_left_inverse {k : LocalizationMap S P} (z : N) :
-    k.lift f.map_units (f.lift k.map_units z) = z := by
+    k.lift f.map_units (f.lift k.map_units z) = z :=
+  by
   rw [lift_spec]
   cases' f.surj z with x hx
-  conv_rhs => 
+  conv_rhs =>
     congr
     skip
     rw [f.eq_mk'_iff_mul_eq.2 hx]
@@ -947,7 +947,8 @@ theorem lift_left_inverse {k : LocalizationMap S P} (z : N) :
 
 @[to_additive]
 theorem lift_surjective_iff :
-    Function.Surjective (f.lift hg) ↔ ∀ v : P, ∃ x : M × S, v * g x.2 = g x.1 := by
+    Function.Surjective (f.lift hg) ↔ ∀ v : P, ∃ x : M × S, v * g x.2 = g x.1 :=
+  by
   constructor
   · intro H v
     obtain ⟨z, hz⟩ := H v
@@ -963,7 +964,8 @@ theorem lift_surjective_iff :
 
 @[to_additive]
 theorem lift_injective_iff :
-    Function.Injective (f.lift hg) ↔ ∀ x y, f.toMap x = f.toMap y ↔ g x = g y := by
+    Function.Injective (f.lift hg) ↔ ∀ x y, f.toMap x = f.toMap y ↔ g x = g y :=
+  by
   constructor
   · intro H x y
     constructor
@@ -1005,7 +1007,8 @@ theorem map_comp : (f.map hy k).comp f.toMap = k.toMap.comp g :=
 #align submonoid.localization_map.map_comp Submonoid.LocalizationMap.map_comp
 
 @[to_additive]
-theorem map_mk' (x) (y : S) : f.map hy k (f.mk' x y) = k.mk' (g x) ⟨g y, hy y⟩ := by
+theorem map_mk' (x) (y : S) : f.map hy k (f.mk' x y) = k.mk' (g x) ⟨g y, hy y⟩ :=
+  by
   rw [map, lift_mk', mul_inv_left]
   · show k.to_map (g x) = k.to_map (g y) * _
     rw [mul_mk'_eq_mk'_of_mul]
@@ -1054,7 +1057,7 @@ of the induced maps equals the map of localizations induced by `l ∘ g`. -/
 theorem map_comp_map {A : Type _} [CommMonoid A] {U : Submonoid A} {R} [CommMonoid R]
     (j : LocalizationMap U R) {l : P →* A} (hl : ∀ w : T, l w ∈ U) :
     (k.map hl j).comp (f.map hy k) = f.map (fun x => show l.comp g x ∈ U from hl ⟨g x, hy x⟩) j :=
-  by 
+  by
   ext z
   show j.to_map _ * _ = j.to_map (l _) * _
   · rw [mul_inv_left, ← mul_assoc, mul_inv_right]
@@ -1100,7 +1103,7 @@ noncomputable def AwayMap.invSelf : N :=
 `z : N` to `g y * (g x)⁻ⁿ`, where `y : M, n : ℕ` are such that `z = F y * (F x)⁻ⁿ`. -/
 noncomputable def AwayMap.lift (hg : IsUnit (g x)) : N →* P :=
   F.lift fun y =>
-    show IsUnit (g y.1) by 
+    show IsUnit (g y.1) by
       obtain ⟨n, hn⟩ := y.2
       rw [← hn, g.map_pow]
       exact IsUnit.pow n hg
@@ -1150,12 +1153,12 @@ noncomputable def AwayMap.negSelf : B :=
 `z : B` to `g y - n • g x`, where `y : A, n : ℕ` are such that `z = F y - n • F x`. -/
 noncomputable def AwayMap.lift (hg : IsAddUnit (g x)) : B →+ C :=
   F.lift fun y =>
-    show IsAddUnit (g y.1) by 
+    show IsAddUnit (g y.1) by
       obtain ⟨n, hn⟩ := y.2
       rw [← hn]
       dsimp
       rw [g.map_nsmul]
-      exact IsAddUnit.map (nsmul_add_monoid_hom n : C →+ C) hg
+      exact IsAddUnit.map (nsmulAddMonoidHom n : C →+ C) hg
 #align add_submonoid.localization_map.away_map.lift AddSubmonoid.LocalizationMap.AwayMap.lift
 
 @[simp]
@@ -1457,7 +1460,9 @@ variable (S)
 @[to_additive
       "Natural homomorphism sending `x : M`, `M` an `add_comm_monoid`, to the equivalence\nclass of `(x, 0)` in the localization of `M` at a submonoid."]
 def monoidOf : Submonoid.LocalizationMap S (Localization S) :=
-  { (r S).mk'.comp <| MonoidHom.inl M S with
+  {
+    (r S).mk'.comp <| MonoidHom.inl M
+        S with
     toFun := fun x => mk x 1
     map_one' := mk_one
     map_mul' := fun x y => by rw [mk_mul, mul_one]
@@ -1480,7 +1485,8 @@ theorem mk_one_eq_monoid_of_mk (x) : mk x 1 = (monoidOf S).toMap x :=
 @[to_additive]
 theorem mk_eq_monoid_of_mk'_apply (x y) : mk x y = (monoidOf S).mk' x y :=
   show _ = _ * _ from
-    (Submonoid.LocalizationMap.mul_inv_right (monoidOf S).map_units _ _ _).2 <| by
+    (Submonoid.LocalizationMap.mul_inv_right (monoidOf S).map_units _ _ _).2 <|
+      by
       rw [← mk_one_eq_monoid_of_mk, ← mk_one_eq_monoid_of_mk,
         show mk x y * mk y 1 = mk (x * y) (1 * y) by rw [mul_comm 1 y, mk_mul],
         show mk x 1 = mk (x * 1) ((1 : S) * 1) by rw [mul_one, mul_one]]
@@ -1652,7 +1658,7 @@ attribute [local semireducible] Localization.zero Localization.mul
 instance : CommMonoidWithZero (Localization S) := by
   refine_struct { Localization.commMonoid S with zero := 0 } <;>
     exact fun x =>
-      Localization.induction_on x <| by 
+      Localization.induction_on x <| by
         intros
         refine' mk_eq_mk_iff.mpr (r_of_eq _)
         simp only [zero_mul, mul_zero]
@@ -1690,7 +1696,8 @@ are such that `z = f x * (f y)⁻¹`. -/
 noncomputable def lift (f : LocalizationWithZeroMap S N) (g : M →*₀ P)
     (hg : ∀ y : S, IsUnit (g y)) : N →*₀ P :=
   { @LocalizationMap.lift _ _ _ _ _ _ _ f.toLocalizationMap g.toMonoidHom hg with
-    map_zero' := by
+    map_zero' :=
+      by
       rw [MonoidHom.to_fun_eq_coe, localization_map.lift_spec, mul_zero, ← map_zero g, ←
         g.to_monoid_hom_coe]
       refine' f.to_localization_map.eq_of_eq hg _

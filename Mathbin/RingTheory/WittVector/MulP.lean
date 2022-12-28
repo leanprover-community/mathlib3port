@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_p
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ noncomputable def wittMulN : ℕ → ℕ → MvPolynomial ℕ ℤ
 variable {p}
 
 theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.coeff (wittMulN p n k) :=
-  by 
+  by
   induction' n with n ih generalizing k
   ·
     simp only [Nat.zero_eq, Nat.cast_zero, mul_zero, zero_coeff, witt_mul_n, AlgHom.map_zero,
@@ -74,14 +74,15 @@ variable (p)
 /-- Multiplication by `n` is a polynomial function. -/
 @[is_poly]
 theorem mul_n_is_poly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
-  ⟨⟨wittMulN p n, fun R _Rcr x => by 
+  ⟨⟨wittMulN p n, fun R _Rcr x => by
       funext k
       exact mul_n_coeff n x k⟩⟩
 #align witt_vector.mul_n_is_poly WittVector.mul_n_is_poly
 
 @[simp]
 theorem bind₁_witt_mul_n_witt_polynomial (n k : ℕ) :
-    bind₁ (wittMulN p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k := by
+    bind₁ (wittMulN p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k :=
+  by
   induction' n with n ih
   · simp only [witt_mul_n, Nat.cast_zero, zero_mul, bind₁_zero_witt_polynomial]
   · rw [witt_mul_n, ← bind₁_bind₁, witt_add, witt_structure_int_prop]

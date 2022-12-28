@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.sub_elim
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,14 +43,14 @@ theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     ∀ {t : Preterm},
       t.freshIndex ≤ k → (subSubst x y k t).val (update k (x.val v - y.val v) v) = t.val v
   | &m, h1 => rfl
-  | m ** n, h1 => by 
+  | m ** n, h1 => by
     have h2 : n ≠ k := ne_of_lt h1
     simp only [sub_subst, preterm.val]
     rw [update_eq_of_ne _ h2]
-  | t +* s, h1 => by 
+  | t +* s, h1 => by
     simp only [sub_subst, val_add]; apply fun_mono_2 <;> apply val_sub_subst (le_trans _ h1)
     apply le_max_left; apply le_max_right
-  | t -* s, h1 => by 
+  | t -* s, h1 => by
     simp only [sub_subst, val_sub]
     by_cases h2 : t = x ∧ s = y
     · rw [if_pos h2]
@@ -95,7 +95,8 @@ def isDiff (t s : Preterm) (k : Nat) : Preform :=
 #align omega.nat.is_diff Omega.Nat.isDiff
 
 theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} :
-    v k = t.val v - s.val v → (isDiff t s k).Holds v := by
+    v k = t.val v - s.val v → (isDiff t s k).Holds v :=
+  by
   intro h1
   simp only [preform.holds, is_diff, if_pos (Eq.refl 1), preterm.val_add, preterm.val_var,
     preterm.val_const]
@@ -128,28 +129,29 @@ theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     ∀ p : Preform,
       p.freshIndex ≤ k →
         ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
-  | t =* s, h1 => by 
+  | t =* s, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply preterm.val_sub_subst (le_trans _ h1)
     apply le_max_left; apply le_max_right
-  | t ≤* s, h1 => by 
+  | t ≤* s, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply preterm.val_sub_subst (le_trans _ h1)
     apply le_max_left; apply le_max_right
-  | ¬* p, h1 => by 
+  | ¬* p, h1 => by
     apply not_congr
     apply sub_subst_equiv p h1
-  | p ∨* q, h1 => by 
+  | p ∨* q, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
     apply le_max_left; apply le_max_right
-  | p ∧* q, h1 => by 
+  | p ∧* q, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
     apply le_max_left; apply le_max_right
 #align omega.nat.sub_subst_equiv Omega.Nat.sub_subst_equiv
 
-theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat := by
+theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat :=
+  by
   intro h1; simp only [sub_elim, sub_elim_core]
   cases' h1 with v h1
   refine' ⟨update (sub_fresh_index t s p) (t.val v - s.val v) v, _⟩

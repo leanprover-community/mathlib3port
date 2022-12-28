@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: E.W.Ayers
 
 ! This file was ported from Lean 3 source module tactic.interactive_expr
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -375,8 +375,8 @@ unsafe def to_local_collection (l : expr) : tactic local_collection :=
   tactic.unsafe.type_context.run do
     let lctx ← tactic.unsafe.type_context.get_local_context
     let some ldecl ← pure <| lctx.get_local_decl l.local_uniq_name
-    pure
-        { key := l
+    pure {
+          key := l
           locals := [l]
           type := ldecl
           value := ldecl }

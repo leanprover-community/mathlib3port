@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Jeremy Avigad, Johan Commelin
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.schur_complement
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,8 +72,10 @@ variable {n : Type _} {m : Type _} {𝕜 : Type _} [IsROrC 𝕜]
 
 theorem IsHermitian.from_blocks₁₁ [Fintype m] [DecidableEq m] {A : Matrix m m 𝕜} (B : Matrix m n 𝕜)
     (D : Matrix n n 𝕜) (hA : A.IsHermitian) :
-    (fromBlocks A B Bᴴ D).IsHermitian ↔ (D - Bᴴ ⬝ A⁻¹ ⬝ B).IsHermitian := by
-  have hBAB : (Bᴴ ⬝ A⁻¹ ⬝ B).IsHermitian := by
+    (fromBlocks A B Bᴴ D).IsHermitian ↔ (D - Bᴴ ⬝ A⁻¹ ⬝ B).IsHermitian :=
+  by
+  have hBAB : (Bᴴ ⬝ A⁻¹ ⬝ B).IsHermitian :=
+    by
     apply is_hermitian_conj_transpose_mul_mul
     apply hA.inv
   rw [is_hermitian_from_blocks_iff]
@@ -88,7 +90,8 @@ theorem IsHermitian.from_blocks₁₁ [Fintype m] [DecidableEq m] {A : Matrix m 
 
 theorem IsHermitian.from_blocks₂₂ [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜) (B : Matrix m n 𝕜)
     {D : Matrix n n 𝕜} (hD : D.IsHermitian) :
-    (fromBlocks A B Bᴴ D).IsHermitian ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).IsHermitian := by
+    (fromBlocks A B Bᴴ D).IsHermitian ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).IsHermitian :=
+  by
   rw [← is_hermitian_submatrix_equiv (Equiv.sumComm n m), Equiv.sum_comm_apply,
     from_blocks_submatrix_sum_swap_sum_swap]
   convert is_hermitian.from_blocks₁₁ _ _ hD <;> simp
@@ -96,7 +99,8 @@ theorem IsHermitian.from_blocks₂₂ [Fintype n] [DecidableEq n] (A : Matrix m 
 
 theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A : Matrix m m 𝕜}
     (B : Matrix m n 𝕜) (D : Matrix n n 𝕜) (hA : A.PosDef) [Invertible A] :
-    (fromBlocks A B Bᴴ D).PosSemidef ↔ (D - Bᴴ ⬝ A⁻¹ ⬝ B).PosSemidef := by
+    (fromBlocks A B Bᴴ D).PosSemidef ↔ (D - Bᴴ ⬝ A⁻¹ ⬝ B).PosSemidef :=
+  by
   rw [pos_semidef, is_hermitian.from_blocks₁₁ _ _ hA.1]
   constructor
   · refine' fun h => ⟨h.1, fun x => _⟩
@@ -116,7 +120,8 @@ theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A 
 
 theorem PosSemidef.from_blocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜)
     (B : Matrix m n 𝕜) {D : Matrix n n 𝕜} (hD : D.PosDef) [Invertible D] :
-    (fromBlocks A B Bᴴ D).PosSemidef ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).PosSemidef := by
+    (fromBlocks A B Bᴴ D).PosSemidef ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).PosSemidef :=
+  by
   rw [← pos_semidef_submatrix_equiv (Equiv.sumComm n m), Equiv.sum_comm_apply,
     from_blocks_submatrix_sum_swap_sum_swap]
   convert pos_semidef.from_blocks₁₁ _ _ hD <;> first |infer_instance|simp

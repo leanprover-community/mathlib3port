@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.hom.embedding
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,8 +31,8 @@ by left multiplication by a fixed element.
 @[to_additive
       "The embedding of a left cancellative additive semigroup into itself\n   by left translation by a fixed element.",
   simps]
-def mulLeftEmbedding {G : Type _} [LeftCancelSemigroup G] (g : G) :
-    G ↪ G where 
+def mulLeftEmbedding {G : Type _} [LeftCancelSemigroup G] (g : G) : G ↪ G
+    where
   toFun h := g * h
   inj' := mul_right_injective g
 #align mul_left_embedding mulLeftEmbedding
@@ -45,8 +45,8 @@ by right multiplication by a fixed element.
 @[to_additive
       "The embedding of a right cancellative additive semigroup into itself\n   by right translation by a fixed element.",
   simps]
-def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) :
-    G ↪ G where 
+def mulRightEmbedding {G : Type _} [RightCancelSemigroup G] (g : G) : G ↪ G
+    where
   toFun h := h * g
   inj' := mul_left_injective g
 #align mul_right_embedding mulRightEmbedding

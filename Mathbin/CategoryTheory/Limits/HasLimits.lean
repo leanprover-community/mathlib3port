@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.limits.has_limits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,7 +252,8 @@ def limit.isoLimitCone {F : J ⥤ C} [HasLimit F] (t : LimitCone F) : limit F �
 
 @[simp, reassoc.1]
 theorem limit.iso_limit_cone_hom_π {F : J ⥤ C} [HasLimit F] (t : LimitCone F) (j : J) :
-    (limit.isoLimitCone t).Hom ≫ t.Cone.π.app j = limit.π F j := by
+    (limit.isoLimitCone t).Hom ≫ t.Cone.π.app j = limit.π F j :=
+  by
   dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
   tidy
 #align
@@ -260,7 +261,8 @@ theorem limit.iso_limit_cone_hom_π {F : J ⥤ C} [HasLimit F] (t : LimitCone F)
 
 @[simp, reassoc.1]
 theorem limit.iso_limit_cone_inv_π {F : J ⥤ C} [HasLimit F] (t : LimitCone F) (j : J) :
-    (limit.isoLimitCone t).inv ≫ limit.π F j = t.Cone.π.app j := by
+    (limit.isoLimitCone t).inv ≫ limit.π F j = t.Cone.π.app j :=
+  by
   dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
   tidy
 #align
@@ -274,7 +276,8 @@ theorem limit.hom_ext {F : J ⥤ C} [HasLimit F] {X : C} {f f' : X ⟶ limit F}
 
 @[simp]
 theorem limit.lift_map {F G : J ⥤ C} [HasLimit F] [HasLimit G] (c : Cone F) (α : F ⟶ G) :
-    limit.lift F c ≫ limMap α = limit.lift G ((Cones.postcompose α).obj c) := by
+    limit.lift F c ≫ limMap α = limit.lift G ((Cones.postcompose α).obj c) :=
+  by
   ext
   rw [assoc, lim_map_π, limit.lift_π_assoc, limit.lift_π]
   rfl
@@ -321,11 +324,12 @@ theorem hasLimitOfIso {F G : J ⥤ C} [HasLimit F] (α : F ≅ G) : HasLimit G :
     { Cone := (Cones.postcompose α.Hom).obj (Limit.cone F)
       IsLimit :=
         { lift := fun s => limit.lift F ((Cones.postcompose α.inv).obj s)
-          fac' := fun s j => by
+          fac' := fun s j =>
+            by
             rw [cones.postcompose_obj_π, nat_trans.comp_app, limit.cone_π, ← category.assoc,
               limit.lift_π]
             simp
-          uniq' := fun s m w => by 
+          uniq' := fun s m w => by
             apply limit.hom_ext; intro j
             rw [limit.lift_π, cones.postcompose_obj_π, nat_trans.comp_app, ← nat_iso.app_inv,
               iso.eq_comp_inv]
@@ -394,7 +398,7 @@ theorem HasLimit.iso_of_equivalence_hom_π {F : J ⥤ C} [HasLimit F] {G : K ⥤
     (e : J ≌ K) (w : e.Functor ⋙ G ≅ F) (k : K) :
     (HasLimit.isoOfEquivalence e w).Hom ≫ limit.π G k =
       limit.π F (e.inverse.obj k) ≫ w.inv.app (e.inverse.obj k) ≫ G.map (e.counit.app k) :=
-  by 
+  by
   simp only [has_limit.iso_of_equivalence, is_limit.cone_points_iso_of_equivalence_hom]
   dsimp
   simp
@@ -405,7 +409,7 @@ theorem HasLimit.iso_of_equivalence_hom_π {F : J ⥤ C} [HasLimit F] {G : K ⥤
 theorem HasLimit.iso_of_equivalence_inv_π {F : J ⥤ C} [HasLimit F] {G : K ⥤ C} [HasLimit G]
     (e : J ≌ K) (w : e.Functor ⋙ G ≅ F) (j : J) :
     (HasLimit.isoOfEquivalence e w).inv ≫ limit.π F j = limit.π G (e.Functor.obj j) ≫ w.Hom.app j :=
-  by 
+  by
   simp only [has_limit.iso_of_equivalence, is_limit.cone_points_iso_of_equivalence_hom]
   dsimp
   simp
@@ -423,7 +427,8 @@ def limit.pre : limit F ⟶ limit (E ⋙ F) :=
 #align category_theory.limits.limit.pre CategoryTheory.Limits.limit.pre
 
 @[simp, reassoc.1]
-theorem limit.pre_π (k : K) : limit.pre F E ≫ limit.π (E ⋙ F) k = limit.π F (E.obj k) := by
+theorem limit.pre_π (k : K) : limit.pre F E ≫ limit.π (E ⋙ F) k = limit.π F (E.obj k) :=
+  by
   erw [is_limit.fac]
   rfl
 #align category_theory.limits.limit.pre_π CategoryTheory.Limits.limit.pre_π
@@ -469,14 +474,16 @@ def limit.post : G.obj (limit F) ⟶ limit (F ⋙ G) :=
 #align category_theory.limits.limit.post CategoryTheory.Limits.limit.post
 
 @[simp, reassoc.1]
-theorem limit.post_π (j : J) : limit.post F G ≫ limit.π (F ⋙ G) j = G.map (limit.π F j) := by
+theorem limit.post_π (j : J) : limit.post F G ≫ limit.π (F ⋙ G) j = G.map (limit.π F j) :=
+  by
   erw [is_limit.fac]
   rfl
 #align category_theory.limits.limit.post_π CategoryTheory.Limits.limit.post_π
 
 @[simp]
 theorem limit.lift_post (c : Cone F) :
-    G.map (limit.lift F c) ≫ limit.post F G = limit.lift (F ⋙ G) (G.mapCone c) := by
+    G.map (limit.lift F c) ≫ limit.post F G = limit.lift (F ⋙ G) (G.mapCone c) :=
+  by
   ext
   rw [assoc, limit.post_π, ← G.map_comp, limit.lift_π, limit.lift_π]
   rfl
@@ -522,7 +529,8 @@ attribute [local elab_without_expected_type] inv_fun_id_assoc
 -- not entirely sure why this is needed
 /-- If a `E ⋙ F` has a limit, and `E` is an equivalence, we can construct a limit of `F`.
 -/
-theorem hasLimitOfEquivalenceComp (e : K ≌ J) [HasLimit (e.Functor ⋙ F)] : HasLimit F := by
+theorem hasLimitOfEquivalenceComp (e : K ≌ J) [HasLimit (e.Functor ⋙ F)] : HasLimit F :=
+  by
   haveI : has_limit (e.inverse ⋙ e.functor ⋙ F) := limits.has_limit_equivalence_comp e.symm
   apply has_limit_of_iso (e.inv_fun_id_assoc F)
 #align
@@ -538,10 +546,10 @@ section
 
 /-- `limit F` is functorial in `F`, when `C` has all limits of shape `J`. -/
 @[simps obj]
-def lim : (J ⥤ C) ⥤ C where 
+def lim : (J ⥤ C) ⥤ C where
   obj F := limit F
   map F G α := limMap α
-  map_id' F := by 
+  map_id' F := by
     ext
     erw [lim_map_π, category.id_comp, category.comp_id]
   map_comp' F G H α β := by
@@ -559,7 +567,8 @@ theorem lim_map_eq_lim_map : lim.map α = limMap α :=
 #align category_theory.limits.lim_map_eq_lim_map CategoryTheory.Limits.lim_map_eq_lim_map
 
 theorem limit.map_pre [HasLimitsOfShape K C] (E : K ⥤ J) :
-    lim.map α ≫ limit.pre G E = limit.pre F E ≫ lim.map (whiskerLeft E α) := by
+    lim.map α ≫ limit.pre G E = limit.pre F E ≫ lim.map (whiskerLeft E α) :=
+  by
   ext
   simp
 #align category_theory.limits.limit.map_pre CategoryTheory.Limits.limit.map_pre
@@ -579,7 +588,7 @@ theorem limit.map_post {D : Type u'} [Category.{v'} D] [HasLimitsOfShape J D]
           (limMap α) ≫
         limit.post G H =
       limit.post F H ≫ limMap (whiskerRight α H) :=
-  by 
+  by
   ext
   simp only [whisker_right_app, lim_map_π, assoc, limit.post_π_assoc, limit.post_π, ← H.map_comp]
 #align category_theory.limits.limit.map_post CategoryTheory.Limits.limit.map_post
@@ -596,9 +605,8 @@ def limYoneda :
 #align category_theory.limits.lim_yoneda CategoryTheory.Limits.limYoneda
 
 /-- The constant functor and limit functor are adjoint to each other-/
-def constLimAdj :
-    (const J : C ⥤ J ⥤ C) ⊣
-      lim where 
+def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim
+    where
   homEquiv c g :=
     { toFun := fun f => limit.lift _ ⟨c, f⟩
       invFun := fun f =>
@@ -637,7 +645,8 @@ instance lim_map_mono {F G : J ⥤ C} [HasLimit F] [HasLimit G] (α : F ⟶ G) [
 /-- We can transport limits of shape `J` along an equivalence `J ≌ J'`.
 -/
 theorem hasLimitsOfShapeOfEquivalence {J' : Type u₂} [Category.{v₂} J'] (e : J ≌ J')
-    [HasLimitsOfShape J C] : HasLimitsOfShape J' C := by
+    [HasLimitsOfShape J C] : HasLimitsOfShape J' C :=
+  by
   constructor
   intro F
   apply has_limit_of_equivalence_comp e
@@ -858,7 +867,8 @@ def colimit.isoColimitCocone {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) 
 
 @[simp, reassoc.1]
 theorem colimit.iso_colimit_cocone_ι_hom {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) (j : J) :
-    colimit.ι F j ≫ (colimit.isoColimitCocone t).Hom = t.Cocone.ι.app j := by
+    colimit.ι F j ≫ (colimit.isoColimitCocone t).Hom = t.Cocone.ι.app j :=
+  by
   dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
   tidy
 #align
@@ -866,7 +876,8 @@ theorem colimit.iso_colimit_cocone_ι_hom {F : J ⥤ C} [HasColimit F] (t : Coli
 
 @[simp, reassoc.1]
 theorem colimit.iso_colimit_cocone_ι_inv {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) (j : J) :
-    t.Cocone.ι.app j ≫ (colimit.isoColimitCocone t).inv = colimit.ι F j := by
+    t.Cocone.ι.app j ≫ (colimit.isoColimitCocone t).inv = colimit.ι F j :=
+  by
   dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
   tidy
 #align
@@ -922,10 +933,11 @@ theorem hasColimitOfIso {F G : J ⥤ C} [HasColimit F] (α : G ≅ F) : HasColim
     { Cocone := (Cocones.precompose α.Hom).obj (Colimit.cocone F)
       IsColimit :=
         { desc := fun s => colimit.desc F ((Cocones.precompose α.inv).obj s)
-          fac' := fun s j => by
+          fac' := fun s j =>
+            by
             rw [cocones.precompose_obj_ι, nat_trans.comp_app, colimit.cocone_ι]
             rw [category.assoc, colimit.ι_desc, ← nat_iso.app_hom, ← iso.eq_inv_comp]; rfl
-          uniq' := fun s m w => by 
+          uniq' := fun s m w => by
             apply colimit.hom_ext; intro j
             rw [colimit.ι_desc, cocones.precompose_obj_ι, nat_trans.comp_app, ← nat_iso.app_inv,
               iso.eq_inv_comp]
@@ -995,7 +1007,7 @@ theorem HasColimit.iso_of_equivalence_hom_π {F : J ⥤ C} [HasColimit F] {G : K
     (e : J ≌ K) (w : e.Functor ⋙ G ≅ F) (j : J) :
     colimit.ι F j ≫ (HasColimit.isoOfEquivalence e w).Hom =
       F.map (e.Unit.app j) ≫ w.inv.app _ ≫ colimit.ι G _ :=
-  by 
+  by
   simp [has_colimit.iso_of_equivalence, is_colimit.cocone_points_iso_of_equivalence_inv]
   dsimp
   simp
@@ -1007,7 +1019,7 @@ theorem HasColimit.iso_of_equivalence_inv_π {F : J ⥤ C} [HasColimit F] {G : K
     (e : J ≌ K) (w : e.Functor ⋙ G ≅ F) (k : K) :
     colimit.ι G k ≫ (HasColimit.isoOfEquivalence e w).inv =
       G.map (e.counitInv.app k) ≫ w.Hom.app (e.inverse.obj k) ≫ colimit.ι F (e.inverse.obj k) :=
-  by 
+  by
   simp [has_colimit.iso_of_equivalence, is_colimit.cocone_points_iso_of_equivalence_inv]
   dsimp
   simp
@@ -1025,7 +1037,8 @@ def colimit.pre : colimit (E ⋙ F) ⟶ colimit F :=
 #align category_theory.limits.colimit.pre CategoryTheory.Limits.colimit.pre
 
 @[simp, reassoc.1]
-theorem colimit.ι_pre (k : K) : colimit.ι (E ⋙ F) k ≫ colimit.pre F E = colimit.ι F (E.obj k) := by
+theorem colimit.ι_pre (k : K) : colimit.ι (E ⋙ F) k ≫ colimit.pre F E = colimit.ι F (E.obj k) :=
+  by
   erw [is_colimit.fac]
   rfl
 #align category_theory.limits.colimit.ι_pre CategoryTheory.Limits.colimit.ι_pre
@@ -1041,7 +1054,8 @@ variable {L : Type u₃} [Category.{v₃} L]
 variable (D : L ⥤ K) [HasColimit (D ⋙ E ⋙ F)]
 
 @[simp]
-theorem colimit.pre_pre : colimit.pre (E ⋙ F) D ≫ colimit.pre F E = colimit.pre F (D ⋙ E) := by
+theorem colimit.pre_pre : colimit.pre (E ⋙ F) D ≫ colimit.pre F E = colimit.pre F (D ⋙ E) :=
+  by
   ext j
   rw [← assoc, colimit.ι_pre, colimit.ι_pre]
   letI : has_colimit ((D ⋙ E) ⋙ F) := show has_colimit (D ⋙ E ⋙ F) by infer_instance
@@ -1078,14 +1092,15 @@ def colimit.post : colimit (F ⋙ G) ⟶ G.obj (colimit F) :=
 
 @[simp, reassoc.1]
 theorem colimit.ι_post (j : J) : colimit.ι (F ⋙ G) j ≫ colimit.post F G = G.map (colimit.ι F j) :=
-  by 
+  by
   erw [is_colimit.fac]
   rfl
 #align category_theory.limits.colimit.ι_post CategoryTheory.Limits.colimit.ι_post
 
 @[simp]
 theorem colimit.post_desc (c : Cocone F) :
-    colimit.post F G ≫ G.map (colimit.desc F c) = colimit.desc (F ⋙ G) (G.mapCocone c) := by
+    colimit.post F G ≫ G.map (colimit.desc F c) = colimit.desc (F ⋙ G) (G.mapCocone c) :=
+  by
   ext
   rw [← assoc, colimit.ι_post, ← G.map_comp, colimit.ι_desc, colimit.ι_desc]
   rfl
@@ -1100,7 +1115,7 @@ theorem colimit.post_post {E : Type u''} [Category.{v''} E] (H : D ⥤ E)
           (F ⋙ G) H ≫
         H.map (colimit.post F G) =
       colimit.post F (G ⋙ H) :=
-  by 
+  by
   ext
   rw [← assoc, colimit.ι_post, ← H.map_comp, colimit.ι_post]
   exact (colimit.ι_post F (G ⋙ H) j).symm
@@ -1117,7 +1132,7 @@ theorem colimit.pre_post {D : Type u'} [Category.{v'} D] (E : K ⥤ J) (F : J �
           (E ⋙ F) G ≫
         G.map (colimit.pre F E) =
       (@colimit.pre _ _ _ (F ⋙ G) _ E H ≫ colimit.post F G : _) :=
-  by 
+  by
   ext
   rw [← assoc, colimit.ι_post, ← G.map_comp, colimit.ι_pre, ← assoc]
   letI : has_colimit (E ⋙ F ⋙ G) := show has_colimit ((E ⋙ F) ⋙ G) by infer_instance
@@ -1135,7 +1150,8 @@ instance hasColimitEquivalenceComp (e : K ≌ J) [HasColimit F] : HasColimit (e.
 
 /-- If a `E ⋙ F` has a colimit, and `E` is an equivalence, we can construct a colimit of `F`.
 -/
-theorem hasColimitOfEquivalenceComp (e : K ≌ J) [HasColimit (e.Functor ⋙ F)] : HasColimit F := by
+theorem hasColimitOfEquivalenceComp (e : K ≌ J) [HasColimit (e.Functor ⋙ F)] : HasColimit F :=
+  by
   haveI : has_colimit (e.inverse ⋙ e.functor ⋙ F) := limits.has_colimit_equivalence_comp e.symm
   apply has_colimit_of_iso (e.inv_fun_id_assoc F).symm
 #align
@@ -1151,13 +1167,13 @@ attribute [local simp] colim_map
 
 /-- `colimit F` is functorial in `F`, when `C` has all colimits of shape `J`. -/
 @[simps obj]
-def colim : (J ⥤ C) ⥤ C where 
+def colim : (J ⥤ C) ⥤ C where
   obj F := colimit F
   map F G α := colimMap α
-  map_id' F := by 
+  map_id' F := by
     ext
     erw [ι_colim_map, id_comp, comp_id]
-  map_comp' F G H α β := by 
+  map_comp' F G H α β := by
     ext
     erw [← assoc, is_colimit.fac, is_colimit.fac, assoc, is_colimit.fac, ← assoc]
     rfl
@@ -1201,7 +1217,7 @@ theorem colimit.map_post {D : Type u'} [Category.{v'} D] [HasColimitsOfShape J D
           F H ≫
         H.map (colim.map α) =
       colim.map (whiskerRight α H) ≫ colimit.post G H :=
-  by 
+  by
   ext
   rw [← assoc, colimit.ι_post, ← H.map_comp, colimit.ι_map, H.map_comp]
   rw [← assoc, colimit.ι_map, assoc, colimit.ι_post]
@@ -1221,10 +1237,8 @@ def colimCoyoneda :
 
 /-- The colimit functor and constant functor are adjoint to each other
 -/
-def colimConstAdj :
-    (colim : (J ⥤ C) ⥤ C) ⊣
-      const
-        J where 
+def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J
+    where
   homEquiv f c :=
     { toFun := fun g =>
         { app := fun _ => colimit.ι _ _ ≫ g
@@ -1263,7 +1277,8 @@ instance colim_map_epi {F G : J ⥤ C} [HasColimit F] [HasColimit G] (α : F ⟶
 /-- We can transport colimits of shape `J` along an equivalence `J ≌ J'`.
 -/
 theorem hasColimitsOfShapeOfEquivalence {J' : Type u₂} [Category.{v₂} J'] (e : J ≌ J')
-    [HasColimitsOfShape J C] : HasColimitsOfShape J' C := by
+    [HasColimitsOfShape J C] : HasColimitsOfShape J' C :=
+  by
   constructor
   intro F
   apply has_colimit_of_equivalence_comp e
@@ -1294,11 +1309,11 @@ section Opposite
 
 /-- If `t : cone F` is a limit cone, then `t.op : cocone F.op` is a colimit cocone.
 -/
-def IsLimit.op {t : Cone F} (P : IsLimit t) :
-    IsColimit t.op where 
+def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op
+    where
   desc s := (P.lift s.unop).op
   fac' s j := congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
-  uniq' s m w := by 
+  uniq' s m w := by
     rw [← P.uniq s.unop m.unop]
     · rfl
     · dsimp
@@ -1309,11 +1324,11 @@ def IsLimit.op {t : Cone F} (P : IsLimit t) :
 
 /-- If `t : cocone F` is a colimit cocone, then `t.op : cone F.op` is a limit cone.
 -/
-def IsColimit.op {t : Cocone F} (P : IsColimit t) :
-    IsLimit t.op where 
+def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op
+    where
   lift s := (P.desc s.unop).op
   fac' s j := congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
-  uniq' s m w := by 
+  uniq' s m w := by
     rw [← P.uniq s.unop m.unop]
     · rfl
     · dsimp
@@ -1324,11 +1339,11 @@ def IsColimit.op {t : Cocone F} (P : IsColimit t) :
 
 /-- If `t : cone F.op` is a limit cone, then `t.unop : cocone F` is a colimit cocone.
 -/
-def IsLimit.unop {t : Cone F.op} (P : IsLimit t) :
-    IsColimit t.unop where 
+def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop
+    where
   desc s := (P.lift s.op).unop
   fac' s j := congr_arg Quiver.Hom.unop (P.fac s.op (op j))
-  uniq' s m w := by 
+  uniq' s m w := by
     rw [← P.uniq s.op m.op]
     · rfl
     · dsimp
@@ -1339,11 +1354,11 @@ def IsLimit.unop {t : Cone F.op} (P : IsLimit t) :
 
 /-- If `t : cocone F.op` is a colimit cocone, then `t.unop : cone F.` is a limit cone.
 -/
-def IsColimit.unop {t : Cocone F.op} (P : IsColimit t) :
-    IsLimit t.unop where 
+def IsColimit.unop {t : Cocone F.op} (P : IsColimit t) : IsLimit t.unop
+    where
   lift s := (P.desc s.op).unop
   fac' s j := congr_arg Quiver.Hom.unop (P.fac s.op (op j))
-  uniq' s m w := by 
+  uniq' s m w := by
     rw [← P.uniq s.op m.op]
     · rfl
     · dsimp

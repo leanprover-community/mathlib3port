@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module group_theory.group_action.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ theorem faithfulSMul_at {α : Type _} [∀ i, HasSmul α <| f i] [∀ i, Nonempt
     [FaithfulSMul α (f i)] : FaithfulSMul α (∀ i, f i) :=
   ⟨fun x y h =>
     eq_of_smul_eq_smul fun a : f i => by
-      classical 
+      classical
         have :=
           congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a)
             i
@@ -177,8 +177,8 @@ instance faithfulSMul {α : Type _} [Nonempty I] [∀ i, HasSmul α <| f i] [∀
 
 #print Pi.mulAction /-
 @[to_additive]
-instance mulAction (α) {m : Monoid α} [∀ i, MulAction α <| f i] :
-    @MulAction α (∀ i : I, f i) m where 
+instance mulAction (α) {m : Monoid α} [∀ i, MulAction α <| f i] : @MulAction α (∀ i : I, f i) m
+    where
   smul := (· • ·)
   mul_smul r s f := funext fun i => mul_smul _ _ _
   one_smul f := funext fun i => one_smul α _
@@ -188,8 +188,8 @@ instance mulAction (α) {m : Monoid α} [∀ i, MulAction α <| f i] :
 #print Pi.mulAction' /-
 @[to_additive]
 instance mulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} [∀ i, MulAction (f i) (g i)] :
-    @MulAction (∀ i, f i) (∀ i : I, g i)
-      (@Pi.monoid I f m) where 
+    @MulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m)
+    where
   smul := (· • ·)
   mul_smul r s f := funext fun i => mul_smul _ _ _
   one_smul f := funext fun i => one_smul _ _
@@ -198,44 +198,42 @@ instance mulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} [∀ i, MulActi
 
 #print Pi.smulZeroClass /-
 instance smulZeroClass (α) {n : ∀ i, Zero <| f i} [∀ i, SMulZeroClass α <| f i] :
-    @SMulZeroClass α (∀ i : I, f i)
-      (@Pi.instZero I f n) where smul_zero c := funext fun i => smul_zero _
+    @SMulZeroClass α (∀ i : I, f i) (@Pi.instZero I f n)
+    where smul_zero c := funext fun i => smul_zero _
 #align pi.smul_zero_class Pi.smulZeroClass
 -/
 
 #print Pi.smulZeroClass' /-
 instance smulZeroClass' {g : I → Type _} {n : ∀ i, Zero <| g i} [∀ i, SMulZeroClass (f i) (g i)] :
-    @SMulZeroClass (∀ i, f i) (∀ i : I, g i)
-      (@Pi.instZero I g n) where smul_zero := by 
+    @SMulZeroClass (∀ i, f i) (∀ i : I, g i) (@Pi.instZero I g n)
+    where smul_zero := by
     intros
     ext x
     apply smul_zero
 #align pi.smul_zero_class' Pi.smulZeroClass'
 -/
 
-#print Pi.distribSmul /-
-instance distribSmul (α) {n : ∀ i, AddZeroClass <| f i} [∀ i, DistribSMul α <| f i] :
-    @DistribSMul α (∀ i : I, f i)
-      (@Pi.addZeroClass I f n) where smul_add c f g := funext fun i => smul_add _ _ _
-#align pi.distrib_smul Pi.distribSmul
+#print Pi.distribSMul /-
+instance distribSMul (α) {n : ∀ i, AddZeroClass <| f i} [∀ i, DistribSMul α <| f i] :
+    @DistribSMul α (∀ i : I, f i) (@Pi.addZeroClass I f n)
+    where smul_add c f g := funext fun i => smul_add _ _ _
+#align pi.distrib_smul Pi.distribSMul
 -/
 
-#print Pi.distribSmul' /-
-instance distribSmul' {g : I → Type _} {n : ∀ i, AddZeroClass <| g i}
-    [∀ i, DistribSMul (f i) (g i)] :
-    @DistribSMul (∀ i, f i) (∀ i : I, g i)
-      (@Pi.addZeroClass I g
-        n) where smul_add := by 
+#print Pi.distribSMul' /-
+instance distribSMul' {g : I → Type _} {n : ∀ i, AddZeroClass <| g i}
+    [∀ i, DistribSMul (f i) (g i)] : @DistribSMul (∀ i, f i) (∀ i : I, g i) (@Pi.addZeroClass I g n)
+    where smul_add := by
     intros
     ext x
     apply smul_add
-#align pi.distrib_smul' Pi.distribSmul'
+#align pi.distrib_smul' Pi.distribSMul'
 -/
 
 #print Pi.distribMulAction /-
 instance distribMulAction (α) {m : Monoid α} {n : ∀ i, AddMonoid <| f i}
     [∀ i, DistribMulAction α <| f i] : @DistribMulAction α (∀ i : I, f i) m (@Pi.addMonoid I f n) :=
-  { Pi.mulAction _, Pi.distribSmul _ with }
+  { Pi.mulAction _, Pi.distribSMul _ with }
 #align pi.distrib_mul_action Pi.distribMulAction
 -/
 
@@ -243,7 +241,7 @@ instance distribMulAction (α) {m : Monoid α} {n : ∀ i, AddMonoid <| f i}
 instance distribMulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} {n : ∀ i, AddMonoid <| g i}
     [∀ i, DistribMulAction (f i) (g i)] :
     @DistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.addMonoid I g n) :=
-  { Pi.mulAction', Pi.distribSmul' with }
+  { Pi.mulAction', Pi.distribSMul' with }
 #align pi.distrib_mul_action' Pi.distribMulAction'
 -/
 
@@ -262,7 +260,7 @@ theorem single_smul {α} [Monoid α] [∀ i, AddMonoid <| f i] [∀ i, DistribMu
 lean 3 declaration is
   forall {I : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Monoid.{u2} α] [_inst_2 : AddMonoid.{u3} β] [_inst_3 : DistribMulAction.{u2, u3} α β _inst_1 _inst_2] [_inst_4 : DecidableEq.{succ u1} I] (i : I) (r : α) (x : β), Eq.{max (succ u1) (succ u3)} (I -> β) (Pi.single.{u1, u3} I (fun (i : I) => β) (fun (a : I) (b : I) => _inst_4 a b) (fun (i : I) => AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β _inst_2)) i (HasSmul.smul.{u2, u3} α β (SMulZeroClass.toHasSmul.{u2, u3} α β (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β _inst_2)) (DistribSMul.toSmulZeroClass.{u2, u3} α β (AddMonoid.toAddZeroClass.{u3} β _inst_2) (DistribMulAction.toDistribSMul.{u2, u3} α β _inst_1 _inst_2 _inst_3))) r x)) (HasSmul.smul.{u2, max u1 u3} α (I -> β) (Pi.instSMul.{u1, u3, u2} I α (fun (i : I) => β) (fun (i : I) => SMulZeroClass.toHasSmul.{u2, u3} α β (AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β _inst_2)) (DistribSMul.toSmulZeroClass.{u2, u3} α β (AddMonoid.toAddZeroClass.{u3} β _inst_2) (DistribMulAction.toDistribSMul.{u2, u3} α β _inst_1 _inst_2 _inst_3)))) r (Pi.single.{u1, u3} I (fun (i : I) => β) (fun (a : I) (b : I) => _inst_4 a b) (fun (i : I) => AddZeroClass.toHasZero.{u3} β (AddMonoid.toAddZeroClass.{u3} β _inst_2)) i x))
 but is expected to have type
-  forall {I : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Monoid.{u2} α] [_inst_2 : AddMonoid.{u1} β] [_inst_3 : DistribMulAction.{u2, u1} α β _inst_1 _inst_2] [_inst_4 : DecidableEq.{succ u3} I] (i : I) (r : α) (x : β), Eq.{max (succ u3) (succ u1)} (I -> β) (Pi.single.{u3, u1} I (fun (i : I) => β) (fun (a : I) (b : I) => _inst_4 a b) (fun (i : I) => AddMonoid.toZero.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.1986 : I) => β) i) _inst_2) i (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β (SMulZeroClass.toSMul.{u2, u1} α β (AddMonoid.toZero.{u1} β _inst_2) (DistribSMul.toSMulZeroClass.{u2, u1} α β (AddMonoid.toAddZeroClass.{u1} β _inst_2) (DistribMulAction.toDistribSMul.{u2, u1} α β _inst_1 _inst_2 _inst_3)))) r x)) (HSMul.hSMul.{u2, max u1 u3, max u3 u1} α (forall (j : I), (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) j) (forall (i : I), (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) i) (instHSMul.{u2, max u3 u1} α (forall (j : I), (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) j) (Pi.instSMul.{u3, u1, u2} I α (fun (j : I) => (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) j) (fun (i : I) => SMulZeroClass.toSMul.{u2, u1} α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) i) (AddMonoid.toZero.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) i) _inst_2) (DistribSMul.toSMulZeroClass.{u2, u1} α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) i) (AddMonoid.toAddZeroClass.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) i) _inst_2) (DistribMulAction.toDistribSMul.{u2, u1} α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) i) _inst_1 _inst_2 _inst_3))))) r (Pi.single.{u3, u1} I (fun (i : I) => β) (fun (a : I) (b : I) => _inst_4 a b) (fun (i : I) => AddMonoid.toZero.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2005 : I) => β) i) _inst_2) i x))
+  forall {I : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Monoid.{u2} α] [_inst_2 : AddMonoid.{u1} β] [_inst_3 : DistribMulAction.{u2, u1} α β _inst_1 _inst_2] [_inst_4 : DecidableEq.{succ u3} I] (i : I) (r : α) (x : β), Eq.{max (succ u3) (succ u1)} (I -> β) (Pi.single.{u3, u1} I (fun (i : I) => β) (fun (a : I) (b : I) => _inst_4 a b) (fun (i : I) => AddMonoid.toZero.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.1988 : I) => β) i) _inst_2) i (HSMul.hSMul.{u2, u1, u1} α β β (instHSMul.{u2, u1} α β (SMulZeroClass.toSMul.{u2, u1} α β (AddMonoid.toZero.{u1} β _inst_2) (DistribSMul.toSMulZeroClass.{u2, u1} α β (AddMonoid.toAddZeroClass.{u1} β _inst_2) (DistribMulAction.toDistribSMul.{u2, u1} α β _inst_1 _inst_2 _inst_3)))) r x)) (HSMul.hSMul.{u2, max u1 u3, max u3 u1} α (forall (j : I), (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) j) (forall (i : I), (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) i) (instHSMul.{u2, max u3 u1} α (forall (j : I), (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) j) (Pi.instSMul.{u3, u1, u2} I α (fun (j : I) => (fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) j) (fun (i : I) => SMulZeroClass.toSMul.{u2, u1} α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) i) (AddMonoid.toZero.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) i) _inst_2) (DistribSMul.toSMulZeroClass.{u2, u1} α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) i) (AddMonoid.toAddZeroClass.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) i) _inst_2) (DistribMulAction.toDistribSMul.{u2, u1} α ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) i) _inst_1 _inst_2 _inst_3))))) r (Pi.single.{u3, u1} I (fun (i : I) => β) (fun (a : I) (b : I) => _inst_4 a b) (fun (i : I) => AddMonoid.toZero.{u1} ((fun (x._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2007 : I) => β) i) _inst_2) i x))
 Case conversion may be inaccurate. Consider using '#align pi.single_smul' Pi.single_smul'ₓ'. -/
 /-- A version of `pi.single_smul` for non-dependent functions. It is useful in cases Lean fails
 to apply `pi.single_smul`. -/
@@ -287,7 +285,7 @@ theorem single_smul₀ {g : I → Type _} [∀ i, MonoidWithZero (f i)] [∀ i, 
 instance mulDistribMulAction (α) {m : Monoid α} {n : ∀ i, Monoid <| f i}
     [∀ i, MulDistribMulAction α <| f i] :
     @MulDistribMulAction α (∀ i : I, f i) m (@Pi.monoid I f n) :=
-  { Pi.mulAction _ with 
+  { Pi.mulAction _ with
     smul_one := fun c => funext fun i => smul_one _
     smul_mul := fun c f g => funext fun i => smul_mul' _ _ _ }
 #align pi.mul_distrib_mul_action Pi.mulDistribMulAction
@@ -296,14 +294,13 @@ instance mulDistribMulAction (α) {m : Monoid α} {n : ∀ i, Monoid <| f i}
 #print Pi.mulDistribMulAction' /-
 instance mulDistribMulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} {n : ∀ i, Monoid <| g i}
     [∀ i, MulDistribMulAction (f i) (g i)] :
-    @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m)
-      (@Pi.monoid I g
-        n) where 
-  smul_mul := by 
+    @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.monoid I g n)
+    where
+  smul_mul := by
     intros
     ext x
     apply smul_mul'
-  smul_one := by 
+  smul_one := by
     intros
     ext x
     apply smul_one
@@ -314,25 +311,25 @@ end Pi
 
 namespace Function
 
-/- warning: function.has_smul -> Function.hasSmul is a dubious translation:
+/- warning: function.has_smul -> Function.hasSMul is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {R : Type.{u2}} {M : Type.{u3}} [_inst_1 : HasSmul.{u2, u3} R M], HasSmul.{u2, max u1 u3} R (ι -> M)
 but is expected to have type
   forall {ι : Type.{u1}} {R : Type.{u2}} {M : Type.{u3}} [_inst_1 : SMul.{u2, u3} R M], SMul.{u2, max u1 u3} R (ι -> M)
-Case conversion may be inaccurate. Consider using '#align function.has_smul Function.hasSmulₓ'. -/
+Case conversion may be inaccurate. Consider using '#align function.has_smul Function.hasSMulₓ'. -/
 /-- Non-dependent version of `pi.has_smul`. Lean gets confused by the dependent instance if this
 is not present. -/
 @[to_additive
       "Non-dependent version of `pi.has_vadd`. Lean gets confused by the dependent instance\nif this is not present."]
-instance hasSmul {ι R M : Type _} [HasSmul R M] : HasSmul R (ι → M) :=
+instance hasSMul {ι R M : Type _} [HasSmul R M] : HasSmul R (ι → M) :=
   Pi.instSMul
-#align function.has_smul Function.hasSmul
+#align function.has_smul Function.hasSMul
 
 /- warning: function.smul_comm_class -> Function.smulCommClass is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {M : Type.{u4}} [_inst_1 : HasSmul.{u2, u4} α M] [_inst_2 : HasSmul.{u3, u4} β M] [_inst_3 : SMulCommClass.{u2, u3, u4} α β M _inst_1 _inst_2], SMulCommClass.{u2, u3, max u1 u4} α β (ι -> M) (Function.hasSmul.{u1, u2, u4} ι α M _inst_1) (Function.hasSmul.{u1, u3, u4} ι β M _inst_2)
+  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {M : Type.{u4}} [_inst_1 : HasSmul.{u2, u4} α M] [_inst_2 : HasSmul.{u3, u4} β M] [_inst_3 : SMulCommClass.{u2, u3, u4} α β M _inst_1 _inst_2], SMulCommClass.{u2, u3, max u1 u4} α β (ι -> M) (Function.hasSMul.{u1, u2, u4} ι α M _inst_1) (Function.hasSMul.{u1, u3, u4} ι β M _inst_2)
 but is expected to have type
-  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {M : Type.{u4}} [_inst_1 : SMul.{u2, u4} α M] [_inst_2 : SMul.{u3, u4} β M] [_inst_3 : SMulCommClass.{u2, u3, u4} α β M _inst_1 _inst_2], SMulCommClass.{u2, u3, max u1 u4} α β (ι -> M) (Pi.instSMul.{u1, u4, u2} ι α (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2415 : ι) => M) (fun (i : ι) => _inst_1)) (Pi.instSMul.{u1, u4, u3} ι β (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2415 : ι) => M) (fun (i : ι) => _inst_2))
+  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {M : Type.{u4}} [_inst_1 : SMul.{u2, u4} α M] [_inst_2 : SMul.{u3, u4} β M] [_inst_3 : SMulCommClass.{u2, u3, u4} α β M _inst_1 _inst_2], SMulCommClass.{u2, u3, max u1 u4} α β (ι -> M) (Pi.instSMul.{u1, u4, u2} ι α (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2417 : ι) => M) (fun (i : ι) => _inst_1)) (Pi.instSMul.{u1, u4, u3} ι β (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2417 : ι) => M) (fun (i : ι) => _inst_2))
 Case conversion may be inaccurate. Consider using '#align function.smul_comm_class Function.smulCommClassₓ'. -/
 /-- Non-dependent version of `pi.smul_comm_class`. Lean gets confused by the dependent instance if
 this is not present. -/
@@ -377,9 +374,9 @@ section Extend
 
 /- warning: function.extend_smul -> Function.extend_smul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} [_inst_1 : HasSmul.{u1, u4} R γ] (r : R) (f : α -> β) (g : α -> γ) (e : β -> γ), Eq.{max (succ u3) (succ u4)} (β -> γ) (Function.extend.{succ u2, succ u3, succ u4} α β γ f (HasSmul.smul.{u1, max u2 u4} R (α -> γ) (Function.hasSmul.{u2, u1, u4} α R γ _inst_1) r g) (HasSmul.smul.{u1, max u3 u4} R (β -> γ) (Function.hasSmul.{u3, u1, u4} β R γ _inst_1) r e)) (HasSmul.smul.{u1, max u3 u4} R (β -> γ) (Function.hasSmul.{u3, u1, u4} β R γ _inst_1) r (Function.extend.{succ u2, succ u3, succ u4} α β γ f g e))
+  forall {R : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} [_inst_1 : HasSmul.{u1, u4} R γ] (r : R) (f : α -> β) (g : α -> γ) (e : β -> γ), Eq.{max (succ u3) (succ u4)} (β -> γ) (Function.extend.{succ u2, succ u3, succ u4} α β γ f (HasSmul.smul.{u1, max u2 u4} R (α -> γ) (Function.hasSMul.{u2, u1, u4} α R γ _inst_1) r g) (HasSmul.smul.{u1, max u3 u4} R (β -> γ) (Function.hasSMul.{u3, u1, u4} β R γ _inst_1) r e)) (HasSmul.smul.{u1, max u3 u4} R (β -> γ) (Function.hasSMul.{u3, u1, u4} β R γ _inst_1) r (Function.extend.{succ u2, succ u3, succ u4} α β γ f g e))
 but is expected to have type
-  forall {R : Type.{u4}} {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : SMul.{u4, u1} R γ] (r : R) (f : α -> β) (g : α -> γ) (e : β -> γ), Eq.{max (succ u2) (succ u1)} (β -> γ) (Function.extend.{succ u3, succ u2, succ u1} α β γ f (HSMul.hSMul.{u4, max u3 u1, max u3 u1} R (α -> γ) (α -> γ) (instHSMul.{u4, max u3 u1} R (α -> γ) (Pi.instSMul.{u3, u1, u4} α R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2663 : α) => γ) (fun (i : α) => _inst_1))) r g) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2666 : β) => γ) (fun (i : β) => _inst_1))) r e)) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.Logic.Function.Basic._hyg.7436 : β) => γ) (fun (i : β) => _inst_1))) r (Function.extend.{succ u3, succ u2, succ u1} α β γ f g e))
+  forall {R : Type.{u4}} {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : SMul.{u4, u1} R γ] (r : R) (f : α -> β) (g : α -> γ) (e : β -> γ), Eq.{max (succ u2) (succ u1)} (β -> γ) (Function.extend.{succ u3, succ u2, succ u1} α β γ f (HSMul.hSMul.{u4, max u3 u1, max u3 u1} R (α -> γ) (α -> γ) (instHSMul.{u4, max u3 u1} R (α -> γ) (Pi.instSMul.{u3, u1, u4} α R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2665 : α) => γ) (fun (i : α) => _inst_1))) r g) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2668 : β) => γ) (fun (i : β) => _inst_1))) r e)) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.Logic.Function.Basic._hyg.7436 : β) => γ) (fun (i : β) => _inst_1))) r (Function.extend.{succ u3, succ u2, succ u1} α β γ f g e))
 Case conversion may be inaccurate. Consider using '#align function.extend_smul Function.extend_smulₓ'. -/
 @[to_additive]
 theorem Function.extend_smul {R α β γ : Type _} [HasSmul R γ] (r : R) (f : α → β) (g : α → γ)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module logic.equiv.fin
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ def finOneEquiv : Fin 1 ≃ Unit :=
 #align fin_one_equiv finOneEquiv
 
 /-- Equivalence between `fin 2` and `bool`. -/
-def finTwoEquiv : Fin 2 ≃ Bool where 
+def finTwoEquiv : Fin 2 ≃ Bool where
   toFun := ![false, true]
   invFun b := cond b 1 0
   left_inv := Fin.forall_fin_two.2 <| by simp
@@ -46,8 +46,8 @@ def finTwoEquiv : Fin 2 ≃ Bool where
 /-- `Π i : fin 2, α i` is equivalent to `α 0 × α 1`. See also `fin_two_arrow_equiv` for a
 non-dependent version and `prod_equiv_pi_fin_two` for a version with inputs `α β : Type u`. -/
 @[simps (config := { fullyApplied := false })]
-def piFinTwoEquiv (α : Fin 2 → Type u) :
-    (∀ i, α i) ≃ α 0 × α 1 where 
+def piFinTwoEquiv (α : Fin 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1
+    where
   toFun f := (f 0, f 1)
   invFun p := Fin.cons p.1 <| Fin.cons p.2 finZeroElim
   left_inv f := funext <| Fin.forall_fin_two.2 ⟨rfl, rfl⟩
@@ -58,7 +58,7 @@ def piFinTwoEquiv (α : Fin 2 → Type u) :
 theorem Fin.preimage_apply_01_prod {α : Fin 2 → Type u} (s : Set (α 0)) (t : Set (α 1)) :
     (fun f : ∀ i, α i => (f 0, f 1)) ⁻¹' s ×ˢ t =
       Set.pi Set.univ (Fin.cons s <| Fin.cons t Fin.elim0) :=
-  by 
+  by
   ext f
   have : (Fin.cons s (Fin.cons t Fin.elim0) : ∀ i, Set (α i)) 1 = t := rfl
   simp [Fin.forall_fin_two, this]
@@ -87,8 +87,8 @@ def finTwoArrowEquiv (α : Type _) : (Fin 2 → α) ≃ α × α :=
 
 /-- `Π i : fin 2, α i` is order equivalent to `α 0 × α 1`. See also `order_iso.fin_two_arrow_equiv`
 for a non-dependent version. -/
-def OrderIso.piFinTwoIso (α : Fin 2 → Type u) [∀ i, Preorder (α i)] :
-    (∀ i, α i) ≃o α 0 × α 1 where 
+def OrderIso.piFinTwoIso (α : Fin 2 → Type u) [∀ i, Preorder (α i)] : (∀ i, α i) ≃o α 0 × α 1
+    where
   toEquiv := piFinTwoEquiv α
   map_rel_iff' f g := Iff.symm Fin.forall_fin_two
 #align order_iso.pi_fin_two_iso OrderIso.piFinTwoIso
@@ -107,7 +107,7 @@ def finCongr {n m : ℕ} (h : n = m) : Fin n ≃ Fin m :=
 @[simp]
 theorem fin_congr_apply_mk {n m : ℕ} (h : n = m) (k : ℕ) (w : k < n) :
     finCongr h ⟨k, w⟩ =
-      ⟨k, by 
+      ⟨k, by
         subst h
         exact w⟩ :=
   rfl
@@ -119,13 +119,14 @@ theorem fin_congr_symm {n m : ℕ} (h : n = m) : (finCongr h).symm = finCongr h.
 #align fin_congr_symm fin_congr_symm
 
 @[simp]
-theorem fin_congr_apply_coe {n m : ℕ} (h : n = m) (k : Fin n) : (finCongr h k : ℕ) = k := by
+theorem fin_congr_apply_coe {n m : ℕ} (h : n = m) (k : Fin n) : (finCongr h k : ℕ) = k :=
+  by
   cases k
   rfl
 #align fin_congr_apply_coe fin_congr_apply_coe
 
 theorem fin_congr_symm_apply_coe {n m : ℕ} (h : n = m) (k : Fin m) :
-    ((finCongr h).symm k : ℕ) = k := by 
+    ((finCongr h).symm k : ℕ) = k := by
   cases k
   rfl
 #align fin_congr_symm_apply_coe fin_congr_symm_apply_coe
@@ -133,9 +134,8 @@ theorem fin_congr_symm_apply_coe {n m : ℕ} (h : n = m) (k : Fin m) :
 /-- An equivalence that removes `i` and maps it to `none`.
 This is a version of `fin.pred_above` that produces `option (fin n)` instead of
 mapping both `i.cast_succ` and `i.succ` to `i`. -/
-def finSuccEquiv' {n : ℕ} (i : Fin (n + 1)) :
-    Fin (n + 1) ≃ Option (Fin
-          n) where 
+def finSuccEquiv' {n : ℕ} (i : Fin (n + 1)) : Fin (n + 1) ≃ Option (Fin n)
+    where
   toFun := i.insertNth none some
   invFun x := x.casesOn' i (Fin.succAbove i)
   left_inv x := Fin.succAboveCases i (by simp) (fun j => by simp) x
@@ -234,7 +234,7 @@ theorem fin_succ_equiv'_zero {n : ℕ} : finSuccEquiv' (0 : Fin (n + 1)) = finSu
 theorem fin_succ_equiv'_last_apply {n : ℕ} {i : Fin (n + 1)} (h : i ≠ Fin.last n) :
     finSuccEquiv' (Fin.last n) i =
       Fin.castLt i (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 h) : ↑i < n) :=
-  by 
+  by
   have h' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 h)
   conv_lhs => rw [← Fin.cast_succ_cast_lt i h']
   convert fin_succ_equiv'_below _
@@ -246,7 +246,7 @@ theorem fin_succ_equiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n
     finSuccEquiv' i j =
       (i.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 hi) : ↑i < n)).predAbove
         j :=
-  by 
+  by
   rw [Fin.predAbove]
   have hi' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 hi)
   rcases hj.lt_or_lt with (hij | hij)
@@ -275,7 +275,7 @@ theorem fin_succ_above_equiv_symm_apply_last (x : { x : Fin (n + 1) // x ≠ Fin
     (finSuccAboveEquiv (Fin.last n)).symm x =
       Fin.castLt (x : Fin (n + 1))
         (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 x.property)) :=
-  by 
+  by
   rw [← Option.some_inj, ← Option.coe_def]
   simpa [finSuccAboveEquiv, OrderIso.symm] using fin_succ_equiv'_last_apply x.property
 #align fin_succ_above_equiv_symm_apply_last fin_succ_above_equiv_symm_apply_last
@@ -284,7 +284,7 @@ theorem fin_succ_above_equiv_symm_apply_ne_last {p : Fin (n + 1)} (h : p ≠ Fin
     (x : { x : Fin (n + 1) // x ≠ p }) :
     (finSuccAboveEquiv p).symm x =
       (p.castLt (lt_of_le_of_ne (Fin.le_last _) (Fin.coe_injective.ne_iff.2 h))).predAbove x :=
-  by 
+  by
   rw [← Option.some_inj, ← Option.coe_def]
   simpa [finSuccAboveEquiv, OrderIso.symm] using fin_succ_equiv'_ne_last_apply h x.property
 #align fin_succ_above_equiv_symm_apply_ne_last fin_succ_above_equiv_symm_apply_ne_last
@@ -323,10 +323,8 @@ theorem fin_succ_equiv_last_symm_none {n : ℕ} : finSuccEquivLast.symm none = F
 /-- Equivalence between `Π j : fin (n + 1), α j` and `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 @[simps (config := { fullyApplied := false })]
 def Equiv.piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (n + 1)) :
-    (∀ j, α j) ≃
-      α i ×
-        ∀ j, α (i.succAbove
-              j) where 
+    (∀ j, α j) ≃ α i × ∀ j, α (i.succAbove j)
+    where
   toFun f := (f i, fun j => f (i.succAbove j))
   invFun f := i.insertNth f.1 f.2
   left_inv f := by simp [Fin.insert_nth_eq_iff]
@@ -336,11 +334,8 @@ def Equiv.piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (
 /-- Order isomorphism between `Π j : fin (n + 1), α j` and
 `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 def OrderIso.piFinSuccAboveIso {n : ℕ} (α : Fin (n + 1) → Type u) [∀ i, LE (α i)]
-    (i : Fin (n + 1)) :
-    (∀ j, α j) ≃o
-      α i × ∀ j,
-          α (i.succAbove
-              j) where 
+    (i : Fin (n + 1)) : (∀ j, α j) ≃o α i × ∀ j, α (i.succAbove j)
+    where
   toEquiv := Equiv.piFinSuccAboveEquiv α i
   map_rel_iff' f g := i.forall_iff_succ_above.symm
 #align order_iso.pi_fin_succ_above_iso OrderIso.piFinSuccAboveIso
@@ -352,9 +347,8 @@ def Equiv.piFinSucc (n : ℕ) (β : Type u) : (Fin (n + 1) → β) ≃ β × (Fi
 #align equiv.pi_fin_succ Equiv.piFinSucc
 
 /-- Equivalence between `fin m ⊕ fin n` and `fin (m + n)` -/
-def finSumFinEquiv :
-    Sum (Fin m) (Fin n) ≃
-      Fin (m + n) where 
+def finSumFinEquiv : Sum (Fin m) (Fin n) ≃ Fin (m + n)
+    where
   toFun := Sum.elim (Fin.castAdd n) (Fin.natAdd m)
   invFun i := @Fin.addCases m n (fun _ => Sum (Fin m) (Fin n)) Sum.inl Sum.inr i
   left_inv x := by cases' x with y y <;> dsimp <;> simp
@@ -414,7 +408,8 @@ theorem fin_add_flip_apply_mk_left {k : ℕ} (h : k < m) (hk : k < m + n := Nat.
 
 @[simp]
 theorem fin_add_flip_apply_mk_right {k : ℕ} (h₁ : m ≤ k) (h₂ : k < m + n) :
-    finAddFlip (⟨k, h₂⟩ : Fin (m + n)) = ⟨k - m, tsub_le_self.trans_lt <| add_comm m n ▸ h₂⟩ := by
+    finAddFlip (⟨k, h₂⟩ : Fin (m + n)) = ⟨k - m, tsub_le_self.trans_lt <| add_comm m n ▸ h₂⟩ :=
+  by
   convert fin_add_flip_apply_nat_add ⟨k - m, (tsub_lt_iff_right h₁).2 _⟩ m
   · simp [add_tsub_cancel_of_le h₁]
   · rwa [add_comm]
@@ -427,12 +422,14 @@ def finRotate : ∀ n, Equiv.Perm (Fin n)
 #align fin_rotate finRotate
 
 theorem fin_rotate_of_lt {k : ℕ} (h : k < n) :
-    finRotate (n + 1) ⟨k, lt_of_lt_of_le h (Nat.le_succ _)⟩ = ⟨k + 1, Nat.succ_lt_succ h⟩ := by
+    finRotate (n + 1) ⟨k, lt_of_lt_of_le h (Nat.le_succ _)⟩ = ⟨k + 1, Nat.succ_lt_succ h⟩ :=
+  by
   dsimp [finRotate]
   simp [h, add_comm]
 #align fin_rotate_of_lt fin_rotate_of_lt
 
-theorem fin_rotate_last' : finRotate (n + 1) ⟨n, lt_add_one _⟩ = ⟨0, Nat.zero_lt_succ _⟩ := by
+theorem fin_rotate_last' : finRotate (n + 1) ⟨n, lt_add_one _⟩ = ⟨0, Nat.zero_lt_succ _⟩ :=
+  by
   dsimp [finRotate]
   rw [fin_add_flip_apply_mk_right]
   simp
@@ -443,12 +440,13 @@ theorem fin_rotate_last : finRotate (n + 1) (Fin.last _) = 0 :=
 #align fin_rotate_last fin_rotate_last
 
 theorem Fin.snoc_eq_cons_rotate {α : Type _} (v : Fin n → α) (a : α) :
-    @Fin.snoc _ (fun _ => α) v a = fun i => @Fin.cons _ (fun _ => α) a v (finRotate _ i) := by
+    @Fin.snoc _ (fun _ => α) v a = fun i => @Fin.cons _ (fun _ => α) a v (finRotate _ i) :=
+  by
   ext ⟨i, h⟩
   by_cases h' : i < n
   · rw [fin_rotate_of_lt h', Fin.snoc, Fin.cons, dif_pos h']
     rfl
-  · have h'' : n = i := by 
+  · have h'' : n = i := by
       simp only [not_lt] at h'
       exact (Nat.eq_of_le_of_lt_succ h' h).symm
     subst h''
@@ -467,7 +465,8 @@ theorem fin_rotate_one : finRotate 1 = Equiv.refl _ :=
 #align fin_rotate_one fin_rotate_one
 
 @[simp]
-theorem fin_rotate_succ_apply {n : ℕ} (i : Fin n.succ) : finRotate n.succ i = i + 1 := by
+theorem fin_rotate_succ_apply {n : ℕ} (i : Fin n.succ) : finRotate n.succ i = i + 1 :=
+  by
   cases n
   · simp
   rcases i.le_last.eq_or_lt with (rfl | h)
@@ -483,7 +482,8 @@ theorem fin_rotate_apply_zero {n : ℕ} : finRotate n.succ 0 = 1 := by
 #align fin_rotate_apply_zero fin_rotate_apply_zero
 
 theorem coe_fin_rotate_of_ne_last {n : ℕ} {i : Fin n.succ} (h : i ≠ Fin.last n) :
-    (finRotate n.succ i : ℕ) = i + 1 := by
+    (finRotate n.succ i : ℕ) = i + 1 :=
+  by
   rw [fin_rotate_succ_apply]
   have : (i : ℕ) < n := lt_of_le_of_ne (nat.succ_le_succ_iff.mp i.2) (fin.coe_injective.ne h)
   exact Fin.coe_add_one_of_lt this
@@ -496,9 +496,8 @@ theorem coe_fin_rotate {n : ℕ} (i : Fin n.succ) :
 
 /-- Equivalence between `fin m × fin n` and `fin (m * n)` -/
 @[simps]
-def finProdFinEquiv :
-    Fin m × Fin n ≃ Fin (m *
-          n) where 
+def finProdFinEquiv : Fin m × Fin n ≃ Fin (m * n)
+    where
   toFun x :=
     ⟨x.2 + n * x.1,
       calc
@@ -528,10 +527,8 @@ def finProdFinEquiv :
 /-- Promote a `fin n` into a larger `fin m`, as a subtype where the underlying
 values are retained. This is the `order_iso` version of `fin.cast_le`. -/
 @[simps apply symmApply]
-def Fin.castLeOrderIso {n m : ℕ} (h : n ≤ m) :
-    Fin n ≃o
-      { i : Fin m //
-        (i : ℕ) < n } where 
+def Fin.castLeOrderIso {n m : ℕ} (h : n ≤ m) : Fin n ≃o { i : Fin m // (i : ℕ) < n }
+    where
   toFun i := ⟨Fin.castLe h i, by simp⟩
   invFun i := ⟨i, i.Prop⟩
   left_inv _ := by simp

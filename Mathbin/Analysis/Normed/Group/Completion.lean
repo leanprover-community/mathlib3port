@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.completion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,8 +31,8 @@ namespace Completion
 
 variable (E : Type _)
 
-instance [UniformSpace E] [HasNorm E] :
-    HasNorm (Completion E) where norm := Completion.extension HasNorm.norm
+instance [UniformSpace E] [HasNorm E] : HasNorm (Completion E)
+    where norm := Completion.extension HasNorm.norm
 
 @[simp]
 theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)‖ = ‖x‖ :=
@@ -41,7 +41,7 @@ theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)�
 
 instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
   { Completion.addCommGroup, Completion.metricSpace with
-    dist_eq := by 
+    dist_eq := by
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
       · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes
 
 ! This file was ported from Lean 3 source module algebra.direct_limit
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,11 +125,11 @@ theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f
 #align module.direct_limit.exists_of Module.DirectLimit.exists_of
 
 @[elab_as_elim]
-protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop}
+protected theorem inductionOn [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop}
     (z : DirectLimit G f) (ih : ∀ i x, C (of R ι G f i x)) : C z :=
   let ⟨i, x, h⟩ := exists_of z
   h ▸ ih i x
-#align module.direct_limit.induction_on Module.DirectLimit.induction_on
+#align module.direct_limit.induction_on Module.DirectLimit.inductionOn
 
 variable {P : Type u₁} [AddCommGroup P] [Module R P] (g : ∀ i, G i →ₗ[R] P)
 
@@ -161,7 +161,7 @@ theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G
     F x =
       lift R ι G f (fun i => F.comp <| of R ι G f i)
         (fun i j hij x => by rw [LinearMap.comp_apply, of_f] <;> rfl) x :=
-  (DirectLimit.induction_on x) fun i x => by rw [lift_of] <;> rfl
+  (DirectLimit.inductionOn x) fun i x => by rw [lift_of] <;> rfl
 #align module.direct_limit.lift_unique Module.DirectLimit.lift_unique
 
 section Totalize
@@ -199,7 +199,7 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     (hx : ∀ k ∈ x.support, k ≤ i) :
     DirectSum.toModule R ι (G j) (fun k => totalize G f k j) x =
       f i j hij (DirectSum.toModule R ι (G i) (fun k => totalize G f k i) x) :=
-  by 
+  by
   rw [← @Dfinsupp.sum_single ι G _ _ _ x]
   unfold Dfinsupp.sum
   simp only [LinearMap.map_sum]
@@ -217,7 +217,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
     span_induction ((Quotient.mk_eq_zero _).1 H)
       (fun x ⟨i, j, hij, y, hxy⟩ =>
         let ⟨k, hik, hjk⟩ := exists_ge_ge i j
-        ⟨k, by 
+        ⟨k, by
           clear_
           subst hxy
           constructor
@@ -309,7 +309,7 @@ theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
 @[elab_as_elim]
 protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop}
     (z : DirectLimit G f) (ih : ∀ i x, C (of G f i x)) : C z :=
-  Module.DirectLimit.induction_on z ih
+  Module.DirectLimit.inductionOn z ih
 #align add_comm_group.direct_limit.induction_on AddCommGroup.DirectLimit.induction_on
 
 /-- A component that corresponds to zero in the direct limit is already zero in some
@@ -436,7 +436,8 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
       ⟨i, c x, by rw [map_C, h]⟩)
     (fun q₁ q₂ ⟨i₁, p₁, ih₁⟩ ⟨i₂, p₂, ih₂⟩ =>
       let ⟨i, h1, h2⟩ := exists_ge_ge i₁ i₂
-      ⟨i, p₁.map (f' i₁ i h1) + p₂.map (f' i₂ i h2), by
+      ⟨i, p₁.map (f' i₁ i h1) + p₂.map (f' i₂ i h2),
+        by
         rw [Polynomial.map_add, map_map, map_map, ← ih₁, ← ih₂]
         congr 2 <;> ext x <;> simp_rw [RingHom.comp_apply, of_f]⟩)
     fun n z ih =>
@@ -468,7 +469,7 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupporte
     (hst : s ⊆ t) :
     f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
       lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) :=
-  by 
+  by
   refine' Subring.InClosure.rec_on hxs _ _ _ _
   ·
     rw [(restriction _).map_one, (FreeCommRing.lift _).map_one, (f' j k hjk).map_one,
@@ -500,7 +501,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       ∃ H : ∀ k : Σi, G i, k ∈ s → k.1 ≤ j,
         IsSupported x s ∧
           lift (fun ix : s => f' ix.1.1 j (H ix ix.2) ix.1.2) (restriction s x) = (0 : G j) :=
-  by 
+  by
   refine' span_induction (Ideal.Quotient.eq_zero_iff_mem.1 H) _ _ _ _
   · rintro x (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩)
     · refine'
@@ -557,7 +558,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     rw [(restriction _).map_zero, (FreeCommRing.lift _).map_zero]
   · rintro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by
+    have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k :=
+      by
       rintro z (hz | hz)
       exact le_trans (hi z hz) hik
       exact le_trans (hj z hz) hjk
@@ -576,7 +578,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
     rcases exists_finset_support x with ⟨s, hxs⟩
     rcases(s.image Sigma.fst).exists_le with ⟨i, hi⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σi, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
+    have : ∀ z : Σi, G i, z ∈ ↑s ∪ t → z.1 ≤ k :=
+      by
       rintro z (hz | hz)
       exacts[(hi z.1 <| Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
     refine'
@@ -607,8 +610,10 @@ variable (f' : ∀ i j, i ≤ j → G i →+* G j)
 from the components to the direct limits are injective. -/
 theorem of_injective [IsDirected ι (· ≤ ·)] [DirectedSystem G fun i j h => f' i j h]
     (hf : ∀ i j hij, Function.Injective (f' i j hij)) (i) :
-    Function.Injective (of G (fun i j h => f' i j h) i) := by
-  suffices ∀ x, of G (fun i j h => f' i j h) i x = 0 → x = 0 by
+    Function.Injective (of G (fun i j h => f' i j h) i) :=
+  by
+  suffices ∀ x, of G (fun i j h => f' i j h) i x = 0 → x = 0
+    by
     intro x y hxy
     rw [← sub_eq_zero]
     apply this
@@ -639,7 +644,7 @@ def lift : DirectLimit G f →+* P :=
   Ideal.Quotient.lift _ (FreeCommRing.lift fun x : Σi, G i => g x.1 x.2)
     (by
       suffices Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σi : ι, G i => g x.fst x.snd) ⊥
-        by 
+        by
         intro x hx
         exact (mem_bot P).1 (this hx)
       rw [Ideal.span_le]
@@ -683,7 +688,8 @@ namespace DirectLimit
 instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
     Nontrivial (Ring.DirectLimit G fun i j h => f' i j h) :=
   ⟨⟨0, 1,
-      (Nonempty.elim (by infer_instance)) fun i : ι => by
+      (Nonempty.elim (by infer_instance)) fun i : ι =>
+        by
         change (0 : Ring.DirectLimit G fun i j h => f' i j h) ≠ 1
         rw [← (Ring.DirectLimit.of _ _ _).map_one]
         intro H; rcases Ring.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
@@ -722,7 +728,8 @@ See note [reducible non-instances]. -/
 protected noncomputable def field [DirectedSystem G fun i j h => f' i j h] :
     Field (Ring.DirectLimit G fun i j h => f' i j h) :=
   { Ring.DirectLimit.commRing G fun i j h => f' i j h,
-    DirectLimit.nontrivial G fun i j h => f' i j h with
+    DirectLimit.nontrivial G fun i j h =>
+      f' i j h with
     inv := inv G fun i j h => f' i j h
     mul_inv_cancel := fun p => DirectLimit.mul_inv_cancel G fun i j h => f' i j h
     inv_zero := dif_pos rfl }

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.classical
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,12 +126,14 @@ theorem Eb_val (h : j ≠ i) : (eb R i j h).val = Matrix.stdBasisMatrix i j 1 :=
 end ElementaryBasis
 
 theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) :
-    ¬IsLieAbelian ↥(sl n R) := by
+    ¬IsLieAbelian ↥(sl n R) :=
+  by
   rcases Fintype.exists_pair_of_one_lt_card h with ⟨j, i, hij⟩
   let A := Eb R i j hij
   let B := Eb R j i hij.symm
   intro c
-  have c' : A.val ⬝ B.val = B.val ⬝ A.val := by
+  have c' : A.val ⬝ B.val = B.val ⬝ A.val :=
+    by
     rw [← sub_eq_zero, ← sl_bracket, c.trivial]
     rfl
   simpa [std_basis_matrix, Matrix.mul_apply, hij] using congr_fun (congr_fun c' i) i
@@ -158,7 +160,8 @@ def so [Fintype n] : LieSubalgebra R (Matrix n n R) :=
 #align lie_algebra.orthogonal.so LieAlgebra.Orthogonal.so
 
 @[simp]
-theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ Aᵀ = -A := by
+theorem mem_so [Fintype n] (A : Matrix n n R) : A ∈ so n R ↔ Aᵀ = -A :=
+  by
   erw [mem_skew_adjoint_matrices_submodule]
   simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, Matrix.mul_one, Matrix.one_mul]
 #align lie_algebra.orthogonal.mem_so LieAlgebra.Orthogonal.mem_so
@@ -182,20 +185,17 @@ def pso (i : R) : Matrix (Sum p q) (Sum p q) R :=
 
 variable [Fintype p] [Fintype q]
 
-theorem Pso_inv {i : R} (hi : i * i = -1) : pso p q R i * pso p q R (-i) = 1 := by
+theorem Pso_inv {i : R} (hi : i * i = -1) : pso p q R i * pso p q R (-i) = 1 :=
+  by
   ext (x y); rcases x with ⟨⟩ <;> rcases y with ⟨⟩
-  ·
-    -- x y : p
+  ·-- x y : p
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h]
-  ·
-    -- x : p, y : q
+  ·-- x : p, y : q
     simp [Pso, indefinite_diagonal]
-  ·
-    -- x : q, y : p
+  ·-- x : q, y : p
     simp [Pso, indefinite_diagonal]
-  ·
-    -- x y : q
+  ·-- x y : q
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h, hi]
 #align lie_algebra.orthogonal.Pso_inv LieAlgebra.Orthogonal.Pso_inv
@@ -206,20 +206,17 @@ def invertiblePso {i : R} (hi : i * i = -1) : Invertible (pso p q R i) :=
 #align lie_algebra.orthogonal.invertible_Pso LieAlgebra.Orthogonal.invertiblePso
 
 theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
-    (pso p q R i)ᵀ ⬝ indefiniteDiagonal p q R ⬝ pso p q R i = 1 := by
+    (pso p q R i)ᵀ ⬝ indefiniteDiagonal p q R ⬝ pso p q R i = 1 :=
+  by
   ext (x y); rcases x with ⟨⟩ <;> rcases y with ⟨⟩
-  ·
-    -- x y : p
+  ·-- x y : p
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h]
-  ·
-    -- x : p, y : q
+  ·-- x : p, y : q
     simp [Pso, indefinite_diagonal]
-  ·
-    -- x : q, y : p
+  ·-- x : q, y : p
     simp [Pso, indefinite_diagonal]
-  ·
-    -- x y : q
+  ·-- x y : q
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h, hi]
 #align
@@ -227,7 +224,8 @@ theorem indefinite_diagonal_transform {i : R} (hi : i * i = -1) :
 
 /-- An equivalence between the indefinite and definite orthogonal Lie algebras, over a ring
 containing a square root of -1. -/
-def soIndefiniteEquiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (Sum p q) R := by
+def soIndefiniteEquiv {i : R} (hi : i * i = -1) : so' p q R ≃ₗ⁅R⁆ so (Sum p q) R :=
+  by
   apply
     (skewAdjointMatricesLieSubalgebraEquiv (indefinite_diagonal p q R) (Pso p q R i)
         (invertible_Pso p q R hi)).trans
@@ -277,19 +275,22 @@ def s :=
   indefiniteDiagonal l l R
 #align lie_algebra.orthogonal.S LieAlgebra.Orthogonal.s
 
-theorem S_as_blocks : s l R = Matrix.fromBlocks 1 0 0 (-1) := by
+theorem S_as_blocks : s l R = Matrix.fromBlocks 1 0 0 (-1) :=
+  by
   rw [← Matrix.diagonal_one, Matrix.diagonal_neg, Matrix.from_blocks_diagonal]
   rfl
 #align lie_algebra.orthogonal.S_as_blocks LieAlgebra.Orthogonal.S_as_blocks
 
-theorem JD_transform [Fintype l] : (pD l R)ᵀ ⬝ jD l R ⬝ pD l R = (2 : R) • s l R := by
+theorem JD_transform [Fintype l] : (pD l R)ᵀ ⬝ jD l R ⬝ pD l R = (2 : R) • s l R :=
+  by
   have h : (PD l R)ᵀ ⬝ JD l R = Matrix.fromBlocks 1 1 1 (-1) := by
     simp [PD, JD, Matrix.from_blocks_transpose, Matrix.from_blocks_multiply]
   erw [h, S_as_blocks, Matrix.from_blocks_multiply, Matrix.from_blocks_smul]
   congr <;> simp [two_smul]
 #align lie_algebra.orthogonal.JD_transform LieAlgebra.Orthogonal.JD_transform
 
-theorem PD_inv [Fintype l] [Invertible (2 : R)] : pD l R * ⅟ (2 : R) • (pD l R)ᵀ = 1 := by
+theorem PD_inv [Fintype l] [Invertible (2 : R)] : pD l R * ⅟ (2 : R) • (pD l R)ᵀ = 1 :=
+  by
   have h : ⅟ (2 : R) • (1 : Matrix l l R) + ⅟ (2 : R) • 1 = 1 := by
     rw [← smul_add, ← two_smul R _, smul_smul, invOf_mul_self, one_smul]
   erw [Matrix.from_blocks_transpose, Matrix.from_blocks_smul, Matrix.mul_eq_mul,
@@ -302,7 +303,8 @@ instance invertiblePD [Fintype l] [Invertible (2 : R)] : Invertible (pD l R) :=
 #align lie_algebra.orthogonal.invertible_PD LieAlgebra.Orthogonal.invertiblePD
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type D. -/
-def typeDEquivSo' [Fintype l] [Invertible (2 : R)] : typeD l R ≃ₗ⁅R⁆ so' l l R := by
+def typeDEquivSo' [Fintype l] [Invertible (2 : R)] : typeD l R ≃ₗ⁅R⁆ so' l l R :=
+  by
   apply (skewAdjointMatricesLieSubalgebraEquiv (JD l R) (PD l R) (by infer_instance)).trans
   apply LieEquiv.ofEq
   ext A
@@ -356,7 +358,8 @@ def pB :=
 
 variable [Fintype l]
 
-theorem PB_inv [Invertible (2 : R)] : pB l R * Matrix.fromBlocks 1 0 0 (⅟ (pD l R)) = 1 := by
+theorem PB_inv [Invertible (2 : R)] : pB l R * Matrix.fromBlocks 1 0 0 (⅟ (pD l R)) = 1 :=
+  by
   rw [PB, Matrix.mul_eq_mul, Matrix.from_blocks_multiply, Matrix.mul_inv_of_self]
   simp only [Matrix.mul_zero, Matrix.mul_one, Matrix.zero_mul, zero_add, add_zero,
     Matrix.from_blocks_one]
@@ -375,7 +378,7 @@ theorem indefinite_diagonal_assoc :
     indefiniteDiagonal (Sum Unit l) l R =
       Matrix.reindexLieEquiv (Equiv.sumAssoc Unit l l).symm
         (Matrix.fromBlocks 1 0 0 (indefiniteDiagonal l l R)) :=
-  by 
+  by
   ext (i j)
   rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;> rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
       simp only [indefinite_diagonal, Matrix.diagonal, Equiv.sumAssoc_apply_inl_inl,
@@ -389,7 +392,8 @@ theorem indefinite_diagonal_assoc :
   lie_algebra.orthogonal.indefinite_diagonal_assoc LieAlgebra.Orthogonal.indefinite_diagonal_assoc
 
 /-- An equivalence between two possible definitions of the classical Lie algebra of type B. -/
-def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l) l R := by
+def typeBEquivSo' [Invertible (2 : R)] : typeB l R ≃ₗ⁅R⁆ so' (Sum Unit l) l R :=
+  by
   apply (skewAdjointMatricesLieSubalgebraEquiv (JB l R) (PB l R) (by infer_instance)).trans
   symm
   apply

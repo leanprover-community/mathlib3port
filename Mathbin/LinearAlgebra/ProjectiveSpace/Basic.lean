@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module linear_algebra.projective_space.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,8 @@ def mk' (v : { v : V // v ≠ 0 }) : ℙ K V :=
 #align projectivization.mk' Projectivization.mk'
 
 @[simp]
-theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 := by
+theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 :=
+  by
   dsimp [mk, mk']
   congr 1
   simp
@@ -90,7 +91,8 @@ theorem rep_nonzero (v : ℙ K V) : v.rep ≠ 0 :=
 #align projectivization.rep_nonzero Projectivization.rep_nonzero
 
 @[simp]
-theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v := by
+theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v :=
+  by
   dsimp [mk, Projectivization.rep]
   simp
 #align projectivization.mk_rep Projectivization.mk_rep
@@ -99,7 +101,8 @@ open FiniteDimensional
 
 /-- Consider an element of the projectivization as a submodule of `V`. -/
 protected def submodule (v : ℙ K V) : Submodule K V :=
-  (Quotient.liftOn' v fun v => K ∙ (v : V)) <| by
+  (Quotient.liftOn' v fun v => K ∙ (v : V)) <|
+    by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨x, rfl : x • b = a⟩
     exact Submodule.span_singleton_group_smul_eq _ x _
 #align projectivization.submodule Projectivization.submodule
@@ -114,7 +117,8 @@ theorem mk_eq_mk_iff (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
 /-- Two nonzero vectors go to the same point in projective space if and only if one is
 a scalar multiple of the other. -/
 theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
-    mk K v hv = mk K w hw ↔ ∃ a : K, a • w = v := by
+    mk K v hv = mk K w hw ↔ ∃ a : K, a • w = v :=
+  by
   rw [mk_eq_mk_iff K v w hv hw]
   constructor
   · rintro ⟨a, ha⟩
@@ -142,23 +146,27 @@ theorem submodule_mk (v : V) (hv : v ≠ 0) : (mk K v hv).Submodule = K ∙ v :=
   rfl
 #align projectivization.submodule_mk Projectivization.submodule_mk
 
-theorem submodule_eq (v : ℙ K V) : v.Submodule = K ∙ v.rep := by
+theorem submodule_eq (v : ℙ K V) : v.Submodule = K ∙ v.rep :=
+  by
   conv_lhs => rw [← v.mk_rep]
   rfl
 #align projectivization.submodule_eq Projectivization.submodule_eq
 
-theorem finrank_submodule (v : ℙ K V) : finrank K v.Submodule = 1 := by
+theorem finrank_submodule (v : ℙ K V) : finrank K v.Submodule = 1 :=
+  by
   rw [submodule_eq]
   exact finrank_span_singleton v.rep_nonzero
 #align projectivization.finrank_submodule Projectivization.finrank_submodule
 
-instance (v : ℙ K V) : FiniteDimensional K v.Submodule := by
+instance (v : ℙ K V) : FiniteDimensional K v.Submodule :=
+  by
   rw [← v.mk_rep]
   change FiniteDimensional K (K ∙ v.rep)
   infer_instance
 
 theorem submodule_injective :
-    Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) := by
+    Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) :=
+  by
   intro u v h; replace h := le_of_eq h
   simp only [submodule_eq] at h
   rw [Submodule.le_span_singleton_iff] at h
@@ -175,7 +183,7 @@ variable (K V)
 collection of subspaces of dimension 1. -/
 noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K H = 1 } :=
   Equiv.ofBijective (fun v => ⟨v.Submodule, v.finrank_submodule⟩)
-    (by 
+    (by
       constructor
       · intro u v h
         apply_fun fun e => e.val  at h
@@ -207,7 +215,8 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 #align projectivization.mk'' Projectivization.mk''
 
 @[simp]
-theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H := by
+theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H :=
+  by
   suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by exact congr_arg coe this
   dsimp [mk'']
   simp
@@ -225,7 +234,7 @@ variable {L W : Type _} [DivisionRing L] [AddCommGroup W] [Module L W]
 /-- An injective semilinear map of vector spaces induces a map on projective spaces. -/
 def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : ℙ K V → ℙ L W :=
   Quotient.map' (fun v => ⟨f v, fun c => v.2 (hf (by simp [c]))⟩)
-    (by 
+    (by
       rintro ⟨u, hu⟩ ⟨v, hv⟩ ⟨a, ha⟩
       use Units.map σ.to_monoid_hom a
       dsimp at ha⊢
@@ -235,7 +244,8 @@ def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : �
 /-- Mapping with respect to a semilinear map over an isomorphism of fields yields
 an injective map on projective spaces. -/
 theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (f : V →ₛₗ[σ] W)
-    (hf : Function.Injective f) : Function.Injective (map f hf) := by
+    (hf : Function.Injective f) : Function.Injective (map f hf) :=
+  by
   intro u v h
   rw [← u.mk_rep, ← v.mk_rep] at *
   apply Quotient.sound'
@@ -251,7 +261,8 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
 #align projectivization.map_injective Projectivization.map_injective
 
 @[simp]
-theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injective = id := by
+theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injective = id :=
+  by
   ext v
   induction v using Projectivization.ind
   rfl
@@ -261,7 +272,8 @@ theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injec
 theorem map_comp {F U : Type _} [Field F] [AddCommGroup U] [Module F U] {σ : K →+* L} {τ : L →+* F}
     {γ : K →+* F} [RingHomCompTriple σ τ γ] (f : V →ₛₗ[σ] W) (hf : Function.Injective f)
     (g : W →ₛₗ[τ] U) (hg : Function.Injective g) :
-    map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf := by
+    map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf :=
+  by
   ext v
   induction v using Projectivization.ind
   rfl

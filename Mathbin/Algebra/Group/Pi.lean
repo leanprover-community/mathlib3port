@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.group.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,7 +270,7 @@ namespace MulHom
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} {mM : Mul.{u1} M} {mN : CommSemigroup.{u2} N} (f : MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) (g : MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))), Eq.{max (succ u1) (succ u2)} (M -> N) (HMul.hMul.{max u1 u2, max u1 u2, max u1 u2} (M -> N) (M -> N) (M -> N) (instHMul.{max u1 u2} (M -> N) (Pi.instMul.{u1, u2} M (fun (ᾰ : M) => N) (fun (i : M) => Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN)))) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) (fun (_x : MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) f) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) (fun (_x : MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) g)) (fun (x : M) => HMul.hMul.{u2, u2, u2} N N N (instHMul.{u2} N (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) (fun (_x : MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) f x) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) (fun (_x : MulHom.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N mM (Semigroup.toHasMul.{u2} N (CommSemigroup.toSemigroup.{u2} N mN))) g x))
 but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} {mM : Mul.{u2} M} {mN : CommSemigroup.{u1} N} (f : MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) (g : MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) ᾰ) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) ᾰ) (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) ᾰ) (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) ᾰ) (instHMul.{max u2 u1} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) ᾰ) (Pi.instMul.{u2, u1} M (fun (ᾰ : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) ᾰ) (fun (i : M) => Semigroup.toMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) i) (CommSemigroup.toSemigroup.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) i) mN)))) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) f) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) g)) (fun (x : M) => HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) (instHMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) (Semigroup.toMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) (CommSemigroup.toSemigroup.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) mN))) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) g x))
+  forall {M : Type.{u2}} {N : Type.{u1}} {mM : Mul.{u2} M} {mN : CommSemigroup.{u1} N} (f : MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) (g : MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))), Eq.{max (succ u2) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) ᾰ) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) ᾰ) (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) ᾰ) (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) ᾰ) (instHMul.{max u2 u1} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) ᾰ) (Pi.instMul.{u2, u1} M (fun (ᾰ : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) ᾰ) (fun (i : M) => Semigroup.toMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) i) (CommSemigroup.toSemigroup.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) i) mN)))) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) f) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) g)) (fun (x : M) => HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) (instHMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) (Semigroup.toMul.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) (CommSemigroup.toSemigroup.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) mN))) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN))) M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)) (MulHom.mulHomClass.{u2, u1} M N mM (Semigroup.toMul.{u1} N (CommSemigroup.toSemigroup.{u1} N mN)))) g x))
 Case conversion may be inaccurate. Consider using '#align mul_hom.coe_mul MulHom.coe_mulₓ'. -/
 @[to_additive]
 theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroup N} (f g : M →ₙ* N) :
@@ -288,8 +288,8 @@ given by `pi.mul_hom f x b = f b x`. -/
 @[to_additive
       "A family of add_hom `f a : γ → β a` defines a add_hom `pi.add_hom\nf : γ → Π a, β a` given by `pi.add_hom f x b = f b x`.",
   simps]
-def Pi.mulHom {γ : Type w} [∀ i, Mul (f i)] [Mul γ] (g : ∀ i, γ →ₙ* f i) :
-    γ →ₙ* ∀ i, f i where 
+def Pi.mulHom {γ : Type w} [∀ i, Mul (f i)] [Mul γ] (g : ∀ i, γ →ₙ* f i) : γ →ₙ* ∀ i, f i
+    where
   toFun x i := g i x
   map_mul' x y := funext fun i => (g i).map_mul x y
 #align pi.mul_hom Pi.mulHom
@@ -312,7 +312,8 @@ theorem Pi.mulHom_injective {γ : Type w} [Nonempty I] [∀ i, Mul (f i)] [Mul �
   simps]
 def Pi.monoidHom {γ : Type w} [∀ i, MulOneClass (f i)] [MulOneClass γ] (g : ∀ i, γ →* f i) :
     γ →* ∀ i, f i :=
-  { Pi.mulHom fun i => (g i).toMulHom with
+  {
+    Pi.mulHom fun i => (g i).toMulHom with
     toFun := fun x i => g i x
     map_one' := funext fun i => (g i).map_one }
 #align pi.monoid_hom Pi.monoidHom
@@ -322,7 +323,7 @@ def Pi.monoidHom {γ : Type w} [∀ i, MulOneClass (f i)] [MulOneClass γ] (g : 
 lean 3 declaration is
   forall {I : Type.{u1}} {f : I -> Type.{u2}} {γ : Type.{u3}} [_inst_1 : Nonempty.{succ u1} I] [_inst_2 : forall (i : I), MulOneClass.{u2} (f i)] [_inst_3 : MulOneClass.{u3} γ] (g : forall (i : I), MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)), (forall (i : I), Function.Injective.{succ u3, succ u2} γ (f i) (coeFn.{max (succ u2) (succ u3), max (succ u3) (succ u2)} (MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) (fun (_x : MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) => γ -> (f i)) (MonoidHom.hasCoeToFun.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) (g i))) -> (Function.Injective.{succ u3, max (succ u1) (succ u2)} γ (forall (i : I), (fun (i : I) => f i) i) (coeFn.{max (succ (max u1 u2)) (succ u3), max (succ u3) (succ (max u1 u2))} (MonoidHom.{u3, max u1 u2} γ (forall (i : I), (fun (i : I) => f i) i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => (fun (i : I) => f i) i) (fun (i : I) => (fun (i : I) => _inst_2 i) i))) (fun (_x : MonoidHom.{u3, max u1 u2} γ (forall (i : I), (fun (i : I) => f i) i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => (fun (i : I) => f i) i) (fun (i : I) => (fun (i : I) => _inst_2 i) i))) => γ -> (forall (i : I), (fun (i : I) => f i) i)) (MonoidHom.hasCoeToFun.{u3, max u1 u2} γ (forall (i : I), (fun (i : I) => f i) i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => (fun (i : I) => f i) i) (fun (i : I) => (fun (i : I) => _inst_2 i) i))) (Pi.monoidHom.{u1, u2, u3} I (fun (i : I) => f i) γ (fun (i : I) => _inst_2 i) _inst_3 g)))
 but is expected to have type
-  forall {I : Type.{u1}} {f : I -> Type.{u2}} {γ : Type.{u3}} [_inst_1 : Nonempty.{succ u1} I] [_inst_2 : forall (i : I), MulOneClass.{u2} (f i)] [_inst_3 : MulOneClass.{u3} γ] (g : forall (i : I), MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)), (forall (i : I), Function.Injective.{succ u3, succ u2} γ (f i) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) γ (fun (_x : γ) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : γ) => f i) _x) (MulHomClass.toFunLike.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) γ (f i) (MulOneClass.toMul.{u3} γ _inst_3) (MulOneClass.toMul.{u2} (f i) (_inst_2 i)) (MonoidHomClass.toMulHomClass.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) γ (f i) _inst_3 (_inst_2 i) (MonoidHom.monoidHomClass.{u3, u2} γ (f i) _inst_3 (_inst_2 i)))) (g i))) -> (Function.Injective.{succ u3, max (succ u1) (succ u2)} γ (forall (i : I), f i) (FunLike.coe.{max (max (succ u1) (succ u2)) (succ u3), succ u3, max (succ u1) (succ u2)} (MonoidHom.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) γ (fun (_x : γ) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : γ) => forall (i : I), f i) _x) (MulHomClass.toFunLike.{max (max u1 u2) u3, u3, max u1 u2} (MonoidHom.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) γ (forall (i : I), f i) (MulOneClass.toMul.{u3} γ _inst_3) (MulOneClass.toMul.{max u1 u2} (forall (i : I), f i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (MonoidHomClass.toMulHomClass.{max (max u1 u2) u3, u3, max u1 u2} (MonoidHom.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i)) (MonoidHom.monoidHomClass.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))))) (Pi.monoidHom.{u1, u2, u3} I (fun (i : I) => f i) γ (fun (i : I) => _inst_2 i) _inst_3 g)))
+  forall {I : Type.{u1}} {f : I -> Type.{u2}} {γ : Type.{u3}} [_inst_1 : Nonempty.{succ u1} I] [_inst_2 : forall (i : I), MulOneClass.{u2} (f i)] [_inst_3 : MulOneClass.{u3} γ] (g : forall (i : I), MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)), (forall (i : I), Function.Injective.{succ u3, succ u2} γ (f i) (FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) γ (fun (_x : γ) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : γ) => f i) _x) (MulHomClass.toFunLike.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) γ (f i) (MulOneClass.toMul.{u3} γ _inst_3) (MulOneClass.toMul.{u2} (f i) (_inst_2 i)) (MonoidHomClass.toMulHomClass.{max u2 u3, u3, u2} (MonoidHom.{u3, u2} γ (f i) _inst_3 (_inst_2 i)) γ (f i) _inst_3 (_inst_2 i) (MonoidHom.monoidHomClass.{u3, u2} γ (f i) _inst_3 (_inst_2 i)))) (g i))) -> (Function.Injective.{succ u3, max (succ u1) (succ u2)} γ (forall (i : I), f i) (FunLike.coe.{max (max (succ u1) (succ u2)) (succ u3), succ u3, max (succ u1) (succ u2)} (MonoidHom.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) γ (fun (_x : γ) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : γ) => forall (i : I), f i) _x) (MulHomClass.toFunLike.{max (max u1 u2) u3, u3, max u1 u2} (MonoidHom.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) γ (forall (i : I), f i) (MulOneClass.toMul.{u3} γ _inst_3) (MulOneClass.toMul.{max u1 u2} (forall (i : I), f i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (MonoidHomClass.toMulHomClass.{max (max u1 u2) u3, u3, max u1 u2} (MonoidHom.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i)) (MonoidHom.monoidHomClass.{u3, max u1 u2} γ (forall (i : I), f i) _inst_3 (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))))) (Pi.monoidHom.{u1, u2, u3} I (fun (i : I) => f i) γ (fun (i : I) => _inst_2 i) _inst_3 g)))
 Case conversion may be inaccurate. Consider using '#align pi.monoid_hom_injective Pi.monoidHom_injectiveₓ'. -/
 @[to_additive]
 theorem Pi.monoidHom_injective {γ : Type w} [Nonempty I] [∀ i, MulOneClass (f i)] [MulOneClass γ]
@@ -340,8 +341,8 @@ This is `function.eval i` as a `mul_hom`. -/
 @[to_additive
       "Evaluation of functions into an indexed collection of additive semigroups at a\npoint is an additive semigroup homomorphism.\nThis is `function.eval i` as an `add_hom`.",
   simps]
-def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ*
-      f i where 
+def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ* f i
+    where
   toFun g := g i
   map_mul' x y := Pi.mul_apply _ _ i
 #align pi.eval_mul_hom Pi.evalMulHom
@@ -350,8 +351,8 @@ def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ*
 #print Pi.constMulHom /-
 /-- `function.const` as a `mul_hom`. -/
 @[to_additive "`function.const` as an `add_hom`.", simps]
-def Pi.constMulHom (α β : Type _) [Mul β] :
-    β →ₙ* α → β where 
+def Pi.constMulHom (α β : Type _) [Mul β] : β →ₙ* α → β
+    where
   toFun := Function.const α
   map_mul' _ _ := rfl
 #align pi.const_mul_hom Pi.constMulHom
@@ -368,8 +369,8 @@ See also `mul_hom.eval`. -/
 @[to_additive
       "Coercion of an `add_hom` into a function is itself a `add_hom`.\nSee also `add_hom.eval`. ",
   simps]
-def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroup β] :
-    (α →ₙ* β) →ₙ* α → β where 
+def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroup β] : (α →ₙ* β) →ₙ* α → β
+    where
   toFun g := g
   map_mul' x y := rfl
 #align mul_hom.coe_fn MulHom.coeFn
@@ -381,7 +382,7 @@ homomorphism `f` between `α` and `β`. -/
       "Additive semigroup homomorphism between the function spaces `I → α` and `I → β`,\ninduced by an additive semigroup homomorphism `f` between `α` and `β`",
   simps]
 protected def MulHom.compLeft {α β : Type _} [Mul α] [Mul β] (f : α →ₙ* β) (I : Type _) :
-    (I → α) →ₙ* I → β where 
+    (I → α) →ₙ* I → β where
   toFun h := f ∘ h
   map_mul' _ _ := by ext <;> simp
 #align mul_hom.comp_left MulHom.compLeft
@@ -400,8 +401,8 @@ This is `function.eval i` as a `monoid_hom`. -/
 @[to_additive
       "Evaluation of functions into an indexed collection of additive monoids at a\npoint is an additive monoid homomorphism.\nThis is `function.eval i` as an `add_monoid_hom`.",
   simps]
-def Pi.evalMonoidHom (i : I) :
-    (∀ i, f i) →* f i where 
+def Pi.evalMonoidHom (i : I) : (∀ i, f i) →* f i
+    where
   toFun g := g i
   map_one' := Pi.one_apply i
   map_mul' x y := Pi.mul_apply _ _ i
@@ -411,8 +412,8 @@ def Pi.evalMonoidHom (i : I) :
 #print Pi.constMonoidHom /-
 /-- `function.const` as a `monoid_hom`. -/
 @[to_additive "`function.const` as an `add_monoid_hom`.", simps]
-def Pi.constMonoidHom (α β : Type _) [MulOneClass β] :
-    β →* α → β where 
+def Pi.constMonoidHom (α β : Type _) [MulOneClass β] : β →* α → β
+    where
   toFun := Function.const α
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -426,8 +427,8 @@ See also `monoid_hom.eval`. -/
 @[to_additive
       "Coercion of an `add_monoid_hom` into a function is itself a `add_monoid_hom`.\n\nSee also `add_monoid_hom.eval`. ",
   simps]
-def MonoidHom.coeFn (α β : Type _) [MulOneClass α] [CommMonoid β] :
-    (α →* β) →* α → β where 
+def MonoidHom.coeFn (α β : Type _) [MulOneClass α] [CommMonoid β] : (α →* β) →* α → β
+    where
   toFun g := g
   map_one' := rfl
   map_mul' x y := rfl
@@ -441,7 +442,7 @@ homomorphism `f` between `α` and `β`. -/
       "Additive monoid homomorphism between the function spaces `I → α` and `I → β`,\ninduced by an additive monoid homomorphism `f` between `α` and `β`",
   simps]
 protected def MonoidHom.compLeft {α β : Type _} [MulOneClass α] [MulOneClass β] (f : α →* β)
-    (I : Type _) : (I → α) →* I → β where 
+    (I : Type _) : (I → α) →* I → β where
   toFun h := f ∘ h
   map_one' := by ext <;> simp
   map_mul' _ _ := by ext <;> simp
@@ -465,8 +466,8 @@ into a dependent family of values, as functions supported at a point.
 This is the `one_hom` version of `pi.mul_single`. -/
 @[to_additive ZeroHom.single
       "The zero-preserving homomorphism including a single value\ninto a dependent family of values, as functions supported at a point.\n\nThis is the `zero_hom` version of `pi.single`."]
-def OneHom.single [∀ i, One <| f i] (i : I) :
-    OneHom (f i) (∀ i, f i) where 
+def OneHom.single [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i)
+    where
   toFun := mulSingle i
   map_one' := mulSingle_one i
 #align one_hom.single OneHom.single
@@ -496,7 +497,7 @@ def MonoidHom.single [∀ i, MulOneClass <| f i] (i : I) : f i →* ∀ i, f i :
 lean 3 declaration is
   forall {I : Type.{u1}} (f : I -> Type.{u2}) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulOneClass.{u2} (f i)] (i : I) (x : f i), Eq.{max (succ u1) (succ u2)} (forall (i : I), f i) (coeFn.{max (succ (max u1 u2)) (succ u2), max (succ u2) (succ (max u1 u2))} (MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) ((fun (i : I) => _inst_2 i) i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => (fun (i : I) => _inst_2 i) i))) (fun (_x : MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) ((fun (i : I) => _inst_2 i) i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => (fun (i : I) => _inst_2 i) i))) => (f i) -> (forall (i : I), f i)) (MonoidHom.hasCoeToFun.{u2, max u1 u2} (f i) (forall (i : I), f i) ((fun (i : I) => _inst_2 i) i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => (fun (i : I) => _inst_2 i) i))) (MonoidHom.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_2 i) i) x) (Pi.mulSingle.{u1, u2} I (fun (i : I) => f i) (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulOneClass.toHasOne.{u2} (f i) (_inst_2 i)) i x)
 but is expected to have type
-  forall {I : Type.{u1}} (f : I -> Type.{u2}) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulOneClass.{u2} (f i)] (i : I) (x : f i), Eq.{max (succ u1) (succ u2)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : f i) => forall (i : I), f i) x) (FunLike.coe.{max (succ u1) (succ u2), succ u2, max (succ u1) (succ u2)} (MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (f i) (fun (_x : f i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : f i) => forall (i : I), f i) _x) (MulHomClass.toFunLike.{max u1 u2, u2, max u1 u2} (MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (f i) (forall (i : I), f i) (MulOneClass.toMul.{u2} (f i) (_inst_2 i)) (MulOneClass.toMul.{max u1 u2} (forall (i : I), f i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (MonoidHomClass.toMulHomClass.{max u1 u2, u2, max u1 u2} (MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i)) (MonoidHom.monoidHomClass.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))))) (MonoidHom.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_2 i) i) x) (Pi.mulSingle.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulOneClass.toOne.{u2} (f i) (_inst_2 i)) i x)
+  forall {I : Type.{u1}} (f : I -> Type.{u2}) [_inst_1 : DecidableEq.{succ u1} I] [_inst_2 : forall (i : I), MulOneClass.{u2} (f i)] (i : I) (x : f i), Eq.{max (succ u1) (succ u2)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : f i) => forall (i : I), f i) x) (FunLike.coe.{max (succ u1) (succ u2), succ u2, max (succ u1) (succ u2)} (MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (f i) (fun (_x : f i) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : f i) => forall (i : I), f i) _x) (MulHomClass.toFunLike.{max u1 u2, u2, max u1 u2} (MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (f i) (forall (i : I), f i) (MulOneClass.toMul.{u2} (f i) (_inst_2 i)) (MulOneClass.toMul.{max u1 u2} (forall (i : I), f i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (MonoidHomClass.toMulHomClass.{max u1 u2, u2, max u1 u2} (MonoidHom.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))) (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i)) (MonoidHom.monoidHomClass.{u2, max u1 u2} (f i) (forall (i : I), f i) (_inst_2 i) (Pi.mulOneClass.{u1, u2} I (fun (i : I) => f i) (fun (i : I) => _inst_2 i))))) (MonoidHom.single.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => _inst_2 i) i) x) (Pi.mulSingle.{u1, u2} I f (fun (a : I) (b : I) => _inst_1 a b) (fun (i : I) => MulOneClass.toOne.{u2} (f i) (_inst_2 i)) i x)
 Case conversion may be inaccurate. Consider using '#align monoid_hom.single_apply MonoidHom.single_applyₓ'. -/
 @[simp, to_additive]
 theorem MonoidHom.single_apply [∀ i, MulOneClass <| f i] (i : I) (x : f i) :
@@ -515,8 +516,8 @@ into a dependent family of `mul_zero_class`es, as functions supported at a point
 
 This is the `mul_hom` version of `pi.single`. -/
 @[simps]
-def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) :
-    f i →ₙ* ∀ i, f i where 
+def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) : f i →ₙ* ∀ i, f i
+    where
   toFun := single i
   map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => zero_mul _) _
 #align mul_hom.single MulHom.single
@@ -582,7 +583,8 @@ For injections of commuting elements at the same index, see `commute.map` -/
 @[to_additive
       "The injection into an additive pi group at different indices commutes.\n\nFor injections of commuting elements at the same index, see `add_commute.map`"]
 theorem Pi.mulSingle_commute [∀ i, MulOneClass <| f i] :
-    Pairwise fun i j => ∀ (x : f i) (y : f j), Commute (mulSingle i x) (mulSingle j y) := by
+    Pairwise fun i j => ∀ (x : f i) (y : f j), Commute (mulSingle i x) (mulSingle j y) :=
+  by
   intro i j hij x y; ext k
   by_cases h1 : i = k;
   · subst h1
@@ -602,7 +604,8 @@ Case conversion may be inaccurate. Consider using '#align pi.mul_single_apply_co
 /-- The injection into a pi group with the same values commutes. -/
 @[to_additive "The injection into an additive pi group with the same values commutes."]
 theorem Pi.mulSingle_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i) (i j : I) :
-    Commute (mulSingle i (x i)) (mulSingle j (x j)) := by
+    Commute (mulSingle i (x i)) (mulSingle j (x j)) :=
+  by
   obtain rfl | hij := Decidable.eq_or_ne i j
   · rfl
   · exact Pi.mulSingle_commute hij _ _
@@ -616,7 +619,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.update_eq_div_mul_single Pi.update_eq_div_mul_mulSingleₓ'. -/
 @[to_additive update_eq_sub_add_single]
 theorem Pi.update_eq_div_mul_mulSingle [∀ i, Group <| f i] (g : ∀ i : I, f i) (x : f i) :
-    Function.update g i x = g / mulSingle i (g i) * mulSingle i x := by
+    Function.update g i x = g / mulSingle i (g i) * mulSingle i x :=
+  by
   ext j
   rcases eq_or_ne i j with (rfl | h)
   · simp
@@ -634,7 +638,7 @@ theorem Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle {M : Type _} [Comm
     {k l m n : I} {u v : M} (hu : u ≠ 1) (hv : v ≠ 1) :
     mulSingle k u * mulSingle l v = mulSingle m u * mulSingle n v ↔
       k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u * v = 1 ∧ k = l ∧ m = n :=
-  by 
+  by
   refine' ⟨fun h => _, _⟩
   · have hk := congr_fun h k
     have hl := congr_fun h l
@@ -761,8 +765,8 @@ variable {η : Type v} (R : Type w) (s : ι → η)
 #print Function.ExtendByOne.hom /-
 /-- `function.extend s f 1` as a bundled hom. -/
 @[to_additive Function.ExtendByZero.hom "`function.extend s f 0` as a bundled hom.", simps]
-noncomputable def Function.ExtendByOne.hom [MulOneClass R] :
-    (ι → R) →* η → R where 
+noncomputable def Function.ExtendByOne.hom [MulOneClass R] : (ι → R) →* η → R
+    where
   toFun f := Function.extend s f 1
   map_one' := Function.extend_one s
   map_mul' f g := by simpa using Function.extend_mul s f g 1 1

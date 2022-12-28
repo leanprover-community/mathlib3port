@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff_realized
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,11 +130,12 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
     _ =
         diam (univ : Set X) + (dist default default + 1 + dist default default) +
           diam (univ : Set Y) :=
-      by 
+      by
       rw [isometry_inl.diam_image, isometry_inr.diam_image]
       rfl
     _ = 1 * diam (univ : Set X) + 1 + 1 * diam (univ : Set Y) := by simp
-    _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by
+    _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) :=
+      by
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_right, \",\", expr diam_nonneg, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       norm_num; norm_num
@@ -153,7 +154,8 @@ private theorem candidates_refl (fA : f ∈ candidates X Y) : f (x, x) = 0 :=
   fA.1.2 x
 #align Gromov_Hausdorff.candidates_refl Gromov_Hausdorff.candidates_refl
 
-private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) := by
+private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) :=
+  by
   have : 0 ≤ 2 * f (x, y) :=
     calc
       0 = f (x, x) := (candidates_refl fA).symm
@@ -184,7 +186,7 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
   | inl x, inl y =>
     calc
       f (inl x, inl y) = dist x y := candidates_dist_inl fA x y
-      _ = dist (inl x) (inl y) := by 
+      _ = dist (inl x) (inl y) := by
         rw [@sum.dist_eq X Y]
         rfl
       _ = 1 * dist (inl x) (inl y) := by simp
@@ -208,7 +210,7 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
   | inr x, inr y =>
     calc
       f (inr x, inr y) = dist x y := candidates_dist_inr fA x y
-      _ = dist (inr x) (inr y) := by 
+      _ = dist (inr x) (inr y) := by
         rw [@sum.dist_eq X Y]
         rfl
       _ = 1 * dist (inr x) (inr y) := by simp
@@ -228,7 +230,8 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
     _ = f (x, z) + f (t, y) := by simp [sub_eq_add_neg, add_assoc]
     _ ≤ maxVar X Y * dist x z + maxVar X Y * dist t y :=
       add_le_add (candidates_dist_bound fA) (candidates_dist_bound fA)
-    _ ≤ maxVar X Y * max (dist x z) (dist t y) + maxVar X Y * max (dist x z) (dist t y) := by
+    _ ≤ maxVar X Y * max (dist x z) (dist t y) + maxVar X Y * max (dist x z) (dist t y) :=
+      by
       apply add_le_add
       apply
         mul_le_mul_of_nonneg_left (le_max_left (dist x z) (dist t y))
@@ -236,7 +239,8 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
       apply
         mul_le_mul_of_nonneg_left (le_max_right (dist x z) (dist t y))
           (zero_le_one.trans (one_le_max_var X Y))
-    _ = 2 * maxVar X Y * max (dist x z) (dist y t) := by
+    _ = 2 * maxVar X Y * max (dist x z) (dist y t) :=
+      by
       simp [dist_comm]
       ring
     _ = 2 * maxVar X Y * dist (x, y) (z, t) := by rfl
@@ -245,7 +249,7 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
 
 /-- Candidates are Lipschitz -/
 private theorem candidates_lipschitz (fA : f ∈ candidates X Y) : LipschitzWith (2 * maxVar X Y) f :=
-  by 
+  by
   apply LipschitzWith.ofDistLeMul
   rintro ⟨x, y⟩ ⟨z, t⟩
   rw [Real.dist_eq, abs_sub_le_iff]
@@ -267,7 +271,8 @@ theorem candidates_b_of_candidates_mem (f : ProdSpaceFun X Y) (fA : f ∈ candid
 
 /-- The distance on `X ⊕ Y` is a candidate -/
 private theorem dist_mem_candidates :
-    (fun p : Sum X Y × Sum X Y => dist p.1 p.2) ∈ candidates X Y := by
+    (fun p : Sum X Y × Sum X Y => dist p.1 p.2) ∈ candidates X Y :=
+  by
   simp only [candidates, dist_comm, forall_const, and_true_iff, add_comm, eq_self_iff_true,
     and_self_iff, Sum.forall, Set.mem_setOf_eq, dist_self]
   repeat'
@@ -298,7 +303,8 @@ private theorem candidates_b_nonempty : (candidatesB X Y).Nonempty :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- To apply Arzela-Ascoli, we need to check that the set of candidates is closed and
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
-private theorem closed_candidates_b : IsClosed (candidatesB X Y) := by
+private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
+  by
   have I1 : ∀ x y, IsClosed { f : Cb X Y | f (inl x, inl y) = dist x y } := fun x y =>
     is_closed_eq continuous_eval_const continuous_const
   have I2 : ∀ x y, IsClosed { f : Cb X Y | f (inr x, inr y) = dist x y } := fun x y =>
@@ -319,7 +325,7 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) := by
             ⋂ (x) (y) (z), { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) }) ∩
           ⋂ x, { f : Cb X Y | f (x, x) = 0 }) ∩
         ⋂ (x) (y), { f : Cb X Y | f (x, y) ≤ max_var X Y } :=
-    by 
+    by
     ext
     simp only [candidates_b, candidates, mem_inter_iff, mem_Inter, mem_set_of_eq]
   rw [this]
@@ -333,7 +339,8 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) := by
 #align Gromov_Hausdorff.closed_candidates_b Gromov_Hausdorff.closed_candidates_b
 
 /-- Compactness of candidates (in bounded_continuous_functions) follows. -/
-private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) := by
+private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) :=
+  by
   refine'
     arzela_ascoli₂ (Icc 0 (max_var X Y)) is_compact_Icc (candidates_b X Y) closed_candidates_b _ _
   · rintro f ⟨x1, x2⟩ hf
@@ -366,7 +373,8 @@ theorem HD_below_aux1 {f : CbCat X Y} (C : ℝ) {x : X} :
 #align Gromov_Hausdorff.HD_below_aux1 GromovHausdorff.HD_below_aux1
 
 private theorem HD_bound_aux1 (f : CbCat X Y) (C : ℝ) :
-    BddAbove (range fun x : X => ⨅ y, f (inl x, inr y) + C) := by
+    BddAbove (range fun x : X => ⨅ y, f (inl x, inr y) + C) :=
+  by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun x => _⟩
   calc
@@ -382,7 +390,8 @@ theorem HD_below_aux2 {f : CbCat X Y} (C : ℝ) {y : Y} :
 #align Gromov_Hausdorff.HD_below_aux2 GromovHausdorff.HD_below_aux2
 
 private theorem HD_bound_aux2 (f : CbCat X Y) (C : ℝ) :
-    BddAbove (range fun y : Y => ⨅ x, f (inl x, inr y) + C) := by
+    BddAbove (range fun y : Y => ⨅ x, f (inl x, inr y) + C) :=
+  by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun y => _⟩
   calc
@@ -394,7 +403,8 @@ private theorem HD_bound_aux2 (f : CbCat X Y) (C : ℝ) :
 /-- Explicit bound on `HD (dist)`. This means that when looking for minimizers it will
 be sufficient to look for functions with `HD(f)` bounded by this bound. -/
 theorem HD_candidates_b_dist_le :
-    hD (candidatesBDist X Y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
+    hD (candidatesBDist X Y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
+  by
   refine' max_le (csupr_le fun x => _) (csupr_le fun y => _)
   · have A :
       (⨅ y, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl x, inr default) :=
@@ -402,7 +412,8 @@ theorem HD_candidates_b_dist_le :
     have B : dist (inl x) (inr default) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
         dist (inl x) (inr (default : Y)) = dist x (default : X) + 1 + dist default default := rfl
-        _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
+        _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
+          by
           apply add_le_add (add_le_add _ le_rfl)
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
           any_goals exact OrderedAddCommMonoid.to_CovariantClass_left ℝ
@@ -416,7 +427,8 @@ theorem HD_candidates_b_dist_le :
     have B : dist (inl default) (inr y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
         dist (inl (default : X)) (inr y) = dist default default + 1 + dist default y := rfl
-        _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
+        _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
+          by
           apply add_le_add (add_le_add _ le_rfl)
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
           any_goals exact OrderedAddCommMonoid.to_CovariantClass_left ℝ
@@ -429,7 +441,8 @@ theorem HD_candidates_b_dist_le :
 /- To check that HD is continuous, we check that it is Lipschitz. As HD is a max, we
 prove separately inequalities controlling the two terms (relying too heavily on copy-paste...) -/
 private theorem HD_lipschitz_aux1 (f g : CbCat X Y) :
-    (⨆ x, ⨅ y, f (inl x, inr y)) ≤ (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g := by
+    (⨆ x, ⨅ y, f (inl x, inr y)) ≤ (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g :=
+  by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 g.bounded_range).1 with ⟨cg, hcg⟩
   have Hcg : ∀ x, cg ≤ g x := fun x => hcg (mem_range_self x)
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1 with ⟨cf, hcf⟩
@@ -441,14 +454,16 @@ private theorem HD_lipschitz_aux1 (f g : CbCat X Y) :
       cinfi_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
   -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
   -- (here the addition of `dist f g`) preserve infimum and supremum
-  have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g := by
+  have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g :=
+    by
     intro x
     refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
     · show BddBelow (range fun y : Y => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
-  have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g := by
+  have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g :=
+    by
     refine' Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
@@ -458,7 +473,8 @@ private theorem HD_lipschitz_aux1 (f g : CbCat X Y) :
 #align Gromov_Hausdorff.HD_lipschitz_aux1 Gromov_Hausdorff.HD_lipschitz_aux1
 
 private theorem HD_lipschitz_aux2 (f g : CbCat X Y) :
-    (⨆ y, ⨅ x, f (inl x, inr y)) ≤ (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g := by
+    (⨆ y, ⨅ x, f (inl x, inr y)) ≤ (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g :=
+  by
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 g.bounded_range).1 with ⟨cg, hcg⟩
   have Hcg : ∀ x, cg ≤ g x := fun x => hcg (mem_range_self x)
   rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1 with ⟨cf, hcf⟩
@@ -470,14 +486,16 @@ private theorem HD_lipschitz_aux2 (f g : CbCat X Y) :
       cinfi_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
   -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
   -- (here the addition of `dist f g`) preserve infimum and supremum
-  have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g := by
+  have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g :=
+    by
     intro y
     refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
     · show BddBelow (range fun x : X => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
-  have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g := by
+  have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g :=
+    by
     refine' Monotone.map_csupr_of_continuous_at (continuous_at_id.add continuous_at_const) _ _
     · intro x y hx
       simpa
@@ -529,9 +547,8 @@ private theorem HD_optimal_GH_dist_le (g : CbCat X Y) (hg : g ∈ candidatesB X 
 /-- With the optimal candidate, construct a premetric space structure on `X ⊕ Y`, on which the
 predistance is given by the candidate. Then, we will identify points at `0` predistance
 to obtain a genuine metric space -/
-def premetricOptimalGHDist :
-    PseudoMetricSpace (Sum X
-        Y) where 
+def premetricOptimalGHDist : PseudoMetricSpace (Sum X Y)
+    where
   dist p q := optimalGHDist X Y (p, q)
   dist_self x := candidates_refl (optimal_GH_dist_mem_candidates_b X Y)
   dist_comm x y := candidates_symm (optimal_GH_dist_mem_candidates_b X Y)
@@ -552,7 +569,8 @@ def optimalGHInjl (x : X) : OptimalGHCoupling X Y :=
 #align Gromov_Hausdorff.optimal_GH_injl GromovHausdorff.optimalGHInjl
 
 /-- The injection of `X` in the optimal coupling between `X` and `Y` is an isometry. -/
-theorem isometryOptimalGHInjl : Isometry (optimalGHInjl X Y) := by
+theorem isometryOptimalGHInjl : Isometry (optimalGHInjl X Y) :=
+  by
   refine' Isometry.ofDistEq fun x y => _
   change dist ⟦inl x⟧ ⟦inl y⟧ = dist x y
   exact candidates_dist_inl (optimal_GH_dist_mem_candidates_b X Y) _ _
@@ -564,7 +582,8 @@ def optimalGHInjr (y : Y) : OptimalGHCoupling X Y :=
 #align Gromov_Hausdorff.optimal_GH_injr GromovHausdorff.optimalGHInjr
 
 /-- The injection of `Y` in the optimal coupling between `X` and `Y` is an isometry. -/
-theorem isometryOptimalGHInjr : Isometry (optimalGHInjr X Y) := by
+theorem isometryOptimalGHInjr : Isometry (optimalGHInjr X Y) :=
+  by
   refine' Isometry.ofDistEq fun x y => _
   change dist ⟦inr x⟧ ⟦inr y⟧ = dist x y
   exact candidates_dist_inr (optimal_GH_dist_mem_candidates_b X Y) _ _
@@ -576,7 +595,7 @@ instance compact_space_optimal_GH_coupling : CompactSpace (OptimalGHCoupling X Y
     have :
       (univ : Set (optimal_GH_coupling X Y)) =
         optimal_GH_injl X Y '' univ ∪ optimal_GH_injr X Y '' univ :=
-      by 
+      by
       refine' subset.antisymm (fun xc hxc => _) (subset_univ _)
       rcases Quotient.exists_rep xc with ⟨x, hx⟩
       cases x <;> rw [← hx]
@@ -598,9 +617,11 @@ optimal coupling. This follows from the fact that HD of the optimal candidate is
 the Hausdorff distance in the optimal coupling, although we only prove here the inequality
 we need. -/
 theorem Hausdorff_dist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
-    hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤ hD f := by
+    hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤ hD f :=
+  by
   refine' le_trans (le_of_forall_le_of_dense fun r hr => _) (HD_optimal_GH_dist_le X Y f h)
-  have A : ∀ x ∈ range (optimal_GH_injl X Y), ∃ y ∈ range (optimal_GH_injr X Y), dist x y ≤ r := by
+  have A : ∀ x ∈ range (optimal_GH_injl X Y), ∃ y ∈ range (optimal_GH_injr X Y), dist x y ≤ r :=
+    by
     intro x hx
     rcases mem_range.1 hx with ⟨z, hz⟩
     rw [← hz]
@@ -613,7 +634,8 @@ theorem Hausdorff_dist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
     rcases exists_lt_of_cInf_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
     rcases mem_range.1 r'range with ⟨z', hz'⟩
     exists optimal_GH_injr X Y z', mem_range_self _
-    have : (optimal_GH_dist X Y) (inl z, inr z') ≤ r := by
+    have : (optimal_GH_dist X Y) (inl z, inr z') ≤ r :=
+      by
       rw [hz']
       exact le_of_lt hr'
     exact this
@@ -634,7 +656,8 @@ theorem Hausdorff_dist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
     rcases exists_lt_of_cInf_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
     rcases mem_range.1 r'range with ⟨z', hz'⟩
     exists optimal_GH_injl X Y z', mem_range_self _
-    have : (optimal_GH_dist X Y) (inl z', inr z) ≤ r := by
+    have : (optimal_GH_dist X Y) (inl z', inr z) ≤ r :=
+      by
       rw [hz']
       exact le_of_lt hr'
     rw [dist_comm]

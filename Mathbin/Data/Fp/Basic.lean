@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fp.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,13 +78,13 @@ def toRat : ∀ f : Float, f.isFinite → ℚ
 #align fp.to_rat Fp.toRat
 
 theorem Float.Zero.valid : ValidFinite emin 0 :=
-  ⟨by 
+  ⟨by
     rw [add_sub_assoc]
     apply le_add_of_nonneg_right
     apply sub_nonneg_of_le
     apply Int.ofNat_le_ofNat_of_le
     exact C.prec_pos,
-    suffices prec ≤ 2 * emax by 
+    suffices prec ≤ 2 * emax by
       rw [← Int.ofNat_le] at this
       rw [← sub_nonneg] at *
       simp only [emin, emax] at *
@@ -136,7 +136,8 @@ def divNatLtTwoPow (n d : ℕ) : ℤ → Bool
 #align fp.div_nat_lt_two_pow Fp.divNatLtTwoPow
 
 -- TODO(Mario): Prove these and drop 'meta'
-unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
+unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool :=
+  by
   let e₁ : ℤ := n.1.size - d.1.size - prec
   cases' h₁ : Int.shift2 d.1 n.1 (e₁ + prec) with d₁ n₁
   let e₂ := if n₁ < d₁ then e₁ - 1 else e₁

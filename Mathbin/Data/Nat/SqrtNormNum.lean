@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.sqrt_norm_num
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,7 +22,7 @@ namespace NormNum
 open Tactic Nat
 
 theorem is_sqrt {n a a2 b : ℕ} (ha2 : a * a = a2) (hb : a2 + b = n) (hle : b ≤ bit0 a) :
-    sqrt n = a := by 
+    sqrt n = a := by
   rw [← hb, ← ha2, ← pow_two]
   exact sqrt_add_eq' _ hle
 #align norm_num.is_sqrt NormNum.is_sqrt

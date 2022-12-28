@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.liminf_limsup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   suffices
     ∃ η < (1 : ℝ≥0),
       ∀ᶠ j in at_top, μ (W ∩ closed_ball (w j) (r₁ (f j))) / μ (closed_ball (w j) (r₁ (f j))) ≤ η
-    by 
+    by
     obtain ⟨η, hη, hη'⟩ := this
     replace hη' : 1 ≤ η := by
       simpa only [Ennreal.one_le_coe_iff] using
@@ -126,7 +126,8 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   have h₁ : ∀ j, b j ⊆ B j := fun j =>
     closed_ball_subset_closed_ball (mul_le_of_le_one_left (hrp (f j)) hM'.le)
   have h₂ : ∀ j, W ∩ B j ⊆ B j := fun j => inter_subset_right W (B j)
-  have h₃ : ∀ᶠ j in at_top, Disjoint (b j) (W ∩ B j) := by
+  have h₃ : ∀ᶠ j in at_top, Disjoint (b j) (W ∩ B j) :=
+    by
     apply hMr.mp
     rw [eventually_at_top]
     refine'
@@ -154,9 +155,10 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   replace hj₂ : ↑C⁻¹ * μ (B j) ≤ μ (b j)
   · rw [Ennreal.coe_inv hC, ← Ennreal.div_eq_inv_mul]
     exact Ennreal.div_le_of_le_mul' hj₂
-  have hj₃ : ↑C⁻¹ * μ (B j) + μ (W ∩ B j) ≤ μ (B j) := by
+  have hj₃ : ↑C⁻¹ * μ (B j) + μ (W ∩ B j) ≤ μ (B j) :=
+    by
     refine' le_trans (add_le_add_right hj₂ _) _
-    rw [← measure_union' hj₁ measurableSetClosedBall]
+    rw [← measure_union' hj₁ measurable_set_closed_ball]
     exact measure_mono (union_subset (h₁ j) (h₂ j))
   replace hj₃ := tsub_le_tsub_right hj₃ (↑C⁻¹ * μ (B j))
   rwa [Ennreal.add_sub_cancel_left hB] at hj₃
@@ -171,7 +173,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le (p : ℕ → Prop) {s : �
     (hMr : ∀ᶠ i in at_top, M * r₁ i ≤ r₂ i) :
     (blimsup (fun i => cthickening (r₁ i) (s i)) atTop p : Set α) ≤ᵐ[μ]
       (blimsup (fun i => cthickening (r₂ i) (s i)) atTop p : Set α) :=
-  by 
+  by
   let R₁ i := max 0 (r₁ i)
   let R₂ i := max 0 (r₂ i)
   have hRp : 0 ≤ R₁ := fun i => le_max_left 0 (r₁ i)
@@ -210,7 +212,7 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     ∀ (p : ℕ → Prop) {r : ℕ → ℝ} (hr : tendsto r at_top (𝓝[>] 0)),
       (blimsup (fun i => cthickening (M * r i) (s i)) at_top p : Set α) =ᵐ[μ]
         (blimsup (fun i => cthickening (r i) (s i)) at_top p : Set α) :=
-    by 
+    by
     clear p hr r
     intro p r hr
     have hr' : tendsto (fun i => M * r i) at_top (𝓝[>] 0) := by
@@ -225,7 +227,8 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
         blimsup_cthickening_ae_le_of_eventually_mul_le μ p hM hr
           (eventually_of_forall fun i => le_refl _)
   let r' : ℕ → ℝ := fun i => if 0 < r i then r i else 1 / ((i : ℝ) + 1)
-  have hr' : tendsto r' at_top (𝓝[>] 0) := by
+  have hr' : tendsto r' at_top (𝓝[>] 0) :=
+    by
     refine'
       tendsto_nhds_within_iff.mpr
         ⟨tendsto.if' hr tendsto_one_div_add_at_top_nhds_0_nat, eventually_of_forall fun i => _⟩
@@ -233,19 +236,23 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     · simp [hi, r']
     · simp only [hi, r', one_div, mem_Ioi, if_false, inv_pos]
       positivity
-  have h₀ : ∀ i, p i ∧ 0 < r i → cthickening (r i) (s i) = cthickening (r' i) (s i) := by
+  have h₀ : ∀ i, p i ∧ 0 < r i → cthickening (r i) (s i) = cthickening (r' i) (s i) :=
+    by
     rintro i ⟨-, hi⟩
     congr
     change r i = ite (0 < r i) (r i) _
     simp [hi]
-  have h₁ : ∀ i, p i ∧ 0 < r i → cthickening (M * r i) (s i) = cthickening (M * r' i) (s i) := by
+  have h₁ : ∀ i, p i ∧ 0 < r i → cthickening (M * r i) (s i) = cthickening (M * r' i) (s i) :=
+    by
     rintro i ⟨-, hi⟩
     simp only [hi, mul_ite, if_true]
-  have h₂ : ∀ i, p i ∧ r i ≤ 0 → cthickening (M * r i) (s i) = cthickening (r i) (s i) := by
+  have h₂ : ∀ i, p i ∧ r i ≤ 0 → cthickening (M * r i) (s i) = cthickening (r i) (s i) :=
+    by
     rintro i ⟨-, hi⟩
     have hi' : M * r i ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hM.le hi
     rw [cthickening_of_nonpos hi, cthickening_of_nonpos hi']
-  have hp : p = fun i => p i ∧ 0 < r i ∨ p i ∧ r i ≤ 0 := by
+  have hp : p = fun i => p i ∧ 0 < r i ∨ p i ∧ r i ≤ 0 :=
+    by
     ext i
     simp [← and_or_left, lt_or_le 0 (r i)]
   rw [hp, blimsup_or_eq_sup, blimsup_or_eq_sup, sup_eq_union,

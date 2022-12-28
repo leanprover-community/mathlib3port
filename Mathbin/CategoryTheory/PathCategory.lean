@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.path_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,9 +43,8 @@ variable (V : Type u₁) [Quiver.{v₁ + 1} V]
 
 namespace Paths
 
-instance categoryPaths :
-    Category.{max u₁ v₁}
-      (Paths V) where 
+instance categoryPaths : Category.{max u₁ v₁} (Paths V)
+    where
   Hom := fun X Y : V => Quiver.Path X Y
   id X := Quiver.Path.nil
   comp X Y Z f g := Quiver.Path.comp f g
@@ -56,7 +55,7 @@ variable {V}
 /-- The inclusion of a quiver `V` into its path category, as a prefunctor.
 -/
 @[simps]
-def of : V ⥤q Paths V where 
+def of : V ⥤q Paths V where
   obj X := X
   map X Y f := f.toPath
 #align category_theory.paths.of CategoryTheory.Paths.of
@@ -64,14 +63,14 @@ def of : V ⥤q Paths V where
 attribute [local ext] Functor.ext
 
 /-- Any prefunctor from `V` lifts to a functor from `paths V` -/
-def lift {C} [Category C] (φ : V ⥤q C) :
-    Paths V ⥤ C where 
+def lift {C} [Category C] (φ : V ⥤q C) : Paths V ⥤ C
+    where
   obj := φ.obj
   map X Y f :=
     @Quiver.Path.rec V _ X (fun Y f => φ.obj X ⟶ φ.obj Y) (𝟙 <| φ.obj X)
       (fun Y Z p f ihp => ihp ≫ φ.map f) Y f
   map_id' X := by rfl
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     induction' g with _ _ g' p ih _ _ _
     · rw [category.comp_id]
       rfl
@@ -95,12 +94,14 @@ theorem lift_cons {C} [Category C] (φ : V ⥤q C) {X Y Z : V} (p : Quiver.Path 
 
 @[simp]
 theorem lift_to_path {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) :
-    (lift φ).map f.toPath = φ.map f := by
+    (lift φ).map f.toPath = φ.map f :=
+  by
   dsimp [Quiver.Hom.toPath, lift]
   simp
 #align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_to_path
 
-theorem lift_spec {C} [Category C] (φ : V ⥤q C) : (of ⋙q (lift φ).toPrefunctor) = φ := by
+theorem lift_spec {C} [Category C] (φ : V ⥤q C) : (of ⋙q (lift φ).toPrefunctor) = φ :=
+  by
   apply Prefunctor.ext; rotate_left
   · rintro X
     rfl
@@ -111,7 +112,8 @@ theorem lift_spec {C} [Category C] (φ : V ⥤q C) : (of ⋙q (lift φ).toPrefun
 #align category_theory.paths.lift_spec CategoryTheory.Paths.lift_spec
 
 theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
-    (hΦ : (of ⋙q Φ.toPrefunctor) = φ) : Φ = lift φ := by
+    (hΦ : (of ⋙q Φ.toPrefunctor) = φ) : Φ = lift φ :=
+  by
   subst_vars
   apply Functor.ext; rotate_left
   · rintro X
@@ -134,7 +136,7 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
       ∀ (a b : V) (e : a ⟶ b),
         F.map e.toPath =
           eqToHom (congr_fun h_obj a) ≫ G.map e.toPath ≫ eqToHom (congr_fun h_obj.symm b)) :
-    F = G := by 
+    F = G := by
   ext (X Y f)
   · induction' f with Y' Z' g e ih
     · erw [F.map_id, G.map_id, category.id_comp, eq_to_hom_trans, eq_to_hom_refl]
@@ -183,7 +185,8 @@ theorem compose_path_to_path {X Y : C} (f : X ⟶ Y) : composePath f.toPath = f 
 
 @[simp]
 theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
-    composePath (f.comp g) = composePath f ≫ composePath g := by
+    composePath (f.comp g) = composePath f ≫ composePath g :=
+  by
   induction' g with Y' Z' g e ih
   · simp
   · simp [ih]
@@ -204,7 +207,7 @@ variable (C)
 
 /-- Composition of paths as functor from the path category of a category to the category. -/
 @[simps]
-def pathComposition : Paths C ⥤ C where 
+def pathComposition : Paths C ⥤ C where
   obj X := X
   map X Y f := composePath f
 #align category_theory.path_composition CategoryTheory.pathComposition
@@ -222,8 +225,8 @@ def pathsHomRel : HomRel (Paths C) := fun X Y p q =>
 
 /-- The functor from a category to the canonical quotient of its path category. -/
 @[simps]
-def toQuotientPaths :
-    C ⥤ Quotient (pathsHomRel C) where 
+def toQuotientPaths : C ⥤ Quotient (pathsHomRel C)
+    where
   obj X := Quotient.mk X
   map X Y f := Quot.mk _ f.toPath
   map_id' X := Quot.sound (Quotient.CompClosure.of _ _ _ (by simp))
@@ -239,17 +242,16 @@ def quotientPathsTo : Quotient (pathsHomRel C) ⥤ C :=
 
 /-- The canonical quotient of the path category of a category
 is equivalent to the original category. -/
-def quotientPathsEquiv :
-    Quotient (pathsHomRel C) ≌
-      C where 
+def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
+    where
   Functor := quotientPathsTo C
   inverse := toQuotientPaths C
   unitIso :=
     NatIso.ofComponents
-      (fun X => by 
+      (fun X => by
         cases X
         rfl)
-      (by 
+      (by
         intros
         cases X; cases Y
         induction f
@@ -259,7 +261,7 @@ def quotientPathsEquiv :
         apply quotient.comp_closure.of
         simp [paths_hom_rel])
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
-  functor_unit_iso_comp' := by 
+  functor_unit_iso_comp' := by
     intros
     cases X
     dsimp

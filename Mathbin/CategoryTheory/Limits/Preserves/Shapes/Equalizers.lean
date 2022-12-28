@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.equalizers
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,8 @@ variable [HasEqualizer (G.map f) (G.map g)]
 equalizer of `(f,g)`.
 -/
 def PreservesEqualizer.ofIsoComparison [i : IsIso (equalizerComparison f g G)] :
-    PreservesLimit (parallelPair f g) G := by
+    PreservesLimit (parallelPair f g) G :=
+  by
   apply preserves_limit_of_preserves_limit_cone (equalizer_is_equalizer f g)
   apply (is_limit_map_cone_fork_equiv _ _).symm _
   apply is_limit.of_point_iso (limit.is_limit (parallel_pair (G.map f) (G.map g)))
@@ -110,7 +111,8 @@ theorem PreservesEqualizer.iso_hom :
 #align
   category_theory.limits.preserves_equalizer.iso_hom CategoryTheory.Limits.PreservesEqualizer.iso_hom
 
-instance : IsIso (equalizerComparison f g G) := by
+instance : IsIso (equalizerComparison f g G) :=
+  by
   rw [← preserves_equalizer.iso_hom]
   infer_instance
 
@@ -129,7 +131,8 @@ def isColimitMapCoconeCoforkEquiv :
         (Cofork.ofπ (G.map h) (by simp only [← G.map_comp, w]) : Cofork (G.map f) (G.map g)) :=
   (IsColimit.precomposeInvEquiv (diagramIsoParallelPair _) _).symm.trans <|
     is_colimit.equiv_iso_colimit <|
-      Cofork.ext (Iso.refl _) <| by
+      Cofork.ext (Iso.refl _) <|
+        by
         dsimp only [cofork.π, cofork.of_π_ι_app]
         dsimp; rw [category.comp_id, category.id_comp]
 #align
@@ -172,7 +175,8 @@ variable [HasCoequalizer (G.map f) (G.map g)]
 coequalizer of `(f,g)`.
 -/
 def ofIsoComparison [i : IsIso (coequalizerComparison f g G)] :
-    PreservesColimit (parallelPair f g) G := by
+    PreservesColimit (parallelPair f g) G :=
+  by
   apply preserves_colimit_of_preserves_colimit_cocone (coequalizer_is_coequalizer f g)
   apply (is_colimit_map_cocone_cofork_equiv _ _).symm _
   apply is_colimit.of_point_iso (colimit.is_colimit (parallel_pair (G.map f) (G.map g)))
@@ -198,12 +202,13 @@ theorem PreservesCoequalizer.iso_hom :
 #align
   category_theory.limits.preserves_coequalizer.iso_hom CategoryTheory.Limits.PreservesCoequalizer.iso_hom
 
-instance : IsIso (coequalizerComparison f g G) := by
+instance : IsIso (coequalizerComparison f g G) :=
+  by
   rw [← preserves_coequalizer.iso_hom]
   infer_instance
 
 instance map_π_epi : Epi (G.map (coequalizer.π f g)) :=
-  ⟨fun W h k => by 
+  ⟨fun W h k => by
     rw [← ι_comp_coequalizer_comparison]
     apply (cancel_epi _).1
     apply epi_comp⟩
@@ -247,7 +252,7 @@ theorem map_π_preserves_coequalizer_inv_colim_map_desc {X' Y' : D} (f' g' : X' 
         (PreservesCoequalizer.iso G f g).inv ≫
           colimMap (parallelPairHom (G.map f) (G.map g) f' g' p q wf wg) ≫ coequalizer.desc h wh =
       q ≫ h :=
-  by 
+  by
   slice_lhs 1 3 => rw [map_π_preserves_coequalizer_inv_colim_map]
   slice_lhs 2 3 => rw [coequalizer.π_desc]
 #align
@@ -255,7 +260,8 @@ theorem map_π_preserves_coequalizer_inv_colim_map_desc {X' Y' : D} (f' g' : X' 
 
 /-- Any functor preserves coequalizers of split pairs. -/
 instance (priority := 1) preservesSplitCoequalizers (f g : X ⟶ Y) [HasSplitCoequalizer f g] :
-    PreservesColimit (parallelPair f g) G := by
+    PreservesColimit (parallelPair f g) G :=
+  by
   apply
     preserves_colimit_of_preserves_colimit_cocone
       (has_split_coequalizer.is_split_coequalizer f g).isCoequalizer

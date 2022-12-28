@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,8 @@ def AffineTargetMorphismProperty.toProperty (P : AffineTargetMorphismProperty) :
   algebraic_geometry.affine_target_morphism_property.to_property AlgebraicGeometry.AffineTargetMorphismProperty.toProperty
 
 theorem AffineTargetMorphismProperty.to_property_apply (P : AffineTargetMorphismProperty)
-    {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine Y] : P.toProperty f ↔ P f := by
+    {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine Y] : P.toProperty f ↔ P f :=
+  by
   delta affine_target_morphism_property.to_property
   simp [*]
 #align
@@ -118,7 +119,7 @@ theorem AffineTargetMorphismProperty.respects_iso_mk {P : AffineTargetMorphismPr
     (h₂ :
       ∀ {X Y Z} (e : Y ≅ Z) (f : X ⟶ Y) [h : IsAffine Y],
         P f → @P (f ≫ e.hom) (is_affine_of_iso e.inv)) :
-    P.toProperty.RespectsIso := by 
+    P.toProperty.RespectsIso := by
   constructor
   · rintro X Y Z e f ⟨a, h⟩
     exact ⟨a, h₁ e f h⟩
@@ -140,7 +141,8 @@ theorem IsAffineOpen.map_is_iso {X Y : SchemeCat} {U : Opens Y.carrier} (hU : Is
 #align algebraic_geometry.is_affine_open.map_is_iso AlgebraicGeometry.IsAffineOpen.map_is_iso
 
 theorem target_affine_locally_respects_iso {P : AffineTargetMorphismProperty}
-    (hP : P.toProperty.RespectsIso) : (targetAffineLocally P).RespectsIso := by
+    (hP : P.toProperty.RespectsIso) : (targetAffineLocally P).RespectsIso :=
+  by
   constructor
   · introv H U
     rw [morphism_restrict_comp, affine_cancel_left_is_iso hP]
@@ -178,7 +180,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
     {X Y : SchemeCat} (f : X ⟶ Y) (𝒰 : Y.OpenCover) [∀ i, IsAffine (𝒰.obj i)]
     (h𝒰 : ∀ i, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) : targetAffineLocally P f :=
   by
-  classical 
+  classical
     let S i :=
       (⟨⟨Set.range (𝒰.map i).1.base, (𝒰.is_open i).base_open.open_range⟩,
           range_is_affine_open_of_open_immersion (𝒰.map i)⟩ :
@@ -201,7 +203,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
         have :
           ∀ {R S : CommRingCat} (e : S = R) (s : Set S),
             Ideal.span (eq_to_hom e '' s) = Ideal.comap (eq_to_hom e.symm) (Ideal.span s) :=
-          by 
+          by
           intros
           subst e
           simpa
@@ -211,7 +213,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
         simp_rw [← P.to_property_apply] at H⊢
         exact (hP.1.arrow_mk_iso_iff (morphism_restrict_restrict_basic_open f _ r)).mpr (H ⟨r, hr'⟩)
     · rw [Set.eq_univ_iff_forall]
-      simp only [Set.mem_Union]
+      simp only [Set.mem_unionᵢ]
       intro x
       exact ⟨⟨_, ⟨𝒰.f x, rfl⟩⟩, 𝒰.covers x⟩
     · rintro ⟨_, i, rfl⟩
@@ -386,8 +388,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `U `g `h₁ `h₂])
              []
              (Tactic.skip "skip")
@@ -431,8 +433,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `𝒰 `h𝒰 `i])
              []
              (Tactic.skip "skip")
@@ -441,8 +443,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.exact
               "exact"
               (Term.fun
@@ -458,8 +460,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -483,8 +485,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -559,8 +561,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "5"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H])
              []
              (Tactic.refine'
@@ -590,8 +592,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                 (Term.hole "_")]
                "⟩"))
              []
-             (tactic___
-              (cdotTk (patternIgnore (token.«·» "·")))
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
               [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") [])
                []
                (Tactic.intro "intro" [`x (Term.hole "_")])
@@ -605,8 +607,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                 "exact"
                 (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))])
              []
-             (tactic___
-              (cdotTk (patternIgnore (token.«·» "·")))
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
               [(Tactic.intro "intro" [`i])
                []
                (Tactic.exact
@@ -633,8 +635,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `U `g `h₁ `h₂])
             []
             (Tactic.skip "skip")
@@ -678,8 +680,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `𝒰 `h𝒰 `i])
             []
             (Tactic.skip "skip")
@@ -688,8 +690,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.exact
              "exact"
              (Term.fun
@@ -705,8 +707,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -730,8 +732,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -806,8 +808,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "5"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H])
             []
             (Tactic.refine'
@@ -837,8 +839,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                (Term.hole "_")]
               "⟩"))
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") [])
               []
               (Tactic.intro "intro" [`x (Term.hole "_")])
@@ -852,8 +854,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                "exact"
                (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))])
             []
-            (tactic___
-             (cdotTk (patternIgnore (token.«·» "·")))
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
              [(Tactic.intro "intro" [`i])
               []
               (Tactic.exact
@@ -873,8 +875,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.intro "intro" [`H])
         []
         (Tactic.refine'
@@ -904,8 +906,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            (Term.hole "_")]
           "⟩"))
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") [])
           []
           (Tactic.intro "intro" [`x (Term.hole "_")])
@@ -919,8 +921,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            "exact"
            (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))])
         []
-        (tactic___
-         (cdotTk (patternIgnore (token.«·» "·")))
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
          [(Tactic.intro "intro" [`i])
           []
           (Tactic.exact
@@ -934,8 +936,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
               "⟩")]))])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.intro "intro" [`i])
         []
         (Tactic.exact
@@ -1005,8 +1007,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") [])
         []
         (Tactic.intro "intro" [`x (Term.hole "_")])
@@ -1314,7 +1316,7 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
             ∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullback_cover f).obj i ⟶ 𝒰.obj i)) →
           ∀ {U : SchemeCat} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
             P (pullback.snd : pullback f g ⟶ U)) :
-    P.IsLocal := by 
+    P.IsLocal := by
   refine' ⟨hP, _, _⟩
   · introv h
     skip
@@ -1359,7 +1361,8 @@ theorem AffineTargetMorphismProperty.IsLocal.affine_open_cover_iff
 
 theorem AffineTargetMorphismProperty.IsLocal.affine_target_iff {P : AffineTargetMorphismProperty}
     (hP : P.IsLocal) {X Y : SchemeCat.{u}} (f : X ⟶ Y) [IsAffine Y] :
-    targetAffineLocally P f ↔ P f := by
+    targetAffineLocally P f ↔ P f :=
+  by
   rw [hP.affine_open_cover_iff f _]
   swap; · exact Scheme.open_cover_of_is_iso (𝟙 Y)
   swap;
@@ -1387,7 +1390,8 @@ structure PropertyIsLocalAtTarget (P : MorphismProperty SchemeCat) : Prop where
 
 theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
     {P : AffineTargetMorphismProperty} (hP : P.IsLocal) :
-    PropertyIsLocalAtTarget (targetAffineLocally P) := by
+    PropertyIsLocalAtTarget (targetAffineLocally P) :=
+  by
   constructor
   · exact target_affine_locally_respects_iso hP.1
   · intro X Y f U H V
@@ -1409,7 +1413,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
         pullback f ((𝒰.obj i.fst).affineCover.map i.snd ≫ 𝒰.map i.fst) ⟶
           pullback (pullback.snd : pullback f (𝒰.map i.fst) ⟶ _)
             ((𝒰.obj i.fst).affineCover.map i.snd) :=
-        by 
+        by
         refine' (pullback_symmetry _ _).Hom ≫ _
         refine' (pullback_right_pullback_fst_iso _ _ _).inv ≫ _
         refine' (pullback_symmetry _ _).Hom ≫ _
@@ -1568,8 +1572,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -1589,16 +1593,16 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `U])
              []
              (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "2")) [`f `U `H]))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `𝒰 `i])
              []
              (Tactic.rwSeq
@@ -1620,8 +1624,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.exact
               "exact"
               (Term.fun
@@ -1637,8 +1641,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `U `g `hg])
              []
              (Tactic.skip "skip")
@@ -1660,8 +1664,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `U])
              []
              (Tactic.tacticErw__
@@ -1678,8 +1682,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "6"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H])
              []
              (Tactic.exact
@@ -1701,8 +1705,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
            []
            (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -1771,8 +1775,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -1792,16 +1796,16 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `U])
             []
             (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "2")) [`f `U `H]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `𝒰 `i])
             []
             (Tactic.rwSeq
@@ -1823,8 +1827,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.exact
              "exact"
              (Term.fun
@@ -1840,8 +1844,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `U `g `hg])
             []
             (Tactic.skip "skip")
@@ -1863,8 +1867,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `U])
             []
             (Tactic.tacticErw__
@@ -1881,8 +1885,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "6"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H])
             []
             (Tactic.exact
@@ -1904,8 +1908,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
           []
           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -1967,8 +1971,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Std.Tactic.rintro
          "rintro"
          [(Std.Tactic.RCases.rintroPat.one
@@ -2286,7 +2290,8 @@ def StableUnderBaseChange (P : AffineTargetMorphismProperty) : Prop :=
 theorem IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange
     {P : AffineTargetMorphismProperty} (hP : P.IsLocal) (hP' : P.StableUnderBaseChange)
     {X Y S : SchemeCat} (f : X ⟶ S) (g : Y ⟶ S) [IsAffine S] (H : P g) :
-    targetAffineLocally P (pullback.fst : pullback f g ⟶ X) := by
+    targetAffineLocally P (pullback.fst : pullback f g ⟶ X) :=
+  by
   rw [(hP.affine_open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out 0 1]
   use X.affine_cover, inferInstance
   intro i
@@ -2300,7 +2305,7 @@ theorem IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange
 theorem IsLocal.stable_under_base_change {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
     (hP' : P.StableUnderBaseChange) : (targetAffineLocally P).StableUnderBaseChange :=
   MorphismProperty.StableUnderBaseChange.mk (target_affine_locally_respects_iso hP.RespectsIso)
-    (by 
+    (by
       intro X Y S f g H
       rw [(hP.target_affine_locally_is_local.open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out
           0 1]
@@ -2340,7 +2345,8 @@ def AffineTargetMorphismProperty.diagonal (P : AffineTargetMorphismProperty) :
   algebraic_geometry.affine_target_morphism_property.diagonal AlgebraicGeometry.AffineTargetMorphismProperty.diagonal
 
 theorem AffineTargetMorphismProperty.diagonal_respects_iso (P : AffineTargetMorphismProperty)
-    (hP : P.toProperty.RespectsIso) : P.diagonal.toProperty.RespectsIso := by
+    (hP : P.toProperty.RespectsIso) : P.diagonal.toProperty.RespectsIso :=
+  by
   delta affine_target_morphism_property.diagonal
   apply affine_target_morphism_property.respects_iso_mk
   · introv H _ _
@@ -2358,7 +2364,8 @@ theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty
     {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)]
     (𝒰' : ∀ i, SchemeCat.OpenCover.{u} (pullback f (𝒰.map i))) [∀ i j, IsAffine ((𝒰' i).obj j)]
     (h𝒰' : ∀ i j k, P (pullback.mapDesc ((𝒰' i).map j) ((𝒰' i).map k) pullback.snd)) :
-    (targetAffineLocally P).diagonal f := by
+    (targetAffineLocally P).diagonal f :=
+  by
   refine' (hP.affine_open_cover_iff _ _).mpr _
   ·
     exact
@@ -2386,7 +2393,8 @@ theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty
 theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
     (P : AffineTargetMorphismProperty) (hP : P.IsLocal) {X Y U : SchemeCat.{u}} (f : X ⟶ Y)
     (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g] (H : (targetAffineLocally P).diagonal f) :
-    P.diagonal (pullback.snd : pullback f g ⟶ _) := by
+    P.diagonal (pullback.snd : pullback f g ⟶ _) :=
+  by
   rintro U V f₁ f₂ _ _ _ _
   skip
   replace H := ((hP.affine_open_cover_tfae (pullback.diagonal f)).out 0 3).mp H
@@ -2592,8 +2600,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Mathlib.Tactic.introv
               "introv"
               [(Lean.binderIdent `H)
@@ -2611,8 +2619,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Mathlib.Tactic.introv "introv" [(Lean.binderIdent `H) (Lean.binderIdent `h𝒰)])
              []
              (Tactic.skip "skip")
@@ -2621,8 +2629,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.exact
               "exact"
               (Term.fun
@@ -2638,8 +2646,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "5"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -2688,8 +2696,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Std.Tactic.rintro
               "rintro"
               [(Std.Tactic.RCases.rintroPat.one
@@ -2734,8 +2742,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Mathlib.Tactic.introv
              "introv"
              [(Lean.binderIdent `H)
@@ -2753,8 +2761,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Mathlib.Tactic.introv "introv" [(Lean.binderIdent `H) (Lean.binderIdent `h𝒰)])
             []
             (Tactic.skip "skip")
@@ -2763,8 +2771,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.exact
              "exact"
              (Term.fun
@@ -2780,8 +2788,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "5"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -2830,8 +2838,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -2869,8 +2877,8 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Std.Tactic.rintro
          "rintro"
          [(Std.Tactic.RCases.rintroPat.one
@@ -3054,7 +3062,8 @@ theorem AffineTargetMorphismProperty.IsLocal.diagonal {P : AffineTargetMorphismP
   algebraic_geometry.affine_target_morphism_property.is_local.diagonal AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.diagonal
 
 theorem diagonal_target_affine_locally_eq_target_affine_locally (P : AffineTargetMorphismProperty)
-    (hP : P.IsLocal) : (targetAffineLocally P).diagonal = targetAffineLocally P.diagonal := by
+    (hP : P.IsLocal) : (targetAffineLocally P).diagonal = targetAffineLocally P.diagonal :=
+  by
   ext (_ _ f)
   exact
     ((hP.diagonal_affine_open_cover_tfae f).out 0 1).trans
@@ -3066,7 +3075,8 @@ theorem universally_is_local_at_target (P : MorphismProperty SchemeCat)
     (hP :
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y),
         (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f) :
-    PropertyIsLocalAtTarget P.universally := by
+    PropertyIsLocalAtTarget P.universally :=
+  by
   refine'
     ⟨P.universally_respects_iso, fun X Y f U =>
       P.universally_stable_under_base_change (is_pullback_morphism_restrict f U).flip, _⟩
@@ -3090,7 +3100,7 @@ theorem universally_is_local_at_target_of_morphism_restrict (P : MorphismPropert
         (∀ i, P (f ∣_ U i)) → P f) :
     PropertyIsLocalAtTarget P.universally :=
   universally_is_local_at_target P
-    (by 
+    (by
       intro X Y f 𝒰 h𝒰
       apply hP₂ f (fun i : 𝒰.J => (𝒰.map i).opensRange) 𝒰.supr_opens_range
       simp_rw [hP₁.arrow_mk_iso_iff (morphism_restrict_opens_range f _)]

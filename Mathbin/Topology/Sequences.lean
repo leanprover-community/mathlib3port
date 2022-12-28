@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.sequences
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,8 @@ theorem seq_closure_eq_closure [FrechetUrysohnSpace X] (s : Set X) : seqClosure 
 /-- In a Fréchet-Urysohn space, a point belongs to the closure of a set iff it is a limit
 of a sequence taking values in this set. -/
 theorem mem_closure_iff_seq_limit [FrechetUrysohnSpace X] {s : Set X} {a : X} :
-    a ∈ closure s ↔ ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) := by
+    a ∈ closure s ↔ ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) :=
+  by
   rw [← seq_closure_eq_closure]
   rfl
 #align mem_closure_iff_seq_limit mem_closure_iff_seq_limit
@@ -146,7 +147,8 @@ that works for any pair of filters assuming that the filter in the domain is cou
 This property is equivalent to the definition of `frechet_urysohn_space`, see
 `frechet_urysohn_space.of_seq_tendsto_imp_tendsto`. -/
 theorem tendsto_nhds_iff_seq_tendsto [FrechetUrysohnSpace X] {f : X → Y} {a : X} {b : Y} :
-    Tendsto f (𝓝 a) (𝓝 b) ↔ ∀ u : ℕ → X, Tendsto u atTop (𝓝 a) → Tendsto (f ∘ u) atTop (𝓝 b) := by
+    Tendsto f (𝓝 a) (𝓝 b) ↔ ∀ u : ℕ → X, Tendsto u atTop (𝓝 a) → Tendsto (f ∘ u) atTop (𝓝 b) :=
+  by
   refine'
     ⟨fun hf u hu => hf.comp hu, fun h =>
       ((nhds_basis_closeds _).tendsto_iff (nhds_basis_closeds _)).2 _⟩
@@ -164,7 +166,7 @@ theorem FrechetUrysohnSpace.of_seq_tendsto_imp_tendsto
     (h :
       ∀ (f : X → Prop) (a : X),
         (∀ u : ℕ → X, Tendsto u atTop (𝓝 a) → Tendsto (f ∘ u) atTop (𝓝 (f a))) → ContinuousAt f a) :
-    FrechetUrysohnSpace X := by 
+    FrechetUrysohnSpace X := by
   refine' ⟨fun s x hcx => _⟩
   specialize h (· ∉ s) x
   by_cases hx : x ∈ s; · exact subset_seq_closure hx
@@ -344,11 +346,13 @@ theorem IsSeqCompact.exists_tendsto (hs : IsSeqCompact s) {u : ℕ → X} (hu : 
 #align is_seq_compact.exists_tendsto IsSeqCompact.exists_tendsto
 
 /-- A sequentially compact set in a uniform space is totally bounded. -/
-protected theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := by
+protected theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s :=
+  by
   intro V V_in
   unfold IsSeqCompact at h
   contrapose! h
-  obtain ⟨u, u_in, hu⟩ : ∃ u : ℕ → X, (∀ n, u n ∈ s) ∧ ∀ n m, m < n → u m ∉ ball (u n) V := by
+  obtain ⟨u, u_in, hu⟩ : ∃ u : ℕ → X, (∀ n, u n ∈ s) ∧ ∀ n m, m < n → u m ∉ ball (u n) V :=
+    by
     simp only [not_subset, mem_Union₂, not_exists, exists_prop] at h
     simpa only [forall_and, ball_image_iff, not_and] using seq_of_forall_finite_exists h
   refine' ⟨u, u_in, fun x x_in φ hφ huφ => _⟩
@@ -364,7 +368,8 @@ variable [IsCountablyGenerated (𝓤 X)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A sequentially compact set in a uniform set with countably generated uniformity filter
 is complete. -/
-protected theorem IsSeqCompact.is_complete (hs : IsSeqCompact s) : IsComplete s := by
+protected theorem IsSeqCompact.is_complete (hs : IsSeqCompact s) : IsComplete s :=
+  by
   intro l hl hls
   haveI := hl.1
   rcases exists_antitone_basis (𝓤 X) with ⟨V, hV⟩
@@ -372,8 +377,10 @@ protected theorem IsSeqCompact.is_complete (hs : IsSeqCompact s) : IsComplete s 
   have hWV' : ∀ n, W n ⊆ V n := fun n ⟨x, y⟩ hx =>
     @hWV n (x, y) ⟨x, refl_mem_uniformity <| hW _, hx⟩
   obtain ⟨t, ht_anti, htl, htW, hts⟩ :
-    ∃ t : ℕ → Set X, Antitone t ∧ (∀ n, t n ∈ l) ∧ (∀ n, t n ×ˢ t n ⊆ W n) ∧ ∀ n, t n ⊆ s := by
-    have : ∀ n, ∃ t ∈ l, t ×ˢ t ⊆ W n ∧ t ⊆ s := by
+    ∃ t : ℕ → Set X, Antitone t ∧ (∀ n, t n ∈ l) ∧ (∀ n, t n ×ˢ t n ⊆ W n) ∧ ∀ n, t n ⊆ s :=
+    by
+    have : ∀ n, ∃ t ∈ l, t ×ˢ t ⊆ W n ∧ t ⊆ s :=
+      by
       rw [le_principal_iff] at hls
       have : ∀ n, W n ∩ s ×ˢ s ∈ l ×ᶠ l := fun n => inter_mem (hl.2 (hW n)) (prod_mem_prod hls hls)
       simpa only [l.basis_sets.prod_self.mem_iff, true_imp_iff, subset_inter_iff,

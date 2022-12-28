@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.real
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,9 +60,9 @@ instance : UniformAddGroup ℝ :=
 -- short-circuit type class inference
 instance : TopologicalAddGroup ℝ := by infer_instance
 
-instance :
-    ProperSpace
-      ℝ where is_compact_closed_ball x r := by
+instance : ProperSpace ℝ
+    where is_compact_closed_ball x r :=
+    by
     rw [Real.closed_ball_eq_Icc]
     apply is_compact_Icc
 
@@ -77,7 +77,7 @@ theorem Real.is_topological_basis_Ioo_rat :
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
-    ⟨Ioo q p, by 
+    ⟨Ioo q p, by
       simp only [mem_Union]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
@@ -158,7 +158,7 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
 instance : TopologicalRing ℝ :=
   { Real.topological_add_group with continuous_mul := Real.continuous_mul }
 
-instance : CompleteSpace ℝ := by 
+instance : CompleteSpace ℝ := by
   apply complete_of_cauchy_seq_tendsto
   intro u hu
   let c : CauSeq ℝ abs := ⟨u, Metric.cauchy_seq_iff'.1 hu⟩
@@ -195,7 +195,7 @@ lemma closure_of_rat_image_le_le_eq {a b : ℚ} (hab : a ≤ b) :
   closure (of_rat '' {q:ℚ | a ≤ q ∧ q ≤ b}) = {r:ℝ | of_rat a ≤ r ∧ r ≤ of_rat b} :=
 _-/
 theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBelow s ∧ BddAbove s :=
-  ⟨by 
+  ⟨by
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
     -- hr : s ⊆ closed_ball 0 r
@@ -218,7 +218,8 @@ section Periodic
 namespace Function
 
 theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
-    (hc : 0 < c) (hf : Continuous f) : IsCompact (range f) := by
+    (hc : 0 < c) (hf : Continuous f) : IsCompact (range f) :=
+  by
   convert is_compact_Icc.image hf
   ext x
   refine' ⟨_, mem_range_of_mem_image f (Icc 0 c)⟩
@@ -229,7 +230,8 @@ theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
 
 /-- A continuous, periodic function has compact range. -/
 theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
-    (hc : c ≠ 0) (hf : Continuous f) : IsCompact (range f) := by
+    (hc : c ≠ 0) (hf : Continuous f) : IsCompact (range f) :=
+  by
   cases' lt_or_gt_of_ne hc with hneg hpos
   exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 #align function.periodic.compact_of_continuous Function.Periodic.compact_of_continuous
@@ -251,7 +253,8 @@ namespace Int
 open Metric
 
 /-- Under the coercion from `ℤ` to `ℝ`, inverse images of compact sets are finite. -/
-theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) := by
+theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) :=
+  by
   refine' tendsto_cocompact_of_tendsto_dist_comp_at_top (0 : ℝ) _
   simp only [Filter.tendsto_at_top, eventually_cofinite, not_le, ← mem_ball]
   change ∀ r : ℝ, (coe ⁻¹' ball (0 : ℝ) r).Finite
@@ -261,7 +264,8 @@ theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact �
 /-- For nonzero `a`, the "multiples of `a`" map `zmultiples_hom` from `ℤ` to `ℝ` is discrete, i.e.
 inverse images of compact sets are finite. -/
 theorem tendsto_zmultiples_hom_cofinite {a : ℝ} (ha : a ≠ 0) :
-    Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) := by
+    Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) :=
+  by
   convert (tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
   ext n
   simp
@@ -274,7 +278,8 @@ namespace AddSubgroup
 /-- The subgroup "multiples of `a`" (`zmultiples a`) is a discrete subgroup of `ℝ`, i.e. its
 intersection with compact sets is finite. -/
 theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
-    Tendsto (zmultiples a).Subtype cofinite (cocompact ℝ) := by
+    Tendsto (zmultiples a).Subtype cofinite (cocompact ℝ) :=
+  by
   rcases eq_or_ne a 0 with (rfl | ha)
   · rw [AddSubgroup.zmultiples_zero_eq_bot]
     intro K hK
@@ -294,22 +299,25 @@ end AddSubgroup
 
 /-- Given a nontrivial subgroup `G ⊆ ℝ`, if `G ∩ ℝ_{>0}` has no minimum then `G` is dense. -/
 theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_in : g₀ ∈ G) (g₀_ne : g₀ ≠ 0)
-    (H' : ¬∃ a : ℝ, IsLeast { g : ℝ | g ∈ G ∧ 0 < g } a) : Dense (G : Set ℝ) := by
+    (H' : ¬∃ a : ℝ, IsLeast { g : ℝ | g ∈ G ∧ 0 < g } a) : Dense (G : Set ℝ) :=
+  by
   let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
   push_neg  at H'
   intro x
   suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, |x - g| < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos
-  obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁ := by
+  obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁ :=
+    by
     cases' lt_or_gt_of_ne g₀_ne with Hg₀ Hg₀
     · exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
     · exact ⟨g₀, g₀_in, Hg₀⟩
   obtain ⟨a, ha⟩ : ∃ a, IsGLB G_pos a :=
     ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
-  have a_notin : a ∉ G_pos := by 
+  have a_notin : a ∉ G_pos := by
     intro H
     exact H' a ⟨H, ha.1⟩
-  obtain ⟨g₂, g₂_in, g₂_pos, g₂_lt⟩ : ∃ g₂ : ℝ, g₂ ∈ G ∧ 0 < g₂ ∧ g₂ < ε := by
+  obtain ⟨g₂, g₂_in, g₂_pos, g₂_lt⟩ : ∃ g₂ : ℝ, g₂ ∈ G ∧ 0 < g₂ ∧ g₂ < ε :=
+    by
     obtain ⟨b, hb, hb', hb''⟩ := ha.exists_between_self_add' a_notin ε_pos
     obtain ⟨c, hc, hc', hc''⟩ := ha.exists_between_self_add' a_notin (sub_pos.2 hb')
     refine' ⟨b - c, G.sub_mem hb.1 hc.1, _, _⟩ <;> linarith
@@ -322,7 +330,8 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
 /-- Subgroups of `ℝ` are either dense or cyclic. See `real.subgroup_dense_of_no_min` and
 `subgroup_cyclic_of_min` for more precise statements. -/
 theorem Real.subgroup_dense_or_cyclic (G : AddSubgroup ℝ) :
-    Dense (G : Set ℝ) ∨ ∃ a : ℝ, G = AddSubgroup.closure {a} := by
+    Dense (G : Set ℝ) ∨ ∃ a : ℝ, G = AddSubgroup.closure {a} :=
+  by
   cases' AddSubgroup.bot_or_exists_ne_zero G with H H
   · right
     use 0

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.maximal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ structure MaximalSpectrum where
   IsMaximal : as_ideal.IsMaximal
 #align maximal_spectrum MaximalSpectrum
 
-attribute [instance] MaximalSpectrum.is_maximal
+attribute [instance] MaximalSpectrum.isMaximal
 
 variable {R}
 
@@ -66,7 +66,8 @@ theorem to_prime_spectrum_injective : (@toPrimeSpectrum R _).Injective := fun �
 open PrimeSpectrum Set
 
 theorem to_prime_spectrum_range :
-    Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } := by
+    Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } :=
+  by
   simp only [is_closed_singleton_iff_is_maximal]
   ext ⟨x, _⟩
   exact ⟨fun ⟨y, hy⟩ => hy ▸ y.IsMaximal, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
@@ -96,14 +97,14 @@ theorem infi_localization_eq_bot :
     (⨅ v : MaximalSpectrum R,
         Localization.subalgebra.ofField K _ v.asIdeal.prime_compl_le_non_zero_divisors) =
       ⊥ :=
-  by 
+  by
   ext x
   rw [Algebra.mem_bot, Algebra.mem_infi]
   constructor
   · apply imp_of_not_imp_not
     intro hrange hlocal
     let denom : Ideal R := (Submodule.span R {1} : Submodule R K).colon (Submodule.span R {x})
-    have hdenom : (1 : R) ∉ denom := by 
+    have hdenom : (1 : R) ∉ denom := by
       intro hdenom
       rcases submodule.mem_span_singleton.mp
           (submodule.mem_colon.mp hdenom x <| Submodule.mem_span_singleton_self x) with
@@ -137,7 +138,7 @@ theorem infi_localization_eq_bot :
     (⨅ v : PrimeSpectrum R,
         Localization.subalgebra.ofField K _ <| v.asIdeal.prime_compl_le_non_zero_divisors) =
       ⊥ :=
-  by 
+  by
   ext x
   rw [Algebra.mem_infi]
   constructor

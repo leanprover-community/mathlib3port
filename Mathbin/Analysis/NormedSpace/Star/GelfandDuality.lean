@@ -4,7 +4,7 @@ Reeased under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.gelfand_duality
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ noncomputable def Ideal.toCharacterSpace : characterSpace ℂ A :=
 #align ideal.to_character_space Ideal.toCharacterSpace
 
 theorem Ideal.to_character_space_apply_eq_zero_of_mem {a : A} (ha : a ∈ I) :
-    I.toCharacterSpace a = 0 := by 
+    I.toCharacterSpace a = 0 := by
   unfold Ideal.toCharacterSpace
   simpa only [character_space.equiv_alg_hom_symm_coe, AlgHom.coe_comp, AlgEquiv.coe_alg_hom,
     quotient.mkₐ_eq_mk, Function.comp_apply, quotient.eq_zero_iff_mem.mpr ha, spectrum.zero_eq,
@@ -97,7 +97,8 @@ theorem Ideal.to_character_space_apply_eq_zero_of_mem {a : A} (ha : a ∈ I) :
 /-- If `a : A` is not a unit, then some character takes the value zero at `a`. This is equivlaent
 to `gelfand_transform ℂ A a` takes the value zero at some character. -/
 theorem WeakDual.characterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
-    ∃ f : characterSpace ℂ A, f a = 0 := by
+    ∃ f : characterSpace ℂ A, f a = 0 :=
+  by
   obtain ⟨M, hM, haM⟩ := (span {a}).exists_le_maximal (span_singleton_ne_top ha)
   exact
     ⟨M.to_character_space,
@@ -107,7 +108,8 @@ theorem WeakDual.characterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
 
 /-- The Gelfand transform is spectrum-preserving. -/
 theorem spectrum.gelfand_transform_eq (a : A) :
-    spectrum ℂ (gelfandTransform ℂ A a) = spectrum ℂ a := by
+    spectrum ℂ (gelfandTransform ℂ A a) = spectrum ℂ a :=
+  by
   refine' Set.Subset.antisymm (AlgHom.spectrum_apply_subset (gelfand_transform ℂ A) a) fun z hz => _
   obtain ⟨f, hf⟩ := WeakDual.characterSpace.exists_apply_eq_zero hz
   simp only [map_sub, sub_eq_zero, AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply] at
@@ -135,14 +137,16 @@ theorem gelfand_transform_map_star (a : A) :
 variable (A)
 
 /-- The Gelfand transform is an isometry when the algebra is a C⋆-algebra over `ℂ`. -/
-theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) := by
+theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) :=
+  by
   nontriviality A
   refine' AddMonoidHomClass.isometryOfNorm (gelfand_transform ℂ A) fun a => _
   /- By `spectrum.gelfand_transform_eq`, the spectra of `star a * a` and its
     `gelfand_transform` coincide. Therefore, so do their spectral radii, and since they are
     self-adjoint, so also do their norms. Applying the C⋆-property of the norm and taking square
     roots shows that the norm is preserved. -/
-  have : spectralRadius ℂ (gelfand_transform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) := by
+  have : spectralRadius ℂ (gelfand_transform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) :=
+    by
     unfold spectralRadius
     rw [spectrum.gelfand_transform_eq]
   simp only [map_mul, (IsSelfAdjoint.star_mul_self _).spectral_radius_eq_nnnorm,
@@ -152,7 +156,8 @@ theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) := by
 #align gelfand_transform_isometry gelfandTransformIsometry
 
 /-- The Gelfand transform is bijective when the algebra is a C⋆-algebra over `ℂ`. -/
-theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A) := by
+theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A) :=
+  by
   refine' ⟨(gelfandTransformIsometry A).Injective, _⟩
   suffices (gelfand_transform ℂ A).range = ⊤ by
     exact fun x => this.symm ▸ (gelfand_transform ℂ A).mem_range.mp (this.symm ▸ Algebra.mem_top)
@@ -212,10 +217,8 @@ variable [NormedRing C] [NormedAlgebra ℂ C] [CompleteSpace C] [StarRing C]
 /-- The functorial map taking `ψ : A →⋆ₐ[ℂ] B` to a continuous function
 `character_space ℂ B → character_space ℂ A` obtained by pre-composition with `ψ`. -/
 @[simps]
-noncomputable def compContinuousMap (ψ : A →⋆ₐ[ℂ] B) :
-    C(characterSpace ℂ B,
-      characterSpace ℂ
-        A) where 
+noncomputable def compContinuousMap (ψ : A →⋆ₐ[ℂ] B) : C(characterSpace ℂ B, characterSpace ℂ A)
+    where
   toFun φ := equivAlgHom.symm ((equivAlgHom φ).comp ψ.toAlgHom)
   continuous_to_fun :=
     Continuous.subtype_mk

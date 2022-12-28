@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.nat.gcd.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,8 @@ theorem eq_zero_of_gcd_eq_zero_right {m n : ℕ} (H : gcd m n = 0) : n = 0 := by
 
 #print Nat.gcd_eq_zero_iff /-
 @[simp]
-theorem gcd_eq_zero_iff {i j : ℕ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 := by
+theorem gcd_eq_zero_iff {i j : ℕ} : gcd i j = 0 ↔ i = 0 ∧ j = 0 :=
+  by
   constructor
   · intro h
     exact ⟨eq_zero_of_gcd_eq_zero_left h, eq_zero_of_gcd_eq_zero_right h⟩
@@ -468,7 +469,8 @@ theorem lcm_assoc (m n k : ℕ) : lcm (lcm m n) k = lcm m (lcm n k) :=
 -/
 
 #print Nat.lcm_ne_zero /-
-theorem lcm_ne_zero {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) : lcm m n ≠ 0 := by
+theorem lcm_ne_zero {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) : lcm m n ≠ 0 :=
+  by
   intro h
   simpa [h, hm, hn] using gcd_mul_lcm m n
 #align nat.lcm_ne_zero Nat.lcm_ne_zero
@@ -518,7 +520,8 @@ theorem coprime.symmetric : Symmetric Coprime := fun m n => Coprime.symm
 #align nat.coprime.symmetric Nat.coprime.symmetric
 -/
 
-theorem Coprime.dvd_of_dvd_mul_right {m n k : ℕ} (H1 : Coprime k n) (H2 : k ∣ m * n) : k ∣ m := by
+theorem Coprime.dvd_of_dvd_mul_right {m n k : ℕ} (H1 : Coprime k n) (H2 : k ∣ m * n) : k ∣ m :=
+  by
   let t := dvd_gcd (dvd_mul_left k m) H2
   rwa [gcd_mul_left, H1.gcd_eq_one, mul_one] at t
 #align nat.coprime.dvd_of_dvd_mul_right Nat.Coprime.dvd_of_dvd_mul_right
@@ -709,7 +712,7 @@ theorem Coprime.coprime_mul_right_right {k m n : ℕ} (H : Coprime m (n * k)) : 
 #align nat.coprime.coprime_mul_right_right Nat.Coprime.coprime_mul_right_right
 
 theorem Coprime.coprime_div_left {m n a : ℕ} (cmn : Coprime m n) (dvd : a ∣ m) :
-    Coprime (m / a) n := by 
+    Coprime (m / a) n := by
   by_cases a_split : a = 0
   · subst a_split
     rw [zero_dvd_iff] at dvd
@@ -786,7 +789,8 @@ theorem Coprime.pow {k l : ℕ} (m n : ℕ) (H1 : Coprime k l) : Coprime (k ^ m)
 #print Nat.coprime_pow_left_iff /-
 @[simp]
 theorem coprime_pow_left_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) :
-    Nat.Coprime (a ^ n) b ↔ Nat.Coprime a b := by
+    Nat.Coprime (a ^ n) b ↔ Nat.Coprime a b :=
+  by
   obtain ⟨n, rfl⟩ := exists_eq_succ_of_ne_zero hn.ne'
   rw [pow_succ, Nat.coprime_mul_iff_left]
   exact ⟨And.left, fun hab => ⟨hab, hab.pow_left _⟩⟩
@@ -842,7 +846,8 @@ theorem coprime_self (n : ℕ) : Coprime n n ↔ n = 1 := by simp [coprime]
 
 #print Nat.gcd_mul_of_coprime_of_dvd /-
 theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : Coprime a c) (b_dvd_c : b ∣ c) :
-    gcd (a * b) c = b := by
+    gcd (a * b) c = b :=
+  by
   rcases exists_eq_mul_left_of_dvd b_dvd_c with ⟨d, rfl⟩
   rw [gcd_mul_right]
   convert one_mul b
@@ -864,13 +869,15 @@ theorem coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.Coprime n) (hmn : m * n = 0
 See `exists_dvd_and_dvd_of_dvd_mul` for the more general but less constructive version for other
 `gcd_monoid`s. -/
 def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) :
-    { d : { m' // m' ∣ m } × { n' // n' ∣ n } // k = d.1 * d.2 } := by
+    { d : { m' // m' ∣ m } × { n' // n' ∣ n } // k = d.1 * d.2 } :=
+  by
   cases h0 : gcd k m
-  case zero => 
+  case zero =>
     obtain rfl : k = 0 := eq_zero_of_gcd_eq_zero_left h0
     obtain rfl : m = 0 := eq_zero_of_gcd_eq_zero_right h0
     exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩
-  case succ tmp =>
+  case
+    succ tmp =>
     have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succ _ <;> clear h0 tmp
     have hd : gcd k m * (k / gcd k m) = k := Nat.mul_div_cancel' (gcd_dvd_left k m)
     refine' ⟨⟨⟨gcd k m, gcd_dvd_right k m⟩, ⟨k / gcd k m, _⟩⟩, hd.symm⟩
@@ -881,7 +888,8 @@ def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) :
 -/
 
 #print Nat.dvd_mul /-
-theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧ y * z = x := by
+theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧ y * z = x :=
+  by
   constructor
   · intro h
     obtain ⟨⟨⟨y, hy⟩, ⟨z, hz⟩⟩, rfl⟩ := prod_dvd_and_dvd_of_dvd_prod h
@@ -892,7 +900,8 @@ theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧
 -/
 
 #print Nat.gcd_mul_dvd_mul_gcd /-
-theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m * n) ∣ gcd k m * gcd k n := by
+theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m * n) ∣ gcd k m * gcd k n :=
+  by
   rcases prod_dvd_and_dvd_of_dvd_prod <| gcd_dvd_right k (m * n) with ⟨⟨⟨m', hm'⟩, ⟨n', hn'⟩⟩, h⟩
   replace h : gcd k (m * n) = m' * n' := h
   rw [h]
@@ -912,7 +921,8 @@ theorem Coprime.gcd_mul (k : ℕ) {m n : ℕ} (h : Coprime m n) : gcd k (m * n) 
 #align nat.coprime.gcd_mul Nat.Coprime.gcd_mul
 
 #print Nat.pow_dvd_pow_iff /-
-theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : 0 < n) : a ^ n ∣ b ^ n ↔ a ∣ b := by
+theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : 0 < n) : a ^ n ∣ b ^ n ↔ a ∣ b :=
+  by
   refine' ⟨fun h => _, fun h => pow_dvd_pow_of_dvd h _⟩
   cases' Nat.eq_zero_or_pos (gcd a b) with g0 g0
   · simp [eq_zero_of_gcd_eq_zero_right g0]
@@ -932,7 +942,7 @@ but is expected to have type
   forall {a : Nat} {b : Nat} {c : Nat} {d : Nat}, (Nat.coprime a b) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) c d) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a b)) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Nat.gcd c a) (Nat.gcd d a)) a)
 Case conversion may be inaccurate. Consider using '#align nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ'. -/
 theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.Coprime d) (h : a * b = c * d) :
-    a.gcd c * b.gcd c = c := by 
+    a.gcd c * b.gcd c = c := by
   apply dvd_antisymm
   · apply Nat.Coprime.dvd_of_dvd_mul_right (Nat.Coprime.mul (cop.gcd_left _) (cop.gcd_left _))
     rw [← h]
@@ -946,7 +956,8 @@ theorem gcd_mul_gcd_of_coprime_of_mul_eq_mul {a b c d : ℕ} (cop : c.Coprime d)
 #print Nat.eq_one_of_dvd_coprimes /-
 /-- If `k:ℕ` divides coprime `a` and `b` then `k = 1` -/
 theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : Coprime a b) (hka : k ∣ a)
-    (hkb : k ∣ b) : k = 1 := by
+    (hkb : k ∣ b) : k = 1 :=
+  by
   rw [coprime_iff_gcd_eq_one] at h_ab_coprime
   have h1 := dvd_gcd hka hkb
   rw [h_ab_coprime] at h1
@@ -956,7 +967,7 @@ theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : Coprime a b) (hka :
 
 #print Nat.coprime.mul_add_mul_ne_mul /-
 theorem coprime.mul_add_mul_ne_mul {m n a b : ℕ} (cop : Coprime m n) (ha : a ≠ 0) (hb : b ≠ 0) :
-    a * m + b * n ≠ m * n := by 
+    a * m + b * n ≠ m * n := by
   intro h
   obtain ⟨x, rfl⟩ : n ∣ a :=
     cop.symm.dvd_of_dvd_mul_right

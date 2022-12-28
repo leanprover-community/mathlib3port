@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_zero.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_zero.covariant_class_mul_le WithZero.covariantClass_mul_leₓ'. -/
 instance covariantClass_mul_le {α : Type u} [Mul α] [Preorder α]
     [CovariantClass α α (· * ·) (· ≤ ·)] :
-    CovariantClass (WithZero α) (WithZero α) (· * ·) (· ≤ ·) := by
+    CovariantClass (WithZero α) (WithZero α) (· * ·) (· ≤ ·) :=
+  by
   refine' ⟨fun a b c hbc => _⟩
   induction a using WithZero.recZeroCoe; · exact zero_le _
   induction b using WithZero.recZeroCoe; · exact zero_le _
@@ -165,7 +166,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_zero.covariant_class_add_le WithZero.covariantClass_add_leₓ'. -/
 protected theorem covariantClass_add_le [AddZeroClass α] [Preorder α]
     [CovariantClass α α (· + ·) (· ≤ ·)] (h : ∀ a : α, 0 ≤ a) :
-    CovariantClass (WithZero α) (WithZero α) (· + ·) (· ≤ ·) := by
+    CovariantClass (WithZero α) (WithZero α) (· + ·) (· ≤ ·) :=
+  by
   refine' ⟨fun a b c hbc => _⟩
   induction a using WithZero.recZeroCoe
   · rwa [zero_add, zero_add]
@@ -211,7 +213,7 @@ section CanonicallyOrderedMonoid
 #print WithZero.existsAddOfLE /-
 instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
     ExistsAddOfLE (WithZero α) :=
-  ⟨fun a b => by 
+  ⟨fun a b => by
     apply WithZero.cases_on a
     · exact fun _ => ⟨b, (zero_add b).symm⟩
     apply WithZero.cases_on b
@@ -228,7 +230,7 @@ instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
 instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAddMonoid α] :
     CanonicallyOrderedAddMonoid (WithZero α) :=
   { WithZero.orderBot, WithZero.orderedAddCommMonoid zero_le, WithZero.existsAddOfLE with
-    le_self_add := fun a b => by 
+    le_self_add := fun a b => by
       apply WithZero.cases_on a
       · exact bot_le
       apply WithZero.cases_on b

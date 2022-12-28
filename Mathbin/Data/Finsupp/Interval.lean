@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finsupp.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,11 +45,12 @@ variable [Zero α] {f : ι →₀ α} {i : ι} {a : α}
 
 /-- Pointwise `finset.singleton` bundled as a `finsupp`. -/
 @[simps]
-def rangeSingleton (f : ι →₀ α) :
-    ι →₀ Finset α where 
+def rangeSingleton (f : ι →₀ α) : ι →₀ Finset α
+    where
   toFun i := {f i}
   support := f.support
-  mem_support_to_fun i := by
+  mem_support_to_fun i :=
+    by
     rw [← not_iff_not, not_mem_support_iff, not_ne_iff]
     exact singleton_injective.eq_iff.symm
 #align finsupp.range_singleton Finsupp.rangeSingleton
@@ -66,11 +67,12 @@ variable [Zero α] [PartialOrder α] [LocallyFiniteOrder α] {f g : ι →₀ α
 
 /-- Pointwise `finset.Icc` bundled as a `finsupp`. -/
 @[simps toFun]
-def rangeIcc (f g : ι →₀ α) :
-    ι →₀ Finset α where 
+def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α
+    where
   toFun i := icc (f i) (g i)
   support := f.support ∪ g.support
-  mem_support_to_fun i := by
+  mem_support_to_fun i :=
+    by
     rw [mem_union, ← not_iff_not, not_or, not_mem_support_iff, not_mem_support_iff, not_ne_iff]
     exact Icc_eq_singleton_iff.symm
 #align finsupp.range_Icc Finsupp.rangeIcc
@@ -92,7 +94,8 @@ variable [PartialOrder α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α
 
 instance : LocallyFiniteOrder (ι →₀ α) :=
   LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.support ∪ g.support).Finsupp <| f.rangeIcc g)
-    fun f g x => by
+    fun f g x =>
+    by
     refine'
       (mem_finsupp_iff_of_support_subset <| Finset.subset_of_eq <| range_Icc_support _ _).trans _
     simp_rw [mem_range_Icc_apply_iff]

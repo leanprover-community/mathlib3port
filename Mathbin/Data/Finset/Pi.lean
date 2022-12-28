@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.finset.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,8 @@ theorem pi_empty {t : ∀ a : α, Finset (δ a)} : pi (∅ : Finset α) t = sing
 
 @[simp]
 theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, Finset (δ a)} {a : α}
-    (ha : a ∉ s) : pi (insert a s) t = (t a).bUnion fun b => (pi s t).image (pi.cons s a b) := by
+    (ha : a ∉ s) : pi (insert a s) t = (t a).bUnion fun b => (pi s t).image (pi.cons s a b) :=
+  by
   apply eq_of_veq
   rw [← (pi (insert a s) t).2.dedup]
   refine'
@@ -111,7 +112,8 @@ theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, F
 #align finset.pi_insert Finset.pi_insert
 
 theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) :
-    (s.pi fun a => ({f a} : Finset β)) = {fun a _ => f a} := by
+    (s.pi fun a => ({f a} : Finset β)) = {fun a _ => f a} :=
+  by
   rw [eq_singleton_iff_unique_mem]
   constructor
   · simp

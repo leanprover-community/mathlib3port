@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module data.set.pointwise.iterate
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,8 +28,10 @@ the map `x ↦ x^n`. Then `s` is invariant under the pointwise action of the sub
 @[to_additive
       "Let `n : ℤ` and `s` a subset of an additive commutative group `G` that is invariant\nunder preimage for the map `x ↦ n • x`. Then `s` is invariant under the pointwise action of the\nadditive subgroup of elements `g : G` such that `(n^j) • g = 0` for some `j : ℕ`. (This additive\nsubgroup is called the Prüfer subgroup when `G` is the `add_circle` and `n` is prime.)"]
 theorem smul_eq_self_of_preimage_zpow_eq_self {G : Type _} [CommGroup G] {n : ℤ} {s : Set G}
-    (hs : (fun x => x ^ n) ⁻¹' s = s) {g : G} {j : ℕ} (hg : g ^ n ^ j = 1) : g • s = s := by
-  suffices ∀ {g' : G} (hg' : g' ^ n ^ j = 1), g' • s ⊆ s by
+    (hs : (fun x => x ^ n) ⁻¹' s = s) {g : G} {j : ℕ} (hg : g ^ n ^ j = 1) : g • s = s :=
+  by
+  suffices ∀ {g' : G} (hg' : g' ^ n ^ j = 1), g' • s ⊆ s
+    by
     refine' le_antisymm (this hg) _
     conv_lhs => rw [← smul_inv_smul g s]
     replace hg : g⁻¹ ^ n ^ j = 1

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.ring.comp_typeclasses
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,13 +86,15 @@ namespace RingHomInvPair
 variable [RingHomInvPair σ σ']
 
 @[simp]
-theorem comp_apply_eq {x : R₁} : σ' (σ x) = x := by
+theorem comp_apply_eq {x : R₁} : σ' (σ x) = x :=
+  by
   rw [← RingHom.comp_apply, comp_eq]
   simp
 #align ring_hom_inv_pair.comp_apply_eq RingHomInvPair.comp_apply_eq
 
 @[simp]
-theorem comp_apply_eq₂ {x : R₂} : σ (σ' x) = x := by
+theorem comp_apply_eq₂ {x : R₂} : σ (σ' x) = x :=
+  by
   rw [← RingHom.comp_apply, comp_eq₂]
   simp
 #align ring_hom_inv_pair.comp_apply_eq₂ RingHomInvPair.comp_apply_eq₂
@@ -141,13 +143,13 @@ end RingHomInvPair
 namespace RingHomCompTriple
 
 instance ids : RingHomCompTriple (RingHom.id R₁) σ₁₂ σ₁₂ :=
-  ⟨by 
+  ⟨by
     ext
     simp⟩
 #align ring_hom_comp_triple.ids RingHomCompTriple.ids
 
 instance right_ids : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
-  ⟨by 
+  ⟨by
     ext
     simp⟩
 #align ring_hom_comp_triple.right_ids RingHomCompTriple.right_ids
@@ -180,7 +182,8 @@ instance ids : RingHomSurjective (RingHom.id R₁) :=
 /-- This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
 theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective σ₁₂] [RingHomSurjective σ₂₃] :
     RingHomSurjective σ₁₃ :=
-  { is_surjective := by 
+  {
+    is_surjective := by
       have := σ₂₃.is_surjective.comp σ₁₂.is_surjective
       rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this }
 #align ring_hom_surjective.comp RingHomSurjective.comp

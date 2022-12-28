@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.filtration
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,8 @@ protected theorem le (f : Filtration ι m) (i : ι) : f i ≤ m :=
 #align measure_theory.filtration.le MeasureTheory.Filtration.le
 
 @[ext]
-protected theorem ext {f g : Filtration ι m} (h : (f : ι → MeasurableSpace Ω) = g) : f = g := by
+protected theorem ext {f g : Filtration ι m} (h : (f : ι → MeasurableSpace Ω) = g) : f = g :=
+  by
   cases f
   cases g
   simp only
@@ -127,7 +128,7 @@ theorem coe_fn_inf {f g : Filtration ι m} : ⇑(f ⊓ g) = f ⊓ g :=
 instance : SupSet (Filtration ι m) :=
   ⟨fun s =>
     { seq := fun i => supₛ ((fun f : Filtration ι m => f i) '' s)
-      mono' := fun i j hij => by 
+      mono' := fun i j hij => by
         refine' supₛ_le fun m' hm' => _
         rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
@@ -135,7 +136,7 @@ instance : SupSet (Filtration ι m) :=
         refine' (f.mono hij).trans _
         have hfj_mem : f j ∈ (fun g : filtration ι m => g j) '' s := ⟨f, hf_mem, rfl⟩
         exact le_supₛ hfj_mem
-      le' := fun i => by 
+      le' := fun i => by
         refine' supₛ_le fun m' hm' => _
         rw [Set.mem_image] at hm'
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
@@ -150,7 +151,7 @@ theorem Sup_def (s : Set (Filtration ι m)) (i : ι) :
 noncomputable instance : InfSet (Filtration ι m) :=
   ⟨fun s =>
     { seq := fun i => if Set.Nonempty s then infₛ ((fun f : Filtration ι m => f i) '' s) else m
-      mono' := fun i j hij => by 
+      mono' := fun i j hij => by
         by_cases h_nonempty : Set.Nonempty s
         swap
         · simp only [h_nonempty, Set.nonempty_image_iff, if_false, le_refl]
@@ -159,7 +160,7 @@ noncomputable instance : InfSet (Filtration ι m) :=
         refine' fun f hf_mem => le_trans _ (f.mono hij)
         have hfi_mem : f i ∈ (fun g : filtration ι m => g i) '' s := ⟨f, hf_mem, rfl⟩
         exact infₛ_le hfi_mem
-      le' := fun i => by 
+      le' := fun i => by
         by_cases h_nonempty : Set.Nonempty s
         swap; · simp only [h_nonempty, if_false, le_refl]
         simp only [h_nonempty, if_true]
@@ -171,8 +172,8 @@ theorem Inf_def (s : Set (Filtration ι m)) (i : ι) :
   rfl
 #align measure_theory.filtration.Inf_def MeasureTheory.Filtration.Inf_def
 
-noncomputable instance :
-    CompleteLattice (Filtration ι m) where 
+noncomputable instance : CompleteLattice (Filtration ι m)
+    where
   le := (· ≤ ·)
   le_refl f i := le_rfl
   le_trans f g h h_fg h_gh i := (h_fg i).trans (h_gh i)
@@ -188,16 +189,16 @@ noncomputable instance :
   sup := supₛ
   le_Sup s f hf_mem i := le_supₛ ⟨f, hf_mem, rfl⟩
   Sup_le s f h_forall i :=
-    supₛ_le fun m' hm' => by 
+    supₛ_le fun m' hm' => by
       obtain ⟨g, hg_mem, hfm'⟩ := hm'
       rw [← hfm']
       exact h_forall g hg_mem i
   inf := infₛ
-  Inf_le s f hf_mem i := by 
+  Inf_le s f hf_mem i := by
     have hs : s.nonempty := ⟨f, hf_mem⟩
     simp only [Inf_def, hs, if_true]
     exact infₛ_le ⟨f, hf_mem, rfl⟩
-  le_Inf s f h_forall i := by 
+  le_Inf s f h_forall i := by
     by_cases hs : s.nonempty
     swap;
     · simp only [Inf_def, hs, if_false]
@@ -212,10 +213,10 @@ noncomputable instance :
 
 end Filtration
 
-theorem measurableSetOfFiltration [Preorder ι] {f : Filtration ι m} {s : Set Ω} {i : ι}
+theorem measurable_set_of_filtration [Preorder ι] {f : Filtration ι m} {s : Set Ω} {i : ι}
     (hs : measurable_set[f i] s) : measurable_set[m] s :=
   f.le i s hs
-#align measure_theory.measurable_set_of_filtration MeasureTheory.measurableSetOfFiltration
+#align measure_theory.measurable_set_of_filtration MeasureTheory.measurable_set_of_filtration
 
 /-- A measure is σ-finite with respect to filtration if it is σ-finite with respect
 to all the sub-σ-algebra of the filtration. -/
@@ -251,23 +252,24 @@ variable [Preorder ι]
 
 /-- Given a sequence of measurable sets `(sₙ)`, `filtration_of_set` is the smallest filtration
 such that `sₙ` is measurable with respect to the `n`-the sub-σ-algebra in `filtration_of_set`. -/
-def filtrationOfSet {s : ι → Set Ω} (hsm : ∀ i, MeasurableSet (s i)) :
-    Filtration ι
-      m where 
+def filtrationOfSet {s : ι → Set Ω} (hsm : ∀ i, MeasurableSet (s i)) : Filtration ι m
+    where
   seq i := MeasurableSpace.generateFrom { t | ∃ j ≤ i, s j = t }
   mono' n m hnm := MeasurableSpace.generate_from_mono fun t ⟨k, hk₁, hk₂⟩ => ⟨k, hk₁.trans hnm, hk₂⟩
   le' n := MeasurableSpace.generate_from_le fun t ⟨k, hk₁, hk₂⟩ => hk₂ ▸ hsm k
 #align measure_theory.filtration_of_set MeasureTheory.filtrationOfSet
 
-theorem measurableSetFiltrationOfSet {s : ι → Set Ω} (hsm : ∀ i, measurable_set[m] (s i)) (i : ι)
-    {j : ι} (hj : j ≤ i) : measurable_set[filtrationOfSet hsm i] (s j) :=
-  MeasurableSpace.measurableSetGenerateFrom ⟨j, hj, rfl⟩
-#align measure_theory.measurable_set_filtration_of_set MeasureTheory.measurableSetFiltrationOfSet
+theorem measurable_set_filtration_of_set {s : ι → Set Ω} (hsm : ∀ i, measurable_set[m] (s i))
+    (i : ι) {j : ι} (hj : j ≤ i) : measurable_set[filtrationOfSet hsm i] (s j) :=
+  MeasurableSpace.measurable_set_generate_from ⟨j, hj, rfl⟩
+#align
+  measure_theory.measurable_set_filtration_of_set MeasureTheory.measurable_set_filtration_of_set
 
-theorem measurableSetFiltrationOfSet' {s : ι → Set Ω} (hsm : ∀ n, measurable_set[m] (s n)) (i : ι) :
-    measurable_set[filtrationOfSet hsm i] (s i) :=
-  measurableSetFiltrationOfSet hsm i le_rfl
-#align measure_theory.measurable_set_filtration_of_set' MeasureTheory.measurableSetFiltrationOfSet'
+theorem measurable_set_filtration_of_set' {s : ι → Set Ω} (hsm : ∀ n, measurable_set[m] (s n))
+    (i : ι) : measurable_set[filtrationOfSet hsm i] (s i) :=
+  measurable_set_filtration_of_set hsm i le_rfl
+#align
+  measure_theory.measurable_set_filtration_of_set' MeasureTheory.measurable_set_filtration_of_set'
 
 end OfSet
 
@@ -281,11 +283,11 @@ include mβ
 /-- Given a sequence of functions, the natural filtration is the smallest sequence
 of σ-algebras such that that sequence of functions is measurable with respect to
 the filtration. -/
-def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) :
-    Filtration ι m where 
+def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) : Filtration ι m
+    where
   seq i := ⨆ j ≤ i, MeasurableSpace.comap (u j) mβ
   mono' i j hij := bsupᵢ_mono fun k => ge_trans hij
-  le' i := by 
+  le' i := by
     refine' supᵢ₂_le _
     rintro j hj s ⟨t, ht, rfl⟩
     exact (hum j).Measurable ht
@@ -299,8 +301,8 @@ theorem filtration_of_set_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : �
     (hsm : ∀ i, measurable_set[m] (s i)) :
     filtrationOfSet hsm =
       natural (fun i => (s i).indicator (fun ω => 1 : Ω → β)) fun i =>
-        stronglyMeasurableOne.indicator (hsm i) :=
-  by 
+        strongly_measurable_one.indicator (hsm i) :=
+  by
   simp only [natural, filtration_of_set, measurable_space_supr_eq]
   ext1 i
   refine' le_antisymm (generate_from_le _) (generate_from_le _)
@@ -353,21 +355,23 @@ noncomputable def limitProcess (f : ι → Ω → E) (ℱ : Filtration ι m)
   else 0
 #align measure_theory.filtration.limit_process MeasureTheory.Filtration.limitProcess
 
-theorem stronglyMeasurableLimitProcess : strongly_measurable[⨆ n, ℱ n] (limitProcess f ℱ μ) := by
+theorem strongly_measurable_limit_process : strongly_measurable[⨆ n, ℱ n] (limitProcess f ℱ μ) :=
+  by
   rw [limit_process]
   split_ifs with h h
   exacts[(Classical.choose_spec h).1, strongly_measurable_zero]
 #align
-  measure_theory.filtration.strongly_measurable_limit_process MeasureTheory.Filtration.stronglyMeasurableLimitProcess
+  measure_theory.filtration.strongly_measurable_limit_process MeasureTheory.Filtration.strongly_measurable_limit_process
 
-theorem stronglyMeasurableLimitProcess' : strongly_measurable[m] (limitProcess f ℱ μ) :=
-  stronglyMeasurableLimitProcess.mono (supₛ_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)
+theorem strongly_measurable_limit_process' : strongly_measurable[m] (limitProcess f ℱ μ) :=
+  strongly_measurable_limit_process.mono (supₛ_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)
 #align
-  measure_theory.filtration.strongly_measurable_limit_process' MeasureTheory.Filtration.stronglyMeasurableLimitProcess'
+  measure_theory.filtration.strongly_measurable_limit_process' MeasureTheory.Filtration.strongly_measurable_limit_process'
 
 theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _} [NormedAddCommGroup F]
     {ℱ : Filtration ℕ m} {f : ℕ → Ω → F} (hfm : ∀ n, AeStronglyMeasurable (f n) μ)
-    (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (limitProcess f ℱ μ) p μ := by
+    (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (limitProcess f ℱ μ) p μ :=
+  by
   rw [limit_process]
   split_ifs with h
   · refine'

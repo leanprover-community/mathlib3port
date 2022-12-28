@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ variable {α : Type _} {ι : Sort _} {ι' : Sort _} [Nonempty ι] [Nonempty ι']
 
 @[to_additive]
 theorem le_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α}
-    (H : ∀ j, a ≤ g * h j) : a ≤ g * infi h :=
+    (H : ∀ j, a ≤ g * h j) : a ≤ g * infᵢ h :=
   inv_mul_le_iff_le_mul.mp <| le_cinfi fun hi => inv_mul_le_iff_le_mul.mpr <| H _
 #align le_mul_cinfi le_mul_cinfi
 
@@ -36,7 +36,7 @@ theorem mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : 
 
 @[to_additive]
 theorem le_cinfi_mul [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α}
-    {h : α} (H : ∀ i, a ≤ g i * h) : a ≤ infi g * h :=
+    {h : α} (H : ∀ i, a ≤ g i * h) : a ≤ infᵢ g * h :=
   mul_inv_le_iff_le_mul.mp <| le_cinfi fun gi => mul_inv_le_iff_le_mul.mpr <| H _
 #align le_cinfi_mul le_cinfi_mul
 
@@ -49,7 +49,7 @@ theorem csupr_mul_le [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)
 @[to_additive]
 theorem le_cinfi_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : ι' → α}
-    (H : ∀ i j, a ≤ g i * h j) : a ≤ infi g * infi h :=
+    (H : ∀ i j, a ≤ g i * h j) : a ≤ infᵢ g * infᵢ h :=
   le_cinfi_mul fun i => le_mul_cinfi <| H _
 #align le_cinfi_mul_cinfi le_cinfi_mul_cinfi
 

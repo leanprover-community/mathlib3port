@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ section SeminormedGroup
 variable [SeminormedGroup E] {ε δ : ℝ} {s t : Set E} {x y : E}
 
 @[to_additive]
-theorem Metric.Bounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s * t) := by
+theorem Metric.Bounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s * t) :=
+  by
   obtain ⟨Rs, hRs⟩ : ∃ R, ∀ x ∈ s, ‖x‖ ≤ R := hs.exists_norm_le'
   obtain ⟨Rt, hRt⟩ : ∃ R, ∀ x ∈ t, ‖x‖ ≤ R := ht.exists_norm_le'
   refine' bounded_iff_forall_norm_le'.2 ⟨Rs + Rt, _⟩
@@ -39,7 +40,8 @@ theorem Metric.Bounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s * t) :
 #align metric.bounded.mul Metric.Bounded.mul
 
 @[to_additive]
-theorem Metric.Bounded.inv : Bounded s → Bounded s⁻¹ := by
+theorem Metric.Bounded.inv : Bounded s → Bounded s⁻¹ :=
+  by
   simp_rw [bounded_iff_forall_norm_le', ← image_inv, ball_image_iff, norm_inv']
   exact id
 #align metric.bounded.inv Metric.Bounded.inv
@@ -74,25 +76,29 @@ end Emetric
 variable (ε δ s t x y)
 
 @[simp, to_additive]
-theorem inv_thickening : (thickening δ s)⁻¹ = thickening δ s⁻¹ := by
+theorem inv_thickening : (thickening δ s)⁻¹ = thickening δ s⁻¹ :=
+  by
   simp_rw [thickening, ← inf_edist_inv]
   rfl
 #align inv_thickening inv_thickening
 
 @[simp, to_additive]
-theorem inv_cthickening : (cthickening δ s)⁻¹ = cthickening δ s⁻¹ := by
+theorem inv_cthickening : (cthickening δ s)⁻¹ = cthickening δ s⁻¹ :=
+  by
   simp_rw [cthickening, ← inf_edist_inv]
   rfl
 #align inv_cthickening inv_cthickening
 
 @[simp, to_additive]
-theorem inv_ball : (ball x δ)⁻¹ = ball x⁻¹ δ := by
+theorem inv_ball : (ball x δ)⁻¹ = ball x⁻¹ δ :=
+  by
   simp_rw [ball, ← dist_inv]
   rfl
 #align inv_ball inv_ball
 
 @[simp, to_additive]
-theorem inv_closed_ball : (closedBall x δ)⁻¹ = closedBall x⁻¹ δ := by
+theorem inv_closed_ball : (closedBall x δ)⁻¹ = closedBall x⁻¹ δ :=
+  by
   simp_rw [closed_ball, ← dist_inv]
   rfl
 #align inv_closed_ball inv_closed_ball
@@ -134,7 +140,8 @@ theorem ball_one_div_singleton : ball 1 δ / {x} = ball x⁻¹ δ := by simp [ba
 #align ball_one_div_singleton ball_one_div_singleton
 
 @[to_additive]
-theorem smul_ball_one : x • ball 1 δ = ball x δ := by
+theorem smul_ball_one : x • ball 1 δ = ball x δ :=
+  by
   ext
   simp [mem_smul_set_iff_inv_smul_mem, inv_mul_eq_div, dist_eq_norm_div]
 #align smul_ball_one smul_ball_one
@@ -176,13 +183,15 @@ theorem closed_ball_one_div_singleton : closedBall 1 δ / {x} = closedBall x⁻�
 #align closed_ball_one_div_singleton closed_ball_one_div_singleton
 
 @[simp, to_additive]
-theorem smul_closed_ball_one : x • closedBall 1 δ = closedBall x δ := by
+theorem smul_closed_ball_one : x • closedBall 1 δ = closedBall x δ :=
+  by
   ext
   simp [mem_smul_set_iff_inv_smul_mem, inv_mul_eq_div, dist_eq_norm_div]
 #align smul_closed_ball_one smul_closed_ball_one
 
 @[to_additive]
-theorem mul_ball_one : s * ball 1 δ = thickening δ s := by
+theorem mul_ball_one : s * ball 1 δ = thickening δ s :=
+  by
   rw [thickening_eq_bUnion_ball]
   convert Union₂_mul (fun x (_ : x ∈ s) => {x}) (ball (1 : E) δ)
   exact s.bUnion_of_singleton.symm
@@ -223,7 +232,8 @@ variable {ε δ s t x y}
 
 @[to_additive]
 theorem IsCompact.mul_closed_ball_one (hs : IsCompact s) (hδ : 0 ≤ δ) :
-    s * closedBall 1 δ = cthickening δ s := by
+    s * closedBall 1 δ = cthickening δ s :=
+  by
   rw [hs.cthickening_eq_bUnion_closed_ball hδ]
   ext x
   simp only [mem_mul, dist_eq_norm_div, exists_prop, mem_Union, mem_closed_ball, exists_and_left,

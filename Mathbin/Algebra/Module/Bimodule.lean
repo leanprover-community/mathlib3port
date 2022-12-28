@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.module.bimodule
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ Note that `R` plays no role but it is convenient to make this generalisation to 
 @[simps]
 def mk (p : AddSubmonoid M) (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p)
     (hB : ∀ (b : B) {m : M}, m ∈ p → b • m ∈ p) : Submodule (A ⊗[R] B) M :=
-  { p with 
+  { p with
     carrier := p
     smul_mem' := fun ab m =>
       TensorProduct.induction_on ab (fun hm => by simpa only [zero_smul] using p.zero_mem)
@@ -95,12 +95,14 @@ def mk (p : AddSubmonoid M) (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p
         fun z w hz hw hm => by simpa only [add_smul] using p.add_mem (hz hm) (hw hm) }
 #align subbimodule.mk Subbimodule.mk
 
-theorem smul_mem (p : Submodule (A ⊗[R] B) M) (a : A) {m : M} (hm : m ∈ p) : a • m ∈ p := by
+theorem smul_mem (p : Submodule (A ⊗[R] B) M) (a : A) {m : M} (hm : m ∈ p) : a • m ∈ p :=
+  by
   suffices a • m = a ⊗ₜ[R] (1 : B) • m by exact this.symm ▸ p.smul_mem _ hm
   simp [TensorProduct.Algebra.smul_def]
 #align subbimodule.smul_mem Subbimodule.smul_mem
 
-theorem smul_mem' (p : Submodule (A ⊗[R] B) M) (b : B) {m : M} (hm : m ∈ p) : b • m ∈ p := by
+theorem smul_mem' (p : Submodule (A ⊗[R] B) M) (b : B) {m : M} (hm : m ∈ p) : b • m ∈ p :=
+  by
   suffices b • m = (1 : A) ⊗ₜ[R] b • m by exact this.symm ▸ p.smul_mem _ hm
   simp [TensorProduct.Algebra.smul_def]
 #align subbimodule.smul_mem' Subbimodule.smul_mem'
@@ -117,7 +119,7 @@ def baseChange (S : Type _) [CommSemiring S] [Module S M] [Algebra S A] [Algebra
 /-- Forgetting the `B` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `A`. -/
 @[simps]
 def toSubmodule (p : Submodule (A ⊗[R] B) M) : Submodule A M :=
-  { p with 
+  { p with
     carrier := p
     smul_mem' := smul_mem p }
 #align subbimodule.to_submodule Subbimodule.toSubmodule
@@ -125,7 +127,7 @@ def toSubmodule (p : Submodule (A ⊗[R] B) M) : Submodule A M :=
 /-- Forgetting the `A` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `B`. -/
 @[simps]
 def toSubmodule' (p : Submodule (A ⊗[R] B) M) : Submodule B M :=
-  { p with 
+  { p with
     carrier := p
     smul_mem' := smul_mem' p }
 #align subbimodule.to_submodule' Subbimodule.toSubmodule'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.over
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,9 +45,8 @@ def Over (X : T) :=
 #align category_theory.over CategoryTheory.Over
 
 -- Satisfying the inhabited linter
-instance Over.inhabited [Inhabited T] :
-    Inhabited (Over
-        (default : T)) where default :=
+instance Over.inhabited [Inhabited T] : Inhabited (Over (default : T))
+    where default :=
     { left := default
       Hom := 𝟙 _ }
 #align category_theory.over.inhabited CategoryTheory.Over.inhabited
@@ -187,10 +186,8 @@ def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map f ⋙ 
 
 end
 
-instance forget_reflects_iso :
-    ReflectsIsomorphisms
-      (forget
-        X) where reflects Y Z f t :=
+instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
+    where reflects Y Z f t :=
     ⟨⟨over.hom_mk (inv ((forget X).map f))
           ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm),
         by tidy⟩⟩
@@ -226,11 +223,12 @@ If `k` is a monomorphism, then `k.left` is a monomorphism. In other words, `over
 monomorphisms.
 The converse of `category_theory.over.mono_of_mono_left`.
 -/
-instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left := by
+instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :=
+  by
   refine' ⟨fun (Y : T) l m a => _⟩
   let l' : mk (m ≫ f.hom) ⟶ f :=
     hom_mk l
-      (by 
+      (by
         dsimp
         rw [← over.w k, reassoc_of a])
   suffices l' = hom_mk m by apply congr_arg comma_morphism.left this
@@ -245,12 +243,12 @@ variable (f : Over X)
 
 /-- Given f : Y ⟶ X, this is the obvious functor from (T/X)/f to T/Y -/
 @[simps]
-def iteratedSliceForward :
-    Over f ⥤ Over f.left where 
+def iteratedSliceForward : Over f ⥤ Over f.left
+    where
   obj α := Over.mk α.Hom.left
   map α β κ :=
     Over.homMk κ.left.left
-      (by 
+      (by
         rw [auto_param_eq]
         rw [← over.w κ]
         rfl)
@@ -258,27 +256,27 @@ def iteratedSliceForward :
 
 /-- Given f : Y ⟶ X, this is the obvious functor from T/Y to (T/X)/f -/
 @[simps]
-def iteratedSliceBackward :
-    Over f.left ⥤
-      Over f where 
+def iteratedSliceBackward : Over f.left ⥤ Over f
+    where
   obj g := mk (homMk g.Hom : mk (g.Hom ≫ f.Hom) ⟶ f)
   map g h α := homMk (homMk α.left (w_assoc α f.Hom)) (OverMorphism.ext (w α))
 #align category_theory.over.iterated_slice_backward CategoryTheory.Over.iteratedSliceBackward
 
 /-- Given f : Y ⟶ X, we have an equivalence between (T/X)/f and T/Y -/
 @[simps]
-def iteratedSliceEquiv :
-    Over f ≌ Over f.left where 
+def iteratedSliceEquiv : Over f ≌ Over f.left
+    where
   Functor := iteratedSliceForward f
   inverse := iteratedSliceBackward f
   unitIso :=
     NatIso.ofComponents (fun g => Over.isoMk (Over.isoMk (Iso.refl _) (by tidy)) (by tidy))
-      fun X Y g => by 
+      fun X Y g => by
       ext
       dsimp
       simp
   counitIso :=
-    NatIso.ofComponents (fun g => Over.isoMk (Iso.refl _) (by tidy)) fun X Y g => by
+    NatIso.ofComponents (fun g => Over.isoMk (Iso.refl _) (by tidy)) fun X Y g =>
+      by
       ext
       dsimp
       simp
@@ -304,8 +302,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 /-- A functor `F : T ⥤ D` induces a functor `over X ⥤ over (F.obj X)` in the obvious way. -/
 @[simps]
-def post (F : T ⥤ D) :
-    Over X ⥤ Over (F.obj X) where 
+def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X)
+    where
   obj Y := mk <| F.map Y.Hom
   map Y₁ Y₂ f :=
     { left := F.map f.left
@@ -323,9 +321,8 @@ def Under (X : T) :=
 #align category_theory.under CategoryTheory.Under
 
 -- Satisfying the inhabited linter
-instance Under.inhabited [Inhabited T] :
-    Inhabited (Under
-        (default : T)) where default :=
+instance Under.inhabited [Inhabited T] : Inhabited (Under (default : T))
+    where default :=
     { right := default
       Hom := 𝟙 _ }
 #align category_theory.under.inhabited CategoryTheory.Under.inhabited
@@ -453,10 +450,8 @@ def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ 
 
 end
 
-instance forget_reflects_iso :
-    ReflectsIsomorphisms
-      (forget
-        X) where reflects Y Z f t :=
+instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
+    where reflects Y Z f t :=
     ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by
         tidy⟩⟩
 #align category_theory.under.forget_reflects_iso CategoryTheory.Under.forget_reflects_iso
@@ -490,11 +485,12 @@ If `k` is a epimorphism, then `k.right` is a epimorphism. In other words, `under
 epimorphisms.
 The converse of `category_theory.under.epi_of_epi_right`.
 -/
-instance epi_right_of_epi {f g : Under X} (k : f ⟶ g) [Epi k] : Epi k.right := by
+instance epi_right_of_epi {f g : Under X} (k : f ⟶ g) [Epi k] : Epi k.right :=
+  by
   refine' ⟨fun (Y : T) l m a => _⟩
   let l' : g ⟶ mk (g.hom ≫ m) :=
     hom_mk l
-      (by 
+      (by
         dsimp
         rw [← under.w k, category.assoc, a, category.assoc])
   suffices l' = hom_mk m by apply congr_arg comma_morphism.right this
@@ -509,8 +505,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 /-- A functor `F : T ⥤ D` induces a functor `under X ⥤ under (F.obj X)` in the obvious way. -/
 @[simps]
-def post {X : T} (F : T ⥤ D) :
-    Under X ⥤ Under (F.obj X) where 
+def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X)
+    where
   obj Y := mk <| F.map Y.Hom
   map Y₁ Y₂ f :=
     { right := F.map f.right

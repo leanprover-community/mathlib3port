@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.cone
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,20 +71,22 @@ open Ring
 #print StrictOrderedRing.mkOfPositiveCone /-
 /-- Construct a `strict_ordered_ring` by designating a positive cone in an existing `ring`. -/
 def StrictOrderedRing.mkOfPositiveCone (C : PositiveCone α) : StrictOrderedRing α :=
-  { ‹Ring α›, OrderedAddCommGroup.mkOfPositiveCone C.toPositiveCone with
+  { ‹Ring α›,
+    OrderedAddCommGroup.mkOfPositiveCone
+      C.toPositiveCone with
     exists_pair_ne := ⟨0, 1, fun h => by simpa [← h, C.pos_iff] using C.one_pos⟩
-    zero_le_one := by 
+    zero_le_one := by
       change C.nonneg (1 - 0)
       convert C.one_nonneg
       simp
-    mul_pos := fun x y xp yp => by 
+    mul_pos := fun x y xp yp => by
       change C.pos (x * y - 0)
       convert
         C.mul_pos x y
-          (by 
+          (by
             convert xp
             simp)
-          (by 
+          (by
             convert yp
             simp)
       simp }

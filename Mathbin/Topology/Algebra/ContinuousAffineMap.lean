@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_affine_map
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ theorem to_fun_eq_coe (f : P →A[R] Q) : f.toFun = ⇑f :=
   rfl
 #align continuous_affine_map.to_fun_eq_coe ContinuousAffineMap.to_fun_eq_coe
 
-theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn := by
+theorem coe_injective : @Function.Injective (P →A[R] Q) (P → Q) coeFn :=
+  by
   rintro ⟨⟨f, ⟨f', hf₁, hf₂⟩, hf₀⟩, hf₁⟩ ⟨⟨g, ⟨g', hg₁, hg₂⟩, hg₀⟩, hg₁⟩ h
   have : f = g ∧ f' = g' := by simpa only using AffineMap.coe_fn_injective h
   congr
@@ -75,7 +76,7 @@ theorem ext {f g : P →A[R] Q} (h : ∀ x, f x = g x) : f = g :=
 #align continuous_affine_map.ext ContinuousAffineMap.ext
 
 theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by 
+  ⟨by
     rintro rfl x
     rfl, ext⟩
 #align continuous_affine_map.ext_iff ContinuousAffineMap.ext_iff
@@ -116,13 +117,13 @@ theorem coe_to_continuous_map (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f 
 #align continuous_affine_map.coe_to_continuous_map ContinuousAffineMap.coe_to_continuous_map
 
 theorem to_affine_map_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
-  by 
+  by
   ext a
   exact AffineMap.congr_fun h a
 #align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affine_map_injective
 
 theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
-  by 
+  by
   ext a
   exact ContinuousMap.congr_fun h a
 #align
@@ -144,7 +145,8 @@ theorem coe_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P → Q) 
 #align continuous_affine_map.coe_mk ContinuousAffineMap.coe_mk
 
 @[simp]
-theorem mk_coe (f : P →A[R] Q) (h) : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f := by
+theorem mk_coe (f : P →A[R] Q) (h) : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f :=
+  by
   ext
   rfl
 #align continuous_affine_map.mk_coe ContinuousAffineMap.mk_coe
@@ -158,7 +160,7 @@ variable (R P)
 
 /-- The constant map is a continuous affine map. -/
 def const (q : Q) : P →A[R] Q :=
-  { AffineMap.const R P q with 
+  { AffineMap.const R P q with
     toFun := AffineMap.const R P q
     cont := continuous_const }
 #align continuous_affine_map.const ContinuousAffineMap.const
@@ -218,9 +220,8 @@ variable [Monoid S] [DistribMulAction S W] [SMulCommClass R S W]
 
 variable [HasContinuousConstSmul S W]
 
-instance :
-    HasSmul S
-      (P →A[R] W) where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
+instance : HasSmul S (P →A[R] W)
+    where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
 
 @[norm_cast, simp]
 theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
@@ -231,8 +232,8 @@ theorem smul_apply (t : S) (f : P →A[R] W) (x : P) : (t • f) x = t • f x :
   rfl
 #align continuous_affine_map.smul_apply ContinuousAffineMap.smul_apply
 
-instance [DistribMulAction Sᵐᵒᵖ W] [IsCentralScalar S W] :
-    IsCentralScalar S (P →A[R] W) where op_smul_eq_smul t f := ext fun _ => op_smul_eq_smul _ _
+instance [DistribMulAction Sᵐᵒᵖ W] [IsCentralScalar S W] : IsCentralScalar S (P →A[R] W)
+    where op_smul_eq_smul t f := ext fun _ => op_smul_eq_smul _ _
 
 instance : MulAction S (P →A[R] W) :=
   Function.Injective.mulAction _ coe_injective coe_smul
@@ -241,10 +242,8 @@ end MulAction
 
 variable [TopologicalAddGroup W]
 
-instance :
-    Add
-      (P →A[R]
-        W) where add f g :=
+instance : Add (P →A[R] W)
+    where add f g :=
     { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
 
 @[norm_cast, simp]
@@ -256,10 +255,8 @@ theorem add_apply (f g : P →A[R] W) (x : P) : (f + g) x = f x + g x :=
   rfl
 #align continuous_affine_map.add_apply ContinuousAffineMap.add_apply
 
-instance :
-    Sub
-      (P →A[R]
-        W) where sub f g :=
+instance : Sub (P →A[R] W)
+    where sub f g :=
     { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
 
 @[norm_cast, simp]
@@ -308,8 +305,8 @@ variable [AddCommGroup V] [Module R V] [TopologicalSpace V]
 variable [AddCommGroup W] [Module R W] [TopologicalSpace W]
 
 /-- A continuous linear map can be regarded as a continuous affine map. -/
-def toContinuousAffineMap (f : V →L[R] W) :
-    V →A[R] W where 
+def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W
+    where
   toFun := f
   linear := f
   map_vadd' := by simp

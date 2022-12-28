@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.gauss_lemma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,8 @@ variable {f : R[X]} (hf : f.IsPrimitive)
 
 include hinj hf
 
-theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) := by
+theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) :=
+  by
   refine' ⟨(map_ring_hom φ).is_unit_map, fun h => _⟩
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   have hdeg := degree_C u.ne_zero
@@ -59,7 +60,8 @@ theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (
   polynomial.is_primitive.is_unit_iff_is_unit_map_of_injective Polynomial.IsPrimitive.is_unit_iff_is_unit_map_of_injective
 
 theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) :
-    Irreducible f := by
+    Irreducible f :=
+  by
   refine' ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ) h), _⟩
   intro a b h
   rcases h_irr.is_unit_or_is_unit (by rw [h, Polynomial.map_mul]) with (hu | hu)
@@ -85,7 +87,8 @@ theorem IsPrimitive.is_unit_iff_is_unit_map {p : R[X]} (hp : p.IsPrimitive) :
 open IsLocalization
 
 theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]} (h0 : p ≠ 0)
-    (h : IsUnit (integerNormalization R⁰ p).primPart) : IsUnit p := by
+    (h : IsUnit (integerNormalization R⁰ p).primPart) : IsUnit p :=
+  by
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ p
   rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hc
@@ -106,7 +109,8 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]}
 /-- **Gauss's Lemma** states that a primitive polynomial is irreducible iff it is irreducible in the
   fraction field. -/
 theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp : p.IsPrimitive) :
-    Irreducible p ↔ Irreducible (p.map (algebraMap R K)) := by
+    Irreducible p ↔ Irreducible (p.map (algebraMap R K)) :=
+  by
   refine'
     ⟨fun hi => ⟨fun h => hi.not_unit (hp.is_unit_iff_is_unit_map.2 h), fun a b hab => _⟩,
       hp.irreducible_of_irreducible_map_of_injective (IsFractionRing.injective _ _)⟩
@@ -116,7 +120,8 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
   rw [mem_non_zero_divisors_iff_ne_zero] at c0 d0
   have hcd0 : c * d ≠ 0 := mul_ne_zero c0 d0
   rw [Ne.def, ← C_eq_zero] at hcd0
-  have h1 : C c * C d * p = integer_normalization R⁰ a * integer_normalization R⁰ b := by
+  have h1 : C c * C d * p = integer_normalization R⁰ a * integer_normalization R⁰ b :=
+    by
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _) _
     rw [Polynomial.map_mul, Polynomial.map_mul, Polynomial.map_mul, hc, hd, map_C, map_C, hab]
     ring
@@ -133,7 +138,7 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
     mul_assoc, ← mul_assoc, ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ←
     mul_assoc (C ↑u)] at h1
   have h0 : a ≠ 0 ∧ b ≠ 0 := by
-    classical 
+    classical
       rw [Ne.def, Ne.def, ← Decidable.not_or_iff_and_not, ← mul_eq_zero, ← hab]
       intro con
       apply hp.ne_zero (map_injective (algebraMap R K) (IsFractionRing.injective _ _) _)
@@ -149,11 +154,12 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
   polynomial.is_primitive.irreducible_iff_irreducible_map_fraction_map Polynomial.IsPrimitive.irreducible_iff_irreducible_map_fraction_map
 
 theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.IsPrimitive)
-    (hq : q.IsPrimitive) (h_dvd : p.map (algebraMap R K) ∣ q.map (algebraMap R K)) : p ∣ q := by
+    (hq : q.IsPrimitive) (h_dvd : p.map (algebraMap R K) ∣ q.map (algebraMap R K)) : p ∣ q :=
+  by
   rcases h_dvd with ⟨r, hr⟩
   obtain ⟨⟨s, s0⟩, hs⟩ := integer_normalization_map_to_map R⁰ r
   rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hs
-  have h : p ∣ q * C s := by 
+  have h : p ∣ q * C s := by
     use integer_normalization R⁰ r
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _)
     rw [Polynomial.map_mul, Polynomial.map_mul, hs, hr, mul_assoc, mul_comm r]

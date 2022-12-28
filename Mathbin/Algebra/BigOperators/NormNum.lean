@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.norm_num
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,7 +213,8 @@ theorem Finset.mk_congr {α : Type _} {xs xs' : Multiset α} (h : xs = xs') (nd 
 theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α) (xs : Finset α)
     {xs' : List α} (h : x ∈ xs') (nd_xs : xs'.Nodup)
     (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
-    insert x xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs) := by
+    insert x xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs) :=
+  by
   have h : x ∈ xs := by simpa [hxs'] using h
   rw [Finset.insert_eq_of_mem h, hxs']
 #align
@@ -224,7 +225,8 @@ theorem Finset.insert_eq_coe_list_of_mem {α : Type _} [DecidableEq α] (x : α)
 theorem Finset.insert_eq_coe_list_cons {α : Type _} [DecidableEq α] (x : α) (xs : Finset α)
     {xs' : List α} (h : x ∉ xs') (nd_xs : xs'.Nodup) (nd_xxs : (x::xs').Nodup)
     (hxs' : xs = Finset.mk (↑xs') (Multiset.coe_nodup.mpr nd_xs)) :
-    insert x xs = Finset.mk (↑(x::xs')) (Multiset.coe_nodup.mpr nd_xxs) := by
+    insert x xs = Finset.mk (↑(x::xs')) (Multiset.coe_nodup.mpr nd_xxs) :=
+  by
   have h : x ∉ xs := by simpa [hxs'] using h
   rw [← Finset.val_inj, Finset.insert_val_of_not_mem h, hxs']
   simp only [Multiset.cons_coe]

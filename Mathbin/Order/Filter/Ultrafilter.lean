@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.ultrafilter
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,16 +138,16 @@ theorem diff_mem_iff (f : Ultrafilter α) : s \ t ∈ f ↔ s ∈ f ∧ t ∉ f 
 
 /-- If `sᶜ ∉ f ↔ s ∈ f`, then `f` is an ultrafilter. The other implication is given by
 `ultrafilter.compl_not_mem_iff`.  -/
-def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) :
-    Ultrafilter α where 
+def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultrafilter α
+    where
   toFilter := f
   ne_bot' := ⟨fun hf => by simpa [hf] using h⟩
   le_of_le g hg hgf s hs := (h s).1 fun hsc => compl_not_mem hs (hgf hsc)
 #align ultrafilter.of_compl_not_mem_iff Ultrafilter.ofComplNotMemIff
 
 /-- If `f : filter α` is an atom, then it is an ultrafilter. -/
-def ofAtom (f : Filter α) (hf : IsAtom f) :
-    Ultrafilter α where 
+def ofAtom (f : Filter α) (hf : IsAtom f) : Ultrafilter α
+    where
   toFilter := f
   ne_bot' := ⟨hf.1⟩
   le_of_le g hg := (is_atom_iff.1 hf).2 g hg.Ne
@@ -239,10 +239,10 @@ theorem map_map (f : Ultrafilter α) (m : α → β) (n : β → γ) : (f.map m)
 /-- The pullback of an ultrafilter along an injection whose range is large with respect to the given
 ultrafilter. -/
 def comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (large : Set.range m ∈ u) :
-    Ultrafilter α where 
+    Ultrafilter α where
   toFilter := comap m u
   ne_bot' := u.ne_bot'.comap_of_range_mem large
-  le_of_le g hg hgu := by 
+  le_of_le g hg hgu := by
     skip
     simp only [← u.unique (map_le_iff_le_comap.2 hgu), comap_map inj, le_rfl]
 #align ultrafilter.comap Ultrafilter.comap
@@ -261,9 +261,10 @@ theorem coe_comap {m : α → β} (u : Ultrafilter β) (inj : Injective m) (larg
 
 @[simp]
 theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := injective_id)
-    (h₁ : range id ∈ f := by 
-      rw [range_id]
-      exact univ_mem) :
+    (h₁ : range id ∈ f :=
+      (by
+        rw [range_id]
+        exact univ_mem)) :
     f.comap h₀ h₁ = f :=
   coe_injective comap_id
 #align ultrafilter.comap_id Ultrafilter.comap_id
@@ -272,9 +273,10 @@ theorem comap_id (f : Ultrafilter α) (h₀ : Injective (id : α → α) := inje
 theorem comap_comap (f : Ultrafilter γ) {m : α → β} {n : β → γ} (inj₀ : Injective n)
     (large₀ : range n ∈ f) (inj₁ : Injective m) (large₁ : range m ∈ f.comap inj₀ large₀)
     (inj₂ : Injective (n ∘ m) := inj₀.comp inj₁)
-    (large₂ : range (n ∘ m) ∈ f := by 
-      rw [range_comp]
-      exact image_mem_of_mem_comap large₀ large₁) :
+    (large₂ : range (n ∘ m) ∈ f :=
+      (by
+        rw [range_comp]
+        exact image_mem_of_mem_comap large₀ large₁)) :
     (f.comap inj₀ large₀).comap inj₁ large₁ = f.comap inj₂ large₂ :=
   coe_injective comap_comap
 #align ultrafilter.comap_comap Ultrafilter.comap_comap
@@ -316,7 +318,8 @@ instance [Inhabited α] : Inhabited (Ultrafilter α) :=
 instance [Nonempty α] : Nonempty (Ultrafilter α) :=
   Nonempty.map pure inferInstance
 
-theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, f = pure x := by
+theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, f = pure x :=
+  by
   rw [← bUnion_of_singleton s] at h'
   rcases(Ultrafilter.finite_bUnion_mem_iff h).mp h' with ⟨a, has, haf⟩
   exact ⟨a, has, eq_of_le (Filter.le_pure_iff.2 haf)⟩
@@ -354,8 +357,8 @@ section
 
 attribute [local instance] Filter.monad Filter.is_lawful_monad
 
-instance is_lawful_monad :
-    LawfulMonad Ultrafilter where 
+instance is_lawful_monad : LawfulMonad Ultrafilter
+    where
   id_map α f := coe_injective (id_map f.1)
   pure_bind α β a f := coe_injective (pure_bind a (coe ∘ f))
   bind_assoc α β γ f m₁ m₂ := coe_injective (filter_eq rfl)
@@ -427,7 +430,8 @@ theorem Iic_pure (a : α) : Iic (pure a : Filter α) = {⊥, pure a} :=
   is_atom_pure.Iic_eq
 #align filter.Iic_pure Filter.Iic_pure
 
-theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g := by
+theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g :=
+  by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra fun hf => _⟩
   set g : Filter ↥(sᶜ) := comap coe f
   haveI : ne_bot g := comap_ne_bot_iff_compl_range.2 (by simpa [compl_set_of] )
@@ -455,7 +459,8 @@ theorem exists_ultrafilter_iff {f : Filter α} : (∃ u : Ultrafilter α, ↑u �
 #align filter.exists_ultrafilter_iff Filter.exists_ultrafilter_iff
 
 theorem forall_ne_bot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Monotone p) :
-    (∀ f : Filter α, NeBot f → f ≤ g → p f) ↔ ∀ f : Ultrafilter α, ↑f ≤ g → p f := by
+    (∀ f : Filter α, NeBot f → f ≤ g → p f) ↔ ∀ f : Ultrafilter α, ↑f ≤ g → p f :=
+  by
   refine' ⟨fun H f hf => H f f.ne_bot hf, _⟩
   intro H f hf hfg
   exact hp (of_le f) (H _ ((of_le f).trans hfg))
@@ -518,14 +523,16 @@ noncomputable def ofComapInfPrincipal (h : m '' s ∈ g) : Ultrafilter α :=
   @of _ (Filter.comap m g ⊓ 𝓟 s) (comap_inf_principal_ne_bot_of_image_mem h)
 #align ultrafilter.of_comap_inf_principal Ultrafilter.ofComapInfPrincipal
 
-theorem of_comap_inf_principal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h := by
+theorem of_comap_inf_principal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h :=
+  by
   let f := Filter.comap m g ⊓ 𝓟 s
   haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
   have : s ∈ f := mem_inf_of_right (mem_principal_self s)
   exact le_def.mp (of_le _) s this
 #align ultrafilter.of_comap_inf_principal_mem Ultrafilter.of_comap_inf_principal_mem
 
-theorem of_comap_inf_principal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal h).map m = g := by
+theorem of_comap_inf_principal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal h).map m = g :=
+  by
   let f := Filter.comap m g ⊓ 𝓟 s
   haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
   apply eq_of_le

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.simple
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ theorem is_iso_of_mono_of_nonzero {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w
 #align category_theory.is_iso_of_mono_of_nonzero CategoryTheory.is_iso_of_mono_of_nonzero
 
 theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
-  { mono_is_iso_iff_nonzero := fun Z f m => by 
+  {
+    mono_is_iso_iff_nonzero := fun Z f m => by
       skip
       haveI : mono (f ≫ i.hom) := mono_comp _ _
       constructor
@@ -73,7 +74,8 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
         subst w
         simpa using j
       · intro h
-        have j : is_iso (f ≫ i.hom) := by
+        have j : is_iso (f ≫ i.hom) :=
+          by
           apply is_iso_of_mono_of_nonzero
           intro w
           apply h
@@ -88,7 +90,7 @@ theorem Simple.iff_of_iso {X Y : C} (i : X ≅ Y) : Simple X ↔ Simple Y :=
 
 theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f]
     (w : f ≠ 0) : kernel.ι f = 0 := by
-  classical 
+  classical
     by_contra
     haveI := is_iso_of_mono_of_nonzero h
     exact w (eq_zero_of_epi_kernel f)
@@ -100,7 +102,7 @@ theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [H
 (assuming `f` has an image, and `C` has equalizers).
 -/
 theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X ⟶ Y} [HasImage f]
-    (w : f ≠ 0) : Epi f := by 
+    (w : f ≠ 0) : Epi f := by
   rw [← image.fac f]
   haveI : is_iso (image.ι f) := is_iso_of_mono_of_nonzero fun h => w (eq_zero_of_image_eq_zero h)
   apply epi_comp
@@ -108,7 +110,7 @@ theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X �
 
 theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f]
     (w : IsIso f → False) : f = 0 := by
-  classical 
+  classical
     by_contra
     exact w (is_iso_of_mono_of_nonzero h)
 #align category_theory.mono_to_simple_zero_of_not_iso CategoryTheory.mono_to_simple_zero_of_not_iso
@@ -151,7 +153,7 @@ variable [Abelian C]
 theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso f ↔ f ≠ 0) :
     Simple X :=
   ⟨fun Y f I => by
-    classical 
+    classical
       fconstructor
       · intros
         have hx := cokernel.π_of_epi f
@@ -175,7 +177,7 @@ theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w :
 
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
     cokernel.π f = 0 := by
-  classical 
+  classical
     by_contra h
     haveI := is_iso_of_epi_of_nonzero h
     exact w (eq_zero_of_mono_cokernel f)
@@ -184,7 +186,7 @@ theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w
 
 theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f]
     (w : IsIso f → False) : f = 0 := by
-  classical 
+  classical
     by_contra
     exact w (is_iso_of_epi_of_nonzero h)
 #align
@@ -198,7 +200,8 @@ variable [Preadditive C] [HasBinaryBiproducts C]
 
 -- There are another three potential variations of this lemma,
 -- but as any one suffices to prove `indecomposable_of_simple` we will not give them all.
-theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X ⊞ Y) ↔ IsZero Y := by
+theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X ⊞ Y) ↔ IsZero Y :=
+  by
   rw [biprod.is_iso_inl_iff_id_eq_fst_comp_inl, ← biprod.total, add_right_eq_self]
   constructor
   · intro h
@@ -211,7 +214,8 @@ theorem Biprod.is_iso_inl_iff_is_zero (X Y : C) : IsIso (biprod.inl : X ⟶ X �
 
 /-- Any simple object in a preadditive category is indecomposable. -/
 theorem indecomposableOfSimple (X : C) [Simple X] : Indecomposable X :=
-  ⟨Simple.not_is_zero X, fun Y Z i => by
+  ⟨Simple.not_is_zero X, fun Y Z i =>
+    by
     refine' or_iff_not_imp_left.mpr fun h => _
     rw [is_zero.iff_is_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z)] at h
     change biprod.inl ≠ 0 at h
@@ -234,10 +238,9 @@ open Subobject
 instance {X : C} [Simple X] : Nontrivial (Subobject X) :=
   nontrivial_of_not_is_zero (Simple.not_is_zero X)
 
-instance {X : C} [Simple X] :
-    IsSimpleOrder
-      (Subobject
-        X) where eq_bot_or_eq_top := by
+instance {X : C} [Simple X] : IsSimpleOrder (Subobject X)
+    where eq_bot_or_eq_top :=
+    by
     rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : mono f⟩⟩; skip
     change mk f = ⊥ ∨ mk f = ⊤
     by_cases h : f = 0
@@ -245,7 +248,8 @@ instance {X : C} [Simple X] :
     · refine' Or.inr ((is_iso_iff_mk_eq_top _).mp ((simple.mono_is_iso_iff_nonzero f).mpr h))
 
 /-- If `X` has subobject lattice `{⊥, ⊤}`, then `X` is simple. -/
-theorem simple_of_is_simple_order_subobject (X : C) [IsSimpleOrder (Subobject X)] : Simple X := by
+theorem simple_of_is_simple_order_subobject (X : C) [IsSimpleOrder (Subobject X)] : Simple X :=
+  by
   constructor; intros ; constructor
   · intro i
     rw [subobject.is_iso_iff_mk_eq_top] at i
@@ -262,9 +266,9 @@ theorem simple_of_is_simple_order_subobject (X : C) [IsSimpleOrder (Subobject X)
 
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
 theorem simple_iff_subobject_is_simple_order (X : C) : Simple X ↔ IsSimpleOrder (Subobject X) :=
-  ⟨by 
+  ⟨by
     intro h
-    infer_instance, by 
+    infer_instance, by
     intro h
     exact simple_of_is_simple_order_subobject X⟩
 #align

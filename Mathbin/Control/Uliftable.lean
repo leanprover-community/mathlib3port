@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.uliftable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,10 +113,8 @@ instance : Uliftable id id where congr α β F := F
 
 /-- for specific state types, this function helps to create a uliftable instance -/
 def StateT.uliftable' {m : Type u₀ → Type v₀} {m' : Type u₁ → Type v₁} [Uliftable m m']
-    (F : s ≃ s') :
-    Uliftable (StateT s m)
-      (StateT s'
-        m') where congr α β G :=
+    (F : s ≃ s') : Uliftable (StateT s m) (StateT s' m')
+    where congr α β G :=
     StateT.equiv <| (Equiv.piCongr F) fun _ => Uliftable.congr _ _ <| Equiv.prodCongr G F
 #align state_t.uliftable' StateTₓ.uliftable'
 
@@ -125,17 +123,16 @@ instance {m m'} [Uliftable m m'] : Uliftable (StateT s m) (StateT (ULift s) m') 
 
 /-- for specific reader monads, this function helps to create a uliftable instance -/
 def ReaderT.uliftable' {m m'} [Uliftable m m'] (F : s ≃ s') :
-    Uliftable (ReaderT s m)
-      (ReaderT s'
-        m') where congr α β G := ReaderT.equiv <| (Equiv.piCongr F) fun _ => Uliftable.congr _ _ G
+    Uliftable (ReaderT s m) (ReaderT s' m')
+    where congr α β G := ReaderT.equiv <| (Equiv.piCongr F) fun _ => Uliftable.congr _ _ G
 #align reader_t.uliftable' ReaderTₓ.uliftable'
 
 instance {m m'} [Uliftable m m'] : Uliftable (ReaderT s m) (ReaderT (ULift s) m') :=
   ReaderT.uliftable' Equiv.ulift.symm
 
 /-- for specific continuation passing monads, this function helps to create a uliftable instance -/
-def ContT.uliftable' {m m'} [Uliftable m m'] (F : r ≃ r') :
-    Uliftable (ContT r m) (ContT r' m') where congr α β := ContT.equiv (Uliftable.congr _ _ F)
+def ContT.uliftable' {m m'} [Uliftable m m'] (F : r ≃ r') : Uliftable (ContT r m) (ContT r' m')
+    where congr α β := ContT.equiv (Uliftable.congr _ _ F)
 #align cont_t.uliftable' ContT.uliftable'
 
 instance {s m m'} [Uliftable m m'] : Uliftable (ContT s m) (ContT (ULift s) m') :=
@@ -143,9 +140,8 @@ instance {s m m'} [Uliftable m m'] : Uliftable (ContT s m) (ContT (ULift s) m') 
 
 /-- for specific writer monads, this function helps to create a uliftable instance -/
 def WriterT.uliftable' {m m'} [Uliftable m m'] (F : w ≃ w') :
-    Uliftable (WriterT w m)
-      (WriterT w'
-        m') where congr α β G := WriterT.equiv <| Uliftable.congr _ _ <| Equiv.prodCongr G F
+    Uliftable (WriterT w m) (WriterT w' m')
+    where congr α β G := WriterT.equiv <| Uliftable.congr _ _ <| Equiv.prodCongr G F
 #align writer_t.uliftable' WriterTₓ.uliftable'
 
 instance {m m'} [Uliftable m m'] : Uliftable (WriterT s m) (WriterT (ULift s) m') :=

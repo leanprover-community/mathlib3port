@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.grading
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,8 @@ theorem GradedAlgebra.ι_apply (m : M) :
   rfl
 #align exterior_algebra.graded_algebra.ι_apply ExteriorAlgebra.GradedAlgebra.ι_apply
 
-theorem GradedAlgebra.ι_sq_zero (m : M) : GradedAlgebra.ι R M m * GradedAlgebra.ι R M m = 0 := by
+theorem GradedAlgebra.ι_sq_zero (m : M) : GradedAlgebra.ι R M m * GradedAlgebra.ι R M m = 0 :=
+  by
   rw [graded_algebra.ι_apply, DirectSum.of_mul_of]
   refine' dfinsupp.single_eq_zero.mpr (Subtype.ext <| ι_sq_zero _)
 #align exterior_algebra.graded_algebra.ι_sq_zero ExteriorAlgebra.GradedAlgebra.ι_sq_zero
@@ -61,11 +62,11 @@ theorem GradedAlgebra.lift_ι_eq (i : ℕ)
     (x : ((ι R : M →ₗ[R] ExteriorAlgebra R M).range ^ i : Submodule R (ExteriorAlgebra R M))) :
     GradedAlgebra.liftι R M x =
       DirectSum.of (fun i => ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M))) i x :=
-  by 
+  by
   cases' x with x hx
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
   refine'
-    Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
+    Submodule.powInductionOnLeft' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
       (fun m hm i x hx ih => _) hx
   · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
     rfl
@@ -84,7 +85,7 @@ instance gradedAlgebra :
     (-- while not necessary, the `by apply` makes this elaborate faster
     by apply graded_algebra.lift_ι R M)
     (-- the proof from here onward is identical to the `tensor_algebra` case
-    by 
+    by
       ext m
       dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
         AlgHom.id_apply, graded_algebra.lift_ι]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.partition.equipartition
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ theorem IsEquipartition.average_le_card_part (hP : P.IsEquipartition) (ht : t �
   finpartition.is_equipartition.average_le_card_part Finpartition.IsEquipartition.average_le_card_part
 
 theorem IsEquipartition.card_part_le_average_add_one (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
-    t.card ≤ s.card / P.parts.card + 1 := by
+    t.card ≤ s.card / P.parts.card + 1 :=
+  by
   rw [← P.sum_card_parts]
   exact equitable_on.le_add_one hP ht
 #align
@@ -82,7 +83,8 @@ theorem topIsEquipartition : (⊤ : Finpartition s).IsEquipartition :=
   (parts_top_subsingleton _).IsEquipartition
 #align finpartition.top_is_equipartition Finpartition.topIsEquipartition
 
-theorem indiscreteIsEquipartition {hs : s ≠ ∅} : (indiscrete hs).IsEquipartition := by
+theorem indiscreteIsEquipartition {hs : s ≠ ∅} : (indiscrete hs).IsEquipartition :=
+  by
   rw [is_equipartition, indiscrete_parts, coe_singleton]
   exact Set.equitable_on_singleton s _
 #align finpartition.indiscrete_is_equipartition Finpartition.indiscreteIsEquipartition

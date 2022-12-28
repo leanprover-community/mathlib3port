@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.monoidal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,8 +53,8 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory.{v} C]
 This isn't an instance because it's not usually how we want to construct internal homs,
 we'll usually prove all objects are closed uniformly.
 -/
-def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) :
-    Closed (X ⊗ Y) where isAdj := by 
+def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) : Closed (X ⊗ Y)
+    where isAdj := by
     haveI := hX.is_adj
     haveI := hY.is_adj
     exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
@@ -64,8 +64,8 @@ def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) :
 This isn't an instance because most of the time we'll prove closedness for all objects at once,
 rather than just for this one.
 -/
-def unitClosed :
-    Closed (𝟙_ C) where isAdj :=
+def unitClosed : Closed (𝟙_ C)
+    where isAdj :=
     { right := 𝟭 C
       adj :=
         Adjunction.mkOfHomEquiv
@@ -74,7 +74,8 @@ def unitClosed :
                 invFun := fun a => (leftUnitor X).Hom ≫ a
                 left_inv := by tidy
                 right_inv := by tidy }
-            hom_equiv_naturality_left_symm' := fun X' X Y f g => by
+            hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+              by
               dsimp
               rw [left_unitor_naturality_assoc] } }
 #align category_theory.unit_closed CategoryTheory.unitClosed
@@ -266,7 +267,8 @@ theorem uncurry_id_eq_ev : uncurry (𝟙 (A ⟶[C] X)) = (ihom.ev A).app X := by
   category_theory.monoidal_closed.uncurry_id_eq_ev CategoryTheory.MonoidalClosed.uncurry_id_eq_ev
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem curry_id_eq_coev : curry (𝟙 _) = (ihom.coev A).app X := by
+theorem curry_id_eq_coev : curry (𝟙 _) = (ihom.coev A).app X :=
+  by
   rw [curry_eq, (ihom A).map_id (A ⊗ _)]
   apply comp_id
 #align
@@ -307,7 +309,8 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) :
   category_theory.monoidal_closed.coev_app_comp_pre_app CategoryTheory.MonoidalClosed.coev_app_comp_pre_app
 
 @[simp]
-theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ := by
+theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ :=
+  by
   simp only [pre, Functor.map_id]
   dsimp
   simp
@@ -328,8 +331,8 @@ end Pre
 
 /-- The internal hom functor given by the monoidal closed structure. -/
 @[simps]
-def internalHom [MonoidalClosed C] :
-    Cᵒᵖ ⥤ C ⥤ C where 
+def internalHom [MonoidalClosed C] : Cᵒᵖ ⥤ C ⥤ C
+    where
   obj X := ihom X.unop
   map X Y f := pre f.unop
 #align category_theory.monoidal_closed.internal_hom CategoryTheory.MonoidalClosed.internalHom
@@ -340,10 +343,10 @@ variable {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D]
 
 /-- Transport the property of being monoidal closed across a monoidal equivalence of categories -/
 noncomputable def ofEquiv (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor]
-    [h : MonoidalClosed D] :
-    MonoidalClosed
-      C where closed' X :=
-    { isAdj := by 
+    [h : MonoidalClosed D] : MonoidalClosed C
+    where closed' X :=
+    {
+      isAdj := by
         haveI q : closed (F.to_functor.obj X) := inferInstance
         haveI : is_left_adjoint (tensor_left (F.to_functor.obj X)) := q.is_adj
         have i := comp_inv_iso (monoidal_functor.comm_tensor_left F X)

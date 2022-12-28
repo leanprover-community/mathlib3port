@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,9 +86,8 @@ include dec_ι
 
 /-- `mk β s x` is the element of `⨁ i, β i` that is zero outside `s`
 and has coefficient `x i` for `i` in `s`. -/
-def mk (s : Finset ι) :
-    (∀ i : (↑s : Set ι), β i.1) →+
-      ⨁ i, β i where 
+def mk (s : Finset ι) : (∀ i : (↑s : Set ι), β i.1) →+ ⨁ i, β i
+    where
   toFun := Dfinsupp.mk s
   map_add' _ _ := Dfinsupp.mk_add
   map_zero' := Dfinsupp.mk_zero
@@ -142,7 +141,7 @@ theorem of_injective (i : ι) : Function.Injective (of β i) :=
 @[elab_as_elim]
 protected theorem induction_on {C : (⨁ i, β i) → Prop} (x : ⨁ i, β i) (H_zero : C 0)
     (H_basic : ∀ (i : ι) (x : β i), C (of β i x)) (H_plus : ∀ x y, C x → C y → C (x + y)) : C x :=
-  by 
+  by
   apply Dfinsupp.induction x H_zero
   intro i b f h1 h2 ih
   solve_by_elim
@@ -182,7 +181,8 @@ theorem to_add_monoid_of (i) (x : β i) : toAddMonoid φ (of β i x) = φ i x :=
   Dfinsupp.lift_add_hom_apply_single φ i x
 #align direct_sum.to_add_monoid_of DirectSum.to_add_monoid_of
 
-theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f := by
+theorem toAddMonoid.unique (f : ⨁ i, β i) : ψ f = toAddMonoid (fun i => ψ.comp (of β i)) f :=
+  by
   congr
   ext
   simp [to_add_monoid, of]
@@ -201,7 +201,8 @@ def fromAddMonoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
 #align direct_sum.from_add_monoid DirectSum.fromAddMonoid
 
 @[simp]
-theorem from_add_monoid_of (i : ι) (f : γ →+ β i) : fromAddMonoid (of _ i f) = (of _ i).comp f := by
+theorem from_add_monoid_of (i : ι) (f : γ →+ β i) : fromAddMonoid (of _ i f) = (of _ i).comp f :=
+  by
   rw [from_add_monoid, to_add_monoid_of]
   rfl
 #align direct_sum.from_add_monoid_of DirectSum.from_add_monoid_of
@@ -237,7 +238,10 @@ instance uniqueOfIsEmpty [IsEmpty ι] : Unique (⨁ i, β i) :=
 /-- The natural equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
 protected def id (M : Type v) (ι : Type _ := PUnit) [AddCommMonoid M] [Unique ι] :
     (⨁ _ : ι, M) ≃+ M :=
-  { DirectSum.toAddMonoid fun _ => AddMonoidHom.id M with
+  {
+    DirectSum.toAddMonoid fun _ =>
+      AddMonoidHom.id
+        M with
     toFun := DirectSum.toAddMonoid fun _ => AddMonoidHom.id M
     invFun := of (fun _ => M) default
     left_inv := fun x =>
@@ -284,9 +288,8 @@ variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMon
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
-noncomputable def sigmaCurry :
-    (⨁ i : Σi, _, δ i.1 i.2) →+
-      ⨁ (i) (j), δ i j where 
+noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j
+    where
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
   map_zero' := Dfinsupp.sigma_curry_zero
   map_add' f g := @Dfinsupp.sigma_curry_add _ _ δ _ f g
@@ -301,9 +304,8 @@ theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
-noncomputable def sigmaUncurry :
-    (⨁ (i) (j), δ i j) →+
-      ⨁ i : Σi, _, δ i.1 i.2 where 
+noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2
+    where
   toFun := Dfinsupp.sigmaUncurry
   map_zero' := Dfinsupp.sigma_uncurry_zero
   map_add' := Dfinsupp.sigma_uncurry_add
@@ -342,7 +344,8 @@ theorem coe_add_monoid_hom_of {M S : Type _} [DecidableEq ι] [AddCommMonoid M] 
 
 theorem coe_of_apply {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
     [AddSubmonoidClass S M] {A : ι → S} (i j : ι) (x : A i) :
-    (of _ i x j : M) = if i = j then x else 0 := by
+    (of _ i x j : M) = if i = j then x else 0 :=
+  by
   obtain rfl | h := Decidable.eq_or_ne i j
   · rw [DirectSum.of_eq_same, if_pos rfl]
   · rw [DirectSum.of_eq_of_ne _ _ _ _ h, if_neg h, ZeroMemClass.coe_zero]
@@ -360,7 +363,8 @@ def IsInternal {M S : Type _} [DecidableEq ι] [AddCommMonoid M] [SetLike S M]
 #align direct_sum.is_internal DirectSum.IsInternal
 
 theorem IsInternal.add_submonoid_supr_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoid M]
-    (A : ι → AddSubmonoid M) (h : IsInternal A) : supᵢ A = ⊤ := by
+    (A : ι → AddSubmonoid M) (h : IsInternal A) : supᵢ A = ⊤ :=
+  by
   rw [AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom, AddMonoidHom.mrange_top_iff_surjective]
   exact Function.Bijective.surjective h
 #align

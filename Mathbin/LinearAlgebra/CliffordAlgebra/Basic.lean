@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Utensil Song
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ open TensorAlgebra
 The Clifford algebra of `M` is defined as the quotient modulo this relation.
 -/
 inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
-  | of (m : M) : rel (ι R m * ι R m) (algebraMap R _ (Q m))
+  | of (m : M) : Rel (ι R m * ι R m) (algebraMap R _ (Q m))
 #align clifford_algebra.rel CliffordAlgebra.Rel
 
 end CliffordAlgebra
@@ -89,7 +89,8 @@ def ι : M →ₗ[R] CliffordAlgebra Q :=
 
 /-- As well as being linear, `ι Q` squares to the quadratic form -/
 @[simp]
-theorem ι_sq_scalar (m : M) : ι Q m * ι Q m = algebraMap R _ (Q m) := by
+theorem ι_sq_scalar (m : M) : ι Q m * ι Q m = algebraMap R _ (Q m) :=
+  by
   erw [← AlgHom.map_mul, RingQuot.mk_alg_hom_rel R (rel.of m), AlgHom.commutes]
   rfl
 #align clifford_algebra.ι_sq_scalar CliffordAlgebra.ι_sq_scalar
@@ -109,23 +110,22 @@ variable (Q)
 from `clifford_algebra Q` to `A`.
 -/
 @[simps symmApply]
-def lift :
-    { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃
-      (CliffordAlgebra Q →ₐ[R]
-        A) where 
+def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A)
+    where
   toFun f :=
     RingQuot.liftAlgHom R
-      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y (h : Rel Q x y) => by
+      ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y (h : Rel Q x y) =>
+        by
         induction h
         rw [AlgHom.commutes, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩
   invFun F :=
     ⟨F.toLinearMap.comp (ι Q), fun m => by
       rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_scalar]⟩
-  left_inv f := by 
+  left_inv f := by
     ext
     simp only [ι, AlgHom.to_linear_map_apply, Function.comp_apply, LinearMap.coe_comp,
       Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
-  right_inv F := by 
+  right_inv F := by
     ext
     simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_apply,
       LinearMap.coe_comp, Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply,
@@ -148,7 +148,8 @@ theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap 
 
 @[simp]
 theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, f m * f m = algebraMap _ _ (Q m))
-    (g : CliffordAlgebra Q →ₐ[R] A) : g.toLinearMap.comp (ι Q) = f ↔ g = lift Q ⟨f, cond⟩ := by
+    (g : CliffordAlgebra Q →ₐ[R] A) : g.toLinearMap.comp (ι Q) = f ↔ g = lift Q ⟨f, cond⟩ :=
+  by
   convert (lift Q).symm_apply_eq
   rw [lift_symm_apply]
   simp only
@@ -156,7 +157,8 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, f m * f m = algebraMa
 
 @[simp]
 theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) :
-    lift Q ⟨g.toLinearMap.comp (ι Q), comp_ι_sq_scalar _⟩ = g := by
+    lift Q ⟨g.toLinearMap.comp (ι Q), comp_ι_sq_scalar _⟩ = g :=
+  by
   convert (lift Q).apply_symm_apply g
   rw [lift_symm_apply]
   rfl
@@ -165,7 +167,8 @@ theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) :
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : CliffordAlgebra Q →ₐ[R] A} :
-    f.toLinearMap.comp (ι Q) = g.toLinearMap.comp (ι Q) → f = g := by
+    f.toLinearMap.comp (ι Q) = g.toLinearMap.comp (ι Q) → f = g :=
+  by
   intro h
   apply (lift Q).symm.Injective
   rw [lift_symm_apply, lift_symm_apply]
@@ -193,7 +196,8 @@ theorem induction {C : CliffordAlgebra Q → Prop}
   let of : { f : M →ₗ[R] s // ∀ m, f m * f m = algebraMap _ _ (Q m) } :=
     ⟨(ι Q).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq <| ι_sq_scalar Q m⟩
   -- the mapping through the subalgebra is the identity
-  have of_id : AlgHom.id R (CliffordAlgebra Q) = s.val.comp (lift Q of) := by
+  have of_id : AlgHom.id R (CliffordAlgebra Q) = s.val.comp (lift Q of) :=
+    by
     ext
     simp [of]
   -- finding a proof is finding an element of the subalgebra
@@ -205,7 +209,8 @@ theorem induction {C : CliffordAlgebra Q → Prop}
 theorem ι_mul_ι_add_swap (a b : M) :
     ι Q a * ι Q b + ι Q b * ι Q a = algebraMap R _ (QuadraticForm.polar Q a b) :=
   calc
-    ι Q a * ι Q b + ι Q b * ι Q a = ι Q (a + b) * ι Q (a + b) - ι Q a * ι Q a - ι Q b * ι Q b := by
+    ι Q a * ι Q b + ι Q b * ι Q a = ι Q (a + b) * ι Q (a + b) - ι Q a * ι Q a - ι Q b * ι Q b :=
+      by
       rw [(ι Q).map_add, mul_add, add_mul, add_mul]
       abel
     _ = algebraMap R _ (Q (a + b)) - algebraMap R _ (Q a) - algebraMap R _ (Q b) := by
@@ -265,7 +270,8 @@ theorem map_apply_ι (f : M₁ →ₗ[R] M₂) (hf) (m : M₁) : map Q₁ Q₂ f
 
 @[simp]
 theorem map_id :
-    (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rfl) = AlgHom.id R (CliffordAlgebra Q₁) := by
+    (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rfl) = AlgHom.id R (CliffordAlgebra Q₁) :=
+  by
   ext m
   exact map_apply_ι _ _ _ _ m
 #align clifford_algebra.map_id CliffordAlgebra.map_id
@@ -273,7 +279,7 @@ theorem map_id :
 @[simp]
 theorem map_comp_map (f : M₂ →ₗ[R] M₃) (hf) (g : M₁ →ₗ[R] M₂) (hg) :
     (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans <| hg m :=
-  by 
+  by
   ext m
   dsimp only [LinearMap.comp_apply, AlgHom.comp_apply, AlgHom.to_linear_map_apply, AlgHom.id_apply]
   rw [map_apply_ι, map_apply_ι, map_apply_ι, LinearMap.comp_apply]
@@ -292,11 +298,13 @@ equivalent. -/
 @[simps apply]
 def equivOfIsometry (e : Q₁.Isometry Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] CliffordAlgebra Q₂ :=
   AlgEquiv.ofAlgHom (map Q₁ Q₂ e e.map_app) (map Q₂ Q₁ e.symm e.symm.map_app)
-    ((map_comp_map _ _ _ _ _ _ _).trans <| by
+    ((map_comp_map _ _ _ _ _ _ _).trans <|
+      by
       convert map_id _ using 2
       ext m
       exact e.to_linear_equiv.apply_symm_apply m)
-    ((map_comp_map _ _ _ _ _ _ _).trans <| by
+    ((map_comp_map _ _ _ _ _ _ _).trans <|
+      by
       convert map_id _ using 2
       ext m
       exact e.to_linear_equiv.symm_apply_apply m)
@@ -310,14 +318,16 @@ theorem equiv_of_isometry_symm (e : Q₁.Isometry Q₂) :
 
 @[simp]
 theorem equiv_of_isometry_trans (e₁₂ : Q₁.Isometry Q₂) (e₂₃ : Q₂.Isometry Q₃) :
-    (equivOfIsometry e₁₂).trans (equivOfIsometry e₂₃) = equivOfIsometry (e₁₂.trans e₂₃) := by
+    (equivOfIsometry e₁₂).trans (equivOfIsometry e₂₃) = equivOfIsometry (e₁₂.trans e₂₃) :=
+  by
   ext x
   exact AlgHom.congr_fun (map_comp_map Q₁ Q₂ Q₃ _ _ _ _) x
 #align clifford_algebra.equiv_of_isometry_trans CliffordAlgebra.equiv_of_isometry_trans
 
 @[simp]
 theorem equiv_of_isometry_refl :
-    (equiv_of_isometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl := by
+    (equiv_of_isometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl :=
+  by
   ext x
   exact AlgHom.congr_fun (map_id Q₁) x
 #align clifford_algebra.equiv_of_isometry_refl CliffordAlgebra.equiv_of_isometry_refl
@@ -327,8 +337,8 @@ end Map
 variable (Q)
 
 /-- If the quadratic form of a vector is invertible, then so is that vector. -/
-def invertibleιOfInvertible (m : M) [Invertible (Q m)] :
-    Invertible (ι Q m) where 
+def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m)
+    where
   invOf := ι Q (⅟ (Q m) • m)
   inv_of_mul_self := by
     rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, invOf_mul_self, map_one]
@@ -338,12 +348,13 @@ def invertibleιOfInvertible (m : M) [Invertible (Q m)] :
 
 /-- For a vector with invertible quadratic form, $v^{-1} = \frac{v}{Q(v)}$ -/
 theorem inv_of_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m) = ι Q (⅟ (Q m) • m) :=
-  by 
+  by
   letI := invertible_ι_of_invertible Q m
   convert (rfl : ⅟ (ι Q m) = _)
 #align clifford_algebra.inv_of_ι CliffordAlgebra.inv_of_ι
 
-theorem is_unit_ι_of_is_unit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) := by
+theorem is_unit_ι_of_is_unit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) :=
+  by
   cases h.nonempty_invertible
   letI := invertible_ι_of_invertible Q m
   exact isUnit_of_invertible (ι Q m)

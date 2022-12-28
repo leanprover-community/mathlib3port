@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.bitraversable.instances
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,12 +107,13 @@ instance IsLawfulBitraversable.flip [IsLawfulBitraversable t] : IsLawfulBitraver
 
 open Bitraversable Functor
 
-instance (priority := 10) Bitraversable.traversable {α} :
-    Traversable (t α) where traverse := @tsnd t _ _
+instance (priority := 10) Bitraversable.traversable {α} : Traversable (t α)
+    where traverse := @tsnd t _ _
 #align bitraversable.traversable Bitraversable.traversable
 
 instance (priority := 10) Bitraversable.isLawfulTraversable [IsLawfulBitraversable t] {α} :
-    IsLawfulTraversable (t α) := by
+    IsLawfulTraversable (t α) :=
+  by
   constructor <;> intros <;> simp [traverse, comp_tsnd, functor_norm]
   · rfl
   · simp [tsnd_eq_snd_id]
@@ -139,7 +140,8 @@ def Bicompl.bitraverse {m} [Applicative m] {α β α' β'} (f : α → m β) (f'
 instance : Bitraversable (bicompl t F G) where bitraverse := @Bicompl.bitraverse t _ F G _ _
 
 instance [IsLawfulTraversable F] [IsLawfulTraversable G] [IsLawfulBitraversable t] :
-    IsLawfulBitraversable (bicompl t F G) := by
+    IsLawfulBitraversable (bicompl t F G) :=
+  by
   constructor <;> intros <;>
     simp [bitraverse, Bicompl.bitraverse, bimap, traverse_id, bitraverse_id_id, comp_bitraverse,
       functor_norm]

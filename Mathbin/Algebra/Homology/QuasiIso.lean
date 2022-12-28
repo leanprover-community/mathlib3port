@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module algebra.homology.quasi_iso
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,15 +44,15 @@ class QuasiIso (f : C ⟶ D) : Prop where
 
 attribute [instance] QuasiIso.is_iso
 
-instance (priority := 100) quasiIsoOfIso (f : C ⟶ D) [IsIso f] :
-    QuasiIso
-      f where IsIso i := by
+instance (priority := 100) quasiIsoOfIso (f : C ⟶ D) [IsIso f] : QuasiIso f
+    where IsIso i :=
+    by
     change is_iso ((homologyFunctor V c i).mapIso (as_iso f)).Hom
     infer_instance
 #align quasi_iso_of_iso quasiIsoOfIso
 
-instance quasiIsoComp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] :
-    QuasiIso (f ≫ g) where IsIso i := by 
+instance quasiIsoComp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] : QuasiIso (f ≫ g)
+    where IsIso i := by
     rw [functor.map_comp]
     infer_instance
 #align quasi_iso_comp quasiIsoComp
@@ -74,7 +74,7 @@ variable {W : Type _} [Category W] [Preadditive W] [HasCokernels W] [HasImages W
 
 /-- An homotopy equivalence is a quasi-isomorphism. -/
 theorem toQuasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : QuasiIso e.Hom :=
-  ⟨fun i => by 
+  ⟨fun i => by
     refine' ⟨⟨(homologyFunctor W c i).map e.inv, _⟩⟩
     simp only [← functor.map_comp, ← (homologyFunctor W c i).map_id]
     constructor <;> apply homology_map_eq_of_homotopy
@@ -82,7 +82,8 @@ theorem toQuasiIso {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) : Quas
 #align homotopy_equiv.to_quasi_iso HomotopyEquiv.toQuasiIso
 
 theorem to_quasi_iso_inv {C D : HomologicalComplex W c} (e : HomotopyEquiv C D) (i : ι) :
-    (@asIso _ _ _ _ _ (e.toQuasiIso.1 i)).inv = (homologyFunctor W c i).map e.inv := by
+    (@asIso _ _ _ _ _ (e.toQuasiIso.1 i)).inv = (homologyFunctor W c i).map e.inv :=
+  by
   symm
   simp only [← iso.hom_comp_eq_id, as_iso_hom, ← functor.map_comp, ← (homologyFunctor W c i).map_id,
     homology_map_eq_of_homotopy e.homotopy_hom_inv_id _]
@@ -113,7 +114,7 @@ noncomputable def toSingle₀CokernelAtZeroIso : cokernel (X.d 1 0) ≅ Y :=
 theorem to_single₀_cokernel_at_zero_iso_hom_eq [hf : QuasiIso f] :
     f.toSingle₀CokernelAtZeroIso.Hom =
       cokernel.desc (X.d 1 0) (f.f 0) (by rw [← f.2 1 0 rfl] <;> exact comp_zero) :=
-  by 
+  by
   ext
   dsimp only [to_single₀_cokernel_at_zero_iso, ChainComplex.homologyZeroIso, homologyOfZeroRight,
     homology.mapIso, ChainComplex.homologyFunctor0Single₀, cokernel.map]
@@ -123,7 +124,8 @@ theorem to_single₀_cokernel_at_zero_iso_hom_eq [hf : QuasiIso f] :
 #align
   homological_complex.hom.to_single₀_cokernel_at_zero_iso_hom_eq HomologicalComplex.Hom.to_single₀_cokernel_at_zero_iso_hom_eq
 
-theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) := by
+theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) :=
+  by
   constructor
   intro Z g h Hgh
   rw [← cokernel.π_desc (X.d 1 0) (f.f 0) (by rw [← f.2 1 0 rfl] <;> exact comp_zero), ←
@@ -131,12 +133,13 @@ theorem to_single₀_epi_at_zero [hf : QuasiIso f] : Epi (f.f 0) := by
   rw [(@cancel_epi _ _ _ _ _ _ (epi_comp _ _) _ _).1 Hgh]
 #align homological_complex.hom.to_single₀_epi_at_zero HomologicalComplex.Hom.to_single₀_epi_at_zero
 
-theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 0) := by
+theorem to_single₀_exact_d_f_at_zero [hf : QuasiIso f] : Exact (X.d 1 0) (f.f 0) :=
+  by
   rw [preadditive.exact_iff_homology_zero]
   have h : X.d 1 0 ≫ f.f 0 = 0 := by
     simp only [← f.2 1 0 rfl, ChainComplex.single₀_obj_X_d, comp_zero]
   refine' ⟨h, Nonempty.intro (homologyIsoKernelDesc _ _ _ ≪≫ _)⟩
-  · suffices is_iso (cokernel.desc _ _ h) by 
+  · suffices is_iso (cokernel.desc _ _ h) by
       haveI := this
       apply kernel.of_mono
     rw [← to_single₀_cokernel_at_zero_iso_hom_eq]
@@ -170,7 +173,7 @@ noncomputable def fromSingle₀KernelAtZeroIso [hf : QuasiIso f] : kernel (X.d 0
 theorem from_single₀_kernel_at_zero_iso_inv_eq [hf : QuasiIso f] :
     f.fromSingle₀KernelAtZeroIso.inv =
       kernel.lift (X.d 0 1) (f.f 0) (by rw [f.2 0 1 rfl] <;> exact zero_comp) :=
-  by 
+  by
   ext
   dsimp only [from_single₀_kernel_at_zero_iso, CochainComplex.homologyZeroIso, homologyOfZeroLeft,
     homology.mapIso, CochainComplex.homologyFunctor0Single₀, kernel.map]
@@ -184,7 +187,8 @@ theorem from_single₀_kernel_at_zero_iso_inv_eq [hf : QuasiIso f] :
 #align
   homological_complex.hom.from_single₀_kernel_at_zero_iso_inv_eq HomologicalComplex.Hom.from_single₀_kernel_at_zero_iso_inv_eq
 
-theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) := by
+theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) :=
+  by
   constructor
   intro Z g h Hgh
   rw [← kernel.lift_ι (X.d 0 1) (f.f 0) (by rw [f.2 0 1 rfl] <;> exact zero_comp), ←
@@ -193,12 +197,14 @@ theorem from_single₀_mono_at_zero [hf : QuasiIso f] : Mono (f.f 0) := by
 #align
   homological_complex.hom.from_single₀_mono_at_zero HomologicalComplex.Hom.from_single₀_mono_at_zero
 
-theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 0 1) := by
+theorem from_single₀_exact_f_d_at_zero [hf : QuasiIso f] : Exact (f.f 0) (X.d 0 1) :=
+  by
   rw [preadditive.exact_iff_homology_zero]
   have h : f.f 0 ≫ X.d 0 1 = 0 := by
     simp only [HomologicalComplex.Hom.comm, CochainComplex.single₀_obj_X_d, zero_comp]
   refine' ⟨h, Nonempty.intro (homologyIsoCokernelLift _ _ _ ≪≫ _)⟩
-  · suffices is_iso (kernel.lift (X.d 0 1) (f.f 0) h) by
+  · suffices is_iso (kernel.lift (X.d 0 1) (f.f 0) h)
+      by
       haveI := this
       apply cokernel.of_epi
     rw [← from_single₀_kernel_at_zero_iso_inv_eq f]
@@ -227,7 +233,8 @@ variable {A : Type _} [Category A] [Abelian A] {B : Type _} [Category B] [Abelia
 theorem CategoryTheory.Functor.quasiIsoOfMapQuasiIso {C D : HomologicalComplex A c} (f : C ⟶ D)
     (hf : QuasiIso ((F.mapHomologicalComplex _).map f)) : QuasiIso f :=
   ⟨fun i =>
-    haveI : is_iso (F.map ((homologyFunctor A c i).map f)) := by
+    haveI : is_iso (F.map ((homologyFunctor A c i).map f)) :=
+      by
       rw [← functor.comp_map, ← nat_iso.naturality_2 (F.homology_functor_iso i) f, functor.comp_map]
       infer_instance
     is_iso_of_reflects_iso _ F⟩

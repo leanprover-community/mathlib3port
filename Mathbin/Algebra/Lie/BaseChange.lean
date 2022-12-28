@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.base_change
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ theorem bracket_tmul (s t : A) (x y : L) : ⁅s ⊗ₜ[R] x, t ⊗ₜ[R] y⁆ = 
   rw [bracket_def, bracket'_tmul]
 #align lie_algebra.extend_scalars.bracket_tmul LieAlgebra.ExtendScalars.bracket_tmul
 
-private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 := by
+private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 :=
+  by
   simp only [bracket_def]
   apply x.induction_on
   · simp only [LinearMap.map_zero, eq_self_iff_true, LinearMap.zero_apply]
@@ -91,7 +92,7 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 := by
 #align lie_algebra.extend_scalars.bracket_lie_self lie_algebra.extend_scalars.bracket_lie_self
 
 private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ = ⁅⁅x, y⁆, z⁆ + ⁅y, ⁅x, z⁆⁆ :=
-  by 
+  by
   simp only [bracket_def]
   apply x.induction_on
   · simp only [LinearMap.map_zero, add_zero, eq_self_iff_true, LinearMap.zero_apply]
@@ -112,16 +113,15 @@ private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ =
     simp only [add_add_add_comm, h₁, h₂, LinearMap.add_apply, LinearMap.map_add]
 #align lie_algebra.extend_scalars.bracket_leibniz_lie lie_algebra.extend_scalars.bracket_leibniz_lie
 
-instance :
-    LieRing
-      (A ⊗[R]
-        L) where 
+instance : LieRing (A ⊗[R] L)
+    where
   add_lie x y z := by simp only [bracket_def, LinearMap.add_apply, LinearMap.map_add]
   lie_add x y z := by simp only [bracket_def, LinearMap.map_add]
   lie_self := bracket_lie_self R A L
   leibniz_lie := bracket_leibniz_lie R A L
 
-private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ = a • ⁅x, y⁆ := by
+private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ = a • ⁅x, y⁆ :=
+  by
   apply x.induction_on
   · simp only [zero_lie, smul_zero]
   · intro a₁ l₁
@@ -156,10 +156,8 @@ instance : LieRing (RestrictScalars R A L) :=
 
 variable [CommRing A] [LieAlgebra A L]
 
-instance lieAlgebra [CommRing R] [Algebra R A] :
-    LieAlgebra R
-      (RestrictScalars R A
-        L) where lie_smul t x y :=
+instance lieAlgebra [CommRing R] [Algebra R A] : LieAlgebra R (RestrictScalars R A L)
+    where lie_smul t x y :=
     (lie_smul (algebraMap R A t) (RestrictScalars.addEquiv R A L x)
         (RestrictScalars.addEquiv R A L y) :
       _)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.order.smul
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ open Pointwise
 with a partial order has a scalar multiplication which is compatible with the order.
 -/
 @[protect_proj]
-class OrderedSmul (R M : Type _) [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] :
+class OrderedSmul (R M : Type _) [OrderedSemiring R] [OrderedAddCommMonoid M] [SMulWithZero R M] :
   Prop where
   smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, a < b → 0 < c → c • a < c • b
   lt_of_smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, c • a < c • b → 0 < c → a < b
@@ -59,28 +59,27 @@ variable {ι 𝕜 R M N : Type _}
 
 namespace OrderDual
 
-instance [Zero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
-  { instSMulOrderDual with 
+instance [Zero R] [AddZeroClass M] [h : SMulWithZero R M] : SMulWithZero R Mᵒᵈ :=
+  { instSMulOrderDual with
     zero_smul := fun m => OrderDual.rec (zero_smul _) m
     smul_zero := fun r => OrderDual.rec smul_zero r }
 
 instance [Monoid R] [MulAction R M] : MulAction R Mᵒᵈ :=
-  { instSMulOrderDual with 
+  { instSMulOrderDual with
     one_smul := fun m => OrderDual.rec (one_smul _) m
     mul_smul := fun r => OrderDual.rec mul_smul r }
 
 instance [MonoidWithZero R] [AddMonoid M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
   { OrderDual.mulAction, OrderDual.smulWithZero with }
 
-instance [MonoidWithZero R] [AddMonoid M] [DistribMulAction R M] :
-    DistribMulAction R
-      Mᵒᵈ where 
+instance [MonoidWithZero R] [AddMonoid M] [DistribMulAction R M] : DistribMulAction R Mᵒᵈ
+    where
   smul_add k a := OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a
   smul_zero r := OrderDual.rec (@smul_zero _ M _ _) r
 
-instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] :
-    OrderedSmul R
-      Mᵒᵈ where 
+instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SMulWithZero R M] [OrderedSmul R M] :
+    OrderedSmul R Mᵒᵈ
+    where
   smul_lt_smul_of_pos a b := @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
   lt_of_smul_lt_smul_of_pos a b := @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
 
@@ -88,14 +87,15 @@ end OrderDual
 
 section OrderedSmul
 
-variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M]
+variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SMulWithZero R M] [OrderedSmul R M]
   {s : Set M} {a b : M} {c : R}
 
 theorem smul_lt_smul_of_pos : a < b → 0 < c → c • a < c • b :=
   OrderedSmul.smul_lt_smul_of_pos
 #align smul_lt_smul_of_pos smul_lt_smul_of_pos
 
-theorem smul_le_smul_of_nonneg (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c • a ≤ c • b := by
+theorem smul_le_smul_of_nonneg (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c • a ≤ c • b :=
+  by
   rcases h₁.eq_or_lt with (rfl | hab)
   · rfl
   · rcases h₂.eq_or_lt with (rfl | hc)
@@ -167,14 +167,14 @@ end OrderedSmul
 
 /-- To prove that a linear ordered monoid is an ordered module, it suffices to verify only the first
 axiom of `ordered_smul`. -/
-theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [SmulWithZero 𝕜 M]
+theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [SMulWithZero 𝕜 M]
     (h : ∀ ⦃c : 𝕜⦄, 0 < c → StrictMono fun a : M => c • a) : OrderedSmul 𝕜 M :=
   { smul_lt_smul_of_pos := fun a b c hab hc => h hc hab
     lt_of_smul_lt_smul_of_pos := fun a b c hab hc => (h hc).lt_iff_lt.1 hab }
 #align ordered_smul.mk'' OrderedSmul.mk''
 
 instance Nat.ordered_smul [LinearOrderedCancelAddCommMonoid M] : OrderedSmul ℕ M :=
-  OrderedSmul.mk'' fun n hn a b hab => by 
+  OrderedSmul.mk'' fun n hn a b hab => by
     cases n
     · cases hn
     induction' n with n ih
@@ -183,7 +183,7 @@ instance Nat.ordered_smul [LinearOrderedCancelAddCommMonoid M] : OrderedSmul ℕ
 #align nat.ordered_smul Nat.ordered_smul
 
 instance Int.ordered_smul [LinearOrderedAddCommGroup M] : OrderedSmul ℤ M :=
-  OrderedSmul.mk'' fun n hn => by 
+  OrderedSmul.mk'' fun n hn => by
     cases n
     · simp only [Int.ofNat_eq_coe, Int.coe_nat_pos, coe_nat_zsmul] at hn⊢
       exact strict_mono_smul_left hn
@@ -204,8 +204,10 @@ variable [LinearOrderedSemifield 𝕜] [OrderedAddCommMonoid M] [OrderedAddCommM
 /-- To prove that a vector space over a linear ordered field is ordered, it suffices to verify only
 the first axiom of `ordered_smul`. -/
 theorem OrderedSmul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a ≤ c • b) :
-    OrderedSmul 𝕜 M := by
-  have hlt' : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a < c • b := by
+    OrderedSmul 𝕜 M :=
+  by
+  have hlt' : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a < c • b :=
+    by
     refine' fun a b c hab hc => (h hab hc).lt_of_ne _
     rw [Ne.def, hc.ne'.is_unit.smul_left_cancel]
     exact hab.ne
@@ -246,22 +248,26 @@ theorem smul_le_smul_iff_of_pos (hc : 0 < c) : c • a ≤ c • b ↔ a ≤ b :
     fun h => smul_le_smul_of_nonneg h hc.le⟩
 #align smul_le_smul_iff_of_pos smul_le_smul_iff_of_pos
 
-theorem inv_smul_le_iff (h : 0 < c) : c⁻¹ • a ≤ b ↔ a ≤ c • b := by
+theorem inv_smul_le_iff (h : 0 < c) : c⁻¹ • a ≤ b ↔ a ≤ c • b :=
+  by
   rw [← smul_le_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
   infer_instance
 #align inv_smul_le_iff inv_smul_le_iff
 
-theorem inv_smul_lt_iff (h : 0 < c) : c⁻¹ • a < b ↔ a < c • b := by
+theorem inv_smul_lt_iff (h : 0 < c) : c⁻¹ • a < b ↔ a < c • b :=
+  by
   rw [← smul_lt_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
   infer_instance
 #align inv_smul_lt_iff inv_smul_lt_iff
 
-theorem le_inv_smul_iff (h : 0 < c) : a ≤ c⁻¹ • b ↔ c • a ≤ b := by
+theorem le_inv_smul_iff (h : 0 < c) : a ≤ c⁻¹ • b ↔ c • a ≤ b :=
+  by
   rw [← smul_le_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
   infer_instance
 #align le_inv_smul_iff le_inv_smul_iff
 
-theorem lt_inv_smul_iff (h : 0 < c) : a < c⁻¹ • b ↔ c • a < b := by
+theorem lt_inv_smul_iff (h : 0 < c) : a < c⁻¹ • b ↔ c • a < b :=
+  by
   rw [← smul_lt_smul_iff_of_pos h, smul_inv_smul₀ h.ne']
   infer_instance
 #align lt_inv_smul_iff lt_inv_smul_iff
@@ -270,8 +276,8 @@ variable (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
-def OrderIso.smulLeft (hc : 0 < c) :
-    M ≃o M where 
+def OrderIso.smulLeft (hc : 0 < c) : M ≃o M
+    where
   toFun b := c • b
   invFun b := c⁻¹ • b
   left_inv := inv_smul_smul₀ hc.ne'
@@ -307,7 +313,7 @@ namespace Tactic
 
 section OrderedSmul
 
-variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {a : R}
+variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SMulWithZero R M] [OrderedSmul R M] {a : R}
   {b : M}
 
 private theorem smul_nonneg_of_pos_of_nonneg (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a • b :=

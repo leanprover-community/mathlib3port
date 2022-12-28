@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.real
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,9 +36,11 @@ variable {ι : Type _} [Fintype ι]
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
 noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → ℝ) :
-    Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (sign ∘ w)) := by
+    Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (sign ∘ w)) :=
+  by
   let u i := if h : w i = 0 then (1 : ℝˣ) else Units.mk0 (w i) h
-  have hu' : ∀ i : ι, (sign (u i) * u i) ^ (-(1 / 2 : ℝ)) ≠ 0 := by
+  have hu' : ∀ i : ι, (sign (u i) * u i) ^ (-(1 / 2 : ℝ)) ≠ 0 :=
+    by
     intro i
     refine' (ne_of_lt (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _) _)).symm
   convert
@@ -69,7 +71,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
   suffices
     (u j : ℝ).sign * v j * v j =
       (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) * (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) * u j * v j * v j
-    by 
+    by
     erw [← mul_assoc, this]
     ring
   rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _),

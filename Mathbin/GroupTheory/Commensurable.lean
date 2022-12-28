@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module group_theory.commensurable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,12 +88,11 @@ theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) :
 
 /-- For `H` a subgroup of `G`, this is the subgroup of all elements `g : conj_aut G`
 such that `commensurable (g • H) H` -/
-def commensurator' (H : Subgroup G) :
-    Subgroup
-      (ConjAct G) where 
+def commensurator' (H : Subgroup G) : Subgroup (ConjAct G)
+    where
   carrier := { g : ConjAct G | Commensurable (g • H) H }
   one_mem' := by rw [Set.mem_setOf_eq, one_smul]
-  mul_mem' a b ha hb := by 
+  mul_mem' a b ha hb := by
     rw [Set.mem_setOf_eq, mul_smul]
     exact trans ((commensurable_conj a).mp hb) ha
   inv_mem' a ha := by rwa [Set.mem_setOf_eq, comm, ← commensurable_inv]

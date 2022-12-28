@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module number_theory.liouville.residual
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,13 +28,14 @@ open Filter Set Metric
 theorem set_of_liouville_eq_Inter_Union :
     { x | Liouville x } =
       ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), ball (a / b) (1 / b ^ n) \ {a / b} :=
-  by 
+  by
   ext x
   simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_prop, mem_diff,
     mem_singleton_iff, mem_ball, Real.dist_eq, and_comm']
 #align set_of_liouville_eq_Inter_Union set_of_liouville_eq_Inter_Union
 
-theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
+theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } :=
+  by
   rw [set_of_liouville_eq_Inter_Union]
   refine' is_Gδ_Inter fun n => IsOpen.is_Gδ _
   refine' is_open_Union fun a => is_open_Union fun b => is_open_Union fun hb => _
@@ -45,7 +46,7 @@ theorem is_Gδ_set_of_liouville : IsGδ { x | Liouville x } := by
 theorem set_of_liouville_eq_irrational_inter_Inter_Union :
     { x | Liouville x } =
       { x | Irrational x } ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), ball (a / b) (1 / b ^ n) :=
-  by 
+  by
   refine' subset.antisymm _ _
   · refine' subset_inter (fun x hx => hx.Irrational) _
     rw [set_of_liouville_eq_Inter_Union]
@@ -59,7 +60,8 @@ theorem set_of_liouville_eq_irrational_inter_Inter_Union :
   set_of_liouville_eq_irrational_inter_Inter_Union set_of_liouville_eq_irrational_inter_Inter_Union
 
 /-- The set of Liouville numbers is a residual set. -/
-theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x := by
+theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x :=
+  by
   rw [Filter.Eventually, set_of_liouville_eq_irrational_inter_Inter_Union]
   refine' eventually_residual_irrational.and _
   refine' eventually_residual.2 ⟨_, _, rat.dense_embedding_coe_real.dense.mono _, subset.rfl⟩

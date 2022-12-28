@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.inj_surj
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,15 +45,16 @@ protected def orderedSemiring [OrderedSemiring α] [Zero β] [One β] [Add β] [
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) : OrderedSemiring β :=
   { hf.OrderedAddCommMonoid f zero add nsmul,
-    hf.Semiring f zero one add mul nsmul npow nat_cast with
+    hf.Semiring f zero one add mul nsmul npow
+      nat_cast with
     zero_le_one := show f 0 ≤ f 1 by simp only [zero, one, zero_le_one]
     mul_le_mul_of_nonneg_left := fun a b c h hc =>
-      show f (c * a) ≤ f (c * b) by 
+      show f (c * a) ≤ f (c * b) by
         rw [mul, mul]
         refine' mul_le_mul_of_nonneg_left h _
         rwa [← zero]
     mul_le_mul_of_nonneg_right := fun a b c h hc =>
-      show f (a * c) ≤ f (b * c) by 
+      show f (a * c) ≤ f (b * c) by
         rw [mul, mul]
         refine' mul_le_mul_of_nonneg_right h _
         rwa [← zero] }
@@ -96,7 +97,7 @@ protected def orderedRing [OrderedRing α] [Zero β] [One β] [Add β] [Mul β] 
   { hf.OrderedSemiring f zero one add mul nsmul npow nat_cast,
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
     mul_nonneg := fun a b ha hb =>
-      show f 0 ≤ f (a * b) by 
+      show f 0 ≤ f (a * b) by
         rw [zero, mul]
         apply mul_nonneg <;> rwa [← zero] }
 #align function.injective.ordered_ring Function.Injective.orderedRing
@@ -136,7 +137,9 @@ protected def strictOrderedSemiring [StrictOrderedSemiring α] [Zero β] [One β
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) : StrictOrderedSemiring β :=
   { hf.OrderedCancelAddCommMonoid f zero add nsmul,
-    hf.OrderedSemiring f zero one add mul nsmul npow nat_cast, pullback_nonzero f zero one with
+    hf.OrderedSemiring f zero one add mul nsmul npow nat_cast,
+    pullback_nonzero f zero
+      one with
     mul_lt_mul_of_pos_left := fun a b c h hc =>
       show f (c * a) < f (c * b) by
         simpa only [mul, zero] using mul_lt_mul_of_pos_left ‹f a < f b› (by rwa [← zero])
@@ -182,7 +185,7 @@ protected def strictOrderedRing [StrictOrderedRing α] [Zero β] [One β] [Add �
   { hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast,
     hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
     mul_pos := fun a b a0 b0 =>
-      show f 0 < f (a * b) by 
+      show f 0 < f (a * b) by
         rw [zero, mul]
         apply mul_pos <;> rwa [← zero] }
 #align function.injective.strict_ordered_ring Function.Injective.strictOrderedRing

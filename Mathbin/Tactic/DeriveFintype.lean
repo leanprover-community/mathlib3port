@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.derive_fintype
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,8 @@ def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x
 
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
 def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n)
-    (s : FinsetAbove α enum (n + 1)) : FinsetAbove α enum n := by
+    (s : FinsetAbove α enum (n + 1)) : FinsetAbove α enum n :=
+  by
   refine' ⟨Finset.cons a s.1 _, _⟩
   · intro h'
     have := s.2 _ h'
@@ -183,7 +184,8 @@ theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ →
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
 def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a = n)
-    (t : FinsetAbove α enum (n + 1)) : FinsetAbove α enum n := by
+    (t : FinsetAbove α enum (n + 1)) : FinsetAbove α enum n :=
+  by
   refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
   · rw [Finset.disjoint_left]
     intro a hs ht

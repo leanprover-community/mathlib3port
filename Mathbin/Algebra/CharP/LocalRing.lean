@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.char_p.local_ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : 
     rw [mul_comm] at q_eq_a_mul_rn
     have a_dvd_q : a ∣ q := ⟨r ^ n, q_eq_a_mul_rn⟩
     -- ... where `a` is a unit.
-    have a_unit : IsUnit (a : R) := by 
+    have a_unit : IsUnit (a : R) := by
       by_contra g
       rw [← mem_nonunits_iff] at g
       rw [← LocalRing.mem_maximal_ideal] at g
@@ -55,7 +55,8 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : 
       exact absurd r_dvd_a r_ne_dvd_a
     -- Let `b` be the inverse of `a`.
     cases' a_unit.exists_left_inv with a_inv h_inv_mul_a
-    have rn_cast_zero : ↑(r ^ n) = (0 : R) := by
+    have rn_cast_zero : ↑(r ^ n) = (0 : R) :=
+      by
       rw [Nat.cast_pow, ← @mul_one R _ (r ^ n), mul_comm, ←
         Classical.choose_spec a_unit.exists_left_inv, mul_assoc, ← Nat.cast_pow, ← Nat.cast_mul, ←
         q_eq_a_mul_rn, CharP.cast_eq_zero R q]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,8 @@ This concept does not have a standard name in the literature.
 add_decl_doc WittVector.coeff
 
 @[ext]
-theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y := by
+theorem ext {x y : 𝕎 R} (h : ∀ n, x.coeff n = y.coeff n) : x = y :=
+  by
   cases x
   cases y
   simp only at h
@@ -95,13 +96,13 @@ theorem coeff_mk (x : ℕ → R) : (mk p x).coeff = x :=
 
 /- These instances are not needed for the rest of the development,
 but it is interesting to establish early on that `witt_vector p` is a lawful functor. -/
-instance : Functor (WittVector
-        p) where 
+instance : Functor (WittVector p)
+    where
   map α β f v := mk p (f ∘ v.coeff)
   mapConst α β a v := mk p fun _ => a
 
-instance : IsLawfulFunctor
-      (WittVector p) where 
+instance : LawfulFunctor (WittVector p)
+    where
   map_const_eq α β := rfl
   id_map := fun α ⟨v, _⟩ => rfl
   comp_map α β γ f g v := rfl
@@ -230,21 +231,24 @@ end RingOperations
 section WittStructureSimplifications
 
 @[simp]
-theorem witt_zero_eq_zero (n : ℕ) : wittZero p n = 0 := by
+theorem witt_zero_eq_zero (n : ℕ) : wittZero p n = 0 :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_zero, wittStructureRat, bind₁, aeval_zero', constant_coeff_X_in_terms_of_W,
     RingHom.map_zero, AlgHom.map_zero, map_witt_structure_int]
 #align witt_vector.witt_zero_eq_zero WittVector.witt_zero_eq_zero
 
 @[simp]
-theorem witt_one_zero_eq_one : wittOne p 0 = 1 := by
+theorem witt_one_zero_eq_one : wittOne p 0 = 1 :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_one, wittStructureRat, X_in_terms_of_W_zero, AlgHom.map_one, RingHom.map_one,
     bind₁_X_right, map_witt_structure_int]
 #align witt_vector.witt_one_zero_eq_one WittVector.witt_one_zero_eq_one
 
 @[simp]
-theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
+theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_one, wittStructureRat, RingHom.map_zero, AlgHom.map_one, RingHom.map_one,
     map_witt_structure_int]
@@ -266,65 +270,75 @@ theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
 #align witt_vector.witt_one_pos_eq_zero WittVector.witt_one_pos_eq_zero
 
 @[simp]
-theorem witt_add_zero : wittAdd p 0 = x (0, 0) + x (1, 0) := by
+theorem witt_add_zero : wittAdd p 0 = x (0, 0) + x (1, 0) :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_add, wittStructureRat, AlgHom.map_add, RingHom.map_add, rename_X,
     X_in_terms_of_W_zero, map_X, witt_polynomial_zero, bind₁_X_right, map_witt_structure_int]
 #align witt_vector.witt_add_zero WittVector.witt_add_zero
 
 @[simp]
-theorem witt_sub_zero : wittSub p 0 = x (0, 0) - x (1, 0) := by
+theorem witt_sub_zero : wittSub p 0 = x (0, 0) - x (1, 0) :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_sub, wittStructureRat, AlgHom.map_sub, RingHom.map_sub, rename_X,
     X_in_terms_of_W_zero, map_X, witt_polynomial_zero, bind₁_X_right, map_witt_structure_int]
 #align witt_vector.witt_sub_zero WittVector.witt_sub_zero
 
 @[simp]
-theorem witt_mul_zero : wittMul p 0 = x (0, 0) * x (1, 0) := by
+theorem witt_mul_zero : wittMul p 0 = x (0, 0) * x (1, 0) :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_mul, wittStructureRat, rename_X, X_in_terms_of_W_zero, map_X,
     witt_polynomial_zero, RingHom.map_mul, bind₁_X_right, AlgHom.map_mul, map_witt_structure_int]
 #align witt_vector.witt_mul_zero WittVector.witt_mul_zero
 
 @[simp]
-theorem witt_neg_zero : wittNeg p 0 = -x (0, 0) := by
+theorem witt_neg_zero : wittNeg p 0 = -x (0, 0) :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [witt_neg, wittStructureRat, rename_X, X_in_terms_of_W_zero, map_X,
     witt_polynomial_zero, RingHom.map_neg, AlgHom.map_neg, bind₁_X_right, map_witt_structure_int]
 #align witt_vector.witt_neg_zero WittVector.witt_neg_zero
 
 @[simp]
-theorem constant_coeff_witt_add (n : ℕ) : constantCoeff (wittAdd p n) = 0 := by
+theorem constant_coeff_witt_add (n : ℕ) : constantCoeff (wittAdd p n) = 0 :=
+  by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [add_zero, RingHom.map_add, constant_coeff_X]
 #align witt_vector.constant_coeff_witt_add WittVector.constant_coeff_witt_add
 
 @[simp]
-theorem constant_coeff_witt_sub (n : ℕ) : constantCoeff (wittSub p n) = 0 := by
+theorem constant_coeff_witt_sub (n : ℕ) : constantCoeff (wittSub p n) = 0 :=
+  by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [sub_zero, RingHom.map_sub, constant_coeff_X]
 #align witt_vector.constant_coeff_witt_sub WittVector.constant_coeff_witt_sub
 
 @[simp]
-theorem constant_coeff_witt_mul (n : ℕ) : constantCoeff (wittMul p n) = 0 := by
+theorem constant_coeff_witt_mul (n : ℕ) : constantCoeff (wittMul p n) = 0 :=
+  by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [mul_zero, RingHom.map_mul, constant_coeff_X]
 #align witt_vector.constant_coeff_witt_mul WittVector.constant_coeff_witt_mul
 
 @[simp]
-theorem constant_coeff_witt_neg (n : ℕ) : constantCoeff (wittNeg p n) = 0 := by
+theorem constant_coeff_witt_neg (n : ℕ) : constantCoeff (wittNeg p n) = 0 :=
+  by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [neg_zero, RingHom.map_neg, constant_coeff_X]
 #align witt_vector.constant_coeff_witt_neg WittVector.constant_coeff_witt_neg
 
 @[simp]
-theorem constant_coeff_witt_nsmul (m : ℕ) (n : ℕ) : constantCoeff (wittNsmul p m n) = 0 := by
+theorem constant_coeff_witt_nsmul (m : ℕ) (n : ℕ) : constantCoeff (wittNsmul p m n) = 0 :=
+  by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [smul_zero, map_nsmul, constant_coeff_X]
 #align witt_vector.constant_coeff_witt_nsmul WittVector.constant_coeff_witt_nsmul
 
 @[simp]
-theorem constant_coeff_witt_zsmul (z : ℤ) (n : ℕ) : constantCoeff (wittZsmul p z n) = 0 := by
+theorem constant_coeff_witt_zsmul (z : ℤ) (n : ℕ) : constantCoeff (wittZsmul p z n) = 0 :=
+  by
   apply constant_coeff_witt_structure_int p _ _ n
   simp only [smul_zero, map_zsmul, constant_coeff_X]
 #align witt_vector.constant_coeff_witt_zsmul WittVector.constant_coeff_witt_zsmul

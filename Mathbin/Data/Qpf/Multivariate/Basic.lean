@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,8 @@ open Mvfunctor (Liftp Liftr)
 -/
 
 
-protected theorem id_map {α : Typevec n} (x : F α) : Typevec.id <$$> x = x := by
+protected theorem id_map {α : Typevec n} (x : F α) : Typevec.id <$$> x = x :=
+  by
   rw [← abs_repr x]
   cases' repr x with a f
   rw [← abs_map]
@@ -115,22 +116,23 @@ protected theorem id_map {α : Typevec n} (x : F α) : Typevec.id <$$> x = x := 
 
 @[simp]
 theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) (x : F α) :
-    (g ⊚ f) <$$> x = g <$$> f <$$> x := by 
+    (g ⊚ f) <$$> x = g <$$> f <$$> x := by
   rw [← abs_repr x]
   cases' repr x with a f
   rw [← abs_map, ← abs_map, ← abs_map]
   rfl
 #align mvqpf.comp_map Mvqpf.comp_map
 
-instance (priority := 100) is_lawful_mvfunctor :
-    IsLawfulMvfunctor F where 
+instance (priority := 100) is_lawful_mvfunctor : IsLawfulMvfunctor F
+    where
   id_map := @Mvqpf.id_map n F _ _
   comp_map := @comp_map n F _ _
 #align mvqpf.is_lawful_mvfunctor Mvqpf.is_lawful_mvfunctor
 
 -- Lifting predicates and relations
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
-    Liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
+    Liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
+  by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : repr y with a f
@@ -146,7 +148,8 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
 #align mvqpf.liftp_iff Mvqpf.liftp_iff
 
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : F α) :
-    Liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
+    Liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
+  by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : repr u with a f
@@ -172,10 +175,12 @@ open Set
 open Mvfunctor
 
 theorem mem_supp {α : Typevec n} (x : F α) (i) (u : α i) :
-    u ∈ supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ := by
+    u ∈ supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ :=
+  by
   rw [supp]; dsimp; constructor
   · intro h a f haf
-    have : liftp (fun i u => u ∈ f i '' univ) x := by
+    have : liftp (fun i u => u ∈ f i '' univ) x :=
+      by
       rw [liftp_iff]
       refine' ⟨a, f, haf.symm, _⟩
       intro i u
@@ -194,10 +199,10 @@ theorem supp_eq {α : Typevec n} {i} (x : F α) :
 theorem has_good_supp_iff {α : Typevec n} (x : F α) :
     (∀ p, Liftp p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u) ↔
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ :=
-  by 
+  by
   constructor
   · intro h
-    have : liftp (supp x) x := by 
+    have : liftp (supp x) x := by
       rw [h]
       introv
       exact id
@@ -252,7 +257,8 @@ theorem supp_eq_of_is_uniform (h : q.IsUniform) {α : Typevec n} (a : q.p.A) (f 
 #align mvqpf.supp_eq_of_is_uniform Mvqpf.supp_eq_of_is_uniform
 
 theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Typevec n} (x : F α) (p : ∀ i, α i → Prop) :
-    Liftp p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u := by
+    Liftp p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u :=
+  by
   rw [liftp_iff, ← abs_repr x]
   cases' repr x with a f; constructor
   · rintro ⟨a', f', abseq, hf⟩ u
@@ -267,13 +273,15 @@ theorem liftp_iff_of_is_uniform (h : q.IsUniform) {α : Typevec n} (x : F α) (p
 #align mvqpf.liftp_iff_of_is_uniform Mvqpf.liftp_iff_of_is_uniform
 
 theorem supp_map (h : q.IsUniform) {α β : Typevec n} (g : α ⟹ β) (x : F α) (i) :
-    supp (g <$$> x) i = g i '' supp x i := by
+    supp (g <$$> x) i = g i '' supp x i :=
+  by
   rw [← abs_repr x]; cases' repr x with a f; rw [← abs_map, Mvpfunctor.map_eq]
   rw [supp_eq_of_is_uniform h, supp_eq_of_is_uniform h, ← image_comp]
   rfl
 #align mvqpf.supp_map Mvqpf.supp_map
 
-theorem supp_preservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform := by
+theorem supp_preservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform :=
+  by
   constructor
   · intro h α a a' f f' h' i
     rw [← Mvpfunctor.supp_eq, ← Mvpfunctor.supp_eq, ← h, h', h]
@@ -282,7 +290,8 @@ theorem supp_preservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform := by
     rwa [supp_eq_of_is_uniform, Mvpfunctor.supp_eq]
 #align mvqpf.supp_preservation_iff_uniform Mvqpf.supp_preservation_iff_uniform
 
-theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.LiftpPreservation := by
+theorem supp_preservation_iff_liftp_preservation : q.SuppPreservation ↔ q.LiftpPreservation :=
+  by
   constructor <;> intro h
   · rintro α p ⟨a, f⟩
     have h' := h

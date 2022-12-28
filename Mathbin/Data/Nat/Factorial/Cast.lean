@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.factorial.cast
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem cast_asc_factorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a +
 #align nat.cast_asc_factorial Nat.cast_asc_factorial
 
 theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) :=
-  by 
+  by
   rw [← pochhammer_eval_cast, pochhammer_nat_eq_desc_factorial]
   cases b
   · simp_rw [desc_factorial_zero]
@@ -61,7 +61,8 @@ variable [Ring S] (a b : ℕ)
 
 /-- Convenience lemma. The `a - 1` is not using truncated substraction, as opposed to the definition
 of `nat.desc_factorial` as a natural. -/
-theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) := by
+theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) :=
+  by
   rw [cast_desc_factorial]
   cases a
   · rw [zero_tsub, cast_zero, pochhammer_ne_zero_eval_zero _ two_ne_zero, zero_mul]

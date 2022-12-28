@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -488,8 +488,8 @@ scoped[Pointwise] attribute [instance] Filter.hasNsmul Filter.hasNpow Filter.has
 
 /-- `filter α` is a `semigroup` under pointwise operations if `α` is.-/
 @[to_additive "`filter α` is an `add_semigroup` under pointwise operations if `α` is."]
-protected def semigroup [Semigroup α] :
-    Semigroup (Filter α) where 
+protected def semigroup [Semigroup α] : Semigroup (Filter α)
+    where
   mul := (· * ·)
   mul_assoc f g h := map₂_assoc mul_assoc
 #align filter.semigroup Filter.semigroup
@@ -506,8 +506,8 @@ variable [MulOneClass α] [MulOneClass β]
 
 /-- `filter α` is a `mul_one_class` under pointwise operations if `α` is. -/
 @[to_additive "`filter α` is an `add_zero_class` under pointwise operations if `α` is."]
-protected def mulOneClass : MulOneClass
-      (Filter α) where 
+protected def mulOneClass : MulOneClass (Filter α)
+    where
   one := 1
   mul := (· * ·)
   one_mul f := by simp only [← pure_one, ← map₂_mul, map₂_pure_left, one_mul, map_id']
@@ -522,8 +522,8 @@ scoped[Pointwise]
 `filter α →* filter β` induced by `map φ`. -/
 @[to_additive
       "If `φ : α →+ β` then `map_add_monoid_hom φ` is the monoid homomorphism\n`filter α →+ filter β` induced by `map φ`."]
-def mapMonoidHom [MonoidHomClass F α β] (φ : F) :
-    Filter α →* Filter β where 
+def mapMonoidHom [MonoidHomClass F α β] (φ : F) : Filter α →* Filter β
+    where
   toFun := map φ
   map_one' := Filter.map_one φ
   map_mul' _ _ := Filter.map_mul φ
@@ -575,10 +575,10 @@ scoped[Pointwise] attribute [instance] Filter.monoid Filter.addMonoid
 
 @[to_additive]
 theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
-  | 0 => by 
+  | 0 => by
     rw [pow_zero]
     exact one_mem_one
-  | n + 1 => by 
+  | n + 1 => by
     rw [pow_succ]
     exact mul_mem_mul hs (pow_mem_pow _)
 #align filter.pow_mem_pow Filter.pow_mem_pow
@@ -589,7 +589,8 @@ theorem bot_pow {n : ℕ} (hn : n ≠ 0) : (⊥ : Filter α) ^ n = ⊥ := by
 #align filter.bot_pow Filter.bot_pow
 
 @[to_additive]
-theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ := by
+theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ :=
+  by
   refine' top_le_iff.1 fun s => _
   simp only [mem_mul, mem_top, exists_and_left, exists_eq_left]
   rintro ⟨t, ht, hs⟩
@@ -597,7 +598,8 @@ theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ := by
 #align filter.mul_top_of_one_le Filter.mul_top_of_one_le
 
 @[to_additive]
-theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ := by
+theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ :=
+  by
   refine' top_le_iff.1 fun s => _
   simp only [mem_mul, mem_top, exists_and_left, exists_eq_left]
   rintro ⟨t, ht, hs⟩
@@ -643,7 +645,8 @@ section DivisionMonoid
 variable [DivisionMonoid α] {f g : Filter α}
 
 @[to_additive]
-protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pure b ∧ a * b = 1 := by
+protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pure b ∧ a * b = 1 :=
+  by
   refine' ⟨fun hfg => _, _⟩
   · obtain ⟨t₁, t₂, h₁, h₂, h⟩ : (1 : Set α) ∈ f * g := hfg.symm.subst one_mem_one
     have hfg : (f * g).ne_bot := hfg.symm.subst one_ne_bot
@@ -659,16 +662,19 @@ protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pur
 /-- `filter α` is a division monoid under pointwise operations if `α` is. -/
 @[to_additive "`filter α` is a subtraction monoid under pointwise\noperations if `α` is."]
 protected def divisionMonoid : DivisionMonoid (Filter α) :=
-  { Filter.monoid, Filter.hasInvolutiveInv, Filter.hasDiv, Filter.hasZpow with
+  { Filter.monoid, Filter.hasInvolutiveInv, Filter.hasDiv,
+    Filter.hasZpow with
     mul_inv_rev := fun s t => map_map₂_antidistrib mul_inv_rev
-    inv_eq_of_mul := fun s t h => by
+    inv_eq_of_mul := fun s t h =>
+      by
       obtain ⟨a, b, rfl, rfl, hab⟩ := Filter.mul_eq_one_iff.1 h
       rw [inv_pure, inv_eq_of_mul_eq_one_right hab]
     div_eq_mul_inv := fun f g => map_map₂_distrib_right div_eq_mul_inv }
 #align filter.division_monoid Filter.divisionMonoid
 
 @[to_additive]
-theorem is_unit_iff : IsUnit f ↔ ∃ a, f = pure a ∧ IsUnit a := by
+theorem is_unit_iff : IsUnit f ↔ ∃ a, f = pure a ∧ IsUnit a :=
+  by
   constructor
   · rintro ⟨u, rfl⟩
     obtain ⟨a, b, ha, hb, h⟩ := Filter.mul_eq_one_iff.1 u.mul_inv
@@ -690,7 +696,8 @@ protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (F
 
 /-- `filter α` has distributive negation if `α` has. -/
 protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Filter α) :=
-  { Filter.hasInvolutiveNeg with
+  {
+    Filter.hasInvolutiveNeg with
     neg_mul := fun _ _ => map₂_map_left_comm neg_mul
     mul_neg := fun _ _ => map_map₂_right_comm mul_neg }
 #align filter.has_distrib_neg Filter.hasDistribNeg
@@ -749,7 +756,8 @@ variable [Group α] [DivisionMonoid β] [MonoidHomClass F α β] (m : F) {f g f�
 
 
 @[simp, to_additive]
-protected theorem one_le_div_iff : 1 ≤ f / g ↔ ¬Disjoint f g := by
+protected theorem one_le_div_iff : 1 ≤ f / g ↔ ¬Disjoint f g :=
+  by
   refine' ⟨fun h hfg => _, _⟩
   · obtain ⟨s, hs, t, ht, hst⟩ := hfg.le_bot (mem_bot : ∅ ∈ ⊥)
     exact Set.one_mem_div_iff.1 (h <| div_mem_div hs ht) (disjoint_iff.2 hst.symm)
@@ -763,7 +771,8 @@ theorem not_one_le_div_iff : ¬1 ≤ f / g ↔ Disjoint f g :=
 #align filter.not_one_le_div_iff Filter.not_one_le_div_iff
 
 @[to_additive]
-theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f := by
+theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f :=
+  by
   rintro s ⟨t₁, t₂, h₁, h₂, hs⟩
   obtain ⟨a, ha₁, ha₂⟩ := Set.not_disjoint_iff.1 (h.not_disjoint h₁ h₂)
   rw [mem_one, ← div_self' a]
@@ -1134,7 +1143,7 @@ instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScal
 @[to_additive]
 instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α (Filter β) (Filter γ) :=
-  ⟨fun a f g => by 
+  ⟨fun a f g => by
     refine' (map_map₂_distrib_left fun _ _ => _).symm
     exact (smul_assoc a _ _).symm⟩
 #align filter.is_scalar_tower' Filter.is_scalar_tower'
@@ -1155,10 +1164,8 @@ instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralSc
 `filter α` on `filter β`. -/
 @[to_additive
       "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `filter α` on `filter β`"]
-protected def mulAction [Monoid α] [MulAction α β] :
-    MulAction (Filter α)
-      (Filter
-        β) where 
+protected def mulAction [Monoid α] [MulAction α β] : MulAction (Filter α) (Filter β)
+    where
   one_smul f := map₂_pure_left.trans <| by simp_rw [one_smul, map_id']
   mul_smul f g h := map₂_assoc mul_smul
 #align filter.mul_action Filter.mulAction
@@ -1167,10 +1174,8 @@ protected def mulAction [Monoid α] [MulAction α β] :
 -/
 @[to_additive
       "An additive action of an additive monoid on a type `β` gives an additive action on\n`filter β`."]
-protected def mulActionFilter [Monoid α] [MulAction α β] :
-    MulAction α
-      (Filter
-        β) where 
+protected def mulActionFilter [Monoid α] [MulAction α β] : MulAction α (Filter β)
+    where
   mul_smul a b f := by simp only [← map_smul, map_map, Function.comp, ← mul_smul]
   one_smul f := by simp only [← map_smul, one_smul, map_id']
 #align filter.mul_action_filter Filter.mulActionFilter
@@ -1182,16 +1187,16 @@ scoped[Pointwise]
 /-- A distributive multiplicative action of a monoid on an additive monoid `β` gives a distributive
 multiplicative action on `filter β`. -/
 protected def distribMulActionFilter [Monoid α] [AddMonoid β] [DistribMulAction α β] :
-    DistribMulAction α
-      (Filter β) where 
+    DistribMulAction α (Filter β)
+    where
   smul_add _ _ _ := map_map₂_distrib <| smul_add _
   smul_zero _ := (map_pure _ _).trans <| by rw [smul_zero, pure_zero]
 #align filter.distrib_mul_action_filter Filter.distribMulActionFilter
 
 /-- A multiplicative action of a monoid on a monoid `β` gives a multiplicative action on `set β`. -/
 protected def mulDistribMulActionFilter [Monoid α] [Monoid β] [MulDistribMulAction α β] :
-    MulDistribMulAction α
-      (Set β) where 
+    MulDistribMulAction α (Set β)
+    where
   smul_mul _ _ _ := image_image2_distrib <| smul_mul' _
   smul_one _ := image_singleton.trans <| by rw [smul_one, singleton_one]
 #align filter.mul_distrib_mul_action_filter Filter.mulDistribMulActionFilter
@@ -1199,9 +1204,9 @@ protected def mulDistribMulActionFilter [Monoid α] [Monoid β] [MulDistribMulAc
 scoped[Pointwise]
   attribute [instance] Filter.distribMulActionFilter Filter.mulDistribMulActionFilter
 
-section SmulWithZero
+section SMulWithZero
 
-variable [Zero α] [Zero β] [SmulWithZero α β] {f : Filter α} {g : Filter β}
+variable [Zero α] [Zero β] [SMulWithZero α β] {f : Filter α} {g : Filter β}
 
 /-!
 Note that we have neither `smul_with_zero α (filter β)` nor `smul_with_zero (filter α) (filter β)`
@@ -1221,7 +1226,8 @@ theorem NeBot.zero_smul_nonneg (hg : g.ne_bot) : 0 ≤ (0 : Filter α) • g :=
     ⟨_, _, h₁, hb, zero_smul _ _⟩
 #align filter.ne_bot.zero_smul_nonneg Filter.NeBot.zero_smul_nonneg
 
-theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 := by
+theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 :=
+  by
   refine' fun s hs => mem_smul_filter.2 _
   convert univ_mem
   refine' eq_univ_iff_forall.2 fun a => _
@@ -1230,12 +1236,13 @@ theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 := by
 
 theorem zero_smul_filter (hg : g.ne_bot) : (0 : α) • g = 0 :=
   zero_smul_filter_nonpos.antisymm <|
-    le_map_iff.2 fun s hs => by
+    le_map_iff.2 fun s hs =>
+      by
       simp_rw [Set.image_eta, zero_smul, (hg.nonempty_of_mem hs).image_const]
       exact zero_mem_zero
 #align filter.zero_smul_filter Filter.zero_smul_filter
 
-end SmulWithZero
+end SMulWithZero
 
 end Filter
 

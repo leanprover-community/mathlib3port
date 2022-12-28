@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.fin.tuple.nat_antidiagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem antidiagonal_tuple_zero_succ (n : ℕ) : antidiagonalTuple 0 n.succ = []
 #align list.nat.antidiagonal_tuple_zero_succ List.Nat.antidiagonal_tuple_zero_succ
 
 theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
-    x ∈ antidiagonalTuple k n ↔ (∑ i, x i) = n := by
+    x ∈ antidiagonalTuple k n ↔ (∑ i, x i) = n :=
+  by
   revert n
   refine' Fin.consInduction _ _ x
   · intro n
@@ -97,7 +98,8 @@ theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
 #align list.nat.mem_antidiagonal_tuple List.Nat.mem_antidiagonal_tuple
 
 /-- The antidiagonal of `n` does not contain duplicate entries. -/
-theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n) := by
+theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n) :=
+  by
   induction' k with k ih generalizing n
   · cases n
     · simp
@@ -125,14 +127,16 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n
 
 theorem antidiagonal_tuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
   | 0 => (congr_arg fun x => [x]) <| Subsingleton.elim _ _
-  | k + 1 => by
+  | k + 1 =>
+    by
     rw [antidiagonal_tuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k,
       List.map_singleton]
     exact congr_arg (fun x => [x]) Matrix.cons_zero_zero
 #align list.nat.antidiagonal_tuple_zero_right List.Nat.antidiagonal_tuple_zero_right
 
 @[simp]
-theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = [![n]] := by
+theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = [![n]] :=
+  by
   simp_rw [antidiagonal_tuple, antidiagonal, List.range_succ, List.map_append, List.map_singleton,
     tsub_self, List.bind_append, List.bind_singleton, antidiagonal_tuple_zero_zero,
     List.map_singleton, List.map_bind]
@@ -145,7 +149,8 @@ theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = [![n]] := by
 #align list.nat.antidiagonal_tuple_one List.Nat.antidiagonal_tuple_one
 
 theorem antidiagonal_tuple_two (n : ℕ) :
-    antidiagonalTuple 2 n = (antidiagonal n).map fun i => ![i.1, i.2] := by
+    antidiagonalTuple 2 n = (antidiagonal n).map fun i => ![i.1, i.2] :=
+  by
   rw [antidiagonal_tuple]
   simp_rw [antidiagonal_tuple_one, List.map_singleton]
   rw [List.map_eq_bind]
@@ -156,7 +161,8 @@ theorem antidiagonal_tuple_pairwise_pi_lex :
     ∀ k n, (antidiagonalTuple k n).Pairwise (Pi.Lex (· < ·) fun _ => (· < ·))
   | 0, 0 => List.pairwise_singleton _ _
   | 0, n + 1 => List.Pairwise.nil
-  | k + 1, n => by
+  | k + 1, n =>
+    by
     simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map, List.mem_map,
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
     simp only [mem_antidiagonal, Prod.forall, and_imp, forall_apply_eq_imp_iff₂]
@@ -269,9 +275,8 @@ section EquivProd
 
 This is the tuple version of `finset.nat.sigma_antidiagonal_equiv_prod`. -/
 @[simps]
-def sigmaAntidiagonalTupleEquivTuple (k : ℕ) :
-    (Σn, antidiagonalTuple k n) ≃
-      (Fin k → ℕ) where 
+def sigmaAntidiagonalTupleEquivTuple (k : ℕ) : (Σn, antidiagonalTuple k n) ≃ (Fin k → ℕ)
+    where
   toFun x := x.2
   invFun x := ⟨∑ i, x i, x, mem_antidiagonal_tuple.mpr rfl⟩
   left_inv := fun ⟨n, t, h⟩ => Sigma.subtype_ext (mem_antidiagonal_tuple.mp h) rfl

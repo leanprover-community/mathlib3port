@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.affine
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ variable [Ring R] [Module R E] [Module R F]
 
 /-- An affine map is continuous iff its underlying linear map is continuous. See also
 `affine_map.continuous_linear_iff`. -/
-theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linear := by
+theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linear :=
+  by
   constructor
   · intro hc
     rw [decomp' f]
@@ -65,8 +66,10 @@ section CommRing
 variable [CommRing R] [Module R F] [HasContinuousConstSmul R F]
 
 @[continuity]
-theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t := by
-  suffices ⇑(homothety x t) = fun y => t • (y - x) + x by
+theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t :=
+  by
+  suffices ⇑(homothety x t) = fun y => t • (y - x) + x
+    by
     rw [this]
     continuity
   ext y

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.non_unital_non_assoc_algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,9 @@ def CommutatorRing (L : Type v) : Type v :=
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
 instance : NonUnitalNonAssocSemiring (CommutatorRing L) :=
   show NonUnitalNonAssocSemiring L from
-    { (inferInstance : AddCommMonoid L) with
+    {
+      (inferInstance : AddCommMonoid
+          L) with
       mul := Bracket.bracket
       left_distrib := lie_add
       right_distrib := add_lie
@@ -97,7 +99,7 @@ variable {R L} {L₂ : Type w} [LieRing L₂] [LieAlgebra R L₂]
 regard a `lie_hom` as a `non_unital_alg_hom`. -/
 @[simps]
 def toNonUnitalAlgHom (f : L →ₗ⁅R⁆ L₂) : CommutatorRing L →ₙₐ[R] CommutatorRing L₂ :=
-  { f with 
+  { f with
     toFun := f
     map_zero' := f.map_zero
     map_mul' := f.map_lie }

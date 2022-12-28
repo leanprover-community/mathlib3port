@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.superpolynomial_decay
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,8 @@ theorem SuperpolynomialDecay.mul_param (hf : SuperpolynomialDecay l k f) :
 #align asymptotics.superpolynomial_decay.mul_param Asymptotics.SuperpolynomialDecay.mul_param
 
 theorem SuperpolynomialDecay.param_pow_mul (hf : SuperpolynomialDecay l k f) (n : ℕ) :
-    SuperpolynomialDecay l k (k ^ n * f) := by
+    SuperpolynomialDecay l k (k ^ n * f) :=
+  by
   induction' n with n hn
   · simpa only [one_mul, pow_zero] using hf
   · simpa only [pow_succ, mul_assoc] using hn.param_mul
@@ -185,7 +186,8 @@ theorem superpolynomial_decay_iff_superpolynomial_decay_abs :
 variable {l k f}
 
 theorem SuperpolynomialDecay.trans_eventually_abs_le (hf : SuperpolynomialDecay l k f)
-    (hfg : abs ∘ g ≤ᶠ[l] abs ∘ f) : SuperpolynomialDecay l k g := by
+    (hfg : abs ∘ g ≤ᶠ[l] abs ∘ f) : SuperpolynomialDecay l k g :=
+  by
   rw [superpolynomial_decay_iff_abs_tendsto_zero] at hf⊢
   refine' fun z =>
     tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (hf z)
@@ -253,7 +255,8 @@ theorem superpolynomial_decay_iff_abs_is_bounded_under (hk : Tendsto k l atTop) 
   asymptotics.superpolynomial_decay_iff_abs_is_bounded_under Asymptotics.superpolynomial_decay_iff_abs_is_bounded_under
 
 theorem superpolynomial_decay_iff_zpow_tendsto_zero (hk : Tendsto k l atTop) :
-    SuperpolynomialDecay l k f ↔ ∀ z : ℤ, Tendsto (fun a : α => k a ^ z * f a) l (𝓝 0) := by
+    SuperpolynomialDecay l k f ↔ ∀ z : ℤ, Tendsto (fun a : α => k a ^ z * f a) l (𝓝 0) :=
+  by
   refine' ⟨fun h z => _, fun h n => by simpa only [zpow_ofNat] using h (n : ℤ)⟩
   by_cases hz : 0 ≤ z
   · lift z to ℕ using hz
@@ -269,7 +272,7 @@ variable {f}
 
 theorem SuperpolynomialDecay.param_zpow_mul (hk : Tendsto k l atTop)
     (hf : SuperpolynomialDecay l k f) (z : ℤ) : SuperpolynomialDecay l k fun a => k a ^ z * f a :=
-  by 
+  by
   rw [superpolynomial_decay_iff_zpow_tendsto_zero _ hk] at hf⊢
   refine' fun z' => (hf <| z' + z).congr' ((hk.eventually_ne_at_top 0).mono fun x hx => _)
   simp [zpow_add₀ hx, mul_assoc, Pi.mul_apply]
@@ -312,7 +315,8 @@ theorem superpolynomial_decay_mul_param_iff (hk : Tendsto k l atTop) :
   asymptotics.superpolynomial_decay_mul_param_iff Asymptotics.superpolynomial_decay_mul_param_iff
 
 theorem superpolynomial_decay_param_pow_mul_iff (hk : Tendsto k l atTop) (n : ℕ) :
-    SuperpolynomialDecay l k (k ^ n * f) ↔ SuperpolynomialDecay l k f := by
+    SuperpolynomialDecay l k (k ^ n * f) ↔ SuperpolynomialDecay l k f :=
+  by
   induction' n with n hn
   · simp
   ·
@@ -355,7 +359,8 @@ variable {l k}
 variable [OrderTopology β]
 
 theorem superpolynomial_decay_iff_is_O (hk : Tendsto k l atTop) :
-    SuperpolynomialDecay l k f ↔ ∀ z : ℤ, f =O[l] fun a : α => k a ^ z := by
+    SuperpolynomialDecay l k f ↔ ∀ z : ℤ, f =O[l] fun a : α => k a ^ z :=
+  by
   refine' (superpolynomial_decay_iff_zpow_tendsto_zero f hk).trans _
   have hk0 : ∀ᶠ x in l, k x ≠ 0 := hk.eventually_ne_at_top 0
   refine' ⟨fun h z => _, fun h z => _⟩
@@ -373,7 +378,8 @@ theorem superpolynomial_decay_iff_is_O (hk : Tendsto k l atTop) :
 #align asymptotics.superpolynomial_decay_iff_is_O Asymptotics.superpolynomial_decay_iff_is_O
 
 theorem superpolynomial_decay_iff_is_o (hk : Tendsto k l atTop) :
-    SuperpolynomialDecay l k f ↔ ∀ z : ℤ, f =o[l] fun a : α => k a ^ z := by
+    SuperpolynomialDecay l k f ↔ ∀ z : ℤ, f =o[l] fun a : α => k a ^ z :=
+  by
   refine' ⟨fun h z => _, fun h => (superpolynomial_decay_iff_is_O f hk).2 fun z => (h z).IsO⟩
   have hk0 : ∀ᶠ x in l, k x ≠ 0 := hk.eventually_ne_at_top 0
   have : (fun x : α => (1 : β)) =o[l] k :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sober
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,8 @@ theorem mem_closed_set_iff (h : IsGenericPoint x S) (hZ : IsClosed Z) : x ∈ Z 
 #align is_generic_point.mem_closed_set_iff IsGenericPoint.mem_closed_set_iff
 
 protected theorem image (h : IsGenericPoint x S) {f : α → β} (hf : Continuous f) :
-    IsGenericPoint (f x) (closure (f '' S)) := by
+    IsGenericPoint (f x) (closure (f '' S)) :=
+  by
   rw [is_generic_point_def, ← h.def, ← image_singleton]
   exact
     subset.antisymm (closure_mono (image_subset _ subset_closure))
@@ -107,7 +108,8 @@ protected theorem image (h : IsGenericPoint x S) {f : α → β} (hf : Continuou
 end IsGenericPoint
 
 theorem is_generic_point_iff_forall_closed (hS : IsClosed S) (hxS : x ∈ S) :
-    IsGenericPoint x S ↔ ∀ Z : Set α, IsClosed Z → x ∈ Z → S ⊆ Z := by
+    IsGenericPoint x S ↔ ∀ Z : Set α, IsClosed Z → x ∈ Z → S ⊆ Z :=
+  by
   have : closure {x} ⊆ S := closure_minimal (singleton_subset_iff.2 hxS) hS
   simp_rw [IsGenericPoint, subset_antisymm_iff, this, true_and_iff, closure, subset_sInter_iff,
     mem_set_of_eq, and_imp, singleton_subset_iff]
@@ -169,25 +171,25 @@ attribute [local instance] specializationOrder
 
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
-    { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o
-      α where 
+    { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α
+    where
   toFun s := s.Prop.1.genericPoint
   invFun x := ⟨closure ({x} : Set α), is_irreducible_singleton.closure, is_closed_closure⟩
   left_inv s :=
     Subtype.eq <| Eq.trans s.Prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
   right_inv x :=
     is_irreducible_singleton.closure.generic_point_spec.Eq
-      (by 
+      (by
         convert is_generic_point_closure using 1
         rw [closure_closure])
-  map_rel_iff' s t := by 
+  map_rel_iff' s t := by
     change _ ⤳ _ ↔ _
     rw [specializes_iff_closure_subset]
     simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
 #align irreducible_set_equiv_points irreducibleSetEquivPoints
 
 theorem ClosedEmbedding.quasi_sober {f : α → β} (hf : ClosedEmbedding f) [QuasiSober β] :
-    QuasiSober α := by 
+    QuasiSober α := by
   constructor
   intro S hS hS'
   have hS'' := hS.image f hf.continuous.continuous_on
@@ -200,17 +202,18 @@ theorem ClosedEmbedding.quasi_sober {f : α → β} (hf : ClosedEmbedding f) [Qu
 #align closed_embedding.quasi_sober ClosedEmbedding.quasi_sober
 
 theorem OpenEmbedding.quasi_sober {f : α → β} (hf : OpenEmbedding f) [QuasiSober β] :
-    QuasiSober α := by 
+    QuasiSober α := by
   constructor
   intro S hS hS'
   have hS'' := hS.image f hf.continuous.continuous_on
   obtain ⟨x, hx⟩ := QuasiSober.sober hS''.closure is_closed_closure
   obtain ⟨T, hT, rfl⟩ := hf.to_inducing.is_closed_iff.mp hS'
   rw [Set.image_preimage_eq_inter_range] at hx hS''
-  have hxT : x ∈ T := by 
+  have hxT : x ∈ T := by
     rw [← hT.closure_eq]
     exact closure_mono (Set.inter_subset_left _ _) hx.mem
-  have hxU : x ∈ Set.range f := by
+  have hxU : x ∈ Set.range f :=
+    by
     rw [hx.mem_open_set_iff hf.open_range]
     refine' Set.Nonempty.mono _ hS''.1
     simpa using subset_closure
@@ -228,11 +231,12 @@ theorem OpenEmbedding.quasi_sober {f : α → β} (hf : OpenEmbedding f) [QuasiS
 
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/
 theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Set α))
-    [hS' : ∀ s : S, QuasiSober s] (hS'' : ⋃₀S = ⊤) : QuasiSober α := by
+    [hS' : ∀ s : S, QuasiSober s] (hS'' : ⋃₀S = ⊤) : QuasiSober α :=
+  by
   rw [quasi_sober_iff]
   intro t h h'
   obtain ⟨x, hx⟩ := h.1
-  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀S := by 
+  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀S := by
     rw [hS'']
     trivial
   haveI : QuasiSober U := hS' ⟨U, hU⟩
@@ -256,7 +260,8 @@ theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s 
   exact Set.image_subset _ subset_closure
 #align quasi_sober_of_open_cover quasi_sober_of_open_cover
 
-instance (priority := 100) T2Space.quasi_sober [T2Space α] : QuasiSober α := by
+instance (priority := 100) T2Space.quasi_sober [T2Space α] : QuasiSober α :=
+  by
   constructor
   rintro S h -
   obtain ⟨x, rfl⟩ := is_irreducible_iff_singleton.mp h

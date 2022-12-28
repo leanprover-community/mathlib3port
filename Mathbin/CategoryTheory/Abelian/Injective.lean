@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.injective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 
 /-- The preadditive Yoneda functor on `J` preserves colimits if `J` is injective. -/
 def preservesFiniteColimitsPreadditiveYonedaObjOfInjective (J : C) [hP : Injective J] :
-    PreservesFiniteColimits (preadditiveYonedaObj J) := by
+    PreservesFiniteColimits (preadditiveYonedaObj J) :=
+  by
   letI := (injective_iff_preserves_epimorphisms_preadditive_yoneda_obj' J).mp hP
   apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
 #align
@@ -46,7 +47,8 @@ def preservesFiniteColimitsPreadditiveYonedaObjOfInjective (J : C) [hP : Injecti
 
 /-- An object is injective if its preadditive Yoneda functor preserves finite colimits. -/
 theorem injective_of_preserves_finite_colimits_preadditive_yoneda_obj (J : C)
-    [hP : PreservesFiniteColimits (preadditiveYonedaObj J)] : Injective J := by
+    [hP : PreservesFiniteColimits (preadditiveYonedaObj J)] : Injective J :=
+  by
   rw [injective_iff_preserves_epimorphisms_preadditive_yoneda_obj']
   infer_instance
 #align

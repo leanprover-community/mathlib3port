@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.double_counting
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,8 @@ theorem mem_bipartite_above {b : β} : b ∈ t.bipartiteAbove r a ↔ b ∈ t �
 #align finset.mem_bipartite_above Finset.mem_bipartite_above
 
 theorem sum_card_bipartite_above_eq_sum_card_bipartite_below [∀ a b, Decidable (r a b)] :
-    (∑ a in s, (t.bipartiteAbove r a).card) = ∑ b in t, (s.bipartiteBelow r b).card := by
+    (∑ a in s, (t.bipartiteAbove r a).card) = ∑ b in t, (s.bipartiteBelow r b).card :=
+  by
   simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]
   exact sum_comm
 #align
@@ -127,11 +128,11 @@ theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t �
       card_mul_le_card_mul _
         (fun a h =>
           card_pos.2 <|
-            (by 
+            (by
               rw [← coe_nonempty, coe_bipartite_above]
               exact hs _ h : (t.bipartite_above r a).Nonempty))
         fun b h =>
-        card_le_one.2 <| by 
+        card_le_one.2 <| by
           simp_rw [mem_bipartite_below]
           exact ht _ h
 #align finset.card_le_card_of_forall_subsingleton Finset.card_le_card_of_forall_subsingleton

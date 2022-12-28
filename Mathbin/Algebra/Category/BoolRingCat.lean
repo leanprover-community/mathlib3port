@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.category.BoolRing
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,14 +65,14 @@ instance hasForgetToCommRing : HasForget₂ BoolRingCat CommRingCat :=
 
 /-- Constructs an isomorphism of Boolean rings from a ring isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : BoolRingCat.{u}} (e : α ≃+* β) :
-    α ≅ β where 
+def Iso.mk {α β : BoolRingCat.{u}} (e : α ≃+* β) : α ≅ β
+    where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
 #align BoolRing.iso.mk BoolRingCat.Iso.mk
@@ -83,17 +83,15 @@ end BoolRingCat
 
 
 @[simps]
-instance BoolRingCat.hasForgetToBoolAlg :
-    HasForget₂ BoolRingCat
-      BoolAlgCat where forget₂ :=
+instance BoolRingCat.hasForgetToBoolAlg : HasForget₂ BoolRingCat BoolAlgCat
+    where forget₂ :=
     { obj := fun X => BoolAlgCat.of (AsBoolalg X)
       map := fun X Y => RingHom.asBoolalg }
 #align BoolRing.has_forget_to_BoolAlg BoolRingCat.hasForgetToBoolAlg
 
 @[simps]
-instance BoolAlgCat.hasForgetToBoolRing :
-    HasForget₂ BoolAlgCat
-      BoolRingCat where forget₂ :=
+instance BoolAlgCat.hasForgetToBoolRing : HasForget₂ BoolAlgCat BoolRingCat
+    where forget₂ :=
     { obj := fun X => BoolRingCat.of (AsBoolring X)
       map := fun X Y => BoundedLatticeHom.asBoolring }
 #align BoolAlg.has_forget_to_BoolRing BoolAlgCat.hasForgetToBoolRing

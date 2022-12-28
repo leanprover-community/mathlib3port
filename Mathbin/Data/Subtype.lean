@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.subtype
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,8 @@ theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x //
 
 #print Subtype.heq_iff_coe_heq /-
 theorem heq_iff_coe_heq {α β : Sort _} {p : α → Prop} {q : β → Prop} {a : { x // p x }}
-    {b : { y // q y }} (h : α = β) (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) := by
+    {b : { y // q y }} (h : α = β) (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) :=
+  by
   subst h
   subst h'
   rw [heq_iff_eq, heq_iff_eq, ext_iff]
@@ -221,7 +222,7 @@ theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → P
 
 /- warning: subtype.restrict_def -> Subtype.restrict_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}} {β : Type.{u2}} (f : α -> β) (p : α -> Prop), Eq.{max (max 1 u1) (succ u2)} ((Subtype.{u1} α p) -> β) (Subtype.restrict.{u1, u2} α (fun (ᾰ : α) => β) p f) (Function.comp.{max 1 u1, u1, succ u2} (Subtype.{u1} α p) α β f ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} α p) α (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (Subtype.val.{u1} α (fun (x : α) => (fun (x : α) => p x) x)))))))
+  forall {α : Sort.{u1}} {β : Type.{u2}} (f : α -> β) (p : α -> Prop), Eq.{max (max 1 u1) (succ u2)} ((Subtype.{u1} α p) -> β) (Subtype.restrict.{u1, u2} α (fun (ᾰ : α) => β) p f) (Function.comp.{max 1 u1, u1, succ u2} (Subtype.{u1} α p) α β f ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} α p) α (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} α p) α (coeBase.{max 1 u1, u1} (Subtype.{u1} α p) α (coeSubtype.{u1} α (fun (x : α) => p x)))))))
 but is expected to have type
   forall {α : Sort.{u2}} {β : Type.{u1}} (f : α -> β) (p : α -> Prop), Eq.{max u2 (succ u1)} ((Subtype.{u2} α p) -> β) (Subtype.restrict.{u2, u1} α (fun (ᾰ : α) => β) p f) (Function.comp.{max 1 u2, u2, succ u1} (Subtype.{u2} α p) α β f (fun (a : Subtype.{u2} α p) => Subtype.val.{u2} α p a))
 Case conversion may be inaccurate. Consider using '#align subtype.restrict_def Subtype.restrict_defₓ'. -/
@@ -246,7 +247,8 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : α -> Type.{u1}} [ne : forall (a : α), Nonempty.{succ u1} (β a)] (p : α -> Prop), Function.Surjective.{max u2 (succ u1), max u2 (succ u1)} (forall (x : α), β x) (forall (x : Subtype.{u2} α p), β (Subtype.val.{u2} α p x)) (fun (f : forall (x : α), β x) => Subtype.restrict.{u2, u1} α (fun (x : α) => β x) p f)
 Case conversion may be inaccurate. Consider using '#align subtype.surjective_restrict Subtype.surjective_restrictₓ'. -/
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
-    Surjective fun f : ∀ x, β x => restrict p f := by
+    Surjective fun f : ∀ x, β x => restrict p f :=
+  by
   letI := Classical.decPred p
   refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext <| _⟩
   rintro ⟨x, hx⟩
@@ -341,7 +343,7 @@ instance [HasEquiv α] (p : α → Prop) : HasEquiv (Subtype p) :=
 
 /- warning: subtype.equiv_iff -> Subtype.equiv_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}} [_inst_1 : HasEquivₓ.{u1} α] {p : α -> Prop} {s : Subtype.{u1} α p} {t : Subtype.{u1} α p}, Iff (HasEquivₓ.Equiv.{max 1 u1} (Subtype.{u1} α p) (Subtype.hasEquiv.{u1} α _inst_1 p) s t) (HasEquivₓ.Equiv.{u1} α _inst_1 ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} α p) α (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (Subtype.val.{u1} α (fun (x : α) => (fun (x : α) => p x) x))))) s) ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} α p) α (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (Subtype.val.{u1} α (fun (x : α) => (fun (x : α) => p x) x))))) t))
+  forall {α : Sort.{u1}} [_inst_1 : HasEquivₓ.{u1} α] {p : α -> Prop} {s : Subtype.{u1} α p} {t : Subtype.{u1} α p}, Iff (HasEquivₓ.Equiv.{max 1 u1} (Subtype.{u1} α p) (Subtype.hasEquiv.{u1} α _inst_1 p) s t) (HasEquivₓ.Equiv.{u1} α _inst_1 ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} α p) α (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} α p) α (coeBase.{max 1 u1, u1} (Subtype.{u1} α p) α (coeSubtype.{u1} α (fun (x : α) => p x))))) s) ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} α p) α (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} α p) α (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} α p) α (coeBase.{max 1 u1, u1} (Subtype.{u1} α p) α (coeSubtype.{u1} α (fun (x : α) => p x))))) t))
 but is expected to have type
   forall {α : Sort.{u1}} [_inst_1 : HasEquiv.{u1, 0} α] {p : α -> Prop} {s : Subtype.{u1} α p} {t : Subtype.{u1} α p}, Iff (HasEquiv.Equiv.{max 1 u1, 0} (Subtype.{u1} α p) (Subtype.instHasEquivSubtype.{u1, 0} α _inst_1 p) s t) (HasEquiv.Equiv.{u1, 0} α _inst_1 (Subtype.val.{u1} α p s) (Subtype.val.{u1} α p t))
 Case conversion may be inaccurate. Consider using '#align subtype.equiv_iff Subtype.equiv_iffₓ'. -/

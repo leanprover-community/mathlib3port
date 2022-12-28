@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.complex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,8 +64,8 @@ def im : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
 
 /-- Given `s` and `t` signed measures, `s + it` is a complex measure-/
 @[simps]
-def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) :
-    ComplexMeasure α where 
+def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : ComplexMeasure α
+    where
   measureOf' i := ⟨s i, t i⟩
   empty' := by rw [s.empty, t.empty] <;> rfl
   not_measurable' i hi := by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
@@ -84,14 +84,14 @@ theorem to_complex_measure_to_signed_measure (c : ComplexMeasure α) :
   measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.to_complex_measure_to_signed_measure
 
 theorem MeasureTheory.SignedMeasure.re_to_complex_measure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).re = s := by 
+    (s.toComplexMeasure t).re = s := by
   ext (i hi)
   rfl
 #align
   measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_to_complex_measure
 
 theorem MeasureTheory.SignedMeasure.im_to_complex_measure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).im = t := by 
+    (s.toComplexMeasure t).im = t := by
   ext (i hi)
   rfl
 #align
@@ -99,10 +99,8 @@ theorem MeasureTheory.SignedMeasure.im_to_complex_measure (s t : SignedMeasure �
 
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
 @[simps]
-def equivSignedMeasure :
-    ComplexMeasure α ≃
-      SignedMeasure α × SignedMeasure
-          α where 
+def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure α
+    where
   toFun c := ⟨c.re, c.im⟩
   invFun := fun ⟨s, t⟩ => s.toComplexMeasure t
   left_inv c := c.to_complex_measure_to_signed_measure
@@ -120,9 +118,9 @@ variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
-  { equivSignedMeasure with 
+  { equivSignedMeasure with
     map_add' := fun c d => by ext (i hi) <;> rfl
-    map_smul' := by 
+    map_smul' := by
       intro r c; ext (i hi)
       · change (r • c i).re = r • (c i).re
         simp [Complex.smul_re]

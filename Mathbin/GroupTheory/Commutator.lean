@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jordan Brown, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module group_theory.commutator
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,8 @@ theorem commutator_mono (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,
   commutator_le.mpr fun g₁ hg₁ g₂ hg₂ => commutator_mem_commutator (h₁ hg₁) (h₂ hg₂)
 #align subgroup.commutator_mono Subgroup.commutator_mono
 
-theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ H₂.centralizer := by
+theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ H₂.centralizer :=
+  by
   rw [eq_bot_iff, commutator_le]
   refine'
     forall_congr' fun p => forall_congr' fun hp => forall_congr' fun q => forall_congr' fun hq => _
@@ -106,7 +107,8 @@ theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ �
 
 /-- **The Three Subgroups Lemma** (via the Hall-Witt identity) -/
 theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁⁆ = ⊥) (h2 : ⁅⁅H₃, H₁⁆, H₂⁆ = ⊥) :
-    ⁅⁅H₁, H₂⁆, H₃⁆ = ⊥ := by
+    ⁅⁅H₁, H₂⁆, H₃⁆ = ⊥ :=
+  by
   simp_rw [commutator_eq_bot_iff_le_centralizer, commutator_le,
     mem_centralizer_iff_commutator_eq_one, ← commutatorElement_def] at h1 h2⊢
   intro x hx y hy z hz
@@ -130,14 +132,15 @@ theorem commutator_comm : ⁅H₁, H₂⁆ = ⁅H₂, H₁⁆ :=
 
 section Normal
 
-instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal ⁅H₁, H₂⁆ := by
+instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal ⁅H₁, H₂⁆ :=
+  by
   let base : Set G := { x | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = x }
   change (closure base).Normal
   suffices h_base : base = Group.conjugatesOfSet base
   · rw [h_base]
     exact Subgroup.normal_closure_normal
   refine' Set.Subset.antisymm Group.subset_conjugates_of_set fun a h => _
-  simp_rw [Group.mem_conjugates_of_set_iff, is_conj_iff] at h
+  simp_rw [Group.mem_conjugates_of_set_iff, isConj_iff] at h
   rcases h with ⟨b, ⟨c, hc, e, he, rfl⟩, d, rfl⟩
   exact ⟨_, h₁.conj_mem c hc d, _, h₂.conj_mem e he d, (conjugate_commutator_element c e d).symm⟩
 #align subgroup.commutator_normal Subgroup.commutator_normal
@@ -171,7 +174,8 @@ theorem commutator_le_inf [Normal H₁] [Normal H₂] : ⁅H₁, H₂⁆ ≤ H�
 
 end Normal
 
-theorem map_commutator (f : G →* G') : map f ⁅H₁, H₂⁆ = ⁅map f H₁, map f H₂⁆ := by
+theorem map_commutator (f : G →* G') : map f ⁅H₁, H₂⁆ = ⁅map f H₁, map f H₂⁆ :=
+  by
   simp_rw [le_antisymm_iff, map_le_iff_le_comap, commutator_le, mem_comap, map_commutator_element]
   constructor
   · intro p hp q hq
@@ -198,7 +202,8 @@ instance commutatorCharacteristic [h₁ : Characteristic H₁] [h₂ : Character
 #align subgroup.commutator_characteristic Subgroup.commutatorCharacteristic
 
 theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
-    ⁅H₁.Prod K₁, H₂.Prod K₂⁆ = ⁅H₁, H₂⁆.Prod ⁅K₁, K₂⁆ := by
+    ⁅H₁.Prod K₁, H₂.Prod K₂⁆ = ⁅H₁, H₂⁆.Prod ⁅K₁, K₂⁆ :=
+  by
   apply le_antisymm
   · rw [commutator_le]
     rintro ⟨p₁, p₂⟩ ⟨hp₁, hp₂⟩ ⟨q₁, q₂⟩ ⟨hq₁, hq₂⟩
@@ -227,7 +232,7 @@ theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _
     (H K : ∀ i, Subgroup (Gs i)) :
     ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ = Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
   by
-  classical 
+  classical
     apply le_antisymm (commutator_pi_pi_le H K)
     · rw [pi_le_iff]
       intro i hi

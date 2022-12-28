@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.triangulated
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ instance (X : C) :
     Nonempty
       (Octahedron (comp_id (𝟙 X)) (contractible_distinguished X) (contractible_distinguished X)
         (contractible_distinguished X)) :=
-  by 
+  by
   refine' ⟨⟨0, 0, _, _, _, _, by convert contractible_distinguished (0 : C)⟩⟩
   all_goals apply Subsingleton.elim
 
@@ -77,17 +77,16 @@ def triangle : Triangle C :=
 
 /-- The first morphism of triangles given by an octahedron. -/
 @[simps]
-def triangleMorphism₁ :
-    Triangle.mk u₁₂ v₁₂ w₁₂ ⟶
-      Triangle.mk u₁₃ v₁₃ w₁₃ where 
+def triangleMorphism₁ : Triangle.mk u₁₂ v₁₂ w₁₂ ⟶ Triangle.mk u₁₃ v₁₃ w₁₃
+    where
   hom₁ := 𝟙 X₁
   hom₂ := u₂₃
   hom₃ := h.m₁
-  comm₁' := by 
+  comm₁' := by
     dsimp
     rw [id_comp, comm]
   comm₂' := h.comm₁
-  comm₃' := by 
+  comm₃' := by
     dsimp
     simpa only [Functor.map_id, comp_id] using h.comm₂.symm
 #align
@@ -95,16 +94,15 @@ def triangleMorphism₁ :
 
 /-- The second morphism of triangles given an octahedron. -/
 @[simps]
-def triangleMorphism₂ :
-    Triangle.mk u₁₃ v₁₃ w₁₃ ⟶
-      Triangle.mk u₂₃ v₂₃ w₂₃ where 
+def triangleMorphism₂ : Triangle.mk u₁₃ v₁₃ w₁₃ ⟶ Triangle.mk u₂₃ v₂₃ w₂₃
+    where
   hom₁ := u₁₂
   hom₂ := 𝟙 X₃
   hom₃ := h.m₃
-  comm₁' := by 
+  comm₁' := by
     dsimp
     rw [comp_id, comm]
-  comm₂' := by 
+  comm₂' := by
     dsimp
     rw [id_comp, h.comm₃]
   comm₃' := h.comm₄

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.complete_lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,7 @@ theorem map_supr₂ [SupSet α] [SupSet β] [SupHomClass F α β] (f : F) (g : �
 #align map_supr₂ map_supr₂
 
 theorem map_infi [InfSet α] [InfSet β] [InfHomClass F α β] (f : F) (g : ι → α) :
-    f (⨅ i, g i) = ⨅ i, f (g i) := by rw [infi, infi, map_Inf, Set.range_comp]
+    f (⨅ i, g i) = ⨅ i, f (g i) := by rw [infᵢ, infᵢ, map_Inf, Set.range_comp]
 #align map_infi map_infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -165,7 +165,9 @@ theorem map_infi₂ [InfSet α] [InfSet β] [InfHomClass F α β] (f : F) (g : �
 -- See note [lower instance priority]
 instance (priority := 100) SupHomClass.toSupBotHomClass [CompleteLattice α] [CompleteLattice β]
     [SupHomClass F α β] : SupBotHomClass F α β :=
-  { ‹SupHomClass F α β› with
+  {
+    ‹SupHomClass F α
+        β› with
     map_sup := fun f a b => by rw [← supₛ_pair, map_Sup, Set.image_pair, supₛ_pair]
     map_bot := fun f => by rw [← supₛ_empty, map_Sup, Set.image_empty, supₛ_empty] }
 #align Sup_hom_class.to_sup_bot_hom_class SupHomClass.toSupBotHomClass
@@ -173,7 +175,9 @@ instance (priority := 100) SupHomClass.toSupBotHomClass [CompleteLattice α] [Co
 -- See note [lower instance priority]
 instance (priority := 100) InfHomClass.toInfTopHomClass [CompleteLattice α] [CompleteLattice β]
     [InfHomClass F α β] : InfTopHomClass F α β :=
-  { ‹InfHomClass F α β› with
+  {
+    ‹InfHomClass F α
+        β› with
     map_inf := fun f a b => by rw [← infₛ_pair, map_Inf, Set.image_pair, infₛ_pair]
     map_top := fun f => by rw [← infₛ_empty, map_Inf, Set.image_empty, infₛ_empty] }
 #align Inf_hom_class.to_inf_top_hom_class InfHomClass.toInfTopHomClass
@@ -266,8 +270,8 @@ section SupSet
 
 variable [SupSet β] [SupSet γ] [SupSet δ]
 
-instance : SupHomClass (SupHom α β) α
-      β where 
+instance : SupHomClass (SupHom α β) α β
+    where
   coe := SupHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_Sup := SupHom.map_Sup'
@@ -310,8 +314,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Sup_hom.copy SupHom.copyₓ'. -/
 /-- Copy of a `Sup_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : SupHom α β) (f' : α → β) (h : f' = f) :
-    SupHom α β where 
+protected def copy (f : SupHom α β) (f' : α → β) (h : f' = f) : SupHom α β
+    where
   toFun := f'
   map_Sup' := h.symm ▸ f.map_Sup'
 #align Sup_hom.copy SupHom.copy
@@ -390,8 +394,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : HasSup.{u1} α] [_inst_2 : HasSup.{u2} β] [_inst_3 : HasSup.{u3} γ], (SupHom.{u2, u3} β γ _inst_2 _inst_3) -> (SupHom.{u1, u2} α β _inst_1 _inst_2) -> (SupHom.{u1, u3} α γ _inst_1 _inst_3)
 Case conversion may be inaccurate. Consider using '#align Sup_hom.comp SupHom.compₓ'. -/
 /-- Composition of `Sup_hom`s as a `Sup_hom`. -/
-def comp (f : SupHom β γ) (g : SupHom α β) :
-    SupHom α γ where 
+def comp (f : SupHom β γ) (g : SupHom α β) : SupHom α γ
+    where
   toFun := f ∘ g
   map_Sup' s := by rw [comp_apply, map_Sup, map_Sup, Set.image_image]
 #align Sup_hom.comp SupHom.comp
@@ -489,7 +493,7 @@ instance : PartialOrder (SupHom α β) :=
   PartialOrder.lift _ FunLike.coe_injective
 
 instance : Bot (SupHom α β) :=
-  ⟨⟨fun _ => ⊥, fun s => by 
+  ⟨⟨fun _ => ⊥, fun s => by
       obtain rfl | hs := s.eq_empty_or_nonempty
       · rw [Set.image_empty, supₛ_empty]
       · rw [hs.image_const, supₛ_singleton]⟩⟩
@@ -534,8 +538,8 @@ section InfSet
 
 variable [InfSet β] [InfSet γ] [InfSet δ]
 
-instance : InfHomClass (InfHom α β) α
-      β where 
+instance : InfHomClass (InfHom α β) α β
+    where
   coe := InfHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_Inf := InfHom.map_Inf'
@@ -578,8 +582,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Inf_hom.copy InfHom.copyₓ'. -/
 /-- Copy of a `Inf_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : InfHom α β) (f' : α → β) (h : f' = f) :
-    InfHom α β where 
+protected def copy (f : InfHom α β) (f' : α → β) (h : f' = f) : InfHom α β
+    where
   toFun := f'
   map_Inf' := h.symm ▸ f.map_Inf'
 #align Inf_hom.copy InfHom.copy
@@ -658,8 +662,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : HasInf.{u1} α] [_inst_2 : HasInf.{u2} β] [_inst_3 : HasInf.{u3} γ], (InfHom.{u2, u3} β γ _inst_2 _inst_3) -> (InfHom.{u1, u2} α β _inst_1 _inst_2) -> (InfHom.{u1, u3} α γ _inst_1 _inst_3)
 Case conversion may be inaccurate. Consider using '#align Inf_hom.comp InfHom.compₓ'. -/
 /-- Composition of `Inf_hom`s as a `Inf_hom`. -/
-def comp (f : InfHom β γ) (g : InfHom α β) :
-    InfHom α γ where 
+def comp (f : InfHom β γ) (g : InfHom α β) : InfHom α γ
+    where
   toFun := f ∘ g
   map_Inf' s := by rw [comp_apply, map_Inf, map_Inf, Set.image_image]
 #align Inf_hom.comp InfHom.comp
@@ -757,7 +761,7 @@ instance : PartialOrder (InfHom α β) :=
   PartialOrder.lift _ FunLike.coe_injective
 
 instance : Top (InfHom α β) :=
-  ⟨⟨fun _ => ⊤, fun s => by 
+  ⟨⟨fun _ => ⊤, fun s => by
       obtain rfl | hs := s.eq_empty_or_nonempty
       · rw [Set.image_empty, infₛ_empty]
       · rw [hs.image_const, infₛ_singleton]⟩⟩
@@ -798,10 +802,10 @@ namespace FrameHom
 
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [CompleteLattice δ]
 
-instance : FrameHomClass (FrameHom α β) α
-      β where 
+instance : FrameHomClass (FrameHom α β) α β
+    where
   coe f := f.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
     congr
@@ -919,9 +923,8 @@ namespace CompleteLatticeHom
 
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [CompleteLattice δ]
 
-instance :
-    CompleteLatticeHomClass (CompleteLatticeHom α β) α
-      β where 
+instance : CompleteLatticeHomClass (CompleteLatticeHom α β) α β
+    where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_Sup f := f.map_Sup'
@@ -1050,9 +1053,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Sup_hom.dual SupHom.dualₓ'. -/
 /-- Reinterpret a `⨆`-homomorphism as an `⨅`-homomorphism between the dual orders. -/
 @[simps]
-protected def dual :
-    SupHom α β ≃
-      InfHom αᵒᵈ βᵒᵈ where 
+protected def dual : SupHom α β ≃ InfHom αᵒᵈ βᵒᵈ
+    where
   toFun f := ⟨to_dual ∘ f ∘ of_dual, f.map_Sup'⟩
   invFun f := ⟨of_dual ∘ f ∘ to_dual, f.map_Inf'⟩
   left_inv f := SupHom.ext fun a => rfl
@@ -1123,10 +1125,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Inf_hom.dual InfHom.dualₓ'. -/
 /-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
 @[simps]
-protected def dual :
-    InfHom α β ≃
-      SupHom αᵒᵈ
-        βᵒᵈ where 
+protected def dual : InfHom α β ≃ SupHom αᵒᵈ βᵒᵈ
+    where
   toFun f :=
     { toFun := to_dual ∘ f ∘ of_dual
       map_Sup' := fun _ => congr_arg toDual (map_Inf f _) }
@@ -1195,10 +1195,8 @@ variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ]
 /-- Reinterpret a complete lattice homomorphism as a complete lattice homomorphism between the dual
 lattices. -/
 @[simps]
-protected def dual :
-    CompleteLatticeHom α β ≃
-      CompleteLatticeHom αᵒᵈ
-        βᵒᵈ where 
+protected def dual : CompleteLatticeHom α β ≃ CompleteLatticeHom αᵒᵈ βᵒᵈ
+    where
   toFun f := ⟨f.toSupHom.dual, f.map_Inf'⟩
   invFun f := ⟨f.toSupHom.dual, f.map_Inf'⟩
   left_inv f := ext fun a => rfl
@@ -1239,12 +1237,11 @@ namespace CompleteLatticeHom
 /-- `set.preimage` as a complete lattice homomorphism.
 
 See also `Sup_hom.set_image`. -/
-def setPreimage (f : α → β) :
-    CompleteLatticeHom (Set β) (Set
-        α) where 
+def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α)
+    where
   toFun := preimage f
-  map_Sup' s := preimage_sUnion.trans <| by simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
-  map_Inf' s := preimage_sInter.trans <| by simp only [Set.Inf_eq_sInter, Set.sInter_image]
+  map_Sup' s := preimage_unionₛ.trans <| by simp only [Set.supₛ_eq_unionₛ, Set.unionₛ_image]
+  map_Inf' s := preimage_interₛ.trans <| by simp only [Set.infₛ_eq_interₛ, Set.interₛ_image]
 #align complete_lattice_hom.set_preimage CompleteLatticeHom.setPreimage
 
 @[simp]
@@ -1270,7 +1267,8 @@ theorem set_preimage_comp (g : β → γ) (f : α → β) :
 
 end CompleteLatticeHom
 
-theorem Set.image_Sup {f : α → β} (s : Set (Set α)) : f '' supₛ s = supₛ (image f '' s) := by
+theorem Set.image_Sup {f : α → β} (s : Set (Set α)) : f '' supₛ s = supₛ (image f '' s) :=
+  by
   ext b
   simp only [Sup_eq_sUnion, mem_image, mem_sUnion, exists_prop, sUnion_image, mem_Union]
   constructor
@@ -1285,16 +1283,16 @@ subsets.
 
 See also `complete_lattice_hom.set_preimage`. -/
 @[simps]
-def SupHom.setImage (f : α → β) :
-    SupHom (Set α) (Set β) where 
+def SupHom.setImage (f : α → β) : SupHom (Set α) (Set β)
+    where
   toFun := image f
   map_Sup' := Set.image_Sup
 #align Sup_hom.set_image SupHom.setImage
 
 /-- An equivalence of types yields an order isomorphism between their lattices of subsets. -/
 @[simps]
-def Equiv.toOrderIsoSet (e : α ≃ β) :
-    Set α ≃o Set β where 
+def Equiv.toOrderIsoSet (e : α ≃ β) : Set α ≃o Set β
+    where
   toFun := image e
   invFun := image e.symm
   left_inv s := by simp only [← image_comp, Equiv.symm_comp_self, id.def, image_id']

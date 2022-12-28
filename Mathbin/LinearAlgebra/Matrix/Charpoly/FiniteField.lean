@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.finite_field
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,8 @@ variable {n : Type _} [DecidableEq n] [Fintype n]
 
 @[simp]
 theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
-    (M ^ Fintype.card K).charpoly = M.charpoly := by
+    (M ^ Fintype.card K).charpoly = M.charpoly :=
+  by
   cases (isEmpty_or_nonempty n).symm
   · cases' CharP.exists K with p hp
     letI := hp
@@ -50,13 +51,15 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
 
 @[simp]
 theorem Zmod.charpoly_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) :
-    (M ^ p).charpoly = M.charpoly := by
+    (M ^ p).charpoly = M.charpoly :=
+  by
   have h := FiniteField.Matrix.charpoly_pow_card M
   rwa [Zmod.card] at h
 #align zmod.charpoly_pow_card Zmod.charpoly_pow_card
 
 theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
-    trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
+    trace (M ^ Fintype.card K) = trace M ^ Fintype.card K :=
+  by
   cases isEmpty_or_nonempty n
   · simp [zero_pow Fintype.card_pos, Matrix.trace]
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff,
@@ -64,7 +67,8 @@ theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matri
 #align finite_field.trace_pow_card FiniteField.trace_pow_card
 
 theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) :
-    trace (M ^ p) = trace M ^ p := by
+    trace (M ^ p) = trace M ^ p :=
+  by
   have h := FiniteField.trace_pow_card M
   rwa [Zmod.card] at h
 #align zmod.trace_pow_card Zmod.trace_pow_card

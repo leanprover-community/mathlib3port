@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Mario Carneiro, Sean Leather
 
 ! This file was ported from Lean 3 source module data.finset.option
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,13 +98,14 @@ theorem mem_erase_none {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔
 #align finset.mem_erase_none Finset.mem_erase_none
 
 theorem erase_none_eq_bUnion [DecidableEq α] (s : Finset (Option α)) :
-    s.eraseNone = s.bUnion Option.toFinset := by 
+    s.eraseNone = s.bUnion Option.toFinset := by
   ext
   simp
 #align finset.erase_none_eq_bUnion Finset.erase_none_eq_bUnion
 
 @[simp]
-theorem erase_none_map_some (s : Finset α) : (s.map Embedding.some).eraseNone = s := by
+theorem erase_none_map_some (s : Finset α) : (s.map Embedding.some).eraseNone = s :=
+  by
   ext
   simp
 #align finset.erase_none_map_some Finset.erase_none_map_some
@@ -121,26 +122,30 @@ theorem coe_erase_none (s : Finset (Option α)) : (s.eraseNone : Set α) = some 
 
 @[simp]
 theorem erase_none_union [DecidableEq (Option α)] [DecidableEq α] (s t : Finset (Option α)) :
-    (s ∪ t).eraseNone = s.eraseNone ∪ t.eraseNone := by
+    (s ∪ t).eraseNone = s.eraseNone ∪ t.eraseNone :=
+  by
   ext
   simp
 #align finset.erase_none_union Finset.erase_none_union
 
 @[simp]
 theorem erase_none_inter [DecidableEq (Option α)] [DecidableEq α] (s t : Finset (Option α)) :
-    (s ∩ t).eraseNone = s.eraseNone ∩ t.eraseNone := by
+    (s ∩ t).eraseNone = s.eraseNone ∩ t.eraseNone :=
+  by
   ext
   simp
 #align finset.erase_none_inter Finset.erase_none_inter
 
 @[simp]
-theorem erase_none_empty : (∅ : Finset (Option α)).eraseNone = ∅ := by
+theorem erase_none_empty : (∅ : Finset (Option α)).eraseNone = ∅ :=
+  by
   ext
   simp
 #align finset.erase_none_empty Finset.erase_none_empty
 
 @[simp]
-theorem erase_none_none : ({none} : Finset (Option α)).eraseNone = ∅ := by
+theorem erase_none_none : ({none} : Finset (Option α)).eraseNone = ∅ :=
+  by
   ext
   simp
 #align finset.erase_none_none Finset.erase_none_none
@@ -162,7 +167,8 @@ theorem insert_none_erase_none [DecidableEq (Option α)] (s : Finset (Option α)
 #align finset.insert_none_erase_none Finset.insert_none_erase_none
 
 @[simp]
-theorem erase_none_insert_none (s : Finset α) : eraseNone (insertNone s) = s := by
+theorem erase_none_insert_none (s : Finset α) : eraseNone (insertNone s) = s :=
+  by
   ext
   simp
 #align finset.erase_none_insert_none Finset.erase_none_insert_none

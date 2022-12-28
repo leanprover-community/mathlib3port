@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.discrete_valuation_ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself,
 -/
 def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
   Units.mkOfMulEqOne A (WittVector.mk p (inverseCoeff a A))
-    (by 
+    (by
       ext n
       induction' n with n ih
       · simp [WittVector.mul_coeff_zero, inverse_coeff, hA]
@@ -94,7 +94,8 @@ section Field
 
 variable {k : Type _} [Field k] [CharP k p]
 
-theorem is_unit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUnit x := by
+theorem is_unit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUnit x :=
+  by
   let y : kˣ := Units.mk0 (x.coeff 0) hx
   have hy : x.coeff 0 = y := rfl
   exact (mk_unit hy).IsUnit
@@ -102,8 +103,9 @@ theorem is_unit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUn
 
 variable (p)
 
-theorem irreducible : Irreducible (p : 𝕎 k) := by
-  have hp : ¬IsUnit (p : 𝕎 k) := by 
+theorem irreducible : Irreducible (p : 𝕎 k) :=
+  by
+  have hp : ¬IsUnit (p : 𝕎 k) := by
     intro hp
     simpa only [constant_coeff_apply, coeff_p_zero, not_isUnit_zero] using
       (constant_coeff : WittVector p k →+* _).is_unit_map hp
@@ -133,7 +135,8 @@ section PerfectRing
 variable {k : Type _} [CommRing k] [CharP k p] [PerfectRing k p]
 
 theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) :
-    ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
+    ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b :=
+  by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
   rw [WittVector.iterate_frobenius_coeff] at hc
@@ -157,7 +160,7 @@ section PerfectField
 variable {k : Type _} [Field k] [CharP k p] [PerfectRing k p]
 
 theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Units (𝕎 k)), a = p ^ m * b :=
-  by 
+  by
   obtain ⟨m, b, h₁, h₂⟩ := exists_eq_pow_p_mul a ha
   let b₀ := Units.mk0 (b.coeff 0) h₁
   have hb₀ : b.coeff 0 = b₀ := rfl
@@ -172,13 +175,13 @@ https://github.com/leanprover/lean4/issues/1102
 -/
 /-- The ring of Witt Vectors of a perfect field of positive characteristic is a DVR.
 -/
-theorem discrete_valuation_ring : DiscreteValuationRing (𝕎 k) :=
-  DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
-    (by 
+theorem discreteValuationRing : DiscreteValuationRing (𝕎 k) :=
+  DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+    (by
       refine' ⟨p, Irreducible p, fun x hx => _⟩
       obtain ⟨n, b, hb⟩ := exists_eq_pow_p_mul' x hx
       exact ⟨n, b, hb.symm⟩)
-#align witt_vector.discrete_valuation_ring WittVector.discrete_valuation_ring
+#align witt_vector.discrete_valuation_ring WittVector.discreteValuationRing
 
 end PerfectField
 

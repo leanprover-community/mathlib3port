@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.Mod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ instance homInhabited (M : ModCat A) : Inhabited (Hom M M) :=
 def comp {M N O : ModCat A} (f : Hom M N) (g : Hom N O) : Hom M O where Hom := f.Hom ≫ g.Hom
 #align Mod.comp ModCat.comp
 
-instance : Category (ModCat A) where 
+instance : Category (ModCat A) where
   Hom M N := Hom M N
   id := id
   comp M N O f g := comp f g
@@ -99,7 +99,7 @@ variable (A)
 
 /-- A monoid object as a module over itself. -/
 @[simps]
-def regular : ModCat A where 
+def regular : ModCat A where
   x := A.x
   act := A.mul
 #align Mod.regular ModCat.regular
@@ -108,7 +108,7 @@ instance : Inhabited (ModCat A) :=
   ⟨regular A⟩
 
 /-- The forgetful functor from module objects to the ambient category. -/
-def forget : ModCat A ⥤ C where 
+def forget : ModCat A ⥤ C where
   obj A := A.x
   map A B f := f.Hom
 #align Mod.forget ModCat.forget
@@ -120,13 +120,12 @@ open CategoryTheory.MonoidalCategory
 between the categories of module objects.
 -/
 @[simps]
-def comap {A B : Mon_ C} (f : A ⟶ B) :
-    ModCat B ⥤
-      ModCat A where 
+def comap {A B : Mon_ C} (f : A ⟶ B) : ModCat B ⥤ ModCat A
+    where
   obj M :=
     { x := M.x
       act := (f.Hom ⊗ 𝟙 M.x) ≫ M.act
-      one_act' := by 
+      one_act' := by
         slice_lhs 1 2 => rw [← comp_tensor_id]
         rw [f.one_hom, one_act]
       assoc' :=
@@ -143,7 +142,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) :
         rw [comp_tensor_id, category.assoc] }
   map M N g :=
     { Hom := g.Hom
-      act_hom' := by 
+      act_hom' := by
         dsimp
         slice_rhs 1 2 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
         slice_rhs 2 3 => rw [← g.act_hom]

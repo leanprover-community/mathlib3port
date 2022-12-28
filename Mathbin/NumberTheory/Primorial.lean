@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens
 
 ! This file was ported from Lean 3 source module number_theory.primorial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ def primorial (n : ℕ) : ℕ :=
 -- mathport name: «expr #»
 local notation x "#" => primorial x
 
-theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n# := by
+theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n# :=
+  by
   refine' prod_congr _ fun _ _ => rfl
   rw [range_succ, filter_insert, if_neg fun h => _]
   have two_dvd : 2 ∣ n + 1 := dvd_iff_mod_eq_zero.mpr (by rw [← mod_add_mod, r, mod_self])
@@ -49,9 +50,10 @@ theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n + 1)# = n#
 #align primorial_succ primorial_succ
 
 theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : Nat.Prime p) (m : ℕ) (p_big : m + 1 < p)
-    (p_small : p ≤ 2 * m + 1) : p ∣ choose (2 * m + 1) (m + 1) := by
+    (p_small : p ≤ 2 * m + 1) : p ∣ choose (2 * m + 1) (m + 1) :=
+  by
   have m_size : m + 1 ≤ 2 * m + 1 := le_of_lt (lt_of_lt_of_le p_big p_small)
-  have s : ¬p ∣ (m + 1)! := by 
+  have s : ¬p ∣ (m + 1)! := by
     intro p_div_fact
     exact lt_le_antisymm p_big (is_prime.dvd_factorial.mp p_div_fact)
   have t : ¬p ∣ (2 * m + 1 - (m + 1))! := by
@@ -77,11 +79,12 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
     match Nat.mod_two_eq_zero_or_one (n + 1) with
     | Or.inl n_odd =>
       match Nat.even_iff.2 n_odd with
-      | ⟨m, twice_m⟩ => by 
+      | ⟨m, twice_m⟩ => by
         have recurse : m + 1 < n + 2 := by linarith
         calc
           (n + 2)# = ∏ i in filter Nat.Prime (range (2 * m + 2)), i := by simpa [two_mul, ← twice_m]
-          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i := by
+          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2) ∪ range (m + 2)), i :=
+            by
             rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
             · exact bot_le
             · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_left m m
@@ -94,20 +97,22 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           _ =
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) *
                 ∏ i in filter Nat.Prime (range (m + 2)), i :=
-            by 
+            by
             apply Finset.prod_union
-            have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) := by
+            have disj : Disjoint (Finset.ico (m + 2) (2 * m + 2)) (range (m + 2)) :=
+              by
               simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_lt, Finset.mem_range]
               intro _ pr _
               exact pr
             exact Finset.disjoint_filter_filter disj
           _ ≤ (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
             Nat.mul_le_mul_left _ (primorial_le_4_pow (m + 1))
-          _ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) := by
+          _ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) :=
+            by
             have s :
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣
                 choose (2 * m + 1) (m + 1) :=
-              by 
+              by
               refine' prod_primes_dvd (choose (2 * m + 1) (m + 1)) _ _
               · intro a
                 rw [Finset.mem_filter, Nat.prime_iff]
@@ -122,7 +127,7 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
             have r :
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ≤
                 choose (2 * m + 1) (m + 1) :=
-              by 
+              by
               refine' @Nat.le_of_dvd _ _ _ s
               exact @choose_pos (2 * m + 1) (m + 1) (by linarith)
             exact Nat.mul_le_mul_right _ r
@@ -131,7 +136,8 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           _ = 4 ^ (2 * m + 1) := by ring
           _ = 4 ^ (n + 2) := by rw [two_mul, ← twice_m]
           
-    | Or.inr n_even => by
+    | Or.inr n_even =>
+      by
       obtain one_lt_n | n_le_one : 1 < n + 1 ∨ n + 1 ≤ 1 := lt_or_le 1 (n + 1)
       · rw [primorial_succ one_lt_n n_even]
         calc

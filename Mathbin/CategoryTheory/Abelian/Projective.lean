@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.projective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,8 @@ theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f 
 
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
 def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Projective P] :
-    PreservesFiniteColimits (preadditiveCoyonedaObj (op P)) := by
+    PreservesFiniteColimits (preadditiveCoyonedaObj (op P)) :=
+  by
   letI := (projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' P).mp hP
   apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
 #align
@@ -54,7 +55,8 @@ def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Proj
 
 /-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
 theorem projective_of_preserves_finite_colimits_preadditive_coyoneda_obj (P : C)
-    [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P := by
+    [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P :=
+  by
   rw [projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj']
   infer_instance
 #align
@@ -90,7 +92,7 @@ irreducible_def of (Z : C) : ProjectiveResolutionCat Z :=
   { complex := ofComplex Z
     π :=
       ChainComplex.mkHom _ _ (Projective.π Z) 0
-        (by 
+        (by
           simp
           exact (exact_d_f (projective.π Z)).w.symm)
         fun n _ => ⟨0, by ext⟩
@@ -119,7 +121,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 then `X` is a projective resolution of `Y.` -/
 def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
     (f : X ⟶ (ChainComplex.single₀ C).obj Y) [QuasiIso f] (H : ∀ n, Projective (X.x n)) :
-    ProjectiveResolutionCat Y where 
+    ProjectiveResolutionCat Y where
   complex := X
   π := f
   Projective := H

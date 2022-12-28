@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.print_sorry
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,7 +23,7 @@ Other searches through the environment can be done using `tactic.find_all_exprs`
 
 namespace Tactic
 
-/-- Auxilliary data type for `tactic.find_all_exprs` -/
+/-- Auxiliary data type for `tactic.find_all_exprs` -/
 unsafe structure find_all_expr_data where
   matching_subexpr : Bool
   -- this declaration contains a subexpression on which the test passes
@@ -37,7 +37,7 @@ unsafe structure find_all_expr_data where
 #align tactic.find_all_expr_data tactic.find_all_expr_data
 
 -- direct descendants of a declaration
-/-- Auxilliary declaration for `tactic.find_all_exprs`.
+/-- Auxiliary declaration for `tactic.find_all_exprs`.
 
 Traverse all declarations occurring in the declaration with the given name,
 excluding declarations `n` such that `g n` is true (and all their descendants),

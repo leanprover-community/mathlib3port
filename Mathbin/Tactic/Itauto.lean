@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.itauto
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,13 +172,15 @@ section
 open Ordering
 
 /-- A comparator for `and_kind`. (There should really be a derive handler for this.) -/
-def AndKind.cmp (p q : AndKind) : Ordering := by
+def AndKind.cmp (p q : AndKind) : Ordering :=
+  by
   cases p <;> cases q
   exacts[Eq, lt, lt, GT.gt, Eq, lt, GT.gt, GT.gt, Eq]
 #align tactic.itauto.and_kind.cmp Tactic.Itauto.AndKind.cmp
 
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
-def Prop.cmp (p q : Prop) : Ordering := by
+def Prop.cmp (p q : Prop) : Ordering :=
+  by
   induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q
   case var.var => exact cmp p q
   case true.true => exact Eq

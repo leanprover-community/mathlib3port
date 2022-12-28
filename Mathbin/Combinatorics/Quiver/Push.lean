@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.push
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ namespace Push
 
 #print Quiver.Push.of /-
 /-- The prefunctor induced by pushing arrows via `σ` -/
-def of : V ⥤q Push σ where 
+def of : V ⥤q Push σ where
   obj := σ
   map X Y f := PushQuiver.arrow f
 #align quiver.push.of Quiver.Push.of
@@ -85,10 +85,11 @@ include φ h
 /-- Given a function `τ : W → W'` and a prefunctor `φ : V ⥤q W'`, one can extend `τ` to be
 a prefunctor `W ⥤q W'` if `τ` and `σ` factorize `φ` at the level of objects, where `W` is given
 the pushforward quiver structure `push σ`. -/
-def lift : Push σ ⥤q W' where 
+def lift : Push σ ⥤q W' where
   obj := τ
   map :=
-    @PushQuiver.rec V _ W σ (fun X Y f => τ X ⟶ τ Y) fun X Y f => by
+    @PushQuiver.rec V _ W σ (fun X Y f => τ X ⟶ τ Y) fun X Y f =>
+      by
       rw [← h X, ← h Y]
       exact φ.map f
 #align quiver.push.lift Quiver.Push.lift
@@ -110,7 +111,8 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u5}} [_inst_1 : Quiver.{u4, u5} V] {W : Type.{u1}} (σ : V -> W) {W' : Type.{u3}} [_inst_2 : Quiver.{u2, u3} W'] (φ : Prefunctor.{u4, u2, u5, u3} V _inst_1 W' _inst_2) (τ : W -> W') (h : forall (x : V), Eq.{succ u3} W' (Prefunctor.obj.{u4, u2, u5, u3} V _inst_1 W' _inst_2 φ x) (τ (σ x))), Eq.{max (max (max (succ u5) u4) (succ u3)) u2} (Prefunctor.{u4, u2, u5, u3} V _inst_1 W' _inst_2) (Prefunctor.comp.{u5, u4, u1, max (max (succ u5) (succ u4)) (succ u1), u3, u2} V _inst_1 (Quiver.Push.{u5, u1} V W σ) (Quiver.instQuiverPush.{u5, u4, u1} V _inst_1 W σ) W' _inst_2 (Quiver.Push.of.{u5, u4, u1} V _inst_1 W σ) (Quiver.Push.lift.{u5, u4, u1, u3, u2} V _inst_1 W σ W' _inst_2 φ τ h)) φ
 Case conversion may be inaccurate. Consider using '#align quiver.push.lift_comp Quiver.Push.lift_compₓ'. -/
-theorem lift_comp : (of σ ⋙q lift σ φ τ h) = φ := by
+theorem lift_comp : (of σ ⋙q lift σ φ τ h) = φ :=
+  by
   fapply Prefunctor.ext
   · rintro
     simp only [Prefunctor.comp_obj]
@@ -132,7 +134,7 @@ but is expected to have type
   forall {V : Type.{u5}} [_inst_1 : Quiver.{u4, u5} V] {W : Type.{u3}} (σ : V -> W) {W' : Type.{u1}} [_inst_2 : Quiver.{u2, u1} W'] (φ : Prefunctor.{u4, u2, u5, u1} V _inst_1 W' _inst_2) (τ : W -> W') (h : forall (x : V), Eq.{succ u1} W' (Prefunctor.obj.{u4, u2, u5, u1} V _inst_1 W' _inst_2 φ x) (τ (σ x))) (Φ : Prefunctor.{max (max (succ u5) (succ u4)) (succ u3), u2, u3, u1} (Quiver.Push.{u5, u3} V W σ) (Quiver.instQuiverPush.{u5, u4, u3} V _inst_1 W σ) W' _inst_2), (Eq.{max (succ u3) (succ u1)} ((Quiver.Push.{u5, u3} V W σ) -> W') (Prefunctor.obj.{max (max (succ u5) (succ u4)) (succ u3), u2, u3, u1} (Quiver.Push.{u5, u3} V W σ) (Quiver.instQuiverPush.{u5, u4, u3} V _inst_1 W σ) W' _inst_2 Φ) τ) -> (Eq.{max (max (max (succ u5) u4) (succ u1)) u2} (Prefunctor.{u4, u2, u5, u1} V _inst_1 W' _inst_2) (Prefunctor.comp.{u5, u4, u3, max (max (succ u5) (succ u4)) (succ u3), u1, u2} V _inst_1 (Quiver.Push.{u5, u3} V W σ) (Quiver.instQuiverPush.{u5, u4, u3} V _inst_1 W σ) W' _inst_2 (Quiver.Push.of.{u5, u4, u3} V _inst_1 W σ) Φ) φ) -> (Eq.{max (max (max (max (succ u5) (succ u4)) (succ u3)) (succ u1)) u2} (Prefunctor.{max (max (succ u5) (succ u4)) (succ u3), u2, u3, u1} (Quiver.Push.{u5, u3} V W σ) (Quiver.instQuiverPush.{u5, u4, u3} V _inst_1 W σ) W' _inst_2) Φ (Quiver.Push.lift.{u5, u4, u3, u1, u2} V _inst_1 W σ W' _inst_2 φ τ h))
 Case conversion may be inaccurate. Consider using '#align quiver.push.lift_unique Quiver.Push.lift_uniqueₓ'. -/
 theorem lift_unique (Φ : Push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : (of σ ⋙q Φ) = φ) :
-    Φ = lift σ φ τ h := by 
+    Φ = lift σ φ τ h := by
   dsimp only [of, lift]
   fapply Prefunctor.ext
   · rintro

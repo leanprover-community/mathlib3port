@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.continuous_of_bounded
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,8 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- and reformulate non-continuity in terms of these bases
   rcases(nhds_basis_balanced 𝕜 E).exists_antitone_subbasis with ⟨b, bE1, bE⟩
   simp only [id.def] at bE
-  have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n := by
+  have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n :=
+    by
     refine' bE.1.to_has_basis _ _
     · intro n _
       use n + 1
@@ -147,7 +148,8 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
   choose! u hu hu' using h
   -- The sequence `(λ n, n • u n)` converges to `0`
-  have h_tendsto : tendsto (fun n : ℕ => (n : 𝕜) • u n) at_top (𝓝 (0 : E)) := by
+  have h_tendsto : tendsto (fun n : ℕ => (n : 𝕜) • u n) at_top (𝓝 (0 : E)) :=
+    by
     apply bE.tendsto
     intro n
     by_cases h : n = 0
@@ -164,12 +166,13 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   rcases hf _ h_bounded hV with ⟨r, hr, h'⟩
   cases' exists_nat_gt r with n hn
   -- We now find a contradiction between `f (u n) ∉ V` and the absorbing property
-  have h1 : r ≤ ‖(n : 𝕜')‖ := by
+  have h1 : r ≤ ‖(n : 𝕜')‖ :=
+    by
     rw [IsROrC.norm_eq_abs, IsROrC.abs_cast_nat]
     exact hn.le
   have hn' : 0 < ‖(n : 𝕜')‖ := lt_of_lt_of_le hr h1
   rw [norm_pos_iff, Ne.def, Nat.cast_eq_zero] at hn'
-  have h'' : f (u n) ∈ V := by 
+  have h'' : f (u n) ∈ V := by
     simp only [Set.image_subset_iff] at h'
     specialize h' (n : 𝕜') h1 (Set.mem_range_self n)
     simp only [Set.mem_preimage, LinearMap.map_smulₛₗ, map_nat_cast] at h'

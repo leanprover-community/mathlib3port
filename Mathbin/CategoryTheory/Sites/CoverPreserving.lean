@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.cover_preserving
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ variable (J) (K)
 /-- The composition of two cover-preserving functors is cover-preserving. -/
 theorem CoverPreserving.comp {F} (hF : CoverPreserving J K F) {G} (hG : CoverPreserving K L G) :
     CoverPreserving J L (F ⋙ G) :=
-  ⟨fun U S hS => by 
+  ⟨fun U S hS => by
     rw [sieve.functor_pushforward_comp]
     exact hG.cover_preserve (hF.cover_preserve hS)⟩
 #align category_theory.cover_preserving.comp CategoryTheory.CoverPreserving.comp
@@ -119,7 +119,8 @@ include h hG
 
 /-- `compatible_preserving` functors indeed preserve compatible families. -/
 theorem Presieve.FamilyOfElements.Compatible.functor_pushforward :
-    (x.functorPushforward G).Compatible := by
+    (x.functorPushforward G).Compatible :=
+  by
   rintro Z₁ Z₂ W g₁ g₂ f₁' f₂' H₁ H₂ eq
   unfold family_of_elements.functor_pushforward
   rcases get_functor_pushforward_structure H₁ with ⟨X₁, f₁, h₁, hf₁, rfl⟩
@@ -133,7 +134,8 @@ theorem Presieve.FamilyOfElements.Compatible.functor_pushforward :
 
 @[simp]
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
-    x.functorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf := by
+    x.functorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf :=
+  by
   unfold family_of_elements.functor_pushforward
   rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with
     ⟨X, g, f', hg, eq⟩
@@ -727,7 +729,8 @@ theorem
 #align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlat
 
 theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
-    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σc', F.obj c' ≅ d) : CompatiblePreserving K F := by
+    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σc', F.obj c' ≅ d) : CompatiblePreserving K F :=
+  by
   constructor
   introv hx he
   obtain ⟨X', e⟩ := hF f₁
@@ -745,7 +748,8 @@ then `G.op ⋙ _` pulls sheaves back to sheaves.
 This result is basically <https://stacks.math.columbia.edu/tag/00WW>.
 -/
 theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
-    (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) := by
+    (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) :=
+  by
   intro X U S hS x hx
   change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x
   let H := ℱ.2 X _ (hG₂.cover_preserve hS)
@@ -781,14 +785,14 @@ if `G` is cover-preserving and compatible-preserving.
 -/
 @[simps]
 def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
-    SheafCat K A ⥤ SheafCat J
-        A where 
+    SheafCat K A ⥤ SheafCat J A
+    where
   obj ℱ := pullbackSheaf hG₁ hG₂ ℱ
   map _ _ f := ⟨((whiskeringLeft _ _ _).obj G.op).map f.val⟩
-  map_id' ℱ := by 
+  map_id' ℱ := by
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_id
-  map_comp' _ _ _ f g := by 
+  map_comp' _ _ _ f g := by
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_comp
 #align category_theory.sites.pullback CategoryTheory.Sites.pullback
@@ -823,7 +827,8 @@ def Sites.pushforward (G : C ⥤ D) : SheafCat J A ⥤ SheafCat K A :=
   sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
 #align category_theory.sites.pushforward CategoryTheory.Sites.pushforward
 
-instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) := by
+instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) :=
+  by
   apply (config := { instances := false }) comp_preserves_finite_limits
   · infer_instance
   apply (config := { instances := false }) comp_preserves_finite_limits

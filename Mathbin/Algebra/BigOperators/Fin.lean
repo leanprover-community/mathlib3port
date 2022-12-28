@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.fin
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,41 +104,46 @@ theorem prod_univ_two [CommMonoid β] (f : Fin 2 → β) : (∏ i, f i) = f 0 * 
 #align fin.prod_univ_two Fin.prod_univ_two
 
 @[to_additive]
-theorem prod_univ_three [CommMonoid β] (f : Fin 3 → β) : (∏ i, f i) = f 0 * f 1 * f 2 := by
+theorem prod_univ_three [CommMonoid β] (f : Fin 3 → β) : (∏ i, f i) = f 0 * f 1 * f 2 :=
+  by
   rw [prod_univ_cast_succ, prod_univ_two]
   rfl
 #align fin.prod_univ_three Fin.prod_univ_three
 
 @[to_additive]
-theorem prod_univ_four [CommMonoid β] (f : Fin 4 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 := by
+theorem prod_univ_four [CommMonoid β] (f : Fin 4 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 :=
+  by
   rw [prod_univ_cast_succ, prod_univ_three]
   rfl
 #align fin.prod_univ_four Fin.prod_univ_four
 
 @[to_additive]
 theorem prod_univ_five [CommMonoid β] (f : Fin 5 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 :=
-  by 
+  by
   rw [prod_univ_cast_succ, prod_univ_four]
   rfl
 #align fin.prod_univ_five Fin.prod_univ_five
 
 @[to_additive]
 theorem prod_univ_six [CommMonoid β] (f : Fin 6 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 := by
+    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 :=
+  by
   rw [prod_univ_cast_succ, prod_univ_five]
   rfl
 #align fin.prod_univ_six Fin.prod_univ_six
 
 @[to_additive]
 theorem prod_univ_seven [CommMonoid β] (f : Fin 7 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 := by
+    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 :=
+  by
   rw [prod_univ_cast_succ, prod_univ_six]
   rfl
 #align fin.prod_univ_seven Fin.prod_univ_seven
 
 @[to_additive]
 theorem prod_univ_eight [CommMonoid β] (f : Fin 8 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 * f 7 := by
+    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 * f 7 :=
+  by
   rw [prod_univ_cast_succ, prod_univ_seven]
   rfl
 #align fin.prod_univ_eight Fin.prod_univ_eight
@@ -168,7 +173,8 @@ theorem prod_Ioi_succ {M : Type _} [CommMonoid M] {n : ℕ} (i : Fin n) (v : Fin
 
 @[to_additive]
 theorem prod_congr' {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin b → M) (h : a = b) :
-    (∏ i : Fin a, f (cast h i)) = ∏ i : Fin b, f i := by
+    (∏ i : Fin a, f (cast h i)) = ∏ i : Fin b, f i :=
+  by
   subst h
   congr
   ext
@@ -179,7 +185,8 @@ theorem prod_congr' {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin b → M) (h
 
 @[to_additive]
 theorem prod_univ_add {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M) :
-    (∏ i : Fin (a + b), f i) = (∏ i : Fin a, f (castAdd b i)) * ∏ i : Fin b, f (natAdd a i) := by
+    (∏ i : Fin (a + b), f i) = (∏ i : Fin a, f (castAdd b i)) * ∏ i : Fin b, f (natAdd a i) :=
+  by
   rw [Fintype.prod_equiv fin_sum_fin_equiv.symm f fun i => f (fin_sum_fin_equiv.to_fun i)]; swap
   · intro x
     simp only [Equiv.to_fun_as_coe, Equiv.apply_symm_apply]
@@ -223,14 +230,16 @@ theorem partial_prod_succ' (f : Fin (n + 1) → α) (j : Fin (n + 1)) :
 theorem partial_prod_left_inv {G : Type _} [Group G] (f : Fin (n + 1) → G) :
     (f 0 • partialProd fun i : Fin n => (f i)⁻¹ * f i.succ) = f :=
   funext fun x =>
-    Fin.inductionOn x (by simp) fun x hx => by
+    Fin.inductionOn x (by simp) fun x hx =>
+      by
       simp only [coe_eq_cast_succ, Pi.smul_apply, smul_eq_mul] at hx⊢
       rw [partial_prod_succ, ← mul_assoc, hx, mul_inv_cancel_left]
 #align fin.partial_prod_left_inv Fin.partial_prod_left_inv
 
 @[to_additive]
 theorem partial_prod_right_inv {G : Type _} [Group G] (g : G) (f : Fin n → G) (i : Fin n) :
-    ((g • partialProd f) i)⁻¹ * (g • partialProd f) i.succ = f i := by
+    ((g • partialProd f) i)⁻¹ * (g • partialProd f) i.succ = f i :=
+  by
   cases' i with i hn
   induction' i with i hi generalizing hn
   · simp [← Fin.succ_mk, partial_prod_succ]
@@ -254,7 +263,8 @@ variable [CommMonoid α]
 
 @[to_additive]
 theorem prod_take_of_fn {n : ℕ} (f : Fin n → α) (i : ℕ) :
-    ((ofFn f).take i).Prod = ∏ j in Finset.univ.filter fun j : Fin n => j.val < i, f j := by
+    ((ofFn f).take i).Prod = ∏ j in Finset.univ.filter fun j : Fin n => j.val < i, f j :=
+  by
   have A : ∀ j : Fin n, ¬(j : ℕ) < 0 := fun j => not_lt_bot
   induction' i with i IH; · simp [A]
   by_cases h : i < n
@@ -263,7 +273,7 @@ theorem prod_take_of_fn {n : ℕ} (f : Fin n → α) (i : ℕ) :
     have A :
       ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i + 1) =
         ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i) ∪ {(⟨i, h⟩ : Fin n)} :=
-      by 
+      by
       ext ⟨_, _⟩
       simp [Nat.lt_succ_iff_lt_or_eq]
     have B :
@@ -272,11 +282,13 @@ theorem prod_take_of_fn {n : ℕ} (f : Fin n → α) (i : ℕ) :
       by simp
     rw [A, Finset.prod_union B, IH]
     simp
-  · have A : (of_fn f).take i = (of_fn f).take i.succ := by
+  · have A : (of_fn f).take i = (of_fn f).take i.succ :=
+      by
       rw [← length_of_fn f] at h
       have : length (of_fn f) ≤ i := not_lt.mp h
       rw [take_all_of_le this, take_all_of_le (le_trans this (Nat.le_succ _))]
-    have B : ∀ j : Fin n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) := by
+    have B : ∀ j : Fin n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) :=
+      by
       intro j
       have : (j : ℕ) < i := lt_of_lt_of_le j.2 (not_lt.mp h)
       simp [this, lt_trans this (Nat.lt_succ_self _)]
@@ -284,7 +296,8 @@ theorem prod_take_of_fn {n : ℕ} (f : Fin n → α) (i : ℕ) :
 #align list.prod_take_of_fn List.prod_take_of_fn
 
 @[to_additive]
-theorem prod_of_fn {n : ℕ} {f : Fin n → α} : (ofFn f).Prod = ∏ i, f i := by
+theorem prod_of_fn {n : ℕ} {f : Fin n → α} : (ofFn f).Prod = ∏ i, f i :=
+  by
   convert prod_take_of_fn f n
   · rw [take_all_of_le (le_of_eq (length_of_fn f))]
   · have : ∀ j : Fin n, (j : ℕ) < n := fun j => j.is_lt
@@ -300,7 +313,7 @@ end CommMonoid
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroup G] :
     ∀ L : List G, alternatingSum L = ∑ i : Fin L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.is_lt
-  | [] => by 
+  | [] => by
     rw [alternating_sum, Finset.sum_eq_zero]
     rintro ⟨i, ⟨⟩⟩
   | g::[] => by simp
@@ -308,7 +321,8 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroup G] :
     calc
       g + -h + L.alternatingSum = g + -h + ∑ i : Fin L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.2 :=
         congr_arg _ (alternating_sum_eq_finset_sum _)
-      _ = ∑ i : Fin (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g::h::L) i _ := by
+      _ = ∑ i : Fin (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g::h::L) i _ :=
+        by
         rw [Fin.sum_univ_succ, Fin.sum_univ_succ, add_assoc]
         unfold_coes
         simp [Nat.succ_eq_add_one, pow_add]
@@ -324,10 +338,10 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroup G] :
 @[to_additive]
 theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroup G] :
     ∀ L : List G, alternatingProd L = ∏ i : Fin L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
-  | [] => by 
+  | [] => by
     rw [alternating_prod, Finset.prod_eq_one]
     rintro ⟨i, ⟨⟩⟩
-  | g::[] => by 
+  | g::[] => by
     show g = ∏ i : Fin 1, [g].nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
     rw [Fin.prod_univ_succ]; simp
   | g::h::L =>
@@ -335,7 +349,8 @@ theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroup G] :
       g * h⁻¹ * L.alternatingProd =
           g * h⁻¹ * ∏ i : Fin L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ) :=
         congr_arg _ (alternating_prod_eq_finset_prod _)
-      _ = ∏ i : Fin (L.length + 2), List.nthLe (g::h::L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
+      _ = ∏ i : Fin (L.length + 2), List.nthLe (g::h::L) i _ ^ (-1 : ℤ) ^ (i : ℕ) :=
+        by
         rw [Fin.prod_univ_succ, Fin.prod_univ_succ, mul_assoc]
         unfold_coes
         simp [Nat.succ_eq_add_one, pow_add]

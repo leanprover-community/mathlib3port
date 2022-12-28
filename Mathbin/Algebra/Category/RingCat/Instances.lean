@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.instances
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,8 @@ instance localization_unit_is_iso (R : CommRingCat) :
 #align localization_unit_is_iso localization_unit_is_iso
 
 instance localization_unit_is_iso' (R : CommRingCat) :
-    @IsIso CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R (Localization.Away (1 : R))) := by
+    @IsIso CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R (Localization.Away (1 : R))) :=
+  by
   cases R
   exact localization_unit_is_iso _
 #align localization_unit_is_iso' localization_unit_is_iso'
@@ -41,7 +42,8 @@ instance Localization.epi {R : Type _} [CommRing R] (M : Submonoid R) :
 #align localization.epi Localization.epi
 
 instance Localization.epi' {R : CommRingCat} (M : Submonoid R) :
-    @Epi CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R <| Localization M : _) := by
+    @Epi CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R <| Localization M : _) :=
+  by
   cases R
   exact IsLocalization.epi M _
 #align localization.epi' Localization.epi'
@@ -52,7 +54,8 @@ instance CommRingCat.is_local_ring_hom_comp {R S T : CommRingCat} (f : R ⟶ S) 
 #align CommRing.is_local_ring_hom_comp CommRingCat.is_local_ring_hom_comp
 
 theorem is_local_ring_hom_of_iso {R S : CommRingCat} (f : R ≅ S) : IsLocalRingHom f.Hom :=
-  { map_nonunit := fun a ha => by 
+  {
+    map_nonunit := fun a ha => by
       convert f.inv.is_unit_map ha
       rw [CategoryTheory.Iso.hom_inv_id_apply] }
 #align is_local_ring_hom_of_iso is_local_ring_hom_of_iso

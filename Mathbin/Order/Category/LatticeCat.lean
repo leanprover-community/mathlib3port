@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.Lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem coe_of (α : Type _) [Lattice α] : ↥(of α) = α :=
 instance : Inhabited LatticeCat :=
   ⟨of Bool⟩
 
-instance : BundledHom @LatticeHom where 
+instance : BundledHom @LatticeHom where
   toFun _ _ _ _ := coeFn
   id := @LatticeHom.id
   comp := @LatticeHom.comp
@@ -68,9 +68,8 @@ instance : LargeCategory.{u} LatticeCat :=
 instance : ConcreteCategory LatticeCat :=
   BundledHom.concreteCategory LatticeHom
 
-instance hasForgetToPartialOrder :
-    HasForget₂ LatticeCat
-      PartialOrderCat where 
+instance hasForgetToPartialOrder : HasForget₂ LatticeCat PartialOrderCat
+    where
   forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => f }
@@ -79,21 +78,21 @@ instance hasForgetToPartialOrder :
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : LatticeCat.{u}} (e : α ≃o β) :
-    α ≅ β where 
+def Iso.mk {α β : LatticeCat.{u}} (e : α ≃o β) : α ≅ β
+    where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
 #align Lattice.iso.mk LatticeCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : LatticeCat ⥤ LatticeCat where 
+def dual : LatticeCat ⥤ LatticeCat where
   obj X := of Xᵒᵈ
   map X Y := LatticeHom.dual
 #align Lattice.dual LatticeCat.dual

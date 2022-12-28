@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module topology.order.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,14 +50,14 @@ class HasContinuousSup (L : Type _) [TopologicalSpace L] [HasSup L] : Prop where
 
 -- see Note [lower instance priority]
 instance (priority := 100) OrderDual.has_continuous_sup (L : Type _) [TopologicalSpace L] [HasInf L]
-    [HasContinuousInf L] :
-    HasContinuousSup Lᵒᵈ where continuous_sup := @HasContinuousInf.continuous_inf L _ _ _
+    [HasContinuousInf L] : HasContinuousSup Lᵒᵈ
+    where continuous_sup := @HasContinuousInf.continuous_inf L _ _ _
 #align order_dual.has_continuous_sup OrderDual.has_continuous_sup
 
 -- see Note [lower instance priority]
 instance (priority := 100) OrderDual.has_continuous_inf (L : Type _) [TopologicalSpace L] [HasSup L]
-    [HasContinuousSup L] :
-    HasContinuousInf Lᵒᵈ where continuous_inf := @HasContinuousSup.continuous_sup L _ _ _
+    [HasContinuousSup L] : HasContinuousInf Lᵒᵈ
+    where continuous_inf := @HasContinuousSup.continuous_sup L _ _ _
 #align order_dual.has_continuous_inf OrderDual.has_continuous_inf
 
 /-- Let `L` be a lattice equipped with a topology such that `L` has continuous infimum and supremum.
@@ -74,8 +74,8 @@ instance (priority := 100) OrderDual.topologicalLattice (L : Type _) [Topologica
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrder.topologicalLattice {L : Type _} [TopologicalSpace L]
-    [LinearOrder L] [OrderClosedTopology L] :
-    TopologicalLattice L where 
+    [LinearOrder L] [OrderClosedTopology L] : TopologicalLattice L
+    where
   continuous_inf := continuous_min
   continuous_sup := continuous_max
 #align linear_order.topological_lattice LinearOrder.topologicalLattice

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.group_with_zero
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,8 @@ See also `filter.prod_top` and `filter.mem_prod_top`. -/
 theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (hf : ContinuousAt f a)
     (hg : ContinuousAt g a) (hh : g a ≠ 0 → ContinuousAt (↿h) (a, f a / g a))
     (h2h : g a = 0 → Tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
-    ContinuousAt (fun x => h x (f x / g x)) a := by
+    ContinuousAt (fun x => h x (f x / g x)) a :=
+  by
   show ContinuousAt (↿h ∘ fun x => (x, f x / g x)) a
   by_cases hga : g a = 0
   · rw [ContinuousAt]
@@ -231,7 +232,7 @@ variable [TopologicalSpace α] [GroupWithZero α] [HasContinuousMul α]
 /-- Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mulLeft₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equiv.mulLeft₀ c hc with 
+  { Equiv.mulLeft₀ c hc with
     continuous_to_fun := continuous_mul_left _
     continuous_inv_fun := continuous_mul_left _ }
 #align homeomorph.mul_left₀ Homeomorph.mulLeft₀
@@ -239,7 +240,7 @@ protected def mulLeft₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
 /-- Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mulRight₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
-  { Equiv.mulRight₀ c hc with 
+  { Equiv.mulRight₀ c hc with
     continuous_to_fun := continuous_mul_right _
     continuous_inv_fun := continuous_mul_right _ }
 #align homeomorph.mul_right₀ Homeomorph.mulRight₀
@@ -273,7 +274,7 @@ section Zpow
 variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀]
 
 theorem continuous_at_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) :
-    ContinuousAt (fun x => x ^ m) x := by 
+    ContinuousAt (fun x => x ^ m) x := by
   cases m
   · simpa only [zpow_ofNat] using continuous_at_pow x m
   · simp only [zpow_negSucc]

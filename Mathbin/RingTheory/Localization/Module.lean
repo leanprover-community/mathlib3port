@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.module
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ section AddCommMonoid
 variable {M : Type _} [AddCommMonoid M] [Module R M] [Module Rₛ M] [IsScalarTower R Rₛ M]
 
 theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : LinearIndependent R b) :
-    LinearIndependent Rₛ b := by 
+    LinearIndependent Rₛ b := by
   rw [linear_independent_iff'] at hli⊢
   intro s g hg i hi
   choose a g' hg' using IsLocalization.exist_integer_multiples S s g
@@ -69,7 +69,8 @@ variable {M : Type _} [AddCommGroup M] [Module R M] [Module Rₛ M] [IsScalarTow
 
 /-- Promote a basis for `M` over `R` to a basis for `M` over the localization `Rₛ` -/
 noncomputable def Basis.localization {ι : Type _} (b : Basis ι R M) : Basis ι Rₛ M :=
-  Basis.mk (b.LinearIndependent.Localization Rₛ S) <| by
+  Basis.mk (b.LinearIndependent.Localization Rₛ S) <|
+    by
     rw [← eq_top_iff, ← @Submodule.restrict_scalars_eq_top_iff Rₛ R, eq_top_iff, ← b.span_eq]
     apply Submodule.span_le_restrict_scalars
 #align basis.localization Basis.localization

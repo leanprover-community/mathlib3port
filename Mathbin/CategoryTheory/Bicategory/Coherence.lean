@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.coherence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,8 +82,8 @@ as a prelax functor. This will be promoted to a pseudofunctor after proving the 
 See `inclusion`.
 -/
 def preinclusion (B : Type u) [Quiver.{v + 1} B] :
-    PrelaxFunctor (LocallyDiscrete (Paths B))
-      (FreeBicategory B) where 
+    PrelaxFunctor (LocallyDiscrete (Paths B)) (FreeBicategory B)
+    where
   obj := id
   map a b := (inclusionPath a b).obj
   map₂ a b f g η := (inclusionPath a b).map η
@@ -97,7 +97,8 @@ theorem preinclusion_obj (a : B) : (preinclusion B).obj a = a :=
 
 @[simp]
 theorem preinclusion_map₂ {a b : B} (f g : Discrete (Path.{v + 1} a b)) (η : f ⟶ g) :
-    (preinclusion B).map₂ η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) := by
+    (preinclusion B).map₂ η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) :=
+  by
   rcases η with ⟨⟨⟩⟩
   cases discrete.ext _ _ η
   exact (inclusion_path a b).map_id _
@@ -164,7 +165,8 @@ def normalizeIso {a : B} :
 `normalize_aux p f = normalize_aux p g`.
 -/
 theorem normalize_aux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
-    normalizeAux p f = normalizeAux p g := by
+    normalizeAux p f = normalizeAux p g :=
+  by
   rcases η with ⟨⟩
   apply @congr_fun _ _ fun p => normalize_aux p f
   clear p
@@ -182,10 +184,11 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
     (preinclusion B).map ⟨p⟩ ◁ η ≫ (normalizeIso p g).Hom =
       (normalizeIso p f).Hom ≫
         (preinclusion B).map₂ (eqToHom (Discrete.ext _ _ (normalize_aux_congr p η))) :=
-  by 
+  by
   rcases η with ⟨⟩; induction η
   case id => simp
-  case vcomp _ _ _ _ _ _ _ ihf ihg =>
+  case
+    vcomp _ _ _ _ _ _ _ ihf ihg =>
     rw [mk_vcomp, bicategory.whisker_left_comp]
     slice_lhs 2 3 => rw [ihg]
     slice_lhs 1 2 => rw [ihf]
@@ -194,7 +197,7 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
     whisker_left _ _ _ _ _ _ _ ih =>-- p ≠ nil required! See the docstring of `normalize_aux`.
     dsimp;
     simp_rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc, ih, assoc]
-  case whisker_right _ _ _ _ _ h η ih => 
+  case whisker_right _ _ _ _ _ h η ih =>
     dsimp
     rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right_assoc, ih, comp_whisker_right]
     have := dcongr_arg (fun x => (normalize_iso x h).Hom) (normalize_aux_congr p (Quot.mk _ η))
@@ -205,7 +208,8 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
 
 @[simp]
 theorem normalize_aux_nil_comp {a b c : B} (f : Hom a b) (g : Hom b c) :
-    normalizeAux nil (f.comp g) = (normalizeAux nil f).comp (normalizeAux nil g) := by
+    normalizeAux nil (f.comp g) = (normalizeAux nil f).comp (normalizeAux nil g) :=
+  by
   induction g generalizing a
   case id => rfl
   case of => rfl
@@ -215,8 +219,8 @@ theorem normalize_aux_nil_comp {a b c : B} (f : Hom a b) (g : Hom b c) :
 
 /-- The normalization pseudofunctor for the free bicategory on a quiver `B`. -/
 def normalize (B : Type u) [Quiver.{v + 1} B] :
-    Pseudofunctor (FreeBicategory B)
-      (LocallyDiscrete (Paths B)) where 
+    Pseudofunctor (FreeBicategory B) (LocallyDiscrete (Paths B))
+    where
   obj := id
   map a b f := ⟨normalizeAux nil f⟩
   map₂ a b f g η := eq_to_hom <| Discrete.ext _ _ <| normalize_aux_congr nil η
@@ -228,7 +232,7 @@ def normalize (B : Type u) [Quiver.{v + 1} B] :
 def normalizeUnitIso (a b : FreeBicategory B) :
     𝟭 (a ⟶ b) ≅ (normalize B).mapFunctor a b ⋙ inclusionPath a b :=
   NatIso.ofComponents (fun f => (λ_ f).symm ≪≫ normalizeIso nil f)
-    (by 
+    (by
       intro f g η
       erw [left_unitor_inv_naturality_assoc, assoc]
       congr 1
@@ -267,7 +271,7 @@ free bicategory.
 -/
 def inclusion (B : Type u) [Quiver.{v + 1} B] :
     Pseudofunctor (LocallyDiscrete (Paths B)) (FreeBicategory B) :=
-  { -- All the conditions for 2-morphisms are trivial thanks to the coherence theorem!
+  {-- All the conditions for 2-morphisms are trivial thanks to the coherence theorem!
       preinclusion
       B with
     map_id := fun a => Iso.refl (𝟙 a)

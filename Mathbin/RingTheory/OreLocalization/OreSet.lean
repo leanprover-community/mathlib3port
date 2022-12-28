@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 
 ! This file was ported from Lean 3 source module ring_theory.ore_localization.ore_set
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,13 +68,10 @@ def oreCondition (r : R) (s : S) : Σ'r' : R, Σ's' : S, r * s' = s * r' :=
 #align ore_localization.ore_condition OreLocalization.oreCondition
 
 /-- The trivial submonoid is an Ore set. -/
-instance oreSetBot :
-    OreSet
-      (⊥ :
-        Submonoid
-          R) where 
+instance oreSetBot : OreSet (⊥ : Submonoid R)
+    where
   ore_left_cancel _ _ s h :=
-    ⟨s, by 
+    ⟨s, by
       rcases s with ⟨s, hs⟩
       rw [Submonoid.mem_bot] at hs
       subst hs
@@ -82,16 +79,15 @@ instance oreSetBot :
       subst h⟩
   oreNum r _ := r
   oreDenom _ s := s
-  ore_eq _ s := by 
+  ore_eq _ s := by
     rcases s with ⟨s, hs⟩
     rw [Submonoid.mem_bot] at hs
     simp [hs]
 #align ore_localization.ore_set_bot OreLocalization.oreSetBot
 
 /-- Every submonoid of a commutative monoid is an Ore set. -/
-instance (priority := 100) oreSetComm {R} [CommMonoid R] (S : Submonoid R) :
-    OreSet
-      S where 
+instance (priority := 100) oreSetComm {R} [CommMonoid R] (S : Submonoid R) : OreSet S
+    where
   ore_left_cancel m n s h := ⟨s, by rw [mul_comm n s, mul_comm m s, h]⟩
   oreNum r _ := r
   oreDenom _ s := s

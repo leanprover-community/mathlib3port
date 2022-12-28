@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.rewrite_search.frontend
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ current target, and generates a string explanation for it.
 Takes an optional list of rewrite rules specified in the same way as the `rw` tactic accepts.
 -/
 unsafe def rewrite_search (explain : parse <| optional (tk "?"))
-    (rs : parse <| optional (list_of (rw_rule_p <| lean.parser.pexpr 0))) (cfg : config := {  }) :
+    (rs : parse <| optional (list_of (rw_rule_p <| lean.parser.pexpr 0))) (cfg : config := { }) :
     tactic Unit := do
   let t ← tactic.target
   if t then tactic.fail "rewrite_search is not suitable for goals containing metavariables"

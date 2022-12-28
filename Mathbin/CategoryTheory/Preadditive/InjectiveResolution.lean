@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.injective_resolution
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,8 @@ end
 namespace InjectiveResolutionCat
 
 @[simp]
-theorem ι_f_succ {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : I.ι.f (n + 1) = 0 := by
+theorem ι_f_succ {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : I.ι.f (n + 1) = 0 :=
+  by
   apply zero_of_source_iso_zero
   dsimp; rfl
 #align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolutionCat.ι_f_succ
@@ -115,22 +116,21 @@ instance {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Mono 
   cases n <;> infer_instance
 
 /-- An injective object admits a trivial injective resolution: itself in degree 0. -/
-def self (Z : C) [CategoryTheory.Injective Z] :
-    InjectiveResolutionCat
-      Z where 
+def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolutionCat Z
+    where
   cocomplex := (CochainComplex.single₀ C).obj Z
   ι := 𝟙 ((CochainComplex.single₀ C).obj Z)
   Injective n := by
     cases n <;>
       · dsimp
         infer_instance
-  exact₀ := by 
+  exact₀ := by
     dsimp
     exact exact_epi_zero _
-  exact n := by 
+  exact n := by
     dsimp
     exact exact_of_zero _ _
-  Mono := by 
+  Mono := by
     dsimp
     infer_instance
 #align category_theory.InjectiveResolution.self CategoryTheory.InjectiveResolutionCat.self

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz, Johan Commelin, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.opposite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,17 +24,16 @@ namespace CategoryTheory
 
 variable (C : Type _) [Category C] [Preadditive C]
 
-instance : Preadditive
-      Cᵒᵖ where 
+instance : Preadditive Cᵒᵖ
+    where
   homGroup X Y := Equiv.addCommGroup (opEquiv X Y)
   add_comp' X Y Z f f' g :=
     congr_arg Quiver.Hom.op (Preadditive.comp_add _ _ _ g.unop f.unop f'.unop)
   comp_add' X Y Z f g g' :=
     congr_arg Quiver.Hom.op (Preadditive.add_comp _ _ _ g.unop g'.unop f.unop)
 
-instance moduleEndLeft {X : Cᵒᵖ} {Y : C} :
-    Module (EndCat X)
-      (unop X ⟶ Y) where 
+instance moduleEndLeft {X : Cᵒᵖ} {Y : C} : Module (EndCat X) (unop X ⟶ Y)
+    where
   smul_add r f g := Preadditive.comp_add _ _ _ _ _ _
   smul_zero r := Limits.comp_zero
   add_smul r s f := Preadditive.add_comp _ _ _ _ _ _

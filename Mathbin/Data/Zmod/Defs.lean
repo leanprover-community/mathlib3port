@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.zmod.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,8 @@ open Nat.Modeq Int
 
 /-- Multiplicative commutative semigroup structure on `fin (n+1)`. -/
 instance (n : ℕ) : CommSemigroup (Fin (n + 1)) :=
-  { Fin.hasMul with
+  {
+    Fin.hasMul with
     mul_assoc := fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
       Fin.eq_of_veq
         (calc
@@ -71,7 +72,8 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin (n + 1), a * (b + c
 
 /-- Commutative ring structure on `fin (n+1)`. -/
 instance (n : ℕ) : CommRing (Fin (n + 1)) :=
-  { Fin.addMonoidWithOne, Fin.addCommGroup n, Fin.commSemigroup n with
+  { Fin.addMonoidWithOne, Fin.addCommGroup n,
+    Fin.commSemigroup n with
     one_mul := Fin.one_mul
     mul_one := Fin.mul_one
     left_distrib := left_distrib_aux n
@@ -108,7 +110,8 @@ instance infinite : Infinite (Zmod 0) :=
 #align zmod.infinite Zmod.infinite
 
 @[simp]
-theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
+theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n :=
+  by
   cases n
   · exact (not_finite (Zmod 0)).elim
   · convert Fintype.card_fin (n + 1)
@@ -117,10 +120,8 @@ theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
 /- We define each field by cases, to ensure that the eta-expanded `zmod.comm_ring` is defeq to the
 original, this helps avoid diamonds with instances coming from classes extending `comm_ring` such as
 field. -/
-instance commRing (n : ℕ) :
-    CommRing
-      (Zmod
-        n) where 
+instance commRing (n : ℕ) : CommRing (Zmod n)
+    where
   add := Nat.casesOn n (@Add.add Int _) fun n => @Add.add (Fin n.succ) _
   add_assoc := Nat.casesOn n (@add_assoc Int _) fun n => @add_assoc (Fin n.succ) _
   zero := Nat.casesOn n (0 : Int) fun n => (0 : Fin n.succ)
@@ -141,7 +142,7 @@ instance commRing (n : ℕ) :
     Nat.casesOn n (@CommRing.nsmul_zero' Int _) fun n => @CommRing.nsmul_zero' (Fin n.succ) _
   nsmul_succ' :=
     Nat.casesOn n (@CommRing.nsmul_succ' Int _) fun n => @CommRing.nsmul_succ' (Fin n.succ) _
-  add_left_neg := by 
+  add_left_neg := by
     cases n
     exacts[@add_left_neg Int _, @add_left_neg (Fin n.succ) _]
   add_comm := Nat.casesOn n (@add_comm Int _) fun n => @add_comm (Fin n.succ) _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.rigid.functor_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,9 +30,8 @@ variable {C D : Type _} [Groupoid C] [Category D] [MonoidalCategory D]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) :
-    HasRightDual
-      F where 
+instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual F
+    where
   rightDual :=
     { obj := fun X => F.obj Xᘁ
       map := fun X Y f => F.map (inv f)ᘁ
@@ -40,14 +39,14 @@ instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) :
   exact :=
     { evaluation :=
         { app := fun X => ε_ _ _
-          naturality' := fun X Y f => by 
+          naturality' := fun X Y f => by
             dsimp
             rw [category.comp_id, functor.map_inv, ← id_tensor_comp_tensor_id, category.assoc,
               right_adjoint_mate_comp_evaluation, ← category.assoc, ← id_tensor_comp,
               is_iso.hom_inv_id, tensor_id, category.id_comp] }
       coevaluation :=
         { app := fun X => η_ _ _
-          naturality' := fun X Y f => by 
+          naturality' := fun X Y f => by
             dsimp
             rw [functor.map_inv, category.id_comp, ← id_tensor_comp_tensor_id, ← category.assoc,
               coevaluation_comp_right_adjoint_mate, category.assoc, ← comp_tensor_id,
@@ -60,9 +59,8 @@ instance rightRigidFunctorCategory [RightRigidCategory D] : RightRigidCategory (
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) :
-    HasLeftDual
-      F where 
+instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) : HasLeftDual F
+    where
   leftDual :=
     { obj := fun X => ᘁF.obj X
       map := fun X Y f => ᘁF.map (inv f)
@@ -70,14 +68,14 @@ instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) :
   exact :=
     { evaluation :=
         { app := fun X => ε_ _ _
-          naturality' := fun X Y f => by 
+          naturality' := fun X Y f => by
             dsimp
             rw [category.comp_id, functor.map_inv, ← tensor_id_comp_id_tensor, category.assoc,
               left_adjoint_mate_comp_evaluation, ← category.assoc, ← comp_tensor_id,
               is_iso.hom_inv_id, tensor_id, category.id_comp] }
       coevaluation :=
         { app := fun X => η_ _ _
-          naturality' := fun X Y f => by 
+          naturality' := fun X Y f => by
             dsimp
             rw [functor.map_inv, category.id_comp, ← tensor_id_comp_id_tensor, ← category.assoc,
               coevaluation_comp_left_adjoint_mate, category.assoc, ← id_tensor_comp,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.order.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,8 +80,8 @@ instance (priority := 100) NormedLinearOrderedGroup.toNormedOrderedGroup
   normed_linear_ordered_group.to_normed_ordered_group NormedLinearOrderedGroup.toNormedOrderedGroup
 
 instance (priority := 100) NormedLinearOrderedField.toNormedField (α : Type _)
-    [NormedLinearOrderedField α] :
-    NormedField α where 
+    [NormedLinearOrderedField α] : NormedField α
+    where
   dist_eq := NormedLinearOrderedField.dist_eq
   norm_mul' := NormedLinearOrderedField.norm_mul'
 #align normed_linear_ordered_field.to_normed_field NormedLinearOrderedField.toNormedField

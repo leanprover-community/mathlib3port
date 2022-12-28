@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.is_homeomorphic_trivial_bundle
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ protected theorem proj_eq (h : IsHomeomorphicTrivialFiberBundle F proj) :
 
 /-- The projection from a trivial fiber bundle to its base is surjective. -/
 protected theorem surjective_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBundle F proj) :
-    Function.Surjective proj := by 
+    Function.Surjective proj := by
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact prod.fst_surjective.comp e.surjective
 #align
@@ -52,7 +52,7 @@ protected theorem surjective_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBu
 
 /-- The projection from a trivial fiber bundle to its base is continuous. -/
 protected theorem continuous_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : Continuous proj :=
-  by 
+  by
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact continuous_fst.comp e.continuous
 #align
@@ -60,7 +60,7 @@ protected theorem continuous_proj (h : IsHomeomorphicTrivialFiberBundle F proj) 
 
 /-- The projection from a trivial fiber bundle to its base is open. -/
 protected theorem is_open_map_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : IsOpenMap proj :=
-  by 
+  by
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact is_open_map_fst.comp e.is_open_map
 #align

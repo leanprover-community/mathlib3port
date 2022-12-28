@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,14 +165,16 @@ theorem is_ordered_structure_iff [IsOrdered L] [LE M] [L.StructureCat M] :
   Iff.rfl
 #align first_order.language.is_ordered_structure_iff FirstOrder.Language.is_ordered_structure_iff
 
-instance is_ordered_structure_has_le [LE M] : IsOrderedStructure Language.order M := by
+instance is_ordered_structure_has_le [LE M] : IsOrderedStructure Language.order M :=
+  by
   rw [is_ordered_structure_iff, order_Lhom_order]
   exact Lhom.id_is_expansion_on M
 #align
   first_order.language.is_ordered_structure_has_le FirstOrder.Language.is_ordered_structure_has_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance model_preorder [Preorder M] : M ⊨ Theory.preorder := by
+instance model_preorder [Preorder M] : M ⊨ Theory.preorder :=
+  by
   simp only [Theory.preorder, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
     forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, forall_eq,
     relations.realize_transitive]
@@ -180,7 +182,8 @@ instance model_preorder [Preorder M] : M ⊨ Theory.preorder := by
 #align first_order.language.model_preorder FirstOrder.Language.model_preorder
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance model_partial_order [PartialOrder M] : M ⊨ Theory.partial_order := by
+instance model_partial_order [PartialOrder M] : M ⊨ Theory.partial_order :=
+  by
   simp only [Theory.partial_order, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
     forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric,
     forall_eq, relations.realize_transitive]
@@ -188,7 +191,8 @@ instance model_partial_order [PartialOrder M] : M ⊨ Theory.partial_order := by
 #align first_order.language.model_partial_order FirstOrder.Language.model_partial_order
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance model_linear_order [LinearOrder M] : M ⊨ Theory.linear_order := by
+instance model_linear_order [LinearOrder M] : M ⊨ Theory.linear_order :=
+  by
   simp only [Theory.linear_order, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
     forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric,
     relations.realize_transitive, forall_eq, relations.realize_total]
@@ -201,7 +205,8 @@ variable [IsOrdered L] [L.StructureCat M]
 
 @[simp]
 theorem rel_map_le_symb [LE M] [L.IsOrderedStructure M] {a b : M} :
-    RelMap (leSymb : L.Relations 2) ![a, b] ↔ a ≤ b := by
+    RelMap (leSymb : L.Relations 2) ![a, b] ↔ a ≤ b :=
+  by
   rw [← order_Lhom_le_symb, Lhom.map_on_relation]
   rfl
 #align first_order.language.rel_map_le_symb FirstOrder.Language.rel_map_le_symb
@@ -227,7 +232,8 @@ section LE
 variable [LE M]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem realize_no_top_order_iff : M ⊨ sentence.no_top_order ↔ NoTopOrder M := by
+theorem realize_no_top_order_iff : M ⊨ sentence.no_top_order ↔ NoTopOrder M :=
+  by
   simp only [sentence.no_top_order, sentence.realize, formula.realize, bounded_formula.realize_all,
     bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le, Sum.elim_inr]
   refine' ⟨fun h => ⟨fun a => h a⟩, _⟩
@@ -242,7 +248,8 @@ theorem realize_no_top_order [h : NoTopOrder M] : M ⊨ sentence.no_top_order :=
 #align first_order.language.realize_no_top_order FirstOrder.Language.realize_no_top_order
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem realize_no_bot_order_iff : M ⊨ sentence.no_bot_order ↔ NoBotOrder M := by
+theorem realize_no_bot_order_iff : M ⊨ sentence.no_bot_order ↔ NoBotOrder M :=
+  by
   simp only [sentence.no_bot_order, sentence.realize, formula.realize, bounded_formula.realize_all,
     bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le, Sum.elim_inr]
   refine' ⟨fun h => ⟨fun a => h a⟩, _⟩
@@ -260,7 +267,8 @@ end LE
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem realize_densely_ordered_iff [Preorder M] :
-    M ⊨ sentence.densely_ordered ↔ DenselyOrdered M := by
+    M ⊨ sentence.densely_ordered ↔ DenselyOrdered M :=
+  by
   simp only [sentence.densely_ordered, sentence.realize, formula.realize,
     bounded_formula.realize_imp, bounded_formula.realize_all, realize, term.realize_lt,
     Sum.elim_inr, bounded_formula.realize_ex, bounded_formula.realize_inf]
@@ -279,7 +287,8 @@ theorem realize_densely_ordered [Preorder M] [h : DenselyOrdered M] :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_DLO [LinearOrder M] [DenselyOrdered M] [NoTopOrder M] [NoBotOrder M] :
-    M ⊨ Theory.DLO := by
+    M ⊨ Theory.DLO :=
+  by
   simp only [Theory.DLO, Set.union_insert, Set.union_singleton, Theory.model_iff,
     Set.mem_insert_iff, forall_eq_or_imp, realize_no_top_order, realize_no_bot_order,
     realize_densely_ordered, true_and_iff]

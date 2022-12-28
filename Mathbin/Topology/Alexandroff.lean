@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.alexandroff
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,7 +162,8 @@ theorem infty_not_mem_image_coe {s : Set X} : ∞ ∉ (coe : X → Alexandroff X
 #align alexandroff.infty_not_mem_image_coe Alexandroff.infty_not_mem_image_coe
 
 @[simp]
-theorem coe_preimage_infty : (coe : X → Alexandroff X) ⁻¹' {∞} = ∅ := by
+theorem coe_preimage_infty : (coe : X → Alexandroff X) ⁻¹' {∞} = ∅ :=
+  by
   ext
   simp
 #align alexandroff.coe_preimage_infty Alexandroff.coe_preimage_infty
@@ -183,21 +184,20 @@ that `coe` has dense range, so it is a dense embedding.
 
 variable [TopologicalSpace X]
 
-instance :
-    TopologicalSpace
-      (Alexandroff
-        X) where 
+instance : TopologicalSpace (Alexandroff X)
+    where
   IsOpen s :=
     (∞ ∈ s → IsCompact (((coe : X → Alexandroff X) ⁻¹' s)ᶜ)) ∧
       IsOpen ((coe : X → Alexandroff X) ⁻¹' s)
   is_open_univ := by simp
-  is_open_inter s t := by 
+  is_open_inter s t := by
     rintro ⟨hms, hs⟩ ⟨hmt, ht⟩
     refine' ⟨_, hs.inter ht⟩
     rintro ⟨hms', hmt'⟩
     simpa [compl_inter] using (hms hms').union (hmt hmt')
-  is_open_sUnion S ho := by
-    suffices IsOpen (coe ⁻¹' ⋃₀S : Set X) by 
+  is_open_sUnion S ho :=
+    by
+    suffices IsOpen (coe ⁻¹' ⋃₀S : Set X) by
       refine' ⟨_, this⟩
       rintro ⟨s, hsS : s ∈ S, hs : ∞ ∈ s⟩
       refine' is_compact_of_is_closed_subset ((ho s hsS).1 hs) this.is_closed_compl _
@@ -226,7 +226,8 @@ theorem is_open_iff_of_not_mem (h : ∞ ∉ s) : IsOpen s ↔ IsOpen (coe ⁻¹'
   simp [is_open_def, h]
 #align alexandroff.is_open_iff_of_not_mem Alexandroff.is_open_iff_of_not_mem
 
-theorem is_closed_iff_of_mem (h : ∞ ∈ s) : IsClosed s ↔ IsClosed (coe ⁻¹' s : Set X) := by
+theorem is_closed_iff_of_mem (h : ∞ ∈ s) : IsClosed s ↔ IsClosed (coe ⁻¹' s : Set X) :=
+  by
   have : ∞ ∉ sᶜ := fun H => H h
   rw [← is_open_compl_iff, is_open_iff_of_not_mem this, ← is_open_compl_iff, preimage_compl]
 #align alexandroff.is_closed_iff_of_mem Alexandroff.is_closed_iff_of_mem
@@ -242,7 +243,8 @@ theorem is_open_image_coe {s : Set X} : IsOpen (coe '' s : Set (Alexandroff X)) 
 #align alexandroff.is_open_image_coe Alexandroff.is_open_image_coe
 
 theorem is_open_compl_image_coe {s : Set X} :
-    IsOpen ((coe '' s : Set (Alexandroff X))ᶜ) ↔ IsClosed s ∧ IsCompact s := by
+    IsOpen ((coe '' s : Set (Alexandroff X))ᶜ) ↔ IsClosed s ∧ IsCompact s :=
+  by
   rw [is_open_iff_of_mem, ← preimage_compl, compl_compl, preimage_image_eq _ coe_injective]
   exact infty_not_mem_image_coe
 #align alexandroff.is_open_compl_image_coe Alexandroff.is_open_compl_image_coe
@@ -280,7 +282,8 @@ theorem is_open_range_coe : IsOpen (range (coe : X → Alexandroff X)) :=
   open_embedding_coe.open_range
 #align alexandroff.is_open_range_coe Alexandroff.is_open_range_coe
 
-theorem is_closed_infty : IsClosed ({∞} : Set (Alexandroff X)) := by
+theorem is_closed_infty : IsClosed ({∞} : Set (Alexandroff X)) :=
+  by
   rw [← compl_range_coe, is_closed_compl_iff]
   exact is_open_range_coe
 #align alexandroff.is_closed_infty Alexandroff.is_closed_infty
@@ -309,7 +312,8 @@ instance nhds_within_compl_coe_ne_bot (x : X) [h : NeBot (𝓝[≠] x)] :
   simpa [nhds_within_coe, preimage, coe_eq_coe] using h.map coe
 #align alexandroff.nhds_within_compl_coe_ne_bot Alexandroff.nhds_within_compl_coe_ne_bot
 
-theorem nhds_within_compl_infty_eq : 𝓝[≠] (∞ : Alexandroff X) = map coe (coclosedCompact X) := by
+theorem nhds_within_compl_infty_eq : 𝓝[≠] (∞ : Alexandroff X) = map coe (coclosedCompact X) :=
+  by
   refine' (nhds_within_basis_open ∞ _).ext (has_basis_coclosed_compact.map _) _ _
   · rintro s ⟨hs, hso⟩
     refine' ⟨_, (is_open_iff_of_mem hs).mp hso, _⟩
@@ -320,7 +324,8 @@ theorem nhds_within_compl_infty_eq : 𝓝[≠] (∞ : Alexandroff X) = map coe (
 #align alexandroff.nhds_within_compl_infty_eq Alexandroff.nhds_within_compl_infty_eq
 
 /-- If `X` is a non-compact space, then `∞` is not an isolated point of `alexandroff X`. -/
-instance nhds_within_compl_infty_ne_bot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : Alexandroff X)) := by
+instance nhds_within_compl_infty_ne_bot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : Alexandroff X)) :=
+  by
   rw [nhds_within_compl_infty_eq]
   infer_instance
 #align alexandroff.nhds_within_compl_infty_ne_bot Alexandroff.nhds_within_compl_infty_ne_bot
@@ -338,7 +343,7 @@ theorem nhds_infty_eq : 𝓝 (∞ : Alexandroff X) = map coe (coclosedCompact X)
 theorem has_basis_nhds_infty :
     (𝓝 (∞ : Alexandroff X)).HasBasis (fun s : Set X => IsClosed s ∧ IsCompact s) fun s =>
       coe '' sᶜ ∪ {∞} :=
-  by 
+  by
   rw [nhds_infty_eq]
   exact (has_basis_coclosed_compact.map _).sup_pure _
 #align alexandroff.has_basis_nhds_infty Alexandroff.has_basis_nhds_infty
@@ -391,7 +396,8 @@ theorem continuous_at_coe {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X �
 
 /-- If `X` is not a compact space, then the natural embedding `X → alexandroff X` has dense range.
 -/
-theorem dense_range_coe [NoncompactSpace X] : DenseRange (coe : X → Alexandroff X) := by
+theorem dense_range_coe [NoncompactSpace X] : DenseRange (coe : X → Alexandroff X) :=
+  by
   rw [DenseRange, ← compl_infty]
   exact dense_compl_singleton _
 #align alexandroff.dense_range_coe Alexandroff.dense_range_coe
@@ -441,27 +447,26 @@ Finally, if the original space `X` is *not* compact and is a preconnected space,
 
 
 /-- For any topological space `X`, its one point compactification is a compact space. -/
-instance :
-    CompactSpace
-      (Alexandroff
-        X) where is_compact_univ := by
-    have : tendsto (coe : X → Alexandroff X) (cocompact X) (𝓝 ∞) := by
+instance : CompactSpace (Alexandroff X)
+    where is_compact_univ :=
+    by
+    have : tendsto (coe : X → Alexandroff X) (cocompact X) (𝓝 ∞) :=
+      by
       rw [nhds_infty_eq]
       exact (tendsto_map.mono_left cocompact_le_coclosed_compact).mono_right le_sup_left
     convert ← this.is_compact_insert_range_of_cocompact continuous_coe
     exact insert_none_range_some X
 
 /-- The one point compactification of a `t0_space` space is a `t0_space`. -/
-instance [T0Space X] : T0Space (Alexandroff X) := by
+instance [T0Space X] : T0Space (Alexandroff X) :=
+  by
   refine' ⟨fun x y hxy => _⟩
   rcases inseparable_iff.1 hxy with (⟨rfl, rfl⟩ | ⟨x, rfl, y, rfl, h⟩)
   exacts[rfl, congr_arg coe h.eq]
 
 /-- The one point compactification of a `t1_space` space is a `t1_space`. -/
-instance [T1Space X] :
-    T1Space
-      (Alexandroff
-        X) where t1 z := by 
+instance [T1Space X] : T1Space (Alexandroff X)
+    where t1 z := by
     induction z using Alexandroff.rec
     · exact is_closed_infty
     · rw [← image_singleton, is_closed_image_coe]
@@ -469,9 +474,11 @@ instance [T1Space X] :
 
 /-- The one point compactification of a locally compact Hausdorff space is a normal (hence,
 Hausdorff and regular) topological space. -/
-instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) := by
+instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) :=
+  by
   have key :
-    ∀ z : X, ∃ u v : Set (Alexandroff X), IsOpen u ∧ IsOpen v ∧ ↑z ∈ u ∧ ∞ ∈ v ∧ Disjoint u v := by
+    ∀ z : X, ∃ u v : Set (Alexandroff X), IsOpen u ∧ IsOpen v ∧ ↑z ∈ u ∧ ∞ ∈ v ∧ Disjoint u v :=
+    by
     intro z
     rcases exists_open_with_compact_closure z with ⟨u, hu, huy', Hu⟩
     exact
@@ -487,17 +494,16 @@ instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) := by
   · exact separated_by_open_embedding open_embedding_coe (mt coe_eq_coe.mpr hxy)
 
 /-- If `X` is not a compact space, then `alexandroff X` is a connected space. -/
-instance [PreconnectedSpace X] [NoncompactSpace X] :
-    ConnectedSpace
-      (Alexandroff
-        X) where 
+instance [PreconnectedSpace X] [NoncompactSpace X] : ConnectedSpace (Alexandroff X)
+    where
   to_preconnected_space := dense_embedding_coe.to_dense_inducing.PreconnectedSpace
   to_nonempty := inferInstance
 
 /-- If `X` is an infinite type with discrete topology (e.g., `ℕ`), then the identity map from
 `cofinite_topology (alexandroff X)` to `alexandroff X` is not continuous. -/
 theorem not_continuous_cofinite_topology_of_symm [Infinite X] [DiscreteTopology X] :
-    ¬Continuous (@CofiniteTopology.of (Alexandroff X)).symm := by
+    ¬Continuous (@CofiniteTopology.of (Alexandroff X)).symm :=
+  by
   inhabit X
   simp only [continuous_iff_continuous_at, ContinuousAt, not_forall]
   use CofiniteTopology.of ↑(default : X)

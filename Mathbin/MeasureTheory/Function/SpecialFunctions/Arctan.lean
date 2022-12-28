@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.function.special_functions.arctan
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,9 +20,9 @@ import Mathbin.MeasureTheory.Constructions.BorelSpace
 namespace Real
 
 @[measurability]
-theorem measurableArctan : Measurable arctan :=
+theorem measurable_arctan : Measurable arctan :=
   continuous_arctan.Measurable
-#align real.measurable_arctan Real.measurableArctan
+#align real.measurable_arctan Real.measurable_arctan
 
 end Real
 
@@ -34,7 +34,7 @@ variable {α : Type _} {m : MeasurableSpace α} {f : α → ℝ} (hf : Measurabl
 
 @[measurability]
 theorem Measurable.arctan : Measurable fun x => arctan (f x) :=
-  measurableArctan.comp hf
+  measurable_arctan.comp hf
 #align measurable.arctan Measurable.arctan
 
 end RealComposition

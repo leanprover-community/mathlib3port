@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.inj_surj
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,8 +38,8 @@ Case conversion may be inaccurate. Consider using '#align function.injective.mul
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀' → M₀) (hf : Injective f)
-    (zero : f 0 = 0) (mul : ∀ a b, f (a * b) = f a * f b) :
-    MulZeroClass M₀' where 
+    (zero : f 0 = 0) (mul : ∀ a b, f (a * b) = f a * f b) : MulZeroClass M₀'
+    where
   mul := (· * ·)
   zero := 0
   zero_mul a := hf <| by simp only [mul, zero, zero_mul]
@@ -56,8 +56,8 @@ Case conversion may be inaccurate. Consider using '#align function.surjective.mu
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulZeroClass [Mul M₀'] [Zero M₀'] (f : M₀ → M₀')
-    (hf : Surjective f) (zero : f 0 = 0) (mul : ∀ a b, f (a * b) = f a * f b) :
-    MulZeroClass M₀' where 
+    (hf : Surjective f) (zero : f 0 = 0) (mul : ∀ a b, f (a * b) = f a * f b) : MulZeroClass M₀'
+    where
   mul := (· * ·)
   zero := 0
   mul_zero := hf.forall.2 fun x => by simp only [← zero, ← mul, mul_zero]
@@ -78,7 +78,8 @@ Case conversion may be inaccurate. Consider using '#align function.injective.no_
 protected theorem Function.Injective.noZeroDivisors [Mul M₀] [Zero M₀] [Mul M₀'] [Zero M₀']
     [NoZeroDivisors M₀'] (f : M₀ → M₀') (hf : Injective f) (zero : f 0 = 0)
     (mul : ∀ x y, f (x * y) = f x * f y) : NoZeroDivisors M₀ :=
-  { eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H =>
+  {
+    eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H =>
       have : f x * f y = 0 := by rw [← mul, H, zero]
       (eq_zero_or_eq_zero_of_mul_eq_zero this).imp (fun H => hf <| by rwa [zero]) fun H =>
         hf <| by rwa [zero] }
@@ -241,7 +242,9 @@ protected def Function.Injective.cancelMonoidWithZero [Zero M₀'] [Mul M₀'] [
     (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CancelMonoidWithZero M₀' :=
-  { hf.Monoid f one mul npow, hf.MulZeroClass f zero mul with
+  { hf.Monoid f one mul npow,
+    hf.MulZeroClass f zero
+      mul with
     mul_left_cancel_of_ne_zero := fun x y z hx H =>
       hf <| mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) <| by erw [← mul, ← mul, H] <;> rfl
     mul_right_cancel_of_ne_zero := fun x y z hx H =>
@@ -291,7 +294,8 @@ protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : GroupWithZero G₀' :=
   { hf.MonoidWithZero f zero one mul npow, hf.DivInvMonoid f one mul inv div npow zpow,
-    pullback_nonzero f zero one with
+    pullback_nonzero f zero
+      one with
     inv_zero := hf <| by erw [inv, zero, inv_zero]
     mul_inv_cancel := fun x hx =>
       hf <| by erw [one, mul, inv, mul_inv_cancel ((hf.ne_iff' zero).2 hx)] }
@@ -312,7 +316,9 @@ protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) :
     GroupWithZero G₀' :=
-  { hf.MonoidWithZero f zero one mul npow, hf.DivInvMonoid f one mul inv div npow zpow with
+  { hf.MonoidWithZero f zero one mul npow,
+    hf.DivInvMonoid f one mul inv div npow
+      zpow with
     inv_zero := by erw [← zero, ← inv, inv_zero]
     mul_inv_cancel :=
       hf.forall.2 fun x hx => by

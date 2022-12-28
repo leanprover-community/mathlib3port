@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.with_bot_top
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,8 @@ theorem preimage_coe_top : (coe : α → WithTop α) ⁻¹' {⊤} = (∅ : Set �
 variable [PartialOrder α] {a b : α}
 
 #print WithTop.range_coe /-
-theorem range_coe : range (coe : α → WithTop α) = Iio ⊤ := by
+theorem range_coe : range (coe : α → WithTop α) = Iio ⊤ :=
+  by
   ext x
   rw [mem_Iio, lt_top_iff_ne_top, mem_range, ← none_eq_top, Option.ne_none_iff_exists]
   rfl

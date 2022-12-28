@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,20 +85,20 @@ theorem smul_swap : (a • x).swap = a • x.swap := by cases x <;> rfl
 #align sum.smul_swap Sum.smul_swap
 
 instance [HasSmul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (Sum α β) :=
-  ⟨fun a b x => by 
+  ⟨fun a b x => by
     cases x
     exacts[congr_arg inl (smul_assoc _ _ _), congr_arg inr (smul_assoc _ _ _)]⟩
 
 @[to_additive]
 instance [SMulCommClass M N α] [SMulCommClass M N β] : SMulCommClass M N (Sum α β) :=
-  ⟨fun a b x => by 
+  ⟨fun a b x => by
     cases x
     exacts[congr_arg inl (smul_comm _ _ _), congr_arg inr (smul_comm _ _ _)]⟩
 
 @[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] :
     IsCentralScalar M (Sum α β) :=
-  ⟨fun a x => by 
+  ⟨fun a x => by
     cases x
     exacts[congr_arg inl (op_smul_eq_smul _ _), congr_arg inr (op_smul_eq_smul _ _)]⟩
 
@@ -127,14 +127,12 @@ instance FaithfulSMulRight [FaithfulSMul M β] : FaithfulSMul M (Sum α β) :=
 end HasSmul
 
 @[to_additive]
-instance {m : Monoid M} [MulAction M α] [MulAction M β] :
-    MulAction M
-      (Sum α
-        β) where 
-  mul_smul a b x := by 
+instance {m : Monoid M} [MulAction M α] [MulAction M β] : MulAction M (Sum α β)
+    where
+  mul_smul a b x := by
     cases x
     exacts[congr_arg inl (mul_smul _ _ _), congr_arg inr (mul_smul _ _ _)]
-  one_smul x := by 
+  one_smul x := by
     cases x
     exacts[congr_arg inl (one_smul _ _), congr_arg inr (one_smul _ _)]
 

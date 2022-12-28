@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.norm
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,8 @@ open Submodule
 This is essentially just a repackaging of the Chinese Remainder Theorem.
 -/
 theorem card_quot_mul_of_coprime [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S]
-    {I J : Ideal S} (coprime : I ⊔ J = ⊤) : cardQuot (I * J) = cardQuot I * cardQuot J := by
+    {I J : Ideal S} (coprime : I ⊔ J = ⊤) : cardQuot (I * J) = cardQuot I * cardQuot J :=
+  by
   let b := Module.Free.chooseBasis ℤ S
   cases isEmpty_or_nonempty (Module.Free.ChooseBasisIndex ℤ S)
   · haveI : Subsingleton S := Function.Surjective.subsingleton b.repr.to_equiv.symm.surjective
@@ -127,7 +128,8 @@ then so are the `c`s, up to `P ^ (i + 1)`.
 Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.mul_add_mem_pow_succ_inj (P : Ideal S) {i : ℕ} (a d d' e e' : S) (a_mem : a ∈ P ^ i)
     (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1)) (h : d - d' ∈ P) :
-    a * d + e - (a * d' + e') ∈ P ^ (i + 1) := by
+    a * d + e - (a * d' + e') ∈ P ^ (i + 1) :=
+  by
   have : a * d - a * d' ∈ P ^ (i + 1) := by
     convert Ideal.mul_mem_mul a_mem h <;> simp [mul_sub, pow_succ, mul_comm]
   convert Ideal.add_mem _ this (Ideal.sub_mem _ e_mem e'_mem)
@@ -145,7 +147,7 @@ include P_prime hP
 Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] {i : ℕ} (a c : S) (a_mem : a ∈ P ^ i)
     (a_not_mem : a ∉ P ^ (i + 1)) (c_mem : c ∈ P ^ i) : ∃ d : S, ∃ e ∈ P ^ (i + 1), a * d + e = c :=
-  by 
+  by
   suffices eq_b : P ^ i = Ideal.span {a} ⊔ P ^ (i + 1)
   · rw [eq_b] at c_mem
     simp only [mul_comm a]
@@ -161,7 +163,8 @@ theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] {i : ℕ} (a c : 
 
 theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_prime : P.IsPrime]
     (hP : P ≠ ⊥) {i : ℕ} {a b : S} (a_not_mem : a ∉ P ^ (i + 1)) (ab_mem : a * b ∈ P ^ (i + 1)) :
-    b ∈ P := by
+    b ∈ P :=
+  by
   simp only [← Ideal.span_singleton_le_iff_mem, ← Ideal.dvd_iff_le, pow_succ, ←
     Ideal.span_singleton_mul_span_singleton] at a_not_mem ab_mem⊢
   exact (prime_pow_succ_dvd_mul (Ideal.prime_of_is_prime hP P_prime) ab_mem).resolve_left a_not_mem
@@ -171,9 +174,11 @@ theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_pri
 Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d' e e' : S)
     (a_not_mem : a ∉ P ^ (i + 1)) (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1))
-    (h : a * d + e - (a * d' + e') ∈ P ^ (i + 1)) : d - d' ∈ P := by
+    (h : a * d + e - (a * d' + e') ∈ P ^ (i + 1)) : d - d' ∈ P :=
+  by
   have : e' - e ∈ P ^ (i + 1) := Ideal.sub_mem _ e'_mem e_mem
-  have h' : a * (d - d') ∈ P ^ (i + 1) := by
+  have h' : a * (d - d') ∈ P ^ (i + 1) :=
+    by
     convert Ideal.add_mem _ h (Ideal.sub_mem _ e'_mem e_mem)
     ring
   exact Ideal.mem_prime_of_mul_mem_pow hP a_not_mem h'
@@ -181,9 +186,10 @@ theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d'
 
 /-- Multiplicity of the ideal norm, for powers of prime ideals. -/
 theorem card_quot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module.Free ℤ S] {i : ℕ} :
-    cardQuot (P ^ i) = cardQuot P ^ i := by
+    cardQuot (P ^ i) = cardQuot P ^ i :=
+  by
   let b := Module.Free.chooseBasis ℤ S
-  classical 
+  classical
     induction' i with i ih
     · simp
     letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i.succ) (pow_ne_zero _ hP)
@@ -226,7 +232,8 @@ end PPrime
 
 /-- Multiplicativity of the ideal norm in number rings. -/
 theorem card_quot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S] (I J : Ideal S) :
-    cardQuot (I * J) = cardQuot I * cardQuot J := by
+    cardQuot (I * J) = cardQuot I * cardQuot J :=
+  by
   let b := Module.Free.chooseBasis ℤ S
   cases isEmpty_or_nonempty (Module.Free.ChooseBasisIndex ℤ S)
   · haveI : Subsingleton S := Function.Surjective.subsingleton b.repr.to_equiv.symm.surjective
@@ -238,7 +245,7 @@ theorem card_quot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite �
     UniqueFactorizationMonoid.multiplicative_of_coprime card_quot I J (card_quot_bot _ _)
       (fun I J hI => by simp [ideal.is_unit_iff.mp hI, Ideal.mul_top])
       (fun I i hI =>
-        have : Ideal.IsPrime I := Ideal.is_prime_of_prime hI
+        have : Ideal.IsPrime I := Ideal.isPrimeOfPrime hI
         card_quot_pow_of_prime hI.ne_zero)
       fun I J hIJ =>
       card_quot_mul_of_coprime
@@ -248,8 +255,8 @@ theorem card_quot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite �
 
 /-- The absolute norm of the ideal `I : ideal R` is the cardinality of the quotient `R ⧸ I`. -/
 noncomputable def Ideal.absNorm [Infinite S] [IsDedekindDomain S] [Module.Free ℤ S]
-    [Module.Finite ℤ S] :
-    Ideal S →*₀ ℕ where 
+    [Module.Finite ℤ S] : Ideal S →*₀ ℕ
+    where
   toFun := Submodule.cardQuot
   map_mul' I J := by rw [card_quot_mul]
   map_one' := by rw [Ideal.one_eq_top, card_quot_top]
@@ -322,13 +329,15 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
         int.nat_abs_eq_iff_associated.mpr (LinearMap.associated_det_comp_equiv _ _ _)
       _ = abs_norm I := this
       
-  have ha : ∀ i, f (b' i) = a i • b' i := by 
+  have ha : ∀ i, f (b' i) = a i • b' i := by
     intro i
     rw [f_apply, b'.equiv_apply, Equiv.refl_apply, ab_eq]
-  have mem_I_iff : ∀ x, x ∈ I ↔ ∀ i, a i ∣ b'.repr x i := by
+  have mem_I_iff : ∀ x, x ∈ I ↔ ∀ i, a i ∣ b'.repr x i :=
+    by
     intro x
     simp_rw [ab.mem_ideal_iff', ab_eq]
-    have : ∀ (c : ι → ℤ) (i), b'.repr (∑ j : ι, c j • a j • b' j) i = a i * c i := by
+    have : ∀ (c : ι → ℤ) (i), b'.repr (∑ j : ι, c j • a j • b' j) i = a i * c i :=
+      by
       intro c i
       simp only [← MulAction.mul_smul, b'.repr_sum_self, mul_comm]
     constructor
@@ -368,7 +377,8 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
 Then an alternative way to compute the norm of `I` is given by taking the determinant of `bI`
 over `b`. -/
 theorem nat_abs_det_basis_change {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι ℤ S)
-    (I : Ideal S) (bI : Basis ι ℤ I) : (b.det (coe ∘ bI)).natAbs = Ideal.absNorm I := by
+    (I : Ideal S) (bI : Basis ι ℤ I) : (b.det (coe ∘ bI)).natAbs = Ideal.absNorm I :=
+  by
   let e := b.equiv bI (Equiv.refl _)
   calc
     (b.det ((Submodule.subtype I).restrictScalars ℤ ∘ bI)).natAbs =
@@ -380,7 +390,8 @@ theorem nat_abs_det_basis_change {ι : Type _} [Fintype ι] [DecidableEq ι] (b 
 
 @[simp]
 theorem abs_norm_span_singleton (r : S) :
-    absNorm (span ({r} : Set S)) = (Algebra.norm ℤ r).natAbs := by
+    absNorm (span ({r} : Set S)) = (Algebra.norm ℤ r).natAbs :=
+  by
   rw [Algebra.norm_apply]
   by_cases hr : r = 0
   ·
@@ -421,14 +432,14 @@ theorem irreducible_of_irreducible_abs_norm {I : Ideal S} (hI : Irreducible I.ab
           hI.is_unit_or_is_unit (_root_.map_mul abs_norm a b)⟩
 #align ideal.irreducible_of_irreducible_abs_norm Ideal.irreducible_of_irreducible_abs_norm
 
-theorem is_prime_of_irreducible_abs_norm {I : Ideal S} (hI : Irreducible I.absNorm) : I.IsPrime :=
-  is_prime_of_prime
+theorem isPrimeOfIrreducibleAbsNorm {I : Ideal S} (hI : Irreducible I.absNorm) : I.IsPrime :=
+  isPrimeOfPrime
     (UniqueFactorizationMonoid.irreducible_iff_prime.mp (irreducible_of_irreducible_abs_norm hI))
-#align ideal.is_prime_of_irreducible_abs_norm Ideal.is_prime_of_irreducible_abs_norm
+#align ideal.is_prime_of_irreducible_abs_norm Ideal.isPrimeOfIrreducibleAbsNorm
 
 theorem prime_of_irreducible_abs_norm_span {a : S} (ha : a ≠ 0)
     (hI : Irreducible (Ideal.span ({a} : Set S)).absNorm) : Prime a :=
-  (Ideal.span_singleton_prime ha).mp (is_prime_of_irreducible_abs_norm hI)
+  (Ideal.span_singleton_prime ha).mp (isPrimeOfIrreducibleAbsNorm hI)
 #align ideal.prime_of_irreducible_abs_norm_span Ideal.prime_of_irreducible_abs_norm_span
 
 end Ideal

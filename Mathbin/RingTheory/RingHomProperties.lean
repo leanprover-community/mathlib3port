@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom_properties
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,14 +53,14 @@ variable {P}
 
 theorem RespectsIso.cancel_left_is_iso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
     (g : S ⟶ T) [IsIso f] : P (f ≫ g) ↔ P g :=
-  ⟨fun H => by 
+  ⟨fun H => by
     convert hP.2 (f ≫ g) (as_iso f).symm.commRingIsoToRingEquiv H
     exact (is_iso.inv_hom_id_assoc _ _).symm, hP.2 g (asIso f).commRingIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_left_is_iso RingHom.RespectsIso.cancel_left_is_iso
 
 theorem RespectsIso.cancel_right_is_iso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
     (g : S ⟶ T) [IsIso g] : P (f ≫ g) ↔ P f :=
-  ⟨fun H => by 
+  ⟨fun H => by
     convert hP.1 (f ≫ g) (as_iso g).symm.commRingIsoToRingEquiv H
     change f = f ≫ g ≫ inv g
     simp, hP.1 f (asIso g).commRingIsoToRingEquiv⟩
@@ -69,7 +69,8 @@ theorem RespectsIso.cancel_right_is_iso (hP : RespectsIso @P) {R S T : CommRingC
 theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _}
     (R' S' : Type _) [CommRing R] [CommRing S] [CommRing R'] [CommRing S'] [Algebra R R']
     [Algebra S S'] (f : R →+* S) (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] :
-    P (Localization.awayMap f r) ↔ P (IsLocalization.Away.map R' S' f r) := by
+    P (Localization.awayMap f r) ↔ P (IsLocalization.Away.map R' S' f r) :=
+  by
   let e₁ : R' ≃+* Localization.Away r :=
     (IsLocalization.algEquiv (Submonoid.powers r) _ _).toRingEquiv
   let e₂ : Localization.Away (f r) ≃+* S' :=
@@ -103,7 +104,7 @@ variable {P}
 
 theorem StableUnderComposition.respects_iso (hP : RingHom.StableUnderComposition @P)
     (hP' : ∀ {R S : Type _} [CommRing R] [CommRing S] (e : R ≃+* S), P e.to_ring_hom) :
-    RingHom.RespectsIso @P := by 
+    RingHom.RespectsIso @P := by
   constructor
   · introv H
     skip
@@ -134,14 +135,14 @@ theorem StableUnderBaseChange.mk (h₁ : RespectsIso @P)
         ∀ [Algebra R S] [Algebra R T],
           P (algebraMap R T) →
             P (algebra.tensor_product.include_left.to_ring_hom : S →+* TensorProduct R S T)) :
-    StableUnderBaseChange @P := by 
+    StableUnderBaseChange @P := by
   introv R h H
   skip
   let e := h.symm.1.Equiv
   let f' :=
     Algebra.TensorProduct.productMap (IsScalarTower.toAlgHom R R' S')
       (IsScalarTower.toAlgHom R S S')
-  have : ∀ x, e x = f' x := by 
+  have : ∀ x, e x = f' x := by
     intro x
     change e.to_linear_map.restrict_scalars R x = f'.to_linear_map x
     congr 1
@@ -166,7 +167,8 @@ attribute [local instance] Algebra.TensorProduct.rightAlgebra
 
 theorem StableUnderBaseChange.pushout_inl (hP : RingHom.StableUnderBaseChange @P)
     (hP' : RingHom.RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S) (g : R ⟶ T) (H : P g) :
-    P (pushout.inl : S ⟶ pushout f g) := by
+    P (pushout.inl : S ⟶ pushout f g) :=
+  by
   rw [←
     show _ = pushout.inl from
       colimit.iso_colimit_cocone_ι_inv ⟨_, CommRingCat.pushoutCoconeIsColimit f g⟩

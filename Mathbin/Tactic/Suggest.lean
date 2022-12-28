@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lucas Allen, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.suggest
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,7 +211,7 @@ and there are any goals remaining.
 
 Returns the number of subgoals which were closed using `solve_by_elim`.
 -/
-unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e : expr) : tactic ℕ :=
+unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := { }) (e : expr) : tactic ℕ :=
   do
   trace_if_enabled `suggest f! "Trying to apply lemma: {e}"
   apply e opt
@@ -251,7 +251,7 @@ and then attempt to solve the subgoal using `apply_and_solve`.
 
 Returns the number of subgoals successfully closed.
 -/
-unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := {  }) (d : decl_data) :
+unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := { }) (d : decl_data) :
     tactic ℕ :=
   let tac := apply_and_solve close_goals opt
   do
@@ -289,8 +289,8 @@ initialize
 -- Trace a list of all relevant lemmas
 -- Call `apply_declaration`, then prepare the tactic script and
 -- count the number of local hypotheses used.
-private unsafe def apply_declaration_script (g : expr) (hyps : List expr)
-    (opt : suggest_opt := {  }) (d : decl_data) : tactic application :=
+private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt : suggest_opt := { })
+    (d : decl_data) : tactic application :=
   -- (This tactic block is only executed when we evaluate the mllist,
     -- so we need to do the `focus1` here.)
     retrieve <|
@@ -315,7 +315,7 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr)
 -- implementation note: we produce a `tactic (mllist tactic application)` first,
 -- because it's easier to work in the tactic monad, but in a moment we squash this
 -- down to an `mllist tactic application`.
-private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist tactic application) :=
+private unsafe def suggest_core' (opt : suggest_opt := { }) : tactic (mllist tactic application) :=
   do
   let g :: _ ← get_goals
   let hyps ← local_context
@@ -370,7 +370,7 @@ It returns a list of `application`s consisting of fields:
 * `num_goals`, the number of remaining goals, and
 * `hyps_used`, the number of local hypotheses used in the solution.
 -/
-unsafe def suggest_core (opt : suggest_opt := {  }) : mllist tactic application :=
+unsafe def suggest_core (opt : suggest_opt := { }) : mllist tactic application :=
   (mllist.monad_lift (suggest_core' opt)).join
 #align tactic.suggest_core tactic.suggest_core
 
@@ -379,7 +379,7 @@ unsafe def suggest_core (opt : suggest_opt := {  }) : mllist tactic application 
 Returns a list of at most `limit` `application`s,
 sorted by number of goals, and then (reverse) number of hypotheses used.
 -/
-unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) :
+unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := { }) :
     tactic (List application) := do
   let results := suggest_core opt
   let L
@@ -395,7 +395,7 @@ unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) :
 `Try this: refine ...`, which make progress on the current goal using a declaration
 from the library.
 -/
-unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := {  }) :
+unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := { }) :
     tactic (List String) := do
   let L ← suggest limit opt
   return <| L application.script
@@ -403,7 +403,7 @@ unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := { 
 
 /-- Returns a string of the form `Try this: exact ...`, which closes the current goal.
 -/
-unsafe def library_search (opt : suggest_opt := {  }) : tactic String :=
+unsafe def library_search (opt : suggest_opt := { }) : tactic String :=
   (suggest_core opt).mfirst fun a => do
     guard (a = 0)
     write a
@@ -445,13 +445,13 @@ You can also use `suggest with attr` to include all lemmas with the attribute `a
 -/
 unsafe def suggest (n : parse (parser.optional (with_desc "n" small_nat)))
     (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
-    (use : parse <| tk "using" *> many ident_ <|> return []) (opt : suggest_opt := {  }) :
+    (use : parse <| tk "using" *> many ident_ <|> return []) (opt : suggest_opt := { }) :
     tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
   let use ← use.mmap get_local
   let L ←
     tactic.suggest_scripts (n.getOrElse 50)
-        { opt with 
+        { opt with
           compulsory_hyps := use
           lemma_thunks := some lemma_thunks
           ctx_thunk }
@@ -536,11 +536,11 @@ You can also use `library_search with attr` to include all lemmas with the attri
 -/
 unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : parse simp_arg_list)
     (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
-    (opt : suggest_opt := {  }) : tactic Unit := do
+    (opt : suggest_opt := { }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
   let use ← use.mmap get_local
   (tactic.library_search
-          { opt with 
+          { opt with
             compulsory_hyps := use
             backtrack_all_goals := tt
             lemma_thunks := some lemma_thunks
@@ -579,8 +579,8 @@ nat.one_pos
 ```
 -/
 @[hole_command]
-unsafe def library_search_hole_cmd :
-    hole_command where 
+unsafe def library_search_hole_cmd : hole_command
+    where
   Name := "library_search"
   descr := "Use `library_search` to complete the goal."
   action _ := do

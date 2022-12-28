@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mitchell Rowett, Scott Morrison
 
 ! This file was ported from Lean 3 source module group_theory.coset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -243,7 +243,8 @@ theorem normal_iff_eq_cosets : s.Normal ↔ ∀ g : α, g *l s = s *r g :=
 #align normal_iff_eq_cosets normal_iff_eq_cosets
 
 @[to_additive left_add_coset_eq_iff]
-theorem left_coset_eq_iff {x y : α} : leftCoset x s = leftCoset y s ↔ x⁻¹ * y ∈ s := by
+theorem left_coset_eq_iff {x y : α} : leftCoset x s = leftCoset y s ↔ x⁻¹ * y ∈ s :=
+  by
   rw [Set.ext_iff]
   simp_rw [mem_left_coset_iff, SetLike.mem_coe]
   constructor
@@ -258,7 +259,8 @@ theorem left_coset_eq_iff {x y : α} : leftCoset x s = leftCoset y s ↔ x⁻¹ 
 #align left_coset_eq_iff left_coset_eq_iff
 
 @[to_additive right_add_coset_eq_iff]
-theorem right_coset_eq_iff {x y : α} : rightCoset (↑s) x = rightCoset s y ↔ y * x⁻¹ ∈ s := by
+theorem right_coset_eq_iff {x y : α} : rightCoset (↑s) x = rightCoset s y ↔ y * x⁻¹ ∈ s :=
+  by
   rw [Set.ext_iff]
   simp_rw [mem_right_coset_iff, SetLike.mem_coe]
   constructor
@@ -305,13 +307,14 @@ variable (s)
 
 @[to_additive]
 theorem left_rel_eq : @Setoid.r _ (leftRel s) = fun x y => x⁻¹ * y ∈ s :=
-  funext₂ <| by 
+  funext₂ <| by
     simp only [eq_iff_iff]
     apply left_rel_apply
 #align quotient_group.left_rel_eq QuotientGroup.left_rel_eq
 
 theorem left_rel_r_eq_left_coset_equivalence :
-    @Setoid.r _ (QuotientGroup.leftRel s) = LeftCosetEquivalence s := by
+    @Setoid.r _ (QuotientGroup.leftRel s) = LeftCosetEquivalence s :=
+  by
   ext
   rw [left_rel_eq]
   exact (left_coset_eq_iff s).symm
@@ -319,7 +322,8 @@ theorem left_rel_r_eq_left_coset_equivalence :
   quotient_group.left_rel_r_eq_left_coset_equivalence QuotientGroup.left_rel_r_eq_left_coset_equivalence
 
 @[to_additive]
-instance leftRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (leftRel s).R := fun x y => by
+instance leftRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (leftRel s).R := fun x y =>
+  by
   rw [left_rel_eq]
   exact ‹DecidablePred (· ∈ s)› _
 #align quotient_group.left_rel_decidable QuotientGroup.leftRelDecidable
@@ -354,13 +358,14 @@ variable (s)
 
 @[to_additive]
 theorem right_rel_eq : @Setoid.r _ (rightRel s) = fun x y => y * x⁻¹ ∈ s :=
-  funext₂ <| by 
+  funext₂ <| by
     simp only [eq_iff_iff]
     apply right_rel_apply
 #align quotient_group.right_rel_eq QuotientGroup.right_rel_eq
 
 theorem right_rel_r_eq_right_coset_equivalence :
-    @Setoid.r _ (QuotientGroup.rightRel s) = RightCosetEquivalence s := by
+    @Setoid.r _ (QuotientGroup.rightRel s) = RightCosetEquivalence s :=
+  by
   ext
   rw [right_rel_eq]
   exact (right_coset_eq_iff s).symm
@@ -368,35 +373,36 @@ theorem right_rel_r_eq_right_coset_equivalence :
   quotient_group.right_rel_r_eq_right_coset_equivalence QuotientGroup.right_rel_r_eq_right_coset_equivalence
 
 @[to_additive]
-instance rightRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s).R := fun x y => by
+instance rightRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s).R := fun x y =>
+  by
   rw [right_rel_eq]
   exact ‹DecidablePred (· ∈ s)› _
 #align quotient_group.right_rel_decidable QuotientGroup.rightRelDecidable
 
 /-- Right cosets are in bijection with left cosets. -/
 @[to_additive "Right cosets are in bijection with left cosets."]
-def quotientRightRelEquivQuotientLeftRel :
-    Quotient (QuotientGroup.rightRel s) ≃
-      α ⧸
-        s where 
+def quotientRightRelEquivQuotientLeftRel : Quotient (QuotientGroup.rightRel s) ≃ α ⧸ s
+    where
   toFun :=
-    Quotient.map' (fun g => g⁻¹) fun a b => by
+    Quotient.map' (fun g => g⁻¹) fun a b =>
+      by
       rw [left_rel_apply, right_rel_apply]
       exact fun h => (congr_arg (· ∈ s) (by group)).mp (s.inv_mem h)
   invFun :=
-    Quotient.map' (fun g => g⁻¹) fun a b => by
+    Quotient.map' (fun g => g⁻¹) fun a b =>
+      by
       rw [left_rel_apply, right_rel_apply]
       exact fun h => (congr_arg (· ∈ s) (by group)).mp (s.inv_mem h)
   left_inv g :=
     Quotient.inductionOn' g fun g =>
       Quotient.sound'
-        (by 
+        (by
           simp only [inv_inv]
           exact Quotient.exact' rfl)
   right_inv g :=
     Quotient.inductionOn' g fun g =>
       Quotient.sound'
-        (by 
+        (by
           simp only [inv_inv]
           exact Quotient.exact' rfl)
 #align
@@ -514,9 +520,10 @@ theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) :
 
 @[to_additive]
 theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
-    coe ⁻¹' ((coe : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s := by
+    coe ⁻¹' ((coe : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s :=
+  by
   ext x
-  simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union,
+  simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_unionᵢ,
     Set.mem_image, [anonymous], ← eq_inv_mul_iff_mul_eq]
   exact
     ⟨fun ⟨y, hs, hN⟩ => ⟨_, N.inv_mem hN, by simpa using hs⟩, fun ⟨z, hz, hxz⟩ =>
@@ -551,7 +558,7 @@ noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
   calc
     α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
     _ ≃ ΣL : α ⧸ s, leftCoset (Quotient.out' L) s :=
-      Equiv.sigmaCongrRight fun L => by 
+      Equiv.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]
         show
           (_root_.subtype fun x : α => Quotient.mk' x = L) ≃
@@ -566,8 +573,8 @@ variable {t : Subgroup α}
 
 /-- If two subgroups `M` and `N` of `G` are equal, their quotients are in bijection. -/
 @[to_additive "If two subgroups `M` and `N` of `G` are equal, their quotients are in bijection."]
-def quotientEquivOfEq (h : s = t) :
-    α ⧸ s ≃ α ⧸ t where 
+def quotientEquivOfEq (h : s = t) : α ⧸ s ≃ α ⧸ t
+    where
   toFun := Quotient.map' id fun a b h' => h ▸ h'
   invFun := Quotient.map' id fun a b h' => h.symm ▸ h'
   left_inv q := induction_on' q fun g => rfl
@@ -585,30 +592,27 @@ of the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_o
       "If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse\nof the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`.",
   simps]
 def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
-    (hf : Function.RightInverse f QuotientGroup.mk) :
-    α ⧸ s ≃
-      (α ⧸ t) ×
-        t ⧸
-          s.subgroupOf
-            t where 
+    (hf : Function.RightInverse f QuotientGroup.mk) : α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroupOf t
+    where
   toFun a :=
     ⟨a.map' id fun b c h => left_rel_apply.mpr (h_le (left_rel_apply.mp h)),
       a.map' (fun g : α => ⟨(f (Quotient.mk' g))⁻¹ * g, left_rel_apply.mp (Quotient.exact' (hf g))⟩)
-        fun b c h => by 
+        fun b c h => by
         rw [left_rel_apply]
         change ((f b)⁻¹ * b)⁻¹ * ((f c)⁻¹ * c) ∈ s
         have key : f b = f c :=
           congr_arg f (Quotient.sound' (left_rel_apply.mpr (h_le (left_rel_apply.mp h))))
         rwa [key, mul_inv_rev, inv_inv, mul_assoc, mul_inv_cancel_left, ← left_rel_apply]⟩
   invFun a :=
-    a.2.map' (fun b => f a.1 * b) fun b c h => by
+    a.2.map' (fun b => f a.1 * b) fun b c h =>
+      by
       rw [left_rel_apply] at h⊢
       change (f a.1 * b)⁻¹ * (f a.1 * c) ∈ s
       rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
-  left_inv := by 
+  left_inv := by
     refine' Quotient.ind' fun a => _
     simp_rw [Quotient.map'_mk', id.def, [anonymous], mul_inv_cancel_left]
-  right_inv := by 
+  right_inv := by
     refine' Prod.rec _
     refine' Quotient.ind' fun a => _
     refine' Quotient.ind' fun b => _
@@ -630,16 +634,15 @@ noncomputable def quotientEquivProdOfLe (h_le : s ≤ t) : α ⧸ s ≃ (α ⧸ 
 @[to_additive
       "If `s ≤ t`, then there is an embedding\n  `s ⧸ H.add_subgroup_of s ↪ t ⧸ H.add_subgroup_of t`."]
 def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) :
-    s ⧸ H.subgroupOf s ↪
-      t ⧸
-        H.subgroupOf
-          t where 
+    s ⧸ H.subgroupOf s ↪ t ⧸ H.subgroupOf t
+    where
   toFun :=
-    Quotient.map' (inclusion h) fun a b => by
+    Quotient.map' (inclusion h) fun a b =>
+      by
       simp_rw [left_rel_eq]
       exact id
   inj' :=
-    Quotient.ind₂' <| by 
+    Quotient.ind₂' <| by
       intro a b h
       simpa only [Quotient.map'_mk', eq'] using h
 #align subgroup.quotient_subgroup_of_embedding_of_le Subgroup.quotientSubgroupOfEmbeddingOfLe
@@ -656,7 +659,7 @@ theorem quotient_subgroup_of_embedding_of_le_apply_mk (H : Subgroup α) (h : s �
       "If `s ≤ t`, then there is an map\n  `H ⧸ s.add_subgroup_of H → H ⧸ t.add_subgroup_of H`."]
 def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) :
     H ⧸ s.subgroupOf H → H ⧸ t.subgroupOf H :=
-  (Quotient.map' id) fun a b => by 
+  (Quotient.map' id) fun a b => by
     simp_rw [left_rel_eq]
     apply h
 #align subgroup.quotient_subgroup_of_map_of_le Subgroup.quotientSubgroupOfMapOfLe
@@ -671,7 +674,7 @@ theorem quotient_subgroup_of_map_of_le_apply_mk (H : Subgroup α) (h : s ≤ t) 
 /-- If `s ≤ t`, then there is a map `α ⧸ s → α ⧸ t`. -/
 @[to_additive "If `s ≤ t`, then there is an map `α ⧸ s → α ⧸ t`."]
 def quotientMapOfLe (h : s ≤ t) : α ⧸ s → α ⧸ t :=
-  (Quotient.map' id) fun a b => by 
+  (Quotient.map' id) fun a b => by
     simp_rw [left_rel_eq]
     apply h
 #align subgroup.quotient_map_of_le Subgroup.quotientMapOfLe
@@ -687,11 +690,8 @@ theorem quotient_map_of_le_apply_mk (h : s ≤ t) (g : α) :
       "The natural embedding\n  `H ⧸ (⨅ i, f i).add_subgroup_of H) ↪ Π i, H ⧸ (f i).add_subgroup_of H`.",
   simps]
 def quotientInfiSubgroupOfEmbedding {ι : Type _} (f : ι → Subgroup α) (H : Subgroup α) :
-    H ⧸ (⨅ i, f i).subgroupOf H ↪
-      ∀ i,
-        H ⧸
-          (f i).subgroupOf
-            H where 
+    H ⧸ (⨅ i, f i).subgroupOf H ↪ ∀ i, H ⧸ (f i).subgroupOf H
+    where
   toFun q i := quotientSubgroupOfMapOfLe H (infᵢ_le f i) q
   inj' :=
     Quotient.ind₂' <| by
@@ -709,9 +709,8 @@ theorem quotient_infi_subgroup_of_embedding_apply_mk {ι : Type _} (f : ι → S
 
 /-- The natural embedding `α ⧸ (⨅ i, f i) ↪ Π i, α ⧸ f i`. -/
 @[to_additive "The natural embedding `α ⧸ (⨅ i, f i) ↪ Π i, α ⧸ f i`.", simps]
-def quotientInfiEmbedding {ι : Type _} (f : ι → Subgroup α) :
-    (α ⧸ ⨅ i, f i) ↪
-      ∀ i, α ⧸ f i where 
+def quotientInfiEmbedding {ι : Type _} (f : ι → Subgroup α) : (α ⧸ ⨅ i, f i) ↪ ∀ i, α ⧸ f i
+    where
   toFun q i := quotientMapOfLe (infᵢ_le f i) q
   inj' :=
     Quotient.ind₂' <| by

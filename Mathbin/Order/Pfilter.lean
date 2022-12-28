@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mathieu Guay-Paquet
 
 ! This file was ported from Lean 3 source module order.pfilter
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => 
 
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
-theorem ext (h : (s : Set P) = t) : s = t := by 
+theorem ext (h : (s : Set P) = t) : s = t := by
   cases s
   cases t
   exact congr_arg _ (ideal.ext h)
@@ -163,15 +163,15 @@ theorem top_mem : ⊤ ∈ F :=
 #align order.pfilter.top_mem Order.Pfilter.top_mem
 
 /-- There is a bottom filter when `P` has a top element. -/
-instance : OrderBot (Pfilter P) where 
+instance : OrderBot (Pfilter P) where
   bot := ⟨⊥⟩
   bot_le F := (bot_le : ⊥ ≤ F.dual)
 
 end OrderTop
 
 /-- There is a top filter when `P` has a bottom element. -/
-instance {P} [Preorder P] [OrderBot P] :
-    OrderTop (Pfilter P) where 
+instance {P} [Preorder P] [OrderBot P] : OrderTop (Pfilter P)
+    where
   top := ⟨⊤⟩
   le_top F := (le_top : F.dual ≤ ⊤)
 
@@ -198,7 +198,7 @@ variable [CompleteSemilatticeInf P] {F : Pfilter P}
 theorem Inf_gc :
     GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F =>
       infₛ (OrderDual.ofDual F : Pfilter P) :=
-  fun x F => by 
+  fun x F => by
   simp
   rfl
 #align order.pfilter.Inf_gc Order.Pfilter.Inf_gc
@@ -206,9 +206,8 @@ theorem Inf_gc :
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def infGi :
     GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F =>
-      infₛ
-        (OrderDual.ofDual F :
-          Pfilter P) where 
+      infₛ (OrderDual.ofDual F : Pfilter P)
+    where
   choice F _ := infₛ (id F : Pfilter P)
   gc := Inf_gc
   u_l_le s := infₛ_le <| mem_principal.2 <| le_refl s

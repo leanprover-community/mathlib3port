@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.pi.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,8 +29,8 @@ variable {I : Type w₀} (C : I → Type u₁) [∀ i, Category.{v₁} (C i)]
 
 /-- `pi C` gives the cartesian product of an indexed family of categories.
 -/
-instance pi : Category.{max w₀ v₁}
-      (∀ i, C i) where 
+instance pi : Category.{max w₀ v₁} (∀ i, C i)
+    where
   Hom X Y := ∀ i, X i ⟶ Y i
   id X i := 𝟙 (X i)
   comp X Y Z f g i := f i ≫ g i
@@ -62,7 +62,7 @@ theorem comp_apply {X Y Z : ∀ i, C i} (f : X ⟶ Y) (g : Y ⟶ Z) (i) :
 The evaluation functor at `i : I`, sending an `I`-indexed family of objects to the object over `i`.
 -/
 @[simps]
-def eval (i : I) : (∀ i, C i) ⥤ C i where 
+def eval (i : I) : (∀ i, C i) ⥤ C i where
   obj f := f i
   map f g α := α i
 #align category_theory.pi.eval CategoryTheory.pi.eval
@@ -74,8 +74,8 @@ variable {J : Type w₁}
 /-- Pull back an `I`-indexed family of objects to an `J`-indexed family, along a function `J → I`.
 -/
 @[simps]
-def comap (h : J → I) :
-    (∀ i, C i) ⥤ ∀ j, C (h j) where 
+def comap (h : J → I) : (∀ i, C i) ⥤ ∀ j, C (h j)
+    where
   obj f i := f (h i)
   map f g α i := α (h i)
 #align category_theory.pi.comap CategoryTheory.pi.comap
@@ -86,9 +86,8 @@ variable (I)
 pulling back a grading along the identity function,
 and the identity functor. -/
 @[simps]
-def comapId :
-    comap C (id : I → I) ≅
-      𝟭 (∀ i, C i) where 
+def comapId : comap C (id : I → I) ≅ 𝟭 (∀ i, C i)
+    where
   Hom := { app := fun X => 𝟙 X }
   inv := { app := fun X => 𝟙 X }
 #align category_theory.pi.comap_id CategoryTheory.pi.comapId
@@ -102,9 +101,8 @@ pulling back along two successive functions, and
 pulling back along their composition
 -/
 @[simps]
-def comapComp (f : K → J) (g : J → I) :
-    comap C g ⋙ comap (C ∘ g) f ≅
-      comap C (g ∘ f) where 
+def comapComp (f : K → J) (g : J → I) : comap C g ⋙ comap (C ∘ g) f ≅ comap C (g ∘ f)
+    where
   Hom := { app := fun X b => 𝟙 (X (g (f b))) }
   inv := { app := fun X b => 𝟙 (X (g (f b))) }
 #align category_theory.pi.comap_comp CategoryTheory.pi.comapComp
@@ -128,10 +126,10 @@ but is expected to have type
   forall {I : Type.{u3}} (C : I -> Type.{u1}) [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u1} (C i)] {J : Type.{u3}} {D : J -> Type.{u1}} [_inst_2 : forall (j : J), CategoryTheory.Category.{u2, u1} (D j)] (s : Sum.{u3, u3} I J), CategoryTheory.Category.{u2, u1} (Sum.elim.{u3, u3, succ (succ u1)} I J Type.{u1} C D s)
 Case conversion may be inaccurate. Consider using '#align category_theory.pi.sum_elim_category CategoryTheory.pi.sumElimCategoryₓ'. -/
 instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
-  | Sum.inl i => by 
+  | Sum.inl i => by
     dsimp
     infer_instance
-  | Sum.inr j => by 
+  | Sum.inr j => by
     dsimp
     infer_instance
 #align category_theory.pi.sum_elim_category CategoryTheory.pi.sumElimCategory
@@ -140,12 +138,8 @@ instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
 to obtain an `I ⊕ J`-indexed family of objects.
 -/
 @[simps]
-def sum :
-    (∀ i, C i) ⥤
-      (∀ j, D j) ⥤
-        ∀ s : Sum I J,
-          Sum.elim C D
-            s where 
+def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s
+    where
   obj f :=
     { obj := fun g s => Sum.rec f g s
       map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
@@ -160,9 +154,10 @@ variable {C}
 pair of corresponding components. -/
 @[simps]
 def isoApp {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
-  ⟨f.Hom i, f.inv i, by 
+  ⟨f.Hom i, f.inv i, by
     dsimp
-    rw [← comp_apply, iso.hom_inv_id, id_apply], by
+    rw [← comp_apply, iso.hom_inv_id, id_apply],
+    by
     dsimp
     rw [← comp_apply, iso.inv_hom_id, id_apply]⟩
 #align category_theory.pi.iso_app CategoryTheory.pi.isoApp
@@ -194,8 +189,8 @@ variable {D : I → Type u₁} [∀ i, Category.{v₁} (D i)] {A : Type u₁} [C
 /-- Assemble an `I`-indexed family of functors into a functor between the pi types.
 -/
 @[simps]
-def pi (F : ∀ i, C i ⥤ D i) :
-    (∀ i, C i) ⥤ ∀ i, D i where 
+def pi (F : ∀ i, C i ⥤ D i) : (∀ i, C i) ⥤ ∀ i, D i
+    where
   obj f i := (F i).obj (f i)
   map f g α i := (F i).map (α i)
 #align category_theory.functor.pi CategoryTheory.Functor.pi
@@ -203,8 +198,8 @@ def pi (F : ∀ i, C i ⥤ D i) :
 /-- Similar to `pi`, but all functors come from the same category `A`
 -/
 @[simps]
-def pi' (f : ∀ i, A ⥤ C i) :
-    A ⥤ ∀ i, C i where 
+def pi' (f : ∀ i, A ⥤ C i) : A ⥤ ∀ i, C i
+    where
   obj a i := (f i).obj a
   map a₁ a₂ h i := (f i).map h
 #align category_theory.functor.pi' CategoryTheory.Functor.pi'
@@ -213,7 +208,8 @@ section EqToHom
 
 @[simp]
 theorem eq_to_hom_proj {x x' : ∀ i, C i} (h : x = x') (i : I) :
-    (eqToHom h : x ⟶ x') i = eqToHom (Function.funext_iff.mp h i) := by
+    (eqToHom h : x ⟶ x') i = eqToHom (Function.funext_iff.mp h i) :=
+  by
   subst h
   rfl
 #align category_theory.functor.eq_to_hom_proj CategoryTheory.Functor.eq_to_hom_proj
@@ -223,13 +219,15 @@ end EqToHom
 -- One could add some natural isomorphisms showing
 -- how `functor.pi` commutes with `pi.eval` and `pi.comap`.
 @[simp]
-theorem pi'_eval (f : ∀ i, A ⥤ C i) (i : I) : pi' f ⋙ pi.eval C i = f i := by
+theorem pi'_eval (f : ∀ i, A ⥤ C i) (i : I) : pi' f ⋙ pi.eval C i = f i :=
+  by
   apply Functor.ext <;> intros
   · simp; · rfl
 #align category_theory.functor.pi'_eval CategoryTheory.Functor.pi'_eval
 
 /-- Two functors to a product category are equal iff they agree on every coordinate. -/
-theorem pi_ext (f f' : A ⥤ ∀ i, C i) (h : ∀ i, f ⋙ pi.eval C i = f' ⋙ pi.eval C i) : f = f' := by
+theorem pi_ext (f f' : A ⥤ ∀ i, C i) (h : ∀ i, f ⋙ pi.eval C i = f' ⋙ pi.eval C i) : f = f' :=
+  by
   apply Functor.ext; swap
   · intro X
     ext i

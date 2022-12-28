@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.powerset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,8 @@ theorem Finset.mem_powerset_len_univ_iff [Fintype α] {s : Finset α} {k : ℕ} 
 
 @[simp]
 theorem Finset.univ_filter_card_eq (α : Type _) [Fintype α] (k : ℕ) :
-    ((Finset.univ : Finset (Finset α)).filter fun s => s.card = k) = Finset.univ.powersetLen k := by
+    ((Finset.univ : Finset (Finset α)).filter fun s => s.card = k) = Finset.univ.powersetLen k :=
+  by
   ext
   simp [Finset.mem_powerset_len]
 #align finset.univ_filter_card_eq Finset.univ_filter_card_eq
@@ -59,7 +60,7 @@ theorem Fintype.card_finset_len [Fintype α] (k : ℕ) :
 
 instance Set.fintype [Fintype α] : Fintype (Set α) :=
   ⟨(@Finset.univ α _).powerset.map ⟨coe, coe_injective⟩, fun s => by
-    classical 
+    classical
       refine' mem_map.2 ⟨finset.univ.filter s, mem_powerset.2 (subset_univ _), _⟩
       apply (coe_filter _ _).trans
       rw [coe_univ, Set.sep_univ]
@@ -67,7 +68,8 @@ instance Set.fintype [Fintype α] : Fintype (Set α) :=
 #align set.fintype Set.fintype
 
 -- Not to be confused with `set.finite`, the predicate
-instance Set.finite' [Finite α] : Finite (Set α) := by
+instance Set.finite' [Finite α] : Finite (Set α) :=
+  by
   cases nonempty_fintype α
   infer_instance
 #align set.finite' Set.finite'

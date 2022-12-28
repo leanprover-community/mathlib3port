@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.bases
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ instance {α : Type _} : Membership (Set α) (FilterBasis α) :=
 instance : Inhabited (FilterBasis ℕ) :=
   ⟨{  sets := range Ici
       Nonempty := ⟨Ici 0, mem_range_self 0⟩
-      inter_sets := by 
+      inter_sets := by
         rintro _ _ ⟨n, rfl⟩ ⟨m, rfl⟩
         refine' ⟨Ici (max n m), mem_range_self _, _⟩
         rintro p p_in
@@ -130,13 +130,13 @@ namespace Filter
 namespace IsBasis
 
 /-- Constructs a filter basis from an indexed family of sets satisfying `is_basis`. -/
-protected def filterBasis {p : ι → Prop} {s : ι → Set α} (h : IsBasis p s) :
-    FilterBasis α where 
+protected def filterBasis {p : ι → Prop} {s : ι → Set α} (h : IsBasis p s) : FilterBasis α
+    where
   sets := { t | ∃ i, p i ∧ s i = t }
   Nonempty :=
     let ⟨i, hi⟩ := h.Nonempty
     ⟨s i, ⟨i, hi, rfl⟩⟩
-  inter_sets := by 
+  inter_sets := by
     rintro _ _ ⟨i, hi, rfl⟩ ⟨j, hj, rfl⟩
     rcases h.inter hi hj with ⟨k, hk, hk'⟩
     exact ⟨_, ⟨k, hk, rfl⟩, hk'⟩
@@ -155,8 +155,8 @@ end Filter
 namespace FilterBasis
 
 /-- The filter associated to a filter basis. -/
-protected def filter (B : FilterBasis α) :
-    Filter α where 
+protected def filter (B : FilterBasis α) : Filter α
+    where
   sets := { s | ∃ t ∈ B, t ⊆ s }
   univ_sets :=
     let ⟨s, s_in⟩ := B.Nonempty
@@ -175,8 +175,10 @@ theorem mem_filter_of_mem (B : FilterBasis α) {U : Set α} : U ∈ B → U ∈ 
   ⟨U, U_in, Subset.refl _⟩
 #align filter_basis.mem_filter_of_mem FilterBasis.mem_filter_of_mem
 
-theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, 𝓟 s := by
-  have : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α) := by
+theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, 𝓟 s :=
+  by
+  have : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α) :=
+    by
     rintro ⟨U, U_in⟩ ⟨V, V_in⟩
     rcases B.inter_sets U_in V_in with ⟨W, W_in, W_sub⟩
     use W, W_in
@@ -186,7 +188,8 @@ theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, 𝓟
   simp [mem_filter_iff, mem_infi_of_directed this]
 #align filter_basis.eq_infi_principal FilterBasis.eq_infi_principal
 
-protected theorem generate (B : FilterBasis α) : generate B.sets = B.filter := by
+protected theorem generate (B : FilterBasis α) : generate B.sets = B.filter :=
+  by
   apply le_antisymm
   · intro U U_in
     rcases B.mem_filter_iff.mp U_in with ⟨V, V_in, h⟩
@@ -209,7 +212,8 @@ protected def filter (h : IsBasis p s) : Filter α :=
 #align filter.is_basis.filter Filter.IsBasis.filter
 
 protected theorem mem_filter_iff (h : IsBasis p s) {U : Set α} :
-    U ∈ h.filter ↔ ∃ i, p i ∧ s i ⊆ U := by
+    U ∈ h.filter ↔ ∃ i, p i ∧ s i ⊆ U :=
+  by
   erw [h.filter_basis.mem_filter_iff]
   simp only [mem_filter_basis_iff h, exists_prop]
   constructor
@@ -241,11 +245,11 @@ theorem has_basis_generate (s : Set (Set α)) :
 #align filter.has_basis_generate Filter.has_basis_generate
 
 /-- The smallest filter basis containing a given collection of sets. -/
-def FilterBasis.ofSets (s : Set (Set α)) :
-    FilterBasis α where 
+def FilterBasis.ofSets (s : Set (Set α)) : FilterBasis α
+    where
   sets := sInter '' { t | Set.Finite t ∧ t ⊆ s }
-  Nonempty := ⟨univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, sInter_empty⟩⟩
-  inter_sets := by 
+  Nonempty := ⟨univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, interₛ_empty⟩⟩
+  inter_sets := by
     rintro _ _ ⟨a, ⟨fina, suba⟩, rfl⟩ ⟨b, ⟨finb, subb⟩, rfl⟩
     exact
       ⟨⋂₀ (a ∪ b), mem_image_of_mem _ ⟨fina.union finb, union_subset suba subb⟩, by
@@ -257,7 +261,8 @@ theorem HasBasis.mem_iff (hl : l.HasBasis p s) : t ∈ l ↔ ∃ (i : _)(hi : p 
   hl.mem_iff' t
 #align filter.has_basis.mem_iff Filter.HasBasis.mem_iff
 
-theorem HasBasis.eq_of_same_basis (hl : l.HasBasis p s) (hl' : l'.HasBasis p s) : l = l' := by
+theorem HasBasis.eq_of_same_basis (hl : l.HasBasis p s) (hl' : l'.HasBasis p s) : l = l' :=
+  by
   ext t
   rw [hl.mem_iff, hl'.mem_iff]
 #align filter.has_basis.eq_of_same_basis Filter.HasBasis.eq_of_same_basis
@@ -312,7 +317,8 @@ theorem HasBasis.is_basis (h : l.HasBasis p s) : IsBasis p s :=
       simpa [h.mem_iff] using l.inter_sets (h.mem_of_mem hi) (h.mem_of_mem hj) }
 #align filter.has_basis.is_basis Filter.HasBasis.is_basis
 
-theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filter = l := by
+theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filter = l :=
+  by
   ext U
   simp [h.mem_iff, is_basis.mem_filter_iff]
 #align filter.has_basis.filter_eq Filter.HasBasis.filter_eq
@@ -336,7 +342,8 @@ protected theorem FilterBasis.has_basis {α : Type _} (B : FilterBasis α) :
 #align filter_basis.has_basis FilterBasis.has_basis
 
 theorem HasBasis.to_has_basis' (hl : l.HasBasis p s) (h : ∀ i, p i → ∃ i', p' i' ∧ s' i' ⊆ s i)
-    (h' : ∀ i', p' i' → s' i' ∈ l) : l.HasBasis p' s' := by
+    (h' : ∀ i', p' i' → s' i' ∈ l) : l.HasBasis p' s' :=
+  by
   refine' ⟨fun t => ⟨fun ht => _, fun ⟨i', hi', ht⟩ => mem_of_superset (h' i' hi') ht⟩⟩
   rcases hl.mem_iff.1 ht with ⟨i, hi, ht⟩
   rcases h i hi with ⟨i', hi', hs's⟩
@@ -403,7 +410,8 @@ theorem as_basis_filter (f : Filter α) : f.asBasis.filter = f := by
 #align filter.as_basis_filter Filter.as_basis_filter
 
 theorem has_basis_self {l : Filter α} {P : Set α → Prop} :
-    HasBasis l (fun s => s ∈ l ∧ P s) id ↔ ∀ t ∈ l, ∃ r ∈ l, P r ∧ r ⊆ t := by
+    HasBasis l (fun s => s ∈ l ∧ P s) id ↔ ∀ t ∈ l, ∃ r ∈ l, P r ∧ r ⊆ t :=
+  by
   simp only [has_basis_iff, exists_prop, id, and_assoc']
   exact
     forall_congr' fun s =>
@@ -422,7 +430,8 @@ theorem HasBasis.comp_equiv (h : l.HasBasis p s) (e : ι' ≃ ι) : l.HasBasis (
 /-- If `{s i | p i}` is a basis of a filter `l` and each `s i` includes `s j` such that
 `p j ∧ q j`, then `{s j | p j ∧ q j}` is a basis of `l`. -/
 theorem HasBasis.restrict (h : l.HasBasis p s) {q : ι → Prop}
-    (hq : ∀ i, p i → ∃ j, p j ∧ q j ∧ s j ⊆ s i) : l.HasBasis (fun i => p i ∧ q i) s := by
+    (hq : ∀ i, p i → ∃ j, p j ∧ q j ∧ s j ⊆ s i) : l.HasBasis (fun i => p i ∧ q i) s :=
+  by
   refine' ⟨fun t => ⟨fun ht => _, fun ⟨i, hpi, hti⟩ => h.mem_iff.2 ⟨i, hpi.1, hti⟩⟩⟩
   rcases h.mem_iff.1 ht with ⟨i, hpi, hti⟩
   rcases hq i hpi with ⟨j, hpj, hqj, hji⟩
@@ -459,7 +468,7 @@ theorem HasBasis.le_basis_iff (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
 
 theorem HasBasis.ext (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s')
     (h : ∀ i, p i → ∃ i', p' i' ∧ s' i' ⊆ s i) (h' : ∀ i', p' i' → ∃ i, p i ∧ s i ⊆ s' i') :
-    l = l' := by 
+    l = l' := by
   apply le_antisymm
   · rw [hl.le_basis_iff hl']
     simpa using h'
@@ -469,7 +478,7 @@ theorem HasBasis.ext (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s')
 
 theorem HasBasis.inf' (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
     (l ⊓ l').HasBasis (fun i : PProd ι ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∩ s' i.2 :=
-  ⟨by 
+  ⟨by
     intro t
     constructor
     · simp only [mem_inf_iff, exists_prop, hl.mem_iff, hl'.mem_iff]
@@ -490,7 +499,7 @@ theorem has_basis_infi' {ι : Type _} {ι' : ι → Type _} {l : ι → Filter �
     {s : ∀ i, ι' i → Set α} (hl : ∀ i, (l i).HasBasis (p i) (s i)) :
     (⨅ i, l i).HasBasis (fun If : Set ι × ∀ i, ι' i => If.1.Finite ∧ ∀ i ∈ If.1, p i (If.2 i))
       fun If : Set ι × ∀ i, ι' i => ⋂ i ∈ If.1, s i (If.2 i) :=
-  ⟨by 
+  ⟨by
     intro t
     constructor
     · simp only [mem_infi', (hl _).mem_iff]
@@ -507,7 +516,7 @@ theorem has_basis_infi {ι : Type _} {ι' : ι → Type _} {l : ι → Filter α
     (⨅ i, l i).HasBasis
       (fun If : ΣI : Set ι, ∀ i : I, ι' i => If.1.Finite ∧ ∀ i : If.1, p i (If.2 i)) fun If =>
       ⋂ i : If.1, s i (If.2 i) :=
-  by 
+  by
   refine' ⟨fun t => ⟨fun ht => _, _⟩⟩
   · rcases(has_basis_infi' hl).mem_iff.mp ht with ⟨⟨I, f⟩, ⟨hI, hf⟩, hsub⟩
     exact
@@ -521,7 +530,8 @@ theorem has_basis_infi {ι : Type _} {ι' : ι → Type _} {l : ι → Filter α
 theorem has_basis_infi_of_directed' {ι : Type _} {ι' : ι → Sort _} [Nonempty ι] {l : ι → Filter α}
     (s : ∀ i, ι' i → Set α) (p : ∀ i, ι' i → Prop) (hl : ∀ i, (l i).HasBasis (p i) (s i))
     (h : Directed (· ≥ ·) l) :
-    (⨅ i, l i).HasBasis (fun ii' : Σi, ι' i => p ii'.1 ii'.2) fun ii' => s ii'.1 ii'.2 := by
+    (⨅ i, l i).HasBasis (fun ii' : Σi, ι' i => p ii'.1 ii'.2) fun ii' => s ii'.1 ii'.2 :=
+  by
   refine' ⟨fun t => _⟩
   rw [mem_infi_of_directed h, Sigma.exists]
   exact exists_congr fun i => (hl i).mem_iff
@@ -530,7 +540,8 @@ theorem has_basis_infi_of_directed' {ι : Type _} {ι' : ι → Sort _} [Nonempt
 theorem has_basis_infi_of_directed {ι : Type _} {ι' : Sort _} [Nonempty ι] {l : ι → Filter α}
     (s : ι → ι' → Set α) (p : ι → ι' → Prop) (hl : ∀ i, (l i).HasBasis (p i) (s i))
     (h : Directed (· ≥ ·) l) :
-    (⨅ i, l i).HasBasis (fun ii' : ι × ι' => p ii'.1 ii'.2) fun ii' => s ii'.1 ii'.2 := by
+    (⨅ i, l i).HasBasis (fun ii' : ι × ι' => p ii'.1 ii'.2) fun ii' => s ii'.1 ii'.2 :=
+  by
   refine' ⟨fun t => _⟩
   rw [mem_infi_of_directed h, Prod.exists]
   exact exists_congr fun i => (hl i).mem_iff
@@ -541,7 +552,7 @@ theorem has_basis_binfi_of_directed' {ι : Type _} {ι' : ι → Sort _} {dom : 
     (hl : ∀ i ∈ dom, (l i).HasBasis (p i) (s i)) (h : DirectedOn (l ⁻¹'o GE.ge) dom) :
     (⨅ i ∈ dom, l i).HasBasis (fun ii' : Σi, ι' i => ii'.1 ∈ dom ∧ p ii'.1 ii'.2) fun ii' =>
       s ii'.1 ii'.2 :=
-  by 
+  by
   refine' ⟨fun t => _⟩
   rw [mem_binfi_of_directed h hdom, Sigma.exists]
   refine' exists_congr fun i => ⟨_, _⟩
@@ -557,7 +568,7 @@ theorem has_basis_binfi_of_directed {ι : Type _} {ι' : Sort _} {dom : Set ι} 
     (hl : ∀ i ∈ dom, (l i).HasBasis (p i) (s i)) (h : DirectedOn (l ⁻¹'o GE.ge) dom) :
     (⨅ i ∈ dom, l i).HasBasis (fun ii' : ι × ι' => ii'.1 ∈ dom ∧ p ii'.1 ii'.2) fun ii' =>
       s ii'.1 ii'.2 :=
-  by 
+  by
   refine' ⟨fun t => _⟩
   rw [mem_binfi_of_directed h hdom, Prod.exists]
   refine' exists_congr fun i => ⟨_, _⟩
@@ -578,7 +589,7 @@ theorem has_basis_pure (x : α) : (pure x : Filter α).HasBasis (fun i : Unit =>
 
 theorem HasBasis.sup' (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
     (l ⊔ l').HasBasis (fun i : PProd ι ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∪ s' i.2 :=
-  ⟨by 
+  ⟨by
     intro t
     simp only [mem_sup, hl.mem_iff, hl'.mem_iff, PProd.exists, union_subset_iff, exists_prop,
       and_assoc', exists_and_left]
@@ -653,7 +664,8 @@ theorem Disjoint.exists_mem_filter_basis (h : Disjoint l l') (hl : l.HasBasis p 
 theorem Pairwise.exists_mem_filter_basis_of_disjoint {I : Type _} [Finite I] {l : I → Filter α}
     {ι : I → Sort _} {p : ∀ i, ι i → Prop} {s : ∀ i, ι i → Set α} (hd : Pairwise (Disjoint on l))
     (h : ∀ i, (l i).HasBasis (p i) (s i)) :
-    ∃ ind : ∀ i, ι i, (∀ i, p i (ind i)) ∧ Pairwise (Disjoint on fun i => s i (ind i)) := by
+    ∃ ind : ∀ i, ι i, (∀ i, p i (ind i)) ∧ Pairwise (Disjoint on fun i => s i (ind i)) :=
+  by
   rcases hd.exists_mem_filter_of_disjoint with ⟨t, htl, hd⟩
   choose ind hp ht using fun i => (h i).mem_iff.1 (htl i)
   exact ⟨ind, hp, hd.mono fun i j hij => hij.mono (ht _) (ht _)⟩
@@ -662,7 +674,8 @@ theorem Pairwise.exists_mem_filter_basis_of_disjoint {I : Type _} [Finite I] {l 
 theorem Set.PairwiseDisjoint.exists_mem_filter_basis {I : Type _} {l : I → Filter α}
     {ι : I → Sort _} {p : ∀ i, ι i → Prop} {s : ∀ i, ι i → Set α} {S : Set I}
     (hd : S.PairwiseDisjoint l) (hS : S.Finite) (h : ∀ i, (l i).HasBasis (p i) (s i)) :
-    ∃ ind : ∀ i, ι i, (∀ i, p i (ind i)) ∧ S.PairwiseDisjoint fun i => s i (ind i) := by
+    ∃ ind : ∀ i, ι i, (∀ i, p i (ind i)) ∧ S.PairwiseDisjoint fun i => s i (ind i) :=
+  by
   rcases hd.exists_mem_filter hS with ⟨t, htl, hd⟩
   choose ind hp ht using fun i => (h i).mem_iff.1 (htl i)
   exact ⟨ind, hp, hd.mono ht⟩
@@ -677,7 +690,8 @@ theorem inf_principal_ne_bot_iff {s : Set α} : NeBot (l ⊓ 𝓟 s) ↔ ∀ U �
   l.basis_sets.inf_principal_ne_bot_iff
 #align filter.inf_principal_ne_bot_iff Filter.inf_principal_ne_bot_iff
 
-theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f ⊓ 𝓟 (sᶜ) = ⊥ := by
+theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f ⊓ 𝓟 (sᶜ) = ⊥ :=
+  by
   refine' not_iff_not.1 ((inf_principal_ne_bot_iff.trans _).symm.trans ne_bot_iff)
   exact
     ⟨fun h hs => by simpa [not_nonempty_empty] using h s hs, fun hs t ht =>
@@ -736,7 +750,8 @@ theorem inf_ne_bot_iff_frequently_left {f g : Filter α} :
 #align filter.inf_ne_bot_iff_frequently_left Filter.inf_ne_bot_iff_frequently_left
 
 theorem inf_ne_bot_iff_frequently_right {f g : Filter α} :
-    NeBot (f ⊓ g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in g, p x) → ∃ᶠ x in f, p x := by
+    NeBot (f ⊓ g) ↔ ∀ {p : α → Prop}, (∀ᶠ x in g, p x) → ∃ᶠ x in f, p x :=
+  by
   rw [inf_comm]
   exact inf_ne_bot_iff_frequently_left
 #align filter.inf_ne_bot_iff_frequently_right Filter.inf_ne_bot_iff_frequently_right
@@ -761,7 +776,8 @@ theorem has_basis_infi_principal {s : ι → Set α} (h : Directed (· ≥ ·) s
 /-- If `s : ι → set α` is an indexed family of sets, then finite intersections of `s i` form a basis
 of `⨅ i, 𝓟 (s i)`.  -/
 theorem has_basis_infi_principal_finite {ι : Type _} (s : ι → Set α) :
-    (⨅ i, 𝓟 (s i)).HasBasis (fun t : Set ι => t.Finite) fun t => ⋂ i ∈ t, s i := by
+    (⨅ i, 𝓟 (s i)).HasBasis (fun t : Set ι => t.Finite) fun t => ⋂ i ∈ t, s i :=
+  by
   refine' ⟨fun U => (mem_infi_finite _).trans _⟩
   simp only [infi_principal_finset, mem_Union, mem_principal, exists_prop, exists_finite_iff_finset,
     Finset.set_bInter_coe]
@@ -769,7 +785,7 @@ theorem has_basis_infi_principal_finite {ι : Type _} (s : ι → Set α) :
 
 theorem has_basis_binfi_principal {s : β → Set α} {S : Set β} (h : DirectedOn (s ⁻¹'o (· ≥ ·)) S)
     (ne : S.Nonempty) : (⨅ i ∈ S, 𝓟 (s i)).HasBasis (fun i => i ∈ S) s :=
-  ⟨by 
+  ⟨by
     refine' fun t => (mem_binfi_of_directed _ Ne).trans <| by simp only [mem_principal]
     rw [directedOn_iff_directed, ← directed_comp, (· ∘ ·)] at h⊢
     apply h.mono_comp _ _
@@ -788,7 +804,7 @@ theorem HasBasis.map (f : α → β) (hl : l.HasBasis p s) : (l.map f).HasBasis 
 
 theorem HasBasis.comap (f : β → α) (hl : l.HasBasis p s) :
     (l.comap f).HasBasis p fun i => f ⁻¹' s i :=
-  ⟨by 
+  ⟨by
     intro t
     simp only [mem_comap, exists_prop, hl.mem_iff]
     constructor
@@ -804,7 +820,8 @@ theorem comap_has_basis (f : α → β) (l : Filter β) :
 #align filter.comap_has_basis Filter.comap_has_basis
 
 theorem HasBasis.forall_mem_mem (h : HasBasis l p s) {x : α} :
-    (∀ t ∈ l, x ∈ t) ↔ ∀ i, p i → x ∈ s i := by
+    (∀ t ∈ l, x ∈ t) ↔ ∀ i, p i → x ∈ s i :=
+  by
   simp only [h.mem_iff, exists_imp]
   exact ⟨fun h i hi => h (s i) i hi subset.rfl, fun h t i hi ht => ht (h i hi)⟩
 #align filter.has_basis.forall_mem_mem Filter.HasBasis.forall_mem_mem
@@ -822,7 +839,8 @@ protected theorem HasBasis.bInter_mem {f : Set α → Set β} (h : HasBasis l p 
   h.binfi_mem hf
 #align filter.has_basis.bInter_mem Filter.HasBasis.bInter_mem
 
-theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.sets = ⋂ (i) (hi : p i), s i := by
+theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.sets = ⋂ (i) (hi : p i), s i :=
+  by
   rw [sInter_eq_bInter]
   exact h.bInter_mem monotone_id
 #align filter.has_basis.sInter_sets Filter.HasBasis.sInter_sets
@@ -856,7 +874,8 @@ variable {la : Filter α} {pa : ι → Prop} {sa : ι → Set α} {lb : Filter �
   {sb : ι' → Set β} {f : α → β}
 
 theorem HasBasis.tendsto_left_iff (hla : la.HasBasis pa sa) :
-    Tendsto f la lb ↔ ∀ t ∈ lb, ∃ (i : _)(hi : pa i), MapsTo f (sa i) t := by
+    Tendsto f la lb ↔ ∀ t ∈ lb, ∃ (i : _)(hi : pa i), MapsTo f (sa i) t :=
+  by
   simp only [tendsto, (hla.map f).le_iff, image_subset_iff]
   rfl
 #align filter.has_basis.tendsto_left_iff Filter.HasBasis.tendsto_left_iff
@@ -904,7 +923,8 @@ theorem HasBasis.prod {ι ι' : Type _} {pa : ι → Prop} {sa : ι → Set α} 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem HasBasis.prod_same_index {p : ι → Prop} {sb : ι → Set β} (hla : la.HasBasis p sa)
     (hlb : lb.HasBasis p sb) (h_dir : ∀ {i j}, p i → p j → ∃ k, p k ∧ sa k ⊆ sa i ∧ sb k ⊆ sb j) :
-    (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i := by
+    (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
+  by
   simp only [has_basis_iff, (hla.prod_pprod hlb).mem_iff]
   refine' fun t => ⟨_, _⟩
   · rintro ⟨⟨i, j⟩, ⟨hi, hj⟩, hsub : sa i ×ˢ sb j ⊆ t⟩
@@ -963,7 +983,8 @@ end TwoTypes
 
 theorem map_sigma_mk_comap {π : α → Type _} {π' : β → Type _} {f : α → β}
     (hf : Function.Injective f) (g : ∀ a, π a → π' (f a)) (a : α) (l : Filter (π' (f a))) :
-    map (Sigma.mk a) (comap (g a) l) = comap (Sigma.map f g) (map (Sigma.mk (f a)) l) := by
+    map (Sigma.mk a) (comap (g a) l) = comap (Sigma.map f g) (map (Sigma.mk (f a)) l) :=
+  by
   refine' (((basis_sets _).comap _).map _).eq_of_same_basis _
   convert ((basis_sets _).map _).comap _
   ext1 s
@@ -1016,7 +1037,8 @@ theorem HasCountableBasis.is_countably_generated {f : Filter α} {p : ι → Pro
   filter.has_countable_basis.is_countably_generated Filter.HasCountableBasis.is_countably_generated
 
 theorem antitone_seq_of_seq (s : ℕ → Set α) :
-    ∃ t : ℕ → Set α, Antitone t ∧ (⨅ i, 𝓟 <| s i) = ⨅ i, 𝓟 (t i) := by
+    ∃ t : ℕ → Set α, Antitone t ∧ (⨅ i, 𝓟 <| s i) = ⨅ i, 𝓟 (t i) :=
+  by
   use fun n => ⋂ m ≤ n, s m; constructor
   · exact fun i j hij => bInter_mono (Iic_subset_Iic.2 hij) fun n hn => subset.refl _
   apply le_antisymm <;> rw [le_infᵢ_iff] <;> intro i
@@ -1041,7 +1063,8 @@ theorem countable_binfi_eq_infi_seq [CompleteLattice α] {B : Set ι} (Bcbl : B.
 #align filter.countable_binfi_eq_infi_seq Filter.countable_binfi_eq_infi_seq
 
 theorem countable_binfi_eq_infi_seq' [CompleteLattice α] {B : Set ι} (Bcbl : B.Countable)
-    (f : ι → α) {i₀ : ι} (h : f i₀ = ⊤) : ∃ x : ℕ → ι, (⨅ t ∈ B, f t) = ⨅ i, f (x i) := by
+    (f : ι → α) {i₀ : ι} (h : f i₀ = ⊤) : ∃ x : ℕ → ι, (⨅ t ∈ B, f t) = ⨅ i, f (x i) :=
+  by
   cases' B.eq_empty_or_nonempty with hB Bnonempty
   · rw [hB, infᵢ_emptyset]
     use fun n => i₀
@@ -1078,8 +1101,10 @@ sequence `i n` such that `p (i n)` for all `n` and `s (i n)` is a decreasing seq
 forms a basis of `f`-/
 theorem HasBasis.exists_antitone_subbasis {f : Filter α} [h : f.IsCountablyGenerated]
     {p : ι' → Prop} {s : ι' → Set α} (hs : f.HasBasis p s) :
-    ∃ x : ℕ → ι', (∀ i, p (x i)) ∧ f.HasAntitoneBasis fun i => s (x i) := by
-  obtain ⟨x', hx'⟩ : ∃ x : ℕ → Set α, f = ⨅ i, 𝓟 (x i) := by
+    ∃ x : ℕ → ι', (∀ i, p (x i)) ∧ f.HasAntitoneBasis fun i => s (x i) :=
+  by
+  obtain ⟨x', hx'⟩ : ∃ x : ℕ → Set α, f = ⨅ i, 𝓟 (x i) :=
+    by
     rcases h with ⟨s, hsc, rfl⟩
     rw [generate_eq_binfi]
     exact countable_binfi_principal_eq_seq_infi hsc
@@ -1087,10 +1112,11 @@ theorem HasBasis.exists_antitone_subbasis {f : Filter α} [h : f.IsCountablyGene
   let x : ℕ → { i : ι' // p i } := fun n =>
     Nat.recOn n (hs.index _ <| this 0) fun n xn =>
       hs.index _ <| inter_mem (this <| n + 1) (hs.mem_of_mem xn.2)
-  have x_mono : Antitone fun i => s (x i) := by
+  have x_mono : Antitone fun i => s (x i) :=
+    by
     refine' antitone_nat_of_succ_le fun i => _
     exact (hs.set_index_subset _).trans (inter_subset_right _ _)
-  have x_subset : ∀ i, s (x i) ⊆ x' i := by 
+  have x_subset : ∀ i, s (x i) ⊆ x' i := by
     rintro (_ | i)
     exacts[hs.set_index_subset _, subset.trans (hs.set_index_subset _) (inter_subset_left _ _)]
   refine' ⟨fun i => x i, fun i => (x i).2, _⟩
@@ -1117,7 +1143,8 @@ theorem exists_antitone_seq (f : Filter α) [f.IsCountablyGenerated] :
 #align filter.exists_antitone_seq Filter.exists_antitone_seq
 
 instance Inf.is_countably_generated (f g : Filter α) [IsCountablyGenerated f]
-    [IsCountablyGenerated g] : IsCountablyGenerated (f ⊓ g) := by
+    [IsCountablyGenerated g] : IsCountablyGenerated (f ⊓ g) :=
+  by
   rcases f.exists_antitone_basis with ⟨s, hs⟩
   rcases g.exists_antitone_basis with ⟨t, ht⟩
   exact
@@ -1138,7 +1165,8 @@ instance comap.is_countably_generated (l : Filter β) [l.IsCountablyGenerated] (
 #align filter.comap.is_countably_generated Filter.comap.is_countably_generated
 
 instance Sup.is_countably_generated (f g : Filter α) [IsCountablyGenerated f]
-    [IsCountablyGenerated g] : IsCountablyGenerated (f ⊔ g) := by
+    [IsCountablyGenerated g] : IsCountablyGenerated (f ⊔ g) :=
+  by
   rcases f.exists_antitone_basis with ⟨s, hs⟩
   rcases g.exists_antitone_basis with ⟨t, ht⟩
   exact
@@ -1159,13 +1187,14 @@ instance coprod.is_countably_generated (la : Filter α) (lb : Filter β) [IsCoun
 end IsCountablyGenerated
 
 theorem is_countably_generated_seq [Countable β] (x : β → Set α) :
-    IsCountablyGenerated (⨅ i, 𝓟 <| x i) := by
+    IsCountablyGenerated (⨅ i, 𝓟 <| x i) :=
+  by
   use range x, countable_range x
   rw [generate_eq_binfi, infᵢ_range]
 #align filter.is_countably_generated_seq Filter.is_countably_generated_seq
 
 theorem is_countably_generated_of_seq {f : Filter α} (h : ∃ x : ℕ → Set α, f = ⨅ i, 𝓟 <| x i) :
-    f.IsCountablyGenerated := by 
+    f.IsCountablyGenerated := by
   let ⟨x, h⟩ := h
   rw [h] <;> apply is_countably_generated_seq
 #align filter.is_countably_generated_of_seq Filter.is_countably_generated_of_seq
@@ -1176,7 +1205,8 @@ theorem is_countably_generated_binfi_principal {B : Set <| Set α} (h : B.Counta
 #align filter.is_countably_generated_binfi_principal Filter.is_countably_generated_binfi_principal
 
 theorem is_countably_generated_iff_exists_antitone_basis {f : Filter α} :
-    IsCountablyGenerated f ↔ ∃ x : ℕ → Set α, f.HasAntitoneBasis x := by
+    IsCountablyGenerated f ↔ ∃ x : ℕ → Set α, f.HasAntitoneBasis x :=
+  by
   constructor
   · intro h
     exact f.exists_antitone_basis
@@ -1192,7 +1222,8 @@ theorem is_countably_generated_principal (s : Set α) : IsCountablyGenerated (�
 #align filter.is_countably_generated_principal Filter.is_countably_generated_principal
 
 @[instance]
-theorem is_countably_generated_pure (a : α) : IsCountablyGenerated (pure a) := by
+theorem is_countably_generated_pure (a : α) : IsCountablyGenerated (pure a) :=
+  by
   rw [← principal_singleton]
   exact is_countably_generated_principal _
 #align filter.is_countably_generated_pure Filter.is_countably_generated_pure
@@ -1208,7 +1239,8 @@ theorem is_countably_generated_top : IsCountablyGenerated (⊤ : Filter α) :=
 #align filter.is_countably_generated_top Filter.is_countably_generated_top
 
 instance Infi.is_countably_generated {ι : Sort _} [Countable ι] (f : ι → Filter α)
-    [∀ i, IsCountablyGenerated (f i)] : IsCountablyGenerated (⨅ i, f i) := by
+    [∀ i, IsCountablyGenerated (f i)] : IsCountablyGenerated (⨅ i, f i) :=
+  by
   choose s hs using fun i => exists_antitone_basis (f i)
   rw [← plift.down_surjective.infi_comp]
   refine'

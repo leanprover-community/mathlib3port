@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.locally_ringed_space
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ instance {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) (x : X) :
 /-- The identity morphism on a locally ringed space. -/
 @[simps]
 def id (X : LocallyRingedSpaceCat) : Hom X X :=
-  ⟨𝟙 _, fun x => by 
+  ⟨𝟙 _, fun x => by
     erw [PresheafedSpace.stalk_map.id]
     apply is_local_ring_hom_id⟩
 #align algebraic_geometry.LocallyRingedSpace.id AlgebraicGeometry.LocallyRingedSpaceCat.id
@@ -125,34 +125,34 @@ instance (X : LocallyRingedSpaceCat) : Inhabited (Hom X X) :=
 
 /-- Composition of morphisms of locally ringed spaces. -/
 def comp {X Y Z : LocallyRingedSpaceCat} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
-  ⟨f.val ≫ g.val, fun x => by 
+  ⟨f.val ≫ g.val, fun x => by
     erw [PresheafedSpace.stalk_map.comp]
     exact @is_local_ring_hom_comp _ _ _ _ _ _ _ _ (f.2 _) (g.2 _)⟩
 #align algebraic_geometry.LocallyRingedSpace.comp AlgebraicGeometry.LocallyRingedSpaceCat.comp
 
 /-- The category of locally ringed spaces. -/
-instance : Category LocallyRingedSpaceCat where 
+instance : Category LocallyRingedSpaceCat
+    where
   Hom := Hom
   id := id
   comp X Y Z f g := comp f g
-  comp_id' := by 
+  comp_id' := by
     intros
     ext1
     simp [comp]
-  id_comp' := by 
+  id_comp' := by
     intros
     ext1
     simp [comp]
-  assoc' := by 
+  assoc' := by
     intros
     ext1
     simp [comp]
 
 /-- The forgetful functor from `LocallyRingedSpace` to `SheafedSpace CommRing`. -/
 @[simps]
-def forgetToSheafedSpace :
-    LocallyRingedSpace ⥤
-      SheafedSpaceCat CommRingCat where 
+def forgetToSheafedSpace : LocallyRingedSpace ⥤ SheafedSpaceCat CommRingCat
+    where
   obj X := X.toSheafedSpace
   map X Y f := f.1
 #align
@@ -213,7 +213,7 @@ In fact, it is slightly stronger as we do not require `f` to come from a morphis
 _locally_ ringed spaces.
 -/
 def isoOfSheafedSpaceIso {X Y : LocallyRingedSpaceCat} (f : X.toSheafedSpace ≅ Y.toSheafedSpace) :
-    X ≅ Y where 
+    X ≅ Y where
   Hom := homOfSheafedSpaceHomOfIsIso f.Hom
   inv := homOfSheafedSpaceHomOfIsIso f.inv
   hom_inv_id' := Hom.ext _ _ f.hom_inv_id
@@ -221,10 +221,10 @@ def isoOfSheafedSpaceIso {X Y : LocallyRingedSpaceCat} (f : X.toSheafedSpace ≅
 #align
   algebraic_geometry.LocallyRingedSpace.iso_of_SheafedSpace_iso AlgebraicGeometry.LocallyRingedSpaceCat.isoOfSheafedSpaceIso
 
-instance :
-    ReflectsIsomorphisms
-      forgetToSheafedSpace where reflects X Y f i :=
-    { out :=
+instance : ReflectsIsomorphisms forgetToSheafedSpace
+    where reflects X Y f i :=
+    {
+      out :=
         ⟨hom_of_SheafedSpace_hom_of_is_iso (CategoryTheory.inv (forget_to_SheafedSpace.map f)),
           hom.ext _ _ (is_iso.hom_inv_id _), hom.ext _ _ (is_iso.inv_hom_id _)⟩ }
 
@@ -237,8 +237,9 @@ instance is_SheafedSpace_iso {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) [IsIso 
 -/
 @[simps]
 def restrict {U : TopCat} (X : LocallyRingedSpaceCat) {f : U ⟶ X.toTop} (h : OpenEmbedding f) :
-    LocallyRingedSpaceCat where 
-  LocalRing := by 
+    LocallyRingedSpaceCat
+    where
+  LocalRing := by
     intro x
     dsimp at *
     -- We show that the stalk of the restriction is isomorphic to the original stalk,
@@ -296,7 +297,7 @@ theorem preimage_basic_open {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) {U : Ope
     (s : Y.Presheaf.obj (op U)) :
     (Opens.map f.1.base).obj (Y.toRingedSpace.basicOpen s) =
       @RingedSpaceCat.basicOpen X.toRingedSpace ((Opens.map f.1.base).obj U) (f.1.c.app _ s) :=
-  by 
+  by
   ext
   constructor
   · rintro ⟨⟨y, hyU⟩, hy : IsUnit _, rfl : y = _⟩
@@ -313,7 +314,8 @@ theorem preimage_basic_open {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) {U : Ope
 -- This actually holds for all ringed spaces with nontrivial stalks.
 @[simp]
 theorem basic_open_zero (X : LocallyRingedSpaceCat) (U : Opens X.carrier) :
-    X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ := by
+    X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ :=
+  by
   ext
   simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.mem_coe, opens.coe_bot, iff_false_iff,
     RingedSpace.basic_open, isUnit_zero_iff, Set.mem_setOf_eq, map_zero]

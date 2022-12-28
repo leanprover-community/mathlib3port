@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.left_derived
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫
           (F.leftDerivedObjIso n Q).inv :=
-  by 
+  by
   dsimp only [functor.left_derived, functor.left_derived_obj_iso]
   dsimp; simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
@@ -144,7 +144,8 @@ def NatTrans.leftDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G
 
 @[simp]
 theorem NatTrans.left_derived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
-    NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) := by
+    NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) :=
+  by
   simp [nat_trans.left_derived]
   rfl
 #align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.left_derived_id
@@ -166,7 +167,7 @@ theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α :
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((NatTrans.mapHomologicalComplex α _).app P.complex) ≫
           (G.leftDerivedObjIso n P).inv :=
-  by 
+  by
   symm
   dsimp [nat_trans.left_derived, functor.left_derived_obj_iso]
   simp only [category.comp_id, category.id_comp]

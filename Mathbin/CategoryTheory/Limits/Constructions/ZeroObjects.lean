@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.zero_objects
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,8 @@ theorem zero_prod_iso_hom (X : C) : (zeroProdIso X).Hom = Prod.snd :=
 #align category_theory.limits.zero_prod_iso_hom CategoryTheory.Limits.zero_prod_iso_hom
 
 @[simp]
-theorem zero_prod_iso_inv_snd (X : C) : (zeroProdIso X).inv ≫ Prod.snd = 𝟙 X := by
+theorem zero_prod_iso_inv_snd (X : C) : (zeroProdIso X).inv ≫ Prod.snd = 𝟙 X :=
+  by
   dsimp [zero_prod_iso, binary_fan_zero_left]
   simp
 #align category_theory.limits.zero_prod_iso_inv_snd CategoryTheory.Limits.zero_prod_iso_inv_snd
@@ -91,7 +92,8 @@ theorem prod_zero_iso_hom (X : C) : (prodZeroIso X).Hom = Prod.fst :=
 #align category_theory.limits.prod_zero_iso_hom CategoryTheory.Limits.prod_zero_iso_hom
 
 @[simp]
-theorem prod_zero_iso_iso_inv_snd (X : C) : (prodZeroIso X).inv ≫ Prod.fst = 𝟙 X := by
+theorem prod_zero_iso_iso_inv_snd (X : C) : (prodZeroIso X).inv ≫ Prod.fst = 𝟙 X :=
+  by
   dsimp [prod_zero_iso, binary_fan_zero_right]
   simp
 #align
@@ -119,7 +121,8 @@ def zeroCoprodIso (X : C) : (0 : C) ⨿ X ≅ X :=
 #align category_theory.limits.zero_coprod_iso CategoryTheory.Limits.zeroCoprodIso
 
 @[simp]
-theorem inr_zero_coprod_iso_hom (X : C) : coprod.inr ≫ (zeroCoprodIso X).Hom = 𝟙 X := by
+theorem inr_zero_coprod_iso_hom (X : C) : coprod.inr ≫ (zeroCoprodIso X).Hom = 𝟙 X :=
+  by
   dsimp [zero_coprod_iso, binary_cofan_zero_left]
   simp
 #align category_theory.limits.inr_zero_coprod_iso_hom CategoryTheory.Limits.inr_zero_coprod_iso_hom
@@ -151,7 +154,8 @@ def coprodZeroIso (X : C) : X ⨿ (0 : C) ≅ X :=
 #align category_theory.limits.coprod_zero_iso CategoryTheory.Limits.coprodZeroIso
 
 @[simp]
-theorem inr_coprod_zeroiso_hom (X : C) : coprod.inl ≫ (coprodZeroIso X).Hom = 𝟙 X := by
+theorem inr_coprod_zeroiso_hom (X : C) : coprod.inl ≫ (coprodZeroIso X).Hom = 𝟙 X :=
+  by
   dsimp [coprod_zero_iso, binary_cofan_zero_right]
   simp
 #align category_theory.limits.inr_coprod_zeroiso_hom CategoryTheory.Limits.inr_coprod_zeroiso_hom
@@ -176,7 +180,8 @@ def pullbackZeroZeroIso (X Y : C) [HasBinaryProduct X Y] :
 
 @[simp]
 theorem pullback_zero_zero_iso_inv_fst (X Y : C) [HasBinaryProduct X Y] :
-    (pullbackZeroZeroIso X Y).inv ≫ pullback.fst = Prod.fst := by
+    (pullbackZeroZeroIso X Y).inv ≫ pullback.fst = Prod.fst :=
+  by
   dsimp [pullback_zero_zero_iso]
   simp
 #align
@@ -184,7 +189,8 @@ theorem pullback_zero_zero_iso_inv_fst (X Y : C) [HasBinaryProduct X Y] :
 
 @[simp]
 theorem pullback_zero_zero_iso_inv_snd (X Y : C) [HasBinaryProduct X Y] :
-    (pullbackZeroZeroIso X Y).inv ≫ pullback.snd = Prod.snd := by
+    (pullbackZeroZeroIso X Y).inv ≫ pullback.snd = Prod.snd :=
+  by
   dsimp [pullback_zero_zero_iso]
   simp
 #align
@@ -217,7 +223,8 @@ def pushoutZeroZeroIso (X Y : C) [HasBinaryCoproduct X Y] :
 
 @[simp]
 theorem inl_pushout_zero_zero_iso_hom (X Y : C) [HasBinaryCoproduct X Y] :
-    pushout.inl ≫ (pushoutZeroZeroIso X Y).Hom = coprod.inl := by
+    pushout.inl ≫ (pushoutZeroZeroIso X Y).Hom = coprod.inl :=
+  by
   dsimp [pushout_zero_zero_iso]
   simp
 #align
@@ -225,7 +232,8 @@ theorem inl_pushout_zero_zero_iso_hom (X Y : C) [HasBinaryCoproduct X Y] :
 
 @[simp]
 theorem inr_pushout_zero_zero_iso_hom (X Y : C) [HasBinaryCoproduct X Y] :
-    pushout.inr ≫ (pushoutZeroZeroIso X Y).Hom = coprod.inr := by
+    pushout.inr ≫ (pushoutZeroZeroIso X Y).Hom = coprod.inr :=
+  by
   dsimp [pushout_zero_zero_iso]
   simp
 #align

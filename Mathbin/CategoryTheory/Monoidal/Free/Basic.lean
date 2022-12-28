@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.free.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,54 +144,53 @@ section
 
 open FreeMonoidalCategory.HomEquiv
 
-instance categoryFreeMonoidalCategory :
-    Category.{u}
-      (F C) where 
+instance categoryFreeMonoidalCategory : Category.{u} (F C)
+    where
   Hom X Y := Quotient (FreeMonoidalCategory.setoidHom X Y)
   id X := ⟦FreeMonoidalCategory.Hom.id _⟧
   comp X Y Z f g :=
     Quotient.map₂ Hom.comp
-      (by 
+      (by
         intro f f' hf g g' hg
         exact comp hf hg)
       f g
-  id_comp' := by 
+  id_comp' := by
     rintro X Y ⟨f⟩
     exact Quotient.sound (id_comp f)
-  comp_id' := by 
+  comp_id' := by
     rintro X Y ⟨f⟩
     exact Quotient.sound (comp_id f)
-  assoc' := by 
+  assoc' := by
     rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩
     exact Quotient.sound (assoc f g h)
 #align
   category_theory.free_monoidal_category.category_free_monoidal_category CategoryTheory.FreeMonoidalCategory.categoryFreeMonoidalCategory
 
-instance :
-    MonoidalCategory
-      (F C) where 
+instance : MonoidalCategory (F C)
+    where
   tensorObj X Y := FreeMonoidalCategory.tensor X Y
   tensorHom X₁ Y₁ X₂ Y₂ :=
-    Quotient.map₂ Hom.tensor <| by 
+    Quotient.map₂ Hom.tensor <| by
       intro _ _ h _ _ h'
       exact hom_equiv.tensor h h'
   tensor_id' X Y := Quotient.sound tensor_id
-  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by 
+  tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩
     exact Quotient.sound (tensor_comp _ _ _ _)
   tensorUnit := FreeMonoidalCategory.unit
   associator X Y Z :=
     ⟨⟦Hom.α_hom X Y Z⟧, ⟦Hom.α_inv X Y Z⟧, Quotient.sound α_hom_inv, Quotient.sound α_inv_hom⟩
-  associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ := by
+  associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ :=
+    by
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
     exact Quotient.sound (associator_naturality _ _ _)
   leftUnitor X := ⟨⟦Hom.l_hom X⟧, ⟦Hom.l_inv X⟧, Quotient.sound l_hom_inv, Quotient.sound l_inv_hom⟩
-  left_unitor_naturality' X Y := by 
+  left_unitor_naturality' X Y := by
     rintro ⟨f⟩
     exact Quotient.sound (l_naturality _)
   rightUnitor X :=
     ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotient.sound ρ_hom_inv, Quotient.sound ρ_inv_hom⟩
-  right_unitor_naturality' X Y := by 
+  right_unitor_naturality' X Y := by
     rintro ⟨f⟩
     exact Quotient.sound (ρ_naturality _)
   pentagon' W X Y Z := Quotient.sound pentagon
@@ -306,7 +305,7 @@ def projectMapAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObj f X ⟶ projec
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :=
   Quotient.lift (projectMapAux f)
-    (by 
+    (by
       intro f g h
       induction' h with
         X Y f X Y f g hfg hfg' X Y f g h _ _ hfg hgh X Y Z f f' g g' _ _ hf hg W X Y Z f g f' g' _ _ hfg hfg'
@@ -345,8 +344,8 @@ end
 
 /-- If `D` is a monoidal category and we have a function `C → D`, then we have a functor from the
     free monoidal category over `C` to the category `D`. -/
-def project : MonoidalFunctor (F C)
-      D where 
+def project : MonoidalFunctor (F C) D
+    where
   obj := projectObj f
   map := projectMap f
   ε := 𝟙 _

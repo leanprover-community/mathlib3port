@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,28 +51,28 @@ theorem norm_eq_abs (z : ℂ) : ‖z‖ = abs z :=
 
 instance : NormedAddCommGroup ℂ :=
   AddGroupNorm.toNormedAddCommGroup
-    { abs with 
+    { abs with
       map_zero' := map_zero abs
       neg' := abs.map_neg
       eq_zero_of_map_eq_zero' := fun _ => abs.eq_zero.1 }
 
 instance : NormedField ℂ :=
-  { Complex.field, Complex.normedAddCommGroup with
+  { Complex.field,
+    Complex.normedAddCommGroup with
     norm := abs
     dist_eq := fun _ _ => rfl
     norm_mul' := map_mul abs }
 
-instance :
-    DenselyNormedField
-      ℂ where lt_norm_lt r₁ r₂ h₀ hr :=
+instance : DenselyNormedField ℂ
+    where lt_norm_lt r₁ r₂ h₀ hr :=
     let ⟨x, h⟩ := NormedField.exists_lt_norm_lt ℝ h₀ hr
     have this : ‖(‖x‖ : ℂ)‖ = ‖‖x‖‖ := by simp only [norm_eq_abs, abs_of_real, Real.norm_eq_abs]
     ⟨‖x‖, by rwa [this, norm_norm]⟩
 
-instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] :
-    NormedAlgebra R
-      ℂ where 
-  norm_smul_le r x := by
+instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ
+    where
+  norm_smul_le r x :=
+    by
     rw [norm_eq_abs, norm_eq_abs, ← algebra_map_smul ℝ r x, Algebra.smul_def, map_mul, ←
       norm_algebra_map' ℝ r, coe_algebra_map, abs_of_real]
     rfl
@@ -90,7 +90,8 @@ theorem dist_eq (z w : ℂ) : dist z w = abs (z - w) :=
   rfl
 #align complex.dist_eq Complex.dist_eq
 
-theorem dist_eq_re_im (z w : ℂ) : dist z w = Real.sqrt ((z.re - w.re) ^ 2 + (z.im - w.im) ^ 2) := by
+theorem dist_eq_re_im (z w : ℂ) : dist z w = Real.sqrt ((z.re - w.re) ^ 2 + (z.im - w.im) ^ 2) :=
+  by
   rw [sq, sq]
   rfl
 #align complex.dist_eq_re_im Complex.dist_eq_re_im
@@ -151,7 +152,8 @@ theorem norm_real (r : ℝ) : ‖(r : ℂ)‖ = ‖r‖ :=
 #align complex.norm_real Complex.norm_real
 
 @[simp]
-theorem norm_rat (r : ℚ) : ‖(r : ℂ)‖ = |(r : ℝ)| := by
+theorem norm_rat (r : ℚ) : ‖(r : ℂ)‖ = |(r : ℝ)| :=
+  by
   rw [← of_real_rat_cast]
   exact norm_real _
 #align complex.norm_rat Complex.norm_rat
@@ -194,7 +196,8 @@ theorem nnnorm_int (n : ℤ) : ‖(n : ℂ)‖₊ = ‖n‖₊ :=
   Subtype.ext <| by simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
 #align complex.nnnorm_int Complex.nnnorm_int
 
-theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ‖ζ‖₊ = 1 := by
+theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ‖ζ‖₊ = 1 :=
+  by
   refine' (@pow_left_inj Nnreal _ _ _ _ zero_le' zero_le' hn.bot_lt).mp _
   rw [← nnnorm_pow, h, nnnorm_one, one_pow]
 #align complex.nnnorm_eq_one_of_pow_eq_one Complex.nnnorm_eq_one_of_pow_eq_one
@@ -288,13 +291,14 @@ theorem im_clm_nnnorm : ‖im_clm‖₊ = 1 :=
 theorem restrict_scalars_one_smul_right' (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
       reClm.smul_right x + I • imClm.smul_right x :=
-  by 
+  by
   ext ⟨a, b⟩
   simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
 #align complex.restrict_scalars_one_smul_right' Complex.restrict_scalars_one_smul_right'
 
 theorem restrict_scalars_one_smul_right (x : ℂ) :
-    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 := by
+    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 :=
+  by
   ext1 z
   dsimp
   apply mul_comm
@@ -360,7 +364,8 @@ theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
 /-- The only continuous ring homomorphisms from `ℂ` to `ℂ` are the identity and the complex
 conjugation. -/
 theorem ring_hom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous f) :
-    f = RingHom.id ℂ ∨ f = conj := by
+    f = RingHom.id ℂ ∨ f = conj :=
+  by
   refine'
     (real_alg_hom_eq_id_or_conj <| AlgHom.mk' f <| map_real_smul f hf).imp (fun h => _) fun h => _
   all_goals convert congr_arg AlgHom.toRingHom h; ext1; rfl
@@ -439,8 +444,8 @@ theorem of_real_clm_nnnorm : ‖of_real_clm‖₊ = 1 :=
   Subtype.ext <| of_real_clm_norm
 #align complex.of_real_clm_nnnorm Complex.of_real_clm_nnnorm
 
-noncomputable instance :
-    IsROrC ℂ where 
+noncomputable instance : IsROrC ℂ
+    where
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   i := Complex.i

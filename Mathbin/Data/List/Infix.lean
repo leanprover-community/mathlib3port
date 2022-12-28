@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.infix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,8 @@ theorem isInfix.trans : ∀ {l₁ l₂ l₃ : List α}, l₁ <:+: l₂ → l₂ 
   | l, _, _, ⟨l₁, r₁, rfl⟩, ⟨l₂, r₂, rfl⟩ => ⟨l₂ ++ l₁, r₁ ++ r₂, by simp only [append_assoc]⟩
 #align list.is_infix.trans List.isInfix.trans
 
-protected theorem isInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ => by
+protected theorem isInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s, t, h⟩ =>
+  by
   rw [← h]
   exact (sublist_append_right _ _).trans (sublist_append_left _ _)
 #align list.is_infix.sublist List.isInfix.sublist
@@ -516,7 +517,8 @@ theorem suffix_or_suffix_of_suffix (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃)
     reverse_prefix.1
 #align list.suffix_or_suffix_of_suffix List.suffix_or_suffix_of_suffix
 
-theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l₂ := by
+theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l₂ :=
+  by
   constructor
   · rintro ⟨⟨hd, tl⟩, hl₃⟩
     · exact Or.inl hl₃
@@ -527,7 +529,8 @@ theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l
     · exact hl₁.trans (l₂.suffix_cons _)
 #align list.suffix_cons_iff List.suffix_cons_iff
 
-theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+: l₂ := by
+theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+: l₂ :=
+  by
   constructor
   · rintro ⟨⟨hd, tl⟩, t, hl₃⟩
     · exact Or.inl ⟨t, hl₃⟩
@@ -675,7 +678,8 @@ instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) :
-    L.take m <+: L.take n ↔ m ≤ n := by
+    L.take m <+: L.take n ↔ m ≤ n :=
+  by
   simp only [prefix_iff_eq_take, length_take]
   induction' m with m IH generalizing L n
   · simp only [min_eq_left, eq_self_iff_true, Nat.zero_le, take]
@@ -693,7 +697,8 @@ theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) :
     exact ⟨Nat.succ_le_succ, Nat.le_of_succ_le_succ⟩
 #align list.prefix_take_le_iff List.prefix_take_le_iff
 
-theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ := by
+theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ :=
+  by
   constructor
   · rintro ⟨L, hL⟩
     simp only [cons_append] at hL
@@ -702,7 +707,8 @@ theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ :=
     rwa [prefix_cons_inj]
 #align list.cons_prefix_iff List.cons_prefix_iff
 
-theorem isPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f := by
+theorem isPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f :=
+  by
   induction' l₁ with hd tl hl generalizing l₂
   · simp only [nil_prefix, map_nil]
   · cases' l₂ with hd₂ tl₂
@@ -712,7 +718,8 @@ theorem isPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.m
 #align list.is_prefix.map List.isPrefix.map
 
 theorem isPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
-    l₁.filterMap f <+: l₂.filterMap f := by
+    l₁.filterMap f <+: l₂.filterMap f :=
+  by
   induction' l₁ with hd₁ tl₁ hl generalizing l₂
   · simp only [nil_prefix, filter_map_nil]
   · cases' l₂ with hd₂ tl₂
@@ -729,40 +736,40 @@ theorem isPrefix.reduce_option {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂
 #align list.is_prefix.reduce_option List.isPrefix.reduce_option
 
 theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
-    l₁.filter p <+: l₂.filter p := by 
+    l₁.filter p <+: l₂.filter p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact prefix_append _ _
 #align list.is_prefix.filter List.isPrefix.filter
 
 theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
-    l₁.filter p <:+ l₂.filter p := by 
+    l₁.filter p <:+ l₂.filter p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact suffix_append _ _
 #align list.is_suffix.filter List.isSuffix.filter
 
 theorem isInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
-    l₁.filter p <:+: l₂.filter p := by 
+    l₁.filter p <:+: l₂.filter p := by
   obtain ⟨xs, ys, rfl⟩ := h
   rw [filter_append, filter_append]
   exact infix_append _ _ _
 #align list.is_infix.filter List.isInfix.filter
 
-instance : IsPartialOrder (List α)
-      (· <+: ·) where 
+instance : IsPartialOrder (List α) (· <+: ·)
+    where
   refl := prefix_refl
   trans _ _ _ := isPrefix.trans
   antisymm _ _ h₁ h₂ := eq_of_prefix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
-instance : IsPartialOrder (List α)
-      (· <:+ ·) where 
+instance : IsPartialOrder (List α) (· <:+ ·)
+    where
   refl := suffix_refl
   trans _ _ _ := isSuffix.trans
   antisymm _ _ h₁ h₂ := eq_of_suffix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
-instance : IsPartialOrder (List α)
-      (· <:+: ·) where 
+instance : IsPartialOrder (List α) (· <:+: ·)
+    where
   refl := infix_refl
   trans _ _ _ := isInfix.trans
   antisymm _ _ h₁ h₂ := eq_of_infix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
@@ -781,7 +788,7 @@ theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
     ⟨fun o =>
       match s, o with
       | _, Or.inl rfl => ⟨_, rfl⟩
-      | s, Or.inr ⟨r, hr, hs⟩ => by 
+      | s, Or.inr ⟨r, hr, hs⟩ => by
         let ⟨s, ht⟩ := (mem_inits _ _).1 hr
         rw [← hs, ← ht] <;> exact ⟨s, rfl⟩,
       fun mi =>
@@ -844,28 +851,33 @@ theorem tails_eq_inits : ∀ l : List α, l.tails = (reverse <| map reverse <| i
   | a :: l => by simp [tails_eq_inits l, append_left_inj]
 #align list.tails_eq_inits List.tails_eq_inits
 
-theorem inits_reverse (l : List α) : inits (reverse l) = reverse (map reverse l.tails) := by
+theorem inits_reverse (l : List α) : inits (reverse l) = reverse (map reverse l.tails) :=
+  by
   rw [tails_eq_inits l]
   simp [reverse_involutive.comp_self]
 #align list.inits_reverse List.inits_reverse
 
-theorem tails_reverse (l : List α) : tails (reverse l) = reverse (map reverse l.inits) := by
+theorem tails_reverse (l : List α) : tails (reverse l) = reverse (map reverse l.inits) :=
+  by
   rw [inits_eq_tails l]
   simp [reverse_involutive.comp_self]
 #align list.tails_reverse List.tails_reverse
 
-theorem map_reverse_inits (l : List α) : map reverse l.inits = (reverse <| tails <| reverse l) := by
+theorem map_reverse_inits (l : List α) : map reverse l.inits = (reverse <| tails <| reverse l) :=
+  by
   rw [inits_eq_tails l]
   simp [reverse_involutive.comp_self]
 #align list.map_reverse_inits List.map_reverse_inits
 
-theorem map_reverse_tails (l : List α) : map reverse l.tails = (reverse <| inits <| reverse l) := by
+theorem map_reverse_tails (l : List α) : map reverse l.tails = (reverse <| inits <| reverse l) :=
+  by
   rw [tails_eq_inits l]
   simp [reverse_involutive.comp_self]
 #align list.map_reverse_tails List.map_reverse_tails
 
 @[simp]
-theorem length_tails (l : List α) : length (tails l) = length l + 1 := by
+theorem length_tails (l : List α) : length (tails l) = length l + 1 :=
+  by
   induction' l with x l IH
   · simp
   · simpa using IH
@@ -877,7 +889,8 @@ theorem length_inits (l : List α) : length (inits l) = length l + 1 := by simp 
 
 @[simp]
 theorem nth_le_tails (l : List α) (n : ℕ) (hn : n < length (tails l)) :
-    nthLe (tails l) n hn = l.drop n := by
+    nthLe (tails l) n hn = l.drop n :=
+  by
   induction' l with x l IH generalizing n
   · simp
   · cases n
@@ -887,7 +900,8 @@ theorem nth_le_tails (l : List α) (n : ℕ) (hn : n < length (tails l)) :
 
 @[simp]
 theorem nth_le_inits (l : List α) (n : ℕ) (hn : n < length (inits l)) :
-    nthLe (inits l) n hn = l.take n := by
+    nthLe (inits l) n hn = l.take n :=
+  by
   induction' l with x l IH generalizing n
   · simp
   · cases n
@@ -941,7 +955,8 @@ but is expected to have type
   forall {α : Type.{u1}} [l : DecidableEq.{succ u1} α] {a : α} {b : α} {_inst_1 : List.{u1} α}, Iff (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.insert.{u1} α (fun (a : α) (b : α) => l a b) b _inst_1)) (Or (Eq.{succ u1} α a b) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a _inst_1))
 Case conversion may be inaccurate. Consider using '#align list.mem_insert_iff List.mem_insert_iffₓ'. -/
 @[simp]
-theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l := by
+theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l :=
+  by
   by_cases h' : b ∈ l
   · simp only [insert_of_mem h']
     apply (or_iff_right_of_imp _).symm

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.domain
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ variable [hp : Fact p.Prime] [CommRing R]
 include hp
 
 theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i = 0) :
-    verschiebung (x.shift k.succ) = x.shift k := by
+    verschiebung (x.shift k.succ) = x.shift k :=
+  by
   ext ⟨j⟩
   · rw [verschiebung_coeff_zero, shift_coeff, h]
     apply Nat.lt_succ_self
@@ -84,7 +85,8 @@ theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i 
 #align witt_vector.verschiebung_shift WittVector.verschiebung_shift
 
 theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i = 0) :
-    x = (verschiebung^[n]) (x.shift n) := by
+    x = (verschiebung^[n]) (x.shift n) :=
+  by
   induction' n with k ih
   · cases x <;> simp [shift]
   · dsimp
@@ -94,8 +96,9 @@ theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i
 #align witt_vector.eq_iterate_verschiebung WittVector.eq_iterate_verschiebung
 
 theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) :
-    ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n]) x' := by
-  have hex : ∃ k : ℕ, x.coeff k ≠ 0 := by 
+    ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n]) x' :=
+  by
+  have hex : ∃ k : ℕ, x.coeff k ≠ 0 := by
     by_contra' hall
     apply hx
     ext i
@@ -116,7 +119,7 @@ This argument is adapted from
 
 
 instance [CharP R p] [NoZeroDivisors R] : NoZeroDivisors (𝕎 R) :=
-  ⟨fun x y => by 
+  ⟨fun x y => by
     contrapose!
     rintro ⟨ha, hb⟩
     rcases verschiebung_nonzero ha with ⟨na, wa, hwa0, rfl⟩

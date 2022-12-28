@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.inj_surj
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.distrib {S} [Mul R] [Add R] [Distrib S] (f : R → S)
     (hf : Injective f) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) :
-    Distrib R where 
+    Distrib R where
   mul := (· * ·)
   add := (· + ·)
   left_distrib x y z := hf <| by simp only [*, left_distrib]
@@ -61,7 +61,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.distrib {S} [Distrib R] [Add S] [Mul S] (f : R → S)
     (hf : Surjective f) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) :
-    Distrib S where 
+    Distrib S where
   mul := (· * ·)
   add := (· + ·)
   left_distrib := hf.forall₃.2 fun x y z => by simp only [← add, ← mul, left_distrib]
@@ -312,7 +312,8 @@ preserves `-` and `*` to a type which has distributive negation. -/
 @[reducible]
 protected def Function.Injective.hasDistribNeg [Neg β] [Mul β] (f : β → α) (hf : Injective f)
     (neg : ∀ a, f (-a) = -f a) (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=
-  { hf.HasInvolutiveNeg _ neg, ‹Mul β› with
+  { hf.HasInvolutiveNeg _ neg,
+    ‹Mul β› with
     neg_mul := fun x y => hf <| by erw [neg, mul, neg, neg_mul, mul]
     mul_neg := fun x y => hf <| by erw [neg, mul, neg, mul_neg, mul] }
 #align function.injective.has_distrib_neg Function.Injective.hasDistribNeg
@@ -329,13 +330,15 @@ preserves `-` and `*` from a type which has distributive negation. -/
 @[reducible]
 protected def Function.Surjective.hasDistribNeg [Neg β] [Mul β] (f : α → β) (hf : Surjective f)
     (neg : ∀ a, f (-a) = -f a) (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=
-  { hf.HasInvolutiveNeg _ neg, ‹Mul β› with
+  { hf.HasInvolutiveNeg _ neg,
+    ‹Mul
+        β› with
     neg_mul :=
-      hf.Forall₂.2 fun x y => by 
+      hf.Forall₂.2 fun x y => by
         erw [← neg, ← mul, neg_mul, neg, mul]
         rfl
     mul_neg :=
-      hf.Forall₂.2 fun x y => by 
+      hf.Forall₂.2 fun x y => by
         erw [← neg, ← mul, mul_neg, neg, mul]
         rfl }
 #align function.surjective.has_distrib_neg Function.Surjective.hasDistribNeg

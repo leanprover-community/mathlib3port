@@ -5,7 +5,7 @@ Isometries of emetric and metric spaces
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometry
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,13 +126,15 @@ theorem rightInv {f : α → β} {g : β → α} (h : Isometry f) (hg : RightInv
 #align isometry.right_inv Isometry.rightInv
 
 theorem preimage_emetric_closed_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) :
-    f ⁻¹' Emetric.closedBall (f x) r = Emetric.closedBall x r := by
+    f ⁻¹' Emetric.closedBall (f x) r = Emetric.closedBall x r :=
+  by
   ext y
   simp [h.edist_eq]
 #align isometry.preimage_emetric_closed_ball Isometry.preimage_emetric_closed_ball
 
 theorem preimage_emetric_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) :
-    f ⁻¹' Emetric.ball (f x) r = Emetric.ball x r := by
+    f ⁻¹' Emetric.ball (f x) r = Emetric.ball x r :=
+  by
   ext y
   simp [h.edist_eq]
 #align isometry.preimage_emetric_ball Isometry.preimage_emetric_ball
@@ -142,7 +144,8 @@ theorem ediam_image (hf : Isometry f) (s : Set α) : Emetric.diam (f '' s) = Eme
   eq_of_forall_ge_iff fun d => by simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
 #align isometry.ediam_image Isometry.ediam_image
 
-theorem ediam_range (hf : Isometry f) : Emetric.diam (range f) = Emetric.diam (univ : Set α) := by
+theorem ediam_range (hf : Isometry f) : Emetric.diam (range f) = Emetric.diam (univ : Set α) :=
+  by
   rw [← image_univ]
   exact hf.ediam_image univ
 #align isometry.ediam_range Isometry.ediam_range
@@ -211,13 +214,15 @@ theorem diam_image (hf : Isometry f) (s : Set α) : Metric.diam (f '' s) = Metri
   rw [Metric.diam, Metric.diam, hf.ediam_image]
 #align isometry.diam_image Isometry.diam_image
 
-theorem diam_range (hf : Isometry f) : Metric.diam (range f) = Metric.diam (univ : Set α) := by
+theorem diam_range (hf : Isometry f) : Metric.diam (range f) = Metric.diam (univ : Set α) :=
+  by
   rw [← image_univ]
   exact hf.diam_image univ
 #align isometry.diam_range Isometry.diam_range
 
 theorem preimage_set_of_dist (hf : Isometry f) (x : α) (p : ℝ → Prop) :
-    f ⁻¹' { y | p (dist y (f x)) } = { y | p (dist y x) } := by
+    f ⁻¹' { y | p (dist y (f x)) } = { y | p (dist y x) } :=
+  by
   ext y
   simp [hf.dist_eq]
 #align isometry.preimage_set_of_dist Isometry.preimage_set_of_dist
@@ -266,7 +271,7 @@ theorem UniformEmbedding.toIsometry {α β} [UniformSpace α] [MetricSpace β] {
       (@PseudoMetricSpace.toPseudoEmetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
-  by 
+  by
   apply Isometry.ofDistEq
   intro x y
   rfl
@@ -280,7 +285,7 @@ theorem Embedding.toIsometry {α β} [TopologicalSpace α] [MetricSpace β] {f :
       (@PseudoMetricSpace.toPseudoEmetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
-  by 
+  by
   apply Isometry.ofDistEq
   intro x y
   rfl
@@ -355,7 +360,7 @@ theorem ediam_image (h : α ≃ᵢ β) (s : Set α) : Emetric.diam (h '' s) = Em
 #align isometric.ediam_image Isometric.ediam_image
 
 theorem to_equiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.toEquiv → h₁ = h₂
-  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by 
+  | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by
     dsimp at H
     subst e₁
 #align isometric.to_equiv_inj Isometric.to_equiv_inj
@@ -368,7 +373,7 @@ theorem ext ⦃h₁ h₂ : α ≃ᵢ β⦄ (H : ∀ x, h₁ x = h₂ x) : h₁ =
 /-- Alternative constructor for isometric bijections,
 taking as input an isometry, and a right inverse. -/
 def mk' {α : Type u} [EmetricSpace α] (f : α → β) (g : β → α) (hfg : ∀ x, f (g x) = x)
-    (hf : Isometry f) : α ≃ᵢ β where 
+    (hf : Isometry f) : α ≃ᵢ β where
   toFun := f
   invFun := g
   left_inv x := hf.Injective <| hfg _
@@ -392,8 +397,8 @@ theorem trans_apply (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) (x : α) : h₁.
 #align isometric.trans_apply Isometric.trans_apply
 
 /-- The inverse of an isometric isomorphism, as an isometric isomorphism. -/
-protected def symm (h : α ≃ᵢ β) :
-    β ≃ᵢ α where 
+protected def symm (h : α ≃ᵢ β) : β ≃ᵢ α
+    where
   isometryToFun := h.Isometry.right_inv h.right_inv
   toEquiv := h.toEquiv.symm
 #align isometric.symm Isometric.symm
@@ -496,8 +501,8 @@ theorem image_emetric_closed_ball (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) :
 
 /-- The (bundled) homeomorphism associated to an isometric isomorphism. -/
 @[simps toEquiv]
-protected def toHomeomorph (h : α ≃ᵢ β) :
-    α ≃ₜ β where 
+protected def toHomeomorph (h : α ≃ᵢ β) : α ≃ₜ β
+    where
   continuous_to_fun := h.Continuous
   continuous_inv_fun := h.symm.Continuous
   toEquiv := h.toEquiv
@@ -532,7 +537,7 @@ theorem comp_continuous_iff' {γ} [TopologicalSpace γ] (h : α ≃ᵢ β) {f : 
 #align isometric.comp_continuous_iff' Isometric.comp_continuous_iff'
 
 /-- The group of isometries. -/
-instance : Group (α ≃ᵢ α) where 
+instance : Group (α ≃ᵢ α) where
   one := Isometric.refl _
   mul e₁ e₂ := e₂.trans e₁
   inv := Isometric.symm
@@ -571,7 +576,8 @@ protected theorem complete_space [CompleteSpace β] (e : α ≃ᵢ β) : Complet
       rwa [Set.image_univ, Isometric.range_eq_univ, ← complete_space_iff_is_complete_univ]
 #align isometric.complete_space Isometric.complete_space
 
-theorem complete_space_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β := by
+theorem complete_space_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β :=
+  by
   constructor <;> intro H
   exacts[e.symm.complete_space, e.complete_space]
 #align isometric.complete_space_iff Isometric.complete_space_iff
@@ -639,8 +645,8 @@ end Isometric
 range of the isometry. -/
 @[simps (config := { simpRhs := true }) toEquiv apply]
 def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) :
-    α ≃ᵢ range
-        f where 
+    α ≃ᵢ range f
+    where
   isometryToFun x y := by simpa [Subtype.edist_eq] using h x y
   toEquiv := Equiv.ofInjective f h.Injective
 #align isometry.isometric_on_range Isometry.isometricOnRange

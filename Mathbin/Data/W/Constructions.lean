@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Hua
 
 ! This file was ported from Lean 3 source module data.W.constructions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,10 +66,10 @@ def toNat : WType Natβ → ℕ
 #align W_type.to_nat WType.toNat
 
 theorem left_inv_nat : Function.LeftInverse ofNat toNat
-  | WType.mk nat_α.zero f => by 
+  | WType.mk nat_α.zero f => by
     simp
     tidy
-  | WType.mk nat_α.succ f => by 
+  | WType.mk nat_α.succ f => by
     simp
     tidy
 #align W_type.left_inv_nat WType.left_inv_nat
@@ -80,7 +80,7 @@ theorem right_inv_nat : Function.RightInverse ofNat toNat
 #align W_type.right_inv_nat WType.right_inv_nat
 
 /-- The naturals are equivalent to their associated `W_type` -/
-def equivNat : WType Natβ ≃ ℕ where 
+def equivNat : WType Natβ ≃ ℕ where
   toFun := toNat
   invFun := ofNat
   left_inv := left_inv_nat
@@ -93,8 +93,8 @@ open Sum PUnit
 This is useful when considering the associated polynomial endofunctor.
 -/
 @[simps]
-def natαEquivPunitSumPunit :
-    nat_α ≃ Sum PUnit.{u + 1} PUnit where 
+def natαEquivPunitSumPunit : nat_α ≃ Sum PUnit.{u + 1} PUnit
+    where
   toFun c :=
     match c with
     | nat_α.zero => inl unit
@@ -161,10 +161,10 @@ def toList : WType (Listβ γ) → List γ
 #align W_type.to_list WType.toList
 
 theorem left_inv_list : Function.LeftInverse (ofList γ) (toList _)
-  | WType.mk list_α.nil f => by 
+  | WType.mk list_α.nil f => by
     simp
     tidy
-  | WType.mk (list_α.cons x) f => by 
+  | WType.mk (list_α.cons x) f => by
     simp
     tidy
 #align W_type.left_inv_list WType.left_inv_list
@@ -175,8 +175,8 @@ theorem right_inv_list : Function.RightInverse (ofList γ) (toList _)
 #align W_type.right_inv_list WType.right_inv_list
 
 /-- Lists are equivalent to their associated `W_type` -/
-def equivList : WType (Listβ γ) ≃
-      List γ where 
+def equivList : WType (Listβ γ) ≃ List γ
+    where
   toFun := toList _
   invFun := ofList _
   left_inv := left_inv_list _
@@ -186,8 +186,8 @@ def equivList : WType (Listβ γ) ≃
 /-- `W_type.list_α` is equivalent to `γ` with an extra point.
 This is useful when considering the associated polynomial endofunctor
 -/
-def listαEquivPunitSum :
-    Listα γ ≃ Sum PUnit.{v + 1} γ where 
+def listαEquivPunitSum : Listα γ ≃ Sum PUnit.{v + 1} γ
+    where
   toFun c :=
     match c with
     | list_α.nil => Sum.inl PUnit.unit

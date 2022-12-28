@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.transfer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,8 @@ include i
 
 /-- No point making this an instance, as it requires `i`. -/
 theorem has_kernels [PreservesFiniteLimits G] : HasKernels C :=
-  { HasLimit := fun X Y f => by 
+  {
+    HasLimit := fun X Y f => by
       have := nat_iso.naturality_1 i f
       simp at this
       rw [← this]
@@ -73,7 +74,9 @@ include adj
 
 /-- No point making this an instance, as it requires `i` and `adj`. -/
 theorem has_cokernels : HasCokernels C :=
-  { HasColimit := fun X Y f => by
+  {
+    HasColimit := fun X Y f =>
+      by
       haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
       have := nat_iso.naturality_1 i f
       simp at this
@@ -105,7 +108,8 @@ variable [Limits.HasKernels C] [PreservesFiniteLimits G]
 
 /-- Auxiliary construction for `coimage_iso_image` -/
 def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) :
-    kernel (G.map (cokernel.π (F.map f))) ≅ kernel (cokernel.π f) := by
+    kernel (G.map (cokernel.π (F.map f))) ≅ kernel (cokernel.π f) :=
+  by
   haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
   calc
     kernel (G.map (cokernel.π (F.map f))) ≅
@@ -134,7 +138,8 @@ variable [Functor.PreservesZeroMorphisms F]
 /-- Auxiliary definition: the abelian coimage and abelian image agree.
 We still need to check that this agrees with the canonical morphism.
 -/
-def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.image f := by
+def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.image f :=
+  by
   haveI : preserves_limits F := adj.right_adjoint_preserves_limits
   haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
   calc
@@ -157,7 +162,8 @@ attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 
 -- The account of this proof in the Stacks project omits this calculation.
 theorem coimage_iso_image_hom {X Y : C} (f : X ⟶ Y) :
-    (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f := by
+    (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f :=
+  by
   ext
   simpa only [← G.map_comp_assoc, coimage_iso_image, nat_iso.inv_inv_app, cokernel_iso,
     coimage_iso_image_aux, iso.trans_symm, iso.symm_symm_eq, iso.refl_trans, iso.trans_refl,
@@ -186,10 +192,11 @@ See <https://stacks.math.columbia.edu/tag/03A3>
 def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFiniteProducts C]
     {D : Type u₂} [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F]
     (G : D ⥤ C) [Functor.PreservesZeroMorphisms G] [PreservesFiniteLimits G] (i : F ⋙ G ≅ 𝟭 C)
-    (adj : G ⊣ F) : Abelian C := by 
+    (adj : G ⊣ F) : Abelian C := by
   haveI := has_kernels F G i
   haveI := has_cokernels F G i adj
-  have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) := by
+  have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) :=
+    by
     intro X Y f
     rw [← coimage_iso_image_hom F G i adj f]
     infer_instance

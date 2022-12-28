@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Markus Himmel, Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.pullbacks
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,8 @@ it suffices to construct an isomorphism
 of the cone points and check it commutes with the legs to `left` and `right`. -/
 def WalkingCospan.ext {F : walking_cospan ⥤ C} {s t : Cone F} (i : s.x ≅ t.x)
     (w₁ : s.π.app WalkingCospan.left = i.Hom ≫ t.π.app WalkingCospan.left)
-    (w₂ : s.π.app WalkingCospan.right = i.Hom ≫ t.π.app WalkingCospan.right) : s ≅ t := by
+    (w₂ : s.π.app WalkingCospan.right = i.Hom ≫ t.π.app WalkingCospan.right) : s ≅ t :=
+  by
   apply cones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.π.naturality walking_cospan.hom.inl
@@ -172,7 +173,8 @@ it suffices to construct an isomorphism
 of the cocone points and check it commutes with the legs from `left` and `right`. -/
 def WalkingSpan.ext {F : walking_span ⥤ C} {s t : Cocone F} (i : s.x ≅ t.x)
     (w₁ : s.ι.app WalkingCospan.left ≫ i.Hom = t.ι.app WalkingCospan.left)
-    (w₂ : s.ι.app WalkingCospan.right ≫ i.Hom = t.ι.app WalkingCospan.right) : s ≅ t := by
+    (w₂ : s.ι.app WalkingCospan.right ≫ i.Hom = t.ι.app WalkingCospan.right) : s ≅ t :=
+  by
   apply cocones.ext i
   rintro (⟨⟩ | ⟨⟨⟩⟩)
   · have h₁ := s.ι.naturality walking_span.hom.fst
@@ -417,7 +419,7 @@ variable {f : X ⟶ Z} {g : Y ⟶ Z} {f' : X' ⟶ Z'} {g' : Y' ⟶ Z'}
 def cospanExt (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ.Hom) :
     cospan f g ≅ cospan f' g' :=
   NatIso.ofComponents
-    (by 
+    (by
       rintro (⟨⟩ | ⟨⟨⟩⟩)
       exacts[iZ, iX, iY])
     (by rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;> repeat' dsimp; simp [wf, wg])
@@ -426,61 +428,68 @@ def cospanExt (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ
 variable (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ.Hom)
 
 @[simp]
-theorem cospan_ext_app_left : (cospanExt iX iY iZ wf wg).app WalkingCospan.left = iX := by
+theorem cospan_ext_app_left : (cospanExt iX iY iZ wf wg).app WalkingCospan.left = iX :=
+  by
   dsimp [cospan_ext]
   simp
 #align category_theory.limits.cospan_ext_app_left CategoryTheory.Limits.cospan_ext_app_left
 
 @[simp]
-theorem cospan_ext_app_right : (cospanExt iX iY iZ wf wg).app WalkingCospan.right = iY := by
+theorem cospan_ext_app_right : (cospanExt iX iY iZ wf wg).app WalkingCospan.right = iY :=
+  by
   dsimp [cospan_ext]
   simp
 #align category_theory.limits.cospan_ext_app_right CategoryTheory.Limits.cospan_ext_app_right
 
 @[simp]
-theorem cospan_ext_app_one : (cospanExt iX iY iZ wf wg).app WalkingCospan.one = iZ := by
+theorem cospan_ext_app_one : (cospanExt iX iY iZ wf wg).app WalkingCospan.one = iZ :=
+  by
   dsimp [cospan_ext]
   simp
 #align category_theory.limits.cospan_ext_app_one CategoryTheory.Limits.cospan_ext_app_one
 
 @[simp]
 theorem cospan_ext_hom_app_left : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.left = iX.Hom :=
-  by 
+  by
   dsimp [cospan_ext]
   simp
 #align category_theory.limits.cospan_ext_hom_app_left CategoryTheory.Limits.cospan_ext_hom_app_left
 
 @[simp]
 theorem cospan_ext_hom_app_right :
-    (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.right = iY.Hom := by
+    (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.right = iY.Hom :=
+  by
   dsimp [cospan_ext]
   simp
 #align
   category_theory.limits.cospan_ext_hom_app_right CategoryTheory.Limits.cospan_ext_hom_app_right
 
 @[simp]
-theorem cospan_ext_hom_app_one : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.one = iZ.Hom := by
+theorem cospan_ext_hom_app_one : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.one = iZ.Hom :=
+  by
   dsimp [cospan_ext]
   simp
 #align category_theory.limits.cospan_ext_hom_app_one CategoryTheory.Limits.cospan_ext_hom_app_one
 
 @[simp]
 theorem cospan_ext_inv_app_left : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.left = iX.inv :=
-  by 
+  by
   dsimp [cospan_ext]
   simp
 #align category_theory.limits.cospan_ext_inv_app_left CategoryTheory.Limits.cospan_ext_inv_app_left
 
 @[simp]
 theorem cospan_ext_inv_app_right :
-    (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.right = iY.inv := by
+    (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.right = iY.inv :=
+  by
   dsimp [cospan_ext]
   simp
 #align
   category_theory.limits.cospan_ext_inv_app_right CategoryTheory.Limits.cospan_ext_inv_app_right
 
 @[simp]
-theorem cospan_ext_inv_app_one : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.one = iZ.inv := by
+theorem cospan_ext_inv_app_one : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.one = iZ.inv :=
+  by
   dsimp [cospan_ext]
   simp
 #align category_theory.limits.cospan_ext_inv_app_one CategoryTheory.Limits.cospan_ext_inv_app_one
@@ -495,7 +504,7 @@ variable {f : X ⟶ Y} {g : X ⟶ Z} {f' : X' ⟶ Y'} {g' : X' ⟶ Z'}
 def spanExt (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.Hom) :
     span f g ≅ span f' g' :=
   NatIso.ofComponents
-    (by 
+    (by
       rintro (⟨⟩ | ⟨⟨⟩⟩)
       exacts[iX, iY, iZ])
     (by rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;> repeat' dsimp; simp [wf, wg])
@@ -504,55 +513,64 @@ def spanExt (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.H
 variable (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.Hom)
 
 @[simp]
-theorem span_ext_app_left : (spanExt iX iY iZ wf wg).app WalkingSpan.left = iY := by
+theorem span_ext_app_left : (spanExt iX iY iZ wf wg).app WalkingSpan.left = iY :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_app_left CategoryTheory.Limits.span_ext_app_left
 
 @[simp]
-theorem span_ext_app_right : (spanExt iX iY iZ wf wg).app WalkingSpan.right = iZ := by
+theorem span_ext_app_right : (spanExt iX iY iZ wf wg).app WalkingSpan.right = iZ :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_app_right CategoryTheory.Limits.span_ext_app_right
 
 @[simp]
-theorem span_ext_app_one : (spanExt iX iY iZ wf wg).app WalkingSpan.zero = iX := by
+theorem span_ext_app_one : (spanExt iX iY iZ wf wg).app WalkingSpan.zero = iX :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_app_one CategoryTheory.Limits.span_ext_app_one
 
 @[simp]
-theorem span_ext_hom_app_left : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.left = iY.Hom := by
+theorem span_ext_hom_app_left : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.left = iY.Hom :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_hom_app_left CategoryTheory.Limits.span_ext_hom_app_left
 
 @[simp]
-theorem span_ext_hom_app_right : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.right = iZ.Hom := by
+theorem span_ext_hom_app_right : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.right = iZ.Hom :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_hom_app_right CategoryTheory.Limits.span_ext_hom_app_right
 
 @[simp]
-theorem span_ext_hom_app_zero : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.zero = iX.Hom := by
+theorem span_ext_hom_app_zero : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.zero = iX.Hom :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_hom_app_zero CategoryTheory.Limits.span_ext_hom_app_zero
 
 @[simp]
-theorem span_ext_inv_app_left : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.left = iY.inv := by
+theorem span_ext_inv_app_left : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.left = iY.inv :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_inv_app_left CategoryTheory.Limits.span_ext_inv_app_left
 
 @[simp]
-theorem span_ext_inv_app_right : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.right = iZ.inv := by
+theorem span_ext_inv_app_right : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.right = iZ.inv :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_inv_app_right CategoryTheory.Limits.span_ext_inv_app_right
 
 @[simp]
-theorem span_ext_inv_app_zero : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.zero = iX.inv := by
+theorem span_ext_inv_app_zero : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.zero = iX.inv :=
+  by
   dsimp [span_ext]
   simp
 #align category_theory.limits.span_ext_inv_app_zero CategoryTheory.Limits.span_ext_inv_app_zero
@@ -595,7 +613,8 @@ theorem π_app_right (c : PullbackCone f g) : c.π.app WalkingCospan.right = c.s
   category_theory.limits.pullback_cone.π_app_right CategoryTheory.Limits.PullbackCone.π_app_right
 
 @[simp]
-theorem condition_one (t : PullbackCone f g) : t.π.app WalkingCospan.one = t.fst ≫ f := by
+theorem condition_one (t : PullbackCone f g) : t.π.app WalkingCospan.one = t.fst ≫ f :=
+  by
   have w := t.π.naturality walking_cospan.hom.inl
   dsimp at w; simpa using w
 #align
@@ -613,7 +632,7 @@ def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x ⟶ 
   { lift
     fac' := fun s j =>
       Option.casesOn j
-        (by 
+        (by
           rw [← s.w inl, ← t.w inl, ← category.assoc]
           congr
           exact fac_left s)
@@ -641,8 +660,8 @@ def isLimitAux' (t : PullbackCone f g)
 /-- A pullback cone on `f` and `g` is determined by morphisms `fst : W ⟶ X` and `snd : W ⟶ Y`
     such that `fst ≫ f = snd ≫ g`. -/
 @[simps]
-def mk {W : C} (fst : W ⟶ X) (snd : W ⟶ Y) (eq : fst ≫ f = snd ≫ g) :
-    PullbackCone f g where 
+def mk {W : C} (fst : W ⟶ X) (snd : W ⟶ Y) (eq : fst ≫ f = snd ≫ g) : PullbackCone f g
+    where
   x := W
   π := { app := fun j => Option.casesOn j (fst ≫ f) fun j' => WalkingPair.casesOn j' fst snd }
 #align category_theory.limits.pullback_cone.mk CategoryTheory.Limits.PullbackCone.mk
@@ -748,7 +767,8 @@ def IsLimit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫
 /-- The flip of a pullback square is a pullback square. -/
 def flipIsLimit {W : C} {h : W ⟶ X} {k : W ⟶ Y} {comm : h ≫ f = k ≫ g}
     (t : IsLimit (mk _ _ comm.symm)) : IsLimit (mk _ _ comm) :=
-  (isLimitAux' _) fun s => by
+  (isLimitAux' _) fun s =>
+    by
     refine'
       ⟨(is_limit.lift' t _ _ s.condition.symm).1, (is_limit.lift' t _ _ _).2.2,
         (is_limit.lift' t _ _ _).2.1, fun m m₁ m₂ => t.hom_ext _⟩
@@ -793,7 +813,8 @@ def isLimitOfFactors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [Mono h] (x : X �
           (cancel_mono h).1 <| by simp only [category.assoc, hxh, hyh, s.condition])) :=
   (PullbackCone.isLimitAux' _) fun t =>
     ⟨hs.lift (PullbackCone.mk t.fst t.snd <| by rw [← hxh, ← hyh, reassoc_of t.condition]),
-      ⟨hs.fac _ WalkingCospan.left, hs.fac _ WalkingCospan.right, fun r hr hr' => by
+      ⟨hs.fac _ WalkingCospan.left, hs.fac _ WalkingCospan.right, fun r hr hr' =>
+        by
         apply pullback_cone.is_limit.hom_ext hs <;>
               simp only [pullback_cone.mk_fst, pullback_cone.mk_snd] at hr hr'⊢ <;>
             simp only [hr, hr'] <;>
@@ -810,7 +831,7 @@ def isLimitOfCompMono (f : X ⟶ W) (g : Y ⟶ W) (i : W ⟶ Z) [Mono i] (s : Pu
       (PullbackCone.mk _ _
         (show s.fst ≫ f ≫ i = s.snd ≫ g ≫ i by
           rw [← category.assoc, ← category.assoc, s.condition])) :=
-  by 
+  by
   apply pullback_cone.is_limit_aux'
   intro s
   rcases pullback_cone.is_limit.lift' H s.fst s.snd
@@ -857,7 +878,8 @@ theorem ι_app_right (c : PushoutCocone f g) : c.ι.app WalkingSpan.right = c.in
   category_theory.limits.pushout_cocone.ι_app_right CategoryTheory.Limits.PushoutCocone.ι_app_right
 
 @[simp]
-theorem condition_zero (t : PushoutCocone f g) : t.ι.app WalkingSpan.zero = f ≫ t.inl := by
+theorem condition_zero (t : PushoutCocone f g) : t.ι.app WalkingSpan.zero = f ≫ t.inl :=
+  by
   have w := t.ι.naturality walking_span.hom.fst
   dsimp at w; simpa using w.symm
 #align
@@ -898,8 +920,8 @@ def isColimitAux' (t : PushoutCocone f g)
 /-- A pushout cocone on `f` and `g` is determined by morphisms `inl : Y ⟶ W` and `inr : Z ⟶ W` such
     that `f ≫ inl = g ↠ inr`. -/
 @[simps]
-def mk {W : C} (inl : Y ⟶ W) (inr : Z ⟶ W) (eq : f ≫ inl = g ≫ inr) :
-    PushoutCocone f g where 
+def mk {W : C} (inl : Y ⟶ W) (inr : Z ⟶ W) (eq : f ≫ inl = g ≫ inr) : PushoutCocone f g
+    where
   x := W
   ι := { app := fun j => Option.casesOn j (f ≫ inl) fun j' => WalkingPair.casesOn j' inl inr }
 #align category_theory.limits.pushout_cocone.mk CategoryTheory.Limits.PushoutCocone.mk
@@ -1005,7 +1027,8 @@ def IsColimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫
 /-- The flip of a pushout square is a pushout square. -/
 def flipIsColimit {W : C} {h : Y ⟶ W} {k : Z ⟶ W} {comm : f ≫ h = g ≫ k}
     (t : IsColimit (mk _ _ comm.symm)) : IsColimit (mk _ _ comm) :=
-  (isColimitAux' _) fun s => by
+  (isColimitAux' _) fun s =>
+    by
     refine'
       ⟨(is_colimit.desc' t _ _ s.condition.symm).1, (is_colimit.desc' t _ _ _).2.2,
         (is_colimit.desc' t _ _ _).2.1, fun m m₁ m₂ => t.hom_ext _⟩
@@ -1031,7 +1054,8 @@ The converse is given in `pushout_cocone.is_colimit_mk_id_id`.
 -/
 theorem epi_of_is_colimit_mk_id_id (f : X ⟶ Y)
     (t : IsColimit (mk (𝟙 Y) (𝟙 Y) rfl : PushoutCocone f f)) : Epi f :=
-  ⟨fun Z g h eq => by
+  ⟨fun Z g h eq =>
+    by
     rcases pushout_cocone.is_colimit.desc' t _ _ Eq with ⟨_, rfl, rfl⟩
     rfl⟩
 #align
@@ -1051,7 +1075,8 @@ def isColimitOfFactors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [Epi h] (x : W 
     ⟨hs.desc
         (PushoutCocone.mk t.inl t.inr <| by
           rw [← hhx, ← hhy, category.assoc, category.assoc, t.condition]),
-      ⟨hs.fac _ WalkingSpan.left, hs.fac _ WalkingSpan.right, fun r hr hr' => by
+      ⟨hs.fac _ WalkingSpan.left, hs.fac _ WalkingSpan.right, fun r hr hr' =>
+        by
         apply pushout_cocone.is_colimit.hom_ext hs <;>
               simp only [pushout_cocone.mk_inl, pushout_cocone.mk_inr] at hr hr'⊢ <;>
             simp only [hr, hr'] <;>
@@ -1068,7 +1093,7 @@ def isColimitOfEpiComp (f : X ⟶ Y) (g : X ⟶ Z) (h : W ⟶ X) [Epi h] (s : Pu
       (PushoutCocone.mk _ _
         (show (h ≫ f) ≫ s.inl = (h ≫ g) ≫ s.inr by
           rw [category.assoc, category.assoc, s.condition])) :=
-  by 
+  by
   apply pushout_cocone.is_colimit_aux'
   intro s
   rcases pushout_cocone.is_colimit.desc' H s.inl s.inr
@@ -1090,8 +1115,8 @@ end PushoutCocone
     If you're thinking about using this, have a look at `has_pullbacks_of_has_limit_cospan`,
     which you may find to be an easier way of achieving your goal. -/
 @[simps]
-def Cone.ofPullbackCone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map inl) (F.map inr)) :
-    Cone F where 
+def Cone.ofPullbackCone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map inl) (F.map inr)) : Cone F
+    where
   x := t.x
   π := t.π ≫ (diagramIsoCospan F).inv
 #align category_theory.limits.cone.of_pullback_cone CategoryTheory.Limits.Cone.ofPullbackCone
@@ -1105,7 +1130,7 @@ def Cone.ofPullbackCone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map inl)
     you may find to be an easiery way of achieving your goal.  -/
 @[simps]
 def Cocone.ofPushoutCocone {F : walking_span ⥤ C} (t : PushoutCocone (F.map fst) (F.map snd)) :
-    Cocone F where 
+    Cocone F where
   x := t.x
   ι := (diagramIsoSpan F).Hom ≫ t.ι
 #align category_theory.limits.cocone.of_pushout_cocone CategoryTheory.Limits.Cocone.ofPushoutCocone
@@ -1113,8 +1138,8 @@ def Cocone.ofPushoutCocone {F : walking_span ⥤ C} (t : PushoutCocone (F.map fs
 /-- Given `F : walking_cospan ⥤ C`, which is really the same as `cospan (F.map inl) (F.map inr)`,
     and a cone on `F`, we get a pullback cone on `F.map inl` and `F.map inr`. -/
 @[simps]
-def PullbackCone.ofCone {F : walking_cospan ⥤ C} (t : Cone F) :
-    PullbackCone (F.map inl) (F.map inr) where 
+def PullbackCone.ofCone {F : walking_cospan ⥤ C} (t : Cone F) : PullbackCone (F.map inl) (F.map inr)
+    where
   x := t.x
   π := t.π ≫ (diagramIsoCospan F).Hom
 #align category_theory.limits.pullback_cone.of_cone CategoryTheory.Limits.PullbackCone.ofCone
@@ -1136,7 +1161,7 @@ def PullbackCone.isoMk {F : walking_cospan ⥤ C} (t : Cone F) :
     and a cocone on `F`, we get a pushout cocone on `F.map fst` and `F.map snd`. -/
 @[simps]
 def PushoutCocone.ofCocone {F : walking_span ⥤ C} (t : Cocone F) :
-    PushoutCocone (F.map fst) (F.map snd) where 
+    PushoutCocone (F.map fst) (F.map snd) where
   x := t.x
   ι := (diagramIsoSpan F).inv ≫ t.ι
 #align category_theory.limits.pushout_cocone.of_cocone CategoryTheory.Limits.PushoutCocone.ofCocone
@@ -1325,7 +1350,7 @@ abbrev pushout.map {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [HasPusho
     (g₂ : T ⟶ Z) [HasPushout g₁ g₂] (i₁ : W ⟶ Y) (i₂ : X ⟶ Z) (i₃ : S ⟶ T) (eq₁ : f₁ ≫ i₁ = i₃ ≫ g₁)
     (eq₂ : f₂ ≫ i₂ = i₃ ≫ g₂) : pushout f₁ f₂ ⟶ pushout g₁ g₂ :=
   pushout.desc (i₁ ≫ pushout.inl) (i₂ ≫ pushout.inr)
-    (by 
+    (by
       simp only [← category.assoc, eq₁, eq₂]
       simp [pushout.condition])
 #align category_theory.limits.pushout.map CategoryTheory.Limits.pushout.map
@@ -1368,7 +1393,7 @@ instance pullback.snd_of_mono {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} [HasPullba
 instance mono_pullback_to_prod {C : Type _} [Category C] {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
     [HasPullback f g] [HasBinaryProduct X Y] :
     Mono (prod.lift pullback.fst pullback.snd : pullback f g ⟶ _) :=
-  ⟨fun W i₁ i₂ h => by 
+  ⟨fun W i₁ i₂ h => by
     ext
     · simpa using congr_arg (fun f => f ≫ Prod.fst) h
     · simpa using congr_arg (fun f => f ≫ Prod.snd) h⟩
@@ -1406,7 +1431,7 @@ instance pushout.inr_of_epi {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} [HasPushout 
 instance epi_coprod_to_pushout {C : Type _} [Category C] {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z)
     [HasPushout f g] [HasBinaryCoproduct Y Z] :
     Epi (coprod.desc pushout.inl pushout.inr : _ ⟶ pushout f g) :=
-  ⟨fun W i₁ i₂ h => by 
+  ⟨fun W i₁ i₂ h => by
     ext
     · simpa using congr_arg (fun f => coprod.inl ≫ f) h
     · simpa using congr_arg (fun f => coprod.inr ≫ f) h⟩
@@ -1415,7 +1440,8 @@ instance epi_coprod_to_pushout {C : Type _} [Category C] {X Y Z : C} (f : X ⟶ 
 instance pullback.map_is_iso {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S) [HasPullback f₁ f₂]
     (g₁ : Y ⟶ T) (g₂ : Z ⟶ T) [HasPullback g₁ g₂] (i₁ : W ⟶ Y) (i₂ : X ⟶ Z) (i₃ : S ⟶ T)
     (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁) (eq₂ : f₂ ≫ i₃ = i₂ ≫ g₂) [IsIso i₁] [IsIso i₂] [IsIso i₃] :
-    IsIso (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) := by
+    IsIso (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) :=
+  by
   refine' ⟨⟨pullback.map _ _ _ _ (inv i₁) (inv i₂) (inv i₃) _ _, _, _⟩⟩
   · rw [is_iso.comp_inv_eq, category.assoc, eq₁, is_iso.inv_hom_id_assoc]
   · rw [is_iso.comp_inv_eq, category.assoc, eq₂, is_iso.inv_hom_id_assoc]
@@ -1435,7 +1461,7 @@ theorem pullback.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y 
     (h₂ : g₁ = g₂) [HasPullback f₁ g₁] [HasPullback f₂ g₂] :
     (pullback.congrHom h₁ h₂).inv =
       pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simp [h₁]) (by simp [h₂]) :=
-  by 
+  by
   apply pullback.hom_ext
   · erw [pullback.lift_fst]
     rw [iso.inv_comp_eq]
@@ -1450,7 +1476,8 @@ theorem pullback.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y 
 instance pushout.map_is_iso {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [HasPushout f₁ f₂]
     (g₁ : T ⟶ Y) (g₂ : T ⟶ Z) [HasPushout g₁ g₂] (i₁ : W ⟶ Y) (i₂ : X ⟶ Z) (i₃ : S ⟶ T)
     (eq₁ : f₁ ≫ i₁ = i₃ ≫ g₁) (eq₂ : f₂ ≫ i₂ = i₃ ≫ g₂) [IsIso i₁] [IsIso i₂] [IsIso i₃] :
-    IsIso (pushout.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) := by
+    IsIso (pushout.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) :=
+  by
   refine' ⟨⟨pushout.map _ _ _ _ (inv i₁) (inv i₂) (inv i₃) _ _, _, _⟩⟩
   · rw [is_iso.comp_inv_eq, category.assoc, eq₁, is_iso.inv_hom_id_assoc]
   · rw [is_iso.comp_inv_eq, category.assoc, eq₂, is_iso.inv_hom_id_assoc]
@@ -1480,7 +1507,7 @@ theorem pushout.congr_hom_inv {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X �
     (h₂ : g₁ = g₂) [HasPushout f₁ g₁] [HasPushout f₂ g₂] :
     (pushout.congrHom h₁ h₂).inv =
       pushout.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simp [h₁]) (by simp [h₂]) :=
-  by 
+  by
   apply pushout.hom_ext
   · erw [pushout.inl_desc]
     rw [iso.comp_inv_eq, category.id_comp]
@@ -1718,7 +1745,8 @@ theorem pullback_cone_of_left_iso_snd : (pullbackConeOfLeftIso f g).snd = 𝟙 _
   category_theory.limits.pullback_cone_of_left_iso_snd CategoryTheory.Limits.pullback_cone_of_left_iso_snd
 
 @[simp]
-theorem pullback_cone_of_left_iso_π_app_none : (pullbackConeOfLeftIso f g).π.app none = g := by
+theorem pullback_cone_of_left_iso_π_app_none : (pullbackConeOfLeftIso f g).π.app none = g :=
+  by
   delta pullback_cone_of_left_iso
   simp
 #align
@@ -1749,7 +1777,8 @@ theorem has_pullback_of_left_iso : HasPullback f g :=
 
 attribute [local instance] has_pullback_of_left_iso
 
-instance pullback_snd_iso_of_left_iso : IsIso (pullback.snd : pullback f g ⟶ _) := by
+instance pullback_snd_iso_of_left_iso : IsIso (pullback.snd : pullback f g ⟶ _) :=
+  by
   refine' ⟨⟨pullback.lift (g ≫ inv f) (𝟙 _) (by simp), _, by simp⟩⟩
   ext
   · simp [← pullback.condition_assoc]
@@ -1759,8 +1788,9 @@ instance pullback_snd_iso_of_left_iso : IsIso (pullback.snd : pullback f g ⟶ _
 
 variable (i : Z ⟶ W) [Mono i]
 
-instance has_pullback_of_right_factors_mono (f : X ⟶ Z) : HasPullback i (f ≫ i) := by
-  conv => 
+instance has_pullback_of_right_factors_mono (f : X ⟶ Z) : HasPullback i (f ≫ i) :=
+  by
+  conv =>
     congr
     rw [← category.id_comp i]
   infer_instance
@@ -1843,7 +1873,8 @@ theorem has_pullback_of_right_iso : HasPullback f g :=
 
 attribute [local instance] has_pullback_of_right_iso
 
-instance pullback_snd_iso_of_right_iso : IsIso (pullback.fst : pullback f g ⟶ _) := by
+instance pullback_snd_iso_of_right_iso : IsIso (pullback.fst : pullback f g ⟶ _) :=
+  by
   refine' ⟨⟨pullback.lift (𝟙 _) (f ≫ inv g) (by simp), _, by simp⟩⟩
   ext
   · simp
@@ -1853,8 +1884,9 @@ instance pullback_snd_iso_of_right_iso : IsIso (pullback.fst : pullback f g ⟶ 
 
 variable (i : Z ⟶ W) [Mono i]
 
-instance has_pullback_of_left_factors_mono (f : X ⟶ Z) : HasPullback (f ≫ i) i := by
-  conv => 
+instance has_pullback_of_left_factors_mono (f : X ⟶ Z) : HasPullback (f ≫ i) i :=
+  by
+  conv =>
     congr
     skip
     rw [← category.id_comp i]
@@ -1919,7 +1951,8 @@ theorem pushout_cocone_of_left_iso_inr : (pushoutCoconeOfLeftIso f g).inr = 𝟙
   category_theory.limits.pushout_cocone_of_left_iso_inr CategoryTheory.Limits.pushout_cocone_of_left_iso_inr
 
 @[simp]
-theorem pushout_cocone_of_left_iso_ι_app_none : (pushoutCoconeOfLeftIso f g).ι.app none = g := by
+theorem pushout_cocone_of_left_iso_ι_app_none : (pushoutCoconeOfLeftIso f g).ι.app none = g :=
+  by
   delta pushout_cocone_of_left_iso
   simp
 #align
@@ -1950,7 +1983,8 @@ theorem has_pushout_of_left_iso : HasPushout f g :=
 
 attribute [local instance] has_pushout_of_left_iso
 
-instance pushout_inr_iso_of_left_iso : IsIso (pushout.inr : _ ⟶ pushout f g) := by
+instance pushout_inr_iso_of_left_iso : IsIso (pushout.inr : _ ⟶ pushout f g) :=
+  by
   refine' ⟨⟨pushout.desc (inv f ≫ g) (𝟙 _) (by simp), by simp, _⟩⟩
   ext
   · simp [← pushout.condition]
@@ -1960,8 +1994,9 @@ instance pushout_inr_iso_of_left_iso : IsIso (pushout.inr : _ ⟶ pushout f g) :
 
 variable (h : W ⟶ X) [Epi h]
 
-instance has_pushout_of_right_factors_epi (f : X ⟶ Y) : HasPushout h (h ≫ f) := by
-  conv => 
+instance has_pushout_of_right_factors_epi (f : X ⟶ Y) : HasPushout h (h ≫ f) :=
+  by
+  conv =>
     congr
     rw [← category.comp_id h]
   infer_instance
@@ -2013,7 +2048,8 @@ theorem pushout_cocone_of_right_iso_inr : (pushoutCoconeOfRightIso f g).inr = in
   category_theory.limits.pushout_cocone_of_right_iso_inr CategoryTheory.Limits.pushout_cocone_of_right_iso_inr
 
 @[simp]
-theorem pushout_cocone_of_right_iso_ι_app_none : (pushoutCoconeOfRightIso f g).ι.app none = f := by
+theorem pushout_cocone_of_right_iso_ι_app_none : (pushoutCoconeOfRightIso f g).ι.app none = f :=
+  by
   delta pushout_cocone_of_right_iso
   simp
 #align
@@ -2045,7 +2081,8 @@ theorem has_pushout_of_right_iso : HasPushout f g :=
 
 attribute [local instance] has_pushout_of_right_iso
 
-instance pushout_inl_iso_of_right_iso : IsIso (pushout.inl : _ ⟶ pushout f g) := by
+instance pushout_inl_iso_of_right_iso : IsIso (pushout.inl : _ ⟶ pushout f g) :=
+  by
   refine' ⟨⟨pushout.desc (𝟙 _) (inv g ≫ f) (by simp), by simp, _⟩⟩
   ext
   · simp [← pushout.condition]
@@ -2055,8 +2092,9 @@ instance pushout_inl_iso_of_right_iso : IsIso (pushout.inl : _ ⟶ pushout f g) 
 
 variable (h : W ⟶ X) [Epi h]
 
-instance has_pushout_of_left_factors_epi (f : X ⟶ Y) : HasPushout (h ≫ f) h := by
-  conv => 
+instance has_pushout_of_left_factors_epi (f : X ⟶ Y) : HasPushout (h ≫ f) h :=
+  by
+  conv =>
     congr
     skip
     rw [← category.comp_id h]
@@ -2099,14 +2137,16 @@ theorem pullback_symmetry_hom_of_mono_eq [Mono f] : (pullbackSymmetry f f).Hom =
 #align
   category_theory.limits.pullback_symmetry_hom_of_mono_eq CategoryTheory.Limits.pullback_symmetry_hom_of_mono_eq
 
-instance fst_iso_of_mono_eq [Mono f] : IsIso (pullback.fst : pullback f f ⟶ _) := by
+instance fst_iso_of_mono_eq [Mono f] : IsIso (pullback.fst : pullback f f ⟶ _) :=
+  by
   refine' ⟨⟨pullback.lift (𝟙 _) (𝟙 _) (by simp), _, by simp⟩⟩
   ext
   · simp
   · simp [fst_eq_snd_of_mono_eq]
 #align category_theory.limits.fst_iso_of_mono_eq CategoryTheory.Limits.fst_iso_of_mono_eq
 
-instance snd_iso_of_mono_eq [Mono f] : IsIso (pullback.snd : pullback f f ⟶ _) := by
+instance snd_iso_of_mono_eq [Mono f] : IsIso (pullback.snd : pullback f f ⟶ _) :=
+  by
   rw [← fst_eq_snd_of_mono_eq]
   infer_instance
 #align category_theory.limits.snd_iso_of_mono_eq CategoryTheory.Limits.snd_iso_of_mono_eq
@@ -2135,14 +2175,16 @@ theorem pullback_symmetry_hom_of_epi_eq [Epi f] : (pushoutSymmetry f f).Hom = �
 #align
   category_theory.limits.pullback_symmetry_hom_of_epi_eq CategoryTheory.Limits.pullback_symmetry_hom_of_epi_eq
 
-instance inl_iso_of_epi_eq [Epi f] : IsIso (pushout.inl : _ ⟶ pushout f f) := by
+instance inl_iso_of_epi_eq [Epi f] : IsIso (pushout.inl : _ ⟶ pushout f f) :=
+  by
   refine' ⟨⟨pushout.desc (𝟙 _) (𝟙 _) (by simp), by simp, _⟩⟩
   ext
   · simp
   · simp [inl_eq_inr_of_epi_eq]
 #align category_theory.limits.inl_iso_of_epi_eq CategoryTheory.Limits.inl_iso_of_epi_eq
 
-instance inr_iso_of_epi_eq [Epi f] : IsIso (pushout.inr : _ ⟶ pushout f f) := by
+instance inr_iso_of_epi_eq [Epi f] : IsIso (pushout.inr : _ ⟶ pushout f f) :=
+  by
   rw [← inl_eq_inr_of_epi_eq]
   infer_instance
 #align category_theory.limits.inr_iso_of_epi_eq CategoryTheory.Limits.inr_iso_of_epi_eq
@@ -2173,7 +2215,7 @@ def bigSquareIsPullback (H : IsLimit (PullbackCone.mk _ _ h₂))
       (PullbackCone.mk _ _
         (show i₁ ≫ g₁ ≫ g₂ = (f₁ ≫ f₂) ≫ i₃ by
           rw [← category.assoc, h₁, category.assoc, h₂, category.assoc])) :=
-  by 
+  by
   fapply pullback_cone.is_limit_aux'
   intro s
   have : (s.fst ≫ g₁) ≫ g₂ = s.snd ≫ i₃ := by rw [← s.condition, category.assoc]
@@ -2182,7 +2224,7 @@ def bigSquareIsPullback (H : IsLimit (PullbackCone.mk _ _ h₂))
   use l₂
   use hl₂
   use
-    show l₂ ≫ f₁ ≫ f₂ = s.snd by 
+    show l₂ ≫ f₁ ≫ f₂ = s.snd by
       rw [← hl₁', ← hl₂', category.assoc]
       rfl
   intro m hm₁ hm₂
@@ -2210,7 +2252,7 @@ def bigSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₂))
       (PushoutCocone.mk _ _
         (show i₁ ≫ g₁ ≫ g₂ = (f₁ ≫ f₂) ≫ i₃ by
           rw [← category.assoc, h₁, category.assoc, h₂, category.assoc])) :=
-  by 
+  by
   fapply pushout_cocone.is_colimit_aux'
   intro s
   have : i₁ ≫ s.inl = f₁ ≫ f₂ ≫ s.inr := by rw [s.condition, category.assoc]
@@ -2218,7 +2260,7 @@ def bigSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₂))
   rcases pushout_cocone.is_colimit.desc' H l₁ s.inr hl₁' with ⟨l₂, hl₂, hl₂'⟩
   use l₂
   use
-    show (g₁ ≫ g₂) ≫ l₂ = s.inl by 
+    show (g₁ ≫ g₂) ≫ l₂ = s.inl by
       rw [← hl₁, ← hl₂, category.assoc]
       rfl
   use hl₂'
@@ -2248,7 +2290,8 @@ def leftSquareIsPullback (H : IsLimit (PullbackCone.mk _ _ h₂))
         (PullbackCone.mk _ _
           (show i₁ ≫ g₁ ≫ g₂ = (f₁ ≫ f₂) ≫ i₃ by
             rw [← category.assoc, h₁, category.assoc, h₂, category.assoc]))) :
-    IsLimit (PullbackCone.mk _ _ h₁) := by
+    IsLimit (PullbackCone.mk _ _ h₁) :=
+  by
   fapply pullback_cone.is_limit_aux'
   intro s
   have : s.fst ≫ g₁ ≫ g₂ = (s.snd ≫ f₂) ≫ i₃ := by
@@ -2285,7 +2328,8 @@ def rightSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₁))
         (PushoutCocone.mk _ _
           (show i₁ ≫ g₁ ≫ g₂ = (f₁ ≫ f₂) ≫ i₃ by
             rw [← category.assoc, h₁, category.assoc, h₂, category.assoc]))) :
-    IsColimit (PushoutCocone.mk _ _ h₂) := by
+    IsColimit (PushoutCocone.mk _ _ h₂) :=
+  by
   fapply pushout_cocone.is_colimit_aux'
   intro s
   have : i₁ ≫ g₁ ≫ s.inl = (f₁ ≫ f₂) ≫ s.inr := by
@@ -2317,7 +2361,8 @@ variable [HasPullback (f' ≫ f) g]
 
 /-- The canonical isomorphism `W ×[X] (X ×[Z] Y) ≅ W ×[Z] Y` -/
 noncomputable def pullbackRightPullbackFstIso :
-    pullback f' (pullback.fst : pullback f g ⟶ _) ≅ pullback (f' ≫ f) g := by
+    pullback f' (pullback.fst : pullback f g ⟶ _) ≅ pullback (f' ≫ f) g :=
+  by
   let this :=
     big_square_is_pullback (pullback.snd : pullback f' (pullback.fst : pullback f g ⟶ _) ⟶ _)
       pullback.snd f' f pullback.fst pullback.fst g pullback.condition pullback.condition
@@ -2356,7 +2401,8 @@ theorem pullback_right_pullback_fst_iso_inv_snd_snd :
 
 @[simp, reassoc.1]
 theorem pullback_right_pullback_fst_iso_inv_snd_fst :
-    (pullbackRightPullbackFstIso f g f').inv ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ f' := by
+    (pullbackRightPullbackFstIso f g f').inv ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ f' :=
+  by
   rw [← pullback.condition]
   exact pullback_right_pullback_fst_iso_inv_fst_assoc _ _ _ _
 #align
@@ -2516,7 +2562,7 @@ local notation "l₂'" => (pullback.snd : W' ⟶ Z₂)
 /-- `(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/
 def pullbackPullbackLeftIsPullback [HasPullback (g₂ ≫ f₃) f₄] :
     IsLimit (PullbackCone.mk l₁ l₂ (show l₁ ≫ g₂ = l₂ ≫ g₃ from (pullback.lift_fst _ _ _).symm)) :=
-  by 
+  by
   apply left_square_is_pullback
   exact pullback_is_pullback f₃ f₄
   convert pullback_is_pullback (g₂ ≫ f₃) f₄
@@ -2530,7 +2576,7 @@ def pullbackAssocIsPullback [HasPullback (g₂ ≫ f₃) f₄] :
       (PullbackCone.mk (l₁ ≫ g₁) l₂
         (show (l₁ ≫ g₁) ≫ f₁ = l₂ ≫ g₃ ≫ f₂ by
           rw [pullback.lift_fst_assoc, category.assoc, category.assoc, pullback.condition])) :=
-  by 
+  by
   apply pullback_cone.flip_is_limit
   apply big_square_is_pullback
   · apply pullback_cone.flip_is_limit
@@ -2548,7 +2594,8 @@ theorem has_pullback_assoc [HasPullback (g₂ ≫ f₃) f₄] : HasPullback f₁
 
 /-- `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/
 def pullbackPullbackRightIsPullback [HasPullback f₁ (g₃ ≫ f₂)] :
-    IsLimit (PullbackCone.mk l₁' l₂' (show l₁' ≫ g₂ = l₂' ≫ g₃ from pullback.lift_snd _ _ _)) := by
+    IsLimit (PullbackCone.mk l₁' l₂' (show l₁' ≫ g₂ = l₂' ≫ g₃ from pullback.lift_snd _ _ _)) :=
+  by
   apply pullback_cone.flip_is_limit
   apply left_square_is_pullback
   · apply pullback_cone.flip_is_limit
@@ -2566,7 +2613,7 @@ def pullbackAssocSymmIsPullback [HasPullback f₁ (g₃ ≫ f₂)] :
       (PullbackCone.mk l₁' (l₂' ≫ g₄)
         (show l₁' ≫ g₂ ≫ f₃ = (l₂' ≫ g₄) ≫ f₄ by
           rw [pullback.lift_snd_assoc, category.assoc, category.assoc, pullback.condition])) :=
-  by 
+  by
   apply big_square_is_pullback
   exact pullback_is_pullback f₃ f₄
   apply pullback_pullback_right_is_pullback
@@ -2589,7 +2636,8 @@ noncomputable def pullbackAssoc :
 
 @[simp, reassoc.1]
 theorem pullback_assoc_inv_fst_fst :
-    (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫ pullback.fst ≫ pullback.fst = pullback.fst := by
+    (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫ pullback.fst ≫ pullback.fst = pullback.fst :=
+  by
   trans l₁' ≫ pullback.fst
   rw [← category.assoc]
   congr 1
@@ -2607,7 +2655,7 @@ theorem pullback_assoc_hom_fst :
 @[simp, reassoc.1]
 theorem pullback_assoc_hom_snd_fst :
     (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
-  by 
+  by
   trans l₂ ≫ pullback.fst
   rw [← category.assoc]
   congr 1
@@ -2618,7 +2666,8 @@ theorem pullback_assoc_hom_snd_fst :
 
 @[simp, reassoc.1]
 theorem pullback_assoc_hom_snd_snd :
-    (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.snd = pullback.snd := by
+    (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.snd = pullback.snd :=
+  by
   trans l₂ ≫ pullback.snd
   rw [← category.assoc]
   congr 1
@@ -2732,7 +2781,7 @@ local notation "l₂'" =>
 def pushoutPushoutLeftIsPushout [HasPushout (g₃ ≫ f₂) g₄] :
     IsColimit
       (PushoutCocone.mk l₁' l₂' (show f₂ ≫ l₁' = f₃ ≫ l₂' from (pushout.inl_desc _ _ _).symm)) :=
-  by 
+  by
   apply pushout_cocone.flip_is_colimit
   apply right_square_is_pushout
   · apply pushout_cocone.flip_is_colimit
@@ -2750,7 +2799,7 @@ def pushoutAssocIsPushout [HasPushout (g₃ ≫ f₂) g₄] :
       (PushoutCocone.mk (f₁ ≫ l₁') l₂'
         (show g₁ ≫ f₁ ≫ l₁' = (g₂ ≫ f₃) ≫ l₂' by
           rw [category.assoc, pushout.inl_desc, pushout.condition_assoc])) :=
-  by 
+  by
   apply big_square_is_pushout
   · apply pushout_pushout_left_is_pushout
   · exact pushout_is_pushout _ _
@@ -2762,7 +2811,8 @@ theorem has_pushout_assoc [HasPushout (g₃ ≫ f₂) g₄] : HasPushout g₁ (g
 
 /-- `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)` is the pushout `(X₁ ⨿[Z₁] X₂) ×[X₂] (X₂ ⨿[Z₂] X₃)`. -/
 def pushoutPushoutRightIsPushout [HasPushout g₁ (g₂ ≫ f₃)] :
-    IsColimit (PushoutCocone.mk l₁ l₂ (show f₂ ≫ l₁ = f₃ ≫ l₂ from pushout.inr_desc _ _ _)) := by
+    IsColimit (PushoutCocone.mk l₁ l₂ (show f₂ ≫ l₁ = f₃ ≫ l₂ from pushout.inr_desc _ _ _)) :=
+  by
   apply right_square_is_pushout
   · exact pushout_is_pushout _ _
   · convert pushout_is_pushout g₁ (g₂ ≫ f₃)
@@ -2776,7 +2826,7 @@ def pushoutAssocSymmIsPushout [HasPushout g₁ (g₂ ≫ f₃)] :
       (PushoutCocone.mk l₁ (f₄ ≫ l₂)
         (show (g₃ ≫ f₂) ≫ l₁ = g₄ ≫ f₄ ≫ l₂ by
           rw [category.assoc, pushout.inr_desc, pushout.condition_assoc])) :=
-  by 
+  by
   apply pushout_cocone.flip_is_colimit
   apply big_square_is_pushout
   · apply pushout_cocone.flip_is_colimit
@@ -2804,7 +2854,8 @@ noncomputable def pushoutAssoc :
 
 @[simp, reassoc.1]
 theorem inl_inl_pushout_assoc_hom :
-    pushout.inl ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl := by
+    pushout.inl ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl :=
+  by
   trans f₁ ≫ l₁
   · congr 1
     exact
@@ -2816,7 +2867,8 @@ theorem inl_inl_pushout_assoc_hom :
 
 @[simp, reassoc.1]
 theorem inr_inl_pushout_assoc_hom :
-    pushout.inr ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl ≫ pushout.inr := by
+    pushout.inr ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl ≫ pushout.inr :=
+  by
   trans f₂ ≫ l₁
   · congr 1
     exact
@@ -2828,7 +2880,8 @@ theorem inr_inl_pushout_assoc_hom :
 
 @[simp, reassoc.1]
 theorem inr_inr_pushout_assoc_inv :
-    pushout.inr ≫ pushout.inr ≫ (pushoutAssoc g₁ g₂ g₃ g₄).inv = pushout.inr := by
+    pushout.inr ≫ pushout.inr ≫ (pushoutAssoc g₁ g₂ g₃ g₄).inv = pushout.inr :=
+  by
   trans f₄ ≫ l₂'
   · congr 1
     exact
@@ -2903,7 +2956,7 @@ def walkingCospanOpEquiv : walking_cospanᵒᵖ ≌ walking_span :=
 -- see Note [lower instance priority]
 /-- Having wide pullback at any universe level implies having binary pullbacks. -/
 instance (priority := 100) has_pullbacks_of_has_wide_pullbacks [HasWidePullbacks.{w} C] :
-    HasPullbacks C := by 
+    HasPullbacks C := by
   haveI := has_wide_pullbacks_shrink.{0, w} C
   infer_instance
 #align
@@ -2915,11 +2968,9 @@ variable {C}
 pullbacks. This is right adjoint to `over.map` (TODO) -/
 @[simps (config :=
       { rhsMd := semireducible
-        simpRhs := true })
-      obj_left obj_hom mapLeft]
-def baseChange [HasPullbacks C] {X Y : C} (f : X ⟶ Y) :
-    Over Y ⥤ Over
-        X where 
+        simpRhs := true }) obj_left obj_hom mapLeft]
+def baseChange [HasPullbacks C] {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X
+    where
   obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ _)
   map g₁ g₂ i := Over.homMk (pullback.map _ _ _ _ i.left (𝟙 _) (𝟙 _) (by simp) (by simp)) (by simp)
 #align category_theory.limits.base_change CategoryTheory.Limits.baseChange

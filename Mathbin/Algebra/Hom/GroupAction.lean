@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.hom.group_action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,8 +104,8 @@ namespace MulActionHom
 instance : CoeFun (X →[M'] Y) fun _ => X → Y :=
   ⟨MulActionHom.toFun⟩
 
-instance : SmulHomClass (X →[M'] Y) M' X
-      Y where 
+instance : SmulHomClass (X →[M'] Y) M' X Y
+    where
   coe := MulActionHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := MulActionHom.map_smul'
@@ -172,8 +172,8 @@ variable {A B}
 /-- The inverse of a bijective equivariant map is equivariant. -/
 @[simps]
 def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
-    (h₂ : Function.RightInverse g f) :
-    B →[M] A where 
+    (h₂ : Function.RightInverse g f) : B →[M] A
+    where
   toFun := g
   map_smul' m x :=
     calc
@@ -223,9 +223,8 @@ instance hasCoe' : Coe (A →+[M] B) (A →[M] B) :=
 instance : CoeFun (A →+[M] B) fun _ => A → B :=
   ⟨toFun⟩
 
-instance :
-    DistribMulActionHomClass (A →+[M] B) M A
-      B where 
+instance : DistribMulActionHomClass (A →+[M] B) M A B
+    where
   coe := DistribMulActionHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := DistribMulActionHom.map_smul'
@@ -263,14 +262,14 @@ protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x 
 #align distrib_mul_action_hom.congr_fun DistribMulActionHom.congr_fun
 
 theorem to_mul_action_hom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) :
-    f = g := by 
+    f = g := by
   ext a
   exact MulActionHom.congr_fun h a
 #align
   distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.to_mul_action_hom_injective
 
 theorem to_add_monoid_hom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g :=
-  by 
+  by
   ext a
   exact AddMonoidHom.congr_fun h a
 #align
@@ -370,7 +369,8 @@ section Semiring
 variable {R M'} [AddMonoid M'] [DistribMulAction R M']
 
 @[ext]
-theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g := by
+theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g :=
+  by
   ext x
   rw [← mul_one x, ← smul_eq_mul R, f.map_smul, g.map_smul, h]
 #align distrib_mul_action_hom.ext_ring DistribMulActionHom.ext_ring
@@ -422,9 +422,8 @@ instance hasCoe' : Coe (R →+*[M] S) (R →+[M] S) :=
 instance : CoeFun (R →+*[M] S) fun _ => R → S :=
   ⟨fun c => c.toFun⟩
 
-instance :
-    MulSemiringActionHomClass (R →+*[M] S) M R
-      S where 
+instance : MulSemiringActionHomClass (R →+*[M] S) M R S
+    where
   coe := MulSemiringActionHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_smul := MulSemiringActionHom.map_smul'

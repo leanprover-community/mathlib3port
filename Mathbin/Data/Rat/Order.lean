@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,8 @@ but is expected to have type
   forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Iff (Rat.Nonneg (Rat.divInt a b)) (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a))
 Case conversion may be inaccurate. Consider using '#align rat.mk_nonneg Rat.divInt_nonnegₓ'. -/
 @[simp]
-theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a := by
+theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a :=
+  by
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   simp [Rat.Nonneg]
   have d0 := Int.ofNat_lt.2 h₁
@@ -68,7 +69,8 @@ theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 �
 #print Rat.nonneg_add /-
 protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a + b) :=
   (numDenCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenCasesOn' b) fun n₂ d₂ h₂ => by
+    (numDenCasesOn' b) fun n₂ d₂ h₂ =>
+      by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
@@ -80,7 +82,8 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
 #print Rat.nonneg_mul /-
 protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a * b) :=
   (numDenCasesOn' a) fun n₁ d₁ h₁ =>
-    (numDenCasesOn' b) fun n₂ d₂ h₂ => by
+    (numDenCasesOn' b) fun n₂ d₂ h₂ =>
+      by
       have d₁0 : 0 < (d₁ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₁)
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
       simp (config := { contextual := true }) [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0, mul_nonneg]
@@ -89,7 +92,8 @@ protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
 
 #print Rat.nonneg_antisymm /-
 protected theorem nonneg_antisymm {a} : Rat.Nonneg a → Rat.Nonneg (-a) → a = 0 :=
-  (numDenCasesOn' a) fun n d h => by
+  (numDenCasesOn' a) fun n d h =>
+    by
     have d0 : 0 < (d : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h)
     simp [d0, h]
     exact fun h₁ h₂ => le_antisymm h₂ h₁
@@ -162,7 +166,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Rat} {b : Rat}, (LE.le.{0} Rat Rat.instLERat a b) -> (LE.le.{0} Rat Rat.instLERat b a) -> (Eq.{1} Rat a b)
 Case conversion may be inaccurate. Consider using '#align rat.le_antisymm Rat.le_antisymmₓ'. -/
-protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
+protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b :=
+  by
   have := eq_neg_of_add_eq_zero_left (Rat.nonneg_antisymm hba <| by rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_neg] at this
 #align rat.le_antisymm Rat.le_antisymm
@@ -173,12 +178,13 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Rat} {b : Rat} {c : Rat}, (LE.le.{0} Rat Rat.instLERat a b) -> (LE.le.{0} Rat Rat.instLERat b c) -> (LE.le.{0} Rat Rat.instLERat a c)
 Case conversion may be inaccurate. Consider using '#align rat.le_trans Rat.le_transₓ'. -/
-protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c := by
+protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c :=
+  by
   have : Rat.Nonneg (b - a + (c - b)) := Rat.nonneg_add hab hbc
   simpa [sub_eq_add_neg, add_comm, add_left_comm]
 #align rat.le_trans Rat.le_trans
 
-instance : LinearOrder ℚ where 
+instance : LinearOrder ℚ where
   le := Rat.le'
   le_refl := Rat.le_refl
   le_trans := @Rat.le_trans
@@ -208,20 +214,23 @@ instance : Preorder ℚ := by infer_instance
 
 /- warning: rat.le_def' -> Rat.le_def' is a dubious translation:
 lean 3 declaration is
-  forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.hasLe p q) (LE.le.{0} Int Int.hasLe (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Rat.den p))))
+  forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.hasLe p q) (LE.le.{0} Int Int.hasLe (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den p))))
 but is expected to have type
   forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.instLERat p q) (LE.le.{0} Int Int.instLEInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num p) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den p))))
 Case conversion may be inaccurate. Consider using '#align rat.le_def' Rat.le_def'ₓ'. -/
-protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.denom ≤ q.num * p.denom := by
+protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.denom ≤ q.num * p.denom :=
+  by
   rw [← @num_denom q, ← @num_denom p]
   conv_rhs => simp only [num_denom]
   exact Rat.le_def (by exact_mod_cast p.pos) (by exact_mod_cast q.pos)
 #align rat.le_def' Rat.le_def'
 
 #print Rat.lt_def /-
-protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.denom < q.num * p.denom := by
+protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.denom < q.num * p.denom :=
+  by
   rw [lt_iff_le_and_ne, Rat.le_def']
-  suffices p ≠ q ↔ p.num * q.denom ≠ q.num * p.denom by
+  suffices p ≠ q ↔ p.num * q.denom ≠ q.num * p.denom
+    by
     constructor <;> intro h
     · exact lt_iff_le_and_ne.elim_right ⟨h.left, this.elim_left h.right⟩
     · have tmp := lt_iff_le_and_ne.elim_left h
@@ -271,7 +280,8 @@ protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a
 #align rat.mul_nonneg Rat.mul_nonneg
 
 instance : LinearOrderedField ℚ :=
-  { Rat.field, Rat.linearOrder, Rat.semiring with
+  { Rat.field, Rat.linearOrder,
+    Rat.semiring with
     zero_le_one := by decide
     add_le_add_left := fun a b ab c => Rat.add_le_add_left.2 ab
     mul_pos := fun a b ha hb =>
@@ -306,7 +316,8 @@ theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
 
 #print Rat.div_lt_div_iff_mul_lt_mul /-
 theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) :
-    (a : ℚ) / b < c / d ↔ a * d < c * b := by
+    (a : ℚ) / b < c / d ↔ a * d < c * b :=
+  by
   simp only [lt_iff_le_not_le]
   apply and_congr
   · simp [div_num_denom, Rat.le_def b_pos d_pos]
@@ -322,11 +333,12 @@ theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by simp
 
 /- warning: rat.abs_def -> Rat.abs_def is a dubious translation:
 lean 3 declaration is
-  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) q) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Int.natAbs (Rat.num q))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Rat.den q)))
+  forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.hasNeg Rat.hasSup) q) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs (Rat.num q))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q)))
 but is expected to have type
   forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat) q) (Rat.divInt (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs (Rat.num q))) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)))
 Case conversion may be inaccurate. Consider using '#align rat.abs_def Rat.abs_defₓ'. -/
-theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom := by
+theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom :=
+  by
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
     rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one,

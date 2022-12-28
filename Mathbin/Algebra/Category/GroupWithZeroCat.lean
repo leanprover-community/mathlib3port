@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.category.GroupWithZero
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,8 +43,8 @@ def of (α : Type _) [GroupWithZero α] : GroupWithZeroCat :=
 instance : Inhabited GroupWithZeroCat :=
   ⟨of (WithZero PUnit)⟩
 
-instance : LargeCategory.{u}
-      GroupWithZeroCat where 
+instance : LargeCategory.{u} GroupWithZeroCat
+    where
   Hom X Y := MonoidWithZeroHom X Y
   id X := MonoidWithZeroHom.id X
   comp X Y Z f g := g.comp f
@@ -52,36 +52,33 @@ instance : LargeCategory.{u}
   comp_id' X Y := MonoidWithZeroHom.id_comp
   assoc' W X Y Z _ _ _ := MonoidWithZeroHom.comp_assoc _ _ _
 
-instance :
-    ConcreteCategory
-      GroupWithZeroCat where 
+instance : ConcreteCategory GroupWithZeroCat
+    where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y f g h => FunLike.coe_injective h⟩
 
-instance hasForgetToBipointed :
-    HasForget₂ GroupWithZeroCat
-      BipointedCat where forget₂ :=
+instance hasForgetToBipointed : HasForget₂ GroupWithZeroCat BipointedCat
+    where forget₂ :=
     { obj := fun X => ⟨X, 0, 1⟩
       map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
 #align GroupWithZero.has_forget_to_Bipointed GroupWithZeroCat.hasForgetToBipointed
 
-instance hasForgetToMon :
-    HasForget₂ GroupWithZeroCat
-      MonCat where forget₂ :=
+instance hasForgetToMon : HasForget₂ GroupWithZeroCat MonCat
+    where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => MonoidWithZeroHom.toMonoidHom }
 #align GroupWithZero.has_forget_to_Mon GroupWithZeroCat.hasForgetToMon
 
 /-- Constructs an isomorphism of groups with zero from a group isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : GroupWithZeroCat.{u}} (e : α ≃* β) :
-    α ≅ β where 
+def Iso.mk {α β : GroupWithZeroCat.{u}} (e : α ≃* β) : α ≅ β
+    where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
 #align GroupWithZero.iso.mk GroupWithZeroCat.Iso.mk

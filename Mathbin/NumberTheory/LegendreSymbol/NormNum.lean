@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.norm_num
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,13 +104,15 @@ theorem JacobiSym.mod_left (a : ℤ) (b ab' : ℕ) (ab r b' : ℤ) (hb' : (b : �
 #align norm_num.jacobi_sym.mod_left NormNum.JacobiSym.mod_left
 
 theorem jacobiSymNat.mod_left (a b ab : ℕ) (r : ℤ) (hab : a % b = ab) (hr : jacobiSymNat ab b = r) :
-    jacobiSymNat a b = r := by
+    jacobiSymNat a b = r :=
+  by
   rw [← hr, jacobi_sym_nat, jacobi_sym_nat, _root_.jacobi_sym.mod_left a b, ← hab]
   rfl
 #align norm_num.jacobi_sym_nat.mod_left NormNum.jacobiSymNat.mod_left
 
 /-- The symbol vanishes when both entries are even (and `b ≠ 0`). -/
-theorem jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0) : jacobiSymNat (bit0 a) (bit0 b) = 0 := by
+theorem jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0) : jacobiSymNat (bit0 a) (bit0 b) = 0 :=
+  by
   refine' jacobi_sym.eq_zero_iff.mpr ⟨Nat.bit0_ne_zero hb₀, fun hf => _⟩
   have h : 2 ∣ (bit0 a).gcd (bit0 b) := Nat.dvd_gcd two_dvd_bit0 two_dvd_bit0
   change 2 ∣ (bit0 a : ℤ).gcd (bit0 b) at h
@@ -120,7 +122,8 @@ theorem jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0) : jacobiSymNat (bit
 
 /-- When `a` is odd and `b` is even, we can replace `b` by `b / 2`. -/
 theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) b = r) :
-    jacobiSymNat (bit1 a) (bit0 b) = r := by
+    jacobiSymNat (bit1 a) (bit0 b) = r :=
+  by
   have ha : legendreSym 2 (bit1 a) = 1 := by
     simp only [legendreSym, quadratic_char_apply, quadratic_char_fun_one, Int.cast_bit1,
       CharTwo.bit1_eq_one, Pi.one_apply]
@@ -134,7 +137,8 @@ theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) 
 
 /-- If `a` is divisible by `4` and `b` is odd, then we can remove the factor `4` from `a`. -/
 theorem jacobiSymNat.double_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 b) = r) :
-    jacobiSymNat (bit0 (bit0 a)) (bit1 b) = r := by
+    jacobiSymNat (bit0 (bit0 a)) (bit1 b) = r :=
+  by
   have : ((2 : ℕ) : ℤ).gcd (bit1 b : ℕ) = 1 := by
     rw [Int.coe_nat_gcd, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul b, Nat.succ_eq_add_one,
       Nat.gcd_mul_left_add_right, Nat.gcd_one_right]
@@ -146,7 +150,8 @@ theorem jacobiSymNat.double_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 but we may have to change the sign, depending on `b % 8`.
 We give one version for each of the four odd residue classes mod `8`. -/
 theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit0 (bit0 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit0 (bit0 b))) = r := by
+    jacobiSymNat (bit0 a) (bit1 (bit0 (bit0 b))) = r :=
+  by
   have hb : bit1 (bit0 (bit0 b)) % 8 = 1 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit0_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
@@ -156,7 +161,8 @@ theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 #align norm_num.jacobi_sym_nat.even_odd₁ NormNum.jacobiSymNat.even_odd₁
 
 theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit1 (bit1 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit1 (bit1 b))) = r := by
+    jacobiSymNat (bit0 a) (bit1 (bit1 (bit1 b))) = r :=
+  by
   have hb : bit1 (bit1 (bit1 b)) % 8 = 7 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit1_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
@@ -166,7 +172,8 @@ theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 #align norm_num.jacobi_sym_nat.even_odd₇ NormNum.jacobiSymNat.even_odd₇
 
 theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit1 (bit0 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit1 (bit0 b))) = -r := by
+    jacobiSymNat (bit0 a) (bit1 (bit1 (bit0 b))) = -r :=
+  by
   have hb : bit1 (bit1 (bit0 b)) % 8 = 3 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
@@ -176,7 +183,8 @@ theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 #align norm_num.jacobi_sym_nat.even_odd₃ NormNum.jacobiSymNat.even_odd₃
 
 theorem jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit0 (bit1 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit0 (bit1 b))) = -r := by
+    jacobiSymNat (bit0 a) (bit1 (bit0 (bit1 b))) = -r :=
+  by
   have hb : bit1 (bit0 (bit1 b)) % 8 = 5 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit1_mod_two]
   rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
@@ -187,7 +195,8 @@ theorem jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
 
 /-- Use quadratic reciproity to reduce to smaller `b`. -/
 theorem jacobiSymNat.qr₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 b) (bit1 (bit0 a)) = r) :
-    jacobiSymNat (bit1 (bit0 a)) (bit1 b) = r := by
+    jacobiSymNat (bit1 (bit0 a)) (bit1 b) = r :=
+  by
   have ha : bit1 (bit0 a) % 4 = 1 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   have hb := Nat.bit1_mod_two
   rwa [jacobi_sym_nat, jacobiSym.quadratic_reciprocity_one_mod_four ha (nat.odd_iff.mpr hb)]
@@ -199,7 +208,8 @@ theorem jacobiSymNat.qr₁_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 b % bit1 (bi
 #align norm_num.jacobi_sym_nat.qr₁_mod NormNum.jacobiSymNat.qr₁_mod
 
 theorem jacobiSymNat.qr₁' (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit0 b)) (bit1 a) = r) :
-    jacobiSymNat (bit1 a) (bit1 (bit0 b)) = r := by
+    jacobiSymNat (bit1 a) (bit1 (bit0 b)) = r :=
+  by
   have hb : bit1 (bit0 b) % 4 = 1 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   have ha := Nat.bit1_mod_two
   rwa [jacobi_sym_nat, ← jacobiSym.quadratic_reciprocity_one_mod_four hb (nat.odd_iff.mpr ha)]
@@ -211,7 +221,8 @@ theorem jacobiSymNat.qr₁'_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 (bit0 b) % 
 #align norm_num.jacobi_sym_nat.qr₁'_mod NormNum.jacobiSymNat.qr₁'_mod
 
 theorem jacobiSymNat.qr₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit1 b)) (bit1 (bit1 a)) = r) :
-    jacobiSymNat (bit1 (bit1 a)) (bit1 (bit1 b)) = -r := by
+    jacobiSymNat (bit1 (bit1 a)) (bit1 (bit1 b)) = -r :=
+  by
   have hb : bit1 (bit1 b) % 4 = 3 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_two]
   have ha : bit1 (bit1 a) % 4 = 3 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_two]
   rwa [jacobi_sym_nat, jacobiSym.quadratic_reciprocity_three_mod_four ha hb, neg_inj]

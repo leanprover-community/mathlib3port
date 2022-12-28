@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ theorem sup_univ_eq_supr [CompleteLattice β] (f : α → β) : Finset.univ.sup 
 #align finset.sup_univ_eq_supr Finset.sup_univ_eq_supr
 
 /-- A special case of `finset.inf_eq_infi` that omits the useless `x ∈ univ` binder. -/
-theorem inf_univ_eq_infi [CompleteLattice β] (f : α → β) : Finset.univ.inf f = infi f :=
+theorem inf_univ_eq_infi [CompleteLattice β] (f : α → β) : Finset.univ.inf f = infᵢ f :=
   sup_univ_eq_supr (f : α → βᵒᵈ)
 #align finset.inf_univ_eq_infi Finset.inf_univ_eq_infi
 
@@ -56,13 +56,13 @@ end Finset
 open Finset Function
 
 theorem Finite.exists_max [Finite α] [Nonempty α] [LinearOrder β] (f : α → β) :
-    ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by 
+    ∃ x₀ : α, ∀ x, f x ≤ f x₀ := by
   cases nonempty_fintype α
   simpa using exists_max_image univ f univ_nonempty
 #align finite.exists_max Finite.exists_max
 
 theorem Finite.exists_min [Finite α] [Nonempty α] [LinearOrder β] (f : α → β) :
-    ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by 
+    ∃ x₀ : α, ∀ x, f x₀ ≤ f x := by
   cases nonempty_fintype α
   simpa using exists_min_image univ f univ_nonempty
 #align finite.exists_min Finite.exists_min

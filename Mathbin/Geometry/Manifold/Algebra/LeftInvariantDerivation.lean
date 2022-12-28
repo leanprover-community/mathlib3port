@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.left_invariant_derivation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,8 @@ theorem to_derivation_eq_coe : X.toDerivation = X :=
 #align left_invariant_derivation.to_derivation_eq_coe LeftInvariantDerivation.to_derivation_eq_coe
 
 theorem coe_injective :
-    @Function.Injective (LeftInvariantDerivation I G) (_ → C^⊤⟮I, G; 𝕜⟯) coeFn := fun X Y h => by
+    @Function.Injective (LeftInvariantDerivation I G) (_ → C^⊤⟮I, G; 𝕜⟯) coeFn := fun X Y h =>
+  by
   cases X
   cases Y
   congr
@@ -99,7 +100,7 @@ theorem coe_derivation :
 theorem coe_derivation_injective :
     Function.Injective
       (coe : LeftInvariantDerivation I G → Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) :=
-  fun X Y h => by 
+  fun X Y h => by
   cases X
   cases Y
   congr
@@ -149,17 +150,15 @@ instance : Zero (LeftInvariantDerivation I G) :=
 instance : Inhabited (LeftInvariantDerivation I G) :=
   ⟨0⟩
 
-instance :
-    Add
-      (LeftInvariantDerivation I
-        G) where add X Y :=
+instance : Add (LeftInvariantDerivation I G)
+    where add X Y :=
     ⟨X + Y, fun g => by
       simp only [LinearMap.map_add, Derivation.coe_add, left_invariant', Pi.add_apply]⟩
 
 instance : Neg (LeftInvariantDerivation I G) where neg X := ⟨-X, fun g => by simp [left_invariant']⟩
 
-instance :
-    Sub (LeftInvariantDerivation I G) where sub X Y := ⟨X - Y, fun g => by simp [left_invariant']⟩
+instance : Sub (LeftInvariantDerivation I G)
+    where sub X Y := ⟨X - Y, fun g => by simp [left_invariant']⟩
 
 @[simp]
 theorem coe_add : ⇑(X + Y) = X + Y :=
@@ -192,27 +191,19 @@ theorem lift_zero :
   rfl
 #align left_invariant_derivation.lift_zero LeftInvariantDerivation.lift_zero
 
-instance hasNatScalar :
-    HasSmul ℕ
-      (LeftInvariantDerivation I
-        G) where smul r X :=
-    ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
+instance hasNatScalar : HasSmul ℕ (LeftInvariantDerivation I G)
+    where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 #align left_invariant_derivation.has_nat_scalar LeftInvariantDerivation.hasNatScalar
 
-instance hasIntScalar :
-    HasSmul ℤ
-      (LeftInvariantDerivation I
-        G) where smul r X :=
-    ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
+instance hasIntScalar : HasSmul ℤ (LeftInvariantDerivation I G)
+    where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 #align left_invariant_derivation.has_int_scalar LeftInvariantDerivation.hasIntScalar
 
 instance : AddCommGroup (LeftInvariantDerivation I G) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
-instance :
-    HasSmul 𝕜
-      (LeftInvariantDerivation I
-        G) where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul, left_invariant']⟩
+instance : HasSmul 𝕜 (LeftInvariantDerivation I G)
+    where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul, left_invariant']⟩
 
 variable (r X)
 
@@ -241,9 +232,8 @@ instance : Module 𝕜 (LeftInvariantDerivation I G) :=
 
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
-def evalAt :
-    LeftInvariantDerivation I G →ₗ[𝕜]
-      PointDerivation I g where 
+def evalAt : LeftInvariantDerivation I G →ₗ[𝕜] PointDerivation I g
+    where
   toFun X := Derivation.evalAt g ↑X
   map_add' X Y := rfl
   map_smul' k X := rfl
@@ -262,7 +252,8 @@ theorem left_invariant : 𝒅ₕ (smooth_left_mul_one I g) (evalAt (1 : G) X) = 
   X.left_invariant'' g
 #align left_invariant_derivation.left_invariant LeftInvariantDerivation.left_invariant
 
-theorem eval_at_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) := by
+theorem eval_at_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) :=
+  by
   ext f
   rw [← left_invariant, apply_hfdifferential, apply_hfdifferential, L_mul, fdifferential_comp,
     apply_fdifferential, LinearMap.comp_apply, apply_fdifferential, ← apply_hfdifferential,
@@ -275,11 +266,10 @@ theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) := by
       apply_fdifferential, eval_at_apply]
 #align left_invariant_derivation.comp_L LeftInvariantDerivation.comp_L
 
-instance :
-    Bracket (LeftInvariantDerivation I G)
-      (LeftInvariantDerivation I
-        G) where bracket X Y :=
-    ⟨⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯), Y⁆, fun g => by
+instance : Bracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G)
+    where bracket X Y :=
+    ⟨⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯), Y⁆, fun g =>
+      by
       ext f
       have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
       have hY := Derivation.congr_fun (left_invariant' g Y) (X f)
@@ -303,33 +293,29 @@ theorem commutator_apply : ⁅X, Y⁆ f = X (Y f) - Y (X f) :=
   rfl
 #align left_invariant_derivation.commutator_apply LeftInvariantDerivation.commutator_apply
 
-instance :
-    LieRing
-      (LeftInvariantDerivation I
-        G) where 
-  add_lie X Y Z := by 
+instance : LieRing (LeftInvariantDerivation I G)
+    where
+  add_lie X Y Z := by
     ext1
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add,
       LeftInvariantDerivation.map_add]
     ring
-  lie_add X Y Z := by 
+  lie_add X Y Z := by
     ext1
     simp only [commutator_apply, coe_add, Pi.add_apply, LinearMap.map_add,
       LeftInvariantDerivation.map_add]
     ring
-  lie_self X := by 
+  lie_self X := by
     ext1
     simp only [commutator_apply, sub_self]
     rfl
-  leibniz_lie X Y Z := by 
+  leibniz_lie X Y Z := by
     ext1
     simp only [commutator_apply, coe_add, coe_sub, map_sub, Pi.add_apply]
     ring
 
-instance :
-    LieAlgebra 𝕜
-      (LeftInvariantDerivation I
-        G) where lie_smul r Y Z := by 
+instance : LieAlgebra 𝕜 (LeftInvariantDerivation I G)
+    where lie_smul r Y Z := by
     ext1
     simp only [commutator_apply, map_smul, smul_sub, coe_smul, Pi.smul_apply]
 

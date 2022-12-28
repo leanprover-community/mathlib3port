@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.partition
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,18 +86,20 @@ def partOfVertex (v : V) : Set V :=
   Classical.choose (P.IsPartition.2 v)
 #align simple_graph.partition.part_of_vertex SimpleGraph.Partition.partOfVertex
 
-theorem part_of_vertex_mem (v : V) : P.partOfVertex v ∈ P.parts := by
+theorem part_of_vertex_mem (v : V) : P.partOfVertex v ∈ P.parts :=
+  by
   obtain ⟨h, -⟩ := (P.is_partition.2 v).some_spec.1
   exact h
 #align simple_graph.partition.part_of_vertex_mem SimpleGraph.Partition.part_of_vertex_mem
 
-theorem mem_part_of_vertex (v : V) : v ∈ P.partOfVertex v := by
+theorem mem_part_of_vertex (v : V) : v ∈ P.partOfVertex v :=
+  by
   obtain ⟨⟨h1, h2⟩, h3⟩ := (P.is_partition.2 v).some_spec
   exact h2.1
 #align simple_graph.partition.mem_part_of_vertex SimpleGraph.Partition.mem_part_of_vertex
 
 theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v ≠ P.partOfVertex w :=
-  by 
+  by
   intro hn
   have hw := P.mem_part_of_vertex w
   rw [← hn] at hw
@@ -108,7 +110,8 @@ theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v �
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
 def toColoring : G.Coloring P.parts :=
-  (Coloring.mk fun v => ⟨P.partOfVertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw => by
+  (Coloring.mk fun v => ⟨P.partOfVertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw =>
+    by
     rw [Ne.def, Subtype.mk_eq_mk]
     exact P.part_of_vertex_ne_of_adj hvw
 #align simple_graph.partition.to_coloring SimpleGraph.Partition.toColoring
@@ -128,11 +131,11 @@ variable {G}
 
 /-- Creates a partition from a coloring. -/
 @[simps]
-def Coloring.toPartition {α : Type v} (C : G.Coloring α) :
-    G.partition where 
+def Coloring.toPartition {α : Type v} (C : G.Coloring α) : G.partition
+    where
   parts := C.colorClasses
   IsPartition := C.color_classes_is_partition
-  Independent := by 
+  Independent := by
     rintro s ⟨c, rfl⟩
     apply C.color_classes_independent
 #align simple_graph.coloring.to_partition SimpleGraph.Coloring.toPartition
@@ -142,7 +145,8 @@ def Coloring.toPartition {α : Type v} (C : G.Coloring α) :
 instance : Inhabited (Partition G) :=
   ⟨G.selfColoring.toPartition⟩
 
-theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorable n := by
+theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorable n :=
+  by
   constructor
   · rintro ⟨P, hf, h⟩
     haveI : Fintype P.parts := hf.fintype

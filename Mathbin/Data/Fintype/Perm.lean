@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.perm
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,14 +40,14 @@ def permsOfList : List α → List (Perm α)
 
 theorem length_perms_of_list : ∀ l : List α, length (permsOfList l) = l.length !
   | [] => rfl
-  | a :: l => by 
+  | a :: l => by
     rw [length_cons, Nat.factorial_succ]
     simp [permsOfList, length_bind, length_perms_of_list, Function.comp, Nat.succ_mul]
     cc
 #align length_perms_of_list length_perms_of_list
 
 theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠ x → x ∈ l) :
-    f ∈ permsOfList l := by 
+    f ∈ permsOfList l := by
   induction' l with a l IH generalizing f h
   · exact List.mem_singleton.2 (Equiv.ext fun x => Decidable.by_contradiction <| h _)
   by_cases hfa : f a = a
@@ -55,9 +55,10 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
     rintro rfl
     exact hx hfa
   have hfa' : f (f a) ≠ f a := mt (fun h => f.injective h) hfa
-  have : ∀ x : α, (swap a (f a) * f) x ≠ x → x ∈ l := by
+  have : ∀ x : α, (swap a (f a) * f) x ≠ x → x ∈ l :=
+    by
     intro x hx
-    have hxa : x ≠ a := by 
+    have hxa : x ≠ a := by
       rintro rfl
       apply hx
       simp only [mul_apply, swap_apply_right]
@@ -74,7 +75,7 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
 
 theorem mem_of_mem_perms_of_list :
     ∀ {l : List α} {f : Perm α}, f ∈ permsOfList l → ∀ {x}, f x ≠ x → x ∈ l
-  | [], f, h => by 
+  | [], f, h => by
     have : f = 1 := by simpa [permsOfList] using h
     rw [this] <;> simp
   | a :: l, f, h =>
@@ -100,7 +101,7 @@ theorem mem_perms_of_list_iff {l : List α} {f : Perm α} :
 
 theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).Nodup
   | [], hl => by simp [permsOfList]
-  | a :: l, hl => by 
+  | a :: l, hl => by
     have hl' : l.Nodup := hl.of_cons
     have hln' : (permsOfList l).Nodup := nodup_perms_of_list hl'
     have hmeml : ∀ {f : Perm α}, f ∈ permsOfList l → f a = a := fun f hf =>

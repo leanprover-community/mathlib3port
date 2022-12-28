@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.opposites
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,14 +93,16 @@ theorem op_ring_equiv_symm_C_mul_X_pow (r : Rᵐᵒᵖ) (n : ℕ) :
 
 @[simp]
 theorem coeff_op_ring_equiv (p : R[X]ᵐᵒᵖ) (n : ℕ) :
-    (opRingEquiv R p).coeff n = op ((unop p).coeff n) := by
+    (opRingEquiv R p).coeff n = op ((unop p).coeff n) :=
+  by
   induction p using MulOpposite.rec'
   cases p
   rfl
 #align polynomial.coeff_op_ring_equiv Polynomial.coeff_op_ring_equiv
 
 @[simp]
-theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = (unop p).support := by
+theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = (unop p).support :=
+  by
   induction p using MulOpposite.rec'
   cases p
   exact Finsupp.support_map_range_of_injective _ _ op_injective
@@ -108,7 +110,7 @@ theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = 
 
 @[simp]
 theorem nat_degree_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).natDegree = (unop p).natDegree :=
-  by 
+  by
   by_cases p0 : p = 0
   · simp only [p0, _root_.map_zero, nat_degree_zero, unop_zero]
   ·

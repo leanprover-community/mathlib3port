@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.rat.denumerable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,12 +24,8 @@ open Denumerable
 instance : Infinite ℚ :=
   Infinite.of_injective (coe : ℕ → ℚ) Nat.cast_injective
 
-private def denumerable_aux :
-    ℚ ≃
-      { x : ℤ × ℕ //
-        0 < x.2 ∧
-          x.1.natAbs.Coprime
-            x.2 } where 
+private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 }
+    where
   toFun x := ⟨⟨x.1, x.2⟩, x.3, x.4⟩
   invFun x := ⟨x.1.1, x.1.2, x.2.1, x.2.2⟩
   left_inv := fun ⟨_, _, _, _⟩ => rfl
@@ -37,7 +33,8 @@ private def denumerable_aux :
 #align rat.denumerable_aux rat.denumerable_aux
 
 /-- **Denumerability of the Rational Numbers** -/
-instance : Denumerable ℚ := by
+instance : Denumerable ℚ :=
+  by
   let T := { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 }
   letI : Infinite T := Infinite.of_injective _ denumerable_aux.injective
   letI : Encodable T := Subtype.encodable

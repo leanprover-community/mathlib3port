@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime_norm_num
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,11 +25,11 @@ namespace Tactic
 namespace NormNum
 
 theorem is_prime_helper (n : ℕ) (h₁ : 1 < n) (h₂ : Nat.minFac n = n) : Nat.Prime n :=
-  Nat.prime_def_min_fac.2 ⟨h₁, h₂⟩
+  Nat.prime_def_minFac.2 ⟨h₁, h₂⟩
 #align tactic.norm_num.is_prime_helper Tactic.NormNum.is_prime_helper
 
 theorem min_fac_bit0 (n : ℕ) : Nat.minFac (bit0 n) = 2 := by
-  simp [Nat.min_fac_eq, show 2 ∣ bit0 n by simp [bit0_eq_two_mul n]]
+  simp [Nat.minFac_eq, show 2 ∣ bit0 n by simp [bit0_eq_two_mul n]]
 #align tactic.norm_num.min_fac_bit0 Tactic.NormNum.min_fac_bit0
 
 /-- A predicate representing partial progress in a proof of `min_fac`. -/
@@ -41,22 +41,25 @@ theorem MinFacHelper.n_pos {n k : ℕ} (h : MinFacHelper n k) : 0 < n :=
   pos_iff_ne_zero.2 fun e => by rw [e] at h <;> exact not_le_of_lt (Nat.bit1_lt h.1) h.2
 #align tactic.norm_num.min_fac_helper.n_pos Tactic.NormNum.MinFacHelper.n_pos
 
-theorem min_fac_ne_bit0 {n k : ℕ} : Nat.minFac (bit1 n) ≠ bit0 k := by
+theorem min_fac_ne_bit0 {n k : ℕ} : Nat.minFac (bit1 n) ≠ bit0 k :=
+  by
   rw [bit0_eq_two_mul]
-  refine' fun e => absurd ((Nat.dvd_add_iff_right _).2 (dvd_trans ⟨_, e⟩ (Nat.min_fac_dvd _))) _ <;>
+  refine' fun e => absurd ((Nat.dvd_add_iff_right _).2 (dvd_trans ⟨_, e⟩ (Nat.minFac_dvd _))) _ <;>
     simp
 #align tactic.norm_num.min_fac_ne_bit0 Tactic.NormNum.min_fac_ne_bit0
 
-theorem min_fac_helper_0 (n : ℕ) (h : 0 < n) : MinFacHelper n 1 := by
+theorem min_fac_helper_0 (n : ℕ) (h : 0 < n) : MinFacHelper n 1 :=
+  by
   refine' ⟨zero_lt_one, lt_of_le_of_ne _ min_fac_ne_bit0.symm⟩
   rw [Nat.succ_le_iff]
   refine' lt_of_le_of_ne (Nat.min_fac_pos _) fun e => Nat.not_prime_one _
   rw [e]
-  exact Nat.min_fac_prime (Nat.bit1_lt h).ne'
+  exact Nat.minFac_prime (Nat.bit1_lt h).ne'
 #align tactic.norm_num.min_fac_helper_0 Tactic.NormNum.min_fac_helper_0
 
 theorem min_fac_helper_1 {n k k' : ℕ} (e : k + 1 = k') (np : Nat.minFac (bit1 n) ≠ bit1 k)
-    (h : MinFacHelper n k) : MinFacHelper n k' := by
+    (h : MinFacHelper n k) : MinFacHelper n k' :=
+  by
   rw [← e]
   refine'
     ⟨Nat.succ_pos _,
@@ -68,32 +71,36 @@ theorem min_fac_helper_1 {n k k' : ℕ} (e : k + 1 = k') (np : Nat.minFac (bit1 
 #align tactic.norm_num.min_fac_helper_1 Tactic.NormNum.min_fac_helper_1
 
 theorem min_fac_helper_2 (n k k' : ℕ) (e : k + 1 = k') (np : ¬Nat.Prime (bit1 k))
-    (h : MinFacHelper n k) : MinFacHelper n k' := by
+    (h : MinFacHelper n k) : MinFacHelper n k' :=
+  by
   refine' min_fac_helper_1 e _ h
   intro e₁; rw [← e₁] at np
-  exact np (Nat.min_fac_prime <| ne_of_gt <| Nat.bit1_lt h.n_pos)
+  exact np (Nat.minFac_prime <| ne_of_gt <| Nat.bit1_lt h.n_pos)
 #align tactic.norm_num.min_fac_helper_2 Tactic.NormNum.min_fac_helper_2
 
 theorem min_fac_helper_3 (n k k' c : ℕ) (e : k + 1 = k') (nc : bit1 n % bit1 k = c) (c0 : 0 < c)
-    (h : MinFacHelper n k) : MinFacHelper n k' := by
+    (h : MinFacHelper n k) : MinFacHelper n k' :=
+  by
   refine' min_fac_helper_1 e _ h
   refine' mt _ (ne_of_gt c0); intro e₁
   rw [← nc, ← Nat.dvd_iff_mod_eq_zero, ← e₁]
-  apply Nat.min_fac_dvd
+  apply Nat.minFac_dvd
 #align tactic.norm_num.min_fac_helper_3 Tactic.NormNum.min_fac_helper_3
 
 theorem min_fac_helper_4 (n k : ℕ) (hd : bit1 n % bit1 k = 0) (h : MinFacHelper n k) :
-    Nat.minFac (bit1 n) = bit1 k := by
+    Nat.minFac (bit1 n) = bit1 k :=
+  by
   rw [← Nat.dvd_iff_mod_eq_zero] at hd
-  exact le_antisymm (Nat.min_fac_le_of_dvd (Nat.bit1_lt h.1) hd) h.2
+  exact le_antisymm (Nat.minFac_le_of_dvd (Nat.bit1_lt h.1) hd) h.2
 #align tactic.norm_num.min_fac_helper_4 Tactic.NormNum.min_fac_helper_4
 
 theorem min_fac_helper_5 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1 n < k')
-    (h : MinFacHelper n k) : Nat.minFac (bit1 n) = bit1 n := by
-  refine' (Nat.prime_def_min_fac.1 (Nat.prime_def_le_sqrt.2 ⟨Nat.bit1_lt h.n_pos, _⟩)).2
+    (h : MinFacHelper n k) : Nat.minFac (bit1 n) = bit1 n :=
+  by
+  refine' (Nat.prime_def_minFac.1 (Nat.prime_def_le_sqrt.2 ⟨Nat.bit1_lt h.n_pos, _⟩)).2
   rw [← e] at hd
   intro m m2 hm md
-  have := le_trans h.2 (le_trans (Nat.min_fac_le_of_dvd m2 md) hm)
+  have := le_trans h.2 (le_trans (Nat.minFac_le_of_dvd m2 md) hm)
   rw [Nat.le_sqrt] at this
   exact not_le_of_lt hd this
 #align tactic.norm_num.min_fac_helper_5 Tactic.NormNum.min_fac_helper_5
@@ -148,8 +155,8 @@ unsafe def prove_min_fac_aux (a a1 : expr) (n1 : ℕ) :
 /-- Given `a` a natural numeral, returns `(b, ⊢ min_fac a = b)`. -/
 unsafe def prove_min_fac (ic : instance_cache) (e : expr) : tactic (instance_cache × expr × expr) :=
   match match_numeral e with
-  | match_numeral_result.zero => return (ic, q((2 : ℕ)), q(Nat.min_fac_zero))
-  | match_numeral_result.one => return (ic, q((1 : ℕ)), q(Nat.min_fac_one))
+  | match_numeral_result.zero => return (ic, q((2 : ℕ)), q(Nat.minFac_zero))
+  | match_numeral_result.one => return (ic, q((1 : ℕ)), q(Nat.minFac_one))
   | match_numeral_result.bit0 e => return (ic, q(2), q(min_fac_bit0).mk_app [e])
   | match_numeral_result.bit1 e => do
     let n ← e.toNat
@@ -172,7 +179,7 @@ theorem factors_helper_nil (a : ℕ) : FactorsHelper 1 a [] := fun pa =>
 
 theorem factors_helper_cons' (n m a b : ℕ) (l : List ℕ) (h₁ : b * m = n) (h₂ : a ≤ b)
     (h₃ : Nat.minFac b = b) (H : FactorsHelper m b l) : FactorsHelper n a (b :: l) := fun pa =>
-  have pb : b.Prime := Nat.prime_def_min_fac.2 ⟨le_trans pa.two_le h₂, h₃⟩
+  have pb : b.Prime := Nat.prime_def_minFac.2 ⟨le_trans pa.two_le h₂, h₃⟩
   let ⟨f₁, f₂, f₃⟩ := H pb
   ⟨List.Chain.cons h₂ f₁, fun c h => h.elim (fun e => e.symm ▸ pb) (f₂ _), by
     rw [List.prod_cons, f₃, h₁]⟩
@@ -189,7 +196,7 @@ theorem factors_helper_sn (n a : ℕ) (h₁ : a < n) (h₂ : Nat.minFac n = n) :
 
 theorem factors_helper_same (n m a : ℕ) (l : List ℕ) (h : a * m = n) (H : FactorsHelper m a l) :
     FactorsHelper n a (a :: l) := fun pa =>
-  factors_helper_cons' _ _ _ _ _ h le_rfl (Nat.prime_def_min_fac.1 pa).2 H pa
+  factors_helper_cons' _ _ _ _ _ h le_rfl (Nat.prime_def_minFac.1 pa).2 H pa
 #align tactic.norm_num.factors_helper_same Tactic.NormNum.factors_helper_same
 
 theorem factors_helper_same_sn (a : ℕ) : FactorsHelper a a [a] :=

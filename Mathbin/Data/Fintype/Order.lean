@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Peter Nelson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.fintype.order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,8 +60,8 @@ variable (α) [Nonempty α]
 -- See note [reducible non-instances]
 /-- Constructs the `⊥` of a finite nonempty `semilattice_inf`. -/
 @[reducible]
-def toOrderBot [SemilatticeInf α] :
-    OrderBot α where 
+def toOrderBot [SemilatticeInf α] : OrderBot α
+    where
   bot := univ.inf' univ_nonempty id
   bot_le a := inf'_le _ <| mem_univ a
 #align fintype.to_order_bot Fintype.toOrderBot
@@ -69,8 +69,8 @@ def toOrderBot [SemilatticeInf α] :
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
 @[reducible]
-def toOrderTop [SemilatticeSup α] :
-    OrderTop α where 
+def toOrderTop [SemilatticeSup α] : OrderTop α
+    where
   top := univ.sup' univ_nonempty id
   le_top a := le_sup' _ <| mem_univ a
 #align fintype.to_order_top Fintype.toOrderTop
@@ -94,7 +94,8 @@ open Classical
 /-- A finite bounded lattice is complete. -/
 @[reducible]
 noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
-  { ‹Lattice α›, ‹BoundedOrder α› with
+  { ‹Lattice α›,
+    ‹BoundedOrder α› with
     sup := fun s => s.toFinset.sup id
     inf := fun s => s.toFinset.inf id
     le_Sup := fun _ _ ha => Finset.le_sup (Set.mem_to_finset.mpr ha)
@@ -108,13 +109,17 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
 @[reducible]
 noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α] :
     CompleteDistribLattice α :=
-  { toCompleteLattice α with
-    infi_sup_le_sup_Inf := fun a s => by
+  {
+    toCompleteLattice
+      α with
+    infi_sup_le_sup_Inf := fun a s =>
+      by
       convert (Finset.inf_sup_distrib_left _ _ _).ge
       convert (Finset.inf_eq_infi _ _).symm
       simp_rw [Set.mem_to_finset]
       rfl
-    inf_Sup_le_supr_inf := fun a s => by
+    inf_Sup_le_supr_inf := fun a s =>
+      by
       convert (Finset.sup_inf_distrib_left _ _ _).le
       convert (Finset.sup_eq_supr _ _).symm
       simp_rw [Set.mem_to_finset]
@@ -181,7 +186,7 @@ variable {α : Type _}
 
 theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α}
     [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
-  classical 
+  classical
     obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
     exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
 #align directed.fintype_le Directed.fintype_le
@@ -192,7 +197,8 @@ theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)
 #align fintype.exists_le Fintype.exists_le
 
 theorem Fintype.bdd_above_range [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _}
-    [Fintype β] (f : β → α) : BddAbove (Set.range f) := by
+    [Fintype β] (f : β → α) : BddAbove (Set.range f) :=
+  by
   obtain ⟨M, hM⟩ := Fintype.exists_le f
   refine' ⟨M, fun a ha => _⟩
   obtain ⟨b, rfl⟩ := ha

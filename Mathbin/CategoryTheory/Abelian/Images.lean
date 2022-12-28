@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.images
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,8 @@ in which this is always an isomorphism, is abelian.
 See <https://stacks.math.columbia.edu/tag/0107>
 -/
 def coimageImageComparison : Abelian.coimage f ⟶ Abelian.image f :=
-  cokernel.desc (kernel.ι f) (kernel.lift (cokernel.π f) f (by simp)) <| by
+  cokernel.desc (kernel.ι f) (kernel.lift (cokernel.π f) f (by simp)) <|
+    by
     ext
     simp
 #align
@@ -118,14 +119,15 @@ def coimageImageComparison : Abelian.coimage f ⟶ Abelian.image f :=
 -/
 def coimageImageComparison' : Abelian.coimage f ⟶ Abelian.image f :=
   kernel.lift (cokernel.π f) (cokernel.desc (kernel.ι f) f (by simp))
-    (by 
+    (by
       ext
       simp)
 #align
   category_theory.abelian.coimage_image_comparison' CategoryTheory.Abelian.coimageImageComparison'
 
 theorem coimage_image_comparison_eq_coimage_image_comparison' :
-    coimageImageComparison f = coimageImageComparison' f := by
+    coimageImageComparison f = coimageImageComparison' f :=
+  by
   ext
   simp [coimage_image_comparison, coimage_image_comparison']
 #align

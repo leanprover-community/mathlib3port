@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.prime_counting
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,13 +84,15 @@ theorem prime_nth_prime (n : ℕ) : Prime (nth Prime n) :=
 theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
     π' (k + n) ≤ π' k + Nat.totient a * (n / a + 1) :=
   calc
-    π' (k + n) ≤ ((range k).filter Prime).card + ((ico k (k + n)).filter Prime).card := by
+    π' (k + n) ≤ ((range k).filter Prime).card + ((ico k (k + n)).filter Prime).card :=
+      by
       rw [prime_counting', count_eq_card_filter_range, range_eq_Ico, ←
         Ico_union_Ico_eq_Ico (zero_le k) le_self_add, filter_union]
       apply card_union_le
     _ ≤ π' k + ((ico k (k + n)).filter Prime).card := by
       rw [prime_counting', count_eq_card_filter_range]
-    _ ≤ π' k + ((ico k (k + n)).filter (Coprime a)).card := by
+    _ ≤ π' k + ((ico k (k + n)).filter (Coprime a)).card :=
+      by
       refine' add_le_add_left (card_le_of_subset _) k.prime_counting'
       simp only [subset_iff, and_imp, mem_filter, mem_Ico]
       intro p succ_k_le_p p_lt_n p_prime
@@ -98,7 +100,8 @@ theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       · exact ⟨succ_k_le_p, p_lt_n⟩
       · rw [coprime_comm]
         exact coprime_of_lt_prime h0 (gt_of_ge_of_gt succ_k_le_p h1) p_prime
-    _ ≤ π' k + totient a * (n / a + 1) := by
+    _ ≤ π' k + totient a * (n / a + 1) :=
+      by
       rw [add_le_add_iff_left]
       exact Ico_filter_coprime_le k n h0
     

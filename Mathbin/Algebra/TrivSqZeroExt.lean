@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.triv_sq_zero_ext
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,7 +291,7 @@ theorem inr_neg [AddGroup R] [Neg M] (m : M) : (inr (-m) : tsze R M) = -inr m :=
 #align triv_sq_zero_ext.inr_neg TrivSqZeroExt.inr_neg
 
 @[simp]
-theorem inr_smul [Zero R] [Zero S] [SmulWithZero S R] [HasSmul S M] (r : S) (m : M) :
+theorem inr_smul [Zero R] [Zero S] [SMulWithZero S R] [HasSmul S M] (r : S) (m : M) :
     (inr (r • m) : tsze R M) = r • inr m :=
   ext (smul_zero _).symm rfl
 #align triv_sq_zero_ext.inr_smul TrivSqZeroExt.inr_smul
@@ -416,7 +416,8 @@ theorem inr_mul_inl [Semiring R] [AddCommMonoid M] [Module R M] (r : R) (m : M) 
 #align triv_sq_zero_ext.inr_mul_inl TrivSqZeroExt.inr_mul_inl
 
 instance [Monoid R] [AddMonoid M] [DistribMulAction R M] : MulOneClass (tsze R M) :=
-  { TrivSqZeroExt.hasOne, TrivSqZeroExt.hasMul with
+  { TrivSqZeroExt.hasOne,
+    TrivSqZeroExt.hasMul with
     one_mul := fun x =>
       ext (one_mul x.1) <| show (1 : R) • x.2 + x.1 • 0 = x.2 by rw [one_smul, smul_zero, add_zero]
     mul_one := fun x =>
@@ -424,13 +425,15 @@ instance [Monoid R] [AddMonoid M] [DistribMulAction R M] : MulOneClass (tsze R M
         show (x.1 • 0 : M) + (1 : R) • x.2 = x.2 by rw [smul_zero, zero_add, one_smul] }
 
 instance [AddMonoidWithOne R] [AddMonoid M] : AddMonoidWithOne (tsze R M) :=
-  { TrivSqZeroExt.addMonoid, TrivSqZeroExt.hasOne with
+  { TrivSqZeroExt.addMonoid,
+    TrivSqZeroExt.hasOne with
     natCast := fun n => (n, 0)
     nat_cast_zero := by simp [Nat.cast]
     nat_cast_succ := fun _ => by ext <;> simp [Nat.cast] }
 
 instance [Semiring R] [AddCommMonoid M] [Module R M] : NonAssocSemiring (tsze R M) :=
-  { TrivSqZeroExt.addMonoidWithOne, TrivSqZeroExt.mulOneClass, TrivSqZeroExt.addCommMonoid with
+  { TrivSqZeroExt.addMonoidWithOne, TrivSqZeroExt.mulOneClass,
+    TrivSqZeroExt.addCommMonoid with
     zero_mul := fun x =>
       ext (zero_mul x.1) <| show (0 : R) • x.2 + x.1 • 0 = 0 by rw [zero_smul, zero_add, smul_zero]
     mul_zero := fun x =>
@@ -471,8 +474,8 @@ variable (R M)
 
 /-- The canonical inclusion of rings `R → triv_sq_zero_ext R M`. -/
 @[simps apply]
-def inlHom [Semiring R] [AddCommMonoid M] [Module R M] :
-    R →+* tsze R M where 
+def inlHom [Semiring R] [AddCommMonoid M] [Module R M] : R →+* tsze R M
+    where
   toFun := inl
   map_one' := inl_one M
   map_mul' := inl_mul M
@@ -491,7 +494,9 @@ variable [CommSemiring S] [CommSemiring R] [AddCommMonoid M]
 variable [Algebra S R] [Module S M] [Module R M] [IsScalarTower S R M]
 
 instance algebra' : Algebra S (tsze R M) :=
-  { (TrivSqZeroExt.inlHom R M).comp (algebraMap S R) with
+  {
+    (TrivSqZeroExt.inlHom R M).comp
+      (algebraMap S R) with
     commutes' := fun r x => mul_comm _ _
     smul_def' := fun r x =>
       ext (Algebra.smul_def _ _) <|
@@ -517,7 +522,7 @@ theorem algebra_map_eq_inl' (s : S) : algebraMap S (tsze R M) s = inl (algebraMa
 
 /-- The canonical `R`-algebra projection `triv_sq_zero_ext R M → R`. -/
 @[simps]
-def fstHom : tsze R M →ₐ[R] R where 
+def fstHom : tsze R M →ₐ[R] R where
   toFun := fst
   map_one' := fst_one
   map_mul' := fst_mul
@@ -550,7 +555,7 @@ def liftAux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[
   AlgHom.ofLinearMap ((Algebra.linearMap _ _).comp (fstHom R M).toLinearMap + f.comp (sndHom R M))
     (show algebraMap R _ 1 + f (0 : M) = 1 by rw [map_zero, map_one, add_zero])
     (TrivSqZeroExt.ind fun r₁ m₁ =>
-      TrivSqZeroExt.ind fun r₂ m₂ => by 
+      TrivSqZeroExt.ind fun r₂ m₂ => by
         dsimp
         simp only [add_zero, zero_add, add_mul, mul_add, smul_mul_smul, hf, smul_zero]
         rw [← RingHom.map_mul, LinearMap.map_add, ← Algebra.commutes _ (f _), ← Algebra.smul_def, ←
@@ -581,9 +586,8 @@ products.
 
 This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps]
-def lift :
-    { f : M →ₗ[R] A // ∀ x y, f x * f y = 0 } ≃
-      (tsze R M →ₐ[R] A) where 
+def lift : { f : M →ₗ[R] A // ∀ x y, f x * f y = 0 } ≃ (tsze R M →ₐ[R] A)
+    where
   toFun f := liftAux f f.Prop
   invFun F :=
     ⟨F.toLinearMap.comp (inrHom R M), fun x y =>

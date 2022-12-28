@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.products.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,9 +45,8 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 See <https://stacks.math.columbia.edu/tag/001K>.
 -/
 @[simps (config := { notRecursive := [] })]
-instance prod :
-    Category.{max v₁ v₂}
-      (C × D) where 
+instance prod : Category.{max v₁ v₂} (C × D)
+    where
   Hom X Y := (X.1 ⟶ Y.1) × (X.2 ⟶ Y.2)
   id X := ⟨𝟙 X.1, 𝟙 X.2⟩
   comp _ _ _ f g := (f.1 ≫ g.1, f.2 ≫ g.2)
@@ -66,7 +65,7 @@ theorem prod_comp {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) �
 #align category_theory.prod_comp CategoryTheory.prod_comp
 
 theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} :
-    IsIso f ↔ IsIso f.1 ∧ IsIso f.2 := by 
+    IsIso f ↔ IsIso f.1 ∧ IsIso f.2 := by
   constructor
   · rintro ⟨g, hfg, hgf⟩
     simp at hfg hgf
@@ -84,16 +83,16 @@ variable {C D}
 
 /-- The isomorphism between `(X.1, X.2)` and `X`. -/
 @[simps]
-def prod.etaIso (X : C × D) :
-    (X.1, X.2) ≅ X where 
+def prod.etaIso (X : C × D) : (X.1, X.2) ≅ X
+    where
   Hom := (𝟙 _, 𝟙 _)
   inv := (𝟙 _, 𝟙 _)
 #align category_theory.prod.eta_iso CategoryTheory.prod.etaIso
 
 /-- Construct an isomorphism in `C × D` out of two isomorphisms in `C` and `D`. -/
 @[simps]
-def Iso.prod {P Q : C} {S T : D} (f : P ≅ Q) (g : S ≅ T) :
-    (P, S) ≅ (Q, T) where 
+def Iso.prod {P Q : C} {S T : D} (f : P ≅ Q) (g : S ≅ T) : (P, S) ≅ (Q, T)
+    where
   Hom := (f.Hom, g.Hom)
   inv := (f.inv, g.inv)
 #align category_theory.iso.prod CategoryTheory.Iso.prod
@@ -121,16 +120,16 @@ namespace Prod
 
 /-- `sectl C Z` is the functor `C ⥤ C × D` given by `X ↦ (X, Z)`. -/
 @[simps]
-def sectl (C : Type u₁) [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] (Z : D) :
-    C ⥤ C × D where 
+def sectl (C : Type u₁) [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] (Z : D) : C ⥤ C × D
+    where
   obj X := (X, Z)
   map X Y f := (f, 𝟙 Z)
 #align category_theory.prod.sectl CategoryTheory.prod.sectl
 
 /-- `sectr Z D` is the functor `D ⥤ C × D` given by `Y ↦ (Z, Y)` . -/
 @[simps]
-def sectr {C : Type u₁} [Category.{v₁} C] (Z : C) (D : Type u₂) [Category.{v₂} D] :
-    D ⥤ C × D where 
+def sectr {C : Type u₁} [Category.{v₁} C] (Z : C) (D : Type u₂) [Category.{v₂} D] : D ⥤ C × D
+    where
   obj X := (Z, X)
   map X Y f := (𝟙 Z, f)
 #align category_theory.prod.sectr CategoryTheory.prod.sectr
@@ -139,21 +138,21 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 
 /-- `fst` is the functor `(X, Y) ↦ X`. -/
 @[simps]
-def fst : C × D ⥤ C where 
+def fst : C × D ⥤ C where
   obj X := X.1
   map X Y f := f.1
 #align category_theory.prod.fst CategoryTheory.prod.fst
 
 /-- `snd` is the functor `(X, Y) ↦ Y`. -/
 @[simps]
-def snd : C × D ⥤ D where 
+def snd : C × D ⥤ D where
   obj X := X.2
   map X Y f := f.2
 #align category_theory.prod.snd CategoryTheory.prod.snd
 
 /-- The functor swapping the factors of a cartesian product of categories, `C × D ⥤ D × C`. -/
 @[simps]
-def swap : C × D ⥤ D × C where 
+def swap : C × D ⥤ D × C where
   obj X := (X.2, X.1)
   map _ _ f := (f.2, f.1)
 #align category_theory.prod.swap CategoryTheory.prod.swap
@@ -162,9 +161,8 @@ def swap : C × D ⥤ D × C where
 to the identity functor.
 -/
 @[simps]
-def symmetry :
-    swap C D ⋙ swap D C ≅
-      𝟭 (C × D) where 
+def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (C × D)
+    where
   Hom := { app := fun X => 𝟙 X }
   inv := { app := fun X => 𝟙 X }
 #align category_theory.prod.symmetry CategoryTheory.prod.symmetry
@@ -192,10 +190,8 @@ variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D]
 which is functorial in both `X` and `F`.
 -/
 @[simps]
-def evaluation :
-    C ⥤
-      (C ⥤ D) ⥤
-        D where 
+def evaluation : C ⥤ (C ⥤ D) ⥤ D
+    where
   obj X :=
     { obj := fun F => F.obj X
       map := fun F G α => α.app X }
@@ -208,11 +204,11 @@ def evaluation :
 as a functor `C × (C ⥤ D) ⥤ D`.
 -/
 @[simps]
-def evaluationUncurried : C × (C ⥤ D) ⥤
-      D where 
+def evaluationUncurried : C × (C ⥤ D) ⥤ D
+    where
   obj p := p.2.obj p.1
   map x y f := x.2.map f.1 ≫ f.2.app y.1
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     cases g; cases f; cases Z; cases Y; cases X
     simp only [prod_comp, nat_trans.comp_app, functor.map_comp, category.assoc]
     rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app, category.assoc,
@@ -237,8 +233,8 @@ namespace Functor
 
 /-- The cartesian product of two functors. -/
 @[simps]
-def prod (F : A ⥤ B) (G : C ⥤ D) :
-    A × C ⥤ B × D where 
+def prod (F : A ⥤ B) (G : C ⥤ D) : A × C ⥤ B × D
+    where
   obj X := (F.obj X.1, G.obj X.2)
   map _ _ f := (F.map f.1, G.map f.2)
 #align category_theory.functor.prod CategoryTheory.Functor.prod
@@ -247,8 +243,8 @@ def prod (F : A ⥤ B) (G : C ⥤ D) :
    You can use `F.prod G` as a "poor man's infix", or just write `functor.prod F G`. -/
 /-- Similar to `prod`, but both functors start from the same category `A` -/
 @[simps]
-def prod' (F : A ⥤ B) (G : A ⥤ C) :
-    A ⥤ B × C where 
+def prod' (F : A ⥤ B) (G : A ⥤ C) : A ⥤ B × C
+    where
   obj a := (F.obj a, G.obj a)
   map x y f := (F.map f, G.map f)
 #align category_theory.functor.prod' CategoryTheory.Functor.prod'
@@ -292,10 +288,10 @@ namespace NatTrans
 
 /-- The cartesian product of two natural transformations. -/
 @[simps]
-def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) :
-    F.Prod H ⟶ G.Prod I where 
+def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod H ⟶ G.Prod I
+    where
   app X := (α.app X.1, β.app X.2)
-  naturality' X Y f := by 
+  naturality' X Y f := by
     cases X; cases Y
     simp only [functor.prod_map, Prod.mk.inj_iff, prod_comp]
     constructor <;> rw [naturality]
@@ -315,19 +311,16 @@ variable (A B C)
 
 /-- The forward direction for `functor_prod_functor_equiv` -/
 @[simps]
-def prodFunctorToFunctorProd :
-    (A ⥤ B) × (A ⥤ C) ⥤ A ⥤ B × C where 
+def prodFunctorToFunctorProd : (A ⥤ B) × (A ⥤ C) ⥤ A ⥤ B × C
+    where
   obj F := F.1.prod' F.2
   map F G f := { app := fun X => (f.1.app X, f.2.app X) }
 #align category_theory.prod_functor_to_functor_prod CategoryTheory.prodFunctorToFunctorProd
 
 /-- The backward direction for `functor_prod_functor_equiv` -/
 @[simps]
-def functorProdToProdFunctor :
-    (A ⥤ B × C) ⥤
-      (A ⥤ B) ×
-        (A ⥤
-          C) where 
+def functorProdToProdFunctor : (A ⥤ B × C) ⥤ (A ⥤ B) × (A ⥤ C)
+    where
   obj F := ⟨F ⋙ CategoryTheory.prod.fst B C, F ⋙ CategoryTheory.prod.snd B C⟩
   map F G α :=
     ⟨{  app := fun X => (α.app X).1
@@ -360,9 +353,8 @@ def functorProdFunctorEquivCounitIso :
 
 /-- The equivalence of categories between `(A ⥤ B) × (A ⥤ C)` and `A ⥤ (B × C)` -/
 @[simps]
-def functorProdFunctorEquiv :
-    (A ⥤ B) × (A ⥤ C) ≌
-      A ⥤ B × C where 
+def functorProdFunctorEquiv : (A ⥤ B) × (A ⥤ C) ≌ A ⥤ B × C
+    where
   Functor := prodFunctorToFunctorProd A B C
   inverse := functorProdToProdFunctor A B C
   unitIso := functorProdFunctorEquivUnitIso A B C

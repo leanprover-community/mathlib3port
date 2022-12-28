@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module logic.function.iterate
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,7 +142,8 @@ theorem iterate_right {f : α → β} {ga : α → α} {gb : β → β} (h : Sem
 
 #print Function.Semiconj.iterate_left /-
 theorem iterate_left {g : ℕ → α → α} (H : ∀ n, Semiconj f (g n) (g <| n + 1)) (n k : ℕ) :
-    Semiconj (f^[n]) (g k) (g <| n + k) := by
+    Semiconj (f^[n]) (g k) (g <| n + k) :=
+  by
   induction' n with n ihn generalizing k
   · rw [Nat.zero_add]
     exact id_left
@@ -184,7 +185,8 @@ theorem iterate_eq_of_map_eq (h : Commute f g) (n : ℕ) {x} (hx : f x = g x) :
 -/
 
 #print Function.Commute.comp_iterate /-
-theorem comp_iterate (h : Commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[n] := by
+theorem comp_iterate (h : Commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[n] :=
+  by
   induction' n with n ihn; · rfl
   funext x
   simp only [ihn, (h.iterate_right n).Eq, iterate_succ, comp_app]
@@ -251,7 +253,7 @@ theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ f^[n.pred] = f^[
 def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) :
     p ((f^[n]) a) :=
   Nat.rec ha
-    (fun m => by 
+    (fun m => by
       rw [iterate_succ']
       exact h _)
     n
@@ -274,7 +276,8 @@ variable {f}
 #print Function.LeftInverse.iterate /-
 theorem LeftInverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) :
     LeftInverse (g^[n]) (f^[n]) :=
-  (Nat.recOn n fun _ => rfl) fun n ihn => by
+  (Nat.recOn n fun _ => rfl) fun n ihn =>
+    by
     rw [iterate_succ', iterate_succ]
     exact ihn.comp hg
 #align function.left_inverse.iterate Function.LeftInverse.iterate
@@ -307,7 +310,8 @@ open Function
 
 #print List.foldl_const /-
 theorem foldl_const (f : α → α) (a : α) (l : List β) :
-    l.foldl (fun b _ => f b) a = (f^[l.length]) a := by
+    l.foldl (fun b _ => f b) a = (f^[l.length]) a :=
+  by
   induction' l with b l H generalizing a
   · rfl
   · rw [length_cons, foldl, iterate_succ_apply, H]

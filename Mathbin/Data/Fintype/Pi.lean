@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,8 @@ def piFinset (t : ∀ a, Finset (δ a)) : Finset (∀ a, δ a) :=
 #align fintype.pi_finset Fintype.piFinset
 
 @[simp]
-theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFinset t ↔ ∀ a, f a ∈ t a := by
+theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFinset t ↔ ∀ a, f a ∈ t a :=
+  by
   constructor
   · simp only [pi_finset, mem_map, and_imp, forall_prop_of_true, exists_prop, mem_univ, exists_imp,
       mem_pi]
@@ -47,7 +48,7 @@ theorem mem_pi_finset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFin
 @[simp]
 theorem coe_pi_finset (t : ∀ a, Finset (δ a)) :
     (piFinset t : Set (∀ a, δ a)) = Set.pi Set.univ fun a => t a :=
-  Set.ext fun x => by 
+  Set.ext fun x => by
     rw [Set.mem_univ_pi]
     exact Fintype.mem_pi_finset
 #align fintype.coe_pi_finset Fintype.coe_pi_finset
@@ -105,7 +106,8 @@ instance Function.Embedding.fintype {α β} [Fintype α] [Fintype β] [Decidable
 @[simp]
 theorem Finset.univ_pi_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α]
     [∀ a, Fintype (β a)] :
-    (Finset.univ.pi fun a : α => (Finset.univ : Finset (β a))) = Finset.univ := by
+    (Finset.univ.pi fun a : α => (Finset.univ : Finset (β a))) = Finset.univ :=
+  by
   ext
   simp
 #align finset.univ_pi_univ Finset.univ_pi_univ

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.nhds_set
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ def nhdsSet (s : Set α) : Filter α :=
 -- mathport name: nhds_set
 scoped[TopologicalSpace] notation "𝓝ˢ" => nhdsSet
 
-theorem nhds_set_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) := by
+theorem nhds_set_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) :=
+  by
   rw [nhdsSet, ← range_diag, ← range_comp]
   rfl
 #align nhds_set_diagonal nhds_set_diagonal
@@ -54,7 +55,7 @@ theorem mem_nhds_set_iff_forall : s ∈ 𝓝ˢ t ↔ ∀ x : α, x ∈ t → s �
 #align mem_nhds_set_iff_forall mem_nhds_set_iff_forall
 
 theorem bUnion_mem_nhds_set {t : α → Set α} (h : ∀ x ∈ s, t x ∈ 𝓝 x) : (⋃ x ∈ s, t x) ∈ 𝓝ˢ s :=
-  mem_nhds_set_iff_forall.2 fun x hx => mem_of_superset (h x hx) (subset_Union₂ x hx)
+  mem_nhds_set_iff_forall.2 fun x hx => mem_of_superset (h x hx) (subset_unionᵢ₂ x hx)
 #align bUnion_mem_nhds_set bUnion_mem_nhds_set
 
 theorem subset_interior_iff_mem_nhds_set : s ⊆ interior t ↔ t ∈ 𝓝ˢ s := by
@@ -91,7 +92,7 @@ theorem nhds_set_interior : 𝓝ˢ (interior s) = 𝓟 (interior s) :=
 #align nhds_set_interior nhds_set_interior
 
 @[simp]
-theorem nhds_set_singleton : 𝓝ˢ {x} = 𝓝 x := by 
+theorem nhds_set_singleton : 𝓝ˢ {x} = 𝓝 x := by
   ext
   rw [← subset_interior_iff_mem_nhds_set, ← mem_interior_iff_mem_nhds, singleton_subset_iff]
 #align nhds_set_singleton nhds_set_singleton
@@ -128,7 +129,8 @@ theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t
   simp only [nhdsSet, image_union, supₛ_union]
 #align nhds_set_union nhds_set_union
 
-theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
+theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) :=
+  by
   rw [nhds_set_union]
   exact union_mem_sup h₁ h₂
 #align union_mem_nhds_set union_mem_nhds_set

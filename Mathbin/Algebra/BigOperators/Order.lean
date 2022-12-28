@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ a nonempty finite family of elements of `M` such that `∀ i ∈ s, p (g i)`. Th
 theorem le_prod_nonempty_of_submultiplicative_on_pred (f : M → N) (p : M → Prop)
     (h_mul : ∀ x y, p x → p y → f (x * y) ≤ f x * f y) (hp_mul : ∀ x y, p x → p y → p (x * y))
     (g : ι → M) (s : Finset ι) (hs_nonempty : s.Nonempty) (hs : ∀ i ∈ s, p (g i)) :
-    f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
+    f (∏ i in s, g i) ≤ ∏ i in s, f (g i) :=
+  by
   refine' le_trans (Multiset.le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul _ _ _) _
   · simp [hs_nonempty.ne_empty]
   · exact multiset.forall_mem_map_iff.mpr hs
@@ -76,7 +77,8 @@ that `∀ i ∈ s, p (g i)`. Then `f (∏ i in s, g i) ≤ ∏ i in s, f (g i)`.
 @[to_additive le_sum_of_subadditive_on_pred]
 theorem le_prod_of_submultiplicative_on_pred (f : M → N) (p : M → Prop) (h_one : f 1 = 1)
     (h_mul : ∀ x y, p x → p y → f (x * y) ≤ f x * f y) (hp_mul : ∀ x y, p x → p y → p (x * y))
-    (g : ι → M) {s : Finset ι} (hs : ∀ i ∈ s, p (g i)) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
+    (g : ι → M) {s : Finset ι} (hs : ∀ i ∈ s, p (g i)) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) :=
+  by
   rcases eq_empty_or_nonempty s with (rfl | hs_nonempty)
   · simp [h_one]
   · exact le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul g s hs_nonempty hs
@@ -93,7 +95,8 @@ add_decl_doc le_sum_of_subadditive_on_pred
 @[to_additive le_sum_of_subadditive]
 theorem le_prod_of_submultiplicative (f : M → N) (h_one : f 1 = 1)
     (h_mul : ∀ x y, f (x * y) ≤ f x * f y) (s : Finset ι) (g : ι → M) :
-    f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
+    f (∏ i in s, g i) ≤ ∏ i in s, f (g i) :=
+  by
   refine' le_trans (Multiset.le_prod_of_submultiplicative f h_one h_mul _) _
   rw [Multiset.map_map]
   rfl
@@ -158,7 +161,7 @@ theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 
 @[to_additive sum_eq_zero_iff_of_nonneg]
 theorem prod_eq_one_iff_of_one_le' :
     (∀ i ∈ s, 1 ≤ f i) → ((∏ i in s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) := by
-  classical 
+  classical
     apply Finset.induction_on s
     exact fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩
     intro a s ha ih H
@@ -184,7 +187,8 @@ theorem single_le_prod' (hf : ∀ i ∈ s, 1 ≤ f i) {a} (h : a ∈ s) : f a �
 
 @[to_additive sum_le_card_nsmul]
 theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, f x ≤ n) :
-    s.Prod f ≤ n ^ s.card := by
+    s.Prod f ≤ n ^ s.card :=
+  by
   refine' (Multiset.prod_le_pow_card (s.val.map f) n _).trans _
   · simpa using h
   · simpa
@@ -292,7 +296,8 @@ variable [DecidableEq α] {s : Finset α} {B : Finset (Finset α)} {n : ℕ}
 /-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
 times how many they are. -/
 theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card ≤ n) :
-    (∑ t in B, (s ∩ t).card) ≤ s.card * n := by
+    (∑ t in B, (s ∩ t).card) ≤ s.card * n :=
+  by
   refine' le_trans _ (s.sum_le_card_nsmul _ _ h)
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
@@ -311,7 +316,8 @@ theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card �
 /-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
 times how many they are. -/
 theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter <| (· ∈ ·) a).card) :
-    s.card * n ≤ ∑ t in B, (s ∩ t).card := by
+    s.card * n ≤ ∑ t in B, (s ∩ t).card :=
+  by
   apply (s.card_nsmul_le_sum _ _ h).trans
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
@@ -342,14 +348,16 @@ theorem sum_card [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card = n) 
 #align finset.sum_card Finset.sum_card
 
 theorem card_le_card_bUnion {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f)
-    (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.bUnion f).card := by
+    (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.bUnion f).card :=
+  by
   rw [card_bUnion hs, card_eq_sum_ones]
   exact sum_le_sum fun i hi => (hf i hi).card_pos
 #align finset.card_le_card_bUnion Finset.card_le_card_bUnion
 
 theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α}
     (hs : (s : Set ι).PairwiseDisjoint f) :
-    s.card ≤ (s.bUnion f).card + (s.filter fun i => f i = ∅).card := by
+    s.card ≤ (s.bUnion f).card + (s.filter fun i => f i = ∅).card :=
+  by
   rw [← Finset.filter_card_add_filter_neg_card_eq_card fun i => f i = ∅, add_comm]
   exact
     add_le_add_right
@@ -412,7 +420,7 @@ variable [OrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 @[to_additive sum_lt_sum]
 theorem prod_lt_prod' (Hle : ∀ i ∈ s, f i ≤ g i) (Hlt : ∃ i ∈ s, f i < g i) :
     (∏ i in s, f i) < ∏ i in s, g i := by
-  classical 
+  classical
     rcases Hlt with ⟨i, hi, hlt⟩
     rw [← insert_erase hi, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _)]
     exact mul_lt_mul_of_lt_of_le hlt (prod_le_prod'' fun j hj => Hle j <| mem_of_mem_erase hj)
@@ -420,7 +428,7 @@ theorem prod_lt_prod' (Hle : ∀ i ∈ s, f i ≤ g i) (Hlt : ∃ i ∈ s, f i <
 
 @[to_additive sum_lt_sum_of_nonempty]
 theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g i) :
-    (∏ i in s, f i) < ∏ i in s, g i := by 
+    (∏ i in s, f i) < ∏ i in s, g i := by
   apply prod_lt_prod'
   · intro i hi
     apply le_of_lt (Hlt i hi)
@@ -432,10 +440,11 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i ∉ s) (hlt : 1 < f i)
     (hle : ∀ j ∈ t, j ∉ s → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
   classical calc
-      (∏ j in s, f j) < ∏ j in insert i s, f j := by
+      (∏ j in s, f j) < ∏ j in insert i s, f j :=
+        by
         rw [prod_insert hs]
         exact lt_mul_of_one_lt_left' (∏ j in s, f j) hlt
-      _ ≤ ∏ j in t, f j := by 
+      _ ≤ ∏ j in t, f j := by
         apply prod_le_prod_of_subset_of_one_le'
         · simp [Finset.insert_subset, h, ht]
         · intro x hx h'x
@@ -478,7 +487,7 @@ theorem prod_lt_one' (h : ∀ i ∈ s, f i ≤ 1) (hs : ∃ i ∈ s, f i < 1) : 
 @[to_additive]
 theorem prod_eq_prod_iff_of_le {f g : ι → M} (h : ∀ i ∈ s, f i ≤ g i) :
     ((∏ i in s, f i) = ∏ i in s, g i) ↔ ∀ i ∈ s, f i = g i := by
-  classical 
+  classical
     revert h
     refine'
       Finset.induction_on s (fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩) fun a s ha ih H => _
@@ -496,21 +505,23 @@ section LinearOrderedCancelCommMonoid
 variable [LinearOrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 
 @[to_additive exists_lt_of_sum_lt]
-theorem exists_lt_of_prod_lt' (Hlt : (∏ i in s, f i) < ∏ i in s, g i) : ∃ i ∈ s, f i < g i := by
+theorem exists_lt_of_prod_lt' (Hlt : (∏ i in s, f i) < ∏ i in s, g i) : ∃ i ∈ s, f i < g i :=
+  by
   contrapose! Hlt with Hle
   exact prod_le_prod'' Hle
 #align finset.exists_lt_of_prod_lt' Finset.exists_lt_of_prod_lt'
 
 @[to_additive exists_le_of_sum_le]
 theorem exists_le_of_prod_le' (hs : s.Nonempty) (Hle : (∏ i in s, f i) ≤ ∏ i in s, g i) :
-    ∃ i ∈ s, f i ≤ g i := by 
+    ∃ i ∈ s, f i ≤ g i := by
   contrapose! Hle with Hlt
   exact prod_lt_prod_of_nonempty' hs Hlt
 #align finset.exists_le_of_prod_le' Finset.exists_le_of_prod_le'
 
 @[to_additive exists_pos_of_sum_zero_of_exists_nonzero]
 theorem exists_one_lt_of_prod_one_of_exists_ne_one' (f : ι → M) (h₁ : (∏ i in s, f i) = 1)
-    (h₂ : ∃ i ∈ s, f i ≠ 1) : ∃ i ∈ s, 1 < f i := by
+    (h₂ : ∃ i ∈ s, f i ≠ 1) : ∃ i ∈ s, 1 < f i :=
+  by
   contrapose! h₁
   obtain ⟨i, m, i_ne⟩ : ∃ i ∈ s, f i ≠ 1 := h₂
   apply ne_of_lt
@@ -538,7 +549,8 @@ theorem prod_nonneg (h0 : ∀ i ∈ s, 0 ≤ f i) : 0 ≤ ∏ i in s, f i :=
 product of `f i` is less than or equal to the product of `g i`. See also `finset.prod_le_prod''` for
 the case of an ordered commutative multiplicative monoid. -/
 theorem prod_le_prod (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ g i) :
-    (∏ i in s, f i) ≤ ∏ i in s, g i := by
+    (∏ i in s, f i) ≤ ∏ i in s, g i :=
+  by
   induction' s using Finset.induction with a s has ih h
   · simp
   · simp only [prod_insert has]
@@ -551,7 +563,8 @@ theorem prod_le_prod (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ g 
 
 /-- If each `f i`, `i ∈ s` belongs to `[0, 1]`, then their product is less than or equal to one.
 See also `finset.prod_le_one'` for the case of an ordered commutative multiplicative monoid. -/
-theorem prod_le_one (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 := by
+theorem prod_le_one (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
+  by
   convert ← prod_le_prod h0 h1
   exact Finset.prod_const_one
 #align finset.prod_le_one Finset.prod_le_one
@@ -560,7 +573,8 @@ theorem prod_le_one (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ 1) 
   sum of the products of `g` and `h`. This is the version for `ordered_comm_semiring`. -/
 theorem prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i + h i ≤ f i)
     (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j) (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) (hg : ∀ i ∈ s, 0 ≤ g i)
-    (hh : ∀ i ∈ s, 0 ≤ h i) : ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i := by
+    (hh : ∀ i ∈ s, 0 ≤ h i) : ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i :=
+  by
   simp_rw [prod_eq_mul_prod_diff_singleton hi]
   refine' le_trans _ (mul_le_mul_of_nonneg_right h2i _)
   · rw [right_distrib]
@@ -591,7 +605,7 @@ section CanonicallyOrderedCommSemiring
 variable [CanonicallyOrderedCommSemiring R] {f g h : ι → R} {s : Finset ι} {i : ι}
 
 theorem prod_le_prod' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i := by
-  classical 
+  classical
     induction' s using Finset.induction with a s has ih h
     · simp
     · rw [Finset.prod_insert has, Finset.prod_insert has]
@@ -605,7 +619,7 @@ theorem prod_le_prod' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏
 -/
 theorem prod_add_prod_le' (hi : i ∈ s) (h2i : g i + h i ≤ f i) (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j)
     (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) : ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i := by
-  classical 
+  classical
     simp_rw [prod_eq_mul_prod_diff_singleton hi]
     refine' le_trans _ (mul_le_mul_right' h2i _)
     rw [right_distrib]
@@ -661,7 +675,7 @@ theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop 
 /-- A sum of numbers is infinite iff one of them is infinite -/
 theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
     (∑ i in s, f i) = ⊤ ↔ ∃ i ∈ s, f i = ⊤ := by
-  classical 
+  classical
     constructor
     · contrapose!
       exact fun h => (sum_lt_top fun i hi => h i hi).Ne
@@ -682,7 +696,8 @@ section AbsoluteValue
 variable {S : Type _}
 
 theorem AbsoluteValue.sum_le [Semiring R] [OrderedSemiring S] (abv : AbsoluteValue R S)
-    (s : Finset ι) (f : ι → R) : abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) := by
+    (s : Finset ι) (f : ι → R) : abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) :=
+  by
   letI := Classical.decEq ι
   refine' Finset.induction_on s _ fun i s hi ih => _
   · simp

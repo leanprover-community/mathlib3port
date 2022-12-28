@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,14 +191,14 @@ instance : AddCommGroup (ℤ√d) := by
     simp [ext, add_comm, add_left_comm]
 
 instance : AddGroupWithOne (ℤ√d) :=
-  { Zsqrtd.addCommGroup with 
+  { Zsqrtd.addCommGroup with
     natCast := fun n => of_int n
     intCast := of_int
     one := 1 }
 
 instance : CommRing (ℤ√d) := by
   refine_struct
-          { Zsqrtd.addGroupWithOne with 
+          { Zsqrtd.addGroupWithOne with
             add := (· + ·)
             zero := (0 : ℤ√d)
             mul := (· * ·)
@@ -246,7 +246,7 @@ theorem conj_im (z : ℤ√d) : (conj z).im = -z.im :=
 #align zsqrtd.conj_im Zsqrtd.conj_im
 
 /-- `conj` as an `add_monoid_hom`. -/
-def conjHom : ℤ√d →+ ℤ√d where 
+def conjHom : ℤ√d →+ ℤ√d where
   toFun := conj
   map_add' := fun ⟨a, ai⟩ ⟨b, bi⟩ => ext.mpr ⟨rfl, neg_add _ _⟩
   map_zero' := ext.mpr ⟨rfl, neg_zero⟩
@@ -346,7 +346,8 @@ theorem mul_conj {x y : ℤ} : (⟨x, y⟩ * conj ⟨x, y⟩ : ℤ√d) = x * x 
   simp [ext, sub_eq_add_neg, mul_comm]
 #align zsqrtd.mul_conj Zsqrtd.mul_conj
 
-theorem conj_mul {a b : ℤ√d} : conj (a * b) = conj a * conj b := by
+theorem conj_mul {a b : ℤ√d} : conj (a * b) = conj a * conj b :=
+  by
   simp [ext]
   ring
 #align zsqrtd.conj_mul Zsqrtd.conj_mul
@@ -367,7 +368,8 @@ protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n 
   simpa using congr_arg re h
 #align zsqrtd.coe_int_inj Zsqrtd.coe_int_inj
 
-theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im := by
+theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im :=
+  by
   constructor
   · rintro ⟨x, rfl⟩
     simp only [add_zero, coe_int_re, zero_mul, mul_im, dvd_mul_right, and_self_iff, mul_re,
@@ -379,7 +381,8 @@ theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ 
 #align zsqrtd.coe_int_dvd_iff Zsqrtd.coe_int_dvd_iff
 
 @[simp, norm_cast]
-theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b := by
+theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b :=
+  by
   rw [coe_int_dvd_iff]
   constructor
   · rintro ⟨hre, -⟩
@@ -389,7 +392,7 @@ theorem coe_int_dvd_coe_int (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b := by
 #align zsqrtd.coe_int_dvd_coe_int Zsqrtd.coe_int_dvd_coe_int
 
 protected theorem eq_of_smul_eq_smul_left {a : ℤ} {b c : ℤ√d} (ha : a ≠ 0) (h : ↑a * b = a * c) :
-    b = c := by 
+    b = c := by
   rw [ext] at h⊢
   apply And.imp _ _ h <;> · simpa only [smul_re, smul_im] using mul_left_cancel₀ ha
 #align zsqrtd.eq_of_smul_eq_smul_left Zsqrtd.eq_of_smul_eq_smul_left
@@ -405,7 +408,7 @@ theorem gcd_pos_iff (a : ℤ√d) : 0 < Int.gcd a.re a.im ↔ a ≠ 0 :=
 #align zsqrtd.gcd_pos_iff Zsqrtd.gcd_pos_iff
 
 theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) (hdvd : b ∣ a) :
-    IsCoprime b.re b.im := by 
+    IsCoprime b.re b.im := by
   apply is_coprime_of_dvd
   · rintro ⟨hre, him⟩
     obtain rfl : b = 0 := by
@@ -414,7 +417,8 @@ theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) 
     simpa only [hdvd, zero_im, zero_re, not_isCoprime_zero_zero] using hcoprime
   · intro z hz hznezero hzdvdu hzdvdv
     apply hz
-    obtain ⟨ha, hb⟩ : z ∣ a.re ∧ z ∣ a.im := by
+    obtain ⟨ha, hb⟩ : z ∣ a.re ∧ z ∣ a.im :=
+      by
       rw [← coe_int_dvd_iff]
       apply dvd_trans _ hdvd
       rw [coe_int_dvd_iff]
@@ -423,7 +427,8 @@ theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) 
 #align zsqrtd.coprime_of_dvd_coprime Zsqrtd.coprime_of_dvd_coprime
 
 theorem exists_coprime_of_gcd_pos {a : ℤ√d} (hgcd : 0 < Int.gcd a.re a.im) :
-    ∃ b : ℤ√d, a = ((Int.gcd a.re a.im : ℤ) : ℤ√d) * b ∧ IsCoprime b.re b.im := by
+    ∃ b : ℤ√d, a = ((Int.gcd a.re a.im : ℤ) : ℤ√d) * b ∧ IsCoprime b.re b.im :=
+  by
   obtain ⟨re, im, H1, Hre, Him⟩ := Int.exists_gcd_one hgcd
   rw [mul_comm] at Hre Him
   refine' ⟨⟨re, im⟩, _, _⟩
@@ -452,14 +457,14 @@ theorem sq_le_add_mixed {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w
 #align zsqrtd.sq_le_add_mixed Zsqrtd.sq_le_add_mixed
 
 theorem sq_le_add {c d x y z w : ℕ} (xy : SqLe x c y d) (zw : SqLe z c w d) :
-    SqLe (x + z) c (y + w) d := by 
+    SqLe (x + z) c (y + w) d := by
   have xz := sq_le_add_mixed xy zw
   simp [sq_le, mul_assoc] at xy zw
   simp [sq_le, mul_add, mul_comm, mul_left_comm, add_le_add, *]
 #align zsqrtd.sq_le_add Zsqrtd.sq_le_add
 
 theorem sq_le_cancel {c d x y z w : ℕ} (zw : SqLe y d x c) (h : SqLe (x + z) c (y + w) d) :
-    SqLe z c w d := by 
+    SqLe z c w d := by
   apply le_of_not_gt
   intro l
   refine' not_le_of_gt _ h
@@ -554,13 +559,14 @@ theorem norm_nat_cast (n : ℕ) : norm n = n * n :=
 #align zsqrtd.norm_nat_cast Zsqrtd.norm_nat_cast
 
 @[simp]
-theorem norm_mul (n m : ℤ√d) : norm (n * m) = norm n * norm m := by
+theorem norm_mul (n m : ℤ√d) : norm (n * m) = norm n * norm m :=
+  by
   simp only [norm, mul_im, mul_re]
   ring
 #align zsqrtd.norm_mul Zsqrtd.norm_mul
 
 /-- `norm` as a `monoid_hom`. -/
-def normMonoidHom : ℤ√d →* ℤ where 
+def normMonoidHom : ℤ√d →* ℤ where
   toFun := norm
   map_mul' := norm_mul
   map_one' := norm_one
@@ -600,7 +606,7 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
           ⟨-x.conj, by
             rwa [← Int.coe_nat_inj', Int.ofNat_natAbs_of_nonpos hx, ← @Int.cast_inj (ℤ√d) _ _,
               Int.cast_neg, norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
-    fun h => by 
+    fun h => by
     let ⟨y, hy⟩ := isUnit_iff_dvd_one.1 h
     have := congr_arg (Int.natAbs ∘ norm) hy
     rw [Function.comp_apply, Function.comp_apply, norm_mul, Int.natAbs_mul, norm_one,
@@ -616,7 +622,8 @@ theorem norm_eq_one_iff' {d : ℤ} (hd : d ≤ 0) (z : ℤ√d) : z.norm = 1 ↔
   rw [← norm_eq_one_iff, ← Int.coe_nat_inj', Int.natAbs_of_nonneg (norm_nonneg hd z), Int.ofNat_one]
 #align zsqrtd.norm_eq_one_iff' Zsqrtd.norm_eq_one_iff'
 
-theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z = 0 := by
+theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z = 0 :=
+  by
   constructor
   · intro h
     rw [ext, zero_re, zero_im]
@@ -633,7 +640,7 @@ theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z
 #align zsqrtd.norm_eq_zero_iff Zsqrtd.norm_eq_zero_iff
 
 theorem norm_eq_of_associated {d : ℤ} (hd : d ≤ 0) {x y : ℤ√d} (h : Associated x y) :
-    x.norm = y.norm := by 
+    x.norm = y.norm := by
   obtain ⟨u, rfl⟩ := h
   rw [norm_mul, (norm_eq_one_iff' hd _).mpr u.is_unit, mul_one]
 #align zsqrtd.norm_eq_of_associated Zsqrtd.norm_eq_of_associated
@@ -697,7 +704,8 @@ theorem nonneg_add_lem {x y z w : ℕ} (xy : nonneg ⟨x, -y⟩) (zw : nonneg �
     rw [neg_add_eq_sub] <;> rwa [Int.subNatNat_eq_coe, Int.subNatNat_eq_coe] at this
 #align zsqrtd.nonneg_add_lem Zsqrtd.nonneg_add_lem
 
-theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a + b) := by
+theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a + b) :=
+  by
   rcases nonneg_cases ha with ⟨x, y, rfl | rfl | rfl⟩ <;>
     rcases nonneg_cases hb with ⟨z, w, rfl | rfl | rfl⟩
   · trivial
@@ -744,19 +752,21 @@ protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
   | ⟨-[x+1], (y + 1 : ℕ)⟩ => Nat.le_total
 #align zsqrtd.nonneg_total Zsqrtd.nonneg_total
 
-protected theorem le_total (a b : ℤ√d) : a ≤ b ∨ b ≤ a := by
+protected theorem le_total (a b : ℤ√d) : a ≤ b ∨ b ≤ a :=
+  by
   have t := (b - a).nonneg_total
   rwa [neg_sub] at t
 #align zsqrtd.le_total Zsqrtd.le_total
 
-instance : Preorder (ℤ√d) where 
+instance : Preorder (ℤ√d) where
   le := (· ≤ ·)
   le_refl a := show nonneg (a - a) by simp only [sub_self]
   le_trans a b c hab hbc := by simpa [sub_add_sub_cancel'] using hab.add hbc
   lt := (· < ·)
   lt_iff_le_not_le a b := (and_iff_right_of_imp (Zsqrtd.le_total _ _).resolve_left).symm
 
-theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n := by
+theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n :=
+  by
   let ⟨x, y, (h : a ≤ ⟨x, y⟩)⟩ :=
     show ∃ x y : ℕ, nonneg (⟨x, y⟩ + -a) from
       match -a with
@@ -809,7 +819,8 @@ theorem nonneg_muld {a : ℤ√d} (ha : nonneg a) : nonneg (sqrtd * a) := by
         simpa [sq_le, mul_comm, mul_left_comm] using Nat.mul_le_mul_left d (nonnegg_neg_pos.1 ha)
 #align zsqrtd.nonneg_muld Zsqrtd.nonneg_muld
 
-theorem nonneg_mul_lem {x y : ℕ} {a : ℤ√d} (ha : nonneg a) : nonneg (⟨x, y⟩ * a) := by
+theorem nonneg_mul_lem {x y : ℕ} {a : ℤ√d} (ha : nonneg a) : nonneg (⟨x, y⟩ * a) :=
+  by
   have : (⟨x, y⟩ * a : ℤ√d) = x * a + sqrtd * (y * a) := by
     rw [decompose, right_distrib, mul_assoc] <;> rfl
   rw [this] <;> exact (nonneg_smul ha).add (nonneg_muld <| nonneg_smul ha)
@@ -881,7 +892,8 @@ theorem divides_sq_eq_zero {x y} (h : x * x = d * y * y) : x = 0 ∧ y = 0 :=
   let g := x.gcd y
   Or.elim g.eq_zero_or_pos
     (fun H => ⟨Nat.eq_zero_of_gcd_eq_zero_left H, Nat.eq_zero_of_gcd_eq_zero_right H⟩) fun gpos =>
-    False.elim <| by
+    False.elim <|
+      by
       let ⟨m, n, co, (hx : x = m * g), (hy : y = n * g)⟩ := Nat.exists_coprime gpos
       rw [hx, hy] at h
       have : m * m = d * (n * n) :=
@@ -915,10 +927,12 @@ theorem nonneg_antisymm : ∀ {a : ℤ√d}, nonneg a → nonneg (-a) → a = 0
   | ⟨(x + 1 : Nat), 0⟩, xy, yx => absurd yx (not_sq_le_succ _ _ _ (by decide))
   | ⟨0, -[y+1]⟩, xy, yx => absurd xy (not_sq_le_succ _ _ _ d_pos)
   | ⟨0, (y + 1 : Nat)⟩, _, yx => absurd yx (not_sq_le_succ _ _ _ d_pos)
-  | ⟨(x + 1 : Nat), -[y+1]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
+  | ⟨(x + 1 : Nat), -[y+1]⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) =>
+    by
     let t := le_antisymm yx xy
     rw [one_mul] at t <;> exact absurd t (not_divides_sq _ _)
-  | ⟨-[x+1], (y + 1 : Nat)⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) => by
+  | ⟨-[x+1], (y + 1 : Nat)⟩, (xy : sq_le _ _ _ _), (yx : sq_le _ _ _ _) =>
+    by
     let t := le_antisymm xy yx
     rw [one_mul] at t <;> exact absurd t (not_divides_sq _ _)
 #align zsqrtd.nonneg_antisymm Zsqrtd.nonneg_antisymm
@@ -928,7 +942,7 @@ theorem le_antisymm {a b : ℤ√d} (ab : a ≤ b) (ba : b ≤ a) : a = b :=
 #align zsqrtd.le_antisymm Zsqrtd.le_antisymm
 
 instance : LinearOrder (ℤ√d) :=
-  { Zsqrtd.preorder with 
+  { Zsqrtd.preorder with
     le_antisymm := @Zsqrtd.le_antisymm
     le_total := Zsqrtd.le_total
     decidableLe := Zsqrtd.decidableLe }
@@ -965,9 +979,8 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : ℤ√d}, a * b
                   
 #align zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero Zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero
 
-instance :
-    NoZeroDivisors
-      (ℤ√d) where eq_zero_or_eq_zero_of_mul_eq_zero := @Zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero
+instance : NoZeroDivisors (ℤ√d)
+    where eq_zero_or_eq_zero_of_mul_eq_zero := @Zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero
 
 instance : IsDomain (ℤ√d) :=
   NoZeroDivisors.toIsDomain _
@@ -980,7 +993,8 @@ protected theorem mul_pos (a b : ℤ√d) (a0 : 0 < a) (b0 : 0 < b) : 0 < a * b 
 #align zsqrtd.mul_pos Zsqrtd.mul_pos
 
 instance : LinearOrderedCommRing (ℤ√d) :=
-  { Zsqrtd.commRing, Zsqrtd.linearOrder, Zsqrtd.nontrivial with
+  { Zsqrtd.commRing, Zsqrtd.linearOrder,
+    Zsqrtd.nontrivial with
     add_le_add_left := @Zsqrtd.add_le_add_left
     mul_pos := @Zsqrtd.mul_pos
     zero_le_one := by decide }
@@ -991,7 +1005,8 @@ instance : OrderedRing (ℤ√d) := by infer_instance
 
 end
 
-theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ√d) : norm a = 0 ↔ a = 0 := by
+theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ√d) : norm a = 0 ↔ a = 0 :=
+  by
   refine' ⟨fun ha => ext.mpr _, fun h => by rw [h, norm_zero]⟩
   delta norm at ha
   rw [sub_eq_zero] at ha
@@ -1012,7 +1027,8 @@ theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ
 variable {R : Type}
 
 @[ext]
-theorem hom_ext [Ring R] {d : ℤ} (f g : ℤ√d →+* R) (h : f sqrtd = g sqrtd) : f = g := by
+theorem hom_ext [Ring R] {d : ℤ} (f g : ℤ√d →+* R) (h : f sqrtd = g sqrtd) : f = g :=
+  by
   ext ⟨x_re, x_im⟩
   simp [decompose, h]
 #align zsqrtd.hom_ext Zsqrtd.hom_ext
@@ -1022,18 +1038,17 @@ variable [CommRing R]
 /-- The unique `ring_hom` from `ℤ√d` to a ring `R`, constructed by replacing `√d` with the provided
 root. Conversely, this associates to every mapping `ℤ√d →+* R` a value of `√d` in `R`. -/
 @[simps]
-def lift {d : ℤ} :
-    { r : R // r * r = ↑d } ≃
-      (ℤ√d →+*
-        R) where 
+def lift {d : ℤ} : { r : R // r * r = ↑d } ≃ (ℤ√d →+* R)
+    where
   toFun r :=
     { toFun := fun a => a.1 + a.2 * (r : R)
       map_zero' := by simp
-      map_add' := fun a b => by 
+      map_add' := fun a b => by
         simp
         ring
       map_one' := by simp
-      map_mul' := fun a b => by
+      map_mul' := fun a b =>
+        by
         have :
           (a.re + a.im * r : R) * (b.re + b.im * r) =
             a.re * b.re + (a.re * b.im + a.im * b.re) * r + a.im * b.im * (r * r) :=
@@ -1041,10 +1056,10 @@ def lift {d : ℤ} :
         simp [this, r.prop]
         ring }
   invFun f := ⟨f sqrtd, by rw [← f.map_mul, dmuld, map_int_cast]⟩
-  left_inv r := by 
+  left_inv r := by
     ext
     simp
-  right_inv f := by 
+  right_inv f := by
     ext
     simp
 #align zsqrtd.lift Zsqrtd.lift
@@ -1053,9 +1068,11 @@ def lift {d : ℤ} :
 `ℤ` into `R` is injective). -/
 theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d })
     (hd : ∀ n : ℤ, d ≠ n * n) : Function.Injective (lift r) :=
-  (injective_iff_map_eq_zero (lift r)).mpr fun a ha => by
+  (injective_iff_map_eq_zero (lift r)).mpr fun a ha =>
+    by
     have h_inj : Function.Injective (coe : ℤ → R) := Int.cast_injective
-    suffices lift r a.norm = 0 by
+    suffices lift r a.norm = 0
+      by
       simp only [coe_int_re, add_zero, lift_apply_apply, coe_int_im, Int.cast_zero, zero_mul] at
         this
       rwa [← Int.cast_zero, h_inj.eq_iff, norm_eq_zero hd] at this

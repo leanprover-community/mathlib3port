@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.definability
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ def Definable (s : Set (α → M)) : Prop :=
 variable {L} {A} {B : Set M} {s : Set (α → M)}
 
 theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.StructureCat M] (h : A.Definable L s)
-    (φ : L →ᴸ L') [φ.IsExpansionOn M] : A.Definable L' s := by
+    (φ : L →ᴸ L') [φ.IsExpansionOn M] : A.Definable L' s :=
+  by
   obtain ⟨ψ, rfl⟩ := h
   refine' ⟨(φ.add_constants A).onFormula ψ, _⟩
   ext x
@@ -62,7 +63,7 @@ theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.StructureCat M] (
 #align set.definable.map_expansion Set.Definable.map_expansion
 
 theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = setOf φ.realize :=
-  by 
+  by
   rw [definable, Equiv.exists_congr_left (Lequiv.add_empty_constants L (∅ : Set M)).onFormula]
   simp
 #align set.empty_definable_iff Set.empty_definable_iff
@@ -72,28 +73,29 @@ theorem definable_iff_empty_definable_with_params :
   empty_definable_iff.symm
 #align set.definable_iff_empty_definable_with_params Set.definable_iff_empty_definable_with_params
 
-theorem Definable.mono (hAs : A.Definable L s) (hAB : A ⊆ B) : B.Definable L s := by
+theorem Definable.mono (hAs : A.Definable L s) (hAB : A ⊆ B) : B.Definable L s :=
+  by
   rw [definable_iff_empty_definable_with_params] at *
   exact hAs.map_expansion (L.Lhom_with_constants_map (Set.inclusion hAB))
 #align set.definable.mono Set.Definable.mono
 
 @[simp]
 theorem definable_empty : A.Definable L (∅ : Set (α → M)) :=
-  ⟨⊥, by 
+  ⟨⊥, by
     ext
     simp⟩
 #align set.definable_empty Set.definable_empty
 
 @[simp]
 theorem definable_univ : A.Definable L (univ : Set (α → M)) :=
-  ⟨⊤, by 
+  ⟨⊤, by
     ext
     simp⟩
 #align set.definable_univ Set.definable_univ
 
 @[simp]
 theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) :
-    A.Definable L (f ∩ g) := by 
+    A.Definable L (f ∩ g) := by
   rcases hf with ⟨φ, rfl⟩
   rcases hg with ⟨θ, rfl⟩
   refine' ⟨φ ⊓ θ, _⟩
@@ -103,7 +105,7 @@ theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
 
 @[simp]
 theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) :
-    A.Definable L (f ∪ g) := by 
+    A.Definable L (f ∪ g) := by
   rcases hf with ⟨φ, hφ⟩
   rcases hg with ⟨θ, hθ⟩
   refine' ⟨φ ⊔ θ, _⟩
@@ -113,7 +115,7 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
 
 theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
     (s : Finset ι) : A.Definable L (s.inf f) := by
-  classical 
+  classical
     refine' Finset.induction definable_univ (fun i s is h => _) s
     rw [Finset.inf_insert]
     exact (hf i).inter h
@@ -121,26 +123,29 @@ theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf 
 
 theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
     (s : Finset ι) : A.Definable L (s.sup f) := by
-  classical 
+  classical
     refine' Finset.induction definable_empty (fun i s is h => _) s
     rw [Finset.sup_insert]
     exact (hf i).union h
 #align set.definable_finset_sup Set.definable_finset_sup
 
 theorem definable_finset_bInter {ι : Type _} {f : ∀ i : ι, Set (α → M)}
-    (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋂ i ∈ s, f i) := by
+    (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋂ i ∈ s, f i) :=
+  by
   rw [← Finset.inf_set_eq_bInter]
   exact definable_finset_inf hf s
 #align set.definable_finset_bInter Set.definable_finset_bInter
 
 theorem definable_finset_bUnion {ι : Type _} {f : ∀ i : ι, Set (α → M)}
-    (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋃ i ∈ s, f i) := by
+    (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋃ i ∈ s, f i) :=
+  by
   rw [← Finset.sup_set_eq_bUnion]
   exact definable_finset_sup hf s
 #align set.definable_finset_bUnion Set.definable_finset_bUnion
 
 @[simp]
-theorem Definable.compl {s : Set (α → M)} (hf : A.Definable L s) : A.Definable L (sᶜ) := by
+theorem Definable.compl {s : Set (α → M)} (hf : A.Definable L s) : A.Definable L (sᶜ) :=
+  by
   rcases hf with ⟨φ, hφ⟩
   refine' ⟨φ.not, _⟩
   rw [hφ]
@@ -154,7 +159,8 @@ theorem Definable.sdiff {s t : Set (α → M)} (hs : A.Definable L s) (ht : A.De
 #align set.definable.sdiff Set.Definable.sdiff
 
 theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Definable L s) :
-    A.Definable L ((fun g : β → M => g ∘ f) ⁻¹' s) := by
+    A.Definable L ((fun g : β → M => g ∘ f) ⁻¹' s) :=
+  by
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨φ.relabel f, _⟩
   ext
@@ -162,7 +168,8 @@ theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Defi
 #align set.definable.preimage_comp Set.Definable.preimage_comp
 
 theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f : α ≃ β) :
-    A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
+    A.Definable L ((fun g : β → M => g ∘ f) '' s) :=
+  by
   refine' (congr rfl _).mp (h.preimage_comp f.symm)
   rw [image_eq_preimage_of_inverse]
   · intro i
@@ -175,7 +182,8 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
 
 /-- This lemma is only intended as a helper for `definable.image_comp. -/
 theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → M)}
-    (h : A.Definable L s) : A.Definable L ((fun g : Sum α (Fin m) → M => g ∘ Sum.inl) '' s) := by
+    (h : A.Definable L s) : A.Definable L ((fun g : Sum α (Fin m) → M => g ∘ Sum.inl) '' s) :=
+  by
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨(bounded_formula.relabel id φ).exs, _⟩
   ext x
@@ -192,7 +200,7 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β)
     [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
-  classical 
+  classical
     cases nonempty_fintype β
     refine'
       (congr rfl (ext fun x => _)).mp
@@ -208,7 +216,7 @@ theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Finite α]
     [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
-  classical 
+  classical
     cases nonempty_fintype α
     cases nonempty_fintype β
     have h :=
@@ -218,7 +226,8 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
             _).preimage_comp
         (range_splitting f)
     have h' :
-      A.definable L { x : α → M | ∀ a, x a = x (range_splitting f (range_factorization f a)) } := by
+      A.definable L { x : α → M | ∀ a, x a = x (range_splitting f (range_factorization f a)) } :=
+      by
       have h' :
         ∀ a, A.definable L { x : α → M | x a = x (range_splitting f (range_factorization f a)) } :=
         by
@@ -276,8 +285,8 @@ namespace DefinableSet
 
 variable {L A α} {s t : L.DefinableSet A α} {x : α → M}
 
-instance : SetLike (L.DefinableSet A α)
-      (α → M) where 
+instance : SetLike (L.DefinableSet A α) (α → M)
+    where
   coe := Subtype.val
   coe_injective' := Subtype.val_injective
 

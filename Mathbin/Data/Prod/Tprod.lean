@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.prod.tprod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ Case conversion may be inaccurate. Consider using '#align list.tprod.elim List.T
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
 protected def elim : ∀ {l : List ι} (v : Tprod α l) {i : ι} (hi : i ∈ l), α i
   | i :: is, v, j, hj =>
-    if hji : j = i then by 
+    if hji : j = i then by
       subst hji
       exact v.1
     else elim v.2 (hj.resolve_left hji)
@@ -112,14 +112,15 @@ theorem elim_of_ne (hj : j ∈ i :: l) (hji : j ≠ i) (v : Tprod α (i :: l)) :
 
 @[simp]
 theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l)) :
-    v.elim (mem_cons_of_mem _ hj) = Tprod.elim v.2 hj := by
+    v.elim (mem_cons_of_mem _ hj) = Tprod.elim v.2 hj :=
+  by
   apply elim_of_ne
   rintro rfl
   exact hl.not_mem hj
 #align list.tprod.elim_of_mem List.Tprod.elim_of_mem
 
 theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (Tprod.mk l f).elim hi = f i
-  | i :: is, f, j, hj => by 
+  | i :: is, f, j, hj => by
     by_cases hji : j = i
     · subst hji
       simp
@@ -131,7 +132,7 @@ theorem ext :
     ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l}
       (hvw : ∀ (i) (hi : i ∈ l), v.elim hi = w.elim hi), v = w
   | [], hl, v, w, hvw => PUnit.ext
-  | i :: is, hl, v, w, hvw => by 
+  | i :: is, hl, v, w, hvw => by
     ext; rw [← elim_self v, hvw, elim_self]
     refine' ext (nodup_cons.mp hl).2 fun j hj => _
     rw [← elim_of_mem hl, hvw, elim_of_mem hl]
@@ -178,7 +179,7 @@ protected def tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l
 theorem mk_preimage_tprod :
     ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk l ⁻¹' Set.tprod l t = { i | i ∈ l }.pi t
   | [], t => by simp [Set.tprod]
-  | i :: l, t => by 
+  | i :: l, t => by
     ext f
     have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by
       rw [mk_preimage_tprod l t]
@@ -191,8 +192,9 @@ theorem mk_preimage_tprod :
 #align set.mk_preimage_tprod Set.mk_preimage_tprod
 
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l)
-    (t : ∀ i, Set (α i)) : Tprod.elim' h ⁻¹' pi univ t = Set.tprod l t := by
-  have : { i | i ∈ l } = univ := by 
+    (t : ∀ i, Set (α i)) : Tprod.elim' h ⁻¹' pi univ t = Set.tprod l t :=
+  by
+  have : { i | i ∈ l } = univ := by
     ext i
     simp [h]
   rw [← this, ← mk_preimage_tprod, preimage_preimage]

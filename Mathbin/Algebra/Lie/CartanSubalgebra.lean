@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.cartan_subalgebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ theorem centralizer_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.I
 
 @[simp]
 theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] (k : ℕ) :
-    H.toLieSubmodule.ucs k = H.toLieSubmodule := by
+    H.toLieSubmodule.ucs k = H.toLieSubmodule :=
+  by
   induction' k with k ih
   · simp
   · simp [ih]
@@ -74,7 +75,8 @@ theorem ucs_eq_self_of_is_cartan_subalgebra (H : LieSubalgebra R L) [H.IsCartanS
   lie_subalgebra.ucs_eq_self_of_is_cartan_subalgebra LieSubalgebra.ucs_eq_self_of_is_cartan_subalgebra
 
 theorem is_cartan_subalgebra_iff_is_ucs_limit :
-    H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit := by
+    H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit :=
+  by
   constructor
   · intro h
     have h₁ : _root_.lie_algebra.is_nilpotent R H := by infer_instance
@@ -87,13 +89,13 @@ theorem is_cartan_subalgebra_iff_is_ucs_limit :
       LieSubalgebra.ucs_eq_self_of_is_cartan_subalgebra]
   · rintro ⟨k, hk⟩
     exact
-      { nilpotent := by 
+      { nilpotent := by
           dsimp only [LieAlgebra.IsNilpotent]
           erw [H.to_lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot]
           use k
           rw [_root_.eq_bot_iff, LieSubmodule.lcs_le_iff, hk k (le_refl k)]
           exact le_refl _
-        self_normalizing := by 
+        self_normalizing := by
           have hk' := hk (k + 1) k.le_succ
           rw [LieSubmodule.ucs_succ, hk k (le_refl k)] at hk'
           rw [← LieSubalgebra.coe_to_submodule_eq_iff, ←
@@ -105,7 +107,8 @@ end LieSubalgebra
 
 @[simp]
 theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRing R] [LieRing L]
-    [LieAlgebra R L] (I : LieIdeal R L) : (I : LieSubalgebra R L).normalizer = ⊤ := by
+    [LieAlgebra R L] (I : LieIdeal R L) : (I : LieSubalgebra R L).normalizer = ⊤ :=
+  by
   ext x
   simpa only [LieSubalgebra.mem_normalizer_iff, LieSubalgebra.mem_top, iff_true_iff] using
     fun y hy => I.lie_mem hy
@@ -114,11 +117,10 @@ theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRing R] [LieRi
 open LieIdeal
 
 /-- A nilpotent Lie algebra is its own Cartan subalgebra. -/
-instance LieAlgebra.top_is_cartan_subalgebra_of_nilpotent [LieAlgebra.IsNilpotent R L] :
-    LieSubalgebra.IsCartanSubalgebra
-      (⊤ : LieSubalgebra R L) where 
+instance LieAlgebra.topIsCartanSubalgebraOfNilpotent [LieAlgebra.IsNilpotent R L] :
+    LieSubalgebra.IsCartanSubalgebra (⊤ : LieSubalgebra R L)
+    where
   nilpotent := inferInstance
   self_normalizing := by rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
-#align
-  lie_algebra.top_is_cartan_subalgebra_of_nilpotent LieAlgebra.top_is_cartan_subalgebra_of_nilpotent
+#align lie_algebra.top_is_cartan_subalgebra_of_nilpotent LieAlgebra.topIsCartanSubalgebraOfNilpotent
 

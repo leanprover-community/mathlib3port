@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module group_theory.group_action.option
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem smul_some : a • some b = some (a • b) :=
 
 @[to_additive]
 instance [HasSmul M N] [IsScalarTower M N α] : IsScalarTower M N (Option α) :=
-  ⟨fun a b x => by 
+  ⟨fun a b x => by
     cases x
     exacts[rfl, congr_arg some (smul_assoc _ _ _)]⟩
 
@@ -86,7 +86,7 @@ instance [SMulCommClass M N α] : SMulCommClass M N (Option α) :=
 
 @[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : IsCentralScalar M (Option α) :=
-  ⟨fun a x => by 
+  ⟨fun a x => by
     cases x
     exacts[rfl, congr_arg some (op_smul_eq_smul _ _)]⟩
 
@@ -96,13 +96,13 @@ instance [FaithfulSMul M α] : FaithfulSMul M (Option α) :=
 
 end HasSmul
 
-instance [Monoid M] [MulAction M α] :
-    MulAction M (Option α) where 
+instance [Monoid M] [MulAction M α] : MulAction M (Option α)
+    where
   smul := (· • ·)
-  one_smul b := by 
+  one_smul b := by
     cases b
     exacts[rfl, congr_arg some (one_smul _ _)]
-  mul_smul a₁ a₂ b := by 
+  mul_smul a₁ a₂ b := by
     cases b
     exacts[rfl, congr_arg some (mul_smul _ _ _)]
 

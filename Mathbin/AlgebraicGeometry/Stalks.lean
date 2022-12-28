@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.stalks
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,8 @@ theorem restrict_stalk_iso_inv_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} 
 
 theorem restrict_stalk_iso_inv_eq_of_restrict {U : TopCat} (X : PresheafedSpaceCat.{v} C)
     {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (x : U) :
-    (X.restrictStalkIso h x).inv = stalkMap (X.of_restrict h) x := by
+    (X.restrictStalkIso h x).inv = stalkMap (X.of_restrict h) x :=
+  by
   ext V
   induction V using Opposite.rec
   let i : (h.is_open_map.functor_nhds x).obj ((open_nhds.map f x).obj V) ⟶ V :=
@@ -118,7 +119,8 @@ theorem restrict_stalk_iso_inv_eq_of_restrict {U : TopCat} (X : PresheafedSpaceC
 
 instance of_restrict_stalk_map_is_iso {U : TopCat} (X : PresheafedSpaceCat.{v} C)
     {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (x : U) :
-    IsIso (stalkMap (X.of_restrict h) x) := by
+    IsIso (stalkMap (X.of_restrict h) x) :=
+  by
   rw [← restrict_stalk_iso_inv_eq_of_restrict]
   infer_instance
 #align
@@ -129,7 +131,8 @@ end Restrict
 namespace StalkMap
 
 @[simp]
-theorem id (X : PresheafedSpaceCat.{v} C) (x : X) : stalkMap (𝟙 X) x = 𝟙 (X.stalk x) := by
+theorem id (X : PresheafedSpaceCat.{v} C) (x : X) : stalkMap (𝟙 X) x = 𝟙 (X.stalk x) :=
+  by
   dsimp [stalk_map]
   simp only [stalk_pushforward.id]
   rw [← map_comp]
@@ -144,7 +147,7 @@ theorem comp {X Y Z : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (β : Y ⟶ Z) (x
     stalkMap (α ≫ β) x =
       (stalkMap β (α.base x) : Z.stalk (β.base (α.base x)) ⟶ Y.stalk (α.base x)) ≫
         (stalkMap α x : Y.stalk (α.base x) ⟶ X.stalk x) :=
-  by 
+  by
   dsimp [stalk_map, stalk_functor, stalk_pushforward]
   ext U
   induction U using Opposite.rec
@@ -168,7 +171,7 @@ either side of the equality.
 theorem congr {X Y : PresheafedSpaceCat.{v} C} (α β : X ⟶ Y) (h₁ : α = β) (x x' : X) (h₂ : x = x') :
     stalkMap α x ≫ eqToHom (show X.stalk x = X.stalk x' by rw [h₂]) =
       eqToHom (show Y.stalk (α.base x) = Y.stalk (β.base x') by rw [h₁, h₂]) ≫ stalkMap β x' :=
-  (stalk_hom_ext _) fun U hx => by 
+  (stalk_hom_ext _) fun U hx => by
     subst h₁
     subst h₂
     simp
@@ -190,8 +193,8 @@ theorem congr_point {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (x x' : X) (
   algebraic_geometry.PresheafedSpace.stalk_map.congr_point AlgebraicGeometry.PresheafedSpaceCat.stalkMap.congr_point
 
 instance is_iso {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) [IsIso α] (x : X) :
-    IsIso (stalkMap α
-        x) where out := by 
+    IsIso (stalkMap α x)
+    where out := by
     let β : Y ⟶ X := CategoryTheory.inv α
     have h_eq : (α ≫ β).base x = x := by rw [is_iso.hom_inv_id α, id_base, TopCat.id_app]
     -- Intuitively, the inverse of the stalk map of `α` at `x` should just be the stalk map of `β`
@@ -227,7 +230,7 @@ theorem stalk_specializes_stalk_map {X Y : PresheafedSpaceCat.{v} C} (f : X ⟶ 
     (h : x ⤳ y) :
     Y.Presheaf.stalkSpecializes (f.base.map_specializes h) ≫ stalkMap f x =
       stalkMap f y ≫ X.Presheaf.stalkSpecializes h :=
-  by 
+  by
   delta PresheafedSpace.stalk_map
   simp [stalk_map]
 #align

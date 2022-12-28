@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.whiskering
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ protected def whiskerRight (adj : F ⊣ G) :
     { Unit :=
         { app := fun X =>
             (Functor.rightUnitor _).inv ≫ whiskerLeft X adj.Unit ≫ (Functor.associator _ _ _).inv
-          naturality' := by 
+          naturality' := by
             intros
             ext
             dsimp
@@ -44,16 +44,16 @@ protected def whiskerRight (adj : F ⊣ G) :
       counit :=
         { app := fun X =>
             (Functor.associator _ _ _).Hom ≫ whiskerLeft X adj.counit ≫ (Functor.rightUnitor _).Hom
-          naturality' := by 
+          naturality' := by
             intros
             ext
             dsimp
             simp }
-      left_triangle' := by 
+      left_triangle' := by
         ext
         dsimp
         simp
-      right_triangle' := by 
+      right_triangle' := by
         ext
         dsimp
         simp }
@@ -69,7 +69,7 @@ protected def whiskerLeft (adj : F ⊣ G) :
     { Unit :=
         { app := fun X =>
             (Functor.leftUnitor _).inv ≫ whiskerRight adj.Unit X ≫ (Functor.associator _ _ _).Hom
-          naturality' := by 
+          naturality' := by
             intros
             ext
             dsimp
@@ -77,17 +77,17 @@ protected def whiskerLeft (adj : F ⊣ G) :
       counit :=
         { app := fun X =>
             (Functor.associator _ _ _).inv ≫ whiskerRight adj.counit X ≫ (Functor.leftUnitor _).Hom
-          naturality' := by 
+          naturality' := by
             intros
             ext
             dsimp
             simp }
-      left_triangle' := by 
+      left_triangle' := by
         ext x
         dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]
         simp
-      right_triangle' := by 
+      right_triangle' := by
         ext x
         dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]

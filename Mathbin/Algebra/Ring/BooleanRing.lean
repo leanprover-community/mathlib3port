@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.ring.boolean_ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,8 @@ theorem mul_self : a * a = a :=
 #align mul_self mul_self
 
 @[simp]
-theorem add_self : a + a = 0 := by
+theorem add_self : a + a = 0 :=
+  by
   have : a + a = a + a + (a + a) :=
     calc
       a + a = (a + a) * (a + a) := by rw [mul_self]
@@ -91,7 +92,8 @@ theorem add_eq_zero : a + b = 0 ↔ a = b :=
 #align add_eq_zero add_eq_zero
 
 @[simp]
-theorem mul_add_mul : a * b + b * a = 0 := by
+theorem mul_add_mul : a * b + b * a = 0 :=
+  by
   have : a + b = a + b + (a * b + b * a) :=
     calc
       a + b = (a + b) * (a + b) := by rw [mul_self]
@@ -192,32 +194,38 @@ BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
 
 scoped[BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 
-theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a := by
+theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a :=
+  by
   dsimp only [(· ⊔ ·)]
   ring
 #align boolean_ring.sup_comm BooleanRing.sup_comm
 
-theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a := by
+theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a :=
+  by
   dsimp only [(· ⊓ ·)]
   ring
 #align boolean_ring.inf_comm BooleanRing.inf_comm
 
-theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) := by
+theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
+  by
   dsimp only [(· ⊔ ·)]
   ring
 #align boolean_ring.sup_assoc BooleanRing.sup_assoc
 
-theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) := by
+theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
+  by
   dsimp only [(· ⊓ ·)]
   ring
 #align boolean_ring.inf_assoc BooleanRing.inf_assoc
 
-theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a := by
+theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a :=
+  by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   assoc_rw [mul_self, add_self, add_zero]
 #align boolean_ring.sup_inf_self BooleanRing.sup_inf_self
 
-theorem inf_sup_self (a b : α) : a ⊓ (a ⊔ b) = a := by
+theorem inf_sup_self (a b : α) : a ⊓ (a ⊔ b) = a :=
+  by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [mul_add, mul_add, mul_self, ← mul_assoc, mul_self, add_assoc, add_self, add_zero]
 #align boolean_ring.inf_sup_self BooleanRing.inf_sup_self
@@ -232,7 +240,8 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
     
 #align boolean_ring.le_sup_inf_aux BooleanRing.le_sup_inf_aux
 
-theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c := by
+theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c :=
+  by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_add]
 #align boolean_ring.le_sup_inf BooleanRing.le_sup_inf
@@ -249,7 +258,9 @@ The data is defined so that:
 * `a \ b` unfolds to `a * (1 + b)`
 -/
 def toBooleanAlgebra : BooleanAlgebra α :=
-  { Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self inf_sup_self with
+  {
+    Lattice.mk' sup_comm sup_assoc inf_comm inf_assoc sup_inf_self
+      inf_sup_self with
     le_sup_inf := le_sup_inf
     top := 1
     le_top := fun a => show a + 1 + a * 1 = 1 by assoc_rw [mul_one, add_comm, add_self, add_zero]
@@ -258,7 +269,8 @@ def toBooleanAlgebra : BooleanAlgebra α :=
     compl := fun a => 1 + a
     inf_compl_le_bot := fun a =>
       show a * (1 + a) + 0 + a * (1 + a) * 0 = 0 by norm_num [mul_add, mul_self, add_self]
-    top_le_sup_compl := fun a => by
+    top_le_sup_compl := fun a =>
+      by
       change
         1 + (a + (1 + a) + a * (1 + a)) + 1 * (a + (1 + a) + a * (1 + a)) =
           a + (1 + a) + a * (1 + a)
@@ -315,7 +327,7 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
 
 @[simp]
 theorem of_boolalg_symm_diff (a b : AsBoolalg α) : ofBoolalg (a ∆ b) = ofBoolalg a + ofBoolalg b :=
-  by 
+  by
   rw [symmDiff_eq_sup_sdiff_inf]
   exact of_boolalg_symm_diff_aux _ _
 #align of_boolalg_symm_diff of_boolalg_symm_diff
@@ -355,11 +367,10 @@ theorem to_boolalg_add (a b : α) : toBoolalg (a + b) = toBoolalg a ∆ toBoolal
 /-- Turn a ring homomorphism from Boolean rings `α` to `β` into a bounded lattice homomorphism
 from `α` to `β` considered as Boolean algebras. -/
 @[simps]
-protected def RingHom.asBoolalg (f : α →+* β) :
-    BoundedLatticeHom (AsBoolalg α)
-      (AsBoolalg β) where 
+protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg α) (AsBoolalg β)
+    where
   toFun := toBoolalg ∘ f ∘ ofBoolalg
-  map_sup' a b := by 
+  map_sup' a b := by
     dsimp
     simp_rw [map_add f, map_mul f]
     rfl
@@ -445,7 +456,7 @@ following data:
 -/
 @[reducible]
 def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α] :
-    NonUnitalCommRing α where 
+    NonUnitalCommRing α where
   add := (· ∆ ·)
   add_assoc := symmDiff_assoc
   zero := ⊥
@@ -480,7 +491,8 @@ variable [BooleanAlgebra α] [BooleanAlgebra β] [BooleanAlgebra γ]
 -/
 @[reducible]
 def BooleanAlgebra.toBooleanRing : BooleanRing α :=
-  { GeneralizedBooleanAlgebra.toNonUnitalCommRing with
+  {
+    GeneralizedBooleanAlgebra.toNonUnitalCommRing with
     one := ⊤
     one_mul := fun _ => top_inf_eq
     mul_one := fun _ => inf_top_eq
@@ -555,8 +567,8 @@ theorem to_boolring_symm_diff (a b : α) : toBoolring (a ∆ b) = toBoolring a +
 from `α` to `β` considered as Boolean rings. -/
 @[simps]
 protected def BoundedLatticeHom.asBoolring (f : BoundedLatticeHom α β) :
-    AsBoolring α →+*
-      AsBoolring β where 
+    AsBoolring α →+* AsBoolring β
+    where
   toFun := toBoolring ∘ f ∘ ofBoolring
   map_zero' := f.map_bot'
   map_one' := f.map_top'
@@ -592,14 +604,14 @@ def OrderIso.asBoolalgAsBoolring (α : Type _) [BooleanAlgebra α] : AsBoolalg (
 `α`. -/
 @[simps]
 def RingEquiv.asBoolringAsBoolalg (α : Type _) [BooleanRing α] : AsBoolring (AsBoolalg α) ≃+* α :=
-  { ofBoolring.trans ofBoolalg with 
+  { ofBoolring.trans ofBoolalg with
     map_mul' := fun a b => rfl
     map_add' := of_boolalg_symm_diff }
 #align ring_equiv.as_boolring_as_boolalg RingEquiv.asBoolringAsBoolalg
 
 open Bool
 
-instance : BooleanRing Bool where 
+instance : BooleanRing Bool where
   add := xor
   add_assoc := xor_assoc
   zero := false

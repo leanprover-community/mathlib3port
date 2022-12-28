@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.chevalley_warning
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,8 @@ variable {K : Type _} {σ : Type _} [Fintype K] [Field K] [Fintype σ]
 local notation "q" => Fintype.card K
 
 theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomial σ K)
-    (h : f.totalDegree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 := by
+    (h : f.totalDegree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 :=
+  by
   haveI : DecidableEq K := Classical.decEq K
   calc
     (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
@@ -96,7 +97,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
   calc
     (∏ j : σ, (e a : σ → K) j ^ d j) =
         (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j :=
-      by 
+      by
       rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
       rfl
     _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
@@ -122,12 +123,14 @@ Assume that the sum of the total degrees of the `f i` is less than the cardinali
 Then the number of common solutions of the `f i` is divisible by `p`. -/
 theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : Finset ι}
     {f : ι → MvPolynomial σ K} (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
-    p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } := by
-  have hq : 0 < q - 1 := by 
+    p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } :=
+  by
+  have hq : 0 < q - 1 := by
     rw [← Fintype.card_units, Fintype.card_pos_iff]
     exact ⟨1⟩
   let S : Finset (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }
-  have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 := by
+  have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 :=
+    by
     intro x
     simp only [S, true_and_iff, sep_def, mem_filter, mem_univ]
   /- The polynomial `F = ∏ i in s, (1 - (f i)^(q - 1))` has the nice property
@@ -136,7 +139,8 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
     Hence the sum of its values is equal to the cardinality of
     `{x : σ → K // ∀ i ∈ s, (f i).eval x = 0}` modulo `p`. -/
   let F : MvPolynomial σ K := ∏ i in s, 1 - f i ^ (q - 1)
-  have hF : ∀ x, eval x F = if x ∈ S then 1 else 0 := by
+  have hF : ∀ x, eval x F = if x ∈ S then 1 else 0 :=
+    by
     intro x
     calc
       eval x F = ∏ i in s, eval x (1 - f i ^ (q - 1)) := eval_prod s _ x
@@ -191,7 +195,8 @@ Assume that the total degree of `f` is less than the cardinality of `σ`.
 Then the number of solutions of `f` is divisible by `p`.
 See `char_dvd_card_solutions_family` for a version that takes a family of polynomials `f i`. -/
 theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K}
-    (h : f.totalDegree < Fintype.card σ) : p ∣ Fintype.card { x : σ → K // eval x f = 0 } := by
+    (h : f.totalDegree < Fintype.card σ) : p ∣ Fintype.card { x : σ → K // eval x f = 0 } :=
+  by
   let F : Unit → MvPolynomial σ K := fun _ => f
   have : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ := by
     simpa only [Fintype.univ_punit, sum_singleton] using h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.adhesive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,14 +65,15 @@ def IsPushout.IsVanKampen (H : IsPushout f g h i) : Prop :=
 #align category_theory.is_pushout.is_van_kampen CategoryTheory.IsPushout.IsVanKampen
 
 theorem IsPushout.IsVanKampen.flip {H : IsPushout f g h i} (H' : H.IsVanKampen) :
-    H.flip.IsVanKampen := by 
+    H.flip.IsVanKampen := by
   introv W' hf hg hh hi w
   simpa only [is_pushout.flip_iff, is_pullback.flip_iff, and_comm'] using
     H' g' f' i' h' αW αY αX αZ hg hf hi hh w.flip
 #align category_theory.is_pushout.is_van_kampen.flip CategoryTheory.IsPushout.IsVanKampen.flip
 
 theorem IsPushout.is_van_kampen_iff (H : IsPushout f g h i) :
-    H.IsVanKampen ↔ IsVanKampenColimit (PushoutCocone.mk h i H.w) := by
+    H.IsVanKampen ↔ IsVanKampenColimit (PushoutCocone.mk h i H.w) :=
+  by
   constructor
   · intro H F' c' α fα eα hα
     refine'
@@ -105,7 +106,7 @@ theorem IsPushout.is_van_kampen_iff (H : IsPushout f g h i) :
     refine'
       Iff.trans _
         ((H w.cocone
-              ⟨by 
+              ⟨by
                 rintro (_ | _ | _)
                 exacts[αW, αX, αY], _⟩
               αZ _ _).trans
@@ -138,7 +139,8 @@ theorem IsPushout.is_van_kampen_iff (H : IsPushout f g h i) :
 
 theorem is_coprod_iff_is_pushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsColimit c) {f : X ⟶ Y}
     {iY : Y ⟶ YE} {fE : c.x ⟶ YE} (H : CommSq f c.inl iY fE) :
-    Nonempty (IsColimit (BinaryCofan.mk (c.inr ≫ fE) iY)) ↔ IsPushout f c.inl iY fE := by
+    Nonempty (IsColimit (BinaryCofan.mk (c.inr ≫ fE) iY)) ↔ IsPushout f c.inl iY fE :=
+  by
   constructor
   · rintro ⟨h⟩
     refine' ⟨H, ⟨limits.pushout_cocone.is_colimit_aux' _ _⟩⟩
@@ -186,7 +188,8 @@ theorem is_coprod_iff_is_pushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsCo
 
 theorem IsPushout.isVanKampenInl {W E X Z : C} (c : BinaryCofan W E) [FinitaryExtensive C]
     [HasPullbacks C] (hc : IsColimit c) (f : W ⟶ X) (h : X ⟶ Z) (i : c.x ⟶ Z)
-    (H : IsPushout f c.inl h i) : H.IsVanKampen := by
+    (H : IsPushout f c.inl h i) : H.IsVanKampen :=
+  by
   obtain ⟨hc₁⟩ := (is_coprod_iff_is_pushout c hc H.1).mpr H
   introv W' hf hg hh hi w
   obtain ⟨hc₂⟩ :=
@@ -215,7 +218,8 @@ theorem IsPushout.isVanKampenInl {W E X Z : C} (c : BinaryCofan W E) [FinitaryEx
         ⟨_, _⟩
     · rw [← category.id_comp αZ, ← show cmp ≫ pullback.snd = αY from pullback.lift_snd _ _ _]
       apply is_pullback.paste_vert _ (is_pullback.of_has_pullback αZ i)
-      have : cmp = (hc₂.cocone_point_unique_up_to_iso hc₄).Hom := by
+      have : cmp = (hc₂.cocone_point_unique_up_to_iso hc₄).Hom :=
+        by
         apply binary_cofan.is_colimit.hom_ext hc₂
         exacts[(hc₂.comp_cocone_point_unique_up_to_iso_hom hc₄ ⟨walking_pair.left⟩).symm,
           (hc₂.comp_cocone_point_unique_up_to_iso_hom hc₄ ⟨walking_pair.right⟩).symm]
@@ -305,7 +309,8 @@ theorem Adhesive.mono_of_is_pushout_of_mono_right [Adhesive C] (H : IsPushout f 
 #align
   category_theory.adhesive.mono_of_is_pushout_of_mono_right CategoryTheory.Adhesive.mono_of_is_pushout_of_mono_right
 
-instance Type.adhesive : Adhesive (Type u) := by
+instance Type.adhesive : Adhesive (Type u) :=
+  by
   constructor
   intros
   exact (is_pushout.is_van_kampen_inl _ (types.is_coprod_of_mono f) _ _ _ H.flip).flip

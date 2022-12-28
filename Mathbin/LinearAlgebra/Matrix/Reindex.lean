@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.reindex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ variable [Semiring R] [AddCommMonoid A] [Module R A]
 /-- The natural map that reindexes a matrix's rows and columns with equivalent types,
 `matrix.reindex`, is a linear equivalence. -/
 def reindexLinearEquiv (eₘ : m ≃ m') (eₙ : n ≃ n') : Matrix m n A ≃ₗ[R] Matrix m' n' A :=
-  { reindex eₘ eₙ with 
+  { reindex eₘ eₙ with
     map_add' := fun _ _ => rfl
     map_smul' := fun _ _ => rfl }
 #align matrix.reindex_linear_equiv Matrix.reindexLinearEquiv
@@ -72,7 +72,7 @@ theorem reindex_linear_equiv_refl_refl :
 theorem reindex_linear_equiv_trans (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
     (reindexLinearEquiv R A e₁ e₂).trans (reindexLinearEquiv R A e₁' e₂') =
       (reindexLinearEquiv R A (e₁.trans e₁') (e₂.trans e₂') : _ ≃ₗ[R] _) :=
-  by 
+  by
   ext
   rfl
 #align matrix.reindex_linear_equiv_trans Matrix.reindex_linear_equiv_trans
@@ -80,7 +80,7 @@ theorem reindex_linear_equiv_trans (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : 
 theorem reindex_linear_equiv_comp (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
     reindexLinearEquiv R A e₁' e₂' ∘ reindexLinearEquiv R A e₁ e₂ =
       reindexLinearEquiv R A (e₁.trans e₁') (e₂.trans e₂') :=
-  by 
+  by
   rw [← reindex_linear_equiv_trans]
   rfl
 #align matrix.reindex_linear_equiv_comp Matrix.reindex_linear_equiv_comp
@@ -128,7 +128,7 @@ variable [CommSemiring R] [Fintype n] [Fintype m] [DecidableEq m] [DecidableEq n
 a matrix's rows and columns with equivalent types, `matrix.reindex`, is an equivalence of algebras.
 -/
 def reindexAlgEquiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
-  { reindexLinearEquiv R R e e with 
+  { reindexLinearEquiv R R e e with
     toFun := reindex e e
     map_mul' := fun a b => (reindex_linear_equiv_mul R R e e e a b).symm
     commutes' := fun r => by simp [algebraMap, Algebra.toRingHom, submatrix_smul] }

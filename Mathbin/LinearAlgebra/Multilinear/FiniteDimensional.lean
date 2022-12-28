@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.finite_dimensional
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ private theorem free_and_finite :
       ∀ [∀ i, Module R (N i)],
         ∀ [∀ i, Module.Finite R (N i)] [∀ i, Module.Free R (N i)],
           Module.Free R (MultilinearMap R N M₂) ∧ Module.Finite R (MultilinearMap R N M₂)
-    by 
+    by
     cases nonempty_fintype ι
     cases this _ (M₁ ∘ (Fintype.equivFin ι).symm)
     have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintype.equivFin ι)
@@ -62,18 +62,18 @@ private theorem free_and_finite :
   · suffices
       Module.Free R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂) ∧
         Module.Finite R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂)
-      by 
+      by
       cases this
       exact
         ⟨Module.Free.ofEquiv (multilinearCurryLeftEquiv R N M₂),
           Module.Finite.equiv (multilinearCurryLeftEquiv R N M₂)⟩
     cases ih fun i => N i.succ
-    exact ⟨Module.Free.linearMap _ _ _, Module.Finite.linear_map _ _⟩
+    exact ⟨Module.Free.linearMap _ _ _, Module.Finite.linearMap _ _⟩
 #align multilinear_map.free_and_finite multilinear_map.free_and_finite
 
-instance Module.Finite.multilinear_map : Module.Finite R (MultilinearMap R M₁ M₂) :=
+instance Module.Finite.multilinearMap : Module.Finite R (MultilinearMap R M₁ M₂) :=
   free_and_finite.2
-#align module.finite.multilinear_map Module.Finite.multilinear_map
+#align module.finite.multilinear_map Module.Finite.multilinearMap
 
 instance Module.Free.multilinearMap : Module.Free R (MultilinearMap R M₁ M₂) :=
   free_and_finite.1

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.comma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,8 +59,8 @@ cone.
 -/
 @[simps]
 def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L R))
-    {c₂ : Cone (F ⋙ snd L R)} (t₂ : IsLimit c₂) :
-    Cone F where 
+    {c₂ : Cone (F ⋙ snd L R)} (t₂ : IsLimit c₂) : Cone F
+    where
   x :=
     { left := c₁.x
       right := c₂.x
@@ -77,14 +77,14 @@ def coneOfPreserves [PreservesLimit (F ⋙ snd L R) R] (c₁ : Cone (F ⋙ fst L
 limit. -/
 def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F ⋙ fst L R)}
     (t₁ : IsLimit c₁) {c₂ : Cone (F ⋙ snd L R)} (t₂ : IsLimit c₂) :
-    IsLimit
-      (coneOfPreserves F c₁
-        t₂) where 
+    IsLimit (coneOfPreserves F c₁ t₂)
+    where
   lift s :=
     { left := t₁.lift ((fst L R).mapCone s)
       right := t₂.lift ((snd L R).mapCone s)
       w' :=
-        (isLimitOfPreserves R t₂).hom_ext fun j => by
+        (isLimitOfPreserves R t₂).hom_ext fun j =>
+          by
           rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac,
             limit_auxiliary_cone_π_app, ← L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp,
             t₂.fac]
@@ -108,8 +108,8 @@ colimit cocone.
 -/
 @[simps]
 def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)}
-    (t₁ : IsColimit c₁) (c₂ : Cocone (F ⋙ snd L R)) :
-    Cocone F where 
+    (t₁ : IsColimit c₁) (c₂ : Cocone (F ⋙ snd L R)) : Cocone F
+    where
   x :=
     { left := c₁.x
       right := c₂.x
@@ -126,14 +126,14 @@ def coconeOfPreserves [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙
 a colimit. -/
 def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Cocone (F ⋙ fst L R)}
     (t₁ : IsColimit c₁) {c₂ : Cocone (F ⋙ snd L R)} (t₂ : IsColimit c₂) :
-    IsColimit
-      (coconeOfPreserves F t₁
-        c₂) where 
+    IsColimit (coconeOfPreserves F t₁ c₂)
+    where
   desc s :=
     { left := t₁.desc ((fst L R).mapCocone s)
       right := t₂.desc ((snd L R).mapCocone s)
       w' :=
-        (isColimitOfPreserves L t₁).hom_ext fun j => by
+        (isColimitOfPreserves L t₁).hom_ext fun j =>
+          by
           rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc,
             colimit_auxiliary_cocone_ι_app, assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ←
             L.map_comp_assoc, t₁.fac]

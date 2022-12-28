@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ordered
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,8 +62,8 @@ theorem lt_def [PartialOrder β] {f g : C(α, β)} : f < g ↔ (∀ a, f a ≤ g
   Pi.lt_def
 #align continuous_map.lt_def ContinuousMap.lt_def
 
-instance hasSup [LinearOrder β] [OrderClosedTopology β] :
-    HasSup C(α, β) where sup f g := { toFun := fun a => max (f a) (g a) }
+instance hasSup [LinearOrder β] [OrderClosedTopology β] : HasSup C(α, β)
+    where sup f g := { toFun := fun a => max (f a) (g a) }
 #align continuous_map.has_sup ContinuousMap.hasSup
 
 @[simp, norm_cast]
@@ -79,13 +79,14 @@ theorem sup_apply [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) (a
 #align continuous_map.sup_apply ContinuousMap.sup_apply
 
 instance [LinearOrder β] [OrderClosedTopology β] : SemilatticeSup C(α, β) :=
-  { ContinuousMap.partialOrder, ContinuousMap.hasSup with
+  { ContinuousMap.partialOrder,
+    ContinuousMap.hasSup with
     le_sup_left := fun f g => le_def.mpr (by simp [le_refl])
     le_sup_right := fun f g => le_def.mpr (by simp [le_refl])
     sup_le := fun f₁ f₂ g w₁ w₂ => le_def.mpr fun a => by simp [le_def.mp w₁ a, le_def.mp w₂ a] }
 
-instance hasInf [LinearOrder β] [OrderClosedTopology β] :
-    HasInf C(α, β) where inf f g := { toFun := fun a => min (f a) (g a) }
+instance hasInf [LinearOrder β] [OrderClosedTopology β] : HasInf C(α, β)
+    where inf f g := { toFun := fun a => min (f a) (g a) }
 #align continuous_map.has_inf ContinuousMap.hasInf
 
 @[simp, norm_cast]
@@ -101,7 +102,8 @@ theorem inf_apply [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) (a
 #align continuous_map.inf_apply ContinuousMap.inf_apply
 
 instance [LinearOrder β] [OrderClosedTopology β] : SemilatticeInf C(α, β) :=
-  { ContinuousMap.partialOrder, ContinuousMap.hasInf with
+  { ContinuousMap.partialOrder,
+    ContinuousMap.hasInf with
     inf_le_left := fun f g => le_def.mpr (by simp [le_refl])
     inf_le_right := fun f g => le_def.mpr (by simp [le_refl])
     le_inf := fun f₁ f₂ g w₁ w₂ => le_def.mpr fun a => by simp [le_def.mp w₁ a, le_def.mp w₂ a] }
@@ -121,7 +123,8 @@ theorem sup'_apply {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(
 
 @[simp, norm_cast]
 theorem sup'_coe {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
-    ((s.sup' H f : C(β, γ)) : ι → β) = s.sup' H fun a => (f a : β → γ) := by
+    ((s.sup' H f : C(β, γ)) : ι → β) = s.sup' H fun a => (f a : β → γ) :=
+  by
   ext
   simp [sup'_apply]
 #align continuous_map.sup'_coe ContinuousMap.sup'_coe

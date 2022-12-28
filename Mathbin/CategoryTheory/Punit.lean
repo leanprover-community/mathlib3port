@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.punit
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,14 +57,13 @@ abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
 
 /-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
-def equiv :
-    Discrete PUnit ⥤ C ≌
-      C where 
+def equiv : Discrete PUnit ⥤ C ≌ C
+    where
   Functor :=
     { obj := fun F => F.obj ⟨⟨⟩⟩
       map := fun F G θ => θ.app ⟨⟨⟩⟩ }
   inverse := Functor.const _
-  unitIso := by 
+  unitIso := by
     apply nat_iso.of_components _ _
     intro X
     apply discrete.nat_iso
@@ -73,7 +72,7 @@ def equiv :
     intros
     ext ⟨⟨⟩⟩
     simp
-  counitIso := by 
+  counitIso := by
     refine' nat_iso.of_components iso.refl _
     intro X Y f
     dsimp; simp
@@ -85,7 +84,8 @@ end Functor
 /-- A category being equivalent to `punit` is equivalent to it having a unique morphism between
   any two objects. (In fact, such a category is also a groupoid; see `groupoid.of_hom_unique`) -/
 theorem equiv_punit_iff_unique :
-    Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty <| Unique (x ⟶ y) := by
+    Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty <| Unique (x ⟶ y) :=
+  by
   constructor
   · rintro ⟨h⟩
     refine' ⟨⟨h.inverse.obj ⟨⟨⟩⟩⟩, fun x y => Nonempty.intro _⟩
@@ -94,7 +94,8 @@ theorem equiv_punit_iff_unique :
     · have hx : x ⟶ h.inverse.obj ⟨⟨⟩⟩ := by convert h.unit.app x
       have hy : h.inverse.obj ⟨⟨⟩⟩ ⟶ y := by convert h.unit_inv.app y
       exact hx ≫ hy
-    have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y := by
+    have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y :=
+      by
       intro z
       simpa using congr_arg (· ≫ h.unit_inv.app y) (h.unit.naturality z)
     apply Subsingleton.intro

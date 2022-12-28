@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.products
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ variable [HasBinaryProducts C]
 
 /-- `X ⨯ -` has a comonad structure. This is sometimes called the writer comonad. -/
 @[simps]
-def prodComonad : Comonad C where 
+def prodComonad : Comonad C where
   toFunctor := prod.functor.obj X
   ε' := { app := fun Y => Limits.prod.snd }
   δ' := { app := fun Y => prod.lift Limits.prod.fst (𝟙 _) }
@@ -55,13 +55,12 @@ def prodComonad : Comonad C where
 category.
 -/
 @[simps]
-def coalgebraToOver :
-    Coalgebra (prodComonad X) ⥤
-      Over X where 
+def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X
+    where
   obj A := Over.mk (A.a ≫ limits.prod.fst)
   map A₁ A₂ f :=
     Over.homMk f.f
-      (by 
+      (by
         rw [over.mk_hom, ← f.h_assoc]
         dsimp
         simp)
@@ -71,11 +70,8 @@ def coalgebraToOver :
 category.
 -/
 @[simps]
-def overToCoalgebra :
-    Over X ⥤
-      Coalgebra
-        (prodComonad
-          X) where 
+def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X)
+    where
   obj f :=
     { a := f.left
       a := prod.lift f.Hom (𝟙 _) }
@@ -84,9 +80,8 @@ def overToCoalgebra :
 
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
 @[simps]
-def coalgebraEquivOver :
-    Coalgebra (prodComonad X) ≌
-      Over X where 
+def coalgebraEquivOver : Coalgebra (prodComonad X) ≌ Over X
+    where
   Functor := coalgebraToOver X
   inverse := overToCoalgebra X
   unitIso :=
@@ -94,13 +89,13 @@ def coalgebraEquivOver :
       (fun A =>
         Coalgebra.isoMk (Iso.refl _)
           (prod.hom_ext
-            (by 
+            (by
               dsimp
               simp)
-            (by 
+            (by
               dsimp
               simpa using A.counit)))
-      fun A₁ A₂ f => by 
+      fun A₁ A₂ f => by
       ext
       simp
   counitIso := NatIso.ofComponents (fun f => Over.isoMk (Iso.refl _)) fun f g k => by tidy
@@ -116,7 +111,7 @@ variable [HasBinaryCoproducts C]
 
 /-- `X ⨿ -` has a monad structure. This is sometimes called the either monad. -/
 @[simps]
-def coprodMonad : Monad C where 
+def coprodMonad : Monad C where
   toFunctor := coprod.functor.obj X
   η' := { app := fun Y => coprod.inr }
   μ' := { app := fun Y => coprod.desc coprod.inl (𝟙 _) }
@@ -126,13 +121,12 @@ def coprodMonad : Monad C where
 category.
 -/
 @[simps]
-def algebraToUnder :
-    Monad.Algebra (coprodMonad X) ⥤
-      Under X where 
+def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X
+    where
   obj A := Under.mk (coprod.inl ≫ A.a)
   map A₁ A₂ f :=
     Under.homMk f.f
-      (by 
+      (by
         rw [under.mk_hom, assoc, ← f.h]
         dsimp
         simp)
@@ -142,11 +136,8 @@ def algebraToUnder :
 category.
 -/
 @[simps]
-def underToAlgebra :
-    Under X ⥤
-      Monad.Algebra
-        (coprodMonad
-          X) where 
+def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X)
+    where
   obj f :=
     { a := f.right
       a := coprod.desc f.Hom (𝟙 _) }
@@ -156,9 +147,8 @@ def underToAlgebra :
 /-- The equivalence from algebras for the coproduct monad to the under category.
 -/
 @[simps]
-def algebraEquivUnder :
-    Monad.Algebra (coprodMonad X) ≌
-      Under X where 
+def algebraEquivUnder : Monad.Algebra (coprodMonad X) ≌ Under X
+    where
   Functor := algebraToUnder X
   inverse := underToAlgebra X
   unitIso :=
@@ -166,10 +156,10 @@ def algebraEquivUnder :
       (fun A =>
         Monad.Algebra.isoMk (Iso.refl _)
           (coprod.hom_ext (by tidy)
-            (by 
+            (by
               dsimp
               simpa using A.unit.symm)))
-      fun A₁ A₂ f => by 
+      fun A₁ A₂ f => by
       ext
       simp
   counitIso :=

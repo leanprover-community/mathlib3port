@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.compare
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ def cmpLE {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : Ordering :=
 
 #print cmpLE_swap /-
 theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) :
-    (cmpLE x y).swap = cmpLE y x := by
+    (cmpLE x y).swap = cmpLE y x :=
+  by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, *, Ordering.swap]
   cases not_or_of_not xy yx (total_of _ _ _)
 #align cmp_le_swap cmpLE_swap
@@ -49,7 +50,8 @@ theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· �
 
 #print cmpLE_eq_cmp /-
 theorem cmpLE_eq_cmp {α} [Preorder α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)]
-    [@DecidableRel α (· < ·)] (x y : α) : cmpLE x y = cmp x y := by
+    [@DecidableRel α (· < ·)] (x y : α) : cmpLE x y = cmp x y :=
+  by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, lt_iff_le_not_le, *, cmp, cmpUsing]
   cases not_or_of_not xy yx (total_of _ _ _)
 #align cmp_le_eq_cmp cmpLE_eq_cmp
@@ -69,7 +71,8 @@ def Compares [LT α] : Ordering → α → α → Prop
 -/
 
 #print Ordering.compares_swap /-
-theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b ↔ o.Compares b a := by
+theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b ↔ o.Compares b a :=
+  by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align ordering.compares_swap Ordering.compares_swap
@@ -159,7 +162,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_implₓ'. -/
 theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder β] {a b : α}
     {a' b' : β} (h : ∀ {o}, Compares o a b → Compares o a' b') (o) :
-    Compares o a b ↔ Compares o a' b' := by
+    Compares o a b ↔ Compares o a' b' :=
+  by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomy a b with hab hab
   · change compares Ordering.lt a b at hab
@@ -190,7 +194,8 @@ open Ordering OrderDual
 #print toDual_compares_toDual /-
 @[simp]
 theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} :
-    Compares o (toDual a) (toDual b) ↔ Compares o b a := by
+    Compares o (toDual a) (toDual b) ↔ Compares o b a :=
+  by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align to_dual_compares_to_dual toDual_compares_toDual
@@ -199,7 +204,8 @@ theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} :
 #print ofDual_compares_ofDual /-
 @[simp]
 theorem ofDual_compares_ofDual [LT α] {a b : αᵒᵈ} {o : Ordering} :
-    Compares o (ofDual a) (ofDual b) ↔ Compares o b a := by
+    Compares o (ofDual a) (ofDual b) ↔ Compares o b a :=
+  by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align of_dual_compares_of_dual ofDual_compares_ofDual
@@ -220,7 +226,8 @@ theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h :
 
 #print cmp_swap /-
 @[simp]
-theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a := by
+theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a :=
+  by
   unfold cmp cmpUsing
   by_cases a < b <;> by_cases h₂ : b < a <;> simp [h, h₂, Ordering.swap]
   exact lt_asymm h h₂
@@ -273,7 +280,7 @@ theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) :
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
 def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering)
     (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
-  { ‹Preorder α› with 
+  { ‹Preorder α› with
     le_antisymm := fun a b => (h a b).le_antisymm
     le_total := fun a b => (h a b).le_total
     decidableLe := fun a b => decidable_of_iff _ (h a b).ne_gt
@@ -339,7 +346,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrder.{u2} α] {x : α} {y : α} {β : Type.{u1}} [_inst_2 : LinearOrder.{u1} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u2} α _inst_1 a b) x y) (cmp.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_2 a b) x' y')) -> (Iff (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) x y) (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) x' y'))
 Case conversion may be inaccurate. Consider using '#align le_iff_le_of_cmp_eq_cmp le_iff_le_of_cmp_eq_cmpₓ'. -/
-theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y' := by
+theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y' :=
+  by
   rw [← not_lt, ← not_lt]
   apply not_congr
   apply lt_iff_lt_of_cmp_eq_cmp

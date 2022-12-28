@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.two_pointing
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ variable (α) [Nonempty α]
 
 #print TwoPointing.pi /-
 /-- The two-pointing of constant functions. -/
-def pi : TwoPointing (α → β) where 
+def pi : TwoPointing (α → β) where
   fst _ := q.fst
   snd _ := q.snd
   fst_ne_snd h := q.fst_ne_snd <| by convert congr_fun h (Classical.arbitrary α)
@@ -139,7 +139,7 @@ end Pi
 
 #print TwoPointing.prod /-
 /-- The product of two two-pointings. -/
-def prod : TwoPointing (α × β) where 
+def prod : TwoPointing (α × β) where
   fst := (p.fst, q.fst)
   snd := (p.snd, q.snd)
   fst_ne_snd h := p.fst_ne_snd (congr_arg Prod.fst h)

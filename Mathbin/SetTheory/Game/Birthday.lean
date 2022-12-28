@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.game.birthday
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,21 +49,21 @@ theorem birthday_def (x : Pgame) :
     birthday x =
       max (lsub.{u, u} fun i => birthday (x.moveLeft i))
         (lsub.{u, u} fun i => birthday (x.moveRight i)) :=
-  by 
+  by
   cases x
   rw [birthday]
   rfl
 #align pgame.birthday_def Pgame.birthday_def
 
 theorem birthday_move_left_lt {x : Pgame} (i : x.LeftMoves) :
-    (x.moveLeft i).birthday < x.birthday := by 
+    (x.moveLeft i).birthday < x.birthday := by
   cases x
   rw [birthday]
   exact lt_max_of_lt_left (lt_lsub _ i)
 #align pgame.birthday_move_left_lt Pgame.birthday_move_left_lt
 
 theorem birthday_move_right_lt {x : Pgame} (i : x.RightMoves) :
-    (x.moveRight i).birthday < x.birthday := by 
+    (x.moveRight i).birthday < x.birthday := by
   cases x
   rw [birthday]
   exact lt_max_of_lt_right (lt_lsub _ i)
@@ -73,7 +73,7 @@ theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
     o < x.birthday ↔
       (∃ i : x.LeftMoves, o ≤ (x.moveLeft i).birthday) ∨
         ∃ i : x.RightMoves, o ≤ (x.moveRight i).birthday :=
-  by 
+  by
   constructor
   · rw [birthday_def]
     intro h
@@ -88,10 +88,11 @@ theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
 #align pgame.lt_birthday_iff Pgame.lt_birthday_iff
 
 theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthday x = birthday y
-  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, r => by
+  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, r =>
+    by
     unfold birthday
     congr 1
-    all_goals 
+    all_goals
       apply lsub_eq_of_range_eq.{u, u, u}
       ext i; constructor
     all_goals rintro ⟨j, rfl⟩
@@ -118,20 +119,22 @@ theorem birthday_one : birthday 1 = 1 := by
 #align pgame.birthday_one Pgame.birthday_one
 
 @[simp]
-theorem birthday_star : birthday star = 1 := by
+theorem birthday_star : birthday star = 1 :=
+  by
   rw [birthday_def]
   simp
 #align pgame.birthday_star Pgame.birthday_star
 
 @[simp]
 theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
-  | ⟨xl, xr, xL, xR⟩ => by 
+  | ⟨xl, xr, xL, xR⟩ => by
     rw [birthday_def, birthday_def, max_comm]
     congr <;> funext <;> apply neg_birthday
 #align pgame.neg_birthday Pgame.neg_birthday
 
 @[simp]
-theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
+theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o :=
+  by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, Pgame.birthday]
   simp only [lsub_empty, max_zero_right]
@@ -156,7 +159,8 @@ theorem neg_birthday_le : -x.birthday.toPgame ≤ x := by
 
 @[simp]
 theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.birthday
-  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
+  | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ =>
+    by
     rw [birthday_def, nadd_def]
     simp only [birthday_add, lsub_sum, mk_add_move_left_inl, move_left_mk, mk_add_move_left_inr,
       mk_add_move_right_inl, move_right_mk, mk_add_move_right_inr]
@@ -167,7 +171,7 @@ theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.
         max_le_iff.2
           ⟨lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_left_lt i),
             lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_right_lt i)⟩
-    all_goals 
+    all_goals
       apply blsub_le_iff.2 fun i hi => _
       rcases lt_birthday_iff.1 hi with (⟨j, hj⟩ | ⟨j, hj⟩)
     · exact lt_max_of_lt_left ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))

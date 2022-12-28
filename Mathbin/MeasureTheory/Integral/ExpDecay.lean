@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module measure_theory.integral.exp_decay
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,8 @@ open Real intervalIntegral MeasureTheory Set Filter
 
 /-- Integral of `exp (-b * x)` over `(a, X)` is bounded as `X → ∞`. -/
 theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) :
-    (∫ x in a..X, exp (-b * x)) ≤ exp (-b * a) / b := by
+    (∫ x in a..X, exp (-b * x)) ≤ exp (-b * a) / b :=
+  by
   rw [integral_deriv_eq_sub' fun x => -exp (-b * x) / b]
   -- goal 1/4: F(X) - F(a) is bounded
   · simp only [tsub_le_iff_right]
@@ -47,8 +48,10 @@ theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) :
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
 theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
-    IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) := by
-  have : ∀ X : ℝ, integrable_on (fun x : ℝ => exp (-b * x)) (Ioc a X) := by
+    IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) :=
+  by
+  have : ∀ X : ℝ, integrable_on (fun x : ℝ => exp (-b * x)) (Ioc a X) :=
+    by
     intro X
     exact (continuous_const.mul continuous_id).exp.integrableOnIoc
   apply integrable_on_Ioi_of_interval_integral_norm_bounded (exp (-b * a) / b) a this tendsto_id
@@ -59,26 +62,29 @@ theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then
 `f` is integrable on `(a, ∞)`. -/
 theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : ContinuousOn f (Ici a))
-    (h2 : f =O[at_top] fun x => exp (-b * x)) : IntegrableOn f (Ioi a) := by
+    (h2 : f =O[at_top] fun x => exp (-b * x)) : IntegrableOn f (Ioi a) :=
+  by
   cases' h2.is_O_with with c h3
   rw [Asymptotics.is_O_with_iff, eventually_at_top] at h3
   cases' h3 with r bdr
   let v := max a r
   -- show integrable on `(a, v]` from continuity
-  have int_left : integrable_on f (Ioc a v) := by
+  have int_left : integrable_on f (Ioc a v) :=
+    by
     rw [← interval_integrable_iff_integrable_Ioc_of_le (le_max_left a r)]
     have u : Icc a v ⊆ Ici a := Icc_subset_Ici_self
     exact (h1.mono u).intervalIntegrableOfIcc (le_max_left a r)
-  suffices integrable_on f (Ioi v) by
+  suffices integrable_on f (Ioi v)
+    by
     have t : integrable_on f (Ioc a v ∪ Ioi v) := integrable_on_union.mpr ⟨int_left, this⟩
     simpa only [Ioc_union_Ioi_eq_Ioi, le_max_iff, le_refl, true_or_iff] using t
   -- now show integrable on `(v, ∞)` from asymptotic
   constructor
-  · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurableSetIoi
+  · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurable_set_Ioi
   have : has_finite_integral (fun x : ℝ => c * exp (-b * x)) (volume.restrict (Ioi v)) :=
     (expNegIntegrableOnIoi v h0).HasFiniteIntegral.const_mul c
   apply this.mono
-  refine' (ae_restrict_iff' measurableSetIoi).mpr _
+  refine' (ae_restrict_iff' measurable_set_Ioi).mpr _
   refine' ae_of_all _ fun x h1x => _
   rw [norm_mul, norm_eq_abs]
   rw [mem_Ioi] at h1x

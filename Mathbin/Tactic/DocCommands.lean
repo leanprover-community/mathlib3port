@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.doc_commands
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,8 +82,8 @@ unsafe def copy_doc_string_cmd (_ : parse (tk "copy_doc_string")) : parser Unit 
 /-- A user attribute `library_note` for tagging decls of type `string × string` for use in note
 output. -/
 @[user_attribute]
-unsafe def library_note_attr :
-    user_attribute where 
+unsafe def library_note_attr : user_attribute
+    where
   Name := `library_note
   descr := "Notes about library features to be included in documentation"
   parser := failed
@@ -185,8 +185,8 @@ unsafe instance tactic_doc_entry.has_to_string : ToString (TacticDocEntry × Str
 /-- A user attribute `tactic_doc` for tagging decls of type `tactic_doc_entry`
 for use in doc output -/
 @[user_attribute]
-unsafe def tactic_doc_entry_attr :
-    user_attribute where 
+unsafe def tactic_doc_entry_attr : user_attribute
+    where
   Name := `tactic_doc
   descr := "Information about a tactic to be included in documentation"
   parser := failed

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.Twop
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ instance hasForgetToBipointed : HasForget₂ TwopCat BipointedCat :=
 
 /-- Swaps the pointed elements of a two-pointed type. `two_pointing.swap` as a functor. -/
 @[simps]
-def swap : TwopCat ⥤ TwopCat where 
+def swap : TwopCat ⥤ TwopCat where
   obj X := ⟨X, X.toTwoPointing.swap⟩
   map X Y f := ⟨f.toFun, f.map_snd, f.map_fst⟩
 #align Twop.swap TwopCat.swap
@@ -117,9 +117,8 @@ theorem Twop_swap_comp_forget_to_Bipointed :
 
 /-- The functor from `Pointed` to `Twop` which adds a second point. -/
 @[simps]
-def pointedToTwopFst :
-    PointedCat.{u} ⥤
-      TwopCat where 
+def pointedToTwopFst : PointedCat.{u} ⥤ TwopCat
+    where
   obj X := ⟨Option X, ⟨X.point, none⟩, some_ne_none _⟩
   map X Y f := ⟨Option.map f.toFun, congr_arg _ f.map_point, rfl⟩
   map_id' X := BipointedCat.Hom.ext _ _ Option.map_id
@@ -128,9 +127,8 @@ def pointedToTwopFst :
 
 /-- The functor from `Pointed` to `Twop` which adds a first point. -/
 @[simps]
-def pointedToTwopSnd :
-    PointedCat.{u} ⥤
-      TwopCat where 
+def pointedToTwopSnd : PointedCat.{u} ⥤ TwopCat
+    where
   obj X := ⟨Option X, ⟨none, X.point⟩, (some_ne_none _).symm⟩
   map X Y f := ⟨Option.map f.toFun, rfl, congr_arg _ f.map_point⟩
   map_id' X := BipointedCat.Hom.ext _ _ Option.map_id
@@ -166,13 +164,14 @@ def pointedToTwopFstForgetCompBipointedToPointedFstAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩
           invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.2 f.toFun, f.map_point, rfl⟩
-          left_inv := fun f => by 
+          left_inv := fun f => by
             ext
             cases x
             exact f.map_snd.symm
             rfl
           right_inv := fun f => PointedCat.Hom.ext _ _ rfl }
-      hom_equiv_naturality_left_symm' := fun X' X Y f g => by
+      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+        by
         ext
         cases x <;> rfl }
 #align
@@ -185,13 +184,14 @@ def pointedToTwopSndForgetCompBipointedToPointedSndAdjunction :
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩
           invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.1 f.toFun, rfl, f.map_point⟩
-          left_inv := fun f => by 
+          left_inv := fun f => by
             ext
             cases x
             exact f.map_fst.symm
             rfl
           right_inv := fun f => PointedCat.Hom.ext _ _ rfl }
-      hom_equiv_naturality_left_symm' := fun X' X Y f g => by
+      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+        by
         ext
         cases x <;> rfl }
 #align

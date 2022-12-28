@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.mutually_singular
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ scoped[MeasureTheory] infixl:60 " ⊥ₘ " => MeasureTheory.Measure.MutuallySing
 namespace MutuallySingular
 
 theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ t) :
-    MutuallySingular μ ν := by
+    MutuallySingular μ ν :=
+  by
   use to_measurable μ s, measurable_set_to_measurable _ _, (measure_to_measurable _).trans hs
   refine' measure_mono_null (fun x hx => (hst trivial).resolve_left fun hxs => hx _) ht
   exact subset_to_measurable _ _ hxs
@@ -88,11 +89,12 @@ theorem mono (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ �
 #align measure_theory.measure.mutually_singular.mono MeasureTheory.Measure.MutuallySingular.mono
 
 @[simp]
-theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν := by
+theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν :=
+  by
   refine' ⟨fun h i => h.mono (le_sum _ _) le_rfl, fun H => _⟩
   choose s hsm hsμ hsν using H
-  refine' ⟨⋂ i, s i, MeasurableSet.inter hsm, _, _⟩
-  · rw [sum_apply _ (MeasurableSet.inter hsm), Ennreal.tsum_eq_zero]
+  refine' ⟨⋂ i, s i, MeasurableSet.Inter hsm, _, _⟩
+  · rw [sum_apply _ (MeasurableSet.Inter hsm), Ennreal.tsum_eq_zero]
     exact fun i => measure_mono_null (Inter_subset _ _) (hsμ i)
   · rwa [compl_Inter, measure_Union_null_iff]
 #align

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.matrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ variable {n : Type w} [DecidableEq n] [Fintype n]
 is compatible with the Lie algebra structures. -/
 def lieEquivMatrix' : Module.EndCat R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
   { LinearMap.toMatrix' with
-    map_lie' := fun T S => by 
+    map_lie' := fun T S => by
       let f := @LinearMap.toMatrix' R _ n n _ _
       change f (T.comp S - S.comp T) = f T * f S - f S * f T
       have h : ∀ T S : Module.EndCat R _, f (T.comp S) = f T ⬝ f S := LinearMap.to_matrix'_comp
@@ -87,7 +87,9 @@ variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
 /-- For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
 types, `matrix.reindex`, is an equivalence of Lie algebras. -/
 def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
-  { Matrix.reindexLinearEquiv R R e e with
+  {
+    Matrix.reindexLinearEquiv R R e
+      e with
     toFun := Matrix.reindex e e
     map_lie' := fun M N => by
       simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply,

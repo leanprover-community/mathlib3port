@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.array.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem mem_rev_list_aux :
         simp [DArray.iterateAux] <;> apply Or.inl <;> unfold read at e <;>
             have H : j = ⟨i, h⟩ := Fin.eq_of_veq je <;>
           rwa [← H, e],
-      fun m => by 
+      fun m => by
       simp [DArray.iterateAux, List.Mem] at m
       cases' m with e m'
       exact ⟨⟨i, h⟩, Nat.lt_succ_self _, Eq.symm e⟩
@@ -184,7 +184,8 @@ theorem to_list_nth_le' (a : Array' n α) (i : Fin n) (h') : List.nthLe a.toList
   by cases i <;> apply to_list_nth_le
 #align array.to_list_nth_le' Array'.to_list_nth_le'
 
-theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v := by
+theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v :=
+  by
   rw [List.nth_eq_some]
   have ll := to_list_length a
   constructor <;> intro h <;> cases' h with h e <;> subst v
@@ -193,7 +194,8 @@ theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i,
 #align array.to_list_nth Array'.to_list_nth
 
 theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
-  (List.ext_le (by simp)) fun j h₁ h₂ => by
+  (List.ext_le (by simp)) fun j h₁ h₂ =>
+    by
     have h₃ : j < n := by simpa using h₁
     rw [to_list_nth_le _ h₃]
     refine'
@@ -254,7 +256,7 @@ theorem push_back_rev_list_aux :
       DArray.iterateAux (a.pushBack v) (fun _ => (· :: ·)) i h [] =
         DArray.iterateAux a (fun _ => (· :: ·)) i h' []
   | 0, h, h' => rfl
-  | i + 1, h, h' => by 
+  | i + 1, h, h' => by
     simp [DArray.iterateAux]
     refine' ⟨_, push_back_rev_list_aux _ _ _⟩
     dsimp [read, DArray.read, push_back]
@@ -263,7 +265,8 @@ theorem push_back_rev_list_aux :
 #align array.push_back_rev_list_aux Array'.push_back_rev_list_aux
 
 @[simp]
-theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList := by
+theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList :=
+  by
   unfold push_back rev_list foldl iterate DArray.iterate
   dsimp [DArray.iterateAux, read, DArray.read, push_back]
   rw [dif_pos (Eq.refl n)]
@@ -277,14 +280,16 @@ theorem push_back_to_list : (a.pushBack v).toList = a.toList ++ [v] := by
 #align array.push_back_to_list Array'.push_back_to_list
 
 @[simp]
-theorem read_push_back_left (i : Fin n) : (a.pushBack v).read i.cast_succ = a.read i := by
+theorem read_push_back_left (i : Fin n) : (a.pushBack v).read i.cast_succ = a.read i :=
+  by
   cases' i with i hi
   have : ¬i = n := ne_of_lt hi
   simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]
 #align array.read_push_back_left Array'.read_push_back_left
 
 @[simp]
-theorem read_push_back_right : (a.pushBack v).read (Fin.last _) = v := by
+theorem read_push_back_right : (a.pushBack v).read (Fin.last _) = v :=
+  by
   cases' hn : Fin.last n with k hk
   have : k = n := by simpa [Fin.eq_iff_veq] using hn.symm
   simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]

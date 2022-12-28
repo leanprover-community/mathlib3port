@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.ideal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,13 +91,14 @@ section
 
 variable {I J s t : Ideal P} {x y : P}
 
-theorem to_lower_set_injective : Injective (toLowerSet : Ideal P → LowerSet P) := fun s t h => by
+theorem to_lower_set_injective : Injective (toLowerSet : Ideal P → LowerSet P) := fun s t h =>
+  by
   cases s
   cases t
   congr
 #align order.ideal.to_lower_set_injective Order.Ideal.to_lower_set_injective
 
-instance : SetLike (Ideal P) P where 
+instance : SetLike (Ideal P) P where
   coe s := s.carrier
   coe_injective' s t h := to_lower_set_injective <| SetLike.coe_injective h
 
@@ -163,7 +164,7 @@ class IsProper (I : Ideal P) : Prop where
 #align order.ideal.is_proper Order.Ideal.IsProper
 
 theorem is_proper_of_not_mem {I : Ideal P} {p : P} (nmem : p ∉ I) : IsProper I :=
-  ⟨fun hp => by 
+  ⟨fun hp => by
     change p ∉ ↑I at nmem
     rw [hp] at nmem
     exact nmem (mem_univ p)⟩
@@ -178,7 +179,8 @@ class IsMaximal (I : Ideal P) extends IsProper I : Prop where
   maximal_proper : ∀ ⦃J : Ideal P⦄, I < J → (J : Set P) = univ
 #align order.ideal.is_maximal Order.Ideal.IsMaximal
 
-theorem inter_nonempty [IsDirected P (· ≥ ·)] (I J : Ideal P) : (I ∩ J : Set P).Nonempty := by
+theorem inter_nonempty [IsDirected P (· ≥ ·)] (I J : Ideal P) : (I ∩ J : Set P).Nonempty :=
+  by
   obtain ⟨a, ha⟩ := I.nonempty
   obtain ⟨b, hb⟩ := J.nonempty
   obtain ⟨c, hac, hbc⟩ := exists_le_le a b
@@ -192,8 +194,8 @@ section Directed
 variable [IsDirected P (· ≤ ·)] [Nonempty P] {I : Ideal P}
 
 /-- In a directed and nonempty order, the top ideal of a is `univ`. -/
-instance : OrderTop
-      (Ideal P) where 
+instance : OrderTop (Ideal P)
+    where
   top := ⟨⊤, univ_nonempty, directedOn_univ⟩
   le_top I := le_top
 
@@ -255,7 +257,7 @@ section OrderTop
 
 variable [OrderTop P] {I : Ideal P}
 
-theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by 
+theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by
   ext
   exact iff_of_true (I.lower le_top h) trivial
 #align order.ideal.top_of_top_mem Order.Ideal.top_of_top_mem
@@ -277,7 +279,7 @@ variable {I J : Ideal P} {x y : P}
 
 /-- The smallest ideal containing a given element. -/
 @[simps]
-def principal (p : P) : Ideal P where 
+def principal (p : P) : Ideal P where
   toLowerSet := LowerSet.iic p
   nonempty' := nonempty_Iic
   directed' x hx y hy := ⟨p, le_rfl, hx, hy⟩
@@ -303,7 +305,7 @@ section OrderBot
 variable [OrderBot P]
 
 /-- There is a bottom ideal when `P` has a bottom element. -/
-instance : OrderBot (Ideal P) where 
+instance : OrderBot (Ideal P) where
   bot := principal ⊥
   bot_le := by simp
 
@@ -360,7 +362,7 @@ supremum of `I` and `J`. -/
 instance : HasSup (Ideal P) :=
   ⟨fun I J =>
     { carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j }
-      nonempty' := by 
+      nonempty' := by
         cases inter_nonempty I J
         exact ⟨w, w, h.1, w, h.2, le_sup_left⟩
       directed' := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
@@ -381,12 +383,14 @@ instance : HasSup (Ideal P) :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∈ » I) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
-  { Ideal.partialOrder with 
+  { Ideal.partialOrder with
     sup := (· ⊔ ·)
-    le_sup_left := fun I J i (_ : i ∈ I) => by
+    le_sup_left := fun I J i (_ : i ∈ I) =>
+      by
       cases J.nonempty
       exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩
-    le_sup_right := fun I J j (_ : j ∈ J) => by
+    le_sup_right := fun I J j (_ : j ∈ J) =>
+      by
       cases I.nonempty
       exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩
     sup_le := fun I J K hIK hJK a ⟨i, hi, j, hj, ha⟩ =>
@@ -430,13 +434,13 @@ instance : InfSet (Ideal P) :=
   ⟨fun S =>
     { toLowerSet := ⨅ s ∈ S, toLowerSet s
       nonempty' :=
-        ⟨⊥, by 
-          rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_Inter₂]
+        ⟨⊥, by
+          rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_interᵢ₂]
           exact fun s _ => s.bot_mem⟩
       directed' := fun a ha b hb =>
         ⟨a ⊔ b,
-          ⟨by 
-            rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_Inter₂] at ha hb⊢
+          ⟨by
+            rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_interᵢ₂] at ha hb⊢
             exact fun s hs => sup_mem (ha _ hs) (hb _ hs), le_sup_left, le_sup_right⟩⟩ }⟩
 
 variable {S : Set (Ideal P)}
@@ -452,7 +456,8 @@ theorem mem_Inf : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by simp_rw [← Set
 
 instance : CompleteLattice (Ideal P) :=
   { Ideal.lattice,
-    completeLatticeOfInf (Ideal P) fun S => by
+    completeLatticeOfInf (Ideal P) fun S =>
+      by
       refine' ⟨fun s hs => _, fun s hs => by rwa [← coe_subset_coe, coe_Inf, subset_Inter₂_iff]⟩
       rw [← coe_subset_coe, coe_Inf]
       exact bInter_subset_of_mem hs with }
@@ -466,7 +471,8 @@ variable [DistribLattice P]
 variable {I J : Ideal P}
 
 theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i ⊔ j) :
-    ∃ i' ∈ I, ∃ j' ∈ J, x = i' ⊔ j' := by
+    ∃ i' ∈ I, ∃ j' ∈ J, x = i' ⊔ j' :=
+  by
   refine' ⟨x ⊓ i, I.lower inf_le_right hi, x ⊓ j, J.lower inf_le_right hj, _⟩
   calc
     x = x ⊓ (i ⊔ j) := left_eq_inf.mpr hx
@@ -486,14 +492,16 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 
-theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x ∉ I := by
+theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x ∉ I :=
+  by
   intro hx
   apply hI.top_not_mem
   have ht : x ⊔ xᶜ ∈ I := sup_mem ‹_› ‹_›
   rwa [sup_compl_eq_top] at ht
 #align order.ideal.is_proper.not_mem_of_compl_mem Order.Ideal.IsProper.not_mem_of_compl_mem
 
-theorem IsProper.not_mem_or_compl_not_mem (hI : IsProper I) : x ∉ I ∨ xᶜ ∉ I := by
+theorem IsProper.not_mem_or_compl_not_mem (hI : IsProper I) : x ∉ I ∨ xᶜ ∉ I :=
+  by
   have h : xᶜ ∈ I → x ∉ I := hI.not_mem_of_compl_mem
   tauto
 #align order.ideal.is_proper.not_mem_or_compl_not_mem Order.Ideal.IsProper.not_mem_or_compl_not_mem
@@ -552,7 +560,8 @@ noncomputable def sequenceOfCofinals : ℕ → P
     | some i => (𝒟 i).above (sequence_of_cofinals n)
 #align order.sequence_of_cofinals Order.sequenceOfCofinals
 
-theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
+theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) :=
+  by
   apply monotone_nat_of_le_succ
   intro n
   dsimp only [sequence_of_cofinals]
@@ -562,7 +571,8 @@ theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
 #align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotone
 
 theorem sequenceOfCofinals.encode_mem (i : ι) :
-    sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i := by
+    sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i :=
+  by
   dsimp only [sequence_of_cofinals]
   rw [Encodable.encodek]
   apply cofinal.above_mem
@@ -574,8 +584,8 @@ theorem sequenceOfCofinals.encode_mem (i : ι) :
   - intersects every set in `𝒟`, according to `cofinal_meets_ideal_of_cofinals p 𝒟`.
 
   This proves the Rasiowa–Sikorski lemma. -/
-def idealOfCofinals :
-    Ideal P where 
+def idealOfCofinals : Ideal P
+    where
   carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
   lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_trans hxy hn⟩
   nonempty' := ⟨p, 0, le_rfl⟩

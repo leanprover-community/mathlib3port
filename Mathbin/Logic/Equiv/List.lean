@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.list
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,8 @@ instance List.encodable : Encodable (List α) :=
     induction' l with a l IH <;> simp [encode_list, decode_list, unpair_mkpair, encodek, *]⟩
 #align list.encodable List.encodable
 
-instance List.countable {α : Type _} [Countable α] : Countable (List α) := by
+instance List.countable {α : Type _} [Countable α] : Countable (List α) :=
+  by
   haveI := Encodable.ofCountable α
   infer_instance
 #align list.countable List.countable
@@ -77,7 +78,7 @@ theorem decode_list_zero : decode (List α) 0 = some [] :=
 @[simp]
 theorem decode_list_succ (v : ℕ) :
     decode (List α) (succ v) = (· :: ·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
-  show decodeList (succ v) = _ by 
+  show decodeList (succ v) = _ by
     cases' e : unpair v with v₁ v₂
     simp [decode_list, e]; rfl
 #align encodable.decode_list_succ Encodable.decode_list_succ
@@ -235,7 +236,8 @@ theorem sorted_univ_to_finset (α) [Fintype α] [Encodable α] [DecidableEq α] 
 #align encodable.sorted_univ_to_finset Encodable.sorted_univ_to_finset
 
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/
-def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Fin (Fintype.card α) := by
+def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Fin (Fintype.card α) :=
+  by
   haveI : DecidableEq α := Encodable.decidableEqOfEncodable _
   trans
   · exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm
@@ -260,7 +262,7 @@ section List
 
 theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encodeList a = n
   | 0 => by rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
-  | succ v => by 
+  | succ v => by
     cases' e : unpair v with v₁ v₂
     have h := unpair_right_le v
     rw [e] at h
@@ -285,7 +287,7 @@ theorem list_of_nat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil
 theorem list_of_nat_succ (v : ℕ) :
     ofNat (List α) (succ v) = ofNat α v.unpair.1 :: ofNat (List α) v.unpair.2 :=
   of_nat_of_decode <|
-    show decodeList (succ v) = _ by 
+    show decodeList (succ v) = _ by
       cases' e : unpair v with v₁ v₂
       simp [decode_list, e]
       rw [show decode_list v₂ = decode (List α) v₂ from rfl, decode_eq_of_nat] <;> rfl
@@ -316,7 +318,8 @@ theorem lower_raise : ∀ l n, lower (raise l n) n = l
 
 theorem raise_lower : ∀ {l n}, List.Sorted (· ≤ ·) (n :: l) → raise (lower l n) n = l
   | [], n, h => rfl
-  | m :: l, n, h => by
+  | m :: l, n, h =>
+    by
     have : n ≤ m := List.rel_of_sorted_cons h _ (l.mem_cons_self _)
     simp [raise, lower, tsub_add_cancel_of_le this, raise_lower h.of_cons]
 #align denumerable.raise_lower Denumerable.raise_lower
@@ -371,7 +374,7 @@ theorem lower_raise' : ∀ l n, lower' (raise' l n) n = l
 
 theorem raise_lower' : ∀ {l n}, (∀ m ∈ l, n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
   | [], n, h₁, h₂ => rfl
-  | m :: l, n, h₁, h₂ => by 
+  | m :: l, n, h₁, h₂ => by
     have : n ≤ m := h₁ _ (l.mem_cons_self _)
     simp [raise', lower', tsub_add_cancel_of_le this,
       raise_lower' (List.rel_of_sorted_cons h₂ : ∀ a ∈ l, m < a) h₂.of_cons]
@@ -415,7 +418,7 @@ end Denumerable
 namespace Equiv
 
 /-- The type lists on unit is canonically equivalent to the natural numbers. -/
-def listUnitEquiv : List Unit ≃ ℕ where 
+def listUnitEquiv : List Unit ≃ ℕ where
   toFun := List.length
   invFun := List.repeat ()
   left_inv u := List.length_injective (by simp)

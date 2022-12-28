@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ variable {α β K : Type _}
 lean 3 declaration is
   forall {K : Type.{u1}} [_inst_1 : HasLiftT.{1, succ u1} Nat K] [_inst_2 : HasLiftT.{1, succ u1} Int K] [_inst_3 : Mul.{u1} K] [_inst_4 : Inv.{u1} K], Rat -> K
 but is expected to have type
-  forall {K : Type.{u1}} [_inst_1 : CoeTail.{1, succ u1} Nat K] [_inst_2 : CoeTail.{1, succ u1} Int K] [_inst_3 : Mul.{u1} K] [_inst_4 : Inv.{u1} K], Rat -> K
+  forall {K : Type.{u1}} [_inst_1 : NatCast.{u1} K] [_inst_2 : IntCast.{u1} K] [_inst_3 : Mul.{u1} K] [_inst_4 : Inv.{u1} K], Rat -> K
 Case conversion may be inaccurate. Consider using '#align rat.cast_rec Rat.castRecₓ'. -/
 /-- The default definition of the coercion `(↑(a : ℚ) : K)` for a division ring `K`
 is defined as `(a / b : K) = (a : K) * (b : K)⁻¹`.
@@ -115,11 +115,15 @@ class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, Ha
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → a * a⁻¹ = 1
   inv_zero : (0 : K)⁻¹ = 0
   ratCast := Rat.castRec
-  rat_cast_mk : ∀ (a : ℤ) (b : ℕ) (h1 h2), rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by
+  rat_cast_mk :
+    ∀ (a : ℤ) (b : ℕ) (h1 h2),
+      rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by
     intros
     rfl
   qsmul : ℚ → K → K := qsmulRec rat_cast
-  qsmul_eq_mul' : ∀ (a : ℚ) (x : K), qsmul a x = rat_cast a * x := by
+  qsmul_eq_mul' :
+    ∀ (a : ℚ) (x : K), qsmul a x = rat_cast a *
+          x := by
     intros
     rfl
 #align division_ring DivisionRing
@@ -284,10 +288,12 @@ open Classical
 #print IsField.toSemifield /-
 /-- Transferring from `is_field` to `semifield`. -/
 noncomputable def IsField.toSemifield {R : Type u} [Semiring R] (h : IsField R) : Semifield R :=
-  { ‹Semiring R›, h with
+  { ‹Semiring R›,
+    h with
     inv := fun a => if ha : a = 0 then 0 else Classical.choose (IsField.mul_inv_cancel h ha)
     inv_zero := dif_pos rfl
-    mul_inv_cancel := fun a ha => by
+    mul_inv_cancel := fun a ha =>
+      by
       convert Classical.choose_spec (IsField.mul_inv_cancel h ha)
       exact dif_neg ha }
 #align is_field.to_semifield IsField.toSemifield

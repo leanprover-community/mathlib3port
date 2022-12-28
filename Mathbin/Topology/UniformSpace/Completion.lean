@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.uniform_space.completion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
   calc
     map Prod.swap ((𝓤 α).lift' gen) =
         (𝓤 α).lift' fun s : Set (α × α) => { p | s ∈ p.2.val ×ᶠ p.1.val } :=
-      by 
+      by
       delta gen
       simp [map_lift'_eq, monotone_set_of, Filter.monotone_mem, Function.comp,
         image_swap_eq_preimage_swap, -Subtype.val_eq_coe]
@@ -95,7 +95,7 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
       uniformity_lift_le_swap
         (monotone_principal.comp
           (monotone_set_of fun p => @Filter.monotone_mem _ (p.2.val ×ᶠ p.1.val)))
-        (by 
+        (by
           have h := fun p : CauchyCat α × CauchyCat α => @Filter.prod_comm _ _ p.2.val p.1.val
           simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
           exact le_rfl)
@@ -121,13 +121,14 @@ private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
 private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) ≤ (𝓤 α).lift' gen :=
   calc
     (((𝓤 α).lift' gen).lift' fun s => compRel s s) = (𝓤 α).lift' fun s => compRel (gen s) (gen s) :=
-      by 
+      by
       rw [lift'_lift'_assoc]
       exact monotone_gen
       exact monotone_comp_rel monotone_id monotone_id
     _ ≤ (𝓤 α).lift' fun s => gen <| compRel s s :=
       lift'_mono' fun s hs => comp_rel_gen_gen_subset_gen_comp_rel
-    _ = ((𝓤 α).lift' fun s : Set (α × α) => compRel s s).lift' gen := by
+    _ = ((𝓤 α).lift' fun s : Set (α × α) => compRel s s).lift' gen :=
+      by
       rw [lift'_lift'_assoc]
       exact monotone_comp_rel monotone_id monotone_id
       exact monotone_gen
@@ -175,7 +176,8 @@ theorem uniform_embedding_pure_cauchy : UniformEmbedding (pure_cauchy : α → C
 #align Cauchy.uniform_embedding_pure_cauchy CauchyCat.uniform_embedding_pure_cauchy
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f => by
+theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f =>
+  by
   have h_ex : ∀ s ∈ 𝓤 (CauchyCat α), ∃ y : α, (f, pure_cauchy y) ∈ s := fun s hs =>
     let ⟨t'', ht''₁, (ht''₂ : gen t'' ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs
     let ⟨t', ht'₁, ht'₂⟩ := comp_mem_uniformity_sets ht''₁
@@ -206,7 +208,8 @@ theorem dense_embedding_pure_cauchy : DenseEmbedding pure_cauchy :=
   uniform_embedding_pure_cauchy.DenseEmbedding dense_range_pure_cauchy
 #align Cauchy.dense_embedding_pure_cauchy CauchyCat.dense_embedding_pure_cauchy
 
-theorem nonempty_Cauchy_iff : Nonempty (CauchyCat α) ↔ Nonempty α := by
+theorem nonempty_Cauchy_iff : Nonempty (CauchyCat α) ↔ Nonempty α :=
+  by
   constructor <;> rintro ⟨c⟩
   · have := eq_univ_iff_forall.1 dense_embedding_pure_cauchy.to_dense_inducing.closure_range c
     obtain ⟨_, ⟨_, a, _⟩⟩ := mem_closure_iff.1 this _ is_open_univ trivial
@@ -263,7 +266,8 @@ end SeparatedSpace
 
 variable [CompleteSpace β]
 
-theorem uniform_continuous_extend {f : α → β} : UniformContinuous (extend f) := by
+theorem uniform_continuous_extend {f : α → β} : UniformContinuous (extend f) :=
+  by
   by_cases hf : UniformContinuous f
   · rw [extend, if_pos hf]
     exact
@@ -277,7 +281,8 @@ end Extend
 end
 
 theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace α] [SeparatedSpace α]
-    {f g : CauchyCat α} : lim f.1 = lim g.1 ↔ (f, g) ∈ separationRel (CauchyCat α) := by
+    {f g : CauchyCat α} : lim f.1 = lim g.1 ↔ (f, g) ∈ separationRel (CauchyCat α) :=
+  by
   constructor
   · intro e s hs
     rcases CauchyCat.mem_uniformity'.1 hs with ⟨t, tu, ts⟩
@@ -297,7 +302,8 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
     refine'
       H { p | (lim p.1.1, lim p.2.1) ∈ t } (CauchyCat.mem_uniformity'.2 ⟨d, du, fun f g h => _⟩)
     rcases mem_prod_iff.1 h with ⟨x, xf, y, yg, h⟩
-    have limc : ∀ (f : CauchyCat α), ∀ x ∈ f.1, lim f.1 ∈ closure x := by
+    have limc : ∀ (f : CauchyCat α), ∀ x ∈ f.1, lim f.1 ∈ closure x :=
+      by
       intro f x xf
       rw [closure_eq_cluster_pts]
       exact f.2.1.mono (le_inf f.2.le_nhds_Lim (le_principal_iff.2 xf))
@@ -380,7 +386,8 @@ protected theorem coe_eq : (coe : α → Completion α) = Quotient.mk'' ∘ pure
 #align uniform_space.completion.coe_eq UniformSpace.Completion.coe_eq
 
 theorem comap_coe_eq_uniformity :
-    ((𝓤 _).comap fun p : α × α => ((p.1 : Completion α), (p.2 : Completion α))) = 𝓤 α := by
+    ((𝓤 _).comap fun p : α × α => ((p.1 : Completion α), (p.2 : Completion α))) = 𝓤 α :=
+  by
   have :
     (fun x : α × α => ((x.1 : completion α), (x.2 : completion α))) =
       (fun x : CauchyCat α × CauchyCat α => (⟦x.1⟧, ⟦x.2⟧)) ∘ fun x : α × α =>
@@ -405,8 +412,8 @@ theorem dense_range_coe : DenseRange (coe : α → Completion α) :=
 variable (α)
 
 /-- The Haudorff completion as an abstract completion. -/
-def cpkg {α : Type _} [UniformSpace α] :
-    AbstractCompletion α where 
+def cpkg {α : Type _} [UniformSpace α] : AbstractCompletion α
+    where
   Space := Completion α
   coe := coe
   uniformStruct := by infer_instance
@@ -618,7 +625,8 @@ section SeparationQuotientCompletion
 /-- The isomorphism between the completion of a uniform space and the completion of its separation
 quotient. -/
 def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
-    Completion (SeparationQuotient α) ≃ Completion α := by
+    Completion (SeparationQuotient α) ≃ Completion α :=
+  by
   refine'
     ⟨completion.extension (SeparationQuotient.lift (coe : α → completion α)),
       completion.map Quotient.mk'', _, _⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.instances
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ import Mathbin.Data.Int.Order.Basic
 
 
 instance Int.euclideanDomain : EuclideanDomain ℤ :=
-  { Int.commRing, Int.nontrivial with 
+  { Int.commRing, Int.nontrivial with
     add := (· + ·)
     mul := (· * ·)
     one := 1
@@ -37,18 +37,19 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
     R := fun a b => a.natAbs < b.natAbs
     r_well_founded := measure_wf fun a => Int.natAbs a
     remainder_lt := fun a b b0 =>
-      Int.ofNat_lt.1 <| by
+      Int.ofNat_lt.1 <|
+        by
         rw [Int.natAbs_of_nonneg (Int.emod_nonneg _ b0), ← Int.abs_eq_natAbs]
         exact Int.emod_lt _ b0
     mul_left_not_lt := fun a b b0 =>
-      not_lt_of_ge <| by 
+      not_lt_of_ge <| by
         rw [← mul_one a.nat_abs, Int.natAbs_mul]
         exact mul_le_mul_of_nonneg_left (Int.natAbs_pos_of_ne_zero b0) (Nat.zero_le _) }
 #align int.euclidean_domain Int.euclideanDomain
 
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : EuclideanDomain K :=
-  { ‹Field K› with 
+  { ‹Field K› with
     add := (· + ·)
     mul := (· * ·)
     one := 1

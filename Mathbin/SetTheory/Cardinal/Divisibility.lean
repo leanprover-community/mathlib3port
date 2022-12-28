@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.divisibility
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,9 +42,10 @@ universe u
 variable {a b : Cardinal.{u}} {n m : ℕ}
 
 @[simp]
-theorem is_unit_iff : IsUnit a ↔ a = 1 := by
+theorem is_unit_iff : IsUnit a ↔ a = 1 :=
+  by
   refine'
-    ⟨fun h => _, by 
+    ⟨fun h => _, by
       rintro rfl
       exact isUnit_one⟩
   rcases eq_or_ne a 0 with (rfl | ha)
@@ -59,7 +60,7 @@ theorem is_unit_iff : IsUnit a ↔ a = 1 := by
     exact zero_ne_one ht
 #align cardinal.is_unit_iff Cardinal.is_unit_iff
 
-instance : Unique Cardinal.{u}ˣ where 
+instance : Unique Cardinal.{u}ˣ where
   default := 1
   uniq a := Units.val_eq_one.mp <| is_unit_iff.mp a.IsUnit
 
@@ -75,7 +76,8 @@ theorem dvd_of_le_of_aleph_0_le (ha : a ≠ 0) (h : a ≤ b) (hb : ℵ₀ ≤ b)
 #align cardinal.dvd_of_le_of_aleph_0_le Cardinal.dvd_of_le_of_aleph_0_le
 
 @[simp]
-theorem prime_of_aleph_0_le (ha : ℵ₀ ≤ a) : Prime a := by
+theorem prime_of_aleph_0_le (ha : ℵ₀ ≤ a) : Prime a :=
+  by
   refine' ⟨(aleph_0_pos.trans_le ha).ne', _, fun b c hbc => _⟩
   · rw [is_unit_iff]
     exact (one_lt_aleph_0.trans_le ha).ne'
@@ -87,7 +89,8 @@ theorem prime_of_aleph_0_le (ha : ℵ₀ ≤ a) : Prime a := by
   rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc
 #align cardinal.prime_of_aleph_0_le Cardinal.prime_of_aleph_0_le
 
-theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a := by
+theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a :=
+  by
   rw [irreducible_iff, not_and_or]
   refine' Or.inr fun h => _
   simpa [mul_aleph_0_eq ha, is_unit_iff, (one_lt_aleph_0.trans_le ha).ne', one_lt_aleph_0.ne'] using
@@ -95,7 +98,8 @@ theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a := b
 #align cardinal.not_irreducible_of_aleph_0_le Cardinal.not_irreducible_of_aleph_0_le
 
 @[simp, norm_cast]
-theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m := by
+theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m :=
+  by
   refine' ⟨_, fun ⟨h, ht⟩ => ⟨h, by exact_mod_cast ht⟩⟩
   rintro ⟨k, hk⟩
   have : ↑m < ℵ₀ := nat_lt_aleph_0 m
@@ -107,7 +111,8 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m := by
 #align cardinal.nat_coe_dvd_iff Cardinal.nat_coe_dvd_iff
 
 @[simp]
-theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
+theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime :=
+  by
   simp only [Prime, Nat.prime_iff]
   refine' and_congr (by simp) (and_congr _ ⟨fun h b c hbc => _, fun h b c hbc => _⟩)
   · simp only [is_unit_iff, Nat.isUnit_iff]
@@ -121,7 +126,7 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
     lift c to ℕ using hc
     exact_mod_cast h b c (by exact_mod_cast hbc)
   rcases aleph_0_le_mul_iff.mp h' with ⟨hb, hc, hℵ₀⟩
-  have hn : (n : Cardinal) ≠ 0 := by 
+  have hn : (n : Cardinal) ≠ 0 := by
     intro h
     rw [h, zero_dvd_iff, mul_eq_zero] at hbc
     cases hbc <;> contradiction
@@ -129,7 +134,8 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
   exact Or.inl (dvd_of_le_of_aleph_0_le hn ((nat_lt_aleph_0 n).le.trans hℵ₀) hℵ₀)
 #align cardinal.nat_is_prime_iff Cardinal.nat_is_prime_iff
 
-theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, a = p ∧ p.Prime := by
+theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, a = p ∧ p.Prime :=
+  by
   cases' le_or_lt ℵ₀ a with h h
   · simp [h]
   lift a to ℕ using id h
@@ -137,7 +143,7 @@ theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, 
 #align cardinal.is_prime_iff Cardinal.is_prime_iff
 
 theorem is_prime_pow_iff {a : Cardinal} : IsPrimePow a ↔ ℵ₀ ≤ a ∨ ∃ n : ℕ, a = n ∧ IsPrimePow n :=
-  by 
+  by
   by_cases h : ℵ₀ ≤ a
   · simp [h, (prime_of_aleph_0_le h).IsPrimePow]
   lift a to ℕ using not_le.mp h

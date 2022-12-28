@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, David Loeffler
 
 ! This file was ported from Lean 3 source module number_theory.bernoulli_polynomials
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,8 @@ def bernoulli (n : ℕ) : ℚ[X] :=
 #align polynomial.bernoulli Polynomial.bernoulli
 
 theorem bernoulli_def (n : ℕ) :
-    bernoulli n = ∑ i in range (n + 1), Polynomial.monomial i (bernoulli (n - i) * choose n i) := by
+    bernoulli n = ∑ i in range (n + 1), Polynomial.monomial i (bernoulli (n - i) * choose n i) :=
+  by
   rw [← sum_range_reflect, add_succ_sub_one, add_zero, bernoulli]
   apply sum_congr rfl
   rintro x hx
@@ -77,9 +78,11 @@ theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
 #align polynomial.bernoulli_zero Polynomial.bernoulli_zero
 
 @[simp]
-theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n := by
+theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n :=
+  by
   rw [bernoulli, eval_finset_sum, sum_range_succ]
-  have : (∑ x : ℕ in range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x)) = 0 := by
+  have : (∑ x : ℕ in range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x)) = 0 :=
+    by
     apply sum_eq_zero fun x hx => _
     have h : 0 < n - x := tsub_pos_of_lt (mem_range.1 hx)
     simp [h]
@@ -87,7 +90,8 @@ theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n := by
 #align polynomial.bernoulli_eval_zero Polynomial.bernoulli_eval_zero
 
 @[simp]
-theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
+theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n :=
+  by
   simp only [bernoulli, eval_finset_sum]
   simp only [← succ_eq_add_one, sum_range_succ, mul_one, cast_one, choose_self,
     (_root_.bernoulli _).mul_comm, sum_bernoulli, one_pow, mul_one, eval_C, eval_monomial]
@@ -100,7 +104,8 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
 end Examples
 
 theorem derivative_bernoulli_add_one (k : ℕ) :
-    (bernoulli (k + 1)).derivative = (k + 1) * bernoulli k := by
+    (bernoulli (k + 1)).derivative = (k + 1) * bernoulli k :=
+  by
   simp_rw [bernoulli, derivative_sum, derivative_monomial, Nat.sub_sub, Nat.add_sub_add_right]
   -- LHS sum has an extra term, but the coefficient is zero:
   rw [range_add_one, sum_insert not_mem_range_self, tsub_self, cast_zero, mul_zero, map_zero,
@@ -113,7 +118,8 @@ theorem derivative_bernoulli_add_one (k : ℕ) :
   rw [(choose_mul_succ_eq k m).symm, mul_comm]
 #align polynomial.derivative_bernoulli_add_one Polynomial.derivative_bernoulli_add_one
 
-theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoulli (k - 1) := by
+theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoulli (k - 1) :=
+  by
   cases k
   · rw [Nat.cast_zero, zero_mul, bernoulli_zero, derivative_one]
   · exact_mod_cast derivative_bernoulli_add_one k
@@ -121,15 +127,16 @@ theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoull
 
 @[simp]
 theorem sum_bernoulli (n : ℕ) :
-    (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) := by
+    (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) :=
+  by
   simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm,
     Finset.sum_Ico_eq_sum_range]
   simp only [add_tsub_cancel_left, tsub_zero, zero_add, LinearMap.map_add]
   simp_rw [smul_monomial, mul_comm (_root_.bernoulli _) _, smul_eq_mul, ← mul_assoc]
-  conv_lhs => 
+  conv_lhs =>
     apply_congr
     skip
-    conv => 
+    conv =>
       apply_congr
       skip
       rw [← Nat.cast_mul,
@@ -142,13 +149,14 @@ theorem sum_bernoulli (n : ℕ) :
     choose_succ_self_right, one_smul, _root_.bernoulli_zero, sum_singleton, zero_add,
     LinearMap.map_add, range_one]
   apply sum_eq_zero fun x hx => _
-  have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by 
+  have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by
     rintro x H
     rw [mem_range] at H
     rw [eq_comm]
     exact ne_of_lt (Nat.lt_of_lt_of_le one_lt_two (le_tsub_of_add_le_left (succ_le_succ H)))
   rw [sum_bernoulli]
-  have g : ite (n + 1 - x = 1) (1 : ℚ) 0 = 0 := by
+  have g : ite (n + 1 - x = 1) (1 : ℚ) 0 = 0 :=
+    by
     simp only [ite_eq_right_iff, one_ne_zero]
     intro h₁
     exact (f x hx) h₁
@@ -166,7 +174,8 @@ theorem bernoulli_eq_sub_sum (n : ℕ) :
 
 /-- Another version of `bernoulli.sum_range_pow`. -/
 theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
-    ((p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p) = (bernoulli p.succ).eval n - bernoulli p.succ := by
+    ((p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p) = (bernoulli p.succ).eval n - bernoulli p.succ :=
+  by
   rw [sum_range_pow, bernoulli_def, eval_finset_sum, ← sum_div, mul_div_cancel' _ _]
   · simp_rw [eval_monomial]
     symm
@@ -183,21 +192,23 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
 
 /-- Rearrangement of `polynomial.sum_range_pow_eq_bernoulli_sub`. -/
 theorem bernoulli_succ_eval (n p : ℕ) :
-    (bernoulli p.succ).eval n = bernoulli p.succ + (p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p := by
+    (bernoulli p.succ).eval n = bernoulli p.succ + (p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p :=
+  by
   apply eq_add_of_sub_eq'
   rw [sum_range_pow_eq_bernoulli_sub]
 #align polynomial.bernoulli_succ_eval Polynomial.bernoulli_succ_eval
 
 theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
-    (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) := by
+    (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) :=
+  by
   apply Nat.strong_induction_on n fun d hd => _
-  have nz : ((d.succ : ℕ) : ℚ) ≠ 0 := by 
+  have nz : ((d.succ : ℕ) : ℚ) ≠ 0 := by
     norm_cast
     exact d.succ_ne_zero
   apply (mul_right_inj' nz).1
   rw [← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum, mul_add, ← smul_eq_mul, ← eval_smul,
     bernoulli_eq_sub_sum, eval_sub, eval_finset_sum]
-  conv_lhs => 
+  conv_lhs =>
     congr
     skip
     apply_congr
@@ -206,7 +217,7 @@ theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
   rw [eval_sub, eval_finset_sum]
   simp_rw [eval_smul, smul_add]
   rw [sum_add_distrib, sub_add, sub_eq_sub_iff_sub_eq_sub, _root_.add_sub_sub_cancel]
-  conv_rhs => 
+  conv_rhs =>
     congr
     skip
     congr

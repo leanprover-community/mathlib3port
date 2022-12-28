@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.json
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,8 +36,8 @@ can parse `{"success": true}` as `my_struct.mk true 0 none`, and reserializing g
 
 open Exceptional
 
-unsafe instance :
-    HasOrelse exceptional where orelse α f g :=
+unsafe instance : HasOrelse exceptional
+    where orelse α f g :=
     match f with
     | success x => success x
     | exception msg => g
@@ -69,17 +69,16 @@ unsafe def json.typename : json → String
 /-! ### Primitive types -/
 
 
-unsafe instance :
-    non_null_json_serializable
-      String where 
+unsafe instance : non_null_json_serializable String
+    where
   to_json := json.of_string
   of_json j := do
     let json.of_string s ← success j |
       exception fun _ => f! "string expected, got {j.typename}"
     pure s
 
-unsafe instance :
-    non_null_json_serializable ℤ where 
+unsafe instance : non_null_json_serializable ℤ
+    where
   to_json z := json.of_int z
   of_json j := do
     let json.of_int z ← success j |
@@ -89,9 +88,8 @@ unsafe instance :
         exception fun _ => f!"number must be integral"
     pure z
 
-unsafe instance :
-    non_null_json_serializable
-      native.float where 
+unsafe instance : non_null_json_serializable native.float
+    where
   to_json f := json.of_float f
   of_json j := do
     let json.of_int z ← success j |
@@ -101,36 +99,32 @@ unsafe instance :
         pure f
     pure z
 
-unsafe instance :
-    non_null_json_serializable
-      Bool where 
+unsafe instance : non_null_json_serializable Bool
+    where
   to_json b := json.of_bool b
   of_json j := do
     let json.of_bool b ← success j |
       exception fun _ => f! "boolean expected, got {j.typename}"
     pure b
 
-unsafe instance : json_serializable
-      PUnit where 
+unsafe instance : json_serializable PUnit
+    where
   to_json u := json.null
   of_json j := do
     let json.null ← success j |
       exception fun _ => f! "null expected, got {j.typename}"
     pure ()
 
-unsafe instance {α} [json_serializable α] :
-    non_null_json_serializable
-      (List α) where 
+unsafe instance {α} [json_serializable α] : non_null_json_serializable (List α)
+    where
   to_json l := json.array (l.map to_json)
   of_json j := do
     let json.array l ← success j |
       exception fun _ => f! "array expected, got {j.typename}"
     l (of_json α)
 
-unsafe instance {α} [json_serializable α] :
-    non_null_json_serializable
-      (Rbmap String
-        α) where 
+unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap String α)
+    where
   to_json m := json.object (m.toList.map fun x => (x.1, to_json x.2))
   of_json j := do
     let json.object l ← success j |
@@ -149,26 +143,24 @@ unsafe instance {α} [json_serializable α] :
 /-! ### Basic coercions -/
 
 
-unsafe instance :
-    non_null_json_serializable
-      ℕ where 
+unsafe instance : non_null_json_serializable ℕ
+    where
   to_json n := to_json (n : ℤ)
   of_json j := do
     let Int.ofNat n ← of_json ℤ j |
       exception fun _ => f!"must be non-negative"
     pure n
 
-unsafe instance {n : ℕ} :
-    non_null_json_serializable
-      (Fin n) where 
+unsafe instance {n : ℕ} : non_null_json_serializable (Fin n)
+    where
   to_json i := to_json i.val
   of_json j := do
     let i ← of_json ℕ j
     if h : i < n then pure ⟨i, h⟩ else exception fun _ => f! "must be less than {n}"
 
 unsafe instance {α : Type} [json_serializable α] (p : α → Prop) [DecidablePred p] :
-    json_serializable (Subtype
-        p) where 
+    json_serializable (Subtype p)
+    where
   to_json x := to_json (x : α)
   of_json j := do
     let i ← of_json α j
@@ -178,9 +170,8 @@ unsafe instance {α : Type} [non_null_json_serializable α] (p : α → Prop) [D
     non_null_json_serializable (Subtype p) where
 
 /-- Note this only makes sense on types which do not themselves serialize to `null` -/
-unsafe instance {α} [non_null_json_serializable α] :
-    json_serializable
-      (Option α) where 
+unsafe instance {α} [non_null_json_serializable α] : json_serializable (Option α)
+    where
   to_json := Option.elim' json.null to_json
   of_json j := do
     of_json PUnit j >> pure none <|> some <$> of_json α j

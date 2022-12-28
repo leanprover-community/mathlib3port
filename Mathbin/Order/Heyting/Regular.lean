@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.heyting.regular
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,8 @@ def BooleanAlgebra.ofRegular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanA
   have : ∀ a : α, IsCompl a (aᶜ) := fun a =>
     ⟨disjoint_compl_right,
       codisjoint_iff.2 <| by erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
-  { ‹HeytingAlgebra α›, GeneralizedHeytingAlgebra.toDistribLattice with
+  { ‹HeytingAlgebra α›,
+    GeneralizedHeytingAlgebra.toDistribLattice with
     himp_eq := fun a b =>
       eq_of_forall_le_iff fun c => le_himp_iff.trans (this _).le_sup_right_iff_inf_left_le.symm
     inf_compl_le_bot := fun a => (this _).1.le_bot
@@ -199,10 +200,8 @@ theorem to_regular_coe (a : Regular α) : toRegular (a : α) = a :=
 #align heyting.regular.to_regular_coe Heyting.Regular.to_regular_coe
 
 /-- The Galois insertion between `regular.to_regular` and `coe`. -/
-def gi :
-    GaloisInsertion toRegular
-      (coe : Regular α →
-          α) where 
+def gi : GaloisInsertion toRegular (coe : Regular α → α)
+    where
   choice a ha := ⟨a, ha.antisymm le_compl_compl⟩
   gc a b :=
     coe_le_coe.symm.trans <|
@@ -220,20 +219,21 @@ theorem coe_sup (a b : Regular α) : (↑(a ⊔ b) : α) = (a ⊔ b)ᶜᶜ :=
 #align heyting.regular.coe_sup Heyting.Regular.coe_sup
 
 instance : BooleanAlgebra (Regular α) :=
-  { Regular.lattice, Regular.boundedOrder, Regular.hasHimp, Regular.hasCompl with
+  { Regular.lattice, Regular.boundedOrder, Regular.hasHimp,
+    Regular.hasCompl with
     le_sup_inf := fun a b c =>
-      coe_le_coe.1 <| by 
+      coe_le_coe.1 <| by
         dsimp
         rw [sup_inf_left, compl_compl_inf_distrib]
     inf_compl_le_bot := fun a => coe_le_coe.1 <| disjoint_iff_inf_le.1 disjoint_compl_right
     top_le_sup_compl := fun a =>
-      coe_le_coe.1 <| by 
+      coe_le_coe.1 <| by
         dsimp
         rw [compl_sup, inf_compl_eq_bot, compl_bot]
         rfl
     himp_eq := fun a b =>
       coe_injective
-        (by 
+        (by
           dsimp
           rw [compl_sup, a.prop.eq]
           refine' eq_of_forall_le_iff fun c => le_himp_iff.trans _

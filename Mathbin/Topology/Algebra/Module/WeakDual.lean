@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Moritz Doll
 
 ! This file was ported from Lean 3 source module topology.algebra.module.weak_dual
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,8 @@ theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B}
 #align weak_bilin.tendsto_iff_forall_eval_tendsto WeakBilin.tendsto_iff_forall_eval_tendsto
 
 /-- Addition in `weak_space B` is continuous. -/
-instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) := by
+instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) :=
+  by
   refine' ⟨continuous_induced_rng.2 _⟩
   refine'
     cast (congr_arg _ _)
@@ -150,7 +151,8 @@ instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) := by
   simp only [Function.comp_apply, Pi.add_apply, map_add, LinearMap.add_apply]
 
 /-- Scalar multiplication by `𝕜` on `weak_bilin B` is continuous. -/
-instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) := by
+instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) :=
+  by
   refine' ⟨continuous_induced_rng.2 _⟩
   refine' cast (congr_arg _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
   ext
@@ -171,11 +173,11 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
 /-- `weak_space B` is a `topological_add_group`, meaning that addition and negation are
 continuous. -/
-instance [HasContinuousAdd 𝕜] :
-    TopologicalAddGroup
-      (WeakBilin B) where 
+instance [HasContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B)
+    where
   to_has_continuous_add := by infer_instance
-  continuous_neg := by
+  continuous_neg :=
+    by
     refine' continuous_induced_rng.2 (continuous_pi_iff.mpr fun y => _)
     refine' cast (congr_arg _ _) (eval_continuous B (-y))
     ext

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.module.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,21 +32,21 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-theorem IsSmulRegular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α}
-    (hk : ∀ i, IsSmulRegular (f i) k) : IsSmulRegular (∀ i, f i) k := fun _ _ h =>
+theorem IsSMulRegular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α}
+    (hk : ∀ i, IsSMulRegular (f i) k) : IsSMulRegular (∀ i, f i) k := fun _ _ h =>
   funext fun i => hk i (congr_fun h i : _)
-#align is_smul_regular.pi IsSmulRegular.pi
+#align is_smul_regular.pi IsSMulRegular.pi
 
-instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] :
-    SmulWithZero α (∀ i, f i) :=
-  { Pi.instSMul with 
+instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SMulWithZero α (f i)] :
+    SMulWithZero α (∀ i, f i) :=
+  { Pi.instSMul with
     smul_zero := fun _ => funext fun _ => smul_zero _
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero Pi.smulWithZero
 
 instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)]
-    [∀ i, SmulWithZero (g i) (f i)] : SmulWithZero (∀ i, g i) (∀ i, f i) :=
-  { Pi.smul' with 
+    [∀ i, SMulWithZero (g i) (f i)] : SMulWithZero (∀ i, g i) (∀ i, f i) :=
+  { Pi.smul' with
     smul_zero := fun _ => funext fun _ => smul_zero _
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero' Pi.smulWithZero'
@@ -65,7 +65,9 @@ variable (I f)
 
 instance module (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i] :
     @Module α (∀ i : I, f i) r (@Pi.addCommMonoid I f m) :=
-  { Pi.distribMulAction _ with
+  {
+    Pi.distribMulAction
+      _ with
     add_smul := fun c f g => funext fun i => add_smul _ _ _
     zero_smul := fun f => funext fun i => zero_smul α _ }
 #align pi.module Pi.module
@@ -88,15 +90,13 @@ instance Function.module (α β : Type _) [Semiring α] [AddCommMonoid β] [Modu
 variable {I f}
 
 instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddCommMonoid (g i)}
-    [∀ i, Module (f i) (g i)] :
-    Module (∀ i, f i)
-      (∀ i,
-        g i) where 
-  add_smul := by 
+    [∀ i, Module (f i) (g i)] : Module (∀ i, f i) (∀ i, g i)
+    where
+  add_smul := by
     intros
     ext1
     apply add_smul
-  zero_smul := by 
+  zero_smul := by
     intros
     ext1
     apply zero_smul

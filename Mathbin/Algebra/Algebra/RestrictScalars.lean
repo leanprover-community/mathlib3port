@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.restrict_scalars
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ instance [Module S M] : Module R (RestrictScalars R S M) :=
 /-- This instance is only relevant when `restrict_scalars.module_orig` is available as an instance.
 -/
 instance [Module S M] : IsScalarTower R S (RestrictScalars R S M) :=
-  ⟨fun r S M => by 
+  ⟨fun r S M => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
 
@@ -136,9 +136,8 @@ instance RestrictScalars.opModule [Module Sᵐᵒᵖ M] : Module Rᵐᵒᵖ (Res
 #align restrict_scalars.op_module RestrictScalars.opModule
 
 instance RestrictScalars.is_central_scalar [Module S M] [Module Sᵐᵒᵖ M] [IsCentralScalar S M] :
-    IsCentralScalar R
-      (RestrictScalars R S
-        M) where op_smul_eq_smul r x := (op_smul_eq_smul (algebraMap R S r) (_ : M) : _)
+    IsCentralScalar R (RestrictScalars R S M)
+    where op_smul_eq_smul r x := (op_smul_eq_smul (algebraMap R S r) (_ : M) : _)
 #align restrict_scalars.is_central_scalar RestrictScalars.is_central_scalar
 
 /-- The `R`-algebra homomorphism from the original coefficient algebra `S` to endomorphisms
@@ -187,7 +186,7 @@ theorem RestrictScalars.add_equiv_symm_map_algebra_map_smul (r : R) (x : M) :
 theorem RestrictScalars.add_equiv_symm_map_smul_smul (r : R) (s : S) (x : M) :
     (RestrictScalars.addEquiv R S M).symm ((r • s) • x) =
       r • (RestrictScalars.addEquiv R S M).symm (s • x) :=
-  by 
+  by
   rw [Algebra.smul_def, mul_smul]
   rfl
 #align restrict_scalars.add_equiv_symm_map_smul_smul RestrictScalars.add_equiv_symm_map_smul_smul
@@ -232,7 +231,9 @@ theorem RestrictScalars.ring_equiv_map_smul (r : R) (x : RestrictScalars R S A) 
 
 /-- `R ⟶ S` induces `S-Alg ⥤ R-Alg` -/
 instance : Algebra R (RestrictScalars R S A) :=
-  { (algebraMap S A).comp (algebraMap R S) with
+  {
+    (algebraMap S A).comp (algebraMap R
+        S) with
     smul := (· • ·)
     commutes' := fun r x => Algebra.commutes _ _
     smul_def' := fun _ _ => Algebra.smul_def _ _ }

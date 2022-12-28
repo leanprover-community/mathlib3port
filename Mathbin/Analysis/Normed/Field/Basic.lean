@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed.field.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,7 +213,8 @@ theorem mul_left_bound (x : α) : ∀ y : α, ‖AddMonoidHom.mulLeft x y‖ ≤
 #align mul_left_bound mul_left_bound
 
 /-- In a seminormed ring, the right-multiplication `add_monoid_hom` is bounded. -/
-theorem mul_right_bound (x : α) : ∀ y : α, ‖AddMonoidHom.mulRight x y‖ ≤ ‖x‖ * ‖y‖ := fun y => by
+theorem mul_right_bound (x : α) : ∀ y : α, ‖AddMonoidHom.mulRight x y‖ ≤ ‖x‖ * ‖y‖ := fun y =>
+  by
   rw [mul_comm]
   convert norm_mul_le y x
 #align mul_right_bound mul_right_bound
@@ -280,7 +281,7 @@ instance Subalgebra.normedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} 
 
 theorem Nat.norm_cast_le : ∀ n : ℕ, ‖(n : α)‖ ≤ n * ‖(1 : α)‖
   | 0 => by simp
-  | n + 1 => by 
+  | n + 1 => by
     rw [n.cast_succ, n.cast_succ, add_mul, one_mul]
     exact norm_add_le_of_le (Nat.norm_cast_le n) le_rfl
 #align nat.norm_cast_le Nat.norm_cast_le
@@ -290,7 +291,7 @@ theorem Nat.norm_cast_le : ∀ n : ℕ, ‖(n : α)‖ ≤ n * ‖(1 : α)‖
 theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ‖l.Prod‖ ≤ (l.map norm).Prod
   | [], h => (h rfl).elim
   | [a], _ => by simp
-  | a::b::l, _ => by 
+  | a::b::l, _ => by
     rw [List.map_cons, List.prod_cons, @List.prod_cons _ _ _ ‖a‖]
     refine' le_trans (norm_mul_le _ _) (mul_le_mul_of_nonneg_left _ (norm_nonneg _))
     exact List.norm_prod_le' (List.cons_ne_nil b l)
@@ -311,7 +312,8 @@ theorem List.nnnorm_prod_le [NormOneClass α] (l : List α) : ‖l.Prod‖₊ �
 #align list.nnnorm_prod_le List.nnnorm_prod_le
 
 theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty)
-    (f : ι → α) : ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ := by
+    (f : ι → α) : ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ :=
+  by
   rcases s with ⟨⟨l⟩, hl⟩
   have : l.map f ≠ [] := by simpa using hs
   simpa using List.norm_prod_le' this
@@ -323,7 +325,8 @@ theorem Finset.nnnorm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι)
 #align finset.nnnorm_prod_le' Finset.nnnorm_prod_le'
 
 theorem Finset.norm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι)
-    (f : ι → α) : ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ := by
+    (f : ι → α) : ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ :=
+  by
   rcases s with ⟨⟨l⟩, hl⟩
   simpa using (l.map f).norm_prod_le
 #align finset.norm_prod_le Finset.norm_prod_le
@@ -434,9 +437,10 @@ end NormedRing
 instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing α] :
     HasContinuousMul α :=
   ⟨continuous_iff_continuous_at.2 fun x =>
-      tendsto_iff_norm_tendsto_zero.2 <| by
+      tendsto_iff_norm_tendsto_zero.2 <|
+        by
         have : ∀ e : α × α, ‖e.1 * e.2 - x.1 * x.2‖ ≤ ‖e.1‖ * ‖e.2 - x.2‖ + ‖e.1 - x.1‖ * ‖x.2‖ :=
-          by 
+          by
           intro e
           calc
             ‖e.1 * e.2 - x.1 * x.2‖ ≤ ‖e.1 * (e.2 - x.2) + (e.1 - x.1) * x.2‖ := by
@@ -456,8 +460,8 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing 
 
 -- see Note [lower instance priority]
 /-- A seminormed ring is a topological ring. -/
-instance (priority := 100) semi_normed_top_ring [NonUnitalSemiNormedRing α] :
-    TopologicalRing α where
+instance (priority := 100) semi_normed_top_ring [NonUnitalSemiNormedRing α] : TopologicalRing α
+    where
 #align semi_normed_top_ring semi_normed_top_ring
 
 section NormedDivisionRing
@@ -472,6 +476,14 @@ theorem norm_mul (a b : α) : ‖a * b‖ = ‖a‖ * ‖b‖ :=
 instance (priority := 900) NormedDivisionRing.to_norm_one_class : NormOneClass α :=
   ⟨mul_left_cancel₀ (mt norm_eq_zero.1 (one_ne_zero' α)) <| by rw [← norm_mul, mul_one, mul_one]⟩
 #align normed_division_ring.to_norm_one_class NormedDivisionRing.to_norm_one_class
+
+instance is_absolute_value_norm : IsAbsoluteValue (norm : α → ℝ)
+    where
+  abv_nonneg := norm_nonneg
+  abv_eq_zero _ := norm_eq_zero
+  abv_add := norm_add_le
+  abv_mul := norm_mul
+#align is_absolute_value_norm is_absolute_value_norm
 
 @[simp]
 theorem nnnorm_mul (a b : α) : ‖a * b‖₊ = ‖a‖₊ * ‖b‖₊ :=
@@ -555,11 +567,13 @@ theorem Filter.tendsto_mul_right_cobounded {a : α} (ha : a ≠ 0) :
 #align filter.tendsto_mul_right_cobounded Filter.tendsto_mul_right_cobounded
 
 -- see Note [lower instance priority]
-instance (priority := 100) NormedDivisionRing.to_has_continuous_inv₀ : HasContinuousInv₀ α := by
+instance (priority := 100) NormedDivisionRing.to_has_continuous_inv₀ : HasContinuousInv₀ α :=
+  by
   refine' ⟨fun r r0 => tendsto_iff_norm_tendsto_zero.2 _⟩
   have r0' : 0 < ‖r‖ := norm_pos_iff.2 r0
   rcases exists_between r0' with ⟨ε, ε0, εr⟩
-  have : ∀ᶠ e in 𝓝 r, ‖e⁻¹ - r⁻¹‖ ≤ ‖r - e‖ / ‖r‖ / ε := by
+  have : ∀ᶠ e in 𝓝 r, ‖e⁻¹ - r⁻¹‖ ≤ ‖r - e‖ / ‖r‖ / ε :=
+    by
     filter_upwards [(is_open_lt continuous_const continuous_norm).eventually_mem εr] with e he
     have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
     calc
@@ -575,7 +589,8 @@ instance (priority := 100) NormedDivisionRing.to_has_continuous_inv₀ : HasCont
   simp
 #align normed_division_ring.to_has_continuous_inv₀ NormedDivisionRing.to_has_continuous_inv₀
 
-theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖x‖ = 1 := by
+theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖x‖ = 1 :=
+  by
   rw [(_ : ‖x‖ = 1 ↔ ‖x‖₊ = 1)]
   apply (@pow_left_inj Nnreal _ _ _ (↑k) zero_le' zero_le' (PNat.pos k)).mp
   · rw [← nnnorm_pow, one_pow, h, nnnorm_one]
@@ -615,8 +630,8 @@ section NormedField
 /-- A densely normed field is always a nontrivially normed field.
 See note [lower instance priority]. -/
 instance (priority := 100) DenselyNormedField.toNontriviallyNormedField [DenselyNormedField α] :
-    NontriviallyNormedField
-      α where non_trivial :=
+    NontriviallyNormedField α
+    where non_trivial :=
     let ⟨a, h, _⟩ := DenselyNormedField.lt_norm_lt 1 2 zero_le_one one_lt_two
     ⟨a, h⟩
 #align
@@ -674,7 +689,8 @@ theorem exists_norm_lt_one : ∃ x : α, 0 < ‖x‖ ∧ ‖x‖ < 1 :=
 variable {α}
 
 @[instance]
-theorem punctured_nhds_ne_bot (x : α) : NeBot (𝓝[≠] x) := by
+theorem punctured_nhds_ne_bot (x : α) : NeBot (𝓝[≠] x) :=
+  by
   rw [← mem_closure_iff_nhds_within_ne_bot, Metric.mem_closure_iff]
   rintro ε ε0
   rcases exists_norm_lt α ε0 with ⟨b, hb0, hbε⟩
@@ -701,22 +717,16 @@ theorem exists_lt_nnnorm_lt {r₁ r₂ : ℝ≥0} (h : r₁ < r₂) : ∃ x : α
   exact_mod_cast exists_lt_norm_lt α r₁.prop h
 #align normed_field.exists_lt_nnnorm_lt NormedField.exists_lt_nnnorm_lt
 
-instance densely_ordered_range_norm :
-    DenselyOrdered
-      (Set.range
-        (norm :
-          α → ℝ)) where dense := by
+instance densely_ordered_range_norm : DenselyOrdered (Set.range (norm : α → ℝ))
+    where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
     exact
       let ⟨z, h⟩ := exists_lt_norm_lt α (norm_nonneg _) hxy
       ⟨⟨‖z‖, z, rfl⟩, h⟩
 #align normed_field.densely_ordered_range_norm NormedField.densely_ordered_range_norm
 
-instance densely_ordered_range_nnnorm :
-    DenselyOrdered
-      (Set.range
-        (nnnorm :
-          α → ℝ≥0)) where dense := by
+instance densely_ordered_range_nnnorm : DenselyOrdered (Set.range (nnnorm : α → ℝ≥0))
+    where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
     exact
       let ⟨z, h⟩ := exists_lt_nnnorm_lt α hxy
@@ -739,8 +749,8 @@ instance : NormedCommRing ℝ :=
 noncomputable instance : NormedField ℝ :=
   { Real.normedAddCommGroup with norm_mul' := abs_mul }
 
-noncomputable instance :
-    DenselyNormedField ℝ where lt_norm_lt _ _ h₀ hr :=
+noncomputable instance : DenselyNormedField ℝ
+    where lt_norm_lt _ _ h₀ hr :=
     let ⟨x, h⟩ := exists_between hr
     ⟨x, by rwa [Real.norm_eq_abs, abs_of_nonneg (h₀.trans h.1.le)]⟩
 
@@ -805,7 +815,7 @@ theorem NormedAddCommGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [No
   (at_top_basis_Ioi.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top' NormedAddCommGroup.tendsto_at_top'
 
-instance : NormedCommRing ℤ where 
+instance : NormedCommRing ℤ where
   norm n := ‖(n : ℝ)‖
   norm_mul m n := le_of_eq <| by simp only [norm, Int.cast_mul, abs_mul]
   dist_eq m n := by simp only [Int.dist_eq, norm, Int.cast_sub]
@@ -833,7 +843,8 @@ theorem Nnreal.coe_nat_abs (n : ℤ) : (n.natAbs : ℝ≥0) = ‖n‖₊ :=
       
 #align nnreal.coe_nat_abs Nnreal.coe_nat_abs
 
-theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊ ↔ ‖z‖₊ ≤ c := by
+theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊ ↔ ‖z‖₊ ≤ c :=
+  by
   rw [Int.abs_eq_natAbs, Int.ofNat_le, Nat.le_floor_iff (zero_le c)]
   congr
   exact Nnreal.coe_nat_abs z
@@ -842,15 +853,15 @@ theorem Int.abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊
 instance : NormOneClass ℤ :=
   ⟨by simp [← Int.norm_cast_real]⟩
 
-instance : NormedField ℚ where 
+instance : NormedField ℚ where
   norm r := ‖(r : ℝ)‖
   norm_mul' r₁ r₂ := by simp only [norm, Rat.cast_mul, abs_mul]
   dist_eq r₁ r₂ := by simp only [Rat.dist_eq, norm, Rat.cast_sub]
 
-instance :
-    DenselyNormedField ℚ where lt_norm_lt r₁ r₂ h₀ hr :=
+instance : DenselyNormedField ℚ
+    where lt_norm_lt r₁ r₂ h₀ hr :=
     let ⟨q, h⟩ := exists_rat_btwn hr
-    ⟨q, by 
+    ⟨q, by
       unfold norm
       rwa [abs_of_pos (h₀.trans_lt h.1)]⟩
 
@@ -966,7 +977,8 @@ open Finset.Nat
 
 theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
-    Summable fun n => ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ := by
+    Summable fun n => ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ :=
+  by
   have :=
     summable_sum_mul_antidiagonal_of_summable_mul
       (Summable.mul_of_nonneg hf hg (fun _ => norm_nonneg _) fun _ => norm_nonneg _)
@@ -993,7 +1005,8 @@ theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm [CompleteSpace �
   tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm
 
 theorem summable_norm_sum_mul_range_of_summable_norm {f g : ℕ → α} (hf : Summable fun x => ‖f x‖)
-    (hg : Summable fun x => ‖g x‖) : Summable fun n => ‖∑ k in range (n + 1), f k * g (n - k)‖ := by
+    (hg : Summable fun x => ‖g x‖) : Summable fun n => ‖∑ k in range (n + 1), f k * g (n - k)‖ :=
+  by
   simp_rw [← sum_antidiagonal_eq_sum_range_succ fun k l => f k * g l]
   exact summable_norm_sum_mul_antidiagonal_of_summable_norm hf hg
 #align summable_norm_sum_mul_range_of_summable_norm summable_norm_sum_mul_range_of_summable_norm
@@ -1004,7 +1017,8 @@ theorem summable_norm_sum_mul_range_of_summable_norm {f g : ℕ → α} (hf : Su
     *not* absolutely summable. -/
 theorem tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm [CompleteSpace α] {f g : ℕ → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
-    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) := by
+    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) :=
+  by
   simp_rw [← sum_antidiagonal_eq_sum_range_succ fun k l => f k * g l]
   exact tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm hf hg
 #align
@@ -1050,7 +1064,7 @@ See note [reducible non-instances] -/
 def NonUnitalSemiNormedRing.induced [NonUnitalRing R] [NonUnitalSemiNormedRing S]
     [NonUnitalRingHomClass F R S] (f : F) : NonUnitalSemiNormedRing R :=
   { SeminormedAddCommGroup.induced R S f with
-    norm_mul := fun x y => by 
+    norm_mul := fun x y => by
       unfold norm
       exact (map_mul f x y).symm ▸ norm_mul_le (f x) (f y) }
 #align non_unital_semi_normed_ring.induced NonUnitalSemiNormedRing.induced
@@ -1114,7 +1128,7 @@ See note [reducible non-instances] -/
 def NormedDivisionRing.induced [DivisionRing R] [NormedDivisionRing S] [NonUnitalRingHomClass F R S]
     (f : F) (hf : Function.Injective f) : NormedDivisionRing R :=
   { NormedAddCommGroup.induced R S f hf with
-    norm_mul' := fun x y => by 
+    norm_mul' := fun x y => by
       unfold norm
       exact (map_mul f x y).symm ▸ norm_mul (f x) (f y) }
 #align normed_division_ring.induced NormedDivisionRing.induced

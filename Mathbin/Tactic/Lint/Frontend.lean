@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.frontend
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -372,7 +372,8 @@ indicates mistakes made in the file above the command. It is equivalent to copyi
 output of `#lint`. On large files, it may take some time before the output appears.
 -/
 @[hole_command]
-unsafe def lint_hole_cmd : hole_command where 
+unsafe def lint_hole_cmd : hole_command
+    where
   Name := "Lint"
   descr := "Lint: Find common mistakes in current file."
   action es := do

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.initial_seg
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ theorem coe_fn_to_rel_embedding (f : r ≼i s) : (f.toRelEmbedding : α → β) 
 
 /- warning: initial_seg.coe_coe_fn -> InitialSeg.coe_coe_fn is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u1, u2} α β r s), Eq.{max (succ u1) (succ u2)} ((fun (_x : RelEmbedding.{u1, u2} α β r s) => α -> β) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (CoeTCₓ.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (InitialSeg.toRelEmbedding.{u1, u2} α β r s)))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r s) (fun (_x : RelEmbedding.{u1, u2} α β r s) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r s) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (CoeTCₓ.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (InitialSeg.toRelEmbedding.{u1, u2} α β r s)))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (InitialSeg.hasCoeToFun.{u1, u2} α β r s) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u1, u2} α β r s), Eq.{max (succ u1) (succ u2)} ((fun (_x : RelEmbedding.{u1, u2} α β r s) => α -> β) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (InitialSeg.RelEmbedding.hasCoe.{u1, u2} α β r s)))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r s) (fun (_x : RelEmbedding.{u1, u2} α β r s) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r s) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (RelEmbedding.{u1, u2} α β r s) (InitialSeg.RelEmbedding.hasCoe.{u1, u2} α β r s)))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (InitialSeg.hasCoeToFun.{u1, u2} α β r s) f)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u2, u1} α β r s), Eq.{max (succ u2) (succ u1)} (forall (a : α), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r s (InitialSeg.toRelEmbedding.{u2, u1} α β r s f))) (fun (x : α) => FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r s (InitialSeg.toRelEmbedding.{u2, u1} α β r s f)) x)
 Case conversion may be inaccurate. Consider using '#align initial_seg.coe_coe_fn InitialSeg.coe_coe_fnₓ'. -/
@@ -134,7 +134,7 @@ instance (r : α → α → Prop) : Inhabited (r ≼i r) :=
 /-- Composition of functions shows that `≼i` is transitive -/
 @[trans]
 protected def trans (f : r ≼i s) (g : s ≼i t) : r ≼i t :=
-  ⟨f.1.trans g.1, fun a c h => by 
+  ⟨f.1.trans g.1, fun a c h => by
     simp at h⊢
     rcases g.2 _ _ h with ⟨b, rfl⟩; have h := g.1.map_rel_iff.1 h
     rcases f.2 _ _ h with ⟨a', rfl⟩; exact ⟨a', rfl⟩⟩
@@ -167,8 +167,9 @@ theorem trans_apply (f : r ≼i s) (g : s ≼i t) (a : α) : (f.trans g) a = g (
 theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
     WellFounded r → Subsingleton (r ≼i s)
   | ⟨h⟩ =>
-    ⟨fun f g => by
-      suffices (f : α → β) = g by 
+    ⟨fun f g =>
+      by
+      suffices (f : α → β) = g by
         cases f
         cases g
         congr
@@ -220,16 +221,16 @@ def antisymm [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : r ≃r s :=
 #align initial_seg.antisymm InitialSeg.antisymm
 -/
 
-/- warning: initial_seg.antisymm_to_fun -> InitialSeg.antisymm_to_fun is a dubious translation:
+/- warning: initial_seg.antisymm_to_fun -> InitialSeg.antisymm_toFun is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsWellOrder.{u2} β s] (f : InitialSeg.{u1, u2} α β r s) (g : InitialSeg.{u2, u1} β α s r), Eq.{max (succ u1) (succ u2)} ((fun (_x : RelIso.{u1, u2} α β r s) => α -> β) (InitialSeg.antisymm.{u1, u2} α β r s _inst_1 f g)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r s) (fun (_x : RelIso.{u1, u2} α β r s) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r s) (InitialSeg.antisymm.{u1, u2} α β r s _inst_1 f g)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (InitialSeg.hasCoeToFun.{u1, u2} α β r s) f)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsWellOrder.{u2} β s] (f : InitialSeg.{u1, u2} α β r s) (g : InitialSeg.{u2, u1} β α s r), Eq.{max (succ u1) (succ u2)} (forall (a : α), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r s (RelIso.toRelEmbedding.{u1, u2} α β r s (InitialSeg.antisymm.{u1, u2} α β r s _inst_1 f g)))) (fun (x : α) => FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r s (InitialSeg.toRelEmbedding.{u1, u2} α β r s f)) x)
-Case conversion may be inaccurate. Consider using '#align initial_seg.antisymm_to_fun InitialSeg.antisymm_to_funₓ'. -/
+Case conversion may be inaccurate. Consider using '#align initial_seg.antisymm_to_fun InitialSeg.antisymm_toFunₓ'. -/
 @[simp]
-theorem antisymm_to_fun [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : (antisymm f g : α → β) = f :=
+theorem antisymm_toFun [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : (antisymm f g : α → β) = f :=
   rfl
-#align initial_seg.antisymm_to_fun InitialSeg.antisymm_to_fun
+#align initial_seg.antisymm_to_fun InitialSeg.antisymm_toFun
 
 /- warning: initial_seg.antisymm_symm -> InitialSeg.antisymm_symm is a dubious translation:
 lean 3 declaration is
@@ -407,7 +408,7 @@ instance hasCoeInitialSeg [IsTrans β s] : Coe (r ≺i s) (r ≼i s) :=
 
 /- warning: principal_seg.coe_coe_fn' -> PrincipalSeg.coe_coe_fn' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrans.{u2} β s] (f : PrincipalSeg.{u1, u2} α β r s), Eq.{max (succ u1) (succ u2)} ((fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (CoeTCₓ.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (fun (f : PrincipalSeg.{u1, u2} α β r s) => InitialSeg.mk.{u1, u2} α β r s (PrincipalSeg.toRelEmbedding.{u1, u2} α β r s f) (PrincipalSeg.hasCoeInitialSeg.proof_1.{u1, u2} α β r s _inst_1 f))))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (InitialSeg.hasCoeToFun.{u1, u2} α β r s) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (CoeTCₓ.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (fun (f : PrincipalSeg.{u1, u2} α β r s) => InitialSeg.mk.{u1, u2} α β r s (PrincipalSeg.toRelEmbedding.{u1, u2} α β r s f) (PrincipalSeg.hasCoeInitialSeg.proof_1.{u1, u2} α β r s _inst_1 f))))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (fun (_x : PrincipalSeg.{u1, u2} α β r s) => α -> β) (PrincipalSeg.hasCoeToFun.{u1, u2} α β r s) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrans.{u2} β s] (f : PrincipalSeg.{u1, u2} α β r s), Eq.{max (succ u1) (succ u2)} ((fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (PrincipalSeg.hasCoeInitialSeg.{u1, u2} α β r s _inst_1)))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (InitialSeg.hasCoeToFun.{u1, u2} α β r s) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{max (succ u1) (succ u2), max (succ u1) (succ u2)} a b] => self.0) (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (HasLiftT.mk.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (CoeTCₓ.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (coeBase.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (InitialSeg.{u1, u2} α β r s) (PrincipalSeg.hasCoeInitialSeg.{u1, u2} α β r s _inst_1)))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PrincipalSeg.{u1, u2} α β r s) (fun (_x : PrincipalSeg.{u1, u2} α β r s) => α -> β) (PrincipalSeg.hasCoeToFun.{u1, u2} α β r s) f)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrans.{u2} β s] (f : PrincipalSeg.{u1, u2} α β r s), Eq.{max (succ u1) (succ u2)} (forall (x : α), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) x) (fun (x : α) => FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r s (InitialSeg.toRelEmbedding.{u1, u2} α β r s (InitialSeg.mk.{u1, u2} α β r s (PrincipalSeg.toRelEmbedding.{u1, u2} α β r s f) (PrincipalSeg.hasCoeInitialSeg.proof_1.{u1, u2} α β r s _inst_1 f)))) x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r s (PrincipalSeg.toRelEmbedding.{u1, u2} α β r s f)))
 Case conversion may be inaccurate. Consider using '#align principal_seg.coe_coe_fn' PrincipalSeg.coe_coe_fn'ₓ'. -/
@@ -426,7 +427,8 @@ theorem init_iff [IsTrans β s] (f : r ≺i s) {a : α} {b : β} : s b (f a) ↔
 #align principal_seg.init_iff PrincipalSeg.init_iff
 
 #print PrincipalSeg.irrefl /-
-theorem irrefl {r : α → α → Prop} [IsWellOrder α r] (f : r ≺i r) : False := by
+theorem irrefl {r : α → α → Prop} [IsWellOrder α r] (f : r ≺i r) : False :=
+  by
   have := f.lt_top f.top
   rw [show f f.top = f.top from InitialSeg.eq (↑f) (InitialSeg.refl r) f.top] at this
   exact irrefl _ this
@@ -512,7 +514,8 @@ def equivLt (f : r ≃r s) (g : s ≺i t) : r ≺i t :=
 /-- Composition of a principal segment with an order isomorphism, as a principal segment -/
 def ltEquiv {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} (f : PrincipalSeg r s)
     (g : s ≃r t) : PrincipalSeg r t :=
-  ⟨@RelEmbedding.trans _ _ _ r s t f g, g f.top, by
+  ⟨@RelEmbedding.trans _ _ _ r s t f g, g f.top,
+    by
     intro x
     rw [← g.apply_symm_apply x, g.map_rel_iff, f.down', exists_congr]
     intro y; exact ⟨congr_arg g, fun h => g.to_equiv.bijective.1 h⟩⟩
@@ -543,12 +546,14 @@ theorem equivLt_top (f : r ≃r s) (g : s ≺i t) : (equivLt f g).top = g.top :=
 
 /-- Given a well order `s`, there is a most one principal segment embedding of `r` into `s`. -/
 instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
-  ⟨fun f g => by
-    have ef : (f : α → β) = g := by 
+  ⟨fun f g =>
+    by
+    have ef : (f : α → β) = g := by
       show ((f : r ≼i s) : α → β) = g
       rw [@Subsingleton.elim _ _ (f : r ≼i s) g]
       rfl
-    have et : f.top = g.top := by
+    have et : f.top = g.top :=
+      by
       refine' extensional_of_trichotomous_of_irrefl s fun x => _
       simp only [f.down, g.down, ef, coe_fn_to_rel_embedding]
     cases f
@@ -572,7 +577,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u3} γ t], (PrincipalSeg.{u2, u1} α β r s) -> (forall (g : PrincipalSeg.{u1, u3} β γ s t) (h : PrincipalSeg.{u2, u3} α γ r t), t (PrincipalSeg.top.{u2, u3} α γ r t h) (PrincipalSeg.top.{u1, u3} β γ s t g))
 Case conversion may be inaccurate. Consider using '#align principal_seg.top_lt_top PrincipalSeg.topLtTopₓ'. -/
 theorem topLtTop {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
-    (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top := by
+    (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top :=
+  by
   rw [Subsingleton.elim h (f.trans g)]
   apply PrincipalSeg.lt_top
 #align principal_seg.top_lt_top PrincipalSeg.topLtTop
@@ -640,7 +646,7 @@ theorem codRestrict_top (p) (f : r ≺i s) (H H₂) : (codRestrict p f H H₂).t
 #print PrincipalSeg.ofIsEmpty /-
 /-- Principal segment from an empty type into a type with a minimal element. -/
 def ofIsEmpty (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) : r ≺i s :=
-  { RelEmbedding.ofIsEmpty r s with 
+  { RelEmbedding.ofIsEmpty r s with
     top := b
     down' := by simp [H] }
 #align principal_seg.of_is_empty PrincipalSeg.ofIsEmpty
@@ -675,7 +681,8 @@ end PrincipalSeg
 /-- To an initial segment taking values in a well order, one can associate either a principal
 segment (if the range is not everything, hence one can take as top the minimum of the complement
 of the range) or an order isomorphism (if the range is everything). -/
-noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r ≺i s) (r ≃r s) := by
+noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r ≺i s) (r ≃r s) :=
+  by
   by_cases h : surjective f
   · exact Sum.inr (RelIso.ofSurjective f h)
   · have h' : _ := (InitialSeg.eq_or_principal f).resolve_left h
@@ -723,7 +730,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align initial_seg.le_lt_apply InitialSeg.leLt_applyₓ'. -/
 @[simp]
 theorem InitialSeg.leLt_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) (a : α) :
-    (f.leLt g) a = g (f a) := by 
+    (f.leLt g) a = g (f a) := by
   delta InitialSeg.leLt; cases' h : f.lt_or_eq with f' f'
   · simp only [PrincipalSeg.trans_apply, f.lt_or_eq_apply_left]
   · simp only [PrincipalSeg.equivLt_apply, f.lt_or_eq_apply_right]
@@ -741,7 +748,8 @@ Case conversion may be inaccurate. Consider using '#align rel_embedding.collapse
 gaps, to obtain an initial segment. Here, we construct the collapsed order embedding pointwise,
 but the proof of the fact that it is an initial segment will be given in `collapse`. -/
 noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬s (f a) b } :=
-  (RelEmbedding.wellFounded f <| IsWellFounded.wf).fix fun a IH => by
+  (RelEmbedding.wellFounded f <| IsWellFounded.wf).fix fun a IH =>
+    by
     let S := { b | ∀ a h, s (IH a h).1 b }
     have : f a ∈ S := fun a' h =>
       ((trichotomous _ _).resolve_left fun h' =>
@@ -753,7 +761,8 @@ noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬
 #print RelEmbedding.collapseF.lt /-
 theorem collapseF.lt [IsWellOrder β s] (f : r ↪r s) {a : α} :
     ∀ {a'}, r a' a → s (collapseF f a').1 (collapseF f a).1 :=
-  show (collapseF f a).1 ∈ { b | ∀ (a') (h : r a' a), s (collapseF f a').1 b } by
+  show (collapseF f a).1 ∈ { b | ∀ (a') (h : r a' a), s (collapseF f a').1 b }
+    by
     unfold collapse_F; rw [WellFounded.fix_eq]
     apply WellFounded.min_mem _ _
 #align rel_embedding.collapse_F.lt RelEmbedding.collapseF.lt
@@ -761,7 +770,8 @@ theorem collapseF.lt [IsWellOrder β s] (f : r ↪r s) {a : α} :
 
 #print RelEmbedding.collapseF.not_lt /-
 theorem collapseF.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b}
-    (h : ∀ (a') (h : r a' a), s (collapseF f a').1 b) : ¬s b (collapseF f a).1 := by
+    (h : ∀ (a') (h : r a' a), s (collapseF f a').1 b) : ¬s b (collapseF f a).1 :=
+  by
   unfold collapse_F; rw [WellFounded.fix_eq]
   exact
     WellFounded.not_lt_min _ _ _
@@ -776,7 +786,7 @@ noncomputable def collapse [IsWellOrder β s] (f : r ↪r s) : r ≼i s :=
   haveI := RelEmbedding.isWellOrder f
   ⟨RelEmbedding.ofMonotone (fun a => (collapse_F f a).1) fun a b => collapse_F.lt f, fun a b =>
     Acc.recOn (is_well_founded.wf.apply b : Acc s b)
-      (fun b H IH a h => by 
+      (fun b H IH a h => by
         let S := { a | ¬s (collapse_F f a).1 b }
         have : S.nonempty := ⟨_, asymm h⟩
         exists (IsWellFounded.wf : WellFounded r).min S this

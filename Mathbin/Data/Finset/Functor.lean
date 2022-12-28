@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finset.functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ variable {α β : Type u} [∀ P, Decidable P]
 construct `functor finset` when working classically. -/
 instance : Functor Finset where map α β f s := s.image f
 
-instance : IsLawfulFunctor Finset where 
+instance : LawfulFunctor Finset where
   id_map α s := image_id
   comp_map α β γ f g s := image_image.symm
 
@@ -72,7 +72,8 @@ section Applicative
 variable {α β : Type u} [∀ P, Decidable P]
 
 instance : Applicative Finset :=
-  { Finset.functor, Finset.hasPure with
+  { Finset.functor,
+    Finset.hasPure with
     seq := fun α β t s => t.sup fun f => s.image f
     seqLeft := fun α β s t => if t = ∅ then ∅ else s
     seqRight := fun α β s t => if s = ∅ then ∅ else t }
@@ -95,14 +96,16 @@ theorem seq_right_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then
 /-- `finset.image₂` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
 theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) (t : Finset β) :
-    image₂ f s t = f <$> s <*> t := by 
+    image₂ f s t = f <$> s <*> t := by
   ext
   simp [mem_sup]
 #align finset.image₂_def Finset.image₂_def
 
 instance : LawfulApplicative Finset :=
-  { Finset.is_lawful_functor with
-    seq_left_eq := fun α β s t => by
+  {
+    Finset.is_lawful_functor with
+    seq_left_eq := fun α β s t =>
+      by
       rw [seq_def, fmap_def, seq_left_def]
       obtain rfl | ht := t.eq_empty_or_nonempty
       · simp_rw [if_pos rfl, image_empty]
@@ -115,7 +118,8 @@ instance : LawfulApplicative Finset :=
         obtain ⟨b, hb, rfl⟩ := hf
         obtain ⟨_, _, rfl⟩ := ha
         exact hb
-    seq_right_eq := fun α β s t => by
+    seq_right_eq := fun α β s t =>
+      by
       rw [seq_def, fmap_def, seq_right_def]
       obtain rfl | hs := s.eq_empty_or_nonempty
       · rw [if_pos rfl, image_empty, sup_empty, bot_eq_empty]
@@ -130,7 +134,7 @@ instance : LawfulApplicative Finset :=
     pure_seq_eq_map := fun α β f s => sup_singleton
     map_pure := fun α β f a => image_singleton _ _
     seq_pure := fun α β s a => sup_singleton'' _ _
-    seq_assoc := fun α β γ s t u => by 
+    seq_assoc := fun α β γ s t u => by
       ext a
       simp_rw [seq_def, fmap_def]
       simp only [exists_prop, mem_sup, mem_image]
@@ -143,7 +147,8 @@ instance : LawfulApplicative Finset :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance : CommApplicative Finset :=
   { Finset.is_lawful_applicative with
-    commutative_prod := fun α β s t => by
+    commutative_prod := fun α β s t =>
+      by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
       change (s.bUnion fun a => t.image fun b => (a, b)) = t.bUnion fun b => s.image fun a => (a, b)
       trans s ×ˢ t <;> [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;> congr <;> ext <;>
@@ -167,11 +172,12 @@ theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
 #align finset.bind_def Finset.bind_def
 
 instance : LawfulMonad Finset :=
-  { Finset.is_lawful_applicative with
+  {
+    Finset.is_lawful_applicative with
     bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _
     bind_map_eq_seq := fun α β t s => rfl
     pure_bind := fun α β t s => sup_singleton
-    bind_assoc := fun α β γ s f g => by 
+    bind_assoc := fun α β γ s f g => by
       convert sup_bUnion _ _
       exact sup_eq_bUnion _ _ }
 
@@ -185,7 +191,7 @@ section Alternative
 variable [∀ P, Decidable P]
 
 instance : Alternative Finset :=
-  { Finset.applicative with 
+  { Finset.applicative with
     orelse := fun α => (· ∪ ·)
     failure := fun α => ∅ }
 
@@ -205,7 +211,8 @@ def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) 
 #align finset.traverse Finset.traverse
 
 @[simp]
-theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := by
+theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s :=
+  by
   rw [traverse, Multiset.id_traverse]
   exact s.val_to_finset
 #align finset.id_traverse Finset.id_traverse
@@ -219,10 +226,11 @@ theorem map_comp_coe (h : α → β) :
 #align finset.map_comp_coe Finset.map_comp_coe
 
 theorem map_traverse (g : α → G β) (h : β → γ) (s : Finset α) :
-    Functor.map h <$> traverse g s = traverse (Functor.map h ∘ g) s := by
+    Functor.map h <$> traverse g s = traverse (Functor.map h ∘ g) s :=
+  by
   unfold traverse
   simp only [map_comp_coe, functor_norm]
-  rw [IsLawfulFunctor.comp_map, Multiset.map_traverse]
+  rw [LawfulFunctor.comp_map, Multiset.map_traverse]
 #align finset.map_traverse Finset.map_traverse
 
 end Traversable

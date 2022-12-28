@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.unit_disc.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem coe_ne_one (z : 𝔻) : (z : ℂ) ≠ 1 :=
 #align complex.unit_disc.coe_ne_one Complex.UnitDisc.coe_ne_one
 
 theorem coe_ne_neg_one (z : 𝔻) : (z : ℂ) ≠ -1 :=
-  ne_of_apply_ne abs <| by 
+  ne_of_apply_ne abs <| by
     rw [abs.map_neg, map_one]
     exact z.abs_ne_one
 #align complex.unit_disc.coe_ne_neg_one Complex.UnitDisc.coe_ne_neg_one
@@ -101,7 +101,8 @@ theorem mk_neg (z : ℂ) (hz : abs (-z) < 1) : mk (-z) hz = -mk z (abs.map_neg z
 #align complex.unit_disc.mk_neg Complex.UnitDisc.mk_neg
 
 instance : SemigroupWithZero 𝔻 :=
-  { UnitDisc.commSemigroup with
+  {
+    UnitDisc.commSemigroup with
     zero := mk 0 <| (map_zero _).trans_lt one_pos
     zero_mul := fun z => coe_injective <| zero_mul _
     mul_zero := fun z => coe_injective <| mul_zero _ }

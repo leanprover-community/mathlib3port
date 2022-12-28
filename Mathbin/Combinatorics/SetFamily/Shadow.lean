@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.shadow
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,8 @@ theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ )
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
-theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 := by
+theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 :=
+  by
   refine' mem_shadow_iff.trans ⟨_, _⟩
   · rintro ⟨s, hs, a, ha, rfl⟩
     refine' ⟨a, not_mem_erase a s, _⟩
@@ -108,14 +109,16 @@ theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ 
 
 /-- The shadow of a family of `r`-sets is a family of `r - 1`-sets. -/
 protected theorem Set.Sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
-    ((∂ ) 𝒜 : Set (Finset α)).Sized (r - 1) := by
+    ((∂ ) 𝒜 : Set (Finset α)).Sized (r - 1) :=
+  by
   intro A h
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_shadow_iff.1 h
   rw [card_erase_of_mem hi, h𝒜 hA]
 #align set.sized.shadow Set.Sized.shadow
 
 theorem sized_shadow_iff (h : ∅ ∉ 𝒜) :
-    ((∂ ) 𝒜 : Set (Finset α)).Sized r ↔ (𝒜 : Set (Finset α)).Sized (r + 1) := by
+    ((∂ ) 𝒜 : Set (Finset α)).Sized r ↔ (𝒜 : Set (Finset α)).Sized (r + 1) :=
+  by
   refine' ⟨fun h𝒜 s hs => _, Set.Sized.shadow⟩
   obtain ⟨a, ha⟩ := nonempty_iff_ne_empty.2 (ne_of_mem_of_not_mem hs h)
   rw [← h𝒜 (erase_mem_shadow hs ha), card_erase_add_one ha]
@@ -123,7 +126,8 @@ theorem sized_shadow_iff (h : ∅ ∉ 𝒜) :
 
 /-- `s ∈ ∂ 𝒜` iff `s` is exactly one element less than something from `𝒜` -/
 theorem mem_shadow_iff_exists_mem_card_add_one :
-    s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + 1 := by
+    s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + 1 :=
+  by
   refine' mem_shadow_iff_insert_mem.trans ⟨_, _⟩
   · rintro ⟨a, ha, hs⟩
     exact ⟨insert a s, hs, subset_insert _ _, card_insert_of_not_mem ha⟩
@@ -143,7 +147,8 @@ theorem exists_subset_of_mem_shadow (hs : s ∈ (∂ ) 𝒜) : ∃ t ∈ 𝒜, s
 
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements less than something in `𝒜`. -/
 theorem mem_shadow_iff_exists_mem_card_add :
-    s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + k := by
+    s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + k :=
+  by
   induction' k with k ih generalizing 𝒜 s
   · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩
@@ -160,7 +165,7 @@ theorem mem_shadow_iff_exists_mem_card_add :
   · rintro ⟨t, ht, hst, hcard⟩
     obtain ⟨u, hsu, hut, hu⟩ :=
       Finset.exists_intermediate_set k
-        (by 
+        (by
           rw [add_comm, hcard]
           exact le_succ _)
         hst
@@ -213,7 +218,8 @@ theorem insert_mem_up_shadow (hs : s ∈ 𝒜) (ha : a ∉ s) : insert a s ∈ (
 
 /-- The upper shadow of a family of `r`-sets is a family of `r + 1`-sets. -/
 protected theorem Set.Sized.up_shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
-    ((∂⁺ ) 𝒜 : Set (Finset α)).Sized (r + 1) := by
+    ((∂⁺ ) 𝒜 : Set (Finset α)).Sized (r + 1) :=
+  by
   intro A h
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_up_shadow_iff.1 h
   rw [card_insert_of_not_mem hi, h𝒜 hA]
@@ -221,7 +227,8 @@ protected theorem Set.Sized.up_shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r)
 
 /-- `t` is in the upper shadow of `𝒜` iff we can remove an element from it so that the resulting
 finset is in `𝒜`. -/
-theorem mem_up_shadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.erase a ∈ 𝒜 := by
+theorem mem_up_shadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.erase a ∈ 𝒜 :=
+  by
   refine' mem_up_shadow_iff.trans ⟨_, _⟩
   · rintro ⟨s, hs, a, ha, rfl⟩
     refine' ⟨a, mem_insert_self a s, _⟩
@@ -232,7 +239,8 @@ theorem mem_up_shadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.er
 
 /-- `s ∈ ∂⁺ 𝒜` iff `s` is exactly one element less than something from `𝒜`. -/
 theorem mem_up_shadow_iff_exists_mem_card_add_one :
-    s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + 1 = s.card := by
+    s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + 1 = s.card :=
+  by
   refine' mem_up_shadow_iff_erase_mem.trans ⟨_, _⟩
   · rintro ⟨a, ha, hs⟩
     exact ⟨s.erase a, hs, erase_subset _ _, card_erase_add_one ha⟩
@@ -252,7 +260,8 @@ theorem exists_subset_of_mem_up_shadow (hs : s ∈ (∂⁺ ) 𝒜) : ∃ t ∈ �
 
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements more than something in `𝒜`. -/
 theorem mem_up_shadow_iff_exists_mem_card_add :
-    s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + k = s.card := by
+    s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + k = s.card :=
+  by
   induction' k with k ih generalizing 𝒜 s
   · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩
@@ -269,7 +278,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add :
   · rintro ⟨t, ht, hts, hcard⟩
     obtain ⟨u, htu, hus, hu⟩ :=
       Finset.exists_intermediate_set 1
-        (by 
+        (by
           rw [add_comm, ← hcard]
           exact add_le_add_left (zero_lt_succ _) _)
         hts
@@ -280,7 +289,8 @@ theorem mem_up_shadow_iff_exists_mem_card_add :
 #align finset.mem_up_shadow_iff_exists_mem_card_add Finset.mem_up_shadow_iff_exists_mem_card_add
 
 @[simp]
-theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image compl) := by
+theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image compl) :=
+  by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor
@@ -291,7 +301,8 @@ theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image c
 #align finset.shadow_image_compl Finset.shadow_image_compl
 
 @[simp]
-theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image compl) := by
+theorem up_shadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image compl) :=
+  by
   ext s
   simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
   constructor

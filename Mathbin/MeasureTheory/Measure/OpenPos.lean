@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.open_pos
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,10 +94,12 @@ theorem interior_eq_empty_of_null (hs : μ s = 0) : interior s = ∅ :=
 /-- If two functions are a.e. equal on an open set and are continuous on this set, then they are
 equal on this set. -/
 theorem eq_on_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : IsOpen U)
-    (hf : ContinuousOn f U) (hg : ContinuousOn g U) : EqOn f g U := by
+    (hf : ContinuousOn f U) (hg : ContinuousOn g U) : EqOn f g U :=
+  by
   replace h := ae_imp_of_ae_restrict h
   simp only [eventually_eq, ae_iff, not_imp] at h
-  have : IsOpen (U ∩ { a | f a ≠ g a }) := by
+  have : IsOpen (U ∩ { a | f a ≠ g a }) :=
+    by
     refine' is_open_iff_mem_nhds.mpr fun a ha => inter_mem (hU.mem_nhds ha.1) _
     rcases ha with ⟨ha : a ∈ U, ha' : (f a, g a) ∈ diagonal Yᶜ⟩
     exact

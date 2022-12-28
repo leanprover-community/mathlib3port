@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Simon Hudon
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.of_has_finite_products
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,8 +50,8 @@ section
 attribute [local tidy] tactic.case_bash
 
 /-- A category with a terminal object and binary products has a natural monoidal structure. -/
-def monoidalOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] :
-    MonoidalCategory C where 
+def monoidalOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : MonoidalCategory C
+    where
   tensorUnit := ⊤_ C
   tensorObj X Y := X ⨯ Y
   tensorHom _ _ _ _ f g := Limits.prod.map f g
@@ -74,19 +74,19 @@ open MonoidalCategory
 /-- The monoidal structure coming from finite products is symmetric.
 -/
 @[simps]
-def symmetricOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] :
-    SymmetricCategory C where 
+def symmetricOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : SymmetricCategory C
+    where
   braiding X Y := Limits.prod.braiding X Y
-  braiding_naturality' X X' Y Y' f g := by 
+  braiding_naturality' X X' Y Y' f g := by
     dsimp [tensor_hom]
     simp
-  hexagon_forward' X Y Z := by 
+  hexagon_forward' X Y Z := by
     dsimp [monoidal_of_has_finite_products]
     simp
-  hexagon_reverse' X Y Z := by 
+  hexagon_reverse' X Y Z := by
     dsimp [monoidal_of_has_finite_products]
     simp
-  symmetry' X Y := by 
+  symmetry' X Y := by
     dsimp
     simp
     rfl
@@ -156,8 +156,8 @@ section
 attribute [local tidy] tactic.case_bash
 
 /-- A category with an initial object and binary coproducts has a natural monoidal structure. -/
-def monoidalOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] :
-    MonoidalCategory C where 
+def monoidalOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : MonoidalCategory C
+    where
   tensorUnit := ⊥_ C
   tensorObj X Y := X ⨿ Y
   tensorHom _ _ _ _ f g := Limits.coprod.map f g
@@ -181,19 +181,19 @@ open MonoidalCategory
 /-- The monoidal structure coming from finite coproducts is symmetric.
 -/
 @[simps]
-def symmetricOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] :
-    SymmetricCategory C where 
+def symmetricOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : SymmetricCategory C
+    where
   braiding := Limits.coprod.braiding
-  braiding_naturality' X X' Y Y' f g := by 
+  braiding_naturality' X X' Y Y' f g := by
     dsimp [tensor_hom]
     simp
-  hexagon_forward' X Y Z := by 
+  hexagon_forward' X Y Z := by
     dsimp [monoidal_of_has_finite_coproducts]
     simp
-  hexagon_reverse' X Y Z := by 
+  hexagon_reverse' X Y Z := by
     dsimp [monoidal_of_has_finite_coproducts]
     simp
-  symmetry' X Y := by 
+  symmetry' X Y := by
     dsimp
     simp
     rfl

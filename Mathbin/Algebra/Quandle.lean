@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module algebra.quandle
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ theorem self_distrib {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ x ◃ z :=
 
 /-- A rack acts on itself by equivalences.
 -/
-def act (x : R) : R ≃ R where 
+def act (x : R) : R ≃ R where
   toFun := Shelf.act x
   invFun := invAct x
   left_inv := left_inv x
@@ -171,21 +171,24 @@ theorem act_inv_act_eq (x y : R) : x ◃ x ◃⁻¹ y = y :=
   right_inv x y
 #align rack.act_inv_act_eq Rack.act_inv_act_eq
 
-theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' := by
+theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' :=
+  by
   constructor
   apply (act x).Injective
   rintro rfl
   rfl
 #align rack.left_cancel Rack.left_cancel
 
-theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y = y' := by
+theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y = y' :=
+  by
   constructor
   apply (act x).symm.Injective
   rintro rfl
   rfl
 #align rack.left_cancel_inv Rack.left_cancel_inv
 
-theorem self_distrib_inv {x y z : R} : x ◃⁻¹ y ◃⁻¹ z = (x ◃⁻¹ y) ◃⁻¹ x ◃⁻¹ z := by
+theorem self_distrib_inv {x y z : R} : x ◃⁻¹ y ◃⁻¹ z = (x ◃⁻¹ y) ◃⁻¹ x ◃⁻¹ z :=
+  by
   rw [← left_cancel (x ◃⁻¹ y), right_inv, ← left_cancel x, right_inv, self_distrib]
   repeat' rw [right_inv]
 #align rack.self_distrib_inv Rack.self_distrib_inv
@@ -197,20 +200,21 @@ of `x`. It is another way to understand the self-distributivity axiom.
 This is used in the natural rack homomorphism `to_conj` from `R` to
 `conj (R ≃ R)` defined by `op'`.
 -/
-theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y * (act x)⁻¹ := by
+theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y * (act x)⁻¹ :=
+  by
   rw [eq_mul_inv_iff_mul_eq]; ext z
   apply self_distrib.symm
 #align rack.ad_conj Rack.ad_conj
 
 /-- The opposite rack, swapping the roles of `◃` and `◃⁻¹`.
 -/
-instance oppositeRack :
-    Rack Rᵐᵒᵖ where 
+instance oppositeRack : Rack Rᵐᵒᵖ
+    where
   act x y := op (invAct (unop x) (unop y))
   self_distrib :=
     MulOpposite.rec' fun x =>
       MulOpposite.rec' fun y =>
-        MulOpposite.rec' fun z => by 
+        MulOpposite.rec' fun z => by
           simp only [unop_op, op_inj]
           exact self_distrib_inv
   invAct x y := op (Shelf.act (unop x) (unop y))
@@ -233,13 +237,15 @@ theorem self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y := by rw [← righ
 #align rack.self_act_act_eq Rack.self_act_act_eq
 
 @[simp]
-theorem self_inv_act_inv_act_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y := by
+theorem self_inv_act_inv_act_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y :=
+  by
   have h := @self_act_act_eq _ _ (op x) (op y)
   simpa using h
 #align rack.self_inv_act_inv_act_eq Rack.self_inv_act_inv_act_eq
 
 @[simp]
-theorem self_act_inv_act_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y := by
+theorem self_act_inv_act_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y :=
+  by
   rw [← left_cancel (x ◃ x)]
   rw [right_inv]
   rw [self_act_act_eq]
@@ -247,12 +253,14 @@ theorem self_act_inv_act_eq {x y : R} : (x ◃ x) ◃⁻¹ y = x ◃⁻¹ y := b
 #align rack.self_act_inv_act_eq Rack.self_act_inv_act_eq
 
 @[simp]
-theorem self_inv_act_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y := by
+theorem self_inv_act_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y :=
+  by
   have h := @self_act_inv_act_eq _ _ (op x) (op y)
   simpa using h
 #align rack.self_inv_act_act_eq Rack.self_inv_act_act_eq
 
-theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y := by
+theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
+  by
   constructor; swap; rintro rfl; rfl
   intro h
   trans (x ◃ x) ◃⁻¹ x ◃ x
@@ -260,7 +268,8 @@ theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y := by
   rw [h, ← left_cancel (y ◃ y), right_inv, self_act_act_eq]
 #align rack.self_act_eq_iff_eq Rack.self_act_eq_iff_eq
 
-theorem self_inv_act_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y := by
+theorem self_inv_act_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y :=
+  by
   have h := @self_act_eq_iff_eq _ _ (op x) (op y)
   simpa using h
 #align rack.self_inv_act_eq_iff_eq Rack.self_inv_act_eq_iff_eq
@@ -268,8 +277,8 @@ theorem self_inv_act_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y
 /-- The map `x ↦ x ◃ x` is a bijection.  (This has applications for the
 regular isotopy version of the Reidemeister I move for knot diagrams.)
 -/
-def selfApplyEquiv (R : Type _) [Rack R] :
-    R ≃ R where 
+def selfApplyEquiv (R : Type _) [Rack R] : R ≃ R
+    where
   toFun x := x ◃ x
   invFun x := x ◃⁻¹ x
   left_inv x := by simp
@@ -283,7 +292,7 @@ def IsInvolutory (R : Type _) [Rack R] : Prop :=
 #align rack.is_involutory Rack.IsInvolutory
 
 theorem involutory_inv_act_eq_act {R : Type _} [Rack R] (h : IsInvolutory R) (x y : R) :
-    x ◃⁻¹ y = x ◃ y := by 
+    x ◃⁻¹ y = x ◃ y := by
   rw [← left_cancel x, right_inv]
   exact ((h x).LeftInverse y).symm
 #align rack.involutory_inv_act_eq_act Rack.involutory_inv_act_eq_act
@@ -296,7 +305,8 @@ def IsAbelian (R : Type _) [Rack R] : Prop :=
 
 /-- Associative racks are uninteresting.
 -/
-theorem assoc_iff_id {R : Type _} [Rack R] {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z := by
+theorem assoc_iff_id {R : Type _} [Rack R] {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z :=
+  by
   rw [self_distrib]
   rw [left_cancel]
 #align rack.assoc_iff_id Rack.assoc_iff_id
@@ -321,7 +331,7 @@ theorem map_act (f : S₁ →◃ S₂) {x y : S₁} : f (x ◃ y) = f x ◃ f y 
 #align shelf_hom.map_act ShelfHom.map_act
 
 /-- The identity homomorphism -/
-def id (S : Type _) [Shelf S] : S →◃ S where 
+def id (S : Type _) [Shelf S] : S →◃ S where
   toFun := id
   map_act' := by simp
 #align shelf_hom.id ShelfHom.id
@@ -331,8 +341,8 @@ instance inhabited (S : Type _) [Shelf S] : Inhabited (S →◃ S) :=
 #align shelf_hom.inhabited ShelfHom.inhabited
 
 /-- The composition of shelf homomorphisms -/
-def comp (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) :
-    S₁ →◃ S₃ where 
+def comp (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) : S₁ →◃ S₃
+    where
   toFun := g.toFun ∘ f.toFun
   map_act' := by simp
 #align shelf_hom.comp ShelfHom.comp
@@ -359,13 +369,14 @@ variable {Q : Type _} [Quandle Q]
 attribute [simp] fix
 
 @[simp]
-theorem fix_inv {x : Q} : x ◃⁻¹ x = x := by
+theorem fix_inv {x : Q} : x ◃⁻¹ x = x :=
+  by
   rw [← left_cancel x]
   simp
 #align quandle.fix_inv Quandle.fix_inv
 
-instance oppositeQuandle :
-    Quandle Qᵐᵒᵖ where fix x := by 
+instance oppositeQuandle : Quandle Qᵐᵒᵖ
+    where fix x := by
     induction x using MulOpposite.rec'
     simp
 #align quandle.opposite_quandle Quandle.oppositeQuandle
@@ -378,17 +389,17 @@ def Conj (G : Type _) :=
   G
 #align quandle.conj Quandle.Conj
 
-instance Conj.quandle (G : Type _) [Group G] :
-    Quandle (Conj G) where 
+instance Conj.quandle (G : Type _) [Group G] : Quandle (Conj G)
+    where
   act x := @MulAut.conj G _ x
-  self_distrib x y z := by 
+  self_distrib x y z := by
     dsimp only [[anonymous], MulAut.conj_apply, conj]
     group
   invAct x := (@MulAut.conj G _ x).symm
-  left_inv x y := by 
+  left_inv x y := by
     dsimp [act, conj]
     group
-  right_inv x y := by 
+  right_inv x y := by
     dsimp [act, conj]
     group
   fix x := by simp
@@ -400,21 +411,22 @@ theorem conj_act_eq_conj {G : Type _} [Group G] (x y : Conj G) :
   rfl
 #align quandle.conj_act_eq_conj Quandle.conj_act_eq_conj
 
-theorem conj_swap {G : Type _} [Group G] (x y : Conj G) : x ◃ y = y ↔ y ◃ x = x := by
+theorem conj_swap {G : Type _} [Group G] (x y : Conj G) : x ◃ y = y ↔ y ◃ x = x :=
+  by
   dsimp [conj] at *; constructor
   repeat' intro h; conv_rhs => rw [eq_mul_inv_of_mul_eq (eq_mul_inv_of_mul_eq h)]; simp
 #align quandle.conj_swap Quandle.conj_swap
 
 /-- `conj` is functorial
 -/
-def Conj.map {G : Type _} {H : Type _} [Group G] [Group H] (f : G →* H) :
-    Conj G →◃ Conj H where 
+def Conj.map {G : Type _} {H : Type _} [Group G] [Group H] (f : G →* H) : Conj G →◃ Conj H
+    where
   toFun := f
   map_act' := by simp
 #align quandle.conj.map Quandle.Conj.map
 
-instance {G : Type _} {H : Type _} [Group G] [Group H] :
-    HasLift (G →* H) (Conj G →◃ Conj H) where lift := Conj.map
+instance {G : Type _} {H : Type _} [Group G] [Group H] : HasLift (G →* H) (Conj G →◃ Conj H)
+    where lift := Conj.map
 
 /-- The dihedral quandle. This is the conjugation quandle of the dihedral group restrict to flips.
 
@@ -431,14 +443,15 @@ because it is an involution (see `dihedral_act.inv`).
 def dihedralAct (n : ℕ) (a : Zmod n) : Zmod n → Zmod n := fun b => 2 * a - b
 #align quandle.dihedral_act Quandle.dihedralAct
 
-theorem dihedralAct.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedralAct n a) := by
+theorem dihedralAct.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedralAct n a) :=
+  by
   intro b
   dsimp [dihedral_act]
   ring
 #align quandle.dihedral_act.inv Quandle.dihedralAct.inv
 
-instance (n : ℕ) : Quandle (Dihedral
-        n) where 
+instance (n : ℕ) : Quandle (Dihedral n)
+    where
   act := dihedralAct n
   self_distrib x y z := by dsimp [dihedral_act]; ring
   invAct := dihedralAct n
@@ -453,8 +466,8 @@ namespace Rack
 /-- This is the natural rack homomorphism to the conjugation quandle of the group `R ≃ R`
 that acts on the rack.
 -/
-def toConj (R : Type _) [Rack R] :
-    R →◃ Quandle.Conj (R ≃ R) where 
+def toConj (R : Type _) [Rack R] : R →◃ Quandle.Conj (R ≃ R)
+    where
   toFun := act
   map_act' := ad_conj
 #align rack.to_conj Rack.toConj
@@ -570,7 +583,7 @@ instance PreEnvelGroupRel'.inhabited (R : Type u) [Rack R] :
 The `pre_envel_group_rel` relation as a `Prop`.  Used as the relation for `pre_envel_group.setoid`.
 -/
 inductive PreEnvelGroupRel (R : Type u) [Rack R] : PreEnvelGroup R → PreEnvelGroup R → Prop
-  | rel {a b : PreEnvelGroup R} (r : PreEnvelGroupRel' R a b) : pre_envel_group_rel a b
+  | Rel {a b : PreEnvelGroup R} (r : PreEnvelGroupRel' R a b) : pre_envel_group_rel a b
 #align rack.pre_envel_group_rel Rack.PreEnvelGroupRel
 
 /-- A quick way to convert a `pre_envel_group_rel'` to a `pre_envel_group_rel`.
@@ -598,10 +611,10 @@ theorem PreEnvelGroupRel.trans {R : Type u} [Rack R] {a b c : PreEnvelGroup R} :
   | ⟨rab⟩, ⟨rbc⟩ => (rab.trans rbc).Rel
 #align rack.pre_envel_group_rel.trans Rack.PreEnvelGroupRel.trans
 
-instance PreEnvelGroup.setoid (R : Type _) [Rack R] :
-    Setoid (PreEnvelGroup R) where 
+instance PreEnvelGroup.setoid (R : Type _) [Rack R] : Setoid (PreEnvelGroup R)
+    where
   R := PreEnvelGroupRel R
-  iseqv := by 
+  iseqv := by
     constructor; apply pre_envel_group_rel.refl
     constructor; apply pre_envel_group_rel.symm
     apply pre_envel_group_rel.trans
@@ -615,10 +628,8 @@ def EnvelGroup (R : Type _) [Rack R] :=
 
 -- Define the `group` instances in two steps so `inv` can be inferred correctly.
 -- TODO: is there a non-invasive way of defining the instance directly?
-instance (R : Type _) [Rack R] :
-    DivInvMonoid
-      (EnvelGroup
-        R) where 
+instance (R : Type _) [Rack R] : DivInvMonoid (EnvelGroup R)
+    where
   mul a b :=
     Quotient.liftOn₂ a b (fun a b => ⟦PreEnvelGroup.mul a b⟧) fun a b a' b' ⟨ha⟩ ⟨hb⟩ =>
       Quotient.sound (PreEnvelGroupRel'.congr_mul ha hb).Rel
@@ -643,8 +654,8 @@ instance EnvelGroup.inhabited (R : Type _) [Rack R] : Inhabited (EnvelGroup R) :
 /-- The canonical homomorphism from a rack to its enveloping group.
 Satisfies universal properties given by `to_envel_group.map` and `to_envel_group.univ`.
 -/
-def toEnvelGroup (R : Type _) [Rack R] :
-    R →◃ Quandle.Conj (EnvelGroup R) where 
+def toEnvelGroup (R : Type _) [Rack R] : R →◃ Quandle.Conj (EnvelGroup R)
+    where
   toFun x := ⟦incl x⟧
   map_act' x y := Quotient.sound (PreEnvelGroupRel'.act_incl x y).symm.Rel
 #align rack.to_envel_group Rack.toEnvelGroup
@@ -687,27 +698,28 @@ end ToEnvelGroup.MapAux
 More precisely, the `envel_group` functor is left adjoint to `quandle.conj`.
 -/
 def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Group G] :
-    (R →◃ Quandle.Conj G) ≃
-      (EnvelGroup R →*
-        G) where 
+    (R →◃ Quandle.Conj G) ≃ (EnvelGroup R →* G)
+    where
   toFun f :=
     { toFun := fun x =>
         Quotient.liftOn x (toEnvelGroup.mapAux f) fun a b ⟨hab⟩ =>
           toEnvelGroup.mapAux.well_def f hab
-      map_one' := by
+      map_one' :=
+        by
         change Quotient.liftOn ⟦Rack.PreEnvelGroup.unit⟧ (to_envel_group.map_aux f) _ = 1
         simp [to_envel_group.map_aux]
       map_mul' := fun x y =>
-        Quotient.induction_on₂ x y fun x y => by
+        Quotient.induction_on₂ x y fun x y =>
+          by
           change Quotient.liftOn ⟦mul x y⟧ (to_envel_group.map_aux f) _ = _
           simp [to_envel_group.map_aux] }
   invFun F := (Quandle.Conj.map F).comp (toEnvelGroup R)
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
   right_inv F :=
     MonoidHom.ext fun x =>
-      (Quotient.induction_on x) fun x => by 
+      (Quotient.induction_on x) fun x => by
         induction x
         · exact F.map_one.symm
         · rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module data.complex.determinant
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,8 @@ namespace Complex
 
 /-- The determinant of `conj_ae`, as a linear map. -/
 @[simp]
-theorem det_conj_ae : conjAe.toLinearMap.det = -1 := by
+theorem det_conj_ae : conjAe.toLinearMap.det = -1 :=
+  by
   rw [← LinearMap.det_to_matrix basis_one_I, to_matrix_conj_ae, Matrix.det_fin_two_of]
   simp
 #align complex.det_conj_ae Complex.det_conj_ae

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.split_simplicial_object
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ theorem ext' : A = ⟨A.1, ⟨A.e, A.2.2⟩⟩ := by tidy
 #align simplicial_object.splitting.index_set.ext' SimplicialObject.Splitting.IndexSet.ext'
 
 theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1) (h₂ : A₁.e ≫ eqToHom (by rw [h₁]) = A₂.e) :
-    A₁ = A₂ := by 
+    A₁ = A₂ := by
   rcases A₁ with ⟨Δ₁, ⟨α₁, hα₁⟩⟩
   rcases A₂ with ⟨Δ₂, ⟨α₂, hα₂⟩⟩
   simp only at h₁
@@ -93,12 +93,12 @@ instance : Fintype (IndexSet Δ) :=
       ⟨⟨A.1.unop.len, Nat.lt_succ_iff.mpr (len_le_of_epi (inferInstance : Epi A.e))⟩,
         A.e.toOrderHom⟩ :
       IndexSet Δ → Sigma fun k : Fin (Δ.unop.len + 1) => Fin (Δ.unop.len + 1) → Fin (k + 1))
-    (by 
+    (by
       rintro ⟨Δ₁, α₁⟩ ⟨Δ₂, α₂⟩ h₁
       induction Δ₁ using Opposite.rec
       induction Δ₂ using Opposite.rec
       simp only at h₁
-      have h₂ : Δ₁ = Δ₂ := by 
+      have h₂ : Δ₁ = Δ₂ := by
         ext1
         simpa only [Fin.mk_eq_mk] using h₁.1
       subst h₂
@@ -126,7 +126,7 @@ def EqId : Prop :=
   A = id _
 #align simplicial_object.splitting.index_set.eq_id SimplicialObject.Splitting.IndexSet.EqId
 
-theorem eq_id_iff_eq : A.EqId ↔ A.1 = Δ := by 
+theorem eq_id_iff_eq : A.EqId ↔ A.1 = Δ := by
   constructor
   · intro h
     dsimp at h
@@ -143,7 +143,8 @@ theorem eq_id_iff_eq : A.EqId ↔ A.1 = Δ := by
 #align
   simplicial_object.splitting.index_set.eq_id_iff_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_eq
 
-theorem eq_id_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len := by
+theorem eq_id_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len :=
+  by
   rw [eq_id_iff_eq]
   constructor
   · intro h
@@ -155,7 +156,8 @@ theorem eq_id_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len := by
 #align
   simplicial_object.splitting.index_set.eq_id_iff_len_eq SimplicialObject.Splitting.IndexSet.eq_id_iff_len_eq
 
-theorem eq_id_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len := by
+theorem eq_id_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len :=
+  by
   rw [eq_id_iff_len_eq]
   constructor
   · intro h
@@ -164,7 +166,8 @@ theorem eq_id_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len := by
 #align
   simplicial_object.splitting.index_set.eq_id_iff_len_le SimplicialObject.Splitting.IndexSet.eq_id_iff_len_le
 
-theorem eq_id_iff_mono : A.EqId ↔ Mono A.e := by
+theorem eq_id_iff_mono : A.EqId ↔ Mono A.e :=
+  by
   constructor
   · intro h
     dsimp at h
@@ -273,12 +276,14 @@ def ιSummand {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) : s.n A.1.unop.len 
 
 @[reassoc.1]
 theorem ι_summand_eq {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
-    s.ιSummand A = s.ι A.1.unop.len ≫ X.map A.e.op := by
+    s.ιSummand A = s.ι A.1.unop.len ≫ X.map A.e.op :=
+  by
   dsimp only [ι_summand, iso.hom]
   erw [colimit.ι_desc, cofan.mk_ι_app]
 #align simplicial_object.splitting.ι_summand_eq SimplicialObject.Splitting.ι_summand_eq
 
-theorem ι_summand_id (n : ℕ) : s.ιSummand (IndexSet.id (op [n])) = s.ι n := by
+theorem ι_summand_id (n : ℕ) : s.ιSummand (IndexSet.id (op [n])) = s.ι n :=
+  by
   erw [ι_summand_eq, X.map_id, comp_id]
   rfl
 #align simplicial_object.splitting.ι_summand_id SimplicialObject.Splitting.ι_summand_id
@@ -299,7 +304,8 @@ theorem ι_summand_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : Inde
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
-    (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g := by
+    (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g :=
+  by
   rw [← cancel_epi (s.iso Δ).Hom]
   ext A
   trace
@@ -307,7 +313,8 @@ theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
   simpa only [ι_summand_eq, iso_hom, colimit.ι_desc_assoc, cofan.mk_ι_app, assoc] using h A
 #align simplicial_object.splitting.hom_ext' SimplicialObject.Splitting.hom_ext'
 
-theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g := by
+theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g :=
+  by
   ext Δ
   apply s.hom_ext'
   intro A
@@ -326,7 +333,8 @@ def desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.
 
 @[simp, reassoc.1]
 theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.unop.len ⟶ Z)
-    (A : IndexSet Δ) : s.ιSummand A ≫ s.desc Δ F = F A := by
+    (A : IndexSet Δ) : s.ιSummand A ≫ s.desc Δ F = F A :=
+  by
   dsimp only [ι_summand, desc]
   simp only [assoc, iso.hom_inv_id_assoc, ι_coprod]
   erw [colimit.ι_desc, cofan.mk_ι_app]
@@ -334,7 +342,7 @@ theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s
 
 /-- A simplicial object that is isomorphic to a split simplicial object is split. -/
 @[simps]
-def ofIso (e : X ≅ Y) : Splitting Y where 
+def ofIso (e : X ≅ Y) : Splitting Y where
   n := s.n
   ι n := s.ι n ≫ e.Hom.app (op [n])
   map_is_iso' Δ := by
@@ -344,7 +352,8 @@ def ofIso (e : X ≅ Y) : Splitting Y where
 
 @[reassoc.1]
 theorem ι_summand_epi_naturality {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ₁ ⟶ Δ₂)
-    [Epi p.unop] : s.ιSummand A ≫ X.map p = s.ιSummand (A.epi_comp p) := by
+    [Epi p.unop] : s.ιSummand A ≫ X.map p = s.ιSummand (A.epi_comp p) :=
+  by
   dsimp [ι_summand]
   erw [colimit.ι_desc, colimit.ι_desc, cofan.mk_ι_app, cofan.mk_ι_app]
   dsimp only [index_set.epi_comp, index_set.e]
@@ -386,10 +395,11 @@ structure Hom (S₁ S₂ : Split C) where
 #align simplicial_object.split.hom SimplicialObject.Split.Hom
 
 @[ext]
-theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n : ℕ, Φ₁.f n = Φ₂.f n) : Φ₁ = Φ₂ := by
+theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n : ℕ, Φ₁.f n = Φ₂.f n) : Φ₁ = Φ₂ :=
+  by
   rcases Φ₁ with ⟨F₁, f₁, c₁⟩
   rcases Φ₂ with ⟨F₂, f₂, c₂⟩
-  have h' : f₁ = f₂ := by 
+  have h' : f₁ = f₂ := by
     ext
     apply h
   subst h'
@@ -406,7 +416,7 @@ attribute [simp, reassoc.1] hom.comm
 
 end Split
 
-instance : Category (Split C) where 
+instance : Category (Split C) where
   Hom := Split.Hom
   id S :=
     { f := 𝟙 _
@@ -462,8 +472,8 @@ variable (C)
 /-- The functor `simplicial_object.split C ⥤ simplicial_object C` which forgets
 the splitting. -/
 @[simps]
-def forget : Split C ⥤ SimplicialObject
-        C where 
+def forget : Split C ⥤ SimplicialObject C
+    where
   obj S := S.x
   map S₁ S₂ Φ := Φ.f
 #align simplicial_object.split.forget SimplicialObject.Split.forget
@@ -471,7 +481,7 @@ def forget : Split C ⥤ SimplicialObject
 /-- The functor `simplicial_object.split C ⥤ C` which sends a simplicial object equipped
 with a splitting to its nondegenerate `n`-simplices. -/
 @[simps]
-def evalN (n : ℕ) : Split C ⥤ C where 
+def evalN (n : ℕ) : Split C ⥤ C where
   obj S := S.s.n n
   map S₁ S₂ Φ := Φ.f n
 #align simplicial_object.split.eval_N SimplicialObject.Split.evalN
@@ -481,10 +491,8 @@ in split simplicial objects is a natural transformation of functors
 `simplicial_object.split C ⥤ C` -/
 @[simps]
 def natTransιSummand {Δ : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) :
-    evalN C A.1.unop.len ⟶
-      forget C ⋙
-        (evaluation SimplexCategoryᵒᵖ C).obj
-          Δ where 
+    evalN C A.1.unop.len ⟶ forget C ⋙ (evaluation SimplexCategoryᵒᵖ C).obj Δ
+    where
   app S := S.s.ιSummand A
   naturality' S₁ S₂ Φ := (ι_summand_naturality_symm Φ A).symm
 #align simplicial_object.split.nat_trans_ι_summand SimplicialObject.Split.natTransιSummand

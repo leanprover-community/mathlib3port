@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sum.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem mem_sum_lift₂ :
     c ∈ sumLift₂ f g a b ↔
       (∃ a₁ b₁ c₁, a = inl a₁ ∧ b = inl b₁ ∧ c = inl c₁ ∧ c₁ ∈ f a₁ b₁) ∨
         ∃ a₂ b₂ c₂, a = inr a₂ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ g a₂ b₂ :=
-  by 
+  by
   constructor
   · cases a <;> cases b
     · rw [sum_lift₂, mem_map]
@@ -64,7 +64,8 @@ theorem mem_sum_lift₂ :
 #align finset.mem_sum_lift₂ Finset.mem_sum_lift₂
 
 theorem inl_mem_sum_lift₂ {c₁ : γ₁} :
-    inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
+    inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ :=
+  by
   rw [mem_sum_lift₂, or_iff_left]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
@@ -72,7 +73,8 @@ theorem inl_mem_sum_lift₂ {c₁ : γ₁} :
 #align finset.inl_mem_sum_lift₂ Finset.inl_mem_sum_lift₂
 
 theorem inr_mem_sum_lift₂ {c₂ : γ₂} :
-    inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
+    inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ :=
+  by
   rw [mem_sum_lift₂, or_iff_right]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
@@ -83,7 +85,7 @@ theorem sum_lift₂_eq_empty :
     sumLift₂ f g a b = ∅ ↔
       (∀ a₁ b₁, a = inl a₁ → b = inl b₁ → f a₁ b₁ = ∅) ∧
         ∀ a₂ b₂, a = inr a₂ → b = inr b₂ → g a₂ b₂ = ∅ :=
-  by 
+  by
   refine' ⟨fun h => _, fun h => _⟩
   ·
     constructor <;>
@@ -128,8 +130,8 @@ section Disjoint
 
 variable [Preorder α] [Preorder β] [LocallyFiniteOrder α] [LocallyFiniteOrder β]
 
-instance : LocallyFiniteOrder
-      (Sum α β) where 
+instance : LocallyFiniteOrder (Sum α β)
+    where
   finsetIcc := sumLift₂ icc icc
   finsetIco := sumLift₂ ico ico
   finsetIoc := sumLift₂ ioc ioc

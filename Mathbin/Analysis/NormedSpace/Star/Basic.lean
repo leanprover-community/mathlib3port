@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 -- see Note [lower instance priority]
 /-- In a C*-ring, star preserves the norm. -/
 instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
-  ⟨by 
+  ⟨by
     intro x
     by_cases htriv : x = 0
     · simp only [htriv, star_zero]
@@ -120,7 +120,8 @@ instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
       exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)⟩
 #align cstar_ring.to_normed_star_group CstarRing.toNormedStarGroup
 
-theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ := by
+theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ :=
+  by
   nth_rw 1 [← star_star x]
   simp only [norm_star_mul_self, norm_star]
 #align cstar_ring.norm_self_mul_star CstarRing.norm_self_mul_star
@@ -137,7 +138,8 @@ theorem nnnorm_star_mul_self {x : E} : ‖x⋆ * x‖₊ = ‖x‖₊ * ‖x‖�
 #align cstar_ring.nnnorm_star_mul_self CstarRing.nnnorm_star_mul_self
 
 @[simp]
-theorem star_mul_self_eq_zero_iff (x : E) : star x * x = 0 ↔ x = 0 := by
+theorem star_mul_self_eq_zero_iff (x : E) : star x * x = 0 ↔ x = 0 :=
+  by
   rw [← norm_eq_zero, norm_star_mul_self]
   exact mul_self_eq_zero.trans norm_eq_zero
 #align cstar_ring.star_mul_self_eq_zero_iff CstarRing.star_mul_self_eq_zero_iff
@@ -175,10 +177,8 @@ instance Pi.starRing' : StarRing (∀ i, R i) :=
 
 variable [Fintype ι] [∀ i, CstarRing (R i)]
 
-instance Prod.cstarRing :
-    CstarRing
-      (R₁ ×
-        R₂) where norm_star_mul_self x := by 
+instance Prod.cstarRing : CstarRing (R₁ × R₂)
+    where norm_star_mul_self x := by
     unfold norm
     simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
     refine' le_antisymm _ _
@@ -189,11 +189,9 @@ instance Prod.cstarRing :
       rcases le_total ‖x.fst‖ ‖x.snd‖ with (h | h) <;> simp [h]
 #align prod.cstar_ring Prod.cstarRing
 
-instance Pi.cstarRing :
-    CstarRing
-      (∀ i,
-        R
-          i) where norm_star_mul_self x := by
+instance Pi.cstarRing : CstarRing (∀ i, R i)
+    where norm_star_mul_self x :=
+    by
     simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
     norm_cast
     exact
@@ -212,7 +210,8 @@ section Unital
 variable [NormedRing E] [StarRing E] [CstarRing E]
 
 @[simp]
-theorem norm_one [Nontrivial E] : ‖(1 : E)‖ = 1 := by
+theorem norm_one [Nontrivial E] : ‖(1 : E)‖ = 1 :=
+  by
   have : 0 < ‖(1 : E)‖ := norm_pos_iff.mpr one_ne_zero
   rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_one, star_one, one_mul]
 #align cstar_ring.norm_one CstarRing.norm_one
@@ -232,7 +231,8 @@ theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ‖U
 #align cstar_ring.norm_of_mem_unitary CstarRing.norm_of_mem_unitary
 
 @[simp]
-theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A‖ := by
+theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A‖ :=
+  by
   nontriviality E
   refine' le_antisymm _ _
   ·
@@ -243,7 +243,7 @@ theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A�
   ·
     calc
       _ = ‖(U : E)⋆ * U * A‖ := by rw [unitary.coe_star_mul_self U, one_mul]
-      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by 
+      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by
         rw [mul_assoc]
         exact norm_mul_le _ _
       _ = ‖(U : E) * A‖ := by rw [norm_star, norm_coe_unitary, one_mul]
@@ -278,7 +278,8 @@ end Unital
 end CstarRing
 
 theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] {x : E}
-    (hx : IsSelfAdjoint x) (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n := by
+    (hx : IsSelfAdjoint x) (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n :=
+  by
   induction' n with k hk
   · simp only [pow_zero, pow_one]
   · rw [pow_succ, pow_mul', sq]
@@ -303,7 +304,7 @@ variable (𝕜)
 
 /-- `star` bundled as a linear isometric equivalence -/
 def starₗᵢ : E ≃ₗᵢ⋆[𝕜] E :=
-  { starAddEquiv with 
+  { starAddEquiv with
     map_smul' := star_smul
     norm_map' := norm_star }
 #align starₗᵢ starₗᵢ
@@ -332,7 +333,8 @@ variable [NormedSpace 𝕜 E] [IsScalarTower 𝕜 E E] [SMulCommClass 𝕜 E E] 
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the left by `a : E` has
 norm equal to the norm of `a`. -/
 @[simp]
-theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ := by
+theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
+  by
   rw [← Sup_closed_unit_ball_eq_nnnorm]
   refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
@@ -355,7 +357,8 @@ theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ := by
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the right by `a : E` has
 norm eqaul to the norm of `a`. -/
 @[simp]
-theorem op_nnnorm_mul_flip : ‖(mul 𝕜 E).flip a‖₊ = ‖a‖₊ := by
+theorem op_nnnorm_mul_flip : ‖(mul 𝕜 E).flip a‖₊ = ‖a‖₊ :=
+  by
   rw [← Sup_unit_ball_eq_nnnorm, ← nnnorm_star, ← @op_nnnorm_mul 𝕜 E, ← Sup_unit_ball_eq_nnnorm]
   congr 1
   simp only [mul_apply', flip_apply]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.natural_transformation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,9 +79,8 @@ def vcomp {F G H : LaxMonoidalFunctor C D} (α : MonoidalNatTrans F G) (β : Mon
   { NatTrans.vcomp α.toNatTrans β.toNatTrans with }
 #align category_theory.monoidal_nat_trans.vcomp CategoryTheory.MonoidalNatTrans.vcomp
 
-instance categoryLaxMonoidalFunctor :
-    Category (LaxMonoidalFunctor C
-        D) where 
+instance categoryLaxMonoidalFunctor : Category (LaxMonoidalFunctor C D)
+    where
   Hom := MonoidalNatTrans
   id := id
   comp F G H α β := vcomp α β
@@ -116,11 +115,13 @@ variable {E : Type u₃} [Category.{v₃} E] [MonoidalCategory.{v₃} E]
 @[simps]
 def hcomp {F G : LaxMonoidalFunctor C D} {H K : LaxMonoidalFunctor D E} (α : MonoidalNatTrans F G)
     (β : MonoidalNatTrans H K) : MonoidalNatTrans (F ⊗⋙ H) (G ⊗⋙ K) :=
-  { NatTrans.hcomp α.toNatTrans β.toNatTrans with
-    unit' := by 
+  {
+    NatTrans.hcomp α.toNatTrans
+      β.toNatTrans with
+    unit' := by
       dsimp; simp
       conv_lhs => rw [← K.to_functor.map_comp, α.unit]
-    tensor' := fun X Y => by 
+    tensor' := fun X Y => by
       dsimp; simp
       conv_lhs => rw [← K.to_functor.map_comp, α.tensor, K.to_functor.map_comp] }
 #align category_theory.monoidal_nat_trans.hcomp CategoryTheory.MonoidalNatTrans.hcomp
@@ -132,8 +133,8 @@ attribute [local simp] nat_trans.naturality monoidal_nat_trans.unit monoidal_nat
 /-- The cartesian product of two monoidal natural transformations is monoidal. -/
 @[simps]
 def prod {F G : LaxMonoidalFunctor C D} {H K : LaxMonoidalFunctor C E} (α : MonoidalNatTrans F G)
-    (β : MonoidalNatTrans H K) :
-    MonoidalNatTrans (F.prod' H) (G.prod' K) where app X := (α.app X, β.app X)
+    (β : MonoidalNatTrans H K) : MonoidalNatTrans (F.prod' H) (G.prod' K)
+    where app X := (α.app X, β.app X)
 #align category_theory.monoidal_nat_trans.prod CategoryTheory.MonoidalNatTrans.prod
 
 end
@@ -152,16 +153,18 @@ and the monoidal naturality in the forward direction.
 def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
     (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f)
     (unit : F.ε ≫ (app (𝟙_ C)).Hom = G.ε)
-    (tensor : ∀ X Y, F.μ X Y ≫ (app (X ⊗ Y)).Hom = ((app X).Hom ⊗ (app Y).Hom) ≫ G.μ X Y) :
-    F ≅ G where 
+    (tensor : ∀ X Y, F.μ X Y ≫ (app (X ⊗ Y)).Hom = ((app X).Hom ⊗ (app Y).Hom) ≫ G.μ X Y) : F ≅ G
+    where
   Hom := { app := fun X => (app X).Hom }
   inv :=
-    { (NatIso.ofComponents app @naturality).inv with
+    {
+      (NatIso.ofComponents app
+          @naturality).inv with
       app := fun X => (app X).inv
-      unit' := by 
+      unit' := by
         dsimp
         rw [← Unit, assoc, iso.hom_inv_id, comp_id]
-      tensor' := fun X Y => by 
+      tensor' := fun X Y => by
         dsimp
         rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id,
           tensor_id, id_comp] }
@@ -211,7 +214,7 @@ def monoidalUnit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
       slice_rhs 2 3 => erw [iso.hom_inv_id_app]
       dsimp
       simp only [CategoryTheory.Category.id_comp]
-      slice_rhs 1 2 => 
+      slice_rhs 1 2 =>
         rw [← tensor_comp, iso.hom_inv_id_app, iso.hom_inv_id_app]
         dsimp
         rw [tensor_id]
@@ -219,7 +222,8 @@ def monoidalUnit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
 #align category_theory.monoidal_unit CategoryTheory.monoidalUnit
 
 instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidalUnit F) :=
-  haveI : ∀ X : C, is_iso ((monoidal_unit F).toNatTrans.app X) := by
+  haveI : ∀ X : C, is_iso ((monoidal_unit F).toNatTrans.app X) :=
+    by
     intros
     dsimp
     infer_instance
@@ -232,13 +236,13 @@ def monoidalCounit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
     (monoidalInverse F).toLaxMonoidalFunctor ⊗⋙ F.toLaxMonoidalFunctor ⟶ LaxMonoidalFunctor.id D :=
   let e := F.toFunctor.asEquivalence
   { toNatTrans := e.counit
-    unit' := by 
+    unit' := by
       dsimp
       simp only [category.comp_id, category.assoc, functor.map_inv, functor.map_comp,
         nat_iso.inv_inv_app, is_iso.inv_comp, is_equivalence.fun_inv_map, adjunction.hom_equiv_unit]
       erw [e.counit_app_functor, ← e.functor.map_comp_assoc, iso.hom_inv_id_app]
       dsimp; simp
-    tensor' := fun X Y => by 
+    tensor' := fun X Y => by
       dsimp
       simp only [adjunction.hom_equiv_unit, adjunction.hom_equiv_naturality_right, category.assoc,
         category.comp_id, functor.map_comp]
@@ -256,7 +260,8 @@ def monoidalCounit (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
 #align category_theory.monoidal_counit CategoryTheory.monoidalCounit
 
 instance (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : IsIso (monoidalCounit F) :=
-  haveI : ∀ X : D, is_iso ((monoidal_counit F).toNatTrans.app X) := by
+  haveI : ∀ X : D, is_iso ((monoidal_counit F).toNatTrans.app X) :=
+    by
     intros
     dsimp
     infer_instance

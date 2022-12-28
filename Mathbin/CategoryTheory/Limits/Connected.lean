@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.connected
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,8 @@ namespace CategoryTheory
 
 section Examples
 
-instance wide_pullback_shape_connected (J : Type v₁) : IsConnected (WidePullbackShape J) := by
+instance wide_pullback_shape_connected (J : Type v₁) : IsConnected (WidePullbackShape J) :=
+  by
   apply is_connected.of_induct
   introv hp t
   cases j
@@ -43,7 +44,8 @@ instance wide_pullback_shape_connected (J : Type v₁) : IsConnected (WidePullba
   · rwa [t (wide_pullback_shape.hom.term j)]
 #align category_theory.wide_pullback_shape_connected CategoryTheory.wide_pullback_shape_connected
 
-instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) := by
+instance wide_pushout_shape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) :=
+  by
   apply is_connected.of_induct
   introv hp t
   cases j
@@ -55,7 +57,8 @@ instance parallelPairInhabited : Inhabited WalkingParallelPair :=
   ⟨WalkingParallelPair.one⟩
 #align category_theory.parallel_pair_inhabited CategoryTheory.parallelPairInhabited
 
-instance parallel_pair_connected : IsConnected WalkingParallelPair := by
+instance parallel_pair_connected : IsConnected WalkingParallelPair :=
+  by
   apply is_connected.of_induct
   introv _ t
   cases j
@@ -83,16 +86,16 @@ def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where app Y := 
 
 /-- (Impl). The obvious natural transformation from (X × K -) to X -/
 @[simps]
-def γ₁ {K : J ⥤ C} (X : C) :
-    K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where app Y := Limits.prod.fst
+def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X
+    where app Y := Limits.prod.fst
 #align
   category_theory.prod_preserves_connected_limits.γ₁ CategoryTheory.ProdPreservesConnectedLimits.γ₁
 
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
 @[simps]
-def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) :
-    Cone K where 
+def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Cone K
+    where
   x := s.x
   π := s.π ≫ γ₂ X
 #align
@@ -108,18 +111,18 @@ Note that this functor does not preserve the two most obvious disconnected limit
 `X ⨯ (A ⨯ B)` and `X ⨯ 1` is not isomorphic to `1`.
 -/
 noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
-    PreservesLimitsOfShape J
-      (prod.functor.obj
-        X) where PreservesLimit K :=
-    { preserves := fun c l =>
+    PreservesLimitsOfShape J (prod.functor.obj X)
+    where PreservesLimit K :=
+    {
+      preserves := fun c l =>
         { lift := fun s =>
             prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s))
-          fac' := fun s j => by 
+          fac' := fun s j => by
             apply prod.hom_ext
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]
               exact (nat_trans_from_is_connected (s.π ≫ γ₁ X) j (Classical.arbitrary _)).symm
             · simp [← l.fac (forget_cone s) j]
-          uniq' := fun s m L => by 
+          uniq' := fun s m L => by
             apply prod.hom_ext
             · erw [limit.lift_π, ← L (Classical.arbitrary J), assoc, lim_map_π, comp_id]
               rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pim Spelier, Daan van Gent
 
 ! This file was ported from Lean 3 source module computability.encoding
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,8 @@ structure Encoding (α : Type u) where
   decode_encode : ∀ x, decode (encode x) = some x
 #align computability.encoding Computability.Encoding
 
-theorem Encoding.encode_injective {α : Type u} (e : Encoding α) : Function.Injective e.encode := by
+theorem Encoding.encode_injective {α : Type u} (e : Encoding α) : Function.Injective e.encode :=
+  by
   refine' fun _ _ h => Option.some_injective _ _
   rw [← e.decode_encode, ← e.decode_encode, h]
 #align computability.encoding.encode_injective Computability.Encoding.encode_injective
@@ -131,7 +132,8 @@ theorem encode_pos_num_nonempty (n : PosNum) : encodePosNum n ≠ [] :=
     List.cons_ne_nil _ _
 #align computability.encode_pos_num_nonempty Computability.encode_pos_num_nonempty
 
-theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n := by
+theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n :=
+  by
   intro n
   induction' n with m hm m hm <;> unfold encode_pos_num decode_pos_num
   · rfl
@@ -140,7 +142,8 @@ theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n := by
   · exact congr_arg PosNum.bit0 hm
 #align computability.decode_encode_pos_num Computability.decode_encode_pos_num
 
-theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n := by
+theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n :=
+  by
   intro n
   cases n <;> unfold encode_num decode_num
   · rfl
@@ -149,14 +152,15 @@ theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n := by
   exact if_neg (encode_pos_num_nonempty n)
 #align computability.decode_encode_num Computability.decode_encode_num
 
-theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n := by
+theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n :=
+  by
   intro n
   conv_rhs => rw [← Num.to_of_nat n]
   exact congr_arg coe (decode_encode_num ↑n)
 #align computability.decode_encode_nat Computability.decode_encode_nat
 
 /-- A binary encoding of ℕ in bool. -/
-def encodingNatBool : Encoding ℕ where 
+def encodingNatBool : Encoding ℕ where
   Γ := Bool
   encode := encodeNat
   decode n := some (decodeNat n)
@@ -169,7 +173,7 @@ def finEncodingNatBool : FinEncoding ℕ :=
 #align computability.fin_encoding_nat_bool Computability.finEncodingNatBool
 
 /-- A binary encoding of ℕ in Γ'. -/
-def encodingNatΓ' : Encoding ℕ where 
+def encodingNatΓ' : Encoding ℕ where
   Γ := Γ'
   encode x := List.map inclusionBoolΓ' (encodeNat x)
   decode x := some (decodeNat (List.map sectionΓ'Bool x))
@@ -200,7 +204,7 @@ theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n :
 #align computability.unary_decode_encode_nat Computability.unary_decode_encode_nat
 
 /-- A unary fin_encoding of ℕ. -/
-def unaryFinEncodingNat : FinEncoding ℕ where 
+def unaryFinEncodingNat : FinEncoding ℕ where
   Γ := Bool
   encode := unaryEncodeNat
   decode n := some (unaryDecodeNat n)
@@ -224,7 +228,8 @@ theorem decode_encode_bool : ∀ b, decodeBool (encodeBool b) = b := fun b => Bo
 #align computability.decode_encode_bool Computability.decode_encode_bool
 
 /-- A fin_encoding of bool in bool. -/
-def finEncodingBoolBool : FinEncoding Bool where 
+def finEncodingBoolBool : FinEncoding Bool
+    where
   Γ := Bool
   encode := encodeBool
   decode x := some (decodeBool x)
@@ -246,7 +251,7 @@ theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
 #align computability.encoding.card_le_card_list Computability.Encoding.card_le_card_list
 
 theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : (#α) ≤ ℵ₀ :=
-  by 
+  by
   refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
   simp only [Cardinal.lift_aleph_0, Cardinal.lift_le_aleph_0]
   cases' isEmpty_or_nonempty e.Γ with h h

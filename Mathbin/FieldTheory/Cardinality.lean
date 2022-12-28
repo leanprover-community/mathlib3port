@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module field_theory.cardinality
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ open Cardinal nonZeroDivisors
 universe u
 
 /-- A finite field has prime power cardinality. -/
-theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrimePow ‖α‖ := by
+theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrimePow ‖α‖ :=
+  by
   cases' CharP.exists α with p _
   haveI hp := Fact.mk (CharP.char_is_prime α p)
   let b := IsNoetherian.finsetBasis (Zmod p) α
@@ -52,7 +53,8 @@ theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrim
 #align fintype.is_prime_pow_card_of_field Fintype.is_prime_pow_card_of_field
 
 /-- A `fintype` can be given a field structure iff its cardinality is a prime power. -/
-theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ IsPrimePow ‖α‖ := by
+theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ IsPrimePow ‖α‖ :=
+  by
   refine' ⟨fun ⟨h⟩ => Fintype.is_prime_pow_card_of_field, _⟩
   rintro ⟨p, n, hp, hn, hα⟩
   haveI := Fact.mk hp.nat_prime
@@ -65,9 +67,10 @@ theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ring α] :
 #align fintype.not_is_field_of_card_not_prime_pow Fintype.not_is_field_of_card_not_prime_pow
 
 /-- Any infinite type can be endowed a field structure. -/
-theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α) := by
+theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α) :=
+  by
   letI K := FractionRing (MvPolynomial α <| ULift.{u} ℚ)
-  suffices (#α) = (#K) by 
+  suffices (#α) = (#K) by
     obtain ⟨e⟩ := Cardinal.eq.1 this
     exact ⟨e.field⟩
   rw [← IsLocalization.card (MvPolynomial α <| ULift.{u} ℚ)⁰ K le_rfl]
@@ -79,7 +82,8 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
 #align infinite.nonempty_field Infinite.nonempty_field
 
 /-- There is a field structure on type if and only if its cardinality is a prime power. -/
-theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (#α) := by
+theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (#α) :=
+  by
   rw [Cardinal.is_prime_pow_iff]
   cases' fintypeOrInfinite α with h h
   ·

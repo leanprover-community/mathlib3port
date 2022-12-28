@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.functor_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ variable {F G : C ⥤ D} (α : F ⟶ G) (X : C)
 def coimageObjIso : (Abelian.coimage α).obj X ≅ Abelian.coimage (α.app X) :=
   PreservesCokernel.iso ((evaluation C D).obj X) _ ≪≫
     cokernel.mapIso _ _ (PreservesKernel.iso ((evaluation C D).obj X) _) (Iso.refl _)
-      (by 
+      (by
         dsimp
         simp only [category.comp_id]
         exact (kernel_comparison_comp_ι _ ((evaluation C D).obj X)).symm)
@@ -56,7 +56,7 @@ def coimageObjIso : (Abelian.coimage α).obj X ≅ Abelian.coimage (α.app X) :=
 def imageObjIso : (Abelian.image α).obj X ≅ Abelian.image (α.app X) :=
   PreservesKernel.iso ((evaluation C D).obj X) _ ≪≫
     kernel.mapIso _ _ (Iso.refl _) (PreservesCokernel.iso ((evaluation C D).obj X) _)
-      (by 
+      (by
         apply (cancel_mono (preserves_cokernel.iso ((evaluation C D).obj X) α).inv).1
         simp only [category.assoc, iso.hom_inv_id]
         dsimp
@@ -68,7 +68,7 @@ def imageObjIso : (Abelian.image α).obj X ≅ Abelian.image (α.app X) :=
 theorem coimage_image_comparison_app :
     coimageImageComparison (α.app X) =
       (coimage_obj_iso α X).inv ≫ (coimageImageComparison α).app X ≫ (image_obj_iso α X).Hom :=
-  by 
+  by
   ext
   dsimp
   simp only [category.comp_id, category.id_comp, category.assoc, coimage_image_factorisation,
@@ -91,8 +91,10 @@ theorem coimage_image_comparison_app' :
   category_theory.abelian.functor_category.coimage_image_comparison_app' CategoryTheory.Abelian.FunctorCategory.coimage_image_comparison_app'
 
 instance functor_category_is_iso_coimage_image_comparison :
-    IsIso (Abelian.coimageImageComparison α) := by
-  have : ∀ X : C, is_iso ((abelian.coimage_image_comparison α).app X) := by
+    IsIso (Abelian.coimageImageComparison α) :=
+  by
+  have : ∀ X : C, is_iso ((abelian.coimage_image_comparison α).app X) :=
+    by
     intros
     rw [coimage_image_comparison_app']
     infer_instance

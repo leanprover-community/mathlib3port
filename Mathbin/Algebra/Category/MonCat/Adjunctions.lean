@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.adjunctions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,8 +33,8 @@ open CategoryTheory
 /-- The functor of adjoining a neutral element `one` to a semigroup.
  -/
 @[to_additive "The functor of adjoining a neutral element `zero` to a semigroup", simps]
-def adjoinOne :
-    SemigroupCat.{u} ⥤ MonCat.{u} where 
+def adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u}
+    where
   obj S := MonCat.of (WithOne S)
   map X Y := WithOne.map
   map_id' X := WithOne.map_id
@@ -42,9 +42,8 @@ def adjoinOne :
 #align adjoin_one adjoinOne
 
 @[to_additive hasForgetToAddSemigroup]
-instance hasForgetToSemigroup :
-    HasForget₂ MonCat
-      SemigroupCat where forget₂ :=
+instance hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
+    where forget₂ :=
     { obj := fun M => SemigroupCat.of M
       map := fun M N => MonoidHom.toMulHom }
 #align has_forget_to_Semigroup hasForgetToSemigroup
@@ -54,7 +53,7 @@ instance hasForgetToSemigroup :
 def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun S M => WithOne.lift.symm
-      hom_equiv_naturality_left_symm' := by 
+      hom_equiv_naturality_left_symm' := by
         intro S T M f g
         ext
         simp only [Equiv.symm_symm, adjoin_one_map, coe_comp]
@@ -65,14 +64,15 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
 #align adjoin_one_adj adjoinOneAdj
 
 /-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
-def free : Type u ⥤ MonCat.{u} where 
+def free : Type u ⥤ MonCat.{u}
+    where
   obj α := MonCat.of (FreeMonoid α)
   map X Y := FreeMonoid.map
-  map_id' := by 
+  map_id' := by
     intros
     ext1
     rfl
-  map_comp' := by 
+  map_comp' := by
     intros
     ext1
     rfl
@@ -82,7 +82,8 @@ def free : Type u ⥤ MonCat.{u} where
 def adj : free ⊣ forget MonCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeMonoid.lift.symm
-      hom_equiv_naturality_left_symm' := fun X Y G f g => by
+      hom_equiv_naturality_left_symm' := fun X Y G f g =>
+        by
         ext1
         rfl }
 #align adj adj

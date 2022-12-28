@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.coequalizer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,9 +51,8 @@ def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).o
 
 /-- The bottom map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.bottomMap :
-    (Monad.free T).obj (T.obj X.A) ⟶
-      (Monad.free T).obj X.A where 
+def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A
+    where
   f := T.μ.app X.A
   h' := T.assoc X.A
 #align
@@ -61,8 +60,8 @@ def FreeCoequalizer.bottomMap :
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶
-      X where 
+def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X
+    where
   f := X.a
   h' := X.assoc.symm
 #align category_theory.monad.free_coequalizer.π CategoryTheory.Monad.FreeCoequalizer.π
@@ -74,7 +73,8 @@ theorem FreeCoequalizer.condition :
 #align
   category_theory.monad.free_coequalizer.condition CategoryTheory.Monad.FreeCoequalizer.condition
 
-instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) := by
+instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
+  by
   apply is_reflexive_pair.mk' _ _ _
   apply (free T).map (T.η.app X.A)
   · ext
@@ -95,7 +95,8 @@ def beckAlgebraCofork : Cofork (FreeCoequalizer.topMap X) (FreeCoequalizer.botto
 free algebras.
 -/
 def beckAlgebraCoequalizer : IsColimit (beckAlgebraCofork X) :=
-  (Cofork.IsColimit.mk' _) fun s => by
+  (Cofork.IsColimit.mk' _) fun s =>
+    by
     have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f :=
       congr_arg monad.algebra.hom.f s.condition
     have h₂ : (T : C ⥤ C).map s.π.f ≫ s.X.a = T.μ.app X.A ≫ s.π.f := s.π.h

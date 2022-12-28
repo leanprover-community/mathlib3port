@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.order.hom.esakia
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,8 @@ export PseudoEpimorphismClass (exists_map_eq_of_map_le)
 instance (priority := 100) PseudoEpimorphismClass.toTopHomClass [PartialOrder α] [OrderTop α]
     [Preorder β] [OrderTop β] [PseudoEpimorphismClass F α β] : TopHomClass F α β :=
   { ‹PseudoEpimorphismClass F α β› with
-    map_top := fun f => by
+    map_top := fun f =>
+      by
       let ⟨b, h⟩ := exists_map_eq_of_map_le f (@le_top _ _ _ <| f ⊤)
       rw [← top_le_iff.1 h.1, h.2] }
 #align pseudo_epimorphism_class.to_top_hom_class PseudoEpimorphismClass.toTopHomClass
@@ -111,10 +112,10 @@ namespace PseudoEpimorphism
 
 variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ]
 
-instance : PseudoEpimorphismClass (PseudoEpimorphism α β) α
-      β where 
+instance : PseudoEpimorphismClass (PseudoEpimorphism α β) α β
+    where
   coe f := f.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -180,7 +181,8 @@ theorem id_apply (a : α) : PseudoEpimorphism.id α a = a :=
 
 /-- Composition of `pseudo_epimorphism`s as a `pseudo_epimorphism`. -/
 def comp (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) : PseudoEpimorphism α γ :=
-  ⟨g.toOrderHom.comp f.toOrderHom, fun a b h₀ => by
+  ⟨g.toOrderHom.comp f.toOrderHom, fun a b h₀ =>
+    by
     obtain ⟨b, h₁, rfl⟩ := g.exists_map_eq_of_map_le' h₀
     obtain ⟨b, h₂, rfl⟩ := f.exists_map_eq_of_map_le' h₁
     exact ⟨b, h₂, rfl⟩⟩
@@ -245,10 +247,10 @@ def toPseudoEpimorphism (f : EsakiaHom α β) : PseudoEpimorphism α β :=
   { f with }
 #align esakia_hom.to_pseudo_epimorphism EsakiaHom.toPseudoEpimorphism
 
-instance : EsakiaHomClass (EsakiaHom α β) α
-      β where 
+instance : EsakiaHomClass (EsakiaHom α β) α β
+    where
   coe f := f.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
     congr
@@ -322,7 +324,8 @@ theorem id_apply (a : α) : EsakiaHom.id α a = a :=
 
 /-- Composition of `esakia_hom`s as an `esakia_hom`. -/
 def comp (g : EsakiaHom β γ) (f : EsakiaHom α β) : EsakiaHom α γ :=
-  ⟨g.toContinuousOrderHom.comp f.toContinuousOrderHom, fun a b h₀ => by
+  ⟨g.toContinuousOrderHom.comp f.toContinuousOrderHom, fun a b h₀ =>
+    by
     obtain ⟨b, h₁, rfl⟩ := g.exists_map_eq_of_map_le' h₀
     obtain ⟨b, h₂, rfl⟩ := f.exists_map_eq_of_map_le' h₁
     exact ⟨b, h₂, rfl⟩⟩

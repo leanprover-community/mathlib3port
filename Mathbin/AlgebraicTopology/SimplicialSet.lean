@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplicial_set
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,11 +76,11 @@ end
 /-- The boundary `∂Δ[n]` of the `n`-th standard simplex consists of
 all `m`-simplices of `standard_simplex n` that are not surjective
 (when viewed as monotone function `m → n`). -/
-def boundary (n : ℕ) :
-    SSet where 
+def boundary (n : ℕ) : SSet
+    where
   obj m := { α : Δ[n].obj m // ¬Function.Surjective (asOrderHom α) }
   map m₁ m₂ f α :=
-    ⟨f.unop ≫ (α : Δ[n].obj m₁), by 
+    ⟨f.unop ≫ (α : Δ[n].obj m₁), by
       intro h
       apply α.property
       exact Function.Surjective.of_comp h⟩
@@ -97,11 +97,11 @@ def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where app m (α : { α : Δ
 It consists of all `m`-simplices `α` of `Δ[n]`
 for which the union of `{i}` and the range of `α` is not all of `n`
 (when viewing `α` as monotone function `m → n`). -/
-def horn (n : ℕ) (i : Fin (n + 1)) :
-    SSet where 
+def horn (n : ℕ) (i : Fin (n + 1)) : SSet
+    where
   obj m := { α : Δ[n].obj m // Set.range (asOrderHom α) ∪ {i} ≠ Set.univ }
   map m₁ m₂ f α :=
-    ⟨f.unop ≫ (α : Δ[n].obj m₁), by 
+    ⟨f.unop ≫ (α : Δ[n].obj m₁), by
       intro h; apply α.property
       rw [Set.eq_univ_iff_forall] at h⊢; intro j
       apply Or.imp _ id (h j)
@@ -113,8 +113,8 @@ def horn (n : ℕ) (i : Fin (n + 1)) :
 scoped[Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
-def hornInclusion (n : ℕ) (i : Fin (n + 1)) :
-    Λ[n, i] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
+def hornInclusion (n : ℕ) (i : Fin (n + 1)) : Λ[n, i] ⟶ Δ[n]
+    where app m (α : { α : Δ[n].obj m // _ }) := α
 #align sSet.horn_inclusion SSet.hornInclusion
 
 section Examples
@@ -154,9 +154,8 @@ namespace Augmented
 /-- The functor which sends `[n]` to the simplicial set `Δ[n]` equipped by
 the obvious augmentation towards the terminal object of the category of sets. -/
 @[simps]
-noncomputable def standardSimplex :
-    SimplexCategory ⥤
-      SSet.Augmented where 
+noncomputable def standardSimplex : SimplexCategory ⥤ SSet.Augmented
+    where
   obj Δ :=
     { left := SSet.standardSimplex.obj Δ
       right := terminal _

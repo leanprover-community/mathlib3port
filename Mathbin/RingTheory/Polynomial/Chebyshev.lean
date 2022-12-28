@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Julian Kuelshammer, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.chebyshev
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,8 @@ theorem T_add_two (n : ℕ) : t R (n + 2) = 2 * X * t R (n + 1) - t R n := by rw
 theorem T_two : t R 2 = 2 * X ^ 2 - 1 := by simp only [T, sub_left_inj, sq, mul_assoc]
 #align polynomial.chebyshev.T_two Polynomial.Chebyshev.T_two
 
-theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : t R n = 2 * X * t R (n - 1) - t R (n - 2) := by
+theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : t R n = 2 * X * t R (n - 1) - t R (n - 2) :=
+  by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm]
   exact T_add_two R n
@@ -116,22 +117,23 @@ theorem U_one : u R 1 = 2 * X :=
 theorem U_add_two (n : ℕ) : u R (n + 2) = 2 * X * u R (n + 1) - u R n := by rw [U]
 #align polynomial.chebyshev.U_add_two Polynomial.Chebyshev.U_add_two
 
-theorem U_two : u R 2 = 4 * X ^ 2 - 1 := by 
+theorem U_two : u R 2 = 4 * X ^ 2 - 1 := by
   simp only [U]
   ring
 #align polynomial.chebyshev.U_two Polynomial.Chebyshev.U_two
 
-theorem U_of_two_le (n : ℕ) (h : 2 ≤ n) : u R n = 2 * X * u R (n - 1) - u R (n - 2) := by
+theorem U_of_two_le (n : ℕ) (h : 2 ≤ n) : u R n = 2 * X * u R (n - 1) - u R (n - 2) :=
+  by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm]
   exact U_add_two R n
 #align polynomial.chebyshev.U_of_two_le Polynomial.Chebyshev.U_of_two_le
 
 theorem U_eq_X_mul_U_add_T : ∀ n : ℕ, u R (n + 1) = X * u R n + t R (n + 1)
-  | 0 => by 
+  | 0 => by
     simp only [U_zero, U_one, T_one]
     ring
-  | 1 => by 
+  | 1 => by
     simp only [U_one, T_two, U_two]
     ring
   | n + 2 =>
@@ -148,10 +150,10 @@ theorem T_eq_U_sub_X_mul_U (n : ℕ) : t R (n + 1) = u R (n + 1) - X * u R n := 
 #align polynomial.chebyshev.T_eq_U_sub_X_mul_U Polynomial.Chebyshev.T_eq_U_sub_X_mul_U
 
 theorem T_eq_X_mul_T_sub_pol_U : ∀ n : ℕ, t R (n + 2) = X * t R (n + 1) - (1 - X ^ 2) * u R n
-  | 0 => by 
+  | 0 => by
     simp only [T_one, T_two, U_zero]
     ring
-  | 1 => by 
+  | 1 => by
     simp only [T_add_two, T_zero, T_add_two, U_one, T_one]
     ring
   | n + 2 =>
@@ -179,7 +181,8 @@ variable {R S}
 theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (t R n) = t S n
   | 0 => by simp only [T_zero, Polynomial.map_one]
   | 1 => by simp only [T_one, map_X]
-  | n + 2 => by
+  | n + 2 =>
+    by
     simp only [T_add_two, Polynomial.map_mul, Polynomial.map_sub, map_X, bit0, Polynomial.map_add,
       Polynomial.map_one]
     rw [map_T (n + 1), map_T n]
@@ -188,11 +191,13 @@ theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (t R n) = t S n
 @[simp]
 theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (u R n) = u S n
   | 0 => by simp only [U_zero, Polynomial.map_one]
-  | 1 => by
+  | 1 =>
+    by
     simp only [U_one, map_X, Polynomial.map_mul, Polynomial.map_add, Polynomial.map_one]
     change map f (1 + 1) * X = 2 * X
     simpa only [Polynomial.map_add, Polynomial.map_one]
-  | n + 2 => by
+  | n + 2 =>
+    by
     simp only [U_add_two, Polynomial.map_mul, Polynomial.map_sub, map_X, bit0, Polynomial.map_add,
       Polynomial.map_one]
     rw [map_U (n + 1), map_U n]
@@ -200,7 +205,8 @@ theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (u R n) = u S n
 
 theorem T_derivative_eq_U : ∀ n : ℕ, derivative (t R (n + 1)) = (n + 1) * u R n
   | 0 => by simp only [T_one, U_zero, derivative_X, Nat.cast_zero, zero_add, mul_one]
-  | 1 => by
+  | 1 =>
+    by
     simp only [T_two, U_one, derivative_sub, derivative_one, derivative_mul, derivative_X_pow,
       Nat.cast_one, Nat.cast_two]
     norm_num
@@ -236,12 +242,13 @@ theorem one_sub_X_sq_mul_derivative_T_eq_poly_in_T (n : ℕ) :
   polynomial.chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T Polynomial.Chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T
 
 theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
-    ((n : R[X]) + 1) * t R (n + 1) = X * u R n - (1 - X ^ 2) * derivative (u R n) := by
+    ((n : R[X]) + 1) * t R (n + 1) = X * u R n - (1 - X ^ 2) * derivative (u R n) :=
+  by
   have h :
     derivative (T R (n + 2)) =
       U R (n + 1) - X * U R n + X * derivative (T R (n + 1)) + 2 * X * U R n -
         (1 - X ^ 2) * derivative (U R n) :=
-    by 
+    by
     conv_lhs => rw [T_eq_X_mul_T_sub_pol_U]
     simp only [derivative_sub, derivative_mul, derivative_X, derivative_one, derivative_X_pow,
       one_mul, T_derivative_eq_U]
@@ -272,21 +279,24 @@ variable (R)
 theorem mul_T : ∀ m k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
   | 0 => by simp [two_mul, add_mul]
   | 1 => by simp [add_comm]
-  | m + 2 => by 
+  | m + 2 => by
     intro k
     -- clean up the `T` nat indices in the goal
-    suffices 2 * T R (m + 2) * T R (m + k + 2) = T R (2 * m + k + 4) + T R k by
+    suffices 2 * T R (m + 2) * T R (m + k + 2) = T R (2 * m + k + 4) + T R k
+      by
       have h_nat₁ : 2 * (m + 2) + k = 2 * m + k + 4 := by ring
       have h_nat₂ : m + 2 + k = m + k + 2 := by simp [add_comm, add_assoc]
       simpa [h_nat₁, h_nat₂] using this
     -- clean up the `T` nat indices in the inductive hypothesis applied to `m + 1` and
     -- `k + 1`
-    have H₁ : 2 * T R (m + 1) * T R (m + k + 2) = T R (2 * m + k + 3) + T R (k + 1) := by
+    have H₁ : 2 * T R (m + 1) * T R (m + k + 2) = T R (2 * m + k + 3) + T R (k + 1) :=
+      by
       have h_nat₁ : m + 1 + (k + 1) = m + k + 2 := by ring
       have h_nat₂ : 2 * (m + 1) + (k + 1) = 2 * m + k + 3 := by ring
       simpa [h_nat₁, h_nat₂] using mul_T (m + 1) (k + 1)
     -- clean up the `T` nat indices in the inductive hypothesis applied to `m` and `k + 2`
-    have H₂ : 2 * T R m * T R (m + k + 2) = T R (2 * m + k + 2) + T R (k + 2) := by
+    have H₂ : 2 * T R m * T R (m + k + 2) = T R (2 * m + k + 2) + T R (k + 2) :=
+      by
       have h_nat₁ : 2 * m + (k + 2) = 2 * m + k + 2 := by simp [add_assoc]
       have h_nat₂ : m + (k + 2) = m + k + 2 := by simp [add_assoc]
       simpa [h_nat₁, h_nat₂] using mul_T m (k + 2)
@@ -302,7 +312,7 @@ theorem mul_T : ∀ m k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
 theorem T_mul : ∀ m n, t R (m * n) = (t R m).comp (t R n)
   | 0 => by simp
   | 1 => by simp
-  | m + 2 => by 
+  | m + 2 => by
     intro n
     have : 2 * T R n * T R ((m + 1) * n) = T R ((m + 2) * n) + T R (m * n) := by
       convert mul_T R n (m * n) <;> ring

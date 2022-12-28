@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module order.complete_lattice_intervals
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,9 +38,8 @@ variable [SupSet α]
 /-- `has_Sup` structure on a nonempty subset `s` of an object with `has_Sup`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
-noncomputable def subsetHasSup [Inhabited s] :
-    SupSet
-      s where sup t :=
+noncomputable def subsetHasSup [Inhabited s] : SupSet s
+    where sup t :=
     if ht : supₛ (coe '' t : Set α) ∈ s then ⟨supₛ (coe '' t : Set α), ht⟩ else default
 #align subset_has_Sup subsetHasSup
 
@@ -66,9 +65,8 @@ variable [InfSet α]
 /-- `has_Inf` structure on a nonempty subset `s` of an object with `has_Inf`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
-noncomputable def subsetHasInf [Inhabited s] :
-    InfSet
-      s where inf t :=
+noncomputable def subsetHasInf [Inhabited s] : InfSet s
+    where inf t :=
     if ht : infₛ (coe '' t : Set α) ∈ s then ⟨infₛ (coe '' t : Set α), ht⟩ else default
 #align subset_has_Inf subsetHasInf
 
@@ -102,25 +100,28 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
     (h_Sup : ∀ {t : Set s} (ht : t.Nonempty) (h_bdd : BddAbove t), supₛ (coe '' t : Set α) ∈ s)
     (h_Inf : ∀ {t : Set s} (ht : t.Nonempty) (h_bdd : BddBelow t), infₛ (coe '' t : Set α) ∈ s) :
     ConditionallyCompleteLinearOrder s :=
-  { -- The following would be a more natural way to finish, but gives a "deep recursion" error:
+  {-- The following would be a more natural way to finish, but gives a "deep recursion" error:
       -- simpa [subset_Sup_of_within (h_Sup t)] using
       --   (strict_mono_coe s).monotone.le_cSup_image hct h_bdd,
       subsetHasSup
       s,
-    subsetHasInf s, DistribLattice.toLattice s, (inferInstance : LinearOrder s) with
-    le_cSup := by 
+    subsetHasInf s, DistribLattice.toLattice s,
+    (inferInstance :
+      LinearOrder
+        s) with
+    le_cSup := by
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).le_cSup_image hct h_bdd
       rwa [subset_Sup_of_within s (h_Sup ⟨c, hct⟩ h_bdd)] at this
-    cSup_le := by 
+    cSup_le := by
       rintro t B ht hB
       have := (Subtype.mono_coe s).cSup_image_le ht hB
       rwa [subset_Sup_of_within s (h_Sup ht ⟨B, hB⟩)] at this
-    le_cInf := by 
+    le_cInf := by
       intro t B ht hB
       have := (Subtype.mono_coe s).le_cInf_image ht hB
       rwa [subset_Inf_of_within s (h_Inf ht ⟨B, hB⟩)] at this
-    cInf_le := by 
+    cInf_le := by
       rintro t c h_bdd hct
       have := (Subtype.mono_coe s).cInf_image_le hct h_bdd
       rwa [subset_Inf_of_within s (h_Inf ⟨c, hct⟩ h_bdd)] at this }
@@ -131,7 +132,8 @@ section OrdConnected
 /-- The `Sup` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
 order takes values within `s`, for all nonempty bounded-above subsets of `s`. -/
 theorem Sup_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Set s⦄ (ht : t.Nonempty)
-    (h_bdd : BddAbove t) : supₛ (coe '' t : Set α) ∈ s := by
+    (h_bdd : BddAbove t) : supₛ (coe '' t : Set α) ∈ s :=
+  by
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
   obtain ⟨B, hB⟩ : ∃ B, B ∈ upperBounds t := h_bdd
   refine' hs.out c.2 B.2 ⟨_, _⟩
@@ -142,7 +144,8 @@ theorem Sup_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Se
 /-- The `Inf` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
 order takes values within `s`, for all nonempty bounded-below subsets of `s`. -/
 theorem Inf_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Set s⦄ (ht : t.Nonempty)
-    (h_bdd : BddBelow t) : infₛ (coe '' t : Set α) ∈ s := by
+    (h_bdd : BddBelow t) : infₛ (coe '' t : Set α) ∈ s :=
+  by
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
   obtain ⟨B, hB⟩ : ∃ B, B ∈ lowerBounds t := h_bdd
   refine' hs.out B.2 c.2 ⟨_, _⟩

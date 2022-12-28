@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finsupp.indicator
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,11 +34,11 @@ namespace Finsupp
 variable [Zero α] {s : Finset ι} (f : ∀ i ∈ s, α) {i : ι}
 
 /-- Create an element of `ι →₀ α` from a finset `s` and a function `f` defined on this finset. -/
-def indicator (s : Finset ι) (f : ∀ i ∈ s, α) :
-    ι →₀ α where 
+def indicator (s : Finset ι) (f : ∀ i ∈ s, α) : ι →₀ α
+    where
   toFun i := if H : i ∈ s then f i H else 0
   support := (s.attach.filter fun i : s => f i.1 i.2 ≠ 0).map <| Embedding.subtype _
-  mem_support_to_fun i := by 
+  mem_support_to_fun i := by
     rw [mem_map, dite_ne_right_iff]
     exact
       ⟨fun ⟨⟨j, hj⟩, hf, rfl⟩ => ⟨hj, (mem_filter.1 hf).2⟩, fun ⟨hi, hf⟩ =>
@@ -60,14 +60,16 @@ theorem indicator_apply : indicator s f i = if hi : i ∈ s then f i hi else 0 :
   rfl
 #align finsupp.indicator_apply Finsupp.indicator_apply
 
-theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f := by
+theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f :=
+  by
   intro a b h
   ext (i hi)
   rw [← indicator_of_mem hi a, ← indicator_of_mem hi b]
   exact congr_fun h i
 #align finsupp.indicator_injective Finsupp.indicator_injective
 
-theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s := by
+theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s :=
+  by
   intro i hi
   rw [mem_coe, mem_support_iff] at hi
   by_contra

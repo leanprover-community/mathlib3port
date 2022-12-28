@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.filtered
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,14 +51,14 @@ class PreservesFilteredColimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
 attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
 
 instance (priority := 100) PreservesColimits.preservesFilteredColimits (F : C ⥤ D)
-    [PreservesColimits F] :
-    PreservesFilteredColimits F where PreservesFilteredColimits := inferInstance
+    [PreservesColimits F] : PreservesFilteredColimits F
+    where PreservesFilteredColimits := inferInstance
 #align
   category_theory.limits.preserves_colimits.preserves_filtered_colimits CategoryTheory.Limits.PreservesColimits.preservesFilteredColimits
 
 instance compPreservesFilteredColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFilteredColimits F]
-    [PreservesFilteredColimits G] :
-    PreservesFilteredColimits (F ⋙ G) where PreservesFilteredColimits J _ _ := inferInstance
+    [PreservesFilteredColimits G] : PreservesFilteredColimits (F ⋙ G)
+    where PreservesFilteredColimits J _ _ := inferInstance
 #align
   category_theory.limits.comp_preserves_filtered_colimits CategoryTheory.Limits.compPreservesFilteredColimits
 
@@ -74,14 +74,14 @@ class PreservesCofilteredLimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
 attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
 
 instance (priority := 100) PreservesLimits.preservesCofilteredLimits (F : C ⥤ D)
-    [PreservesLimits F] :
-    PreservesCofilteredLimits F where PreservesCofilteredLimits := inferInstance
+    [PreservesLimits F] : PreservesCofilteredLimits F
+    where PreservesCofilteredLimits := inferInstance
 #align
   category_theory.limits.preserves_limits.preserves_cofiltered_limits CategoryTheory.Limits.PreservesLimits.preservesCofilteredLimits
 
 instance compPreservesCofilteredLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesCofilteredLimits F]
-    [PreservesCofilteredLimits G] :
-    PreservesCofilteredLimits (F ⋙ G) where PreservesCofilteredLimits J _ _ := inferInstance
+    [PreservesCofilteredLimits G] : PreservesCofilteredLimits (F ⋙ G)
+    where PreservesCofilteredLimits J _ _ := inferInstance
 #align
   category_theory.limits.comp_preserves_cofiltered_limits CategoryTheory.Limits.compPreservesCofilteredLimits
 

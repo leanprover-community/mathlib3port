@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.path_connected
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,7 @@ instance hasUncurryPath {X α : Type _} [TopologicalSpace X] {x y : α → X} :
 
 /-- The constant path from a point to itself -/
 @[refl, simps]
-def refl (x : X) : Path x x where 
+def refl (x : X) : Path x x where
   toFun t := x
   continuous_to_fun := continuous_const
   source' := rfl
@@ -149,7 +149,7 @@ theorem refl_range {a : X} : range (Path.refl a) = {a} := by simp [Path.refl, Co
 
 /-- The reverse of a path from `x` to `y`, as a path from `y` to `x` -/
 @[symm, simps]
-def symm (γ : Path x y) : Path y x where 
+def symm (γ : Path x y) : Path y x where
   toFun := γ ∘ σ
   continuous_to_fun := by continuity
   source' := by simpa [-Path.target] using γ.target
@@ -157,19 +157,22 @@ def symm (γ : Path x y) : Path y x where
 #align path.symm Path.symm
 
 @[simp]
-theorem symm_symm {γ : Path x y} : γ.symm.symm = γ := by
+theorem symm_symm {γ : Path x y} : γ.symm.symm = γ :=
+  by
   ext
   simp
 #align path.symm_symm Path.symm_symm
 
 @[simp]
-theorem refl_symm {a : X} : (Path.refl a).symm = Path.refl a := by
+theorem refl_symm {a : X} : (Path.refl a).symm = Path.refl a :=
+  by
   ext
   rfl
 #align path.refl_symm Path.refl_symm
 
 @[simp]
-theorem symm_range {a b : X} (γ : Path a b) : range γ.symm = range γ := by
+theorem symm_range {a b : X} (γ : Path a b) : range γ.symm = range γ :=
+  by
   ext x
   simp only [mem_range, Path.symm, CoeFun.coe, coeFn, unitInterval.symm, SetCoe.exists, comp_app,
     Subtype.coe_mk, Subtype.val_eq_coe]
@@ -279,8 +282,8 @@ theorem refl_extend {X : Type _} [TopologicalSpace X] {a : X} : (Path.refl a).ex
 #align path.refl_extend Path.refl_extend
 
 /-- The path obtained from a map defined on `ℝ` by restriction to the unit interval. -/
-def ofLine {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h₁ : f 1 = y) :
-    Path x y where 
+def ofLine {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h₁ : f 1 = y) : Path x y
+    where
   toFun := f ∘ coe
   continuous_to_fun := hf.comp_continuous continuous_subtype_coe Subtype.prop
   source' := h₀
@@ -296,11 +299,11 @@ attribute [local simp] Iic_def
 /-- Concatenation of two paths from `x` to `y` and from `y` to `z`, putting the first
 path on `[0, 1/2]` and the second one on `[1/2, 1]`. -/
 @[trans]
-def trans (γ : Path x y) (γ' : Path y z) :
-    Path x
-      z where 
+def trans (γ : Path x y) (γ' : Path y z) : Path x z
+    where
   toFun := (fun t : ℝ => if t ≤ 1 / 2 then γ.extend (2 * t) else γ'.extend (2 * t - 1)) ∘ coe
-  continuous_to_fun := by
+  continuous_to_fun :=
+    by
     refine'
       (Continuous.if_le _ _ continuous_id continuous_const (by norm_num)).comp
         continuous_subtype_coe
@@ -319,7 +322,8 @@ theorem trans_apply (γ : Path x y) (γ' : Path y z) (t : I) :
 #align path.trans_apply Path.trans_apply
 
 @[simp]
-theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.symm.trans γ.symm := by
+theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.symm.trans γ.symm :=
+  by
   ext t
   simp only [trans_apply, ← one_div, symm_apply, not_le, comp_app]
   split_ifs with h h₁ h₂ h₃ h₄ <;> rw [coe_symm_eq] at h
@@ -336,14 +340,16 @@ theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.
 
 @[simp]
 theorem refl_trans_refl {X : Type _} [TopologicalSpace X] {a : X} :
-    (Path.refl a).trans (Path.refl a) = Path.refl a := by
+    (Path.refl a).trans (Path.refl a) = Path.refl a :=
+  by
   ext
   simp only [Path.trans, if_t_t, one_div, Path.refl_extend]
   rfl
 #align path.refl_trans_refl Path.refl_trans_refl
 
 theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path a b) (γ₂ : Path b c) :
-    range (γ₁.trans γ₂) = range γ₁ ∪ range γ₂ := by
+    range (γ₁.trans γ₂) = range γ₁ ∪ range γ₂ :=
+  by
   rw [Path.trans]
   apply eq_of_subset_of_subset
   · rintro x ⟨⟨t, ht0, ht1⟩, hxt⟩
@@ -377,7 +383,7 @@ theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path 
         unfold_coes
         change t ≠ 0 at h
         have ht0 := lt_of_le_of_ne ht0 h.symm
-        have : ¬(t + 1) / 2 ≤ 1 / 2 := by 
+        have : ¬(t + 1) / 2 ≤ 1 / 2 := by
           rw [not_le]
           linarith
         simp only [comp_app, if_false, this]
@@ -387,7 +393,7 @@ theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path 
 
 /-- Image of a path from `x` to `y` by a continuous map -/
 def map (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {f : X → Y} (h : Continuous f) :
-    Path (f x) (f y) where 
+    Path (f x) (f y) where
   toFun := f ∘ γ
   continuous_to_fun := by continuity
   source' := by simp
@@ -396,7 +402,7 @@ def map (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {f : X → Y} (h : Con
 
 @[simp]
 theorem map_coe (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {f : X → Y} (h : Continuous f) :
-    (γ.map h : I → Y) = f ∘ γ := by 
+    (γ.map h : I → Y) = f ∘ γ := by
   ext t
   rfl
 #align path.map_coe Path.map_coe
@@ -409,14 +415,16 @@ theorem map_symm (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {f : X → Y}
 
 @[simp]
 theorem map_trans (γ : Path x y) (γ' : Path y z) {Y : Type _} [TopologicalSpace Y] {f : X → Y}
-    (h : Continuous f) : (γ.trans γ').map h = (γ.map h).trans (γ'.map h) := by
+    (h : Continuous f) : (γ.trans γ').map h = (γ.map h).trans (γ'.map h) :=
+  by
   ext t
   rw [trans_apply, map_coe, comp_app, trans_apply]
   split_ifs <;> rfl
 #align path.map_trans Path.map_trans
 
 @[simp]
-theorem map_id (γ : Path x y) : γ.map continuous_id = γ := by
+theorem map_id (γ : Path x y) : γ.map continuous_id = γ :=
+  by
   ext
   rfl
 #align path.map_id Path.map_id
@@ -424,14 +432,14 @@ theorem map_id (γ : Path x y) : γ.map continuous_id = γ := by
 @[simp]
 theorem map_map (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {Z : Type _} [TopologicalSpace Z]
     {f : X → Y} (hf : Continuous f) {g : Y → Z} (hg : Continuous g) :
-    (γ.map hf).map hg = γ.map (hg.comp hf) := by 
+    (γ.map hf).map hg = γ.map (hg.comp hf) := by
   ext
   rfl
 #align path.map_map Path.map_map
 
 /-- Casting a path from `x` to `y` to a path from `x'` to `y'` when `x' = x` and `y' = y` -/
-def cast (γ : Path x y) {x' y'} (hx : x' = x) (hy : y' = y) :
-    Path x' y' where 
+def cast (γ : Path x y) {x' y'} (hx : x' = x) (hy : y' = y) : Path x' y'
+    where
   toFun := γ
   continuous_to_fun := γ.Continuous
   source' := by simp [hx]
@@ -480,7 +488,8 @@ theorem continuous_uncurry_extend_of_continuous_family {X ι : Type _} [Topologi
 theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι]
     {a b c : ι → X} (γ₁ : ∀ t : ι, Path (a t) (b t)) (h₁ : Continuous ↿γ₁)
     (γ₂ : ∀ t : ι, Path (b t) (c t)) (h₂ : Continuous ↿γ₂) :
-    Continuous ↿fun t => (γ₁ t).trans (γ₂ t) := by
+    Continuous ↿fun t => (γ₁ t).trans (γ₂ t) :=
+  by
   have h₁' := Path.continuous_uncurry_extend_of_continuous_family γ₁ h₁
   have h₂' := Path.continuous_uncurry_extend_of_continuous_family γ₂ h₂
   simp only [has_uncurry.uncurry, CoeFun.coe, coeFn, Path.trans, (· ∘ ·)]
@@ -500,7 +509,8 @@ theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [Topologica
 
 @[continuity]
 theorem Continuous.path_trans {f : Y → Path x y} {g : Y → Path y z} :
-    Continuous f → Continuous g → Continuous fun t => (f t).trans (g t) := by
+    Continuous f → Continuous g → Continuous fun t => (f t).trans (g t) :=
+  by
   intro hf hg
   apply continuous_uncurry_iff.mp
   exact trans_continuous_family _ (continuous_uncurry_iff.mpr hf) _ (continuous_uncurry_iff.mpr hg)
@@ -520,10 +530,8 @@ variable {a₁ a₂ a₃ : X} {b₁ b₂ b₃ : Y}
 
 /-- Given a path in `X` and a path in `Y`, we can take their pointwise product to get a path in
 `X × Y`. -/
-protected def prod (γ₁ : Path a₁ a₂) (γ₂ : Path b₁ b₂) :
-    Path (a₁, b₁)
-      (a₂,
-        b₂) where 
+protected def prod (γ₁ : Path a₁ a₂) (γ₂ : Path b₁ b₂) : Path (a₁, b₁) (a₂, b₂)
+    where
   toContinuousMap := ContinuousMap.prodMk γ₁.toContinuousMap γ₂.toContinuousMap
   source' := by simp
   target' := by simp
@@ -551,9 +559,8 @@ variable {χ : ι → Type _} [∀ i, TopologicalSpace (χ i)] {as bs cs : ∀ i
 
 /-- Given a family of paths, one in each Xᵢ, we take their pointwise product to get a path in
 Π i, Xᵢ. -/
-protected def pi (γ : ∀ i, Path (as i) (bs i)) :
-    Path as
-      bs where 
+protected def pi (γ : ∀ i, Path (as i) (bs i)) : Path as bs
+    where
   toContinuousMap := ContinuousMap.pi fun i => (γ i).toContinuousMap
   source' := by simp
   target' := by simp
@@ -566,7 +573,8 @@ theorem pi_coe_fn (γ : ∀ i, Path (as i) (bs i)) : coeFn (Path.pi γ) = fun t 
 
 /-- Path composition commutes with products -/
 theorem trans_pi_eq_pi_trans (γ₀ : ∀ i, Path (as i) (bs i)) (γ₁ : ∀ i, Path (bs i) (cs i)) :
-    (Path.pi γ₀).trans (Path.pi γ₁) = Path.pi fun i => (γ₀ i).trans (γ₁ i) := by
+    (Path.pi γ₀).trans (Path.pi γ₁) = Path.pi fun i => (γ₀ i).trans (γ₁ i) :=
+  by
   ext (t i)
   unfold Path.trans
   simp only [Path.coe_mk, Function.comp_apply, pi_coe_fn]
@@ -598,12 +606,12 @@ protected theorem mul_apply [Mul X] [HasContinuousMul X] {a₁ b₁ a₂ b₂ : 
 /-- `γ.truncate t₀ t₁` is the path which follows the path `γ` on the
   time interval `[t₀, t₁]` and stays still otherwise. -/
 def truncate {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t₀ t₁ : ℝ) :
-    Path (γ.extend <| min t₀ t₁)
-      (γ.extend t₁) where 
+    Path (γ.extend <| min t₀ t₁) (γ.extend t₁)
+    where
   toFun s := γ.extend (min (max s t₀) t₁)
   continuous_to_fun :=
     γ.continuous_extend.comp ((continuous_subtype_coe.max continuous_const).min continuous_const)
-  source' := by 
+  source' := by
     simp only [min_def, max_def']
     norm_cast
     split_ifs with h₁ h₂ h₃ h₄
@@ -613,7 +621,7 @@ def truncate {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t₀ t
     · have h₄ : t₁ ≤ 0 := le_of_lt (by simpa using h₂)
       simp [γ.extend_of_le_zero h₄, γ.extend_of_le_zero h₁]
     all_goals rfl
-  target' := by 
+  target' := by
     simp only [min_def, max_def']
     norm_cast
     split_ifs with h₁ h₂ h₃
@@ -632,7 +640,8 @@ def truncateOfLe {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t�
 #align path.truncate_of_le Path.truncateOfLe
 
 theorem truncate_range {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) {t₀ t₁ : ℝ} :
-    range (γ.truncate t₀ t₁) ⊆ range γ := by
+    range (γ.truncate t₀ t₁) ⊆ range γ :=
+  by
   rw [← γ.extend_range]
   simp only [range_subset_iff, SetCoe.exists, SetCoe.forall]
   intro x hx
@@ -657,7 +666,8 @@ theorem truncate_continuous_family {X : Type _} [TopologicalSpace X] {a b : X} (
     `end` -/
 @[continuity]
 theorem truncate_const_continuous_family {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b)
-    (t : ℝ) : Continuous ↿(γ.truncate t) := by
+    (t : ℝ) : Continuous ↿(γ.truncate t) :=
+  by
   have key : Continuous (fun x => (t, x) : ℝ × I → ℝ × ℝ × I) :=
     continuous_const.prod_mk continuous_id
   convert γ.truncate_continuous_family.comp key
@@ -665,7 +675,8 @@ theorem truncate_const_continuous_family {X : Type _} [TopologicalSpace X] {a b 
 
 @[simp]
 theorem truncate_self {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t : ℝ) :
-    γ.truncate t t = (Path.refl <| γ.extend t).cast (by rw [min_self]) rfl := by
+    γ.truncate t t = (Path.refl <| γ.extend t).cast (by rw [min_self]) rfl :=
+  by
   ext x
   rw [cast_coe]
   simp only [truncate, CoeFun.coe, coeFn, refl, min_def, max_def]
@@ -686,7 +697,8 @@ theorem truncate_one_one {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path 
 
 @[simp]
 theorem truncate_zero_one {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) :
-    γ.truncate 0 1 = γ.cast (by simp [zero_le_one, extend_zero]) (by simp) := by
+    γ.truncate 0 1 = γ.cast (by simp [zero_le_one, extend_zero]) (by simp) :=
+  by
   ext x
   rw [cast_coe]
   have : ↑x ∈ (Icc 0 1 : Set ℝ) := x.2
@@ -700,7 +712,7 @@ theorem truncate_zero_one {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path
 path defined by `γ ∘ f`.
 -/
 def reparam (γ : Path x y) (f : I → I) (hfcont : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-    Path x y where 
+    Path x y where
   toFun := γ ∘ f
   continuous_to_fun := by continuity
   source' := by simp [hf₀]
@@ -714,15 +726,17 @@ theorem coe_to_fun (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf₀ 
 #align path.coe_to_fun Path.coe_to_fun
 
 @[simp]
-theorem reparam_id (γ : Path x y) : γ.reparam id continuous_id rfl rfl = γ := by
+theorem reparam_id (γ : Path x y) : γ.reparam id continuous_id rfl rfl = γ :=
+  by
   ext
   rfl
 #align path.reparam_id Path.reparam_id
 
 theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf₀ : f 0 = 0)
-    (hf₁ : f 1 = 1) : range ⇑(γ.reparam f hfcont hf₀ hf₁) = range γ := by
+    (hf₁ : f 1 = 1) : range ⇑(γ.reparam f hfcont hf₀ hf₁) = range γ :=
+  by
   change range (γ ∘ f) = range γ
-  have : range f = univ := by 
+  have : range f = univ := by
     rw [range_iff_surjective]
     intro t
     have h₁ : Continuous (Icc_extend (zero_le_one' ℝ) f) := by continuity
@@ -737,7 +751,8 @@ theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf�
 #align path.range_reparam Path.range_reparam
 
 theorem refl_reparam {f : I → I} (hfcont : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-    (refl x).reparam f hfcont hf₀ hf₁ = refl x := by
+    (refl x).reparam f hfcont hf₀ hf₁ = refl x :=
+  by
   ext
   simp
 #align path.refl_reparam Path.refl_reparam
@@ -775,7 +790,7 @@ theorem Joined.trans {x y z : X} (hxy : Joined x y) (hyz : Joined y z) : Joined 
 variable (X)
 
 /-- The setoid corresponding the equivalence relation of being joined by a continuous path. -/
-def pathSetoid : Setoid X where 
+def pathSetoid : Setoid X where
   R := Joined
   iseqv := Equivalence.mk _ Joined.refl (fun x y => Joined.symm) fun x y z => Joined.trans
 #align path_setoid pathSetoid
@@ -801,7 +816,8 @@ def JoinedIn (F : Set X) (x y : X) : Prop :=
 
 variable {F : Set X}
 
-theorem JoinedIn.mem (h : JoinedIn F x y) : x ∈ F ∧ y ∈ F := by
+theorem JoinedIn.mem (h : JoinedIn F x y) : x ∈ F ∧ y ∈ F :=
+  by
   rcases h with ⟨γ, γ_in⟩
   have : γ 0 ∈ F ∧ γ 1 ∈ F := by constructor <;> apply γ_in
   simpa using this
@@ -861,13 +877,15 @@ theorem JoinedIn.refl (h : x ∈ F) : JoinedIn F x x :=
 #align joined_in.refl JoinedIn.refl
 
 @[symm]
-theorem JoinedIn.symm (h : JoinedIn F x y) : JoinedIn F y x := by
+theorem JoinedIn.symm (h : JoinedIn F x y) : JoinedIn F y x :=
+  by
   cases' h.mem with hx hy
   simp_all [joined_in_iff_joined]
   exact h.symm
 #align joined_in.symm JoinedIn.symm
 
-theorem JoinedIn.trans (hxy : JoinedIn F x y) (hyz : JoinedIn F y z) : JoinedIn F x z := by
+theorem JoinedIn.trans (hxy : JoinedIn F x y) (hyz : JoinedIn F y z) : JoinedIn F x z :=
+  by
   cases' hxy.mem with hx hy
   cases' hyz.mem with hx hy
   simp_all [joined_in_iff_joined]
@@ -900,7 +918,8 @@ theorem path_component_symm : x ∈ pathComponent y ↔ y ∈ pathComponent x :=
   ⟨fun h => mem_path_component_of_mem h, fun h => mem_path_component_of_mem h⟩
 #align path_component_symm path_component_symm
 
-theorem path_component_congr (h : x ∈ pathComponent y) : pathComponent x = pathComponent y := by
+theorem path_component_congr (h : x ∈ pathComponent y) : pathComponent x = pathComponent y :=
+  by
   ext z
   constructor
   · intro h'
@@ -939,7 +958,8 @@ def IsPathConnected (F : Set X) : Prop :=
   ∃ x ∈ F, ∀ {y}, y ∈ F → JoinedIn F x y
 #align is_path_connected IsPathConnected
 
-theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, pathComponentIn x F = F := by
+theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ x ∈ F, pathComponentIn x F = F :=
+  by
   constructor <;> rintro ⟨x, x_in, h⟩ <;> use x, x_in
   · ext y
     exact ⟨fun hy => hy.Mem.2, h⟩
@@ -965,7 +985,8 @@ theorem is_path_connected_iff :
 #align is_path_connected_iff is_path_connected_iff
 
 theorem IsPathConnected.image {Y : Type _} [TopologicalSpace Y] (hF : IsPathConnected F) {f : X → Y}
-    (hf : Continuous f) : IsPathConnected (f '' F) := by
+    (hf : Continuous f) : IsPathConnected (f '' F) :=
+  by
   rcases hF with ⟨x, x_in, hx⟩
   use f x, mem_image_of_mem f x_in
   rintro _ ⟨y, y_in, rfl⟩
@@ -982,7 +1003,8 @@ theorem IsPathConnected.subset_path_component (h : IsPathConnected F) (x_in : x 
 #align is_path_connected.subset_path_component IsPathConnected.subset_path_component
 
 theorem IsPathConnected.union {U V : Set X} (hU : IsPathConnected U) (hV : IsPathConnected V)
-    (hUV : (U ∩ V).Nonempty) : IsPathConnected (U ∪ V) := by
+    (hUV : (U ∩ V).Nonempty) : IsPathConnected (U ∪ V) :=
+  by
   rcases hUV with ⟨x, xU, xV⟩
   use x, Or.inl xU
   rintro y (yU | yV)
@@ -993,7 +1015,8 @@ theorem IsPathConnected.union {U V : Set X} (hU : IsPathConnected U) (hV : IsPat
 /-- If a set `W` is path-connected, then it is also path-connected when seen as a set in a smaller
 ambient type `U` (when `U` contains `W`). -/
 theorem IsPathConnected.preimage_coe {U W : Set X} (hW : IsPathConnected W) (hWU : W ⊆ U) :
-    IsPathConnected ((coe : U → X) ⁻¹' W) := by
+    IsPathConnected ((coe : U → X) ⁻¹' W) :=
+  by
   rcases hW with ⟨x, x_in, hx⟩
   use ⟨x, hWU x_in⟩, by simp [x_in]
   rintro ⟨y, hyU⟩ hyW
@@ -1002,10 +1025,12 @@ theorem IsPathConnected.preimage_coe {U W : Set X} (hW : IsPathConnected W) (hWU
 
 theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpace X] {n : ℕ}
     {s : Set X} (h : IsPathConnected s) (p : Fin (n + 1) → X) (hp : ∀ i, p i ∈ s) :
-    ∃ γ : Path (p 0) (p n), range γ ⊆ s ∧ ∀ i, p i ∈ range γ := by
+    ∃ γ : Path (p 0) (p n), range γ ⊆ s ∧ ∀ i, p i ∈ range γ :=
+  by
   let p' : ℕ → X := fun k => if h : k < n + 1 then p ⟨k, h⟩ else p ⟨0, n.zero_lt_succ⟩
-  obtain ⟨γ, hγ⟩ : ∃ γ : Path (p' 0) (p' n), (∀ i ≤ n, p' i ∈ range γ) ∧ range γ ⊆ s := by
-    have hp' : ∀ i ≤ n, p' i ∈ s := by 
+  obtain ⟨γ, hγ⟩ : ∃ γ : Path (p' 0) (p' n), (∀ i ≤ n, p' i ∈ range γ) ∧ range γ ⊆ s :=
+    by
+    have hp' : ∀ i ≤ n, p' i ∈ s := by
       intro i hi
       simp [p', Nat.lt_succ_of_le hi, hp]
     clear_value p'
@@ -1040,7 +1065,7 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
         apply union_subset hγ₀.2
         rw [range_subset_iff]
         exact hγ₁
-  have hpp' : ∀ k < n + 1, p k = p' k := by 
+  have hpp' : ∀ k < n + 1, p k = p' k := by
     intro k hk
     simp only [p', hk, dif_pos]
     congr
@@ -1053,7 +1078,7 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
   rintro ⟨i, hi⟩
   suffices p ⟨i, hi⟩ = p' i by convert hγ.1 i (Nat.le_of_lt_succ hi)
   rw [← hpp' i hi]
-  suffices i = i % n.succ by 
+  suffices i = i % n.succ by
     congr
     assumption
   rw [Nat.mod_eq_of_lt hi]
@@ -1061,7 +1086,8 @@ theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpac
 
 theorem IsPathConnected.exists_path_through_family' {X : Type _} [TopologicalSpace X] {n : ℕ}
     {s : Set X} (h : IsPathConnected s) (p : Fin (n + 1) → X) (hp : ∀ i, p i ∈ s) :
-    ∃ (γ : Path (p 0) (p n))(t : Fin (n + 1) → I), (∀ t, γ t ∈ s) ∧ ∀ i, γ (t i) = p i := by
+    ∃ (γ : Path (p 0) (p n))(t : Fin (n + 1) → I), (∀ t, γ t ∈ s) ∧ ∀ i, γ (t i) = p i :=
+  by
   rcases h.exists_path_through_family p hp with ⟨γ, hγ⟩
   rcases hγ with ⟨h₁, h₂⟩
   simp only [range, mem_set_of_eq] at h₂
@@ -1081,7 +1107,8 @@ class PathConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where
 #align path_connected_space PathConnectedSpace
 
 theorem path_connected_space_iff_zeroth_homotopy :
-    PathConnectedSpace X ↔ Nonempty (ZerothHomotopy X) ∧ Subsingleton (ZerothHomotopy X) := by
+    PathConnectedSpace X ↔ Nonempty (ZerothHomotopy X) ∧ Subsingleton (ZerothHomotopy X) :=
+  by
   letI := pathSetoid X
   constructor
   · intro h
@@ -1105,7 +1132,8 @@ def somePath (x y : X) : Path x y :=
 
 end PathConnectedSpace
 
-theorem is_path_connected_iff_path_connected_space : IsPathConnected F ↔ PathConnectedSpace F := by
+theorem is_path_connected_iff_path_connected_space : IsPathConnected F ↔ PathConnectedSpace F :=
+  by
   rw [is_path_connected_iff]
   constructor
   · rintro ⟨⟨x, x_in⟩, h⟩
@@ -1119,7 +1147,8 @@ theorem is_path_connected_iff_path_connected_space : IsPathConnected F ↔ PathC
     apply H
 #align is_path_connected_iff_path_connected_space is_path_connected_iff_path_connected_space
 
-theorem path_connected_space_iff_univ : PathConnectedSpace X ↔ IsPathConnected (univ : Set X) := by
+theorem path_connected_space_iff_univ : PathConnectedSpace X ↔ IsPathConnected (univ : Set X) :=
+  by
   constructor
   · intro h
     haveI := @PathConnectedSpace.nonempty X _ _
@@ -1138,7 +1167,7 @@ theorem path_connected_space_iff_eq : PathConnectedSpace X ↔ ∃ x : X, pathCo
 
 -- see Note [lower instance priority]
 instance (priority := 100) PathConnectedSpace.connected_space [PathConnectedSpace X] :
-    ConnectedSpace X := by 
+    ConnectedSpace X := by
   rw [connected_space_iff_connected_component]
   rcases is_path_connected_iff_eq.mp (path_connected_space_iff_univ.mp ‹_›) with ⟨x, x_in, hx⟩
   use x
@@ -1146,7 +1175,8 @@ instance (priority := 100) PathConnectedSpace.connected_space [PathConnectedSpac
   exact (by simpa using hx : pathComponent x = univ) ▸ path_component_subset_component x
 #align path_connected_space.connected_space PathConnectedSpace.connected_space
 
-theorem IsPathConnected.is_connected (hF : IsPathConnected F) : IsConnected F := by
+theorem IsPathConnected.is_connected (hF : IsPathConnected F) : IsConnected F :=
+  by
   rw [is_connected_iff_connected_space]
   rw [is_path_connected_iff_path_connected_space] at hF
   exact @PathConnectedSpace.connected_space _ _ hF
@@ -1157,14 +1187,16 @@ namespace PathConnectedSpace
 variable [PathConnectedSpace X]
 
 theorem exists_path_through_family {n : ℕ} (p : Fin (n + 1) → X) :
-    ∃ γ : Path (p 0) (p n), ∀ i, p i ∈ range γ := by
+    ∃ γ : Path (p 0) (p n), ∀ i, p i ∈ range γ :=
+  by
   have : IsPathConnected (univ : Set X) := path_connected_space_iff_univ.mp (by infer_instance)
   rcases this.exists_path_through_family p fun i => True.intro with ⟨γ, -, h⟩
   exact ⟨γ, h⟩
 #align path_connected_space.exists_path_through_family PathConnectedSpace.exists_path_through_family
 
 theorem exists_path_through_family' {n : ℕ} (p : Fin (n + 1) → X) :
-    ∃ (γ : Path (p 0) (p n))(t : Fin (n + 1) → I), ∀ i, γ (t i) = p i := by
+    ∃ (γ : Path (p 0) (p n))(t : Fin (n + 1) → I), ∀ i, γ (t i) = p i :=
+  by
   have : IsPathConnected (univ : Set X) := path_connected_space_iff_univ.mp (by infer_instance)
   rcases this.exists_path_through_family' p fun i => True.intro with ⟨γ, t, -, h⟩
   exact ⟨γ, t, h⟩
@@ -1186,7 +1218,7 @@ export LocPathConnectedSpace (path_connected_basis)
 
 theorem loc_path_connected_of_bases {p : ι → Prop} {s : X → ι → Set X}
     (h : ∀ x, (𝓝 x).HasBasis p (s x)) (h' : ∀ x i, p i → IsPathConnected (s x i)) :
-    LocPathConnectedSpace X := by 
+    LocPathConnectedSpace X := by
   constructor
   intro x
   apply (h x).to_has_basis
@@ -1198,7 +1230,8 @@ theorem loc_path_connected_of_bases {p : ι → Prop} {s : X → ι → Set X}
 #align loc_path_connected_of_bases loc_path_connected_of_bases
 
 theorem path_connected_space_iff_connected_space [LocPathConnectedSpace X] :
-    PathConnectedSpace X ↔ ConnectedSpace X := by
+    PathConnectedSpace X ↔ ConnectedSpace X :=
+  by
   constructor
   · intro h
     infer_instance
@@ -1226,7 +1259,7 @@ theorem path_connected_subset_basis [LocPathConnectedSpace X] {U : Set X} (h : I
 
 theorem loc_path_connected_of_is_open [LocPathConnectedSpace X] {U : Set X} (h : IsOpen U) :
     LocPathConnectedSpace U :=
-  ⟨by 
+  ⟨by
     rintro ⟨x, x_in⟩
     rw [nhds_subtype_eq_comap]
     constructor
@@ -1247,7 +1280,8 @@ theorem loc_path_connected_of_is_open [LocPathConnectedSpace X] {U : Set X} (h :
 #align loc_path_connected_of_is_open loc_path_connected_of_is_open
 
 theorem IsOpen.is_connected_iff_is_path_connected [LocPathConnectedSpace X] {U : Set X}
-    (U_op : IsOpen U) : IsPathConnected U ↔ IsConnected U := by
+    (U_op : IsOpen U) : IsPathConnected U ↔ IsConnected U :=
+  by
   rw [is_connected_iff_connected_space, is_path_connected_iff_path_connected_space]
   haveI := loc_path_connected_of_is_open U_op
   exact path_connected_space_iff_connected_space

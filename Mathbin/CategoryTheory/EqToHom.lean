@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.eq_to_hom
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ theorem eq_to_hom_refl (X : C) (p : X = X) : eqToHom p = 𝟙 X :=
 
 @[simp, reassoc.1]
 theorem eq_to_hom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) :
-    eqToHom p ≫ eqToHom q = eqToHom (p.trans q) := by
+    eqToHom p ≫ eqToHom q = eqToHom (p.trans q) :=
+  by
   cases p
   cases q
   simp
@@ -81,7 +82,8 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congr_arg_mpr_hom_left {X Y Z : C} (p : X = Y) (q : Y ⟶ Z) :
-    (congr_arg (fun W : C => W ⟶ Z) p).mpr q = eqToHom p ≫ q := by
+    (congr_arg (fun W : C => W ⟶ Z) p).mpr q = eqToHom p ≫ q :=
+  by
   cases p
   simp
 #align category_theory.congr_arg_mpr_hom_left CategoryTheory.congr_arg_mpr_hom_left
@@ -95,7 +97,8 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congr_arg_mpr_hom_right {X Y Z : C} (p : X ⟶ Y) (q : Z = Y) :
-    (congr_arg (fun W : C => X ⟶ W) q).mpr p = p ≫ eqToHom q.symm := by
+    (congr_arg (fun W : C => X ⟶ W) q).mpr p = p ≫ eqToHom q.symm :=
+  by
   cases q
   simp
 #align category_theory.congr_arg_mpr_hom_right CategoryTheory.congr_arg_mpr_hom_right
@@ -130,14 +133,16 @@ theorem eq_to_iso_trans {X Y Z : C} (p : X = Y) (q : Y = Z) :
 #align category_theory.eq_to_iso_trans CategoryTheory.eq_to_iso_trans
 
 @[simp]
-theorem eq_to_hom_op {X Y : C} (h : X = Y) : (eqToHom h).op = eqToHom (congr_arg op h.symm) := by
+theorem eq_to_hom_op {X Y : C} (h : X = Y) : (eqToHom h).op = eqToHom (congr_arg op h.symm) :=
+  by
   cases h
   rfl
 #align category_theory.eq_to_hom_op CategoryTheory.eq_to_hom_op
 
 @[simp]
 theorem eq_to_hom_unop {X Y : Cᵒᵖ} (h : X = Y) :
-    (eqToHom h).unop = eqToHom (congr_arg unop h.symm) := by
+    (eqToHom h).unop = eqToHom (congr_arg unop h.symm) :=
+  by
   cases h
   rfl
 #align category_theory.eq_to_hom_unop CategoryTheory.eq_to_hom_unop
@@ -146,7 +151,8 @@ instance {X Y : C} (h : X = Y) : IsIso (eqToHom h) :=
   IsIso.of_iso (eqToIso h)
 
 @[simp]
-theorem inv_eq_to_hom {X Y : C} (h : X = Y) : inv (eqToHom h) = eqToHom h.symm := by
+theorem inv_eq_to_hom {X Y : C} (h : X = Y) : inv (eqToHom h) = eqToHom h.symm :=
+  by
   ext
   simp
 #align category_theory.inv_eq_to_hom CategoryTheory.inv_eq_to_hom
@@ -158,10 +164,11 @@ namespace Functor
 /-- Proving equality between functors. This isn't an extensionality lemma,
   because usually you don't really want to do this. -/
 theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
-    (h_map : ∀ X Y f, F.map f = eqToHom (h_obj X) ≫ G.map f ≫ eqToHom (h_obj Y).symm) : F = G := by
+    (h_map : ∀ X Y f, F.map f = eqToHom (h_obj X) ≫ G.map f ≫ eqToHom (h_obj Y).symm) : F = G :=
+  by
   cases' F with F_obj _ _ _
   cases' G with G_obj _ _ _
-  obtain rfl : F_obj = G_obj := by 
+  obtain rfl : F_obj = G_obj := by
     ext X
     apply h_obj
   congr
@@ -171,7 +178,8 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
 
 /-- Two morphisms are conjugate via eq_to_hom if and only if they are heterogeneously equal. -/
 theorem conj_eq_to_hom_iff_heq {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) (h : W = Y) (h' : X = Z) :
-    f = eqToHom h ≫ g ≫ eqToHom h'.symm ↔ HEq f g := by
+    f = eqToHom h ≫ g ≫ eqToHom h'.symm ↔ HEq f g :=
+  by
   cases h
   cases h'
   simp
@@ -210,7 +218,8 @@ variable {E : Type u₃} [Category.{v₃} E] {F G : C ⥤ D} {X Y Z : C} {f : X 
 
 theorem map_comp_heq (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y) (hz : F.obj Z = G.obj Z)
     (hf : HEq (F.map f) (G.map f)) (hg : HEq (F.map g) (G.map g)) :
-    HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by
+    HEq (F.map (f ≫ g)) (G.map (f ≫ g)) :=
+  by
   rw [F.map_comp, G.map_comp]
   congr
 #align category_theory.functor.map_comp_heq CategoryTheory.Functor.map_comp_heq
@@ -226,7 +235,8 @@ theorem precomp_map_heq (H : E ⥤ C) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.ma
 #align category_theory.functor.precomp_map_heq CategoryTheory.Functor.precomp_map_heq
 
 theorem postcomp_map_heq (H : D ⥤ E) (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y)
-    (hmap : HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by
+    (hmap : HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) :=
+  by
   dsimp
   congr
 #align category_theory.functor.postcomp_map_heq CategoryTheory.Functor.postcomp_map_heq
@@ -266,7 +276,8 @@ theorem eq_to_hom_app {F G : C ⥤ D} (h : F = G) (X : C) :
 #align category_theory.eq_to_hom_app CategoryTheory.eq_to_hom_app
 
 theorem NatTrans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
-    α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) := by
+    α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) :=
+  by
   rw [α.naturality_assoc]
   simp [eq_to_hom_map]
 #align category_theory.nat_trans.congr CategoryTheory.NatTrans.congr
@@ -276,7 +287,8 @@ theorem eq_conj_eq_to_hom {X Y : C} (f : X ⟶ Y) : f = eqToHom rfl ≫ f ≫ eq
 #align category_theory.eq_conj_eq_to_hom CategoryTheory.eq_conj_eq_to_hom
 
 theorem dcongr_arg {ι : Type _} {F G : ι → C} (α : ∀ i, F i ⟶ G i) {i j : ι} (h : i = j) :
-    α i = eqToHom (congr_arg F h) ≫ α j ≫ eqToHom (congr_arg G h.symm) := by
+    α i = eqToHom (congr_arg F h) ≫ α j ≫ eqToHom (congr_arg G h.symm) :=
+  by
   subst h
   simp
 #align category_theory.dcongr_arg CategoryTheory.dcongr_arg

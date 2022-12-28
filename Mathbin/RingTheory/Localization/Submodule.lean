@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.submodule
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,12 +72,13 @@ theorem coe_submodule_mul (I J : Ideal R) :
 
 theorem coe_submodule_fg (hS : Function.Injective (algebraMap R S)) (I : Ideal R) :
     Submodule.Fg (coeSubmodule S I) ↔ Submodule.Fg I :=
-  ⟨Submodule.fg_of_fg_map _ (LinearMap.ker_eq_bot.mpr hS), Submodule.Fg.map _⟩
+  ⟨Submodule.fgOfFgMap _ (LinearMap.ker_eq_bot.mpr hS), Submodule.Fg.map _⟩
 #align is_localization.coe_submodule_fg IsLocalization.coe_submodule_fg
 
 @[simp]
 theorem coe_submodule_span (s : Set R) :
-    coeSubmodule S (Ideal.span s) = Submodule.span R (algebraMap R S '' s) := by
+    coeSubmodule S (Ideal.span s) = Submodule.span R (algebraMap R S '' s) :=
+  by
   rw [IsLocalization.coeSubmodule, Ideal.span, Submodule.map_span]
   rfl
 #align is_localization.coe_submodule_span IsLocalization.coe_submodule_span
@@ -100,7 +101,8 @@ section
 
 include M
 
-theorem is_noetherian_ring (h : IsNoetherianRing R) : IsNoetherianRing S := by
+theorem is_noetherian_ring (h : IsNoetherianRing R) : IsNoetherianRing S :=
+  by
   rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at h⊢
   exact OrderEmbedding.wellFounded (IsLocalization.orderEmbedding M S).dual h
 #align is_localization.is_noetherian_ring IsLocalization.is_noetherian_ring
@@ -129,7 +131,8 @@ theorem coe_submodule_injective (h : M ≤ nonZeroDivisors R) :
 #align is_localization.coe_submodule_injective IsLocalization.coe_submodule_injective
 
 theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
-    (coeSubmodule S I).IsPrincipal ↔ I.IsPrincipal := by
+    (coeSubmodule S I).IsPrincipal ↔ I.IsPrincipal :=
+  by
   constructor <;> rintro ⟨⟨x, hx⟩⟩
   · have x_mem : x ∈ coe_submodule S I := hx.symm ▸ Submodule.mem_span_singleton_self x
     obtain ⟨x, x_mem, rfl⟩ := (mem_coe_submodule _ _).mp x_mem
@@ -143,7 +146,8 @@ variable {S} (M)
 
 theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [IsScalarTower R S N]
     {x : N} {a : Set N} :
-    x ∈ Submodule.span S a ↔ ∃ y ∈ Submodule.span R a, ∃ z : M, x = mk' S 1 z • y := by
+    x ∈ Submodule.span S a ↔ ∃ y ∈ Submodule.span R a, ∃ z : M, x = mk' S 1 z • y :=
+  by
   constructor; intro h
   · refine' Submodule.span_induction h _ _ _ _
     · rintro x hx
@@ -170,7 +174,8 @@ theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [Is
 #align is_localization.mem_span_iff IsLocalization.mem_span_iff
 
 theorem mem_span_map {x : S} {a : Set R} :
-    x ∈ Ideal.span (algebraMap R S '' a) ↔ ∃ y ∈ Ideal.span a, ∃ z : M, x = mk' S y z := by
+    x ∈ Ideal.span (algebraMap R S '' a) ↔ ∃ y ∈ Ideal.span a, ∃ z : M, x = mk' S y z :=
+  by
   refine' (mem_span_iff M).trans _
   constructor
   · rw [← coe_submodule_span]

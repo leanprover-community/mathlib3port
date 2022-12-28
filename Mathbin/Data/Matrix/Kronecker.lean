@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.kronecker
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,8 @@ theorem kronecker_map_smul_right [HasSmul R β] [HasSmul R γ] (f : α → β �
 
 theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [DecidableEq m] [DecidableEq n]
     (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
-    kroneckerMap f (diagonal a) (diagonal b) = diagonal fun mn => f (a mn.1) (b mn.2) := by
+    kroneckerMap f (diagonal a) (diagonal b) = diagonal fun mn => f (a mn.1) (b mn.2) :=
+  by
   ext (⟨i₁, i₂⟩⟨j₁, j₂⟩)
   simp [diagonal, apply_ite f, ite_and, ite_apply, apply_ite (f (a i₁)), hf₁, hf₂]
 #align matrix.kronecker_map_diagonal_diagonal Matrix.kronecker_map_diagonal_diagonal
@@ -140,7 +141,7 @@ theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃
     (ep : p ≃ p') (M : Matrix l m α) (N : Matrix n p β) :
     kroneckerMap f (reindex el em M) (reindex en ep N) =
       reindex (el.prodCongr en) (em.prodCongr ep) (kroneckerMap f M N) :=
-  by 
+  by
   ext (⟨i, i'⟩⟨j, j'⟩)
   rfl
 #align matrix.kronecker_map_reindex Matrix.kronecker_map_reindex
@@ -198,7 +199,7 @@ theorem kronecker_map_bilinear_mul_mul [CommSemiring R] [Fintype m] [Fintype m']
     (B : Matrix m n α) (A' : Matrix l' m' β) (B' : Matrix m' n' β) :
     kroneckerMapBilinear f (A ⬝ B) (A' ⬝ B') =
       kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' :=
-  by 
+  by
   ext (⟨i, i'⟩⟨j, j'⟩)
   simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ,
     Finset.sum_product, kronecker_map]

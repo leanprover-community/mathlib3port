@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.free_groupoid
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,12 +85,13 @@ instance {V} [Q : Quiver V] [h : Nonempty V] : Nonempty (FreeGroupoid V) :=
   ⟨⟨h.some⟩⟩
 
 theorem congr_reverse {X Y : paths <| Quiver.Symmetrify V} (p q : X ⟶ Y) :
-    Quotient.CompClosure redStep p q → Quotient.CompClosure redStep p.reverse q.reverse := by
+    Quotient.CompClosure redStep p q → Quotient.CompClosure redStep p.reverse q.reverse :=
+  by
   rintro ⟨XW, pp, qq, WY, _, Z, f⟩
   have :
     quotient.comp_closure red_step (WY.reverse ≫ 𝟙 _ ≫ XW.reverse)
       (WY.reverse ≫ (f.to_path ≫ (Quiver.reverse f).toPath) ≫ XW.reverse) :=
-    by 
+    by
     apply quotient.comp_closure.intro
     apply red_step.step
   simpa only [category_struct.comp, category_struct.id, Quiver.Path.reverse, Quiver.Path.nil_comp,
@@ -101,7 +102,7 @@ theorem congr_reverse {X Y : paths <| Quiver.Symmetrify V} (p q : X ⟶ Y) :
 theorem congr_comp_reverse {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (p ≫ p.reverse) =
       Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (𝟙 X) :=
-  by 
+  by
   apply Quot.EqvGen_sound
   induction' p with _ _ q f ih
   · apply EqvGen.refl
@@ -113,7 +114,7 @@ theorem congr_comp_reverse {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
       have :
         quotient.comp_closure red_step (q ≫ 𝟙 _ ≫ q.reverse)
           (q ≫ (f.to_path ≫ (Quiver.reverse f).toPath) ≫ q.reverse) :=
-        by 
+        by
         apply quotient.comp_closure.intro
         apply red_step.step
       have that : q.cons f = q.comp f.to_path := by rfl
@@ -128,7 +129,7 @@ theorem congr_comp_reverse {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
 theorem congr_reverse_comp {X Y : paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (p.reverse ≫ p) =
       Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (𝟙 Y) :=
-  by 
+  by
   nth_rw 2 [← Quiver.Path.reverse_reverse p]
   apply congr_comp_reverse
 #align
@@ -143,15 +144,15 @@ def quotInv {X Y : FreeGroupoid V} (f : X ⟶ Y) : Y ⟶ X :=
     Quot.sound <| congr_reverse pp qq con
 #align category_theory.groupoid.free.quot_inv CategoryTheory.Groupoid.Free.quotInv
 
-instance : Groupoid (FreeGroupoid
-        V) where 
+instance : Groupoid (FreeGroupoid V)
+    where
   inv X Y f := quotInv f
   inv_comp' X Y p := (Quot.induction_on p) fun pp => congr_reverse_comp pp
   comp_inv' X Y p := (Quot.induction_on p) fun pp => congr_comp_reverse pp
 
 /-- The inclusion of the quiver on `V` to the underlying quiver on `free_groupoid V`-/
-def of (V) [Quiver V] : V ⥤q FreeGroupoid
-        V where 
+def of (V) [Quiver V] : V ⥤q FreeGroupoid V
+    where
   obj X := ⟨X⟩
   map X Y f := Quot.mk _ f.toPosPath
 #align category_theory.groupoid.free.of CategoryTheory.Groupoid.Free.of
@@ -159,7 +160,7 @@ def of (V) [Quiver V] : V ⥤q FreeGroupoid
 theorem of_eq :
     of V =
       (Quiver.Symmetrify.of ⋙q paths.of).comp (quotient.functor <| @redStep V _).toPrefunctor :=
-  by 
+  by
   apply Prefunctor.ext; rotate_left
   · rintro X
     rfl
@@ -174,7 +175,7 @@ variable {V' : Type u'} [Groupoid V'] (φ : V ⥤q V')
 /-- The lift of a prefunctor to a groupoid, to a functor from `free_groupoid V` -/
 def lift (φ : V ⥤q V') : FreeGroupoid V ⥤ V' :=
   Quotient.lift _ (paths.lift <| Quiver.Symmetrify.lift φ)
-    (by 
+    (by
       rintro _ _ _ _ ⟨X, Y, f⟩
       simp only [Quiver.Symmetrify.lift_reverse, paths.lift_nil, Quiver.Path.comp_nil,
         paths.lift_cons, paths.lift_to_path]
@@ -182,14 +183,15 @@ def lift (φ : V ⥤q V') : FreeGroupoid V ⥤ V' :=
       apply groupoid.comp_inv)
 #align category_theory.groupoid.free.lift CategoryTheory.Groupoid.Free.lift
 
-theorem lift_spec (φ : V ⥤q V') : (of V ⋙q (lift φ).toPrefunctor) = φ := by
+theorem lift_spec (φ : V ⥤q V') : (of V ⋙q (lift φ).toPrefunctor) = φ :=
+  by
   rw [of_eq, Prefunctor.comp_assoc, Prefunctor.comp_assoc, functor.to_prefunctor_comp]
   dsimp [lift]
   rw [quotient.lift_spec, paths.lift_spec, Quiver.Symmetrify.lift_spec]
 #align category_theory.groupoid.free.lift_spec CategoryTheory.Groupoid.Free.lift_spec
 
 theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : (of V ⋙q Φ.toPrefunctor) = φ) :
-    Φ = lift φ := by 
+    Φ = lift φ := by
   apply quotient.lift_unique
   apply paths.lift_unique
   fapply @Quiver.Symmetrify.lift_unique _ _ _ _ _ _ _ _ _
@@ -217,14 +219,16 @@ def CategoryTheory.freeGroupoidFunctor (φ : V ⥤q V') : FreeGroupoid V ⥤ Fre
 #align category_theory.free_groupoid_functor CategoryTheory.freeGroupoidFunctor
 
 theorem free_groupoid_functor_id :
-    freeGroupoidFunctor (Prefunctor.id V) = Functor.id (FreeGroupoid V) := by
+    freeGroupoidFunctor (Prefunctor.id V) = Functor.id (FreeGroupoid V) :=
+  by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
 #align
   category_theory.groupoid.free.free_groupoid_functor_id CategoryTheory.Groupoid.Free.free_groupoid_functor_id
 
 theorem free_groupoid_functor_comp (φ : V ⥤q V') (φ' : V' ⥤q V'') :
-    freeGroupoidFunctor (φ ⋙q φ') = freeGroupoidFunctor φ ⋙ freeGroupoidFunctor φ' := by
+    freeGroupoidFunctor (φ ⋙q φ') = freeGroupoidFunctor φ ⋙ freeGroupoidFunctor φ' :=
+  by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
 #align

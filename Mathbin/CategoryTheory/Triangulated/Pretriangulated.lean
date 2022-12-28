@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.pretriangulated
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,8 @@ theorem inv_rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.invRotate �
 the composition `f ≫ g = 0`.
 See <https://stacks.math.columbia.edu/tag/0146>
 -/
-theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mor₁ ≫ T.mor₂ = 0 := by
+theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mor₁ ≫ T.mor₂ = 0 :=
+  by
   obtain ⟨c, hc⟩ :=
     complete_distinguished_triangle_morphism _ _ (contractible_distinguished T.obj₁) H (𝟙 T.obj₁)
       T.mor₁ rfl
@@ -156,7 +157,8 @@ the composition `h ≫ f⟦1⟧ = 0`.
 See <https://stacks.math.columbia.edu/tag/0146>
 -/
 theorem comp_dist_triangle_mor_zero₃₁ (T) (_ : T ∈ (dist_triang C)) :
-    T.mor₃ ≫ (shiftEquiv C 1).Functor.map T.mor₁ = 0 := by
+    T.mor₃ ≫ (shiftEquiv C 1).Functor.map T.mor₁ = 0 :=
+  by
   have H₂ := rot_of_dist_triangle C T.rotate (rot_of_dist_triangle C T H)
   simpa using comp_dist_triangle_mor_zero₁₂ C T.rotate.rotate H₂
 #align
@@ -180,7 +182,7 @@ structure TriangulatedFunctorStruct extends C ⥤ D where
 namespace TriangulatedFunctorStruct
 
 /-- The identity `triangulated_functor_struct`. -/
-def id : TriangulatedFunctorStruct C C where 
+def id : TriangulatedFunctorStruct C C where
   obj X := X
   map _ _ f := f
   commShift := by rfl
@@ -196,22 +198,20 @@ variable {C D}
 triangles of `D`.
 -/
 @[simps]
-def mapTriangle (F : TriangulatedFunctorStruct C D) :
-    Triangle C ⥤
-      Triangle
-        D where 
+def mapTriangle (F : TriangulatedFunctorStruct C D) : Triangle C ⥤ Triangle D
+    where
   obj T := Triangle.mk (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
   map S T f :=
     { hom₁ := F.map f.hom₁
       hom₂ := F.map f.hom₂
       hom₃ := F.map f.hom₃
-      comm₁' := by 
+      comm₁' := by
         dsimp
         simp only [← F.to_functor.map_comp, f.comm₁]
-      comm₂' := by 
+      comm₂' := by
         dsimp
         simp only [← F.to_functor.map_comp, f.comm₂]
-      comm₃' := by 
+      comm₃' := by
         dsimp
         erw [category.assoc, ← F.comm_shift.hom.naturality]
         simp only [functor.comp_map, ← F.to_functor.map_comp_assoc, f.comm₃] }
@@ -241,7 +241,7 @@ instance : Inhabited (TriangulatedFunctor C C) :=
   ⟨{  obj := fun X => X
       map := fun _ _ f => f
       commShift := by rfl
-      map_distinguished' := by 
+      map_distinguished' := by
         rintro ⟨_, _, _, _⟩ Tdt
         dsimp at *
         rwa [category.comp_id] }⟩

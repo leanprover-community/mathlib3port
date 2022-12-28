@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module geometry.euclidean.sphere
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,10 +62,12 @@ which are used to deduce corresponding results for Euclidean affine spaces.
 
 
 theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧ x + y = k • (x - y))
-    (h₂ : ‖z - y‖ = ‖z + y‖) : ‖x - y‖ * ‖x + y‖ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| := by
+    (h₂ : ‖z - y‖ = ‖z + y‖) : ‖x - y‖ * ‖x + y‖ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| :=
+  by
   obtain ⟨k, hk_ne_one, hk⟩ := h₁
   let r := (k - 1)⁻¹ * (k + 1)
-  have hxy : x = r • y := by
+  have hxy : x = r • y :=
+    by
     rw [← smul_smul, eq_inv_smul_iff₀ (sub_ne_zero.mpr hk_ne_one), ← sub_eq_zero]
     calc
       (k - 1) • x - (k + 1) • y = k • x - x - (k • y + y) := by
@@ -111,7 +113,8 @@ include V
 /-- If `P` is a point on the line `AB` and `Q` is equidistant from `A` and `B`, then
 `AP * BP = abs (BQ ^ 2 - PQ ^ 2)`. -/
 theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧ b -ᵥ p = k • (a -ᵥ p))
-    (hq : dist a q = dist b q) : dist a p * dist b p = |dist b q ^ 2 - dist p q ^ 2| := by
+    (hq : dist a q = dist b q) : dist a p * dist b p = |dist b q ^ 2 - dist p q ^ 2| :=
+  by
   let m : P := midpoint ℝ a b
   obtain ⟨v, h1, h2, h3⟩ := vsub_sub_vsub_cancel_left, v a p m, v p q m, v a q m
   have h : ∀ r, b -ᵥ r = m -ᵥ r + (m -ᵥ a) := fun r => by
@@ -128,7 +131,8 @@ theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧
 theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a, b, c, d} : Set P))
     (hapb : ∃ k₁ : ℝ, k₁ ≠ 1 ∧ b -ᵥ p = k₁ • (a -ᵥ p))
     (hcpd : ∃ k₂ : ℝ, k₂ ≠ 1 ∧ d -ᵥ p = k₂ • (c -ᵥ p)) :
-    dist a p * dist b p = dist c p * dist d p := by
+    dist a p * dist b p = dist c p * dist d p :=
+  by
   obtain ⟨q, r, h'⟩ := (cospherical_def {a, b, c, d}).mp h
   obtain ⟨ha, hb, hc, hd⟩ := h' a _, h' b _, h' c _, h' d _
   · rw [← hd] at hc
@@ -141,7 +145,8 @@ theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a
 /-- **Intersecting Chords Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hapb : ∠ a p b = π) (hcpd : ∠ c p d = π) :
-    dist a p * dist b p = dist c p * dist d p := by
+    dist a p * dist b p = dist c p * dist d p :=
+  by
   obtain ⟨-, k₁, _, hab⟩ := angle_eq_pi_iff.mp hapb
   obtain ⟨-, k₂, _, hcd⟩ := angle_eq_pi_iff.mp hcpd
   exact mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, by linarith, hab⟩ ⟨k₂, by linarith, hcd⟩
@@ -151,7 +156,8 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
 /-- **Intersecting Secants Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hab : a ≠ b) (hcd : c ≠ d) (hapb : ∠ a p b = 0)
-    (hcpd : ∠ c p d = 0) : dist a p * dist b p = dist c p * dist d p := by
+    (hcpd : ∠ c p d = 0) : dist a p * dist b p = dist c p * dist d p :=
+  by
   obtain ⟨-, k₁, -, hab₁⟩ := angle_eq_zero_iff.mp hapb
   obtain ⟨-, k₂, -, hcd₁⟩ := angle_eq_zero_iff.mp hcpd
   refine' mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, _, hab₁⟩ ⟨k₂, _, hcd₁⟩ <;> by_contra hnot <;>
@@ -163,15 +169,18 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P}
 /-- **Ptolemy’s Theorem**. -/
 theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hapc : ∠ a p c = π) (hbpd : ∠ b p d = π) :
-    dist a b * dist c d + dist b c * dist d a = dist a c * dist b d := by
+    dist a b * dist c d + dist b c * dist d a = dist a c * dist b d :=
+  by
   have h' : cospherical ({a, c, b, d} : Set P) := by rwa [Set.insert_comm c b {d}]
   have hmul := mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi h' hapc hbpd
   have hbp := left_dist_ne_zero_of_angle_eq_pi hbpd
-  have h₁ : dist c d = dist c p / dist b p * dist a b := by
+  have h₁ : dist c d = dist c p / dist b p * dist a b :=
+    by
     rw [dist_mul_of_eq_angle_of_dist_mul b p a c p d, dist_comm a b]
     · rw [angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi hbpd hapc, angle_comm]
     all_goals field_simp [mul_comm, hmul]
-  have h₂ : dist d a = dist a p / dist b p * dist b c := by
+  have h₂ : dist d a = dist a p / dist b p * dist b c :=
+    by
     rw [dist_mul_of_eq_angle_of_dist_mul c p b d p a, dist_comm c b]
     · rwa [angle_comm, angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi]
       rwa [angle_comm]

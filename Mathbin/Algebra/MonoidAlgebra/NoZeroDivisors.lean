@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.no_zero_divisors
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ as a product of monomials in the supports of `f` and `g` is a product. -/
 theorem mul_apply_add_eq_mul_of_forall_ne [Add A] {f g : AddMonoidAlgebra R A} {a0 b0 : A}
     (h : ∀ {a b : A}, a ∈ f.support → b ∈ g.support → a ≠ a0 ∨ b ≠ b0 → a + b ≠ a0 + b0) :
     (f * g) (a0 + b0) = f a0 * g b0 := by
-  classical 
+  classical
     rw [mul_apply]
     refine' (Finset.sum_eq_single a0 _ _).trans _
     · exact fun b H hb => Finset.sum_eq_zero fun x H1 => if_neg (h H H1 (Or.inl hb))
@@ -91,7 +91,7 @@ theorem Right.exists_add_of_mem_support_single_mul [AddRightCancelSemigroup A]
 cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-divisors. -/
 theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigroup A]
     [LinearOrder A] [CovariantClass A A (· + ·) (· < ·)] : NoZeroDivisors (AddMonoidAlgebra R A) :=
-  ⟨fun f g fg => by 
+  ⟨fun f g fg => by
     contrapose! fg
     let gmin : A := g.support.min' (support_nonempty_iff.mpr fg.2)
     refine' support_nonempty_iff.mp _
@@ -131,7 +131,7 @@ cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-d
 theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigroup A]
     [LinearOrder A] [CovariantClass A A (Function.swap (· + ·)) (· < ·)] :
     NoZeroDivisors (AddMonoidAlgebra R A) :=
-  ⟨fun f g fg => by 
+  ⟨fun f g fg => by
     contrapose! fg
     let fmin : A := f.support.min' (support_nonempty_iff.mpr fg.1)
     refine' support_nonempty_iff.mp _

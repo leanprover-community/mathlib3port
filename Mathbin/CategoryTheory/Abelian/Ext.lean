@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.abelian.ext
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,14 +46,14 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
   Functor.flip
     { obj := fun Y => (((linearYoneda R C).obj Y).rightOp.leftDerived n).leftOp
       map := fun Y Y' f => (NatTrans.leftDerived ((linearYoneda R C).map f).rightOp n).leftOp
-      map_id' := by 
+      map_id' := by
         intro X
         ext Y : 2
         dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app,
           functor.left_op_obj, functor.right_op_obj]
         rw [(linear_yoneda R C).map_id, ← unop_id, nat_trans.right_op_id, nat_trans.left_derived_id]
         rfl
-      map_comp' := by 
+      map_comp' := by
         intro X Y Z f g
         rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
         rfl }
@@ -68,7 +68,7 @@ def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) :
   E ≪≫
     { hom := 0
       inv := 0
-      hom_inv_id' := by 
+      hom_inv_id' := by
         let Z : (ModuleCat R)ᵒᵖ := 0
         rw [← (0 : 0 ⟶ Z.unop).unop_op, ← (0 : Z.unop ⟶ 0).unop_op, ← unop_id, ← unop_comp]
         congr 1

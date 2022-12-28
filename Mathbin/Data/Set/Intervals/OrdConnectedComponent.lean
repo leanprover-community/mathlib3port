@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected_component
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,8 @@ theorem mem_ord_connected_component : y ∈ ordConnectedComponent s x ↔ [x, y]
 theorem dual_ord_connected_component :
     ordConnectedComponent (of_dual ⁻¹' s) (toDual x) = of_dual ⁻¹' ordConnectedComponent s x :=
   ext <|
-    toDual.Surjective.forall.2 fun x => by
+    toDual.Surjective.forall.2 fun x =>
+      by
       rw [mem_ord_connected_component, dual_interval]
       rfl
 #align set.dual_ord_connected_component Set.dual_ord_connected_component
@@ -134,7 +135,8 @@ theorem ord_connected_component_ord_connected_proj (s : Set α) (x : s) :
 
 @[simp]
 theorem ord_connected_proj_eq {x y : s} :
-    ordConnectedProj s x = ordConnectedProj s y ↔ [(x : α), y] ⊆ s := by
+    ordConnectedProj s x = ordConnectedProj s y ↔ [(x : α), y] ⊆ s :=
+  by
   constructor <;> intro h
   · rw [← mem_ord_connected_component, ← ord_connected_component_ord_connected_proj, h,
       ord_connected_component_ord_connected_proj, self_mem_ord_connected_component]
@@ -151,7 +153,8 @@ def ordConnectedSection (s : Set α) : Set α :=
 #align set.ord_connected_section Set.ordConnectedSection
 
 theorem dual_ord_connected_section (s : Set α) :
-    ordConnectedSection (of_dual ⁻¹' s) = of_dual ⁻¹' ordConnectedSection s := by
+    ordConnectedSection (of_dual ⁻¹' s) = of_dual ⁻¹' ordConnectedSection s :=
+  by
   simp only [ord_connected_section, ord_connected_proj]
   congr 1 with x; simp only; congr 1
   exact dual_ord_connected_component
@@ -162,7 +165,8 @@ theorem ord_connected_section_subset : ordConnectedSection s ⊆ s :=
 #align set.ord_connected_section_subset Set.ord_connected_section_subset
 
 theorem eq_of_mem_ord_connected_section_of_interval_subset (hx : x ∈ ordConnectedSection s)
-    (hy : y ∈ ordConnectedSection s) (h : [x, y] ⊆ s) : x = y := by
+    (hy : y ∈ ordConnectedSection s) (h : [x, y] ⊆ s) : x = y :=
+  by
   rcases hx with ⟨x, rfl⟩; rcases hy with ⟨y, rfl⟩
   exact
     ord_connected_proj_eq.2
@@ -186,7 +190,7 @@ theorem ord_separating_set_comm (s t : Set α) : ordSeparatingSet s t = ordSepar
 
 theorem disjoint_left_ord_separating_set : Disjoint s (ordSeparatingSet s t) :=
   Disjoint.inter_right' _ <|
-    disjoint_Union₂_right.2 fun x hx =>
+    disjoint_unionᵢ₂_right.2 fun x hx =>
       disjoint_compl_right.mono_right <| ord_connected_component_subset
 #align set.disjoint_left_ord_separating_set Set.disjoint_left_ord_separating_set
 
@@ -205,7 +209,8 @@ def ordT5Nhd (s t : Set α) : Set α :=
   ⋃ x ∈ s, ordConnectedComponent (tᶜ ∩ (ord_connected_section <| ordSeparatingSet s t)ᶜ) x
 #align set.ord_t5_nhd Set.ordT5Nhd
 
-theorem disjoint_ord_t5_nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
+theorem disjoint_ord_t5_nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
+  by
   rw [disjoint_iff_inf_le]
   rintro x ⟨hx₁, hx₂⟩
   rcases mem_Union₂.1 hx₁ with ⟨a, has, ha⟩
@@ -218,7 +223,8 @@ theorem disjoint_ord_t5_nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
   exact fun h₁ h₂ h₃ h₄ => this h₂ h₁ h₄ h₃
   cases' ha with ha ha'
   cases' hb with hb hb'
-  have hsub : [a, b] ⊆ (ord_separating_set s t).ordConnectedSectionᶜ := by
+  have hsub : [a, b] ⊆ (ord_separating_set s t).ordConnectedSectionᶜ :=
+    by
     rw [ord_separating_set_comm, interval_swap] at hb'
     calc
       [a, b] ⊆ [a, x] ∪ [x, b] := interval_subset_interval_union_interval

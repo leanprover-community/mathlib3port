@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Chris Hughes, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.prod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ namespace Prod
 
 /-- Product of two distributive types is distributive. -/
 instance [Distrib R] [Distrib S] : Distrib (R × S) :=
-  { Prod.hasAdd, Prod.hasMul with
+  { Prod.hasAdd,
+    Prod.hasMul with
     left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩
     right_distrib := fun a b c => mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
 
@@ -295,7 +296,7 @@ variable (R S) [Subsingleton S]
 
 /-- A ring `R` is isomorphic to `R × S` when `S` is the zero ring -/
 @[simps]
-def prodZeroRing : R ≃+* R × S where 
+def prodZeroRing : R ≃+* R × S where
   toFun x := (x, 0)
   invFun := Prod.fst
   map_add' := by simp
@@ -306,7 +307,7 @@ def prodZeroRing : R ≃+* R × S where
 
 /-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps]
-def zeroRingProd : R ≃+* S × R where 
+def zeroRingProd : R ≃+* S × R where
   toFun x := (0, x)
   invFun := Prod.snd
   map_add' := by simp
@@ -319,7 +320,8 @@ end RingEquiv
 
 /-- The product of two nontrivial rings is not a domain -/
 theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ring R] [Ring S] [IsDomain (R × S)]
-    [Nontrivial R] [Nontrivial S] : False := by
+    [Nontrivial R] [Nontrivial S] : False :=
+  by
   have :=
     NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero (show ((0 : R), (1 : S)) * (1, 0) = 0 by simp)
   rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at this
@@ -332,7 +334,8 @@ theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ring R] [Ring S] [
 
 
 instance [OrderedSemiring α] [OrderedSemiring β] : OrderedSemiring (α × β) :=
-  { Prod.semiring, Prod.partialOrder _ _ with
+  { Prod.semiring,
+    Prod.partialOrder _ _ with
     add_le_add_left := fun _ _ => add_le_add_left
     zero_le_one := ⟨zero_le_one, zero_le_one⟩
     mul_le_mul_of_nonneg_left := fun a b c hab hc =>

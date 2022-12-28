@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.homology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ def cyclesIsoKernel {i j : ι} (r : c.Rel i j) : (C.cycles i : V) ≅ kernel (C.
   Subobject.isoOfEq _ _ (C.cycles_eq_kernel_subobject r) ≪≫ kernelSubobjectIso (C.d i j)
 #align homological_complex.cycles_iso_kernel HomologicalComplex.cyclesIsoKernel
 
-theorem cycles_eq_top {i} (h : ¬c.Rel i (c.next i)) : C.cycles i = ⊤ := by
+theorem cycles_eq_top {i} (h : ¬c.Rel i (c.next i)) : C.cycles i = ⊤ :=
+  by
   rw [eq_top_iff]
   apply le_kernel_subobject
   rw [C.d_from_eq_zero h, comp_zero]
@@ -94,7 +95,8 @@ def boundariesIsoImage [HasEqualizers V] {i j : ι} (r : c.Rel i j) :
   Subobject.isoOfEq _ _ (C.boundaries_eq_image_subobject r) ≪≫ imageSubobjectIso (C.d i j)
 #align homological_complex.boundaries_iso_image HomologicalComplex.boundariesIsoImage
 
-theorem boundaries_eq_bot [HasZeroObject V] {j} (h : ¬c.Rel (c.prev j) j) : C.boundaries j = ⊥ := by
+theorem boundaries_eq_bot [HasZeroObject V] {j} (h : ¬c.Rel (c.prev j) j) : C.boundaries j = ⊥ :=
+  by
   rw [eq_bot_iff]
   refine' image_subobject_le _ 0 _
   rw [C.d_to_eq_zero h, zero_comp]
@@ -218,14 +220,16 @@ theorem cycles_map_arrow (f : C₁ ⟶ C₂) (i : ι) :
 #align cycles_map_arrow cycles_map_arrow
 
 @[simp]
-theorem cycles_map_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ := by
+theorem cycles_map_id (i : ι) : cyclesMap (𝟙 C₁) i = 𝟙 _ :=
+  by
   dsimp only [cyclesMap]
   simp
 #align cycles_map_id cycles_map_id
 
 @[simp]
 theorem cycles_map_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) :
-    cyclesMap (f ≫ g) i = cyclesMap f i ≫ cyclesMap g i := by
+    cyclesMap (f ≫ g) i = cyclesMap f i ≫ cyclesMap g i :=
+  by
   dsimp only [cyclesMap]
   simp [subobject.factor_thru_right]
 #align cycles_map_comp cycles_map_comp
@@ -234,8 +238,8 @@ variable (V c)
 
 /-- Cycles as a functor. -/
 @[simps]
-def cyclesFunctor (i : ι) :
-    HomologicalComplex V c ⥤ V where 
+def cyclesFunctor (i : ι) : HomologicalComplex V c ⥤ V
+    where
   obj C := C.cycles i
   map C₁ C₂ f := cyclesMap f i
 #align cycles_functor cyclesFunctor
@@ -261,8 +265,8 @@ variable (V c)
 
 /-- Boundaries as a functor. -/
 @[simps]
-def boundariesFunctor (i : ι) :
-    HomologicalComplex V c ⥤ V where 
+def boundariesFunctor (i : ι) : HomologicalComplex V c ⥤ V
+    where
   obj C := C.boundaries i
   map C₁ C₂ f := imageSubobjectMap (f.sqTo i)
 #align boundaries_functor boundariesFunctor
@@ -280,7 +284,8 @@ variable {C₁ C₂ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 @[simp, reassoc.1]
 theorem boundaries_to_cycles_naturality (i : ι) :
-    boundariesMap f i ≫ C₂.boundariesToCycles i = C₁.boundariesToCycles i ≫ cyclesMap f i := by
+    boundariesMap f i ≫ C₂.boundariesToCycles i = C₁.boundariesToCycles i ≫ cyclesMap f i :=
+  by
   ext
   simp
 #align boundaries_to_cycles_naturality boundaries_to_cycles_naturality
@@ -289,28 +294,26 @@ variable (V c)
 
 /-- The natural transformation from the boundaries functor to the cycles functor. -/
 @[simps]
-def boundariesToCyclesNatTrans (i : ι) :
-    boundariesFunctor V c i ⟶
-      cyclesFunctor V c i where 
+def boundariesToCyclesNatTrans (i : ι) : boundariesFunctor V c i ⟶ cyclesFunctor V c i
+    where
   app C := C.boundariesToCycles i
   naturality' C₁ C₂ f := boundaries_to_cycles_naturality f i
 #align boundaries_to_cycles_nat_trans boundariesToCyclesNatTrans
 
 /-- The `i`-th homology, as a functor to `V`. -/
 @[simps]
-def homologyFunctor [HasCokernels V] (i : ι) :
-    HomologicalComplex V c ⥤
-      V where
+def homologyFunctor [HasCokernels V] (i : ι) : HomologicalComplex V c ⥤ V
+    where
   -- It would be nice if we could just write
   -- `cokernel (boundaries_to_cycles_nat_trans V c i)`
   -- here, but universe implementation details get in the way...
   obj C := C.homology i
   map C₁ C₂ f := homology.map _ _ (f.sqTo i) (f.sqFrom i) rfl
-  map_id' := by 
+  map_id' := by
     intros ; ext1
     simp only [homology.π_map, kernel_subobject_map_id, hom.sq_from_id, category.id_comp,
       category.comp_id]
-  map_comp' := by 
+  map_comp' := by
     intros ; ext1
     simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, homology.π_map,
       category.assoc]
@@ -318,16 +321,15 @@ def homologyFunctor [HasCokernels V] (i : ι) :
 
 /-- The homology functor from `ι`-indexed complexes to `ι`-graded objects in `V`. -/
 @[simps]
-def gradedHomologyFunctor [HasCokernels V] :
-    HomologicalComplex V c ⥤
-      GradedObject ι V where 
+def gradedHomologyFunctor [HasCokernels V] : HomologicalComplex V c ⥤ GradedObject ι V
+    where
   obj C i := C.homology i
   map C C' f i := (homologyFunctor V c i).map f
-  map_id' := by 
+  map_id' := by
     intros ; ext
     simp only [pi.id_apply, homology.π_map, homology_functor_map, kernel_subobject_map_id,
       hom.sq_from_id, category.id_comp, category.comp_id]
-  map_comp' := by 
+  map_comp' := by
     intros ; ext
     simp only [hom.sq_from_comp, kernel_subobject_map_comp, homology.π_map_assoc, pi.comp_apply,
       homology.π_map, homology_functor_map, category.assoc]

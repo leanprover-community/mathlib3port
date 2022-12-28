@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.Pointed
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,8 +82,8 @@ def comp {X Y Z : PointedCat.{u}} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
 
 end Hom
 
-instance largeCategory : LargeCategory
-      PointedCat where 
+instance largeCategory : LargeCategory PointedCat
+    where
   Hom := Hom
   id := Hom.id
   comp := @Hom.comp
@@ -92,9 +92,8 @@ instance largeCategory : LargeCategory
   assoc' _ _ _ _ _ _ _ := Hom.ext _ _ rfl
 #align Pointed.large_category PointedCat.largeCategory
 
-instance concreteCategory :
-    ConcreteCategory
-      PointedCat where 
+instance concreteCategory : ConcreteCategory PointedCat
+    where
   forget :=
     { obj := PointedCat.X
       map := @Hom.toFun }
@@ -104,8 +103,8 @@ instance concreteCategory :
 /-- Constructs a isomorphism between pointed types from an equivalence that preserves the point
 between them. -/
 @[simps]
-def Iso.mk {α β : PointedCat} (e : α ≃ β) (he : e α.point = β.point) :
-    α ≅ β where 
+def Iso.mk {α β : PointedCat} (e : α ≃ β) (he : e α.point = β.point) : α ≅ β
+    where
   Hom := ⟨e, he⟩
   inv := ⟨e.symm, e.symm_apply_eq.2 he.symm⟩
   hom_inv_id' := PointedCat.Hom.ext _ _ e.symm_comp_self
@@ -116,8 +115,8 @@ end PointedCat
 
 /-- `option` as a functor from types to pointed types. This is the free functor. -/
 @[simps]
-def typeToPointed : Type u ⥤
-      PointedCat.{u} where 
+def typeToPointed : Type u ⥤ PointedCat.{u}
+    where
   obj X := ⟨Option X, none⟩
   map X Y f := ⟨Option.map f, rfl⟩
   map_id' X := PointedCat.Hom.ext _ _ Option.map_id
@@ -130,13 +129,14 @@ def typeToPointedForgetAdjunction : typeToPointed ⊣ forget PointedCat :=
     { homEquiv := fun X Y =>
         { toFun := fun f => f.toFun ∘ Option.some
           invFun := fun f => ⟨fun o => o.elim Y.point f, rfl⟩
-          left_inv := fun f => by 
+          left_inv := fun f => by
             ext
             cases x
             exact f.map_point.symm
             rfl
           right_inv := fun f => funext fun _ => rfl }
-      hom_equiv_naturality_left_symm' := fun X' X Y f g => by
+      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+        by
         ext
         cases x <;> rfl }
 #align Type_to_Pointed_forget_adjunction typeToPointedForgetAdjunction

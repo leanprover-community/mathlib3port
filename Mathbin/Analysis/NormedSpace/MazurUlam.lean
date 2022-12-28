@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.mazur_ulam
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,13 +49,15 @@ include E
 then it fixes the midpoint of `[x, y]`. This is a lemma for a more general Mazur-Ulam theorem,
 see below. -/
 theorem midpoint_fixed {x y : PE} :
-    ∀ e : PE ≃ᵢ PE, e x = x → e y = y → e (midpoint ℝ x y) = midpoint ℝ x y := by
+    ∀ e : PE ≃ᵢ PE, e x = x → e y = y → e (midpoint ℝ x y) = midpoint ℝ x y :=
+  by
   set z := midpoint ℝ x y
   -- Consider the set of `e : E ≃ᵢ E` such that `e x = x` and `e y = y`
   set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
   haveI : Nonempty s := ⟨⟨Isometric.refl PE, rfl, rfl⟩⟩
   -- On the one hand, `e` cannot send the midpoint `z` of `[x, y]` too far
-  have h_bdd : BddAbove (range fun e : s => dist (e z) z) := by
+  have h_bdd : BddAbove (range fun e : s => dist (e z) z) :=
+    by
     refine' ⟨dist x z + dist x z, forall_range_iff.2 <| Subtype.forall.2 _⟩
     rintro e ⟨hx, hy⟩
     calc
@@ -69,18 +71,19 @@ theorem midpoint_fixed {x y : PE} :
   set R : PE ≃ᵢ PE := (point_reflection ℝ z).toIsometric
   set f : PE ≃ᵢ PE → PE ≃ᵢ PE := fun e => ((e.trans R).trans e.symm).trans R
   -- Note that `f` doubles the value of ``dist (e z) z`
-  have hf_dist : ∀ e, dist (f e z) z = 2 * dist (e z) z := by
+  have hf_dist : ∀ e, dist (f e z) z = 2 * dist (e z) z :=
+    by
     intro e
     dsimp [f]
     rw [dist_point_reflection_fixed, ← e.dist_eq, e.apply_symm_apply,
       dist_point_reflection_self_real, dist_comm]
   -- Also note that `f` maps `s` to itself
-  have hf_maps_to : maps_to f s s := by 
+  have hf_maps_to : maps_to f s s := by
     rintro e ⟨hx, hy⟩
     constructor <;> simp [hx, hy, e.symm_apply_eq.2 hx.symm, e.symm_apply_eq.2 hy.symm]
   -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
   set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z
-  have : c ≤ c / 2 := by 
+  have : c ≤ c / 2 := by
     apply csupr_le
     rintro ⟨e, he⟩
     simp only [Subtype.coe_mk, le_div_iff' (zero_lt_two' ℝ), ← hf_dist]
@@ -94,7 +97,8 @@ theorem midpoint_fixed {x y : PE} :
 include F
 
 /-- A bijective isometry sends midpoints to midpoints. -/
-theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midpoint ℝ (f x) (f y) := by
+theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midpoint ℝ (f x) (f y) :=
+  by
   set e : PE ≃ᵢ PE :=
     ((f.trans <| (point_reflection ℝ <| midpoint ℝ (f x) (f y)).toIsometric).trans f.symm).trans
       (point_reflection ℝ <| midpoint ℝ x y).toIsometric
@@ -169,7 +173,8 @@ theorem coe_fn_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : ⇑f.toRealAff
 
 @[simp]
 theorem coe_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) :
-    f.toRealAffineIsometryEquiv.toIsometric = f := by
+    f.toRealAffineIsometryEquiv.toIsometric = f :=
+  by
   ext
   rfl
 #align isometric.coe_to_real_affine_isometry_equiv Isometric.coe_to_real_affine_isometry_equiv

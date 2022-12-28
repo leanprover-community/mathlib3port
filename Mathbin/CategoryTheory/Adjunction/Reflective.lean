@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.reflective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ More generally this applies to objects essentially in the reflective subcategory
 instance is_iso_unit_obj [Reflective i] {B : D} : IsIso ((ofRightAdjoint i).Unit.app (i.obj B)) :=
   by
   have :
-    (of_right_adjoint i).Unit.app (i.obj B) = inv (i.map ((of_right_adjoint i).counit.app B)) := by
+    (of_right_adjoint i).Unit.app (i.obj B) = inv (i.map ((of_right_adjoint i).counit.app B)) :=
+    by
     rw [← comp_hom_eq_id]
     apply (of_right_adjoint i).right_triangle_components
   rw [this]
@@ -77,12 +78,13 @@ reflection of `A`, with the isomorphism as `η_A`.
 (For any `B` in the reflective subcategory, we automatically have that `ε_B` is an iso.)
 -/
 theorem Functor.essImage.unit_is_iso [Reflective i] {A : C} (h : A ∈ i.essImage) :
-    IsIso ((ofRightAdjoint i).Unit.app A) := by
+    IsIso ((ofRightAdjoint i).Unit.app A) :=
+  by
   suffices
     (of_right_adjoint i).Unit.app A =
       h.get_iso.inv ≫
         (of_right_adjoint i).Unit.app (i.obj h.witness) ≫ (left_adjoint i ⋙ i).map h.get_iso.hom
-    by 
+    by
     rw [this]
     infer_instance
   rw [← nat_trans.naturality]
@@ -97,10 +99,11 @@ theorem mem_ess_image_of_unit_is_iso [IsRightAdjoint i] (A : C)
 
 /-- If `η_A` is a split monomorphism, then `A` is in the reflective subcategory. -/
 theorem mem_ess_image_of_unit_is_split_mono [Reflective i] {A : C}
-    [IsSplitMono ((ofRightAdjoint i).Unit.app A)] : A ∈ i.essImage := by
+    [IsSplitMono ((ofRightAdjoint i).Unit.app A)] : A ∈ i.essImage :=
+  by
   let η : 𝟭 C ⟶ left_adjoint i ⋙ i := (of_right_adjoint i).Unit
   haveI : is_iso (η.app (i.obj ((left_adjoint i).obj A))) := (i.obj_mem_ess_image _).unit_is_iso
-  have : epi (η.app A) := by 
+  have : epi (η.app A) := by
     apply epi_of_epi (retraction (η.app A)) _
     rw [show retraction _ ≫ η.app A = _ from η.naturality (retraction (η.app A))]
     apply epi_comp (η.app (i.obj ((left_adjoint i).obj A)))
@@ -173,25 +176,25 @@ theorem unit_comp_partial_bijective_natural [Reflective i] (A : C) {B B' : C} (h
 /-- If `i : D ⥤ C` is reflective, the inverse functor of `i ≌ F.ess_image` can be explicitly
 defined by the reflector. -/
 @[simps]
-def equivEssImageOfReflective [Reflective i] :
-    D ≌ i.EssImageSubcategory where 
+def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory
+    where
   Functor := i.toEssImage
   inverse := i.essImageInclusion ⋙ (leftAdjoint i : _)
   unitIso :=
     NatIso.ofComponents (fun X => (as_iso <| (ofRightAdjoint i).counit.app X).symm)
-      (by 
+      (by
         intro X Y f
         dsimp
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
         exact ((of_right_adjoint i).counit.naturality _).symm)
   counitIso :=
     NatIso.ofComponents
-      (fun X => by 
+      (fun X => by
         refine' iso.symm <| as_iso _
         exact (of_right_adjoint i).Unit.app X.obj
         apply (config := { instances := false }) is_iso_of_reflects_iso _ i.ess_image_inclusion
         exact functor.ess_image.unit_is_iso X.property)
-      (by 
+      (by
         intro X Y f
         dsimp
         rw [is_iso.comp_inv_eq, assoc]

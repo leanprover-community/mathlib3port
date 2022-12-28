@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.monad.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,8 +102,8 @@ Case conversion may be inaccurate. Consider using '#align state_t.equiv StateT.e
 their respective function spaces -/
 def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ σ₁ : Type u₀}
     {α₂ σ₂ : Type u₁} (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) :
-    StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂
-        α₂ where 
+    StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂ α₂
+    where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.left_inv _
@@ -119,9 +119,8 @@ Case conversion may be inaccurate. Consider using '#align reader_t.equiv ReaderT
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
 def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ρ₁ : Type u₀}
-    {α₂ ρ₂ : Type u₁} (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) :
-    ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂
-        α₂ where 
+    {α₂ ρ₂ : Type u₁} (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂ α₂
+    where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.left_inv _

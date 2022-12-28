@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,8 @@ theorem inv_apply [Inv Y] (f : LocallyConstant X Y) (x : X) : f⁻¹ x = (f x)�
 #align locally_constant.inv_apply LocallyConstant.inv_apply
 
 @[to_additive]
-instance [Mul Y] :
-    Mul (LocallyConstant X Y) where mul f g := ⟨f * g, f.IsLocallyConstant.mul g.IsLocallyConstant⟩
+instance [Mul Y] : Mul (LocallyConstant X Y)
+    where mul f g := ⟨f * g, f.IsLocallyConstant.mul g.IsLocallyConstant⟩
 
 @[simp, to_additive]
 theorem coe_mul [Mul Y] (f g : LocallyConstant X Y) : ⇑(f * g) = f * g :=
@@ -66,20 +66,21 @@ theorem mul_apply [Mul Y] (f g : LocallyConstant X Y) (x : X) : (f * g) x = f x 
 
 @[to_additive]
 instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
-  { LocallyConstant.hasOne, LocallyConstant.hasMul with
-    one_mul := by 
+  { LocallyConstant.hasOne,
+    LocallyConstant.hasMul with
+    one_mul := by
       intros
       ext
       simp only [mul_apply, one_apply, one_mul]
-    mul_one := by 
+    mul_one := by
       intros
       ext
       simp only [mul_apply, one_apply, mul_one] }
 
 /-- `coe_fn` is a `monoid_hom`. -/
 @[to_additive "`coe_fn` is an `add_monoid_hom`.", simps]
-def coeFnMonoidHom [MulOneClass Y] :
-    LocallyConstant X Y →* X → Y where 
+def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y
+    where
   toFun := coeFn
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -87,20 +88,21 @@ def coeFnMonoidHom [MulOneClass Y] :
 
 /-- The constant-function embedding, as a multiplicative monoid hom. -/
 @[to_additive "The constant-function embedding, as an additive monoid hom.", simps]
-def constMonoidHom [MulOneClass Y] :
-    Y →* LocallyConstant X Y where 
+def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y
+    where
   toFun := const X
   map_one' := rfl
   map_mul' _ _ := rfl
 #align locally_constant.const_monoid_hom LocallyConstant.constMonoidHom
 
 instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
-  { LocallyConstant.hasZero, LocallyConstant.hasMul with
-    zero_mul := by 
+  { LocallyConstant.hasZero,
+    LocallyConstant.hasMul with
+    zero_mul := by
       intros
       ext
       simp only [mul_apply, zero_apply, zero_mul]
-    mul_zero := by 
+    mul_zero := by
       intros
       ext
       simp only [mul_apply, zero_apply, mul_zero] }
@@ -139,8 +141,8 @@ theorem char_fn_inj [Nontrivial Y] (hU : IsClopen U) (hV : IsClopen V)
 end CharFn
 
 @[to_additive]
-instance [Div Y] :
-    Div (LocallyConstant X Y) where div f g := ⟨f / g, f.IsLocallyConstant.div g.IsLocallyConstant⟩
+instance [Div Y] : Div (LocallyConstant X Y)
+    where div f g := ⟨f / g, f.IsLocallyConstant.div g.IsLocallyConstant⟩
 
 @[to_additive]
 theorem coe_div [Div Y] (f g : LocallyConstant X Y) : ⇑(f / g) = f / g :=
@@ -155,7 +157,7 @@ theorem div_apply [Div Y] (f g : LocallyConstant X Y) (x : X) : (f / g) x = f x 
 @[to_additive]
 instance [Semigroup Y] : Semigroup (LocallyConstant X Y) :=
   { LocallyConstant.hasMul with
-    mul_assoc := by 
+    mul_assoc := by
       intros
       ext
       simp only [mul_apply, mul_assoc] }
@@ -166,7 +168,7 @@ instance [SemigroupWithZero Y] : SemigroupWithZero (LocallyConstant X Y) :=
 @[to_additive]
 instance [CommSemigroup Y] : CommSemigroup (LocallyConstant X Y) :=
   { LocallyConstant.semigroup with
-    mul_comm := by 
+    mul_comm := by
       intros
       ext
       simp only [mul_apply, mul_comm] }
@@ -176,7 +178,8 @@ instance [Monoid Y] : Monoid (LocallyConstant X Y) :=
   { LocallyConstant.semigroup, LocallyConstant.mulOneClass with mul := (· * ·) }
 
 instance [AddMonoidWithOne Y] : AddMonoidWithOne (LocallyConstant X Y) :=
-  { LocallyConstant.addMonoid, LocallyConstant.hasOne with
+  { LocallyConstant.addMonoid,
+    LocallyConstant.hasOne with
     natCast := fun n => const X n
     nat_cast_zero := by ext <;> simp [Nat.cast]
     nat_cast_succ := fun _ => by ext <;> simp [Nat.cast] }
@@ -187,12 +190,13 @@ instance [CommMonoid Y] : CommMonoid (LocallyConstant X Y) :=
 
 @[to_additive]
 instance [Group Y] : Group (LocallyConstant X Y) :=
-  { LocallyConstant.monoid, LocallyConstant.hasInv, LocallyConstant.hasDiv with
-    mul_left_inv := by 
+  { LocallyConstant.monoid, LocallyConstant.hasInv,
+    LocallyConstant.hasDiv with
+    mul_left_inv := by
       intros
       ext
       simp only [mul_apply, inv_apply, one_apply, mul_left_inv]
-    div_eq_mul_inv := by 
+    div_eq_mul_inv := by
       intros
       ext
       simp only [mul_apply, inv_apply, div_apply, div_eq_mul_inv] }
@@ -202,12 +206,13 @@ instance [CommGroup Y] : CommGroup (LocallyConstant X Y) :=
   { LocallyConstant.commMonoid, LocallyConstant.group with }
 
 instance [Distrib Y] : Distrib (LocallyConstant X Y) :=
-  { LocallyConstant.hasAdd, LocallyConstant.hasMul with
-    left_distrib := by 
+  { LocallyConstant.hasAdd,
+    LocallyConstant.hasMul with
+    left_distrib := by
       intros
       ext
       simp only [mul_apply, add_apply, mul_add]
-    right_distrib := by 
+    right_distrib := by
       intros
       ext
       simp only [mul_apply, add_apply, add_mul] }
@@ -259,9 +264,8 @@ instance [CommRing Y] : CommRing (LocallyConstant X Y) :=
 
 variable {R : Type _}
 
-instance [HasSmul R Y] :
-    HasSmul R (LocallyConstant X
-        Y) where smul r f :=
+instance [HasSmul R Y] : HasSmul R (LocallyConstant X Y)
+    where smul r f :=
     { toFun := r • f
       IsLocallyConstant := ((is_locally_constant f).comp ((· • ·) r) : _) }
 
@@ -288,16 +292,14 @@ section Algebra
 
 variable [CommSemiring R] [Semiring Y] [Algebra R Y]
 
-instance :
-    Algebra R
-      (LocallyConstant X
-        Y) where 
+instance : Algebra R (LocallyConstant X Y)
+    where
   toRingHom := constRingHom.comp <| algebraMap R Y
-  commutes' := by 
+  commutes' := by
     intros
     ext
     exact Algebra.commutes' _ _
-  smul_def' := by 
+  smul_def' := by
     intros
     ext
     exact Algebra.smul_def' _ _

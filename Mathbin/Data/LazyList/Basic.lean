@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.lazy_list.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ def mk {α} (x : α) : Thunk α := fun _ => x
 #align thunk.mk Thunkₓ.mk
 
 instance {α : Type u} [DecidableEq α] : DecidableEq (Thunk α)
-  | a, b => by
+  | a, b =>
+    by
     have : a = b ↔ a () = b () := ⟨by cc, by intro <;> ext x <;> cases x <;> assumption⟩
     rw [this] <;> infer_instance
 
@@ -41,11 +42,11 @@ namespace LazyList
 open Function
 
 /-- Isomorphism between strict and lazy lists. -/
-def listEquivLazyList (α : Type _) :
-    List α ≃ LazyList α where 
+def listEquivLazyList (α : Type _) : List α ≃ LazyList α
+    where
   toFun := LazyList.ofList
   invFun := LazyList.toList
-  right_inv := by 
+  right_inv := by
     intro
     induction x
     rfl
@@ -53,7 +54,7 @@ def listEquivLazyList (α : Type _) :
     ext
     cases x
     rfl
-  left_inv := by 
+  left_inv := by
     intro
     induction x
     rfl
@@ -80,11 +81,13 @@ protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} 
   | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk.mk <$> traverse (xs ())
 #align lazy_list.traverse LazyList.traverse
 
-instance : Traversable LazyList where 
+instance : Traversable LazyList
+    where
   map := @LazyList.traverse id _
   traverse := @LazyList.traverse
 
-instance : IsLawfulTraversable LazyList := by
+instance : IsLawfulTraversable LazyList :=
+  by
   apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros <;> skip <;> ext
   · induction x
     rfl
@@ -153,11 +156,12 @@ def reverse {α} (xs : LazyList α) : LazyList α :=
   ofList xs.toList.reverse
 #align lazy_list.reverse LazyList.reverse
 
-instance : Monad LazyList where 
+instance : Monad LazyList where
   pure := @LazyList.singleton
   bind := @LazyList.bind
 
-theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs := by
+theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs :=
+  by
   induction xs; rfl
   simp [LazyList.append, xs_ih]
   ext; congr
@@ -172,17 +176,16 @@ theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : �
   induction xs <;> simp [LazyList.bind, append, *, append_assoc, append, LazyList.bind]
 #align lazy_list.append_bind LazyList.append_bind
 
-instance :
-    LawfulMonad
-      LazyList where 
-  pure_bind := by 
+instance : LawfulMonad LazyList
+    where
+  pure_bind := by
     intros
     apply append_nil
-  bind_assoc := by 
+  bind_assoc := by
     intros
     dsimp [(· >>= ·)]
     induction x <;> simp [LazyList.bind, append_bind, *]
-  id_map := by 
+  id_map := by
     intros
     simp [(· <$> ·)]
     induction x <;> simp [LazyList.bind, *, singleton, append]

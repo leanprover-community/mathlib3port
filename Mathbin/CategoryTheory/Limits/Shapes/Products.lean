@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.products
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,16 +65,16 @@ abbrev Cofan (f : β → C) :=
 
 /-- A fan over `f : β → C` consists of a collection of maps from an object `P` to every `f b`. -/
 @[simps]
-def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) :
-    Fan f where 
+def Fan.mk {f : β → C} (P : C) (p : ∀ b, P ⟶ f b) : Fan f
+    where
   x := P
   π := { app := fun X => p X.as }
 #align category_theory.limits.fan.mk CategoryTheory.Limits.Fan.mk
 
 /-- A cofan over `f : β → C` consists of a collection of maps from every `f b` to an object `P`. -/
 @[simps]
-def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) :
-    Cofan f where 
+def Cofan.mk {f : β → C} (P : C) (p : ∀ b, f b ⟶ P) : Cofan f
+    where
   x := P
   ι := { app := fun X => p X.as }
 #align category_theory.limits.cofan.mk CategoryTheory.Limits.Cofan.mk
@@ -189,7 +189,7 @@ abbrev Pi.map {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶
 instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Mono (p i)] : mono <| Pi.map p :=
   @Limits.lim_map_mono _ _ _ _ _
-    (by 
+    (by
       dsimp
       infer_instance)
 #align category_theory.limits.pi.map_mono CategoryTheory.Limits.Pi.map_mono
@@ -211,7 +211,7 @@ abbrev Sigma.map {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, 
 instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b)
     [∀ i, Epi (p i)] : epi <| Sigma.map p :=
   @Limits.colim_map_epi _ _ _ _ _
-    (by 
+    (by
       dsimp
       infer_instance)
 #align category_theory.limits.sigma.map_epi CategoryTheory.Limits.Sigma.map_epi
@@ -245,7 +245,8 @@ theorem pi_comparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 @[simp, reassoc.1]
 theorem map_lift_pi_comparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C)
-    (g : ∀ j, P ⟶ f j) : G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
+    (g : ∀ j, P ⟶ f j) : G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) :=
+  by
   ext
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
@@ -269,7 +270,8 @@ theorem ι_comp_sigma_comparison [HasCoproduct f] [HasCoproduct fun b => G.obj (
 @[simp, reassoc.1]
 theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C)
     (g : ∀ j, f j ⟶ P) :
-    sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by
+    sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) :=
+  by
   ext
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
@@ -307,7 +309,8 @@ theorem has_smallest_coproducts_of_has_coproducts [HasCoproducts.{w} C] : HasCop
 theorem has_products_of_limit_fans (lf : ∀ {J : Type w} (f : J → C), Fan f)
     (lf_is_limit : ∀ {J : Type w} (f : J → C), IsLimit (lf f)) : HasProducts.{w} C :=
   fun J : Type w =>
-  { HasLimit := fun F =>
+  {
+    HasLimit := fun F =>
       HasLimit.mk
         ⟨(Cones.postcompose Discrete.natIsoFunctor.inv).obj (lf fun j => F.obj ⟨j⟩),
           (IsLimit.postcomposeInvEquiv _ _).symm (lf_is_limit _)⟩ }
@@ -325,25 +328,25 @@ variable {C} [Unique β] (f : β → C)
 
 /-- The limit cone for the product over an index type with exactly one term. -/
 @[simps]
-def limitConeOfUnique :
-    LimitCone
-      (Discrete.functor
-        f) where 
+def limitConeOfUnique : LimitCone (Discrete.functor f)
+    where
   Cone :=
     { x := f default
       π :=
-        { app := fun j =>
+        {
+          app := fun j =>
             eqToHom
-              (by 
+              (by
                 dsimp
                 congr ) } }
   IsLimit :=
     { lift := fun s => s.π.app default
-      fac' := fun s j => by
+      fac' := fun s j =>
+        by
         have w := (s.π.naturality (eq_to_hom (Unique.default_eq _))).symm
         dsimp at w
         simpa [eq_to_hom_map] using w
-      uniq' := fun s m w => by 
+      uniq' := fun s m w => by
         specialize w default
         dsimp at w
         simpa using w }
@@ -362,14 +365,13 @@ def productUniqueIso : ∏ f ≅ f default :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
-def colimitCoconeOfUnique :
-    ColimitCocone
-      (Discrete.functor
-        f) where 
+def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f)
+    where
   Cocone :=
     { x := f default
       ι :=
-        { app := fun j =>
+        {
+          app := fun j =>
             eqToHom
               (by
                 trace
@@ -378,11 +380,12 @@ def colimitCoconeOfUnique :
                 congr ) } }
   IsColimit :=
     { desc := fun s => s.ι.app default
-      fac' := fun s j => by
+      fac' := fun s j =>
+        by
         have w := s.ι.naturality (eq_to_hom (Unique.eq_default _))
         dsimp at w
         simpa [eq_to_hom_map] using w
-      uniq' := fun s m w => by 
+      uniq' := fun s m w => by
         specialize w default
         dsimp at w
         simpa using w }
@@ -414,7 +417,8 @@ def Pi.reindex : piObj (f ∘ ε) ≅ piObj f :=
 #align category_theory.limits.pi.reindex CategoryTheory.Limits.Pi.reindex
 
 @[simp, reassoc.1]
-theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b := by
+theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b :=
+  by
   dsimp [pi.reindex]
   simp only [has_limit.iso_of_equivalence_hom_π, discrete.nat_iso_inv_app,
     equivalence.equivalence_mk'_counit, discrete.equivalence_counit_iso, discrete.nat_iso_hom_app,
@@ -442,7 +446,8 @@ def Sigma.reindex : sigmaObj (f ∘ ε) ≅ sigmaObj f :=
 
 @[simp, reassoc.1]
 theorem Sigma.ι_reindex_hom (b : β) :
-    Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).Hom = Sigma.ι f (ε b) := by
+    Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).Hom = Sigma.ι f (ε b) :=
+  by
   dsimp [sigma.reindex]
   simp only [has_colimit.iso_of_equivalence_hom_π, equivalence.equivalence_mk'_unit,
     discrete.equivalence_unit_iso, discrete.nat_iso_hom_app, eq_to_iso.hom, eq_to_hom_map,

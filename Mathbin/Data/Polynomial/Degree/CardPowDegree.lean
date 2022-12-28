@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.card_pow_degree
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,17 +46,17 @@ noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n =>
     pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.natDegree
-    nonneg' := fun p => by 
+    nonneg' := fun p => by
       dsimp
       split_ifs
       · rfl
       exact pow_nonneg (Int.ofNat_zero_le _) _
     eq_zero' := fun p =>
       ite_eq_left_iff.trans <|
-        ⟨fun h => by 
+        ⟨fun h => by
           contrapose! h
           exact ⟨h, (pow_pos _).ne'⟩, absurd⟩
-    add_le' := fun p q => by 
+    add_le' := fun p q => by
       by_cases hp : p = 0; · simp [hp]
       by_cases hq : q = 0; · simp [hq]
       by_cases hpq : p + q = 0
@@ -68,7 +68,7 @@ noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
         le_trans (le_max_iff.mpr _)
           (max_le_add_of_nonneg (pow_nonneg (by linarith) _) (pow_nonneg (by linarith) _))
       exact (max_choice p.nat_degree q.nat_degree).imp (fun h => by rw [h]) fun h => by rw [h]
-    map_mul' := fun p q => by 
+    map_mul' := fun p q => by
       by_cases hp : p = 0; · simp [hp]
       by_cases hq : q = 0; · simp [hq]
       have hpq : p * q ≠ 0 := mul_ne_zero hp hq
@@ -96,7 +96,9 @@ theorem card_pow_degree_is_euclidean : IsEuclidean (cardPowDegree : AbsoluteValu
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n =>
     pow_pos (Int.coe_nat_pos.mpr card_pos) n
-  { map_lt_map_iff' := fun p q => by
+  {
+    map_lt_map_iff' := fun p q =>
+      by
       simp only [EuclideanDomain.r, card_pow_degree_apply]
       split_ifs with hp hq hq
       · simp only [hp, hq, lt_self_iff_false]

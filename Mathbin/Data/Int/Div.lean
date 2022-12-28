@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.div
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,8 @@ but is expected to have type
   forall {a : Int} {b : Int} {c : Int} {d : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt b c) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c d)) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) c b) d))
 Case conversion may be inaccurate. Consider using '#align int.eq_mul_div_of_mul_eq_mul_of_dvd_left Int.eq_mul_div_of_mul_eq_mul_of_dvd_leftₓ'. -/
 theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc : b ∣ c)
-    (h : b * a = c * d) : a = c / b * d := by
+    (h : b * a = c * d) : a = c / b * d :=
+  by
   cases' hbc with k hk
   subst hk
   rw [Int.mul_ediv_cancel_left _ hb]
@@ -49,7 +50,7 @@ Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_dvd_of_
 /-- If an integer with larger absolute value divides an integer, it is
 zero. -/
 theorem eq_zero_of_dvd_of_natAbs_lt_natAbs {a b : ℤ} (w : a ∣ b) (h : natAbs b < natAbs a) :
-    b = 0 := by 
+    b = 0 := by
   rw [← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd] at w
   rw [← nat_abs_eq_zero]
   exact eq_zero_of_dvd_of_lt w h
@@ -76,7 +77,8 @@ theorem eq_of_mod_eq_of_natAbs_sub_lt_natAbs {a b c : ℤ} (h1 : a % b = c)
 
 #print Int.ofNat_add_negSucc_of_ge /-
 theorem ofNat_add_negSucc_of_ge {m n : ℕ} (h : n.succ ≤ m) :
-    ofNat m + -[n+1] = ofNat (m - n.succ) := by
+    ofNat m + -[n+1] = ofNat (m - n.succ) :=
+  by
   change sub_nat_nat _ _ = _
   have h' : n.succ - m = 0
   apply tsub_eq_zero_iff_le.mpr h

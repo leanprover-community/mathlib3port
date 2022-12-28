@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.generator
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ theorem Preadditive.is_coseparator_iff (G : C) :
 #align category_theory.preadditive.is_coseparator_iff CategoryTheory.Preadditive.is_coseparator_iff
 
 theorem is_separator_iff_faithful_preadditive_coyoneda (G : C) :
-    IsSeparator G ↔ Faithful (preadditiveCoyoneda.obj (op G)) := by
+    IsSeparator G ↔ Faithful (preadditiveCoyoneda.obj (op G)) :=
+  by
   rw [is_separator_iff_faithful_coyoneda_obj, ← whiskering_preadditive_coyoneda, functor.comp_obj,
     whiskering_right_obj_obj]
   exact ⟨fun h => faithful.of_comp _ (forget AddCommGroupCat), fun h => faithful.comp _ _⟩
@@ -64,14 +65,16 @@ theorem is_separator_iff_faithful_preadditive_coyoneda (G : C) :
   category_theory.is_separator_iff_faithful_preadditive_coyoneda CategoryTheory.is_separator_iff_faithful_preadditive_coyoneda
 
 theorem is_separator_iff_faithful_preadditive_coyoneda_obj (G : C) :
-    IsSeparator G ↔ Faithful (preadditiveCoyonedaObj (op G)) := by
+    IsSeparator G ↔ Faithful (preadditiveCoyonedaObj (op G)) :=
+  by
   rw [is_separator_iff_faithful_preadditive_coyoneda, preadditive_coyoneda_obj_2]
   exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGroupCat.{v}), fun h => faithful.comp _ _⟩
 #align
   category_theory.is_separator_iff_faithful_preadditive_coyoneda_obj CategoryTheory.is_separator_iff_faithful_preadditive_coyoneda_obj
 
 theorem is_coseparator_iff_faithful_preadditive_yoneda (G : C) :
-    IsCoseparator G ↔ Faithful (preadditiveYoneda.obj G) := by
+    IsCoseparator G ↔ Faithful (preadditiveYoneda.obj G) :=
+  by
   rw [is_coseparator_iff_faithful_yoneda_obj, ← whiskering_preadditive_yoneda, functor.comp_obj,
     whiskering_right_obj_obj]
   exact ⟨fun h => faithful.of_comp _ (forget AddCommGroupCat), fun h => faithful.comp _ _⟩
@@ -79,7 +82,8 @@ theorem is_coseparator_iff_faithful_preadditive_yoneda (G : C) :
   category_theory.is_coseparator_iff_faithful_preadditive_yoneda CategoryTheory.is_coseparator_iff_faithful_preadditive_yoneda
 
 theorem is_coseparator_iff_faithful_preadditive_yoneda_obj (G : C) :
-    IsCoseparator G ↔ Faithful (preadditiveYonedaObj G) := by
+    IsCoseparator G ↔ Faithful (preadditiveYonedaObj G) :=
+  by
   rw [is_coseparator_iff_faithful_preadditive_yoneda, preadditive_yoneda_obj_2]
   exact ⟨fun h => faithful.of_comp _ (forget₂ _ AddCommGroupCat.{v}), fun h => faithful.comp _ _⟩
 #align

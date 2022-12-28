@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.self_adjoint
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,8 +204,8 @@ end IsSelfAdjoint
 variable (R)
 
 /-- The self-adjoint elements of a star additive group, as an additive subgroup. -/
-def selfAdjoint [AddGroup R] [StarAddMonoid R] :
-    AddSubgroup R where 
+def selfAdjoint [AddGroup R] [StarAddMonoid R] : AddSubgroup R
+    where
   carrier := { x | IsSelfAdjoint x }
   zero_mem' := star_zero R
   add_mem' _ _ hx := hx.add
@@ -213,8 +213,8 @@ def selfAdjoint [AddGroup R] [StarAddMonoid R] :
 #align self_adjoint selfAdjoint
 
 /-- The skew-adjoint elements of a star additive group, as an additive subgroup. -/
-def skewAdjoint [AddCommGroup R] [StarAddMonoid R] :
-    AddSubgroup R where 
+def skewAdjoint [AddCommGroup R] [StarAddMonoid R] : AddSubgroup R
+    where
   carrier := { x | star x = -x }
   zero_mem' := show star (0 : R) = -0 by simp only [star_zero, neg_zero]
   add_mem' x y (hx : star x = -x) (hy : star y = -y) :=
@@ -230,7 +230,8 @@ section AddGroup
 
 variable [AddGroup R] [StarAddMonoid R]
 
-theorem mem_iff {x : R} : x ∈ selfAdjoint R ↔ star x = x := by
+theorem mem_iff {x : R} : x ∈ selfAdjoint R ↔ star x = x :=
+  by
   rw [← AddSubgroup.mem_carrier]
   exact Iff.rfl
 #align self_adjoint.mem_iff selfAdjoint.mem_iff
@@ -268,7 +269,7 @@ instance : NatCast (selfAdjoint R) :=
 
 instance : IntCast (selfAdjoint R) :=
   ⟨fun n =>
-    ⟨n, by 
+    ⟨n, by
       cases n <;> simp [show ↑n ∈ selfAdjoint R from (n : selfAdjoint R).2]
       refine' add_mem (is_self_adjoint_one R).neg (n : selfAdjoint R).2.neg⟩⟩
 
@@ -400,7 +401,8 @@ section AddGroup
 
 variable [AddCommGroup R] [StarAddMonoid R]
 
-theorem mem_iff {x : R} : x ∈ skewAdjoint R ↔ star x = -x := by
+theorem mem_iff {x : R} : x ∈ skewAdjoint R ↔ star x = -x :=
+  by
   rw [← AddSubgroup.mem_carrier]
   exact Iff.rfl
 #align skew_adjoint.mem_iff skewAdjoint.mem_iff
@@ -432,7 +434,7 @@ theorem conjugate' {x : R} (hx : x ∈ skewAdjoint R) (z : R) : star z * x * z �
 #align skew_adjoint.conjugate' skewAdjoint.conjugate'
 
 theorem is_star_normal_of_mem {x : R} (hx : x ∈ skewAdjoint R) : IsStarNormal x :=
-  ⟨by 
+  ⟨by
     simp only [mem_iff] at hx
     simp only [hx, Commute.neg_left]⟩
 #align skew_adjoint.is_star_normal_of_mem skewAdjoint.is_star_normal_of_mem

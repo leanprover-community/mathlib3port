@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.admissible_abs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,12 +32,13 @@ open Int
 in each set are close together. -/
 theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb : b ≠ 0) (A : Fin n → ℤ) :
     ∃ t : Fin n → Fin ⌈1 / ε⌉₊, ∀ i₀ i₁, t i₀ = t i₁ → ↑(abs (A i₁ % b - A i₀ % b)) < abs b • ε :=
-  by 
+  by
   have hb' : (0 : ℝ) < ↑(abs b) := int.cast_pos.mpr (abs_pos.mpr hb)
-  have hbε : 0 < abs b • ε := by 
+  have hbε : 0 < abs b • ε := by
     rw [Algebra.smul_def]
     exact mul_pos hb' hε
-  have hfloor : ∀ i, 0 ≤ floor ((A i % b : ℤ) / abs b • ε : ℝ) := by
+  have hfloor : ∀ i, 0 ≤ floor ((A i % b : ℤ) / abs b • ε : ℝ) :=
+    by
     intro i
     exact floor_nonneg.mpr (div_nonneg (cast_nonneg.mpr (mod_nonneg _ hb)) hbε.le)
   refine' ⟨fun i => ⟨nat_abs (floor ((A i % b : ℤ) / abs b • ε : ℝ)), _⟩, _⟩
@@ -57,7 +58,7 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
 
 /-- `abs : ℤ → ℤ` is an admissible absolute value -/
 noncomputable def absIsAdmissible : IsAdmissible AbsoluteValue.abs :=
-  { AbsoluteValue.abs_is_euclidean with 
+  { AbsoluteValue.abs_is_euclidean with
     card := fun ε => ⌈1 / ε⌉₊
     exists_partition' := fun n ε hε b hb => exists_partition_int n hε hb }
 #align absolute_value.abs_is_admissible AbsoluteValue.absIsAdmissible

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.integrally_closed
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 /-- `R` is integrally closed iff all integral elements of its fraction field `K`
 are also elements of `R`. -/
 theorem is_integrally_closed_iff :
-    IsIntegrallyClosed R ↔ ∀ {x : K}, IsIntegral R x → ∃ y, algebraMap R K y = x := by
+    IsIntegrallyClosed R ↔ ∀ {x : K}, IsIntegral R x → ∃ y, algebraMap R K y = x :=
+  by
   let e : K ≃ₐ[R] FractionRing R := IsLocalization.algEquiv R⁰ _ _
   constructor
   · rintro ⟨cl⟩
@@ -65,7 +66,8 @@ theorem is_integrally_closed_iff :
 /-- `R` is integrally closed iff it is the integral closure of itself in its field of fractions. -/
 theorem is_integrally_closed_iff_is_integral_closure :
     IsIntegrallyClosed R ↔ IsIntegralClosure R R K :=
-  (is_integrally_closed_iff K).trans <| by
+  (is_integrally_closed_iff K).trans <|
+    by
     let e : K ≃ₐ[R] FractionRing R := IsLocalization.algEquiv R⁰ _ _
     constructor
     · intro cl
@@ -113,7 +115,8 @@ include id ifr
 
 variable {R} (K)
 
-theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrallyClosed R := by
+theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrallyClosed R :=
+  by
   refine' eq_bot_iff.trans _
   constructor
   · rw [is_integrally_closed_iff K]

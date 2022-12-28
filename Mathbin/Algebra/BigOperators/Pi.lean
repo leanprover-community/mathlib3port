@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.big_operators.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,13 +72,15 @@ variable {I : Type _} [DecidableEq I] {Z : I → Type _}
 variable [∀ i, AddCommMonoid (Z i)]
 
 -- As we only defined `single` into `add_monoid`, we only prove the `finset.sum` version here.
-theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑ i, Pi.single i (f i)) = f := by
+theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑ i, Pi.single i (f i)) = f :=
+  by
   ext a
   simp
 #align finset.univ_sum_single Finset.univ_sum_single
 
 theorem AddMonoidHom.functions_ext [Finite I] (G : Type _) [AddCommMonoid G] (g h : (∀ i, Z i) →+ G)
-    (H : ∀ i x, g (Pi.single i x) = h (Pi.single i x)) : g = h := by
+    (H : ∀ i x, g (Pi.single i x) = h (Pi.single i x)) : g = h :=
+  by
   cases nonempty_fintype I
   ext k
   rw [← Finset.univ_sum_single k, g.map_sum, h.map_sum]

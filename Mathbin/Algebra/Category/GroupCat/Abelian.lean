@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Group.abelian
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,15 +48,15 @@ def normalEpi (hf : Epi f) : NormalEpi f :=
 end
 
 /-- The category of abelian groups is abelian. -/
-instance : Abelian
-      AddCommGroupCat.{u} where 
+instance : Abelian AddCommGroupCat.{u}
+    where
   HasFiniteProducts := ⟨by infer_instance⟩
   normalMonoOfMono X Y := normalMono
   normalEpiOfEpi X Y := normalEpi
-  add_comp' := by 
+  add_comp' := by
     intros
     simp only [preadditive.add_comp]
-  comp_add' := by 
+  comp_add' := by
     intros
     simp only [preadditive.comp_add]
 

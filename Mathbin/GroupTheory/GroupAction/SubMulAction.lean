@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,8 +116,8 @@ theorem ext {p q : SubMulAction R M} (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 
 /-- Copy of a sub_mul_action with a new `carrier` equal to the old one. Useful to fix definitional
 equalities.-/
-protected def copy (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) :
-    SubMulAction R M where 
+protected def copy (p : SubMulAction R M) (s : Set M) (hs : s = ↑p) : SubMulAction R M
+    where
   carrier := s
   smul_mem' := hs.symm ▸ p.smul_mem'
 #align sub_mul_action.copy SubMulAction.copy
@@ -221,7 +221,8 @@ variable [HasSmul S R] [HasSmul S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M)
 
-theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p := by
+theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p :=
+  by
   rw [← one_smul R x, ← smul_assoc]
   exact p.smul_mem _ h
 #align sub_mul_action.smul_of_tower_mem SubMulAction.smul_of_tower_mem
@@ -232,8 +233,8 @@ instance hasSmul' : HasSmul S p where smul c x := ⟨c • x.1, smul_of_tower_me
 instance : IsScalarTower S R p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 
 instance is_scalar_tower' {S' : Type _} [HasSmul S' R] [HasSmul S' S] [HasSmul S' M]
-    [IsScalarTower S' R M] [IsScalarTower S' S M] :
-    IsScalarTower S' S p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
+    [IsScalarTower S' R M] [IsScalarTower S' S M] : IsScalarTower S' S p
+    where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 #align sub_mul_action.is_scalar_tower' SubMulAction.is_scalar_tower'
 
 @[simp, norm_cast]
@@ -259,7 +260,7 @@ variable [Monoid S] [HasSmul S R] [MulAction S M] [IsScalarTower S R M]
 variable (p : SubMulAction R M)
 
 /-- If the scalar product forms a `mul_action`, then the subset inherits this action -/
-instance mulAction' : MulAction S p where 
+instance mulAction' : MulAction S p where
   smul := (· • ·)
   one_smul x := Subtype.ext <| one_smul _ x
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul c₁ c₂ x
@@ -282,7 +283,8 @@ lemma orbit_of_sub_mul {p : sub_mul_action R M} (m : p) :
 -/
 /-- Stabilizers in monoid sub_mul_action coincide with stabilizers in the ambient space -/
 theorem StabilizerOfSubMul.submonoid {p : SubMulAction R M} (m : p) :
-    MulAction.Stabilizer.submonoid R m = MulAction.Stabilizer.submonoid R (m : M) := by
+    MulAction.Stabilizer.submonoid R m = MulAction.Stabilizer.submonoid R (m : M) :=
+  by
   ext
   simp only [MulAction.mem_stabilizer_submonoid_iff, ← SubMulAction.coe_smul, SetLike.coe_eq_coe]
 #align sub_mul_action.stabilizer_of_sub_mul.submonoid SubMulAction.StabilizerOfSubMul.submonoid
@@ -295,7 +297,8 @@ variable [Group R] [MulAction R M]
 
 /-- Stabilizers in group sub_mul_action coincide with stabilizers in the ambient space -/
 theorem stabilizer_of_sub_mul {p : SubMulAction R M} (m : p) :
-    MulAction.stabilizer R m = MulAction.stabilizer R (m : M) := by
+    MulAction.stabilizer R m = MulAction.stabilizer R (m : M) :=
+  by
   rw [← Subgroup.to_submonoid_eq]
   exact stabilizer_of_sub_mul.submonoid m
 #align sub_mul_action.stabilizer_of_sub_mul SubMulAction.stabilizer_of_sub_mul
@@ -317,8 +320,8 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
-instance [n_empty : Nonempty p] :
-    Zero p where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
+instance [n_empty : Nonempty p] : Zero p
+    where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
 
 end Module
 
@@ -332,14 +335,15 @@ variable (p p' : SubMulAction R M)
 
 variable {r : R} {x y : M}
 
-theorem neg_mem (hx : x ∈ p) : -x ∈ p := by
+theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
+  by
   rw [← neg_one_smul R]
   exact p.smul_mem _ hx
 #align sub_mul_action.neg_mem SubMulAction.neg_mem
 
 @[simp]
 theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rw [← neg_neg x]
     exact neg_mem _ h, neg_mem _⟩
 #align sub_mul_action.neg_mem_iff SubMulAction.neg_mem_iff

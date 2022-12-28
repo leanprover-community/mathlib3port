@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor_bases
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem is_open_map_barycentric_coord [Nontrivial ι] (b : AffineBasis ι 𝕜 P
     IsOpenMap (b.Coord i) :=
   AffineMap.is_open_map_linear_iff.mp <|
     (b.Coord i).linear.is_open_map_of_finite_dimensional <|
-      (b.Coord i).surjective_iff_linear_surjective.mpr (b.surjective_coord i)
+      (b.Coord i).linear_surjective_iff.mpr (b.surjective_coord i)
 #align is_open_map_barycentric_coord is_open_map_barycentric_coord
 
 variable [FiniteDimensional 𝕜 E] (b : AffineBasis ι 𝕜 P)
@@ -68,7 +68,8 @@ TODO Restate this result for affine spaces (instead of vector spaces) once the d
 convexity is generalised to this setting. -/
 theorem AffineBasis.interior_convex_hull {ι E : Type _} [Finite ι] [NormedAddCommGroup E]
     [NormedSpace ℝ E] (b : AffineBasis ι ℝ E) :
-    interior (convexHull ℝ (range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
+    interior (convexHull ℝ (range b.points)) = { x | ∀ i, 0 < b.Coord i x } :=
+  by
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
     have : range b.points = univ :=
@@ -76,7 +77,8 @@ theorem AffineBasis.interior_convex_hull {ι E : Type _} [Finite ι] [NormedAddC
     simp [this]
   · -- The positive-dimensional case.
     haveI : FiniteDimensional ℝ E := b.finite_dimensional
-    have : convexHull ℝ (range b.points) = ⋂ i, b.coord i ⁻¹' Ici 0 := by
+    have : convexHull ℝ (range b.points) = ⋂ i, b.coord i ⁻¹' Ici 0 :=
+      by
       rw [convex_hull_affine_basis_eq_nonneg_barycentric b, set_of_forall]
       rfl
     ext
@@ -98,12 +100,13 @@ open AffineMap
 an affine basis, all of whose elements belong to `u`. -/
 theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu : IsOpen u)
     (hsu : s ⊆ u) (hne : s.Nonempty) (h : AffineIndependent ℝ (coe : s → P)) :
-    ∃ t : Set P, s ⊆ t ∧ t ⊆ u ∧ AffineIndependent ℝ (coe : t → P) ∧ affineSpan ℝ t = ⊤ := by
+    ∃ t : Set P, s ⊆ t ∧ t ⊆ u ∧ AffineIndependent ℝ (coe : t → P) ∧ affineSpan ℝ t = ⊤ :=
+  by
   obtain ⟨q, hq⟩ := hne
   obtain ⟨ε, ε0, hεu⟩ := metric.nhds_basis_closed_ball.mem_iff.1 (hu.mem_nhds <| hsu hq)
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := exists_subset_affine_independent_affine_span_eq_top h
   let f : P → P := fun y => line_map q y (ε / dist y q)
-  have hf : ∀ y, f y ∈ u := by 
+  have hf : ∀ y, f y ∈ u := by
     refine' fun y => hεu _
     simp only [f]
     rw [Metric.mem_closed_ball, line_map_apply, dist_vadd_left, norm_smul, Real.norm_eq_abs,
@@ -111,7 +114,7 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
     exact mul_le_of_le_one_left ε0.le (div_self_le_one _)
   have hεyq : ∀ (y) (_ : y ∉ s), ε / dist y q ≠ 0 := fun y hy =>
     div_ne_zero ε0.ne' (dist_ne_zero.2 (ne_of_mem_of_not_mem hq hy).symm)
-  classical 
+  classical
     let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
     refine' ⟨Set.range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
     · intro p hp
@@ -130,7 +133,8 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ⊆ » u) -/
 theorem IsOpen.exists_subset_affine_independent_span_eq_top {u : Set P} (hu : IsOpen u)
     (hne : u.Nonempty) :
-    ∃ (s : _)(_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ := by
+    ∃ (s : _)(_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ :=
+  by
   rcases hne with ⟨x, hx⟩
   rcases hu.exists_between_affine_independent_span_eq_top (singleton_subset_iff.mpr hx)
       (singleton_nonempty _) (affine_independent_of_subsingleton _ _) with
@@ -154,17 +158,20 @@ theorem affine_span_eq_top_of_nonempty_interior {s : Set V}
 #align affine_span_eq_top_of_nonempty_interior affine_span_eq_top_of_nonempty_interior
 
 theorem AffineBasis.centroid_mem_interior_convex_hull {ι} [Fintype ι] (b : AffineBasis ι ℝ V) :
-    Finset.univ.centroid ℝ b.points ∈ interior (convexHull ℝ (range b.points)) := by
+    Finset.univ.centroid ℝ b.points ∈ interior (convexHull ℝ (range b.points)) :=
+  by
   haveI := b.nonempty
   simp only [b.interior_convex_hull, mem_set_of_eq, b.coord_apply_centroid (Finset.mem_univ _),
     inv_pos, Nat.cast_pos, Finset.card_pos, Finset.univ_nonempty, forall_true_iff]
 #align affine_basis.centroid_mem_interior_convex_hull AffineBasis.centroid_mem_interior_convex_hull
 
 theorem interior_convex_hull_nonempty_iff_affine_span_eq_top [FiniteDimensional ℝ V] {s : Set V} :
-    (interior (convexHull ℝ s)).Nonempty ↔ affineSpan ℝ s = ⊤ := by
+    (interior (convexHull ℝ s)).Nonempty ↔ affineSpan ℝ s = ⊤ :=
+  by
   refine' ⟨affine_span_eq_top_of_nonempty_interior, fun h => _⟩
   obtain ⟨t, hts, b, hb⟩ := AffineBasis.exists_affine_subbasis h
-  suffices (interior (convexHull ℝ (range b.points))).Nonempty by
+  suffices (interior (convexHull ℝ (range b.points))).Nonempty
+    by
     rw [hb, Subtype.range_coe_subtype, set_of_mem_eq] at this
     refine' this.mono _
     mono*

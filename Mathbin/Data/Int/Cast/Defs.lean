@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module data.int.cast.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,10 +58,13 @@ It also contains data for the unique homomorphisms `ℕ → R` and `ℤ → R`.
 @[protect_proj]
 class AddGroupWithOne (R : Type u) extends IntCast R, AddGroup R, AddMonoidWithOne R where
   intCast := Int.castDef
-  int_cast_of_nat : ∀ n : ℕ, int_cast n = (n : R) := by
+  int_cast_of_nat :
+    ∀ n : ℕ, int_cast n = (n : R) := by
     intros
     rfl
-  int_cast_neg_succ_of_nat : ∀ n : ℕ, int_cast (-(n + 1 : ℕ)) = -((n + 1 : ℕ) : R) := by
+  int_cast_neg_succ_of_nat :
+    ∀ n : ℕ, int_cast (-(n + 1 : ℕ)) =
+        -((n + 1 : ℕ) : R) := by
     intros
     rfl
 #align add_group_with_one AddGroupWithOne

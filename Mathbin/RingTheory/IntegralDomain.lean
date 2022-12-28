@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.integral_domain
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,9 +54,11 @@ theorem mul_left_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
 def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M]
     [Nontrivial M] : GroupWithZero M :=
-  { ‹Nontrivial M›, ‹CancelMonoidWithZero M› with
+  { ‹Nontrivial M›,
+    ‹CancelMonoidWithZero
+        M› with
     inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_finite₀ h) 1
-    mul_inv_cancel := fun a ha => by 
+    mul_inv_cancel := fun a ha => by
       simp [Inv.inv, dif_neg ha]
       exact Fintype.right_inverse_bij_inv _ _
     inv_zero := by simp [Inv.inv, dif_pos rfl] }
@@ -64,7 +66,8 @@ def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [Decidab
 
 theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [IsDomain R]
     [GcdMonoid R] [Unique Rˣ] {a b c : R} {n : ℕ} (cp : IsCoprime a b) (h : a * b = c ^ n) :
-    ∃ d : R, a = d ^ n := by
+    ∃ d : R, a = d ^ n :=
+  by
   refine' exists_eq_pow_of_mul_eq_pow (isUnit_of_dvd_one _ _) h
   obtain ⟨x, y, hxy⟩ := cp
   rw [← hxy]
@@ -77,7 +80,7 @@ theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemir
     [GcdMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}
     (h : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → IsCoprime (f i) (f j))
     (hprod : (∏ i in s, f i) = c ^ n) : ∀ i ∈ s, ∃ d : R, f i = d ^ n := by
-  classical 
+  classical
     intro i hi
     rw [← insert_erase hi, prod_insert (not_mem_erase i s)] at hprod
     refine'
@@ -112,7 +115,8 @@ def Fintype.fieldOfDomain (R) [CommRing R] [IsDomain R] [DecidableEq R] [Fintype
   { Fintype.groupWithZeroOfCancel R, ‹CommRing R› with }
 #align fintype.field_of_domain Fintype.fieldOfDomain
 
-theorem Finite.is_field_of_domain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R := by
+theorem Finite.is_field_of_domain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R :=
+  by
   cases nonempty_fintype R
   exact @Field.toIsField R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
 #align finite.is_field_of_domain Finite.is_field_of_domain
@@ -123,7 +127,8 @@ variable [CommRing R] [IsDomain R] [Group G]
 
 theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective f) {n : ℕ}
     (hn : 0 < n) (g₀ : G) :
-    ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card := by
+    ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card :=
+  by
   haveI : DecidableEq R := Classical.decEq _
   refine' le_trans _ (nth_roots n (f g₀)).to_finset_card_le
   apply card_le_card_of_inj_on f
@@ -138,7 +143,7 @@ theorem card_nth_roots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
 theorem is_cyclic_of_subgroup_is_domain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G :=
   by
-  classical 
+  classical
     cases nonempty_fintype G
     apply is_cyclic_of_card_pow_eq_one_le
     intro n hn
@@ -157,7 +162,8 @@ section
 variable (S : Subgroup Rˣ) [Finite S]
 
 /-- A finite subgroup of the units of an integral domain is cyclic. -/
-instance subgroup_units_cyclic : IsCyclic S := by
+instance subgroup_units_cyclic : IsCyclic S :=
+  by
   refine'
     is_cyclic_of_subgroup_is_domain ⟨(coe : S → R), _, _⟩ (units.ext.comp Subtype.val_injective)
   · simp
@@ -171,7 +177,8 @@ variable [Fintype G]
 
 theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G →* H) {x y : H}
     (hx : x ∈ Set.range f) (hy : y ∈ Set.range f) :
-    (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card := by
+    (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card :=
+  by
   rcases hx with ⟨x, rfl⟩
   rcases hy with ⟨y, rfl⟩
   refine' card_congr (fun g _ => g * x⁻¹ * y) _ _ fun g hg => ⟨g * y⁻¹ * x, _⟩
@@ -188,12 +195,12 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
 theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) = 0 := by
-  classical 
+  classical
     obtain ⟨x, hx⟩ :
       ∃ x : MonoidHom.range f.to_hom_units,
         ∀ y : MonoidHom.range f.to_hom_units, y ∈ Submonoid.powers x
     exact IsCyclic.exists_monoid_generator
-    have hx1 : x ≠ 1 := by 
+    have hx1 : x ≠ 1 := by
       rintro rfl
       apply hf
       ext g
@@ -255,7 +262,8 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
 unless the homomorphism is trivial, in which case the sum is equal to the cardinality of the group.
 -/
 theorem sum_hom_units (f : G →* R) [Decidable (f = 1)] :
-    (∑ g : G, f g) = if f = 1 then Fintype.card G else 0 := by
+    (∑ g : G, f g) = if f = 1 then Fintype.card G else 0 :=
+  by
   split_ifs with h h
   · simp [h, card_univ]
   · exact sum_hom_units_eq_zero f h

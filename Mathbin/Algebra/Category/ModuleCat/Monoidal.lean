@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Scott Morrison, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module algebra.category.Module.monoidal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,13 +61,15 @@ def tensorHom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') :
   TensorProduct.map f g
 #align Module.monoidal_category.tensor_hom ModuleCat.MonoidalCategory.tensorHom
 
-theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (M ⊗ N)) := by
+theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (M ⊗ N)) :=
+  by
   ext1
   rfl
 #align Module.monoidal_category.tensor_id ModuleCat.MonoidalCategory.tensor_id
 
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁)
-    (g₂ : Y₂ ⟶ Z₂) : tensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom f₁ f₂ ≫ tensorHom g₁ g₂ := by
+    (g₂ : Y₂ ⟶ Z₂) : tensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom f₁ f₂ ≫ tensorHom g₁ g₂ :=
+  by
   ext1
   rfl
 #align Module.monoidal_category.tensor_comp ModuleCat.MonoidalCategory.tensor_comp
@@ -92,7 +94,8 @@ private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMono
     [AddCommMonoid X₃] [Module R X₁] [Module R X₂] [Module R X₃] {Y₁ Y₂ Y₃ : Type _}
     [AddCommMonoid Y₁] [AddCommMonoid Y₂] [AddCommMonoid Y₃] [Module R Y₁] [Module R Y₂]
     [Module R Y₃] (f₁ : X₁ →ₗ[R] Y₁) (f₂ : X₂ →ₗ[R] Y₂) (f₃ : X₃ →ₗ[R] Y₃) :
-    ↑(assoc R Y₁ Y₂ Y₃) ∘ₗ map (map f₁ f₂) f₃ = map f₁ (map f₂ f₃) ∘ₗ ↑(assoc R X₁ X₂ X₃) := by
+    ↑(assoc R Y₁ Y₂ Y₃) ∘ₗ map (map f₁ f₂) f₃ = map f₁ (map f₂ f₃) ∘ₗ ↑(assoc R X₁ X₂ X₃) :=
+  by
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
@@ -107,7 +110,7 @@ private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoid W] [AddCommMonoid
             (assoc R W (X ⊗[R] Y) Z).toLinearMap).comp
         (map ↑(assoc R W X Y) (1 : Z →ₗ[R] Z)) =
       (assoc R W X (Y ⊗[R] Z)).toLinearMap.comp (assoc R (W ⊗[R] X) Y Z).toLinearMap :=
-  by 
+  by
   apply TensorProduct.ext_fourfold
   intro w x y z
   rfl
@@ -136,7 +139,8 @@ def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
 #align Module.monoidal_category.left_unitor ModuleCat.MonoidalCategory.leftUnitor
 
 theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
-    tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f := by
+    tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f :=
+  by
   ext (x y); dsimp
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
   rw [LinearMap.map_smul]
@@ -150,7 +154,8 @@ def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
 #align Module.monoidal_category.right_unitor ModuleCat.MonoidalCategory.rightUnitor
 
 theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
-    tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f := by
+    tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f :=
+  by
   ext (x y); dsimp
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
   rw [LinearMap.map_smul]
@@ -161,7 +166,7 @@ theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
 theorem triangle (M N : ModuleCat.{u} R) :
     (associator M (ModuleCat.of R R) N).Hom ≫ tensorHom (𝟙 M) (leftUnitor N).Hom =
       tensorHom (rightUnitor M).Hom (𝟙 N) :=
-  by 
+  by
   apply TensorProduct.ext_threefold
   intro x y z
   change R at y
@@ -174,8 +179,8 @@ end MonoidalCategory
 
 open MonoidalCategory
 
-instance monoidalCategory :
-    MonoidalCategory (ModuleCat.{u} R) where
+instance monoidalCategory : MonoidalCategory (ModuleCat.{u} R)
+    where
   -- data
   tensorObj := tensorObj
   tensorHom := @tensorHom _ _
@@ -269,7 +274,8 @@ def braiding (M N : ModuleCat R) : tensorObj M N ≅ tensorObj N M :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem braiding_naturality {X₁ X₂ Y₁ Y₂ : ModuleCat.{u} R} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
-    (f ⊗ g) ≫ (Y₁.braiding Y₂).Hom = (X₁.braiding X₂).Hom ≫ (g ⊗ f) := by
+    (f ⊗ g) ≫ (Y₁.braiding Y₂).Hom = (X₁.braiding X₂).Hom ≫ (g ⊗ f) :=
+  by
   apply TensorProduct.ext'
   intro x y
   rfl
@@ -281,7 +287,7 @@ theorem braiding_naturality {X₁ X₂ Y₁ Y₂ : ModuleCat.{u} R} (f : X₁ �
 theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
     (α_ X Y Z).Hom ≫ (braiding X _).Hom ≫ (α_ Y Z X).Hom =
       ((braiding X Y).Hom ⊗ 𝟙 Z) ≫ (α_ Y X Z).Hom ≫ (𝟙 Y ⊗ (braiding X Z).Hom) :=
-  by 
+  by
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
@@ -293,7 +299,7 @@ theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
 theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
     (α_ X Y Z).inv ≫ (braiding _ Z).Hom ≫ (α_ Z X Y).inv =
       (𝟙 X ⊗ (Y.braiding Z).Hom) ≫ (α_ X Z Y).inv ≫ ((X.braiding Z).Hom ⊗ 𝟙 Y) :=
-  by 
+  by
   apply (cancel_epi (α_ X Y Z).Hom).1
   apply TensorProduct.ext_threefold
   intro x y z
@@ -303,9 +309,8 @@ theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
 attribute [local ext] TensorProduct.ext
 
 /-- The symmetric monoidal structure on `Module R`. -/
-instance symmetricCategory :
-    SymmetricCategory (ModuleCat.{u}
-        R) where 
+instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R)
+    where
   braiding := braiding
   braiding_naturality' X₁ X₂ Y₁ Y₂ f g := braiding_naturality f g
   hexagon_forward' := hexagon_forward
@@ -353,26 +358,24 @@ instance : MonoidalLinear R (ModuleCat.{u} R) := by
 @[simps]
 def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
     ((MonoidalCategory.tensorLeft M).obj N ⟶ P) ≃
-      (N ⟶
-        ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj
-          P) where 
+      (N ⟶ ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj P)
+    where
   toFun f := LinearMap.compr₂ (TensorProduct.mk R N M) ((β_ N M).Hom ≫ f)
   invFun f := (β_ M N).Hom ≫ TensorProduct.lift f
-  left_inv f := by 
+  left_inv f := by
     ext (m n)
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       Function.comp_apply, coe_comp, monoidal_category.braiding_hom_apply]
-  right_inv f := by 
+  right_inv f := by
     ext (m n)
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       symmetric_category.symmetry_assoc]
 #align Module.monoidal_closed_hom_equiv ModuleCat.monoidalClosedHomEquiv
 
-instance :
-    MonoidalClosed
-      (ModuleCat.{u}
-        R) where closed' M :=
-    { isAdj :=
+instance : MonoidalClosed (ModuleCat.{u} R)
+    where closed' M :=
+    {
+      isAdj :=
         { right := (linearCoyoneda R (ModuleCat.{u} R)).obj (op M)
           adj := Adjunction.mkOfHomEquiv { homEquiv := fun N P => monoidalClosedHomEquiv M N P } } }
 
@@ -388,7 +391,7 @@ theorem monoidal_closed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x :
 @[simp]
 theorem monoidal_closed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M)
     (y : N) : MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x :=
-  by 
+  by
   simp only [monoidal_closed.uncurry, ihom.adjunction, is_left_adjoint.adj]
   simp
 #align Module.monoidal_closed_uncurry ModuleCat.monoidal_closed_uncurry

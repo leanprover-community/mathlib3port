@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.default
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,20 +34,23 @@ variable {X : C}
 namespace CategoryTheory.Over
 
 /-- Make sure we can derive pullbacks in `over B`. -/
-instance {B : C} [HasPullbacks C] : HasPullbacks (Over B) := by
+instance {B : C} [HasPullbacks C] : HasPullbacks (Over B) :=
+  by
   letI : has_limits_of_shape (UliftHom.{v} (ULift.{v} walking_cospan)) C :=
     has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v} _)
   letI : category (UliftHom.{v} (ULift.{v} walking_cospan)) := inferInstance
   exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
 
 /-- Make sure we can derive equalizers in `over B`. -/
-instance {B : C} [HasEqualizers C] : HasEqualizers (Over B) := by
+instance {B : C} [HasEqualizers C] : HasEqualizers (Over B) :=
+  by
   letI : has_limits_of_shape (UliftHom.{v} (ULift.{v} walking_parallel_pair)) C :=
     has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v} _)
   letI : category (UliftHom.{v} (ULift.{v} walking_parallel_pair)) := inferInstance
   exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
 
-instance hasFiniteLimits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) := by
+instance hasFiniteLimits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) :=
+  by
   apply @has_finite_limits_of_has_equalizers_and_finite_products _ _ _ _
   · exact construct_products.over_finite_products_of_finite_wide_pullbacks
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
@@ -56,7 +59,8 @@ instance hasFiniteLimits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (O
     · infer_instance
 #align category_theory.over.has_finite_limits CategoryTheory.Over.hasFiniteLimits
 
-instance hasLimits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over B) := by
+instance hasLimits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over B) :=
+  by
   apply @has_limits_of_has_equalizers_and_products _ _ _ _
   · exact construct_products.over_products_of_wide_pullbacks
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _

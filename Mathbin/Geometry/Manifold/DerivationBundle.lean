@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.derivation_bundle
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,9 +86,8 @@ theorem smul_def (x : M) (f : C^∞⟮I, M; 𝕜⟯⟨x⟩) (k : 𝕜) : f • k
   rfl
 #align pointed_smooth_map.smul_def PointedSmoothMap.smul_def
 
-instance (x : M) :
-    IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩
-      𝕜 where smul_assoc k f h := by
+instance (x : M) : IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜
+    where smul_assoc k f h := by
     simp only [smul_def, Algebra.id.smul_eq_mul, SmoothMap.coe_smul, Pi.smul_apply, mul_assoc]
 
 end PointedSmoothMap
@@ -135,9 +134,8 @@ variable {I} {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : T
 differential takes `h : f x = y`. It is particularly handy to deal with situations where the points
 on where it has to be evaluated are equal but not definitionally equal. -/
 def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) :
-    PointDerivation I x →ₗ[𝕜]
-      PointDerivation I'
-        y where 
+    PointDerivation I x →ₗ[𝕜] PointDerivation I' y
+    where
   toFun v :=
     Derivation.mk'
       { toFun := fun g => v (g.comp f)

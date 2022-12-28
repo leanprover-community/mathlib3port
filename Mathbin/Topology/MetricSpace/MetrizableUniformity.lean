@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable_uniformity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,21 +65,20 @@ namespace PseudoMetricSpace
 /-- The maximal pseudo metric space structure on `X` such that `dist x y ≤ d x y` for all `x y`,
 where `d : X → X → ℝ≥0` is a function such that `d x x = 0` and `d x y = d y x` for all `x`, `y`. -/
 noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
-    (dist_comm : ∀ x y, d x y = d y x) :
-    PseudoMetricSpace
-      X where 
+    (dist_comm : ∀ x y, d x y = d y x) : PseudoMetricSpace X
+    where
   dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self x :=
     (Nnreal.coe_eq_zero _).2 <|
       nonpos_iff_eq_zero.1 <| (cinfi_le (OrderBot.bddBelow _) []).trans_eq <| by simp [dist_self]
   dist_comm x y :=
-    Nnreal.coe_eq.2 <| by 
+    Nnreal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
       rw [← sum_reverse, zip_with_distrib_reverse, reverse_append, reverse_reverse,
         reverse_singleton, singleton_append, reverse_cons, reverse_reverse,
         zip_with_comm_of_comm _ dist_comm]
       simp only [length, length_append]
-  dist_triangle x y z := by 
+  dist_triangle x y z := by
     rw [← Nnreal.coe_add, Nnreal.coe_le_coe]
     refine' Nnreal.le_infi_add_infi fun lxy lyz => _
     calc
@@ -134,7 +133,8 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
     Then `d x₀ xₖ ≤ L`, `d xₖ xₖ₊₁ ≤ L`, and `d xₖ₊₁ xₙ ≤ L`, thus `d x₀ xₙ ≤ 2 * L`. -/
   rw [dist_of_prenndist, ← Nnreal.coe_two, ← Nnreal.coe_mul, Nnreal.mul_infi, Nnreal.coe_le_coe]
   refine' le_cinfi fun l => _
-  have hd₀_trans : Transitive fun x y => d x y = 0 := by
+  have hd₀_trans : Transitive fun x y => d x y = 0 :=
+    by
     intro a b c hab hbc
     rw [← nonpos_iff_eq_zero]
     simpa only [*, max_eq_right, mul_zero] using hd a b c c
@@ -151,8 +151,9 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }
   have hs₀ : 0 ∈ s := by simp [s]
   have hsne : s.nonempty := ⟨0, hs₀⟩
-  obtain ⟨M, hMl, hMs⟩ : ∃ M ≤ length l, IsGreatest s M := by
-    have hs_ub : length l ∈ upperBounds s := by 
+  obtain ⟨M, hMl, hMs⟩ : ∃ M ≤ length l, IsGreatest s M :=
+    by
+    have hs_ub : length l ∈ upperBounds s := by
       intro m hm
       rw [← not_lt, Nat.lt_iff_add_one_le, ← hL_len]
       intro hLm
@@ -215,7 +216,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       ∃ U : ℕ → Set (X × X),
         (∀ n, SymmetricRel (U n)) ∧
           (∀ ⦃m n⦄, m < n → U n ○ (U n ○ U n) ⊆ U m) ∧ (𝓤 X).HasAntitoneBasis U :=
-      by 
+      by
       rcases UniformSpace.has_seq_basis X with ⟨V, hB, hV_symm⟩
       rcases hB.subbasis_with_rel fun m =>
           hB.tendsto_small_sets.eventually
@@ -224,7 +225,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       exact ⟨V ∘ φ, fun n => hV_symm _, hφ_comp, hφB⟩
     letI := UniformSpace.separationSetoid X
     set d : X → X → ℝ≥0 := fun x y => if h : ∃ n, (x, y) ∉ U n then (1 / 2) ^ Nat.find h else 0
-    have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by 
+    have hd₀ : ∀ {x y}, d x y = 0 ↔ x ≈ y := by
       intro x y
       dsimp only [d]
       refine' Iff.trans _ hB.to_has_basis.mem_separation_rel.symm
@@ -233,7 +234,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       · rw [← not_forall] at h
         simp [h, pow_eq_zero_iff']
       · simpa only [not_exists, not_not, eq_self_iff_true, true_iff_iff] using h
-    have hd_symm : ∀ x y, d x y = d y x := by 
+    have hd_symm : ∀ x y, d x y = d y x := by
       intro x y
       dsimp only [d]
       simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
@@ -241,7 +242,8 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
     letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
     have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_of_prenndist_le _ _ _
-    have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n := by
+    have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n :=
+      by
       intro x y n
       simp only [d]
       split_ifs with h
@@ -249,7 +251,8 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
         exact ⟨fun ⟨m, hmn, hm⟩ hn => hm (hB.antitone hmn hn), fun h => ⟨n, le_rfl, h⟩⟩
       · push_neg  at h
         simp only [h, not_true, (pow_pos hr.1 _).not_le]
-    have hd_le : ∀ x y, ↑(d x y) ≤ 2 * dist x y := by
+    have hd_le : ∀ x y, ↑(d x y) ≤ 2 * dist x y :=
+      by
       refine' PseudoMetricSpace.le_two_mul_dist_of_prenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
       by_cases H : ∃ n, (x₁, x₄) ∉ U n
       · refine' (dif_pos H).trans_le _
@@ -286,7 +289,8 @@ protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace 
 
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/
 instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X]
-    [IsCountablyGenerated (𝓤 X)] : TopologicalSpace.PseudoMetrizableSpace X := by
+    [IsCountablyGenerated (𝓤 X)] : TopologicalSpace.PseudoMetrizableSpace X :=
+  by
   letI := UniformSpace.pseudoMetricSpace X
   infer_instance
 #align uniform_space.pseudo_metrizable_space UniformSpace.pseudoMetrizableSpace
@@ -294,7 +298,8 @@ instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X]
 /-- A T₀ uniform space with countably generated `𝓤 X` is metrizable. This is not an instance to
 avoid loops. -/
 theorem UniformSpace.metrizableSpace [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
-    TopologicalSpace.MetrizableSpace X := by
+    TopologicalSpace.MetrizableSpace X :=
+  by
   letI := UniformSpace.metricSpace X
   infer_instance
 #align uniform_space.metrizable_space UniformSpace.metrizableSpace

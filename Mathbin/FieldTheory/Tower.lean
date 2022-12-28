@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 theorem dim_mul_dim' :
     Cardinal.lift.{w} (Module.rank F K) * Cardinal.lift.{v} (Module.rank K A) =
       Cardinal.lift.{v} (Module.rank F A) :=
-  by 
+  by
   let b := Basis.ofVectorSpace F K
   let c := Basis.ofVectorSpace K A
   rw [← (Module.rank F K).lift_id, ← b.mk_eq_dim, ← (Module.rank K A).lift_id, ← c.mk_eq_dim, ←
@@ -95,14 +95,16 @@ theorem left (K L : Type _) [Field K] [Algebra F K] [Ring L] [Nontrivial L] [Alg
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
   let ⟨⟨b, hb⟩⟩ := hf
   ⟨⟨b,
-      Submodule.restrict_scalars_injective F _ _ <| by
+      Submodule.restrict_scalars_injective F _ _ <|
+        by
         rw [Submodule.restrict_scalars_top, eq_top_iff, ← hb, Submodule.span_le]
         exact Submodule.subset_span⟩⟩
 #align finite_dimensional.right FiniteDimensional.right
 
 /-- Tower law: if `A` is a `K`-algebra and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/
-theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A = finrank F A := by
+theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A = finrank F A :=
+  by
   by_cases hA : FiniteDimensional K A
   · skip
     let b := Basis.ofVectorSpace F K
@@ -118,7 +120,8 @@ theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [A
   { to_nontrivial :=
       ⟨⟨⊥, ⊤, fun he =>
           Nat.not_prime_one ((Subalgebra.bot_eq_top_iff_finrank_eq_one.1 he).subst hp)⟩⟩
-    eq_bot_or_eq_top := fun K => by
+    eq_bot_or_eq_top := fun K =>
+      by
       haveI := finite_dimensional_of_finrank hp.pos
       letI := divisionRingOfFiniteDimensional F K
       refine' (hp.eq_one_or_self_of_dvd _ ⟨_, (finrank_mul_finrank F K A).symm⟩).imp _ fun h => _
@@ -140,7 +143,8 @@ instance linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGro
 
 theorem finrank_linear_map (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V]
     [Module F V] [AddCommGroup W] [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] :
-    finrank F (V →ₗ[F] W) = finrank F V * finrank F W := by
+    finrank F (V →ₗ[F] W) = finrank F V * finrank F W :=
+  by
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
   rw [LinearEquiv.finrank_eq (LinearMap.toMatrix b c), Matrix.finrank_matrix,

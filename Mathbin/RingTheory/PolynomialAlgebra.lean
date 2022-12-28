@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial_algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
 #align poly_equiv_tensor.to_fun_bilinear PolyEquivTensor.toFunBilinear
 
 theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
-    toFunBilinear R A a p = p.Sum fun n r => monomial n (a * algebraMap R A r) := by
+    toFunBilinear R A a p = p.Sum fun n r => monomial n (a * algebraMap R A r) :=
+  by
   dsimp [to_fun_bilinear_apply_apply, aeval_def, eval₂_eq_sum, Polynomial.sum]
   rw [Finset.smul_sum]
   congr with i : 1
@@ -97,7 +98,7 @@ theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : 
     a₁ * a₂ * (algebraMap R A) ((p₁ * p₂).coeff k) =
       (Finset.Nat.antidiagonal k).Sum fun x =>
         a₁ * (algebraMap R A) (coeff p₁ x.1) * (a₂ * (algebraMap R A) (coeff p₂ x.2)) :=
-  by 
+  by
   simp_rw [mul_assoc, Algebra.commutes, ← Finset.mul_sum, mul_assoc, ← Finset.mul_sum]
   congr
   simp_rw [Algebra.commutes (coeff p₂ _), coeff_mul, RingHom.map_sum, RingHom.map_mul]
@@ -108,7 +109,7 @@ theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     (toFunLinear R A) ((a₁ * a₂) ⊗ₜ[R] (p₁ * p₂)) =
       (toFunLinear R A) (a₁ ⊗ₜ[R] p₁) * (toFunLinear R A) (a₂ ⊗ₜ[R] p₂) :=
   by
-  classical 
+  classical
     simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
     ext k
     simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
@@ -137,7 +138,8 @@ def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] A[X] :=
 
 @[simp]
 theorem to_fun_alg_hom_apply_tmul (a : A) (p : R[X]) :
-    toFunAlgHom R A (a ⊗ₜ[R] p) = p.Sum fun n r => monomial n (a * (algebraMap R A) r) := by
+    toFunAlgHom R A (a ⊗ₜ[R] p) = p.Sum fun n r => monomial n (a * (algebraMap R A) r) :=
+  by
   dsimp [to_fun_alg_hom]
   rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
 #align poly_equiv_tensor.to_fun_alg_hom_apply_tmul PolyEquivTensor.to_fun_alg_hom_apply_tmul
@@ -161,7 +163,8 @@ theorem inv_fun_monomial (n : ℕ) (a : A) :
   eval₂_monomial _ _
 #align poly_equiv_tensor.inv_fun_monomial PolyEquivTensor.inv_fun_monomial
 
-theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
+theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x :=
+  by
   apply TensorProduct.induction_on x
   · simp [inv_fun]
   · intro a p
@@ -177,7 +180,8 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
     simp only [AlgHom.map_add, inv_fun_add, hp, hq]
 #align poly_equiv_tensor.left_inv PolyEquivTensor.left_inv
 
-theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
+theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x :=
+  by
   apply Polynomial.induction_on' x
   · intro p q hp hq
     simp only [inv_fun_add, AlgHom.map_add, hp, hq]
@@ -192,7 +196,7 @@ theorem right_inv (x : A[X]) : (toFunAlgHom R A) (invFun R A x) = x := by
 
 The equivalence, ignoring the algebra structure, `(A ⊗[R] R[X]) ≃ A[X]`.
 -/
-def equiv : A ⊗[R] R[X] ≃ A[X] where 
+def equiv : A ⊗[R] R[X] ≃ A[X] where
   toFun := toFunAlgHom R A
   invFun := invFun R A
   left_inv := left_inv R A
@@ -245,7 +249,8 @@ noncomputable def matPolyEquiv : Matrix n n R[X] ≃ₐ[R] (Matrix n n R)[X] :=
 open Finset
 
 theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
-    matPolyEquiv (stdBasisMatrix i j <| monomial k x) = monomial k (stdBasisMatrix i j x) := by
+    matPolyEquiv (stdBasisMatrix i j <| monomial k x) = monomial k (stdBasisMatrix i j x) :=
+  by
   simp only [matPolyEquiv, AlgEquiv.trans_apply, matrix_equiv_tensor_apply_std_basis]
   apply (polyEquivTensor R (Matrix n n R)).Injective
   simp only [AlgEquiv.apply_symm_apply]
@@ -259,7 +264,8 @@ theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
 #align mat_poly_equiv_coeff_apply_aux_1 mat_poly_equiv_coeff_apply_aux_1
 
 theorem mat_poly_equiv_coeff_apply_aux_2 (i j : n) (p : R[X]) (k : ℕ) :
-    coeff (matPolyEquiv (stdBasisMatrix i j p)) k = stdBasisMatrix i j (coeff p k) := by
+    coeff (matPolyEquiv (stdBasisMatrix i j p)) k = stdBasisMatrix i j (coeff p k) :=
+  by
   apply Polynomial.induction_on' p
   · intro p q hp hq
     ext
@@ -273,7 +279,8 @@ theorem mat_poly_equiv_coeff_apply_aux_2 (i j : n) (p : R[X]) (k : ℕ) :
 
 @[simp]
 theorem mat_poly_equiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
-    coeff (matPolyEquiv m) k i j = coeff (m i j) k := by
+    coeff (matPolyEquiv m) k i j = coeff (m i j) k :=
+  by
   apply Matrix.induction_on' m
   · simp
   · intro p q hp hq
@@ -289,14 +296,16 @@ theorem mat_poly_equiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
 
 @[simp]
 theorem mat_poly_equiv_symm_apply_coeff (p : (Matrix n n R)[X]) (i j : n) (k : ℕ) :
-    coeff (matPolyEquiv.symm p i j) k = coeff p k i j := by
+    coeff (matPolyEquiv.symm p i j) k = coeff p k i j :=
+  by
   have t : p = matPolyEquiv (mat_poly_equiv.symm p) := by simp
   conv_rhs => rw [t]
   simp only [mat_poly_equiv_coeff_apply]
 #align mat_poly_equiv_symm_apply_coeff mat_poly_equiv_symm_apply_coeff
 
 theorem mat_poly_equiv_smul_one (p : R[X]) :
-    matPolyEquiv (p • 1) = p.map (algebraMap R (Matrix n n R)) := by
+    matPolyEquiv (p • 1) = p.map (algebraMap R (Matrix n n R)) :=
+  by
   ext (m i j)
   simp only [coeff_map, one_apply, algebra_map_matrix_apply, mul_boole, Pi.smul_apply,
     mat_poly_equiv_coeff_apply]
@@ -304,7 +313,8 @@ theorem mat_poly_equiv_smul_one (p : R[X]) :
 #align mat_poly_equiv_smul_one mat_poly_equiv_smul_one
 
 theorem support_subset_support_mat_poly_equiv (m : Matrix n n R[X]) (i j : n) :
-    support (m i j) ⊆ support (matPolyEquiv m) := by
+    support (m i j) ⊆ support (matPolyEquiv m) :=
+  by
   intro k
   contrapose
   simp only [not_mem_support_iff]

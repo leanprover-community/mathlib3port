@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.spectrum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,8 +88,8 @@ noncomputable def resolvent (a : A) (r : R) : A :=
 
 /-- The unit `1 - r⁻¹ • a` constructed from `r • 1 - a` when the latter is a unit. -/
 @[simps]
-noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) :
-    Aˣ where 
+noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) : Aˣ
+    where
   val := ↑ₐ s - r⁻¹ • a
   inv := r • ↑h.Unit⁻¹
   val_inv := by rw [mul_smul_comm, ← smul_mul_assoc, smul_sub, smul_inv_smul, h.mul_coe_inv]
@@ -118,7 +118,8 @@ theorem mem_iff {r : R} {a : A} : r ∈ σ a ↔ ¬IsUnit (↑ₐ r - a) :=
   Iff.rfl
 #align spectrum.mem_iff spectrum.mem_iff
 
-theorem not_mem_iff {r : R} {a : A} : r ∉ σ a ↔ IsUnit (↑ₐ r - a) := by
+theorem not_mem_iff {r : R} {a : A} : r ∉ σ a ↔ IsUnit (↑ₐ r - a) :=
+  by
   apply not_iff_not.mp
   simp [Set.not_not_mem, mem_iff]
 #align spectrum.not_mem_iff spectrum.not_mem_iff
@@ -159,7 +160,8 @@ theorem resolvent_eq {a : A} {r : R} (h : r ∈ resolventSet R a) : resolvent a 
 #align spectrum.resolvent_eq spectrum.resolvent_eq
 
 theorem units_smul_resolvent {r : Rˣ} {s : R} {a : A} :
-    r • resolvent a (s : R) = resolvent (r⁻¹ • a) (r⁻¹ • s : R) := by
+    r • resolvent a (s : R) = resolvent (r⁻¹ • a) (r⁻¹ • s : R) :=
+  by
   by_cases h : s ∈ spectrum R a
   · rw [mem_iff] at h
     simp only [resolvent, Algebra.algebra_map_eq_smul_one] at *
@@ -187,7 +189,8 @@ theorem is_unit_resolvent {r : R} {a : A} : r ∈ resolventSet R a ↔ IsUnit (r
 #align spectrum.is_unit_resolvent spectrum.is_unit_resolvent
 
 theorem inv_mem_resolvent_set {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ resolventSet R (a : A)) :
-    (↑r⁻¹ : R) ∈ resolventSet R (↑a⁻¹ : A) := by
+    (↑r⁻¹ : R) ∈ resolventSet R (↑a⁻¹ : A) :=
+  by
   rw [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one, ← Units.smul_def] at h⊢
   rw [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv, IsUnit.sub_iff]
   have h₁ : (a : A) * (r • (↑a⁻¹ : A) - 1) = r • 1 - a := by
@@ -220,12 +223,13 @@ theorem add_mem_add_iff {a : A} {r s : R} : r + s ∈ σ (↑ₐ s + a) ↔ r �
 
 theorem smul_mem_smul_iff {a : A} {s : R} {r : Rˣ} : r • s ∈ σ (r • a) ↔ s ∈ σ a := by
   simp only [mem_iff, not_iff_not, Algebra.algebra_map_eq_smul_one, smul_assoc, ← smul_sub,
-    is_unit_smul_iff]
+    isUnit_smul_iff]
 #align spectrum.smul_mem_smul_iff spectrum.smul_mem_smul_iff
 
 open Polynomial
 
-theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
+theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a :=
+  by
   ext
   have x_eq : x = r • r⁻¹ • x := by simp
   nth_rw 1 [x_eq]
@@ -237,8 +241,10 @@ theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
 #align spectrum.unit_smul_eq_smul spectrum.unit_smul_eq_smul
 
 -- `r ∈ σ(a*b) ↔ r ∈ σ(b*a)` for any `r : Rˣ`
-theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) := by
-  have h₁ : ∀ x y : A, IsUnit (1 - x * y) → IsUnit (1 - y * x) := by
+theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) :=
+  by
+  have h₁ : ∀ x y : A, IsUnit (1 - x * y) → IsUnit (1 - y * x) :=
+    by
     refine' fun x y h => ⟨⟨1 - y * x, 1 + y * h.unit.inv * x, _, _⟩, rfl⟩
     calc
       (1 - y * x) * (1 + y * (IsUnit.unit h).inv * x) =
@@ -273,7 +279,8 @@ theorem star_mem_resolvent_set_iff {r : R} {a : A} :
       star_star, star_one] using IsUnit.star h
 #align spectrum.star_mem_resolvent_set_iff spectrum.star_mem_resolvent_set_iff
 
-protected theorem map_star (a : A) : σ (star a) = star (σ a) := by
+protected theorem map_star (a : A) : σ (star a) = star (σ a) :=
+  by
   ext
   simpa only [Set.mem_star, mem_iff, not_iff_not] using star_mem_resolvent_set_iff.symm
 #align spectrum.map_star spectrum.map_star
@@ -335,7 +342,8 @@ open Polynomial
 
 theorem exists_mem_of_not_is_unit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp : p ≠ 0)
     (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => X - c x) p.roots).Prod)) :
-    ∃ k : R, k ∈ σ a ∧ eval k p = 0 := by
+    ∃ k : R, k ∈ σ a ∧ eval k p = 0 :=
+  by
   rw [← Multiset.prod_to_list, AlgHom.map_list_prod] at h
   replace h := mt List.prod_is_unit h
   simp only [not_forall, exists_prop, aeval_C, Multiset.mem_to_list, List.mem_map, aeval_X,
@@ -360,7 +368,8 @@ local notation "↑ₐ" => algebraMap 𝕜 A
 
 /-- Without the assumption `nontrivial A`, then `0 : A` would be invertible. -/
 @[simp]
-theorem zero_eq [Nontrivial A] : σ (0 : A) = {0} := by
+theorem zero_eq [Nontrivial A] : σ (0 : A) = {0} :=
+  by
   refine' Set.Subset.antisymm _ (by simp [Algebra.algebra_map_eq_smul_one, mem_iff])
   rw [spectrum, Set.compl_subset_comm]
   intro k hk
@@ -385,13 +394,14 @@ theorem one_eq [Nontrivial A] : σ (1 : A) = {1} :=
 /-- the assumption `(σ a).nonempty` is necessary and cannot be removed without
     further conditions on the algebra `A` and scalar field `𝕜`. -/
 theorem smul_eq_smul [Nontrivial A] (k : 𝕜) (a : A) (ha : (σ a).Nonempty) : σ (k • a) = k • σ a :=
-  by 
+  by
   rcases eq_or_ne k 0 with (rfl | h)
   · simpa [ha, zero_smul_set]
   · exact unit_smul_eq_smul a (Units.mk0 k h)
 #align spectrum.smul_eq_smul spectrum.smul_eq_smul
 
-theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} := by
+theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} :=
+  by
   suffices h : ∀ x y : A, σ (x * y) \ {0} ⊆ σ (y * x) \ {0}
   · exact Set.eq_of_subset_of_subset (h a b) (h b a)
   · rintro _ _ k ⟨k_mem, k_neq⟩
@@ -399,7 +409,8 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
     exact ⟨unit_mem_mul_iff_mem_swap_mul.mp k_mem, k_neq⟩
 #align spectrum.nonzero_mul_eq_swap_mul spectrum.nonzero_mul_eq_swap_mul
 
-protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) := by
+protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) :=
+  by
   refine' Set.eq_of_subset_of_subset (fun k hk => _) fun k hk => _
   · rw [Set.mem_inv] at hk
     have : k ≠ 0 := by simpa only [inv_inv] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
@@ -416,7 +427,7 @@ open Polynomial
 because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degree_pos` and
 `spectrum.map_polynomial_aeval_of_nonempty` need the field to be algebraically closed. -/
 theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (fun k => eval k p) '' σ a ⊆ σ (aeval a p) :=
-  by 
+  by
   rintro _ ⟨k, hk, rfl⟩
   let q := C (eval k p) - p
   have hroot : is_root q k := by simp only [eval_C, eval_sub, sub_self, is_root.def]
@@ -458,7 +469,8 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[
 /-- In this version of the spectral mapping theorem, we assume the spectrum
 is nonempty instead of assuming the degree of the polynomial is positive. -/
 theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X])
-    (hnon : (σ a).Nonempty) : σ (aeval a p) = (fun k => eval k p) '' σ a := by
+    (hnon : (σ a).Nonempty) : σ (aeval a p) = (fun k => eval k p) '' σ a :=
+  by
   nontriviality A
   refine' Or.elim (le_or_gt (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
   · rw [eq_C_of_degree_le_zero h]
@@ -476,7 +488,7 @@ theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
     σ (a ^ n) = (fun x => x ^ n) '' σ a := by
   simpa only [aeval_X_pow, eval_pow, eval_X] using
     map_polynomial_aeval_of_degree_pos a (X ^ n : 𝕜[X])
-      (by 
+      (by
         rw_mod_cast [degree_X_pow]
         exact hn)
 #align spectrum.map_pow_of_pos spectrum.map_pow_of_pos
@@ -494,9 +506,10 @@ variable (𝕜)
 /-- Every element `a` in a nontrivial finite-dimensional algebra `A`
 over an algebraically closed field `𝕜` has non-empty spectrum. -/
 theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nontrivial A]
-    [I : FiniteDimensional 𝕜 A] (a : A) : ∃ k : 𝕜, k ∈ σ a := by
+    [I : FiniteDimensional 𝕜 A] (a : A) : ∃ k : 𝕜, k ∈ σ a :=
+  by
   obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) a
-  have nu : ¬IsUnit (aeval a p) := by 
+  have nu : ¬IsUnit (aeval a p) := by
     rw [← aeval_def] at h_eval_p
     rw [h_eval_p]
     simp
@@ -547,7 +560,8 @@ local notation "σ" => spectrum R
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
-theorem apply_mem_spectrum [Nontrivial R] (φ : F) (a : A) : φ a ∈ σ a := by
+theorem apply_mem_spectrum [Nontrivial R] (φ : F) (a : A) : φ a ∈ σ a :=
+  by
   have h : ↑ₐ (φ a) - a ∈ (φ : A →+* R).ker := by
     simp only [RingHom.mem_ker, map_sub, RingHom.coe_coe, AlgHomClass.commutes,
       Algebra.id.map_eq_id, RingHom.id_apply, sub_self]

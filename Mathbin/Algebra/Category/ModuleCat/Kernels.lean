@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Module.kernels
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,8 @@ def kernelIsLimit : IsLimit (kernelCone f) :=
   Fork.IsLimit.mk _
     (fun s =>
       LinearMap.codRestrict f.ker (Fork.ι s) fun c =>
-        LinearMap.mem_ker.2 <| by
+        LinearMap.mem_ker.2 <|
+          by
           rw [← @Function.comp_apply _ _ _ f (fork.ι s) c, ← coe_comp, fork.condition,
             has_zero_morphisms.comp_zero (fork.ι s) N]
           rfl)
@@ -58,7 +59,8 @@ def cokernelIsColimit : IsColimit (cokernelCocone f) :=
   Cofork.IsColimit.mk _
     (fun s =>
       f.range.liftq (Cofork.π s) <| LinearMap.range_le_ker_iff.2 <| CokernelCofork.condition s)
-    (fun s => f.range.liftq_mkq (Cofork.π s) _) fun s m h => by
+    (fun s => f.range.liftq_mkq (Cofork.π s) _) fun s m h =>
+    by
     haveI : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (Submodule.range_mkq _)
     apply (cancel_epi (as_hom f.range.mkq)).1
     convert h
@@ -128,7 +130,7 @@ theorem range_mkq_cokernel_iso_range_quotient_inv :
   Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernel_iso_range_quotient_inv
 
 theorem cokernel_π_ext {M N : ModuleCat.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :
-    cokernel.π f x = cokernel.π f y := by 
+    cokernel.π f x = cokernel.π f y := by
   subst w
   simp
 #align Module.cokernel_π_ext ModuleCat.cokernel_π_ext

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,13 +160,15 @@ theorem coe_repr_symm : ↑b.repr.symm = Finsupp.total ι M R b :=
 #align basis.coe_repr_symm Basis.coe_repr_symm
 
 @[simp]
-theorem repr_total (v) : b.repr (Finsupp.total _ _ _ b v) = v := by
+theorem repr_total (v) : b.repr (Finsupp.total _ _ _ b v) = v :=
+  by
   rw [← b.coe_repr_symm]
   exact b.repr.apply_symm_apply v
 #align basis.repr_total Basis.repr_total
 
 @[simp]
-theorem total_repr : Finsupp.total _ _ _ b (b.repr x) = x := by
+theorem total_repr : Finsupp.total _ _ _ b (b.repr x) = x :=
+  by
   rw [← b.coe_repr_symm]
   exact b.repr.symm_apply_apply x
 #align basis.total_repr Basis.total_repr
@@ -181,7 +183,8 @@ theorem mem_span_repr_support {ι : Type _} (b : Basis ι R M) (m : M) :
 #align basis.mem_span_repr_support Basis.mem_span_repr_support
 
 theorem repr_support_subset_of_mem_span {ι : Type _} (b : Basis ι R M) (s : Set ι) {m : M}
-    (hm : m ∈ span R (b '' s)) : ↑(b.repr m).support ⊆ s := by
+    (hm : m ∈ span R (b '' s)) : ↑(b.repr m).support ⊆ s :=
+  by
   rcases(Finsupp.mem_span_image_iff_total _).1 hm with ⟨l, hl, hlm⟩
   rwa [← hlm, repr_total, ← Finsupp.mem_supported R l]
 #align basis.repr_support_subset_of_mem_span Basis.repr_support_subset_of_mem_span
@@ -216,7 +219,8 @@ theorem coe_sum_coords : (b.sumCoords : M → R) = fun m => (b.repr m).Sum fun i
   rfl
 #align basis.coe_sum_coords Basis.coe_sum_coords
 
-theorem coe_sum_coords_eq_finsum : (b.sumCoords : M → R) = fun m => ∑ᶠ i, b.Coord i m := by
+theorem coe_sum_coords_eq_finsum : (b.sumCoords : M → R) = fun m => ∑ᶠ i, b.Coord i m :=
+  by
   ext m
   simp only [Basis.sumCoords, Basis.coord, Finsupp.lapply_apply, LinearMap.id_coe,
     LinearEquiv.coe_coe, Function.comp_apply, Finsupp.coe_lsum, LinearMap.coe_comp,
@@ -225,7 +229,8 @@ theorem coe_sum_coords_eq_finsum : (b.sumCoords : M → R) = fun m => ∑ᶠ i, 
 #align basis.coe_sum_coords_eq_finsum Basis.coe_sum_coords_eq_finsum
 
 @[simp]
-theorem coe_sum_coords_of_fintype [Fintype ι] : (b.sumCoords : M → R) = ∑ i, b.Coord i := by
+theorem coe_sum_coords_of_fintype [Fintype ι] : (b.sumCoords : M → R) = ∑ i, b.Coord i :=
+  by
   ext m
   simp only [sum_coords, Finsupp.sum_fintype, LinearMap.id_coe, LinearEquiv.coe_coe, coord_apply,
     id.def, Fintype.sum_apply, imp_true_iff, eq_self_iff_true, Finsupp.coe_lsum, LinearMap.coe_comp]
@@ -256,7 +261,8 @@ variable [RingHomInvPair σ σ'] [RingHomInvPair σ' σ]
 variable {M₁ : Type _} [AddCommMonoid M₁] [Module R₁ M₁]
 
 /-- Two linear maps are equal if they are equal on basis vectors. -/
-theorem ext {f₁ f₂ : M →ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ := by
+theorem ext {f₁ f₂ : M →ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
+  by
   ext x
   rw [← b.total_repr x, Finsupp.total_apply, Finsupp.sum]
   simp only [LinearMap.map_sum, LinearMap.map_smulₛₗ, h]
@@ -265,7 +271,8 @@ theorem ext {f₁ f₂ : M →ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b 
 include σ'
 
 /-- Two linear equivs are equal if they are equal on basis vectors. -/
-theorem ext' {f₁ f₂ : M ≃ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ := by
+theorem ext' {f₁ f₂ : M ≃ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
+  by
   ext x
   rw [← b.total_repr x, Finsupp.total_apply, Finsupp.sum]
   simp only [LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, h]
@@ -274,7 +281,8 @@ theorem ext' {f₁ f₂ : M ≃ₛₗ[σ] M₁} (h : ∀ i, f₁ (b i) = f₂ (b
 omit σ'
 
 /-- Two elements are equal if their coordinates are equal. -/
-theorem ext_elem {x y : M} (h : ∀ i, b.repr x i = b.repr y i) : x = y := by
+theorem ext_elem {x y : M} (h : ∀ i, b.repr x i = b.repr y i) : x = y :=
+  by
   rw [← b.total_repr x, ← b.total_repr y]
   congr 1
   ext i
@@ -298,17 +306,19 @@ theorem apply_eq_iff {b : Basis ι R M} {x : M} {i : ι} : b i = x ↔ b.repr x 
 /-- An unbundled version of `repr_eq_iff` -/
 theorem repr_apply_eq (f : M → ι → R) (hadd : ∀ x y, f (x + y) = f x + f y)
     (hsmul : ∀ (c : R) (x : M), f (c • x) = c • f x) (f_eq : ∀ i, f (b i) = Finsupp.single i 1)
-    (x : M) (i : ι) : b.repr x i = f x i := by
+    (x : M) (i : ι) : b.repr x i = f x i :=
+  by
   let f_i : M →ₗ[R] R :=
     { toFun := fun x => f x i
       map_add' := fun _ _ => by rw [hadd, Pi.add_apply]
       map_smul' := fun _ _ => by simp [hsmul, Pi.smul_apply] }
-  have : Finsupp.lapply i ∘ₗ ↑b.repr = f_i := by
+  have : Finsupp.lapply i ∘ₗ ↑b.repr = f_i :=
+    by
     refine' b.ext fun j => _
     show b.repr (b j) i = f (b j) i
     rw [b.repr_self, f_eq]
   calc
-    b.repr x i = f_i x := by 
+    b.repr x i = f_i x := by
       rw [← this]
       rfl
     _ = f x i := rfl
@@ -318,7 +328,7 @@ theorem repr_apply_eq (f : M → ι → R) (hadd : ∀ x y, f (x + y) = f x + f 
 /-- Two bases are equal if they assign the same coordinates. -/
 theorem eq_of_repr_eq_repr {b₁ b₂ : Basis ι R M} (h : ∀ x i, b₁.repr x i = b₂.repr x i) : b₁ = b₂ :=
   by
-  have : b₁.repr = b₂.repr := by 
+  have : b₁.repr = b₂.repr := by
     ext
     apply h
   cases b₁
@@ -329,7 +339,7 @@ theorem eq_of_repr_eq_repr {b₁ b₂ : Basis ι R M} (h : ∀ x i, b₁.repr x 
 /-- Two bases are equal if their basis vectors are the same. -/
 @[ext]
 theorem eq_of_apply_eq {b₁ b₂ : Basis ι R M} (h : ∀ i, b₁ i = b₂ i) : b₁ = b₂ :=
-  suffices b₁.repr = b₂.repr by 
+  suffices b₁.repr = b₂.repr by
     cases b₁
     cases b₂
     simpa
@@ -370,7 +380,8 @@ then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module.
 See also `basis.algebra_map_coeffs` for the case where `f` is equal to `algebra_map`.
 -/
 @[simps (config := { simpRhs := true })]
-def mapCoeffs : Basis ι R' M := by
+def mapCoeffs : Basis ι R' M :=
+  by
   letI : Module R' R := Module.compHom R (↑f.symm : R' →+* R)
   haveI : IsScalarTower R' R M :=
     { smul_assoc := fun x y z => by dsimp [(· • ·)]; rw [mul_smul, ← h, f.apply_symm_apply] }
@@ -448,7 +459,8 @@ def reindexRange : Basis (range b) R M :=
     Basis.of_repr (Module.subsingletonEquiv R M (range b))
 #align basis.reindex_range Basis.reindexRange
 
-theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindexRange ⟨b i, h⟩ = b i := by
+theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindexRange ⟨b i, h⟩ = b i :=
+  by
   by_cases htr : Nontrivial R
   · letI := htr
     simp [htr, reindex_range, reindex_apply, Equiv.apply_ofInjective_symm b.injective,
@@ -468,13 +480,15 @@ theorem reindex_range_repr_self (i : ι) :
 #align basis.reindex_range_repr_self Basis.reindex_range_repr_self
 
 @[simp]
-theorem reindex_range_apply (x : range b) : b.reindexRange x = x := by
+theorem reindex_range_apply (x : range b) : b.reindexRange x = x :=
+  by
   rcases x with ⟨bi, ⟨i, rfl⟩⟩
   exact b.reindex_range_self i
 #align basis.reindex_range_apply Basis.reindex_range_apply
 
 theorem reindex_range_repr' (x : M) {bi : M} {i : ι} (h : b i = bi) :
-    b.reindexRange.repr x ⟨bi, ⟨i, h⟩⟩ = b.repr x i := by
+    b.reindexRange.repr x ⟨bi, ⟨i, h⟩⟩ = b.repr x i :=
+  by
   nontriviality
   subst h
   refine' (b.repr_apply_eq (fun x i => b.reindex_range.repr x ⟨b i, _⟩) _ _ _ x i).symm
@@ -508,13 +522,15 @@ def reindexFinsetRange : Basis (Finset.univ.image b) R M :=
 #align basis.reindex_finset_range Basis.reindexFinsetRange
 
 theorem reindex_finset_range_self (i : ι) (h := Finset.mem_image_of_mem b (Finset.mem_univ i)) :
-    b.reindexFinsetRange ⟨b i, h⟩ = b i := by
+    b.reindexFinsetRange ⟨b i, h⟩ = b i :=
+  by
   rw [reindex_finset_range, reindex_apply, reindex_range_apply]
   rfl
 #align basis.reindex_finset_range_self Basis.reindex_finset_range_self
 
 @[simp]
-theorem reindex_finset_range_apply (x : Finset.univ.image b) : b.reindexFinsetRange x = x := by
+theorem reindex_finset_range_apply (x : Finset.univ.image b) : b.reindexFinsetRange x = x :=
+  by
   rcases x with ⟨bi, hbi⟩
   rcases finset.mem_image.mp hbi with ⟨i, -, rfl⟩
   exact b.reindex_finset_range_self i
@@ -523,7 +539,7 @@ theorem reindex_finset_range_apply (x : Finset.univ.image b) : b.reindexFinsetRa
 theorem reindex_finset_range_repr_self (i : ι) :
     b.reindexFinsetRange.repr (b i) =
       Finsupp.single ⟨b i, Finset.mem_image_of_mem b (Finset.mem_univ i)⟩ 1 :=
-  by 
+  by
   ext ⟨bi, hbi⟩
   rw [reindex_finset_range, reindex_repr, reindex_range_repr_self]
   convert Finsupp.single_apply_left ((Equiv.refl M).subtypeEquiv _).symm.Injective _ _ _
@@ -552,7 +568,8 @@ protected theorem ne_zero [Nontrivial R] (i) : b i ≠ 0 :=
   b.LinearIndependent.NeZero i
 #align basis.ne_zero Basis.ne_zero
 
-protected theorem mem_span (x : M) : x ∈ span R (range b) := by
+protected theorem mem_span (x : M) : x ∈ span R (range b) :=
+  by
   rw [← b.total_repr x, Finsupp.total_apply, Finsupp.sum]
   exact Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
 #align basis.mem_span Basis.mem_span
@@ -561,7 +578,8 @@ protected theorem span_eq : span R (range b) = ⊤ :=
   eq_top_iff.mpr fun x _ => b.mem_span x
 #align basis.span_eq Basis.span_eq
 
-theorem index_nonempty (b : Basis ι R M) [Nontrivial M] : Nonempty ι := by
+theorem index_nonempty (b : Basis ι R M) [Nontrivial M] : Nonempty ι :=
+  by
   obtain ⟨x, y, ne⟩ : ∃ x y : M, x ≠ y := Nontrivial.exists_pair_ne
   obtain ⟨i, _⟩ := not_forall.mp (mt b.ext_elem Ne)
   exact ⟨i⟩
@@ -569,7 +587,8 @@ theorem index_nonempty (b : Basis ι R M) [Nontrivial M] : Nonempty ι := by
 
 /-- If the submodule `P` has a basis, `x ∈ P` iff it is a linear combination of basis vectors. -/
 theorem mem_submodule_iff {P : Submodule R M} (b : Basis ι R P) {x : M} :
-    x ∈ P ↔ ∃ c : ι →₀ R, x = Finsupp.sum c fun i x => x • b i := by
+    x ∈ P ↔ ∃ c : ι →₀ R, x = Finsupp.sum c fun i x => x • b i :=
+  by
   conv_lhs =>
     rw [← P.range_subtype, ← Submodule.map_top, ← b.span_eq, Submodule.map_span, ← Set.range_comp, ←
       Finsupp.range_total]
@@ -590,22 +609,20 @@ If `R` is commutative, you can set `S := R`; if `R` is not commutative,
 you can recover an `add_equiv` by setting `S := ℕ`.
 See library note [bundled maps over different rings].
 -/
-def constr :
-    (ι → M') ≃ₗ[S]
-      M →ₗ[R]
-        M' where 
+def constr : (ι → M') ≃ₗ[S] M →ₗ[R] M'
+    where
   toFun f := (Finsupp.total M' M' R id).comp <| Finsupp.lmapDomain R R f ∘ₗ ↑b.repr
   invFun f i := f (b i)
-  left_inv f := by 
+  left_inv f := by
     ext
     simp
-  right_inv f := by 
+  right_inv f := by
     refine' b.ext fun i => _
     simp
-  map_add' f g := by 
+  map_add' f g := by
     refine' b.ext fun i => _
     simp
-  map_smul' c f := by 
+  map_smul' c f := by
     refine' b.ext fun i => _
     simp
 #align basis.constr Basis.constr
@@ -615,7 +632,8 @@ theorem constr_def (f : ι → M') :
   rfl
 #align basis.constr_def Basis.constr_def
 
-theorem constr_apply (f : ι → M') (x : M) : b.constr S f x = (b.repr x).Sum fun b a => a • f b := by
+theorem constr_apply (f : ι → M') (x : M) : b.constr S f x = (b.repr x).Sum fun b a => a • f b :=
+  by
   simp only [constr_def, LinearMap.comp_apply, Finsupp.lmap_domain_apply, Finsupp.total_apply]
   rw [Finsupp.sum_map_domain_index] <;> simp [add_smul]
 #align basis.constr_apply Basis.constr_apply
@@ -680,7 +698,8 @@ theorem equiv_trans {ι'' : Type _} (b'' : Basis ι'' R M'') (e : ι ≃ ι') (e
 
 @[simp]
 theorem map_equiv (b : Basis ι R M) (b' : Basis ι' R M') (e : ι ≃ ι') :
-    b.map (b.Equiv b' e) = b'.reindex e.symm := by
+    b.map (b.Equiv b' e) = b'.reindex e.symm :=
+  by
   ext i
   simp
 #align basis.map_equiv Basis.map_equiv
@@ -709,7 +728,7 @@ theorem prod_repr_inr (x) (i) : (b.Prod b').repr x (Sum.inr i) = b'.repr x.2 i :
 #align basis.prod_repr_inr Basis.prod_repr_inr
 
 theorem prod_apply_inl_fst (i) : (b.Prod b' (Sum.inl i)).1 = b i :=
-  b.repr.Injective <| by 
+  b.repr.Injective <| by
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
@@ -718,7 +737,7 @@ theorem prod_apply_inl_fst (i) : (b.Prod b' (Sum.inl i)).1 = b i :=
 #align basis.prod_apply_inl_fst Basis.prod_apply_inl_fst
 
 theorem prod_apply_inr_fst (i) : (b.Prod b' (Sum.inr i)).1 = 0 :=
-  b.repr.Injective <| by 
+  b.repr.Injective <| by
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
@@ -728,7 +747,7 @@ theorem prod_apply_inr_fst (i) : (b.Prod b' (Sum.inr i)).1 = 0 :=
 #align basis.prod_apply_inr_fst Basis.prod_apply_inr_fst
 
 theorem prod_apply_inl_snd (i) : (b.Prod b' (Sum.inl i)).2 = 0 :=
-  b'.repr.Injective <| by 
+  b'.repr.Injective <| by
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
@@ -738,7 +757,7 @@ theorem prod_apply_inl_snd (i) : (b.Prod b' (Sum.inl i)).2 = 0 :=
 #align basis.prod_apply_inl_snd Basis.prod_apply_inl_snd
 
 theorem prod_apply_inr_snd (i) : (b.Prod b' (Sum.inr i)).2 = b' i :=
-  b'.repr.Injective <| by 
+  b'.repr.Injective <| by
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
@@ -762,7 +781,8 @@ section NoZeroSmulDivisors
 protected theorem no_zero_smul_divisors [NoZeroDivisors R] (b : Basis ι R M) :
     NoZeroSmulDivisors R M :=
   ⟨fun c x hcx =>
-    or_iff_not_imp_right.mpr fun hx => by
+    or_iff_not_imp_right.mpr fun hx =>
+      by
       rw [← b.total_repr x, ← LinearMap.map_smul] at hcx
       have := linear_independent_iff.mp b.linear_independent (c • b.repr x) hcx
       rw [smul_eq_zero] at this
@@ -776,7 +796,7 @@ protected theorem smul_eq_zero [NoZeroDivisors R] (b : Basis ι R M) {c : R} {x 
 
 theorem eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : Submodule R M)
     (rank_eq : ∀ {m : ℕ} (v : Fin m → N), LinearIndependent R (coe ∘ v : Fin m → M) → m = 0) :
-    N = ⊥ := by 
+    N = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro x hx
   contrapose! rank_eq with x_ne
@@ -817,7 +837,8 @@ theorem singleton_repr (ι R : Type _) [Unique ι] [Semiring R] (x i) :
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M]
     [NoZeroSmulDivisors R M] (ι : Type _) [Unique ι] :
-    Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y := by
+    Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y :=
+  by
   fconstructor
   · rintro ⟨b⟩
     refine' ⟨b default, b.linear_independent.ne_zero _, _⟩
@@ -853,8 +874,8 @@ protected def empty [Subsingleton M] [IsEmpty ι] : Basis ι R M :=
   of_repr 0
 #align basis.empty Basis.empty
 
-instance emptyUnique [Subsingleton M] [IsEmpty ι] :
-    Unique (Basis ι R M) where 
+instance emptyUnique [Subsingleton M] [IsEmpty ι] : Unique (Basis ι R M)
+    where
   default := Basis.empty M
   uniq := fun ⟨x⟩ => congr_arg of_repr <| Subsingleton.elim _ _
 #align basis.empty_unique Basis.emptyUnique
@@ -875,7 +896,7 @@ variable [Fintype ι] (b : Basis ι R M)
 -/
 def Basis.equivFun : M ≃ₗ[R] ι → R :=
   LinearEquiv.trans b.repr
-    ({ Finsupp.equivFunOnFinite with 
+    ({ Finsupp.equivFunOnFinite with
         toFun := coeFn
         map_add' := Finsupp.coe_add
         map_smul' := Finsupp.coe_smul } :
@@ -911,7 +932,8 @@ theorem Basis.map_equiv_fun (f : M ≃ₗ[R] M') : (b.map f).equivFun = f.symm.t
   rfl
 #align basis.map_equiv_fun Basis.map_equiv_fun
 
-theorem Basis.sum_equiv_fun (u : M) : (∑ i, b.equivFun u i • b i) = u := by
+theorem Basis.sum_equiv_fun (u : M) : (∑ i, b.equivFun u i • b i) = u :=
+  by
   conv_rhs => rw [← b.total_repr u]
   simp [Finsupp.total_apply, Finsupp.sum_fintype, b.equiv_fun_apply]
 #align basis.sum_equiv_fun Basis.sum_equiv_fun
@@ -925,7 +947,8 @@ theorem Basis.equiv_fun_self (i j : ι) : b.equivFun (b i) j = if i = j then 1 e
   rw [b.equiv_fun_apply, b.repr_self_apply]
 #align basis.equiv_fun_self Basis.equiv_fun_self
 
-theorem Basis.repr_sum_self (c : ι → R) : ⇑(b.repr (∑ i, c i • b i)) = c := by
+theorem Basis.repr_sum_self (c : ι → R) : ⇑(b.repr (∑ i, c i • b i)) = c :=
+  by
   ext j
   simp only [map_sum, LinearEquiv.map_smul, repr_self, Finsupp.smul_single, smul_eq_mul, mul_one,
     Finset.sum_apply']
@@ -959,7 +982,8 @@ theorem Basis.coe_of_equiv_fun (e : M ≃ₗ[R] ι → R) :
 #align basis.coe_of_equiv_fun Basis.coe_of_equiv_fun
 
 @[simp]
-theorem Basis.of_equiv_fun_equiv_fun (v : Basis ι R M) : Basis.ofEquivFun v.equivFun = v := by
+theorem Basis.of_equiv_fun_equiv_fun (v : Basis ι R M) : Basis.ofEquivFun v.equivFun = v :=
+  by
   ext j
   simp only [Basis.equiv_fun_symm_apply, Basis.coe_of_equiv_fun]
   simp_rw [Function.update_apply, ite_smul]
@@ -1009,7 +1033,7 @@ and `f`, `g` form a bijection between the basis vectors,
 -/
 def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ range b') (hg : ∀ i, g (b' i) ∈ range b)
     (hgf : ∀ i, g (f (b i)) = b i) (hfg : ∀ i, f (g (b' i)) = b' i) : M ≃ₗ[R] M' :=
-  { b.constr R (f ∘ b) with 
+  { b.constr R (f ∘ b) with
     invFun := b'.constr R (g ∘ b')
     left_inv :=
       have : (b'.constr R (g ∘ b')).comp (b.constr R (f ∘ b)) = LinearMap.id :=
@@ -1040,7 +1064,8 @@ theorem equiv'_symm_apply (f : M → M') (g : M' → M) (hf hg hgf hfg) (i : ι'
 #align basis.equiv'_symm_apply Basis.equiv'_symm_apply
 
 theorem sum_repr_mul_repr {ι'} [Fintype ι'] (b' : Basis ι' R M) (x : M) (i : ι) :
-    (∑ j : ι', b.repr (b' j) i * b'.repr x j) = b.repr x i := by
+    (∑ j : ι', b.repr (b' j) i * b'.repr x j) = b.repr x i :=
+  by
   conv_rhs => rw [← b'.sum_repr x]
   simp_rw [LinearEquiv.map_sum, LinearEquiv.map_smul, Finset.sum_apply']
   refine' Finset.sum_congr rfl fun j _ => _
@@ -1105,7 +1130,10 @@ variable (hli : LinearIndependent R v) (hsp : ⊤ ≤ span R (range v))
 /-- A linear independent family of vectors spanning the whole module is a basis. -/
 protected noncomputable def mk : Basis ι R M :=
   Basis.of_repr
-    { hli.repr.comp (LinearMap.id.codRestrict _ fun h => hsp Submodule.mem_top) with
+    {
+      hli.repr.comp
+        (LinearMap.id.codRestrict _ fun h =>
+          hsp Submodule.mem_top) with
       invFun := Finsupp.total _ _ _ v
       left_inv := fun x => hli.total_repr ⟨x, _⟩
       right_inv := fun x => hli.repr_eq rfl }
@@ -1142,7 +1170,8 @@ theorem mk_coord_apply_ne {i j : ι} (h : j ≠ i) : (Basis.mk hli hsp).Coord i 
 
 /-- Given a basis, the `i`th element of the dual basis evaluates to the Kronecker delta on the
 `j`th element of the basis. -/
-theorem mk_coord_apply {i j : ι} : (Basis.mk hli hsp).Coord i (v j) = if j = i then 1 else 0 := by
+theorem mk_coord_apply {i j : ι} : (Basis.mk hli hsp).Coord i (v j) = if j = i then 1 else 0 :=
+  by
   cases eq_or_ne j i
   · simp only [h, if_true, eq_self_iff_true, mk_coord_apply_eq i]
   · simp only [h, if_false, mk_coord_apply_ne h]
@@ -1156,10 +1185,10 @@ variable (hli : LinearIndependent R v)
 
 /-- A linear independent family of vectors is a basis for their span. -/
 protected noncomputable def span : Basis ι R (span R (range v)) :=
-  Basis.mk (linear_independent_span hli) <| by 
+  Basis.mk (linear_independent_span hli) <| by
     intro x _
     have h₁ : ((coe : span R (range v) → M) '' Set.range fun i => Subtype.mk (v i) _) = range v :=
-      by 
+      by
       rw [← Set.range_comp]
       rfl
     have h₂ :
@@ -1170,11 +1199,11 @@ protected noncomputable def span : Basis ι R (span R (range v)) :=
       (x : M) ∈
         map (Submodule.subtype (span R (range v)))
           (span R (Set.range fun i => Subtype.mk (v i) _)) :=
-      by 
+      by
       rw [h₂]
       apply Subtype.mem x
     rcases mem_map.1 h₃ with ⟨y, hy₁, hy₂⟩
-    have h_x_eq_y : x = y := by 
+    have h_x_eq_y : x = y := by
       rw [Subtype.ext_iff, ← hy₂]
       simp
     rwa [h_x_eq_y]
@@ -1188,7 +1217,8 @@ end Span
 
 theorem group_smul_span_eq_top {G : Type _} [Group G] [DistribMulAction G R] [DistribMulAction G M]
     [IsScalarTower G R M] {v : ι → M} (hv : Submodule.span R (Set.range v) = ⊤) {w : ι → G} :
-    Submodule.span R (Set.range (w • v)) = ⊤ := by
+    Submodule.span R (Set.range (w • v)) = ⊤ :=
+  by
   rw [eq_top_iff]
   intro j hj
   rw [← hv] at hj
@@ -1231,7 +1261,8 @@ theorem units_smul_apply {v : Basis ι R M} {w : ι → Rˣ} (i : ι) : v.units_
 
 @[simp]
 theorem coord_units_smul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
-    (e.units_smul w).Coord i = (w i)⁻¹ • e.Coord i := by
+    (e.units_smul w).Coord i = (w i)⁻¹ • e.Coord i :=
+  by
   apply e.ext
   intro j
   trans ((e.units_smul w).Coord i) ((w j)⁻¹ • (e.units_smul w) j)
@@ -1271,11 +1302,12 @@ noncomputable def mkFinCons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Fi
   have span_b : Submodule.span R (Set.range (N.Subtype ∘ b)) = N := by
     rw [Set.range_comp, Submodule.span_image, b.span_eq, Submodule.map_subtype_top]
   @Basis.mk _ _ _ (Fin.cons y (N.Subtype ∘ b) : Fin (n + 1) → M) _ _ _
-    ((b.LinearIndependent.map' N.Subtype (Submodule.ker_subtype _)).fin_cons' _ _ <| by
+    ((b.LinearIndependent.map' N.Subtype (Submodule.ker_subtype _)).fin_cons' _ _ <|
+      by
       rintro c ⟨x, hx⟩ hc
       rw [span_b] at hx
       exact hli c x hx hc)
-    fun x _ => by 
+    fun x _ => by
     rw [Fin.range_cons, Submodule.mem_span_insert', span_b]
     exact hsp x
 #align basis.mk_fin_cons Basis.mkFinCons
@@ -1347,9 +1379,9 @@ def Submodule.inductionOnRankAux (b : Basis ι R M) (P : Submodule R M → Sort 
         (∀ N' ≤ N, ∀ x ∈ N, (∀ (c : R), ∀ y ∈ N', c • x + y = (0 : M) → c = 0) → P N') → P N)
     (n : ℕ) (N : Submodule R M)
     (rank_le : ∀ {m : ℕ} (v : Fin m → N), LinearIndependent R (coe ∘ v : Fin m → M) → m ≤ n) :
-    P N := by 
+    P N := by
   haveI : DecidableEq M := Classical.decEq M
-  have Pbot : P ⊥ := by 
+  have Pbot : P ⊥ := by
     apply ih
     intro N N_le x x_mem x_ortho
     exfalso
@@ -1451,7 +1483,8 @@ theorem coe_of_vector_space : ⇑(ofVectorSpace K V) = coe :=
 #align basis.coe_of_vector_space Basis.coe_of_vector_space
 
 theorem ofVectorSpaceIndex.linear_independent :
-    LinearIndependent K (coe : ofVectorSpaceIndex K V → V) := by
+    LinearIndependent K (coe : ofVectorSpaceIndex K V → V) :=
+  by
   convert (of_vector_space K V).LinearIndependent
   ext x
   rw [of_vector_space_apply_self]
@@ -1485,7 +1518,8 @@ variable {K V}
 
 /-- For a module over a division ring, the span of a nonzero element is an atom of the
 lattice of submodules. -/
-theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodule K V) := by
+theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodule K V) :=
+  by
   constructor
   · rw [Submodule.ne_bot_iff]
     exact ⟨v, ⟨mem_span_singleton_self v, hv⟩⟩
@@ -1496,7 +1530,7 @@ theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodul
     simp_rw [span_singleton_le_iff_mem, ← Ne.def, Submodule.ne_bot_iff] at *
     rcases h with ⟨s, ⟨hs, hz⟩⟩
     cases' mem_span_singleton.1 (hT.1 hs) with a ha
-    have h : a ≠ 0 := by 
+    have h : a ≠ 0 := by
       intro h
       rw [h, zero_smul] at ha
       exact hz ha.symm
@@ -1508,7 +1542,8 @@ theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodul
 /-- The atoms of the lattice of submodules of a module over a division ring are the
 submodules equal to the span of a nonzero element of the module. -/
 theorem atom_iff_nonzero_span (W : Submodule K V) :
-    IsAtom W ↔ ∃ (v : V)(hv : v ≠ 0), W = span K {v} := by
+    IsAtom W ↔ ∃ (v : V)(hv : v ≠ 0), W = span K {v} :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · cases' h with hbot h
     rcases(Submodule.ne_bot_iff W).1 hbot with ⟨v, ⟨hW, hv⟩⟩
@@ -1522,9 +1557,8 @@ theorem atom_iff_nonzero_span (W : Submodule K V) :
 #align atom_iff_nonzero_span atom_iff_nonzero_span
 
 /-- The lattice of submodules of a module over a division ring is atomistic. -/
-instance :
-    IsAtomistic
-      (Submodule K V) where eq_Sup_atoms := by 
+instance : IsAtomistic (Submodule K V)
+    where eq_Sup_atoms := by
     intro W
     use { T : Submodule K V | ∃ (v : V)(hv : v ∈ W)(hz : v ≠ 0), T = span K {v} }
     refine' ⟨submodule_eq_Sup_le_nonzero_spans W, _⟩
@@ -1535,11 +1569,13 @@ end AtomsOfSubmoduleLattice
 variable {K V}
 
 theorem LinearMap.exists_left_inverse_of_injective (f : V →ₗ[K] V') (hf_inj : f.ker = ⊥) :
-    ∃ g : V' →ₗ[K] V, g.comp f = LinearMap.id := by
+    ∃ g : V' →ₗ[K] V, g.comp f = LinearMap.id :=
+  by
   let B := Basis.ofVectorSpaceIndex K V
   let hB := Basis.ofVectorSpace K V
   have hB₀ : _ := hB.linear_independent.to_subtype_range
-  have : LinearIndependent K (fun x => x : f '' B → V') := by
+  have : LinearIndependent K (fun x => x : f '' B → V') :=
+    by
     have h₁ : LinearIndependent K fun x : ↥(⇑f '' range (Basis.ofVectorSpace _ _)) => ↑x :=
       @LinearIndependent.image_subtype _ _ _ _ _ _ _ _ _ f hB₀ (show Disjoint _ _ by simp [hf_inj])
     rwa [Basis.range_of_vector_space K V] at h₁
@@ -1549,7 +1585,8 @@ theorem LinearMap.exists_left_inverse_of_injective (f : V →ₗ[K] V') (hf_inj 
   haveI : Inhabited V := ⟨0⟩
   refine' ⟨hC.constr ℕ (C.restrict (inv_fun f)), hB.ext fun b => _⟩
   rw [image_subset_iff] at BC
-  have fb_eq : f b = hC ⟨f b, BC b.2⟩ := by
+  have fb_eq : f b = hC ⟨f b, BC b.2⟩ :=
+    by
     change f b = Basis.extend this _
     rw [Basis.extend_apply_self, Subtype.coe_mk]
   dsimp [hB]
@@ -1567,7 +1604,8 @@ instance Module.Submodule.complemented_lattice : ComplementedLattice (Submodule 
 #align module.submodule.complemented_lattice Module.Submodule.complemented_lattice
 
 theorem LinearMap.exists_right_inverse_of_surjective (f : V →ₗ[K] V') (hf_surj : f.range = ⊤) :
-    ∃ g : V' →ₗ[K] V, f.comp g = LinearMap.id := by
+    ∃ g : V' →ₗ[K] V, f.comp g = LinearMap.id :=
+  by
   let C := Basis.ofVectorSpaceIndex K V'
   let hC := Basis.ofVectorSpace K V'
   haveI : Inhabited V := ⟨0⟩
@@ -1591,7 +1629,8 @@ open Submodule LinearMap
 /-- If `p < ⊤` is a subspace of a vector space `V`, then there exists a nonzero linear map
 `f : V →ₗ[K] K` such that `p ≤ ker f`. -/
 theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
-    ∃ (f : _)(_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f := by
+    ∃ (f : _)(_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f :=
+  by
   rcases SetLike.exists_of_lt hp with ⟨v, -, hpv⟩; clear hp
   rcases(LinearPmap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
   refine' ⟨f, _, _⟩

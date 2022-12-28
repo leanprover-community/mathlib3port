@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.functor_bicategory
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,10 +36,10 @@ namespace OplaxNatTrans
 
 /-- Left whiskering of an oplax natural transformation and a modification. -/
 @[simps]
-def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) :
-    η ≫ θ ⟶ η ≫ ι where 
+def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ ⟶ η ≫ ι
+    where
   app a := η.app a ◁ Γ.app a
-  naturality' a b f := by 
+  naturality' a b f := by
     dsimp
     rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc]
     simp
@@ -47,10 +47,10 @@ def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) :
 
 /-- Right whiskering of an oplax natural transformation and a modification. -/
 @[simps]
-def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) :
-    η ≫ ι ⟶ θ ≫ ι where 
+def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) : η ≫ ι ⟶ θ ≫ ι
+    where
   app a := Γ.app a ▷ ι.app a
-  naturality' a b f := by 
+  naturality' a b f := by
     dsimp
     simp_rw [assoc, ← associator_inv_naturality_left, whisker_exchange_assoc]
     simp
@@ -80,16 +80,14 @@ variable (B C)
 
 /-- A bicategory structure on the oplax functors between bicategories. -/
 @[simps]
-instance OplaxFunctor.bicategory :
-    Bicategory
-      (OplaxFunctor B
-        C) where 
+instance OplaxFunctor.bicategory : Bicategory (OplaxFunctor B C)
+    where
   whiskerLeft F G H η _ _ Γ := OplaxNatTrans.whiskerLeft η Γ
   whiskerRight F G H _ _ Γ η := OplaxNatTrans.whiskerRight Γ η
   associator F G H I := OplaxNatTrans.associator
   leftUnitor F G := OplaxNatTrans.leftUnitor
   rightUnitor F G := OplaxNatTrans.rightUnitor
-  whisker_exchange' := by 
+  whisker_exchange' := by
     intros
     ext
     apply whisker_exchange

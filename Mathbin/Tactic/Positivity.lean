@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth, Yaël Dillies
 
 ! This file was ported from Lean 3 source module tactic.positivity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -296,9 +296,8 @@ The main (recursive) step of this tactic is to try successively all the extensio
 attribute on the expression at hand, and also to try the two "base case" tactics
 `tactic.norm_num.positivity`, `tactic.positivity.compare_hyp` on the expression at hand. -/
 @[user_attribute]
-unsafe def attr :
-    user_attribute (expr → tactic strictness)
-      Unit where 
+unsafe def attr : user_attribute (expr → tactic strictness) Unit
+    where
   Name := `positivity
   descr := "extensions handling particular operations for the `positivity` tactic"
   cache_cfg :=
@@ -479,7 +478,8 @@ private theorem le_min_of_le_of_lt (ha : a ≤ b) (hb : a < c) : a ≤ min b c :
   le_min ha hb.le
 #align tactic.le_min_of_le_of_lt tactic.le_min_of_le_of_lt
 
-private theorem min_ne (ha : a ≠ c) (hb : b ≠ c) : min a b ≠ c := by
+private theorem min_ne (ha : a ≠ c) (hb : b ≠ c) : min a b ≠ c :=
+  by
   rw [min_def]
   split_ifs <;> assumption
 #align tactic.min_ne tactic.min_ne
@@ -492,7 +492,8 @@ private theorem min_ne_of_lt_of_ne (ha : c < a) (hb : b ≠ c) : min a b ≠ c :
   min_ne ha.ne' hb
 #align tactic.min_ne_of_lt_of_ne tactic.min_ne_of_lt_of_ne
 
-private theorem max_ne (ha : a ≠ c) (hb : b ≠ c) : max a b ≠ c := by
+private theorem max_ne (ha : a ≠ c) (hb : b ≠ c) : max a b ≠ c :=
+  by
   rw [max_def]
   split_ifs <;> assumption
 #align tactic.max_ne tactic.max_ne
@@ -674,7 +675,8 @@ private theorem div_ne_zero_of_ne_zero_of_pos (ha : a ≠ 0) (hb : 0 < b) : a / 
 
 end LinearOrderedSemifield
 
-private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a := by
+private theorem int_div_self_pos {a : ℤ} (ha : 0 < a) : 0 < a / a :=
+  by
   rw [Int.ediv_self ha.ne']
   exact zero_lt_one
 #align tactic.int_div_self_pos tactic.int_div_self_pos
@@ -987,7 +989,8 @@ private theorem int_cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : 
   Int.cast_ne_zero.2
 #align tactic.int_cast_ne_zero tactic.int_cast_ne_zero
 
-private theorem int_cast_nonneg [OrderedRing α] {n : ℤ} (hn : 0 ≤ n) : 0 ≤ (n : α) := by
+private theorem int_cast_nonneg [OrderedRing α] {n : ℤ} (hn : 0 ≤ n) : 0 ≤ (n : α) :=
+  by
   rw [← Int.cast_zero]
   exact Int.cast_mono hn
 #align tactic.int_cast_nonneg tactic.int_cast_nonneg

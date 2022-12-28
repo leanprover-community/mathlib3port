@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.disjoint
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,12 +65,12 @@ theorem Iic_disjoint_Ici : Disjoint (Iic a) (Ici b) ↔ ¬b ≤ a :=
 
 @[simp]
 theorem Union_Iic : (⋃ a : α, Iic a) = univ :=
-  Union_eq_univ_iff.2 fun x => ⟨x, right_mem_Iic⟩
+  unionᵢ_eq_univ_iff.2 fun x => ⟨x, right_mem_Iic⟩
 #align set.Union_Iic Set.Union_Iic
 
 @[simp]
 theorem Union_Ici : (⋃ a : α, Ici a) = univ :=
-  Union_eq_univ_iff.2 fun x => ⟨x, left_mem_Ici⟩
+  unionᵢ_eq_univ_iff.2 fun x => ⟨x, left_mem_Ici⟩
 #align set.Union_Ici Set.Union_Ici
 
 @[simp]
@@ -95,12 +95,12 @@ theorem Union_Ico_left (b : α) : (⋃ a, Ico a b) = Iio b := by
 
 @[simp]
 theorem Union_Iio [NoMaxOrder α] : (⋃ a : α, Iio a) = univ :=
-  Union_eq_univ_iff.2 exists_gt
+  unionᵢ_eq_univ_iff.2 exists_gt
 #align set.Union_Iio Set.Union_Iio
 
 @[simp]
 theorem Union_Ioi [NoMinOrder α] : (⋃ a : α, Ioi a) = univ :=
-  Union_eq_univ_iff.2 exists_lt
+  unionᵢ_eq_univ_iff.2 exists_lt
 #align set.Union_Ioi Set.Union_Ioi
 
 @[simp]
@@ -136,7 +136,8 @@ theorem Ico_disjoint_Ico : Disjoint (Ico a₁ a₂) (Ico b₁ b₂) ↔ min a₂
 #align set.Ico_disjoint_Ico Set.Ico_disjoint_Ico
 
 @[simp]
-theorem Ioc_disjoint_Ioc : Disjoint (Ioc a₁ a₂) (Ioc b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
+theorem Ioc_disjoint_Ioc : Disjoint (Ioc a₁ a₂) (Ioc b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ :=
+  by
   have h : _ ↔ min (toDual a₁) (toDual b₁) ≤ max (toDual a₂) (toDual b₂) := Ico_disjoint_Ico
   simpa only [dual_Ico] using h
 #align set.Ioc_disjoint_Ioc Set.Ioc_disjoint_Ioc
@@ -144,7 +145,8 @@ theorem Ioc_disjoint_Ioc : Disjoint (Ioc a₁ a₂) (Ioc b₁ b₂) ↔ min a₂
 /-- If two half-open intervals are disjoint and the endpoint of one lies in the other,
   then it must be equal to the endpoint of the other. -/
 theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x₂) (Ico y₁ y₂)) (hx : x₁ < x₂)
-    (h2 : x₂ ∈ Ico y₁ y₂) : y₁ = x₂ := by
+    (h2 : x₂ ∈ Ico y₁ y₂) : y₁ = x₂ :=
+  by
   rw [Ico_disjoint_Ico, min_eq_left (le_of_lt h2.2), le_max_iff] at h
   apply le_antisymm h2.1
   exact h.elim (fun h => absurd hx (not_lt_of_le h)) id
@@ -182,7 +184,8 @@ section UnionIxx
 
 variable [LinearOrder α] {s : Set α} {a : α} {f : ι → α}
 
-theorem IsGLB.bUnion_Ioi_eq (h : IsGLB s a) : (⋃ x ∈ s, Ioi x) = Ioi a := by
+theorem IsGLB.bUnion_Ioi_eq (h : IsGLB s a) : (⋃ x ∈ s, Ioi x) = Ioi a :=
+  by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ioi_subset_Ioi (h.1 hx)
   · rcases h.exists_between hx with ⟨y, hys, hay, hyx⟩
@@ -190,7 +193,7 @@ theorem IsGLB.bUnion_Ioi_eq (h : IsGLB s a) : (⋃ x ∈ s, Ioi x) = Ioi a := by
 #align is_glb.bUnion_Ioi_eq IsGLB.bUnion_Ioi_eq
 
 theorem IsGLB.Union_Ioi_eq (h : IsGLB (range f) a) : (⋃ x, Ioi (f x)) = Ioi a :=
-  bUnion_range.symm.trans h.bUnion_Ioi_eq
+  bunionᵢ_range.symm.trans h.bUnion_Ioi_eq
 #align is_glb.Union_Ioi_eq IsGLB.Union_Ioi_eq
 
 theorem IsLUB.bUnion_Iio_eq (h : IsLUB s a) : (⋃ x ∈ s, Iio x) = Iio a :=
@@ -202,7 +205,8 @@ theorem IsLUB.Union_Iio_eq (h : IsLUB (range f) a) : (⋃ x, Iio (f x)) = Iio a 
 #align is_lub.Union_Iio_eq IsLUB.Union_Iio_eq
 
 theorem IsGLB.bUnion_Ici_eq_Ioi (a_glb : IsGLB s a) (a_not_mem : a ∉ s) :
-    (⋃ x ∈ s, Ici x) = Ioi a := by
+    (⋃ x ∈ s, Ici x) = Ioi a :=
+  by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ici_subset_Ioi.mpr (lt_of_le_of_ne (a_glb.1 hx) fun h => (h ▸ a_not_mem) hx)
   · rcases a_glb.exists_between hx with ⟨y, hys, hay, hyx⟩
@@ -210,7 +214,8 @@ theorem IsGLB.bUnion_Ici_eq_Ioi (a_glb : IsGLB s a) (a_not_mem : a ∉ s) :
     refine' ⟨y, hys, hyx.le⟩
 #align is_glb.bUnion_Ici_eq_Ioi IsGLB.bUnion_Ici_eq_Ioi
 
-theorem IsGLB.bUnion_Ici_eq_Ici (a_glb : IsGLB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Ici x) = Ici a := by
+theorem IsGLB.bUnion_Ici_eq_Ici (a_glb : IsGLB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Ici x) = Ici a :=
+  by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ici_subset_Ici.mpr (mem_lower_bounds.mp a_glb.1 x hx)
   · apply mem_Union₂.mpr

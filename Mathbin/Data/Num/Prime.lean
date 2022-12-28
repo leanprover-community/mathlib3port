@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.prime
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ def minFacAux (n : PosNum) : ℕ → PosNum → PosNum
 #align pos_num.min_fac_aux PosNum.minFacAux
 
 theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.bit1) :
-    (minFacAux n fuel k : ℕ) = Nat.minFacAux n k.bit1 := by
+    (minFacAux n fuel k : ℕ) = Nat.minFacAux n k.bit1 :=
+  by
   induction' fuel with fuel ih generalizing k <;> rw [min_fac_aux, Nat.minFacAux]
   · rw [if_pos]
     rwa [zero_add, Nat.sqrt_lt] at h
@@ -63,9 +64,10 @@ def minFac : PosNum → PosNum
 #align pos_num.min_fac PosNum.minFac
 
 @[simp]
-theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n := by
+theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n :=
+  by
   cases n; · rfl
-  · rw [min_fac, Nat.min_fac_eq, if_neg]
+  · rw [min_fac, Nat.minFac_eq, if_neg]
     swap
     · simp
     rw [min_fac_aux_to_nat]
@@ -75,7 +77,7 @@ theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n := by
     convert lt_add_of_pos_right _ (by decide : (0 : ℕ) < (n + 4) * n + 8)
     unfold _root_.bit1 _root_.bit0
     ring
-  · rw [min_fac, Nat.min_fac_eq, if_pos]
+  · rw [min_fac, Nat.minFac_eq, if_pos]
     · rfl
     simp
 #align pos_num.min_fac_to_nat PosNum.min_fac_to_nat
@@ -90,14 +92,14 @@ instance decidablePrime : DecidablePred PosNum.Prime
   | 1 => Decidable.isFalse Nat.not_prime_one
   | bit0 n =>
     decidable_of_iff' (n = 1)
-      (by 
+      (by
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans <| eq_comm.trans _)
         · exact bit0_le_bit0.2 (to_nat_pos _)
         rw [← min_fac_to_nat, to_nat_inj]
         exact ⟨bit0.inj, congr_arg _⟩)
   | bit1 n =>
     decidable_of_iff' (minFacAux (bit1 n) n 1 = bit1 n)
-      (by 
+      (by
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans _)
         · exact Nat.bit0_le_bit1_iff.2 (to_nat_pos _)
         rw [← min_fac_to_nat, to_nat_inj]; rfl)

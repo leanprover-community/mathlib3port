@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.dedup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,8 @@ theorem dedup_idempotent {l : List α} : dedup (dedup l) = dedup l :=
   pw_filter_idempotent
 #align list.dedup_idempotent List.dedup_idempotent
 
-theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ dedup l₂ := by
+theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ dedup l₂ :=
+  by
   induction' l₁ with a l₁ IH; · rfl; rw [cons_union, ← IH]
   show dedup (a :: (l₁ ++ l₂)) = insert a (dedup (l₁ ++ l₂))
   by_cases a ∈ dedup (l₁ ++ l₂) <;> [rw [dedup_cons_of_mem' h, insert_of_mem h],
@@ -110,7 +111,8 @@ theorem count_dedup (l : List α) (a : α) : l.dedup.count a = if a ∈ l then 1
 
 /-- Summing the count of `x` over a list filtered by some `p` is just `countp` applied to `p` -/
 theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p] (l : List α) :
-    ((l.dedup.filter p).map fun x => l.count x).Sum = l.countp p := by
+    ((l.dedup.filter p).map fun x => l.count x).Sum = l.countp p :=
+  by
   induction' l with a as h
   · simp
   · simp_rw [List.countp_cons, List.count_cons', List.sum_map_add]

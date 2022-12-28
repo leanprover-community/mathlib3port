@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.projective_resolution
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,8 @@ end
 namespace ProjectiveResolutionCat
 
 @[simp]
-theorem π_f_succ {Z : C} (P : ProjectiveResolutionCat Z) (n : ℕ) : P.π.f (n + 1) = 0 := by
+theorem π_f_succ {Z : C} (P : ProjectiveResolutionCat Z) (n : ℕ) : P.π.f (n + 1) = 0 :=
+  by
   apply zero_of_target_iso_zero
   dsimp; rfl
 #align category_theory.ProjectiveResolution.π_f_succ CategoryTheory.ProjectiveResolutionCat.π_f_succ
@@ -136,24 +137,23 @@ instance {Z : C} (P : ProjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Epi 
   cases n <;> infer_instance
 
 /-- A projective object admits a trivial projective resolution: itself in degree 0. -/
-def self (Z : C) [CategoryTheory.Projective Z] :
-    ProjectiveResolutionCat
-      Z where 
+def self (Z : C) [CategoryTheory.Projective Z] : ProjectiveResolutionCat Z
+    where
   complex := (ChainComplex.single₀ C).obj Z
   π := 𝟙 ((ChainComplex.single₀ C).obj Z)
-  Projective n := by 
+  Projective n := by
     cases n
     · dsimp
       infer_instance
     · dsimp
       infer_instance
-  exact₀ := by 
+  exact₀ := by
     dsimp
     exact exact_zero_mono _
-  exact n := by 
+  exact n := by
     dsimp
     exact exact_of_zero _ _
-  Epi := by 
+  Epi := by
     dsimp
     infer_instance
 #align category_theory.ProjectiveResolution.self CategoryTheory.ProjectiveResolutionCat.self
@@ -177,7 +177,8 @@ def liftFOne {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : Projec
 @[simp]
 theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
     (Q : ProjectiveResolutionCat Z) :
-    liftFOne f P Q ≫ Q.complex.d 1 0 = P.complex.d 1 0 ≫ liftFZero f P Q := by
+    liftFOne f P Q ≫ Q.complex.d 1 0 = P.complex.d 1 0 ≫ liftFZero f P Q :=
+  by
   dsimp [lift_f_zero, lift_f_one]
   simp
 #align
@@ -205,7 +206,8 @@ def lift {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : Projective
 /-- The resolution maps intertwine the lift of a morphism and that morphism. -/
 @[simp, reassoc.1]
 theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
-    (Q : ProjectiveResolutionCat Z) : lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f := by
+    (Q : ProjectiveResolutionCat Z) : lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f :=
+  by
   ext
   dsimp [lift, lift_f_zero]
   apply factor_thru_comp
@@ -282,15 +284,17 @@ def liftCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveReso
 
 -- We don't care about the actual definitions of these homotopies.
 /-- Any two projective resolutions are homotopy equivalent. -/
-def homotopyEquiv {X : C} (P Q : ProjectiveResolutionCat X) :
-    HomotopyEquiv P.complex Q.complex where 
+def homotopyEquiv {X : C} (P Q : ProjectiveResolutionCat X) : HomotopyEquiv P.complex Q.complex
+    where
   Hom := lift (𝟙 X) P Q
   inv := lift (𝟙 X) Q P
-  homotopyHomInvId := by
+  homotopyHomInvId :=
+    by
     refine' (lift_comp_homotopy (𝟙 X) (𝟙 X) P Q P).symm.trans _
     simp [category.id_comp]
     apply lift_id_homotopy
-  homotopyInvHomId := by
+  homotopyInvHomId :=
+    by
     refine' (lift_comp_homotopy (𝟙 X) (𝟙 X) Q P Q).symm.trans _
     simp [category.id_comp]
     apply lift_id_homotopy
@@ -342,18 +346,15 @@ variable (C) [Preadditive C] [HasZeroObject C] [HasEqualizers C] [HasImages C]
 if considered with target the homotopy category
 (`ℕ`-indexed chain complexes and chain maps up to homotopy).
 -/
-def projectiveResolutions :
-    C ⥤
-      HomotopyCategory C
-        (ComplexShape.down
-          ℕ) where 
+def projectiveResolutions : C ⥤ HomotopyCategory C (ComplexShape.down ℕ)
+    where
   obj X := (HomotopyCategory.quotient _ _).obj (projectiveResolution X)
   map X Y f := (HomotopyCategory.quotient _ _).map (projectiveResolution.lift f)
-  map_id' X := by 
+  map_id' X := by
     rw [← (HomotopyCategory.quotient _ _).map_id]
     apply HomotopyCategory.eq_of_homotopy
     apply ProjectiveResolution.lift_id_homotopy
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     rw [← (HomotopyCategory.quotient _ _).map_comp]
     apply HomotopyCategory.eq_of_homotopy
     apply ProjectiveResolution.lift_comp_homotopy

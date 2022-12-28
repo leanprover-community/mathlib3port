@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.units
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,15 +52,15 @@ protected theorem isUnit_iff {n : ℕ} : IsUnit n ↔ n = 1 :=
 -/
 
 #print Nat.unique_units /-
-instance unique_units : Unique ℕˣ where 
+instance unique_units : Unique ℕˣ where
   default := 1
   uniq := Nat.units_eq_one
 #align nat.unique_units Nat.unique_units
 -/
 
 #print Nat.unique_addUnits /-
-instance unique_addUnits : Unique
-      (AddUnits ℕ) where 
+instance unique_addUnits : Unique (AddUnits ℕ)
+    where
   default := 0
   uniq := Nat.addUnits_eq_zero
 #align nat.unique_add_units Nat.unique_addUnits

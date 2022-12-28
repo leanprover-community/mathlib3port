@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.polynomial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,8 @@ variable {α : Type _} [TopologicalSpace α] [CommSemiring R] [TopologicalSpace 
 
 @[simp]
 theorem aeval_continuous_map_apply (g : R[X]) (f : C(α, R)) (x : α) :
-    ((Polynomial.aeval f) g) x = g.eval (f x) := by
+    ((Polynomial.aeval f) g) x = g.eval (f x) :=
+  by
   apply Polynomial.induction_on' g
   · intro p q hp hq
     simp [hp, hq]
@@ -84,24 +85,24 @@ variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 /-- The algebra map from `R[X]` to continuous functions `C(R, R)`.
 -/
 @[simps]
-def toContinuousMapAlgHom :
-    R[X] →ₐ[R] C(R, R) where 
+def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R)
+    where
   toFun p := p.toContinuousMap
-  map_zero' := by 
+  map_zero' := by
     ext
     simp
-  map_add' := by 
+  map_add' := by
     intros
     ext
     simp
-  map_one' := by 
+  map_one' := by
     ext
     simp
-  map_mul' := by 
+  map_mul' := by
     intros
     ext
     simp
-  commutes' := by 
+  commutes' := by
     intros
     ext
     simp [Algebra.algebra_map_eq_smul_one]
@@ -110,24 +111,24 @@ def toContinuousMapAlgHom :
 /-- The algebra map from `R[X]` to continuous functions `C(X, R)`, for any subset `X` of `R`.
 -/
 @[simps]
-def toContinuousMapOnAlgHom (X : Set R) :
-    R[X] →ₐ[R] C(X, R) where 
+def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R)
+    where
   toFun p := p.toContinuousMapOn X
-  map_zero' := by 
+  map_zero' := by
     ext
     simp
-  map_add' := by 
+  map_add' := by
     intros
     ext
     simp
-  map_one' := by 
+  map_one' := by
     ext
     simp
-  map_mul' := by 
+  map_mul' := by
     intros
     ext
     simp
-  commutes' := by 
+  commutes' := by
     intros
     ext
     simp [Algebra.algebra_map_eq_smul_one]
@@ -151,7 +152,8 @@ def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
 
 @[simp]
 theorem polynomial_functions_coe (X : Set R) :
-    (polynomialFunctions X : Set C(X, R)) = Set.range (Polynomial.toContinuousMapOnAlgHom X) := by
+    (polynomialFunctions X : Set C(X, R)) = Set.range (Polynomial.toContinuousMapOnAlgHom X) :=
+  by
   ext
   simp [polynomialFunctions]
 #align polynomial_functions_coe polynomial_functions_coe
@@ -178,7 +180,7 @@ is the polynomials on `[a,b]`. -/
 theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h : a < b) :
     (polynomialFunctions I).comap (compRightAlgHom ℝ ℝ (iccHomeoI a b h).symm.toContinuousMap) =
       polynomialFunctions (Set.Icc a b) :=
-  by 
+  by
   ext f
   fconstructor
   · rintro ⟨p, ⟨-, w⟩⟩

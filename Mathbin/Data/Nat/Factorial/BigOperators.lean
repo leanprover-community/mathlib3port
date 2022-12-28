@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Pim Otte
 
 ! This file was ported from Lean 3 source module data.nat.factorial.big_operators
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ theorem prod_factorial_pos : 0 < ∏ i in s, (f i)! :=
 #align nat.prod_factorial_pos Nat.prod_factorial_pos
 
 theorem prod_factorial_dvd_factorial_sum : (∏ i in s, (f i)!) ∣ (∑ i in s, f i)! := by
-  classical 
+  classical
     induction' s using Finset.induction with a' s' has ih
     · simp only [Finset.sum_empty, Finset.prod_empty, factorial]
     · simp only [Finset.prod_insert has, Finset.sum_insert has]

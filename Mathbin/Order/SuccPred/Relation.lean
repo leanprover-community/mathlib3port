@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.succ_pred.relation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ variable {α : Type _} [PartialOrder α] [SuccOrder α] [IsSuccArchimedean α]
 /-- For `n ≤ m`, `(n, m)` is in the reflexive-transitive closure of `~` if `i ~ succ i`
   for all `i` between `n` and `m`. -/
 theorem refl_trans_gen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico n m, r i (succ i))
-    (hnm : n ≤ m) : ReflTransGen r n m := by 
+    (hnm : n ≤ m) : ReflTransGen r n m := by
   revert h; refine' Succ.rec _ _ hnm
   · intro h
     exact refl_trans_gen.refl
@@ -41,7 +41,8 @@ theorem refl_trans_gen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : �
 /-- For `m ≤ n`, `(n, m)` is in the reflexive-transitive closure of `~` if `succ i ~ i`
   for all `i` between `n` and `m`. -/
 theorem refl_trans_gen_of_succ_of_ge (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
-    (hmn : m ≤ n) : ReflTransGen r n m := by
+    (hmn : m ≤ n) : ReflTransGen r n m :=
+  by
   rw [← refl_trans_gen_swap]
   exact refl_trans_gen_of_succ_of_le (swap r) h hmn
 #align refl_trans_gen_of_succ_of_ge refl_trans_gen_of_succ_of_ge
@@ -85,7 +86,8 @@ theorem trans_gen_of_succ_of_ne (r : α → α → Prop) {n m : α} (h1 : ∀ i 
 /-- `(n, m)` is in the transitive closure of a reflexive relation `~` if `i ~ succ i` and
   `succ i ~ i` for all `i` between `n` and `m`. -/
 theorem trans_gen_of_succ_of_reflexive (r : α → α → Prop) {n m : α} (hr : Reflexive r)
-    (h1 : ∀ i ∈ Ico n m, r i (succ i)) (h2 : ∀ i ∈ Ico m n, r (succ i) i) : TransGen r n m := by
+    (h1 : ∀ i ∈ Ico n m, r i (succ i)) (h2 : ∀ i ∈ Ico m n, r (succ i) i) : TransGen r n m :=
+  by
   rcases eq_or_ne m n with (rfl | hmn); · exact trans_gen.single (hr m)
   exact trans_gen_of_succ_of_ne r h1 h2 hmn.symm
 #align trans_gen_of_succ_of_reflexive trans_gen_of_succ_of_reflexive

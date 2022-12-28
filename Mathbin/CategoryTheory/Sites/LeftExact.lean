@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.left_exact
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,12 +43,12 @@ namespace CategoryTheory.GrothendieckTopology
 def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type max v u}
     [SmallCategory K] {F : K ⥤ Cᵒᵖ ⥤ D} {W : J.cover X} (i : W.arrow)
     (E : Cone (F ⋙ J.diagramFunctor D X ⋙ (evaluation (J.cover X)ᵒᵖ D).obj (op W))) :
-    Cone (F ⋙ (evaluation _ _).obj (op
-            i.y)) where 
+    Cone (F ⋙ (evaluation _ _).obj (op i.y))
+    where
   x := E.x
   π :=
     { app := fun k => E.π.app k ≫ multiequalizer.ι (W.index (F.obj k)) i
-      naturality' := by 
+      naturality' := by
         intro a b f
         dsimp
         rw [category.id_comp, category.assoc, ← E.w f]
@@ -67,7 +67,7 @@ abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLi
     (fun i =>
       (isLimitOfPreserves ((evaluation _ _).obj (op i.y)) (limit.isLimit _)).lift
         (coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation i E))
-    (by 
+    (by
       intro i
       change (_ ≫ _) ≫ _ = (_ ≫ _) ≫ _
       dsimp [evaluate_combined_cones]
@@ -86,7 +86,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
   (preservesLimitOfEvaluation _ _) fun W =>
     preservesLimitOfPreservesLimitCone (limit.isLimit _)
       { lift := fun E => liftToDiagramLimitObj F E
-        fac' := by 
+        fac' := by
           intro E k
           dsimp [diagram_nat_trans]
           ext1
@@ -95,7 +95,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
           dsimp [evaluate_combined_cones]
           erw [category.comp_id, category.assoc, ← nat_trans.comp_app, limit.lift_π, limit.lift_π]
           rfl
-        uniq' := by 
+        uniq' := by
           intro E m hm
           ext
           delta lift_to_diagram_limit_obj
@@ -137,7 +137,7 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K]
   let s :
     colimit (F ⋙ J.diagramFunctor D X).flip ≅ F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X) :=
     NatIso.ofComponents (fun k => colimitObjIsoColimitCompEvaluation _ k)
-      (by 
+      (by
         intro i j f
         rw [← iso.eq_comp_inv, category.assoc, ← iso.inv_comp_eq]
         ext w
@@ -158,7 +158,8 @@ theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [Fin
     [HasLimitsOfShape K D] [PreservesLimitsOfShape K (forget D)]
     [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
     (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) (k) :
-    liftToPlusObjLimitObj F X S ≫ (J.plusMap (limit.π F k)).app (op X) = S.π.app k := by
+    liftToPlusObjLimitObj F X S ≫ (J.plusMap (limit.π F k)).app (op X) = S.π.app k :=
+  by
   dsimp only [lift_to_plus_obj_limit_obj]
   rw [← (limit.is_limit (F ⋙ J.plus_functor D ⋙ (evaluation Cᵒᵖ D).obj (op X))).fac S k,
     category.assoc]
@@ -184,7 +185,8 @@ theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [Fin
 
 instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] :
-    PreservesLimitsOfShape K (J.plusFunctor D) := by
+    PreservesLimitsOfShape K (J.plusFunctor D) :=
+  by
   constructor; intro F; apply preserves_limit_of_evaluation; intro X
   apply preserves_limit_of_preserves_limit_cone (limit.is_limit F)
   refine' ⟨fun S => lift_to_plus_obj_limit_obj F X.unop S, _, _⟩
@@ -209,7 +211,8 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
     rfl
 
 instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)] [ReflectsIsomorphisms (forget D)] :
-    PreservesFiniteLimits (J.plusFunctor D) := by
+    PreservesFiniteLimits (J.plusFunctor D) :=
+  by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{max v u}
   intro K _ _
   haveI : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
@@ -242,13 +245,15 @@ variable (K : Type max v u)
 
 variable [SmallCategory K] [FinCategory K] [HasLimitsOfShape K D]
 
-instance : PreservesLimitsOfShape K (presheafToSheaf J D) := by
+instance : PreservesLimitsOfShape K (presheafToSheaf J D) :=
+  by
   constructor; intro F; constructor; intro S hS
   apply is_limit_of_reflects (Sheaf_to_presheaf J D)
   haveI : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
   apply is_limit_of_preserves (J.sheafification D) hS
 
-instance [HasFiniteLimits D] : PreservesFiniteLimits (presheafToSheaf J D) := by
+instance [HasFiniteLimits D] : PreservesFiniteLimits (presheafToSheaf J D) :=
+  by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{max v u}
   intros ; skip; infer_instance
 

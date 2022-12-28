@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.lp
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Meas
 
 theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ)
     (hf_meas : StronglyMeasurable f) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
-    FinStronglyMeasurable f μ := by 
+    FinStronglyMeasurable f μ := by
   borelize G
   haveI : separable_space (Set.range f ∪ {0} : Set G) :=
     hf_meas.separable_space_range_union_singleton
@@ -64,7 +64,7 @@ theorem Memℒp.aeFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p �
   ⟨hf.AeStronglyMeasurable.mk f,
     ((mem_ℒp_congr_ae hf.AeStronglyMeasurable.ae_eq_mk).mp
           hf).finStronglyMeasurableOfStronglyMeasurable
-      hf.AeStronglyMeasurable.stronglyMeasurableMk hp_ne_zero hp_ne_top,
+      hf.AeStronglyMeasurable.strongly_measurable_mk hp_ne_zero hp_ne_top,
     hf.AeStronglyMeasurable.ae_eq_mk⟩
 #align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aeFinStronglyMeasurable
 
@@ -75,7 +75,7 @@ theorem Integrable.aeFinStronglyMeasurable (hf : Integrable f μ) : AeFinStrongl
 
 theorem lp.finStronglyMeasurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ :=
-  (lp.memℒp f).finStronglyMeasurableOfStronglyMeasurable (lp.stronglyMeasurable f) hp_ne_zero
+  (lp.memℒp f).finStronglyMeasurableOfStronglyMeasurable (lp.strongly_measurable f) hp_ne_zero
     hp_ne_top
 #align measure_theory.Lp.fin_strongly_measurable MeasureTheory.lp.finStronglyMeasurable
 

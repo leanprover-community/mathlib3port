@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem zero_apply {V W : SemiNormedGroupCat} (x : V) : (0 : V ⟶ W) x = 0 :=
   rfl
 #align SemiNormedGroup.zero_apply SemiNormedGroupCat.zero_apply
 
-theorem is_zero_of_subsingleton (V : SemiNormedGroupCat) [Subsingleton V] : Limits.IsZero V := by
+theorem is_zero_of_subsingleton (V : SemiNormedGroupCat) [Subsingleton V] : Limits.IsZero V :=
+  by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
     have : x = 0 := Subsingleton.elim _ _
@@ -96,7 +97,8 @@ instance has_zero_object : Limits.HasZeroObject SemiNormedGroupCat.{u} :=
 #align SemiNormedGroup.has_zero_object SemiNormedGroupCat.has_zero_object
 
 theorem isoIsometryOfNormNoninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1 : i.hom.NormNoninc)
-    (h2 : i.inv.NormNoninc) : Isometry i.hom := by
+    (h2 : i.inv.NormNoninc) : Isometry i.hom :=
+  by
   apply AddMonoidHomClass.isometryOfNorm
   intro v
   apply le_antisymm (h1 v)
@@ -120,9 +122,8 @@ namespace SemiNormedGroup₁Cat
 instance : CoeSort SemiNormedGroup₁Cat (Type u) :=
   bundled.has_coe_to_sort
 
-instance :
-    LargeCategory.{u}
-      SemiNormedGroup₁Cat where 
+instance : LargeCategory.{u} SemiNormedGroup₁Cat
+    where
   hom X Y := { f : NormedAddGroupHom X Y // f.NormNoninc }
   id X := ⟨NormedAddGroupHom.id X, NormedAddGroupHom.NormNoninc.id⟩
   comp X Y Z f g := ⟨(g : NormedAddGroupHom Y Z).comp (f : NormedAddGroupHom X Y), g.2.comp f.2⟩
@@ -132,13 +133,12 @@ theorem hom_ext {M N : SemiNormedGroup₁Cat} (f g : M ⟶ N) (w : (f : M → N)
   Subtype.eq (NormedAddGroupHom.ext (congr_fun w))
 #align SemiNormedGroup₁.hom_ext SemiNormedGroup₁Cat.hom_ext
 
-instance :
-    ConcreteCategory.{u}
-      SemiNormedGroup₁Cat where 
+instance : ConcreteCategory.{u} SemiNormedGroup₁Cat
+    where
   forget :=
     { obj := fun X => X
       map := fun X Y f => f }
-  forget_faithful := {  }
+  forget_faithful := { }
 
 /-- Construct a bundled `SemiNormedGroup₁` from the underlying type and typeclass. -/
 def of (M : Type u) [SeminormedAddCommGroup M] : SemiNormedGroup₁Cat :=
@@ -163,21 +163,20 @@ theorem mk_hom_apply {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc)
 /-- Promote an isomorphism in `SemiNormedGroup` to an isomorphism in `SemiNormedGroup₁`. -/
 @[simps]
 def mkIso {M N : SemiNormedGroupCat} (f : M ≅ N) (i : f.hom.NormNoninc) (i' : f.inv.NormNoninc) :
-    SemiNormedGroup₁Cat.of M ≅
-      SemiNormedGroup₁Cat.of N where 
+    SemiNormedGroup₁Cat.of M ≅ SemiNormedGroup₁Cat.of N
+    where
   hom := mkHom f.hom i
   inv := mkHom f.inv i'
-  hom_inv_id' := by 
+  hom_inv_id' := by
     apply Subtype.eq
     exact f.hom_inv_id
-  inv_hom_id' := by 
+  inv_hom_id' := by
     apply Subtype.eq
     exact f.inv_hom_id
 #align SemiNormedGroup₁.mk_iso SemiNormedGroup₁Cat.mkIso
 
-instance :
-    HasForget₂ SemiNormedGroup₁Cat
-      SemiNormedGroupCat where forget₂ :=
+instance : HasForget₂ SemiNormedGroup₁Cat SemiNormedGroupCat
+    where forget₂ :=
     { obj := fun X => X
       map := fun X Y f => f.1 }
 
@@ -211,14 +210,13 @@ instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] :
   i
 #align SemiNormedGroup₁.of_unique SemiNormedGroup₁Cat.ofUnique
 
-instance :
-    Limits.HasZeroMorphisms.{u, u + 1}
-      SemiNormedGroup₁Cat where 
+instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁Cat
+    where
   HasZero X Y := { zero := ⟨0, NormedAddGroupHom.NormNoninc.zero⟩ }
-  comp_zero' X Y f Z := by 
+  comp_zero' X Y f Z := by
     ext
     rfl
-  zero_comp' X Y Z f := by 
+  zero_comp' X Y Z f := by
     ext
     simp [coe_fn_coe_base']
 
@@ -227,7 +225,8 @@ theorem zero_apply {V W : SemiNormedGroup₁Cat} (x : V) : (0 : V ⟶ W) x = 0 :
   rfl
 #align SemiNormedGroup₁.zero_apply SemiNormedGroup₁Cat.zero_apply
 
-theorem is_zero_of_subsingleton (V : SemiNormedGroup₁Cat) [Subsingleton V] : Limits.IsZero V := by
+theorem is_zero_of_subsingleton (V : SemiNormedGroup₁Cat) [Subsingleton V] : Limits.IsZero V :=
+  by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
   · ext
     have : x = 0 := Subsingleton.elim _ _
@@ -241,7 +240,8 @@ instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁Cat.{u} :=
   ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
 #align SemiNormedGroup₁.has_zero_object SemiNormedGroup₁Cat.has_zero_object
 
-theorem isoIsometry {V W : SemiNormedGroup₁Cat} (i : V ≅ W) : Isometry i.hom := by
+theorem isoIsometry {V W : SemiNormedGroup₁Cat} (i : V ≅ W) : Isometry i.hom :=
+  by
   change Isometry (i.hom : V →+ W)
   refine' AddMonoidHomClass.isometryOfNorm i.hom _
   intro v

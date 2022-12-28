@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.with_bot
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,8 +39,8 @@ namespace WithBot
 
 variable {a b : α}
 
-unsafe instance [has_to_format α] :
-    has_to_format (WithBot α) where to_format x :=
+unsafe instance [has_to_format α] : has_to_format (WithBot α)
+    where to_format x :=
     match x with
     | none => "⊥"
     | some x => to_fmt x
@@ -226,7 +226,8 @@ def unbot : ∀ x : WithBot α, x ≠ ⊥ → α
 
 #print WithBot.coe_unbot /-
 @[simp]
-theorem coe_unbot (x : WithBot α) (h : x ≠ ⊥) : (x.unbot h : WithBot α) = x := by
+theorem coe_unbot (x : WithBot α) (h : x ≠ ⊥) : (x.unbot h : WithBot α) = x :=
+  by
   cases x
   simpa using h
   rfl
@@ -240,8 +241,8 @@ theorem unbot_coe (x : α) (h : (x : WithBot α) ≠ ⊥ := coe_ne_bot) : (x : W
 #align with_bot.unbot_coe WithBot.unbot_coe
 -/
 
-instance canLift :
-    CanLift (WithBot α) α coe fun r => r ≠ ⊥ where prf x h := ⟨x.unbot h, coe_unbot _ _⟩
+instance canLift : CanLift (WithBot α) α coe fun r => r ≠ ⊥
+    where prf x h := ⟨x.unbot h, coe_unbot _ _⟩
 #align with_bot.can_lift WithBot.canLift
 
 section LE
@@ -285,8 +286,8 @@ theorem none_le {a : WithBot α} : @LE.le (WithBot α) _ none a := fun b h => Op
 instance : OrderBot (WithBot α) :=
   { WithBot.hasBot with bot_le := fun a => none_le }
 
-instance [OrderTop α] : OrderTop
-      (WithBot α) where 
+instance [OrderTop α] : OrderTop (WithBot α)
+    where
   top := some ⊤
   le_top o a ha := by cases ha <;> exact ⟨_, rfl, le_top⟩
 
@@ -433,11 +434,11 @@ theorem lt_coe_iff : ∀ {x : WithBot α}, x < b ↔ ∀ a, x = ↑a → a < b
 
 end LT
 
-instance [Preorder α] : Preorder
-      (WithBot α) where 
+instance [Preorder α] : Preorder (WithBot α)
+    where
   le := (· ≤ ·)
   lt := (· < ·)
-  lt_iff_le_not_le := by 
+  lt_iff_le_not_le := by
     intros
     cases a <;> cases b <;> simp [lt_iff_le_not_le] <;> simp [(· < ·), (· ≤ ·)]
   le_refl o a ha := ⟨a, ha, le_rfl⟩
@@ -448,7 +449,7 @@ instance [Preorder α] : Preorder
 
 instance [PartialOrder α] : PartialOrder (WithBot α) :=
   { WithBot.preorder with
-    le_antisymm := fun o₁ o₂ h₁ h₂ => by 
+    le_antisymm := fun o₁ o₂ h₁ h₂ => by
       cases' o₁ with a
       · cases' o₂ with b
         · rfl
@@ -559,17 +560,20 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithBot.{u1} α} {b : α} {c : α}, (Ne.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α))) -> (Iff (LT.lt.{u1} α _inst_1 (WithBot.unbot'.{u1} α b a) c) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) a (WithBot.some.{u1} α c)))
 Case conversion may be inaccurate. Consider using '#align with_bot.unbot'_lt_iff WithBot.unbot'_lt_iffₓ'. -/
-theorem unbot'_lt_iff [LT α] {a : WithBot α} {b c : α} (ha : a ≠ ⊥) : a.unbot' b < c ↔ a < c := by
+theorem unbot'_lt_iff [LT α] {a : WithBot α} {b c : α} (ha : a ≠ ⊥) : a.unbot' b < c ↔ a < c :=
+  by
   lift a to α using ha
   rw [unbot'_coe, coe_lt_coe]
 #align with_bot.unbot'_lt_iff WithBot.unbot'_lt_iff
 
 instance [SemilatticeSup α] : SemilatticeSup (WithBot α) :=
-  { WithBot.orderBot, WithBot.partialOrder with
+  { WithBot.orderBot,
+    WithBot.partialOrder with
     sup := Option.liftOrGet (· ⊔ ·)
     le_sup_left := fun o₁ o₂ a ha => by cases ha <;> cases o₂ <;> simp [Option.liftOrGet]
     le_sup_right := fun o₁ o₂ a ha => by cases ha <;> cases o₁ <;> simp [Option.liftOrGet]
-    sup_le := fun o₁ o₂ o₃ h₁ h₂ a ha => by
+    sup_le := fun o₁ o₂ o₃ h₁ h₂ a ha =>
+      by
       cases' o₁ with b <;> cases' o₂ with c <;> cases ha
       · exact h₂ a rfl
       · exact h₁ a rfl
@@ -584,15 +588,16 @@ theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithBot α) =
 -/
 
 instance [SemilatticeInf α] : SemilatticeInf (WithBot α) :=
-  { WithBot.orderBot, WithBot.partialOrder with
+  { WithBot.orderBot,
+    WithBot.partialOrder with
     inf := fun o₁ o₂ => o₁.bind fun a => o₂.map fun b => a ⊓ b
-    inf_le_left := fun o₁ o₂ a ha => by 
+    inf_le_left := fun o₁ o₂ a ha => by
       simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
       exact ⟨_, rfl, inf_le_left⟩
-    inf_le_right := fun o₁ o₂ a ha => by 
+    inf_le_right := fun o₁ o₂ a ha => by
       simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
       exact ⟨_, rfl, inf_le_right⟩
-    le_inf := fun o₁ o₂ o₃ h₁ h₂ a ha => by 
+    le_inf := fun o₁ o₂ o₃ h₁ h₂ a ha => by
       cases ha
       rcases h₁ a rfl with ⟨b, ⟨⟩, ab⟩
       rcases h₂ a rfl with ⟨c, ⟨⟩, ac⟩
@@ -730,7 +735,7 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α]
 -/
 
 instance [LE α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
-  ⟨by 
+  ⟨by
     apply rec_bot_coe
     · exact ‹Nonempty α›.elim fun a => ⟨a, not_coe_le_bot a⟩
     · intro a
@@ -738,7 +743,7 @@ instance [LE α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
       exact ⟨b, by rwa [coe_le_coe]⟩⟩
 
 instance [LT α] [NoMaxOrder α] [Nonempty α] : NoMaxOrder (WithBot α) :=
-  ⟨by 
+  ⟨by
     apply WithBot.recBotCoe
     · apply ‹Nonempty α›.elim
       exact fun a => ⟨a, WithBot.bot_lt_coe a⟩
@@ -760,8 +765,8 @@ namespace WithTop
 
 variable {a b : α}
 
-unsafe instance [has_to_format α] :
-    has_to_format (WithTop α) where to_format x :=
+unsafe instance [has_to_format α] : has_to_format (WithTop α)
+    where to_format x :=
     match x with
     | none => "⊤"
     | some x => to_fmt x
@@ -1066,8 +1071,8 @@ theorem untop_coe (x : α) (h : (x : WithTop α) ≠ ⊤ := coe_ne_top) : (x : W
 #align with_top.untop_coe WithTop.untop_coe
 -/
 
-instance canLift :
-    CanLift (WithTop α) α coe fun r => r ≠ ⊤ where prf x h := ⟨x.untop h, coe_untop _ _⟩
+instance canLift : CanLift (WithTop α) α coe fun r => r ≠ ⊤
+    where prf x h := ⟨x.untop h, coe_untop _ _⟩
 #align with_top.can_lift WithTop.canLift
 
 section LE
@@ -1163,8 +1168,8 @@ theorem le_none {a : WithTop α} : @LE.le (WithTop α) _ a none :=
 instance : OrderTop (WithTop α) :=
   { WithTop.hasTop with le_top := fun a => le_none }
 
-instance [OrderBot α] : OrderBot
-      (WithTop α) where 
+instance [OrderBot α] : OrderBot (WithTop α)
+    where
   bot := some ⊥
   bot_le o a ha := by cases ha <;> exact ⟨_, rfl, bot_le⟩
 
@@ -1207,7 +1212,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {a : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (WithTop.some.{u1} α a) x) (forall (b : WithTop.{u1} α), (Eq.{succ u1} (WithTop.{u1} α) x b) -> (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) (WithTop.some.{u1} α a) b))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_le_iff WithTop.coe_le_iffₓ'. -/
-theorem coe_le_iff {x : WithTop α} : ↑a ≤ x ↔ ∀ b, x = ↑b → a ≤ b := by
+theorem coe_le_iff {x : WithTop α} : ↑a ≤ x ↔ ∀ b, x = ↑b → a ≤ b :=
+  by
   simp only [← to_dual_le_to_dual_iff, to_dual_apply_coe, WithBot.le_coe_iff, OrderDual.forall,
     to_dual_le_to_dual]
   exact forall₂_congr fun _ _ => Iff.rfl
@@ -1584,7 +1590,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : WithTop.{u1} α), Not (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (Option.none.{u1} α) a)
 Case conversion may be inaccurate. Consider using '#align with_top.not_none_lt WithTop.not_none_ltₓ'. -/
 @[simp]
-theorem not_none_lt (a : WithTop α) : ¬@LT.lt (WithTop α) _ none a := by
+theorem not_none_lt (a : WithTop α) : ¬@LT.lt (WithTop α) _ none a :=
+  by
   rw [← to_dual_lt_to_dual_iff]
   exact WithBot.not_lt_none _
 #align with_top.not_none_lt WithTop.not_none_lt
@@ -1595,7 +1602,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) a b) (Exists.{succ u1} α (fun (p : α) => And (Eq.{succ u1} (WithTop.{u1} α) a (WithTop.some.{u1} α p)) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α p) b)))
 Case conversion may be inaccurate. Consider using '#align with_top.lt_iff_exists_coe WithTop.lt_iff_exists_coeₓ'. -/
-theorem lt_iff_exists_coe {a b : WithTop α} : a < b ↔ ∃ p : α, a = p ∧ ↑p < b := by
+theorem lt_iff_exists_coe {a b : WithTop α} : a < b ↔ ∃ p : α, a = p ∧ ↑p < b :=
+  by
   rw [← to_dual_lt_to_dual_iff, WithBot.lt_iff_exists_coe, OrderDual.exists]
   exact exists_congr fun _ => and_congr_left' Iff.rfl
 #align with_top.lt_iff_exists_coe WithTop.lt_iff_exists_coe
@@ -1606,7 +1614,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] {a : α} {x : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α a) x) (forall (b : WithTop.{u1} α), (Eq.{succ u1} (WithTop.{u1} α) x b) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α a) b))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_iff WithTop.coe_lt_iffₓ'. -/
-theorem coe_lt_iff {x : WithTop α} : ↑a < x ↔ ∀ b, x = ↑b → a < b := by
+theorem coe_lt_iff {x : WithTop α} : ↑a < x ↔ ∀ b, x = ↑b → a < b :=
+  by
   simp only [← to_dual_lt_to_dual_iff, WithBot.lt_coe_iff, to_dual_apply_coe, OrderDual.forall,
     to_dual_lt_to_dual]
   exact forall₂_congr fun _ _ => Iff.rfl
@@ -1614,19 +1623,19 @@ theorem coe_lt_iff {x : WithTop α} : ↑a < x ↔ ∀ b, x = ↑b → a < b := 
 
 end LT
 
-instance [Preorder α] : Preorder
-      (WithTop α) where 
+instance [Preorder α] : Preorder (WithTop α)
+    where
   le := (· ≤ ·)
   lt := (· < ·)
   lt_iff_le_not_le := by simp [← to_dual_lt_to_dual_iff, lt_iff_le_not_le]
   le_refl _ := toDual_le_toDual_iff.mp le_rfl
-  le_trans _ _ _ := by 
+  le_trans _ _ _ := by
     simp_rw [← to_dual_le_to_dual_iff]
     exact Function.swap le_trans
 
 instance [PartialOrder α] : PartialOrder (WithTop α) :=
   { WithTop.preorder with
-    le_antisymm := fun _ _ => by 
+    le_antisymm := fun _ _ => by
       simp_rw [← to_dual_le_to_dual_iff]
       exact Function.swap le_antisymm }
 
@@ -1703,18 +1712,20 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β) (a : WithTop.{u2} α) (b : WithTop.{u2} α), (forall {a : α} {b : α}, Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) a b)) -> (Iff (LE.le.{u1} (WithTop.{u1} β) (Preorder.toLE.{u1} (WithTop.{u1} β) (WithTop.preorder.{u1} β _inst_2)) (WithTop.map.{u2, u1} α β f a) (WithTop.map.{u2, u1} α β f b)) (LE.le.{u2} (WithTop.{u2} α) (Preorder.toLE.{u2} (WithTop.{u2} α) (WithTop.preorder.{u2} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align with_top.map_le_iff WithTop.map_le_iffₓ'. -/
 theorem map_le_iff [Preorder α] [Preorder β] (f : α → β) (a b : WithTop α)
-    (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) : a.map f ≤ b.map f ↔ a ≤ b := by
+    (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) : a.map f ≤ b.map f ↔ a ≤ b :=
+  by
   rw [← to_dual_le_to_dual_iff, to_dual_map, to_dual_map, WithBot.map_le_iff,
     to_dual_le_to_dual_iff]
   simp [mono_iff]
 #align with_top.map_le_iff WithTop.map_le_iff
 
 instance [SemilatticeInf α] : SemilatticeInf (WithTop α) :=
-  { WithTop.partialOrder with 
+  { WithTop.partialOrder with
     inf := Option.liftOrGet (· ⊓ ·)
     inf_le_left := fun o₁ o₂ a ha => by cases ha <;> cases o₂ <;> simp [Option.liftOrGet]
     inf_le_right := fun o₁ o₂ a ha => by cases ha <;> cases o₁ <;> simp [Option.liftOrGet]
-    le_inf := fun o₁ o₂ o₃ h₁ h₂ a ha => by
+    le_inf := fun o₁ o₂ o₃ h₁ h₂ a ha =>
+      by
       cases' o₂ with b <;> cases' o₃ with c <;> cases ha
       · exact h₂ a rfl
       · exact h₁ a rfl
@@ -1729,15 +1740,16 @@ theorem coe_inf [SemilatticeInf α] (a b : α) : ((a ⊓ b : α) : WithTop α) =
 -/
 
 instance [SemilatticeSup α] : SemilatticeSup (WithTop α) :=
-  { WithTop.partialOrder with
+  {
+    WithTop.partialOrder with
     sup := fun o₁ o₂ => o₁.bind fun a => o₂.map fun b => a ⊔ b
-    le_sup_left := fun o₁ o₂ a ha => by 
+    le_sup_left := fun o₁ o₂ a ha => by
       simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
       exact ⟨_, rfl, le_sup_left⟩
-    le_sup_right := fun o₁ o₂ a ha => by 
+    le_sup_right := fun o₁ o₂ a ha => by
       simp [map] at ha; rcases ha with ⟨b, rfl, c, rfl, rfl⟩
       exact ⟨_, rfl, le_sup_right⟩
-    sup_le := fun o₁ o₂ o₃ h₁ h₂ a ha => by 
+    sup_le := fun o₁ o₂ o₃ h₁ h₂ a ha => by
       cases ha
       rcases h₁ a rfl with ⟨b, ⟨⟩, ab⟩
       rcases h₂ a rfl with ⟨c, ⟨⟩, ac⟩
@@ -1789,7 +1801,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9707 : α) (x._@.Mathlib.Order.WithBot._hyg.9709 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9707 x._@.Mathlib.Order.WithBot._hyg.9709)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9727 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9729 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9727 x._@.Mathlib.Order.WithBot._hyg.9729)
 Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
-  ⟨fun _ _ => by 
+  ⟨fun _ _ => by
     simp_rw [← to_dual_le_to_dual_iff]
     exact total_of _ _ _⟩
 #align with_top.is_total_le WithTop.isTotal_le
@@ -1872,7 +1884,7 @@ theorem WithBot.wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
 #print WithTop.trichotomous.lt /-
 instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
     IsTrichotomous (WithTop α) (· < ·) :=
-  ⟨by 
+  ⟨by
     rintro (a | _) (b | _)
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· < ·) _ a b⟩
@@ -1880,15 +1892,15 @@ instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
 -/
 
 #print WithTop.IsWellOrder.lt /-
-instance IsWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] :
-    IsWellOrder (WithTop α) (· < ·) where wf := wellFounded_lt h.wf
+instance IsWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] : IsWellOrder (WithTop α) (· < ·)
+    where wf := wellFounded_lt h.wf
 #align with_top.is_well_order.lt WithTop.IsWellOrder.lt
 -/
 
 #print WithTop.trichotomous.gt /-
 instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
     IsTrichotomous (WithTop α) (· > ·) :=
-  ⟨by 
+  ⟨by
     rintro (a | _) (b | _)
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· > ·) _ a b⟩
@@ -1896,8 +1908,8 @@ instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
 -/
 
 #print WithTop.IsWellOrder.gt /-
-instance IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
-    IsWellOrder (WithTop α) (· > ·) where wf := wellFounded_gt h.wf
+instance IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] : IsWellOrder (WithTop α) (· > ·)
+    where wf := wellFounded_gt h.wf
 #align with_top.is_well_order.gt WithTop.IsWellOrder.gt
 -/
 

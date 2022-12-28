@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.analytic.uniqueness
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,8 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
   obtain ⟨y, yu, hxy⟩ : ∃ y ∈ u, edist x y < r / 2
   exact Emetric.mem_closure_iff.1 xu (r / 2) (Ennreal.half_pos hp.r_pos.ne')
   let q := p.change_origin (y - x)
-  have has_series : HasFpowerSeriesOnBall f q y (r / 2) := by
+  have has_series : HasFpowerSeriesOnBall f q y (r / 2) :=
+    by
     have A : (‖y - x‖₊ : ℝ≥0∞) < r / 2 := by rwa [edist_comm, edist_eq_coe_nnnorm_sub] at hxy
     have := hp.change_origin (A.trans_le Ennreal.half_le_self)
     simp only [add_sub_cancel'_right] at this
@@ -66,7 +67,8 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
   have M : Emetric.ball y (r / 2) ∈ 𝓝 x := emetric.is_open_ball.mem_nhds hxy
   filter_upwards [M] with z hz
   have A : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) (f z) := has_series.has_sum_sub hz
-  have B : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) 0 := by
+  have B : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) 0 :=
+    by
     have : HasFpowerSeriesAt 0 q y := has_series.has_fpower_series_at.congr yu
     convert has_sum_zero
     ext n
@@ -81,11 +83,12 @@ version assuming only that the function vanishes at some points arbitrarily clos
 `eq_on_zero_of_preconnected_of_frequently_eq_zero`. -/
 theorem eq_on_zero_of_preconnected_of_eventually_eq_zero {f : E → F} {U : Set E}
     (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U) {z₀ : E} (h₀ : z₀ ∈ U) (hfz₀ : f =ᶠ[𝓝 z₀] 0) :
-    EqOn f 0 U := by 
+    EqOn f 0 U := by
   let F' := UniformSpace.Completion F
   set e : F →L[𝕜] F' := UniformSpace.Completion.toComplL
   have : AnalyticOn 𝕜 (e ∘ f) U := fun x hx => (e.analytic_at _).comp (hf x hx)
-  have A : eq_on (e ∘ f) 0 U := by
+  have A : eq_on (e ∘ f) 0 U :=
+    by
     apply eq_on_zero_of_preconnected_of_eventually_eq_zero_aux this hU h₀
     filter_upwards [hfz₀] with x hx
     simp only [hx, Function.comp_apply, Pi.zero_apply, map_zero]

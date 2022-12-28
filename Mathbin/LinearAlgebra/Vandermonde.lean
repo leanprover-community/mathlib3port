@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.vandermonde
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem vandermonde_apply {n : ℕ} (v : Fin n → R) (i j) : vandermonde v i j 
 theorem vandermonde_cons {n : ℕ} (v0 : R) (v : Fin n → R) :
     vandermonde (Fin.cons v0 v : Fin n.succ → R) =
       Fin.cons (fun j => v0 ^ (j : ℕ)) fun i => Fin.cons 1 fun j => v i * vandermonde v i j :=
-  by 
+  by
   ext (i j)
   refine' Fin.cases (by simp) (fun i => _) i
   refine' Fin.cases (by simp) (fun j => _) j
@@ -62,7 +62,7 @@ theorem vandermonde_succ {n : ℕ} (v : Fin n.succ → R) :
     vandermonde v =
       Fin.cons (fun j => v 0 ^ (j : ℕ)) fun i =>
         Fin.cons 1 fun j => v i.succ * vandermonde (Fin.tail v) i j :=
-  by 
+  by
   conv_lhs => rw [← Fin.cons_self_tail v, vandermonde_cons]
   simp only [Fin.tail]
 #align matrix.vandermonde_succ Matrix.vandermonde_succ
@@ -78,7 +78,8 @@ theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Fin n → R) (i j) 
 #align matrix.vandermonde_transpose_mul_vandermonde Matrix.vandermonde_transpose_mul_vandermonde
 
 theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
-    det (vandermonde v) = ∏ i : Fin n, ∏ j in ioi i, v j - v i := by
+    det (vandermonde v) = ∏ i : Fin n, ∏ j in ioi i, v j - v i :=
+  by
   unfold vandermonde
   induction' n with n ih
   · exact det_eq_one_of_card_eq_zero (Fintype.card_fin 0)
@@ -104,7 +105,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
               (v (Fin.succ i) - v 0) *
                 ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
             Matrix _ _ R) :=
-      by 
+      by
       congr
       ext (i j)
       rw [Fin.succ_above_zero, Matrix.cons_val_succ, Fin.coe_succ, mul_comm]
@@ -141,7 +142,8 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
 #align matrix.det_vandermonde Matrix.det_vandermonde
 
 theorem det_vandermonde_eq_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
-    det (vandermonde v) = 0 ↔ ∃ i j : Fin n, v i = v j ∧ i ≠ j := by
+    det (vandermonde v) = 0 ↔ ∃ i j : Fin n, v i = v j ∧ i ≠ j :=
+  by
   constructor
   · simp only [det_vandermonde v, Finset.prod_eq_zero_iff, sub_eq_zero, forall_exists_index]
     exact fun i _ j h₁ h₂ => ⟨j, i, h₂, (mem_Ioi.mp h₁).ne'⟩
@@ -164,7 +166,7 @@ theorem eq_zero_of_forall_index_sum_pow_mul_eq_zero {R : Type _} [CommRing R] [I
 
 theorem eq_zero_of_forall_index_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
     {f v : Fin n → R} (hf : Function.Injective f) (hfv : ∀ j, (∑ i, v i * f j ^ (i : ℕ)) = 0) :
-    v = 0 := by 
+    v = 0 := by
   apply eq_zero_of_forall_index_sum_pow_mul_eq_zero hf
   simp_rw [mul_comm]
   exact hfv

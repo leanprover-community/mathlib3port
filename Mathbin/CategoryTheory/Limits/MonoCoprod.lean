@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.limits.mono_coprod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ class MonoCoprod : Prop where
 variable {C}
 
 instance (priority := 100) monoCoprodOfHasZeroMorphisms [HasZeroMorphisms C] : MonoCoprod C :=
-  ⟨fun A B c hc => by
+  ⟨fun A B c hc =>
+    by
     haveI : is_split_mono c.inl :=
       is_split_mono.mk' (split_mono.mk (hc.desc (binary_cofan.mk (𝟙 A) 0)) (is_colimit.fac _ _ _))
     infer_instance⟩
@@ -77,7 +78,8 @@ instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inr : 
   binary_cofan_inr _ (colimit.isColimit _)
 
 theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit c₁) (hc₂ : IsColimit c₂) :
-    Mono c₁.inl ↔ Mono c₂.inl := by
+    Mono c₁.inl ↔ Mono c₂.inl :=
+  by
   suffices
     ∀ (c₁ c₂ : binary_cofan A B) (hc₁ : is_colimit c₁) (hc₂ : is_colimit c₂) (h : mono c₁.inl),
       mono c₂.inl
@@ -89,17 +91,18 @@ theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit 
 #align category_theory.limits.mono_coprod.mono_inl_iff CategoryTheory.Limits.MonoCoprod.mono_inl_iff
 
 theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B)(hc : IsColimit c), Mono c.inl) : MonoCoprod C :=
-  ⟨fun A B c' hc' => by 
+  ⟨fun A B c' hc' => by
     obtain ⟨c, hc₁, hc₂⟩ := h A B
     simpa only [mono_inl_iff hc' hc₁] using hc₂⟩
 #align category_theory.limits.mono_coprod.mk' CategoryTheory.Limits.MonoCoprod.mk'
 
 instance monoCoprodType : MonoCoprod (Type u) :=
-  MonoCoprod.mk' fun A B => by
+  MonoCoprod.mk' fun A B =>
+    by
     refine' ⟨binary_cofan.mk (Sum.inl : A ⟶ Sum A B) Sum.inr, _, _⟩
     · refine'
         binary_cofan.is_colimit.mk _
-          (fun Y f₁ f₂ x => by 
+          (fun Y f₁ f₂ x => by
             cases x
             exacts[f₁ x, f₂ x])
           (fun Y f₁ f₂ => rfl) (fun Y f₁ f₂ => rfl) _

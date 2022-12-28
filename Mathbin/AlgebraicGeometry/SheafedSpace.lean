@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.sheafed_space
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,11 +119,11 @@ theorem id_c (X : SheafedSpaceCat C) :
 theorem id_c_app (X : SheafedSpaceCat C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
       eqToHom
-        (by 
+        (by
           induction U using Opposite.rec
           cases U
           rfl) :=
-  by 
+  by
   induction U using Opposite.rec
   cases U
   simp only [id_c]
@@ -156,8 +156,8 @@ theorem congr_app {X Y : SheafedSpaceCat C} {α β : X ⟶ Y} (h : α = β) (U) 
 variable (C)
 
 /-- The forgetful functor from `SheafedSpace` to `Top`. -/
-def forget : SheafedSpaceCat C ⥤
-      TopCat where 
+def forget : SheafedSpaceCat C ⥤ TopCat
+    where
   obj X := (X : TopCat.{v})
   map X Y f := f.base
 #align algebraic_geometry.SheafedSpace.forget AlgebraicGeometry.SheafedSpaceCat.forget

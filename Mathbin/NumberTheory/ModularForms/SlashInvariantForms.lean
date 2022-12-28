@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_invariant_forms
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,8 +58,8 @@ class SlashInvariantFormClass extends FunLike F ℍ fun _ => ℂ where
 attribute [nolint dangerous_instance] SlashInvariantFormClass.toFunLike
 
 instance (priority := 100) SlashInvariantFormClass.slashInvariantForm :
-    SlashInvariantFormClass (SlashInvariantForm Γ k) Γ
-      k where 
+    SlashInvariantFormClass (SlashInvariantForm Γ k) Γ k
+    where
   coe := SlashInvariantForm.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   slash_action_eq := SlashInvariantForm.slash_action_eq'
@@ -83,7 +83,7 @@ theorem slash_invariant_form_ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x
 /-- Copy of a `slash_invariant_form` with a new `to_fun` equal to the old one.
 Useful to fix definitional equalities. -/
 protected def SlashInvariantForm.copy (f : SlashInvariantForm Γ k) (f' : ℍ → ℂ) (h : f' = ⇑f) :
-    SlashInvariantForm Γ k where 
+    SlashInvariantForm Γ k where
   toFun := f'
   slash_action_eq' := h.symm ▸ f.slash_action_eq'
 #align slash_invariant_form.copy SlashInvariantForm.copy
@@ -110,7 +110,8 @@ theorem slash_action_eqn [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) :
 #align slash_invariant_form.slash_action_eqn SlashInvariantForm.slash_action_eqn
 
 theorem slash_action_eqn' (k : ℤ) (Γ : Subgroup SL(2, ℤ)) [SlashInvariantFormClass F Γ k] (f : F)
-    (γ : Γ) (z : ℍ) : f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z := by
+    (γ : Γ) (z : ℍ) : f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z :=
+  by
   rw [← ModularForm.slash_action_eq'_iff]
   simp
 #align slash_invariant_form.slash_action_eqn' SlashInvariantForm.slash_action_eqn'
@@ -211,8 +212,8 @@ instance : AddCommGroup (SlashInvariantForm Γ k) :=
   FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 /-- Additive coercion from `slash_invariant_form` to `ℍ → ℂ`.-/
-def coeHom : SlashInvariantForm Γ k →+
-      ℍ → ℂ where 
+def coeHom : SlashInvariantForm Γ k →+ ℍ → ℂ
+    where
   toFun f := f
   map_zero' := rfl
   map_add' _ _ := rfl

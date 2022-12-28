@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.bilinear_form
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,8 +69,8 @@ open Matrix
 /-- The map from `matrix n n R` to bilinear forms on `n → R`.
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
-def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) :
-    BilinForm R₂ (n → R₂) where 
+def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) : BilinForm R₂ (n → R₂)
+    where
   bilin v w := ∑ (i) (j), v i * M i j * w j
   bilin_add_left x y z := by simp only [Pi.add_apply, add_mul, sum_add_distrib]
   bilin_smul_left a x y := by simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, mul_sum]
@@ -80,7 +80,8 @@ def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) :
 #align matrix.to_bilin'_aux Matrix.toBilin'Aux
 
 theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n n R₂) (i j : n) :
-    M.toBilin'Aux (stdBasis R₂ (fun _ => R₂) i 1) (stdBasis R₂ (fun _ => R₂) j 1) = M i j := by
+    M.toBilin'Aux (stdBasis R₂ (fun _ => R₂) i 1) (stdBasis R₂ (fun _ => R₂) j 1) = M i j :=
+  by
   rw [Matrix.toBilin'Aux, coe_fn_mk, sum_eq_single i, sum_eq_single j]
   · simp only [std_basis_same, std_basis_same, one_mul, mul_one]
   · rintro j' - hj'
@@ -102,9 +103,8 @@ theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n
 /-- The linear map from bilinear forms to `matrix n n R` given an `n`-indexed basis.
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
-def BilinForm.toMatrixAux (b : n → M₂) :
-    BilinForm R₂ M₂ →ₗ[R₂]
-      Matrix n n R₂ where 
+def BilinForm.toMatrixAux (b : n → M₂) : BilinForm R₂ M₂ →ₗ[R₂] Matrix n n R₂
+    where
   toFun B := of fun i j => B (b i) (b j)
   map_add' f g := rfl
   map_smul' f g := rfl
@@ -120,7 +120,7 @@ variable [Fintype n] [Fintype o]
 
 theorem to_bilin'_aux_to_matrix_aux [DecidableEq n] (B₂ : BilinForm R₂ (n → R₂)) :
     Matrix.toBilin'Aux (BilinForm.toMatrixAux (fun j => stdBasis R₂ (fun _ => R₂) j 1) B₂) = B₂ :=
-  by 
+  by
   refine' ext_basis (Pi.basisFun R₂ n) fun i j => _
   rw [Pi.basis_fun_apply, Pi.basis_fun_apply, Matrix.to_bilin'_aux_std_basis,
     BilinForm.to_matrix_aux_apply]
@@ -138,10 +138,13 @@ variable [DecidableEq n] [DecidableEq o]
 
 /-- The linear equivalence between bilinear forms on `n → R` and `n × n` matrices -/
 def BilinForm.toMatrix' : BilinForm R₂ (n → R₂) ≃ₗ[R₂] Matrix n n R₂ :=
-  { BilinForm.toMatrixAux fun j => stdBasis R₂ (fun _ => R₂) j 1 with
+  {
+    BilinForm.toMatrixAux fun j =>
+      stdBasis R₂ (fun _ => R₂) j
+        1 with
     invFun := Matrix.toBilin'Aux
     left_inv := by convert to_bilin'_aux_to_matrix_aux
-    right_inv := fun M => by 
+    right_inv := fun M => by
       ext (i j)
       simp only [to_fun_eq_coe, BilinForm.to_matrix_aux_apply, Matrix.to_bilin'_aux_std_basis] }
 #align bilin_form.to_matrix' BilinForm.toMatrix'
@@ -169,7 +172,8 @@ theorem Matrix.to_bilin'_apply (M : Matrix n n R₂) (x y : n → R₂) :
 #align matrix.to_bilin'_apply Matrix.to_bilin'_apply
 
 theorem Matrix.to_bilin'_apply' (M : Matrix n n R₂) (v w : n → R₂) :
-    Matrix.toBilin' M v w = Matrix.dotProduct v (M.mulVec w) := by
+    Matrix.toBilin' M v w = Matrix.dotProduct v (M.mulVec w) :=
+  by
   simp_rw [Matrix.to_bilin'_apply, Matrix.dotProduct, Matrix.mulVec, Matrix.dotProduct]
   refine' Finset.sum_congr rfl fun _ _ => _
   rw [Finset.mul_sum]
@@ -215,7 +219,8 @@ theorem BilinForm.to_matrix'_apply (B : BilinForm R₂ (n → R₂)) (i j : n) :
 
 @[simp]
 theorem BilinForm.to_matrix'_comp (B : BilinForm R₂ (n → R₂)) (l r : (o → R₂) →ₗ[R₂] n → R₂) :
-    (B.comp l r).toMatrix' = l.toMatrix'ᵀ ⬝ B.toMatrix' ⬝ r.toMatrix' := by
+    (B.comp l r).toMatrix' = l.toMatrix'ᵀ ⬝ B.toMatrix' ⬝ r.toMatrix' :=
+  by
   ext (i j)
   simp only [BilinForm.to_matrix'_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply,
     LinearMap.toMatrix', LinearEquiv.coe_mk, sum_mul]
@@ -302,7 +307,8 @@ theorem BilinForm.to_matrix_apply (B : BilinForm R₂ M₂) (i j : n) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem Matrix.to_bilin_apply (M : Matrix n n R₂) (x y : M₂) :
-    Matrix.toBilin b M x y = ∑ (i) (j), b.repr x i * M i j * b.repr y j := by
+    Matrix.toBilin b M x y = ∑ (i) (j), b.repr x i * M i j * b.repr y j :=
+  by
   rw [Matrix.toBilin, BilinForm.toMatrix, LinearEquiv.symm_trans_apply, ← Matrix.toBilin']
   simp only [congr_symm, congr_apply, LinearEquiv.symm_symm, Matrix.to_bilin'_apply,
     Basis.equiv_fun_apply]
@@ -324,13 +330,15 @@ theorem Matrix.to_bilin_symm : (Matrix.toBilin b).symm = BilinForm.toMatrix b :=
   (BilinForm.toMatrix b).symm_symm
 #align matrix.to_bilin_symm Matrix.to_bilin_symm
 
-theorem Matrix.to_bilin_basis_fun : Matrix.toBilin (Pi.basisFun R₂ n) = Matrix.toBilin' := by
+theorem Matrix.to_bilin_basis_fun : Matrix.toBilin (Pi.basisFun R₂ n) = Matrix.toBilin' :=
+  by
   ext M
   simp only [Matrix.to_bilin_apply, Matrix.to_bilin'_apply, Pi.basis_fun_repr]
 #align matrix.to_bilin_basis_fun Matrix.to_bilin_basis_fun
 
 theorem BilinForm.to_matrix_basis_fun :
-    BilinForm.toMatrix (Pi.basisFun R₂ n) = BilinForm.toMatrix' := by
+    BilinForm.toMatrix (Pi.basisFun R₂ n) = BilinForm.toMatrix' :=
+  by
   ext B
   rw [BilinForm.to_matrix_apply, BilinForm.to_matrix'_apply, Pi.basis_fun_apply, Pi.basis_fun_apply]
 #align bilin_form.to_matrix_basis_fun BilinForm.to_matrix_basis_fun
@@ -357,7 +365,7 @@ variable [DecidableEq o]
 theorem BilinForm.to_matrix_comp (B : BilinForm R₂ M₂) (l r : M₂' →ₗ[R₂] M₂) :
     BilinForm.toMatrix c (B.comp l r) =
       (toMatrix c b l)ᵀ ⬝ BilinForm.toMatrix b B ⬝ toMatrix c b r :=
-  by 
+  by
   ext (i j)
   simp only [BilinForm.to_matrix_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply,
     LinearMap.toMatrix', LinearEquiv.coe_mk, sum_mul]
@@ -434,10 +442,11 @@ theorem is_adjoint_pair_to_bilin' [DecidableEq n] :
     BilinForm.IsAdjointPair (Matrix.toBilin' J) (Matrix.toBilin' J₃) (Matrix.toLin' A)
         (Matrix.toLin' A') ↔
       Matrix.IsAdjointPair J J₃ A A' :=
-  by 
+  by
   rw [BilinForm.is_adjoint_pair_iff_comp_left_eq_comp_right]
   have h :
-    ∀ B B' : BilinForm R₃ (n → R₃), B = B' ↔ BilinForm.toMatrix' B = BilinForm.toMatrix' B' := by
+    ∀ B B' : BilinForm R₃ (n → R₃), B = B' ↔ BilinForm.toMatrix' B = BilinForm.toMatrix' B' :=
+    by
     intro B B'
     constructor <;> intro h
     · rw [h]
@@ -453,9 +462,10 @@ theorem is_adjoint_pair_to_bilin [DecidableEq n] :
     BilinForm.IsAdjointPair (Matrix.toBilin b J) (Matrix.toBilin b J₃) (Matrix.toLin b b A)
         (Matrix.toLin b b A') ↔
       Matrix.IsAdjointPair J J₃ A A' :=
-  by 
+  by
   rw [BilinForm.is_adjoint_pair_iff_comp_left_eq_comp_right]
-  have h : ∀ B B' : BilinForm R₃ M₃, B = B' ↔ BilinForm.toMatrix b B = BilinForm.toMatrix b B' := by
+  have h : ∀ B B' : BilinForm R₃ M₃, B = B' ↔ BilinForm.toMatrix b B = BilinForm.toMatrix b B' :=
+    by
     intro B B'
     constructor <;> intro h
     · rw [h]
@@ -467,25 +477,26 @@ theorem is_adjoint_pair_to_bilin [DecidableEq n] :
 
 theorem Matrix.is_adjoint_pair_equiv' [DecidableEq n] (P : Matrix n n R₃) (h : IsUnit P) :
     (Pᵀ ⬝ J ⬝ P).IsAdjointPair (Pᵀ ⬝ J ⬝ P) A A' ↔ J.IsAdjointPair J (P ⬝ A ⬝ P⁻¹) (P ⬝ A' ⬝ P⁻¹) :=
-  by 
+  by
   have h' : IsUnit P.det := P.is_unit_iff_is_unit_det.mp h
   let u := P.nonsing_inv_unit h'
   let v := Pᵀ.nonsingInvUnit (P.is_unit_det_transpose h')
   let x := Aᵀ * Pᵀ * J
   let y := J * P * A'
-  suffices x * ↑u = ↑v * y ↔ ↑v⁻¹ * x = y * ↑u⁻¹ by
+  suffices x * ↑u = ↑v * y ↔ ↑v⁻¹ * x = y * ↑u⁻¹
+    by
     dsimp only [Matrix.IsAdjointPair]
     repeat' rw [Matrix.transpose_mul]
     simp only [← Matrix.mul_eq_mul, ← mul_assoc, P.transpose_nonsing_inv]
-    conv_lhs => 
+    conv_lhs =>
       rhs
       rw [mul_assoc, mul_assoc]
       congr
       skip
       rw [← mul_assoc]
-    conv_rhs => 
+    conv_rhs =>
       rw [mul_assoc, mul_assoc]
-      conv => 
+      conv =>
         lhs
         congr
         skip
@@ -552,22 +563,22 @@ theorem Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Matrix ι
   matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin
 
 -- Lemmas transferring nondegeneracy between a matrix and its associated bilinear form
-theorem Matrix.Nondegenerate.to_bilin' {M : Matrix ι ι R₃} (h : M.Nondegenerate) :
+theorem Matrix.Nondegenerate.toBilin' {M : Matrix ι ι R₃} (h : M.Nondegenerate) :
     M.toBilin'.Nondegenerate := fun x hx =>
   h.eq_zero_of_ortho fun y => by simpa only [to_bilin'_apply'] using hx y
-#align matrix.nondegenerate.to_bilin' Matrix.Nondegenerate.to_bilin'
+#align matrix.nondegenerate.to_bilin' Matrix.Nondegenerate.toBilin'
 
 @[simp]
 theorem Matrix.nondegenerate_to_bilin'_iff {M : Matrix ι ι R₃} :
     M.toBilin'.Nondegenerate ↔ M.Nondegenerate :=
   ⟨fun h v hv => (h v) fun w => (M.to_bilin'_apply' _ _).trans <| hv w,
-    Matrix.Nondegenerate.to_bilin'⟩
+    Matrix.Nondegenerate.toBilin'⟩
 #align matrix.nondegenerate_to_bilin'_iff Matrix.nondegenerate_to_bilin'_iff
 
-theorem Matrix.Nondegenerate.to_bilin {M : Matrix ι ι R₃} (h : M.Nondegenerate)
-    (b : Basis ι R₃ M₃) : (toBilin b M).Nondegenerate :=
+theorem Matrix.Nondegenerate.toBilin {M : Matrix ι ι R₃} (h : M.Nondegenerate) (b : Basis ι R₃ M₃) :
+    (toBilin b M).Nondegenerate :=
   (Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin b).mp h.toBilin'
-#align matrix.nondegenerate.to_bilin Matrix.Nondegenerate.to_bilin
+#align matrix.nondegenerate.to_bilin Matrix.Nondegenerate.toBilin
 
 @[simp]
 theorem Matrix.nondegenerate_to_bilin_iff {M : Matrix ι ι R₃} (b : Basis ι R₃ M₃) :
@@ -606,21 +617,21 @@ theorem nondegenerate_to_bilin'_iff_det_ne_zero {M : Matrix ι ι A} :
 #align
   bilin_form.nondegenerate_to_bilin'_iff_det_ne_zero BilinForm.nondegenerate_to_bilin'_iff_det_ne_zero
 
-theorem nondegenerate_to_bilin'_of_det_ne_zero' (M : Matrix ι ι A) (h : M.det ≠ 0) :
+theorem nondegenerateToBilin'OfDetNeZero' (M : Matrix ι ι A) (h : M.det ≠ 0) :
     M.toBilin'.Nondegenerate :=
   nondegenerate_to_bilin'_iff_det_ne_zero.mpr h
 #align
-  bilin_form.nondegenerate_to_bilin'_of_det_ne_zero' BilinForm.nondegenerate_to_bilin'_of_det_ne_zero'
+  bilin_form.nondegenerate_to_bilin'_of_det_ne_zero' BilinForm.nondegenerateToBilin'OfDetNeZero'
 
 theorem nondegenerate_iff_det_ne_zero {B : BilinForm A M₃} (b : Basis ι A M₃) :
     B.Nondegenerate ↔ (toMatrix b B).det ≠ 0 := by
   rw [← Matrix.nondegenerate_iff_det_ne_zero, nondegenerate_to_matrix_iff]
 #align bilin_form.nondegenerate_iff_det_ne_zero BilinForm.nondegenerate_iff_det_ne_zero
 
-theorem nondegenerate_of_det_ne_zero (b : Basis ι A M₃) (h : (toMatrix b B₃).det ≠ 0) :
+theorem nondegenerateOfDetNeZero (b : Basis ι A M₃) (h : (toMatrix b B₃).det ≠ 0) :
     B₃.Nondegenerate :=
   (nondegenerate_iff_det_ne_zero b).mpr h
-#align bilin_form.nondegenerate_of_det_ne_zero BilinForm.nondegenerate_of_det_ne_zero
+#align bilin_form.nondegenerate_of_det_ne_zero BilinForm.nondegenerateOfDetNeZero
 
 end Det
 

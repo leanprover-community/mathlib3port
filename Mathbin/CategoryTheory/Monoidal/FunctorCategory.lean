@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.functor_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ variable (F G F' G' : C ⥤ D)
 Tensor product of functors `C ⥤ D`, when `D` is monoidal.
  -/
 @[simps]
-def tensorObj : C ⥤ D where 
+def tensorObj : C ⥤ D where
   obj X := F.obj X ⊗ G.obj X
   map X Y f := F.map f ⊗ G.map f
   map_id' X := by rw [F.map_id, G.map_id, tensor_id]
@@ -61,10 +61,10 @@ variable (α : F ⟶ G) (β : F' ⟶ G')
 Tensor product of natural transformations into `D`, when `D` is monoidal.
 -/
 @[simps]
-def tensorHom : tensorObj F F' ⟶
-      tensorObj G G' where 
+def tensorHom : tensorObj F F' ⟶ tensorObj G G'
+    where
   app X := α.app X ⊗ β.app X
-  naturality' X Y f := by 
+  naturality' X Y f := by
     dsimp
     rw [← tensor_comp, α.naturality, β.naturality, tensor_comp]
 #align
@@ -78,40 +78,44 @@ open CategoryTheory.Monoidal.FunctorCategory
 the functor category `C ⥤ D` has a natural pointwise monoidal structure,
 where `(F ⊗ G).obj X = F.obj X ⊗ G.obj X`.
 -/
-instance functorCategoryMonoidal :
-    MonoidalCategory (C ⥤ D) where 
+instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D)
+    where
   tensorObj F G := tensorObj F G
   tensorHom F G F' G' α β := tensorHom α β
-  tensor_id' F G := by 
+  tensor_id' F G := by
     ext
     dsimp
     rw [tensor_id]
-  tensor_comp' F G H F' G' H' α β γ δ := by 
+  tensor_comp' F G H F' G' H' α β γ δ := by
     ext
     dsimp
     rw [tensor_comp]
   tensorUnit := (CategoryTheory.Functor.const C).obj (𝟙_ D)
   leftUnitor F :=
-    NatIso.ofComponents (fun X => λ_ (F.obj X)) fun X Y f => by
+    NatIso.ofComponents (fun X => λ_ (F.obj X)) fun X Y f =>
+      by
       dsimp
       rw [left_unitor_naturality]
   rightUnitor F :=
-    NatIso.ofComponents (fun X => ρ_ (F.obj X)) fun X Y f => by
+    NatIso.ofComponents (fun X => ρ_ (F.obj X)) fun X Y f =>
+      by
       dsimp
       rw [right_unitor_naturality]
   associator F G H :=
-    NatIso.ofComponents (fun X => α_ (F.obj X) (G.obj X) (H.obj X)) fun X Y f => by
+    NatIso.ofComponents (fun X => α_ (F.obj X) (G.obj X) (H.obj X)) fun X Y f =>
+      by
       dsimp
       rw [associator_naturality]
-  left_unitor_naturality' F G α := by 
+  left_unitor_naturality' F G α := by
     ext X
     dsimp
     rw [left_unitor_naturality]
-  right_unitor_naturality' F G α := by 
+  right_unitor_naturality' F G α := by
     ext X
     dsimp
     rw [right_unitor_naturality]
-  associator_naturality' F G H F' G' H' α β γ := by
+  associator_naturality' F G H F' G' H' α β γ :=
+    by
     ext X
     dsimp
     rw [associator_naturality]
@@ -210,14 +214,13 @@ variable [BraidedCategory.{v₂} D]
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also braided.
 -/
-instance functorCategoryBraided :
-    BraidedCategory
-      (C ⥤ D) where 
+instance functorCategoryBraided : BraidedCategory (C ⥤ D)
+    where
   braiding F G := NatIso.ofComponents (fun X => β_ _ _) (by tidy)
-  hexagon_forward' F G H := by 
+  hexagon_forward' F G H := by
     ext X
     apply hexagon_forward
-  hexagon_reverse' F G H := by 
+  hexagon_reverse' F G H := by
     ext X
     apply hexagon_reverse
 #align
@@ -238,9 +241,8 @@ variable [SymmetricCategory.{v₂} D]
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also symmetric.
 -/
-instance functorCategorySymmetric :
-    SymmetricCategory
-      (C ⥤ D) where symmetry' F G := by 
+instance functorCategorySymmetric : SymmetricCategory (C ⥤ D)
+    where symmetry' F G := by
     ext X
     apply symmetry
 #align

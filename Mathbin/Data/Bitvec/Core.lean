@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joe Hendrix, Sebastian Ullrich
 
 ! This file was ported from Lean 3 source module data.bitvec.core
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ padding with `fill : bool`. If `x.length < i` then this will return the constant
 bitvector. -/
 def fillShr (x : Bitvec n) (i : ℕ) (fill : Bool) : Bitvec n :=
   Bitvec.cong
-      (by 
+      (by
         by_cases i ≤ n
         · have h₁ := Nat.sub_le n i
           rw [min_eq_right h]
@@ -310,7 +310,8 @@ attribute [local simp] Nat.zero_add Nat.add_zero Nat.one_mul Nat.mul_one Nat.zer
 
 -- mul_left_comm
 theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
-    Bitvec.toNat (xs++ₜb ::ᵥ nil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b ::ᵥ nil) := by
+    Bitvec.toNat (xs++ₜb ::ᵥ nil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b ::ᵥ nil) :=
+  by
   cases' xs with xs P
   simp [bits_to_nat_to_list]; clear P
   unfold bits_to_nat List.foldl
@@ -326,7 +327,8 @@ theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     apply xs_ih
 #align bitvec.to_nat_append Bitvec.to_nat_append
 
-theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 := by
+theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 :=
+  by
   simp [bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldl cond
   simp [cond_to_bool_mod_two]
@@ -337,7 +339,8 @@ theorem of_nat_succ {k n : ℕ} :
   rfl
 #align bitvec.of_nat_succ Bitvec.of_nat_succ
 
-theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k := by
+theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=
+  by
   induction' k with k ih generalizing n
   · simp [Nat.mod_one]
     rfl

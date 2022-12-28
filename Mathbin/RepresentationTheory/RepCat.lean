@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,11 +51,13 @@ variable {k G : Type u} [CommRing k] [Monoid G]
 instance : CoeSort (RepCat k G) (Type u) :=
   ConcreteCategory.hasCoeToSort _
 
-instance (V : RepCat k G) : AddCommGroup V := by
+instance (V : RepCat k G) : AddCommGroup V :=
+  by
   change AddCommGroup ((forget₂ (RepCat k G) (ModuleCat k)).obj V)
   infer_instance
 
-instance (V : RepCat k G) : Module k V := by
+instance (V : RepCat k G) : Module k V :=
+  by
   change Module k ((forget₂ (RepCat k G) (ModuleCat k)).obj V)
   infer_instance
 
@@ -172,7 +174,7 @@ theorem to_Module_monoid_algebra_map_aux {k G : Type _} [CommRing k] [Monoid G] 
     (r : MonoidAlgebra k G) (x : V) :
     f ((((MonoidAlgebra.lift k G (V →ₗ[k] V)) ρ) r) x) =
       (((MonoidAlgebra.lift k G (W →ₗ[k] W)) σ) r) (f x) :=
-  by 
+  by
   apply MonoidAlgebra.induction_on r
   · intro g
     simp only [one_smul, MonoidAlgebra.lift_single, MonoidAlgebra.of_apply]
@@ -191,22 +193,19 @@ def toModuleMonoidAlgebraMap {V W : RepCat k G} (f : V ⟶ W) :
 #align Rep.to_Module_monoid_algebra_map RepCat.toModuleMonoidAlgebraMap
 
 /-- Functorially convert a representation of `G` into a module over `monoid_algebra k G`. -/
-def toModuleMonoidAlgebra :
-    RepCat k G ⥤
-      ModuleCat.{u}
-        (MonoidAlgebra k G) where 
+def toModuleMonoidAlgebra : RepCat k G ⥤ ModuleCat.{u} (MonoidAlgebra k G)
+    where
   obj V := ModuleCat.of _ V.ρ.AsModule
   map V W f := toModuleMonoidAlgebraMap f
 #align Rep.to_Module_monoid_algebra RepCat.toModuleMonoidAlgebra
 
 /-- Functorially convert a module over `monoid_algebra k G` into a representation of `G`. -/
-def ofModuleMonoidAlgebra :
-    ModuleCat.{u} (MonoidAlgebra k G) ⥤
-      RepCat k G where 
+def ofModuleMonoidAlgebra : ModuleCat.{u} (MonoidAlgebra k G) ⥤ RepCat k G
+    where
   obj M := RepCat.of (Representation.ofModule k G M)
   map M N f :=
     { hom := { f with map_smul' := fun r x => f.map_smul (algebraMap k _ r) x }
-      comm' := fun g => by 
+      comm' := fun g => by
         ext
         apply f.map_smul }
 #align Rep.of_Module_monoid_algebra RepCat.ofModuleMonoidAlgebra
@@ -223,14 +222,16 @@ theorem of_Module_monoid_algebra_obj_ρ (M : ModuleCat.{u} (MonoidAlgebra k G)) 
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def counitIsoAddEquiv {M : ModuleCat.{u} (MonoidAlgebra k G)} :
-    (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≃+ M := by
+    (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≃+ M :=
+  by
   dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' (Representation.ofModule k G ↥M).asModuleEquiv.trans (RestrictScalars.addEquiv _ _ _)
 #align Rep.counit_iso_add_equiv RepCat.counitIsoAddEquiv
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def unitIsoAddEquiv {V : RepCat k G} :
-    V ≃+ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V := by
+    V ≃+ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V :=
+  by
   dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' V.ρ.as_module_equiv.symm.trans _
   exact (RestrictScalars.addEquiv _ _ _).symm
@@ -241,7 +242,7 @@ def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
     (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≅ M :=
   LinearEquiv.toModuleIso'
     { counitIsoAddEquiv with
-      map_smul' := fun r x => by 
+      map_smul' := fun r x => by
         dsimp [counit_iso_add_equiv]
         simp }
 #align Rep.counit_iso RepCat.counitIso
@@ -249,7 +250,7 @@ def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
 theorem unit_iso_comm (V : RepCat k G) (g : G) (x : V) :
     unitIsoAddEquiv ((V.ρ g).toFun x) =
       ((ofModuleMonoidAlgebra.obj (toModuleMonoidAlgebra.obj V)).ρ g).toFun (unitIsoAddEquiv x) :=
-  by 
+  by
   dsimp [unit_iso_add_equiv, of_Module_monoid_algebra, to_Module_monoid_algebra]
   simp only [AddEquiv.apply_eq_iff_eq, AddEquiv.apply_symm_apply,
     Representation.as_module_equiv_symm_map_rho, Representation.of_module_as_module_act]
@@ -260,20 +261,18 @@ def unitIso (V : RepCat k G) : V ≅ (to_Module_monoid_algebra ⋙ of_Module_mon
   ActionCat.mkIso
     (LinearEquiv.toModuleIso'
       { unitIsoAddEquiv with
-        map_smul' := fun r x => by 
+        map_smul' := fun r x => by
           dsimp [unit_iso_add_equiv]
           simp only [Representation.as_module_equiv_symm_map_smul,
             RestrictScalars.add_equiv_symm_map_algebra_map_smul] })
-    fun g => by 
+    fun g => by
     ext
     apply unit_iso_comm
 #align Rep.unit_iso RepCat.unitIso
 
 /-- The categorical equivalence `Rep k G ≌ Module (monoid_algebra k G)`. -/
-def equivalenceModuleMonoidAlgebra :
-    RepCat k G ≌
-      ModuleCat.{u}
-        (MonoidAlgebra k G) where 
+def equivalenceModuleMonoidAlgebra : RepCat k G ≌ ModuleCat.{u} (MonoidAlgebra k G)
+    where
   Functor := toModuleMonoidAlgebra
   inverse := ofModuleMonoidAlgebra
   unitIso := NatIso.ofComponents (fun V => unitIso V) (by tidy)

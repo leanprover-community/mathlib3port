@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.semiconj_Sup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ theorem order_iso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β}
 #align is_order_right_adjoint.order_iso_comp IsOrderRightAdjoint.order_iso_comp
 
 theorem comp_order_iso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
-    (h : IsOrderRightAdjoint f g) (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) := by
+    (h : IsOrderRightAdjoint f g) (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) :=
+  by
   intro y
   change IsLUB (e ⁻¹' { x | f x ≤ y }) (e.symm (g y))
   rw [e.is_lub_preimage, e.apply_symm_apply]
@@ -93,7 +94,8 @@ This is a version of Proposition 2.1 from [Étienne Ghys, Groupes d'homeomorphis
 cohomologie bornee][ghys87:groupes]. -/
 theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} {fb : β ↪o β} {g : α → β}
     (h : Function.Semiconj g fa fb) {g' : β → α} (hg' : IsOrderRightAdjoint g g') :
-    Function.Semiconj g' fb fa := by
+    Function.Semiconj g' fb fa :=
+  by
   refine' fun y => (hg' _).unique _
   rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
   simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
@@ -103,7 +105,8 @@ variable {G : Type _}
 
 theorem semiconj_of_is_lub [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
     (H : ∀ x, IsLUB (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) :
-    Function.Semiconj h (f₂ g) (f₁ g) := by
+    Function.Semiconj h (f₂ g) (f₁ g) :=
+  by
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)
   rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this

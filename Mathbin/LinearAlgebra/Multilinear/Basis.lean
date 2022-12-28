@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.basis
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,8 @@ variable [∀ i, Module R (M i)] [Module R M₂] [Module R M₃]
 basis vectors. -/
 theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n → Type _}
     (e : ∀ i, Basis (ι₁ i) R (M i))
-    (h : ∀ v : ∀ i, ι₁ i, (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g := by
+    (h : ∀ v : ∀ i, ι₁ i, (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g :=
+  by
   induction' n with m hm
   · ext x
     convert h finZeroElim
@@ -60,7 +61,8 @@ dependently-typed version would still be true, but the proof would need a depend
 version of `dom_dom_congr`. -/
 theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι]
     {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _} (e : Basis ι₁ R M₂)
-    (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g := by
+    (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
+  by
   cases nonempty_fintype ι
   exact
     (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp

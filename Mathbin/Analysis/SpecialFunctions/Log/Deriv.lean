@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,8 @@ namespace Real
 
 variable {x : ℝ}
 
-theorem hasStrictDerivAtLogOfPos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x := by
+theorem hasStrictDerivAtLogOfPos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x :=
+  by
   have : HasStrictDerivAt log (exp <| log x)⁻¹ x :=
     (has_strict_deriv_at_exp <| log x).ofLocalLeftInverse (continuous_at_log hx.ne')
         (ne_of_gt <| exp_pos _) <|
@@ -40,7 +41,8 @@ theorem hasStrictDerivAtLogOfPos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x :=
   rwa [exp_log hx] at this
 #align real.has_strict_deriv_at_log_of_pos Real.hasStrictDerivAtLogOfPos
 
-theorem hasStrictDerivAtLog (hx : x ≠ 0) : HasStrictDerivAt log x⁻¹ x := by
+theorem hasStrictDerivAtLog (hx : x ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
+  by
   cases' hx.lt_or_lt with hx hx
   · convert (has_strict_deriv_at_log_of_pos (neg_pos.mpr hx)).comp x (hasStrictDerivAtNeg x)
     · ext y
@@ -78,7 +80,8 @@ theorem deriv_log' : deriv log = Inv.inv :=
   funext deriv_log
 #align real.deriv_log' Real.deriv_log'
 
-theorem contDiffOnLog {n : ℕ∞} : ContDiffOn ℝ n log ({0}ᶜ) := by
+theorem contDiffOnLog {n : ℕ∞} : ContDiffOn ℝ n log ({0}ᶜ) :=
+  by
   suffices : ContDiffOn ℝ ⊤ log ({0}ᶜ); exact this.of_le le_top
   refine' (cont_diff_on_top_iff_deriv_of_open is_open_compl_singleton).2 _
   simp [differentiable_on_log, contDiffOnInv]
@@ -100,19 +103,22 @@ section deriv
 variable {f : ℝ → ℝ} {x f' : ℝ} {s : Set ℝ}
 
 theorem HasDerivWithinAt.log (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0) :
-    HasDerivWithinAt (fun y => log (f y)) (f' / f x) s x := by
+    HasDerivWithinAt (fun y => log (f y)) (f' / f x) s x :=
+  by
   rw [div_eq_inv_mul]
   exact (has_deriv_at_log hx).compHasDerivWithinAt x hf
 #align has_deriv_within_at.log HasDerivWithinAt.log
 
 theorem HasDerivAt.log (hf : HasDerivAt f f' x) (hx : f x ≠ 0) :
-    HasDerivAt (fun y => log (f y)) (f' / f x) x := by
+    HasDerivAt (fun y => log (f y)) (f' / f x) x :=
+  by
   rw [← has_deriv_within_at_univ] at *
   exact hf.log hx
 #align has_deriv_at.log HasDerivAt.log
 
 theorem HasStrictDerivAt.log (hf : HasStrictDerivAt f f' x) (hx : f x ≠ 0) :
-    HasStrictDerivAt (fun y => log (f y)) (f' / f x) x := by
+    HasStrictDerivAt (fun y => log (f y)) (f' / f x) x :=
+  by
   rw [div_eq_inv_mul]
   exact (has_strict_deriv_at_log hx).comp x hf
 #align has_strict_deriv_at.log HasStrictDerivAt.log
@@ -210,7 +216,8 @@ namespace Real
 
 /-- The function `x * log (1 + t / x)` tends to `t` at `+∞`. -/
 theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) :
-    Tendsto (fun x => x * log (1 + t / x)) atTop (𝓝 t) := by
+    Tendsto (fun x => x * log (1 + t / x)) atTop (𝓝 t) :=
+  by
   have h₁ : tendsto (fun h => h⁻¹ * log (1 + t * h)) (𝓝[≠] 0) (𝓝 t) := by
     simpa [has_deriv_at_iff_tendsto_slope, slope_fun_def] using
       (((hasDerivAtId (0 : ℝ)).const_mul t).const_add 1).log (by simp)
@@ -233,21 +240,24 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
     and then apply the mean value inequality. -/
   let F : ℝ → ℝ := fun x => (∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)
   -- First step: compute the derivative of `F`
-  have A : ∀ y ∈ Ioo (-1 : ℝ) 1, deriv F y = -y ^ n / (1 - y) := by
+  have A : ∀ y ∈ Ioo (-1 : ℝ) 1, deriv F y = -y ^ n / (1 - y) :=
+    by
     intro y hy
-    have : (∑ i in range n, (↑i + 1) * y ^ i / (↑i + 1)) = ∑ i in range n, y ^ i := by
+    have : (∑ i in range n, (↑i + 1) * y ^ i / (↑i + 1)) = ∑ i in range n, y ^ i :=
+      by
       congr with i
       exact mul_div_cancel_left _ (Nat.cast_add_one_pos i).ne'
     field_simp [F, this, geom_sum_eq (ne_of_lt hy.2), sub_ne_zero_of_ne (ne_of_gt hy.2),
       sub_ne_zero_of_ne (ne_of_lt hy.2)]
     ring
   -- second step: show that the derivative of `F` is small
-  have B : ∀ y ∈ Icc (-|x|) (|x|), |deriv F y| ≤ |x| ^ n / (1 - |x|) := by
+  have B : ∀ y ∈ Icc (-|x|) (|x|), |deriv F y| ≤ |x| ^ n / (1 - |x|) :=
+    by
     intro y hy
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_le (neg_lt_neg h) hy.1, lt_of_le_of_lt hy.2 h⟩
     calc
       |deriv F y| = |-y ^ n / (1 - y)| := by rw [A y this]
-      _ ≤ |x| ^ n / (1 - |x|) := by 
+      _ ≤ |x| ^ n / (1 - |x|) := by
         have : |y| ≤ |x| := abs_le.2 hy
         have : 0 < 1 - |x| := by linarith
         have : 1 - |x| ≤ |1 - y| := le_trans (by linarith [hy.2]) (le_abs_self _)
@@ -256,8 +266,10 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       
   -- third step: apply the mean value inequality
-  have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ := by
-    have : ∀ y ∈ Icc (-|x|) (|x|), DifferentiableAt ℝ F y := by
+  have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ :=
+    by
+    have : ∀ y ∈ Icc (-|x|) (|x|), DifferentiableAt ℝ F y :=
+      by
       intro y hy
       have : 1 - y ≠ 0 := sub_ne_zero_of_ne (ne_of_gt (lt_of_le_of_lt hy.2 h))
       simp [F, this]
@@ -272,7 +284,8 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Power series expansion of the logarithm around `1`. -/
 theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
-    HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) := by
+    HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) :=
+  by
   rw [Summable.has_sum_iff_tendsto_nat]
   show tendsto (fun n : ℕ => ∑ i : ℕ in range n, x ^ (i + 1) / (i + 1)) at_top (𝓝 (-log (1 - x)))
   · rw [tendsto_iff_norm_tendsto_zero]
@@ -286,10 +299,12 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
   show Summable fun n : ℕ => x ^ (n + 1) / (n + 1)
   · refine' summable_of_norm_bounded _ (summable_geometric_of_lt_1 (abs_nonneg _) h) fun i => _
     calc
-      ‖x ^ (i + 1) / (i + 1)‖ = |x| ^ (i + 1) / (i + 1) := by
+      ‖x ^ (i + 1) / (i + 1)‖ = |x| ^ (i + 1) / (i + 1) :=
+        by
         have : (0 : ℝ) ≤ i + 1 := le_of_lt (Nat.cast_add_one_pos i)
         rw [norm_eq_abs, abs_div, ← pow_abs, abs_of_nonneg this]
-      _ ≤ |x| ^ (i + 1) / (0 + 1) := by
+      _ ≤ |x| ^ (i + 1) / (0 + 1) :=
+        by
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr add_le_add_right, \",\", expr i.cast_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         norm_num
@@ -302,10 +317,10 @@ theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
 theorem has_sum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     HasSum (fun k : ℕ => (2 : ℝ) * (1 / (2 * k + 1)) * x ^ (2 * k + 1))
       (log (1 + x) - log (1 - x)) :=
-  by 
+  by
   let term := fun n : ℕ => -1 * ((-x) ^ (n + 1) / ((n : ℝ) + 1)) + x ^ (n + 1) / (n + 1)
   have h_term_eq_goal : term ∘ (· * ·) 2 = fun k : ℕ => 2 * (1 / (2 * k + 1)) * x ^ (2 * k + 1) :=
-    by 
+    by
     ext n
     dsimp [term]
     rw [Odd.neg_pow (⟨n, rfl⟩ : Odd (2 * n + 1)) x]

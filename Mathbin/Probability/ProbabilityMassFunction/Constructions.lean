@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.constructions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,9 +86,10 @@ theorem to_outer_measure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasu
 
 @[simp]
 theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f)
-    (hs : MeasurableSet s) : (p.map f).toMeasure s = p.toMeasure (f ⁻¹' s) := by
+    (hs : MeasurableSet s) : (p.map f).toMeasure s = p.toMeasure (f ⁻¹' s) :=
+  by
   rw [to_measure_apply_eq_to_outer_measure_apply _ s hs,
-    to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurableSetPreimage hf hs)]
+    to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurable_set_preimage hf hs)]
   exact to_outer_measure_map_apply f p s
 #align pmf.to_measure_map_apply Pmf.to_measure_map_apply
 
@@ -110,7 +111,8 @@ theorem monad_seq_eq_seq {α β : Type _} (q : Pmf (α → β)) (p : Pmf α) : q
 #align pmf.monad_seq_eq_seq Pmf.monad_seq_eq_seq
 
 @[simp]
-theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 := by
+theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 :=
+  by
   simp only [seq, mul_boole, bind_apply, pure_apply]
   refine' tsum_congr fun f => Ennreal.tsum_mul_left.symm.trans (tsum_congr fun a => _)
   simpa only [mul_zero] using mul_ite (b = f a) (q f) (p a) 0
@@ -126,12 +128,12 @@ theorem mem_support_seq_iff : b ∈ (seq q p).support ↔ ∃ f ∈ q.support, b
 
 end Seq
 
-instance : IsLawfulFunctor Pmf where 
+instance : LawfulFunctor Pmf where
   map_const_eq α β := rfl
   id_map α := bind_pure
   comp_map α β γ g h x := (map_comp _ _ _).symm
 
-instance : LawfulMonad Pmf where 
+instance : LawfulMonad Pmf where
   bind_pure_comp_eq_map α β f x := rfl
   bind_map_eq_seq α β f x := rfl
   pure_bind α β := pure_bind
@@ -309,7 +311,8 @@ theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) :=
 #align pmf.bernoulli_apply Pmf.bernoulli_apply
 
 @[simp]
-theorem support_bernoulli : (bernoulli p h).support = { b | cond b (p ≠ 0) (p ≠ 1) } := by
+theorem support_bernoulli : (bernoulli p h).support = { b | cond b (p ≠ 0) (p ≠ 1) } :=
+  by
   refine' Set.ext fun b => _
   induction b
   · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_false, Ne.def, tsub_eq_zero_iff_le, not_le]

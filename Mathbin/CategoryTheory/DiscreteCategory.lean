@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.discrete_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,15 +54,16 @@ structure Discrete (α : Type u₁) where
 #align category_theory.discrete CategoryTheory.Discrete
 
 @[simp]
-theorem Discrete.mk_as {α : Type u₁} (X : Discrete α) : Discrete.mk X.as = X := by
+theorem Discrete.mk_as {α : Type u₁} (X : Discrete α) : Discrete.mk X.as = X :=
+  by
   ext
   rfl
 #align category_theory.discrete.mk_as CategoryTheory.Discrete.mk_as
 
 /-- `discrete α` is equivalent to the original type `α`.-/
 @[simps]
-def discreteEquiv {α : Type u₁} :
-    Discrete α ≃ α where 
+def discreteEquiv {α : Type u₁} : Discrete α ≃ α
+    where
   toFun := Discrete.as
   invFun := Discrete.mk
   left_inv := by tidy
@@ -79,12 +80,11 @@ somewhat annoyingly we have to define `X ⟶ Y` as `ulift (plift (X = Y))`.
 
 See <https://stacks.math.columbia.edu/tag/001A>
 -/
-instance discreteCategory (α : Type u₁) :
-    SmallCategory (Discrete
-        α) where 
+instance discreteCategory (α : Type u₁) : SmallCategory (Discrete α)
+    where
   Hom X Y := ULift (PLift (X.as = Y.as))
   id X := ULift.up (PLift.up rfl)
-  comp X Y Z g f := by 
+  comp X Y Z g f := by
     cases X
     cases Y
     cases Z
@@ -100,7 +100,7 @@ instance [Inhabited α] : Inhabited (Discrete α) :=
   ⟨⟨default⟩⟩
 
 instance [Subsingleton α] : Subsingleton (Discrete α) :=
-  ⟨by 
+  ⟨by
     intros
     ext
     apply Subsingleton.elim⟩
@@ -128,7 +128,7 @@ theorem eq_of_hom {X Y : Discrete α} (i : X ⟶ Y) : X.as = Y.as :=
 in the discrete category. -/
 abbrev eqToHom {X Y : Discrete α} (h : X.as = Y.as) : X ⟶ Y :=
   eqToHom
-    (by 
+    (by
       ext
       exact h)
 #align category_theory.discrete.eq_to_hom CategoryTheory.Discrete.eqToHom
@@ -137,7 +137,7 @@ abbrev eqToHom {X Y : Discrete α} (h : X.as = Y.as) : X ⟶ Y :=
 in the discrete category. -/
 abbrev eqToIso {X Y : Discrete α} (h : X.as = Y.as) : X ≅ Y :=
   eqToIso
-    (by 
+    (by
       ext
       exact h)
 #align category_theory.discrete.eq_to_iso CategoryTheory.Discrete.eqToIso
@@ -165,10 +165,11 @@ instance {I : Type u₁} {i j : Discrete I} (f : i ⟶ j) : IsIso f :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- Any function `I → C` gives a functor `discrete I ⥤ C`.
 -/
-def functor {I : Type u₁} (F : I → C) :
-    Discrete I ⥤ C where 
+def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C
+    where
   obj := F ∘ discrete.as
-  map X Y f := by
+  map X Y f :=
+    by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
     cases f
@@ -200,10 +201,11 @@ a natural transformation is just a collection of maps,
 as the naturality squares are trivial.
 -/
 @[simps]
-def natTrans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ⟶ G.obj i) :
-    F ⟶ G where 
+def natTrans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ⟶ G.obj i) : F ⟶ G
+    where
   app := f
-  naturality' X Y g := by
+  naturality' X Y g :=
+    by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
     cases g
@@ -217,7 +219,8 @@ as the naturality squares are trivial.
 -/
 @[simps]
 def natIso {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i) : F ≅ G :=
-  NatIso.ofComponents f fun X Y g => by
+  NatIso.ofComponents f fun X Y g =>
+    by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
     cases g
@@ -234,7 +237,8 @@ theorem nat_iso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discre
   `discrete.functor (F.obj)`. -/
 @[simp]
 def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functor (F.obj ∘ discrete.mk) :=
-  nat_iso fun i => by
+  nat_iso fun i =>
+    by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
     rfl
@@ -253,9 +257,8 @@ def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : 
 an equivalence between the corresponding `discrete` categories.
 -/
 @[simps]
-def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) :
-    Discrete I ≌
-      Discrete J where 
+def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ Discrete J
+    where
   Functor := Discrete.functor (discrete.mk ∘ (e : I → J))
   inverse := Discrete.functor (discrete.mk ∘ (e.symm : J → I))
   unitIso :=
@@ -276,8 +279,8 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) :
 
 /-- We can convert an equivalence of `discrete` categories to a type-level `equiv`. -/
 @[simps]
-def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) :
-    α ≃ β where 
+def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) : α ≃ β
+    where
   toFun := discrete.as ∘ h.Functor.obj ∘ discrete.mk
   invFun := discrete.as ∘ h.inverse.obj ∘ discrete.mk
   left_inv a := by simpa using eq_of_hom (h.unit_iso.app (discrete.mk a)).2
@@ -297,17 +300,20 @@ open Opposite
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- A discrete category is equivalent to its opposite category. -/
 @[simps functor_obj_as inverse_obj]
-protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α := by
+protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
+  by
   let F : Discrete α ⥤ (Discrete α)ᵒᵖ := Discrete.functor fun x => op (Discrete.mk x)
   refine'
     equivalence.mk (functor.left_op F) F _
-      (discrete.nat_iso fun X => by
+      (discrete.nat_iso fun X =>
+        by
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
         simp [F])
   refine'
     nat_iso.of_components
-      (fun X => by
+      (fun X =>
+        by
         run_tac
           tactic.op_induction'
         trace
@@ -322,7 +328,7 @@ variable {C : Type u₂} [Category.{v₂} C]
 @[simp]
 theorem functor_map_id (F : Discrete J ⥤ C) {j : Discrete J} (f : j ⟶ j) : F.map f = 𝟙 (F.obj j) :=
   by
-  have h : f = 𝟙 j := by 
+  have h : f = 𝟙 j := by
     cases f
     cases f
     ext

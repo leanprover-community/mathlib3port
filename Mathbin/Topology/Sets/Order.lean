@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,10 +32,10 @@ structure ClopenUpperSet (α : Type _) [TopologicalSpace α] [LE α] extends Clo
 
 namespace ClopenUpperSet
 
-instance : SetLike (ClopenUpperSet α)
-      α where 
+instance : SetLike (ClopenUpperSet α) α
+    where
   coe s := s.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr

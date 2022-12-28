@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.canonical
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,11 +66,13 @@ theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y�
     (hU : Presieve.IsSheafFor P U) (hB : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), Presieve.IsSheafFor P (B hf))
     (hB' :
       ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (h : U f) ⦃Z⦄ (g : Z ⟶ Y), Presieve.IsSeparatedFor P ((B h).pullback g)) :
-    Presieve.IsSheafFor P (Sieve.bind U B) := by
+    Presieve.IsSheafFor P (Sieve.bind U B) :=
+  by
   intro s hs
   let y : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), presieve.family_of_elements P (B hf) := fun Y f hf Z g hg =>
     s _ (presieve.bind_comp _ _ hg)
-  have hy : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), (y hf).Compatible := by
+  have hy : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), (y hf).Compatible :=
+    by
     intro Y f H Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ comm
     apply hs
     apply reassoc_of comm
@@ -84,7 +86,8 @@ theorem is_sheaf_for_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y�
     intro Y l hl
     apply (hB' hf (l ≫ h)).ext
     intro M m hm
-    have : bind U B (m ≫ l ≫ h ≫ f) := by
+    have : bind U B (m ≫ l ≫ h ≫ f) :=
+      by
       have : bind U B _ := presieve.bind_comp f hf hm
       simpa using this
     trans s (m ≫ l ≫ h ≫ f) this
@@ -122,8 +125,10 @@ https://math.stackexchange.com/a/358709
 theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presieve.IsSheafFor P R)
     (hR' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : S f), Presieve.IsSeparatedFor P (R.pullback f))
     (hS : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : R f), Presieve.IsSheafFor P (S.pullback f)) :
-    Presieve.IsSheafFor P S := by
-  have : (bind R fun Y f hf => S.pullback f : presieve X) ≤ S := by
+    Presieve.IsSheafFor P S :=
+  by
+  have : (bind R fun Y f hf => S.pullback f : presieve X) ≤ S :=
+    by
     rintro Z f ⟨W, f, g, hg, hf : S _, rfl⟩
     apply hf
   apply presieve.is_sheaf_for_subsieve_aux P this
@@ -134,7 +139,7 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
     apply (hS (R.downward_closed hf _)).IsSeparatedFor
   · intro Y f hf
     have : sieve.pullback f (bind R fun T (k : T ⟶ X) (hf : R k) => pullback k S) = R.pullback f :=
-      by 
+      by
       ext (Z g)
       constructor
       · rintro ⟨W, k, l, hl, _, comm⟩
@@ -152,14 +157,13 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
 This is a special case of https://stacks.math.columbia.edu/tag/00Z9, but following a different
 proof (see the comments there).
 -/
-def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) :
-    GrothendieckTopology
-      C where 
+def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C
+    where
   sieves X S := ∀ (Y) (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f)
-  top_mem' X Y f := by 
+  top_mem' X Y f := by
     rw [sieve.pullback_top]
     exact presieve.is_sheaf_for_top_sieve P
-  pullback_stable' X Y S f hS Z g := by 
+  pullback_stable' X Y S f hS Z g := by
     rw [← pullback_comp]
     apply hS
   transitive' X S hS R hR Z g :=
@@ -196,7 +200,8 @@ theorem sheaf_for_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (h : P ∈ Ps)
 Check that if each `P ∈ Ps` is a sheaf for `J`, then `J` is a subtopology of `finest_topology Ps`.
 -/
 theorem le_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (J : GrothendieckTopology C)
-    (hJ : ∀ P ∈ Ps, Presieve.IsSheaf J P) : J ≤ finestTopology Ps := by
+    (hJ : ∀ P ∈ Ps, Presieve.IsSheaf J P) : J ≤ finestTopology Ps :=
+  by
   rintro X S hS _ ⟨⟨_, _, ⟨P, hP, rfl⟩, rfl⟩, rfl⟩
   intro Y f
   -- this can't be combined with the previous because the `subst` is applied at the end
@@ -237,7 +242,7 @@ namespace Subcanonical
 theorem of_yoneda_is_sheaf (J : GrothendieckTopology C)
     (h : ∀ X, Presieve.IsSheaf J (yoneda.obj X)) : Subcanonical J :=
   le_finest_topology _ _
-    (by 
+    (by
       rintro P ⟨X, rfl⟩
       apply h)
 #align

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.matrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,8 +144,8 @@ instance [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R] [HasContinuo
 instance [Fintype n] [NonUnitalNonAssocSemiring R] [TopologicalSemiring R] :
     TopologicalSemiring (Matrix n n R) where
 
-instance [Fintype n] [NonUnitalNonAssocRing R] [TopologicalRing R] :
-    TopologicalRing (Matrix n n R) where
+instance [Fintype n] [NonUnitalNonAssocRing R] [TopologicalRing R] : TopologicalRing (Matrix n n R)
+    where
 
 @[continuity]
 theorem Continuous.matrix_vec_mul_vec [Mul R] [HasContinuousMul R] {A : X → m → R} {B : X → n → R}
@@ -198,7 +198,8 @@ theorem Continuous.matrix_trace [Fintype n] [AddCommMonoid R] [HasContinuousAdd 
 
 @[continuity]
 theorem Continuous.matrix_det [Fintype n] [DecidableEq n] [CommRing R] [TopologicalRing R]
-    {A : X → Matrix n n R} (hA : Continuous A) : Continuous fun x => (A x).det := by
+    {A : X → Matrix n n R} (hA : Continuous A) : Continuous fun x => (A x).det :=
+  by
   simp_rw [Matrix.det_apply]
   refine' continuous_finset_sum _ fun l _ => Continuous.const_smul _ _
   refine' continuous_finset_prod _ fun l _ => hA.matrix_elem _ _
@@ -269,7 +270,8 @@ theorem Continuous.matrix_block_diag {A : X → Matrix (m × p) (n × p) R} (hA 
 theorem Continuous.matrix_block_diagonal' [Zero R] [DecidableEq l]
     {A : X → ∀ i, Matrix (m' i) (n' i) R} (hA : Continuous A) :
     Continuous fun x => blockDiagonal' (A x) :=
-  continuous_matrix fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ => by
+  continuous_matrix fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ =>
+    by
     dsimp only [block_diagonal']
     split_ifs
     · subst h
@@ -312,7 +314,8 @@ theorem summable_matrix_transpose {f : X → Matrix m n R} :
     _)
 #align summable_matrix_transpose summable_matrix_transpose
 
-theorem Matrix.transpose_tsum [T2Space R] {f : X → Matrix m n R} : (∑' x, f x)ᵀ = ∑' x, (f x)ᵀ := by
+theorem Matrix.transpose_tsum [T2Space R] {f : X → Matrix m n R} : (∑' x, f x)ᵀ = ∑' x, (f x)ᵀ :=
+  by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_transpose.tsum_eq.symm
   · have hft := summable_matrix_transpose.not.mpr hf
@@ -338,7 +341,8 @@ theorem summable_matrix_conj_transpose [StarAddMonoid R] [HasContinuousStar R]
 #align summable_matrix_conj_transpose summable_matrix_conj_transpose
 
 theorem Matrix.conj_transpose_tsum [StarAddMonoid R] [HasContinuousStar R] [T2Space R]
-    {f : X → Matrix m n R} : (∑' x, f x)ᴴ = ∑' x, (f x)ᴴ := by
+    {f : X → Matrix m n R} : (∑' x, f x)ᴴ = ∑' x, (f x)ᴴ :=
+  by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_conj_transpose.tsum_eq.symm
   · have hft := summable_matrix_conj_transpose.not.mpr hf
@@ -365,7 +369,8 @@ theorem summable_matrix_diagonal [DecidableEq n] {f : X → n → R} :
 #align summable_matrix_diagonal summable_matrix_diagonal
 
 theorem Matrix.diagonal_tsum [DecidableEq n] [T2Space R] {f : X → n → R} :
-    diagonal (∑' x, f x) = ∑' x, diagonal (f x) := by
+    diagonal (∑' x, f x) = ∑' x, diagonal (f x) :=
+  by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_diagonal.tsum_eq.symm
   · have hft := summable_matrix_diagonal.not.mpr hf
@@ -406,7 +411,8 @@ theorem summable_matrix_block_diagonal [DecidableEq p] {f : X → p → Matrix m
 #align summable_matrix_block_diagonal summable_matrix_block_diagonal
 
 theorem Matrix.block_diagonal_tsum [DecidableEq p] [T2Space R] {f : X → p → Matrix m n R} :
-    blockDiagonal (∑' x, f x) = ∑' x, blockDiagonal (f x) := by
+    blockDiagonal (∑' x, f x) = ∑' x, blockDiagonal (f x) :=
+  by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_block_diagonal.tsum_eq.symm
   · have hft := summable_matrix_block_diagonal.not.mpr hf
@@ -447,7 +453,8 @@ theorem summable_matrix_block_diagonal' [DecidableEq l] {f : X → ∀ i, Matrix
 
 theorem Matrix.block_diagonal'_tsum [DecidableEq l] [T2Space R]
     {f : X → ∀ i, Matrix (m' i) (n' i) R} :
-    blockDiagonal' (∑' x, f x) = ∑' x, blockDiagonal' (f x) := by
+    blockDiagonal' (∑' x, f x) = ∑' x, blockDiagonal' (f x) :=
+  by
   by_cases hf : Summable f
   · exact hf.has_sum.matrix_block_diagonal'.tsum_eq.symm
   · have hft := summable_matrix_block_diagonal'.not.mpr hf

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ open Classical
 theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
     Nat.eq_one_of_dvd_one <|
-      Int.coe_nat_dvd.1 <| by 
+      Int.coe_nat_dvd.1 <| by
         rw [Int.ofNat_one, ← H]
         exact
           dvd_add (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left m n) _)
@@ -51,7 +51,8 @@ theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.C
 alias Nat.is_coprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.Coprime.is_coprime
 
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
-  (Finset.induction_on t fun _ => isCoprime_one_left) fun b t hbt ih H => by
+  (Finset.induction_on t fun _ => isCoprime_one_left) fun b t hbt ih H =>
+    by
     rw [Finset.prod_insert hbt]
     rw [Finset.forall_mem_insert] at H
     exact H.1.mul_left (ih H.2)
@@ -83,13 +84,14 @@ theorem IsCoprime.of_prod_right (H1 : IsCoprime x (∏ i in t, s i)) (i : I) (hi
 theorem Finset.prod_dvd_of_coprime :
     ∀ (Hs : (t : Set I).Pairwise (IsCoprime on s)) (Hs1 : ∀ i ∈ t, s i ∣ z), (∏ x in t, s x) ∣ z :=
   Finset.induction_on t (fun _ _ => one_dvd z)
-    (by 
+    (by
       intro a r har ih Hs Hs1
       rw [Finset.prod_insert har]
       have aux1 : a ∈ (↑(insert a r) : Set I) := Finset.mem_insert_self a r
       refine'
         (IsCoprime.prod_right fun i hir =>
-              Hs aux1 (Finset.mem_insert_of_mem hir) <| by
+              Hs aux1 (Finset.mem_insert_of_mem hir) <|
+                by
                 rintro rfl
                 exact har hir).mul_dvd
           (Hs1 a aux1) ((ih (Hs.mono _)) fun i hi => Hs1 i <| Finset.mem_insert_of_mem hi)
@@ -108,7 +110,7 @@ open Finset
 theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
     (∃ μ : I → R, (∑ i in t, μ i * ∏ j in t \ {i}, s j) = 1) ↔
       Pairwise (IsCoprime on fun i : t => s i) :=
-  by 
+  by
   refine' h.cons_induction _ _ <;> clear t h
   · simp only [Pairwise, sum_singleton, Finset.sdiff_self, prod_empty, mul_one,
       exists_apply_eq_apply, Ne.def, true_iff_iff]
@@ -117,7 +119,8 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
     simpa [hi, hj] using h
   intro a t hat h ih
   rw [pairwise_cons']
-  have mem : ∀ x ∈ t, a ∈ insert a t \ {x} := fun x hx => by
+  have mem : ∀ x ∈ t, a ∈ insert a t \ {x} := fun x hx =>
+    by
     rw [mem_sdiff, mem_singleton]
     exact ⟨mem_insert_self _ _, fun ha => hat (ha.symm.cases_on hx)⟩
   constructor
@@ -162,14 +165,16 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
 #align exists_sum_eq_one_iff_pairwise_coprime exists_sum_eq_one_iff_pairwise_coprime
 
 theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
-    (∃ μ : I → R, (∑ i : I, μ i * ∏ j in {i}ᶜ, s j) = 1) ↔ Pairwise (IsCoprime on s) := by
+    (∃ μ : I → R, (∑ i : I, μ i * ∏ j in {i}ᶜ, s j) = 1) ↔ Pairwise (IsCoprime on s) :=
+  by
   convert exists_sum_eq_one_iff_pairwise_coprime Finset.univ_nonempty using 1
   simp only [Function.onFun, pairwise_subtype_iff_pairwise_finset', coe_univ, Set.pairwise_univ]
   assumption
 #align exists_sum_eq_one_iff_pairwise_coprime' exists_sum_eq_one_iff_pairwise_coprime'
 
 theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
-    Pairwise (IsCoprime on fun i : t => s i) ↔ ∀ i ∈ t, IsCoprime (s i) (∏ j in t \ {i}, s j) := by
+    Pairwise (IsCoprime on fun i : t => s i) ↔ ∀ i ∈ t, IsCoprime (s i) (∏ j in t \ {i}, s j) :=
+  by
   refine' ⟨fun hp i hi => is_coprime.prod_right_iff.mpr fun j hj => _, fun hp => _⟩
   · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
     obtain ⟨hj, ji⟩ := hj
@@ -181,12 +186,14 @@ theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
 
 variable {m n : ℕ}
 
-theorem IsCoprime.pow_left (H : IsCoprime x y) : IsCoprime (x ^ m) y := by
+theorem IsCoprime.pow_left (H : IsCoprime x y) : IsCoprime (x ^ m) y :=
+  by
   rw [← Finset.card_range m, ← Finset.prod_const]
   exact IsCoprime.prod_left fun _ _ => H
 #align is_coprime.pow_left IsCoprime.pow_left
 
-theorem IsCoprime.pow_right (H : IsCoprime x y) : IsCoprime x (y ^ n) := by
+theorem IsCoprime.pow_right (H : IsCoprime x y) : IsCoprime x (y ^ n) :=
+  by
   rw [← Finset.card_range n, ← Finset.prod_const]
   exact IsCoprime.prod_right fun _ _ => H
 #align is_coprime.pow_right IsCoprime.pow_right
@@ -195,7 +202,8 @@ theorem IsCoprime.pow (H : IsCoprime x y) : IsCoprime (x ^ m) (y ^ n) :=
   H.pow_left.pow_right
 #align is_coprime.pow IsCoprime.pow
 
-theorem IsCoprime.pow_left_iff (hm : 0 < m) : IsCoprime (x ^ m) y ↔ IsCoprime x y := by
+theorem IsCoprime.pow_left_iff (hm : 0 < m) : IsCoprime (x ^ m) y ↔ IsCoprime x y :=
+  by
   refine' ⟨fun h => _, IsCoprime.pow_left⟩
   rw [← Finset.card_range m, ← Finset.prod_const] at h
   exact h.of_prod_left 0 (finset.mem_range.mpr hm)

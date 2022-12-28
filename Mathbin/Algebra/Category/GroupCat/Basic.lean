@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.category.Group.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,8 @@ theorem one_apply (G H : GroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
 #align Group.one_apply GroupCat.one_apply
 
 @[ext, to_additive]
-theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by
+theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ :=
+  by
   ext1
   apply w
 #align Group.ext GroupCat.ext
@@ -189,7 +190,8 @@ theorem one_apply (G H : CommGroupCat) (g : G) : (1 : G ⟶ H) g = 1 :=
 #align CommGroup.one_apply CommGroupCat.one_apply
 
 @[ext, to_additive]
-theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ := by
+theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) : f₁ = f₂ :=
+  by
   ext1
   apply w
 #align CommGroup.ext CommGroupCat.ext
@@ -248,8 +250,9 @@ theorem int_hom_ext {G : AddCommGroupCat.{0}} (f g : AddCommGroupCat.of ℤ ⟶ 
 -- TODO: this argument should be generalised to the situation where
 -- the forgetful functor is representable.
 theorem injective_of_mono {G H : AddCommGroupCat.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f :=
-  fun g₁ g₂ h => by
-  have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by 
+  fun g₁ g₂ h =>
+  by
+  have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by
     ext
     simpa [as_hom_apply] using h
   have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0
@@ -260,8 +263,8 @@ end AddCommGroupCat
 
 /-- Build an isomorphism in the category `Group` from a `mul_equiv` between `group`s. -/
 @[to_additive AddEquiv.toAddGroupIso, simps]
-def MulEquiv.toGroupIso {X Y : GroupCat} (e : X ≃* Y) :
-    X ≅ Y where 
+def MulEquiv.toGroupIso {X Y : GroupCat} (e : X ≃* Y) : X ≅ Y
+    where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_Group_iso MulEquiv.toGroupIso
@@ -271,8 +274,8 @@ add_decl_doc AddEquiv.toAddGroupIso
 
 /-- Build an isomorphism in the category `CommGroup` from a `mul_equiv` between `comm_group`s. -/
 @[to_additive AddEquiv.toAddCommGroupIso, simps]
-def MulEquiv.toCommGroupIso {X Y : CommGroupCat} (e : X ≃* Y) :
-    X ≅ Y where 
+def MulEquiv.toCommGroupIso {X Y : CommGroupCat} (e : X ≃* Y) : X ≅ Y
+    where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_CommGroup_iso MulEquiv.toCommGroupIso
@@ -305,8 +308,8 @@ end CategoryTheory.Iso
 in `Group` -/
 @[to_additive addEquivIsoAddGroupIso
       "additive equivalences between `add_group`s are the same\nas (isomorphic to) isomorphisms in `AddGroup`"]
-def mulEquivIsoGroupIso {X Y : GroupCat.{u}} :
-    X ≃* Y ≅ X ≅ Y where 
+def mulEquivIsoGroupIso {X Y : GroupCat.{u}} : X ≃* Y ≅ X ≅ Y
+    where
   Hom e := e.toGroupIso
   inv i := i.groupIsoToMulEquiv
 #align mul_equiv_iso_Group_iso mulEquivIsoGroupIso
@@ -315,8 +318,8 @@ def mulEquivIsoGroupIso {X Y : GroupCat.{u}} :
 in `CommGroup` -/
 @[to_additive addEquivIsoAddCommGroupIso
       "additive equivalences between `add_comm_group`s are\nthe same as (isomorphic to) isomorphisms in `AddCommGroup`"]
-def mulEquivIsoCommGroupIso {X Y : CommGroupCat.{u}} :
-    X ≃* Y ≅ X ≅ Y where 
+def mulEquivIsoCommGroupIso {X Y : CommGroupCat.{u}} : X ≃* Y ≅ X ≅ Y
+    where
   Hom e := e.toCommGroupIso
   inv i := i.commGroupIsoToMulEquiv
 #align mul_equiv_iso_CommGroup_iso mulEquivIsoCommGroupIso
@@ -325,10 +328,8 @@ namespace CategoryTheory.AutCat
 
 /-- The (bundled) group of automorphisms of a type is isomorphic to the (bundled) group
 of permutations. -/
-def isoPerm {α : Type u} :
-    GroupCat.of (AutCat α) ≅
-      GroupCat.of
-        (Equiv.Perm α) where 
+def isoPerm {α : Type u} : GroupCat.of (AutCat α) ≅ GroupCat.of (Equiv.Perm α)
+    where
   Hom := ⟨fun g => g.toEquiv, by tidy, by tidy⟩
   inv := ⟨fun g => g.toIso, by tidy, by tidy⟩
 #align category_theory.Aut.iso_perm CategoryTheory.AutCat.isoPerm
@@ -342,9 +343,8 @@ def mulEquivPerm {α : Type u} : AutCat α ≃* Equiv.Perm α :=
 end CategoryTheory.AutCat
 
 @[to_additive]
-instance GroupCat.forget_reflects_isos :
-    ReflectsIsomorphisms
-      (forget GroupCat.{u}) where reflects X Y f _ := by
+instance GroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget GroupCat.{u})
+    where reflects X Y f _ := by
     skip
     let i := as_iso ((forget GroupCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
@@ -352,10 +352,8 @@ instance GroupCat.forget_reflects_isos :
 #align Group.forget_reflects_isos GroupCat.forget_reflects_isos
 
 @[to_additive]
-instance CommGroupCat.forget_reflects_isos :
-    ReflectsIsomorphisms
-      (forget
-        CommGroupCat.{u}) where reflects X Y f _ := by
+instance CommGroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommGroupCat.{u})
+    where reflects X Y f _ := by
     skip
     let i := as_iso ((forget CommGroupCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }

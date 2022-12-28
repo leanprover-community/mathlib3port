@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.injective_resolution
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,8 @@ def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y) (J : InjectiveRe
 /-- The resolution maps intertwine the descent of a morphism and that morphism. -/
 @[simp, reassoc.1]
 theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolutionCat Y)
-    (J : InjectiveResolutionCat Z) : J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι := by
+    (J : InjectiveResolutionCat Z) : J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι :=
+  by
   ext n
   rcases n with (_ | _ | n) <;>
     · dsimp [desc, desc_f_one, desc_f_zero]
@@ -142,7 +143,8 @@ def descHomotopyZeroSucc {Y Z : C} {I : InjectiveResolutionCat Y} {J : Injective
     (I.cocomplex.d (n + 2) (n + 3)) (Abelian.Exact.op _ _ (I.exact _))
     (by
       simp [preadditive.comp_sub, ← category.assoc, preadditive.sub_comp,
-        show I.cocomplex.d (n + 1) (n + 2) ≫ g' = f.f (n + 1) - g ≫ J.cocomplex.d n (n + 1) by
+        show I.cocomplex.d (n + 1) (n + 2) ≫ g' = f.f (n + 1) - g ≫ J.cocomplex.d n (n + 1)
+          by
           rw [w]
           simp only [add_sub_cancel]])
 #align
@@ -181,9 +183,8 @@ def descCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (I : InjectiveResol
 
 -- We don't care about the actual definitions of these homotopies.
 /-- Any two injective resolutions are homotopy equivalent. -/
-def homotopyEquiv {X : C} (I J : InjectiveResolutionCat X) :
-    HomotopyEquiv I.cocomplex
-      J.cocomplex where 
+def homotopyEquiv {X : C} (I J : InjectiveResolutionCat X) : HomotopyEquiv I.cocomplex J.cocomplex
+    where
   Hom := desc (𝟙 X) J I
   inv := desc (𝟙 X) I J
   homotopyHomInvId :=
@@ -240,18 +241,15 @@ variable (C) [HasInjectiveResolutions C]
 if considered with target the homotopy category
 (`ℕ`-indexed cochain complexes and chain maps up to homotopy).
 -/
-def injectiveResolutions :
-    C ⥤
-      HomotopyCategory C
-        (ComplexShape.up
-          ℕ) where 
+def injectiveResolutions : C ⥤ HomotopyCategory C (ComplexShape.up ℕ)
+    where
   obj X := (HomotopyCategory.quotient _ _).obj (injectiveResolution X)
   map X Y f := (HomotopyCategory.quotient _ _).map (injectiveResolution.desc f)
-  map_id' X := by 
+  map_id' X := by
     rw [← (HomotopyCategory.quotient _ _).map_id]
     apply HomotopyCategory.eq_of_homotopy
     apply InjectiveResolution.desc_id_homotopy
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     rw [← (HomotopyCategory.quotient _ _).map_comp]
     apply HomotopyCategory.eq_of_homotopy
     apply InjectiveResolution.desc_comp_homotopy
@@ -330,7 +328,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 `f : Y[0] ⟶ X`, then `X` is an injective resolution of `Y.` -/
 def HomologicalComplex.Hom.fromSingle₀InjectiveResolution (X : CochainComplex C ℕ) (Y : C)
     (f : (CochainComplex.single₀ C).obj Y ⟶ X) [QuasiIso f] (H : ∀ n, Injective (X.x n)) :
-    InjectiveResolutionCat Y where 
+    InjectiveResolutionCat Y where
   cocomplex := X
   ι := f
   Injective := H

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.complex.conformal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,8 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace �
   {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
 theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) :
-    IsConformalMap (map.restrictScalars ℝ) := by
+    IsConformalMap (map.restrictScalars ℝ) :=
+  by
   have minor₁ : ‖map 1‖ ≠ 0 := by simpa only [ext_ring_iff, Ne.def, norm_eq_zero] using nonzero
   refine' ⟨‖map 1‖, minor₁, ⟨‖map 1‖⁻¹ • map, _⟩, _⟩
   · intro x
@@ -84,11 +85,11 @@ variable {f : ℂ → ℂ} {z : ℂ} {g : ℂ →L[ℝ] ℂ}
 theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
     (∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨
       ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conj_cle :=
-  by 
+  by
   rcases h with ⟨c, hc, li, rfl⟩
   obtain ⟨li, rfl⟩ : ∃ li' : ℂ ≃ₗᵢ[ℝ] ℂ, li'.toLinearIsometry = li
   exact
-    ⟨li.to_linear_isometry_equiv rfl, by 
+    ⟨li.to_linear_isometry_equiv rfl, by
       ext1
       rfl⟩
   rcases linear_isometry_complex li with ⟨a, rfl | rfl⟩
@@ -112,14 +113,15 @@ theorem is_conformal_map_iff_is_complex_or_conj_linear :
       ((∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨
           ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conj_cle) ∧
         g ≠ 0 :=
-  by 
+  by
   constructor
   · exact fun h => ⟨h.is_complex_or_conj_linear, h.NeZero⟩
   · rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
     · refine' isConformalMapComplexLinear _
       contrapose! h₂ with w
       simp only [w, restrict_scalars_zero]
-    · have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conj_cle := by
+    · have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conj_cle :=
+        by
         ext1
         simp only [hmap, coe_comp', ContinuousLinearEquiv.coe_coe, Function.comp_apply,
           conj_cle_apply, star_ring_end_self_apply]

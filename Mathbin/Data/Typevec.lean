@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.typevec
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -357,7 +357,7 @@ def typevecCasesNil₃ {β : ∀ v v' : Typevec 0, v ⟹ v' → Sort _}
 def typevecCasesCons₃ (n : ℕ) {β : ∀ v v' : Typevec (n + 1), v ⟹ v' → Sort _}
     (F :
       ∀ (t t') (f : t → t') (v v' : Typevec n) (fs : v ⟹ v'), β (v ::: t) (v' ::: t') (fs ::: f)) :
-    ∀ v v' fs, β v v' fs := by 
+    ∀ v v' fs, β v v' fs := by
   intro v v'
   rw [← append1_drop_last v, ← append1_drop_last v']
   intro fs
@@ -366,7 +366,8 @@ def typevecCasesCons₃ (n : ℕ) {β : ∀ v v' : Typevec (n + 1), v ⟹ v' →
 #align typevec.typevec_cases_cons₃ Typevec.typevecCasesCons₃
 
 /-- specialized cases distinction for an arrow in the category of 0-length type vectors -/
-def typevecCasesNil₂ {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nilFun) : ∀ f, β f := by
+def typevecCasesNil₂ {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nilFun) : ∀ f, β f :=
+  by
   intro g; have : g = nil_fun; ext ⟨⟩
   rw [this]; exact f
 #align typevec.typevec_cases_nil₂ Typevec.typevecCasesNil₂
@@ -377,7 +378,7 @@ def typevecCasesNil₂ {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort _} (f : β nilFu
 /-- specialized cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevecCasesCons₂ (n : ℕ) (t t' : Type _) (v v' : Typevec n)
     {β : (v ::: t) ⟹ (v' ::: t') → Sort _} (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) :
-    ∀ fs, β fs := by 
+    ∀ fs, β fs := by
   intro fs
   rw [← split_drop_fun_last_fun fs]
   apply F
@@ -659,7 +660,8 @@ theorem diag_sub_val {n} {α : Typevec.{u} n} : subtypeVal (repeatEq α) ⊚ dia
   ext i <;> induction i <;> [rfl, apply i_ih]
 #align typevec.diag_sub_val Typevec.diag_sub_val
 
-theorem prod_id : ∀ {n} {α β : Typevec.{u} n}, (id ⊗' id) = (id : α ⊗ β ⟹ _) := by
+theorem prod_id : ∀ {n} {α β : Typevec.{u} n}, (id ⊗' id) = (id : α ⊗ β ⟹ _) :=
+  by
   intros ; ext (i a); induction i
   · cases a
     rfl
@@ -678,7 +680,8 @@ theorem append_prod_append_fun {n} {α α' β β' : Typevec.{u} n} {φ φ' ψ ψ
 end Liftp'
 
 @[simp]
-theorem drop_fun_diag {α} : dropFun (@prod.diag (n + 1) α) = prod.diag := by
+theorem drop_fun_diag {α} : dropFun (@prod.diag (n + 1) α) = prod.diag :=
+  by
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_diag Typevec.drop_fun_diag
@@ -697,28 +700,28 @@ theorem last_fun_subtype_val {α} (p : α ⟹ repeat (n + 1) Prop) :
 
 @[simp]
 theorem drop_fun_to_subtype {α} (p : α ⟹ repeat (n + 1) Prop) :
-    dropFun (toSubtype p) = toSubtype _ := by 
+    dropFun (toSubtype p) = toSubtype _ := by
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_to_subtype Typevec.drop_fun_to_subtype
 
 @[simp]
 theorem last_fun_to_subtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (toSubtype p) = _root_.id :=
-  by 
+  by
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.last_fun_to_subtype Typevec.last_fun_to_subtype
 
 @[simp]
 theorem drop_fun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) :
-    dropFun (ofSubtype p) = ofSubtype _ := by 
+    dropFun (ofSubtype p) = ofSubtype _ := by
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_of_subtype Typevec.drop_fun_of_subtype
 
 @[simp]
 theorem last_fun_of_subtype {α} (p : α ⟹ repeat (n + 1) Prop) : lastFun (ofSubtype p) = _root_.id :=
-  by 
+  by
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.last_fun_of_subtype Typevec.last_fun_of_subtype
@@ -735,14 +738,16 @@ open Mvfunctor
 
 @[simp]
 theorem drop_fun_prod {α α' β β' : Typevec (n + 1)} (f : α ⟹ β) (f' : α' ⟹ β') :
-    dropFun (f ⊗' f') = (dropFun f ⊗' dropFun f') := by
+    dropFun (f ⊗' f') = (dropFun f ⊗' dropFun f') :=
+  by
   ext i : 2
   induction i <;> simp [drop_fun, *] <;> rfl
 #align typevec.drop_fun_prod Typevec.drop_fun_prod
 
 @[simp]
 theorem last_fun_prod {α α' β β' : Typevec (n + 1)} (f : α ⟹ β) (f' : α' ⟹ β') :
-    lastFun (f ⊗' f') = Prod.map (lastFun f) (lastFun f') := by
+    lastFun (f ⊗' f') = Prod.map (lastFun f) (lastFun f') :=
+  by
   ext i : 1
   induction i <;> simp [last_fun, *] <;> rfl
 #align typevec.last_fun_prod Typevec.last_fun_prod
@@ -765,7 +770,8 @@ theorem drop_fun_id {α : Typevec (n + 1)} : dropFun (@Typevec.id _ α) = id :=
 #align typevec.drop_fun_id Typevec.drop_fun_id
 
 @[simp]
-theorem prod_map_id {α β : Typevec n} : (@Typevec.id _ α ⊗' @Typevec.id _ β) = id := by
+theorem prod_map_id {α β : Typevec n} : (@Typevec.id _ α ⊗' @Typevec.id _ β) = id :=
+  by
   ext i : 2
   induction i <;> simp only [Typevec.prod.map, *, drop_fun_id]
   cases x
@@ -774,7 +780,8 @@ theorem prod_map_id {α β : Typevec n} : (@Typevec.id _ α ⊗' @Typevec.id _ �
 #align typevec.prod_map_id Typevec.prod_map_id
 
 @[simp]
-theorem subtype_val_diag_sub {α : Typevec n} : subtypeVal (repeatEq α) ⊚ diag_sub = prod.diag := by
+theorem subtype_val_diag_sub {α : Typevec n} : subtypeVal (repeatEq α) ⊚ diag_sub = prod.diag :=
+  by
   clear * -
   ext i
   induction i <;> [rfl, apply i_ih]

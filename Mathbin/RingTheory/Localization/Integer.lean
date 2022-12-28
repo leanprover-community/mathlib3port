@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.integer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ theorem is_integer_mul {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsI
   Subring.mul_mem _ ha hb
 #align is_localization.is_integer_mul IsLocalization.is_integer_mul
 
-theorem is_integer_smul {a : R} {b : S} (hb : IsInteger R b) : IsInteger R (a • b) := by
+theorem is_integer_smul {a : R} {b : S} (hb : IsInteger R b) : IsInteger R (a • b) :=
+  by
   rcases hb with ⟨b', hb⟩
   use a * b'
   rw [← hb, (algebraMap R S).map_mul, Algebra.smul_def]
@@ -87,14 +88,16 @@ theorem exists_integer_multiple' (a : S) : ∃ b : M, IsInteger R (a * algebraMa
 
 This version multiplies `a` on the left, matching the argument order in the `has_smul` instance.
 -/
-theorem exists_integer_multiple (a : S) : ∃ b : M, IsInteger R ((b : R) • a) := by
+theorem exists_integer_multiple (a : S) : ∃ b : M, IsInteger R ((b : R) • a) :=
+  by
   simp_rw [Algebra.smul_def, mul_comm _ a]
   apply exists_integer_multiple'
 #align is_localization.exists_integer_multiple IsLocalization.exists_integer_multiple
 
 /-- We can clear the denominators of a `finset`-indexed family of fractions. -/
 theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
-    ∃ b : M, ∀ i ∈ s, IsLocalization.IsInteger R ((b : R) • f i) := by
+    ∃ b : M, ∀ i ∈ s, IsLocalization.IsInteger R ((b : R) • f i) :=
+  by
   haveI := Classical.propDecidable
   refine' ⟨∏ i in s, (sec M (f i)).2, fun i hi => ⟨_, _⟩⟩
   · exact (∏ j in s.erase i, (sec M (f j)).2) * (sec M (f i)).1
@@ -107,7 +110,8 @@ theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
 
 /-- We can clear the denominators of a finite indexed family of fractions. -/
 theorem exist_integer_multiples_of_finite {ι : Type _} [Finite ι] (f : ι → S) :
-    ∃ b : M, ∀ i, IsLocalization.IsInteger R ((b : R) • f i) := by
+    ∃ b : M, ∀ i, IsLocalization.IsInteger R ((b : R) • f i) :=
+  by
   cases nonempty_fintype ι
   obtain ⟨b, hb⟩ := exist_integer_multiples M Finset.univ f
   exact ⟨b, fun i => hb i (Finset.mem_univ _)⟩
@@ -151,7 +155,8 @@ noncomputable def finsetIntegerMultiple [DecidableEq R] (s : Finset S) : Finset 
 open Pointwise
 
 theorem finset_integer_multiple_image [DecidableEq R] (s : Finset S) :
-    algebraMap R S '' finsetIntegerMultiple M s = commonDenomOfFinset M s • s := by
+    algebraMap R S '' finsetIntegerMultiple M s = commonDenomOfFinset M s • s :=
+  by
   delta finset_integer_multiple common_denom
   rw [Finset.coe_image]
   ext

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,10 +39,8 @@ include V
 /-- The additive action on an affine subspace corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwiseAddAction :
-    AddAction V
-      (AffineSubspace k
-        P) where 
+protected def pointwiseAddAction : AddAction V (AffineSubspace k P)
+    where
   vadd x S := S.map (AffineEquiv.constVadd k P x)
   zero_vadd p := ((congr_arg fun f => p.map f) <| AffineMap.ext <| zero_vadd _).trans p.map_id
   add_vadd x y p :=
@@ -64,13 +62,14 @@ theorem vadd_mem_pointwise_vadd_iff {v : V} {s : AffineSubspace k P} {p : P} :
   vadd_mem_vadd_set_iff
 #align affine_subspace.vadd_mem_pointwise_vadd_iff AffineSubspace.vadd_mem_pointwise_vadd_iff
 
-theorem pointwise_vadd_bot (v : V) : v +ᵥ (⊥ : AffineSubspace k P) = ⊥ := by
+theorem pointwise_vadd_bot (v : V) : v +ᵥ (⊥ : AffineSubspace k P) = ⊥ :=
+  by
   ext
   simp
 #align affine_subspace.pointwise_vadd_bot AffineSubspace.pointwise_vadd_bot
 
 theorem pointwise_vadd_direction (v : V) (s : AffineSubspace k P) :
-    (v +ᵥ s).direction = s.direction := by 
+    (v +ᵥ s).direction = s.direction := by
   unfold VAdd.vadd
   rw [map_direction]
   exact Submodule.map_id _
@@ -85,7 +84,8 @@ omit V
 include V₁ V₂
 
 theorem map_pointwise_vadd (f : P₁ →ᵃ[k] P₂) (v : V₁) (s : AffineSubspace k P₁) :
-    (v +ᵥ s).map f = f.linear v +ᵥ s.map f := by
+    (v +ᵥ s).map f = f.linear v +ᵥ s.map f :=
+  by
   unfold VAdd.vadd
   rw [map_map, map_map]
   congr 1

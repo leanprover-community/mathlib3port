@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.finset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ theorem Finset.Nonempty.cInf_eq_min' {s : Finset α} (h : s.Nonempty) : infₛ �
   @Finset.Nonempty.cSup_eq_max' αᵒᵈ _ s h
 #align finset.nonempty.cInf_eq_min' Finset.Nonempty.cInf_eq_min'
 
-theorem Finset.Nonempty.cSup_mem {s : Finset α} (h : s.Nonempty) : supₛ (s : Set α) ∈ s := by
+theorem Finset.Nonempty.cSup_mem {s : Finset α} (h : s.Nonempty) : supₛ (s : Set α) ∈ s :=
+  by
   rw [h.cSup_eq_max']
   exact s.max'_mem _
 #align finset.nonempty.cSup_mem Finset.Nonempty.cSup_mem
@@ -58,7 +59,8 @@ theorem Finset.Nonempty.cInf_mem {s : Finset α} (h : s.Nonempty) : infₛ (s : 
   @Finset.Nonempty.cSup_mem αᵒᵈ _ _ h
 #align finset.nonempty.cInf_mem Finset.Nonempty.cInf_mem
 
-theorem Set.Nonempty.cSup_mem (h : s.Nonempty) (hs : s.Finite) : supₛ s ∈ s := by
+theorem Set.Nonempty.cSup_mem (h : s.Nonempty) (hs : s.Finite) : supₛ s ∈ s :=
+  by
   lift s to Finset α using hs
   exact Finset.Nonempty.cSup_mem h
 #align set.nonempty.cSup_mem Set.Nonempty.cSup_mem
@@ -88,7 +90,7 @@ non-empty. As a result, we can translate between the two.
 namespace Finset
 
 theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
-    s.sup' H f = supₛ (f '' s) := by 
+    s.sup' H f = supₛ (f '' s) := by
   apply le_antisymm
   · refine' (Finset.sup'_le _ _) fun a ha => _
     refine' le_cSup ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩

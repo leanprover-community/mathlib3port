@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.functor.reflects_isomorphisms
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,22 +52,22 @@ theorem is_iso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.m
 #align category_theory.is_iso_of_reflects_iso CategoryTheory.is_iso_of_reflects_iso
 
 instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful F] :
-    ReflectsIsomorphisms
-      F where reflects X Y f i :=
+    ReflectsIsomorphisms F
+    where reflects X Y f i :=
     ⟨⟨F.preimage (inv (F.map f)), ⟨F.map_injective (by simp), F.map_injective (by simp)⟩⟩⟩
 #align category_theory.of_full_and_faithful CategoryTheory.of_full_and_faithful
 
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] :
     ReflectsIsomorphisms (F ⋙ G) :=
-  ⟨fun _ _ f (hf : IsIso (G.map _)) => by 
+  ⟨fun _ _ f (hf : IsIso (G.map _)) => by
     skip
     haveI := is_iso_of_reflects_iso (F.map f) G
     exact is_iso_of_reflects_iso f F⟩
 
 instance (priority := 100) reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms
     [Balanced C] (F : C ⥤ D) [ReflectsMonomorphisms F] [ReflectsEpimorphisms F] :
-    ReflectsIsomorphisms
-      F where reflects A B f hf := by 
+    ReflectsIsomorphisms F
+    where reflects A B f hf := by
     skip
     haveI : epi f := epi_of_epi_map F inferInstance
     haveI : mono f := mono_of_mono_map F inferInstance

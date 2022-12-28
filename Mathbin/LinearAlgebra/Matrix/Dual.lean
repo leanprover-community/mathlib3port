@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.dual
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ variable {K V₁ V₂ ι₁ ι₂ : Type _} [Field K] [AddCommGroup V₁] [Modul
 theorem LinearMap.to_matrix_transpose (u : V₁ →ₗ[K] V₂) :
     LinearMap.toMatrix B₂.dualBasis B₁.dualBasis (Module.Dual.transpose u) =
       (LinearMap.toMatrix B₁ B₂ u)ᵀ :=
-  by 
+  by
   ext (i j)
   simp only [LinearMap.to_matrix_apply, Module.Dual.transpose_apply, B₁.dual_basis_repr,
     B₂.dual_basis_apply, Matrix.transpose_apply, LinearMap.comp_apply]
@@ -43,7 +43,8 @@ theorem LinearMap.to_matrix_transpose (u : V₁ →ₗ[K] V₂) :
 
 @[simp]
 theorem Matrix.to_lin_transpose (M : Matrix ι₁ ι₂ K) :
-    Matrix.toLin B₁.dualBasis B₂.dualBasis Mᵀ = Module.Dual.transpose (Matrix.toLin B₂ B₁ M) := by
+    Matrix.toLin B₁.dualBasis B₂.dualBasis Mᵀ = Module.Dual.transpose (Matrix.toLin B₂ B₁ M) :=
+  by
   apply (LinearMap.toMatrix B₁.dual_basis B₂.dual_basis).Injective
   rw [LinearMap.to_matrix_to_lin, LinearMap.to_matrix_transpose, LinearMap.to_matrix_to_lin]
 #align matrix.to_lin_transpose Matrix.to_lin_transpose

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.gen
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ def freqAux : ∀ (xs : List (ℕ+ × Gen α)) (i), i < (xs.map (Subtype.val ∘
     if h' : j < i then x
     else
       freq_aux xs (j - i)
-        (by 
+        (by
           rw [tsub_lt_iff_right (le_of_not_gt h')]
           simpa [List.sum_cons, add_comm] using h)
 #align slim_check.gen.freq_aux SlimCheck.Gen.freqAux
@@ -204,7 +204,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
   have ha : 1 ≤ s :=
     le_trans Pos <|
       List.length_map (Subtype.val ∘ Prod.fst) xs ▸
-        List.length_le_sum_of_one_le _ fun i => by 
+        List.length_le_sum_of_one_le _ fun i => by
           simp
           intros
           assumption

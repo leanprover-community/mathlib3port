@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.units
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ instance [Monoid α] [Finite α] : Finite αˣ :=
 
 theorem Fintype.card_units [GroupWithZero α] [Fintype α] [Fintype αˣ] :
     Fintype.card αˣ = Fintype.card α - 1 := by
-  classical 
+  classical
     rw [eq_comm, Nat.sub_eq_iff_eq_add (Fintype.card_pos_iff.2 ⟨(0 : α)⟩),
       Fintype.card_congr (unitsEquivNeZero α)]
     have := Fintype.card_congr (Equiv.sumCompl (· = (0 : α))).symm

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.symmetrized
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,8 +149,8 @@ instance [Sub α] : Sub αˢʸᵐ where sub a b := sym (unsym a - unsym b)
 instance [Neg α] : Neg αˢʸᵐ where neg a := sym (-unsym a)
 
 -- Introduce the symmetrized multiplication
-instance [Add α] [Mul α] [One α] [Invertible (2 : α)] :
-    Mul αˢʸᵐ where mul a b := sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
+instance [Add α] [Mul α] [One α] [Invertible (2 : α)] : Mul αˢʸᵐ
+    where mul a b := sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
 
 @[to_additive]
 instance [Inv α] : Inv αˢʸᵐ where inv a := Sym <| (unsym a)⁻¹
@@ -269,8 +269,8 @@ instance [AddCommGroup α] : AddCommGroup αˢʸᵐ :=
 instance {R : Type _} [Semiring R] [AddCommMonoid α] [Module R α] : Module R αˢʸᵐ :=
   Function.Injective.module R ⟨unsym, unsym_zero, unsym_add⟩ unsym_injective unsym_smul
 
-instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] :
-    Invertible (sym a) where 
+instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : Invertible (sym a)
+    where
   invOf := sym (⅟ a)
   inv_of_mul_self := by
     rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
@@ -284,7 +284,7 @@ theorem inv_of_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [In
 #align sym_alg.inv_of_sym SymAlg.inv_of_sym
 
 instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
-  { SymAlg.addCommMonoid with 
+  { SymAlg.addCommMonoid with
     one := 1
     mul := (· * ·)
     zero := 0
@@ -326,8 +326,8 @@ theorem mul_comm [Mul α] [AddCommSemigroup α] [One α] [Invertible (2 : α)] (
     a * b = b * a := by rw [mul_def, mul_def, add_comm]
 #align sym_alg.mul_comm SymAlg.mul_comm
 
-instance [Ring α] [Invertible (2 : α)] :
-    IsCommJordan αˢʸᵐ where 
+instance [Ring α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ
+    where
   mul_comm := SymAlg.mul_comm
   lmul_comm_rmul_rmul a b :=
     by

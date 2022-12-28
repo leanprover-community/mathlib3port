@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.denumerable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,8 @@ theorem of_nat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
 #align denumerable.of_nat_of_decode Denumerable.of_nat_of_decode
 
 @[simp]
-theorem encode_of_nat (n) : encode (ofNat α n) = n := by
+theorem encode_of_nat (n) : encode (ofNat α n) = n :=
+  by
   let ⟨a, h, e⟩ := decode_inv n
   rwa [of_nat_of_decode h]
 #align denumerable.encode_of_nat Denumerable.encode_of_nat
@@ -84,7 +85,7 @@ instance (priority := 100) : Infinite α :=
   Infinite.of_surjective _ (eqv α).Surjective
 
 /-- A type equivalent to `ℕ` is denumerable. -/
-def mk' {α} (e : α ≃ ℕ) : Denumerable α where 
+def mk' {α} (e : α ≃ ℕ) : Denumerable α where
   encode := e
   decode := some ∘ e.symm
   encodek a := congr_arg some (e.symm_apply_apply _)
@@ -119,7 +120,7 @@ theorem of_nat_nat (n) : ofNat ℕ n = n :=
 
 /-- If `α` is denumerable, then so is `option α`. -/
 instance option : Denumerable (Option α) :=
-  ⟨fun n => by 
+  ⟨fun n => by
     cases n
     · refine' ⟨none, _, encode_none⟩
       rw [decode_option_zero, Option.mem_def]
@@ -130,7 +131,8 @@ instance option : Denumerable (Option α) :=
 
 /-- If `α` and `β` are denumerable, then so is their sum. -/
 instance sum : Denumerable (Sum α β) :=
-  ⟨fun n => by
+  ⟨fun n =>
+    by
     suffices ∃ a ∈ @decode_sum α β _ _ n, encode_sum a = bit (bodd n) (div2 n) by simpa [bit_decomp]
     simp [decode_sum] <;> cases bodd n <;> simp [decode_sum, bit, encode_sum]⟩
 #align denumerable.sum Denumerable.sum
@@ -265,7 +267,8 @@ def ofNat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
 #align nat.subtype.of_nat Nat.Subtype.ofNat
 
 theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = ⟨x, hx⟩
-  | x => fun hx => by
+  | x => fun hx =>
+    by
     let t : List s :=
       ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
     have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by
@@ -314,18 +317,18 @@ private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filter (�
 open Finset
 
 private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
-  | 0 => by 
+  | 0 => by
     rw [to_fun_aux_eq, card_eq_zero, eq_empty_iff_forall_not_mem]
     rintro n hn
     rw [mem_filter, of_nat, mem_range] at hn
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
-  | n + 1 => by 
+  | n + 1 => by
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
     have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by simp
     have h₂ :
       (range (succ (ofNat s n))).filter (· ∈ s) =
         insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) :=
-      by 
+      by
       simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>
         ⟨fun h => by
@@ -335,7 +338,7 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
           h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h =>
             ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
     simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
-    conv => 
+    conv =>
       rhs
       rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
 #align nat.subtype.right_inverse_aux nat.subtype.right_inverse_aux
@@ -356,7 +359,8 @@ namespace Denumerable
 open Encodable
 
 /-- An infinite encodable type is denumerable. -/
-def ofEncodableOfInfinite (α : Type _) [Encodable α] [Infinite α] : Denumerable α := by
+def ofEncodableOfInfinite (α : Type _) [Encodable α] [Infinite α] : Denumerable α :=
+  by
   letI := @decidable_range_encode α _ <;>
     letI : Infinite (Set.range (@encode α _)) :=
       Infinite.of_injective _ (Equiv.ofInjective _ encode_injective).Injective
@@ -372,7 +376,7 @@ theorem nonempty_denumerable (α : Type _) [Countable α] [Infinite α] : Nonemp
 #align nonempty_denumerable nonempty_denumerable
 
 instance nonempty_equiv_of_countable [Countable α] [Infinite α] [Countable β] [Infinite β] :
-    Nonempty (α ≃ β) := by 
+    Nonempty (α ≃ β) := by
   cases nonempty_denumerable α
   cases nonempty_denumerable β
   exact ⟨(Denumerable.eqv _).trans (Denumerable.eqv _).symm⟩

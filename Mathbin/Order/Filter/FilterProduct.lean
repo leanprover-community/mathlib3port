@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.filter_product
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,8 @@ open Ultrafilter
 local notation "β*" => Germ (φ : Filter α) β
 
 instance [DivisionSemiring β] : DivisionSemiring β* :=
-  { Germ.semiring, Germ.divInvMonoid, Germ.nontrivial with
+  { Germ.semiring, Germ.divInvMonoid,
+    Germ.nontrivial with
     mul_inv_cancel := fun f =>
       (induction_on f) fun f hf =>
         coe_eq.2 <|
@@ -76,7 +77,8 @@ theorem const_lt_iff [Preorder β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
   coe_lt.trans lift_rel_const_iff
 #align filter.germ.const_lt_iff Filter.Germ.const_lt_iff
 
-theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) := by
+theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) :=
+  by
   ext (⟨f⟩⟨g⟩)
   exact coe_lt
 #align filter.germ.lt_def Filter.Germ.lt_def
@@ -98,7 +100,7 @@ theorem const_inf [HasInf β] (a b : β) : ↑(a ⊓ b) = (↑a ⊓ ↑b : β*) 
 #align filter.germ.const_inf Filter.Germ.const_inf
 
 instance [SemilatticeSup β] : SemilatticeSup β* :=
-  { Germ.partialOrder with 
+  { Germ.partialOrder with
     sup := (· ⊔ ·)
     le_sup_left := fun f g =>
       (induction_on₂ f g) fun f g => eventually_of_forall fun x => le_sup_left
@@ -108,7 +110,7 @@ instance [SemilatticeSup β] : SemilatticeSup β* :=
       (induction_on₃ f₁ f₂ g) fun f₁ f₂ g h₁ h₂ => h₂.mp <| h₁.mono fun x => sup_le }
 
 instance [SemilatticeInf β] : SemilatticeInf β* :=
-  { Germ.partialOrder with 
+  { Germ.partialOrder with
     inf := (· ⊓ ·)
     inf_le_left := fun f g =>
       (induction_on₂ f g) fun f g => eventually_of_forall fun x => inf_le_left
@@ -155,7 +157,8 @@ noncomputable instance [LinearOrderedCommGroup β] : LinearOrderedCommGroup β* 
   { Germ.orderedCommGroup, Germ.linearOrder with }
 
 instance [OrderedSemiring β] : OrderedSemiring β* :=
-  { Germ.semiring, Germ.orderedAddCommMonoid with
+  { Germ.semiring,
+    Germ.orderedAddCommMonoid with
     zero_le_one := const_le zero_le_one
     mul_le_mul_of_nonneg_left := fun x y z =>
       (induction_on₃ x y z) fun f g h hfg hh => hh.mp <| hfg.mono fun a => mul_le_mul_of_nonneg_left
@@ -167,7 +170,8 @@ instance [OrderedCommSemiring β] : OrderedCommSemiring β* :=
   { Germ.orderedSemiring, Germ.commSemiring with }
 
 instance [OrderedRing β] : OrderedRing β* :=
-  { Germ.ring, Germ.orderedAddCommGroup with
+  { Germ.ring,
+    Germ.orderedAddCommGroup with
     zero_le_one := const_le zero_le_one
     mul_nonneg := fun x y =>
       (induction_on₂ x y) fun f g hf hg => hg.mp <| hf.mono fun a => mul_nonneg }
@@ -176,7 +180,8 @@ instance [OrderedCommRing β] : OrderedCommRing β* :=
   { Germ.orderedRing, Germ.orderedCommSemiring with }
 
 instance [StrictOrderedSemiring β] : StrictOrderedSemiring β* :=
-  { Germ.orderedSemiring, Germ.orderedCancelAddCommMonoid, Germ.nontrivial with
+  { Germ.orderedSemiring, Germ.orderedCancelAddCommMonoid,
+    Germ.nontrivial with
     mul_lt_mul_of_pos_left := fun x y z =>
       (induction_on₃ x y z) fun f g h hfg hh =>
         coe_lt.2 <| (coe_lt.1 hh).mp <| (coe_lt.1 hfg).mono fun a => mul_lt_mul_of_pos_left
@@ -188,7 +193,8 @@ instance [StrictOrderedCommSemiring β] : StrictOrderedCommSemiring β* :=
   { Germ.strictOrderedSemiring, Germ.orderedCommSemiring with }
 
 instance [StrictOrderedRing β] : StrictOrderedRing β* :=
-  { Germ.ring, Germ.strictOrderedSemiring with
+  { Germ.ring,
+    Germ.strictOrderedSemiring with
     zero_le_one := const_le zero_le_one
     mul_pos := fun x y =>
       (induction_on₂ x y) fun f g hf hg =>
@@ -207,7 +213,7 @@ noncomputable instance [LinearOrderedCommRing β] : LinearOrderedCommRing β* :=
   { Germ.linearOrderedRing, Germ.commMonoid with }
 
 theorem max_def [LinearOrder β] (x y : β*) : max x y = map₂ max x y :=
-  (induction_on₂ x y) fun a b => by 
+  (induction_on₂ x y) fun a b => by
     cases le_total (a : β*) b
     · rw [max_eq_right h, map₂_coe, coe_eq]
       exact h.mono fun i hi => (max_eq_right hi).symm
@@ -216,7 +222,7 @@ theorem max_def [LinearOrder β] (x y : β*) : max x y = map₂ max x y :=
 #align filter.germ.max_def Filter.Germ.max_def
 
 theorem min_def [K : LinearOrder β] (x y : β*) : min x y = map₂ min x y :=
-  (induction_on₂ x y) fun a b => by 
+  (induction_on₂ x y) fun a b => by
     cases le_total (a : β*) b
     · rw [min_eq_left h, map₂_coe, coe_eq]
       exact h.mono fun i hi => (min_eq_left hi).symm

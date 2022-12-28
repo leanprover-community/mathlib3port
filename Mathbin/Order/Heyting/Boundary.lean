@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.heyting.boundary
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,8 @@ theorem hnot_boundary (a : α) : ￢∂ a = ⊤ := by rw [boundary, hnot_inf_dis
 
 #print Coheyting.boundary_inf /-
 /-- **Leibniz rule** for the co-Heyting boundary. -/
-theorem boundary_inf (a b : α) : ∂ (a ⊓ b) = ∂ a ⊓ b ⊔ a ⊓ ∂ b := by
+theorem boundary_inf (a b : α) : ∂ (a ⊓ b) = ∂ a ⊓ b ⊔ a ⊓ ∂ b :=
+  by
   unfold boundary
   rw [hnot_inf_distrib, inf_sup_left, inf_right_comm, ← inf_assoc]
 #align coheyting.boundary_inf Coheyting.boundary_inf
@@ -141,7 +142,8 @@ theorem boundary_inf_le : ∂ (a ⊓ b) ≤ ∂ a ⊔ ∂ b :=
 -/
 
 #print Coheyting.boundary_sup_le /-
-theorem boundary_sup_le : ∂ (a ⊔ b) ≤ ∂ a ⊔ ∂ b := by
+theorem boundary_sup_le : ∂ (a ⊔ b) ≤ ∂ a ⊔ ∂ b :=
+  by
   rw [boundary, inf_sup_right]
   exact
     sup_le_sup (inf_le_inf_left _ <| hnot_anti le_sup_left)
@@ -153,13 +155,15 @@ theorem boundary_sup_le : ∂ (a ⊔ b) ≤ ∂ a ⊔ ∂ b := by
 proof can be obtained from the other using the equivalence of Heyting algebras and intuitionistic
 logic and duality between Heyting and co-Heyting algebras. It is crucial that the following proof be
 intuitionistic. -/
-example (a b : Prop) : (a ∧ b ∨ ¬(a ∧ b)) ∧ ((a ∨ b) ∨ ¬(a ∨ b)) → a ∨ ¬a := by
+example (a b : Prop) : (a ∧ b ∨ ¬(a ∧ b)) ∧ ((a ∨ b) ∨ ¬(a ∨ b)) → a ∨ ¬a :=
+  by
   rintro ⟨⟨ha, hb⟩ | hnab, (ha | hb) | hnab⟩ <;> try exact Or.inl ha
   · exact Or.inr fun ha => hnab ⟨ha, hb⟩
   · exact Or.inr fun ha => hnab <| Or.inl ha
 
 #print Coheyting.boundary_le_boundary_sup_sup_boundary_inf_left /-
-theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
+theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) :=
+  by
   simp only [boundary, sup_inf_left, sup_inf_right, sup_right_idem, le_inf_iff, sup_assoc,
     @sup_comm _ _ _ a]
   refine' ⟨⟨⟨_, _⟩, _⟩, ⟨_, _⟩, _⟩ <;> try exact le_sup_of_le_left inf_le_left <;>
@@ -174,7 +178,8 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b)
 -/
 
 #print Coheyting.boundary_le_boundary_sup_sup_boundary_inf_right /-
-theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
+theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) :=
+  by
   rw [@sup_comm _ _ a, inf_comm]
   exact boundary_le_boundary_sup_sup_boundary_inf_left
 #align
@@ -201,7 +206,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] (a : α), Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) a)) (Coheyting.boundary.{u1} α _inst_1 a)) a
 Case conversion may be inaccurate. Consider using '#align coheyting.hnot_hnot_sup_boundary Coheyting.hnot_hnot_sup_boundaryₓ'. -/
-theorem hnot_hnot_sup_boundary (a : α) : ￢￢a ⊔ ∂ a = a := by
+theorem hnot_hnot_sup_boundary (a : α) : ￢￢a ⊔ ∂ a = a :=
+  by
   rw [boundary, sup_inf_left, hnot_sup_self, inf_top_eq, sup_eq_right]
   exact hnot_hnot_le
 #align coheyting.hnot_hnot_sup_boundary Coheyting.hnot_hnot_sup_boundary
@@ -213,7 +219,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CoheytingAlgebra.{u1} α] {a : α}, Iff (Eq.{succ u1} α (HNot.hnot.{u1} α (CoheytingAlgebra.toHNot.{u1} α _inst_1) a) (Top.top.{u1} α (CoheytingAlgebra.toTop.{u1} α _inst_1))) (Exists.{succ u1} α (fun (b : α) => Eq.{succ u1} α (Coheyting.boundary.{u1} α _inst_1 b) a))
 Case conversion may be inaccurate. Consider using '#align coheyting.hnot_eq_top_iff_exists_boundary Coheyting.hnot_eq_top_iff_exists_boundaryₓ'. -/
 theorem hnot_eq_top_iff_exists_boundary : ￢a = ⊤ ↔ ∃ b, ∂ b = a :=
-  ⟨fun h => ⟨a, by rw [boundary, h, inf_top_eq]⟩, by
+  ⟨fun h => ⟨a, by rw [boundary, h, inf_top_eq]⟩,
+    by
     rintro ⟨b, rfl⟩
     exact hnot_boundary _⟩
 #align coheyting.hnot_eq_top_iff_exists_boundary Coheyting.hnot_eq_top_iff_exists_boundary

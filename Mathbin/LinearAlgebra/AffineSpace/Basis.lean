@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.basis
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,8 @@ protected theorem nonempty : Nonempty ι :=
 
 /-- Composition of an affine basis and an equivalence of index types. -/
 def compEquiv {ι'} (e : ι' ≃ ι) : AffineBasis ι' k P :=
-  ⟨b.points ∘ e, b.ind.comp_embedding e.toEmbedding, by
+  ⟨b.points ∘ e, b.ind.comp_embedding e.toEmbedding,
+    by
     rw [e.surjective.range_comp]
     exact b.3⟩
 #align affine_basis.comp_equiv AffineBasis.compEquiv
@@ -100,7 +101,7 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
       suffices
         Submodule.span k (range fun j : { x // x ≠ i } => b.points ↑j -ᵥ b.points i) =
           vectorSpan k (range b.points)
-        by 
+        by
         rw [this, ← direction_affine_span, b.tot, AffineSubspace.direction_top]
         exact le_rfl
       conv_rhs => rw [← image_univ]
@@ -116,8 +117,8 @@ theorem basis_of_apply (i : ι) (j : { j : ι // j ≠ i }) :
 #align affine_basis.basis_of_apply AffineBasis.basis_of_apply
 
 /-- The `i`th barycentric coordinate of a point. -/
-noncomputable def coord (i : ι) :
-    P →ᵃ[k] k where 
+noncomputable def coord (i : ι) : P →ᵃ[k] k
+    where
   toFun q := 1 - (b.basisOf i).sumCoords (q -ᵥ b.points i)
   linear := -(b.basisOf i).sumCoords
   map_vadd' q v := by
@@ -143,7 +144,7 @@ theorem coord_apply_neq (i j : ι) (h : j ≠ i) : b.Coord i (b.points j) = 0 :=
 #align affine_basis.coord_apply_neq AffineBasis.coord_apply_neq
 
 theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b.points j) = if i = j then 1 else 0 :=
-  by 
+  by
   cases eq_or_ne i j <;> simp [h.symm]
   simp [h]
 #align affine_basis.coord_apply AffineBasis.coord_apply
@@ -166,8 +167,10 @@ theorem coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} (hi : i ∉ 
   affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_mem
 
 @[simp]
-theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 := by
-  have hq : q ∈ affineSpan k (range b.points) := by
+theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :=
+  by
+  have hq : q ∈ affineSpan k (range b.points) :=
+    by
     rw [b.tot]
     exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq
@@ -178,8 +181,10 @@ theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :
 
 @[simp]
 theorem affine_combination_coord_eq_self [Fintype ι] (q : P) :
-    (Finset.univ.affineCombination b.points fun i => b.Coord i q) = q := by
-  have hq : q ∈ affineSpan k (range b.points) := by
+    (Finset.univ.affineCombination b.points fun i => b.Coord i q) = q :=
+  by
+  have hq : q ∈ affineSpan k (range b.points) :=
+    by
     rw [b.tot]
     exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq
@@ -192,20 +197,24 @@ theorem affine_combination_coord_eq_self [Fintype ι] (q : P) :
 affine space is a module so we can talk about linear combinations. -/
 @[simp]
 theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (v : V) :
-    (∑ i, b.Coord i v • b.points i) = v := by
+    (∑ i, b.Coord i v • b.points i) = v :=
+  by
   have hb := b.affine_combination_coord_eq_self v
   rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb
 #align affine_basis.linear_combination_coord_eq_self AffineBasis.linear_combination_coord_eq_self
 
-theorem ext_elem [Fintype ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ := by
+theorem ext_elem [Fintype ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ :=
+  by
   rw [← b.affine_combination_coord_eq_self q₁, ← b.affine_combination_coord_eq_self q₂]
   simp only [h]
 #align affine_basis.ext_elem AffineBasis.ext_elem
 
 @[simp]
-theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i : P → k) = 1 := by
+theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i : P → k) = 1 :=
+  by
   ext q
-  have hp : (range b.points).Subsingleton := by
+  have hp : (range b.points).Subsingleton :=
+    by
     rw [← image_univ]
     apply subsingleton.image
     apply subsingleton_of_subsingleton
@@ -218,7 +227,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
 #align affine_basis.coe_coord_of_subsingleton_eq_one AffineBasis.coe_coord_of_subsingleton_eq_one
 
 theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by
-  classical 
+  classical
     intro x
     obtain ⟨j, hij⟩ := exists_ne i
     let s : Finset ι := {i, j}
@@ -231,18 +240,18 @@ theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coo
 #align affine_basis.surjective_coord AffineBasis.surjective_coord
 
 /-- Barycentric coordinates as an affine map. -/
-noncomputable def coords :
-    P →ᵃ[k] ι → k where 
+noncomputable def coords : P →ᵃ[k] ι → k
+    where
   toFun q i := b.Coord i q
   linear :=
     { toFun := fun v i => -(b.basisOf i).sumCoords v
-      map_add' := fun v w => by 
+      map_add' := fun v w => by
         ext i
         simp only [LinearMap.map_add, Pi.add_apply, neg_add]
-      map_smul' := fun t v => by 
+      map_smul' := fun t v => by
         ext i
         simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] }
-  map_vadd' p v := by 
+  map_vadd' p v := by
     ext i
     simp only [linear_eq_sum_coords, LinearMap.coe_mk, LinearMap.neg_apply, Pi.vadd_apply',
       AffineMap.map_vadd]
@@ -267,7 +276,8 @@ theorem to_matrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) :
 #align affine_basis.to_matrix_apply AffineBasis.to_matrix_apply
 
 @[simp]
-theorem to_matrix_self [DecidableEq ι] : b.toMatrix b.points = (1 : Matrix ι ι k) := by
+theorem to_matrix_self [DecidableEq ι] : b.toMatrix b.points = (1 : Matrix ι ι k) :=
+  by
   ext (i j)
   rw [to_matrix_apply, coord_apply, Matrix.one_eq_pi_single, Pi.single_apply]
 #align affine_basis.to_matrix_self AffineBasis.to_matrix_self
@@ -281,10 +291,12 @@ theorem to_matrix_row_sum_one {ι' : Type _} (q : ι' → P) (i : ι') : (∑ j,
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a right inverse, then `p` is affine independent. -/
 theorem affine_independent_of_to_matrix_right_inv [DecidableEq ι'] (p : ι' → P) {A : Matrix ι ι' k}
-    (hA : b.toMatrix p ⬝ A = 1) : AffineIndependent k p := by
+    (hA : b.toMatrix p ⬝ A = 1) : AffineIndependent k p :=
+  by
   rw [affine_independent_iff_eq_of_fintype_affine_combination_eq]
   intro w₁ w₂ hw₁ hw₂ hweq
-  have hweq' : (b.to_matrix p).vecMul w₁ = (b.to_matrix p).vecMul w₂ := by
+  have hweq' : (b.to_matrix p).vecMul w₁ = (b.to_matrix p).vecMul w₂ :=
+    by
     ext j
     change (∑ i, w₁ i • b.coord j (p i)) = ∑ i, w₂ i • b.coord j (p i)
     rw [← finset.univ.affine_combination_eq_linear_combination _ _ hw₁, ←
@@ -299,8 +311,10 @@ theorem affine_independent_of_to_matrix_right_inv [DecidableEq ι'] (p : ι' →
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the
 coordinates of `p` with respect `b` has a left inverse, then `p` spans the entire space. -/
 theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k] (p : ι' → P)
-    {A : Matrix ι ι' k} (hA : A ⬝ b.toMatrix p = 1) : affineSpan k (range p) = ⊤ := by
-  suffices ∀ i, b.points i ∈ affineSpan k (range p) by
+    {A : Matrix ι ι' k} (hA : A ⬝ b.toMatrix p = 1) : affineSpan k (range p) = ⊤ :=
+  by
+  suffices ∀ i, b.points i ∈ affineSpan k (range p)
+    by
     rw [eq_top_iff, ← b.tot, affine_span_le]
     rintro q ⟨i, rfl⟩
     exact this i
@@ -313,7 +327,8 @@ theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k]
       _ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl
       _ = 1 := by simp [hA, Matrix.one_apply, Finset.filter_eq]
       
-  have hbi : b.points i = finset.univ.affine_combination p (A i) := by
+  have hbi : b.points i = finset.univ.affine_combination p (A i) :=
+    by
     apply b.ext_elem
     intro j
     rw [b.coord_apply, finset.univ.map_affine_combination _ _ hAi,
@@ -330,7 +345,8 @@ theorem affine_span_eq_top_of_to_matrix_left_inv [DecidableEq ι] [Nontrivial k]
 See also `affine_basis.to_matrix_inv_mul_affine_basis_to_matrix`. -/
 @[simp]
 theorem to_matrix_vec_mul_coords (x : P) :
-    (b.toMatrix b₂.points).vecMul (b₂.coords x) = b.coords x := by
+    (b.toMatrix b₂.points).vecMul (b₂.coords x) = b.coords x :=
+  by
   ext j
   change _ = b.coord j x
   conv_rhs => rw [← b₂.affine_combination_coord_eq_self x]
@@ -340,7 +356,8 @@ theorem to_matrix_vec_mul_coords (x : P) :
 
 variable [DecidableEq ι]
 
-theorem to_matrix_mul_to_matrix : b.toMatrix b₂.points ⬝ b₂.toMatrix b.points = 1 := by
+theorem to_matrix_mul_to_matrix : b.toMatrix b₂.points ⬝ b₂.toMatrix b.points = 1 :=
+  by
   ext (l m)
   change (b₂.to_matrix b.points).vecMul (b.coords (b₂.points l)) m = _
   rw [to_matrix_vec_mul_coords, coords_apply, ← to_matrix_apply, to_matrix_self]
@@ -354,7 +371,8 @@ theorem is_unit_to_matrix : IsUnit (b.toMatrix b₂.points) :=
 #align affine_basis.is_unit_to_matrix AffineBasis.is_unit_to_matrix
 
 theorem is_unit_to_matrix_iff [Nontrivial k] (p : ι → P) :
-    IsUnit (b.toMatrix p) ↔ AffineIndependent k p ∧ affineSpan k (range p) = ⊤ := by
+    IsUnit (b.toMatrix p) ↔ AffineIndependent k p ∧ affineSpan k (range p) = ⊤ :=
+  by
   constructor
   · rintro ⟨⟨B, A, hA, hA'⟩, rfl : B = b.to_matrix p⟩
     rw [Matrix.mul_eq_mul] at hA hA'
@@ -380,7 +398,8 @@ variable (b b₂ : AffineBasis ι k P)
 See also `affine_basis.to_matrix_vec_mul_coords`. -/
 @[simp]
 theorem to_matrix_inv_vec_mul_to_matrix (x : P) :
-    (b.toMatrix b₂.points)⁻¹.vecMul (b.coords x) = b₂.coords x := by
+    (b.toMatrix b₂.points)⁻¹.vecMul (b.coords x) = b₂.coords x :=
+  by
   have hu := b.is_unit_to_matrix b₂
   rw [Matrix.is_unit_iff_is_unit_det] at hu
   rw [← b.to_matrix_vec_mul_coords b₂, Matrix.vec_mul_vec_mul, Matrix.mul_nonsing_inv _ hu,
@@ -390,7 +409,8 @@ theorem to_matrix_inv_vec_mul_to_matrix (x : P) :
 /-- If we fix a background affine basis `b`, then for any other basis `b₂`, we can characterise
 the barycentric coordinates provided by `b₂` in terms of determinants relative to `b`. -/
 theorem det_smul_coords_eq_cramer_coords (x : P) :
-    (b.toMatrix b₂.points).det • b₂.coords x = (b.toMatrix b₂.points)ᵀ.cramer (b.coords x) := by
+    (b.toMatrix b₂.points).det • b₂.coords x = (b.toMatrix b₂.points)ᵀ.cramer (b.coords x) :=
+  by
   have hu := b.is_unit_to_matrix b₂
   rw [Matrix.is_unit_iff_is_unit_det] at hu
   rw [← b.to_matrix_inv_vec_mul_to_matrix, Matrix.det_smul_inv_vec_mul_eq_cramer_transpose _ _ hu]
@@ -434,7 +454,8 @@ theorem card_eq_finrank_add_one [Fintype ι] (b : AffineBasis ι k P) :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
-    ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe := by
+    ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe :=
+  by
   obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affine_independent k V t
   refine' ⟨s, hst, ⟨coe, h_ind, _⟩, rfl⟩
   rw [Subtype.range_coe, h_tot, ht]
@@ -450,7 +471,8 @@ theorem exists_affine_basis : ∃ (s : Set P)(b : AffineBasis (↥s) k P), b.poi
 variable {k V P}
 
 theorem exists_affine_basis_of_finite_dimensional [Fintype ι] [FiniteDimensional k V]
-    (h : Fintype.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) := by
+    (h : Fintype.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) :=
+  by
   obtain ⟨s, b, hb⟩ := AffineBasis.exists_affine_basis k V P
   lift s to Finset P using b.finite_set
   refine' ⟨b.comp_equiv <| Fintype.equivOfCardEq _⟩

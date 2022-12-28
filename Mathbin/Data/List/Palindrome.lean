@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Wong
 
 ! This file was ported from Lean 3 source module data.list.palindrome
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ theorem reverse_eq {l : List α} (p : Palindrome l) : reverse l = l :=
   Palindrome.rec_on p rfl (fun _ => rfl) fun x l p h => by simp [h]
 #align list.palindrome.reverse_eq List.Palindrome.reverse_eq
 
-theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l := by
+theorem of_reverse_eq {l : List α} : reverse l = l → Palindrome l :=
+  by
   refine' bidirectional_rec_on l (fun _ => palindrome.nil) (fun a _ => palindrome.singleton a) _
   intro x l y hp hr
   rw [reverse_cons, reverse_append] at hr
@@ -67,7 +68,8 @@ theorem iff_reverse_eq {l : List α} : Palindrome l ↔ reverse l = l :=
   Iff.intro reverse_eq of_reverse_eq
 #align list.palindrome.iff_reverse_eq List.Palindrome.iff_reverse_eq
 
-theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) := by
+theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) :=
+  by
   apply of_reverse_eq
   rw [reverse_append, reverse_reverse]
 #align list.palindrome.append_reverse List.Palindrome.append_reverse

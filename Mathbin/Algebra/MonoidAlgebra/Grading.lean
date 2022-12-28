@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.grading
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,8 @@ theorem mem_grade_by_iff (f : M → ι) (i : ι) (a : AddMonoidAlgebra R M) :
     a ∈ gradeBy R f i ↔ (a.support : Set M) ⊆ f ⁻¹' {i} := by rfl
 #align add_monoid_algebra.mem_grade_by_iff AddMonoidAlgebra.mem_grade_by_iff
 
-theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a.support ⊆ {m} := by
+theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a.support ⊆ {m} :=
+  by
   rw [← Finset.coe_subset, Finset.coe_singleton]
   rfl
 #align add_monoid_algebra.mem_grade_iff AddMonoidAlgebra.mem_grade_iff
@@ -75,7 +76,7 @@ theorem mem_grade_iff (m : M) (a : AddMonoidAlgebra R M) : a ∈ grade R m ↔ a
 theorem mem_grade_iff' (m : M) (a : AddMonoidAlgebra R M) :
     a ∈ grade R m ↔
       a ∈ ((Finsupp.lsingle m : R →ₗ[R] M →₀ R).range : Submodule R (AddMonoidAlgebra R M)) :=
-  by 
+  by
   rw [mem_grade_iff, Finsupp.support_subset_singleton']
   apply exists_congr
   intro r
@@ -87,7 +88,8 @@ theorem grade_eq_lsingle_range (m : M) : grade R m = (Finsupp.lsingle m : R →�
 #align add_monoid_algebra.grade_eq_lsingle_range AddMonoidAlgebra.grade_eq_lsingle_range
 
 theorem single_mem_grade_by {R} [CommSemiring R] (f : M → ι) (m : M) (r : R) :
-    Finsupp.single m r ∈ gradeBy R f (f m) := by
+    Finsupp.single m r ∈ gradeBy R f (f m) :=
+  by
   intro x hx
   rw [finset.mem_singleton.mp (Finsupp.support_single_subset hx)]
 #align add_monoid_algebra.single_mem_grade_by AddMonoidAlgebra.single_mem_grade_by
@@ -101,13 +103,9 @@ end
 open DirectSum
 
 instance gradeBy.graded_monoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f : M →+ ι) :
-    SetLike.GradedMonoid
-      (gradeBy R f :
-        ι →
-          Submodule R
-            (AddMonoidAlgebra R
-              M)) where 
-  one_mem m h := by 
+    SetLike.GradedMonoid (gradeBy R f : ι → Submodule R (AddMonoidAlgebra R M))
+    where
+  one_mem m h := by
     rw [one_def] at h
     by_cases H : (1 : R) = (0 : R)
     · rw [H, Finsupp.single_zero] at h
@@ -115,7 +113,7 @@ instance gradeBy.graded_monoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f 
       exact h
     · rw [Finsupp.support_single_ne_zero _ H, Finset.mem_singleton] at h
       rw [h, AddMonoidHom.map_zero]
-  mul_mem i j a b ha hb c hc := by 
+  mul_mem i j a b ha hb c hc := by
     set h := support_mul a b hc
     simp only [Finset.mem_bUnion] at h
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩
@@ -142,7 +140,7 @@ def decomposeAux : AddMonoidAlgebra R M →ₐ[R] ⨁ i : ι, gradeBy R f i :=
           (by
             congr 2 <;> try ext <;>
               simp only [Submodule.mem_to_add_submonoid, toAdd_one, AddMonoidHom.map_zero])
-      map_mul' := fun i j => by 
+      map_mul' := fun i j => by
         symm
         convert DirectSum.of_mul_of _ _
         apply DirectSum.of_eq_of_graded_monoid_eq
@@ -157,7 +155,7 @@ theorem decompose_aux_single (m : M) (r : R) :
     decomposeAux f (Finsupp.single m r) =
       DirectSum.of (fun i : ι => gradeBy R f i) (f m)
         ⟨Finsupp.single m r, single_mem_grade_by _ _ _⟩ :=
-  by 
+  by
   refine' (lift_single _ _ _).trans _
   refine' (DirectSum.of_smul _ _ _ _).symm.trans _
   apply DirectSum.of_eq_of_graded_monoid_eq
@@ -168,7 +166,8 @@ theorem decompose_aux_single (m : M) (r : R) :
 #align add_monoid_algebra.decompose_aux_single AddMonoidAlgebra.decompose_aux_single
 
 theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) :
-    decomposeAux f ↑x = DirectSum.of (fun i => gradeBy R f i) i x := by
+    decomposeAux f ↑x = DirectSum.of (fun i => gradeBy R f i) i x :=
+  by
   obtain ⟨x, hx⟩ := x
   revert hx
   refine' Finsupp.induction x _ _
@@ -195,7 +194,7 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) :
 
 instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
   GradedAlgebra.ofAlgHom _ (decomposeAux f)
-    (by 
+    (by
       ext : 2
       dsimp
       rw [decompose_aux_single, DirectSum.coe_alg_hom_of, Subtype.coe_mk])

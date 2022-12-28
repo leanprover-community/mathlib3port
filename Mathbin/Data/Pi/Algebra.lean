@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.pi.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -414,7 +414,8 @@ theorem apply_mulSingle (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i :
 #print Pi.apply_mulSingle₂ /-
 @[to_additive apply_single₂]
 theorem apply_mulSingle₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i)
-    (y : g i) (j : I) : f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j := by
+    (y : g i) (j : I) : f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j :=
+  by
   by_cases h : j = i
   · subst h
     simp only [mul_single_eq_same]
@@ -635,7 +636,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (a : α -> γ) (a' : α -> γ) (b : β -> γ) (b' : β -> γ) [_inst_1 : Mul.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (HMul.hMul.{max u2 u3, max u2 u3, max u2 u3} (α -> γ) (α -> γ) (α -> γ) (instHMul.{max u2 u3} (α -> γ) (Pi.instMul.{u2, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_1))) a a') (HMul.hMul.{max u1 u3, max u1 u3, max u1 u3} (β -> γ) (β -> γ) (β -> γ) (instHMul.{max u1 u3} (β -> γ) (Pi.instMul.{u1, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1))) b b')) (HMul.hMul.{max (max u2 u1) u3, max (max u2 u1) u3, max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) (instHMul.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instMul.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (ᾰ : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))) (Sum.elim.{u2, u1, succ u3} α β γ a b) (Sum.elim.{u2, u1, succ u3} α β γ a' b'))
 Case conversion may be inaccurate. Consider using '#align sum.elim_mul_mul Sum.elim_mul_mulₓ'. -/
 @[to_additive]
-theorem elim_mul_mul [Mul γ] : Sum.elim (a * a') (b * b') = Sum.elim a b * Sum.elim a' b' := by
+theorem elim_mul_mul [Mul γ] : Sum.elim (a * a') (b * b') = Sum.elim a b * Sum.elim a' b' :=
+  by
   ext x
   cases x <;> rfl
 #align sum.elim_mul_mul Sum.elim_mul_mul
@@ -647,7 +649,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} (a : α -> γ) (a' : α -> γ) (b : β -> γ) (b' : β -> γ) [_inst_1 : Div.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (HDiv.hDiv.{max u2 u3, max u2 u3, max u2 u3} (α -> γ) (α -> γ) (α -> γ) (instHDiv.{max u2 u3} (α -> γ) (Pi.instDiv.{u2, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_1))) a a') (HDiv.hDiv.{max u1 u3, max u1 u3, max u1 u3} (β -> γ) (β -> γ) (β -> γ) (instHDiv.{max u1 u3} (β -> γ) (Pi.instDiv.{u1, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1))) b b')) (HDiv.hDiv.{max (max u2 u1) u3, max (max u2 u1) u3, max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) ((Sum.{u2, u1} α β) -> γ) (instHDiv.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instDiv.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (ᾰ : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))) (Sum.elim.{u2, u1, succ u3} α β γ a b) (Sum.elim.{u2, u1, succ u3} α β γ a' b'))
 Case conversion may be inaccurate. Consider using '#align sum.elim_div_div Sum.elim_div_divₓ'. -/
 @[to_additive]
-theorem elim_div_div [Div γ] : Sum.elim (a / a') (b / b') = Sum.elim a b / Sum.elim a' b' := by
+theorem elim_div_div [Div γ] : Sum.elim (a / a') (b / b') = Sum.elim a b / Sum.elim a' b' :=
+  by
   ext x
   cases x <;> rfl
 #align sum.elim_div_div Sum.elim_div_div

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.complex_deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,8 @@ open Set Filter
 
 open Real
 
-theorem hasStrictDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x := by
+theorem hasStrictDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x :=
+  by
   convert (has_strict_deriv_at_sin x).div (has_strict_deriv_at_cos x) h
   rw [← sin_sq_add_cos_sq x]
   ring
@@ -39,7 +40,8 @@ theorem hasDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 
 open TopologicalSpace
 
 theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) :
-    Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
+    Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop :=
+  by
   simp only [tan_eq_sin_div_cos, ← norm_eq_abs, norm_div]
   have A : sin x ≠ 0 := fun h => by simpa [*, sq] using sin_sq_add_cos_sq x
   have B : tendsto cos (𝓝[≠] x) (𝓝[≠] 0) :=
@@ -55,7 +57,8 @@ theorem tendsto_abs_tan_at_top (k : ℤ) :
 #align complex.tendsto_abs_tan_at_top Complex.tendsto_abs_tan_at_top
 
 @[simp]
-theorem continuous_at_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 := by
+theorem continuous_at_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 :=
+  by
   refine' ⟨fun hc h₀ => _, fun h => (has_deriv_at_tan h).ContinuousAt⟩
   exact
     not_tendsto_nhds_of_tendsto_at_top (tendsto_abs_tan_of_cos_eq_zero h₀) _
@@ -69,7 +72,8 @@ theorem differentiable_at_tan {x : ℂ} : DifferentiableAt ℂ tan x ↔ cos x �
 
 @[simp]
 theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
-  if h : cos x = 0 then by
+  if h : cos x = 0 then
+    by
     have : ¬DifferentiableAt ℂ tan x := mt differentiable_at_tan.1 (not_not.2 h)
     simp [deriv_zero_of_not_differentiable_at this, h, sq]
   else (hasDerivAtTan h).deriv

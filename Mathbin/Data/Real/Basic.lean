@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,7 +165,7 @@ theorem cauchy_inv : ∀ f, (f⁻¹ : ℝ).cauchy = f.cauchy⁻¹
 /-- `real.equiv_Cauchy` as a ring equivalence. -/
 @[simps]
 def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.CauchyCat :=
-  { equivCauchy with 
+  { equivCauchy with
     toFun := cauchy
     invFun := of_cauchy
     map_add' := cauchy_add
@@ -339,13 +339,15 @@ theorem mk_le {f g : CauSeq ℚ abs} : mk f ≤ mk g ↔ f ≤ g := by simp [le_
 #align real.mk_le Real.mk_le
 
 @[elab_as_elim]
-protected theorem ind_mk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x := by
+protected theorem ind_mk {C : Real → Prop} (x : Real) (h : ∀ y, C (mk y)) : C x :=
+  by
   cases' x with x
   induction' x using Quot.induction_on with x
   exact h x
 #align real.ind_mk Real.ind_mk
 
-theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b := by
+theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b :=
+  by
   induction a using Real.ind_mk
   induction b using Real.ind_mk
   induction c using Real.ind_mk
@@ -353,7 +355,7 @@ theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b := b
   show Pos _ ↔ Pos _; rw [add_sub_add_left_eq_sub]
 #align real.add_lt_add_iff_left Real.add_lt_add_iff_left
 
-instance : PartialOrder ℝ where 
+instance : PartialOrder ℝ where
   le := (· ≤ ·)
   lt := (· < ·)
   lt_iff_le_not_le a b :=
@@ -371,7 +373,8 @@ instance : PartialOrder ℝ where
 instance : Preorder ℝ := by infer_instance
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
-theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y := by
+theorem rat_cast_lt {x y : ℚ} : (x : ℝ) < (y : ℝ) ↔ x < y :=
+  by
   rw [mk_lt]
   exact const_lt
 #align real.rat_cast_lt Real.rat_cast_lt
@@ -380,16 +383,18 @@ protected theorem zero_lt_one : (0 : ℝ) < 1 := by
   convert rat_cast_lt.2 zero_lt_one <;> simp [← of_cauchy_rat_cast, of_cauchy_one, of_cauchy_zero]
 #align real.zero_lt_one Real.zero_lt_one
 
-protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b := by
+protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b :=
+  by
   induction' a using Real.ind_mk with a
   induction' b using Real.ind_mk with b
   simpa only [mk_lt, mk_pos, ← mk_mul] using CauSeq.mul_pos
 #align real.mul_pos Real.mul_pos
 
 instance : StrictOrderedCommRing ℝ :=
-  { Real.commRing, Real.partialOrder, Real.semiring with
+  { Real.commRing, Real.partialOrder,
+    Real.semiring with
     exists_pair_ne := ⟨0, 1, Real.zero_lt_one.Ne⟩
-    add_le_add_left := by 
+    add_le_add_left := by
       simp only [le_iff_eq_or_lt]
       rintro a b ⟨rfl, h⟩
       · simp
@@ -432,7 +437,7 @@ instance : HasSup ℝ :=
   ⟨sup⟩
 
 theorem of_cauchy_sup (a b) : (⟨⟦a ⊔ b⟧⟩ : ℝ) = ⟨⟦a⟧⟩ ⊔ ⟨⟦b⟧⟩ :=
-  show _ = sup _ _ by 
+  show _ = sup _ _ by
     rw [sup]
     rfl
 #align real.of_cauchy_sup Real.of_cauchy_sup
@@ -450,7 +455,7 @@ instance : HasInf ℝ :=
   ⟨inf⟩
 
 theorem of_cauchy_inf (a b) : (⟨⟦a ⊓ b⟧⟩ : ℝ) = ⟨⟦a⟧⟩ ⊓ ⟨⟦b⟧⟩ :=
-  show _ = inf _ _ by 
+  show _ = inf _ _ by
     rw [inf]
     rfl
 #align real.of_cauchy_inf Real.of_cauchy_inf
@@ -461,40 +466,40 @@ theorem mk_inf (a b) : (mk (a ⊓ b) : ℝ) = mk a ⊓ mk b :=
 #align real.mk_inf Real.mk_inf
 
 instance : DistribLattice ℝ :=
-  { Real.partialOrder with 
+  { Real.partialOrder with
     sup := (· ⊔ ·)
     le := (· ≤ ·)
     le_sup_left := fun a =>
       (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by 
+        (Real.ind_mk b) fun b => by
           rw [← mk_sup, mk_le]
           exact CauSeq.le_sup_left
     le_sup_right := fun a =>
       (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by 
+        (Real.ind_mk b) fun b => by
           rw [← mk_sup, mk_le]
           exact CauSeq.le_sup_right
     sup_le := fun a =>
       (Real.ind_mk a) fun a b =>
         (Real.ind_mk b) fun b c =>
-          (Real.ind_mk c) fun c => by 
+          (Real.ind_mk c) fun c => by
             simp_rw [← mk_sup, mk_le]
             exact CauSeq.sup_le
     inf := (· ⊓ ·)
     inf_le_left := fun a =>
       (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by 
+        (Real.ind_mk b) fun b => by
           rw [← mk_inf, mk_le]
           exact CauSeq.inf_le_left
     inf_le_right := fun a =>
       (Real.ind_mk a) fun a b =>
-        (Real.ind_mk b) fun b => by 
+        (Real.ind_mk b) fun b => by
           rw [← mk_inf, mk_le]
           exact CauSeq.inf_le_right
     le_inf := fun a =>
       (Real.ind_mk a) fun a b =>
         (Real.ind_mk b) fun b c =>
-          (Real.ind_mk c) fun c => by 
+          (Real.ind_mk c) fun c => by
             simp_rw [← mk_inf, mk_le]
             exact CauSeq.le_inf
     le_sup_inf := fun a =>
@@ -502,7 +507,7 @@ instance : DistribLattice ℝ :=
         (Real.ind_mk b) fun b c =>
           (Real.ind_mk c) fun c =>
             Eq.le
-              (by 
+              (by
                 simp only [← mk_sup, ← mk_inf]
                 exact congr_arg mk (CauSeq.sup_inf_distrib_left _ _ _).symm) }
 
@@ -536,9 +541,9 @@ instance : IsDomain ℝ :=
   { Real.nontrivial, Real.commRing, LinearOrderedRing.is_domain with }
 
 noncomputable instance : LinearOrderedField ℝ :=
-  { Real.linearOrderedCommRing with 
+  { Real.linearOrderedCommRing with
     inv := Inv.inv
-    mul_inv_cancel := by 
+    mul_inv_cancel := by
       rintro ⟨a⟩ h
       rw [mul_comm]
       simp only [← of_cauchy_inv, ← of_cauchy_mul, ← of_cauchy_one, ← of_cauchy_zero, Ne.def] at *
@@ -574,7 +579,8 @@ converging to the same number may be printed differently.
 unsafe instance : Repr ℝ where repr r := "real.of_cauchy " ++ repr r.cauchy
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible[tactic.transparency.semireducible] } -/
-theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j) → x ≤ mk f := by
+theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j) → x ≤ mk f :=
+  by
   intro h
   induction' x using Real.ind_mk with x
   apply le_of_not_lt
@@ -589,7 +595,7 @@ theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j ≥ i, x ≤ f j
 #align real.le_mk_of_forall_le Real.le_mk_of_forall_le
 
 theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j ≥ i, (f j : ℝ) ≤ x) :
-    mk f ≤ x := by 
+    mk f ≤ x := by
   cases' h with i H
   rw [← neg_le_neg_iff, ← mk_neg]
   exact le_mk_of_forall_le ⟨i, fun j ij => by simp [H _ ij]⟩
@@ -641,9 +647,11 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
 #align real.exists_floor Real.exists_floor
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
-theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLUB S x := by
+theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLUB S x :=
+  by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
-  have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by
+  have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } :=
+    by
     cases' exists_int_gt U with k hk
     refine' fun d => ⟨k * d, fun z h => _⟩
     rcases h with ⟨y, yS, hy⟩
@@ -655,15 +663,18 @@ theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃
   have hf₁ : ∀ n > 0, ∃ y ∈ S, ((f n / n : ℚ) : ℝ) ≤ y := fun n n0 =>
     let ⟨y, yS, hy⟩ := (hf n).1
     ⟨y, yS, by simpa using (div_le_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _)).2 hy⟩
-  have hf₂ : ∀ n > 0, ∀ y ∈ S, (y - (n : ℕ)⁻¹ : ℝ) < (f n / n : ℚ) := by
+  have hf₂ : ∀ n > 0, ∀ y ∈ S, (y - (n : ℕ)⁻¹ : ℝ) < (f n / n : ℚ) :=
+    by
     intro n n0 y yS
     have := (Int.sub_one_lt_floor _).trans_le (Int.cast_le.2 <| (hf n).2 _ ⟨y, yS, Int.floor_le _⟩)
     simp [-sub_eq_add_neg]
     rwa [lt_div_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _), sub_mul, _root_.inv_mul_cancel]
     exact ne_of_gt (Nat.cast_pos.2 n0)
-  have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ) := by
+  have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ) :=
+    by
     intro ε ε0
-    suffices ∀ (j) (_ : j ≥ ⌈ε⁻¹⌉₊) (k) (_ : k ≥ ⌈ε⁻¹⌉₊), (f j / j - f k / k : ℚ) < ε by
+    suffices ∀ (j) (_ : j ≥ ⌈ε⁻¹⌉₊) (k) (_ : k ≥ ⌈ε⁻¹⌉₊), (f j / j - f k / k : ℚ) < ε
+      by
       refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ ij _ le_rfl⟩⟩
       rw [neg_lt, neg_sub]
       exact this _ le_rfl _ ij
@@ -703,7 +714,7 @@ theorem Sup_def (S : Set ℝ) :
 #align real.Sup_def Real.Sup_def
 
 protected theorem is_lub_Sup (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddAbove S) : IsLUB S (supₛ S) :=
-  by 
+  by
   simp only [Sup_def, dif_pos (And.intro h₁ h₂)]
   apply Classical.choose_spec
 #align real.is_lub_Sup Real.is_lub_Sup
@@ -716,13 +727,13 @@ theorem Inf_def (S : Set ℝ) : infₛ S = -supₛ (-S) :=
 #align real.Inf_def Real.Inf_def
 
 protected theorem is_glb_Inf (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddBelow S) : IsGLB S (infₛ S) :=
-  by 
+  by
   rw [Inf_def, ← is_lub_neg', neg_neg]
   exact Real.is_lub_Sup _ h₁.neg h₂.neg
 #align real.is_glb_Inf Real.is_glb_Inf
 
 noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
-  { Real.linearOrder, Real.lattice with 
+  { Real.linearOrder, Real.lattice with
     sup := SupSet.supₛ
     inf := InfSet.infₛ
     le_cSup := fun s a hs ha => (Real.is_lub_Sup s ⟨a, ha⟩ hs).1 ha
@@ -741,7 +752,8 @@ theorem add_neg_lt_Sup {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : ε < 0) 
 #align real.add_neg_lt_Sup Real.add_neg_lt_Sup
 
 theorem Inf_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.Nonempty) {a : ℝ} :
-    infₛ s ≤ a ↔ ∀ ε, 0 < ε → ∃ x ∈ s, x < a + ε := by
+    infₛ s ≤ a ↔ ∀ ε, 0 < ε → ∃ x ∈ s, x < a + ε :=
+  by
   rw [le_iff_forall_pos_lt_add]
   constructor <;> intro H ε ε_pos
   · exact exists_lt_of_cInf_lt h' (H ε ε_pos)
@@ -750,7 +762,8 @@ theorem Inf_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.Nonempty) {a : ℝ} :
 #align real.Inf_le_iff Real.Inf_le_iff
 
 theorem le_Sup_iff {s : Set ℝ} (h : BddAbove s) (h' : s.Nonempty) {a : ℝ} :
-    a ≤ supₛ s ↔ ∀ ε, ε < 0 → ∃ x ∈ s, a + ε < x := by
+    a ≤ supₛ s ↔ ∀ ε, ε < 0 → ∃ x ∈ s, a + ε < x :=
+  by
   rw [le_iff_forall_pos_lt_add]
   refine' ⟨fun H ε ε_neg => _, fun H ε ε_pos => _⟩
   · exact exists_lt_of_lt_cSup h' (lt_sub_iff_add_lt.mp (H _ (neg_pos.mpr ε_neg)))
@@ -763,7 +776,8 @@ theorem Sup_empty : supₛ (∅ : Set ℝ) = 0 :=
   dif_neg <| by simp
 #align real.Sup_empty Real.Sup_empty
 
-theorem csupr_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) = 0 := by
+theorem csupr_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) = 0 :=
+  by
   dsimp [supᵢ]
   convert Real.Sup_empty
   rw [Set.range_eq_empty_iff]
@@ -771,7 +785,8 @@ theorem csupr_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) =
 #align real.csupr_empty Real.csupr_empty
 
 @[simp]
-theorem csupr_const_zero {α : Sort _} : (⨆ i : α, (0 : ℝ)) = 0 := by
+theorem csupr_const_zero {α : Sort _} : (⨆ i : α, (0 : ℝ)) = 0 :=
+  by
   cases isEmpty_or_nonempty α
   · exact Real.csupr_empty _
   · exact csupr_const
@@ -799,7 +814,8 @@ theorem cinfi_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨅ i, f i) =
 #align real.cinfi_empty Real.cinfi_empty
 
 @[simp]
-theorem cinfi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 := by
+theorem cinfi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 :=
+  by
   cases isEmpty_or_nonempty α
   · exact Real.cinfi_empty _
   · exact cinfi_const
@@ -818,7 +834,8 @@ theorem infi_of_not_bdd_below {α : Sort _} {f : α → ℝ} (hf : ¬BddBelow (S
 As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
 suffices to show that `S` is bounded below by `0` to show that `0 ≤ Inf S`.
 -/
-theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ supₛ S := by
+theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ supₛ S :=
+  by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Sup_empty.ge
   · apply dite _ (fun h => le_cSup_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
@@ -827,7 +844,8 @@ theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sup
 /-- As `0` is the default value for `real.Sup` of the empty set, it suffices to show that `S` is
 bounded above by `0` to show that `Sup S ≤ 0`.
 -/
-theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : supₛ S ≤ 0 := by
+theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : supₛ S ≤ 0 :=
+  by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
   exacts[Sup_empty.le, cSup_le hS₂ hS]
 #align real.Sup_nonpos Real.Sup_nonpos
@@ -835,7 +853,8 @@ theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : supₛ S 
 /-- As `0` is the default value for `real.Inf` of the empty set, it suffices to show that `S` is
 bounded below by `0` to show that `0 ≤ Inf S`.
 -/
-theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ infₛ S := by
+theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ infₛ S :=
+  by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
   exacts[Inf_empty.ge, le_cInf hS₂ hS]
 #align real.Inf_nonneg Real.Inf_nonneg
@@ -844,19 +863,22 @@ theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ inf
 As `0` is the default value for `real.Inf` of the empty set or sets which are not bounded below, it
 suffices to show that `S` is bounded above by `0` to show that `Inf S ≤ 0`.
 -/
-theorem Inf_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : infₛ S ≤ 0 := by
+theorem Inf_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : infₛ S ≤ 0 :=
+  by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Inf_empty.le
   · apply dite _ (fun h => cInf_le_of_le h hy <| hS y hy) fun h => (Inf_of_not_bdd_below h).le
 #align real.Inf_nonpos Real.Inf_nonpos
 
-theorem Inf_le_Sup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : infₛ s ≤ supₛ s := by
+theorem Inf_le_Sup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : infₛ s ≤ supₛ s :=
+  by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
   · rw [infₛ_empty, supₛ_empty]
   · exact cInf_le_cSup h₁ h₂ hne
 #align real.Inf_le_Sup Real.Inf_le_Sup
 
-theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x := by
+theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
+  by
   let S := { x : ℝ | const abs x < f }
   have lb : ∃ x, x ∈ S := exists_lt f
   have ub' : ∀ x, f < const abs x → ∀ y ∈ S, y ≤ x := fun x h y yS =>

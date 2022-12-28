@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.sub.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,8 @@ variable [Preorder α] [Add α] [Sub α] [OrderedSub α] {a b c d : α}
 
 #print AddHom.le_map_tsub /-
 theorem AddHom.le_map_tsub [Preorder β] [Add β] [Sub β] [OrderedSub β] (f : AddHom α β)
-    (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) := by
+    (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) :=
+  by
   rw [tsub_le_iff_right, ← f.map_add]
   exact hf le_tsub_add
 #align add_hom.le_map_tsub AddHom.le_map_tsub
@@ -71,7 +72,8 @@ Case conversion may be inaccurate. Consider using '#align order_iso.map_tsub Ord
 it preserves addition. -/
 theorem OrderIso.map_tsub {M N : Type _} [Preorder M] [Add M] [Sub M] [OrderedSub M]
     [PartialOrder N] [Add N] [Sub N] [OrderedSub N] (e : M ≃o N)
-    (h_add : ∀ a b, e (a + b) = e a + e b) (a b : M) : e (a - b) = e a - e b := by
+    (h_add : ∀ a b, e (a + b) = e a + e b) (a b : M) : e (a - b) = e a - e b :=
+  by
   set e_add : M ≃+ N := { e with map_add' := h_add }
   refine' le_antisymm _ (e_add.to_add_hom.le_map_tsub e.monotone a b)
   suffices e (e.symm (e a) - e.symm (e b)) ≤ e (e.symm (e a - e b)) by simpa

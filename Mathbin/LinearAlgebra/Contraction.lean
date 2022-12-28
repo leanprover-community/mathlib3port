@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Antoine Labelle
 
 ! This file was ported from Lean 3 source module linear_algebra.contraction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ theorem contract_right_apply (f : Module.Dual R M) (m : M) : contractRight R M (
 
 @[simp]
 theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) :
-    dualTensorHom R M N (f ⊗ₜ n) m = f m • n := by
+    dualTensorHom R M N (f ⊗ₜ n) m = f m • n :=
+  by
   dsimp only [dualTensorHom]
   rw [uncurry_apply]
   rfl
@@ -82,7 +83,8 @@ theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) :
 
 @[simp]
 theorem transpose_dual_tensor_hom (f : Module.Dual R M) (m : M) :
-    Dual.transpose (dualTensorHom R M M (f ⊗ₜ m)) = dualTensorHom R _ _ (Dual.eval R M m ⊗ₜ f) := by
+    Dual.transpose (dualTensorHom R M M (f ⊗ₜ m)) = dualTensorHom R _ _ (Dual.eval R M m ⊗ₜ f) :=
+  by
   ext (f' m')
   simp only [dual.transpose_apply, coe_comp, Function.comp_apply, dual_tensor_hom_apply,
     LinearMap.map_smulₛₗ, RingHom.id_apply, Algebra.id.smul_eq_mul, dual.eval_apply, smul_apply]
@@ -121,7 +123,7 @@ theorem map_dual_tensor_hom (f : Module.Dual R M) (p : P) (g : Module.Dual R N) 
 theorem comp_dual_tensor_hom (f : Module.Dual R M) (n : N) (g : Module.Dual R N) (p : P) :
     dualTensorHom R N P (g ⊗ₜ[R] p) ∘ₗ dualTensorHom R M N (f ⊗ₜ[R] n) =
       g n • dualTensorHom R M P (f ⊗ₜ p) :=
-  by 
+  by
   ext m;
   simp only [coe_comp, Function.comp_apply, dual_tensor_hom_apply, LinearMap.map_smul,
     RingHom.id_apply, smul_apply]
@@ -132,7 +134,8 @@ theorem comp_dual_tensor_hom (f : Module.Dual R M) (n : N) (g : Module.Dual R N)
 single one and zeros elsewhere -/
 theorem to_matrix_dual_tensor_hom {m : Type _} {n : Type _} [Fintype m] [Fintype n] [DecidableEq m]
     [DecidableEq n] (bM : Basis m R M) (bN : Basis n R N) (j : m) (i : n) :
-    toMatrix bM bN (dualTensorHom R M N (bM.Coord j ⊗ₜ bN i)) = stdBasisMatrix i j 1 := by
+    toMatrix bM bN (dualTensorHom R M N (bM.Coord j ⊗ₜ bN i)) = stdBasisMatrix i j 1 :=
+  by
   ext (i' j')
   by_cases hij : i = i' ∧ j = j' <;>
     simp [LinearMap.to_matrix_apply, Finsupp.single_eq_pi_single, hij]
@@ -159,12 +162,12 @@ provides this equivalence in return for a basis of `M`. -/
 noncomputable def dualTensorHomEquivOfBasis : Module.Dual R M ⊗[R] N ≃ₗ[R] M →ₗ[R] N :=
   LinearEquiv.ofLinear (dualTensorHom R M N)
     (∑ i, TensorProduct.mk R _ N (b.dualBasis i) ∘ₗ LinearMap.applyₗ (b i))
-    (by 
+    (by
       ext (f m)
       simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def,
         Fintype.sum_apply, Function.comp_apply, Basis.coe_dual_basis, coe_comp, Basis.coord_apply, ←
         f.map_smul, (dualTensorHom R M N).map_sum, ← f.map_sum, b.sum_repr])
-    (by 
+    (by
       ext (f m)
       simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def,
         Fintype.sum_apply, Function.comp_apply, Basis.coe_dual_basis, coe_comp, compr₂_apply,
@@ -246,7 +249,8 @@ noncomputable def rtensorHomEquivHomRtensor : (M →ₗ[R] P) ⊗[R] Q ≃ₗ[R]
 
 @[simp]
 theorem ltensor_hom_equiv_hom_ltensor_to_linear_map :
-    (ltensorHomEquivHomLtensor R M P Q).toLinearMap = ltensorHomToHomLtensor R M P Q := by
+    (ltensorHomEquivHomLtensor R M P Q).toLinearMap = ltensorHomToHomLtensor R M P Q :=
+  by
   let e := congr (LinearEquiv.refl R P) (dualTensorHomEquiv R M Q)
   have h : Function.Surjective e.to_linear_map := e.surjective
   refine' (cancel_right h).1 _
@@ -260,7 +264,8 @@ theorem ltensor_hom_equiv_hom_ltensor_to_linear_map :
 
 @[simp]
 theorem rtensor_hom_equiv_hom_rtensor_to_linear_map :
-    (rtensorHomEquivHomRtensor R M P Q).toLinearMap = rtensorHomToHomRtensor R M P Q := by
+    (rtensorHomEquivHomRtensor R M P Q).toLinearMap = rtensorHomToHomRtensor R M P Q :=
+  by
   let e := congr (dualTensorHomEquiv R M P) (LinearEquiv.refl R Q)
   have h : Function.Surjective e.to_linear_map := e.surjective
   refine' (cancel_right h).1 _
@@ -300,7 +305,8 @@ noncomputable def homTensorHomEquiv : (M →ₗ[R] P) ⊗[R] (N →ₗ[R] Q) ≃
 
 @[simp]
 theorem hom_tensor_hom_equiv_to_linear_map :
-    (homTensorHomEquiv R M N P Q).toLinearMap = homTensorHomMap R M N P Q := by
+    (homTensorHomEquiv R M N P Q).toLinearMap = homTensorHomMap R M N P Q :=
+  by
   ext (f g m n)
   simp only [homTensorHomEquiv, compr₂_apply, mk_apply, LinearEquiv.coe_to_linear_map,
     LinearEquiv.trans_apply, lift.equiv_apply, LinearEquiv.arrow_congr_apply, LinearEquiv.refl_symm,

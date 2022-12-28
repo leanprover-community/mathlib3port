@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.quasiconvex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ section HasSmul
 variable [HasSmul 𝕜 E] {s : Set E} {f g : E → β}
 
 theorem QuasiconvexOn.sup (hf : QuasiconvexOn 𝕜 s f) (hg : QuasiconvexOn 𝕜 s g) :
-    QuasiconvexOn 𝕜 s (f ⊔ g) := by 
+    QuasiconvexOn 𝕜 s (f ⊔ g) := by
   intro r
   simp_rw [Pi.sup_def, sup_le_iff, Set.sep_and]
   exact (hf r).inter (hg r)
@@ -164,7 +164,8 @@ theorem quasilinear_on_iff_mem_interval :
 #align quasilinear_on_iff_mem_interval quasilinear_on_iff_mem_interval
 
 theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) :
-    Convex 𝕜 ({ x ∈ s | f x < r }) := by
+    Convex 𝕜 ({ x ∈ s | f x < r }) :=
+  by
   refine' fun x hx y hy a b ha hb hab => _
   have h := hf _ ⟨hx.1, le_max_left _ _⟩ ⟨hy.1, le_max_right _ _⟩ ha hb hab
   exact ⟨h.1, h.2.trans_lt <| max_lt hx.2 hy.2⟩
@@ -257,7 +258,8 @@ section LinearOrderedField
 variable [LinearOrderedField 𝕜] [LinearOrderedAddCommMonoid β] {s : Set 𝕜} {f : 𝕜 → β}
 
 theorem QuasilinearOn.monotone_on_or_antitone_on (hf : QuasilinearOn 𝕜 s f) :
-    MonotoneOn f s ∨ AntitoneOn f s := by
+    MonotoneOn f s ∨ AntitoneOn f s :=
+  by
   simp_rw [monotone_on_or_antitone_on_iff_interval, ← segment_eq_interval]
   rintro a ha b hb c hc h
   refine' ⟨((hf.2 _).segment_subset _ _ h).2, ((hf.1 _).segment_subset _ _ h).2⟩ <;> simp [*]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.equiv_rw
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -263,7 +263,7 @@ attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_appl
 
 -- call `dsimp_result` with `no_defaults := tt`.
 /-- Rewrite the goal using an equiv `e`. -/
-unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit := do
+unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := { }) : tactic Unit := do
   let t ← target
   let e ← equiv_rw_type e t cfg
   let s ← to_expr ``(Equiv.invFun $(e))
@@ -319,7 +319,7 @@ The maximum search depth for rewriting in subexpressions is controlled by
 `equiv_rw e {max_depth := n}`.
 -/
 unsafe def equiv_rw (l : parse pexpr_list_or_texpr) (locat : parse location)
-    (cfg : equiv_rw_cfg := {  }) : itactic := do
+    (cfg : equiv_rw_cfg := { }) : itactic := do
   let es ← l.mmap fun e => to_expr e
   match locat with
     | loc.wildcard => do

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.charpoly.to_matrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,8 @@ section Basic
 /-- `charpoly f` is the characteristic polynomial of the matrix of `f` in any basis. -/
 @[simp]
 theorem charpoly_to_matrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
-    (toMatrix b b f).charpoly = f.charpoly := by
+    (toMatrix b b f).charpoly = f.charpoly :=
+  by
   set A := to_matrix b b f
   set b' := choose_basis R M
   set ι' := choose_basis_index R M

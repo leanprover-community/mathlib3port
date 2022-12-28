@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.category.pairwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ section
 
 attribute [local tidy] tactic.case_bash
 
-instance : Category (Pairwise ι) where 
+instance : Category (Pairwise ι) where
   Hom := Hom
   id := id
   comp X Y Z f g := comp f g
@@ -123,7 +123,7 @@ sending `single i` to `U i` and `pair i j` to `U i ⊓ U j`,
 and the morphisms to the obvious inequalities.
 -/
 @[simps]
-def diagram : Pairwise ι ⥤ α where 
+def diagram : Pairwise ι ⥤ α where
   obj := diagramObj U
   map X Y f := diagramMap U f
 #align category_theory.pairwise.diagram CategoryTheory.Pairwise.diagram
@@ -146,7 +146,7 @@ def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supᵢ U
 `supr U` provides a cocone over `diagram U`.
 -/
 @[simps]
-def cocone : Cocone (diagram U) where 
+def cocone : Cocone (diagram U) where
   x := supᵢ U
   ι := { app := coconeιApp U }
 #align category_theory.pairwise.cocone CategoryTheory.Pairwise.cocone
@@ -154,12 +154,10 @@ def cocone : Cocone (diagram U) where
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
 `infi U` provides a limit cone over `diagram U`.
 -/
-def coconeIsColimit :
-    IsColimit
-      (cocone
-        U) where desc s :=
+def coconeIsColimit : IsColimit (cocone U)
+    where desc s :=
     homOfLe
-      (by 
+      (by
         apply CompleteLattice.Sup_le
         rintro _ ⟨j, rfl⟩
         exact (s.ι.app (single j)).le)

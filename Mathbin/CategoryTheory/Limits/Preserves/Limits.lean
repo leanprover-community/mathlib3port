@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.limits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ theorem preserves_limits_iso_inv_π (j) :
 
 @[simp, reassoc.1]
 theorem lift_comp_preserves_limits_iso_hom (t : Cone F) :
-    G.map (limit.lift _ t) ≫ (preservesLimitIso G F).Hom = limit.lift (F ⋙ G) (G.mapCone _) := by
+    G.map (limit.lift _ t) ≫ (preservesLimitIso G F).Hom = limit.lift (F ⋙ G) (G.mapCone _) :=
+  by
   ext
   simp [← G.map_comp]
 #align
@@ -87,7 +88,7 @@ functorial wrt `F`. -/
 @[simps]
 def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :=
   NatIso.ofComponents (fun F => preservesLimitIso G F)
-    (by 
+    (by
       intro _ _ f
       ext
       dsimp
@@ -131,7 +132,8 @@ theorem ι_preserves_colimits_iso_hom (j : J) :
 
 @[simp, reassoc.1]
 theorem preserves_colimits_iso_inv_comp_desc (t : Cocone F) :
-    (preservesColimitIso G F).inv ≫ G.map (colimit.desc _ t) = colimit.desc _ (G.mapCocone t) := by
+    (preservesColimitIso G F).inv ≫ G.map (colimit.desc _ t) = colimit.desc _ (G.mapCocone t) :=
+  by
   ext
   simp [← G.map_comp]
 #align
@@ -144,7 +146,7 @@ is functorial wrt `F`. -/
 @[simps]
 def preservesColimitNatIso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ colim :=
   NatIso.ofComponents (fun F => preservesColimitIso G F)
-    (by 
+    (by
       intro _ _ f
       rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv]
       ext

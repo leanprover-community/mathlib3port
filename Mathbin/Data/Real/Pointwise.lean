@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.real.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,8 @@ section MulActionWithZero
 
 variable [MulActionWithZero α ℝ] [OrderedSmul α ℝ] {a : α}
 
-theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : infₛ (a • s) = a • infₛ s := by
+theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : infₛ (a • s) = a • infₛ s :=
+  by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Inf_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
@@ -53,7 +54,8 @@ theorem Real.smul_infi_of_nonneg (ha : 0 ≤ a) (f : ι → ℝ) : (a • ⨅ i,
   (Real.Inf_smul_of_nonneg ha _).symm.trans <| congr_arg infₛ <| (range_comp _ _).symm
 #align real.smul_infi_of_nonneg Real.smul_infi_of_nonneg
 
-theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : supₛ (a • s) = a • supₛ s := by
+theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : supₛ (a • s) = a • supₛ s :=
+  by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Sup_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
@@ -76,7 +78,8 @@ section Module
 
 variable [Module α ℝ] [OrderedSmul α ℝ] {a : α}
 
-theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : infₛ (a • s) = a • supₛ s := by
+theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : infₛ (a • s) = a • supₛ s :=
+  by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Inf_empty, Real.Sup_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
@@ -93,7 +96,8 @@ theorem Real.smul_supr_of_nonpos (ha : a ≤ 0) (f : ι → ℝ) : (a • ⨆ i,
   (Real.Inf_smul_of_nonpos ha _).symm.trans <| congr_arg infₛ <| (range_comp _ _).symm
 #align real.smul_supr_of_nonpos Real.smul_supr_of_nonpos
 
-theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : supₛ (a • s) = a • infₛ s := by
+theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : supₛ (a • s) = a • infₛ s :=
+  by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · rw [smul_set_empty, Real.Sup_empty, Real.Inf_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt

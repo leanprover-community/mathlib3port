@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.compare_exp
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,8 @@ theorem is_o_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o
     (fun z => Real.log (abs z)) =O[l] fun z =>
         Real.log (Real.sqrt 2) + Real.log (max z.re (|z.im|)) :=
       IsO.of_bound 1 <|
-        (hl.tendsto_re.eventually_ge_at_top 1).mono fun z hz => by
+        (hl.tendsto_re.eventually_ge_at_top 1).mono fun z hz =>
+          by
           have h2 : 0 < Real.sqrt 2 := by simp
           have hz' : 1 ≤ abs z := hz.trans (re_le_abs z)
           have hz₀ : 0 < abs z := one_pos.trans_le hz'
@@ -147,7 +148,8 @@ theorem is_o_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o
           exacts[abs_le_sqrt_two_mul_max z, one_pos.trans_le hz', mul_pos h2 hm₀, h2.ne', hm₀.ne']
     _ =o[l] re :=
       IsO.add (is_o_const_left.2 <| Or.inr <| hl.tendsto_abs_re) <|
-        is_o_iff_nat_mul_le.2 fun n => by
+        is_o_iff_nat_mul_le.2 fun n =>
+          by
           filter_upwards [is_o_iff_nat_mul_le.1 hl.is_o_log_re_re n,
             hl.abs_im_pow_eventually_le_exp_re n,
             hl.tendsto_re.eventually_gt_at_top 1] with z hre him h₁
@@ -175,7 +177,8 @@ theorem is_o_cpow_exp (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : 0 < b) :
     _ =ᶠ[l] fun z => Real.exp (re a * Real.log (abs z)) :=
       hl.eventually_ne.mono fun z hz => by simp only [Real.rpow_def_of_pos, abs.pos hz, mul_comm]
     _ =o[l] fun z => exp (b * z) :=
-      is_o.of_norm_right <| by
+      is_o.of_norm_right <|
+        by
         simp only [norm_eq_abs, abs_exp, of_real_mul_re, Real.is_o_exp_comp_exp_comp]
         refine'
           (is_equivalent.refl.sub_is_o _).symm.tendsto_at_top (hl.tendsto_re.const_mul_at_top hb)
@@ -189,7 +192,7 @@ theorem is_o_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁ <
     (fun z => z ^ a₁ * exp (b₁ * z)) =o[l] fun z => z ^ a₂ * exp (b₂ * z) :=
   calc
     (fun z => z ^ a₁ * exp (b₁ * z)) =ᶠ[l] fun z => z ^ a₂ * exp (b₁ * z) * z ^ (a₁ - a₂) :=
-      hl.eventually_ne.mono fun z hz => by 
+      hl.eventually_ne.mono fun z hz => by
         simp only
         rw [mul_right_comm, ← cpow_add _ _ hz, add_sub_cancel'_right]
     _ =o[l] fun z => z ^ a₂ * exp (b₁ * z) * exp (↑(b₂ - b₁) * z) :=

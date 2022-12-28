@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,8 +56,8 @@ The list of ancestors should be in the order they appear in the `extends` clause
 contain only the names of the ancestor structures, without any arguments.
 -/
 @[user_attribute]
-unsafe def ancestor_attr :
-    user_attribute Unit (List Name) where 
+unsafe def ancestor_attr : user_attribute Unit (List Name)
+    where
   Name := `ancestor
   descr := "ancestor of old structures"
   parser := many ident

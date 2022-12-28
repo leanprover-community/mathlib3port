@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,8 @@ theorem sup_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).sup = a ⊔ s.s
 #align multiset.sup_ndinsert Multiset.sup_ndinsert
 
 theorem nodup_sup_iff {α : Type _} [DecidableEq α] {m : Multiset (Multiset α)} :
-    m.sup.Nodup ↔ ∀ a : Multiset α, a ∈ m → a.Nodup := by
+    m.sup.Nodup ↔ ∀ a : Multiset α, a ∈ m → a.Nodup :=
+  by
   apply m.induction_on
   · simp
   · intro a s h

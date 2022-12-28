@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module deprecated.group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,8 @@ preserves multiplication when the target is commutative. -/
       "A sum of maps which preserves addition, preserves addition when the target\nis commutative."]
 theorem mul {α β} [Semigroup α] [CommSemigroup β] {f g : α → β} (hf : IsMulHom f)
     (hg : IsMulHom g) : IsMulHom fun a => f a * g a :=
-  { map_mul := fun a b => by
+  {
+    map_mul := fun a b => by
       simp only [hf.map_mul, hg.map_mul, mul_comm, mul_assoc, mul_left_comm] }
 #align is_mul_hom.mul IsMulHom.mul
 
@@ -111,8 +112,8 @@ include mM mN
 
 /-- Interpret a map `f : M → N` as a homomorphism `M →* N`. -/
 @[to_additive "Interpret a map `f : M → N` as a homomorphism `M →+ N`."]
-def of {f : M → N} (h : IsMonoidHom f) :
-    M →* N where 
+def of {f : M → N} (h : IsMonoidHom f) : M →* N
+    where
   toFun := f
   map_one' := h.2
   map_mul' := h.1.1

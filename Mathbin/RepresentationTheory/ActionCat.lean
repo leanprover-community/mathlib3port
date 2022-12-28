@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,27 +64,25 @@ namespace ActionCat
 variable {V}
 
 @[simp]
-theorem ρ_one {G : MonCat.{u}} (A : ActionCat V G) : A.ρ 1 = 𝟙 A.V := by
+theorem ρ_one {G : MonCat.{u}} (A : ActionCat V G) : A.ρ 1 = 𝟙 A.V :=
+  by
   rw [MonoidHom.map_one]
   rfl
 #align Action.ρ_one ActionCat.ρ_one
 
 /-- When a group acts, we can lift the action to the group of automorphisms. -/
 @[simps]
-def ρAut {G : GroupCat.{u}} (A : ActionCat V (MonCat.of G)) :
-    G ⟶
-      GroupCat.of
-        (AutCat
-          A.V) where 
+def ρAut {G : GroupCat.{u}} (A : ActionCat V (MonCat.of G)) : G ⟶ GroupCat.of (AutCat A.V)
+    where
   toFun g :=
     { Hom := A.ρ g
       inv := A.ρ (g⁻¹ : G)
       hom_inv_id' := (A.ρ.map_mul (g⁻¹ : G) g).symm.trans (by rw [inv_mul_self, ρ_one])
       inv_hom_id' := (A.ρ.map_mul g (g⁻¹ : G)).symm.trans (by rw [mul_inv_self, ρ_one]) }
-  map_one' := by 
+  map_one' := by
     ext
     exact A.ρ.map_one
-  map_mul' x y := by 
+  map_mul' x y := by
     ext
     exact A.ρ.map_mul x y
 #align Action.ρ_Aut ActionCat.ρAut
@@ -98,8 +96,8 @@ instance inhabited' : Inhabited (ActionCat (Type u) G) :=
 #align Action.inhabited' ActionCat.inhabited'
 
 /-- The trivial representation of a group. -/
-def trivial : ActionCat AddCommGroupCat
-      G where 
+def trivial : ActionCat AddCommGroupCat G
+    where
   V := AddCommGroupCat.of PUnit
   ρ := 1
 #align Action.trivial ActionCat.trivial
@@ -135,15 +133,15 @@ instance (M : ActionCat V G) : Inhabited (ActionCat.Hom M M) :=
 /-- The composition of two `Action V G` homomorphisms is the composition of the underlying maps.
 -/
 @[simps]
-def comp {M N K : ActionCat V G} (p : ActionCat.Hom M N) (q : ActionCat.Hom N K) :
-    ActionCat.Hom M K where 
+def comp {M N K : ActionCat V G} (p : ActionCat.Hom M N) (q : ActionCat.Hom N K) : ActionCat.Hom M K
+    where
   Hom := p.Hom ≫ q.Hom
   comm' g := by rw [← category.assoc, p.comm, category.assoc, q.comm, ← category.assoc]
 #align Action.hom.comp ActionCat.Hom.comp
 
 end Hom
 
-instance : Category (ActionCat V G) where 
+instance : Category (ActionCat V G) where
   Hom M N := Hom M N
   id M := Hom.id M
   comp M N K f g := Hom.comp f g
@@ -164,20 +162,21 @@ from an isomorphism of the the underlying objects,
 where the forward direction commutes with the group action. -/
 @[simps]
 def mkIso {M N : ActionCat V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.Hom = f.Hom ≫ N.ρ g) :
-    M ≅ N where 
+    M ≅ N
+    where
   Hom :=
     { Hom := f.Hom
       comm' := comm }
   inv :=
     { Hom := f.inv
-      comm' := fun g => by 
+      comm' := fun g => by
         have w := comm g =≫ f.inv
         simp at w
         simp [w] }
 #align Action.mk_iso ActionCat.mkIso
 
 instance (priority := 100) is_iso_of_hom_is_iso {M N : ActionCat V G} (f : M ⟶ N) [IsIso f.Hom] :
-    IsIso f := by 
+    IsIso f := by
   convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm)
   ext
   rfl
@@ -192,10 +191,8 @@ namespace FunctorCategoryEquivalence
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
-def functor :
-    ActionCat V G ⥤
-      SingleObj G ⥤
-        V where 
+def functor : ActionCat V G ⥤ SingleObj G ⥤ V
+    where
   obj M :=
     { obj := fun _ => M.V
       map := fun _ _ g => M.ρ g
@@ -208,10 +205,8 @@ def functor :
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
-def inverse :
-    (SingleObj G ⥤ V) ⥤
-      ActionCat V
-        G where 
+def inverse : (SingleObj G ⥤ V) ⥤ ActionCat V G
+    where
   obj F :=
     { V := F.obj PUnit.unit
       ρ :=
@@ -246,8 +241,8 @@ variable (V G)
 /-- The category of actions of `G` in the category `V`
 is equivalent to the functor category `single_obj G ⥤ V`.
 -/
-def functorCategoryEquivalence :
-    ActionCat V G ≌ SingleObj G ⥤ V where 
+def functorCategoryEquivalence : ActionCat V G ≌ SingleObj G ⥤ V
+    where
   Functor := Functor
   inverse := inverse
   unitIso := unitIso
@@ -256,16 +251,12 @@ def functorCategoryEquivalence :
 
 attribute [simps] functor_category_equivalence
 
-instance [HasFiniteProducts V] :
-    HasFiniteProducts
-      (ActionCat V
-        G) where out n :=
+instance [HasFiniteProducts V] : HasFiniteProducts (ActionCat V G)
+    where out n :=
     Adjunction.hasLimitsOfShapeOfEquivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
-instance [HasFiniteLimits V] :
-    HasFiniteLimits
-      (ActionCat V
-        G) where out J _ _ :=
+instance [HasFiniteLimits V] : HasFiniteLimits (ActionCat V G)
+    where out J _ _ :=
     adjunction.has_limits_of_shape_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
 instance [HasLimits V] : HasLimits (ActionCat V G) :=
@@ -286,18 +277,18 @@ Use the `category_theory.forget` API provided by the `concrete_category` instanc
 rather than using this directly.
 -/
 @[simps]
-def forget : ActionCat V G ⥤ V where 
+def forget : ActionCat V G ⥤ V where
   obj M := M.V
   map M N f := f.Hom
 #align Action.forget ActionCat.forget
 
 instance : Faithful (forget V G) where map_injective' X Y f g w := Hom.ext _ _ w
 
-instance [ConcreteCategory V] :
-    ConcreteCategory (ActionCat V G) where forget := forget V G ⋙ ConcreteCategory.forget V
+instance [ConcreteCategory V] : ConcreteCategory (ActionCat V G)
+    where forget := forget V G ⋙ ConcreteCategory.forget V
 
-instance hasForgetToV [ConcreteCategory V] :
-    HasForget₂ (ActionCat V G) V where forget₂ := forget V G
+instance hasForgetToV [ConcreteCategory V] : HasForget₂ (ActionCat V G) V
+    where forget₂ := forget V G
 #align Action.has_forget_to_V ActionCat.hasForgetToV
 
 /-- The forgetful functor is intertwined by `functor_category_equivalence` with
@@ -318,7 +309,8 @@ noncomputable instance [HasColimits V] : PreservesColimits (forget V G) :=
 end Forget
 
 theorem Iso.conj_ρ {M N : ActionCat V G} (f : M ≅ N) (g : G) :
-    N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) := by
+    N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) :=
+  by
   rw [iso.conj_apply, iso.eq_inv_comp]
   simp [f.hom.comm']
 #align Action.iso.conj_ρ ActionCat.Iso.conj_ρ
@@ -327,18 +319,16 @@ section HasZeroMorphisms
 
 variable [HasZeroMorphisms V]
 
-instance :
-    HasZeroMorphisms
-      (ActionCat V
-        G) where 
+instance : HasZeroMorphisms (ActionCat V G)
+    where
   HasZero X Y :=
-    ⟨⟨0, by 
+    ⟨⟨0, by
         intro g
         simp⟩⟩
-  comp_zero' P Q f R := by 
+  comp_zero' P Q f R := by
     ext1
     simp
-  zero_comp' P Q R f := by 
+  zero_comp' P Q R f := by
     ext1
     simp
 
@@ -360,39 +350,37 @@ section Preadditive
 
 variable [Preadditive V]
 
-instance :
-    Preadditive
-      (ActionCat V
-        G) where 
+instance : Preadditive (ActionCat V G)
+    where
   homGroup X Y :=
     { zero := ⟨0, by simp⟩
       add := fun f g => ⟨f.Hom + g.Hom, by simp [f.comm, g.comm]⟩
       neg := fun f => ⟨-f.Hom, by simp [f.comm]⟩
-      zero_add := by 
+      zero_add := by
         intros
         ext
         exact zero_add _
-      add_zero := by 
+      add_zero := by
         intros
         ext
         exact add_zero _
-      add_assoc := by 
+      add_assoc := by
         intros
         ext
         exact add_assoc _ _ _
-      add_left_neg := by 
+      add_left_neg := by
         intros
         ext
         exact add_left_neg _
-      add_comm := by 
+      add_comm := by
         intros
         ext
         exact add_comm _ _ }
-  add_comp' := by 
+  add_comp' := by
     intros
     ext
     exact preadditive.add_comp _ _ _ _ _ _
-  comp_add' := by 
+  comp_add' := by
     intros
     ext
     exact preadditive.comp_add _ _ _ _ _ _
@@ -434,54 +422,52 @@ section Linear
 
 variable [Preadditive V] {R : Type _} [Semiring R] [Linear R V]
 
-instance :
-    Linear R
-      (ActionCat V
-        G) where 
+instance : Linear R (ActionCat V G)
+    where
   homModule X Y :=
     { smul := fun r f => ⟨r • f.Hom, by simp [f.comm]⟩
-      one_smul := by 
+      one_smul := by
         intros
         ext
         exact one_smul _ _
-      smul_zero := by 
+      smul_zero := by
         intros
         ext
         exact smul_zero _
-      zero_smul := by 
+      zero_smul := by
         intros
         ext
         exact zero_smul _ _
-      add_smul := by 
+      add_smul := by
         intros
         ext
         exact add_smul _ _ _
-      smul_add := by 
+      smul_add := by
         intros
         ext
         exact smul_add _ _ _
-      mul_smul := by 
+      mul_smul := by
         intros
         ext
         exact mul_smul _ _ _ }
-  smul_comp' := by 
+  smul_comp' := by
     intros
     ext
     exact linear.smul_comp _ _ _ _ _ _
-  comp_smul' := by 
+  comp_smul' := by
     intros
     ext
     exact linear.comp_smul _ _ _ _ _ _
 
-instance forget_linear : Functor.Linear R (forget V G) where
-#align Action.forget_linear ActionCat.forget_linear
+instance forgetLinear : Functor.Linear R (forget V G) where
+#align Action.forget_linear ActionCat.forgetLinear
 
-instance forget₂_linear [ConcreteCategory V] : Functor.Linear R (forget₂ (ActionCat V G) V) where
-#align Action.forget₂_linear ActionCat.forget₂_linear
+instance forget₂Linear [ConcreteCategory V] : Functor.Linear R (forget₂ (ActionCat V G) V) where
+#align Action.forget₂_linear ActionCat.forget₂Linear
 
-instance functor_category_equivalence_linear :
+instance functorCategoryEquivalenceLinear :
     Functor.Linear R (functorCategoryEquivalence V G).Functor where
-#align Action.functor_category_equivalence_linear ActionCat.functor_category_equivalence_linear
+#align Action.functor_category_equivalence_linear ActionCat.functorCategoryEquivalenceLinear
 
 @[simp]
 theorem smul_hom {X Y : ActionCat V G} (r : R) (f : X ⟶ Y) : (r • f).Hom = r • f.Hom :=
@@ -543,38 +529,44 @@ theorem tensor_hom {W X Y Z : ActionCat V G} (f : W ⟶ X) (g : Y ⟶ Z) :
 
 @[simp]
 theorem associator_hom_hom {X Y Z : ActionCat V G} :
-    Hom.hom (α_ X Y Z).Hom = (α_ X.V Y.V Z.V).Hom := by
+    Hom.hom (α_ X Y Z).Hom = (α_ X.V Y.V Z.V).Hom :=
+  by
   dsimp [monoidal.transport_associator]
   simp
 #align Action.associator_hom_hom ActionCat.associator_hom_hom
 
 @[simp]
 theorem associator_inv_hom {X Y Z : ActionCat V G} :
-    Hom.hom (α_ X Y Z).inv = (α_ X.V Y.V Z.V).inv := by
+    Hom.hom (α_ X Y Z).inv = (α_ X.V Y.V Z.V).inv :=
+  by
   dsimp [monoidal.transport_associator]
   simp
 #align Action.associator_inv_hom ActionCat.associator_inv_hom
 
 @[simp]
-theorem left_unitor_hom_hom {X : ActionCat V G} : Hom.hom (λ_ X).Hom = (λ_ X.V).Hom := by
+theorem left_unitor_hom_hom {X : ActionCat V G} : Hom.hom (λ_ X).Hom = (λ_ X.V).Hom :=
+  by
   dsimp [monoidal.transport_left_unitor]
   simp
 #align Action.left_unitor_hom_hom ActionCat.left_unitor_hom_hom
 
 @[simp]
-theorem left_unitor_inv_hom {X : ActionCat V G} : Hom.hom (λ_ X).inv = (λ_ X.V).inv := by
+theorem left_unitor_inv_hom {X : ActionCat V G} : Hom.hom (λ_ X).inv = (λ_ X.V).inv :=
+  by
   dsimp [monoidal.transport_left_unitor]
   simp
 #align Action.left_unitor_inv_hom ActionCat.left_unitor_inv_hom
 
 @[simp]
-theorem right_unitor_hom_hom {X : ActionCat V G} : Hom.hom (ρ_ X).Hom = (ρ_ X.V).Hom := by
+theorem right_unitor_hom_hom {X : ActionCat V G} : Hom.hom (ρ_ X).Hom = (ρ_ X.V).Hom :=
+  by
   dsimp [monoidal.transport_right_unitor]
   simp
 #align Action.right_unitor_hom_hom ActionCat.right_unitor_hom_hom
 
 @[simp]
-theorem right_unitor_inv_hom {X : ActionCat V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).inv := by
+theorem right_unitor_inv_hom {X : ActionCat V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).inv :=
+  by
   dsimp [monoidal.transport_right_unitor]
   simp
 #align Action.right_unitor_inv_hom ActionCat.right_unitor_inv_hom
@@ -584,12 +576,13 @@ variable (V G)
 /-- When `V` is monoidal the forgetful functor `Action V G` to `V` is monoidal. -/
 @[simps]
 def forgetMonoidal : MonoidalFunctor (ActionCat V G) V :=
-  { ActionCat.forget _ _ with 
+  { ActionCat.forget _ _ with
     ε := 𝟙 _
     μ := fun X Y => 𝟙 _ }
 #align Action.forget_monoidal ActionCat.forgetMonoidal
 
-instance forget_monoidal_faithful : Faithful (forgetMonoidal V G).toFunctor := by
+instance forget_monoidal_faithful : Faithful (forgetMonoidal V G).toFunctor :=
+  by
   change faithful (forget V G)
   infer_instance
 #align Action.forget_monoidal_faithful ActionCat.forget_monoidal_faithful
@@ -607,7 +600,8 @@ def forgetBraided : BraidedFunctor (ActionCat V G) V :=
   { forgetMonoidal _ _ with }
 #align Action.forget_braided ActionCat.forgetBraided
 
-instance forget_braided_faithful : Faithful (forgetBraided V G).toFunctor := by
+instance forget_braided_faithful : Faithful (forgetBraided V G).toFunctor :=
+  by
   change faithful (forget V G)
   infer_instance
 #align Action.forget_braided_faithful ActionCat.forget_braided_faithful
@@ -640,13 +634,15 @@ def functorCategoryMonoidalEquivalence : MonoidalFunctor (ActionCat V G) (Single
   Monoidal.fromTransported (ActionCat.functorCategoryEquivalence _ _).symm
 #align Action.functor_category_monoidal_equivalence ActionCat.functorCategoryMonoidalEquivalence
 
-instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor := by
+instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor :=
+  by
   change is_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
   infer_instance
 
 variable (H : GroupCat.{u})
 
-instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) := by
+instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
+  by
   change right_rigid_category (single_obj H ⥤ V)
   infer_instance
 
@@ -654,7 +650,8 @@ instance [RightRigidCategory V] : RightRigidCategory (SingleObj (H : MonCat.{u})
 instance [RightRigidCategory V] : RightRigidCategory (ActionCat V H) :=
   rightRigidCategoryOfEquivalence (functorCategoryMonoidalEquivalence V _)
 
-instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) := by
+instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
+  by
   change left_rigid_category (single_obj H ⥤ V)
   infer_instance
 
@@ -662,7 +659,8 @@ instance [LeftRigidCategory V] : LeftRigidCategory (SingleObj (H : MonCat.{u}) �
 instance [LeftRigidCategory V] : LeftRigidCategory (ActionCat V H) :=
   leftRigidCategoryOfEquivalence (functorCategoryMonoidalEquivalence V _)
 
-instance [RigidCategory V] : RigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) := by
+instance [RigidCategory V] : RigidCategory (SingleObj (H : MonCat.{u}) ⥤ V) :=
+  by
   change rigid_category (single_obj H ⥤ V)
   infer_instance
 
@@ -689,7 +687,8 @@ theorem left_dual_V [LeftRigidCategory V] : (ᘁX).V = ᘁX.V :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_dual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ := by
+theorem right_dual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ :=
+  by
   rw [← single_obj.inv_as_inv]
   rfl
 #align Action.right_dual_ρ ActionCat.right_dual_ρ
@@ -697,7 +696,8 @@ theorem right_dual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_dual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) := by
+theorem left_dual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) :=
+  by
   rw [← single_obj.inv_as_inv]
   rfl
 #align Action.left_dual_ρ ActionCat.left_dual_ρ
@@ -705,9 +705,8 @@ theorem left_dual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻
 end Monoidal
 
 /-- Actions/representations of the trivial group are just objects in the ambient category. -/
-def actionPunitEquivalence :
-    ActionCat V (MonCat.of PUnit) ≌
-      V where 
+def actionPunitEquivalence : ActionCat V (MonCat.of PUnit) ≌ V
+    where
   Functor := forget V _
   inverse :=
     { obj := fun X => ⟨X, 1⟩
@@ -725,10 +724,8 @@ taking actions of `H` to actions of `G`.
 (This makes sense for any homomorphism, but the name is natural when `f` is a monomorphism.)
 -/
 @[simps]
-def res {G H : MonCat} (f : G ⟶ H) :
-    ActionCat V H ⥤
-      ActionCat V
-        G where 
+def res {G H : MonCat} (f : G ⟶ H) : ActionCat V H ⥤ ActionCat V G
+    where
   obj M :=
     { V := M.V
       ρ := f ≫ M.ρ }
@@ -764,12 +761,12 @@ instance res_additive [Preadditive V] : (res V f).Additive where
 
 variable {R : Type _} [Semiring R]
 
-instance res_linear [Preadditive V] [Linear R V] : (res V f).Linear R where
-#align Action.res_linear ActionCat.res_linear
+instance resLinear [Preadditive V] [Linear R V] : (res V f).Linear R where
+#align Action.res_linear ActionCat.resLinear
 
 /-- Bundles a type `H` with a multiplicative action of `G` as an `Action`. -/
-def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] :
-    ActionCat (Type u) (MonCat.of G) where 
+def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] : ActionCat (Type u) (MonCat.of G)
+    where
   V := H
   ρ := @MulAction.toEndHom _ _ _ (by assumption)
 #align Action.of_mul_action ActionCat.ofMulAction
@@ -785,16 +782,13 @@ theorem of_mul_action_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x
 product of `F` as types is a product in the category of `G`-sets. -/
 def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι → Type max v u)
     [∀ i : ι, MulAction G (F i)] :
-    LimitCone
-      (Discrete.functor fun i : ι =>
-        ActionCat.ofMulAction G
-          (F
-            i)) where 
+    LimitCone (Discrete.functor fun i : ι => ActionCat.ofMulAction G (F i))
+    where
   Cone :=
     { x := ActionCat.ofMulAction G (∀ i : ι, F i)
       π :=
         { app := fun i => ⟨fun x => x i.as, fun g => by ext <;> rfl⟩
-          naturality' := fun i j x => by 
+          naturality' := fun i j x => by
             ext
             trace
               "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
@@ -803,16 +797,16 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
   IsLimit :=
     { lift := fun s =>
         { Hom := fun x i => (s.π.app ⟨i⟩).Hom x
-          comm' := fun g => by 
+          comm' := fun g => by
             ext (x j)
             dsimp
             exact congr_fun ((s.π.app ⟨j⟩).comm g) x }
-      fac' := fun s j => by 
+      fac' := fun s j => by
         ext
         dsimp
         congr
         rw [discrete.mk_as]
-      uniq' := fun s f h => by 
+      uniq' := fun s f h => by
         ext (x j)
         dsimp at *
         rw [← h ⟨j⟩]
@@ -828,10 +822,8 @@ variable {V} {W : Type (u + 1)} [LargeCategory W]
 /-- A functor between categories induces a functor between
 the categories of `G`-actions within those categories. -/
 @[simps]
-def mapAction (F : V ⥤ W) (G : MonCat.{u}) :
-    ActionCat V G ⥤
-      ActionCat W
-        G where 
+def mapAction (F : V ⥤ W) (G : MonCat.{u}) : ActionCat V G ⥤ ActionCat W G
+    where
   obj M :=
     { V := F.obj M.V
       ρ :=
@@ -840,13 +832,13 @@ def mapAction (F : V ⥤ W) (G : MonCat.{u}) :
           map_mul' := fun g h => by simp only [End.mul_def, F.map_comp, map_mul] } }
   map M N f :=
     { Hom := F.map f.Hom
-      comm' := fun g => by 
+      comm' := fun g => by
         dsimp
         rw [← F.map_comp, f.comm, F.map_comp] }
-  map_id' M := by 
+  map_id' M := by
     ext
     simp only [ActionCat.id_hom, F.map_id]
-  map_comp' M N P f g := by 
+  map_comp' M N P f g := by
     ext
     simp only [ActionCat.comp_hom, F.map_comp]
 #align category_theory.functor.map_Action CategoryTheory.Functor.mapAction
@@ -858,8 +850,8 @@ instance map_Action_preadditive [F.Additive] : (F.mapAction G).Additive where
 
 variable {R : Type _} [Semiring R] [CategoryTheory.Linear R V] [CategoryTheory.Linear R W]
 
-instance map_Action_linear [F.Additive] [F.Linear R] : (F.mapAction G).Linear R where
-#align category_theory.functor.map_Action_linear CategoryTheory.Functor.map_Action_linear
+instance mapActionLinear [F.Additive] [F.Linear R] : (F.mapAction G).Linear R where
+#align category_theory.functor.map_Action_linear CategoryTheory.Functor.mapActionLinear
 
 end CategoryTheory.Functor
 
@@ -874,12 +866,12 @@ the categories of `G`-actions within those categories. -/
 @[simps]
 def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
     MonoidalFunctor (ActionCat V G) (ActionCat W G) :=
-  { -- See note [dsimp, simp].
+  {-- See note [dsimp, simp].
           F.toFunctor.mapAction
       G with
     ε :=
       { Hom := F.ε
-        comm' := fun g => by 
+        comm' := fun g => by
           dsimp
           erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] }
     μ := fun X Y =>
@@ -887,26 +879,26 @@ def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
         comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) }
     ε_is_iso := by infer_instance
     μ_is_iso := by infer_instance
-    μ_natural' := by 
+    μ_natural' := by
       intros
       ext
       dsimp
       simp
-    associativity' := by 
-      intros
-      ext
-      dsimp
-      simp
-      dsimp
-      simp
-    left_unitality' := by 
+    associativity' := by
       intros
       ext
       dsimp
       simp
       dsimp
       simp
-    right_unitality' := by 
+    left_unitality' := by
+      intros
+      ext
+      dsimp
+      simp
+      dsimp
+      simp
+    right_unitality' := by
       intros
       ext
       dsimp

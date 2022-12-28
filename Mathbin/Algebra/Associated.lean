@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.associated
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem dvd_or_dvd (hp : Prime p) {a b : α} (h : p ∣ a * b) : p ∣ a ∨ p �
 #align prime.dvd_or_dvd Prime.dvd_or_dvd
 
 #print Prime.dvd_of_dvd_pow /-
-theorem dvd_of_dvd_pow (hp : Prime p) {a : α} {n : ℕ} (h : p ∣ a ^ n) : p ∣ a := by
+theorem dvd_of_dvd_pow (hp : Prime p) {a : α} {n : ℕ} (h : p ∣ a ^ n) : p ∣ a :=
+  by
   induction' n with n ih
   · rw [pow_zero] at h
     have := isUnit_of_dvd_one _ h
@@ -126,12 +127,12 @@ variable [CommMonoidWithZero β] {F : Type _} {G : Type _} [MonoidWithZeroHomCla
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CommMonoidWithZero.{u1} α] [_inst_2 : CommMonoidWithZero.{u2} β] {F : Type.{u3}} {G : Type.{u4}} [_inst_3 : MonoidWithZeroHomClass.{u3, u1, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))] [_inst_4 : MulHomClass.{u4, u2, u1} G β α (MulZeroClass.toHasMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MulZeroClass.toHasMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))))] (f : F) (g : G) {p : α}, (forall (a : α), Eq.{succ u1} α (coeFn.{succ u4, max (succ u2) (succ u1)} G (fun (_x : G) => β -> α) (FunLike.hasCoeToFun.{succ u4, succ u2, succ u1} G β (fun (_x : β) => α) (MulHomClass.toFunLike.{u4, u2, u1} G β α (MulZeroClass.toHasMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MulZeroClass.toHasMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) _inst_4)) g (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u3, u1, u2} F α β (MulOneClass.toHasMul.{u1} α (MulZeroOneClass.toMulOneClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) (MulOneClass.toHasMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} F α β (MulZeroOneClass.toMulOneClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u1, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3)))) f a)) a) -> (Prime.{u2} β _inst_2 (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u3, u1, u2} F α β (MulOneClass.toHasMul.{u1} α (MulZeroOneClass.toMulOneClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) (MulOneClass.toHasMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u1, u2} F α β (MulZeroOneClass.toMulOneClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u1, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3)))) f p)) -> (Prime.{u1} α _inst_1 p)
 but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u2}} [_inst_1 : CommMonoidWithZero.{u4} α] [_inst_2 : CommMonoidWithZero.{u2} β] {F : Type.{u3}} {G : Type.{u1}} [_inst_3 : MonoidWithZeroHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))] [_inst_4 : MulHomClass.{u1, u2, u4} G β α (MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MulZeroClass.toMul.{u4} α (MulZeroOneClass.toMulZeroClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))))] (f : F) (g : G) {p : α}, (forall (a : α), Eq.{succ u4} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : β) => α) (FunLike.coe.{succ u3, succ u4, succ u2} F α (fun (a : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) a) (MulHomClass.toFunLike.{u3, u4, u2} F α β (MulOneClass.toMul.{u4} α (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) (MulOneClass.toMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u4, u2} F α β (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3))) f a)) (FunLike.coe.{succ u1, succ u2, succ u4} G β (fun (_x : β) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : β) => α) _x) (MulHomClass.toFunLike.{u1, u2, u4} G β α (MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MulZeroClass.toMul.{u4} α (MulZeroOneClass.toMulZeroClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) _inst_4) g (FunLike.coe.{succ u3, succ u4, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) _x) (MulHomClass.toFunLike.{u3, u4, u2} F α β (MulOneClass.toMul.{u4} α (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) (MulOneClass.toMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u4, u2} F α β (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3))) f a)) a) -> (Prime.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) p) _inst_2 (FunLike.coe.{succ u3, succ u4, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) _x) (MulHomClass.toFunLike.{u3, u4, u2} F α β (MulOneClass.toMul.{u4} α (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) (MulOneClass.toMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u4, u2} F α β (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3))) f p)) -> (Prime.{u4} α _inst_1 p)
+  forall {α : Type.{u4}} {β : Type.{u2}} [_inst_1 : CommMonoidWithZero.{u4} α] [_inst_2 : CommMonoidWithZero.{u2} β] {F : Type.{u3}} {G : Type.{u1}} [_inst_3 : MonoidWithZeroHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))] [_inst_4 : MulHomClass.{u1, u2, u4} G β α (MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MulZeroClass.toMul.{u4} α (MulZeroOneClass.toMulZeroClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))))] (f : F) (g : G) {p : α}, (forall (a : α), Eq.{succ u4} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : β) => α) (FunLike.coe.{succ u3, succ u4, succ u2} F α (fun (a : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) a) (MulHomClass.toFunLike.{u3, u4, u2} F α β (MulOneClass.toMul.{u4} α (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) (MulOneClass.toMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u4, u2} F α β (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3))) f a)) (FunLike.coe.{succ u1, succ u2, succ u4} G β (fun (_x : β) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : β) => α) _x) (MulHomClass.toFunLike.{u1, u2, u4} G β α (MulZeroClass.toMul.{u2} β (MulZeroOneClass.toMulZeroClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MulZeroClass.toMul.{u4} α (MulZeroOneClass.toMulZeroClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) _inst_4) g (FunLike.coe.{succ u3, succ u4, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) _x) (MulHomClass.toFunLike.{u3, u4, u2} F α β (MulOneClass.toMul.{u4} α (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) (MulOneClass.toMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u4, u2} F α β (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3))) f a)) a) -> (Prime.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) p) _inst_2 (FunLike.coe.{succ u3, succ u4, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) _x) (MulHomClass.toFunLike.{u3, u4, u2} F α β (MulOneClass.toMul.{u4} α (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)))) (MulOneClass.toMul.{u2} β (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)))) (MonoidHomClass.toMulHomClass.{u3, u4, u2} F α β (MulZeroOneClass.toMulOneClass.{u4} α (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1))) (MulZeroOneClass.toMulOneClass.{u2} β (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2))) (MonoidWithZeroHomClass.toMonoidHomClass.{u3, u4, u2} F α β (MonoidWithZero.toMulZeroOneClass.{u4} α (CommMonoidWithZero.toMonoidWithZero.{u4} α _inst_1)) (MonoidWithZero.toMulZeroOneClass.{u2} β (CommMonoidWithZero.toMonoidWithZero.{u2} β _inst_2)) _inst_3))) f p)) -> (Prime.{u4} α _inst_1 p)
 Case conversion may be inaccurate. Consider using '#align comap_prime comap_primeₓ'. -/
 theorem comap_prime (hinv : ∀ a, g (f a : β) = a) (hp : Prime (f p)) : Prime p :=
   ⟨fun h => hp.1 <| by simp [h], fun h => hp.2.1 <| h.map f, fun a b h => by
     refine'
-        (hp.2.2 (f a) (f b) <| by 
+        (hp.2.2 (f a) (f b) <| by
               convert map_dvd f h
               simp).imp
           _ _ <;>
@@ -161,7 +162,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (forall {a : α} {b : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) p b)) -> (Or (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p a) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) a b)))
 Case conversion may be inaccurate. Consider using '#align prime.left_dvd_or_dvd_right_of_dvd_mul Prime.left_dvd_or_dvd_right_of_dvd_mulₓ'. -/
 theorem Prime.left_dvd_or_dvd_right_of_dvd_mul [CancelCommMonoidWithZero α] {p : α} (hp : Prime p)
-    {a b : α} : a ∣ p * b → p ∣ a ∨ a ∣ b := by
+    {a b : α} : a ∣ p * b → p ∣ a ∨ a ∣ b :=
+  by
   rintro ⟨c, hc⟩
   rcases hp.2.2 a c (hc ▸ dvd_mul_right _ _) with (h | ⟨x, rfl⟩)
   · exact Or.inl h
@@ -176,7 +178,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α} {a : α} {b : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (forall (n : Nat), (Not (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p a)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) a b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n) b))
 Case conversion may be inaccurate. Consider using '#align prime.pow_dvd_of_dvd_mul_left Prime.pow_dvd_of_dvd_mul_leftₓ'. -/
 theorem Prime.pow_dvd_of_dvd_mul_left [CancelCommMonoidWithZero α] {p a b : α} (hp : Prime p)
-    (n : ℕ) (h : ¬p ∣ a) (h' : p ^ n ∣ a * b) : p ^ n ∣ b := by
+    (n : ℕ) (h : ¬p ∣ a) (h' : p ^ n ∣ a * b) : p ^ n ∣ b :=
+  by
   induction' n with n ih
   · rw [pow_zero]
     exact one_dvd b
@@ -193,7 +196,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α} {a : α} {b : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (forall (n : Nat), (Not (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) a b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n) a))
 Case conversion may be inaccurate. Consider using '#align prime.pow_dvd_of_dvd_mul_right Prime.pow_dvd_of_dvd_mul_rightₓ'. -/
 theorem Prime.pow_dvd_of_dvd_mul_right [CancelCommMonoidWithZero α] {p a b : α} (hp : Prime p)
-    (n : ℕ) (h : ¬p ∣ b) (h' : p ^ n ∣ a * b) : p ^ n ∣ a := by
+    (n : ℕ) (h : ¬p ∣ b) (h' : p ^ n ∣ a * b) : p ^ n ∣ a :=
+  by
   rw [mul_comm] at h'
   exact hp.pow_dvd_of_dvd_mul_left n h h'
 #align prime.pow_dvd_of_dvd_mul_right Prime.pow_dvd_of_dvd_mul_right
@@ -213,7 +217,8 @@ theorem Prime.dvd_of_pow_dvd_pow_mul_pow_of_square_not_dvd [CancelCommMonoidWith
   obtain ⟨x, rfl⟩ := hp.dvd_of_dvd_pow hbdiv
   obtain ⟨y, hy⟩ := hpow
   -- Then we can divide out a common factor of `p ^ n` from the equation `hy`.
-  have : a ^ n.succ * x ^ n = p * y := by
+  have : a ^ n.succ * x ^ n = p * y :=
+    by
     refine' mul_left_cancel₀ (pow_ne_zero n hp.ne_zero) _
     rw [← mul_assoc _ p, ← pow_succ', ← hy, mul_pow, ← mul_assoc (a ^ n.succ), mul_comm _ (p ^ n),
       mul_assoc]
@@ -232,7 +237,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α} {x : α} {y : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (forall {i : Nat}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) x y)) -> (Or (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p y)))
 Case conversion may be inaccurate. Consider using '#align prime_pow_succ_dvd_mul prime_pow_succ_dvd_mulₓ'. -/
 theorem prime_pow_succ_dvd_mul {α : Type _} [CancelCommMonoidWithZero α] {p x y : α} (h : Prime p)
-    {i : ℕ} (hxy : p ^ (i + 1) ∣ x * y) : p ^ (i + 1) ∣ x ∨ p ∣ y := by
+    {i : ℕ} (hxy : p ^ (i + 1) ∣ x * y) : p ^ (i + 1) ∣ x ∨ p ∣ y :=
+  by
   rw [or_iff_not_imp_right]
   intro hy
   induction' i with i ih generalizing x
@@ -341,7 +347,8 @@ theorem of_irreducible_mul {α} [Monoid α] {x y : α} : Irreducible (x * y) →
 
 #print of_irreducible_pow /-
 theorem of_irreducible_pow {α} [Monoid α] {x : α} {n : ℕ} (hn : n ≠ 1) :
-    Irreducible (x ^ n) → IsUnit x := by
+    Irreducible (x ^ n) → IsUnit x :=
+  by
   obtain hn | hn := hn.lt_or_lt
   · simp only [nat.lt_one_iff.mp hn, IsEmpty.forall_iff, not_irreducible_one, pow_zero]
   intro h
@@ -358,7 +365,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (x : α), (Not (IsUnit.{u1} α _inst_1 x)) -> (Or (Irreducible.{u1} α _inst_1 x) (Exists.{succ u1} α (fun (a : α) => Exists.{succ u1} α (fun (b : α) => And (Not (IsUnit.{u1} α _inst_1 a)) (And (Not (IsUnit.{u1} α _inst_1 b)) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) a b) x))))))
 Case conversion may be inaccurate. Consider using '#align irreducible_or_factor irreducible_or_factorₓ'. -/
 theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
-    Irreducible x ∨ ∃ a b, ¬IsUnit a ∧ ¬IsUnit b ∧ a * b = x := by
+    Irreducible x ∨ ∃ a b, ¬IsUnit a ∧ ¬IsUnit b ∧ a * b = x :=
+  by
   haveI := Classical.dec
   refine' or_iff_not_imp_right.2 fun H => _
   simp [h, irreducible_iff] at H⊢
@@ -370,7 +378,7 @@ theorem irreducible_or_factor {α} [Monoid α] (x : α) (h : ¬IsUnit x) :
 #print Irreducible.dvd_symm /-
 /-- If `p` and `q` are irreducible, then `p ∣ q` implies `q ∣ p`. -/
 theorem Irreducible.dvd_symm [Monoid α] {p q : α} (hp : Irreducible p) (hq : Irreducible q) :
-    p ∣ q → q ∣ p := by 
+    p ∣ q → q ∣ p := by
   rintro ⟨q', rfl⟩
   rw [IsUnit.mul_right_dvd (Or.resolve_left (of_irreducible_mul hq) hp.not_unit)]
 #align irreducible.dvd_symm Irreducible.dvd_symm
@@ -389,11 +397,12 @@ variable [Monoid α]
 
 /- warning: irreducible_units_mul -> irreducible_units_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : Units.{u1} α _inst_1) (b : α), Iff (Irreducible.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.val.{u1} α _inst_1)))) a) b)) (Irreducible.{u1} α _inst_1 b)
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : Units.{u1} α _inst_1) (b : α), Iff (Irreducible.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) a) b)) (Irreducible.{u1} α _inst_1 b)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : Units.{u1} α _inst_1) (b : α), Iff (Irreducible.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) (Units.val.{u1} α _inst_1 a) b)) (Irreducible.{u1} α _inst_1 b)
 Case conversion may be inaccurate. Consider using '#align irreducible_units_mul irreducible_units_mulₓ'. -/
-theorem irreducible_units_mul (a : αˣ) (b : α) : Irreducible (↑a * b) ↔ Irreducible b := by
+theorem irreducible_units_mul (a : αˣ) (b : α) : Irreducible (↑a * b) ↔ Irreducible b :=
+  by
   simp only [irreducible_iff, Units.isUnit_units_mul, and_congr_right_iff]
   refine' fun hu => ⟨fun h A B HAB => _, fun h A B HAB => _⟩
   · rw [← a.is_unit_units_mul]
@@ -417,11 +426,12 @@ theorem irreducible_isUnit_mul {a b : α} (h : IsUnit a) : Irreducible (a * b) �
 
 /- warning: irreducible_mul_units -> irreducible_mul_units is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : Units.{u1} α _inst_1) (b : α), Iff (Irreducible.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.val.{u1} α _inst_1)))) a))) (Irreducible.{u1} α _inst_1 b)
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : Units.{u1} α _inst_1) (b : α), Iff (Irreducible.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) a))) (Irreducible.{u1} α _inst_1 b)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : Units.{u1} α _inst_1) (b : α), Iff (Irreducible.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b (Units.val.{u1} α _inst_1 a))) (Irreducible.{u1} α _inst_1 b)
 Case conversion may be inaccurate. Consider using '#align irreducible_mul_units irreducible_mul_unitsₓ'. -/
-theorem irreducible_mul_units (a : αˣ) (b : α) : Irreducible (b * ↑a) ↔ Irreducible b := by
+theorem irreducible_mul_units (a : αˣ) (b : α) : Irreducible (b * ↑a) ↔ Irreducible b :=
+  by
   simp only [irreducible_iff, Units.isUnit_mul_units, and_congr_right_iff]
   refine' fun hu => ⟨fun h A B HAB => _, fun h A B HAB => _⟩
   · rw [← Units.isUnit_mul_units B a]
@@ -450,7 +460,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α}, Iff (Irreducible.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) a b)) (Or (And (Irreducible.{u1} α _inst_1 a) (IsUnit.{u1} α _inst_1 b)) (And (Irreducible.{u1} α _inst_1 b) (IsUnit.{u1} α _inst_1 a)))
 Case conversion may be inaccurate. Consider using '#align irreducible_mul_iff irreducible_mul_iffₓ'. -/
 theorem irreducible_mul_iff {a b : α} :
-    Irreducible (a * b) ↔ Irreducible a ∧ IsUnit b ∨ Irreducible b ∧ IsUnit a := by
+    Irreducible (a * b) ↔ Irreducible a ∧ IsUnit b ∨ Irreducible b ∧ IsUnit a :=
+  by
   constructor
   · refine' fun h => Or.imp (fun h' => ⟨_, h'⟩) (fun h' => ⟨_, h'⟩) (h.is_unit_or_is_unit rfl).symm
     · rwa [irreducible_mul_isUnit h'] at h
@@ -472,7 +483,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α}, (Irreducible.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a) -> (Not (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a))
 Case conversion may be inaccurate. Consider using '#align irreducible.not_square Irreducible.not_squareₓ'. -/
-theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a := by
+theorem Irreducible.not_square (ha : Irreducible a) : ¬IsSquare a :=
+  by
   rintro ⟨b, rfl⟩
   simp only [irreducible_mul_iff, or_self_iff] at ha
   exact ha.1.not_unit ha.2
@@ -502,7 +514,7 @@ protected theorem Prime.irreducible (hp : Prime p) : Irreducible p :=
           (isUnit_iff_dvd_one.2
             ⟨x,
               mul_right_cancel₀ (show a ≠ 0 from fun h => by simp_all [Prime]) <| by
-                conv => 
+                conv =>
                     lhs
                     rw [hx] <;>
                   simp [mul_comm, mul_assoc, mul_left_comm]⟩))
@@ -511,7 +523,7 @@ protected theorem Prime.irreducible (hp : Prime p) : Irreducible p :=
         (isUnit_iff_dvd_one.2
           ⟨x,
             mul_right_cancel₀ (show b ≠ 0 from fun h => by simp_all [Prime]) <| by
-              conv => 
+              conv =>
                   lhs
                   rw [hx] <;>
                 simp [mul_comm, mul_assoc, mul_left_comm]⟩)⟩
@@ -614,8 +626,8 @@ instance [Monoid α] : IsTrans α Associated :=
 
 #print Associated.setoid /-
 /-- The setoid of the relation `x ~ᵤ y` iff there is a unit `u` such that `x * u = y` -/
-protected def setoid (α : Type _) [Monoid α] :
-    Setoid α where 
+protected def setoid (α : Type _) [Monoid α] : Setoid α
+    where
   R := Associated
   iseqv := ⟨Associated.refl, fun a b => Associated.symm, fun a b c => Associated.trans⟩
 #align associated.setoid Associated.setoid
@@ -627,7 +639,7 @@ attribute [local instance] Associated.setoid
 
 /- warning: unit_associated_one -> unit_associated_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {u : Units.{u1} α _inst_1}, Associated.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.val.{u1} α _inst_1)))) u) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))))
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {u : Units.{u1} α _inst_1}, Associated.{u1} α _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) u) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {u : Units.{u1} α _inst_1}, Associated.{u1} α _inst_1 (Units.val.{u1} α _inst_1 u) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align unit_associated_one unit_associated_oneₓ'. -/
@@ -657,7 +669,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align associated_zero_iff_eq_zero associated_zero_iff_eq_zeroₓ'. -/
 theorem associated_zero_iff_eq_zero [MonoidWithZero α] (a : α) : a ~ᵤ 0 ↔ a = 0 :=
   Iff.intro
-    (fun h => by 
+    (fun h => by
       let ⟨u, h⟩ := h.symm
       simpa using h.symm)
     fun h => h ▸ Associated.refl a
@@ -702,7 +714,7 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] (a : β) (u : β), (IsUnit.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) u) -> (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) u a) a)
 Case conversion may be inaccurate. Consider using '#align associated_unit_mul_left associated_unit_mul_leftₓ'. -/
 theorem associated_unit_mul_left {β : Type _} [CommMonoid β] (a u : β) (hu : IsUnit u) :
-    Associated (u * a) a := by 
+    Associated (u * a) a := by
   rw [mul_comm]
   exact associated_mul_unit_left _ _ hu
 #align associated_unit_mul_left associated_unit_mul_left
@@ -747,7 +759,8 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] {u : β} {a : β} {b : β}, (IsUnit.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) u) -> (Iff (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) u a) b) (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align associated_is_unit_mul_left_iff associated_isUnit_mul_left_iffₓ'. -/
 theorem associated_isUnit_mul_left_iff {β : Type _} [CommMonoid β] {u a b : β} (hu : IsUnit u) :
-    Associated (u * a) b ↔ Associated a b := by
+    Associated (u * a) b ↔ Associated a b :=
+  by
   rw [mul_comm]
   exact associated_mul_isUnit_left_iff hu
 #align associated_is_unit_mul_left_iff associated_isUnit_mul_left_iff
@@ -776,7 +789,7 @@ theorem associated_isUnit_mul_right_iff {β : Type _} [CommMonoid β] {a u b : �
 
 /- warning: associated_mul_unit_left_iff -> associated_mul_unit_left_iff is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : Monoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β _inst_1}, Iff (Associated.{u1} β _inst_1 (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β _inst_1) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β _inst_1) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β _inst_1) β (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} β _inst_1) β (Units.val.{u1} β _inst_1)))) u)) b) (Associated.{u1} β _inst_1 a b)
+  forall {β : Type.{u1}} [_inst_1 : Monoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β _inst_1}, Iff (Associated.{u1} β _inst_1 (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β _inst_1) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β _inst_1) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β _inst_1) β (coeBase.{succ u1, succ u1} (Units.{u1} β _inst_1) β (Units.hasCoe.{u1} β _inst_1)))) u)) b) (Associated.{u1} β _inst_1 a b)
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : Monoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β _inst_1}, Iff (Associated.{u1} β _inst_1 (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) a (Units.val.{u1} β _inst_1 u)) b) (Associated.{u1} β _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align associated_mul_unit_left_iff associated_mul_unit_left_iffₓ'. -/
@@ -788,7 +801,7 @@ theorem associated_mul_unit_left_iff {β : Type _} [Monoid β] {a b : β} {u : U
 
 /- warning: associated_unit_mul_left_iff -> associated_unit_mul_left_iff is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)}, Iff (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (Units.val.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))) u) a) b) (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a b)
+  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)}, Iff (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (coeBase.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (Units.hasCoe.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))) u) a) b) (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a b)
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)}, Iff (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (Units.val.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) u) a) b) (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align associated_unit_mul_left_iff associated_unit_mul_left_iffₓ'. -/
@@ -800,7 +813,7 @@ theorem associated_unit_mul_left_iff {β : Type _} [CommMonoid β] {a b : β} {u
 
 /- warning: associated_mul_unit_right_iff -> associated_mul_unit_right_iff is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : Monoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β _inst_1}, Iff (Associated.{u1} β _inst_1 a (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) b ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β _inst_1) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β _inst_1) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β _inst_1) β (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} β _inst_1) β (Units.val.{u1} β _inst_1)))) u))) (Associated.{u1} β _inst_1 a b)
+  forall {β : Type.{u1}} [_inst_1 : Monoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β _inst_1}, Iff (Associated.{u1} β _inst_1 a (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) b ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β _inst_1) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β _inst_1) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β _inst_1) β (coeBase.{succ u1, succ u1} (Units.{u1} β _inst_1) β (Units.hasCoe.{u1} β _inst_1)))) u))) (Associated.{u1} β _inst_1 a b)
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : Monoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β _inst_1}, Iff (Associated.{u1} β _inst_1 a (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β _inst_1))) b (Units.val.{u1} β _inst_1 u))) (Associated.{u1} β _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align associated_mul_unit_right_iff associated_mul_unit_right_iffₓ'. -/
@@ -812,7 +825,7 @@ theorem associated_mul_unit_right_iff {β : Type _} [Monoid β] {a b : β} {u : 
 
 /- warning: associated_unit_mul_right_iff -> associated_unit_mul_right_iff is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)}, Iff (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (Units.val.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))) u) b)) (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a b)
+  forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)}, Iff (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toHasMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (coeBase.{succ u1, succ u1} (Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)) β (Units.hasCoe.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1))))) u) b)) (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a b)
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CommMonoid.{u1} β] {a : β} {b : β} {u : Units.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)}, Iff (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a (HMul.hMul.{u1, u1, u1} β β β (instHMul.{u1} β (MulOneClass.toMul.{u1} β (Monoid.toMulOneClass.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1)))) (Units.val.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) u) b)) (Associated.{u1} β (CommMonoid.toMonoid.{u1} β _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align associated_unit_mul_right_iff associated_unit_mul_right_iffₓ'. -/
@@ -854,7 +867,8 @@ theorem Associated.mul_right [CommMonoid α] {a b : α} (h : a ~ᵤ b) (c : α) 
 #align associated.mul_right Associated.mul_right
 
 #print Associated.pow_pow /-
-theorem Associated.pow_pow [CommMonoid α] {a b : α} {n : ℕ} (h : a ~ᵤ b) : a ^ n ~ᵤ b ^ n := by
+theorem Associated.pow_pow [CommMonoid α] {a b : α} {n : ℕ} (h : a ~ᵤ b) : a ^ n ~ᵤ b ^ n :=
+  by
   induction' n with n ih; · simp [h]
   convert h.mul_mul ih <;> rw [pow_succ]
 #align associated.pow_pow Associated.pow_pow
@@ -874,12 +888,12 @@ protected theorem Associated.dvd_dvd [Monoid α] {a b : α} (h : a ~ᵤ b) : a �
 
 #print associated_of_dvd_dvd /-
 theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ b) (hba : b ∣ a) :
-    a ~ᵤ b := by 
+    a ~ᵤ b := by
   rcases hab with ⟨c, rfl⟩
   rcases hba with ⟨d, a_eq⟩
   by_cases ha0 : a = 0
   · simp_all
-  have hac0 : a * c ≠ 0 := by 
+  have hac0 : a * c ≠ 0 := by
     intro con
     rw [con, zero_mul] at a_eq
     apply ha0 a_eq
@@ -921,9 +935,9 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} α] {a : α} {b : α}, (Associated.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1) a b) -> (Iff (Eq.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1)))) (Eq.{succ u1} α b (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align associated.eq_zero_iff Associated.eq_zero_iffₓ'. -/
 theorem Associated.eq_zero_iff [MonoidWithZero α] {a b : α} (h : a ~ᵤ b) : a = 0 ↔ b = 0 :=
-  ⟨fun ha => by 
+  ⟨fun ha => by
     let ⟨u, hu⟩ := h
-    simp [hu.symm, ha], fun hb => by 
+    simp [hu.symm, ha], fun hb => by
     let ⟨u, hu⟩ := h.symm
     simp [hu.symm, hb]⟩
 #align associated.eq_zero_iff Associated.eq_zero_iff
@@ -944,7 +958,7 @@ protected theorem Associated.prime [CommMonoidWithZero α] {p q : α} (h : p ~�
   ⟨h.ne_zero_iff.1 hp.NeZero,
     let ⟨u, hu⟩ := h
     ⟨fun ⟨v, hv⟩ => hp.not_unit ⟨v * u⁻¹, by simp [hv, hu.symm]⟩,
-      hu ▸ by 
+      hu ▸ by
         simp [Units.mul_right_dvd]
         intro a b
         exact hp.dvd_or_dvd⟩⟩
@@ -1032,7 +1046,7 @@ theorem Associated.of_mul_left [CancelCommMonoidWithZero α] {a b c d : α} (h :
   let ⟨v, hv⟩ := Associated.symm h₁
   ⟨u * (v : αˣ),
     mul_left_cancel₀ ha
-      (by 
+      (by
         rw [← hv, mul_assoc c (v : α) d, mul_left_comm c, ← hu]
         simp [hv.symm, mul_assoc, mul_comm, mul_left_comm])⟩
 #align associated.of_mul_left Associated.of_mul_left
@@ -1050,8 +1064,9 @@ theorem Associated.of_mul_right [CancelCommMonoidWithZero α] {a b c d : α} :
 
 #print Associated.of_pow_associated_of_prime /-
 theorem Associated.of_pow_associated_of_prime [CancelCommMonoidWithZero α] {p₁ p₂ : α} {k₁ k₂ : ℕ}
-    (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₁) (h : p₁ ^ k₁ ~ᵤ p₂ ^ k₂) : p₁ ~ᵤ p₂ := by
-  have : p₁ ∣ p₂ ^ k₂ := by 
+    (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₁) (h : p₁ ^ k₁ ~ᵤ p₂ ^ k₂) : p₁ ~ᵤ p₂ :=
+  by
+  have : p₁ ∣ p₂ ^ k₂ := by
     rw [← h.dvd_iff_dvd_right]
     apply dvd_pow_self _ hk₁.ne'
   rw [← hp₁.dvd_prime_iff_associated hp₂]
@@ -1081,7 +1096,8 @@ theorem units_eq_one (u : αˣ) : u = 1 :=
 #align units_eq_one units_eq_one
 
 #print associated_iff_eq /-
-theorem associated_iff_eq {x y : α} : x ~ᵤ y ↔ x = y := by
+theorem associated_iff_eq {x y : α} : x ~ᵤ y ↔ x = y :=
+  by
   constructor
   · rintro ⟨c, rfl⟩
     rw [units_eq_one c, Units.val_one, mul_one]
@@ -1091,7 +1107,8 @@ theorem associated_iff_eq {x y : α} : x ~ᵤ y ↔ x = y := by
 -/
 
 #print associated_eq_eq /-
-theorem associated_eq_eq : (Associated : α → α → Prop) = Eq := by
+theorem associated_eq_eq : (Associated : α → α → Prop) = Eq :=
+  by
   ext
   rw [associated_iff_eq]
 #align associated_eq_eq associated_eq_eq
@@ -1112,7 +1129,8 @@ variable {R : Type _} [CancelCommMonoidWithZero R] [Unique Rˣ] {p₁ p₂ : R} 
 
 #print eq_of_prime_pow_eq /-
 theorem eq_of_prime_pow_eq (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₁)
-    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by
+    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ :=
+  by
   rw [← associated_iff_eq] at h⊢
   apply h.of_pow_associated_of_prime hp₁ hp₂ hk₁
 #align eq_of_prime_pow_eq eq_of_prime_pow_eq
@@ -1120,7 +1138,8 @@ theorem eq_of_prime_pow_eq (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 
 
 #print eq_of_prime_pow_eq' /-
 theorem eq_of_prime_pow_eq' (hp₁ : Prime p₁) (hp₂ : Prime p₂) (hk₁ : 0 < k₂)
-    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ := by
+    (h : p₁ ^ k₁ = p₂ ^ k₂) : p₁ = p₂ :=
+  by
   rw [← associated_iff_eq] at h⊢
   apply h.of_pow_associated_of_prime' hp₁ hp₂ hk₁
 #align eq_of_prime_pow_eq' eq_of_prime_pow_eq'
@@ -1225,10 +1244,10 @@ theorem exists_rep [Monoid α] (a : Associates α) : ∃ a0 : α, Associates.mk 
 #align associates.exists_rep Associates.exists_rep
 -/
 
-instance [Monoid α] [Subsingleton α] :
-    Unique (Associates α) where 
+instance [Monoid α] [Subsingleton α] : Unique (Associates α)
+    where
   default := 1
-  uniq a := by 
+  uniq a := by
     apply Quotient.recOnSubsingleton₂
     intro a b
     congr
@@ -1258,7 +1277,7 @@ theorem mk_mul_mk {x y : α} : Associates.mk x * Associates.mk y = Associates.mk
   rfl
 #align associates.mk_mul_mk Associates.mk_mul_mk
 
-instance : CommMonoid (Associates α) where 
+instance : CommMonoid (Associates α) where
   one := 1
   mul := (· * ·)
   mul_one a' := (Quotient.induction_on a') fun a => show ⟦a * 1⟧ = ⟦a⟧ by simp
@@ -1269,7 +1288,7 @@ instance : CommMonoid (Associates α) where
   mul_comm a' b' :=
     (Quotient.induction_on₂ a' b') fun a b => show ⟦a * b⟧ = ⟦b * a⟧ by rw [mul_comm]
 
-instance : Preorder (Associates α) where 
+instance : Preorder (Associates α) where
   le := Dvd.Dvd
   le_refl := dvd_refl
   le_trans a b c := dvd_trans
@@ -1289,7 +1308,7 @@ protected def mkMonoidHom : α →* Associates α :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (a : α), Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))) (fun (_x : MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))) => α -> (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MonoidHom.hasCoeToFun.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))) (Associates.mkMonoidHom.{u1} α _inst_1) a) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) a) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MulOneClass.toMul.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (MonoidHom.monoidHomClass.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))))) (Associates.mkMonoidHom.{u1} α _inst_1) a) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) a) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MulOneClass.toMul.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (MonoidHom.monoidHomClass.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))))) (Associates.mkMonoidHom.{u1} α _inst_1) a) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align associates.mk_monoid_hom_apply Associates.mk_monoid_hom_applyₓ'. -/
 @[simp]
 theorem mk_monoid_hom_apply (a : α) : Associates.mkMonoidHom a = Associates.mk a :=
@@ -1300,7 +1319,7 @@ theorem mk_monoid_hom_apply (a : α) : Associates.mkMonoidHom a = Associates.mk 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {f : MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))}, (Function.RightInverse.{succ u1, succ u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (fun (_x : MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) => (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> α) (MonoidHom.hasCoeToFun.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) f) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) -> (forall (a : α), Associated.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (fun (_x : MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) => (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> α) (MonoidHom.hasCoeToFun.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) f (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {f : MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))}, (Function.RightInverse.{succ u1, succ u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (fun (_x : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (MulOneClass.toMul.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (MonoidHom.monoidHomClass.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) f) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) -> (forall (a : α), Associated.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (fun (_x : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (MulOneClass.toMul.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (MonoidHom.monoidHomClass.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) f (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)))
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {f : MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))}, (Function.RightInverse.{succ u1, succ u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (fun (_x : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (MulOneClass.toMul.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (MonoidHom.monoidHomClass.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) f) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) -> (forall (a : α), Associated.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (fun (_x : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (MulOneClass.toMul.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (MonoidHom.monoidHomClass.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) f (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)))
 Case conversion may be inaccurate. Consider using '#align associates.associated_map_mk Associates.associated_map_mkₓ'. -/
 theorem associated_map_mk {f : Associates α →* α} (hinv : Function.RightInverse f Associates.mk)
     (a : α) : a ~ᵤ f (Associates.mk a) :=
@@ -1321,7 +1340,7 @@ theorem mk_pow (a : α) (n : ℕ) : Associates.mk (a ^ n) = Associates.mk a ^ n 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α], Eq.{succ u1} ((Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> Prop) (Dvd.Dvd.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (semigroupDvd.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toSemigroup.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))))) (LE.le.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Preorder.toLE.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.preorder.{u1} α _inst_1)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α], Eq.{succ u1} ((Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> Prop) (fun (x._@.Mathlib.Algebra.Associated._hyg.9336 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (x._@.Mathlib.Algebra.Associated._hyg.9338 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => Dvd.dvd.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (semigroupDvd.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toSemigroup.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Associated._hyg.9336 x._@.Mathlib.Algebra.Associated._hyg.9338) (fun (x._@.Mathlib.Algebra.Associated._hyg.9351 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (x._@.Mathlib.Algebra.Associated._hyg.9353 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => LE.le.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Preorder.toLE.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instPreorderAssociatesToMonoid.{u1} α _inst_1)) x._@.Mathlib.Algebra.Associated._hyg.9351 x._@.Mathlib.Algebra.Associated._hyg.9353)
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α], Eq.{succ u1} ((Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) -> Prop) (fun (x._@.Mathlib.Algebra.Associated._hyg.9350 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (x._@.Mathlib.Algebra.Associated._hyg.9352 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => Dvd.dvd.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (semigroupDvd.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toSemigroup.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Associated._hyg.9350 x._@.Mathlib.Algebra.Associated._hyg.9352) (fun (x._@.Mathlib.Algebra.Associated._hyg.9365 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (x._@.Mathlib.Algebra.Associated._hyg.9367 : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) => LE.le.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Preorder.toLE.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instPreorderAssociatesToMonoid.{u1} α _inst_1)) x._@.Mathlib.Algebra.Associated._hyg.9365 x._@.Mathlib.Algebra.Associated._hyg.9367)
 Case conversion may be inaccurate. Consider using '#align associates.dvd_eq_le Associates.dvd_eq_leₓ'. -/
 theorem dvd_eq_le : ((· ∣ ·) : Associates α → Associates α → Prop) = (· ≤ ·) :=
   rfl
@@ -1358,15 +1377,15 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α], Unique.{succ u1} (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align associates.unique_units Associates.uniqueUnitsₓ'. -/
-instance uniqueUnits : Unique (Associates
-          α)ˣ where 
+instance uniqueUnits : Unique (Associates α)ˣ
+    where
   default := 1
   uniq := Associates.units_eq_one
 #align associates.unique_units Associates.uniqueUnits
 
 /- warning: associates.coe_unit_eq_one -> Associates.coe_unit_eq_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (u : Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))), Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Units.val.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))))) u) (OfNat.ofNat.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) 1 (OfNat.mk.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) 1 (One.one.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.hasOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (u : Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))), Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (coeBase.{succ u1, succ u1} (Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1))) (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Units.hasCoe.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))))) u) (OfNat.ofNat.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) 1 (OfNat.mk.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) 1 (One.one.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.hasOne.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (u : Units.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))), Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Units.val.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)) u) (OfNat.ofNat.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) 1 (One.toOfNat1.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instOneAssociates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align associates.coe_unit_eq_one Associates.coe_unit_eq_oneₓ'. -/
@@ -1450,7 +1469,7 @@ Case conversion may be inaccurate. Consider using '#align associates.le_mul_left
 theorem le_mul_left {a b : Associates α} : a ≤ b * a := by rw [mul_comm] <;> exact le_mul_right
 #align associates.le_mul_left Associates.le_mul_left
 
-instance : OrderBot (Associates α) where 
+instance : OrderBot (Associates α) where
   bot := 1
   bot_le a := one_le
 
@@ -1560,17 +1579,18 @@ section CommMonoidWithZero
 variable [CommMonoidWithZero α]
 
 instance : CommMonoidWithZero (Associates α) :=
-  { Associates.commMonoid, Associates.hasZero with
-    zero_mul := by 
+  { Associates.commMonoid,
+    Associates.hasZero with
+    zero_mul := by
       rintro ⟨a⟩
       show Associates.mk (0 * a) = Associates.mk 0
       rw [zero_mul]
-    mul_zero := by 
+    mul_zero := by
       rintro ⟨a⟩
       show Associates.mk (a * 0) = Associates.mk 0
       rw [mul_zero] }
 
-instance : OrderTop (Associates α) where 
+instance : OrderTop (Associates α) where
   top := 0
   le_top a := ⟨0, (mul_zero a).symm⟩
 
@@ -1598,7 +1618,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} α] (p : α), Iff (Prime.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (Associates.instCommMonoidWithZeroAssociatesToMonoidToMonoidWithZero.{u1} α _inst_1) (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) p)) (Prime.{u1} α _inst_1 p)
 Case conversion may be inaccurate. Consider using '#align associates.prime_mk Associates.prime_mkₓ'. -/
-theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p := by
+theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p :=
+  by
   rw [Prime, _root_.prime, forall_associated]
   trans
   · apply and_congr
@@ -1621,7 +1642,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} α] (a : α), Iff (Irreducible.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (MonoidWithZero.toMonoid.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (CommMonoidWithZero.toMonoidWithZero.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (Associates.instCommMonoidWithZeroAssociatesToMonoidToMonoidWithZero.{u1} α _inst_1))) (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) a)) (Irreducible.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) a)
 Case conversion may be inaccurate. Consider using '#align associates.irreducible_mk Associates.irreducible_mkₓ'. -/
-theorem irreducible_mk (a : α) : Irreducible (Associates.mk a) ↔ Irreducible a := by
+theorem irreducible_mk (a : α) : Irreducible (Associates.mk a) ↔ Irreducible a :=
+  by
   simp only [irreducible_iff, is_unit_mk]
   apply and_congr Iff.rfl
   constructor
@@ -1642,7 +1664,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} α] {a : α} {b : α}, Iff (DvdNotUnit.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (Associates.instCommMonoidWithZeroAssociatesToMonoidToMonoidWithZero.{u1} α _inst_1) (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) a) (Associates.mk.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)) b)) (DvdNotUnit.{u1} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align associates.mk_dvd_not_unit_mk_iff Associates.mk_dvdNotUnit_mk_iffₓ'. -/
 theorem mk_dvdNotUnit_mk_iff {a b : α} :
-    DvdNotUnit (Associates.mk a) (Associates.mk b) ↔ DvdNotUnit a b := by
+    DvdNotUnit (Associates.mk a) (Associates.mk b) ↔ DvdNotUnit a b :=
+  by
   rw [DvdNotUnit, DvdNotUnit, mk_ne_zero]
   apply and_congr_right; intro ane0
   constructor
@@ -1669,7 +1692,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} α] {a : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))} {b : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))}, (LT.lt.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (Preorder.toLT.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (Associates.instPreorderAssociatesToMonoid.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α _inst_1))) a b) -> (DvdNotUnit.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1))) (Associates.instCommMonoidWithZeroAssociatesToMonoidToMonoidWithZero.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align associates.dvd_not_unit_of_lt Associates.dvdNotUnit_of_ltₓ'. -/
-theorem dvdNotUnit_of_lt {a b : Associates α} (hlt : a < b) : DvdNotUnit a b := by
+theorem dvdNotUnit_of_lt {a b : Associates α} (hlt : a < b) : DvdNotUnit a b :=
+  by
   constructor;
   · rintro rfl
     apply not_lt_of_le _ hlt
@@ -1717,7 +1741,7 @@ instance : NoZeroDivisors (Associates α) :=
 
 instance : CancelCommMonoidWithZero (Associates α) :=
   { (inferInstance : CommMonoidWithZero (Associates α)) with
-    mul_left_cancel_of_ne_zero := by 
+    mul_left_cancel_of_ne_zero := by
       rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ ha h
       rcases Quotient.exact' h with ⟨u, hu⟩
       rw [mul_assoc] at hu
@@ -1743,7 +1767,8 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
   | _, m, ⟨hp0, hp1, h⟩, ⟨d, rfl⟩ =>
     match h m d dvd_rfl with
     | Or.inl h =>
-      (by_cases fun this : m = 0 => by simp [this]) fun this : m ≠ 0 => by
+      (by_cases fun this : m = 0 => by simp [this]) fun this : m ≠ 0 =>
+        by
         have : m * d ≤ m * 1 := by simpa using h
         have : d ≤ 1 := Associates.le_of_mul_le_mul_left m d 1 ‹m ≠ 0› this
         have : d = 1 := bot_unique this
@@ -1755,7 +1780,8 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
 #align associates.one_or_eq_of_le_of_prime Associates.one_or_eq_of_le_of_prime
 
 instance : CanonicallyOrderedMonoid (Associates α) :=
-  { Associates.cancelCommMonoidWithZero, Associates.boundedOrder, Associates.orderedCommMonoid with
+  { Associates.cancelCommMonoidWithZero, Associates.boundedOrder,
+    Associates.orderedCommMonoid with
     exists_mul_of_le := fun a b => id
     le_self_mul := fun a b => ⟨b, rfl⟩ }
 
@@ -1785,7 +1811,8 @@ end Associates
 section CommMonoidWithZero
 
 theorem DvdNotUnit.is_unit_of_irreducible_right [CommMonoidWithZero α] {p q : α}
-    (h : DvdNotUnit p q) (hq : Irreducible q) : IsUnit p := by
+    (h : DvdNotUnit p q) (hq : Irreducible q) : IsUnit p :=
+  by
   obtain ⟨hp', x, hx, hx'⟩ := h
   exact Or.resolve_right ((irreducible_iff.1 hq).right p x hx') hx
 #align dvd_not_unit.is_unit_of_irreducible_right DvdNotUnit.is_unit_of_irreducible_right
@@ -1798,7 +1825,8 @@ theorem not_irreducible_of_not_unit_dvdNotUnit [CommMonoidWithZero α] {p q : α
 -/
 
 #print DvdNotUnit.not_unit /-
-theorem DvdNotUnit.not_unit [CommMonoidWithZero α] {p q : α} (hp : DvdNotUnit p q) : ¬IsUnit q := by
+theorem DvdNotUnit.not_unit [CommMonoidWithZero α] {p q : α} (hp : DvdNotUnit p q) : ¬IsUnit q :=
+  by
   obtain ⟨-, x, hx, rfl⟩ := hp
   exact fun hc => hx (is_unit_iff_dvd_one.mpr (dvd_of_mul_left_dvd (is_unit_iff_dvd_one.mp hc)))
 #align dvd_not_unit.not_unit DvdNotUnit.not_unit
@@ -1806,7 +1834,8 @@ theorem DvdNotUnit.not_unit [CommMonoidWithZero α] {p q : α} (hp : DvdNotUnit 
 
 #print dvdNotUnit_of_dvdNotUnit_associated /-
 theorem dvdNotUnit_of_dvdNotUnit_associated [CommMonoidWithZero α] [Nontrivial α] {p q r : α}
-    (h : DvdNotUnit p q) (h' : Associated q r) : DvdNotUnit p r := by
+    (h : DvdNotUnit p q) (h' : Associated q r) : DvdNotUnit p r :=
+  by
   obtain ⟨u, rfl⟩ := Associated.symm h'
   obtain ⟨hp, x, hx⟩ := h
   refine' ⟨hp, x * ↑u⁻¹, DvdNotUnit.not_unit ⟨u⁻¹.NeZero, x, hx.left, mul_comm _ _⟩, _⟩
@@ -1825,7 +1854,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α} {b : α}, (Associated.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))) p b) p) -> (Ne.{succ u1} α p (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) -> (IsUnit.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) b)
 Case conversion may be inaccurate. Consider using '#align is_unit_of_associated_mul isUnit_of_associated_mulₓ'. -/
 theorem isUnit_of_associated_mul [CancelCommMonoidWithZero α] {p b : α} (h : Associated (p * b) p)
-    (hp : p ≠ 0) : IsUnit b := by 
+    (hp : p ≠ 0) : IsUnit b := by
   cases' h with a ha
   refine' isUnit_of_mul_eq_one b a ((mul_right_inj' hp).mp _)
   rwa [← mul_assoc, mul_one]
@@ -1833,7 +1862,7 @@ theorem isUnit_of_associated_mul [CancelCommMonoidWithZero α] {p b : α} (h : A
 
 #print DvdNotUnit.not_associated /-
 theorem DvdNotUnit.not_associated [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q) :
-    ¬Associated p q := by 
+    ¬Associated p q := by
   rintro ⟨a, rfl⟩
   obtain ⟨hp, x, hx, hx'⟩ := h
   rcases(mul_right_inj' hp).mp hx' with rfl
@@ -1842,7 +1871,8 @@ theorem DvdNotUnit.not_associated [CancelCommMonoidWithZero α] {p q : α} (h : 
 -/
 
 #print DvdNotUnit.ne /-
-theorem DvdNotUnit.ne [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q) : p ≠ q := by
+theorem DvdNotUnit.ne [CancelCommMonoidWithZero α] {p q : α} (h : DvdNotUnit p q) : p ≠ q :=
+  by
   by_contra hcontra
   obtain ⟨hp, x, hx', hx''⟩ := h
   conv_lhs at hx'' => rw [← hcontra, ← mul_one p]
@@ -1858,7 +1888,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {q : α}, (Not (IsUnit.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) q)) -> (Ne.{succ u1} α q (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) -> (Function.Injective.{1, succ u1} Nat α (fun (n : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) q n))
 Case conversion may be inaccurate. Consider using '#align pow_injective_of_not_unit pow_injective_of_not_unitₓ'. -/
 theorem pow_injective_of_not_unit [CancelCommMonoidWithZero α] {q : α} (hq : ¬IsUnit q)
-    (hq' : q ≠ 0) : Function.Injective fun n : ℕ => q ^ n := by
+    (hq' : q ≠ 0) : Function.Injective fun n : ℕ => q ^ n :=
+  by
   refine' injective_of_lt_imp_ne fun n m h => DvdNotUnit.ne ⟨pow_ne_zero n hq', q ^ (m - n), _, _⟩
   · exact not_isUnit_of_not_isUnit_dvd hq (dvd_pow (dvd_refl _) (Nat.sub_pos_of_lt h).ne')
   · exact (pow_mul_pow_sub q h.le).symm
@@ -1871,7 +1902,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α} {q : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (forall (n : Nat), Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) q (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p n)) (Exists.{1} Nat (fun (i : Nat) => And (LE.le.{0} Nat instLENat i n) (Associated.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) q (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p i)))))
 Case conversion may be inaccurate. Consider using '#align dvd_prime_pow dvd_prime_powₓ'. -/
 theorem dvd_prime_pow [CancelCommMonoidWithZero α] {p q : α} (hp : Prime p) (n : ℕ) :
-    q ∣ p ^ n ↔ ∃ i ≤ n, Associated q (p ^ i) := by
+    q ∣ p ^ n ↔ ∃ i ≤ n, Associated q (p ^ i) :=
+  by
   induction' n with n ih generalizing q
   · simp [← isUnit_iff_dvd_one, associated_one_iff_isUnit]
   refine' ⟨fun h => _, fun ⟨i, hi, hq⟩ => hq.dvd.trans (pow_dvd_pow p hi)⟩

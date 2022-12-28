@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.bound
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ theorem eps_pos (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 0 < ε :=
 theorem hundred_div_ε_pow_five_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
     (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) : 100 / ε ^ 5 ≤ m :=
   (div_le_of_nonneg_of_le_mul (eps_pow_five_pos hPε).le (by positivity) hPε).trans
-    (by 
+    (by
       norm_cast
       rwa [Nat.le_div_iff_mul_le'
           (step_bound_pos (P.parts_nonempty <| univ_nonempty.ne_empty).card_pos),
@@ -102,7 +102,8 @@ theorem hundred_le_m [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ 
       (hundred_div_ε_pow_five_le_m hPα hPε)
 #align szemeredi_regularity.hundred_le_m SzemerediRegularity.hundred_le_m
 
-theorem a_add_one_le_four_pow_parts_card : a + 1 ≤ 4 ^ P.parts.card := by
+theorem a_add_one_le_four_pow_parts_card : a + 1 ≤ 4 ^ P.parts.card :=
+  by
   have h : 1 ≤ 4 ^ P.parts.card := one_le_pow_of_one_le (by norm_num) _
   rw [step_bound, ← Nat.div_div_eq_div_mul, ← Nat.le_sub_iff_right h, tsub_le_iff_left, ←
     Nat.add_sub_assoc h]
@@ -118,8 +119,10 @@ theorem card_aux₁ (hucard : u.card = m * 4 ^ P.parts.card + a) :
 
 theorem card_aux₂ (hP : P.IsEquipartition) (hu : u ∈ P.parts)
     (hucard : ¬u.card = m * 4 ^ P.parts.card + a) :
-    (4 ^ P.parts.card - (a + 1)) * m + (a + 1) * (m + 1) = u.card := by
-  have : m * 4 ^ P.parts.card ≤ card α / P.parts.card := by
+    (4 ^ P.parts.card - (a + 1)) * m + (a + 1) * (m + 1) = u.card :=
+  by
+  have : m * 4 ^ P.parts.card ≤ card α / P.parts.card :=
+    by
     rw [step_bound, ← Nat.div_div_eq_div_mul]
     exact Nat.div_mul_le_self _ _
   rw [Nat.add_sub_of_le this] at hucard
@@ -129,7 +132,7 @@ theorem card_aux₂ (hP : P.IsEquipartition) (hu : u ∈ P.parts)
 #align szemeredi_regularity.card_aux₂ SzemerediRegularity.card_aux₂
 
 theorem pow_mul_m_le_card_part (hP : P.IsEquipartition) (hu : u ∈ P.parts) :
-    (4 : ℝ) ^ P.parts.card * m ≤ u.card := by 
+    (4 : ℝ) ^ P.parts.card * m ≤ u.card := by
   norm_cast
   rw [step_bound, ← Nat.div_div_eq_div_mul]
   exact (Nat.mul_div_le _ _).trans (hP.average_le_card_part hu)
@@ -156,7 +159,8 @@ theorem initial_bound_pos : 0 < initialBound ε l :=
 #align szemeredi_regularity.initial_bound_pos SzemerediRegularity.initial_bound_pos
 
 theorem hundred_lt_pow_initial_bound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
-    100 < 4 ^ initialBound ε l * ε ^ 5 := by
+    100 < 4 ^ initialBound ε l * ε ^ 5 :=
+  by
   rw [← rpow_nat_cast 4, ← div_lt_iff (pow_pos hε 5), lt_rpow_iff_log_lt _ zero_lt_four, ←
     div_lt_iff, initial_bound, Nat.cast_max, Nat.cast_max]
   · push_cast

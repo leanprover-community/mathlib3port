@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.laurent_series
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,13 +74,15 @@ theorem power_series_part_coeff (x : LaurentSeries R) (n : ℕ) :
 #align laurent_series.power_series_part_coeff LaurentSeries.power_series_part_coeff
 
 @[simp]
-theorem power_series_part_zero : powerSeriesPart (0 : LaurentSeries R) = 0 := by
+theorem power_series_part_zero : powerSeriesPart (0 : LaurentSeries R) = 0 :=
+  by
   ext
   simp
 #align laurent_series.power_series_part_zero LaurentSeries.power_series_part_zero
 
 @[simp]
-theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 ↔ x = 0 := by
+theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 ↔ x = 0 :=
+  by
   constructor
   · contrapose!
     intro h
@@ -93,7 +95,8 @@ theorem power_series_part_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 
 
 @[simp]
 theorem single_order_mul_power_series_part (x : LaurentSeries R) :
-    (single x.order 1 : LaurentSeries R) * x.powerSeriesPart = x := by
+    (single x.order 1 : LaurentSeries R) * x.powerSeriesPart = x :=
+  by
   ext n
   rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mul]
   by_cases h : x.order ≤ n
@@ -113,7 +116,8 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
   laurent_series.single_order_mul_power_series_part LaurentSeries.single_order_mul_power_series_part
 
 theorem of_power_series_power_series_part (x : LaurentSeries R) :
-    ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x := by
+    ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x :=
+  by
   refine' Eq.trans _ (congr rfl x.single_order_mul_power_series_part)
   rw [← mul_assoc, single_mul_single, neg_add_self, mul_one, ← C_apply, C_one, one_mul,
     coe_power_series]
@@ -134,10 +138,9 @@ theorem coe_algebra_map [CommSemiring R] :
 /-- The localization map from power series to Laurent series. -/
 @[simps]
 instance of_power_series_localization [CommRing R] :
-    IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R))
-      (LaurentSeries
-        R) where 
-  map_units := by 
+    IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R)) (LaurentSeries R)
+    where
+  map_units := by
     rintro ⟨_, n, rfl⟩
     refine' ⟨⟨single (n : ℤ) 1, single (-n : ℤ) 1, _, _⟩, _⟩
     · simp only [single_mul_single, mul_one, add_right_neg]
@@ -145,7 +148,7 @@ instance of_power_series_localization [CommRing R] :
     · simp only [single_mul_single, mul_one, add_left_neg]
       rfl
     · simp
-  surj := by 
+  surj := by
     intro z
     by_cases h : 0 ≤ z.order
     · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
@@ -158,7 +161,7 @@ instance of_power_series_localization [CommRing R] :
       refine' congr rfl _
       rw [Subtype.coe_mk, of_power_series_X_pow, Int.ofNat_natAbs_of_nonpos]
       exact le_of_not_ge h
-  eq_iff_exists := by 
+  eq_iff_exists := by
     intro x y
     rw [coe_algebra_map, of_power_series_injective.eq_iff]
     constructor
@@ -221,7 +224,7 @@ theorem coe_mul : ((f * g : PowerSeries R) : LaurentSeries R) = f * g :=
 theorem coeff_coe (i : ℤ) :
     ((f : PowerSeries R) : LaurentSeries R).coeff i =
       if i < 0 then 0 else PowerSeries.coeff R i.natAbs f :=
-  by 
+  by
   cases i
   ·
     rw [Int.nat_abs_of_nat_core, Int.ofNat_eq_coe, coeff_coe_power_series,
@@ -245,7 +248,8 @@ theorem coe_X : ((x : PowerSeries R) : LaurentSeries R) = single 1 1 :=
 
 @[simp, norm_cast]
 theorem coe_smul {S : Type _} [Semiring S] [Module R S] (r : R) (x : PowerSeries S) :
-    ((r • x : PowerSeries S) : LaurentSeries S) = r • x := by
+    ((r • x : PowerSeries S) : LaurentSeries S) = r • x :=
+  by
   ext
   simp [coeff_coe, coeff_smul, smul_ite]
 #align power_series.coe_smul PowerSeries.coe_smul

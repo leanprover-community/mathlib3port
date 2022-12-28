@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.W.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,8 +73,8 @@ variable (β)
 /-- The canonical bijection with the sigma type, showing that `W_type` is a fixed point of
   the polynomial functor `X ↦ Σ a : α, β a → X`. -/
 @[simps]
-def equivSigma : WType β ≃
-      Σa : α, β a → WType β where 
+def equivSigma : WType β ≃ Σa : α, β a → WType β
+    where
   toFun := toSigma
   invFun := ofSigma
   left_inv := of_sigma_to_sigma
@@ -96,7 +96,8 @@ def elim (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) : WType β → γ
 
 theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ)
     (fγ_injective : Function.Injective fγ) : Function.Injective (elim γ fγ)
-  | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h => by
+  | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h =>
+    by
     obtain ⟨rfl, h⟩ := Sigma.mk.inj (fγ_injective h)
     congr with x
     exact elim_injective (congr_fun (eq_of_heq h) x : _)
@@ -107,7 +108,7 @@ instance [hα : IsEmpty α] : IsEmpty (WType β) :=
 
 theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] :
     Infinite (WType β) :=
-  ⟨by 
+  ⟨by
     intro hf
     have hba : b ≠ a := fun h => ha.elim (IsEmpty.elim' (show IsEmpty (β a) from h ▸ he))
     refine'
@@ -131,7 +132,8 @@ def depth : WType β → ℕ
   | ⟨a, f⟩ => (Finset.sup Finset.univ fun n => depth (f n)) + 1
 #align W_type.depth WType.depth
 
-theorem depth_pos (t : WType β) : 0 < t.depth := by
+theorem depth_pos (t : WType β) : 0 < t.depth :=
+  by
   cases t
   apply Nat.succ_pos
 #align W_type.depth_pos WType.depth_pos
@@ -158,7 +160,7 @@ variable [∀ a : α, Encodable (β a)]
 
 private def encodable_zero : Encodable (WType' β 0) :=
   let f : WType' β 0 → Empty := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
-  let finv : Empty → WType' β 0 := by 
+  let finv : Empty → WType' β 0 := by
     intro x
     cases x
   have : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim <| not_lt_of_ge h (WType.depth_pos _)
@@ -166,7 +168,7 @@ private def encodable_zero : Encodable (WType' β 0) :=
 #align W_type.encodable_zero W_type.encodable_zero
 
 private def f (n : ℕ) : WType' β (n + 1) → Σa : α, β a → WType' β n
-  | ⟨t, h⟩ => by 
+  | ⟨t, h⟩ => by
     cases' t with a f
     have h₀ : ∀ i : β a, WType.depth (f i) ≤ n := fun i =>
       Nat.le_of_lt_succ (lt_of_lt_of_le (WType.depth_lt_depth_mk a f i) h)
@@ -184,14 +186,15 @@ variable [Encodable α]
 
 private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (WType' β (n + 1)) :=
   Encodable.ofLeftInverse (f n) (finv n)
-    (by 
+    (by
       rintro ⟨⟨_, _⟩, _⟩
       rfl)
 #align W_type.encodable_succ W_type.encodable_succ
 
 /-- `W_type` is encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
 encodable. -/
-instance : Encodable (WType β) := by
+instance : Encodable (WType β) :=
+  by
   haveI h' : ∀ n, Encodable (W_type' β n) := fun n => Nat.recOn n encodable_zero encodable_succ
   let f : WType β → Σn, W_type' β n := fun t => ⟨t.depth, ⟨t, le_rfl⟩⟩
   let finv : (Σn, W_type' β n) → WType β := fun p => p.2.1

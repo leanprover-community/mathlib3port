@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_paracompact
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,8 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       Ennreal.pow_pos (Ennreal.inv_pos.2 Ennreal.two_ne_top) _
     have hpow_le : ∀ {m n : ℕ}, m ≤ n → (2⁻¹ : ℝ≥0∞) ^ n ≤ 2⁻¹ ^ m := fun m n h =>
       Ennreal.pow_le_pow_of_le_one (Ennreal.inv_le_one.2 ennreal.one_lt_two.le) h
-    have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n := by
+    have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n :=
+      by
       intro n
       simp [pow_succ, ← mul_assoc, Ennreal.mul_inv_cancel]
     -- Consider an open covering `S : set (set α)`
@@ -79,7 +80,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         D n i =
           ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt :
             ∀ m < n, ∀ (j : ι), x ∉ D m j), ball x (2⁻¹ ^ n) :=
-      fun n s => by 
+      fun n s => by
       simp only [D]
       rw [Nat.strongRecOn'_beta]
     have memD :
@@ -87,13 +88,13 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         y ∈ D n i ↔
           ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt :
             ∀ m < n, ∀ (j : ι), x ∉ D m j), edist y x < 2⁻¹ ^ n :=
-      by 
+      by
       intro n i y
       rw [Dn n i]
       simp only [mem_Union, mem_ball]
     -- The sets `D n i` cover the whole space. Indeed, for each `x` we can choose `n` such that
     -- `ball x (3 / 2 ^ n) ⊆ s (ind x)`, then either `x ∈ D n i`, or `x ∈ D m i` for some `m < n`.
-    have Dcov : ∀ x, ∃ n i, x ∈ D n i := by 
+    have Dcov : ∀ x, ∃ n i, x ∈ D n i := by
       intro x
       obtain ⟨n, hn⟩ : ∃ n : ℕ, ball x (3 * 2⁻¹ ^ n) ⊆ s (ind x) :=
         by
@@ -107,13 +108,13 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       apply h n (ind x)
       exact memD.2 ⟨x, rfl, hn, fun _ _ _ => h _ _, mem_ball_self (pow_pos _)⟩
     -- Each `D n i` is a union of open balls, hence it is an open set
-    have Dopen : ∀ n i, IsOpen (D n i) := by 
+    have Dopen : ∀ n i, IsOpen (D n i) := by
       intro n i
       rw [Dn]
       iterate 4 refine' is_open_Union fun _ => _
       exact is_open_ball
     -- the covering `D n i` is a refinement of the original covering: `D n i ⊆ s i`
-    have HDS : ∀ n i, D n i ⊆ s i := by 
+    have HDS : ∀ n i, D n i ⊆ s i := by
       intro n s x
       rw [memD]
       rintro ⟨y, rfl, hsub, -, hyx⟩
@@ -143,7 +144,8 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       set B := ball x (2⁻¹ ^ (n + k + 1))
       refine' ⟨B, ball_mem_nhds _ (pow_pos _), _⟩
       -- The sets `D m i`, `m > n + k`, are disjoint with `B`
-      have Hgt : ∀ m ≥ n + k + 1, ∀ (i : ι), Disjoint (D m i) B := by
+      have Hgt : ∀ m ≥ n + k + 1, ∀ (i : ι), Disjoint (D m i) B :=
+        by
         rintro m hm i
         rw [disjoint_iff_inf_le]
         rintro y ⟨hym, hyx⟩
@@ -158,7 +160,8 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
           _ = 2⁻¹ ^ k := by rw [← two_mul, h2pow]
           
       -- For each `m ≤ n + k` there is at most one `j` such that `D m j ∩ B` is nonempty.
-      have Hle : ∀ m ≤ n + k, Set.Subsingleton { j | (D m j ∩ B).Nonempty } := by
+      have Hle : ∀ m ≤ n + k, Set.Subsingleton { j | (D m j ∩ B).Nonempty } :=
+        by
         rintro m hm j₁ ⟨y, hyD, hyB⟩ j₂ ⟨z, hzD, hzB⟩
         by_contra h
         wlog h : j₁ < j₂ := Ne.lt_or_lt h using j₁ j₂ y z, j₂ j₁ z y

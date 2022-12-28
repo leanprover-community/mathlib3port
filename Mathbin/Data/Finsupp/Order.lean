@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.finsupp.order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,11 +53,11 @@ theorem le_def {f g : ι →₀ α} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 #align finsupp.le_def Finsupp.le_def
 
 /-- The order on `finsupp`s over a partial order embeds into the order on functions -/
-def orderEmbeddingToFun : (ι →₀ α) ↪o
-      (ι → α) where 
+def orderEmbeddingToFun : (ι →₀ α) ↪o (ι → α)
+    where
   toFun f := f
   inj' f g h :=
-    Finsupp.ext fun i => by 
+    Finsupp.ext fun i => by
       dsimp at h
       rw [h]
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
@@ -75,7 +75,7 @@ section Preorder
 variable [Preorder α]
 
 instance : Preorder (ι →₀ α) :=
-  { Finsupp.hasLe with 
+  { Finsupp.hasLe with
     le_refl := fun f i => le_rfl
     le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
@@ -88,7 +88,7 @@ instance [PartialOrder α] : PartialOrder (ι →₀ α) :=
   { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [SemilatticeInf α] : SemilatticeInf (ι →₀ α) :=
-  { Finsupp.partialOrder with 
+  { Finsupp.partialOrder with
     inf := zipWith (· ⊓ ·) inf_idem
     inf_le_left := fun f g i => inf_le_left
     inf_le_right := fun f g i => inf_le_right
@@ -100,7 +100,7 @@ theorem inf_apply [SemilatticeInf α] {i : ι} {f g : ι →₀ α} : (f ⊓ g) 
 #align finsupp.inf_apply Finsupp.inf_apply
 
 instance [SemilatticeSup α] : SemilatticeSup (ι →₀ α) :=
-  { Finsupp.partialOrder with 
+  { Finsupp.partialOrder with
     sup := zipWith (· ⊔ ·) sup_idem
     le_sup_left := fun f g i => le_sup_left
     le_sup_right := fun f g i => le_sup_right
@@ -136,7 +136,7 @@ section CanonicallyOrderedAddMonoid
 
 variable [CanonicallyOrderedAddMonoid α]
 
-instance : OrderBot (ι →₀ α) where 
+instance : OrderBot (ι →₀ α) where
   bot := 0
   bot_le := by simp only [le_def, coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
 
@@ -178,7 +178,8 @@ instance : OrderedSub (ι →₀ α) :=
   ⟨fun n m k => forall_congr' fun x => tsub_le_iff_right⟩
 
 instance : CanonicallyOrderedAddMonoid (ι →₀ α) :=
-  { Finsupp.orderBot, Finsupp.orderedAddCommMonoid with
+  { Finsupp.orderBot,
+    Finsupp.orderedAddCommMonoid with
     exists_add_of_le := fun f g h => ⟨g - f, ext fun x => (add_tsub_cancel_of_le <| h x).symm⟩
     le_self_add := fun f g x => le_self_add }
 
@@ -192,7 +193,8 @@ theorem tsub_apply (f g : ι →₀ α) (a : ι) : (f - g) a = f a - g a :=
 #align finsupp.tsub_apply Finsupp.tsub_apply
 
 @[simp]
-theorem single_tsub : single i (a - b) = single i a - single i b := by
+theorem single_tsub : single i (a - b) = single i a - single i b :=
+  by
   ext j
   obtain rfl | h := eq_or_ne i j
   · rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same]
@@ -215,7 +217,8 @@ section CanonicallyLinearOrderedAddMonoid
 variable [CanonicallyLinearOrderedAddMonoid α]
 
 @[simp]
-theorem support_inf [DecidableEq ι] (f g : ι →₀ α) : (f ⊓ g).support = f.support ∩ g.support := by
+theorem support_inf [DecidableEq ι] (f g : ι →₀ α) : (f ⊓ g).support = f.support ∩ g.support :=
+  by
   ext
   simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter,
     Finset.mem_inter]
@@ -223,13 +226,15 @@ theorem support_inf [DecidableEq ι] (f g : ι →₀ α) : (f ⊓ g).support = 
 #align finsupp.support_inf Finsupp.support_inf
 
 @[simp]
-theorem support_sup [DecidableEq ι] (f g : ι →₀ α) : (f ⊔ g).support = f.support ∪ g.support := by
+theorem support_sup [DecidableEq ι] (f g : ι →₀ α) : (f ⊔ g).support = f.support ∪ g.support :=
+  by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
   rw [_root_.sup_eq_bot_iff, not_and_or]
 #align finsupp.support_sup Finsupp.support_sup
 
-theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.support g.support := by
+theorem disjoint_iff {f g : ι →₀ α} : Disjoint f g ↔ Disjoint f.support g.support :=
+  by
   rw [disjoint_iff, disjoint_iff, Finsupp.bot_eq_zero, ← Finsupp.support_eq_empty,
     Finsupp.support_inf]
   rfl

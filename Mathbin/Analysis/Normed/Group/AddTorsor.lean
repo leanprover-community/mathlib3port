@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_torsor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,8 +48,8 @@ variable {α V P W Q : Type _} [SeminormedAddCommGroup V] [PseudoMetricSpace P] 
   [NormedAddCommGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
 /-- A `seminormed_add_comm_group` is a `normed_add_torsor` over itself. -/
-instance (priority := 100) SeminormedAddCommGroup.toNormedAddTorsor :
-    NormedAddTorsor V V where dist_eq_norm' := dist_eq_norm
+instance (priority := 100) SeminormedAddCommGroup.toNormedAddTorsor : NormedAddTorsor V V
+    where dist_eq_norm' := dist_eq_norm
 #align seminormed_add_comm_group.to_normed_add_torsor SeminormedAddCommGroup.toNormedAddTorsor
 
 -- Because of the add_torsor.nonempty instance.
@@ -104,8 +104,8 @@ theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ‖v‖ := by rw [
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 addition/subtraction of `x : P`. -/
 @[simps]
-def Isometric.vaddConst (x : P) :
-    V ≃ᵢ P where 
+def Isometric.vaddConst (x : P) : V ≃ᵢ P
+    where
   toEquiv := Equiv.vaddConst x
   isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_right _ _ _
 #align isometric.vadd_const Isometric.vaddConst
@@ -116,8 +116,8 @@ variable (P)
 
 /-- Self-isometry of a (semi)normed add torsor given by addition of a constant vector `x`. -/
 @[simps]
-def Isometric.constVadd (x : V) :
-    P ≃ᵢ P where 
+def Isometric.constVadd (x : V) : P ≃ᵢ P
+    where
   toEquiv := Equiv.constVadd P x
   isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_left _ _ _
 #align isometric.const_vadd Isometric.constVadd
@@ -132,8 +132,8 @@ theorem dist_vsub_cancel_left (x y z : P) : dist (x -ᵥ y) (x -ᵥ z) = dist y 
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
 subtraction from `x : P`. -/
 @[simps]
-def Isometric.constVsub (x : P) :
-    P ≃ᵢ V where 
+def Isometric.constVsub (x : P) : P ≃ᵢ V
+    where
   toEquiv := Equiv.constVsub x
   isometryToFun := Isometry.ofDistEq fun y z => dist_vsub_cancel_left _ _ _
 #align isometric.const_vsub Isometric.constVsub
@@ -171,7 +171,8 @@ theorem dist_vadd_vadd_le (v v' : V) (p p' : P) :
 #align dist_vadd_vadd_le dist_vadd_vadd_le
 
 theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
-    dist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ dist p₁ p₃ + dist p₂ p₄ := by
+    dist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ dist p₁ p₃ + dist p₂ p₄ :=
+  by
   rw [dist_eq_norm, vsub_sub_vsub_comm, dist_eq_norm_vsub V, dist_eq_norm_vsub V]
   exact norm_sub_le _ _
 #align dist_vsub_vsub_le dist_vsub_vsub_le
@@ -187,13 +188,15 @@ theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
 #align nndist_vsub_vsub_le nndist_vsub_vsub_le
 
 theorem edist_vadd_vadd_le (v v' : V) (p p' : P) :
-    edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v' + edist p p' := by
+    edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v' + edist p p' :=
+  by
   simp only [edist_nndist]
   apply_mod_cast nndist_vadd_vadd_le
 #align edist_vadd_vadd_le edist_vadd_vadd_le
 
 theorem edist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
-    edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃ + edist p₂ p₄ := by
+    edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃ + edist p₂ p₄ :=
+  by
   simp only [edist_nndist]
   apply_mod_cast nndist_vsub_vsub_le
 #align edist_vsub_vsub_le edist_vsub_vsub_le
@@ -204,12 +207,12 @@ omit V
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V]
-    [AddTorsor V P] : PseudoMetricSpace
-      P where 
+    [AddTorsor V P] : PseudoMetricSpace P
+    where
   dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
-  dist_triangle := by 
+  dist_triangle := by
     intro x y z
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
@@ -221,13 +224,13 @@ def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedA
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V]
-    [AddTorsor V P] : MetricSpace
-      P where 
+    [AddTorsor V P] : MetricSpace P
+    where
   dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   eq_of_dist_eq_zero x y h := by simpa using h
   dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
-  dist_triangle := by 
+  dist_triangle := by
     intro x y z
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
@@ -267,8 +270,8 @@ theorem uniform_continuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x
   (LipschitzWith.prodFst.vsub LipschitzWith.prodSnd).UniformContinuous
 #align uniform_continuous_vsub uniform_continuous_vsub
 
-instance (priority := 100) NormedAddTorsor.to_has_continuous_vadd :
-    HasContinuousVadd V P where continuous_vadd := uniform_continuous_vadd.Continuous
+instance (priority := 100) NormedAddTorsor.to_has_continuous_vadd : HasContinuousVadd V P
+    where continuous_vadd := uniform_continuous_vadd.Continuous
 #align normed_add_torsor.to_has_continuous_vadd NormedAddTorsor.to_has_continuous_vadd
 
 theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=

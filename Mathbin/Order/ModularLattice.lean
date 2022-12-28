@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.modular_lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,8 @@ theorem covby_sup_of_inf_covby_of_inf_covby_left : a ⊓ b ⋖ a → a ⊓ b ⋖
   IsWeakUpperModularLattice.covby_sup_of_inf_covby_covby
 #align covby_sup_of_inf_covby_of_inf_covby_left covby_sup_of_inf_covby_of_inf_covby_left
 
-theorem covby_sup_of_inf_covby_of_inf_covby_right : a ⊓ b ⋖ a → a ⊓ b ⋖ b → b ⋖ a ⊔ b := by
+theorem covby_sup_of_inf_covby_of_inf_covby_right : a ⊓ b ⋖ a → a ⊓ b ⋖ b → b ⋖ a ⊔ b :=
+  by
   rw [inf_comm, sup_comm]
   exact fun ha hb => covby_sup_of_inf_covby_of_inf_covby_left hb ha
 #align covby_sup_of_inf_covby_of_inf_covby_right covby_sup_of_inf_covby_of_inf_covby_right
@@ -119,7 +120,8 @@ theorem inf_covby_of_covby_sup_of_covby_sup_left : a ⋖ a ⊔ b → b ⋖ a ⊔
   IsWeakLowerModularLattice.inf_covby_of_covby_covby_sup
 #align inf_covby_of_covby_sup_of_covby_sup_left inf_covby_of_covby_sup_of_covby_sup_left
 
-theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ b := by
+theorem inf_covby_of_covby_sup_of_covby_sup_right : a ⋖ a ⊔ b → b ⋖ a ⊔ b → a ⊓ b ⋖ b :=
+  by
   rw [sup_comm, inf_comm]
   exact fun ha hb => inf_covby_of_covby_sup_of_covby_sup_left hb ha
 #align inf_covby_of_covby_sup_of_covby_sup_right inf_covby_of_covby_sup_of_covby_sup_right
@@ -141,7 +143,8 @@ theorem covby_sup_of_inf_covby_left : a ⊓ b ⋖ a → b ⋖ a ⊔ b :=
   IsUpperModularLattice.covby_sup_of_inf_covby
 #align covby_sup_of_inf_covby_left covby_sup_of_inf_covby_left
 
-theorem covby_sup_of_inf_covby_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b := by
+theorem covby_sup_of_inf_covby_right : a ⊓ b ⋖ b → a ⋖ a ⊔ b :=
+  by
   rw [sup_comm, inf_comm]
   exact covby_sup_of_inf_covby_left
 #align covby_sup_of_inf_covby_right covby_sup_of_inf_covby_right
@@ -170,7 +173,8 @@ theorem inf_covby_of_covby_sup_left : a ⋖ a ⊔ b → a ⊓ b ⋖ b :=
   IsLowerModularLattice.inf_covby_of_covby_sup
 #align inf_covby_of_covby_sup_left inf_covby_of_covby_sup_left
 
-theorem inf_covby_of_covby_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a := by
+theorem inf_covby_of_covby_sup_right : b ⋖ a ⊔ b → a ⊓ b ⋖ a :=
+  by
   rw [inf_comm, sup_comm]
   exact inf_covby_of_covby_sup_left
 #align inf_covby_of_covby_sup_right inf_covby_of_covby_sup_right
@@ -211,7 +215,7 @@ theorem inf_sup_assoc_of_le {x : α} (y : α) {z : α} (h : z ≤ x) : x ⊓ y �
 instance : IsModularLattice αᵒᵈ :=
   ⟨fun x y z xz =>
     le_of_eq
-      (by 
+      (by
         rw [inf_comm, sup_comm, eq_comm, inf_comm, sup_comm]
         exact @sup_inf_assoc_of_le α _ _ _ y _ xz)⟩
 
@@ -255,7 +259,8 @@ theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrder β] [Preor
     WellFounded ((· < ·) : α → α → Prop) :=
   Subrelation.wf
     (fun A B hAB =>
-      show Prod.Lex (· < ·) (· < ·) (f₂ A, g₂ A) (f₂ B, g₂ B) by
+      show Prod.Lex (· < ·) (· < ·) (f₂ A, g₂ A) (f₂ B, g₂ B)
+        by
         simp only [Prod.lex_def, lt_iff_le_not_le, ← gci.l_le_l_iff, ← gi.u_le_u_iff, hf, hg,
           le_antisymm_iff]
         simp only [gci.l_le_l_iff, gi.u_le_u_iff, ← lt_iff_le_not_le, ← le_antisymm_iff]
@@ -277,24 +282,22 @@ theorem well_founded_gt_exact_sequence {β γ : Type _} [Preorder β] [PartialOr
 
 /-- The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
 @[simps]
-def infIccOrderIsoIccSup (a b : α) :
-    Set.Icc (a ⊓ b) a ≃o
-      Set.Icc b
-        (a ⊔
-          b) where 
+def infIccOrderIsoIccSup (a b : α) : Set.Icc (a ⊓ b) a ≃o Set.Icc b (a ⊔ b)
+    where
   toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.Prop.2 b⟩⟩
   invFun x := ⟨a ⊓ x, ⟨inf_le_inf_left a x.Prop.1, inf_le_left⟩⟩
   left_inv x :=
     Subtype.ext
-      (by 
+      (by
         change a ⊓ (↑x ⊔ b) = ↑x
         rw [sup_comm, ← inf_sup_assoc_of_le _ x.prop.2, sup_eq_right.2 x.prop.1])
   right_inv x :=
     Subtype.ext
-      (by 
+      (by
         change a ⊓ ↑x ⊔ b = ↑x
         rw [inf_comm, inf_sup_assoc_of_le _ x.prop.1, inf_eq_left.2 x.prop.2])
-  map_rel_iff' x y := by
+  map_rel_iff' x y :=
+    by
     simp only [Subtype.mk_le_mk, Equiv.coe_fn_mk, and_true_iff, le_sup_right]
     rw [← Subtype.coe_le_coe]
     refine' ⟨fun h => _, fun h => sup_le_sup_right h _⟩
@@ -313,11 +316,8 @@ theorem sup_strict_mono_on_Icc_inf {a b : α} : StrictMonoOn (fun c => c ⊔ b) 
 
 /-- The diamond isomorphism between the intervals `]a ⊓ b, a[` and `}b, a ⊔ b[`. -/
 @[simps]
-def infIooOrderIsoIooSup (a b : α) :
-    Ioo (a ⊓ b) a ≃o
-      Ioo b
-        (a ⊔
-          b) where 
+def infIooOrderIsoIooSup (a b : α) : Ioo (a ⊓ b) a ≃o Ioo b (a ⊔ b)
+    where
   toFun c :=
     ⟨c ⊔ b,
       le_sup_right.trans_lt <|
@@ -329,11 +329,11 @@ def infIooOrderIsoIooSup (a b : α) :
       inf_le_left.trans_lt' <|
         inf_strict_mono_on_Icc_sup (Ioo_subset_Icc_self c.2) (right_mem_Icc.2 le_sup_right) c.2.2⟩
   left_inv c :=
-    Subtype.ext <| by 
+    Subtype.ext <| by
       dsimp
       rw [sup_comm, ← inf_sup_assoc_of_le _ c.prop.2.le, sup_eq_right.2 c.prop.1.le]
   right_inv c :=
-    Subtype.ext <| by 
+    Subtype.ext <| by
       dsimp
       rw [inf_comm, inf_sup_assoc_of_le _ c.prop.1.le, inf_eq_left.2 c.prop.2.le]
   map_rel_iff' c d :=
@@ -343,7 +343,8 @@ def infIooOrderIsoIooSup (a b : α) :
 
 -- See note [lower instance priority]
 instance (priority := 100) IsModularLattice.to_is_lower_modular_lattice : IsLowerModularLattice α :=
-  ⟨fun a b => by
+  ⟨fun a b =>
+    by
     simp_rw [covby_iff_Ioo_eq, @sup_comm _ _ a, @inf_comm _ _ a, ← is_empty_coe_sort, right_lt_sup,
       inf_lt_left, (infIooOrderIsoIooSup _ _).symm.toEquiv.is_empty_congr]
     exact id⟩
@@ -351,7 +352,8 @@ instance (priority := 100) IsModularLattice.to_is_lower_modular_lattice : IsLowe
 
 -- See note [lower instance priority]
 instance (priority := 100) IsModularLattice.to_is_upper_modular_lattice : IsUpperModularLattice α :=
-  ⟨fun a b => by
+  ⟨fun a b =>
+    by
     simp_rw [covby_iff_Ioo_eq, ← is_empty_coe_sort, right_lt_sup, inf_lt_left,
       (infIooOrderIsoIooSup _ _).toEquiv.is_empty_congr]
     exact id⟩
@@ -398,7 +400,7 @@ theorem Disjoint.disjoint_sup_right_of_disjoint_sup_left [Lattice α] [OrderBot 
 
 theorem Disjoint.disjoint_sup_left_of_disjoint_sup_right [Lattice α] [OrderBot α]
     [IsModularLattice α] {a b c : α} (h : Disjoint b c) (hsup : Disjoint a (b ⊔ c)) :
-    Disjoint (a ⊔ b) c := by 
+    Disjoint (a ⊔ b) c := by
   rw [Disjoint.comm, sup_comm]
   apply Disjoint.disjoint_sup_right_of_disjoint_sup_left h.symm
   rwa [sup_comm, Disjoint.comm] at hsup
@@ -424,7 +426,7 @@ variable [BoundedOrder α] [ComplementedLattice α]
 instance complemented_lattice_Iic : ComplementedLattice (Set.Iic a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
-    ⟨⟨y ⊓ a, Set.mem_Iic.2 inf_le_right⟩, by 
+    ⟨⟨y ⊓ a, Set.mem_Iic.2 inf_le_right⟩, by
       constructor
       · rw [disjoint_iff_inf_le]
         change x ⊓ (y ⊓ a) ≤ ⊥
@@ -440,7 +442,7 @@ instance complemented_lattice_Iic : ComplementedLattice (Set.Iic a) :=
 instance complemented_lattice_Ici : ComplementedLattice (Set.Ici a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_is_compl x
-    ⟨⟨y ⊔ a, Set.mem_Ici.2 le_sup_right⟩, by 
+    ⟨⟨y ⊔ a, Set.mem_Ici.2 le_sup_right⟩, by
       constructor
       · rw [disjoint_iff_inf_le]
         change x ⊓ (y ⊔ a) ≤ a

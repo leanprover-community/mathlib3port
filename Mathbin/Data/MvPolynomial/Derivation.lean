@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.derivation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,12 +101,13 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
         D (monomial s 1 * x i) =
           (monomial s 1 : MvPolynomial σ R) • D (x i) +
             (x i : MvPolynomial σ R) • D (monomial s 1) :=
-  by 
+  by
   refine' ⟨fun H p i => H _ _, fun H => _⟩
-  have hC : ∀ r, D (C r) = 0 := by 
+  have hC : ∀ r, D (C r) = 0 := by
     intro r
     rw [C_eq_smul_one, D.map_smul, h₁, smul_zero]
-  have : ∀ p i, D (p * X i) = p • D (X i) + (X i : MvPolynomial σ R) • D p := by
+  have : ∀ p i, D (p * X i) = p • D (X i) + (X i : MvPolynomial σ R) • D p :=
+    by
     intro p i
     induction' p using MvPolynomial.induction_on' with s r p q hp hq
     · rw [← mul_one r, ← C_mul_monomial, mul_assoc, C_mul', D.map_smul, H, C_mul', smul_assoc,
@@ -125,13 +126,13 @@ theorem leibniz_iff_X (D : MvPolynomial σ R →ₗ[R] A) (h₁ : D 1 = 0) :
 variable (R)
 
 /-- The derivation on `mv_polynomial σ R` that takes value `f i` on `X i`. -/
-def mkDerivation (f : σ → A) :
-    Derivation R (MvPolynomial σ R)
-      A where 
+def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A
+    where
   toLinearMap := mkDerivationₗ R f
   map_one_eq_zero' := mk_derivationₗ_C _ 1
   leibniz' :=
-    (leibniz_iff_X (mkDerivationₗ R f) (mk_derivationₗ_C _ 1)).2 fun s i => by
+    (leibniz_iff_X (mkDerivationₗ R f) (mk_derivationₗ_C _ 1)).2 fun s i =>
+      by
       simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mul]
       rw [Finsupp.sum_add_index] <;> [skip, · simp,
         · intros

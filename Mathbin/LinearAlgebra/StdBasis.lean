@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.std_basis
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,8 @@ theorem std_basis_apply (i : ι) (b : φ i) : stdBasis R φ i b = update 0 i b :
 #align linear_map.std_basis_apply LinearMap.std_basis_apply
 
 @[simp]
-theorem std_basis_apply' (i i' : ι) : (stdBasis R (fun _x : ι => R) i) 1 i' = ite (i = i') 1 0 := by
+theorem std_basis_apply' (i i' : ι) : (stdBasis R (fun _x : ι => R) i) 1 i' = ite (i = i') 1 0 :=
+  by
   rw [LinearMap.std_basis_apply, Function.update_apply, Pi.zero_apply]
   congr 1; rw [eq_iff_iff, eq_comm]
 #align linear_map.std_basis_apply' LinearMap.std_basis_apply'
@@ -77,7 +78,8 @@ theorem std_basis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j =
   Pi.single_eq_of_ne h b
 #align linear_map.std_basis_ne LinearMap.std_basis_ne
 
-theorem std_basis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) := by
+theorem std_basis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) :=
+  by
   ext (x j)
   convert (update_apply 0 x i j _).symm
   rfl
@@ -100,7 +102,8 @@ theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (stdBasis R �
 #align linear_map.proj_std_basis_ne LinearMap.proj_std_basis_ne
 
 theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
-    (⨆ i ∈ I, range (stdBasis R φ i)) ≤ ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
+    (⨆ i ∈ I, range (stdBasis R φ i)) ≤ ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) :=
+  by
   refine' supᵢ_le fun i => supᵢ_le fun hi => range_le_iff_comap.2 _
   simp only [(ker_comp _ _).symm, eq_top_iff, SetLike.le_def, mem_ker, comap_infi, mem_infi]
   rintro b - j hj
@@ -113,7 +116,7 @@ theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) 
 theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu : Set.univ ⊆ ↑I ∪ J) :
     (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i)) ≤ ⨆ i ∈ I, range (stdBasis R φ i) :=
   SetLike.le_def.2
-    (by 
+    (by
       intro b hb
       simp only [mem_infi, mem_ker, proj_apply] at hb
       rw [←
@@ -130,7 +133,8 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
 
 theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J)
     (hu : Set.univ ⊆ I ∪ J) (hI : Set.Finite I) :
-    (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) := by
+    (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) :=
+  by
   refine' le_antisymm (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
   have : Set.univ ⊆ ↑hI.to_finset ∪ J := by rwa [hI.coe_to_finset]
   refine' le_trans (infi_ker_proj_le_supr_range_std_basis R φ this) (supᵢ_mono fun i => _)
@@ -139,7 +143,8 @@ theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J)
 #align
   linear_map.supr_range_std_basis_eq_infi_ker_proj LinearMap.supr_range_std_basis_eq_infi_ker_proj
 
-theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = ⊤ := by
+theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = ⊤ :=
+  by
   cases nonempty_fintype ι
   convert top_unique (infi_emptyset.ge.trans <| infi_ker_proj_le_supr_range_std_basis R φ _)
   ·
@@ -150,14 +155,15 @@ theorem supr_range_std_basis [Finite ι] : (⨆ i, range (stdBasis R φ i)) = �
 #align linear_map.supr_range_std_basis LinearMap.supr_range_std_basis
 
 theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
-    Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) := by
+    Disjoint (⨆ i ∈ I, range (stdBasis R φ i)) (⨆ i ∈ J, range (stdBasis R φ i)) :=
+  by
   refine'
     Disjoint.mono (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right)
       (supr_range_std_basis_le_infi_ker_proj _ _ _ _ <| disjoint_compl_right) _
   simp only [disjoint_iff_inf_le, SetLike.le_def, mem_infi, mem_inf, mem_ker, mem_bot, proj_apply,
     funext_iff]
   rintro b ⟨hI, hJ⟩ i
-  classical 
+  classical
     by_cases hiI : i ∈ I
     · by_cases hiJ : i ∈ J
       · exact (h.le_bot ⟨hiI, hiJ⟩).elim
@@ -186,22 +192,25 @@ variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
 theorem linear_independent_std_basis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ i, Module R (Ms i)]
     [DecidableEq η] (v : ∀ j, ιs j → Ms j) (hs : ∀ i, LinearIndependent R (v i)) :
-    LinearIndependent R fun ji : Σj, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) := by
-  have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i) := by
+    LinearIndependent R fun ji : Σj, ιs j => stdBasis R Ms ji.1 (v ji.1 ji.2) :=
+  by
+  have hs' : ∀ j : η, LinearIndependent R fun i : ιs j => std_basis R Ms j (v j i) :=
+    by
     intro j
     exact (hs j).map' _ (ker_std_basis _ _ _)
   apply linear_independent_Union_finite hs'
   · intro j J _ hiJ
-    simp [(Set.union.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
+    simp [(Set.unionᵢ.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_Union]
     have h₀ :
-      ∀ j, span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤ range (std_basis R Ms j) := by
+      ∀ j, span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤ range (std_basis R Ms j) :=
+      by
       intro j
       rw [span_le, LinearMap.range_coe]
       apply range_comp_subset_range
     have h₁ :
       span R (range fun i : ιs j => std_basis R Ms j (v j i)) ≤
         ⨆ i ∈ {j}, range (std_basis R Ms i) :=
-      by 
+      by
       rw [@supᵢ_singleton _ _ _ fun i => LinearMap.range (std_basis R (fun j : η => Ms j) i)]
       apply h₀
     have h₂ :
@@ -237,7 +246,8 @@ protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) :
 
 @[simp]
 theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) (j i) :
-    (Pi.basis s).repr (stdBasis R _ j (s j i)) = Finsupp.single ⟨j, i⟩ 1 := by
+    (Pi.basis s).repr (stdBasis R _ j (s j i)) = Finsupp.single ⟨j, i⟩ 1 :=
+  by
   ext ⟨j', i'⟩
   by_cases hj : j = j'
   · subst hj
@@ -280,7 +290,8 @@ noncomputable def basisFun : Basis η R (∀ j : η, R) :=
 #align pi.basis_fun Pi.basisFun
 
 @[simp]
-theorem basis_fun_apply [DecidableEq η] (i) : basisFun R η i = stdBasis R (fun i : η => R) i 1 := by
+theorem basis_fun_apply [DecidableEq η] (i) : basisFun R η i = stdBasis R (fun i : η => R) i 1 :=
+  by
   simp only [basis_fun, Basis.coe_of_equiv_fun, LinearEquiv.refl_symm, LinearEquiv.refl_apply,
     std_basis_apply]
   congr
@@ -309,7 +320,8 @@ noncomputable def stdBasis : Basis (m × n) R (Matrix m n R) :=
 variable {n m}
 
 theorem std_basis_eq_std_basis_matrix (i : n) (j : m) [DecidableEq n] [DecidableEq m] :
-    stdBasis R n m (i, j) = stdBasisMatrix i j (1 : R) := by
+    stdBasis R n m (i, j) = stdBasisMatrix i j (1 : R) :=
+  by
   ext (a b)
   by_cases hi : i = a <;> by_cases hj : j = b
   · simp [std_basis, hi, hj]

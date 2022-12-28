@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.centralizer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,17 +51,17 @@ namespace LieSubmodule
 variable (N : LieSubmodule R L M) {N₁ N₂ : LieSubmodule R L M}
 
 /-- The centralizer of a Lie submodule. -/
-def centralizer :
-    LieSubmodule R L M where 
+def centralizer : LieSubmodule R L M
+    where
   carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
-  add_mem' m₁ m₂ hm₁ hm₂ x := by 
+  add_mem' m₁ m₂ hm₁ hm₂ x := by
     rw [lie_add]
     exact N.add_mem' (hm₁ x) (hm₂ x)
   zero_mem' x := by simp
-  smul_mem' t m hm x := by 
+  smul_mem' t m hm x := by
     rw [lie_smul]
     exact N.smul_mem' t (hm x)
-  lie_mem x m hm y := by 
+  lie_mem x m hm y := by
     rw [leibniz_lie]
     exact N.add_mem' (hm ⁅y, x⁆) (N.lie_mem (hm y))
 #align lie_submodule.centralizer LieSubmodule.centralizer
@@ -71,32 +71,37 @@ theorem mem_centralizer (m : M) : m ∈ N.centralizer ↔ ∀ x : L, ⁅x, m⁆ 
   Iff.rfl
 #align lie_submodule.mem_centralizer LieSubmodule.mem_centralizer
 
-theorem le_centralizer : N ≤ N.centralizer := by
+theorem le_centralizer : N ≤ N.centralizer :=
+  by
   intro m hm
   rw [mem_centralizer]
   exact fun x => N.lie_mem hm
 #align lie_submodule.le_centralizer LieSubmodule.le_centralizer
 
-theorem centralizer_inf : (N₁ ⊓ N₂).centralizer = N₁.centralizer ⊓ N₂.centralizer := by
+theorem centralizer_inf : (N₁ ⊓ N₂).centralizer = N₁.centralizer ⊓ N₂.centralizer :=
+  by
   ext
   simp [← forall_and]
 #align lie_submodule.centralizer_inf LieSubmodule.centralizer_inf
 
 @[mono]
-theorem monotone_centalizer : Monotone (centralizer : LieSubmodule R L M → LieSubmodule R L M) := by
+theorem monotone_centalizer : Monotone (centralizer : LieSubmodule R L M → LieSubmodule R L M) :=
+  by
   intro N₁ N₂ h m hm
   rw [mem_centralizer] at hm⊢
   exact fun x => h (hm x)
 #align lie_submodule.monotone_centalizer LieSubmodule.monotone_centalizer
 
 @[simp]
-theorem comap_centralizer (f : M' →ₗ⁅R,L⁆ M) : N.centralizer.comap f = (N.comap f).centralizer := by
+theorem comap_centralizer (f : M' →ₗ⁅R,L⁆ M) : N.centralizer.comap f = (N.comap f).centralizer :=
+  by
   ext
   simp
 #align lie_submodule.comap_centralizer LieSubmodule.comap_centralizer
 
 theorem top_lie_le_iff_le_centralizer (N' : LieSubmodule R L M) :
-    ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.centralizer := by
+    ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.centralizer :=
+  by
   rw [lie_le_iff]
   tauto
 #align lie_submodule.top_lie_le_iff_le_centralizer LieSubmodule.top_lie_le_iff_le_centralizer
@@ -124,17 +129,20 @@ variable (H : LieSubalgebra R L)
 subalgebra. This is called the normalizer of the Lie subalgebra. -/
 def normalizer : LieSubalgebra R L :=
   { H.toLieSubmodule.centralizer with
-    lie_mem' := fun y z hy hz x => by
+    lie_mem' := fun y z hy hz x =>
+      by
       rw [coe_bracket_of_module, mem_to_lie_submodule, leibniz_lie, ← lie_skew y, ← sub_eq_add_neg]
       exact H.sub_mem (hz ⟨_, hy x⟩) (hy ⟨_, hz x⟩) }
 #align lie_subalgebra.normalizer LieSubalgebra.normalizer
 
-theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y, x⁆ ∈ H := by
+theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y, x⁆ ∈ H :=
+  by
   rw [Subtype.forall']
   rfl
 #align lie_subalgebra.mem_normalizer_iff' LieSubalgebra.mem_normalizer_iff'
 
-theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x, y⁆ ∈ H := by
+theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x, y⁆ ∈ H :=
+  by
   rw [mem_normalizer_iff']
   refine' forall₂_congr fun y hy => _
   rw [← lie_skew, neg_mem_iff]
@@ -152,7 +160,8 @@ theorem coe_centralizer_eq_normalizer :
 variable {H}
 
 theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy : y ∈ (R ∙ x) ⊔ ↑H)
-    (hz : z ∈ (R ∙ x) ⊔ ↑H) : ⁅y, z⁆ ∈ (R ∙ x) ⊔ ↑H := by
+    (hz : z ∈ (R ∙ x) ⊔ ↑H) : ⁅y, z⁆ ∈ (R ∙ x) ⊔ ↑H :=
+  by
   rw [Submodule.mem_sup] at hy hz
   obtain ⟨u₁, hu₁, v, hv : v ∈ H, rfl⟩ := hy
   obtain ⟨u₂, hu₂, w, hw : w ∈ H, rfl⟩ := hz
@@ -166,7 +175,8 @@ theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy 
 #align lie_subalgebra.lie_mem_sup_of_mem_normalizer LieSubalgebra.lie_mem_sup_of_mem_normalizer
 
 /-- A Lie subalgebra is an ideal of its normalizer. -/
-theorem ideal_in_normalizer {x y : L} (hx : x ∈ H.normalizer) (hy : y ∈ H) : ⁅x, y⁆ ∈ H := by
+theorem ideal_in_normalizer {x y : L} (hx : x ∈ H.normalizer) (hy : y ∈ H) : ⁅x, y⁆ ∈ H :=
+  by
   rw [← lie_skew, neg_mem_iff]
   exact hx ⟨y, hy⟩
 #align lie_subalgebra.ideal_in_normalizer LieSubalgebra.ideal_in_normalizer
@@ -174,7 +184,8 @@ theorem ideal_in_normalizer {x y : L} (hx : x ∈ H.normalizer) (hy : y ∈ H) :
 /-- A Lie subalgebra `H` is an ideal of any Lie subalgebra `K` containing `H` and contained in the
 normalizer of `H`. -/
 theorem exists_nested_lie_ideal_of_le_normalizer {K : LieSubalgebra R L} (h₁ : H ≤ K)
-    (h₂ : K ≤ H.normalizer) : ∃ I : LieIdeal R K, (I : LieSubalgebra R K) = ofLe h₁ := by
+    (h₂ : K ≤ H.normalizer) : ∃ I : LieIdeal R K, (I : LieSubalgebra R K) = ofLe h₁ :=
+  by
   rw [exists_nested_lie_ideal_coe_eq_iff]
   exact fun x y hx hy => ideal_in_normalizer (h₂ hx) hy
 #align
@@ -183,7 +194,8 @@ theorem exists_nested_lie_ideal_of_le_normalizer {K : LieSubalgebra R L} (h₁ :
 variable (H)
 
 theorem normalizer_eq_self_iff :
-    H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H <| L ⧸ H.toLieSubmodule) = ⊥ := by
+    H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H <| L ⧸ H.toLieSubmodule) = ⊥ :=
+  by
   rw [LieSubmodule.eq_bot_iff]
   refine' ⟨fun h => _, fun h => le_antisymm (fun x hx => _) H.le_normalizer⟩
   · rintro ⟨x⟩ hx
@@ -193,7 +205,8 @@ theorem normalizer_eq_self_iff :
     replace hx : ⁅_, LieSubmodule.Quotient.mk' _ x⁆ = 0 := hx ⟨y, hy⟩
     rwa [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero] at hx
   · let y := LieSubmodule.Quotient.mk' H.to_lie_submodule x
-    have hy : y ∈ LieModule.maxTrivSubmodule R H (L ⧸ H.to_lie_submodule) := by
+    have hy : y ∈ LieModule.maxTrivSubmodule R H (L ⧸ H.to_lie_submodule) :=
+      by
       rintro ⟨z, hz⟩
       rw [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero, coe_bracket_of_module,
         Submodule.coe_mk, mem_to_lie_submodule]

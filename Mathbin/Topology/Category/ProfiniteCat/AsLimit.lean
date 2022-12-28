@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.as_limit
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,8 +45,8 @@ universe u
 variable (X : ProfiniteCat.{u})
 
 /-- The functor `discrete_quotient X ⥤ Fintype` whose limit is isomorphic to `X`. -/
-def fintypeDiagram :
-    DiscreteQuotient X ⥤ FintypeCat where 
+def fintypeDiagram : DiscreteQuotient X ⥤ FintypeCat
+    where
   obj S := FintypeCat.of S
   map S T f := DiscreteQuotient.ofLe f.le
 #align Profinite.fintype_diagram ProfiniteCat.fintypeDiagram
@@ -64,7 +64,7 @@ def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
 
 instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
   is_iso_of_bijective _
-    (by 
+    (by
       refine' ⟨fun a b => _, fun a => _⟩
       · intro h
         refine' DiscreteQuotient.eq_of_proj_eq fun S => _

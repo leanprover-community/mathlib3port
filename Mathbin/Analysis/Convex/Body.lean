@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul A. Reichert
 
 ! This file was ported from Lean 3 source module analysis.convex.body
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,10 +54,10 @@ namespace ConvexBody
 
 variable {V}
 
-instance : SetLike (ConvexBody V)
-      V where 
+instance : SetLike (ConvexBody V) V
+    where
   coe := ConvexBody.carrier
-  coe_injective' K L h := by 
+  coe_injective' K L h := by
     cases K
     cases L
     congr
@@ -84,22 +84,20 @@ theorem coe_mk (s : Set V) (h₁ h₂ h₃) : (mk s h₁ h₂ h₃ : Set V) = s 
   rfl
 #align convex_body.coe_mk ConvexBody.coe_mk
 
-instance :
-    AddMonoid
-      (ConvexBody
-        V) where
+instance : AddMonoid (ConvexBody V)
+    where
   -- we cannot write K + L to avoid reducibility issues with the set.has_add instance
   add K L :=
     ⟨Set.image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact,
       K.Nonempty.add L.Nonempty⟩
-  add_assoc K L M := by 
+  add_assoc K L M := by
     ext
     simp only [coe_mk, Set.image2_add, add_assoc]
   zero := ⟨0, convex_singleton 0, is_compact_singleton, Set.singleton_nonempty 0⟩
-  zero_add K := by 
+  zero_add K := by
     ext
     simp only [coe_mk, Set.image2_add, zero_add]
-  add_zero K := by 
+  add_zero K := by
     ext
     simp only [coe_mk, Set.image2_add, add_zero]
 
@@ -118,34 +116,31 @@ instance : Inhabited (ConvexBody V) :=
 
 instance : AddCommMonoid (ConvexBody V) :=
   { ConvexBody.addMonoid with
-    add_comm := fun K L => by 
+    add_comm := fun K L => by
       ext
       simp only [coe_add, add_comm] }
 
-instance :
-    HasSmul ℝ
-      (ConvexBody
-        V) where smul c K :=
-    ⟨c • (K : Set V), K.Convex.smul _, K.IsCompact.smul _, K.Nonempty.smul_set⟩
+instance : HasSmul ℝ (ConvexBody V)
+    where smul c K := ⟨c • (K : Set V), K.Convex.smul _, K.IsCompact.smul _, K.Nonempty.smul_set⟩
 
 @[simp]
 theorem coe_smul (c : ℝ) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=
   rfl
 #align convex_body.coe_smul ConvexBody.coe_smul
 
-instance : DistribMulAction ℝ
-      (ConvexBody V) where 
+instance : DistribMulAction ℝ (ConvexBody V)
+    where
   toHasSmul := ConvexBody.hasSmul
-  one_smul K := by 
+  one_smul K := by
     ext
     simp only [coe_smul, one_smul]
-  mul_smul c d K := by 
+  mul_smul c d K := by
     ext
     simp only [coe_smul, mul_smul]
-  smul_add c K L := by 
+  smul_add c K L := by
     ext
     simp only [coe_smul, coe_add, smul_add]
-  smul_zero c := by 
+  smul_zero c := by
     ext
     simp only [coe_smul, coe_zero, smul_zero]
 
@@ -156,15 +151,13 @@ theorem coe_smul' (c : ℝ≥0) (K : ConvexBody V) : (↑(c • K) : Set V) = c 
 
 /-- The convex bodies in a fixed space $V$ form a module over the nonnegative reals.
 -/
-instance :
-    Module ℝ≥0
-      (ConvexBody
-        V) where 
-  add_smul c d K := by 
+instance : Module ℝ≥0 (ConvexBody V)
+    where
+  add_smul c d K := by
     ext1
     simp only [coe_smul, coe_add]
     exact Convex.add_smul K.convex (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _)
-  zero_smul K := by 
+  zero_smul K := by
     ext1
     exact Set.zero_smul_set K.nonempty
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,11 +67,8 @@ theorem pi_map_π_apply {β : Type u} {f g : β → Type u} (α : ∀ j, f j ⟶
 #align category_theory.limits.types.pi_map_π_apply CategoryTheory.Limits.Types.pi_map_π_apply
 
 /-- The category of types has `punit` as a terminal object. -/
-def terminalLimitCone :
-    Limits.LimitCone
-      (Functor.empty
-        (Type
-          u)) where 
+def terminalLimitCone : Limits.LimitCone (Functor.empty (Type u))
+    where
   Cone :=
     { x := PUnit
       π := by tidy }
@@ -90,11 +87,8 @@ noncomputable def isTerminalPunit : IsTerminal (PUnit : Type u) :=
 #align category_theory.limits.types.is_terminal_punit CategoryTheory.Limits.Types.isTerminalPunit
 
 /-- The category of types has `pempty` as an initial object. -/
-def initialColimitCocone :
-    Limits.ColimitCocone
-      (Functor.empty
-        (Type
-          u)) where 
+def initialColimitCocone : Limits.ColimitCocone (Functor.empty (Type u))
+    where
   Cocone :=
     { x := PEmpty
       ι := by tidy }
@@ -137,10 +131,8 @@ theorem binary_product_cone_snd (X Y : Type u) : (binaryProductCone X Y).snd = P
 
 /-- The product type `X × Y` is a binary product for `X` and `Y`. -/
 @[simps]
-def binaryProductLimit (X Y : Type u) :
-    IsLimit
-      (binaryProductCone X
-        Y) where 
+def binaryProductLimit (X Y : Type u) : IsLimit (binaryProductCone X Y)
+    where
   lift (s : BinaryFan X Y) x := (s.fst x, s.snd x)
   fac' s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
   uniq' s m w := funext fun x => Prod.ext (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
@@ -193,11 +185,8 @@ theorem binary_product_iso_inv_comp_snd (X Y : Type u) :
 -- a function type
 /-- The functor which sends `X, Y` to the product type `X × Y`. -/
 @[simps (config := { typeMd := reducible })]
-def binaryProductFunctor :
-    Type u ⥤
-      Type u ⥤
-        Type
-          u where 
+def binaryProductFunctor : Type u ⥤ Type u ⥤ Type u
+    where
   obj X :=
     { obj := fun Y => X × Y
       map := fun Y₁ Y₂ f => (binaryProductLimit X Y₂).lift (BinaryFan.mk Prod.fst (Prod.snd ≫ f)) }
@@ -209,7 +198,8 @@ def binaryProductFunctor :
 /-- The product functor given by the instance `has_binary_products (Type u)` is isomorphic to the
 explicit binary product functor given by the product type.
 -/
-noncomputable def binaryProductIsoProd : binary_product_functor ≅ (prod.functor : Type u ⥤ _) := by
+noncomputable def binaryProductIsoProd : binary_product_functor ≅ (prod.functor : Type u ⥤ _) :=
+  by
   apply nat_iso.of_components (fun X => _) _
   · apply nat_iso.of_components (fun Y => _) _
     · exact ((limit.is_limit _).conePointUniqueUpToIso (binary_product_limit X Y)).symm
@@ -229,10 +219,8 @@ def binaryCoproductCocone (X Y : Type u) : Cocone (pair X Y) :=
 
 /-- The sum type `X ⊕ Y` is a binary coproduct for `X` and `Y`. -/
 @[simps]
-def binaryCoproductColimit (X Y : Type u) :
-    IsColimit
-      (binaryCoproductCocone X
-        Y) where 
+def binaryCoproductColimit (X Y : Type u) : IsColimit (binaryCoproductCocone X Y)
+    where
   desc := fun s : BinaryCofan X Y => Sum.elim s.inl s.inr
   fac' s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
   uniq' s m w := funext fun x => Sum.casesOn x (congr_fun (w ⟨left⟩)) (congr_fun (w ⟨right⟩))
@@ -289,7 +277,7 @@ theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) :=
   by
-  classical 
+  classical
     constructor
     · rintro ⟨h⟩
       rw [←
@@ -315,7 +303,8 @@ theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
       congr 1
       exact set.compl_range_inr.symm
     · rintro ⟨h₁, h₂, h₃⟩
-      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr := by
+      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr :=
+        by
         rw [eq_compl_iff_is_compl.mpr h₃.symm]
         exact fun _ => or_not
       refine' ⟨binary_cofan.is_colimit.mk _ _ _ _ _⟩
@@ -354,10 +343,8 @@ noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
 
 /-- The category of types has `Π j, f j` as the product of a type family `f : J → Type`.
 -/
-def productLimitCone {J : Type u} (F : J → Type max u v) :
-    Limits.LimitCone
-      (Discrete.functor
-        F) where 
+def productLimitCone {J : Type u} (F : J → Type max u v) : Limits.LimitCone (Discrete.functor F)
+    where
   Cone :=
     { x := ∀ j, F j
       π := { app := fun j f => f j.as } }
@@ -387,16 +374,14 @@ theorem product_iso_inv_comp_π {J : Type u} (F : J → Type max u v) (j : J) :
 
 /-- The category of types has `Σ j, f j` as the coproduct of a type family `f : J → Type`.
 -/
-def coproductColimitCocone {J : Type u} (F : J → Type u) :
-    Limits.ColimitCocone
-      (Discrete.functor
-        F) where 
+def coproductColimitCocone {J : Type u} (F : J → Type u) : Limits.ColimitCocone (Discrete.functor F)
+    where
   Cocone :=
     { x := Σj, F j
       ι := { app := fun j x => ⟨j.as, x⟩ } }
   IsColimit :=
     { desc := fun s x => s.ι.app ⟨x.1⟩ x.2
-      uniq' := fun s m w => by 
+      uniq' := fun s m w => by
         ext ⟨j, x⟩
         have := congr_fun (w ⟨j⟩) x
         exact this }
@@ -433,7 +418,7 @@ The converse of `unique_of_type_equalizer`.
 -/
 noncomputable def typeEqualizerOfUnique (t : ∀ y : Y, g y = h y → ∃! x : X, f x = y) :
     IsLimit (Fork.ofι _ w) :=
-  (Fork.IsLimit.mk' _) fun s => by 
+  (Fork.IsLimit.mk' _) fun s => by
     refine' ⟨fun i => _, _, _⟩
     · apply Classical.choose (t (s.ι i) _)
       apply congr_fun s.condition i
@@ -448,7 +433,7 @@ noncomputable def typeEqualizerOfUnique (t : ∀ y : Y, g y = h y → ∃! x : X
 
 /-- The converse of `type_equalizer_of_unique`. -/
 theorem unique_of_type_equalizer (t : IsLimit (Fork.ofι _ w)) (y : Y) (hy : g y = h y) :
-    ∃! x : X, f x = y := by 
+    ∃! x : X, f x = y := by
   let y' : PUnit ⟶ Y := fun _ => y
   have hy' : y' ≫ g = y' ≫ h := funext fun _ => hy
   refine' ⟨(fork.is_limit.lift' t _ hy').1 ⟨⟩, congr_fun (fork.is_limit.lift' t y' _).2 ⟨⟩, _⟩
@@ -469,10 +454,8 @@ theorem type_equalizer_iff_unique :
   category_theory.limits.types.type_equalizer_iff_unique CategoryTheory.Limits.Types.type_equalizer_iff_unique
 
 /-- Show that the subtype `{x : Y // g x = h x}` is an equalizer for the pair `(g,h)`. -/
-def equalizerLimit :
-    Limits.LimitCone
-      (parallelPair g
-        h) where 
+def equalizerLimit : Limits.LimitCone (parallelPair g h)
+    where
   Cone := Fork.ofι (Subtype.val : { x : Y // g x = h x } → Y) (funext Subtype.prop)
   IsLimit :=
     (Fork.IsLimit.mk' _) fun s =>
@@ -507,21 +490,20 @@ variable {X Y Z : Type u} (f g : X ⟶ Y)
 
 /-- (Implementation) The relation to be quotiented to obtain the coequalizer. -/
 inductive CoequalizerRel : Y → Y → Prop
-  | rel (x : X) : coequalizer_rel (f x) (g x)
+  | Rel (x : X) : coequalizer_rel (f x) (g x)
 #align category_theory.limits.types.coequalizer_rel CategoryTheory.Limits.Types.CoequalizerRel
 
 /-- Show that the quotient by the relation generated by `f(x) ~ g(x)`
 is a coequalizer for the pair `(f, g)`.
 -/
-def coequalizerColimit :
-    Limits.ColimitCocone
-      (parallelPair f
-        g) where 
+def coequalizerColimit : Limits.ColimitCocone (parallelPair f g)
+    where
   Cocone :=
     Cofork.ofπ (Quot.mk (CoequalizerRel f g)) (funext fun x => Quot.sound (CoequalizerRel.rel x))
   IsColimit :=
     (Cofork.IsColimit.mk' _) fun s =>
-      ⟨Quot.lift s.π fun a b (h : CoequalizerRel f g a b) => by
+      ⟨Quot.lift s.π fun a b (h : CoequalizerRel f g a b) =>
+          by
           cases h
           exact congr_fun s.condition h_1,
         rfl, fun m hm => funext fun x => Quot.induction_on x (congr_fun hm : _)⟩
@@ -532,8 +514,10 @@ def coequalizerColimit :
 then `π ⁻¹' (π '' U) = U`.
 -/
 theorem coequalizer_preimage_image_eq_of_preimage_eq (π : Y ⟶ Z) (e : f ≫ π = g ≫ π)
-    (h : IsColimit (Cofork.ofπ π e)) (U : Set Y) (H : f ⁻¹' U = g ⁻¹' U) : π ⁻¹' (π '' U) = U := by
-  have lem : ∀ x y, coequalizer_rel f g x y → (x ∈ U ↔ y ∈ U) := by
+    (h : IsColimit (Cofork.ofπ π e)) (U : Set Y) (H : f ⁻¹' U = g ⁻¹' U) : π ⁻¹' (π '' U) = U :=
+  by
+  have lem : ∀ x y, coequalizer_rel f g x y → (x ∈ U ↔ y ∈ U) :=
+    by
     rintro _ _ ⟨x⟩
     change x ∈ f ⁻¹' U ↔ x ∈ g ⁻¹' U
     congr 2
@@ -611,8 +595,8 @@ abbrev pullbackCone : Limits.PullbackCone f g :=
 for given `f` and `g`.
 -/
 @[simps]
-def pullbackLimitCone (f : X ⟶ Z) (g : Y ⟶ Z) :
-    Limits.LimitCone (cospan f g) where 
+def pullbackLimitCone (f : X ⟶ Z) (g : Y ⟶ Z) : Limits.LimitCone (cospan f g)
+    where
   Cone := pullbackCone f g
   IsLimit :=
     PullbackCone.isLimitAux _ (fun s x => ⟨⟨s.fst x, s.snd x⟩, congr_fun s.condition x⟩) (by tidy)

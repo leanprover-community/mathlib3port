@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.Fintype
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,9 +78,8 @@ theorem comp_apply {X Y Z : FintypeCat} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f
 -- See `equiv_equiv_iso` in the root namespace for the analogue in `Type`.
 /-- Equivalences between finite types are the same as isomorphisms in `Fintype`. -/
 @[simps]
-def equivEquivIso {A B : FintypeCat} :
-    A ≃ B ≃
-      (A ≅ B) where 
+def equivEquivIso {A B : FintypeCat} : A ≃ B ≃ (A ≅ B)
+    where
   toFun e :=
     { Hom := e
       inv := e.symm }
@@ -126,9 +125,8 @@ theorem ext (X Y : Skeleton) : X.len = Y.len → X = Y :=
   ULift.ext _ _
 #align Fintype.skeleton.ext FintypeCat.Skeleton.ext
 
-instance :
-    SmallCategory
-      Skeleton.{u} where 
+instance : SmallCategory Skeleton.{u}
+    where
   Hom X Y := ULift.{u} (Fin X.len) → ULift.{u} (Fin Y.len)
   id _ := id
   comp _ _ _ f g := g ∘ f
@@ -139,13 +137,13 @@ theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
       Nonempty.intro <|
         { toFun := fun x => (h.Hom ⟨x⟩).down
           invFun := fun x => (h.inv ⟨x⟩).down
-          left_inv := by 
+          left_inv := by
             intro a
             change ULift.down _ = _
             rw [ULift.up_down]
             change ((h.hom ≫ h.inv) _).down = _
             simpa
-          right_inv := by 
+          right_inv := by
             intro a
             change ULift.down _ = _
             rw [ULift.up_down]
@@ -154,9 +152,8 @@ theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
 #align Fintype.skeleton.is_skeletal FintypeCat.Skeleton.is_skeletal
 
 /-- The canonical fully faithful embedding of `Fintype.skeleton` into `Fintype`. -/
-def incl :
-    skeleton.{u} ⥤
-      FintypeCat.{u} where 
+def incl : skeleton.{u} ⥤ FintypeCat.{u}
+    where
   obj X := FintypeCat.of (ULift (Fin X.len))
   map _ _ f := f
 #align Fintype.skeleton.incl FintypeCat.Skeleton.incl
@@ -182,7 +179,8 @@ noncomputable def equivalence : skeleton ≌ FintypeCat :=
 #align Fintype.skeleton.equivalence FintypeCat.Skeleton.equivalence
 
 @[simp]
-theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n := by
+theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n :=
+  by
   convert Finset.card_fin n
   apply Fintype.of_equiv_card
 #align Fintype.skeleton.incl_mk_nat_card FintypeCat.Skeleton.incl_mk_nat_card
@@ -190,9 +188,8 @@ theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n := by
 end Skeleton
 
 /-- `Fintype.skeleton` is a skeleton of `Fintype`. -/
-noncomputable def isSkeleton :
-    IsSkeletonOf FintypeCat Skeleton
-      Skeleton.incl where 
+noncomputable def isSkeleton : IsSkeletonOf FintypeCat Skeleton Skeleton.incl
+    where
   skel := Skeleton.is_skeletal
   eqv := by infer_instance
 #align Fintype.is_skeleton FintypeCat.isSkeleton

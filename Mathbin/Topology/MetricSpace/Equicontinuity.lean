@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.metric_space.equicontinuity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ protected theorem equicontinuous_at_iff_pair {ι : Type _} [TopologicalSpace β]
     {x₀ : β} :
     EquicontinuousAt F x₀ ↔
       ∀ ε > 0, ∃ U ∈ 𝓝 x₀, ∀ (x) (_ : x ∈ U) (x') (_ : x' ∈ U), ∀ i, dist (F i x) (F i x') < ε :=
-  by 
+  by
   rw [equicontinuous_at_iff_pair]
   constructor <;> intro H
   · intro ε hε
@@ -97,7 +97,8 @@ equicontinuity at a point is to show that all of the functions share a common *l
 modulus. -/
 theorem equicontinuous_at_of_continuity_modulus {ι : Type _} [TopologicalSpace β] {x₀ : β}
     (b : β → ℝ) (b_lim : Tendsto b (𝓝 x₀) (𝓝 0)) (F : ι → β → α)
-    (H : ∀ᶠ x in 𝓝 x₀, ∀ i, dist (F i x₀) (F i x) ≤ b x) : EquicontinuousAt F x₀ := by
+    (H : ∀ᶠ x in 𝓝 x₀, ∀ i, dist (F i x₀) (F i x) ≤ b x) : EquicontinuousAt F x₀ :=
+  by
   rw [Metric.equicontinuous_at_iff_right]
   intro ε ε0
   filter_upwards [b_lim (Iio_mem_nhds ε0), H] using fun x hx₁ hx₂ i => (hx₂ i).trans_lt hx₁
@@ -108,7 +109,8 @@ uniform equicontinuity is to show that all of the functions share a common *glob
 modulus. -/
 theorem uniform_equicontinuous_of_continuity_modulus {ι : Type _} [PseudoMetricSpace β] (b : ℝ → ℝ)
     (b_lim : Tendsto b (𝓝 0) (𝓝 0)) (F : ι → β → α)
-    (H : ∀ (x y : β) (i), dist (F i x) (F i y) ≤ b (dist x y)) : UniformEquicontinuous F := by
+    (H : ∀ (x y : β) (i), dist (F i x) (F i y) ≤ b (dist x y)) : UniformEquicontinuous F :=
+  by
   rw [Metric.uniform_equicontinuous_iff]
   intro ε ε0
   rcases tendsto_nhds_nhds.1 b_lim ε ε0 with ⟨δ, δ0, hδ⟩

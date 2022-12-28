@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.bifunctor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,8 +120,8 @@ instance Bifunctor.const : Bifunctor Const where bimap α α' β β f _ := f
 instance IsLawfulBifunctor.const : IsLawfulBifunctor Const := by refine' { .. } <;> intros <;> rfl
 #align is_lawful_bifunctor.const IsLawfulBifunctor.const
 
-instance Bifunctor.flip :
-    Bifunctor (flip F) where bimap α α' β β' f f' x := (bimap f' f x : F β' α')
+instance Bifunctor.flip : Bifunctor (flip F)
+    where bimap α α' β β' f f' x := (bimap f' f x : F β' α')
 #align bifunctor.flip Bifunctor.flip
 
 instance IsLawfulBifunctor.flip [IsLawfulBifunctor F] : IsLawfulBifunctor (flip F) := by
@@ -138,18 +138,17 @@ instance (priority := 10) Bifunctor.functor {α} : Functor (F α) where map _ _ 
 #align bifunctor.functor Bifunctor.functor
 
 instance (priority := 10) Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} :
-    IsLawfulFunctor (F α) := by refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
+    LawfulFunctor (F α) := by refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
 #align bifunctor.is_lawful_functor Bifunctor.is_lawful_functor
 
 section Bicompl
 
 variable (G : Type _ → Type u₀) (H : Type _ → Type u₁) [Functor G] [Functor H]
 
-instance :
-    Bifunctor
-      (bicompl F G H) where bimap α α' β β' f f' x := (bimap (map f) (map f') x : F (G α') (H β'))
+instance : Bifunctor (bicompl F G H)
+    where bimap α α' β β' f f' x := (bimap (map f) (map f') x : F (G α') (H β'))
 
-instance [IsLawfulFunctor G] [IsLawfulFunctor H] [IsLawfulBifunctor F] :
+instance [LawfulFunctor G] [LawfulFunctor H] [IsLawfulBifunctor F] :
     IsLawfulBifunctor (bicompl F G H) := by
   constructor <;> intros <;> simp [bimap, map_id, map_comp_map, functor_norm]
 
@@ -159,10 +158,10 @@ section Bicompr
 
 variable (G : Type u₂ → Type _) [Functor G]
 
-instance :
-    Bifunctor (bicompr G F) where bimap α α' β β' f f' x := (map (bimap f f') x : G (F α' β'))
+instance : Bifunctor (bicompr G F)
+    where bimap α α' β β' f f' x := (map (bimap f f') x : G (F α' β'))
 
-instance [IsLawfulFunctor G] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompr G F) := by
+instance [LawfulFunctor G] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompr G F) := by
   constructor <;> intros <;> simp [bimap, functor_norm]
 
 end Bicompr

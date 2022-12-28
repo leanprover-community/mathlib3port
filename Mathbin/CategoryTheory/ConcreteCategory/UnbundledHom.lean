@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.unbundled_hom
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,9 +42,8 @@ variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α �
 
 include 𝒞
 
-instance bundledHom :
-    BundledHom fun α β (Iα : c α) (Iβ : c β) =>
-      Subtype (hom Iα Iβ) where 
+instance bundledHom : BundledHom fun α β (Iα : c α) (Iβ : c β) => Subtype (hom Iα Iβ)
+    where
   toFun _ _ _ _ := Subtype.val
   id α Iα := ⟨id, hom_id hom Iα⟩
   id_to_fun := by intros <;> rfl

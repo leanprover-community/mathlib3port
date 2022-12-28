@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.nonneg.ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
       (Function.funext_iff.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
-        Subtype.eq <| by 
+        Subtype.eq <| by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
           · simp [h2.not_le]
@@ -204,8 +204,8 @@ theorem mk_eq_one [OrderedSemiring α] {x : α} (hx : 0 ≤ x) :
   Subtype.ext_iff
 #align nonneg.mk_eq_one Nonneg.mk_eq_one
 
-instance hasMul [OrderedSemiring α] :
-    Mul { x : α // 0 ≤ x } where mul x y := ⟨x * y, mul_nonneg x.2 y.2⟩
+instance hasMul [OrderedSemiring α] : Mul { x : α // 0 ≤ x }
+    where mul x y := ⟨x * y, mul_nonneg x.2 y.2⟩
 #align nonneg.has_mul Nonneg.hasMul
 
 @[simp, norm_cast]
@@ -221,7 +221,8 @@ theorem mk_mul_mk [OrderedSemiring α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) 
 #align nonneg.mk_mul_mk Nonneg.mk_mul_mk
 
 instance addMonoidWithOne [OrderedSemiring α] : AddMonoidWithOne { x : α // 0 ≤ x } :=
-  { Nonneg.hasOne, Nonneg.orderedAddCommMonoid with
+  { Nonneg.hasOne,
+    Nonneg.orderedAddCommMonoid with
     natCast := fun n => ⟨n, Nat.cast_nonneg n⟩
     nat_cast_zero := by simp [Nat.cast]
     nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl }
@@ -237,8 +238,8 @@ theorem mk_nat_cast [OrderedSemiring α] (n : ℕ) : (⟨n, n.cast_nonneg⟩ : {
   rfl
 #align nonneg.mk_nat_cast Nonneg.mk_nat_cast
 
-instance hasPow [OrderedSemiring α] :
-    Pow { x : α // 0 ≤ x } ℕ where pow x n := ⟨x ^ n, pow_nonneg x.2 n⟩
+instance hasPow [OrderedSemiring α] : Pow { x : α // 0 ≤ x } ℕ
+    where pow x n := ⟨x ^ n, pow_nonneg x.2 n⟩
 #align nonneg.has_pow Nonneg.hasPow
 
 @[simp, norm_cast]
@@ -315,7 +316,8 @@ def coeRingHom [OrderedSemiring α] : { x : α // 0 ≤ x } →+* α :=
 
 instance canonicallyOrderedAddMonoid [OrderedRing α] :
     CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
-  { Nonneg.orderedAddCommMonoid, Nonneg.orderBot with
+  { Nonneg.orderedAddCommMonoid,
+    Nonneg.orderBot with
     le_self_add := fun a b => le_add_of_nonneg_right b.2
     exists_add_of_le := fun a b h =>
       ⟨⟨b - a, sub_nonneg_of_le h⟩, Subtype.ext (add_sub_cancel'_right _ _).symm⟩ }
@@ -324,7 +326,8 @@ instance canonicallyOrderedAddMonoid [OrderedRing α] :
 instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α] :
     CanonicallyOrderedCommSemiring { x : α // 0 ≤ x } :=
   { Nonneg.canonicallyOrderedAddMonoid, Nonneg.orderedCommSemiring with
-    eq_zero_or_eq_zero_of_mul_eq_zero := by
+    eq_zero_or_eq_zero_of_mul_eq_zero :=
+      by
       rintro ⟨a, ha⟩ ⟨b, hb⟩
       simp }
 #align nonneg.canonically_ordered_comm_semiring Nonneg.canonicallyOrderedCommSemiring
@@ -353,19 +356,22 @@ theorem to_nonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := 
 #align nonneg.to_nonneg_of_nonneg Nonneg.to_nonneg_of_nonneg
 
 @[simp]
-theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by
+theorem to_nonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a :=
+  by
   cases' a with a ha
   exact to_nonneg_of_nonneg ha
 #align nonneg.to_nonneg_coe Nonneg.to_nonneg_coe
 
 @[simp]
-theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b := by
+theorem to_nonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b :=
+  by
   cases' b with b hb
   simp [to_nonneg, hb]
 #align nonneg.to_nonneg_le Nonneg.to_nonneg_le
 
 @[simp]
-theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b := by
+theorem to_nonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b :=
+  by
   cases' a with a ha
   simp [to_nonneg, ha.not_lt]
 #align nonneg.to_nonneg_lt Nonneg.to_nonneg_lt
@@ -383,7 +389,7 @@ theorem mk_sub_mk [Sub α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) :
 end LinearOrder
 
 instance hasOrderedSub [LinearOrderedRing α] : OrderedSub { x : α // 0 ≤ x } :=
-  ⟨by 
+  ⟨by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
     simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, to_nonneg_le,
       Subtype.coe_mk]⟩

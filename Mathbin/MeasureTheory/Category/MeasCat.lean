@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.category.Meas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem coe_of (X : Type u) [MeasurableSpace X] : (of X : Type u) = X :=
 #align Meas.coe_of MeasCat.coe_of
 
 instance unbundledHom : UnbundledHom @Measurable :=
-  ⟨@measurableId, @Measurable.comp⟩
+  ⟨@measurable_id, @Measurable.comp⟩
 #align Meas.unbundled_hom MeasCat.unbundledHom
 
 deriving instance LargeCategory, ConcreteCategory for MeasCat
@@ -81,25 +81,25 @@ the pure values are the Dirac measure, and the bind operation maps to the integr
 In probability theory, the `Meas`-morphisms `X → Prob X` are (sub-)Markov kernels (here `Prob` is
 the restriction of `Measure` to (sub-)probability space.)
 -/
-def measure : MeasCat ⥤
-      MeasCat where 
+def measure : MeasCat ⥤ MeasCat
+    where
   obj X := ⟨@MeasureTheory.Measure X.1 X.2⟩
-  map X Y f := ⟨Measure.map (f : X → Y), Measure.measurableMap f f.2⟩
+  map X Y f := ⟨Measure.map (f : X → Y), Measure.measurable_map f f.2⟩
   map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
   map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ =>
     Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
 #align Meas.Measure MeasCat.measure
 
 /-- The Giry monad, i.e. the monadic structure associated with `Measure`. -/
-def giry : CategoryTheory.Monad
-      MeasCat where 
+def giry : CategoryTheory.Monad MeasCat
+    where
   toFunctor := measure
   η' :=
-    { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurableDirac⟩
+    { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurable_dirac⟩
       naturality' := fun X Y ⟨f, hf⟩ =>
         Subtype.eq <| funext fun a => (Measure.map_dirac hf a).symm }
   μ' :=
-    { app := fun X => ⟨@Measure.join X.1 X.2, Measure.measurableJoin⟩
+    { app := fun X => ⟨@Measure.join X.1 X.2, Measure.measurable_join⟩
       naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq <| funext fun μ => Measure.join_map_map hf μ }
   assoc' α := Subtype.eq <| funext fun μ => @Measure.join_map_join _ _ _
   left_unit' α := Subtype.eq <| funext fun μ => @Measure.join_dirac _ _ _
@@ -109,10 +109,10 @@ def giry : CategoryTheory.Monad
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
-def integral : giry.Algebra where 
+def integral : giry.Algebra where
   A := MeasCat.of ℝ≥0∞
-  a := ⟨fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m, Measure.measurableLintegral measurableId⟩
-  unit' := Subtype.eq <| funext fun r : ℝ≥0∞ => lintegral_dirac' _ measurableId
+  a := ⟨fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m, Measure.measurable_lintegral measurable_id⟩
+  unit' := Subtype.eq <| funext fun r : ℝ≥0∞ => lintegral_dirac' _ measurable_id
   assoc' :=
     Subtype.eq <|
       funext fun μ : Measure (Measure ℝ≥0∞) =>
@@ -125,7 +125,7 @@ def integral : giry.Algebra where
 end MeasCat
 
 instance TopCat.hasForgetToMeas : HasForget₂ TopCat.{u} MeasCat.{u} :=
-  BundledHom.mkHasForget₂ borel (fun X Y f => ⟨f.1, f.2.borelMeasurable⟩) (by intros <;> rfl)
+  BundledHom.mkHasForget₂ borel (fun X Y f => ⟨f.1, f.2.borel_measurable⟩) (by intros <;> rfl)
 #align Top.has_forget_to_Meas TopCat.hasForgetToMeas
 
 /- warning: Borel clashes with borel -> borel
@@ -133,7 +133,7 @@ warning: Borel -> borel is a dubious translation:
 lean 3 declaration is
   CategoryTheory.Functor.{u1, u1, succ u1, succ u1} TopCat.{u1} TopCat.largeCategory.{u1} MeasCat.{u1} MeasCat.largeCategory.{u1}
 but is expected to have type
-  PUnit.{0}
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α], MeasurableSpace.{u1} α
 Case conversion may be inaccurate. Consider using '#align Borel borelₓ'. -/
 /-- The Borel functor, the canonical embedding of topological spaces into measurable spaces. -/
 @[reducible]

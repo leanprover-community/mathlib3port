@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.convex.caratheodory
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,18 +56,20 @@ namespace Caratheodory
 then it is in the convex hull of a strict subset of `t`. -/
 theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E}
     (h : ¬AffineIndependent 𝕜 (coe : t → E)) {x : E} (m : x ∈ convexHull 𝕜 (↑t : Set E)) :
-    ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.erase y) : Set E) := by
+    ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.erase y) : Set E) :=
+  by
   simp only [Finset.convex_hull_eq, mem_set_of_eq] at m⊢
   obtain ⟨f, fpos, fsum, rfl⟩ := m
   obtain ⟨g, gcombo, gsum, gpos⟩ := exists_nontrivial_relation_sum_zero_of_not_affine_ind h
   replace gpos := exists_pos_of_sum_zero_of_exists_nonzero g gsum gpos
   clear h
   let s := @Finset.filter _ (fun z => 0 < g z) (fun _ => LinearOrder.decidableLt _ _) t
-  obtain ⟨i₀, mem, w⟩ : ∃ i₀ ∈ s, ∀ i ∈ s, f i₀ / g i₀ ≤ f i / g i := by
+  obtain ⟨i₀, mem, w⟩ : ∃ i₀ ∈ s, ∀ i ∈ s, f i₀ / g i₀ ≤ f i / g i :=
+    by
     apply s.exists_min_image fun z => f z / g z
     obtain ⟨x, hx, hgx⟩ : ∃ x ∈ t, 0 < g x := gpos
     exact ⟨x, mem_filter.mpr ⟨hx, hgx⟩⟩
-  have hg : 0 < g i₀ := by 
+  have hg : 0 < g i₀ := by
     rw [mem_filter] at mem
     exact mem.2
   have hi₀ : i₀ ∈ t := filter_subset _ _ mem
@@ -84,7 +86,7 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E}
   · simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
     intro e hei₀ het
     by_cases hes : e ∈ s
-    · have hge : 0 < g e := by 
+    · have hge : 0 < g e := by
         rw [mem_filter] at hes
         exact hes.2
       rw [← le_div_iff hge]
@@ -133,7 +135,7 @@ theorem mem_min_card_finset_of_mem_convex_hull :
   caratheodory.mem_min_card_finset_of_mem_convex_hull Caratheodory.mem_min_card_finset_of_mem_convex_hull
 
 theorem min_card_finset_of_mem_convex_hull_nonempty : (minCardFinsetOfMemConvexHull hx).Nonempty :=
-  by 
+  by
   rw [← Finset.coe_nonempty, ← @convex_hull_nonempty_iff 𝕜]
   exact ⟨x, mem_min_card_finset_of_mem_convex_hull hx⟩
 #align
@@ -146,12 +148,13 @@ theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : 
   caratheodory.min_card_finset_of_mem_convex_hull_card_le_card Caratheodory.min_card_finset_of_mem_convex_hull_card_le_card
 
 theorem affine_independent_min_card_finset_of_mem_convex_hull :
-    AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) := by
+    AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) :=
+  by
   let k := (min_card_finset_of_mem_convex_hull hx).card - 1
   have hk : (min_card_finset_of_mem_convex_hull hx).card = k + 1 :=
     (Nat.succ_pred_eq_of_pos
         (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm
-  classical 
+  classical
     by_contra
     obtain ⟨p, hp⟩ := mem_convex_hull_erase h (mem_min_card_finset_of_mem_convex_hull hx)
     have contra :=
@@ -174,16 +177,16 @@ variable {s : Set E}
 theorem convex_hull_eq_union :
     convexHull 𝕜 s =
       ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coe : t → E)), convexHull 𝕜 ↑t :=
-  by 
+  by
   apply Set.Subset.antisymm
   · intro x hx
-    simp only [exists_prop, Set.mem_Union]
+    simp only [exists_prop, Set.mem_unionᵢ]
     exact
       ⟨Caratheodory.minCardFinsetOfMemConvexHull hx,
         Caratheodory.min_card_finset_of_mem_convex_hull_subseteq hx,
         Caratheodory.affine_independent_min_card_finset_of_mem_convex_hull hx,
         Caratheodory.mem_min_card_finset_of_mem_convex_hull hx⟩
-  · iterate 3 convert Set.Union_subset _; intro
+  · iterate 3 convert Set.unionᵢ_subset _; intro
     exact convex_hull_mono ‹_›
 #align convex_hull_eq_union convex_hull_eq_union
 
@@ -192,9 +195,9 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
     ∃ (ι : Sort (u + 1))(_ : Fintype ι),
       ∃ (z : ι → E)(w : ι → 𝕜)(hss : Set.range z ⊆ s)(hai : AffineIndependent 𝕜 z)(hw :
         ∀ i, 0 < w i), (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
-  by 
+  by
   rw [convex_hull_eq_union] at hx
-  simp only [exists_prop, Set.mem_Union] at hx
+  simp only [exists_prop, Set.mem_unionᵢ] at hx
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := hx
   simp only [t.convex_hull_eq, exists_prop, Set.mem_setOf_eq] at ht₃
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := ht₃

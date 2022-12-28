@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.hadamard
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,12 +115,14 @@ variable [DecidableEq n] [MulZeroOneClass α]
 
 variable (M : Matrix n n α)
 
-theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonal fun i => M i i := by
+theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonal fun i => M i i :=
+  by
   ext
   by_cases h : i = j <;> simp [h]
 #align matrix.hadamard_one Matrix.hadamard_one
 
-theorem one_hadamard : (1 : Matrix n n α) ⊙ M = diagonal fun i => M i i := by
+theorem one_hadamard : (1 : Matrix n n α) ⊙ M = diagonal fun i => M i i :=
+  by
   ext
   by_cases h : i = j <;> simp [h]
 #align matrix.one_hadamard Matrix.one_hadamard
@@ -149,7 +151,8 @@ theorem sum_hadamard_eq : (∑ (i : m) (j : n), (A ⊙ B) i j) = trace (A ⬝ B�
 #align matrix.sum_hadamard_eq Matrix.sum_hadamard_eq
 
 theorem dot_product_vec_mul_hadamard [DecidableEq m] [DecidableEq n] (v : m → α) (w : n → α) :
-    dotProduct (vecMul v (A ⊙ B)) w = trace (diagonal v ⬝ A ⬝ (B ⬝ diagonal w)ᵀ) := by
+    dotProduct (vecMul v (A ⊙ B)) w = trace (diagonal v ⬝ A ⬝ (B ⬝ diagonal w)ᵀ) :=
+  by
   rw [← sum_hadamard_eq, Finset.sum_comm]
   simp [dot_product, vec_mul, Finset.sum_mul, mul_assoc]
 #align matrix.dot_product_vec_mul_hadamard Matrix.dot_product_vec_mul_hadamard

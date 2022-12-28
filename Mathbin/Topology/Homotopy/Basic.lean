@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,10 +104,10 @@ section
 
 variable {f₀ f₁ : C(X, Y)}
 
-instance : HomotopyLike (Homotopy f₀ f₁) f₀
-      f₁ where 
+instance : HomotopyLike (Homotopy f₀ f₁) f₀ f₁
+    where
   coe f := f.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -171,14 +171,14 @@ def extend (F : Homotopy f₀ f₁) : C(ℝ, C(X, Y)) :=
 #align continuous_map.homotopy.extend ContinuousMap.Homotopy.extend
 
 theorem extend_apply_of_le_zero (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ≤ 0) (x : X) :
-    F.extend t x = f₀ x := by 
+    F.extend t x = f₀ x := by
   rw [← F.apply_zero]
   exact ContinuousMap.congr_fun (Set.IccExtend_of_le_left (zero_le_one' ℝ) F.curry ht) x
 #align
   continuous_map.homotopy.extend_apply_of_le_zero ContinuousMap.Homotopy.extend_apply_of_le_zero
 
 theorem extend_apply_of_one_le (F : Homotopy f₀ f₁) {t : ℝ} (ht : 1 ≤ t) (x : X) :
-    F.extend t x = f₁ x := by 
+    F.extend t x = f₁ x := by
   rw [← F.apply_one]
   exact ContinuousMap.congr_fun (Set.IccExtend_of_right_le (zero_le_one' ℝ) F.curry ht) x
 #align continuous_map.homotopy.extend_apply_of_one_le ContinuousMap.Homotopy.extend_apply_of_one_le
@@ -207,7 +207,7 @@ end
 /-- Given a continuous function `f`, we can define a `homotopy f f` by `F (t, x) = f x`
 -/
 @[simps]
-def refl (f : C(X, Y)) : Homotopy f f where 
+def refl (f : C(X, Y)) : Homotopy f f where
   toFun x := f x.2
   map_zero_left' _ := rfl
   map_one_left' _ := rfl
@@ -219,15 +219,16 @@ instance : Inhabited (Homotopy (ContinuousMap.id X) (ContinuousMap.id X)) :=
 /-- Given a `homotopy f₀ f₁`, we can define a `homotopy f₁ f₀` by reversing the homotopy.
 -/
 @[simps]
-def symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) :
-    Homotopy f₁ f₀ where 
+def symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : Homotopy f₁ f₀
+    where
   toFun x := F (σ x.1, x.2)
   map_zero_left' := by norm_num
   map_one_left' := by norm_num
 #align continuous_map.homotopy.symm ContinuousMap.Homotopy.symm
 
 @[simp]
-theorem symm_symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : F.symm.symm = F := by
+theorem symm_symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : F.symm.symm = F :=
+  by
   ext
   simp
 #align continuous_map.homotopy.symm_symm ContinuousMap.Homotopy.symm_symm
@@ -236,11 +237,11 @@ theorem symm_symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : F.symm.symm =
 Given `homotopy f₀ f₁` and `homotopy f₁ f₂`, we can define a `homotopy f₀ f₂` by putting the first
 homotopy on `[0, 1/2]` and the second on `[1/2, 1]`.
 -/
-def trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁ f₂) :
-    Homotopy f₀
-      f₂ where 
+def trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁ f₂) : Homotopy f₀ f₂
+    where
   toFun x := if (x.1 : ℝ) ≤ 1 / 2 then F.extend (2 * x.1) x.2 else G.extend (2 * x.1 - 1) x.2
-  continuous_to_fun := by
+  continuous_to_fun :=
+    by
     refine'
       continuous_if_le (continuous_induced_dom.comp continuous_fst) continuous_const
         (F.continuous.comp (by continuity)).ContinuousOn
@@ -264,7 +265,7 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Hom
 #align continuous_map.homotopy.trans_apply ContinuousMap.Homotopy.trans_apply
 
 theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁ f₂) :
-    (F.trans G).symm = G.symm.trans F.symm := by 
+    (F.trans G).symm = G.symm.trans F.symm := by
   ext x
   simp only [symm_apply, trans_apply]
   split_ifs with h₁ h₂
@@ -289,8 +290,8 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
 /-- Casting a `homotopy f₀ f₁` to a `homotopy g₀ g₁` where `f₀ = g₀` and `f₁ = g₁`.
 -/
 @[simps]
-def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) :
-    Homotopy g₀ g₁ where 
+def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) : Homotopy g₀ g₁
+    where
   toFun := F
   map_zero_left' := by simp [← h₀]
   map_one_left' := by simp [← h₁]
@@ -301,8 +302,8 @@ def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ =
 -/
 @[simps]
 def hcomp {f₀ f₁ : C(X, Y)} {g₀ g₁ : C(Y, Z)} (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) :
-    Homotopy (g₀.comp f₀) (g₁.comp
-        f₁) where 
+    Homotopy (g₀.comp f₀) (g₁.comp f₁)
+    where
   toFun x := G (x.1, F x)
   map_zero_left' := by simp
   map_one_left' := by simp
@@ -366,7 +367,8 @@ variable {f₀ f₁ : C(X, Y)} {P : C(X, Y) → Prop}
 instance : CoeFun (HomotopyWith f₀ f₁ P) fun _ => I × X → Y :=
   ⟨fun F => F.toFun⟩
 
-theorem coe_fn_injective : @Function.Injective (HomotopyWith f₀ f₁ P) (I × X → Y) coeFn := by
+theorem coe_fn_injective : @Function.Injective (HomotopyWith f₀ f₁ P) (I × X → Y) coeFn :=
+  by
   rintro ⟨⟨⟨F, _⟩, _⟩, _⟩ ⟨⟨⟨G, _⟩, _⟩, _⟩ h
   congr 3
 #align continuous_map.homotopy_with.coe_fn_injective ContinuousMap.HomotopyWith.coe_fn_injective
@@ -415,7 +417,8 @@ theorem prop (F : HomotopyWith f₀ f₁ P) (t : I) : P (F.toHomotopy.curry t) :
   F.prop' t
 #align continuous_map.homotopy_with.prop ContinuousMap.HomotopyWith.prop
 
-theorem extendProp (F : HomotopyWith f₀ f₁ P) (t : ℝ) : P (F.toHomotopy.extend t) := by
+theorem extendProp (F : HomotopyWith f₀ f₁ P) (t : ℝ) : P (F.toHomotopy.extend t) :=
+  by
   by_cases ht₀ : 0 ≤ t
   · by_cases ht₁ : t ≤ 1
     · convert F.prop ⟨t, ht₀, ht₁⟩
@@ -441,7 +444,7 @@ variable {P : C(X, Y) → Prop}
 @[simps]
 def refl (f : C(X, Y)) (hf : P f) : HomotopyWith f f P :=
   { Homotopy.refl f with
-    prop' := fun t => by 
+    prop' := fun t => by
       convert hf
       cases f
       rfl }
@@ -470,7 +473,7 @@ by putting the first homotopy on `[0, 1/2]` and the second on `[1/2, 1]`.
 def trans {f₀ f₁ f₂ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (G : HomotopyWith f₁ f₂ P) :
     HomotopyWith f₀ f₂ P :=
   { F.toHomotopy.trans G.toHomotopy with
-    prop' := fun t => by 
+    prop' := fun t => by
       simp only [homotopy.trans]
       change P ⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩
       split_ifs
@@ -588,7 +591,7 @@ by putting the first homotopy on `[0, 1/2]` and the second on `[1/2, 1]`.
 -/
 def trans (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) : HomotopyRel f₀ f₂ S :=
   { Homotopy.trans F.toHomotopy G.toHomotopy with
-    prop' := fun t => by 
+    prop' := fun t => by
       intro x hx
       simp only [homotopy.trans]
       change (⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩ : C(X, Y)) _ = _ ∧ _ = _

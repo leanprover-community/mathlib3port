@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.group.ulift
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,7 +181,7 @@ instance monoid [Monoid α] : Monoid (ULift α) :=
 
 #print ULift.addMonoidWithOne /-
 instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=
-  { ULift.one, ULift.addMonoid with 
+  { ULift.one, ULift.addMonoid with
     natCast := fun n => ⟨n⟩
     nat_cast_zero := congr_arg ULift.up Nat.cast_zero
     nat_cast_succ := fun n => congr_arg ULift.up (Nat.cast_succ _) }
@@ -236,7 +236,8 @@ instance group [Group α] : Group (ULift α) :=
 
 #print ULift.addGroupWithOne /-
 instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
-  { ULift.addMonoidWithOne, ULift.addGroup with
+  { ULift.addMonoidWithOne,
+    ULift.addGroup with
     intCast := fun n => ⟨n⟩
     int_cast_of_nat := fun n => congr_arg ULift.up (Int.cast_of_nat _)
     int_cast_neg_succ_of_nat := fun n => congr_arg ULift.up (Int.cast_negSucc _) }

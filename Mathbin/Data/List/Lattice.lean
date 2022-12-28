@@ -5,7 +5,7 @@ Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, M
 Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,8 @@ theorem disjoint_nil_left (l : List α) : Disjoint [] l := fun a => (not_mem_nil
 
 #print List.disjoint_nil_right /-
 @[simp]
-theorem disjoint_nil_right (l : List α) : Disjoint l [] := by
+theorem disjoint_nil_right (l : List α) : Disjoint l [] :=
+  by
   rw [disjoint_comm]
   exact disjoint_nil_left _
 #align list.disjoint_nil_right List.disjoint_nil_right
@@ -123,7 +124,8 @@ but is expected to have type
   forall {α : Type.{u1}} {l : α} {a : List.{u1} α}, Iff (List.Disjoint.{u1} α (List.cons.{u1} α l (List.nil.{u1} α)) a) (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l a))
 Case conversion may be inaccurate. Consider using '#align list.singleton_disjoint List.singleton_disjointₓ'. -/
 @[simp]
-theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l := by
+theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l :=
+  by
   simp only [Disjoint, mem_singleton, forall_eq]
   rfl
 #align list.singleton_disjoint List.singleton_disjoint
@@ -213,10 +215,11 @@ but is expected to have type
   forall {α : Type.{u1}} {l : Nat} {m : Nat} {n : List.{u1} α}, (List.Nodup.{u1} α n) -> (LE.le.{0} Nat instLENat l m) -> (List.Disjoint.{u1} α (List.take.{u1} α l n) (List.drop.{u1} α m n))
 Case conversion may be inaccurate. Consider using '#align list.disjoint_take_drop List.disjoint_take_dropₓ'. -/
 theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (l.take m) (l.drop n) :=
-  by 
+  by
   induction l generalizing m n
   case nil m n => simp
-  case cons x xs xs_ih m n =>
+  case
+    cons x xs xs_ih m n =>
     cases m <;> cases n <;>
       simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop, true_or_iff,
         eq_self_iff_true, not_true, false_and_iff, disjoint_nil_left, take]
@@ -351,7 +354,8 @@ theorem subset_inter {l l₁ l₂ : List α} (h₁ : l ⊆ l₁) (h₂ : l ⊆ l
   mem_inter.2 ⟨h₁ h, h₂ h⟩
 #align list.subset_inter List.subset_inter
 
-theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ := by
+theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ :=
+  by
   simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and]
   rfl
 #align list.inter_eq_nil_iff_disjoint List.inter_eq_nil_iff_disjoint
@@ -393,7 +397,7 @@ theorem cons_bag_inter_of_pos (l₁ : List α) (h : a ∈ l₂) :
 
 @[simp]
 theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).bagInter l₂ = l₁.bagInter l₂ :=
-  by 
+  by
   cases l₂; · simp only [bag_inter_nil]
   simp only [erase_of_not_mem h, List.bagInter, if_neg h]
 #align list.cons_bag_inter_of_neg List.cons_bag_inter_of_neg
@@ -401,7 +405,7 @@ theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).ba
 @[simp]
 theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter l₂ ↔ a ∈ l₁ ∧ a ∈ l₂
   | [], l₂ => by simp only [nil_bag_inter, not_mem_nil, false_and_iff]
-  | b :: l₁, l₂ => by 
+  | b :: l₁, l₂ => by
     by_cases b ∈ l₂
     · rw [cons_bag_inter_of_pos _ h, mem_cons_iff, mem_cons_iff, mem_bag_inter]
       by_cases ba : a = b
@@ -419,7 +423,7 @@ theorem count_bag_inter {a : α} :
     ∀ {l₁ l₂ : List α}, count a (l₁.bagInter l₂) = min (count a l₁) (count a l₂)
   | [], l₂ => by simp
   | l₁, [] => by simp
-  | b :: l₁, l₂ => by 
+  | b :: l₁, l₂ => by
     by_cases hb : b ∈ l₂
     · rw [cons_bag_inter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase, ←
         min_add_add_right]
@@ -436,7 +440,8 @@ theorem count_bag_inter {a : α} :
 
 theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ l₁
   | [], l₂ => by simp
-  | b :: l₁, l₂ => by
+  | b :: l₁, l₂ =>
+    by
     by_cases b ∈ l₂ <;> simp only [h, cons_bag_inter_of_pos, cons_bag_inter_of_neg, not_false_iff]
     · exact (bag_inter_sublist_left _ _).cons_cons _
     · apply sublist_cons_of_sublist
@@ -445,7 +450,7 @@ theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ 
 
 theorem bag_inter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInter l₂ = [] ↔ l₁ ∩ l₂ = []
   | [], l₂ => by simp
-  | b :: l₁, l₂ => by 
+  | b :: l₁, l₂ => by
     by_cases h : b ∈ l₂ <;> simp [h]
     exact bag_inter_nil_iff_inter_nil l₁ l₂
 #align list.bag_inter_nil_iff_inter_nil List.bag_inter_nil_iff_inter_nil

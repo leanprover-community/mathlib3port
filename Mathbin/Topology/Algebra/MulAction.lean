@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.mul_action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,10 +74,8 @@ section HasSmul
 variable [HasSmul M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance (priority := 100) HasContinuousSmul.has_continuous_const_smul :
-    HasContinuousConstSmul M
-      X where continuous_const_smul _ :=
-    continuous_smul.comp (continuous_const.prod_mk continuous_id)
+instance (priority := 100) HasContinuousSmul.has_continuous_const_smul : HasContinuousConstSmul M X
+    where continuous_const_smul _ := continuous_smul.comp (continuous_const.prod_mk continuous_id)
 #align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.has_continuous_const_smul
 
 @[to_additive]
@@ -140,9 +138,8 @@ section Monoid
 variable [Monoid M] [MulAction M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance Units.has_continuous_smul :
-    HasContinuousSmul Mˣ
-      X where continuous_smul :=
+instance Units.has_continuous_smul : HasContinuousSmul Mˣ X
+    where continuous_smul :=
     show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : Mˣ × X => (p.1, p.2)) from
       continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
 #align units.has_continuous_smul Units.has_continuous_smul
@@ -171,7 +168,8 @@ variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [HasSmul M X]
 @[to_additive]
 theorem has_continuous_smul_Inf {ts : Set (TopologicalSpace X)}
     (h : ∀ t ∈ ts, @HasContinuousSmul M X _ _ t) : @HasContinuousSmul M X _ _ (infₛ ts) :=
-  { continuous_smul := by 
+  {
+    continuous_smul := by
       rw [← @infₛ_singleton _ _ ‹TopologicalSpace M›]
       exact
         continuous_Inf_rng.2 fun t ht =>
@@ -187,7 +185,8 @@ theorem has_continuous_smul_infi {ts' : ι → TopologicalSpace X}
 
 @[to_additive]
 theorem has_continuous_smul_inf {t₁ t₂ : TopologicalSpace X} [@HasContinuousSmul M X _ _ t₁]
-    [@HasContinuousSmul M X _ _ t₂] : @HasContinuousSmul M X _ _ (t₁ ⊓ t₂) := by
+    [@HasContinuousSmul M X _ _ t₂] : @HasContinuousSmul M X _ _ (t₁ ⊓ t₂) :=
+  by
   rw [inf_eq_infᵢ]
   refine' has_continuous_smul_infi fun b => _
   cases b <;> assumption
@@ -206,7 +205,8 @@ include G
 /-- An `add_torsor` for a connected space is a connected space. This is not an instance because
 it loops for a group as a torsor over itself. -/
 protected theorem AddTorsor.connected_space : ConnectedSpace P :=
-  { is_preconnected_univ := by
+  { is_preconnected_univ :=
+      by
       convert
         is_preconnected_univ.image (Equiv.vaddConst (Classical.arbitrary P) : G → P)
           (continuous_id.vadd continuous_const).ContinuousOn

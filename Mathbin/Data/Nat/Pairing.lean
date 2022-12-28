@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.pairing
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,8 @@ def unpair (n : ℕ) : ℕ × ℕ :=
 #align nat.unpair Nat.unpair
 
 @[simp]
-theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n := by
+theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n :=
+  by
   dsimp only [unpair]; set s := sqrt n
   have sm : s * s + (n - s * s) = n := add_tsub_cancel_of_le (sqrt_le _)
   split_ifs
@@ -63,13 +64,15 @@ theorem mkpair_unpair' {n a b} (H : unpair n = (a, b)) : mkpair a b = n := by
 #align nat.mkpair_unpair' Nat.mkpair_unpair'
 
 @[simp]
-theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) := by
+theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) :=
+  by
   dsimp only [mkpair]; split_ifs
   · show unpair (b * b + a) = (a, b)
     have be : sqrt (b * b + a) = b := sqrt_add_eq _ (le_trans (le_of_lt h) (Nat.le_add_left _ _))
     simp [unpair, be, add_tsub_cancel_right, h]
   · show unpair (a * a + a + b) = (a, b)
-    have ae : sqrt (a * a + (a + b)) = a := by
+    have ae : sqrt (a * a + (a + b)) = a :=
+      by
       rw [sqrt_add_eq]
       exact add_le_add_left (le_of_not_gt h) _
     simp [unpair, ae, Nat.not_lt_zero, add_assoc]
@@ -90,7 +93,8 @@ theorem mkpair_eq_mkpair {a b c d : ℕ} : mkpair a b = mkpair c d ↔ a = c ∧
   mkpairEquiv.Injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
 #align nat.mkpair_eq_mkpair Nat.mkpair_eq_mkpair
 
-theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n := by
+theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n :=
+  by
   let s := sqrt n
   simp [unpair]; change sqrt n with s
   by_cases h : n - s * s < s <;> simp [h]
@@ -101,7 +105,7 @@ theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n := by
 #align nat.unpair_lt Nat.unpair_lt
 
 @[simp]
-theorem unpair_zero : unpair 0 = 0 := by 
+theorem unpair_zero : unpair 0 = 0 := by
   rw [unpair]
   simp
 #align nat.unpair_zero Nat.unpair_zero
@@ -114,7 +118,8 @@ theorem unpair_left_le : ∀ n : ℕ, (unpair n).1 ≤ n
 theorem left_le_mkpair (a b : ℕ) : a ≤ mkpair a b := by simpa using unpair_left_le (mkpair a b)
 #align nat.left_le_mkpair Nat.left_le_mkpair
 
-theorem right_le_mkpair (a b : ℕ) : b ≤ mkpair a b := by
+theorem right_le_mkpair (a b : ℕ) : b ≤ mkpair a b :=
+  by
   by_cases h : a < b <;> simp [mkpair, h]
   exact le_trans (le_mul_self _) (Nat.le_add_right _ _)
 #align nat.right_le_mkpair Nat.right_le_mkpair
@@ -123,7 +128,8 @@ theorem unpair_right_le (n : ℕ) : (unpair n).2 ≤ n := by
   simpa using right_le_mkpair n.unpair.1 n.unpair.2
 #align nat.unpair_right_le Nat.unpair_right_le
 
-theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b < mkpair a₂ b := by
+theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b < mkpair a₂ b :=
+  by
   by_cases h₁ : a₁ < b <;> simp [mkpair, h₁, add_assoc]
   · by_cases h₂ : a₂ < b <;> simp [mkpair, h₂, h]
     simp at h₂
@@ -137,7 +143,8 @@ theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b 
     apply add_lt_add_right <;> assumption
 #align nat.mkpair_lt_mkpair_left Nat.mkpair_lt_mkpair_left
 
-theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁ < mkpair a b₂ := by
+theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁ < mkpair a b₂ :=
+  by
   by_cases h₁ : a < b₁ <;> simp [mkpair, h₁, add_assoc]
   · simp [mkpair, lt_trans h₁ h, h]
     exact mul_self_lt_mul_self h
@@ -148,7 +155,8 @@ theorem mkpair_lt_mkpair_right (a) {b₁ b₂} (h : b₁ < b₂) : mkpair a b₁
     exact le_trans h₁ (Nat.le_add_left _ _)
 #align nat.mkpair_lt_mkpair_right Nat.mkpair_lt_mkpair_right
 
-theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 := by
+theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 :=
+  by
   rw [mkpair, add_sq, mul_one, two_mul, sq, add_assoc, add_assoc]
   cases lt_or_le m n
   · rw [if_pos h, max_eq_right h.le, add_lt_add_iff_left, add_assoc]
@@ -157,7 +165,8 @@ theorem mkpair_lt_max_add_one_sq (m n : ℕ) : mkpair m n < (max m n + 1) ^ 2 :=
     exact lt_succ_of_le h
 #align nat.mkpair_lt_max_add_one_sq Nat.mkpair_lt_max_add_one_sq
 
-theorem max_sq_add_min_le_mkpair (m n : ℕ) : max m n ^ 2 + min m n ≤ mkpair m n := by
+theorem max_sq_add_min_le_mkpair (m n : ℕ) : max m n ^ 2 + min m n ≤ mkpair m n :=
+  by
   rw [mkpair]
   cases lt_or_le m n
   · rw [if_pos h, max_eq_right h.le, min_eq_left h.le, sq]
@@ -166,7 +175,8 @@ theorem max_sq_add_min_le_mkpair (m n : ℕ) : max m n ^ 2 + min m n ≤ mkpair 
 #align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_mkpair
 
 theorem add_le_mkpair (m n : ℕ) : m + n ≤ mkpair m n :=
-  (max_sq_add_min_le_mkpair _ _).trans' <| by
+  (max_sq_add_min_le_mkpair _ _).trans' <|
+    by
     rw [sq, ← min_add_max, add_comm, add_le_add_iff_right]
     exact le_mul_self _
 #align nat.add_le_mkpair Nat.add_le_mkpair
@@ -200,7 +210,8 @@ namespace Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Union_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
-    (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n := by
+    (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n :=
+  by
   rw [← Union_prod]
   convert surjective_unpair.Union_comp _
   rfl

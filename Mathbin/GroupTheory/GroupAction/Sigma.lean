@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sigma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,19 +63,19 @@ theorem smul_mk : a • mk i b = ⟨i, a • b⟩ :=
 
 @[to_additive]
 instance [HasSmul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σi, α i) :=
-  ⟨fun a b x => by 
+  ⟨fun a b x => by
     cases x
     rw [smul_mk, smul_mk, smul_mk, smul_assoc]⟩
 
 @[to_additive]
 instance [∀ i, SMulCommClass M N (α i)] : SMulCommClass M N (Σi, α i) :=
-  ⟨fun a b x => by 
+  ⟨fun a b x => by
     cases x
     rw [smul_mk, smul_mk, smul_mk, smul_mk, smul_comm]⟩
 
 @[to_additive]
 instance [∀ i, HasSmul Mᵐᵒᵖ (α i)] [∀ i, IsCentralScalar M (α i)] : IsCentralScalar M (Σi, α i) :=
-  ⟨fun a x => by 
+  ⟨fun a x => by
     cases x
     rw [smul_mk, smul_mk, op_smul_eq_smul]⟩
 
@@ -98,15 +98,12 @@ instance [Nonempty ι] [∀ i, FaithfulSMul M (α i)] : FaithfulSMul M (Σi, α 
 end HasSmul
 
 @[to_additive]
-instance {m : Monoid M} [∀ i, MulAction M (α i)] :
-    MulAction M
-      (Σi,
-        α
-          i) where 
-  mul_smul a b x := by 
+instance {m : Monoid M} [∀ i, MulAction M (α i)] : MulAction M (Σi, α i)
+    where
+  mul_smul a b x := by
     cases x
     rw [smul_mk, smul_mk, smul_mk, mul_smul]
-  one_smul x := by 
+  one_smul x := by
     cases x
     rw [smul_mk, one_smul]
 

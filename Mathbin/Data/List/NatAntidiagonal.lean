@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.list.nat_antidiagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ def antidiagonal (n : ℕ) : List (ℕ × ℕ) :=
 
 /-- A pair (i, j) is contained in the antidiagonal of `n` if and only if `i + j = n`. -/
 @[simp]
-theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x.1 + x.2 = n := by
+theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x.1 + x.2 = n :=
+  by
   rw [antidiagonal, mem_map]; constructor
   · rintro ⟨i, hi, rfl⟩
     rw [mem_range, lt_succ_iff] at hi
@@ -69,7 +70,8 @@ theorem nodup_antidiagonal (n : ℕ) : Nodup (antidiagonal n) :=
 
 @[simp]
 theorem antidiagonal_succ {n : ℕ} :
-    antidiagonal (n + 1) = (0, n + 1) :: (antidiagonal n).map (Prod.map Nat.succ id) := by
+    antidiagonal (n + 1) = (0, n + 1) :: (antidiagonal n).map (Prod.map Nat.succ id) :=
+  by
   simp only [antidiagonal, range_succ_eq_map, map_cons, true_and_iff, Nat.add_succ_sub_one,
     add_zero, id.def, eq_self_iff_true, tsub_zero, map_map, Prod.map_mk]
   apply congr (congr rfl _) rfl
@@ -77,7 +79,8 @@ theorem antidiagonal_succ {n : ℕ} :
 #align list.nat.antidiagonal_succ List.Nat.antidiagonal_succ
 
 theorem antidiagonal_succ' {n : ℕ} :
-    antidiagonal (n + 1) = (antidiagonal n).map (Prod.map id Nat.succ) ++ [(n + 1, 0)] := by
+    antidiagonal (n + 1) = (antidiagonal n).map (Prod.map id Nat.succ) ++ [(n + 1, 0)] :=
+  by
   simp only [antidiagonal, range_succ, add_tsub_cancel_left, map_append, append_assoc, tsub_self,
     singleton_append, map_map, map]
   congr 1
@@ -88,7 +91,7 @@ theorem antidiagonal_succ' {n : ℕ} :
 theorem antidiagonal_succ_succ' {n : ℕ} :
     antidiagonal (n + 2) =
       (0, n + 2) :: (antidiagonal n).map (Prod.map Nat.succ Nat.succ) ++ [(n + 2, 0)] :=
-  by 
+  by
   rw [antidiagonal_succ']
   simpa
 #align list.nat.antidiagonal_succ_succ' List.Nat.antidiagonal_succ_succ'

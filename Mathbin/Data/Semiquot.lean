@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.semiquot
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ def mk {a : α} {s : Set α} (h : a ∈ s) : Semiquot α :=
   ⟨s, Trunc.mk ⟨a, h⟩⟩
 #align semiquot.mk Semiquot.mk
 
-theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.s = q₂.s := by
+theorem ext_s {q₁ q₂ : Semiquot α} : q₁ = q₂ ↔ q₁.s = q₂.s :=
+  by
   refine' ⟨congr_arg _, fun h => _⟩
   cases q₁
   cases q₂
@@ -132,15 +133,15 @@ theorem mem_map (f : α → β) (q : Semiquot α) (b : β) : b ∈ map f q ↔ �
 
 /-- Apply a function returning a `semiquot` to a `semiquot`. -/
 def bind (q : Semiquot α) (f : α → Semiquot β) : Semiquot β :=
-  ⟨⋃ a ∈ q.1, (f a).1, q.2.bind fun a => (f a.1).2.map fun b => ⟨b.1, Set.mem_bUnion a.2 b.2⟩⟩
+  ⟨⋃ a ∈ q.1, (f a).1, q.2.bind fun a => (f a.1).2.map fun b => ⟨b.1, Set.mem_bunionᵢ a.2 b.2⟩⟩
 #align semiquot.bind Semiquot.bind
 
 @[simp]
 theorem mem_bind (q : Semiquot α) (f : α → Semiquot β) (b : β) : b ∈ bind q f ↔ ∃ a ∈ q, b ∈ f a :=
-  Set.mem_Union₂
+  Set.mem_unionᵢ₂
 #align semiquot.mem_bind Semiquot.mem_bind
 
-instance : Monad Semiquot where 
+instance : Monad Semiquot where
   pure := @Semiquot.pure
   map := @Semiquot.map
   bind := @Semiquot.bind
@@ -169,8 +170,8 @@ theorem pure_inj {a b : α} : (pure a : Semiquot α) = pure b ↔ a = b :=
   ext_s.trans Set.singleton_eq_singleton_iff
 #align semiquot.pure_inj Semiquot.pure_inj
 
-instance : LawfulMonad
-      Semiquot where 
+instance : LawfulMonad Semiquot
+    where
   pure_bind α β x f := ext.2 <| by simp
   bind_assoc α β γ s f g :=
     ext.2 <| by
@@ -184,15 +185,15 @@ instance : LawfulMonad
 instance : LE (Semiquot α) :=
   ⟨fun s t => s.s ⊆ t.s⟩
 
-instance : PartialOrder
-      (Semiquot α) where 
+instance : PartialOrder (Semiquot α)
+    where
   le s t := ∀ ⦃x⦄, x ∈ s → x ∈ t
   le_refl s := Set.Subset.refl _
   le_trans s t u := Set.Subset.trans
   le_antisymm s t h₁ h₂ := ext_s.2 (Set.Subset.antisymm h₁ h₂)
 
 instance : SemilatticeSup (Semiquot α) :=
-  { Semiquot.partialOrder with 
+  { Semiquot.partialOrder with
     sup := fun s => blur s.s
     le_sup_left := fun s t => Set.subset_union_left _ _
     le_sup_right := fun s t => Set.subset_union_right _ _
@@ -214,7 +215,8 @@ def get (q : Semiquot α) (h : q.IsPure) : α :=
   liftOn q id h
 #align semiquot.get Semiquot.get
 
-theorem get_mem {q : Semiquot α} (p) : get q p ∈ q := by
+theorem get_mem {q : Semiquot α} (p) : get q p ∈ q :=
+  by
   let ⟨a, h⟩ := exists_mem q
   unfold get <;> rw [lift_on_of_mem q _ _ a h] <;> exact h
 #align semiquot.get_mem Semiquot.get_mem
@@ -225,7 +227,7 @@ theorem eq_pure {q : Semiquot α} (p) : q = pure (get q p) :=
 
 @[simp]
 theorem pure_is_pure (a : α) : IsPure (pure a)
-  | b, ab, c, ac => by 
+  | b, ab, c, ac => by
     rw [mem_pure] at ab ac
     cc
 #align semiquot.pure_is_pure Semiquot.pure_is_pure
@@ -272,8 +274,8 @@ theorem is_pure_univ [Inhabited α] : @IsPure α univ ↔ Subsingleton α :=
   ⟨fun h => ⟨fun a b => h a trivial b trivial⟩, fun ⟨h⟩ a _ b _ => h a b⟩
 #align semiquot.is_pure_univ Semiquot.is_pure_univ
 
-instance [Inhabited α] : OrderTop
-      (Semiquot α) where 
+instance [Inhabited α] : OrderTop (Semiquot α)
+    where
   top := univ
   le_top s := Set.subset_univ _
 

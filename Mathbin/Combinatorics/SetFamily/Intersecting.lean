@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.intersecting
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem intersecting_insert :
 #align set.intersecting_insert Set.intersecting_insert
 
 theorem intersecting_iff_pairwise_not_disjoint :
-    s.Intersecting ↔ (s.Pairwise fun a b => ¬Disjoint a b) ∧ s ≠ {⊥} := by
+    s.Intersecting ↔ (s.Pairwise fun a b => ¬Disjoint a b) ∧ s ≠ {⊥} :=
+  by
   refine' ⟨fun h => ⟨fun a ha b hb _ => h ha hb, _⟩, fun h a ha b hb hab => _⟩
   · rintro rfl
     exact intersecting_singleton.1 h rfl
@@ -100,7 +101,8 @@ protected theorem Subsingleton.intersecting (hs : s.Subsingleton) : s.Intersecti
 #align set.subsingleton.intersecting Set.Subsingleton.intersecting
 
 theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α) :
-    s.Intersecting ↔ s = ∅ := by
+    s.Intersecting ↔ s = ∅ :=
+  by
   refine'
     subsingleton_of_subsingleton.intersecting.trans
       ⟨not_imp_comm.2 fun h => subsingleton_of_subsingleton.eq_singleton_of_mem _, _⟩
@@ -113,7 +115,7 @@ theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α)
 /-- Maximal intersecting families are upper sets. -/
 protected theorem Intersecting.is_upper_set (hs : s.Intersecting)
     (h : ∀ t : Set α, t.Intersecting → s ⊆ t → s = t) : IsUpperSet s := by
-  classical 
+  classical
     rintro a b hab ha
     rw [h (insert b s) _ (subset_insert _ _)]
     · exact mem_insert _ _
@@ -124,7 +126,7 @@ protected theorem Intersecting.is_upper_set (hs : s.Intersecting)
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.is_upper_set' {s : Finset α} (hs : (s : Set α).Intersecting)
     (h : ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) : IsUpperSet (s : Set α) := by
-  classical 
+  classical
     rintro a b hab ha
     rw [h (insert b s) _ (Finset.subset_insert _ _)]
     · exact mem_insert_self _ _
@@ -156,7 +158,8 @@ theorem Intersecting.not_mem {s : Set α} (hs : s.Intersecting) {a : α} (ha : a
 #align set.intersecting.not_mem Set.Intersecting.not_mem
 
 theorem Intersecting.disjoint_map_compl {s : Finset α} (hs : (s : Set α).Intersecting) :
-    Disjoint s (s.map ⟨compl, compl_injective⟩) := by
+    Disjoint s (s.map ⟨compl, compl_injective⟩) :=
+  by
   rw [Finset.disjoint_left]
   rintro x hx hxc
   obtain ⟨x, hx', rfl⟩ := mem_map.mp hxc
@@ -165,7 +168,7 @@ theorem Intersecting.disjoint_map_compl {s : Finset α} (hs : (s : Set α).Inter
 
 theorem Intersecting.card_le [Fintype α] {s : Finset α} (hs : (s : Set α).Intersecting) :
     2 * s.card ≤ Fintype.card α := by
-  classical 
+  classical
     refine' (s.disj_union _ hs.disjoint_map_compl).card_le_univ.trans_eq' _
     rw [two_mul, card_disj_union, card_map]
 #align set.intersecting.card_le Set.Intersecting.card_le
@@ -175,7 +178,7 @@ variable [Nontrivial α] [Fintype α] {s : Finset α}
 -- Note, this lemma is false when `α` has exactly one element and boring when `α` is empty.
 theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
     (∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) ↔ 2 * s.card = Fintype.card α := by
-  classical 
+  classical
     refine'
       ⟨fun h => _, fun h t ht hst =>
         Finset.eq_of_subset_of_card_le hst <|
@@ -193,7 +196,7 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
     rintro rfl
     have :=
       h {⊤}
-        (by 
+        (by
           rw [coe_singleton]
           exact intersecting_singleton.2 top_ne_bot)
     rw [compl_bot] at ha
@@ -202,7 +205,8 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
 #align set.intersecting.is_max_iff_card_eq Set.Intersecting.is_max_iff_card_eq
 
 theorem Intersecting.exists_card_eq (hs : (s : Set α).Intersecting) :
-    ∃ t, s ⊆ t ∧ 2 * t.card = Fintype.card α ∧ (t : Set α).Intersecting := by
+    ∃ t, s ⊆ t ∧ 2 * t.card = Fintype.card α ∧ (t : Set α).Intersecting :=
+  by
   have := hs.card_le
   rw [mul_comm, ← Nat.le_div_iff_mul_le' two_pos] at this
   revert hs

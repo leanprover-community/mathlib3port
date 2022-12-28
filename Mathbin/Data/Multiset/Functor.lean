@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Simon Hudon, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.multiset.functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ theorem fmap_def {α' β'} {s : Multiset α'} (f : α' → β') : f <$> s = s.ma
   rfl
 #align multiset.fmap_def Multiset.fmap_def
 
-instance : IsLawfulFunctor Multiset := by refine' { .. } <;> intros <;> simp
+instance : LawfulFunctor Multiset := by refine' { .. } <;> intros <;> simp
 
 open IsLawfulTraversable CommApplicative
 
@@ -40,21 +40,23 @@ variable {α' β' : Type u} (f : α' → F β')
 
 def traverse : Multiset α' → F (Multiset β') :=
   Quotient.lift (Functor.map coe ∘ Traversable.traverse f)
-    (by 
+    (by
       introv p; unfold Function.comp
       induction p
       case nil => rfl
-      case cons =>
+      case
+        cons =>
         have :
           Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₁ =
             Multiset.cons <$> f p_x <*> coe <$> traverse f p_l₂ :=
           by rw [p_ih]
         simpa [functor_norm]
-      case swap =>
+      case
+        swap =>
         have :
           (fun a b (l : List β') => (↑(a :: b :: l) : Multiset β')) <$> f p_y <*> f p_x =
             (fun a b l => ↑(a :: b :: l)) <$> f p_x <*> f p_y :=
-          by 
+          by
           rw [CommApplicative.commutative_map]
           congr
           funext a b l
@@ -64,7 +66,7 @@ def traverse : Multiset α' → F (Multiset β') :=
 #align multiset.traverse Multiset.traverse
 
 instance : Monad Multiset :=
-  { Multiset.functor with 
+  { Multiset.functor with
     pure := fun α x => {x}
     bind := @bind }
 
@@ -78,9 +80,8 @@ theorem bind_def {α β} : (· >>= ·) = @bind α β :=
   rfl
 #align multiset.bind_def Multiset.bind_def
 
-instance :
-    LawfulMonad
-      Multiset where 
+instance : LawfulMonad Multiset
+    where
   bind_pure_comp_eq_map α β f s := (Multiset.induction_on s rfl) fun a s ih => by simp
   pure_bind α β x f := by simp [pure]
   bind_assoc := @bind_assoc
@@ -118,7 +119,7 @@ theorem map_traverse {G : Type _ → Type _} [Applicative G] [CommApplicative G]
     (g : α → G β) (h : β → γ) (x : Multiset α) :
     Functor.map (Functor.map h) (traverse g x) = traverse (Functor.map h ∘ g) x :=
   Quotient.induction_on x
-    (by intro <;> simp [traverse, functor_norm] <;> rw [IsLawfulFunctor.comp_map, map_traverse])
+    (by intro <;> simp [traverse, functor_norm] <;> rw [LawfulFunctor.comp_map, map_traverse])
 #align multiset.map_traverse Multiset.map_traverse
 
 theorem traverse_map {G : Type _ → Type _} [Applicative G] [CommApplicative G] {α β γ : Type _}

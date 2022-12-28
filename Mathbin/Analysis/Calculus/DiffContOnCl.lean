@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.diff_cont_on_cl
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ theorem comp {g : G → E} {t : Set G} (hf : DiffContOnCl 𝕜 f s) (hg : DiffCo
 #align diff_cont_on_cl.comp DiffContOnCl.comp
 
 theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnCl 𝕜 f (ball x r)) :
-    ContinuousOn f (closedBall x r) := by
+    ContinuousOn f (closedBall x r) :=
+  by
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero]
     exact continuous_on_singleton f x
@@ -148,4 +149,9 @@ theorem Differentiable.compDiffContOnCl {g : G → E} {t : Set G} (hf : Differen
     (hg : DiffContOnCl 𝕜 g t) : DiffContOnCl 𝕜 (f ∘ g) t :=
   hf.DiffContOnCl.comp hg (mapsTo_image _ _)
 #align differentiable.comp_diff_cont_on_cl Differentiable.compDiffContOnCl
+
+theorem DifferentiableOn.diffContOnClBall {U : Set E} {c : E} {R : ℝ} (hf : DifferentiableOn 𝕜 f U)
+    (hc : closedBall c R ⊆ U) : DiffContOnCl 𝕜 f (ball c R) :=
+  DiffContOnCl.mkBall (hf.mono (ball_subset_closed_ball.trans hc)) (hf.ContinuousOn.mono hc)
+#align differentiable_on.diff_cont_on_cl_ball DifferentiableOn.diffContOnClBall
 

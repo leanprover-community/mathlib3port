@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.noetherian
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
-    ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map asIdeal) ≤ I := by
+    ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map asIdeal) ≤ I :=
+  by
   refine' IsNoetherian.induction (fun (M : Ideal R) hgt => _) I
   by_cases h_prM : M.is_prime
   · use {⟨M, h_prM⟩}
@@ -39,7 +40,8 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   by_cases htop : M = ⊤
   · rw [htop]
     exact ⟨0, le_top⟩
-  have lt_add : ∀ (z) (_ : z ∉ M), M < M + span R {z} := by
+  have lt_add : ∀ (z) (_ : z ∉ M), M < M + span R {z} :=
+    by
     intro z hz
     refine' lt_of_le_of_ne le_sup_left fun m_eq => hz _
     rw [m_eq]
@@ -65,7 +67,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
     (h_nzI : I ≠ ⊥) :
     ∃ Z : Multiset (PrimeSpectrum A),
       Multiset.prod (Z.map asIdeal) ≤ I ∧ Multiset.prod (Z.map asIdeal) ≠ ⊥ :=
-  by 
+  by
   revert h_nzI
   refine' IsNoetherian.induction (fun (M : Ideal A) hgt => _) I
   intro h_nzM
@@ -82,7 +84,8 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
     rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact ⟨le_rfl, h_nzM⟩
   obtain ⟨x, hx, y, hy, h_xy⟩ := (ideal.not_is_prime_iff.mp h_prM).resolve_left h_topM
-  have lt_add : ∀ (z) (_ : z ∉ M), M < M + span A {z} := by
+  have lt_add : ∀ (z) (_ : z ∉ M), M < M + span A {z} :=
+    by
     intro z hz
     refine' lt_of_le_of_ne le_sup_left fun m_eq => hz _
     rw [m_eq]
@@ -103,7 +106,8 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
 
 open TopologicalSpace
 
-instance : NoetherianSpace (PrimeSpectrum R) := by
+instance : NoetherianSpace (PrimeSpectrum R) :=
+  by
   rw [(noetherian_space_tfae <| PrimeSpectrum R).out 0 1]
   have H := ‹IsNoetherianRing R›
   rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at H

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module logic.unique
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) :
     Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
   ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩,
     fun ⟨a, ha, he⟩ =>
-    ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by 
+    ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
         congr
         exact he b hb⟩⟩⟩
 #align unique_subtype_iff_exists_unique unique_subtype_iff_exists_unique
@@ -92,16 +92,16 @@ equivalent by `unique.subsingleton.unique`.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def uniqueOfSubsingleton {α : Sort _} [Subsingleton α] (a : α) :
-    Unique α where 
+def uniqueOfSubsingleton {α : Sort _} [Subsingleton α] (a : α) : Unique α
+    where
   default := a
   uniq _ := Subsingleton.elim _ _
 #align unique_of_subsingleton uniqueOfSubsingleton
 -/
 
 #print PUnit.unique /-
-instance PUnit.unique : Unique
-      PUnit.{u} where 
+instance PUnit.unique : Unique PUnit.{u}
+    where
   default := PUnit.unit
   uniq x := PUnit.subsingleton x _
 #align punit.unique PUnit.unique
@@ -116,8 +116,8 @@ theorem PUnit.default_eq_unit : (default : PUnit) = PUnit.unit :=
 
 #print uniqueProp /-
 /-- Every provable proposition is unique, as all proofs are equal. -/
-def uniqueProp {p : Prop} (h : p) :
-    Unique p where 
+def uniqueProp {p : Prop} (h : p) : Unique p
+    where
   default := h
   uniq x := rfl
 #align unique_prop uniqueProp
@@ -228,7 +228,7 @@ end Unique
 theorem unique_iff_subsingleton_and_nonempty (α : Sort u) :
     Nonempty (Unique α) ↔ Subsingleton α ∧ Nonempty α :=
   ⟨fun ⟨u⟩ => by constructor <;> exact inferInstance, fun ⟨hs, hn⟩ =>
-    ⟨by 
+    ⟨by
       skip
       inhabit α
       exact Unique.mk' α⟩⟩
@@ -267,8 +267,8 @@ but is expected to have type
   forall {α : Sort.{u2}} [_inst_1 : IsEmpty.{u2} α] (β : α -> Sort.{u1}), Unique.{imax u2 u1} (forall (a : α), β a)
 Case conversion may be inaccurate. Consider using '#align pi.unique_of_is_empty Pi.uniqueOfIsEmptyₓ'. -/
 /-- There is a unique function on an empty domain. -/
-instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) :
-    Unique (∀ a, β a) where 
+instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, β a)
+    where
   default := isEmptyElim
   uniq f := funext isEmptyElim
 #align pi.unique_of_is_empty Pi.uniqueOfIsEmpty
@@ -279,7 +279,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Unique.{u2} α] (f : α -> β), Eq.{imax u2 u1} (α -> β) f (Function.const.{u1, u2} β α (f (Inhabited.default.{u2} α (Unique.instInhabited.{u2} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align eq_const_of_unique eq_const_of_uniqueₓ'. -/
-theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by
+theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) :=
+  by
   ext x
   rw [Subsingleton.elim x default]
 #align eq_const_of_unique eq_const_of_unique
@@ -350,7 +351,8 @@ lean 3 declaration is
 but is expected to have type
   forall {A : Sort.{u2}} {B : Sort.{u1}} [_inst_1 : Unique.{u2} A] [_inst_2 : Unique.{u1} B] {f : A -> B}, Function.Bijective.{u2, u1} A B f
 Case conversion may be inaccurate. Consider using '#align unique.bijective Unique.bijectiveₓ'. -/
-theorem Unique.bijective {A B} [Unique A] [Unique B] {f : A → B} : Function.Bijective f := by
+theorem Unique.bijective {A B} [Unique A] [Unique B] {f : A → B} : Function.Bijective f :=
+  by
   rw [Function.bijective_iff_has_inverse]
   refine' ⟨default, _, _⟩ <;> intro x <;> simp
 #align unique.bijective Unique.bijective
@@ -373,16 +375,16 @@ end Option
 section Subtype
 
 #print Unique.subtypeEq /-
-instance Unique.subtypeEq (y : α) :
-    Unique { x // x = y } where 
+instance Unique.subtypeEq (y : α) : Unique { x // x = y }
+    where
   default := ⟨y, rfl⟩
   uniq := fun ⟨x, hx⟩ => by simpa using hx
 #align unique.subtype_eq Unique.subtypeEq
 -/
 
 #print Unique.subtypeEq' /-
-instance Unique.subtypeEq' (y : α) :
-    Unique { x // y = x } where 
+instance Unique.subtypeEq' (y : α) : Unique { x // y = x }
+    where
   default := ⟨y, rfl⟩
   uniq := fun ⟨x, hx⟩ => by simpa using hx.symm
 #align unique.subtype_eq' Unique.subtypeEq'

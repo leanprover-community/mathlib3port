@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module algebra.is_prime_pow
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ theorem is_prime_pow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime
       ⟨_, _, hp, Nat.succ_pos', hn⟩⟩
 #align is_prime_pow_iff_pow_succ is_prime_pow_iff_pow_succ
 
-theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) := by
+theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) :=
+  by
   simp only [is_prime_pow_def, not_exists, not_and', and_imp]
   intro x n hn hx
   rw [pow_eq_zero hx]
@@ -47,7 +48,7 @@ theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) := by
 
 theorem IsPrimePow.not_unit {n : R} (h : IsPrimePow n) : ¬IsUnit n :=
   let ⟨p, k, hp, hk, hn⟩ := h
-  hn ▸ (is_unit_pow_iff hk.ne').Not.mpr hp.not_unit
+  hn ▸ (isUnit_pow_iff hk.ne').Not.mpr hp.not_unit
 #align is_prime_pow.not_unit IsPrimePow.not_unit
 
 theorem IsUnit.not_is_prime_pow {n : R} (h : IsUnit n) : ¬IsPrimePow n := fun h' => h'.not_unit h
@@ -85,7 +86,8 @@ theorem Nat.Prime.is_prime_pow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
 #align nat.prime.is_prime_pow Nat.Prime.is_prime_pow
 
 theorem is_prime_pow_nat_iff_bounded (n : ℕ) :
-    IsPrimePow n ↔ ∃ p : ℕ, p ≤ n ∧ ∃ k : ℕ, k ≤ n ∧ p.Prime ∧ 0 < k ∧ p ^ k = n := by
+    IsPrimePow n ↔ ∃ p : ℕ, p ≤ n ∧ ∃ k : ℕ, k ≤ n ∧ p.Prime ∧ 0 < k ∧ p ^ k = n :=
+  by
   rw [is_prime_pow_nat_iff]
   refine' Iff.symm ⟨fun ⟨p, _, k, _, hp, hk, hn⟩ => ⟨p, k, hp, hk, hn⟩, _⟩
   rintro ⟨p, k, hp, hk, rfl⟩
@@ -96,7 +98,8 @@ theorem is_prime_pow_nat_iff_bounded (n : ℕ) :
 instance {n : ℕ} : Decidable (IsPrimePow n) :=
   decidable_of_iff' _ (is_prime_pow_nat_iff_bounded n)
 
-theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m ≠ 1) : IsPrimePow m := by
+theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m ≠ 1) : IsPrimePow m :=
+  by
   rw [is_prime_pow_nat_iff] at hn⊢
   rcases hn with ⟨p, k, hp, hk, rfl⟩
   obtain ⟨i, hik, rfl⟩ := (Nat.dvd_prime_pow hp).1 hm
@@ -107,7 +110,8 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
 #align is_prime_pow.dvd IsPrimePow.dvd
 
 theorem Nat.disjoint_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
-    Disjoint (a.divisors.filter IsPrimePow) (b.divisors.filter IsPrimePow) := by
+    Disjoint (a.divisors.filter IsPrimePow) (b.divisors.filter IsPrimePow) :=
+  by
   simp only [Finset.disjoint_left, Finset.mem_filter, and_imp, Nat.mem_divisors, not_and]
   rintro n han ha hn hbn hb -
   exact hn.ne_one (Nat.eq_one_of_dvd_coprimes hab han hbn)

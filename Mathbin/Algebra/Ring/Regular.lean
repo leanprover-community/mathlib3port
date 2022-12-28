@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.regular
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,8 @@ Case conversion may be inaccurate. Consider using '#align is_left_regular_of_non
 /-- Left `mul` by a `k : α` over `[ring α]` is injective, if `k` is not a zero divisor.
 The typeclass that restricts all terms of `α` to have this property is `no_zero_divisors`. -/
 theorem isLeftRegular_of_non_zero_divisor [NonUnitalNonAssocRing α] (k : α)
-    (h : ∀ x : α, k * x = 0 → x = 0) : IsLeftRegular k := by
+    (h : ∀ x : α, k * x = 0 → x = 0) : IsLeftRegular k :=
+  by
   refine' fun x y (h' : k * x = k * y) => sub_eq_zero.mp (h _ _)
   rw [mul_sub, sub_eq_zero, h']
 #align is_left_regular_of_non_zero_divisor isLeftRegular_of_non_zero_divisor
@@ -45,7 +46,8 @@ Case conversion may be inaccurate. Consider using '#align is_right_regular_of_no
 /-- Right `mul` by a `k : α` over `[ring α]` is injective, if `k` is not a zero divisor.
 The typeclass that restricts all terms of `α` to have this property is `no_zero_divisors`. -/
 theorem isRightRegular_of_non_zero_divisor [NonUnitalNonAssocRing α] (k : α)
-    (h : ∀ x : α, x * k = 0 → x = 0) : IsRightRegular k := by
+    (h : ∀ x : α, x * k = 0 → x = 0) : IsRightRegular k :=
+  by
   refine' fun x y (h' : x * k = y * k) => sub_eq_zero.mp (h _ _)
   rw [sub_mul, sub_eq_zero, h']
 #align is_right_regular_of_non_zero_divisor isRightRegular_of_non_zero_divisor
@@ -72,7 +74,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_regular_iff_ne_zero' isRegular_iff_ne_zero'ₓ'. -/
 theorem isRegular_iff_ne_zero' [Nontrivial α] [NonUnitalNonAssocRing α] [NoZeroDivisors α] {k : α} :
     IsRegular k ↔ k ≠ 0 :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rintro rfl
     exact not_not.mpr h.left not_isLeftRegular_zero, isRegular_of_ne_zero'⟩
 #align is_regular_iff_ne_zero' isRegular_iff_ne_zero'
@@ -88,7 +90,10 @@ Case conversion may be inaccurate. Consider using '#align no_zero_divisors.to_ca
 Note this is not an instance as it forms a typeclass loop. -/
 @[reducible]
 def NoZeroDivisors.toCancelMonoidWithZero [Ring α] [NoZeroDivisors α] : CancelMonoidWithZero α :=
-  { (by infer_instance : MonoidWithZero α) with
+  {
+    (by infer_instance :
+      MonoidWithZero
+        α) with
     mul_left_cancel_of_ne_zero := fun a b c ha =>
       @IsRegular.left _ _ _ (isRegular_of_ne_zero' ha) _ _
     mul_right_cancel_of_ne_zero := fun a b c hb =>

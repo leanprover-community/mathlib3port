@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.equitabilise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
       n ≤ m + 1 ∧
         n ≤ a * m + b * (m + 1) ∧
           ite (0 < a) (a - 1) a * m + ite (0 < a) b (b - 1) * (m + 1) = s.card - n :=
-    by 
+    by
     rw [hn, ← hs]
     split_ifs <;> rw [tsub_mul, one_mul]
     · refine' ⟨m_pos, le_succ _, le_add_right (le_mul_of_pos_left ‹0 < a›), _⟩
@@ -167,14 +167,15 @@ theorem card_filter_equitabilise_big :
 #align finpartition.card_filter_equitabilise_big Finpartition.card_filter_equitabilise_big
 
 theorem card_filter_equitabilise_small (hm : m ≠ 0) :
-    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m).card = a := by
+    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m).card = a :=
+  by
   refine' (mul_eq_mul_right_iff.1 <| (add_left_inj (b * (m + 1))).1 _).resolve_right hm
   rw [h, ← (P.equitabilise h).sum_card_parts]
   have hunion :
     (P.equitabilise h).parts =
       ((P.equitabilise h).parts.filter fun u => u.card = m) ∪
         (P.equitabilise h).parts.filter fun u => u.card = m + 1 :=
-    by 
+    by
     rw [← filter_or, filter_true_of_mem]
     exact fun x => card_eq_of_mem_parts_equitabilise
   nth_rw 2 [hunion]
@@ -186,7 +187,8 @@ theorem card_filter_equitabilise_small (hm : m ≠ 0) :
   exact (hb i h).symm.trans (ha i h)
 #align finpartition.card_filter_equitabilise_small Finpartition.card_filter_equitabilise_small
 
-theorem card_parts_equitabilise (hm : m ≠ 0) : (P.equitabilise h).parts.card = a + b := by
+theorem card_parts_equitabilise (hm : m ≠ 0) : (P.equitabilise h).parts.card = a + b :=
+  by
   rw [← filter_true_of_mem fun x => card_eq_of_mem_parts_equitabilise, filter_or, card_union_eq,
     P.card_filter_equitabilise_small _ hm, P.card_filter_equitabilise_big]
   exact disjoint_filter.2 fun x _ h₀ h₁ => Nat.succ_ne_self m <| h₁.symm.trans h₀
@@ -202,7 +204,8 @@ variable (s)
 
 /-- We can find equipartitions of arbitrary size. -/
 theorem exists_equipartition_card_eq (hn : n ≠ 0) (hs : n ≤ s.card) :
-    ∃ P : Finpartition s, P.IsEquipartition ∧ P.parts.card = n := by
+    ∃ P : Finpartition s, P.IsEquipartition ∧ P.parts.card = n :=
+  by
   rw [← pos_iff_ne_zero] at hn
   have : (n - s.card % n) * (s.card / n) + s.card % n * (s.card / n + 1) = s.card := by
     rw [tsub_mul, mul_add, ← add_assoc,

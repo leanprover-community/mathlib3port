@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.bool.count
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,8 @@ theorem count_tt_add_count_ff (l : List Bool) : count true l + count false l = l
 theorem Chain.count_bnot :
     ∀ {b : Bool} {l : List Bool}, Chain (· ≠ ·) b l → count (!b) l = count b l + length l % 2
   | b, [], h => rfl
-  | b, x :: l, h => by
+  | b, x :: l, h =>
+    by
     obtain rfl : b = !x := Bool.eq_not_iff.2 (rel_of_chain_cons h)
     rw [Bool.not_not, count_cons_self, count_cons_of_ne x.bnot_ne_self,
       chain.count_bnot (chain_of_chain_cons h), length, add_assoc, Nat.mod_two_add_succ_mod_two]
@@ -56,7 +57,7 @@ namespace Chain'
 variable {l : List Bool}
 
 theorem count_bnot_eq_count (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) (b : Bool) :
-    count (!b) l = count b l := by 
+    count (!b) l = count b l := by
   cases' l with x l
   · rfl
   rw [length_cons, Nat.even_add_one, Nat.not_even_iff] at h2
@@ -71,7 +72,7 @@ theorem count_ff_eq_count_tt (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) 
 #align list.chain'.count_ff_eq_count_tt List.Chain'.count_ff_eq_count_tt
 
 theorem count_bnot_le_count_add_one (hl : Chain' (· ≠ ·) l) (b : Bool) :
-    count (!b) l ≤ count b l + 1 := by 
+    count (!b) l ≤ count b l + 1 := by
   cases' l with x l
   · exact zero_le _
   obtain rfl | rfl : b = x ∨ b = !x := by simp only [Bool.eq_not_iff, em]
@@ -97,7 +98,7 @@ theorem two_mul_count_bool_of_even (hl : Chain' (· ≠ ·) l) (h2 : Even (lengt
 theorem two_mul_count_bool_eq_ite (hl : Chain' (· ≠ ·) l) (b : Bool) :
     2 * count b l =
       if Even (length l) then length l else if b ∈ l.head' then length l + 1 else length l - 1 :=
-  by 
+  by
   by_cases h2 : Even (length l)
   · rw [if_pos h2, hl.two_mul_count_bool_of_even h2]
   · cases' l with x l
@@ -110,20 +111,23 @@ theorem two_mul_count_bool_eq_ite (hl : Chain' (· ≠ ·) l) (b : Bool) :
 #align list.chain'.two_mul_count_bool_eq_ite List.Chain'.two_mul_count_bool_eq_ite
 
 theorem length_sub_one_le_two_mul_count_bool (hl : Chain' (· ≠ ·) l) (b : Bool) :
-    length l - 1 ≤ 2 * count b l := by
+    length l - 1 ≤ 2 * count b l :=
+  by
   rw [hl.two_mul_count_bool_eq_ite]
   split_ifs <;> simp [le_tsub_add, Nat.le_succ_of_le]
 #align
   list.chain'.length_sub_one_le_two_mul_count_bool List.Chain'.length_sub_one_le_two_mul_count_bool
 
 theorem length_div_two_le_count_bool (hl : Chain' (· ≠ ·) l) (b : Bool) :
-    length l / 2 ≤ count b l := by
+    length l / 2 ≤ count b l :=
+  by
   rw [Nat.div_le_iff_le_mul_add_pred two_pos, ← tsub_le_iff_right]
   exact length_sub_one_le_two_mul_count_bool hl b
 #align list.chain'.length_div_two_le_count_bool List.Chain'.length_div_two_le_count_bool
 
 theorem two_mul_count_bool_le_length_add_one (hl : Chain' (· ≠ ·) l) (b : Bool) :
-    2 * count b l ≤ length l + 1 := by
+    2 * count b l ≤ length l + 1 :=
+  by
   rw [hl.two_mul_count_bool_eq_ite]
   split_ifs <;> simp [Nat.le_succ_of_le]
 #align

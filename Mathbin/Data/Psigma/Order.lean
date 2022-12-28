@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 
 ! This file was ported from Lean 3 source module data.psigma.order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,9 +69,9 @@ instance lt [LT ι] [∀ i, LT (α i)] : LT (Σₗ' i, α i) :=
 
 #print PSigma.Lex.preorder /-
 instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, α i) :=
-  { Lex.le, Lex.lt with 
+  { Lex.le, Lex.lt with
     le_refl := fun ⟨i, a⟩ => Lex.right _ le_rfl
-    le_trans := by 
+    le_trans := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁r⟩ ⟨h₂r⟩
       · left
         apply lt_trans
@@ -83,7 +83,8 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, �
       · right
         apply le_trans
         repeat' assumption
-    lt_iff_le_not_le := by
+    lt_iff_le_not_le :=
+      by
       refine' fun a b => ⟨fun hab => ⟨hab.mono_right fun i a b => le_of_lt, _⟩, _⟩
       · rintro (⟨i, a, hji⟩ | ⟨i, hba⟩) <;> obtain ⟨_, _, hij⟩ | ⟨_, hab⟩ := hab
         · exact hij.not_lt hji
@@ -100,7 +101,8 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, �
 /-- Dictionary / lexicographic partial_order for dependent pairs. -/
 instance partialOrder [PartialOrder ι] [∀ i, PartialOrder (α i)] : PartialOrder (Σₗ' i, α i) :=
   { Lex.preorder with
-    le_antisymm := by
+    le_antisymm :=
+      by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, hlt₁⟩ | ⟨_, hlt₁⟩) (⟨_, _, hlt₂⟩ | ⟨_, hlt₂⟩)
       · exact (lt_irrefl a₁ <| hlt₁.trans hlt₂).elim
       · exact (lt_irrefl a₁ hlt₁).elim
@@ -112,8 +114,9 @@ instance partialOrder [PartialOrder ι] [∀ i, PartialOrder (α i)] : PartialOr
 #print PSigma.Lex.linearOrder /-
 /-- Dictionary / lexicographic linear_order for pairs. -/
 instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder (Σₗ' i, α i) :=
-  { Lex.partialOrder with
-    le_total := by 
+  {
+    Lex.partialOrder with
+    le_total := by
       rintro ⟨i, a⟩ ⟨j, b⟩
       obtain hij | rfl | hji := lt_trichotomy i j
       · exact Or.inl (lex.left _ _ hij)
@@ -135,9 +138,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.lex.order_bot PSigma.Lex.orderBotₓ'. -/
 /-- The lexicographical linear order on a sigma type. -/
 instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] :
-    OrderBot (Σₗ' i, α i) where 
+    OrderBot (Σₗ' i, α i) where
   bot := ⟨⊥, ⊥⟩
-  bot_le := fun ⟨a, b⟩ => by 
+  bot_le := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_bot_or_bot_lt a
     · exact lex.right _ bot_le
     · exact lex.left _ _ ha
@@ -151,9 +154,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.lex.order_top PSigma.Lex.orderTopₓ'. -/
 /-- The lexicographical linear order on a sigma type. -/
 instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [OrderTop (α ⊤)] :
-    OrderTop (Σₗ' i, α i) where 
+    OrderTop (Σₗ' i, α i) where
   top := ⟨⊤, ⊤⟩
-  le_top := fun ⟨a, b⟩ => by 
+  le_top := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_top_or_lt_top a
     · exact lex.right _ le_top
     · exact lex.left _ _ ha
@@ -174,7 +177,7 @@ instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i
 #print PSigma.Lex.denselyOrdered /-
 instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σₗ' i, α i) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | @⟨_, _, b, h⟩)
     · obtain ⟨k, hi, hj⟩ := exists_between h
       obtain ⟨c⟩ : Nonempty (α k) := inferInstance
@@ -187,7 +190,7 @@ instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i
 #print PSigma.Lex.denselyOrdered_of_noMaxOrder /-
 instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
     [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | @⟨_, _, b, h⟩)
     · obtain ⟨c, ha⟩ := exists_gt a
       exact ⟨⟨i, c⟩, right _ ha, left _ _ h⟩
@@ -199,7 +202,7 @@ instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [�
 #print PSigma.Lex.densely_ordered_of_noMinOrder /-
 instance densely_ordered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | @⟨_, _, b, h⟩)
     · obtain ⟨c, hb⟩ := exists_lt b
       exact ⟨⟨j, c⟩, left _ _ h, right _ hb⟩
@@ -211,7 +214,7 @@ instance densely_ordered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)]
 #print PSigma.Lex.noMaxOrder_of_nonempty /-
 instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
     [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ' i, α i) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
@@ -228,7 +231,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
 instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀ i, Nonempty (α i)] :
     NoMaxOrder (Σₗ' i, α i) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
@@ -238,7 +241,7 @@ instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀
 #print PSigma.Lex.noMaxOrder /-
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ' i, α i) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩
     obtain ⟨b, h⟩ := exists_gt a
     exact ⟨⟨i, b⟩, right _ h⟩⟩
@@ -248,7 +251,7 @@ instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (�
 #print PSigma.Lex.noMinOrder /-
 instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ' i, α i) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩
     obtain ⟨b, h⟩ := exists_lt a
     exact ⟨⟨i, b⟩, right _ h⟩⟩

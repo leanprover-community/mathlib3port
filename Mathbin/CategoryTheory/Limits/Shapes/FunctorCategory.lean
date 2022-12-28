@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.functor_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,13 +28,13 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 variable {D : Type u₂} [Category.{v₂} D]
 
-instance functorCategoryHasFiniteLimits [HasFiniteLimits D] :
-    HasFiniteLimits (C ⥤ D) where out J _ _ := inferInstance
+instance functorCategoryHasFiniteLimits [HasFiniteLimits D] : HasFiniteLimits (C ⥤ D)
+    where out J _ _ := inferInstance
 #align
   category_theory.limits.functor_category_has_finite_limits CategoryTheory.Limits.functorCategoryHasFiniteLimits
 
-instance functorCategoryHasFiniteColimits [HasFiniteColimits D] :
-    HasFiniteColimits (C ⥤ D) where out J _ _ := inferInstance
+instance functorCategoryHasFiniteColimits [HasFiniteColimits D] : HasFiniteColimits (C ⥤ D)
+    where out J _ _ := inferInstance
 #align
   category_theory.limits.functor_category_has_finite_colimits CategoryTheory.Limits.functorCategoryHasFiniteColimits
 

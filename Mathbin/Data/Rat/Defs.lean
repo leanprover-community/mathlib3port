@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,8 +91,10 @@ def [anonymous] (n : ℤ) : ℕ+ → ℚ
     let g := n'.gcd d
     ⟨n / g, d / g, by
       apply (Nat.le_div_iff_mul_le (Nat.gcd_pos_of_pos_right _ dpos)).2
-      rw [one_mul]; exact Nat.le_of_dvd dpos (Nat.gcd_dvd_right _ _), by
-      have : Int.natAbs (n / ↑g) = n' / g := by
+      rw [one_mul]; exact Nat.le_of_dvd dpos (Nat.gcd_dvd_right _ _),
+      by
+      have : Int.natAbs (n / ↑g) = n' / g :=
+        by
         cases' Int.natAbs_eq n with e e <;> rw [e]
         · rfl
         rw [Int.neg_ediv_of_dvd, Int.natAbs_neg]
@@ -122,7 +124,7 @@ scoped infixl:70 " /. " => Rat.mk
 /- warning: rat.mk_pnat_eq clashes with [anonymous] -> [anonymous]
 warning: rat.mk_pnat_eq -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall (n : Int) (d : Nat) (h : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d), Eq.{1} Rat ([anonymous] n (Subtype.mk.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) d h)) (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d))
+  forall (n : Int) (d : Nat) (h : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d), Eq.{1} Rat ([anonymous] n (Subtype.mk.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) d h)) (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))
 but is expected to have type
   forall {n : Sort.{u}} {d : Nat}, ((Eq.{1} Nat d (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat d (Nat.succ m)) -> n) -> n
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_eq [anonymous]ₓ'. -/
@@ -132,7 +134,7 @@ theorem [anonymous] (n d h) : [anonymous] n ⟨d, h⟩ = n /. d := by
 
 /- warning: rat.mk_nat_eq -> Rat.mkRat_eq is a dubious translation:
 lean 3 declaration is
-  forall (n : Int) (d : Nat), Eq.{1} Rat (mkRat n d) (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d))
+  forall (n : Int) (d : Nat), Eq.{1} Rat (mkRat n d) (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))
 but is expected to have type
   forall (n : Int) (d : Nat), Eq.{1} Rat (mkRat n d) (Rat.divInt n (Nat.cast.{0} Int Int.instNatCastInt d))
 Case conversion may be inaccurate. Consider using '#align rat.mk_nat_eq Rat.mkRat_eqₓ'. -/
@@ -159,7 +161,8 @@ but is expected to have type
   forall {n : Sort.{u}} {n_1 : Nat}, ((Eq.{1} Nat n_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat n_1 (Nat.succ m)) -> n) -> n
 Case conversion may be inaccurate. Consider using '#align rat.zero_mk_pnat [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] (n) : [anonymous] 0 n = 0 := by
+theorem [anonymous] (n) : [anonymous] 0 n = 0 :=
+  by
   cases' n with n npos
   simp only [mk_pnat, Int.natAbs_zero, Nat.div_self npos, Nat.gcd_zero_left, Int.zero_div]
   rfl
@@ -192,12 +195,14 @@ but is expected to have type
   forall {a : Int} {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Iff (Eq.{1} Rat (Rat.divInt a b) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))) (Eq.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))))
 Case conversion may be inaccurate. Consider using '#align rat.mk_eq_zero Rat.divInt_eq_zeroₓ'. -/
 @[simp]
-theorem divInt_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 := by
+theorem divInt_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 :=
+  by
   refine'
-    ⟨fun h => _, by 
+    ⟨fun h => _, by
       rintro rfl
       simp⟩
-  have : ∀ {a b}, mk_pnat a b = 0 → a = 0 := by
+  have : ∀ {a b}, mk_pnat a b = 0 → a = 0 :=
+    by
     rintro a ⟨b, h⟩ e
     injection e with e
     apply Int.eq_mul_of_ediv_eq_right gcd_abs_dvd_left e
@@ -225,11 +230,13 @@ but is expected to have type
   forall {a : Int} {b : Int} {c : Int} {d : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Iff (Eq.{1} Rat (Rat.divInt c a) (Rat.divInt d b)) (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) d a)))
 Case conversion may be inaccurate. Consider using '#align rat.mk_eq Rat.divInt_eq_iffₓ'. -/
 theorem divInt_eq_iff :
-    ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /. d ↔ a * d = c * b := by
-  suffices ∀ a b c d hb hd, [anonymous] a ⟨b, hb⟩ = [anonymous] c ⟨d, hd⟩ ↔ a * d = c * b by
+    ∀ {a b c d : ℤ} (hb : b ≠ 0) (hd : d ≠ 0), a /. b = c /. d ↔ a * d = c * b :=
+  by
+  suffices ∀ a b c d hb hd, [anonymous] a ⟨b, hb⟩ = [anonymous] c ⟨d, hd⟩ ↔ a * d = c * b
+    by
     intros ; cases' b with b b <;> simp [mk, mk_nat, Nat.succPNat]
     simp [mt (congr_arg Int.ofNat) hb]
-    all_goals 
+    all_goals
       cases' d with d d <;> simp [mk, mk_nat, Nat.succPNat]
       simp [mt (congr_arg Int.ofNat) hd]
       all_goals rw [this]; try rfl
@@ -244,22 +251,24 @@ theorem divInt_eq_iff :
       cc
   intros ; simp [mk_pnat]; constructor <;> intro h
   · cases' h with ha hb
-    have ha := by 
+    have ha := by
       have dv := @gcd_abs_dvd_left
       have := Int.eq_mul_of_ediv_eq_right dv ha
       rw [← Int.mul_ediv_assoc _ dv] at this
       exact Int.eq_mul_of_ediv_eq_left (dv.mul_left _) this.symm
-    have hb := by 
+    have hb := by
       have dv := fun {a b} => Nat.gcd_dvd_right (Int.natAbs a) b
       have := Nat.eq_mul_of_div_eq_right dv hb
       rw [← Nat.mul_div_assoc _ dv] at this
       exact Nat.eq_mul_of_div_eq_left (dv.mul_left _) this.symm
-    have m0 : (a.nat_abs.gcd b * c.nat_abs.gcd d : ℤ) ≠ 0 := by
+    have m0 : (a.nat_abs.gcd b * c.nat_abs.gcd d : ℤ) ≠ 0 :=
+      by
       refine' Int.coe_nat_ne_zero.2 (ne_of_gt _)
       apply mul_pos <;> apply Nat.gcd_pos_of_pos_right <;> assumption
     apply mul_right_cancel₀ m0
     simpa [mul_comm, mul_left_comm] using congr (congr_arg (· * ·) ha.symm) (congr_arg coe hb)
-  · suffices ∀ a c, a * d = c * b → a / a.gcd b = c / c.gcd d ∧ b / a.gcd b = d / c.gcd d by
+  · suffices ∀ a c, a * d = c * b → a / a.gcd b = c / c.gcd d ∧ b / a.gcd b = d / c.gcd d
+      by
       cases' this a.nat_abs c.nat_abs (by simpa [Int.natAbs_mul] using congr_arg Int.natAbs h) with
         h₁ h₂
       have hs := congr_arg Int.sign h
@@ -301,7 +310,8 @@ but is expected to have type
   forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int c (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Rat (Rat.divInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c)) (Rat.divInt a b))
 Case conversion may be inaccurate. Consider using '#align rat.div_mk_div_cancel_left Rat.divInt_mul_rightₓ'. -/
 @[simp]
-theorem divInt_mul_right {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) = a /. b := by
+theorem divInt_mul_right {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) = a /. b :=
+  by
   by_cases b0 : b = 0;
   · subst b0
     simp
@@ -310,7 +320,7 @@ theorem divInt_mul_right {a b c : ℤ} (c0 : c ≠ 0) : a * c /. (b * c) = a /. 
 
 /- warning: rat.num_denom -> Rat.num_den is a dubious translation:
 lean 3 declaration is
-  forall {a : Rat}, Eq.{1} Rat (Rat.mk (Rat.num a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Rat.den a))) a
+  forall {a : Rat}, Eq.{1} Rat (Rat.mk (Rat.num a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den a))) a
 but is expected to have type
   forall {a : Rat}, Eq.{1} Rat (Rat.divInt (Rat.num a) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den a))) a
 Case conversion may be inaccurate. Consider using '#align rat.num_denom Rat.num_denₓ'. -/
@@ -321,7 +331,7 @@ theorem num_den : ∀ {a : ℚ}, a.num /. a.denom = a
 
 /- warning: rat.num_denom' -> Rat.num_den' is a dubious translation:
 lean 3 declaration is
-  forall {n : Int} {d : Nat} {h : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d} {c : Nat.Coprime (Int.natAbs n) d}, Eq.{1} Rat (Rat.mk' n d h c) (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d))
+  forall {n : Int} {d : Nat} {h : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d} {c : Nat.Coprime (Int.natAbs n) d}, Eq.{1} Rat (Rat.mk' n d h c) (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))
 but is expected to have type
   forall {n : Int} {d : Nat} {h : Ne.{1} Nat d (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} {c : Nat.coprime (Int.natAbs n) d}, Eq.{1} Rat (Rat.mk' n d h c) (Rat.divInt n (Nat.cast.{0} Int Int.instNatCastInt d))
 Case conversion may be inaccurate. Consider using '#align rat.num_denom' Rat.num_den'ₓ'. -/
@@ -341,7 +351,7 @@ theorem coe_int_eq_divInt (z : ℤ) : (z : ℚ) = z /. 1 :=
 
 /- warning: rat.num_denom_cases_on -> Rat.numDenCasesOn is a dubious translation:
 lean 3 declaration is
-  forall {C : Rat -> Sort.{u1}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d)))) -> (C a)
+  forall {C : Rat -> Sort.{u1}} (a : Rat), (forall (n : Int) (d : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d) -> (Nat.Coprime (Int.natAbs n) d) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)))) -> (C a)
 but is expected to have type
   forall {C : Rat -> Sort.{u1}} (a : Rat), (forall (n : [mdata borrowed:1 Int]) (d : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) d) -> (Nat.coprime (Int.natAbs n) d) -> (C (Rat.divInt n (Nat.cast.{0} Int Int.instNatCastInt d)))) -> (C a)
 Case conversion may be inaccurate. Consider using '#align rat.num_denom_cases_on Rat.numDenCasesOnₓ'. -/
@@ -355,7 +365,7 @@ def numDenCasesOn.{u} {C : ℚ → Sort u} :
 
 /- warning: rat.num_denom_cases_on' -> Rat.numDenCasesOn' is a dubious translation:
 lean 3 declaration is
-  forall {C : Rat -> Sort.{u1}} (a : Rat), (forall (n : Int) (d : Nat), (Ne.{1} Nat d (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d)))) -> (C a)
+  forall {C : Rat -> Sort.{u1}} (a : Rat), (forall (n : Int) (d : Nat), (Ne.{1} Nat d (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (C (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)))) -> (C a)
 but is expected to have type
   forall {C : Rat -> Sort.{u1}} (a : Rat), (forall (n : Int) (d : Nat), (Ne.{1} Nat d (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (C (Rat.divInt n (Nat.cast.{0} Int Int.instNatCastInt d)))) -> (C a)
 Case conversion may be inaccurate. Consider using '#align rat.num_denom_cases_on' Rat.numDenCasesOn'ₓ'. -/
@@ -378,7 +388,7 @@ instance : Add ℚ :=
 
 /- warning: rat.lift_binop_eq -> Rat.lift_binop_eq is a dubious translation:
 lean 3 declaration is
-  forall (f : Rat -> Rat -> Rat) (f₁ : Int -> Int -> Int -> Int -> Int) (f₂ : Int -> Int -> Int -> Int -> Int), (forall {n₁ : Int} {d₁ : Nat} {h₁ : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d₁} {c₁ : Nat.Coprime (Int.natAbs n₁) d₁} {n₂ : Int} {d₂ : Nat} {h₂ : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d₂} {c₂ : Nat.Coprime (Int.natAbs n₂) d₂}, Eq.{1} Rat (f (Rat.mk' n₁ d₁ h₁ c₁) (Rat.mk' n₂ d₂ h₂ c₂)) (Rat.mk (f₁ n₁ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d₁) n₂ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d₂)) (f₂ n₁ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d₁) n₂ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) d₂)))) -> (forall {n₁ : Int} {d₁ : Int} {n₂ : Int} {d₂ : Int}, (Ne.{1} Int d₁ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int d₂ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int (f₂ n₁ d₁ n₂ d₂) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) -> (forall (a : Int) (b : Int) (c : Int) (d : Int), (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (forall {n₁ : Int} {d₁ : Int} {n₂ : Int} {d₂ : Int}, (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a d₁) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n₁ b)) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c d₂) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n₂ d)) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (f₁ n₁ d₁ n₂ d₂) (f₂ a b c d)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (f₁ a b c d) (f₂ n₁ d₁ n₂ d₂)))) -> (Eq.{1} Rat (f (Rat.mk a b) (Rat.mk c d)) (Rat.mk (f₁ a b c d) (f₂ a b c d))))
+  forall (f : Rat -> Rat -> Rat) (f₁ : Int -> Int -> Int -> Int -> Int) (f₂ : Int -> Int -> Int -> Int -> Int), (forall {n₁ : Int} {d₁ : Nat} {h₁ : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d₁} {c₁ : Nat.Coprime (Int.natAbs n₁) d₁} {n₂ : Int} {d₂ : Nat} {h₂ : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d₂} {c₂ : Nat.Coprime (Int.natAbs n₂) d₂}, Eq.{1} Rat (f (Rat.mk' n₁ d₁ h₁ c₁) (Rat.mk' n₂ d₂ h₂ c₂)) (Rat.mk (f₁ n₁ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d₁) n₂ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d₂)) (f₂ n₁ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d₁) n₂ ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d₂)))) -> (forall {n₁ : Int} {d₁ : Int} {n₂ : Int} {d₂ : Int}, (Ne.{1} Int d₁ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int d₂ (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int (f₂ n₁ d₁ n₂ d₂) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))) -> (forall (a : Int) (b : Int) (c : Int) (d : Int), (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Ne.{1} Int d (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (forall {n₁ : Int} {d₁ : Int} {n₂ : Int} {d₂ : Int}, (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a d₁) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n₁ b)) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c d₂) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) n₂ d)) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (f₁ n₁ d₁ n₂ d₂) (f₂ a b c d)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (f₁ a b c d) (f₂ n₁ d₁ n₂ d₂)))) -> (Eq.{1} Rat (f (Rat.mk a b) (Rat.mk c d)) (Rat.mk (f₁ a b c d) (f₂ a b c d))))
 but is expected to have type
   forall (f : Rat -> Rat -> Rat) (f₁ : Int -> Int -> Int -> Int -> Int) (f₂ : Int -> Int -> Int -> Int -> Int), (forall {n₁ : Int} {d₁ : Nat} {h₁ : Ne.{1} Nat d₁ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} {c₁ : Nat.coprime (Int.natAbs n₁) d₁} {n₂ : Int} {d₂ : Nat} {h₂ : Ne.{1} Nat d₂ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))} {c₂ : Nat.coprime (Int.natAbs n₂) d₂}, Eq.{1} Rat (f (Rat.mk' n₁ d₁ h₁ c₁) (Rat.mk' n₂ d₂ h₂ c₂)) (Rat.divInt (f₁ n₁ (Nat.cast.{0} Int Int.instNatCastInt d₁) n₂ (Nat.cast.{0} Int Int.instNatCastInt d₂)) (f₂ n₁ (Nat.cast.{0} Int Int.instNatCastInt d₁) n₂ (Nat.cast.{0} Int Int.instNatCastInt d₂)))) -> (forall {n₁ : Int} {d₁ : Int} {n₂ : Int} {d₂ : Int}, (Ne.{1} Int d₁ (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int d₂ (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int (f₂ n₁ d₁ n₂ d₂) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))) -> (forall (a : Int) (b : Int) (c : Int) (d : Int), (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Ne.{1} Int d (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (forall {n₁ : Int} {d₁ : Int} {n₂ : Int} {d₂ : Int}, (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a d₁) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n₁ b)) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c d₂) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) n₂ d)) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (f₁ n₁ d₁ n₂ d₂) (f₂ a b c d)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (f₁ a b c d) (f₂ n₁ d₁ n₂ d₂)))) -> (Eq.{1} Rat (f (Rat.divInt a b) (Rat.divInt c d)) (Rat.divInt (f₁ a b c d) (f₂ a b c d))))
 Case conversion may be inaccurate. Consider using '#align rat.lift_binop_eq Rat.lift_binop_eqₓ'. -/
@@ -391,7 +401,8 @@ theorem lift_binop_eq (f : ℚ → ℚ → ℚ) (f₁ : ℤ → ℤ → ℤ → 
     (H :
       ∀ {n₁ d₁ n₂ d₂} (h₁ : a * d₁ = n₁ * b) (h₂ : c * d₂ = n₂ * d),
         f₁ n₁ d₁ n₂ d₂ * f₂ a b c d = f₁ a b c d * f₂ n₁ d₁ n₂ d₂) :
-    f (a /. b) (c /. d) = f₁ a b c d /. f₂ a b c d := by
+    f (a /. b) (c /. d) = f₁ a b c d /. f₂ a b c d :=
+  by
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   generalize hc : c /. d = x; cases' x with n₂ d₂ h₂ c₂; rw [num_denom'] at hc
   rw [fv]
@@ -408,7 +419,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.add_def Rat.add_def''ₓ'. -/
 @[simp]
 theorem add_def'' {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) :
-    a /. b + c /. d = (a * d + c * b) /. (b * d) := by
+    a /. b + c /. d = (a * d + c * b) /. (b * d) :=
+  by
   apply lift_binop_eq Rat.add <;> intros <;> try assumption
   · apply mk_pnat_eq
   · apply mul_ne_zero d₁0 d₂0
@@ -437,7 +449,8 @@ but is expected to have type
   forall {a : Int} {b : Int}, Eq.{1} Rat (Neg.neg.{0} Rat Rat.instNegRat (Rat.divInt a b)) (Rat.divInt (Neg.neg.{0} Int Int.instNegInt a) b)
 Case conversion may be inaccurate. Consider using '#align rat.neg_def Rat.neg_defₓ'. -/
 @[simp]
-theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b := by
+theorem neg_def {a b : ℤ} : -(a /. b) = -a /. b :=
+  by
   by_cases b0 : b = 0;
   · subst b0
     simp
@@ -478,7 +491,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mul_def Rat.mul_def'ₓ'. -/
 @[simp]
 theorem mul_def' {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) : a /. b * (c /. d) = a * c /. (b * d) :=
-  by 
+  by
   apply lift_binop_eq Rat.mul <;> intros <;> try assumption
   · apply mk_pnat_eq
   · apply mul_ne_zero d₁0 d₂0
@@ -507,7 +520,8 @@ but is expected to have type
   forall {a : Int} {b : Int}, Eq.{1} Rat (Inv.inv.{0} Rat Rat.instInvRat (Rat.divInt a b)) (Rat.divInt b a)
 Case conversion may be inaccurate. Consider using '#align rat.inv_def Rat.inv_def'ₓ'. -/
 @[simp]
-theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
+theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
+  by
   by_cases a0 : a = 0
   · subst a0
     simp
@@ -528,7 +542,7 @@ theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
     · unfold Rat.inv
       rw [num_denom']
       rfl
-  have n0 : n ≠ 0 := by 
+  have n0 : n ≠ 0 := by
     rintro rfl
     rw [Rat.zero_divInt, mk_eq_zero b0] at ha
     exact a0 ha
@@ -581,7 +595,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_zero_one Rat.divInt_zero_oneₓ'. -/
 @[simp]
 theorem divInt_zero_one : 0 /. 1 = 0 :=
-  show [anonymous] _ _ = _ by 
+  show [anonymous] _ _ = _ by
     rw [mk_pnat]
     simp
     rfl
@@ -595,7 +609,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_one_one Rat.divInt_one_oneₓ'. -/
 @[simp]
 theorem divInt_one_one : 1 /. 1 = 1 :=
-  show [anonymous] _ _ = _ by 
+  show [anonymous] _ _ = _ by
     rw [mk_pnat]
     simp
     rfl
@@ -609,7 +623,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_neg_one_one Rat.divInt_neg_one_oneₓ'. -/
 @[simp]
 theorem divInt_neg_one_one : -1 /. 1 = -1 :=
-  show [anonymous] _ _ = _ by 
+  show [anonymous] _ _ = _ by
     rw [mk_pnat]
     simp
     rfl
@@ -617,7 +631,7 @@ theorem divInt_neg_one_one : -1 /. 1 = -1 :=
 
 #print Rat.mul_one /-
 protected theorem mul_one : a * 1 = a :=
-  (numDenCasesOn' a) fun n d h => by 
+  (numDenCasesOn' a) fun n d h => by
     rw [← mk_one_one]
     simp [h, -mk_one_one]
 #align rat.mul_one Rat.mul_one
@@ -625,7 +639,7 @@ protected theorem mul_one : a * 1 = a :=
 
 #print Rat.one_mul /-
 protected theorem one_mul : 1 * a = a :=
-  (numDenCasesOn' a) fun n d h => by 
+  (numDenCasesOn' a) fun n d h => by
     rw [← mk_one_one]
     simp [h, -mk_one_one]
 #align rat.one_mul Rat.one_mul
@@ -663,7 +677,8 @@ protected theorem mul_add : a * (b + c) = a * b + a * c := by
 -/
 
 #print Rat.zero_ne_one /-
-protected theorem zero_ne_one : 0 ≠ (1 : ℚ) := by
+protected theorem zero_ne_one : 0 ≠ (1 : ℚ) :=
+  by
   rw [ne_comm, ← mk_one_one, mk_ne_zero one_ne_zero]
   exact one_ne_zero
 #align rat.zero_ne_one Rat.zero_ne_one
@@ -671,10 +686,11 @@ protected theorem zero_ne_one : 0 ≠ (1 : ℚ) := by
 
 #print Rat.mul_inv_cancel /-
 protected theorem mul_inv_cancel : a ≠ 0 → a * a⁻¹ = 1 :=
-  (numDenCasesOn' a) fun n d h a0 => by
+  (numDenCasesOn' a) fun n d h a0 =>
+    by
     have n0 : n ≠ 0 :=
       mt
-        (by 
+        (by
           rintro rfl
           simp)
         a0
@@ -699,7 +715,7 @@ The `rat.field` instance and any field-specific lemmas can be found in `data.rat
 -/
 
 
-instance : CommRing ℚ where 
+instance : CommRing ℚ where
   zero := 0
   add := (· + ·)
   neg := Neg.neg
@@ -726,7 +742,7 @@ instance : CommRing ℚ where
       Nat.cast_add, Nat.cast_one, mul_one]
 
 instance : CommGroupWithZero ℚ :=
-  { Rat.commRing with 
+  { Rat.commRing with
     zero := 0
     one := 1
     mul := (· * ·)
@@ -781,8 +797,9 @@ theorem den_nz (q : ℚ) : q.denom ≠ 0 :=
 -/
 
 #print Rat.eq_iff_mul_eq_mul /-
-theorem eq_iff_mul_eq_mul {p q : ℚ} : p = q ↔ p.num * q.denom = q.num * p.denom := by
-  conv => 
+theorem eq_iff_mul_eq_mul {p q : ℚ} : p = q ↔ p.num * q.denom = q.num * p.denom :=
+  by
+  conv =>
     lhs
     rw [← @num_denom p, ← @num_denom q]
   apply Rat.divInt_eq_iff <;>
@@ -830,7 +847,8 @@ theorem den_zero : Rat.den 0 = 1 :=
 -/
 
 #print Rat.zero_of_num_zero /-
-theorem zero_of_num_zero {q : ℚ} (hq : q.num = 0) : q = 0 := by
+theorem zero_of_num_zero {q : ℚ} (hq : q.num = 0) : q = 0 :=
+  by
   have : q = q.num /. q.denom := num_den.symm
   simpa [hq]
 #align rat.zero_of_num_zero Rat.zero_of_num_zero
@@ -894,11 +912,12 @@ theorem divInt_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /
 
 /- warning: rat.mul_num_denom -> Rat.mul_num_den is a dubious translation:
 lean 3 declaration is
-  forall (q : Rat) (r : Rat), Eq.{1} Rat (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) q r) (Rat.mk (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) (Rat.num r)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Rat.den q) (Rat.den r))))
+  forall (q : Rat) (r : Rat), Eq.{1} Rat (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) q r) (Rat.mk (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) (Rat.num r)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Rat.den q) (Rat.den r))))
 but is expected to have type
   forall (q : Rat) (r : Rat), Eq.{1} Rat (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) q r) (Rat.divInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Rat.num r)) (Nat.cast.{0} Int Int.instNatCastInt (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Rat.den q) (Rat.den r))))
 Case conversion may be inaccurate. Consider using '#align rat.mul_num_denom Rat.mul_num_denₓ'. -/
-theorem mul_num_den (q r : ℚ) : q * r = q.num * r.num /. ↑(q.denom * r.denom) := by
+theorem mul_num_den (q r : ℚ) : q * r = q.num * r.num /. ↑(q.denom * r.denom) :=
+  by
   have hq' : (↑q.denom : ℤ) ≠ 0 := by have := denom_ne_zero q <;> simpa
   have hr' : (↑r.denom : ℤ) ≠ 0 := by have := denom_ne_zero r <;> simpa
   suffices q.num /. ↑q.denom * (r.num /. ↑r.denom) = q.num * r.num /. ↑(q.denom * r.denom) by
@@ -908,12 +927,12 @@ theorem mul_num_den (q r : ℚ) : q * r = q.num * r.num /. ↑(q.denom * r.denom
 
 /- warning: rat.div_num_denom -> Rat.div_num_den is a dubious translation:
 lean 3 declaration is
-  forall (q : Rat) (r : Rat), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) q r) (Rat.mk (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Rat.den r))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Rat.den q)) (Rat.num r)))
+  forall (q : Rat) (r : Rat), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) q r) (Rat.mk (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den r))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q)) (Rat.num r)))
 but is expected to have type
   forall (q : Rat) (r : Rat), Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) q r) (Rat.divInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den r))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)) (Rat.num r)))
 Case conversion may be inaccurate. Consider using '#align rat.div_num_denom Rat.div_num_denₓ'. -/
 theorem div_num_den (q r : ℚ) : q / r = q.num * r.denom /. (q.denom * r.num) :=
-  if hr : r.num = 0 then by 
+  if hr : r.num = 0 then by
     have hr' : r = 0 := zero_of_num_zero hr
     simp [*]
   else
@@ -935,7 +954,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.add_mk Rat.add_divIntₓ'. -/
 protected theorem add_divInt (a b c : ℤ) : (a + b) /. c = a /. c + b /. c :=
   if h : c = 0 then by simp [h]
-  else by 
+  else by
     rw [add_def h h, mk_eq h (mul_ne_zero h h)]
     simp [add_mul, mul_assoc]
 #align rat.add_mk Rat.add_divInt
@@ -946,7 +965,8 @@ lean 3 declaration is
 but is expected to have type
   forall (n : Int) (d : Int), Eq.{1} Rat (Rat.divInt n d) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Rat.ofInt n) (Rat.ofInt d))
 Case conversion may be inaccurate. Consider using '#align rat.mk_eq_div Rat.divInt_eq_divₓ'. -/
-theorem divInt_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d := by
+theorem divInt_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d :=
+  by
   by_cases d0 : d = 0; · simp [d0, div_zero]
   simp [division_def, coe_int_eq_mk, mul_def one_ne_zero d0]
 #align rat.mk_eq_div Rat.divInt_eq_div
@@ -957,7 +977,8 @@ lean 3 declaration is
 but is expected to have type
   forall {x : Int}, (Ne.{1} Int x (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (forall (n : Int) (d : Int), Eq.{1} Rat (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (Rat.divInt n x) (Rat.divInt x d)) (Rat.divInt n d))
 Case conversion may be inaccurate. Consider using '#align rat.mk_mul_mk_cancel Rat.divInt_mul_divInt_cancelₓ'. -/
-theorem divInt_mul_divInt_cancel {x : ℤ} (hx : x ≠ 0) (n d : ℤ) : n /. x * (x /. d) = n /. d := by
+theorem divInt_mul_divInt_cancel {x : ℤ} (hx : x ≠ 0) (n d : ℤ) : n /. x * (x /. d) = n /. d :=
+  by
   by_cases hd : d = 0
   · rw [hd]
     simp
@@ -990,7 +1011,8 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Int} {d : Int}, Eq.{1} Rat (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Rat.ofInt n) (Rat.ofInt d)) (Rat.divInt n d)
 Case conversion may be inaccurate. Consider using '#align rat.coe_int_div_eq_mk Rat.coe_int_div_eq_divIntₓ'. -/
-theorem coe_int_div_eq_divInt {n d : ℤ} : (n : ℚ) / ↑d = n /. d := by
+theorem coe_int_div_eq_divInt {n d : ℤ} : (n : ℚ) / ↑d = n /. d :=
+  by
   repeat' rw [coe_int_eq_mk]
   exact mk_div_mk_cancel_left one_ne_zero n d
 #align rat.coe_int_div_eq_mk Rat.coe_int_div_eq_divInt
@@ -1003,7 +1025,8 @@ theorem num_div_den (r : ℚ) : (r.num / r.denom : ℚ) = r := by
 -/
 
 #print Rat.coe_int_num_of_den_eq_one /-
-theorem coe_int_num_of_den_eq_one {q : ℚ} (hq : q.denom = 1) : ↑q.num = q := by
+theorem coe_int_num_of_den_eq_one {q : ℚ} (hq : q.denom = 1) : ↑q.num = q :=
+  by
   conv_rhs => rw [← @num_denom q, hq]
   rw [coe_int_eq_mk]
   rfl
@@ -1022,7 +1045,7 @@ instance canLift : CanLift ℚ ℤ coe fun q => q.denom = 1 :=
 
 /- warning: rat.coe_nat_eq_mk -> Rat.coe_nat_eq_divInt is a dubious translation:
 lean 3 declaration is
-  forall (n : Nat), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) n) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) n) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+  forall (n : Nat), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing)))))))) n) (Rat.mk ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
 but is expected to have type
   forall (n : Nat), Eq.{1} Rat (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (CommRing.toRing.{0} Rat Rat.commRing))) n) (Rat.divInt (Nat.cast.{0} Int Int.instNatCastInt n) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align rat.coe_nat_eq_mk Rat.coe_nat_eq_divIntₓ'. -/

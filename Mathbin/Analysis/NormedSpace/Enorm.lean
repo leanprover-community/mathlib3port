@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.enorm
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 
 @[simp]
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
-  le_antisymm (e.map_smul_le' c x) <| by 
+  le_antisymm (e.map_smul_le' c x) <| by
     by_cases hc : c = 0; · simp [hc]
     calc
       (‖c‖₊ : ℝ≥0∞) * e x = ‖c‖₊ * e (c⁻¹ • c • x) := by rw [inv_smul_smul₀ hc]
@@ -126,8 +126,8 @@ theorem map_sub_le (x y : V) : e (x - y) ≤ e x + e y :=
     
 #align enorm.map_sub_le Enorm.map_sub_le
 
-instance : PartialOrder (Enorm 𝕜
-        V) where 
+instance : PartialOrder (Enorm 𝕜 V)
+    where
   le e₁ e₂ := ∀ x, e₁ x ≤ e₂ x
   le_refl e x := le_rfl
   le_trans e₁ e₂ e₃ h₁₂ h₂₃ x := le_trans (h₁₂ x) (h₂₃ x)
@@ -137,10 +137,12 @@ instance : PartialOrder (Enorm 𝕜
 noncomputable instance : Top (Enorm 𝕜 V) :=
   ⟨{  toFun := fun x => if x = 0 then 0 else ⊤
       eq_zero' := fun x => by split_ifs <;> simp [*]
-      map_add_le' := fun x y => by
+      map_add_le' := fun x y =>
+        by
         split_ifs with hxy hx hy hy hx hy hy <;> try simp [*]
         simpa [hx, hy] using hxy
-      map_smul_le' := fun c x => by
+      map_smul_le' := fun c x =>
+        by
         split_ifs with hcx hx hx <;> simp only [smul_eq_zero, not_or] at hcx
         · simp only [mul_zero, le_refl]
         · have : c = 0 := by tauto
@@ -155,13 +157,13 @@ theorem top_map {x : V} (hx : x ≠ 0) : (⊤ : Enorm 𝕜 V) x = ⊤ :=
   if_neg hx
 #align enorm.top_map Enorm.top_map
 
-noncomputable instance : OrderTop (Enorm 𝕜
-        V) where 
+noncomputable instance : OrderTop (Enorm 𝕜 V)
+    where
   top := ⊤
   le_top e x := if h : x = 0 then by simp [h] else by simp [top_map h]
 
 noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
-  { Enorm.partialOrder with 
+  { Enorm.partialOrder with
     le := (· ≤ ·)
     lt := (· < ·)
     sup := fun e₁ e₂ =>
@@ -187,7 +189,7 @@ theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁ ⊔ e₂) x = max (e�
 
 /-- Structure of an `emetric_space` defined by an extended norm. -/
 @[reducible]
-def emetricSpace : EmetricSpace V where 
+def emetricSpace : EmetricSpace V where
   edist x y := e (x - y)
   edist_self x := by simp
   eq_of_edist_eq_zero x y := by simp [sub_eq_zero]
@@ -200,8 +202,8 @@ def emetricSpace : EmetricSpace V where
 #align enorm.emetric_space Enorm.emetricSpace
 
 /-- The subspace of vectors with finite enorm. -/
-def finiteSubspace : Subspace 𝕜
-      V where 
+def finiteSubspace : Subspace 𝕜 V
+    where
   carrier := { x | e x < ⊤ }
   zero_mem' := by simp
   add_mem' x y hx hy := lt_of_le_of_lt (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)
@@ -214,7 +216,8 @@ def finiteSubspace : Subspace 𝕜
 
 /-- Metric space structure on `e.finite_subspace`. We use `emetric_space.to_metric_space`
 to ensure that this definition agrees with `e.emetric_space`. -/
-instance : MetricSpace e.finiteSubspace := by
+instance : MetricSpace e.finiteSubspace :=
+  by
   letI := e.emetric_space
   refine' EmetricSpace.toMetricSpace fun x y => _
   change e (x - y) ≠ ⊤
@@ -230,7 +233,8 @@ theorem finite_edist_eq (x y : e.finiteSubspace) : edist x y = e (x - y) :=
 
 /-- Normed group instance on `e.finite_subspace`. -/
 instance : NormedAddCommGroup e.finiteSubspace :=
-  { finiteSubspace.metricSpace e, Submodule.addCommGroup _ with
+  { finiteSubspace.metricSpace e,
+    Submodule.addCommGroup _ with
     norm := fun x => (e x).toReal
     dist_eq := fun x y => rfl }
 
@@ -239,10 +243,8 @@ theorem finite_norm_eq (x : e.finiteSubspace) : ‖x‖ = (e x).toReal :=
 #align enorm.finite_norm_eq Enorm.finite_norm_eq
 
 /-- Normed space instance on `e.finite_subspace`. -/
-instance :
-    NormedSpace 𝕜
-      e.finiteSubspace where norm_smul_le c x :=
-    le_of_eq <| by simp [finite_norm_eq, Ennreal.to_real_mul]
+instance : NormedSpace 𝕜 e.finiteSubspace
+    where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, Ennreal.to_real_mul]
 
 end Enorm
 

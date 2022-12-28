@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.completion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,8 @@ protected theorem dist_eq (x y : α) : dist (x : Completion α) y = dist x y :=
 
 /- Let us check that the new distance satisfies the axioms of a distance, by starting from the
 properties on α and extending them to `completion α` by continuity. -/
-protected theorem dist_self (x : Completion α) : dist x x = 0 := by
+protected theorem dist_self (x : Completion α) : dist x x = 0 :=
+  by
   apply induction_on x
   · refine' is_closed_eq _ continuous_const
     exact completion.continuous_dist continuous_id continuous_id
@@ -68,7 +69,8 @@ protected theorem dist_self (x : Completion α) : dist x x = 0 := by
     rw [completion.dist_eq, dist_self]
 #align uniform_space.completion.dist_self UniformSpace.Completion.dist_self
 
-protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
+protected theorem dist_comm (x y : Completion α) : dist x y = dist y x :=
+  by
   apply induction_on₂ x y
   ·
     exact
@@ -80,7 +82,8 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr completion.continuous_dist, ",", expr continuous.fst, ",", expr continuous.snd, ",", expr continuous_id, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
+protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z :=
+  by
   apply induction_on₃ x y z
   ·
     refine' is_closed_le _ (Continuous.add _ _) <;>
@@ -95,7 +98,8 @@ protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y 
 /-- Elements of the uniformity (defined generally for completions) can be characterized in terms
 of the distance. -/
 protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α)) :
-    s ∈ 𝓤 (Completion α) ↔ ∃ ε > 0, ∀ {a b}, dist a b < ε → (a, b) ∈ s := by
+    s ∈ 𝓤 (Completion α) ↔ ∃ ε > 0, ∀ {a b}, dist a b < ε → (a, b) ∈ s :=
+  by
   constructor
   · /- Start from an entourage `s`. It contains a closed entourage `t`. Its pullback in `α` is an
         entourage, so it contains an `ε`-neighborhood of the diagonal by definition of the entourages
@@ -140,7 +144,8 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
       Set.mem_setOf_eq] at T
     rcases T with ⟨t1, ht1, t2, ht2, ht⟩
     refine' mem_of_superset ht1 _
-    have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε := by
+    have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε :=
+      by
       intro a b hab
       have : ((a, b), (a, a)) ∈ t1 ×ˢ t2 := ⟨hab, refl_mem_uniformity ht2⟩
       have I := ht this
@@ -167,7 +172,8 @@ protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : 
 /-- Reformulate `completion.mem_uniformity_dist` in terms that are suitable for the definition
 of the metric space structure. -/
 protected theorem uniformity_dist' :
-    𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } := by
+    𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } :=
+  by
   ext s; rw [mem_infi_of_directed]
   · simp [completion.mem_uniformity_dist, subset_def]
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
@@ -180,8 +186,8 @@ protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 { p 
 #align uniform_space.completion.uniformity_dist UniformSpace.Completion.uniformity_dist
 
 /-- Metric space structure on the completion of a pseudo_metric space. -/
-instance : MetricSpace
-      (Completion α) where 
+instance : MetricSpace (Completion α)
+    where
   dist_self := Completion.dist_self
   eq_of_dist_eq_zero := Completion.eq_of_dist_eq_zero
   dist_comm := Completion.dist_comm

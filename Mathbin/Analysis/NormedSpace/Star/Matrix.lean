@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hans Parshall
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.matrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,8 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
     (i j : n) : ‖U i j‖ ≤ 1 :=
   by
   -- The norm squared of an entry is at most the L2 norm of its row.
-  have norm_sum : ‖U i j‖ ^ 2 ≤ ∑ x, ‖U i x‖ ^ 2 := by
+  have norm_sum : ‖U i j‖ ^ 2 ≤ ∑ x, ‖U i x‖ ^ 2 :=
+    by
     apply Multiset.single_le_sum
     · intro x h_x
       rw [Multiset.mem_map] at h_x
@@ -47,7 +48,8 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
     simp only [Matrix.mul_apply, Matrix.conj_transpose_apply, ← star_ring_end_apply,
       IsROrC.mul_conj, IsROrC.norm_sq_eq_def', IsROrC.of_real_pow]
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ, real part
-  have re_diag_eq_norm_sum : IsROrC.re ((U ⬝ Uᴴ) i i) = ∑ x : n, ‖U i x‖ ^ 2 := by
+  have re_diag_eq_norm_sum : IsROrC.re ((U ⬝ Uᴴ) i i) = ∑ x : n, ‖U i x‖ ^ 2 :=
+    by
     rw [IsROrC.ext_iff] at diag_eq_norm_sum
     rw [diag_eq_norm_sum.1]
     norm_cast
@@ -64,7 +66,7 @@ attribute [local instance] Matrix.normedAddCommGroup
 
 /-- The entrywise sup norm of a unitary matrix is at most 1. -/
 theorem entrywise_sup_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.unitaryGroup n 𝕜) :
-    ‖U‖ ≤ 1 := by 
+    ‖U‖ ≤ 1 := by
   simp_rw [pi_norm_le_iff_of_nonneg zero_le_one]
   intro i j
   exact entry_norm_bound_of_unitary hU _ _

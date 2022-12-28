@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.topology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ instance : ContractibleSpace ℍ :=
 instance : LocPathConnectedSpace ℍ :=
   loc_path_connected_of_is_open <| is_open_lt continuous_const Complex.continuous_im
 
-instance : NoncompactSpace ℍ := by 
+instance : NoncompactSpace ℍ := by
   refine' ⟨fun h => _⟩
   have : IsCompact (Complex.im ⁻¹' Ioi 0) := is_compact_iff_is_compact_univ.2 h
   replace := this.is_closed.closure_eq

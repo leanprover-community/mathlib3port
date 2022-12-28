@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.analysis.filter
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,8 +78,8 @@ end
 
 /-- The filter represented by a `cfilter` is the collection of supersets of
   elements of the filter base. -/
-def toFilter (F : Cfilter (Set α) σ) :
-    Filter α where 
+def toFilter (F : Cfilter (Set α) σ) : Filter α
+    where
   sets := { a | ∃ b, F b ⊆ a }
   univ_sets := ⟨F.pt, subset_univ _⟩
   sets_of_superset := fun x y ⟨b, h⟩ s => ⟨b, Subset.trans h s⟩
@@ -271,7 +271,7 @@ protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g
         inter_subset_inter (F.f.inf_le_left _ _) (G.f.inf_le_left _ _)
       inf_le_right := fun ⟨a, a'⟩ ⟨b, b'⟩ =>
         inter_subset_inter (F.f.inf_le_right _ _) (G.f.inf_le_right _ _) },
-    by 
+    by
     ext x
     cases F <;> cases G <;> substs f g <;> simp [Cfilter.toFilter]
     constructor
@@ -368,7 +368,7 @@ theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ 
 #align filter.realizer.tendsto_iff Filter.Realizer.tendsto_iff
 
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
-  classical 
+  classical
     rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, not_forall]
     simp only [Set.not_nonempty_iff_eq_empty]
     exact

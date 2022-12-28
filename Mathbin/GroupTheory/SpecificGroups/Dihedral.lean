@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.dihedral
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,20 +63,20 @@ private def inv : DihedralGroup n → DihedralGroup n
 
 /-- The group structure on `dihedral_group n`.
 -/
-instance : Group (DihedralGroup n) where 
+instance : Group (DihedralGroup n) where
   mul := mul
   mul_assoc := by rintro (a | a) (b | b) (c | c) <;> simp only [mul] <;> ring
   one := one
-  one_mul := by 
+  one_mul := by
     rintro (a | a)
     exact congr_arg r (zero_add a)
     exact congr_arg sr (sub_zero a)
-  mul_one := by 
+  mul_one := by
     rintro (a | a)
     exact congr_arg r (add_zero a)
     exact congr_arg sr (add_zero a)
   inv := inv
-  mul_left_inv := by 
+  mul_left_inv := by
     rintro (a | a)
     exact congr_arg r (neg_add_self a)
     exact congr_arg r (sub_self a)
@@ -105,9 +105,8 @@ theorem one_def : (1 : DihedralGroup n) = r 0 :=
   rfl
 #align dihedral_group.one_def DihedralGroup.one_def
 
-private def fintype_helper :
-    Sum (Zmod n) (Zmod n) ≃
-      DihedralGroup n where 
+private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n
+    where
   invFun i :=
     match i with
     | r j => Sum.inl j
@@ -135,7 +134,8 @@ theorem card [NeZero n] : Fintype.card (DihedralGroup n) = 2 * n := by
 #align dihedral_group.card DihedralGroup.card
 
 @[simp]
-theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
+theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k :=
+  by
   induction' k with k IH
   · rw [Nat.cast_zero]
     rfl
@@ -146,7 +146,8 @@ theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
 #align dihedral_group.r_one_pow DihedralGroup.r_one_pow
 
 @[simp]
-theorem r_one_pow_n : r (1 : Zmod n) ^ n = 1 := by
+theorem r_one_pow_n : r (1 : Zmod n) ^ n = 1 :=
+  by
   rw [r_one_pow, one_def]
   congr 1
   exact Zmod.nat_cast_self _
@@ -159,7 +160,8 @@ theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by rw [sr_mul_sr, sub_self
 /-- If `0 < n`, then `sr i` has order 2.
 -/
 @[simp]
-theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 := by
+theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 :=
+  by
   rw [order_of_eq_prime _ _]
   · exact ⟨Nat.prime_two⟩
   rw [sq, sr_mul_self]
@@ -169,7 +171,8 @@ theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 := by
 /-- If `0 < n`, then `r 1` has order `n`.
 -/
 @[simp]
-theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
+theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n :=
+  by
   rcases eq_zero_or_neZero n with (rfl | hn)
   · rw [order_of_eq_zero_iff']
     intro n hn
@@ -190,12 +193,14 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
 
 /-- If `0 < n`, then `i : zmod n` has order `n / gcd n i`.
 -/
-theorem order_of_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val := by
+theorem order_of_r [NeZero n] (i : Zmod n) : orderOf (r i) = n / Nat.gcd n i.val :=
+  by
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
   rw [← r_one_pow, order_of_pow, order_of_r_one]
 #align dihedral_group.order_of_r DihedralGroup.order_of_r
 
-theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 := by
+theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 :=
+  by
   rcases eq_zero_or_neZero n with (rfl | hn)
   · exact Monoid.exponent_eq_zero_of_order_zero order_of_r_one
   skip

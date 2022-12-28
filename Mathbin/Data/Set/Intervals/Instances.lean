@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stuart Presnell, Eric Wieser, Yaël Dillies, Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.set.intervals.instances
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,8 @@ theorem mk_one (h : (1 : α) ∈ Icc (0 : α) 1) : (⟨1, h⟩ : Icc (0 : α) 1)
 #align set.Icc.mk_one Set.Icc.mk_one
 
 @[simp, norm_cast]
-theorem coe_eq_zero {x : Icc (0 : α) 1} : (x : α) = 0 ↔ x = 0 := by
+theorem coe_eq_zero {x : Icc (0 : α) 1} : (x : α) = 0 ↔ x = 0 :=
+  by
   symm
   exact Subtype.ext_iff
 #align set.Icc.coe_eq_zero Set.Icc.coe_eq_zero
@@ -88,7 +89,8 @@ theorem coe_ne_zero {x : Icc (0 : α) 1} : (x : α) ≠ 0 ↔ x ≠ 0 :=
 #align set.Icc.coe_ne_zero Set.Icc.coe_ne_zero
 
 @[simp, norm_cast]
-theorem coe_eq_one {x : Icc (0 : α) 1} : (x : α) = 1 ↔ x = 1 := by
+theorem coe_eq_one {x : Icc (0 : α) 1} : (x : α) = 1 ↔ x = 1 :=
+  by
   symm
   exact Subtype.ext_iff
 #align set.Icc.coe_eq_one Set.Icc.coe_eq_one
@@ -115,14 +117,12 @@ theorem le_one {t : Icc (0 : α) 1} : t ≤ 1 :=
   t.2.2
 #align set.Icc.le_one Set.Icc.le_one
 
-instance hasMul :
-    Mul
-      (Icc (0 : α)
-        1) where mul p q := ⟨p * q, ⟨mul_nonneg p.2.1 q.2.1, mul_le_one p.2.2 q.2.1 q.2.2⟩⟩
+instance hasMul : Mul (Icc (0 : α) 1)
+    where mul p q := ⟨p * q, ⟨mul_nonneg p.2.1 q.2.1, mul_le_one p.2.2 q.2.1 q.2.2⟩⟩
 #align set.Icc.has_mul Set.Icc.hasMul
 
-instance hasPow :
-    Pow (Icc (0 : α) 1) ℕ where pow p n := ⟨p.1 ^ n, ⟨pow_nonneg p.2.1 n, pow_le_one n p.2.1 p.2.2⟩⟩
+instance hasPow : Pow (Icc (0 : α) 1) ℕ
+    where pow p n := ⟨p.1 ^ n, ⟨pow_nonneg p.2.1 n, pow_le_one n p.2.1 p.2.2⟩⟩
 #align set.Icc.has_pow Set.Icc.hasPow
 
 @[simp, norm_cast]
@@ -166,7 +166,8 @@ instance cancelCommMonoidWithZero {α : Type _} [OrderedCommRing α] [NoZeroDivi
 
 variable {β : Type _} [OrderedRing β]
 
-theorem one_sub_mem {t : β} (ht : t ∈ Icc (0 : β) 1) : 1 - t ∈ Icc (0 : β) 1 := by
+theorem one_sub_mem {t : β} (ht : t ∈ Icc (0 : β) 1) : 1 - t ∈ Icc (0 : β) 1 :=
+  by
   rw [mem_Icc] at *
   exact ⟨sub_nonneg.2 ht.2, (sub_le_self_iff _).2 ht.1⟩
 #align set.Icc.one_sub_mem Set.Icc.one_sub_mem
@@ -202,7 +203,8 @@ theorem mk_zero [Nontrivial α] (h : (0 : α) ∈ Ico (0 : α) 1) : (⟨0, h⟩ 
 #align set.Ico.mk_zero Set.Ico.mk_zero
 
 @[simp, norm_cast]
-theorem coe_eq_zero [Nontrivial α] {x : Ico (0 : α) 1} : (x : α) = 0 ↔ x = 0 := by
+theorem coe_eq_zero [Nontrivial α] {x : Ico (0 : α) 1} : (x : α) = 0 ↔ x = 0 :=
+  by
   symm
   exact Subtype.ext_iff
 #align set.Ico.coe_eq_zero Set.Ico.coe_eq_zero
@@ -224,10 +226,8 @@ theorem nonneg [Nontrivial α] {t : Ico (0 : α) 1} : 0 ≤ t :=
   t.2.1
 #align set.Ico.nonneg Set.Ico.nonneg
 
-instance hasMul :
-    Mul
-      (Ico (0 : α)
-        1) where mul p q :=
+instance hasMul : Mul (Ico (0 : α) 1)
+    where mul p q :=
     ⟨p * q, ⟨mul_nonneg p.2.1 q.2.1, mul_lt_one_of_nonneg_of_lt_one_right p.2.2.le q.2.1 q.2.2⟩⟩
 #align set.Ico.has_mul Set.Ico.hasMul
 
@@ -269,7 +269,8 @@ theorem mk_one [Nontrivial α] (h : (1 : α) ∈ Ioc (0 : α) 1) : (⟨1, h⟩ :
 #align set.Ioc.mk_one Set.Ioc.mk_one
 
 @[simp, norm_cast]
-theorem coe_eq_one [Nontrivial α] {x : Ioc (0 : α) 1} : (x : α) = 1 ↔ x = 1 := by
+theorem coe_eq_one [Nontrivial α] {x : Ioc (0 : α) 1} : (x : α) = 1 ↔ x = 1 :=
+  by
   symm
   exact Subtype.ext_iff
 #align set.Ioc.coe_eq_one Set.Ioc.coe_eq_one
@@ -291,16 +292,12 @@ theorem le_one [Nontrivial α] {t : Ioc (0 : α) 1} : t ≤ 1 :=
   t.2.2
 #align set.Ioc.le_one Set.Ioc.le_one
 
-instance hasMul :
-    Mul
-      (Ioc (0 : α)
-        1) where mul p q :=
-    ⟨p.1 * q.1, ⟨mul_pos p.2.1 q.2.1, mul_le_one p.2.2 (le_of_lt q.2.1) q.2.2⟩⟩
+instance hasMul : Mul (Ioc (0 : α) 1)
+    where mul p q := ⟨p.1 * q.1, ⟨mul_pos p.2.1 q.2.1, mul_le_one p.2.2 (le_of_lt q.2.1) q.2.2⟩⟩
 #align set.Ioc.has_mul Set.Ioc.hasMul
 
-instance hasPow :
-    Pow (Ioc (0 : α) 1)
-      ℕ where pow p n := ⟨p.1 ^ n, ⟨pow_pos p.2.1 n, pow_le_one n (le_of_lt p.2.1) p.2.2⟩⟩
+instance hasPow : Pow (Ioc (0 : α) 1) ℕ
+    where pow p n := ⟨p.1 ^ n, ⟨pow_pos p.2.1 n, pow_le_one n (le_of_lt p.2.1) p.2.2⟩⟩
 #align set.Ioc.has_pow Set.Ioc.hasPow
 
 @[simp, norm_cast]
@@ -332,7 +329,8 @@ instance commMonoid {α : Type _} [StrictOrderedCommSemiring α] [Nontrivial α]
 
 instance cancelMonoid {α : Type _} [StrictOrderedRing α] [IsDomain α] :
     CancelMonoid (Ioc (0 : α) 1) :=
-  { Set.Ioc.monoid with
+  {
+    Set.Ioc.monoid with
     mul_left_cancel := fun a b c h =>
       Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_arg Subtype.val h : _)
     mul_right_cancel := fun a b c h =>
@@ -359,10 +357,8 @@ theorem lt_one (x : Ioo (0 : α) 1) : (x : α) < 1 :=
   x.2.2
 #align set.Ioo.lt_one Set.Ioo.lt_one
 
-instance hasMul :
-    Mul
-      (Ioo (0 : α)
-        1) where mul p q :=
+instance hasMul : Mul (Ioo (0 : α) 1)
+    where mul p q :=
     ⟨p.1 * q.1, ⟨mul_pos p.2.1 q.2.1, mul_lt_one_of_nonneg_of_lt_one_right p.2.2.le q.2.1.le q.2.2⟩⟩
 #align set.Ioo.has_mul Set.Ioo.hasMul
 
@@ -381,7 +377,8 @@ instance commSemigroup {α : Type _} [StrictOrderedCommSemiring α] : CommSemigr
 
 variable {β : Type _} [OrderedRing β]
 
-theorem one_sub_mem {t : β} (ht : t ∈ Ioo (0 : β) 1) : 1 - t ∈ Ioo (0 : β) 1 := by
+theorem one_sub_mem {t : β} (ht : t ∈ Ioo (0 : β) 1) : 1 - t ∈ Ioo (0 : β) 1 :=
+  by
   rw [mem_Ioo] at *
   refine' ⟨sub_pos.2 ht.2, _⟩
   exact lt_of_le_of_ne ((sub_le_self_iff 1).2 ht.1.le) (mt sub_eq_self.mp ht.1.ne')

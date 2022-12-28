@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.divisibility
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ Case conversion may be inaccurate. Consider using '#align zero_dvd_iff zero_dvd_
     product with zero equals `a` iff `a` equals zero. -/
 @[simp]
 theorem zero_dvd_iff : 0 ∣ a ↔ a = 0 :=
-  ⟨eq_zero_of_zero_dvd, fun h => by 
+  ⟨eq_zero_of_zero_dvd, fun h => by
     rw [h]
     use 0
     simp⟩
@@ -108,7 +108,8 @@ def DvdNotUnit (a b : α) : Prop :=
 -/
 
 #print dvdNotUnit_of_dvd_of_not_dvd /-
-theorem dvdNotUnit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : DvdNotUnit a b := by
+theorem dvdNotUnit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : DvdNotUnit a b :=
+  by
   constructor
   · rintro rfl
     exact hnd (dvd_zero _)
@@ -134,7 +135,7 @@ theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} :
         (isUnit_of_dvd_one _
           ⟨e,
             mul_left_cancel₀ hx0 <| by
-              conv => 
+              conv =>
                   lhs
                   rw [he, hdx] <;>
                 simp [mul_assoc]⟩)⟩⟩
@@ -151,7 +152,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} α] {p : α} {q : α}, (Ne.{succ u1} α q (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1)))) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α _inst_1))) p q) -> (Ne.{succ u1} α p (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align ne_zero_of_dvd_ne_zero ne_zero_of_dvd_ne_zeroₓ'. -/
-theorem ne_zero_of_dvd_ne_zero {p q : α} (h₁ : q ≠ 0) (h₂ : p ∣ q) : p ≠ 0 := by
+theorem ne_zero_of_dvd_ne_zero {p q : α} (h₁ : q ≠ 0) (h₂ : p ∣ q) : p ≠ 0 :=
+  by
   rcases h₂ with ⟨u, rfl⟩
   exact left_ne_zero_of_mul h₁
 #align ne_zero_of_dvd_ne_zero ne_zero_of_dvd_ne_zero

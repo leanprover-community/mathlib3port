@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.coeffs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,10 +53,10 @@ theorem val_nil : val v [] = 0 :=
 
 theorem val_between_eq_of_le {as : List Int} {l : Nat} :
     ∀ m, as.length ≤ l + m → valBetween v as l m = valBetween v as l (as.length - l)
-  | 0, h1 => by 
+  | 0, h1 => by
     rw [add_zero] at h1
     rw [tsub_eq_zero_iff_le.mpr h1]
-  | m + 1, h1 => by 
+  | m + 1, h1 => by
     rw [le_iff_eq_or_lt] at h1
     cases h1
     · rw [h1, add_comm l, add_tsub_cancel_right]
@@ -68,7 +68,7 @@ theorem val_between_eq_of_le {as : List Int} {l : Nat} :
 #align omega.coeffs.val_between_eq_of_le Omega.Coeffs.val_between_eq_of_le
 
 theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = valBetween v as 0 k :=
-  by 
+  by
   intro h1; unfold val
   rw [val_between_eq_of_le k _]; rfl
   rw [zero_add]; exact h1
@@ -79,9 +79,9 @@ theorem val_between_eq_val_between {v w : Nat → Int} {as bs : List Int} {l : N
       (∀ x, l ≤ x → x < l + m → v x = w x) →
         (∀ x, l ≤ x → x < l + m → get x as = get x bs) → valBetween v as l m = valBetween w bs l m
   | 0, h1, h2 => rfl
-  | m + 1, h1, h2 => by 
+  | m + 1, h1, h2 => by
     unfold val_between
-    have h3 : l + m < l + (m + 1) := by 
+    have h3 : l + m < l + (m + 1) := by
       rw [← add_assoc]
       apply lt_add_one
     apply fun_mono_2
@@ -96,10 +96,11 @@ open List.Func
 theorem val_between_set {a : Int} {l n : Nat} :
     ∀ {m}, l ≤ n → n < l + m → valBetween v ([] {n ↦ a}) l m = a * v n
   | 0, h1, h2 => by exfalso; apply lt_irrefl l (lt_of_le_of_lt h1 h2)
-  | m + 1, h1, h2 => by 
+  | m + 1, h1, h2 => by
     rw [← add_assoc, Nat.lt_succ_iff, le_iff_eq_or_lt] at h2
     cases h2 <;> unfold val_between
-    · have h3 : val_between v ([] {l + m ↦ a}) l m = 0 := by
+    · have h3 : val_between v ([] {l + m ↦ a}) l m = 0 :=
+        by
         apply @Eq.trans _ _ (val_between v [] l m)
         · apply val_between_eq_val_between
           · intros
@@ -116,7 +117,8 @@ theorem val_between_set {a : Int} {l n : Nat} :
 #align omega.coeffs.val_between_set Omega.Coeffs.val_between_set
 
 @[simp]
-theorem val_set {m : Nat} {a : Int} : val v ([] {m ↦ a}) = a * v m := by
+theorem val_set {m : Nat} {a : Int} : val v ([] {m ↦ a}) = a * v m :=
+  by
   apply val_between_set (zero_le _)
   rw [length_set, zero_add]
   exact lt_max_of_lt_right (lt_add_one _)
@@ -125,7 +127,7 @@ theorem val_set {m : Nat} {a : Int} : val v ([] {m ↦ a}) = a * v m := by
 theorem val_between_neg {as : List Int} {l : Nat} :
     ∀ {o}, valBetween v (neg as) l o = -valBetween v as l o
   | 0 => rfl
-  | o + 1 => by 
+  | o + 1 => by
     unfold val_between
     rw [neg_add, neg_mul_eq_neg_mul]
     apply fun_mono_2
@@ -142,13 +144,14 @@ theorem val_neg {as : List Int} : val v (neg as) = -val v as := by
 theorem val_between_add {is js : List Int} {l : Nat} :
     ∀ m, valBetween v (add is js) l m = valBetween v is l m + valBetween v js l m
   | 0 => rfl
-  | m + 1 => by 
+  | m + 1 => by
     simp only [val_between, val_between_add m, List.Func.get, get_add]
     ring
 #align omega.coeffs.val_between_add Omega.Coeffs.val_between_add
 
 @[simp]
-theorem val_add {is js : List Int} : val v (add is js) = val v is + val v js := by
+theorem val_add {is js : List Int} : val v (add is js) = val v is + val v js :=
+  by
   unfold val
   rw [val_between_add];
   apply fun_mono_2 <;> apply val_between_eq_of_le <;> rw [zero_add, length_add]
@@ -158,13 +161,14 @@ theorem val_add {is js : List Int} : val v (add is js) = val v is + val v js := 
 theorem val_between_sub {is js : List Int} {l : Nat} :
     ∀ m, valBetween v (sub is js) l m = valBetween v is l m - valBetween v js l m
   | 0 => rfl
-  | m + 1 => by 
+  | m + 1 => by
     simp only [val_between, val_between_sub m, List.Func.get, get_sub]
     ring
 #align omega.coeffs.val_between_sub Omega.Coeffs.val_between_sub
 
 @[simp]
-theorem val_sub {is js : List Int} : val v (sub is js) = val v is - val v js := by
+theorem val_sub {is js : List Int} : val v (sub is js) = val v is - val v js :=
+  by
   unfold val
   rw [val_between_sub]
   apply fun_mono_2 <;> apply val_between_eq_of_le <;> rw [zero_add, length_sub]
@@ -184,7 +188,7 @@ def valExcept (k : Nat) (v : Nat → Int) (as) :=
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
     (∀ (x) (_ : x ≠ k), v x = w x) →
       (∀ (x) (_ : x ≠ k), get x is = get x js) → valExcept k v is = valExcept k w js :=
-  by 
+  by
   intro h1 h2; unfold val_except
   apply fun_mono_2
   ·
@@ -213,7 +217,7 @@ theorem val_except_update_set {n : Nat} {as : List Int} {i j : Int} :
 theorem val_between_add_val_between {as : List Int} {l m : Nat} :
     ∀ {n}, valBetween v as l m + valBetween v as (l + m) n = valBetween v as l (m + n)
   | 0 => by simp only [val_between, add_zero]
-  | n + 1 => by 
+  | n + 1 => by
     rw [← add_assoc]
     unfold val_between
     rw [add_assoc]
@@ -222,7 +226,8 @@ theorem val_between_add_val_between {as : List Int} {l m : Nat} :
 #align omega.coeffs.val_between_add_val_between Omega.Coeffs.val_between_add_val_between
 
 theorem val_except_add_eq (n : Nat) {as : List Int} :
-    valExcept n v as + get n as * v n = val v as := by
+    valExcept n v as + get n as * v n = val v as :=
+  by
   unfold val_except
   unfold val
   cases' le_total (n + 1) as.length with h1 h1
@@ -243,7 +248,7 @@ theorem val_except_add_eq (n : Nat) {as : List Int} :
 theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
     ∀ {m}, valBetween v (List.map ((· * ·) i) as) l m = i * valBetween v as l m
   | 0 => by simp only [val_between, mul_zero, List.map]
-  | m + 1 => by 
+  | m + 1 => by
     unfold val_between
     rw [@val_between_map_mul m, mul_add]
     apply fun_mono_2 rfl
@@ -255,7 +260,7 @@ theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
 
 theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} :
     (∀ x ∈ as, i ∣ x) → ∀ n, i ∣ get n as
-  | h1, n => by 
+  | h1, n => by
     apply forall_val_of_forall_mem _ h1
     apply dvd_zero
 #align omega.coeffs.forall_val_dvd_of_forall_mem_dvd Omega.Coeffs.forall_val_dvd_of_forall_mem_dvd
@@ -263,7 +268,7 @@ theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} :
 theorem dvd_val_between {i} {as : List Int} {l : Nat} :
     ∀ {m}, (∀ x ∈ as, i ∣ x) → i ∣ valBetween v as l m
   | 0, h1 => dvd_zero _
-  | m + 1, h1 => by 
+  | m + 1, h1 => by
     unfold val_between
     apply dvd_add
     apply dvd_val_between h1
@@ -282,7 +287,7 @@ theorem dvd_val {as : List Int} {i : Int} : (∀ x ∈ as, i ∣ x) → i ∣ va
 theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ as, i ∣ x) :
     ∀ {m}, valBetween v (List.map (fun x => x / i) as) l m = valBetween v as l m / i
   | 0 => by simp only [Int.zero_div, val_between, List.map]
-  | m + 1 => by 
+  | m + 1 => by
     unfold val_between
     rw [@val_between_map_div m, Int.add_ediv_of_dvd_right]
     apply fun_mono_2 rfl
@@ -291,11 +296,12 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ 
         calc
           get (l + m) (List.map (fun x : ℤ => x / i) as) * v (l + m) =
               get (l + m) as / i * v (l + m) :=
-            by 
+            by
             apply fun_mono_2 _ rfl
             rw [get_map']
             apply Int.zero_div
-          _ = get (l + m) as * v (l + m) / i := by
+          _ = get (l + m) as * v (l + m) / i :=
+            by
             repeat' rw [mul_comm _ (v (l + m))]
             rw [Int.mul_ediv_assoc]
             apply forall_val_dvd_of_forall_mem_dvd h1
@@ -306,7 +312,8 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ 
 
 @[simp]
 theorem val_map_div {as : List Int} {i : Int} :
-    (∀ x ∈ as, i ∣ x) → val v (List.map (fun x => x / i) as) = val v as / i := by
+    (∀ x ∈ as, i ∣ x) → val v (List.map (fun x => x / i) as) = val v as / i :=
+  by
   intro h1
   simpa only [val, List.length_map] using val_between_map_div h1
 #align omega.coeffs.val_map_div Omega.Coeffs.val_map_div

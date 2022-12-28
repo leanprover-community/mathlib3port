@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.homotopy_equivalence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,8 @@ variable {C : Type _} [Category C] [Preadditive C] (X : SimplicialObject C)
 /-- Inductive construction of homotopies from `P q` to `𝟙 _` -/
 noncomputable def homotopyPToId : ∀ q : ℕ, Homotopy (p q : K[X] ⟶ _) (𝟙 _)
   | 0 => Homotopy.refl _
-  | q + 1 => by
+  | q + 1 =>
+    by
     refine'
       Homotopy.trans (Homotopy.ofEq _)
         (Homotopy.trans
@@ -55,7 +56,7 @@ def homotopyQToZero (q : ℕ) : Homotopy (q q : K[X] ⟶ _) 0 :=
 theorem homotopy_P_to_id_eventually_constant {q n : ℕ} (hqn : n < q) :
     ((homotopyPToId X (q + 1)).Hom n (n + 1) : X _[n] ⟶ X _[n + 1]) =
       (homotopyPToId X q).Hom n (n + 1) :=
-  by 
+  by
   unfold homotopy_P_to_id
   simp only [homotopy_Hσ_to_zero, hσ'_eq_zero hqn (c_mk (n + 1) n rfl), Homotopy.trans_hom,
     Pi.add_apply, Homotopy.of_eq_hom, Pi.zero_apply, Homotopy.add_hom, Homotopy.comp_left_hom,
@@ -69,12 +70,11 @@ variable (X)
 /-- Construction of the homotopy from `P_infty` to the identity using eventually
 (termwise) constant homotopies from `P q` to the identity for all `q` -/
 @[simps]
-def homotopyPInftyToId :
-    Homotopy (pInfty : K[X] ⟶ _)
-      (𝟙 _) where 
+def homotopyPInftyToId : Homotopy (pInfty : K[X] ⟶ _) (𝟙 _)
+    where
   Hom i j := (homotopyPToId X (j + 1)).Hom i j
   zero' i j hij := Homotopy.zero _ i j hij
-  comm n := by 
+  comm n := by
     cases n
     ·
       simpa only [Homotopy.d_next_zero_chain_complex, Homotopy.prev_d_chain_complex, P_f_0_eq,
@@ -92,9 +92,8 @@ is an homotopy equivalence -/
 @[simps]
 def homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex {A : Type _} [Category A]
     [Abelian A] {Y : SimplicialObject A} :
-    HomotopyEquiv ((normalizedMooreComplex A).obj Y)
-      ((alternatingFaceMapComplex A).obj
-        Y) where 
+    HomotopyEquiv ((normalizedMooreComplex A).obj Y) ((alternatingFaceMapComplex A).obj Y)
+    where
   Hom := inclusionOfMooreComplexMap Y
   inv := pInftyToNormalizedMooreComplex Y
   homotopyHomInvId := Homotopy.ofEq (splitMonoInclusionOfMooreComplexMap Y).id

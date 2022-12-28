@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.complex_shape
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,8 +69,8 @@ Below we define `c.next` and `c.prev` which provide these related elements.
 @[ext, nolint has_nonempty_instance]
 structure ComplexShape (ι : Type _) where
   Rel : ι → ι → Prop
-  next_eq : ∀ {i j j'}, rel i j → rel i j' → j = j'
-  prev_eq : ∀ {i i' j}, rel i j → rel i' j → i = i'
+  next_eq : ∀ {i j j'}, Rel i j → Rel i j' → j = j'
+  prev_eq : ∀ {i i' j}, Rel i j → Rel i' j → i = i'
 #align complex_shape ComplexShape
 -/
 
@@ -84,8 +84,8 @@ variable {ι : Type _}
 This is mostly only useful so we can describe the relation of "related in `k` steps" below.
 -/
 @[simps]
-def refl (ι : Type _) : ComplexShape
-      ι where 
+def refl (ι : Type _) : ComplexShape ι
+    where
   Rel i j := i = j
   next_eq i j j' w w' := w.symm.trans w'
   prev_eq i i' j w w' := w.trans w'.symm
@@ -96,8 +96,8 @@ def refl (ι : Type _) : ComplexShape
 /-- The reverse of a `complex_shape`.
 -/
 @[simps]
-def symm (c : ComplexShape ι) :
-    ComplexShape ι where 
+def symm (c : ComplexShape ι) : ComplexShape ι
+    where
   Rel i j := c.Rel j i
   next_eq i j j' w w' := c.prev_eq w w'
   prev_eq i i' j w w' := c.next_eq w w'
@@ -106,7 +106,8 @@ def symm (c : ComplexShape ι) :
 
 #print ComplexShape.symm_symm /-
 @[simp]
-theorem symm_symm (c : ComplexShape ι) : c.symm.symm = c := by
+theorem symm_symm (c : ComplexShape ι) : c.symm.symm = c :=
+  by
   ext
   simp
 #align complex_shape.symm_symm ComplexShape.symm_symm
@@ -118,15 +119,15 @@ theorem symm_symm (c : ComplexShape ι) : c.symm.symm = c := by
 We need this to define "related in k steps" later.
 -/
 @[simp]
-def trans (c₁ c₂ : ComplexShape ι) :
-    ComplexShape ι where 
+def trans (c₁ c₂ : ComplexShape ι) : ComplexShape ι
+    where
   Rel := Relation.Comp c₁.Rel c₂.Rel
-  next_eq i j j' w w' := by 
+  next_eq i j j' w w' := by
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
     rw [c₁.next_eq w₁ w₁'] at w₂
     exact c₂.next_eq w₂ w₂'
-  prev_eq i i' j w w' := by 
+  prev_eq i i' j w w' := by
     obtain ⟨k, w₁, w₂⟩ := w
     obtain ⟨k', w₁', w₂'⟩ := w'
     rw [c₂.prev_eq w₂ w₂'] at w₁
@@ -135,7 +136,8 @@ def trans (c₁ c₂ : ComplexShape ι) :
 -/
 
 #print ComplexShape.subsingleton_next /-
-instance subsingleton_next (c : ComplexShape ι) (i : ι) : Subsingleton { j // c.Rel i j } := by
+instance subsingleton_next (c : ComplexShape ι) (i : ι) : Subsingleton { j // c.Rel i j } :=
+  by
   fconstructor
   rintro ⟨j, rij⟩ ⟨k, rik⟩
   congr
@@ -144,7 +146,8 @@ instance subsingleton_next (c : ComplexShape ι) (i : ι) : Subsingleton { j // 
 -/
 
 #print ComplexShape.subsingleton_prev /-
-instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // c.Rel i j } := by
+instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // c.Rel i j } :=
+  by
   fconstructor
   rintro ⟨i, rik⟩ ⟨j, rjk⟩
   congr
@@ -171,7 +174,8 @@ def prev (c : ComplexShape ι) (j : ι) : ι :=
 -/
 
 #print ComplexShape.next_eq' /-
-theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j := by
+theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j :=
+  by
   apply c.next_eq _ h
   dsimp only [next]
   rw [dif_pos]
@@ -180,7 +184,8 @@ theorem next_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.next i = j
 -/
 
 #print ComplexShape.prev_eq' /-
-theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i := by
+theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i :=
+  by
   apply c.prev_eq _ h
   dsimp only [prev]
   rw [dif_pos]
@@ -193,8 +198,8 @@ theorem prev_eq' (c : ComplexShape ι) {i j : ι} (h : c.Rel i j) : c.prev j = i
 (For example when `a = 1`, a cohomology theory indexed by `ℕ` or `ℤ`)
 -/
 @[simps]
-def up' {α : Type _} [AddRightCancelSemigroup α] (a : α) :
-    ComplexShape α where 
+def up' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α
+    where
   Rel i j := i + a = j
   next_eq i j k hi hj := hi.symm.trans hj
   prev_eq i j k hi hj := add_right_cancel (hi.trans hj.symm)
@@ -206,8 +211,8 @@ def up' {α : Type _} [AddRightCancelSemigroup α] (a : α) :
 (For example when `a = 1`, a homology theory indexed by `ℕ` or `ℤ`)
 -/
 @[simps]
-def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) :
-    ComplexShape α where 
+def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α
+    where
   Rel i j := j + a = i
   next_eq i j k hi hj := add_right_cancel (hi.trans hj.symm)
   prev_eq i j k hi hj := hi.symm.trans hj

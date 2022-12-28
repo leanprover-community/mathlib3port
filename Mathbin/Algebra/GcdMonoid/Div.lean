@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.div
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ namespace Nat
 /-- Given a nonempty finset `s` and a function `f` from `s` to `ℕ`, if `d = s.gcd`,
 then the `gcd` of `(f i) / d` is equal to `1`. -/
 theorem gcd_div_eq_one {β : Type _} {f : β → ℕ} (s : Finset β) {x : β} (hx : x ∈ s)
-    (hfz : f x ≠ 0) : (s.gcd fun b => f b / s.gcd f) = 1 := by
+    (hfz : f x ≠ 0) : (s.gcd fun b => f b / s.gcd f) = 1 :=
+  by
   obtain ⟨g, he, hg⟩ := Finset.extract_gcd f ⟨x, hx⟩
   refine' ((Finset.gcd_congr rfl) fun a ha => _).trans hg
   rw [he a ha, Nat.mul_div_cancel_left]
@@ -57,7 +58,8 @@ namespace Int
 /-- Given a nonempty finset `s` and a function `f` from `s` to `ℤ`, if `d = s.gcd`,
 then the `gcd` of `(f i) / d` is equal to `1`. -/
 theorem gcd_div_eq_one {β : Type _} {f : β → ℤ} (s : Finset β) {x : β} (hx : x ∈ s)
-    (hfz : f x ≠ 0) : (s.gcd fun b => f b / s.gcd f) = 1 := by
+    (hfz : f x ≠ 0) : (s.gcd fun b => f b / s.gcd f) = 1 :=
+  by
   obtain ⟨g, he, hg⟩ := Finset.extract_gcd f ⟨x, hx⟩
   refine' ((Finset.gcd_congr rfl) fun a ha => _).trans hg
   rw [he a ha, Int.mul_ediv_cancel_left]
@@ -82,7 +84,8 @@ variable {K : Type _} [Field K]
 /-- Given a nonempty finset `s` and a function `f` from `s` to `K[X]`, if `d = s.gcd f`,
 then the `gcd` of `(f i) / d` is equal to `1`. -/
 theorem gcd_div_eq_one {β : Type _} {f : β → K[X]} (s : Finset β) {x : β} (hx : x ∈ s)
-    (hfz : f x ≠ 0) : (s.gcd fun b => f b / s.gcd f) = 1 := by
+    (hfz : f x ≠ 0) : (s.gcd fun b => f b / s.gcd f) = 1 :=
+  by
   obtain ⟨g, he, hg⟩ := Finset.extract_gcd f ⟨x, hx⟩
   refine' ((Finset.gcd_congr rfl) fun a ha => _).trans hg
   rw [he a ha, EuclideanDomain.mul_div_cancel_left]

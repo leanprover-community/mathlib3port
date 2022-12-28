@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.decomposition
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem decomposition_Q (n q : ℕ) :
     ((q q).f (n + 1) : X _[n + 1] ⟶ X _[n + 1]) =
       ∑ i : Fin (n + 1) in Finset.filter (fun i : Fin (n + 1) => (i : ℕ) < q) Finset.univ,
         (p i).f (n + 1) ≫ X.δ i.rev.succ ≫ X.σ i.rev :=
-  by 
+  by
   induction' q with q hq
   ·
     simp only [Q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_false,
@@ -111,14 +111,15 @@ variable (X n)
 /-- the canonical `morph_components` whose associated morphism is the identity
 (see `F_id`) thanks to `decomposition_Q n (n+1)` -/
 @[simps]
-def id : MorphComponents X n
-      (X _[n + 1]) where 
+def id : MorphComponents X n (X _[n + 1])
+    where
   a := pInfty.f (n + 1)
   b i := X.σ i
 #align algebraic_topology.dold_kan.morph_components.id AlgebraicTopology.DoldKan.MorphComponents.id
 
 @[simp]
-theorem id_φ : (id X n).φ = 𝟙 _ := by
+theorem id_φ : (id X n).φ = 𝟙 _ :=
+  by
   simp only [← P_add_Q_f (n + 1) (n + 1), φ]
   congr 1
   · simp only [id, P_infty_f, P_f_idem]
@@ -132,14 +133,15 @@ variable {X n}
 
 /-- A `morph_components` can be postcomposed with a morphism. -/
 @[simps]
-def postComp : MorphComponents X n Z' where 
+def postComp : MorphComponents X n Z' where
   a := f.a ≫ h
   b i := f.b i ≫ h
 #align
   algebraic_topology.dold_kan.morph_components.post_comp AlgebraicTopology.DoldKan.MorphComponents.postComp
 
 @[simp]
-theorem post_comp_φ : (f.postComp h).φ = f.φ ≫ h := by
+theorem post_comp_φ : (f.postComp h).φ = f.φ ≫ h :=
+  by
   unfold φ post_comp
   simp only [add_comp, sum_comp, assoc]
 #align
@@ -147,15 +149,16 @@ theorem post_comp_φ : (f.postComp h).φ = f.φ ≫ h := by
 
 /-- A `morph_components` can be precomposed with a morphism of simplicial objects. -/
 @[simps]
-def preComp : MorphComponents X' n
-      Z where 
+def preComp : MorphComponents X' n Z
+    where
   a := g.app (op [n + 1]) ≫ f.a
   b i := g.app (op [n]) ≫ f.b i
 #align
   algebraic_topology.dold_kan.morph_components.pre_comp AlgebraicTopology.DoldKan.MorphComponents.preComp
 
 @[simp]
-theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ := by
+theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ :=
+  by
   unfold φ pre_comp
   simp only [P_infty_f, comp_add]
   congr 1

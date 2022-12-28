@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.compatible_plus
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,11 +54,11 @@ variable (P : Cᵒᵖ ⥤ D)
 to the diagram used to define `P ⋙ F`. -/
 def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
   NatIso.ofComponents
-    (fun W => by 
+    (fun W => by
       refine' _ ≪≫ has_limit.iso_of_nat_iso (W.unop.multicospan_comp _ _).symm
       refine'
         (is_limit_of_preserves F (limit.is_limit _)).conePointUniqueUpToIso (limit.is_limit _))
-    (by 
+    (by
       intro A B f
       ext
       dsimp
@@ -73,7 +73,8 @@ def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
 
 @[simp, reassoc.1]
 theorem diagram_comp_iso_hom_ι (X : C) (W : (J.cover X)ᵒᵖ) (i : W.unop.arrow) :
-    (J.diagramCompIso F P X).Hom.app W ≫ multiequalizer.ι _ i = F.map (multiequalizer.ι _ _) := by
+    (J.diagramCompIso F P X).Hom.app W ≫ multiequalizer.ι _ i = F.map (multiequalizer.ι _ _) :=
+  by
   delta diagram_comp_iso
   dsimp
   simp
@@ -89,13 +90,13 @@ variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`. -/
 def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
   NatIso.ofComponents
-    (fun X => by 
+    (fun X => by
       refine' _ ≪≫ has_colimit.iso_of_nat_iso (J.diagram_comp_iso F P X.unop)
       refine'
         (is_colimit_of_preserves F
               (colimit.is_colimit (J.diagram P (unop X)))).coconePointUniqueUpToIso
           (colimit.is_colimit _))
-    (by 
+    (by
       intro X Y f
       apply (is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).hom_ext
       intro W
@@ -103,7 +104,7 @@ def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
       simp only [functor.map_comp, category.assoc]
       slice_rhs 1 2 =>
         erw [(is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).fac]
-      slice_lhs 1 3 => 
+      slice_lhs 1 3 =>
         simp only [← F.map_comp]
         dsimp [colim_map, is_colimit.map, colimit.pre]
         simp only [colimit.ι_desc_assoc, colimit.ι_desc]
@@ -131,7 +132,7 @@ def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
 theorem ι_plus_comp_iso_hom (X) (W) :
     F.map (colimit.ι _ W) ≫ (J.plusCompIso F P).Hom.app X =
       (J.diagramCompIso F P X.unop).Hom.app W ≫ colimit.ι _ W :=
-  by 
+  by
   delta diagram_comp_iso plus_comp_iso
   simp only [is_colimit.desc_cocone_morphism_hom, is_colimit.unique_up_to_iso_hom,
     cocones.forget_map, iso.trans_hom, nat_iso.of_components_hom_app, functor.map_iso_hom, ←
@@ -154,7 +155,7 @@ theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ �
     [∀ (X : C) (W : J.cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (W.index P).multicospan G] :
     whiskerLeft _ η ≫ (J.plusCompIso G P).Hom =
       (J.plusCompIso F P).Hom ≫ J.plusMap (whiskerLeft _ η) :=
-  by 
+  by
   ext X
   apply (is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).hom_ext
   intro W
@@ -184,7 +185,7 @@ def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D)
 theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
     whiskerRight (J.plusMap η) F ≫ (J.plusCompIso F Q).Hom =
       (J.plusCompIso F P).Hom ≫ J.plusMap (whiskerRight η F) :=
-  by 
+  by
   ext X
   apply (is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).hom_ext
   intro W
@@ -217,7 +218,8 @@ def plusFunctorWhiskerRightIso :
 
 @[simp, reassoc.1]
 theorem whisker_right_to_plus_comp_plus_comp_iso_hom :
-    whiskerRight (J.toPlus _) _ ≫ (J.plusCompIso F P).Hom = J.toPlus _ := by
+    whiskerRight (J.toPlus _) _ ≫ (J.plusCompIso F P).Hom = J.toPlus _ :=
+  by
   ext
   dsimp [to_plus]
   simp only [ι_plus_comp_iso_hom, functor.map_comp, category.assoc]
@@ -238,7 +240,8 @@ theorem to_plus_comp_plus_comp_iso_inv :
   category_theory.grothendieck_topology.to_plus_comp_plus_comp_iso_inv CategoryTheory.GrothendieckTopology.to_plus_comp_plus_comp_iso_inv
 
 theorem plus_comp_iso_inv_eq_plus_lift (hP : Presheaf.IsSheaf J (J.plusObj P ⋙ F)) :
-    (J.plusCompIso F P).inv = J.plusLift (whiskerRight (J.toPlus _) _) hP := by
+    (J.plusCompIso F P).inv = J.plusLift (whiskerRight (J.toPlus _) _) hP :=
+  by
   apply J.plus_lift_unique
   simp [iso.comp_inv_eq]
 #align

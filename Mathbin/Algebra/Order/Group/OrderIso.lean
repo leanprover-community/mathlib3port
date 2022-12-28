@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.order_iso
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,8 +48,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.inv OrderIso.invₓ'. -/
 /-- `x ↦ x⁻¹` as an order-reversing equivalence. -/
 @[to_additive "`x ↦ -x` as an order-reversing equivalence.", simps]
-def OrderIso.inv :
-    α ≃o αᵒᵈ where 
+def OrderIso.inv : α ≃o αᵒᵈ
+    where
   toEquiv := (Equiv.inv α).trans OrderDual.toDual
   map_rel_iff' a b := @inv_le_inv_iff α _ _ _ _ _ _
 #align order_iso.inv OrderIso.inv
@@ -107,8 +107,8 @@ Case conversion may be inaccurate. Consider using '#align order_iso.mul_right Or
 /-- `equiv.mul_right` as an `order_iso`. See also `order_embedding.mul_right`. -/
 @[to_additive "`equiv.add_right` as an `order_iso`. See also `order_embedding.add_right`.",
   simps (config := { simpRhs := true }) toEquiv apply]
-def OrderIso.mulRight (a : α) :
-    α ≃o α where 
+def OrderIso.mulRight (a : α) : α ≃o α
+    where
   map_rel_iff' _ _ := mul_le_mul_iff_right a
   toEquiv := Equiv.mulRight a
 #align order_iso.mul_right OrderIso.mulRight
@@ -120,7 +120,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LE.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.722 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.724 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.722 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.724)) (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.737 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.739 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.737 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.739)] (a : α), Eq.{succ u1} (OrderIso.{u1, u1} α α _inst_2 _inst_2) (OrderIso.symm.{u1, u1} α α _inst_2 _inst_2 (OrderIso.mulRight.{u1} α _inst_1 _inst_2 _inst_3 a)) (OrderIso.mulRight.{u1} α _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
 Case conversion may be inaccurate. Consider using '#align order_iso.mul_right_symm OrderIso.mulRight_symmₓ'. -/
 @[simp, to_additive]
-theorem OrderIso.mulRight_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.mulRight a⁻¹ := by
+theorem OrderIso.mulRight_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.mulRight a⁻¹ :=
+  by
   ext x
   rfl
 #align order_iso.mul_right_symm OrderIso.mulRight_symm
@@ -140,8 +141,8 @@ Case conversion may be inaccurate. Consider using '#align order_iso.mul_left Ord
 /-- `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
 @[to_additive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
   simps (config := { simpRhs := true }) toEquiv apply]
-def OrderIso.mulLeft (a : α) :
-    α ≃o α where 
+def OrderIso.mulLeft (a : α) : α ≃o α
+    where
   map_rel_iff' _ _ := mul_le_mul_iff_left a
   toEquiv := Equiv.mulLeft a
 #align order_iso.mul_left OrderIso.mulLeft
@@ -153,7 +154,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] [_inst_2 : LE.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.934 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.936 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.934 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.936) (fun (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.949 : α) (x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.951 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.949 x._@.Mathlib.Algebra.Order.Group.OrderIso._hyg.951)] (a : α), Eq.{succ u1} (OrderIso.{u1, u1} α α _inst_2 _inst_2) (OrderIso.symm.{u1, u1} α α _inst_2 _inst_2 (OrderIso.mulLeft.{u1} α _inst_1 _inst_2 _inst_3 a)) (OrderIso.mulLeft.{u1} α _inst_1 _inst_2 _inst_3 (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
 Case conversion may be inaccurate. Consider using '#align order_iso.mul_left_symm OrderIso.mulLeft_symmₓ'. -/
 @[simp, to_additive]
-theorem OrderIso.mulLeft_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mulLeft a⁻¹ := by
+theorem OrderIso.mulLeft_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mulLeft a⁻¹ :=
+  by
   ext x
   rfl
 #align order_iso.mul_left_symm OrderIso.mulLeft_symm

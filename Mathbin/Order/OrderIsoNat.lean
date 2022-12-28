@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.order_iso_nat
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ theorem coe_nat_gt {f : ℕ → α} {H : ∀ n : ℕ, r (f (n + 1)) (f n)} : ⇑
   rfl
 #align rel_embedding.coe_nat_gt RelEmbedding.coe_nat_gt
 
-theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc r b ∧ r b a := by
+theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc r b ∧ r b a :=
+  by
   contrapose! h
   refine' ⟨_, fun b hr => _⟩
   by_contra hb
@@ -65,13 +66,15 @@ theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc
 
 /-- A value is accessible iff it isn't contained in any infinite decreasing sequence. -/
 theorem acc_iff_no_decreasing_seq {x} :
-    Acc r x ↔ IsEmpty { f : ((· > ·) : ℕ → ℕ → Prop) ↪r r // x ∈ Set.range f } := by
+    Acc r x ↔ IsEmpty { f : ((· > ·) : ℕ → ℕ → Prop) ↪r r // x ∈ Set.range f } :=
+  by
   constructor
   · refine' fun h => h.recOn fun x h IH => _
     constructor
     rintro ⟨f, k, hf⟩
     exact IsEmpty.elim' (IH (f (k + 1)) (hf ▸ f.map_rel_iff.2 (lt_add_one k))) ⟨f, _, rfl⟩
-  · have : ∀ x : { a // ¬Acc r a }, ∃ y : { a // ¬Acc r a }, r y.1 x.1 := by
+  · have : ∀ x : { a // ¬Acc r a }, ∃ y : { a // ¬Acc r a }, r y.1 x.1 :=
+      by
       rintro ⟨x, hx⟩
       cases exists_not_acc_lt_of_not_acc hx
       exact ⟨⟨w, h.1⟩, h.2⟩
@@ -82,14 +85,16 @@ theorem acc_iff_no_decreasing_seq {x} :
     apply h
 #align rel_embedding.acc_iff_no_decreasing_seq RelEmbedding.acc_iff_no_decreasing_seq
 
-theorem not_acc_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) (k : ℕ) : ¬Acc r (f k) := by
+theorem not_acc_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) (k : ℕ) : ¬Acc r (f k) :=
+  by
   rw [acc_iff_no_decreasing_seq, not_isEmpty_iff]
   exact ⟨⟨f, k, rfl⟩⟩
 #align rel_embedding.not_acc_of_decreasing_seq RelEmbedding.not_acc_of_decreasing_seq
 
 /-- A relation is well-founded iff it doesn't have any infinite decreasing sequence. -/
 theorem well_founded_iff_no_descending_seq :
-    WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) := by
+    WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) :=
+  by
   constructor
   · rintro ⟨h⟩
     exact ⟨fun f => not_acc_of_decreasing_seq f 0 (h _)⟩
@@ -99,7 +104,7 @@ theorem well_founded_iff_no_descending_seq :
   rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.well_founded_iff_no_descending_seq
 
 theorem not_well_founded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
-  by 
+  by
   rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]
   exact ⟨f⟩
 #align
@@ -152,7 +157,7 @@ theorem order_embedding_of_set_range : Set.range (Nat.orderEmbeddingOfSet s) = s
 
 theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
-  classical 
+  classical
     have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
       simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
         Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
@@ -167,7 +172,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
     ∃ g : ℕ ↪o ℕ,
       (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
   by
-  classical 
+  classical
     let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
     by_cases hbad : Infinite bad
     · haveI := hbad
@@ -176,7 +181,8 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
       rw [Nat.order_embedding_of_set_range bad] at h
       exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
     · rw [Set.infinite_coe_iff, Set.Infinite, not_not] at hbad
-      obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad := by
+      obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad :=
+        by
         by_cases he : hbad.to_finset.nonempty
         ·
           refine'
@@ -184,7 +190,8 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
               Nat.not_succ_le_self _
                 (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
         · exact ⟨0, fun n hn nbad => he ⟨n, hbad.mem_to_finset.2 nbad⟩⟩
-      have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) := by
+      have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n + m)) (f (n' + m)) :=
+        by
         intro n
         have h := hm _ (le_add_of_nonneg_left n.zero_le)
         simp only [exists_prop, not_not, Set.mem_setOf_eq, not_forall] at h
@@ -205,7 +212,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
 theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ,
       (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
-  by 
+  by
   obtain ⟨g, hr | hnr⟩ := exists_increasing_or_nonincreasing_subseq' r f
   · refine' ⟨g, Or.intro_left _ fun m n mn => _⟩
     obtain ⟨x, rfl⟩ := exists_add_of_le (Nat.succ_le_iff.2 mn)
@@ -217,7 +224,8 @@ theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTr
 #align exists_increasing_or_nonincreasing_subseq exists_increasing_or_nonincreasing_subseq
 
 theorem WellFounded.monotone_chain_condition' [Preorder α] :
-    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → ¬a n < a m := by
+    WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → ¬a n < a m :=
+  by
   refine' ⟨fun h a => _, fun h => _⟩
   · have hne : (Set.range a).Nonempty := ⟨a 0, by simp⟩
     obtain ⟨x, ⟨n, rfl⟩, H⟩ := h.has_min _ hne
@@ -231,7 +239,8 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
-  WellFounded.monotone_chain_condition'.trans <| by
+  WellFounded.monotone_chain_condition'.trans <|
+    by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
     rw [lt_iff_le_and_ne]
@@ -254,7 +263,7 @@ noncomputable def monotonicSequenceLimit [Preorder α] (a : ℕ →o α) :=
 
 theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α]
     (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : supᵢ a = monotonicSequenceLimit a :=
-  by 
+  by
   suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supᵢ a _)
   apply supᵢ_le
   intro m
@@ -262,7 +271,7 @@ theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α]
   · exact a.monotone hm
   · replace hm := le_of_not_le hm
     let S := { n | ∀ m, n ≤ m → a n = a m }
-    have hInf : Inf S ∈ S := by 
+    have hInf : Inf S ∈ S := by
       refine' Nat.Inf_mem _
       rw [WellFounded.monotone_chain_condition] at h
       exact h a

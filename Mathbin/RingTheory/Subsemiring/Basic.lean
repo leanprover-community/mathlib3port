@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem nat_cast_mem [AddSubmonoidWithOneClass S R] (n : ℕ) : (n : R) ∈ s :=
 
 instance (priority := 74) AddSubmonoidWithOneClass.toAddMonoidWithOne
     [AddSubmonoidWithOneClass S R] : AddMonoidWithOne s :=
-  { AddSubmonoidClass.toAddMonoid s with 
+  { AddSubmonoidClass.toAddMonoid s with
     one := ⟨_, one_mem s⟩
     natCast := fun n => ⟨n, nat_cast_mem s n⟩
     nat_cast_zero := Subtype.ext Nat.cast_zero
@@ -79,7 +79,8 @@ variable [SetLike S R] [hSR : SubsemiringClass S R] (s : S)
 
 include hSR
 
-theorem coe_nat_mem (n : ℕ) : (n : R) ∈ s := by
+theorem coe_nat_mem (n : ℕ) : (n : R) ∈ s :=
+  by
   rw [← nsmul_one]
   exact nsmul_mem (one_mem _) _
 #align coe_nat_mem coe_nat_mem
@@ -97,9 +98,8 @@ instance nontrivial [Nontrivial R] : Nontrivial s :=
   (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
 #align subsemiring_class.nontrivial SubsemiringClass.nontrivial
 
-instance no_zero_divisors [NoZeroDivisors R] :
-    NoZeroDivisors
-      s where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
+instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s
+    where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| Subtype.ext_iff.mp h)
       (fun h => Or.inl <| Subtype.eq h) fun h => Or.inr <| Subtype.eq h
 #align subsemiring_class.no_zero_divisors SubsemiringClass.no_zero_divisors
@@ -126,7 +126,8 @@ instance (priority := 75) toSemiring {R} [Semiring R] [SetLike S R] [Subsemiring
 
 @[simp, norm_cast]
 theorem coe_pow {R} [Semiring R] [SetLike S R] [SubsemiringClass S R] (x : s) (n : ℕ) :
-    ((x ^ n : s) : R) = (x ^ n : R) := by
+    ((x ^ n : s) : R) = (x ^ n : R) :=
+  by
   induction' n with n ih
   · simp
   · simp [pow_succ, ih]
@@ -202,13 +203,13 @@ add_decl_doc Subsemiring.toAddSubmonoid
 
 namespace Subsemiring
 
-instance : SetLike (Subsemiring R)
-      R where 
+instance : SetLike (Subsemiring R) R
+    where
   coe := Subsemiring.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
-instance : SubsemiringClass (Subsemiring R)
-      R where 
+instance : SubsemiringClass (Subsemiring R) R
+    where
   zero_mem := zero_mem'
   add_mem := add_mem'
   one_mem := one_mem'
@@ -272,7 +273,7 @@ theorem to_add_submonoid_mono : Monotone (toAddSubmonoid : Subsemiring R → Add
 /-- Construct a `subsemiring R` from a set `s`, a submonoid `sm`, and an additive
 submonoid `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
 protected def mk' (s : Set R) (sm : Submonoid R) (hm : ↑sm = s) (sa : AddSubmonoid R)
-    (ha : ↑sa = s) : Subsemiring R where 
+    (ha : ↑sa = s) : Subsemiring R where
   carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   one_mem' := hm ▸ sm.one_mem
@@ -370,7 +371,8 @@ protected theorem sum_mem (s : Subsemiring R) {ι : Type _} {t : Finset ι} {f :
 
 /-- A subsemiring of a `non_assoc_semiring` inherits a `non_assoc_semiring` structure -/
 instance toNonAssocSemiring : NonAssocSemiring s :=
-  { s.toSubmonoid.toMulOneClass, s.toAddSubmonoid.toAddCommMonoid with
+  { s.toSubmonoid.toMulOneClass,
+    s.toAddSubmonoid.toAddCommMonoid with
     mul_zero := fun x => Subtype.eq <| mul_zero x
     zero_mul := fun x => Subtype.eq <| zero_mul x
     right_distrib := fun x y z => Subtype.eq <| right_distrib x y z
@@ -409,9 +411,8 @@ protected theorem pow_mem {R : Type _} [Semiring R] (s : Subsemiring R) {x : R} 
   pow_mem hx n
 #align subsemiring.pow_mem Subsemiring.pow_mem
 
-instance no_zero_divisors [NoZeroDivisors R] :
-    NoZeroDivisors
-      s where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
+instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s
+    where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| Subtype.ext_iff.mp h)
       (fun h => Or.inl <| Subtype.eq h) fun h => Or.inr <| Subtype.eq h
 #align subsemiring.no_zero_divisors Subsemiring.no_zero_divisors
@@ -423,7 +424,8 @@ instance toSemiring {R} [Semiring R] (s : Subsemiring R) : Semiring s :=
 
 @[simp, norm_cast]
 theorem coe_pow {R} [Semiring R] (s : Subsemiring R) (x : s) (n : ℕ) :
-    ((x ^ n : s) : R) = (x ^ n : R) := by
+    ((x ^ n : s) : R) = (x ^ n : R) :=
+  by
   induction' n with n ih
   · simp
   · simp [pow_succ, ih]
@@ -525,8 +527,8 @@ theorem coe_top : ((⊤ : Subsemiring R) : Set R) = Set.univ :=
 
 /-- The ring equiv between the top element of `subsemiring R` and `R`. -/
 @[simps]
-def topEquiv : (⊤ : Subsemiring R) ≃+*
-      R where 
+def topEquiv : (⊤ : Subsemiring R) ≃+* R
+    where
   toFun r := r
   invFun r := ⟨r, Subsemiring.mem_top r⟩
   left_inv r := SetLike.eta r _
@@ -590,7 +592,9 @@ theorem gc_map_comap (f : R →+* S) : GaloisConnection (map f) (comap f) := fun
 
 /-- A subsemiring is isomorphic to its image under an injective function -/
 noncomputable def equivMapOfInjective (f : R →+* S) (hf : Function.Injective f) : s ≃+* s.map f :=
-  { Equiv.Set.image f s hf with
+  {
+    Equiv.Set.image f s
+      hf with
     map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _)
     map_add' := fun _ _ => Subtype.ext (f.map_add _ _) }
 #align subsemiring.equiv_map_of_injective Subsemiring.equivMapOfInjective
@@ -622,7 +626,8 @@ theorem mem_srange {f : R →+* S} {y : S} : y ∈ f.srange ↔ ∃ x, f x = y :
   Iff.rfl
 #align ring_hom.mem_srange RingHom.mem_srange
 
-theorem srange_eq_map (f : R →+* S) : f.srange = (⊤ : Subsemiring R).map f := by
+theorem srange_eq_map (f : R →+* S) : f.srange = (⊤ : Subsemiring R).map f :=
+  by
   ext
   simp
 #align ring_hom.srange_eq_map RingHom.srange_eq_map
@@ -686,7 +691,7 @@ theorem coe_Inf (S : Set (Subsemiring R)) : ((infₛ S : Subsemiring R) : Set R)
 #align subsemiring.coe_Inf Subsemiring.coe_Inf
 
 theorem mem_Inf {S : Set (Subsemiring R)} {x : R} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
-  Set.mem_Inter₂
+  Set.mem_interᵢ₂
 #align subsemiring.mem_Inf Subsemiring.mem_Inf
 
 @[simp]
@@ -703,7 +708,8 @@ theorem Inf_to_add_submonoid (s : Set (Subsemiring R)) :
 
 /-- Subsemirings of a semiring form a complete lattice. -/
 instance : CompleteLattice (Subsemiring R) :=
-  { completeLatticeOfInf (Subsemiring R) fun s =>
+  {
+    completeLatticeOfInf (Subsemiring R) fun s =>
       IsGLB.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
         is_glb_binfi with
     bot := ⊥
@@ -725,7 +731,7 @@ section Center
 
 /-- The center of a semiring `R` is the set of elements that commute with everything in `R` -/
 def center (R) [Semiring R] : Subsemiring R :=
-  { Submonoid.center R with 
+  { Submonoid.center R with
     carrier := Set.center R
     zero_mem' := Set.zero_mem_center R
     add_mem' := fun a b => Set.add_mem_center }
@@ -763,7 +769,7 @@ section Centralizer
 
 /-- The centralizer of a set as subsemiring. -/
 def centralizer {R} [Semiring R] (s : Set R) : Subsemiring R :=
-  { Submonoid.centralizer s with 
+  { Submonoid.centralizer s with
     carrier := s.centralizer
     zero_mem' := Set.zero_mem_centralizer _
     add_mem' := fun x y hx hy => Set.add_mem_centralizer hx hy }
@@ -851,7 +857,10 @@ namespace Submonoid
 
 /-- The additive closure of a submonoid is a subsemiring. -/
 def subsemiringClosure (M : Submonoid R) : Subsemiring R :=
-  { AddSubmonoid.closure (M : Set R) with
+  {
+    AddSubmonoid.closure
+      (M : Set
+          R) with
     one_mem' := AddSubmonoid.mem_closure.mpr fun y hy => hy M.one_mem
     mul_mem' := fun x y => MulMemClass.mul_mem_add_closure }
 #align submonoid.subsemiring_closure Submonoid.subsemiringClosure
@@ -869,7 +878,7 @@ theorem subsemiring_closure_to_add_submonoid :
 /-- The `subsemiring` generated by a multiplicative submonoid coincides with the
 `subsemiring.closure` of the submonoid itself . -/
 theorem subsemiring_closure_eq_closure : M.subsemiringClosure = Subsemiring.closure (M : Set R) :=
-  by 
+  by
   ext
   refine'
         ⟨fun hx => _, fun hx =>
@@ -906,7 +915,7 @@ theorem mem_closure_iff {s : Set R} {x} :
 
 @[simp]
 theorem closure_add_submonoid_closure {s : Set R} : closure ↑(AddSubmonoid.closure s) = closure s :=
-  by 
+  by
   ext x
   refine' ⟨fun hx => _, fun hx => closure_mono AddSubmonoid.subset_closure hx⟩
   rintro - ⟨H, rfl⟩
@@ -967,9 +976,8 @@ theorem mem_closure_iff_exists_list {R} [Semiring R] {s : Set R} {x} :
 variable (R)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
-protected def gi :
-    GaloisInsertion (@closure R _)
-      coe where 
+protected def gi : GaloisInsertion (@closure R _) coe
+    where
   choice s _ := closure s
   gc s t := closure_le
   le_l_u s := subset_closure
@@ -1019,7 +1027,7 @@ theorem comap_inf (s t : Subsemiring S) (f : R →+* S) : (s ⊓ t).comap f = s.
 #align subsemiring.comap_inf Subsemiring.comap_inf
 
 theorem comap_infi {ι : Sort _} (f : R →+* S) (s : ι → Subsemiring S) :
-    (infi s).comap f = ⨅ i, (s i).comap f :=
+    (infᵢ s).comap f = ⨅ i, (s i).comap f :=
   (gc_map_comap f).u_infi
 #align subsemiring.comap_infi Subsemiring.comap_infi
 
@@ -1081,20 +1089,21 @@ theorem top_prod_top : (⊤ : Subsemiring R).Prod (⊤ : Subsemiring S) = ⊤ :=
 
 /-- Product of subsemirings is isomorphic to their product as monoids. -/
 def prodEquiv (s : Subsemiring R) (t : Subsemiring S) : s.Prod t ≃+* s × t :=
-  { Equiv.Set.prod ↑s ↑t with 
+  { Equiv.Set.prod ↑s ↑t with
     map_mul' := fun x y => rfl
     map_add' := fun x y => rfl }
 #align subsemiring.prod_equiv Subsemiring.prodEquiv
 
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subsemiring R} (hS : Directed (· ≤ ·) S)
-    {x : R} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
+    {x : R} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
+  by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   let U : Subsemiring R :=
     Subsemiring.mk' (⋃ i, (S i : Set R)) (⨆ i, (S i).toSubmonoid)
       (Submonoid.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id) (⨆ i, (S i).toAddSubmonoid)
       (AddSubmonoid.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id)
   suffices (⨆ i, S i) ≤ U by simpa using @this x
-  exact supᵢ_le fun i x hx => Set.mem_Union.2 ⟨i, hx⟩
+  exact supᵢ_le fun i x hx => Set.mem_unionᵢ.2 ⟨i, hx⟩
 #align subsemiring.mem_supr_of_directed Subsemiring.mem_supr_of_directed
 
 theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subsemiring R}
@@ -1103,7 +1112,8 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subsemiring R}
 #align subsemiring.coe_supr_of_directed Subsemiring.coe_supr_of_directed
 
 theorem mem_Sup_of_directed_on {S : Set (Subsemiring R)} (Sne : S.Nonempty)
-    (hS : DirectedOn (· ≤ ·) S) {x : R} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s := by
+    (hS : DirectedOn (· ≤ ·) S) {x : R} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
+  by
   haveI : Nonempty S := Sne.to_subtype
   simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align subsemiring.mem_Sup_of_directed_on Subsemiring.mem_Sup_of_directed_on
@@ -1269,7 +1279,8 @@ variable {s t : Subsemiring R}
 /-- Makes the identity isomorphism from a proof two subsemirings of a multiplicative
     monoid are equal. -/
 def subsemiringCongr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr <| congr_arg _ h with
+  {
+    Equiv.setCongr <| congr_arg _ h with
     map_mul' := fun _ _ => rfl
     map_add' := fun _ _ => rfl }
 #align ring_equiv.subsemiring_congr RingEquiv.subsemiringCongr
@@ -1277,7 +1288,7 @@ def subsemiringCongr (h : s = t) : s ≃+* t :=
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.srange`. -/
 def sofLeftInverse {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) : R ≃+* f.srange :=
-  { f.srangeRestrict with 
+  { f.srangeRestrict with
     toFun := fun x => f.srangeRestrict x
     invFun := fun x => (g ∘ f.srange.Subtype) x
     left_inv := h
@@ -1355,8 +1366,8 @@ instance [HasSmul R' α] [FaithfulSMul R' α] (S : Subsemiring R') : FaithfulSMu
   S.toSubmonoid.HasFaithfulSmul
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
-instance [Zero α] [SmulWithZero R' α] (S : Subsemiring R') : SmulWithZero S α :=
-  SmulWithZero.compHom _ S.Subtype.toMonoidWithZeroHom.toZeroHom
+instance [Zero α] [SMulWithZero R' α] (S : Subsemiring R') : SMulWithZero S α :=
+  SMulWithZero.compHom _ S.Subtype.toMonoidWithZeroHom.toZeroHom
 
 end NonAssocSemiring
 
@@ -1400,7 +1411,7 @@ instance center.smul_comm_class_right : SMulCommClass R' (center R') R' :=
 def closureCommSemiringOfComm {s : Set R'} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b = b * a) :
     CommSemiring (closure s) :=
   { (closure s).toSemiring with
-    mul_comm := fun x y => by 
+    mul_comm := fun x y => by
       ext
       simp only [Subsemiring.coe_mul]
       refine'
@@ -1420,8 +1431,8 @@ end Actions
 -- While this definition is not about `subsemiring`s, this is the earliest we have
 -- both `strict_ordered_semiring` and `submonoid` available.
 /-- Submonoid of positive elements of an ordered semiring. -/
-def posSubmonoid (R : Type _) [StrictOrderedSemiring R] :
-    Submonoid R where 
+def posSubmonoid (R : Type _) [StrictOrderedSemiring R] : Submonoid R
+    where
   carrier := { x | 0 < x }
   one_mem' := show (0 : R) < 1 from zero_lt_one
   mul_mem' x y (hx : 0 < x) (hy : 0 < y) := mul_pos hx hy

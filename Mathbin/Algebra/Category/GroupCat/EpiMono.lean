@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.epi_mono
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,8 @@ variable [CommGroup A] [CommGroup B]
 
 @[to_additive AddMonoidHom.range_eq_top_of_cancel]
 theorem range_eq_top_of_cancel {f : A →* B}
-    (h : ∀ u v : B →* B ⧸ f.range, u.comp f = v.comp f → u = v) : f.range = ⊤ := by
+    (h : ∀ u v : B →* B ⧸ f.range, u.comp f = v.comp f → u = v) : f.range = ⊤ :=
+  by
   specialize h 1 (QuotientGroup.mk' _) _
   · ext1
     simp only [one_apply, coe_comp, coe_mk', Function.comp_apply]
@@ -111,19 +112,19 @@ local notation "∞" => XWithInfinity.infinity
 -- mathport name: exprSX'
 local notation "SX'" => Equiv.Perm X'
 
-instance :
-    HasSmul B X' where smul b x :=
+instance : HasSmul B X'
+    where smul b x :=
     match x with
     | from_coset y =>
       from_coset
-        ⟨b *l y, by 
+        ⟨b *l y, by
           rw [← Subtype.val_eq_coe, ← y.2.some_spec, left_coset_assoc]
           use b * y.2.some⟩
     | ∞ => ∞
 
 theorem mul_smul (b b' : B) (x : X') : (b * b') • x = b • b' • x :=
   match x with
-  | from_coset y => by 
+  | from_coset y => by
     change from_coset _ = from_coset _
     simp only [← Subtype.val_eq_coe, left_coset_assoc]
   | ∞ => rfl
@@ -131,7 +132,7 @@ theorem mul_smul (b b' : B) (x : X') : (b * b') • x = b • b' • x :=
 
 theorem one_smul (x : X') : (1 : B) • x = x :=
   match x with
-  | from_coset y => by 
+  | from_coset y => by
     change from_coset _ = from_coset _
     simp only [← Subtype.val_eq_coe, one_left_coset, Subtype.ext_iff_val]
   | ∞ => rfl
@@ -140,7 +141,7 @@ theorem one_smul (x : X') : (1 : B) • x = x :=
 theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
     from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ =
       from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
-  by 
+  by
   congr
   change b *l f.range = f.range
   nth_rw 2 [show (f.range : Set B) = 1 *l f.range from (one_left_coset _).symm]
@@ -152,7 +153,7 @@ theorem from_coset_eq_of_mem_range {b : B} (hb : b ∈ f.range) :
 theorem from_coset_ne_of_nin_range {b : B} (hb : b ∉ f.range) :
     from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ ≠
       from_coset ⟨f.range.carrier, ⟨1, one_left_coset _⟩⟩ :=
-  by 
+  by
   intro r
   simp only [Subtype.mk_eq_mk] at r
   change b *l f.range = f.range at r
@@ -204,22 +205,21 @@ theorem τ_symm_apply_infinity :
 /-- Let `g : B ⟶ S(X')` be defined as such that, for any `β : B`, `g(β)` is the function sending
 point at infinity to point at infinity and sending coset `y` to `β *l y`.
 -/
-def g :
-    B →*
-      SX' where 
+def g : B →* SX'
+    where
   toFun β :=
     { toFun := fun x => β • x
       invFun := fun x => β⁻¹ • x
-      left_inv := fun x => by 
+      left_inv := fun x => by
         dsimp only
         rw [← mul_smul, mul_left_inv, one_smul]
-      right_inv := fun x => by 
+      right_inv := fun x => by
         dsimp only
         rw [← mul_smul, mul_right_inv, one_smul] }
-  map_one' := by 
+  map_one' := by
     ext
     simp [one_smul]
-  map_mul' b1 b2 := by 
+  map_mul' b1 b2 := by
     ext
     simp [mul_smul]
 #align Group.surjective_of_epi_auxs.G GroupCat.SurjectiveOfEpiAuxs.g
@@ -229,12 +229,12 @@ local notation "g" => g f
 
 /-- Define `h : B ⟶ S(X')` to be `τ g τ⁻¹`
 -/
-def h : B →* SX' where 
+def h : B →* SX' where
   toFun β := (τ.symm.trans (g β)).trans τ
-  map_one' := by 
+  map_one' := by
     ext
     simp
-  map_mul' b1 b2 := by 
+  map_mul' b1 b2 := by
     ext
     simp
 #align Group.surjective_of_epi_auxs.H GroupCat.SurjectiveOfEpiAuxs.h
@@ -259,7 +259,8 @@ theorem g_apply_infinity (x : B) : (g x) ∞ = ∞ :=
   rfl
 #align Group.surjective_of_epi_auxs.g_apply_infinity GroupCat.SurjectiveOfEpiAuxs.g_apply_infinity
 
-theorem h_apply_infinity (x : B) (hx : x ∈ f.range) : (h x) ∞ = ∞ := by
+theorem h_apply_infinity (x : B) (hx : x ∈ f.range) : (h x) ∞ = ∞ :=
+  by
   simp only [H, MonoidHom.coe_mk, Equiv.to_fun_as_coe, Equiv.coe_trans, Function.comp_apply]
   rw [τ_symm_apply_infinity, g_apply_from_coset]
   simpa only [← Subtype.val_eq_coe] using τ_apply_from_coset' f x hx
@@ -294,7 +295,8 @@ theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : 
 #align
   Group.surjective_of_epi_auxs.h_apply_from_coset_nin_range GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset_nin_range
 
-theorem agree : f.range.carrier = { x | h x = g x } := by
+theorem agree : f.range.carrier = { x | h x = g x } :=
+  by
   refine' Set.ext fun b => ⟨_, fun hb : h b = g b => by_contradiction fun r => _⟩
   · rintro ⟨a, rfl⟩
     change h (f a) = g (f a)
@@ -324,7 +326,8 @@ theorem comp_eq : (f ≫ show B ⟶ GroupCat.of SX' from g) = f ≫ h :=
     simp only [comp_apply, show h (f a) = _ from (by simp [← agree] : f a ∈ { b | h b = g b })]
 #align Group.surjective_of_epi_auxs.comp_eq GroupCat.SurjectiveOfEpiAuxs.comp_eq
 
-theorem g_ne_h (x : B) (hx : x ∉ f.range) : g ≠ h := by
+theorem g_ne_h (x : B) (hx : x ∉ f.range) : g ≠ h :=
+  by
   intro r
   replace r :=
     FunLike.congr_fun (FunLike.congr_fun r x) (from_coset ⟨f.range, ⟨1, one_left_coset _⟩⟩)
@@ -337,7 +340,8 @@ theorem g_ne_h (x : B) (hx : x ∉ f.range) : g ≠ h := by
 
 end SurjectiveOfEpiAuxs
 
-theorem surjective_of_epi [Epi f] : Function.Surjective f := by
+theorem surjective_of_epi [Epi f] : Function.Surjective f :=
+  by
   by_contra r
   push_neg  at r
   rcases r with ⟨b, hb⟩
@@ -360,8 +364,10 @@ namespace AddGroupCat
 
 variable {A B : AddGroupCat.{u}} (f : A ⟶ B)
 
-theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
-  have i1 : epi f ↔ epi (Group_AddGroup_equivalence.inverse.map f) := by
+theorem epi_iff_surjective : Epi f ↔ Function.Surjective f :=
+  by
+  have i1 : epi f ↔ epi (Group_AddGroup_equivalence.inverse.map f) :=
+    by
     refine' ⟨_, Group_AddGroup_equivalence.inverse.epi_of_epi_map⟩
     intro e'
     apply Group_AddGroup_equivalence.inverse.map_epi
@@ -379,17 +385,13 @@ namespace GroupCat
 variable {A B : GroupCat.{u}} (f : A ⟶ B)
 
 @[to_additive]
-instance forget_Group_preserves_mono :
-    (forget
-        GroupCat).PreservesMonomorphisms where preserves X Y f e := by
-    rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
+instance forget_Group_preserves_mono : (forget GroupCat).PreservesMonomorphisms
+    where preserves X Y f e := by rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
 #align Group.forget_Group_preserves_mono GroupCat.forget_Group_preserves_mono
 
 @[to_additive]
-instance forget_Group_preserves_epi :
-    (forget
-        GroupCat).PreservesEpimorphisms where preserves X Y f e := by
-    rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
+instance forget_Group_preserves_epi : (forget GroupCat).PreservesEpimorphisms
+    where preserves X Y f e := by rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
 #align Group.forget_Group_preserves_epi GroupCat.forget_Group_preserves_epi
 
 end GroupCat
@@ -433,17 +435,13 @@ theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
 #align CommGroup.epi_iff_surjective CommGroupCat.epi_iff_surjective
 
 @[to_additive]
-instance forget_CommGroup_preserves_mono :
-    (forget
-        CommGroupCat).PreservesMonomorphisms where preserves X Y f e := by
-    rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
+instance forget_CommGroup_preserves_mono : (forget CommGroupCat).PreservesMonomorphisms
+    where preserves X Y f e := by rwa [mono_iff_injective, ← CategoryTheory.mono_iff_injective] at e
 #align CommGroup.forget_CommGroup_preserves_mono CommGroupCat.forget_CommGroup_preserves_mono
 
 @[to_additive]
-instance forget_CommGroup_preserves_epi :
-    (forget
-        CommGroupCat).PreservesEpimorphisms where preserves X Y f e := by
-    rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
+instance forget_CommGroup_preserves_epi : (forget CommGroupCat).PreservesEpimorphisms
+    where preserves X Y f e := by rwa [epi_iff_surjective, ← CategoryTheory.epi_iff_surjective] at e
 #align CommGroup.forget_CommGroup_preserves_epi CommGroupCat.forget_CommGroup_preserves_epi
 
 end CommGroupCat

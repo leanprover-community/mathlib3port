@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.replacer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,8 +79,8 @@ unsafe def valid_types : expr → List expr
   | _ => []
 #align tactic.valid_types tactic.valid_types
 
-unsafe def replacer_attr (ntac : Name) :
-    user_attribute where 
+unsafe def replacer_attr (ntac : Name) : user_attribute
+    where
   Name := ntac
   descr :=
     "Replaces the definition of `" ++ toString ntac ++ "`. This should be " ++
@@ -155,8 +155,8 @@ unsafe def unprime : Name → tactic Name
 #align tactic.unprime tactic.unprime
 
 @[user_attribute]
-unsafe def replaceable_attr :
-    user_attribute where 
+unsafe def replaceable_attr : user_attribute
+    where
   Name := `replaceable
   descr := "make definition replaceable in dependent modules"
   after_set :=

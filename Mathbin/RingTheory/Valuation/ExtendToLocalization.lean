@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.extend_to_localization
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,10 +31,12 @@ the complement of `v.supp`. -/
 noncomputable def Valuation.extendToLocalization : Valuation B Γ :=
   let f := IsLocalization.toLocalizationMap S B
   let h : ∀ s : S, IsUnit (v.1.toMonoidHom s) := fun s => isUnit_iff_ne_zero.2 (hS s.2)
-  { f.lift h with 
+  { f.lift h with
     map_zero' := by convert f.lift_eq _ 0 <;> simp
-    map_add_le_max' := fun x y => by
-      obtain ⟨a, b, s, rfl, rfl⟩ : ∃ (a b : A)(s : S), f.mk' a s = x ∧ f.mk' b s = y := by
+    map_add_le_max' := fun x y =>
+      by
+      obtain ⟨a, b, s, rfl, rfl⟩ : ∃ (a b : A)(s : S), f.mk' a s = x ∧ f.mk' b s = y :=
+        by
         obtain ⟨a, s, rfl⟩ := f.mk'_surjective x
         obtain ⟨b, t, rfl⟩ := f.mk'_surjective y
         use a * t, b * s, s * t

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.count
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem countp_pos {l} : 0 < countp p l ↔ ∃ a ∈ l, p a := by
 #align list.countp_pos List.countp_pos
 
 @[simp]
-theorem countp_eq_zero {l} : countp p l = 0 ↔ ∀ a ∈ l, ¬p a := by
+theorem countp_eq_zero {l} : countp p l = 0 ↔ ∀ a ∈ l, ¬p a :=
+  by
   rw [← not_iff_not, ← Ne.def, ← pos_iff_ne_zero, countp_pos]
   simp
 #align list.countp_eq_zero List.countp_eq_zero
@@ -123,7 +124,8 @@ theorem countp_map (p : β → Prop) [DecidablePred p] (f : α → β) :
 
 variable {p q}
 
-theorem countp_mono_left (h : ∀ x ∈ l, p x → q x) : countp p l ≤ countp q l := by
+theorem countp_mono_left (h : ∀ x ∈ l, p x → q x) : countp p l ≤ countp q l :=
+  by
   induction' l with a l ihl; · rfl
   rw [forall_mem_cons] at h; cases' h with ha hl
   rw [countp_cons, countp_cons]
@@ -172,7 +174,7 @@ theorem count_cons_of_ne {a b : α} (h : a ≠ b) (l : List α) : count a (b :: 
 theorem count_tail :
     ∀ (l : List α) (a : α) (h : 0 < l.length),
       l.tail.count a = l.count a - ite (a = List.nthLe l 0 h) 1 0
-  | _ :: _, a, h => by 
+  | _ :: _, a, h => by
     rw [count_cons]
     split_ifs <;> simp
 #align list.count_tail List.count_tail
@@ -248,7 +250,8 @@ theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
 theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} :
     n ≤ count a l ↔ repeat a n <+ l :=
   ⟨fun h =>
-    ((repeat_sublist_repeat a).2 h).trans <| by
+    ((repeat_sublist_repeat a).2 h).trans <|
+      by
       have : filter (Eq a) l = repeat a (count a l) :=
         eq_repeat.2
           ⟨by simp only [count, countp_eq_length_filter], fun b m => (of_mem_filter m).symm⟩
@@ -265,7 +268,7 @@ theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l
 theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) :
     count a (filter p l) = count a l := by
   simp only [count, countp_filter,
-    show (fun b => a = b ∧ p b) = Eq a by 
+    show (fun b => a = b ∧ p b) = Eq a by
       ext b
       constructor <;> cc]
 #align list.count_filter List.count_filter
@@ -281,14 +284,15 @@ theorem count_map_of_injective {α β} [DecidableEq α] [DecidableEq β] (l : Li
 #align list.count_map_of_injective List.count_map_of_injective
 
 theorem count_le_count_map [DecidableEq β] (l : List α) (f : α → β) (x : α) :
-    count x l ≤ count (f x) (map f l) := by
+    count x l ≤ count (f x) (map f l) :=
+  by
   rw [count, count, countp_map]
   exact countp_mono_left fun y hyl => congr_arg f
 #align list.count_le_count_map List.count_le_count_map
 
 theorem count_erase (a b : α) : ∀ l : List α, count a (l.erase b) = count a l - ite (a = b) 1 0
   | [] => by simp
-  | c :: l => by 
+  | c :: l => by
     rw [erase_cons]
     by_cases hc : c = b
     · rw [if_pos hc, hc, count_cons', Nat.add_sub_cancel]
@@ -312,7 +316,8 @@ theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.e
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
-    (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a := by
+    (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a :=
+  by
   induction' l with a' as h generalizing a
   · rw [map_nil, prod_nil, count_nil, pow_zero]
   · specialize h a fun a' ha' hfa' => hf a' ha' (mem_cons_of_mem _ hfa')

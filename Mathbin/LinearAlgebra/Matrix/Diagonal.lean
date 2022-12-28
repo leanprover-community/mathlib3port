@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.diagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ variable {K : Type u} [Field K]
 -- maybe try to relax the universe constraint
 theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
     ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) :=
-  by 
+  by
   rw [← comap_bot, ← infi_ker_proj, comap_infi]
   have := fun i : m => ker_comp (to_lin' (diagonal w)) (proj i)
   simp only [comap_infi, ← this, proj_diagonal, ker_smul']
@@ -77,7 +77,7 @@ theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
 theorem range_diagonal [DecidableEq m] (w : m → K) :
     (diagonal w).toLin'.range =
       ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range :=
-  by 
+  by
   dsimp only [mem_set_of_eq]
   rw [← map_top, ← supr_range_std_basis, map_supr]
   congr ; funext i
@@ -85,7 +85,8 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
 #align matrix.range_diagonal Matrix.range_diagonal
 
 theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
-    rank (diagonal w).toLin' = Fintype.card { i // w i ≠ 0 } := by
+    rank (diagonal w).toLin' = Fintype.card { i // w i ≠ 0 } :=
+  by
   have hu : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 } := by rw [Set.compl_union_self]
   have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left
   have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (Set.to_finite _)

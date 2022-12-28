@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov
 
 ! This file was ported from Lean 3 source module analysis.convex.jensen
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,8 @@ variable [LinearOrderedField 𝕜] [AddCommGroup E] [OrderedAddCommGroup β] [Mo
 /-- Convex **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
     (h₁ : 0 < ∑ i in t, w i) (hmem : ∀ i ∈ t, p i ∈ s) :
-    f (t.centerMass w p) ≤ t.centerMass w (f ∘ p) := by
+    f (t.centerMass w p) ≤ t.centerMass w (f ∘ p) :=
+  by
   have hmem' : ∀ i ∈ t, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi =>
     ⟨hmem i hi, le_rfl⟩
   convert (hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
@@ -89,7 +90,8 @@ variable [LinearOrderedField 𝕜] [AddCommGroup E] [LinearOrderedAddCommGroup �
 
 theorem le_sup_of_mem_convex_hull {s : Finset E} (hf : ConvexOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
     (hx : x ∈ convexHull 𝕜 (s : Set E)) :
-    f x ≤ s.sup' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f := by
+    f x ≤ s.sup' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f :=
+  by
   obtain ⟨w, hw₀, hw₁, rfl⟩ := mem_convex_hull.1 hx
   exact
     (hf.map_center_mass_le hw₀ (by positivity) <| subset_convex_hull _ _).trans
@@ -106,7 +108,7 @@ theorem inf_le_of_mem_convex_hull {s : Finset E} (hf : ConcaveOn 𝕜 (convexHul
 `s` is less than the value it takes on one of those points. -/
 theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i)
     (hw₁ : 0 < ∑ i in t, w i) (hp : ∀ i ∈ t, p i ∈ s) : ∃ i ∈ t, f (t.centerMass w p) ≤ f (p i) :=
-  by 
+  by
   set y := t.center_mass w p
   rsuffices ⟨i, hi, hfi⟩ : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i
   · rw [mem_filter] at hi
@@ -129,7 +131,8 @@ theorem ConcaveOn.exists_le_of_center_mass (h : ConcaveOn 𝕜 s f) (hw₀ : ∀
 /-- Maximum principle for convex functions. If a function `f` is convex on the convex hull of `s`,
 then the eventual maximum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
 theorem ConvexOn.exists_ge_of_mem_convex_hull (hf : ConvexOn 𝕜 (convexHull 𝕜 s) f) {x}
-    (hx : x ∈ convexHull 𝕜 s) : ∃ y ∈ s, f x ≤ f y := by
+    (hx : x ∈ convexHull 𝕜 s) : ∃ y ∈ s, f x ≤ f y :=
+  by
   rw [_root_.convex_hull_eq] at hx
   obtain ⟨α, t, w, p, hw₀, hw₁, hp, rfl⟩ := hx
   rcases hf.exists_ge_of_center_mass hw₀ (hw₁.symm ▸ zero_lt_one) fun i hi =>

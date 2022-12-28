@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.antichain
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,8 @@ protected theorem is_antisymm (h : IsAntichain r univ) : IsAntisymm α r :=
   ⟨fun a b ha _ => h.Eq trivial trivial ha⟩
 #align is_antichain.is_antisymm IsAntichain.is_antisymm
 
-protected theorem subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.Subsingleton := by
+protected theorem subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.Subsingleton :=
+  by
   rintro a ha b hb
   obtain hab | hab | hab := trichotomous_of r a b
   · exact h.eq ha hb hab
@@ -87,7 +88,8 @@ theorem swap (hs : IsAntichain r s) : IsAntichain (swap r) s :=
 #align is_antichain.swap IsAntichain.swap
 
 theorem image (hs : IsAntichain r s) (f : α → β) (h : ∀ ⦃a b⦄, r' (f a) (f b) → r a b) :
-    IsAntichain r' (f '' s) := by
+    IsAntichain r' (f '' s) :=
+  by
   rintro _ ⟨b, hb, rfl⟩ _ ⟨c, hc, rfl⟩ hbc hr
   exact hs hb hc (ne_of_apply_ne _ hbc) (h hr)
 #align is_antichain.image IsAntichain.image
@@ -117,7 +119,8 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r)
   (is_antichain_insert_of_symmetric hr).2 ⟨hs, h⟩
 #align is_antichain.insert_of_symmetric IsAntichain.insert_of_symmetric
 
-theorem image_rel_embedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain r' (φ '' s) := by
+theorem image_rel_embedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain r' (φ '' s) :=
+  by
   intro b hb b' hb' h₁ h₂
   rw [Set.mem_image] at hb hb'
   obtain ⟨⟨a, has, rfl⟩, ⟨a', has', rfl⟩⟩ := hb, hb'
@@ -215,13 +218,15 @@ section Preorder
 variable [Preorder α]
 
 theorem is_antichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
-  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq' hb h.2.1 (h.2.2 hb)⟩, by
+  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq' hb h.2.1 (h.2.2 hb)⟩,
+    by
     rintro rfl
     exact ⟨is_antichain_singleton _ _, isLeast_singleton⟩⟩
 #align is_antichain_and_least_iff is_antichain_and_least_iff
 
 theorem is_antichain_and_greatest_iff : IsAntichain (· ≤ ·) s ∧ IsGreatest s a ↔ s = {a} :=
-  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩, by
+  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩,
+    by
     rintro rfl
     exact ⟨is_antichain_singleton _ _, isGreatest_singleton⟩⟩
 #align is_antichain_and_greatest_iff is_antichain_and_greatest_iff
@@ -295,7 +300,8 @@ theorem swap [IsSymm α r] (hs : IsStrongAntichain r s) : IsStrongAntichain (swa
 #align is_strong_antichain.swap IsStrongAntichain.swap
 
 theorem image (hs : IsStrongAntichain r s) {f : α → β} (hf : Surjective f)
-    (h : ∀ a b, r' (f a) (f b) → r a b) : IsStrongAntichain r' (f '' s) := by
+    (h : ∀ a b, r' (f a) (f b) → r a b) : IsStrongAntichain r' (f '' s) :=
+  by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ hab c
   obtain ⟨c, rfl⟩ := hf c
   exact (hs ha hb (ne_of_apply_ne _ hab) _).imp (mt <| h _ _) (mt <| h _ _)

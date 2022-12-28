@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.pochhammer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,8 @@ section
 variable {S} {T : Type v} [Semiring T]
 
 @[simp]
-theorem pochhammer_map (f : S →+* T) (n : ℕ) : (pochhammer S n).map f = pochhammer T n := by
+theorem pochhammer_map (f : S →+* T) (n : ℕ) : (pochhammer S n).map f = pochhammer T n :=
+  by
   induction' n with n ih
   · simp
   · simp [ih, pochhammer_succ_left, map_comp]
@@ -82,7 +83,8 @@ theorem pochhammer_eval_cast (n k : ℕ) : ((pochhammer ℕ n).eval k : S) = (po
     eval₂_at_nat_cast, Nat.cast_id, eq_nat_cast]
 #align pochhammer_eval_cast pochhammer_eval_cast
 
-theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then 1 else 0 := by
+theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then 1 else 0 :=
+  by
   cases n
   · simp
   · simp [X_mul, Nat.succ_ne_zero, pochhammer_succ_left]
@@ -96,7 +98,8 @@ theorem pochhammer_ne_zero_eval_zero {n : ℕ} (h : n ≠ 0) : (pochhammer S n).
   simp [pochhammer_eval_zero, h]
 #align pochhammer_ne_zero_eval_zero pochhammer_ne_zero_eval_zero
 
-theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n * (X + n) := by
+theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n * (X + n) :=
+  by
   suffices h : pochhammer ℕ (n + 1) = pochhammer ℕ n * (X + n)
   · apply_fun Polynomial.map (algebraMap ℕ S)  at h
     simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X,
@@ -134,7 +137,8 @@ theorem Polynomial.mul_X_add_nat_cast_comp {p q : S[X]} {n : ℕ} :
 #align polynomial.mul_X_add_nat_cast_comp Polynomial.mul_X_add_nat_cast_comp
 
 theorem pochhammer_mul (n m : ℕ) :
-    pochhammer S n * (pochhammer S m).comp (X + n) = pochhammer S (n + m) := by
+    pochhammer S n * (pochhammer S m).comp (X + n) = pochhammer S (n + m) :=
+  by
   induction' m with m ih
   · simp
   ·
@@ -145,14 +149,15 @@ theorem pochhammer_mul (n m : ℕ) :
 theorem pochhammer_nat_eq_asc_factorial (n : ℕ) :
     ∀ k, (pochhammer ℕ k).eval (n + 1) = n.ascFactorial k
   | 0 => by erw [eval_one] <;> rfl
-  | t + 1 => by 
+  | t + 1 => by
     rw [pochhammer_succ_right, eval_mul, pochhammer_nat_eq_asc_factorial t]
     suffices n.asc_factorial t * (n + 1 + t) = n.asc_factorial (t + 1) by simpa
     rw [Nat.asc_factorial_succ, add_right_comm, mul_comm]
 #align pochhammer_nat_eq_asc_factorial pochhammer_nat_eq_asc_factorial
 
 theorem pochhammer_nat_eq_desc_factorial (a b : ℕ) :
-    (pochhammer ℕ b).eval a = (a + b - 1).descFactorial b := by
+    (pochhammer ℕ b).eval a = (a + b - 1).descFactorial b :=
+  by
   cases b
   · rw [Nat.desc_factorial_zero, pochhammer_zero, Polynomial.eval_one]
   rw [Nat.add_succ, Nat.succ_sub_succ, tsub_zero]
@@ -171,7 +176,8 @@ section StrictOrderedSemiring
 
 variable {S : Type _} [StrictOrderedSemiring S]
 
-theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval s := by
+theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval s :=
+  by
   induction' n with n ih
   · simp only [Nat.zero_eq, pochhammer_zero, eval_one]
     exact zero_lt_one
@@ -201,7 +207,7 @@ theorem factorial_mul_pochhammer (S : Type _) [Semiring S] (r n : ℕ) :
 
 theorem pochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (pochhammer ℕ r).eval (n + 1) = (n + r) * (pochhammer ℕ r).eval n
-  | 0 => by 
+  | 0 => by
     by_cases h : r = 0
     · simp only [h, zero_mul, zero_add]
     · simp only [pochhammer_eval_zero, zero_mul, if_neg h, mul_zero]

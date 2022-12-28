@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.coherence_tactic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,8 +50,8 @@ class LiftHom {a b : B} (f : a ⟶ b) where
 instance liftHomId : LiftHom (𝟙 a) where lift := 𝟙 (of.obj a)
 #align category_theory.bicategory.lift_hom_id CategoryTheory.Bicategory.liftHomId
 
-instance liftHomComp (f : a ⟶ b) (g : b ⟶ c) [LiftHom f] [LiftHom g] :
-    LiftHom (f ≫ g) where lift := LiftHom.lift f ≫ LiftHom.lift g
+instance liftHomComp (f : a ⟶ b) (g : b ⟶ c) [LiftHom f] [LiftHom g] : LiftHom (f ≫ g)
+    where lift := LiftHom.lift f ≫ LiftHom.lift g
 #align category_theory.bicategory.lift_hom_comp CategoryTheory.Bicategory.liftHomComp
 
 instance (priority := 100) liftHomOf (f : a ⟶ b) : LiftHom f where lift := of.map f
@@ -65,37 +65,35 @@ class LiftHom₂ {f g : a ⟶ b} [LiftHom f] [LiftHom g] (η : f ⟶ g) where
 instance liftHom₂Id (f : a ⟶ b) [LiftHom f] : LiftHom₂ (𝟙 f) where lift := 𝟙 _
 #align category_theory.bicategory.lift_hom₂_id CategoryTheory.Bicategory.liftHom₂Id
 
-instance liftHom₂LeftUnitorHom (f : a ⟶ b) [LiftHom f] :
-    LiftHom₂ (λ_ f).Hom where lift := (λ_ (LiftHom.lift f)).Hom
+instance liftHom₂LeftUnitorHom (f : a ⟶ b) [LiftHom f] : LiftHom₂ (λ_ f).Hom
+    where lift := (λ_ (LiftHom.lift f)).Hom
 #align
   category_theory.bicategory.lift_hom₂_left_unitor_hom CategoryTheory.Bicategory.liftHom₂LeftUnitorHom
 
-instance liftHom₂LeftUnitorInv (f : a ⟶ b) [LiftHom f] :
-    LiftHom₂ (λ_ f).inv where lift := (λ_ (LiftHom.lift f)).inv
+instance liftHom₂LeftUnitorInv (f : a ⟶ b) [LiftHom f] : LiftHom₂ (λ_ f).inv
+    where lift := (λ_ (LiftHom.lift f)).inv
 #align
   category_theory.bicategory.lift_hom₂_left_unitor_inv CategoryTheory.Bicategory.liftHom₂LeftUnitorInv
 
-instance liftHom₂RightUnitorHom (f : a ⟶ b) [LiftHom f] :
-    LiftHom₂ (ρ_ f).Hom where lift := (ρ_ (LiftHom.lift f)).Hom
+instance liftHom₂RightUnitorHom (f : a ⟶ b) [LiftHom f] : LiftHom₂ (ρ_ f).Hom
+    where lift := (ρ_ (LiftHom.lift f)).Hom
 #align
   category_theory.bicategory.lift_hom₂_right_unitor_hom CategoryTheory.Bicategory.liftHom₂RightUnitorHom
 
-instance liftHom₂RightUnitorInv (f : a ⟶ b) [LiftHom f] :
-    LiftHom₂ (ρ_ f).inv where lift := (ρ_ (LiftHom.lift f)).inv
+instance liftHom₂RightUnitorInv (f : a ⟶ b) [LiftHom f] : LiftHom₂ (ρ_ f).inv
+    where lift := (ρ_ (LiftHom.lift f)).inv
 #align
   category_theory.bicategory.lift_hom₂_right_unitor_inv CategoryTheory.Bicategory.liftHom₂RightUnitorInv
 
 instance liftHom₂AssociatorHom (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) [LiftHom f] [LiftHom g]
-    [LiftHom h] :
-    LiftHom₂
-      (α_ f g h).Hom where lift := (α_ (LiftHom.lift f) (LiftHom.lift g) (LiftHom.lift h)).Hom
+    [LiftHom h] : LiftHom₂ (α_ f g h).Hom
+    where lift := (α_ (LiftHom.lift f) (LiftHom.lift g) (LiftHom.lift h)).Hom
 #align
   category_theory.bicategory.lift_hom₂_associator_hom CategoryTheory.Bicategory.liftHom₂AssociatorHom
 
 instance liftHom₂AssociatorInv (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) [LiftHom f] [LiftHom g]
-    [LiftHom h] :
-    LiftHom₂
-      (α_ f g h).inv where lift := (α_ (LiftHom.lift f) (LiftHom.lift g) (LiftHom.lift h)).inv
+    [LiftHom h] : LiftHom₂ (α_ f g h).inv
+    where lift := (α_ (LiftHom.lift f) (LiftHom.lift g) (LiftHom.lift h)).inv
 #align
   category_theory.bicategory.lift_hom₂_associator_inv CategoryTheory.Bicategory.liftHom₂AssociatorInv
 
@@ -244,7 +242,8 @@ example {f' : a ⟶ d} {f : a ⟶ b} {g : b ⟶ c} {h : c ⟶ d} (η : f' ⟶ (f
   η ⊗≫ 𝟙 _
 
 @[simp]
-theorem bicategorical_comp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ := by
+theorem bicategorical_comp_refl {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) : η ⊗≫ θ = η ≫ θ :=
+  by
   dsimp [bicategorical_comp]
   simp
 #align

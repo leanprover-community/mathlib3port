@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.quot
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ namespace Setoid
 #print Setoid.ext /-
 theorem ext {α : Sort _} :
     ∀ {s t : Setoid α}, (∀ a b, @Setoid.r α s a b ↔ @Setoid.r α t a b) → s = t
-  | ⟨r, _⟩, ⟨p, _⟩, Eq => by
+  | ⟨r, _⟩, ⟨p, _⟩, Eq =>
+    by
     have : r = p := funext fun a => funext fun b => propext <| Eq a b
     subst this
 #align setoid.ext Setoid.ext
@@ -267,8 +268,8 @@ instance (s : Setoid α) [Inhabited α] : Inhabited (Quotient s) :=
 instance (s : Setoid α) [Subsingleton α] : Subsingleton (Quotient s) :=
   Quot.Subsingleton
 
-instance {α : Type _} [Setoid α] :
-    IsEquiv α (· ≈ ·) where 
+instance {α : Type _} [Setoid α] : IsEquiv α (· ≈ ·)
+    where
   refl := Setoid.refl
   symm a b := Setoid.symm
   trans a b c := Setoid.trans
@@ -447,13 +448,11 @@ noncomputable def Quot.out {r : α → α → Prop} (q : Quot r) : α :=
 #align quot.out Quot.out
 -/
 
-#print quot.unquot /-
 /-- Unwrap the VM representation of a quotient to obtain an element of the equivalence class.
   Computable but unsound. -/
 unsafe def quot.unquot {r : α → α → Prop} : Quot r → α :=
   unchecked_cast
 #align quot.unquot quot.unquot
--/
 
 #print Quot.out_eq /-
 @[simp]
@@ -485,7 +484,8 @@ theorem Quotient.mk_out [s : Setoid α] (a : α) : ⟦a⟧.out ≈ a :=
 
 #print Quotient.mk_eq_iff_out /-
 theorem Quotient.mk_eq_iff_out [s : Setoid α] {x : α} {y : Quotient s} :
-    ⟦x⟧ = y ↔ x ≈ Quotient.out y := by
+    ⟦x⟧ = y ↔ x ≈ Quotient.out y :=
+  by
   refine' Iff.trans _ Quotient.eq
   rw [Quotient.out_eq y]
 #align quotient.mk_eq_iff_out Quotient.mk_eq_iff_out
@@ -493,7 +493,8 @@ theorem Quotient.mk_eq_iff_out [s : Setoid α] {x : α} {y : Quotient s} :
 
 #print Quotient.eq_mk_iff_out /-
 theorem Quotient.eq_mk_iff_out [s : Setoid α] {x : Quotient s} {y : α} :
-    x = ⟦y⟧ ↔ Quotient.out x ≈ y := by
+    x = ⟦y⟧ ↔ Quotient.out x ≈ y :=
+  by
   refine' Iff.trans _ Quotient.eq
   rw [Quotient.out_eq x]
 #align quotient.eq_mk_iff_out Quotient.eq_mk_iff_out
@@ -522,8 +523,8 @@ theorem Quotient.out_inj {s : Setoid α} {x y : Quotient s} : x.out = y.out ↔ 
 section Pi
 
 #print piSetoid /-
-instance piSetoid {ι : Sort _} {α : ι → Sort _} [∀ i, Setoid (α i)] :
-    Setoid (∀ i, α i) where 
+instance piSetoid {ι : Sort _} {α : ι → Sort _} [∀ i, Setoid (α i)] : Setoid (∀ i, α i)
+    where
   R a b := ∀ i, a i ≈ b i
   iseqv :=
     ⟨fun a i => Setoid.refl _, fun a b h i => Setoid.symm (h _), fun a b c h₁ h₂ i =>
@@ -561,7 +562,8 @@ Case conversion may be inaccurate. Consider using '#align quotient.induction_on_
 @[elab_as_elim]
 theorem Quotient.induction_on_pi {ι : Type _} {α : ι → Sort _} [s : ∀ i, Setoid (α i)]
     {p : (∀ i, Quotient (s i)) → Prop} (f : ∀ i, Quotient (s i))
-    (h : ∀ a : ∀ i, α i, p fun i => ⟦a i⟧) : p f := by
+    (h : ∀ a : ∀ i, α i, p fun i => ⟦a i⟧) : p f :=
+  by
   rw [← (funext fun i => Quotient.out_eq (f i) : (fun i => ⟦(f i).out⟧) = f)]
   apply h
 #align quotient.induction_on_pi Quotient.induction_on_pi
@@ -681,11 +683,11 @@ def map (f : α → β) (q : Trunc α) : Trunc β :=
 #align trunc.map Trunc.map
 -/
 
-instance : Monad Trunc where 
+instance : Monad Trunc where
   pure := @Trunc.mk
   bind := @Trunc.bind
 
-instance : LawfulMonad Trunc where 
+instance : LawfulMonad Trunc where
   id_map α q := Trunc.eq _ _
   pure_bind α β q f := rfl
   bind_assoc α β γ x f g := Trunc.eq _ _

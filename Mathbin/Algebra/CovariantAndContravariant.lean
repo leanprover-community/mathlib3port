@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.covariant_and_contravariant
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group.covariant_iff_contravariant Group.covariant_iff_contravariantₓ'. -/
 @[to_additive]
 theorem Group.covariant_iff_contravariant [Group N] :
-    Covariant N N (· * ·) r ↔ Contravariant N N (· * ·) r := by
+    Covariant N N (· * ·) r ↔ Contravariant N N (· * ·) r :=
+  by
   refine' ⟨fun h a b c bc => _, fun h a b c bc => _⟩
   · rw [← inv_mul_cancel_left a b, ← inv_mul_cancel_left a c]
     exact h a⁻¹ bc
@@ -217,7 +218,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group.covariant_swap_iff_contravariant_swap Group.covariant_swap_iff_contravariant_swapₓ'. -/
 @[to_additive]
 theorem Group.covariant_swap_iff_contravariant_swap [Group N] :
-    Covariant N N (swap (· * ·)) r ↔ Contravariant N N (swap (· * ·)) r := by
+    Covariant N N (swap (· * ·)) r ↔ Contravariant N N (swap (· * ·)) r :=
+  by
   refine' ⟨fun h a b c bc => _, fun h a b c bc => _⟩
   · rw [← mul_inv_cancel_right b a, ← mul_inv_cancel_right c a]
     exact h a⁻¹ bc
@@ -396,7 +398,8 @@ end Monotone
 
 #print covariant_le_of_covariant_lt /-
 theorem covariant_le_of_covariant_lt [PartialOrder N] :
-    Covariant M N μ (· < ·) → Covariant M N μ (· ≤ ·) := by
+    Covariant M N μ (· < ·) → Covariant M N μ (· ≤ ·) :=
+  by
   refine' fun h a b c bc => _
   rcases le_iff_eq_or_lt.mp bc with (rfl | bc)
   · exact rfl.le
@@ -406,7 +409,8 @@ theorem covariant_le_of_covariant_lt [PartialOrder N] :
 
 #print contravariant_lt_of_contravariant_le /-
 theorem contravariant_lt_of_contravariant_le [PartialOrder N] :
-    Contravariant M N μ (· ≤ ·) → Contravariant M N μ (· < ·) := by
+    Contravariant M N μ (· ≤ ·) → Contravariant M N μ (· < ·) :=
+  by
   refine' fun h a b c bc => lt_iff_le_and_ne.mpr ⟨h a bc.le, _⟩
   rintro rfl
   exact lt_irrefl _ bc
@@ -454,19 +458,16 @@ theorem contravariant_flip_mul_iff [CommSemigroup N] :
 #print contravariant_mul_lt_of_covariant_mul_le /-
 @[to_additive]
 instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N]
-    [CovariantClass N N (· * ·) (· ≤ ·)] :
-    ContravariantClass N N (· * ·)
-      (· < ·) where elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
+    [CovariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (· * ·) (· < ·)
+    where elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
 #align contravariant_mul_lt_of_covariant_mul_le contravariant_mul_lt_of_covariant_mul_le
 -/
 
 #print covariant_mul_lt_of_contravariant_mul_le /-
 @[to_additive]
 instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N]
-    [ContravariantClass N N (· * ·) (· ≤ ·)] :
-    CovariantClass N N (· * ·)
-      (· <
-        ·) where elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
+    [ContravariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
+    where elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
 #align covariant_mul_lt_of_contravariant_mul_le covariant_mul_lt_of_contravariant_mul_le
 -/
 
@@ -478,9 +479,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_mul_le_of_covariant_mul_leₓ'. -/
 @[to_additive]
 instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroup N] [LE N]
-    [CovariantClass N N (· * ·) (· ≤ ·)] :
-    CovariantClass N N (swap (· * ·))
-      (· ≤ ·) where elim := (covariant_flip_mul_iff N (· ≤ ·)).mpr CovariantClass.elim
+    [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (swap (· * ·)) (· ≤ ·)
+    where elim := (covariant_flip_mul_iff N (· ≤ ·)).mpr CovariantClass.elim
 #align covariant_swap_mul_le_of_covariant_mul_le covariant_swap_mul_le_of_covariant_mul_le
 
 /- warning: contravariant_swap_mul_le_of_contravariant_mul_le -> contravariant_swap_mul_le_of_contravariant_mul_le is a dubious translation:
@@ -491,9 +491,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_mul_le_of_contravariant_mul_leₓ'. -/
 @[to_additive]
 instance contravariant_swap_mul_le_of_contravariant_mul_le [CommSemigroup N] [LE N]
-    [ContravariantClass N N (· * ·) (· ≤ ·)] :
-    ContravariantClass N N (swap (· * ·))
-      (· ≤ ·) where elim := (contravariant_flip_mul_iff N (· ≤ ·)).mpr ContravariantClass.elim
+    [ContravariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (swap (· * ·)) (· ≤ ·)
+    where elim := (contravariant_flip_mul_iff N (· ≤ ·)).mpr ContravariantClass.elim
 #align
   contravariant_swap_mul_le_of_contravariant_mul_le contravariant_swap_mul_le_of_contravariant_mul_le
 
@@ -505,9 +504,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_mul_lt_of_contravariant_mul_ltₓ'. -/
 @[to_additive]
 instance contravariant_swap_mul_lt_of_contravariant_mul_lt [CommSemigroup N] [LT N]
-    [ContravariantClass N N (· * ·) (· < ·)] :
-    ContravariantClass N N (swap (· * ·))
-      (· < ·) where elim := (contravariant_flip_mul_iff N (· < ·)).mpr ContravariantClass.elim
+    [ContravariantClass N N (· * ·) (· < ·)] : ContravariantClass N N (swap (· * ·)) (· < ·)
+    where elim := (contravariant_flip_mul_iff N (· < ·)).mpr ContravariantClass.elim
 #align
   contravariant_swap_mul_lt_of_contravariant_mul_lt contravariant_swap_mul_lt_of_contravariant_mul_lt
 
@@ -519,9 +517,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_mul_lt_of_covariant_mul_ltₓ'. -/
 @[to_additive]
 instance covariant_swap_mul_lt_of_covariant_mul_lt [CommSemigroup N] [LT N]
-    [CovariantClass N N (· * ·) (· < ·)] :
-    CovariantClass N N (swap (· * ·))
-      (· < ·) where elim := (covariant_flip_mul_iff N (· < ·)).mpr CovariantClass.elim
+    [CovariantClass N N (· * ·) (· < ·)] : CovariantClass N N (swap (· * ·)) (· < ·)
+    where elim := (covariant_flip_mul_iff N (· < ·)).mpr CovariantClass.elim
 #align covariant_swap_mul_lt_of_covariant_mul_lt covariant_swap_mul_lt_of_covariant_mul_lt
 
 /- warning: left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le -> LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le is a dubious translation:
@@ -532,10 +529,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_leₓ'. -/
 @[to_additive]
 instance LeftCancelSemigroup.covariant_mul_lt_of_covariant_mul_le [LeftCancelSemigroup N]
-    [PartialOrder N] [CovariantClass N N (· * ·) (· ≤ ·)] :
-    CovariantClass N N (· * ·)
-      (· <
-        ·) where elim a b c bc := by
+    [PartialOrder N] [CovariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
+    where elim a b c bc := by
     cases' lt_iff_le_and_ne.mp bc with bc cb
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_right a).mpr cb⟩
 #align
@@ -550,9 +545,8 @@ Case conversion may be inaccurate. Consider using '#align right_cancel_semigroup
 @[to_additive]
 instance RightCancelSemigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le
     [RightCancelSemigroup N] [PartialOrder N] [CovariantClass N N (swap (· * ·)) (· ≤ ·)] :
-    CovariantClass N N (swap (· * ·))
-      (· <
-        ·) where elim a b c bc := by
+    CovariantClass N N (swap (· * ·)) (· < ·)
+    where elim a b c bc := by
     cases' lt_iff_le_and_ne.mp bc with bc cb
     exact lt_iff_le_and_ne.mpr ⟨CovariantClass.elim a bc, (mul_ne_mul_left a).mpr cb⟩
 #align
@@ -567,9 +561,8 @@ Case conversion may be inaccurate. Consider using '#align left_cancel_semigroup.
 @[to_additive]
 instance LeftCancelSemigroup.contravariant_mul_le_of_contravariant_mul_lt [LeftCancelSemigroup N]
     [PartialOrder N] [ContravariantClass N N (· * ·) (· < ·)] :
-    ContravariantClass N N (· * ·)
-      (· ≤
-        ·) where elim a b c bc := by
+    ContravariantClass N N (· * ·) (· ≤ ·)
+    where elim a b c bc := by
     cases' le_iff_eq_or_lt.mp bc with h h
     · exact ((mul_right_inj a).mp h).le
     · exact (ContravariantClass.elim _ h).le
@@ -585,9 +578,8 @@ Case conversion may be inaccurate. Consider using '#align right_cancel_semigroup
 @[to_additive]
 instance RightCancelSemigroup.contravariant_swap_mul_le_of_contravariant_swap_mul_lt
     [RightCancelSemigroup N] [PartialOrder N] [ContravariantClass N N (swap (· * ·)) (· < ·)] :
-    ContravariantClass N N (swap (· * ·))
-      (· ≤
-        ·) where elim a b c bc := by
+    ContravariantClass N N (swap (· * ·)) (· ≤ ·)
+    where elim a b c bc := by
     cases' le_iff_eq_or_lt.mp bc with h h
     · exact ((mul_left_inj a).mp h).le
     · exact (ContravariantClass.elim _ h).le

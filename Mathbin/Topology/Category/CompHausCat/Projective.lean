@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.category.CompHaus.projective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,11 +38,8 @@ open CategoryTheory Function
 
 namespace CompHausCat
 
-instance projective_ultrafilter (X : Type _) :
-    Projective
-      (of <|
-        Ultrafilter
-          X) where factors Y Z f g hg := by
+instance projective_ultrafilter (X : Type _) : Projective (of <| Ultrafilter X)
+    where factors Y Z f g hg := by
     rw [epi_iff_surjective] at hg
     obtain ⟨g', hg'⟩ := hg.has_right_inverse
     let t : X → Y := g' ∘ f ∘ (pure : X → Ultrafilter X)
@@ -57,8 +54,8 @@ instance projective_ultrafilter (X : Type _) :
 
 /-- For any compact Hausdorff space `X`,
   the natural map `ultrafilter X → X` is a projective presentation. -/
-def projectivePresentation (X : CompHausCat) :
-    ProjectivePresentation X where 
+def projectivePresentation (X : CompHausCat) : ProjectivePresentation X
+    where
   P := of <| Ultrafilter X
   f := ⟨_, continuous_ultrafilter_extend id⟩
   Projective := CompHausCat.projective_ultrafilter X

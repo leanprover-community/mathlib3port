@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.integrability
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff)
     (hs : MeasurableSet s) (I : Box ι) (y : E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
     HasIntegral.{u, v, v} I l (s.indicator fun _ => y) μ.toBoxAdditive.toSmul
       ((μ (s ∩ I)).toReal • y) :=
-  by 
+  by
   refine' has_integral_of_mul ‖y‖ fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
   rw [Nnreal.coe_pos] at ε0
@@ -78,7 +78,8 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff)
   refine' mul_le_mul_of_nonneg_right _ (norm_nonneg y)
   set t := (π.to_prepartition.filter fun J => π.tag J ∈ s).union
   change abs ((μ t).toReal - (μ (s ∩ I)).toReal) ≤ ε
-  have htU : t ⊆ U ∩ I := by
+  have htU : t ⊆ U ∩ I :=
+    by
     simp only [t, prepartition.Union_def, Union_subset_iff, prepartition.mem_filter, and_imp]
     refine' fun J hJ hJs x hx => ⟨hrsU _ ⟨hJs, π.tag_mem_Icc J⟩ _, π.le_of_mem' J hJ hx⟩
     simpa only [r, s.piecewise_eq_of_mem _ _ hJs] using hπ.1 J hJ (box.coe_subset_Icc hx)
@@ -92,7 +93,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = ff)
     refine' le_measure_diff.trans ((measure_mono _).trans hμF.le)
     rintro x ⟨⟨hxs, hxI⟩, hxt⟩
     refine' ⟨⟨hxs, box.coe_subset_Icc hxI⟩, fun hxF => hxt _⟩
-    simp only [t, prepartition.Union_def, prepartition.mem_filter, Set.mem_Union, exists_prop]
+    simp only [t, prepartition.Union_def, prepartition.mem_filter, Set.mem_unionᵢ, exists_prop]
     rcases hπp x hxI with ⟨J, hJπ, hxJ⟩
     refine' ⟨J, ⟨hJπ, _⟩, hxJ⟩
     contrapose hxF
@@ -116,10 +117,11 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   haveI := Fact.mk (I.measure_coe_lt_top μ)
   change μ.restrict I { x | f x ≠ 0 } = 0 at hf
   set N : (ι → ℝ) → ℕ := fun x => ⌈‖f x‖⌉₊
-  have N0 : ∀ {x}, N x = 0 ↔ f x = 0 := by 
+  have N0 : ∀ {x}, N x = 0 ↔ f x = 0 := by
     intro x
     simp [N]
-  have : ∀ n, ∃ (U : _)(_ : U ⊇ N ⁻¹' {n}), IsOpen U ∧ μ.restrict I U < δ n / n := by
+  have : ∀ n, ∃ (U : _)(_ : U ⊇ N ⁻¹' {n}), IsOpen U ∧ μ.restrict I U < δ n / n :=
+    by
     refine' fun n => (N ⁻¹' {n}).exists_is_open_lt_of_lt _ _
     cases n
     · simpa [Ennreal.div_zero (Ennreal.coe_pos.2 (δ0 _)).ne'] using measure_lt_top (μ.restrict I) _
@@ -138,7 +140,8 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   rintro n -
   dsimp [integral_sum]
   have :
-    ∀ J ∈ π.filter fun J => N (π.tag J) = n, ‖(μ ↑J).toReal • f (π.tag J)‖ ≤ (μ J).toReal * n := by
+    ∀ J ∈ π.filter fun J => N (π.tag J) = n, ‖(μ ↑J).toReal • f (π.tag J)‖ ≤ (μ J).toReal * n :=
+    by
     intro J hJ
     rw [tagged_prepartition.mem_filter] at hJ
     rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.to_real_nonneg]
@@ -147,7 +150,8 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   clear this
   rw [← sum_mul, ← prepartition.measure_Union_to_real]
   generalize hm : μ (π.filter fun J => N (π.tag J) = n).union = m
-  have : m < δ n / n := by
+  have : m < δ n / n :=
+    by
     simp only [measure.restrict_apply (hUo _).MeasurableSet] at hμU
     refine' hm ▸ (measure_mono _).trans_lt (hμU _)
     simp only [Set.subset_def, tagged_prepartition.mem_Union, exists_prop,
@@ -165,7 +169,8 @@ a.e. equal to `f` on `I`, then `g` has the same integral on `I`.  -/
 theorem HasIntegral.congrAe {l : IntegrationParams} {I : Box ι} {y : E} {f g : (ι → ℝ) → E}
     {μ : Measure (ι → ℝ)} [IsLocallyFiniteMeasure μ]
     (hf : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul y) (hfg : f =ᵐ[μ.restrict I] g)
-    (hl : l.bRiemann = ff) : HasIntegral.{u, v, v} I l g μ.toBoxAdditive.toSmul y := by
+    (hl : l.bRiemann = ff) : HasIntegral.{u, v, v} I l g μ.toBoxAdditive.toSmul y :=
+  by
   have : g - f =ᵐ[μ.restrict I] 0 := hfg.mono fun x hx => sub_eq_zero.2 hx.symm
   simpa using hf.add (has_integral_zero_of_ae_eq_zero this hl)
 #align box_integral.has_integral.congr_ae BoxIntegral.HasIntegral.congrAe
@@ -179,7 +184,8 @@ namespace SimpleFunc
 /-- A simple function is McShane integrable w.r.t. any locally finite measure. -/
 theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ]
     (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = ff) :
-    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (f.integral (μ.restrict I)) := by
+    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (f.integral (μ.restrict I)) :=
+  by
   induction' f using MeasureTheory.SimpleFunc.induction with y s hs f g hd hfi hgi
   ·
     simpa only [measure.restrict_apply hs, const_zero, integral_piecewise_zero, integral_const,
@@ -210,7 +216,8 @@ open TopologicalSpace
 theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
     [IsLocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams)
     (hl : l.bRiemann = ff) :
-    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (∫ x in I, f x ∂μ) := by
+    HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (∫ x in I, f x ∂μ) :=
+  by
   borelize E
   -- First we replace an `ae_strongly_measurable` function by a measurable one.
   rcases hf.ae_strongly_measurable with ⟨g, hg, hfg⟩
@@ -229,7 +236,8 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
   have hfi' := fun n => ((f n).hasBoxIntegral μ I l hl).Integrable
   have hfgi : tendsto (fun n => (f n).integral (μ.restrict I)) at_top (𝓝 <| ∫ x in I, g x ∂μ) :=
     tendsto_integral_approx_on_of_measurable_of_range_subset hg.measurable hgi _ subset.rfl
-  have hfg_mono : ∀ (x) {m n}, m ≤ n → ‖f n x - g x‖ ≤ ‖f m x - g x‖ := by
+  have hfg_mono : ∀ (x) {m n}, m ≤ n → ‖f n x - g x‖ ≤ ‖f m x - g x‖ :=
+    by
     intro x m n hmn
     rw [← dist_eq_norm, ← dist_eq_norm, dist_nndist, dist_nndist, Nnreal.coe_le_coe, ←
       Ennreal.coe_le_coe, ← edist_nndist, ← edist_nndist]
@@ -241,13 +249,15 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
   rw [Nnreal.coe_pos] at ε0
   have ε0' := Ennreal.coe_pos.2 ε0
   -- Choose `N` such that the integral of `‖f N x - g x‖` is less than or equal to `ε`.
-  obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, (∫ x in I, ‖f N x - g x‖ ∂μ) ≤ ε := by
+  obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, (∫ x in I, ‖f N x - g x‖ ∂μ) ≤ ε :=
+    by
     have : tendsto (fun n => ∫⁻ x in I, ‖f n x - g x‖₊ ∂μ) at_top (𝓝 0) :=
       simple_func.tendsto_approx_on_range_L1_nnnorm hg.measurable hgi
     refine' (this.eventually (ge_mem_nhds ε0')).exists.imp fun N hN => _
     exact integral_coe_le_of_lintegral_coe_le hN
   -- For each `x`, we choose `Nx x ≥ N₀` such that `dist (f Nx x) (g x) ≤ ε`.
-  have : ∀ x, ∃ N₁, N₀ ≤ N₁ ∧ dist (f N₁ x) (g x) ≤ ε := by
+  have : ∀ x, ∃ N₁, N₀ ≤ N₁ ∧ dist (f N₁ x) (g x) ≤ ε :=
+    by
     intro x
     have : tendsto (fun n => f n x) at_top (𝓝 <| g x) :=
       simple_func.tendsto_approx_on hg.measurable _ (subset_closure (by simp))
@@ -295,7 +305,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     have hrn :
       ∀ J ∈ π.filter fun J => Nx (π.tag J) = n,
         r c (π.tag J) = (hfi' n).convergenceR (δ n) c (π.tag J) :=
-      by 
+      by
       intro J hJ
       obtain rfl := hNxn J hJ
       rfl
@@ -319,8 +329,9 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     have hfgi : ∀ (n), ∀ J ∈ π, integrable_on (fun x => ‖f n x - g x‖) J μ := fun n J hJ =>
       ((hfi n J hJ).sub (hgi J hJ)).norm
     rw [← hπp.Union_eq, prepartition.Union_def',
-      integral_finset_bUnion π.boxes (fun J hJ => J.measurableSetCoe) π.pairwise_disjoint hgi,
-      integral_finset_bUnion π.boxes (fun J hJ => J.measurableSetCoe) π.pairwise_disjoint (hfgi _)]
+      integral_finset_bUnion π.boxes (fun J hJ => J.measurable_set_coe) π.pairwise_disjoint hgi,
+      integral_finset_bUnion π.boxes (fun J hJ => J.measurable_set_coe) π.pairwise_disjoint
+        (hfgi _)]
     refine' dist_sum_sum_le_of_le _ fun J hJ => _
     rw [dist_eq_norm, ← integral_sub (hfi _ J hJ) (hgi J hJ)]
     refine' norm_integral_le_of_norm_le (hfgi _ J hJ) (eventually_of_forall fun x => _)

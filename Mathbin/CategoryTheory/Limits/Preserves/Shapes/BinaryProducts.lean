@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.binary_products
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ def isLimitMapConeBinaryFanEquiv :
   (IsLimit.postcomposeHomEquiv (diagramIsoPair _) _).symm.trans
     (IsLimit.equivIsoLimit
       (Cones.ext (Iso.refl _)
-        (by 
+        (by
           rintro (_ | _)
           tidy)))
 #align
@@ -86,7 +86,8 @@ variable [HasBinaryProduct (G.obj X) (G.obj Y)]
 pair of `(X,Y)`.
 -/
 def PreservesLimitPair.ofIsoProdComparison [i : IsIso (prodComparison G X Y)] :
-    PreservesLimit (pair X Y) G := by
+    PreservesLimit (pair X Y) G :=
+  by
   apply preserves_limit_of_preserves_limit_cone (prod_is_prod X Y)
   apply (is_limit_map_cone_binary_fan_equiv _ _ _).symm _
   apply is_limit.of_point_iso (limit.is_limit (pair (G.obj X) (G.obj Y)))
@@ -109,7 +110,8 @@ theorem PreservesLimitPair.iso_hom : (PreservesLimitPair.iso G X Y).Hom = prodCo
 #align
   category_theory.limits.preserves_limit_pair.iso_hom CategoryTheory.Limits.PreservesLimitPair.iso_hom
 
-instance : IsIso (prodComparison G X Y) := by
+instance : IsIso (prodComparison G X Y) :=
+  by
   rw [← preserves_limit_pair.iso_hom]
   infer_instance
 
@@ -128,7 +130,7 @@ def isColimitMapCoconeBinaryCofanEquiv :
   (IsColimit.precomposeHomEquiv (diagramIsoPair _).symm _).symm.trans
     (IsColimit.equivIsoColimit
       (Cocones.ext (Iso.refl _)
-        (by 
+        (by
           rintro (_ | _)
           tidy)))
 #align
@@ -166,7 +168,8 @@ variable [HasBinaryCoproduct (G.obj X) (G.obj Y)]
 pair of `(X,Y)`.
 -/
 def PreservesColimitPair.ofIsoCoprodComparison [i : IsIso (coprodComparison G X Y)] :
-    PreservesColimit (pair X Y) G := by
+    PreservesColimit (pair X Y) G :=
+  by
   apply preserves_colimit_of_preserves_colimit_cocone (coprod_is_coprod X Y)
   apply (is_colimit_map_cocone_binary_cofan_equiv _ _ _).symm _
   apply is_colimit.of_point_iso (colimit.is_colimit (pair (G.obj X) (G.obj Y)))
@@ -193,7 +196,8 @@ theorem PreservesColimitPair.iso_hom :
 #align
   category_theory.limits.preserves_colimit_pair.iso_hom CategoryTheory.Limits.PreservesColimitPair.iso_hom
 
-instance : IsIso (coprodComparison G X Y) := by
+instance : IsIso (coprodComparison G X Y) :=
+  by
   rw [← preserves_colimit_pair.iso_hom]
   infer_instance
 

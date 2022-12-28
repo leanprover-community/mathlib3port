@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.euclidean_dist
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,8 @@ theorem closed_ball_eq_image (x : E) (r : ℝ) :
   rw [to_euclidean.image_symm_eq_preimage, closed_ball_eq_preimage]
 #align euclidean.closed_ball_eq_image Euclidean.closed_ball_eq_image
 
-theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (closedBall x r) := by
+theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (closedBall x r) :=
+  by
   rw [closed_ball_eq_image]
   exact (is_compact_closed_ball _ _).image to_euclidean.symm.continuous
 #align euclidean.is_compact_closed_ball Euclidean.is_compact_closed_ball
@@ -98,13 +99,15 @@ theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : closure (ball x r) = clos
 #align euclidean.closure_ball Euclidean.closure_ball
 
 theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s)
-    (h : s ⊆ ball x R) : ∃ r ∈ Ioo 0 R, s ⊆ ball x r := by
+    (h : s ⊆ ball x R) : ∃ r ∈ Ioo 0 R, s ⊆ ball x r :=
+  by
   rw [ball_eq_preimage, ← image_subset_iff] at h
   rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩
   exact ⟨r, hr, image_subset_iff.1 hsr⟩
 #align euclidean.exists_pos_lt_subset_ball Euclidean.exists_pos_lt_subset_ball
 
-theorem nhds_basis_closed_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (closedBall x) := by
+theorem nhds_basis_closed_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (closedBall x) :=
+  by
   rw [to_euclidean.to_homeomorph.nhds_eq_comap]
   exact metric.nhds_basis_closed_ball.comap _
 #align euclidean.nhds_basis_closed_ball Euclidean.nhds_basis_closed_ball
@@ -113,7 +116,8 @@ theorem closed_ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : closedBall x r ∈
   nhds_basis_closed_ball.mem_of_mem hr
 #align euclidean.closed_ball_mem_nhds Euclidean.closed_ball_mem_nhds
 
-theorem nhds_basis_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (ball x) := by
+theorem nhds_basis_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (ball x) :=
+  by
   rw [to_euclidean.to_homeomorph.nhds_eq_comap]
   exact metric.nhds_basis_ball.comap _
 #align euclidean.nhds_basis_ball Euclidean.nhds_basis_ball
@@ -127,7 +131,8 @@ end Euclidean
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {f g : F → E} {n : ℕ∞}
 
 theorem ContDiff.euclideanDist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
-    ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) := by
+    ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) :=
+  by
   simp only [Euclidean.dist]
   apply @ContDiff.dist ℝ
   exacts[(@toEuclidean E _ _ _).ContDiff.comp hf, (@toEuclidean E _ _ _).ContDiff.comp hg, fun x =>

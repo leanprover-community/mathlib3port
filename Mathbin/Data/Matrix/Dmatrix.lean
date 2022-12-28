@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.matrix.dmatrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ theorem map_apply {M : Dmatrix m n α} {β : m → n → Type w} {f : ∀ ⦃i j
 @[simp]
 theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n → Type z}
     {f : ∀ ⦃i j⦄, α i j → β i j} {g : ∀ ⦃i j⦄, β i j → γ i j} :
-    (M.map f).map g = M.map fun i j x => g (f x) := by
+    (M.map f).map g = M.map fun i j x => g (f x) :=
+  by
   ext
   simp
 #align dmatrix.map_map Dmatrix.map_map
@@ -165,33 +166,35 @@ theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) (i j) : (M - N)
 @[simp]
 theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)]
     {f : ∀ ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 :=
-  by 
+  by
   ext
   simp [h]
 #align dmatrix.map_zero Dmatrix.map_zero
 
 theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :
-    ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by
+    ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j :=
+  by
   ext
   simp
 #align dmatrix.map_add Dmatrix.map_add
 
 theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :
-    ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by
+    ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j :=
+  by
   ext
   simp
 #align dmatrix.map_sub Dmatrix.map_sub
 
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Dmatrix m n α) :=
-  ⟨fun M N => by 
+  ⟨fun M N => by
     ext
     exact isEmptyElim i⟩
 #align dmatrix.subsingleton_of_empty_left Dmatrix.subsingleton_of_empty_left
 
 instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Dmatrix m n α) :=
-  ⟨fun M N => by 
+  ⟨fun M N => by
     ext
     exact isEmptyElim j⟩
 #align dmatrix.subsingleton_of_empty_right Dmatrix.subsingleton_of_empty_right
@@ -201,9 +204,8 @@ end Dmatrix
 /-- The `add_monoid_hom` between spaces of dependently typed matrices
 induced by an `add_monoid_hom` between their coefficients. -/
 def AddMonoidHom.mapDmatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type w}
-    [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) :
-    Dmatrix m n α →+ Dmatrix m n
-        β where 
+    [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β
+    where
   toFun M := M.map fun i j => @f i j
   map_zero' := by simp
   map_add' := Dmatrix.map_add f

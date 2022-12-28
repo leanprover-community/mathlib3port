@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.linear_map
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,8 @@ theorem PiToModule.from_matrix_apply [DecidableEq ι] (A : Matrix ι ι R) (w : 
 #align pi_to_module.from_matrix_apply PiToModule.from_matrix_apply
 
 theorem PiToModule.from_matrix_apply_single_one [DecidableEq ι] (A : Matrix ι ι R) (j : ι) :
-    PiToModule.fromMatrix R b A (Pi.single j 1) = ∑ i : ι, A i j • b i := by
+    PiToModule.fromMatrix R b A (Pi.single j 1) = ∑ i : ι, A i j • b i :=
+  by
   rw [PiToModule.from_matrix_apply, Fintype.total_apply, Matrix.mul_vec_single]
   simp_rw [mul_one]
 #align pi_to_module.from_matrix_apply_single_one PiToModule.from_matrix_apply_single_one
@@ -65,7 +66,8 @@ theorem PiToModule.from_End_apply (f : Module.EndCat R M) (w : ι → R) :
 #align pi_to_module.from_End_apply PiToModule.from_End_apply
 
 theorem PiToModule.from_End_apply_single_one [DecidableEq ι] (f : Module.EndCat R M) (i : ι) :
-    PiToModule.fromEnd R b f (Pi.single i 1) = f (b i) := by
+    PiToModule.fromEnd R b f (Pi.single i 1) = f (b i) :=
+  by
   rw [PiToModule.from_End_apply]
   congr
   convert Fintype.total_apply_single R b i 1
@@ -73,10 +75,12 @@ theorem PiToModule.from_End_apply_single_one [DecidableEq ι] (f : Module.EndCat
 #align pi_to_module.from_End_apply_single_one PiToModule.from_End_apply_single_one
 
 theorem PiToModule.from_End_injective (hb : Submodule.span R (Set.range b) = ⊤) :
-    Function.Injective (PiToModule.fromEnd R b) := by
+    Function.Injective (PiToModule.fromEnd R b) :=
+  by
   intro x y e
   ext m
-  obtain ⟨m, rfl⟩ : m ∈ (Fintype.total R R b).range := by
+  obtain ⟨m, rfl⟩ : m ∈ (Fintype.total R R b).range :=
+    by
     rw [(Fintype.range_total R b).trans hb]
     trivial
   exact (LinearMap.congr_fun e m : _)
@@ -105,7 +109,8 @@ theorem Matrix.represents_iff {A : Matrix ι ι R} {f : Module.EndCat R M} :
 #align matrix.represents_iff Matrix.represents_iff
 
 theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.EndCat R M} :
-    A.Represents b f ↔ ∀ j, (∑ i : ι, A i j • b i) = f (b j) := by
+    A.Represents b f ↔ ∀ j, (∑ i : ι, A i j • b i) = f (b j) :=
+  by
   constructor
   · intro h i
     have := LinearMap.congr_fun h (Pi.single i 1)
@@ -118,7 +123,8 @@ theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.EndCat R M} :
 #align matrix.represents_iff' Matrix.represents_iff'
 
 theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.EndCat R M}
-    (h : A.Represents b f) (h' : Matrix.Represents b A' f') : (A * A').Represents b (f * f') := by
+    (h : A.Represents b f) (h' : Matrix.Represents b A' f') : (A * A').Represents b (f * f') :=
+  by
   delta Matrix.Represents PiToModule.fromMatrix
   rw [LinearMap.comp_apply, AlgEquiv.to_linear_map_apply, map_mul]
   ext
@@ -127,7 +133,8 @@ theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.EndCat R M}
   rfl
 #align matrix.represents.mul Matrix.Represents.mul
 
-theorem Matrix.Represents.one : (1 : Matrix ι ι R).Represents b 1 := by
+theorem Matrix.Represents.one : (1 : Matrix ι ι R).Represents b 1 :=
+  by
   delta Matrix.Represents PiToModule.fromMatrix
   rw [LinearMap.comp_apply, AlgEquiv.to_linear_map_apply, map_one]
   ext
@@ -157,10 +164,8 @@ variable (b R)
 
 /-- The subalgebra of `matrix ι ι R` that consists of matrices that actually represent
 endomorphisms on `M`. -/
-def Matrix.isRepresentation :
-    Subalgebra R
-      (Matrix ι ι
-        R) where 
+def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R)
+    where
   carrier := { A | ∃ f : Module.EndCat R M, A.Represents b f }
   mul_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ * f₂, e₁.mul e₂⟩
   one_mem' := ⟨1, Matrix.Represents.one⟩
@@ -171,8 +176,8 @@ def Matrix.isRepresentation :
 
 /-- The map sending a matrix to the endomorphism it represents. This is an `R`-algebra morphism. -/
 noncomputable def Matrix.isRepresentation.toEnd :
-    Matrix.isRepresentation R b →ₐ[R]
-      Module.EndCat R M where 
+    Matrix.isRepresentation R b →ₐ[R] Module.EndCat R M
+    where
   toFun A := A.2.some
   map_one' := (1 : Matrix.isRepresentation R b).2.some_spec.Eq hb Matrix.Represents.one
   map_mul' A₁ A₂ := (A₁ * A₂).2.some_spec.Eq hb (A₁.2.some_spec.mul A₂.2.some_spec)
@@ -197,12 +202,13 @@ theorem Matrix.isRepresentation.eq_to_End_of_represents (A : Matrix.isRepresenta
 theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) (I : Ideal R)
     (hI : f.range ≤ I • ⊤) : ∃ M, Matrix.isRepresentation.toEnd R b hb M = f ∧ ∀ i j, M.1 i j ∈ I :=
   by
-  have : ∀ x, f x ∈ (Ideal.finsuppTotal ι M I b).range := by
+  have : ∀ x, f x ∈ (Ideal.finsuppTotal ι M I b).range :=
+    by
     rw [Ideal.range_finsupp_total, hb]
     exact fun x => hI (f.mem_range_self x)
   choose bM' hbM'
   let A : Matrix ι ι R := fun i j => bM' (b j) i
-  have : A.represents b f := by 
+  have : A.represents b f := by
     rw [Matrix.represents_iff']
     dsimp [A]
     intro j
@@ -215,7 +221,8 @@ theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) 
   matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.to_End_exists_mem_ideal
 
 theorem Matrix.isRepresentation.to_End_surjective :
-    Function.Surjective (Matrix.isRepresentation.toEnd R b hb) := by
+    Function.Surjective (Matrix.isRepresentation.toEnd R b hb) :=
+  by
   intro f
   obtain ⟨M, e, -⟩ := Matrix.isRepresentation.to_End_exists_mem_ideal R b hb f ⊤ _
   exact ⟨M, e⟩
@@ -234,7 +241,7 @@ This is the version found in Eisenbud 4.3, which is slightly weaker than Matsumu
 theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
     [Module.Finite R M] (f : Module.EndCat R M) (I : Ideal R) (hI : f.range ≤ I • ⊤) :
     ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
-  classical 
+  classical
     cases subsingleton_or_nontrivial R
     · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
     obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ := Module.Finite.out

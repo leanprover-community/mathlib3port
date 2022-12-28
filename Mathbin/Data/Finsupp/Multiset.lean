@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.finsupp.multiset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,12 +32,13 @@ namespace Finsupp
 
 /-- Given `f : α →₀ ℕ`, `f.to_multiset` is the multiset with multiplicities given by the values of
 `f` on the elements of `α`. We define this function as an `add_equiv`. -/
-def toMultiset :
-    (α →₀ ℕ) ≃+ Multiset α where 
+def toMultiset : (α →₀ ℕ) ≃+ Multiset α
+    where
   toFun f := f.Sum fun a n => n • {a}
   invFun s := ⟨s.toFinset, fun a => s.count a, fun a => by simp⟩
   left_inv f :=
-    ext fun a => by
+    ext fun a =>
+      by
       simp only [Sum, Multiset.count_sum', Multiset.count_singleton, mul_boole, coe_mk,
         mem_support_iff, Multiset.count_nsmul, Finset.sum_ite_eq, ite_not, ite_eq_right_iff]
       exact Eq.symm
@@ -82,7 +83,8 @@ theorem card_to_multiset (f : α →₀ ℕ) : f.toMultiset.card = f.Sum fun a =
 #align finsupp.card_to_multiset Finsupp.card_to_multiset
 
 theorem to_multiset_map (f : α →₀ ℕ) (g : α → β) :
-    f.toMultiset.map g = (f.mapDomain g).toMultiset := by
+    f.toMultiset.map g = (f.mapDomain g).toMultiset :=
+  by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.map_zero, map_domain_zero, to_multiset_zero]
   · intro a n f _ _ ih
@@ -94,7 +96,8 @@ theorem to_multiset_map (f : α →₀ ℕ) (g : α → β) :
 
 @[simp]
 theorem prod_to_multiset [CommMonoid α] (f : α →₀ ℕ) :
-    f.toMultiset.Prod = f.Prod fun a n => a ^ n := by
+    f.toMultiset.Prod = f.Prod fun a n => a ^ n :=
+  by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.prod_zero, Finsupp.prod_zero_index]
   · intro a n f _ _ ih
@@ -104,7 +107,8 @@ theorem prod_to_multiset [CommMonoid α] (f : α →₀ ℕ) :
 #align finsupp.prod_to_multiset Finsupp.prod_to_multiset
 
 @[simp]
-theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultiset.toFinset = f.support := by
+theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultiset.toFinset = f.support :=
+  by
   refine' f.induction _ _
   · rw [to_multiset_zero, Multiset.to_finset_zero, support_zero]
   · intro a n f ha hn ih
@@ -188,8 +192,8 @@ theorem Finsupp.to_multiset_to_finsupp (f : α →₀ ℕ) : f.toMultiset.toFins
 namespace Finsupp
 
 /-- `finsupp.to_multiset` as an order isomorphism. -/
-def orderIsoMultiset :
-    (ι →₀ ℕ) ≃o Multiset ι where 
+def orderIsoMultiset : (ι →₀ ℕ) ≃o Multiset ι
+    where
   toEquiv := toMultiset.toEquiv
   map_rel_iff' f g := by simp [Multiset.le_iff_count, le_def]
 #align finsupp.order_iso_multiset Finsupp.orderIsoMultiset
@@ -208,7 +212,8 @@ theorem to_multiset_strict_mono : StrictMono (@toMultiset ι) :=
   (@orderIsoMultiset ι).StrictMono
 #align finsupp.to_multiset_strict_mono Finsupp.to_multiset_strict_mono
 
-theorem sum_id_lt_of_lt (m n : ι →₀ ℕ) (h : m < n) : (m.Sum fun _ => id) < n.Sum fun _ => id := by
+theorem sum_id_lt_of_lt (m n : ι →₀ ℕ) (h : m < n) : (m.Sum fun _ => id) < n.Sum fun _ => id :=
+  by
   rw [← card_to_multiset, ← card_to_multiset]
   apply Multiset.card_lt_of_lt
   exact to_multiset_strict_mono h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.algebra.open_subgroup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,8 @@ theorem mem_coe_subgroup : g ∈ (U : Subgroup G) ↔ g ∈ U :=
 #align open_subgroup.mem_coe_subgroup OpenSubgroup.mem_coe_subgroup
 
 @[to_additive]
-theorem coe_injective : Injective (coe : OpenSubgroup G → Set G) := by
+theorem coe_injective : Injective (coe : OpenSubgroup G → Set G) :=
+  by
   rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
   congr
 #align open_subgroup.coe_injective OpenSubgroup.coe_injective
@@ -152,7 +153,8 @@ instance : Inhabited (OpenSubgroup G) :=
   ⟨⊤⟩
 
 @[to_additive]
-theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
+theorem is_closed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) :=
+  by
   apply is_open_compl_iff.1
   refine' is_open_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
   · intro u hux
@@ -172,7 +174,9 @@ variable {H : Type _} [Group H] [TopologicalSpace H]
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
-  { (U : Subgroup G).Prod (V : Subgroup H) with
+  {
+    (U : Subgroup G).Prod (V : Subgroup
+          H) with
     carrier := U ×ˢ V
     is_open' := U.IsOpen.Prod V.IsOpen }
 #align open_subgroup.prod OpenSubgroup.prod
@@ -186,14 +190,15 @@ instance : PartialOrder (OpenSubgroup G) :=
 
 @[to_additive]
 instance : SemilatticeInf (OpenSubgroup G) :=
-  { OpenSubgroup.partialOrder with
+  {
+    OpenSubgroup.partialOrder with
     inf := fun U V => { (U : Subgroup G) ⊓ V with is_open' := IsOpen.inter U.IsOpen V.IsOpen }
     inf_le_left := fun U V => Set.inter_subset_left _ _
     inf_le_right := fun U V => Set.inter_subset_right _ _
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
 
 @[to_additive]
-instance : OrderTop (OpenSubgroup G) where 
+instance : OrderTop (OpenSubgroup G) where
   top := ⊤
   le_top U := Set.subset_univ _
 
@@ -248,7 +253,8 @@ namespace Subgroup
 variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G] (H : Subgroup G)
 
 @[to_additive]
-theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) := by
+theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) :=
+  by
   simp only [is_open_iff_mem_nhds, SetLike.mem_coe] at hg⊢
   intro x hx
   have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 <| x * (x⁻¹ * g)) :=
@@ -269,7 +275,8 @@ theorem is_open_of_open_subgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (
 @[to_additive
       "If a subgroup of an additive topological group has `0` in its interior, then it is\nopen."]
 theorem is_open_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [TopologicalGroup G]
-    {H : Subgroup G} (h_1_int : (1 : G) ∈ interior (H : Set G)) : IsOpen (H : Set G) := by
+    {H : Subgroup G} (h_1_int : (1 : G) ∈ interior (H : Set G)) : IsOpen (H : Set G) :=
+  by
   have h : 𝓝 1 ≤ Filter.principal (H : Set G) :=
     nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
   rw [is_open_iff_nhds]
@@ -296,7 +303,8 @@ variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G]
 
 @[to_additive]
 instance : SemilatticeSup (OpenSubgroup G) :=
-  { OpenSubgroup.semilatticeInf with
+  {
+    OpenSubgroup.semilatticeInf with
     sup := fun U V =>
       { (U : Subgroup G) ⊔ V with
         is_open' :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.ring2
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ def horner' (a : HornerExpr) (x : PosNum) (n : Num) (b : HornerExpr) : HornerExp
 
 def addConst (k : ZNum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then e
-  else by 
+  else by
     induction' e with n a x n b A B
     · exact const (k + n)
     · exact horner a x n B
@@ -177,7 +177,8 @@ def add : HornerExpr → HornerExpr → HornerExpr
     end
   end end
 end-/
-def neg (e : HornerExpr) : HornerExpr := by
+def neg (e : HornerExpr) : HornerExpr :=
+  by
   induction' e with n a x n b A B
   · exact const (-n)
   · exact horner A x n B
@@ -187,7 +188,7 @@ def mulConst (k : ZNum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then 0
   else
     if k = 1 then e
-    else by 
+    else by
       induction' e with n a x n b A B
       · exact const (n * k)
       · exact horner A x n B
@@ -234,7 +235,7 @@ instance : Mul HornerExpr :=
 
 def pow (e : HornerExpr) : Num → HornerExpr
   | 0 => 1
-  | Num.pos p => by 
+  | Num.pos p => by
     induction' p with p ep p ep
     · exact e
     · exact (ep.mul ep).mul e
@@ -267,7 +268,7 @@ theorem cseval_atom {α} [CommSemiring α] (t : Tree α) (n : PosNum) :
 
 theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
     (cs : e.IsCs) : (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e :=
-  by 
+  by
   simp [add_const]
   cases k <;> simp! [*]
   simp [show ZNum.pos k ≠ 0 by decide]
@@ -284,7 +285,7 @@ theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
 theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : IsCs a) (h₂ : IsCs b) :
     (horner' a x n b).IsCs ∧
       cseval t (horner' a x n b) = Tactic.Ring.horner (cseval t a) (t.getOrZero x) n (cseval t b) :=
-  by 
+  by
   cases' a with n₁ a₁ x₁ n₁ b₁ <;> simp [horner'] <;> split_ifs
   · simp! [*, Tactic.Ring.horner]
   · exact ⟨⟨h₁, h₂⟩, rfl⟩
@@ -296,7 +297,8 @@ theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : Is
 #align tactic.ring2.horner_expr.cseval_horner' Tactic.Ring2.HornerExpr.cseval_horner'
 
 theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
-    (cs₂ : e₂.IsCs) : (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁ + cseval t e₂ := by
+    (cs₂ : e₂.IsCs) : (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁ + cseval t e₂ :=
+  by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
     simpa using cseval_add_const t n₁ cs₂
@@ -317,7 +319,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
           is_cs e₂ → is_cs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0 + cseval t e₂ :=
       fun _ e₂ c => ⟨c, (zero_add _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp!
-    · have : n₁ = n₂ := by 
+    · have : n₁ = n₂ := by
         have := congr_arg (coe : ZNum → ℤ) e
         simp at this
         have := sub_eq_zero.1 this
@@ -355,7 +357,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
 
 theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
     (cs : e.IsCs) : (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k :=
-  by 
+  by
   simp [mul_const]
   split_ifs with h h
   · cases (Num.to_znum_inj.1 h : k = 0)
@@ -377,7 +379,8 @@ theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
 #align tactic.ring2.horner_expr.cseval_mul_const Tactic.Ring2.HornerExpr.cseval_mul_const
 
 theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
-    (cs₂ : e₂.IsCs) : (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ := by
+    (cs₂ : e₂.IsCs) : (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ :=
+  by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
     simpa [mul_comm] using cseval_mul_const t n₁ cs₂
@@ -414,7 +417,7 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
 theorem cseval_pow {α} [CommSemiring α] (t : Tree α) {x : HornerExpr} (cs : x.IsCs) :
     ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
   | 0 => ⟨⟨1, rfl⟩, (pow_zero _).symm⟩
-  | Num.pos p => by 
+  | Num.pos p => by
     simp [pow]; induction' p with p ep p ep
     · simp [*]
     · simp [pow_bit1]

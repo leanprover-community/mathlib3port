@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.add_circle
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,8 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   · let δ : ι → ℝ := fun j => T / (2 * ↑(n j))
     have hδ₀ : ∀ᶠ j in l, 0 < δ j :=
       (hu₂.eventually_gt_at_top 0).mono fun j hj => div_pos hT₀ <| by positivity
-    have hδ₁ : tendsto δ l (𝓝[>] 0) := by
+    have hδ₁ : tendsto δ l (𝓝[>] 0) :=
+      by
       refine' tendsto_nhds_within_iff.mpr ⟨_, hδ₀⟩
       replace hu₂ : tendsto (fun j => T⁻¹ * 2 * n j) l at_top :=
         (tendsto_coe_nat_at_top_iff.mpr hu₂).const_mul_at_top (by positivity : 0 < T⁻¹ * 2)
@@ -89,17 +90,19 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
       simp only [δ, Pi.inv_apply, mul_inv_rev, inv_inv, div_eq_inv_mul, ← mul_assoc]
     have hw : ∀ᶠ j in l, d ∈ closed_ball d (1 * δ j) := hδ₀.mono fun j hj => by simp [hj.le]
     exact hd _ δ hδ₁ hw
-  suffices ∀ᶠ j in l, μ (s ∩ I j) / μ (I j) = μ s / Ennreal.ofReal T by
+  suffices ∀ᶠ j in l, μ (s ∩ I j) / μ (I j) = μ s / Ennreal.ofReal T
+    by
     replace hd := hd.congr' this
     rwa [tendsto_const_nhds_iff, Ennreal.div_eq_one_iff hT₁ Ennreal.of_real_ne_top] at hd
   refine' (hu₂.eventually_gt_at_top 0).mono fun j hj => _
   have huj : IsOfFinAddOrder (u j) := add_order_of_pos_iff.mp hj
-  have huj' : 1 ≤ (↑(n j) : ℝ) := by 
+  have huj' : 1 ≤ (↑(n j) : ℝ) := by
     norm_cast
     exact nat.succ_le_iff.mpr hj
   have hI₀ : μ (I j) ≠ 0 := (measure_closed_ball_pos _ d <| by positivity).Ne.symm
   have hI₁ : μ (I j) ≠ ⊤ := measure_ne_top _ _
-  have hI₂ : μ (I j) * ↑(n j) = Ennreal.ofReal T := by
+  have hI₂ : μ (I j) * ↑(n j) = Ennreal.ofReal T :=
+    by
     rw [volume_closed_ball, mul_div, mul_div_mul_left T _ two_ne_zero,
       min_eq_right (div_le_self hT₀.le huj'), mul_comm, ← nsmul_eq_mul, ← Ennreal.of_real_nsmul,
       nsmul_eq_mul, mul_div_cancel']
@@ -112,7 +115,8 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
 
 theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n • y :=
   { measurePreservingZsmul volume (abs_pos.mp <| lt_trans zero_lt_one hn) with
-    ae_empty_or_univ := fun s hs hs' => by
+    ae_empty_or_univ := fun s hs hs' =>
+      by
       let u : ℕ → AddCircle T := fun j => ↑((↑1 : ℝ) / ↑(n.nat_abs ^ j) * T)
       replace hn : 1 < n.nat_abs
       · rwa [Int.abs_eq_natAbs, Nat.one_lt_cast] at hn
@@ -123,7 +127,8 @@ theorem ergodicZsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n
           abs_pow, abs_dvd]
       have hu₁ : ∀ j, (u j +ᵥ s : Set _) =ᵐ[volume] s := fun j => by
         rw [vadd_eq_self_of_preimage_zsmul_eq_self hs' (hnu j)]
-      have hu₂ : tendsto (fun j => addOrderOf <| u j) at_top at_top := by
+      have hu₂ : tendsto (fun j => addOrderOf <| u j) at_top at_top :=
+        by
         simp_rw [hu₀]
         exact Nat.tendsto_pow_at_top_at_top_of_one_lt hn
       exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hs.null_measurable_set hu₁ hu₂ }
@@ -133,19 +138,22 @@ theorem ergodicNsmul {n : ℕ} (hn : 1 < n) : Ergodic fun y : AddCircle T => n �
   ergodicZsmul (by simp [hn] : 1 < |(n : ℤ)|)
 #align add_circle.ergodic_nsmul AddCircle.ergodicNsmul
 
-theorem ergodicZsmulAdd (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun y => n • y + x := by
+theorem ergodicZsmulAdd (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun y => n • y + x :=
+  by
   set f : AddCircle T → AddCircle T := fun y => n • y + x
   let e : AddCircle T ≃ᵐ AddCircle T := MeasurableEquiv.addLeft (DivisibleBy.div x <| n - 1)
   have he : measure_preserving e volume volume := measure_preserving_add_left volume _
-  suffices e ∘ f ∘ e.symm = fun y => n • y by
+  suffices e ∘ f ∘ e.symm = fun y => n • y
+    by
     rw [← he.ergodic_conjugate_iff, this]
     exact ergodic_zsmul h
   replace h : n - 1 ≠ 0
   · rw [← abs_one] at h
     rw [sub_ne_zero]
     exact ne_of_apply_ne _ (ne_of_gt h)
-  have hnx : n • DivisibleBy.div x (n - 1) = x + DivisibleBy.div x (n - 1) := by
-    conv_rhs => 
+  have hnx : n • DivisibleBy.div x (n - 1) = x + DivisibleBy.div x (n - 1) :=
+    by
+    conv_rhs =>
       congr
       rw [← DivisibleBy.div_cancel x h]
     rw [sub_smul, one_smul, sub_add_cancel]

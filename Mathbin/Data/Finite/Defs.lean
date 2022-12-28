@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.finite.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,8 @@ theorem Finite.exists_equiv_fin (α : Sort _) [h : Finite α] : ∃ n : ℕ, Non
 #align finite.exists_equiv_fin Finite.exists_equiv_fin
 
 #print Finite.of_equiv /-
-theorem Finite.of_equiv (α : Sort _) [h : Finite α] (f : α ≃ β) : Finite β := by
+theorem Finite.of_equiv (α : Sort _) [h : Finite α] (f : α ≃ β) : Finite β :=
+  by
   cases' h with n e
   exact Finite.intro (f.symm.trans e)
 #align finite.of_equiv Finite.of_equiv

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.equicontinuity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ only one with `x₀`. -/
 theorem equicontinuous_at_iff_pair {F : ι → X → α} {x₀ : X} :
     EquicontinuousAt F x₀ ↔
       ∀ U ∈ 𝓤 α, ∃ V ∈ 𝓝 x₀, ∀ (x) (_ : x ∈ V) (y) (_ : y ∈ V) (i), (F i x, F i y) ∈ U :=
-  by 
+  by
   constructor <;> intro H U hU
   · rcases comp_symm_mem_uniformity_sets hU with ⟨V, hV, hVsymm, hVU⟩
     refine' ⟨_, H V hV, fun x hx y hy i => hVU (prod_mk_mem_comp_rel _ (hy i))⟩
@@ -154,7 +154,7 @@ theorem UniformEquicontinuous.equicontinuous {F : ι → β → α} (h : Uniform
 
 /-- Each function of a family equicontinuous at `x₀` is continuous at `x₀`. -/
 theorem EquicontinuousAt.continuous_at {F : ι → X → α} {x₀ : X} (h : EquicontinuousAt F x₀)
-    (i : ι) : ContinuousAt (F i) x₀ := by 
+    (i : ι) : ContinuousAt (F i) x₀ := by
   intro U hU
   rw [UniformSpace.mem_nhds_iff] at hU
   rcases hU with ⟨V, hV₁, hV₂⟩
@@ -275,7 +275,8 @@ theorem uniform_equicontinuous_iff_uniform_continuous {F : ι → β → α} :
 
 theorem Filter.HasBasis.equicontinuous_at_iff_left {κ : Type _} {p : κ → Prop} {s : κ → Set X}
     {F : ι → X → α} {x₀ : X} (hX : (𝓝 x₀).HasBasis p s) :
-    EquicontinuousAt F x₀ ↔ ∀ U ∈ 𝓤 α, ∃ (k : _)(_ : p k), ∀ x ∈ s k, ∀ i, (F i x₀, F i x) ∈ U := by
+    EquicontinuousAt F x₀ ↔ ∀ U ∈ 𝓤 α, ∃ (k : _)(_ : p k), ∀ x ∈ s k, ∀ i, (F i x₀, F i x) ∈ U :=
+  by
   rw [equicontinuous_at_iff_continuous_at, ContinuousAt,
     hX.tendsto_iff (UniformFun.has_basis_nhds ι α _)]
   rfl
@@ -283,7 +284,8 @@ theorem Filter.HasBasis.equicontinuous_at_iff_left {κ : Type _} {p : κ → Pro
 
 theorem Filter.HasBasis.equicontinuous_at_iff_right {κ : Type _} {p : κ → Prop}
     {s : κ → Set (α × α)} {F : ι → X → α} {x₀ : X} (hα : (𝓤 α).HasBasis p s) :
-    EquicontinuousAt F x₀ ↔ ∀ k, p k → ∀ᶠ x in 𝓝 x₀, ∀ i, (F i x₀, F i x) ∈ s k := by
+    EquicontinuousAt F x₀ ↔ ∀ k, p k → ∀ᶠ x in 𝓝 x₀, ∀ i, (F i x₀, F i x) ∈ s k :=
+  by
   rw [equicontinuous_at_iff_continuous_at, ContinuousAt,
     (UniformFun.has_basis_nhds_of_basis ι α _ hα).tendsto_right_iff]
   rfl
@@ -314,7 +316,8 @@ theorem Filter.HasBasis.uniform_equicontinuous_iff_left {κ : Type _} {p : κ �
 
 theorem Filter.HasBasis.uniform_equicontinuous_iff_right {κ : Type _} {p : κ → Prop}
     {s : κ → Set (α × α)} {F : ι → β → α} (hα : (𝓤 α).HasBasis p s) :
-    UniformEquicontinuous F ↔ ∀ k, p k → ∀ᶠ xy : β × β in 𝓤 β, ∀ i, (F i xy.1, F i xy.2) ∈ s k := by
+    UniformEquicontinuous F ↔ ∀ k, p k → ∀ᶠ xy : β × β in 𝓤 β, ∀ i, (F i xy.1, F i xy.2) ∈ s k :=
+  by
   rw [uniform_equicontinuous_iff_uniform_continuous, UniformContinuous,
     (UniformFun.has_basis_uniformity_of_basis ι α hα).tendsto_right_iff]
   rfl
@@ -337,7 +340,8 @@ theorem Filter.HasBasis.uniform_equicontinuous_iff {κ₁ κ₂ : Type _} {p₁ 
 `x₀ : X` iff the family `𝓕'`, obtained by precomposing each function of `𝓕` by `u`, is
 equicontinuous at `x₀`. -/
 theorem UniformInducing.equicontinuous_at_iff {F : ι → X → α} {x₀ : X} {u : α → β}
-    (hu : UniformInducing u) : EquicontinuousAt F x₀ ↔ EquicontinuousAt ((· ∘ ·) u ∘ F) x₀ := by
+    (hu : UniformInducing u) : EquicontinuousAt F x₀ ↔ EquicontinuousAt ((· ∘ ·) u ∘ F) x₀ :=
+  by
   have := (UniformFun.postcomp_uniform_inducing hu).Inducing
   rw [equicontinuous_at_iff_continuous_at, equicontinuous_at_iff_continuous_at,
     this.continuous_at_iff]
@@ -348,7 +352,8 @@ theorem UniformInducing.equicontinuous_at_iff {F : ι → X → α} {x₀ : X} {
 /-- Given `u : α → β` a uniform inducing map, a family `𝓕 : ι → X → α` is equicontinuous iff the
 family `𝓕'`, obtained by precomposing each function of `𝓕` by `u`, is equicontinuous. -/
 theorem UniformInducing.equicontinuous_iff {F : ι → X → α} {u : α → β} (hu : UniformInducing u) :
-    Equicontinuous F ↔ Equicontinuous ((· ∘ ·) u ∘ F) := by
+    Equicontinuous F ↔ Equicontinuous ((· ∘ ·) u ∘ F) :=
+  by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   rw [hu.equicontinuous_at_iff]
@@ -358,7 +363,8 @@ theorem UniformInducing.equicontinuous_iff {F : ι → X → α} {u : α → β}
 iff the family `𝓕'`, obtained by precomposing each function of `𝓕` by `u`, is uniformly
 equicontinuous. -/
 theorem UniformInducing.uniform_equicontinuous_iff {F : ι → β → α} {u : α → γ}
-    (hu : UniformInducing u) : UniformEquicontinuous F ↔ UniformEquicontinuous ((· ∘ ·) u ∘ F) := by
+    (hu : UniformInducing u) : UniformEquicontinuous F ↔ UniformEquicontinuous ((· ∘ ·) u ∘ F) :=
+  by
   have := UniformFun.postcomp_uniform_inducing hu
   rw [uniform_equicontinuous_iff_uniform_continuous, uniform_equicontinuous_iff_uniform_continuous,
     this.uniform_continuous_iff]
@@ -371,7 +377,8 @@ embedding than continuity, but in practice this will mostly be applied to `fun_l
 the coercion is injective. -/
 theorem EquicontinuousAt.closure' {A : Set Y} {u : Y → X → α} {x₀ : X}
     (hA : EquicontinuousAt (u ∘ coe : A → X → α) x₀) (hu : Continuous u) :
-    EquicontinuousAt (u ∘ coe : closure A → X → α) x₀ := by
+    EquicontinuousAt (u ∘ coe : closure A → X → α) x₀ :=
+  by
   intro U hU
   rcases mem_uniformity_is_closed hU with ⟨V, hV, hVclosed, hVU⟩
   filter_upwards [hA V hV] with x hx
@@ -426,7 +433,8 @@ on the embedding than continuity, but in practice this will mostly be applied to
 where the coercion is injective. -/
 theorem UniformEquicontinuous.closure' {A : Set Y} {u : Y → β → α}
     (hA : UniformEquicontinuous (u ∘ coe : A → β → α)) (hu : Continuous u) :
-    UniformEquicontinuous (u ∘ coe : closure A → β → α) := by
+    UniformEquicontinuous (u ∘ coe : closure A → β → α) :=
+  by
   intro U hU
   rcases mem_uniformity_is_closed hU with ⟨V, hV, hVclosed, hVU⟩
   filter_upwards [hA V hV]

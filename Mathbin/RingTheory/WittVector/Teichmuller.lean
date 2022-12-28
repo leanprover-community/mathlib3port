@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.teichmuller
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ satisfy the ring axioms.
 include hp
 
 private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
-    ghostComponent n (teichmullerFun p r) = r ^ p ^ n := by
+    ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
+  by
   rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
     tsub_zero]
   · rfl
@@ -83,7 +84,8 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
 #align witt_vector.ghost_component_teichmuller_fun witt_vector.ghost_component_teichmuller_fun
 
 private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
-    map f (teichmullerFun p r) = teichmullerFun p (f r) := by
+    map f (teichmullerFun p r) = teichmullerFun p (f r) :=
+  by
   ext n
   cases n
   · rfl
@@ -91,7 +93,8 @@ private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
 #align witt_vector.map_teichmuller_fun witt_vector.map_teichmuller_fun
 
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
-    teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
+    teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y :=
+  by
   apply (ghost_map.bijective_of_invertible p (MvPolynomial R ℚ)).1
   rw [RingHom.map_mul]
   ext1 n
@@ -99,7 +102,8 @@ private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
 #align witt_vector.teichmuller_mul_aux₁ witt_vector.teichmuller_mul_aux₁
 
 private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
-    teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
+    teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y :=
+  by
   refine'
     map_injective (MvPolynomial.map (Int.castRingHom ℚ))
       (MvPolynomial.map_injective _ Int.cast_injective) _
@@ -109,15 +113,15 @@ private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
 /-- The Teichmüller lift of an element of `R` to `𝕎 R`.
 The `0`-th coefficient of `teichmuller p r` is `r`, and all others are `0`.
 This is a monoid homomorphism. -/
-def teichmuller : R →* 𝕎 R where 
+def teichmuller : R →* 𝕎 R where
   toFun := teichmullerFun p
-  map_one' := by 
+  map_one' := by
     ext ⟨⟩
     · rw [one_coeff_zero]
       rfl
     · rw [one_coeff_eq_of_pos _ _ _ (Nat.succ_pos n)]
       rfl
-  map_mul' := by 
+  map_mul' := by
     intro x y
     rcases counit_surjective R x with ⟨x, rfl⟩
     rcases counit_surjective R y with ⟨y, rfl⟩

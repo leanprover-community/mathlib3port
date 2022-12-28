@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.dslope
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,8 @@ theorem dslope_of_ne (f : 𝕜 → E) (h : b ≠ a) : dslope f a b = slope f a b
 
 theorem ContinuousLinearMap.dslope_comp {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
     (f : E →L[𝕜] F) (g : 𝕜 → E) (a b : 𝕜) (H : a = b → DifferentiableAt 𝕜 g a) :
-    dslope (f ∘ g) a b = f (dslope g a b) := by
+    dslope (f ∘ g) a b = f (dslope g a b) :=
+  by
   rcases eq_or_ne b a with (rfl | hne)
   · simp only [dslope_same]
     exact (f.has_fderiv_at.comp_has_deriv_at b (H rfl).HasDerivAt).deriv
@@ -92,7 +93,8 @@ theorem continuous_at_dslope_same : ContinuousAt (dslope f a) a ↔ Differentiab
 #align continuous_at_dslope_same continuous_at_dslope_same
 
 theorem ContinuousWithinAt.of_dslope (h : ContinuousWithinAt (dslope f a) s b) :
-    ContinuousWithinAt f s b := by
+    ContinuousWithinAt f s b :=
+  by
   have : ContinuousWithinAt (fun x => (x - a) • dslope f a x + f a) s b :=
     ((continuous_within_at_id.sub continuous_within_at_const).smul h).add continuous_within_at_const
   simpa only [sub_smul_dslope, sub_add_cancel] using this
@@ -107,7 +109,8 @@ theorem ContinuousOn.of_dslope (h : ContinuousOn (dslope f a) s) : ContinuousOn 
 #align continuous_on.of_dslope ContinuousOn.of_dslope
 
 theorem continuous_within_at_dslope_of_ne (h : b ≠ a) :
-    ContinuousWithinAt (dslope f a) s b ↔ ContinuousWithinAt f s b := by
+    ContinuousWithinAt (dslope f a) s b ↔ ContinuousWithinAt f s b :=
+  by
   refine' ⟨ContinuousWithinAt.of_dslope, fun hc => _⟩
   simp only [dslope, continuous_within_at_update_of_ne h]
   exact
@@ -120,7 +123,8 @@ theorem continuous_at_dslope_of_ne (h : b ≠ a) : ContinuousAt (dslope f a) b �
 #align continuous_at_dslope_of_ne continuous_at_dslope_of_ne
 
 theorem continuous_on_dslope (h : s ∈ 𝓝 a) :
-    ContinuousOn (dslope f a) s ↔ ContinuousOn f s ∧ DifferentiableAt 𝕜 f a := by
+    ContinuousOn (dslope f a) s ↔ ContinuousOn f s ∧ DifferentiableAt 𝕜 f a :=
+  by
   refine' ⟨fun hc => ⟨hc.of_dslope, continuous_at_dslope_same.1 <| hc.ContinuousAt h⟩, _⟩
   rintro ⟨hc, hd⟩ x hx
   rcases eq_or_ne x a with (rfl | hne)
@@ -144,7 +148,8 @@ theorem DifferentiableOn.ofDslope (h : DifferentiableOn 𝕜 (dslope f a) s) :
 #align differentiable_on.of_dslope DifferentiableOn.ofDslope
 
 theorem differentiable_within_at_dslope_of_ne (h : b ≠ a) :
-    DifferentiableWithinAt 𝕜 (dslope f a) s b ↔ DifferentiableWithinAt 𝕜 f s b := by
+    DifferentiableWithinAt 𝕜 (dslope f a) s b ↔ DifferentiableWithinAt 𝕜 f s b :=
+  by
   refine' ⟨DifferentiableWithinAt.ofDslope, fun hd => _⟩
   refine'
     (((differentiable_within_at_id.sub_const a).inv (sub_ne_zero.2 h)).smul

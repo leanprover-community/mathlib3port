@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.psub
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem ppred_eq_none : ∀ {n : ℕ}, ppred n = none ↔ n = 0
 #print Nat.psub_eq_some /-
 theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
   | 0, k => by simp [eq_comm]
-  | n + 1, k => by 
+  | n + 1, k => by
     dsimp
     apply option.bind_eq_some.trans
     simp [psub_eq_some, add_comm, add_left_comm, Nat.succ_eq_add_one]
@@ -91,7 +91,8 @@ theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
 -/
 
 #print Nat.psub_eq_none /-
-theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n := by
+theorem psub_eq_none {m n : ℕ} : psub m n = none ↔ m < n :=
+  by
   cases s : psub m n <;> simp [eq_comm]
   · show m < n
     refine' lt_of_not_ge fun h => _

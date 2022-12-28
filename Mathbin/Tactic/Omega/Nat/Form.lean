@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.form
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,24 +103,24 @@ def freshIndex : Preform → Nat
 
 theorem holds_constant {v w : Nat → Nat} :
     ∀ p : Preform, (∀ x < p.freshIndex, v x = w x) → (p.Holds v ↔ p.Holds w)
-  | t =* s, h1 => by 
+  | t =* s, h1 => by
     simp only [holds]
     apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
       apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
-  | t ≤* s, h1 => by 
+  | t ≤* s, h1 => by
     simp only [holds]
     apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
       apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
-  | ¬* p, h1 => by 
+  | ¬* p, h1 => by
     apply not_congr
     apply holds_constant p h1
-  | p ∨* q, h1 => by 
+  | p ∨* q, h1 => by
     simp only [holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
-  | p ∧* q, h1 => by 
+  | p ∧* q, h1 => by
     simp only [holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
@@ -150,7 +150,8 @@ theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q 
   apply Exists.imp h1 h2
 #align omega.nat.preform.sat_of_implies_of_sat Omega.Nat.Preform.sat_of_implies_of_sat
 
-theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q := by
+theorem sat_or {p q : Preform} : Sat (p ∨* q) ↔ Sat p ∨ Sat q :=
+  by
   constructor <;> intro h1
   · cases' h1 with v h1
     cases' h1 with h1 h1 <;> [left, right] <;> refine' ⟨v, _⟩ <;> assumption
@@ -185,7 +186,8 @@ theorem univ_close_of_valid {p : Preform} : ∀ {m : Nat} {v : Nat → Nat}, p.v
   | m + 1, v, h1 => fun i => univ_close_of_valid h1
 #align omega.nat.univ_close_of_valid Omega.Nat.univ_close_of_valid
 
-theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
+theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid :=
+  by
   simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
   rw [not_exists_not]; intro h; assumption
 #align omega.nat.valid_of_unsat_not Omega.Nat.valid_of_unsat_not

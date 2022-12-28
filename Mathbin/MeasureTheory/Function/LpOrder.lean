@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ theorem coe_fn_le (f g : lp E p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
   rw [← Subtype.coe_le_coe, ← ae_eq_fun.coe_fn_le, ← coe_fn_coe_base, ← coe_fn_coe_base]
 #align measure_theory.Lp.coe_fn_le MeasureTheory.lp.coe_fn_le
 
-theorem coe_fn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f := by
+theorem coe_fn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
+  by
   rw [← coe_fn_le]
   have h0 := Lp.coe_fn_zero E p μ
   constructor <;> intro h <;> filter_upwards [h, h0] with _ _ h2
@@ -52,7 +53,8 @@ theorem coe_fn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f := by
   · rwa [← h2]
 #align measure_theory.Lp.coe_fn_nonneg MeasureTheory.lp.coe_fn_nonneg
 
-instance : CovariantClass (lp E p μ) (lp E p μ) (· + ·) (· ≤ ·) := by
+instance : CovariantClass (lp E p μ) (lp E p μ) (· + ·) (· ≤ ·) :=
+  by
   refine' ⟨fun f g₁ g₂ hg₁₂ => _⟩
   rw [← coe_fn_le] at hg₁₂⊢
   filter_upwards [coe_fn_add f g₁, coe_fn_add f g₂, hg₁₂] with _ h1 h2 h3
@@ -81,10 +83,10 @@ theorem MeasureTheory.Memℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp
 
 instance : Lattice (lp E p μ) :=
   Subtype.lattice
-    (fun f g hf hg => by 
+    (fun f g hf hg => by
       rw [mem_Lp_iff_mem_ℒp] at *
       exact (mem_ℒp_congr_ae (ae_eq_fun.coe_fn_sup _ _)).mpr (hf.sup hg))
-    fun f g hf hg => by 
+    fun f g hf hg => by
     rw [mem_Lp_iff_mem_ℒp] at *
     exact (mem_ℒp_congr_ae (ae_eq_fun.coe_fn_inf _ _)).mpr (hf.inf hg)
 
@@ -101,9 +103,10 @@ theorem coe_fn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
 #align measure_theory.Lp.coe_fn_abs MeasureTheory.lp.coe_fn_abs
 
 noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) :=
-  { lp.lattice, lp.normedAddCommGroup with
+  { lp.lattice,
+    lp.normedAddCommGroup with
     add_le_add_left := fun f g => add_le_add_left
-    solid := fun f g hfg => by 
+    solid := fun f g hfg => by
       rw [← coe_fn_le] at hfg
       simp_rw [Lp.norm_def, Ennreal.to_real_le_to_real (Lp.snorm_ne_top f) (Lp.snorm_ne_top g)]
       refine' snorm_mono_ae _

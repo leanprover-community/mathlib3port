@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.simplicial_complex.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem mem_space_iff : x ∈ K.space ↔ ∃ s ∈ K.faces, x ∈ convexHull �
 #align geometry.simplicial_complex.mem_space_iff Geometry.SimplicialComplex.mem_space_iff
 
 theorem convex_hull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆ K.space :=
-  subset_bUnion_of_mem hs
+  subset_bunionᵢ_of_mem hs
 #align
   geometry.simplicial_complex.convex_hull_subset_space Geometry.SimplicialComplex.convex_hull_subset_space
 
@@ -109,7 +109,7 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.faces) (ht : t ∈
     Disjoint (convexHull 𝕜 (s : Set E)) (convexHull 𝕜 ↑t) ∨
       ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
   by
-  classical 
+  classical
     by_contra' h
     refine'
       h.2 (s ∩ t)
@@ -132,7 +132,7 @@ def ofErase (faces : Set (Finset E))
     (inter_subset_convex_hull :
       ∀ (s) (_ : s ∈ faces) (t) (_ : t ∈ faces),
         convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t ⊆ convexHull 𝕜 (s ∩ t : Set E)) :
-    SimplicialComplex 𝕜 E where 
+    SimplicialComplex 𝕜 E where
   faces := faces \ {∅}
   not_empty_mem h := h.2 (mem_singleton _)
   indep s hs := indep _ hs.1
@@ -164,7 +164,8 @@ theorem mem_vertices : x ∈ K.vertices ↔ {x} ∈ K.faces :=
   Iff.rfl
 #align geometry.simplicial_complex.mem_vertices Geometry.SimplicialComplex.mem_vertices
 
-theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) := by
+theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) :=
+  by
   ext x
   refine' ⟨fun h => mem_bUnion h <| mem_coe.2 <| mem_singleton_self x, fun h => _⟩
   obtain ⟨s, hs, hx⟩ := mem_Union₂.1 h
@@ -177,9 +178,10 @@ theorem vertices_subset_space : K.vertices ⊆ K.space :=
   geometry.simplicial_complex.vertices_subset_space Geometry.SimplicialComplex.vertices_subset_space
 
 theorem vertex_mem_convex_hull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
-    x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s := by
+    x ∈ convexHull 𝕜 (s : Set E) ↔ x ∈ s :=
+  by
   refine' ⟨fun h => _, fun h => subset_convex_hull _ _ h⟩
-  classical 
+  classical
     have h := K.inter_subset_convex_hull hx hs ⟨by simp, h⟩
     by_contra H
     rwa [← coe_inter,
@@ -214,7 +216,8 @@ theorem mem_facets : s ∈ K.facets ↔ s ∈ K.faces ∧ ∀ t ∈ K.faces, s �
 theorem facets_subset : K.facets ⊆ K.faces := fun s hs => hs.1
 #align geometry.simplicial_complex.facets_subset Geometry.SimplicialComplex.facets_subset
 
-theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t ∈ K.faces ∧ s ⊂ t := by
+theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t ∈ K.faces ∧ s ⊂ t :=
+  by
   refine' ⟨fun hs' : ¬(_ ∧ _) => _, _⟩
   · push_neg  at hs'
     obtain ⟨t, ht⟩ := hs' hs
@@ -246,7 +249,9 @@ instance : HasInf (SimplicialComplex 𝕜 E) :=
       inter_subset_convex_hull := fun s t hs ht => K.inter_subset_convex_hull hs.1 ht.1 }⟩
 
 instance : SemilatticeInf (SimplicialComplex 𝕜 E) :=
-  { (PartialOrder.lift faces) fun x y => ext _ _ with
+  {
+    (PartialOrder.lift faces) fun x y =>
+      ext _ _ with
     inf := (· ⊓ ·)
     inf_le_left := fun K L s hs => hs.1
     inf_le_right := fun K L s hs => hs.2
@@ -272,7 +277,7 @@ theorem faces_bot : (⊥ : SimplicialComplex 𝕜 E).faces = ∅ :=
 #align geometry.simplicial_complex.faces_bot Geometry.SimplicialComplex.faces_bot
 
 theorem space_bot : (⊥ : SimplicialComplex 𝕜 E).space = ∅ :=
-  Set.bUnion_empty _
+  Set.bunionᵢ_empty _
 #align geometry.simplicial_complex.space_bot Geometry.SimplicialComplex.space_bot
 
 theorem facets_bot : (⊥ : SimplicialComplex 𝕜 E).facets = ∅ :=

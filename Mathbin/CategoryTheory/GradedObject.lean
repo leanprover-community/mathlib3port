@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.graded_object
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,8 +70,8 @@ instance categoryOfGradedObjects (β : Type w) : Category.{max w v} (GradedObjec
 
 /-- The projection of a graded object to its `i`-th component. -/
 @[simps]
-def eval {β : Type w} (b : β) :
-    GradedObject β C ⥤ C where 
+def eval {β : Type w} (b : β) : GradedObject β C ⥤ C
+    where
   obj X := X b
   map X Y f := f b
 #align category_theory.graded_object.eval CategoryTheory.GradedObject.eval
@@ -84,10 +84,8 @@ variable (C)
 pulling back along two propositionally equal functions.
 -/
 @[simps]
-def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) :
-    comap (fun _ => C) f ≅
-      comap (fun _ => C)
-        g where 
+def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) f ≅ comap (fun _ => C) g
+    where
   Hom := { app := fun X b => eqToHom (by dsimp [comap]; subst h) }
   inv := { app := fun X b => eqToHom (by dsimp [comap]; subst h) }
 #align category_theory.graded_object.comap_eq CategoryTheory.GradedObject.comapEq
@@ -97,14 +95,16 @@ theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) :
 #align category_theory.graded_object.comap_eq_symm CategoryTheory.GradedObject.comap_eq_symm
 
 theorem comap_eq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
-    comapEq C (k.trans l) = comapEq C k ≪≫ comapEq C l := by
+    comapEq C (k.trans l) = comapEq C k ≪≫ comapEq C l :=
+  by
   ext (X b)
   simp
 #align category_theory.graded_object.comap_eq_trans CategoryTheory.GradedObject.comap_eq_trans
 
 @[simp]
 theorem eq_to_hom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
-    (eqToHom h : X ⟶ Y) b = eqToHom (by subst h) := by
+    (eqToHom h : X ⟶ Y) b = eqToHom (by subst h) :=
+  by
   subst h
   rfl
 #align category_theory.graded_object.eq_to_hom_apply CategoryTheory.GradedObject.eq_to_hom_apply
@@ -113,24 +113,23 @@ theorem eq_to_hom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β)
 given an equivalence between β and γ.
 -/
 @[simps]
-def comapEquiv {β γ : Type w} (e : β ≃ γ) :
-    GradedObject β C ≌
-      GradedObject γ C where 
+def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedObject γ C
+    where
   Functor := comap (fun _ => C) (e.symm : γ → β)
   inverse := comap (fun _ => C) (e : β → γ)
   counitIso :=
     (comapComp (fun _ => C) _ _).trans
       (comapEq C
-        (by 
+        (by
           ext
           simp))
   unitIso :=
     (comapEq C
-          (by 
+          (by
             ext
             simp)).trans
       (comapComp _ _ _).symm
-  functor_unit_iso_comp' X := by 
+  functor_unit_iso_comp' X := by
     ext b
     dsimp
     simp
@@ -145,26 +144,26 @@ instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObj
       ε :=
         (comapId β fun _ => C).symm ≪≫
           comapEq C
-            (by 
+            (by
               ext
               simp)
       μ := fun m n =>
         comapComp _ _ _ ≪≫
           comapEq C
-            (by 
+            (by
               ext
               simp [add_zsmul, add_comm])
-      left_unitality := by 
+      left_unitality := by
         introv
         ext
         dsimp
         simpa
-      right_unitality := by 
+      right_unitality := by
         introv
         ext
         dsimp
         simpa
-      associativity := by 
+      associativity := by
         introv
         ext
         dsimp
@@ -229,8 +228,8 @@ attribute [local tidy] tactic.discrete_cases
 
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
-noncomputable def total :
-    GradedObject β C ⥤ C where 
+noncomputable def total : GradedObject β C ⥤ C
+    where
   obj X := ∐ fun i : β => X i
   map X Y f := Limits.Sigma.map fun i => f i
 #align category_theory.graded_object.total CategoryTheory.GradedObject.total
@@ -244,11 +243,9 @@ The `total` functor taking a graded object to the coproduct of its graded compon
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.
 -/
-instance :
-    Faithful
-      (total β
-        C) where map_injective' X Y f g w := by
-    classical 
+instance : Faithful (total β C)
+    where map_injective' X Y f g w := by
+    classical
       ext i
       replace w := sigma.ι (fun i : β => X i) i ≫= w
       erw [colimit.ι_map, colimit.ι_map] at w

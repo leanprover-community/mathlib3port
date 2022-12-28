@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.induction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,8 +291,8 @@ unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) :
   let args ← get_constructor_argument_info iname num_params decl.type
   let non_param_args := args.drop num_params
   let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
-  pure
-      { cname := decl
+  pure {
+        cname := decl
         non_param_args
         num_non_param_args := non_param_args
         rec_args
@@ -310,8 +310,8 @@ unsafe def get_inductive_info (I : Name) : tactic inductive_info := do
   let num_indices := env.inductive_num_indices I
   let constructor_names := env.constructors_of I
   let constructors ← constructor_names.mmap (get_constructor_info I num_params)
-  pure
-      { iname := I
+  pure {
+        iname := I
         constructors
         num_constructors := constructors
         type
@@ -325,8 +325,8 @@ hypothesis.
 unsafe def get_major_premise_info (major_premise : expr) : tactic major_premise_info := do
   let type ← infer_type major_premise
   let ⟨f, args⟩ ← get_app_fn_args_whnf type
-  pure
-      { mpname := major_premise
+  pure {
+        mpname := major_premise
         mpexpr := major_premise
         type
         args }

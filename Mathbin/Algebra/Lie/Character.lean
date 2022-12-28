@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.character
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ theorem lie_character_apply_lie (χ : LieCharacter R L) (x y : L) : χ ⁅x, y�
 #align lie_algebra.lie_character_apply_lie LieAlgebra.lie_character_apply_lie
 
 theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
-    (h : x ∈ derivedSeries R L 1) : χ x = 0 := by
+    (h : x ∈ derivedSeries R L 1) : χ x = 0 :=
+  by
   rw [derived_series_def, derived_series_of_ideal_succ, derived_series_of_ideal_zero, ←
     LieSubmodule.mem_coe_submodule, LieSubmodule.lie_ideal_oper_eq_linear_span] at h
   apply Submodule.span_induction h
@@ -64,19 +65,18 @@ theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]
-def lieCharacterEquivLinearDual [IsLieAbelian L] :
-    LieCharacter R L ≃ Module.Dual R
-        L where 
+def lieCharacterEquivLinearDual [IsLieAbelian L] : LieCharacter R L ≃ Module.Dual R L
+    where
   toFun χ := (χ : L →ₗ[R] R)
   invFun ψ :=
     { ψ with
       map_lie' := fun x y => by
         rw [LieModule.IsTrivial.trivial, LieRing.of_associative_ring_bracket, mul_comm, sub_self,
           LinearMap.to_fun_eq_coe, LinearMap.map_zero] }
-  left_inv χ := by 
+  left_inv χ := by
     ext
     rfl
-  right_inv ψ := by 
+  right_inv ψ := by
     ext
     rfl
 #align lie_algebra.lie_character_equiv_linear_dual LieAlgebra.lieCharacterEquivLinearDual

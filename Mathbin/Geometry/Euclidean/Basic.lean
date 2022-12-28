@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,16 +118,18 @@ applies to `c₂`.  Then the vector between `c₁` and `c₂` is orthogonal
 to that between `p₁` and `p₂`.  (In two dimensions, this says that the
 diagonals of a kite are orthogonal.) -/
 theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ : dist p₁ c₁ = dist p₂ c₁)
-    (hc₂ : dist p₁ c₂ = dist p₂ c₂) : ⟪c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0 := by
-  have h : ⟪c₂ -ᵥ c₁ + (c₂ -ᵥ c₁), p₂ -ᵥ p₁⟫ = 0 := by
-    conv_lhs => 
+    (hc₂ : dist p₁ c₂ = dist p₂ c₂) : ⟪c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0 :=
+  by
+  have h : ⟪c₂ -ᵥ c₁ + (c₂ -ᵥ c₁), p₂ -ᵥ p₁⟫ = 0 :=
+    by
+    conv_lhs =>
       congr
       congr
       rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₁]
       skip
       rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₂]
     rw [sub_add_sub_comm, inner_sub_left]
-    conv_lhs => 
+    conv_lhs =>
       congr
       rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₂]
       skip
@@ -155,12 +157,14 @@ theorem dist_smul_vadd_sq (r : ℝ) (v : V) (p₁ p₂ : P) :
 /-- The condition for two points on a line to be equidistant from
 another point. -/
 theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) :
-    dist (r • v +ᵥ p₁) p₂ = dist p₁ p₂ ↔ r = 0 ∨ r = -2 * ⟪v, p₁ -ᵥ p₂⟫ / ⟪v, v⟫ := by
+    dist (r • v +ᵥ p₁) p₂ = dist p₁ p₂ ↔ r = 0 ∨ r = -2 * ⟪v, p₁ -ᵥ p₂⟫ / ⟪v, v⟫ :=
+  by
   conv_lhs =>
     rw [← mul_self_inj_of_nonneg dist_nonneg dist_nonneg, dist_smul_vadd_sq, ← sub_eq_zero,
       add_sub_assoc, dist_eq_norm_vsub V p₁ p₂, ← real_inner_self_eq_norm_mul_norm, sub_self]
   have hvi : ⟪v, v⟫ ≠ 0 := by simpa using hv
-  have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * ⟪v, p₁ -ᵥ p₂⟫ * (2 * ⟪v, p₁ -ᵥ p₂⟫) := by
+  have hd : discrim ⟪v, v⟫ (2 * ⟪v, p₁ -ᵥ p₂⟫) 0 = 2 * ⟪v, p₁ -ᵥ p₂⟫ * (2 * ⟪v, p₁ -ᵥ p₂⟫) :=
+    by
     rw [discrim]
     ring
   rw [quadratic_eq_zero_iff hvi hd, add_left_neg, zero_div, neg_mul_eq_neg_mul, ←
@@ -179,13 +183,15 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     (hc₁s : c₁ ∈ s) (hc₂s : c₂ ∈ s) (hp₁s : p₁ ∈ s) (hp₂s : p₂ ∈ s) (hps : p ∈ s) {r₁ r₂ : ℝ}
     (hc : c₁ ≠ c₂) (hp : p₁ ≠ p₂) (hp₁c₁ : dist p₁ c₁ = r₁) (hp₂c₁ : dist p₂ c₁ = r₁)
     (hpc₁ : dist p c₁ = r₁) (hp₁c₂ : dist p₁ c₂ = r₂) (hp₂c₂ : dist p₂ c₂ = r₂)
-    (hpc₂ : dist p c₂ = r₂) : p = p₁ ∨ p = p₂ := by
+    (hpc₂ : dist p c₂ = r₂) : p = p₁ ∨ p = p₂ :=
+  by
   have ho : ⟪c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0 :=
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hp₂c₁.symm) (hp₁c₂.trans hp₂c₂.symm)
   have hop : ⟪c₂ -ᵥ c₁, p -ᵥ p₁⟫ = 0 :=
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hpc₁.symm) (hp₁c₂.trans hpc₂.symm)
   let b : Fin 2 → V := ![c₂ -ᵥ c₁, p₂ -ᵥ p₁]
-  have hb : LinearIndependent ℝ b := by
+  have hb : LinearIndependent ℝ b :=
+    by
     refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
     · intro i
       fin_cases i <;> simp [b, hc.symm, hp.symm]
@@ -194,7 +200,8 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       · exact ho
       · rw [real_inner_comm]
         exact ho
-  have hbs : Submodule.span ℝ (Set.range b) = s.direction := by
+  have hbs : Submodule.span ℝ (Set.range b) = s.direction :=
+    by
     refine' eq_of_le_of_finrank_eq _ _
     · rw [Submodule.span_le, Set.range_subset_iff]
       intro i
@@ -202,9 +209,11 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       · exact vsub_mem_direction hc₂s hc₁s
       · exact vsub_mem_direction hp₂s hp₁s
     · rw [finrank_span_eq_card hb, Fintype.card_fin, hd]
-  have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
+  have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) :=
+    by
     intro v hv
-    have hr : Set.range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
+    have hr : Set.range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} :=
+      by
       have hu : (Finset.univ : Finset (Fin 2)) = {0, 1} := by decide
       rw [← Fintype.coe_image_univ, hu]
       simp
@@ -235,7 +244,8 @@ theorem eq_of_dist_eq_of_dist_eq_of_finrank_eq_two [FiniteDimensional ℝ V] (hd
     {c₁ c₂ p₁ p₂ p : P} {r₁ r₂ : ℝ} (hc : c₁ ≠ c₂) (hp : p₁ ≠ p₂) (hp₁c₁ : dist p₁ c₁ = r₁)
     (hp₂c₁ : dist p₂ c₁ = r₁) (hpc₁ : dist p c₁ = r₁) (hp₁c₂ : dist p₁ c₂ = r₂)
     (hp₂c₂ : dist p₂ c₂ = r₂) (hpc₂ : dist p c₂ = r₂) : p = p₁ ∨ p = p₂ :=
-  haveI hd' : finrank ℝ (⊤ : AffineSubspace ℝ P).direction = 2 := by
+  haveI hd' : finrank ℝ (⊤ : AffineSubspace ℝ P).direction = 2 :=
+    by
     rw [direction_top, finrank_top]
     exact hd
   eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top ℝ V _) (mem_top ℝ V _)
@@ -255,7 +265,7 @@ def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpac
   Classical.choose <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›)
       (mk'_nonempty p s.directionᗮ)
-      (by 
+      (by
         rw [direction_mk' p s.directionᗮ]
         exact Submodule.is_compl_orthogonal_of_complete_space)
 #align euclidean_geometry.orthogonal_projection_fn EuclideanGeometry.orthogonalProjectionFn
@@ -271,7 +281,7 @@ theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [
   Classical.choose_spec <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›)
       (mk'_nonempty p s.directionᗮ)
-      (by 
+      (by
         rw [direction_mk' p s.directionᗮ]
         exact Submodule.is_compl_orthogonal_of_complete_space)
 #align
@@ -281,7 +291,8 @@ theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [
 lemma is only intended for use in setting up the bundled version and
 should not be used once that is defined. -/
 theorem orthogonal_projection_fn_mem {s : AffineSubspace ℝ P} [Nonempty s]
-    [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p ∈ s := by
+    [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p ∈ s :=
+  by
   rw [← mem_coe, ← Set.singleton_subset_iff, ← inter_eq_singleton_orthogonal_projection_fn]
   exact Set.inter_subset_left _ _
 #align
@@ -291,7 +302,8 @@ theorem orthogonal_projection_fn_mem {s : AffineSubspace ℝ P} [Nonempty s]
 subspace.  This lemma is only intended for use in setting up the
 bundled version and should not be used once that is defined. -/
 theorem orthogonal_projection_fn_mem_orthogonal {s : AffineSubspace ℝ P} [Nonempty s]
-    [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p ∈ mk' p s.directionᗮ := by
+    [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p ∈ mk' p s.directionᗮ :=
+  by
   rw [← mem_coe, ← Set.singleton_subset_iff, ← inter_eq_singleton_orthogonal_projection_fn]
   exact Set.inter_subset_right _ _
 #align
@@ -317,11 +329,12 @@ points whose difference is that vector) is the `orthogonal_projection`
 for real inner product spaces, onto the direction of the affine
 subspace being projected onto. -/
 def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
-    P →ᵃ[ℝ]
-      s where 
+    P →ᵃ[ℝ] s
+    where
   toFun p := ⟨orthogonalProjectionFn s p, orthogonal_projection_fn_mem p⟩
   linear := orthogonalProjection s.direction
-  map_vadd' p v := by
+  map_vadd' p v :=
+    by
     have hs : ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈ s :=
       vadd_mem_of_mem_direction (orthogonalProjection s.direction v).2
         (orthogonal_projection_fn_mem p)
@@ -338,7 +351,7 @@ def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
     have hm :
       ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈
         ({orthogonalProjectionFn s (v +ᵥ p)} : Set P) :=
-      by 
+      by
       rw [← inter_eq_singleton_orthogonal_projection_fn (v +ᵥ p)]
       exact Set.mem_inter hs ho
     rw [Set.mem_singleton_iff] at hm
@@ -366,7 +379,8 @@ through the given point is the `orthogonal_projection` of that point
 onto the subspace. -/
 theorem inter_eq_singleton_orthogonal_projection {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] (p : P) :
-    (s : Set P) ∩ mk' p s.directionᗮ = {orthogonalProjection s p} := by
+    (s : Set P) ∩ mk' p s.directionᗮ = {orthogonalProjection s p} :=
+  by
   rw [← orthogonal_projection_fn_eq]
   exact inter_eq_singleton_orthogonal_projection_fn p
 #align
@@ -407,7 +421,8 @@ theorem vsub_orthogonal_projection_mem_direction {s : AffineSubspace ℝ P} [Non
 /-- A point equals its orthogonal projection if and only if it lies in
 the subspace. -/
 theorem orthogonal_projection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
-    [CompleteSpace s.direction] {p : P} : ↑(orthogonalProjection s p) = p ↔ p ∈ s := by
+    [CompleteSpace s.direction] {p : P} : ↑(orthogonalProjection s p) = p ↔ p ∈ s :=
+  by
   constructor
   · exact fun h => h ▸ orthogonal_projection_mem p
   · intro h
@@ -420,7 +435,8 @@ theorem orthogonal_projection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s
 
 @[simp]
 theorem orthogonal_projection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
-    [CompleteSpace s.direction] (p : s) : orthogonalProjection s p = p := by
+    [CompleteSpace s.direction] (p : s) : orthogonalProjection s p = p :=
+  by
   ext
   rw [orthogonal_projection_eq_self_iff]
   exact p.2
@@ -431,7 +447,8 @@ theorem orthogonal_projection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [N
 @[simp]
 theorem orthogonal_projection_orthogonal_projection (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) :
-    orthogonalProjection s (orthogonalProjection s p) = orthogonalProjection s p := by
+    orthogonalProjection s (orthogonalProjection s p) = orthogonalProjection s p :=
+  by
   ext
   rw [orthogonal_projection_eq_self_iff]
   exact orthogonal_projection_mem p
@@ -440,7 +457,8 @@ theorem orthogonal_projection_orthogonal_projection (s : AffineSubspace ℝ P) [
 
 theorem eq_orthogonal_projection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s]
     [Nonempty s'] [CompleteSpace s.direction] [CompleteSpace s'.direction] (h : s = s') (p : P) :
-    (orthogonalProjection s p : P) = (orthogonalProjection s' p : P) := by
+    (orthogonalProjection s p : P) = (orthogonalProjection s' p : P) :=
+  by
   change orthogonalProjectionFn s p = orthogonalProjectionFn s' p
   congr
   exact h
@@ -483,7 +501,8 @@ theorem vsub_orthogonal_projection_mem_direction_orthogonal (s : AffineSubspace 
 part of the orthogonal projection. -/
 theorem orthogonal_projection_vsub_orthogonal_projection (s : AffineSubspace ℝ P) [Nonempty s]
     [CompleteSpace s.direction] (p : P) :
-    orthogonalProjection s.direction (p -ᵥ orthogonalProjection s p) = 0 := by
+    orthogonalProjection s.direction (p -ᵥ orthogonalProjection s p) = 0 :=
+  by
   apply orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero
   intro c hc
   rw [← neg_vsub_eq_vsub_rev, inner_neg_right,
@@ -496,7 +515,8 @@ orthogonal projection, produces the original point if the vector was
 in the orthogonal direction. -/
 theorem orthogonal_projection_vadd_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
     [CompleteSpace s.direction] {p : P} (hp : p ∈ s) {v : V} (hv : v ∈ s.directionᗮ) :
-    orthogonalProjection s (v +ᵥ p) = ⟨p, hp⟩ := by
+    orthogonalProjection s (v +ᵥ p) = ⟨p, hp⟩ :=
+  by
   have h := vsub_orthogonal_projection_mem_direction_orthogonal s (v +ᵥ p)
   rw [vadd_vsub_assoc, Submodule.add_mem_iff_right _ hv] at h
   refine' (eq_of_vsub_eq_zero _).symm
@@ -554,7 +574,8 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
       norm_add_sq_eq_norm_sq_add_norm_sq_real
         (Submodule.inner_right_of_mem_orthogonal (vsub_mem_direction hp1 hp2)
           (Submodule.smul_mem _ _ hv))
-    _ = ‖(p1 -ᵥ p2 : V)‖ * ‖(p1 -ᵥ p2 : V)‖ + |r1 - r2| * |r1 - r2| * ‖v‖ * ‖v‖ := by
+    _ = ‖(p1 -ᵥ p2 : V)‖ * ‖(p1 -ᵥ p2 : V)‖ + |r1 - r2| * |r1 - r2| * ‖v‖ * ‖v‖ :=
+      by
       rw [norm_smul, Real.norm_eq_abs]
       ring
     _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (‖v‖ * ‖v‖) := by
@@ -572,12 +593,13 @@ general sense of the word that includes both those common cases. -/
 def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] : P ≃ᵃⁱ[ℝ] P :=
   AffineIsometryEquiv.mk' (fun p => ↑(orthogonalProjection s p) -ᵥ p +ᵥ orthogonalProjection s p)
     (reflection s.direction) (↑(Classical.arbitrary s))
-    (by 
+    (by
       intro p
       let v := p -ᵥ ↑(Classical.arbitrary s)
       let a : V := _root_.orthogonal_projection s.direction v
       let b : P := ↑(Classical.arbitrary s)
-      have key : a +ᵥ b -ᵥ (v +ᵥ b) +ᵥ (a +ᵥ b) = a + a - v +ᵥ (b -ᵥ b +ᵥ b) := by
+      have key : a +ᵥ b -ᵥ (v +ᵥ b) +ᵥ (a +ᵥ b) = a + a - v +ᵥ (b -ᵥ b +ᵥ b) :=
+        by
         rw [← add_vadd, vsub_vadd_eq_vsub_sub, vsub_vadd, vadd_vsub]
         congr 1
         abel
@@ -602,13 +624,14 @@ theorem eq_reflection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s] 
 /-- Reflecting twice in the same subspace. -/
 @[simp]
 theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
-    (p : P) : reflection s (reflection s p) = p := by
+    (p : P) : reflection s (reflection s p) = p :=
+  by
   have :
     ∀ a : s,
       ∀ b : V,
         (_root_.orthogonal_projection s.direction) b = 0 →
           reflection s (reflection s (b +ᵥ a)) = b +ᵥ a :=
-    by 
+    by
     intro a b h
     have : (a : P) -ᵥ (b +ᵥ a) = -b := by rw [vsub_vadd_eq_vsub_sub, vsub_self, zero_sub]
     simp [reflection, h, this]
@@ -619,7 +642,7 @@ theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteS
 /-- Reflection is its own inverse. -/
 @[simp]
 theorem reflection_symm (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] :
-    (reflection s).symm = reflection s := by 
+    (reflection s).symm = reflection s := by
   ext
   rw [← (reflection s).Injective.eq_iff]
   simp
@@ -634,7 +657,8 @@ theorem reflection_involutive (s : AffineSubspace ℝ P) [Nonempty s] [CompleteS
 /-- A point is its own reflection if and only if it is in the
 subspace. -/
 theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
-    (p : P) : reflection s p = p ↔ p ∈ s := by
+    (p : P) : reflection s p = p ↔ p ∈ s :=
+  by
   rw [← orthogonal_projection_eq_self_iff, reflection_apply]
   constructor
   · intro h
@@ -653,7 +677,7 @@ theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace �
     [Nonempty s₂] [CompleteSpace s₁.direction] [CompleteSpace s₂.direction] (p : P) :
     reflection s₁ p = reflection s₂ p ↔
       (orthogonalProjection s₁ p : P) = orthogonalProjection s₂ p :=
-  by 
+  by
   rw [reflection_apply, reflection_apply]
   constructor
   · intro h
@@ -670,7 +694,8 @@ theorem reflection_eq_iff_orthogonal_projection_eq (s₁ s₂ : AffineSubspace �
 /-- The distance between `p₁` and the reflection of `p₂` equals that
 between the reflection of `p₁` and `p₂`. -/
 theorem dist_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
-    (p₁ p₂ : P) : dist p₁ (reflection s p₂) = dist (reflection s p₁) p₂ := by
+    (p₁ p₂ : P) : dist p₁ (reflection s p₂) = dist (reflection s p₁) p₂ :=
+  by
   conv_lhs => rw [← reflection_reflection s p₁]
   exact (reflection s).dist_map _ _
 #align euclidean_geometry.dist_reflection EuclideanGeometry.dist_reflection
@@ -678,7 +703,8 @@ theorem dist_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s
 /-- A point in the subspace is equidistant from another point and its
 reflection. -/
 theorem dist_reflection_eq_of_mem (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction]
-    {p₁ : P} (hp₁ : p₁ ∈ s) (p₂ : P) : dist p₁ (reflection s p₂) = dist p₁ p₂ := by
+    {p₁ : P} (hp₁ : p₁ ∈ s) (p₂ : P) : dist p₁ (reflection s p₂) = dist p₁ p₂ :=
+  by
   rw [← reflection_eq_self_iff p₁] at hp₁
   convert (reflection s).dist_map p₁ p₂
   rw [hp₁]
@@ -687,7 +713,8 @@ theorem dist_reflection_eq_of_mem (s : AffineSubspace ℝ P) [Nonempty s] [Compl
 /-- The reflection of a point in a subspace is contained in any larger
 subspace containing both the point and the subspace reflected in. -/
 theorem reflection_mem_of_le_of_mem {s₁ s₂ : AffineSubspace ℝ P} [Nonempty s₁]
-    [CompleteSpace s₁.direction] (hle : s₁ ≤ s₂) {p : P} (hp : p ∈ s₂) : reflection s₁ p ∈ s₂ := by
+    [CompleteSpace s₁.direction] (hle : s₁ ≤ s₂) {p : P} (hp : p ∈ s₂) : reflection s₁ p ∈ s₂ :=
+  by
   rw [reflection_apply]
   have ho : ↑(orthogonalProjection s₁ p) ∈ s₂ := hle (orthogonal_projection_mem p)
   exact vadd_mem_of_mem_direction (vsub_mem_direction ho hp) ho
@@ -696,7 +723,8 @@ theorem reflection_mem_of_le_of_mem {s₁ s₂ : AffineSubspace ℝ P} [Nonempty
 /-- Reflecting an orthogonal vector plus a point in the subspace
 produces the negation of that vector plus the point. -/
 theorem reflection_orthogonal_vadd {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
-    {p : P} (hp : p ∈ s) {v : V} (hv : v ∈ s.directionᗮ) : reflection s (v +ᵥ p) = -v +ᵥ p := by
+    {p : P} (hp : p ∈ s) {v : V} (hv : v ∈ s.directionᗮ) : reflection s (v +ᵥ p) = -v +ᵥ p :=
+  by
   rw [reflection_apply, orthogonal_projection_vadd_eq_self hp hv, vsub_vadd_eq_vsub_sub]
   simp
 #align euclidean_geometry.reflection_orthogonal_vadd EuclideanGeometry.reflection_orthogonal_vadd
@@ -793,7 +821,8 @@ theorem Sphere.ne_iff {s₁ s₂ : Sphere P} :
 #align euclidean_geometry.sphere.ne_iff EuclideanGeometry.Sphere.ne_iff
 
 theorem Sphere.center_eq_iff_eq_of_mem {s₁ s₂ : Sphere P} {p : P} (hs₁ : p ∈ s₁) (hs₂ : p ∈ s₂) :
-    s₁.center = s₂.center ↔ s₁ = s₂ := by
+    s₁.center = s₂.center ↔ s₁ = s₂ :=
+  by
   refine' ⟨fun h => sphere.ext _ _ h _, fun h => h ▸ rfl⟩
   rw [mem_sphere] at hs₁ hs₂
   rw [← hs₁, ← hs₂, h]
@@ -833,7 +862,8 @@ theorem cospherical_def (ps : Set P) :
 
 /-- A set of points is cospherical if and only if they lie in some sphere. -/
 theorem cospherical_iff_exists_sphere {ps : Set P} :
-    Cospherical ps ↔ ∃ s : Sphere P, ps ⊆ (s : Set P) := by
+    Cospherical ps ↔ ∃ s : Sphere P, ps ⊆ (s : Set P) :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with ⟨c, r, h⟩
     exact ⟨⟨c, r⟩, h⟩
@@ -849,7 +879,7 @@ theorem Sphere.cospherical (s : Sphere P) : Cospherical (s : Set P) :=
 
 /-- A subset of a cospherical set is cospherical. -/
 theorem Cospherical.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Cospherical ps₂) :
-    Cospherical ps₁ := by 
+    Cospherical ps₁ := by
   rcases hc with ⟨c, r, hcr⟩
   exact ⟨c, r, fun p hp => hcr p (hs hp)⟩
 #align euclidean_geometry.cospherical.subset EuclideanGeometry.Cospherical.subset
@@ -857,7 +887,8 @@ theorem Cospherical.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Co
 include V
 
 /-- The empty set is cospherical. -/
-theorem cosphericalEmpty : Cospherical (∅ : Set P) := by
+theorem cosphericalEmpty : Cospherical (∅ : Set P) :=
+  by
   use add_torsor.nonempty.some
   simp
 #align euclidean_geometry.cospherical_empty EuclideanGeometry.cosphericalEmpty
@@ -865,7 +896,8 @@ theorem cosphericalEmpty : Cospherical (∅ : Set P) := by
 omit V
 
 /-- A single point is cospherical. -/
-theorem cosphericalSingleton (p : P) : Cospherical ({p} : Set P) := by
+theorem cosphericalSingleton (p : P) : Cospherical ({p} : Set P) :=
+  by
   use p
   simp
 #align euclidean_geometry.cospherical_singleton EuclideanGeometry.cosphericalSingleton
@@ -873,7 +905,8 @@ theorem cosphericalSingleton (p : P) : Cospherical ({p} : Set P) := by
 include V
 
 /-- Two points are cospherical. -/
-theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := by
+theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
+  by
   use (2⁻¹ : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁, (2⁻¹ : ℝ) * dist p₂ p₁
   intro p
   rw [Set.mem_insert_iff, Set.mem_singleton_iff]
@@ -882,7 +915,7 @@ theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := 
       dist_eq_norm_vsub V p₂]
     simp
   · rw [H, dist_eq_norm_vsub V p₂, vsub_vadd_eq_vsub_sub, dist_eq_norm_vsub V p₂]
-    conv_lhs => 
+    conv_lhs =>
       congr
       congr
       rw [← one_smul ℝ (p₂ -ᵥ p₁ : V)]
@@ -892,35 +925,38 @@ theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := 
 
 /-- Any three points in a cospherical set are affinely independent. -/
 theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P}
-    (hps : Set.range p ⊆ s) (hpi : Function.Injective p) : AffineIndependent ℝ p := by
+    (hps : Set.range p ⊆ s) (hpi : Function.Injective p) : AffineIndependent ℝ p :=
+  by
   rw [affine_independent_iff_not_collinear]
   intro hc
   rw [collinear_iff_of_mem (Set.mem_range_self (0 : Fin 3))] at hc
   rcases hc with ⟨v, hv⟩
   rw [Set.forall_range_iff] at hv
-  have hv0 : v ≠ 0 := by 
+  have hv0 : v ≠ 0 := by
     intro h
     have he : p 1 = p 0 := by simpa [h] using hv 1
     exact (by decide : (1 : Fin 3) ≠ 0) (hpi he)
   rcases hs with ⟨c, r, hs⟩
   have hs' := fun i => hs (p i) (Set.mem_of_mem_of_subset (Set.mem_range_self _) hps)
   choose f hf using hv
-  have hsd : ∀ i, dist (f i • v +ᵥ p 0) c = r := by
+  have hsd : ∀ i, dist (f i • v +ᵥ p 0) c = r :=
+    by
     intro i
     rw [← hf]
     exact hs' i
-  have hf0 : f 0 = 0 := by 
+  have hf0 : f 0 = 0 := by
     have hf0' := hf 0
     rw [eq_comm, ← @vsub_eq_zero_iff_eq V, vadd_vsub, smul_eq_zero] at hf0'
     simpa [hv0] using hf0'
-  have hfi : Function.Injective f := by 
+  have hfi : Function.Injective f := by
     intro i j h
     have hi := hf i
     rw [h, ← hf j] at hi
     exact hpi hi
   simp_rw [← hsd 0, hf0, zero_smul, zero_vadd, dist_smul_vadd_eq_dist (p 0) c hv0] at hsd
   have hfn0 : ∀ i, i ≠ 0 → f i ≠ 0 := fun i => (hfi.ne_iff' hf0).2
-  have hfn0' : ∀ i, i ≠ 0 → f i = -2 * ⟪v, p 0 -ᵥ c⟫ / ⟪v, v⟫ := by
+  have hfn0' : ∀ i, i ≠ 0 → f i = -2 * ⟪v, p 0 -ᵥ c⟫ / ⟪v, v⟫ :=
+    by
     intro i hi
     have hsdi := hsd i
     simpa [hfn0, hi] using hsdi
@@ -932,7 +968,8 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
 /-- Any three points in a cospherical set are affinely independent. -/
 theorem Cospherical.affine_independent_of_mem_of_ne {s : Set P} (hs : Cospherical s) {p₁ p₂ p₃ : P}
     (h₁ : p₁ ∈ s) (h₂ : p₂ ∈ s) (h₃ : p₃ ∈ s) (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) :
-    AffineIndependent ℝ ![p₁, p₂, p₃] := by
+    AffineIndependent ℝ ![p₁, p₂, p₃] :=
+  by
   refine' hs.affine_independent _ _
   · simp [h₁, h₂, h₃, Set.insert_subset]
   · erw [Fin.cons_injective_iff, Fin.cons_injective_iff]
@@ -989,7 +1026,8 @@ theorem eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two [FiniteDimensional ℝ 
 /-- Given a point on a sphere and a point not outside it, the inner product between the
 difference of those points and the radius vector is positive unless the points are equal. -/
 theorem inner_pos_or_eq_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
-    (hp₂ : dist p₂ s.center ≤ s.radius) : 0 < ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ ∨ p₁ = p₂ := by
+    (hp₂ : dist p₂ s.center ≤ s.radius) : 0 < ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ ∨ p₁ = p₂ :=
+  by
   by_cases h : p₁ = p₂; · exact Or.inr h
   refine' Or.inl _
   rw [mem_sphere] at hp₁
@@ -1021,7 +1059,8 @@ theorem inner_pos_or_eq_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ 
 /-- Given a point on a sphere and a point not outside it, the inner product between the
 difference of those points and the radius vector is nonnegative. -/
 theorem inner_nonneg_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
-    (hp₂ : dist p₂ s.center ≤ s.radius) : 0 ≤ ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ := by
+    (hp₂ : dist p₂ s.center ≤ s.radius) : 0 ≤ ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ :=
+  by
   rcases inner_pos_or_eq_of_dist_le_radius hp₁ hp₂ with (h | rfl)
   · exact h.le
   · simp
@@ -1031,7 +1070,8 @@ theorem inner_nonneg_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p
 /-- Given a point on a sphere and a point inside it, the inner product between the difference of
 those points and the radius vector is positive. -/
 theorem inner_pos_of_dist_lt_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
-    (hp₂ : dist p₂ s.center < s.radius) : 0 < ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ := by
+    (hp₂ : dist p₂ s.center < s.radius) : 0 < ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ :=
+  by
   by_cases h : p₁ = p₂
   · rw [h, mem_sphere] at hp₁
     exact False.elim (hp₂.ne hp₁)
@@ -1068,7 +1108,8 @@ def Sphere.secondInter (s : Sphere P) (p : P) (v : V) : P :=
 point and the center. -/
 @[simp]
 theorem Sphere.second_inter_dist (s : Sphere P) (p : P) (v : V) :
-    dist (s.secondInter p v) s.center = dist p s.center := by
+    dist (s.secondInter p v) s.center = dist p s.center :=
+  by
   rw [sphere.second_inter]
   by_cases hv : v = 0; · simp [hv]
   rw [dist_smul_vadd_eq_dist _ _ hv]
@@ -1094,7 +1135,8 @@ variable {V}
 /-- The point given by `second_inter` equals the original point if and only if the line is
 orthogonal to the radius vector. -/
 theorem Sphere.second_inter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
-    s.secondInter p v = p ↔ ⟪v, p -ᵥ s.center⟫ = 0 := by
+    s.secondInter p v = p ↔ ⟪v, p -ᵥ s.center⟫ = 0 :=
+  by
   refine' ⟨fun hp => _, fun hp => _⟩
   · by_cases hv : v = 0
     · simp [hv]
@@ -1108,7 +1150,8 @@ theorem Sphere.second_inter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
 /-- A point on a line through a point on a sphere equals that point or `second_inter`. -/
 theorem Sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem {s : Sphere P} {p : P}
     (hp : p ∈ s) {v : V} {p' : P} (hp' : p' ∈ AffineSubspace.mk' p (ℝ ∙ v)) :
-    p' = p ∨ p' = s.secondInter p v ↔ p' ∈ s := by
+    p' = p ∨ p' = s.secondInter p v ↔ p' ∈ s :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with (h | h)
     · rwa [h]
@@ -1129,7 +1172,8 @@ theorem Sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem {s : Sphe
 /-- `second_inter` is unchanged by multiplying the vector by a nonzero real. -/
 @[simp]
 theorem Sphere.second_inter_smul (s : Sphere P) (p : P) (v : V) {r : ℝ} (hr : r ≠ 0) :
-    s.secondInter p (r • v) = s.secondInter p v := by
+    s.secondInter p (r • v) = s.secondInter p v :=
+  by
   simp_rw [sphere.second_inter, real_inner_smul_left, inner_smul_right, smul_smul,
     div_mul_eq_div_div]
   rw [mul_comm, ← mul_div_assoc, ← mul_div_assoc, mul_div_cancel_left _ hr, mul_comm, mul_assoc,
@@ -1146,7 +1190,8 @@ theorem Sphere.second_inter_neg (s : Sphere P) (p : P) (v : V) :
 /-- Applying `second_inter` twice returns the original point. -/
 @[simp]
 theorem Sphere.second_inter_second_inter (s : Sphere P) (p : P) (v : V) :
-    s.secondInter (s.secondInter p v) v = p := by
+    s.secondInter (s.secondInter p v) v = p :=
+  by
   by_cases hv : v = 0; · simp [hv]
   have hv' : ⟪v, v⟫ ≠ 0 := inner_self_eq_zero.not.2 hv
   simp only [sphere.second_inter, vadd_vsub_assoc, vadd_vadd, inner_add_right, inner_smul_right,
@@ -1178,7 +1223,8 @@ theorem Sphere.second_inter_vsub_mem_affine_span (s : Sphere P) (p₁ p₂ : P) 
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, the three points are collinear. -/
 theorem Sphere.second_inter_collinear (s : Sphere P) (p p' : P) :
-    Collinear ℝ ({p, p', s.secondInter p (p' -ᵥ p)} : Set P) := by
+    Collinear ℝ ({p, p', s.secondInter p (p' -ᵥ p)} : Set P) :=
+  by
   rw [Set.pair_comm, Set.insert_comm]
   exact
     (collinear_insert_iff_of_mem_affine_span (s.second_inter_vsub_mem_affine_span _ _)).2
@@ -1190,7 +1236,8 @@ theorem Sphere.second_inter_collinear (s : Sphere P) (p p' : P) :
 `second_inter`, and the second point is not outside the sphere, the second point is weakly
 between the first point and the result of `second_inter`. -/
 theorem Sphere.wbtw_second_inter {s : Sphere P} {p p' : P} (hp : p ∈ s)
-    (hp' : dist p' s.center ≤ s.radius) : Wbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) := by
+    (hp' : dist p' s.center ≤ s.radius) : Wbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) :=
+  by
   by_cases h : p' = p; · simp [h]
   refine'
     wbtw_of_collinear_of_dist_center_le_radius (s.second_inter_collinear p p') hp hp'
@@ -1205,7 +1252,8 @@ theorem Sphere.wbtw_second_inter {s : Sphere P} {p p' : P} (hp : p ∈ s)
 `second_inter`, and the second point is inside the sphere, the second point is strictly between
 the first point and the result of `second_inter`. -/
 theorem Sphere.sbtw_second_inter {s : Sphere P} {p p' : P} (hp : p ∈ s)
-    (hp' : dist p' s.center < s.radius) : Sbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) := by
+    (hp' : dist p' s.center < s.radius) : Sbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) :=
+  by
   refine' ⟨sphere.wbtw_second_inter hp hp'.le, _, _⟩
   · rintro rfl
     rw [mem_sphere] at hp

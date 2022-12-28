@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.real.pi.leibniz
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,12 +46,14 @@ local notation "|" x "|" => abs x
   subintervals. Finally, we (6) apply the Mean Value Theorem twice, obtaining bounds on `f 1 - f u`
   and `f u - f 0` from the bounds on `f'` (note that `f 0 = 0`). -/
 theorem tendsto_sum_pi_div_four :
-    Tendsto (fun k => ∑ i in Finset.range k, (-(1 : ℝ)) ^ i / (2 * i + 1)) atTop (𝓝 (π / 4)) := by
+    Tendsto (fun k => ∑ i in Finset.range k, (-(1 : ℝ)) ^ i / (2 * i + 1)) atTop (𝓝 (π / 4)) :=
+  by
   rw [tendsto_iff_norm_tendsto_zero, ← tendsto_zero_iff_norm_tendsto_zero]
   -- (1) We introduce a useful sequence `u` of values in [0,1], then prove that another sequence
   --     constructed from `u` tends to `0` at `+∞`
   let u := fun k : ℕ => (k : Nnreal) ^ (-1 / (2 * (k : ℝ) + 1))
-  have H : tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) at_top (𝓝 0) := by
+  have H : tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) at_top (𝓝 0) :=
+    by
     convert
       (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add
             tendsto_inv_at_top_zero).comp
@@ -60,7 +62,7 @@ theorem tendsto_sum_pi_div_four :
       simp only [Nnreal.coe_nat_cast, Function.comp_apply, Nnreal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
         @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
-          (by 
+          (by
             norm_cast
             simp only [Nat.succ_ne_zero, not_false_iff]),
         rpow_neg_one k, sub_eq_add_neg]
@@ -79,26 +81,28 @@ theorem tendsto_sum_pi_div_four :
     simp only [f]
     simp [b]
   -- We show that `U` is indeed in [0,1]
-  have hU1 : (U : ℝ) ≤ 1 := by 
+  have hU1 : (U : ℝ) ≤ 1 := by
     by_cases hk : k = 0
     · simp [u, U, hk]
     ·
       exact
         rpow_le_one_of_one_le_of_nonpos
-          (by 
+          (by
             norm_cast
             exact nat.succ_le_iff.mpr (Nat.pos_of_ne_zero hk))
           (le_of_lt
             (@div_neg_of_neg_of_pos _ _ (-(1 : ℝ)) (2 * k + 1) (neg_neg_iff_pos.mpr zero_lt_one)
-              (by 
+              (by
                 norm_cast
                 exact Nat.succ_pos')))
   have hU2 := Nnreal.coe_nonneg U
   -- (4) We compute the derivative of `f`, denoted by `f'`
   let f' := fun x : ℝ => (-x ^ 2) ^ k / (1 + x ^ 2)
-  have has_deriv_at_f : ∀ x, HasDerivAt f (f' x) x := by
+  have has_deriv_at_f : ∀ x, HasDerivAt f (f' x) x :=
+    by
     intro x
-    have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) ((-x ^ 2) ^ i) x := by
+    have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) ((-x ^ 2) ^ i) x :=
+      by
       intro i hi
       convert
         HasDerivAt.constMul ((-1 : ℝ) ^ i / (2 * i + 1))
@@ -110,7 +114,7 @@ theorem tendsto_sum_pi_div_four :
           Nat.cast_one, Nat.cast_mul]
         rw [← mul_assoc,
           @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _
-            (by 
+            (by
               norm_cast
               linarith),
           pow_mul x 2 i, ← mul_pow (-1) (x ^ 2) i]
@@ -126,7 +130,8 @@ theorem tendsto_sum_pi_div_four :
   have hderiv2 : ∀ x ∈ Icc 0 (U : ℝ), HasDerivWithinAt f (f' x) (Icc 0 (U : ℝ)) x := fun x hx =>
     (has_deriv_at_f x).HasDerivWithinAt
   -- (5) We prove a general bound for `f'` and then more precise bounds on each of two subintervals
-  have f'_bound : ∀ x ∈ Icc (-1 : ℝ) 1, |f' x| ≤ |x| ^ (2 * k) := by
+  have f'_bound : ∀ x ∈ Icc (-1 : ℝ) 1, |f' x| ≤ |x| ^ (2 * k) :=
+    by
     intro x hx
     rw [abs_div, IsAbsoluteValue.abv_pow abs (-x ^ 2) k, abs_neg, IsAbsoluteValue.abv_pow abs x 2, ←
       pow_mul]
@@ -134,13 +139,15 @@ theorem tendsto_sum_pi_div_four :
     refine' le_mul_of_one_le_right (pow_nonneg (abs_nonneg _) _) _
     rw [abs_of_nonneg (add_nonneg zero_le_one (sq_nonneg x) : (0 : ℝ) ≤ _)]
     exact (le_add_of_nonneg_right (sq_nonneg x) : (1 : ℝ) ≤ _)
-  have hbound1 : ∀ x ∈ Ico (U : ℝ) 1, |f' x| ≤ 1 := by
+  have hbound1 : ∀ x ∈ Ico (U : ℝ) 1, |f' x| ≤ 1 :=
+    by
     rintro x ⟨hx_left, hx_right⟩
     have hincr := pow_le_pow_of_le_left (le_trans hU2 hx_left) (le_of_lt hx_right) (2 * k)
     rw [one_pow (2 * k), ← abs_of_nonneg (le_trans hU2 hx_left)] at hincr
     rw [← abs_of_nonneg (le_trans hU2 hx_left)] at hx_right
     linarith [f'_bound x (mem_Icc.mpr (abs_le.mp (le_of_lt hx_right)))]
-  have hbound2 : ∀ x ∈ Ico 0 (U : ℝ), |f' x| ≤ U ^ (2 * k) := by
+  have hbound2 : ∀ x ∈ Ico 0 (U : ℝ), |f' x| ≤ U ^ (2 * k) :=
+    by
     rintro x ⟨hx_left, hx_right⟩
     have hincr := pow_le_pow_of_le_left hx_left (le_of_lt hx_right) (2 * k)
     rw [← abs_of_nonneg hx_left] at hincr hx_right
@@ -155,7 +162,8 @@ theorem tendsto_sum_pi_div_four :
     _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) :=
       le_trans (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2)
     _ = 1 - U + U ^ (2 * k) * U := by ring
-    _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by
+    _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) :=
+      by
       rw [← pow_succ' (U : ℝ) (2 * k)]
       norm_cast
     

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.integral_normalization
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,14 +51,14 @@ theorem integral_normalization_zero : integralNormalization (0 : R[X]) = 0 := by
 theorem integral_normalization_coeff {f : R[X]} {i : ℕ} :
     (integralNormalization f).coeff i =
       if f.degree = i then 1 else coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) :=
-  by 
+  by
   have : f.coeff i = 0 → f.degree ≠ i := fun hc hd => coeff_ne_zero_of_eq_degree hd hc
   simp (config := { contextual := true }) [integral_normalization, coeff_monomial, this,
     mem_support_iff]
 #align polynomial.integral_normalization_coeff Polynomial.integral_normalization_coeff
 
 theorem integral_normalization_support {f : R[X]} : (integralNormalization f).support ⊆ f.support :=
-  by 
+  by
   intro
   simp (config := { contextual := true }) [integral_normalization, coeff_monomial, mem_support_iff]
 #align polynomial.integral_normalization_support Polynomial.integral_normalization_support
@@ -100,7 +100,7 @@ variable [Ring R] [IsDomain R]
 
 @[simp]
 theorem support_integral_normalization {f : R[X]} : (integralNormalization f).support = f.support :=
-  by 
+  by
   by_cases hf : f = 0; · simp [hf]
   ext i
   refine' ⟨fun h => integral_normalization_support h, _⟩
@@ -124,14 +124,14 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
     eval₂ f (z * f p.leadingCoeff) (integralNormalization p) =
         p.support.attach.Sum fun i =>
           f (coeff (integralNormalization p) i.1 * p.leadingCoeff ^ i.1) * z ^ i.1 :=
-      by 
+      by
       rw [eval₂, sum_def, support_integral_normalization]
       simp only [mul_comm z, mul_pow, mul_assoc, RingHom.map_pow, RingHom.map_mul]
       exact finset.sum_attach.symm
     _ =
         p.support.attach.Sum fun i =>
           f (coeff p i.1 * p.leadingCoeff ^ (natDegree p - 1)) * z ^ i.1 :=
-      by 
+      by
       by_cases hp : p = 0; · simp [hp]
       have one_le_deg : 1 ≤ nat_degree p :=
         Nat.succ_le_of_lt (nat_degree_pos_of_eval₂_root hp f hz inj)
@@ -145,7 +145,8 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
           Nat.le_pred_of_lt (lt_of_le_of_ne (le_nat_degree_of_ne_zero (mem_support_iff.mp i.2)) hi)
         rw [integral_normalization_coeff_ne_nat_degree hi, mul_assoc, ← pow_add,
           tsub_add_cancel_of_le this]
-    _ = f p.leadingCoeff ^ (natDegree p - 1) * eval₂ f z p := by
+    _ = f p.leadingCoeff ^ (natDegree p - 1) * eval₂ f z p :=
+      by
       simp_rw [eval₂, sum_def, fun i => mul_comm (coeff p i), RingHom.map_mul, RingHom.map_pow,
         mul_assoc, ← Finset.mul_sum]
       congr 1

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.locally_finite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,8 @@ theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop
   ⟨i, hpi, hi Subset.rfl⟩
 #align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basis
 
-protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => closure (f i) := by
+protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => closure (f i) :=
+  by
   intro x
   rcases hf x with ⟨s, hsx, hsf⟩
   refine' ⟨interior s, interior_mem_nhds.2 hsx, hsf.subset fun i hi => _⟩
@@ -93,7 +94,7 @@ protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => closur
 #align locally_finite.closure LocallyFinite.closure
 
 theorem is_closed_Union (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) :=
-  by 
+  by
   simp only [← is_open_compl_iff, compl_Union, is_open_iff_mem_nhds, mem_Inter]
   intro a ha
   replace ha : ∀ i, f iᶜ ∈ 𝓝 a := fun i => (hc i).is_open_compl.mem_nhds (ha i)
@@ -110,13 +111,14 @@ theorem closure_Union (h : LocallyFinite f) : closure (⋃ i, f i) = ⋃ i, clos
   Subset.antisymm
     (closure_minimal (Union_mono fun _ => subset_closure) <|
       h.closure.is_closed_Union fun _ => is_closed_closure)
-    (Union_subset fun i => closure_mono <| subset_Union _ _)
+    (Union_subset fun i => closure_mono <| subset_unionᵢ _ _)
 #align locally_finite.closure_Union LocallyFinite.closure_Union
 
 /-- If `f : β → set α` is a locally finite family of closed sets, then for any `x : α`, the
 intersection of the complements to `f i`, `x ∉ f i`, is a neighbourhood of `x`. -/
 theorem Inter_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) (x : X) :
-    (⋂ (i) (hi : x ∉ f i), f iᶜ) ∈ 𝓝 x := by
+    (⋂ (i) (hi : x ∉ f i), f iᶜ) ∈ 𝓝 x :=
+  by
   refine' IsOpen.mem_nhds _ (mem_Inter₂.2 fun i => id)
   suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by
     rwa [← is_open_compl_iff, compl_Union, Inter_subtype] at this
@@ -131,7 +133,8 @@ interval `[N, +∞)` and a neighbourhood of `x`.
 We formulate the conclusion in terms of the product of filter `filter.at_top` and `𝓝 x`. -/
 theorem exists_forall_eventually_eq_prod {π : X → Sort _} {f : ℕ → ∀ x : X, π x}
     (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
-    ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ p : ℕ × X in at_top ×ᶠ 𝓝 x, f p.1 p.2 = F p.2 := by
+    ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ p : ℕ × X in at_top ×ᶠ 𝓝 x, f p.1 p.2 = F p.2 :=
+  by
   choose U hUx hU using hf
   choose N hN using fun x => (hU x).BddAbove
   replace hN : ∀ (x), ∀ n > N x, ∀ y ∈ U x, f (n + 1) y = f n y

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.ext
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,14 +40,15 @@ but is expected to have type
   forall {M : Type.{u1}} {{m₁ : Monoid.{u1} M}} {{m₂ : Monoid.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M m₁))) (Mul.mul.{u1} M (Semigroup.toMul.{u1} M (Monoid.toSemigroup.{u1} M m₂)))) -> (Eq.{succ u1} (Monoid.{u1} M) m₁ m₂)
 Case conversion may be inaccurate. Consider using '#align monoid.ext Monoid.extₓ'. -/
 @[ext, to_additive]
-theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ := by
+theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
+  by
   have h₁ : (@Monoid.toMulOneClass _ m₁).one = (@Monoid.toMulOneClass _ m₂).one :=
     congr_arg (@MulOneClass.one M) (MulOneClass.ext h_mul)
   set f : @MonoidHom M M (@Monoid.toMulOneClass _ m₁) (@Monoid.toMulOneClass _ m₂) :=
     { toFun := id
       map_one' := h₁
       map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
-  have hpow : m₁.npow = m₂.npow := by 
+  have hpow : m₁.npow = m₂.npow := by
     ext (n x)
     exact @MonoidHom.map_pow M M m₁ m₂ f x n
   cases m₁
@@ -58,7 +59,7 @@ theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m
 #print CommMonoid.toMonoid_injective /-
 @[to_additive]
 theorem CommMonoid.toMonoid_injective {M : Type u} : Function.Injective (@CommMonoid.toMonoid M) :=
-  by 
+  by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align comm_monoid.to_monoid_injective CommMonoid.toMonoid_injective
@@ -78,7 +79,8 @@ theorem CommMonoid.ext {M : Type _} ⦃m₁ m₂ : CommMonoid M⦄ (h_mul : m₁
 #print LeftCancelMonoid.toMonoid_injective /-
 @[to_additive]
 theorem LeftCancelMonoid.toMonoid_injective {M : Type u} :
-    Function.Injective (@LeftCancelMonoid.toMonoid M) := by
+    Function.Injective (@LeftCancelMonoid.toMonoid M) :=
+  by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align left_cancel_monoid.to_monoid_injective LeftCancelMonoid.toMonoid_injective
@@ -99,7 +101,8 @@ theorem LeftCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : LeftCancelMonoid M⦄ (
 #print RightCancelMonoid.toMonoid_injective /-
 @[to_additive]
 theorem RightCancelMonoid.toMonoid_injective {M : Type u} :
-    Function.Injective (@RightCancelMonoid.toMonoid M) := by
+    Function.Injective (@RightCancelMonoid.toMonoid M) :=
+  by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align right_cancel_monoid.to_monoid_injective RightCancelMonoid.toMonoid_injective
@@ -120,7 +123,8 @@ theorem RightCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : RightCancelMonoid M⦄
 #print CancelMonoid.toLeftCancelMonoid_injective /-
 @[to_additive]
 theorem CancelMonoid.toLeftCancelMonoid_injective {M : Type u} :
-    Function.Injective (@CancelMonoid.toLeftCancelMonoid M) := by
+    Function.Injective (@CancelMonoid.toLeftCancelMonoid M) :=
+  by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align cancel_monoid.to_left_cancel_monoid_injective CancelMonoid.toLeftCancelMonoid_injective
@@ -141,7 +145,8 @@ theorem CancelMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelMonoid M⦄ (h_mul : 
 #print CancelCommMonoid.toCommMonoid_injective /-
 @[to_additive]
 theorem CancelCommMonoid.toCommMonoid_injective {M : Type u} :
-    Function.Injective (@CancelCommMonoid.toCommMonoid M) := by
+    Function.Injective (@CancelCommMonoid.toCommMonoid M) :=
+  by
   rintro ⟨⟩ ⟨⟩ h
   congr <;> injection h
 #align cancel_comm_monoid.to_comm_monoid_injective CancelCommMonoid.toCommMonoid_injective
@@ -167,7 +172,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_inv_monoid.ext DivInvMonoid.extₓ'. -/
 @[ext, to_additive]
 theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : m₁.mul = m₂.mul)
-    (h_inv : m₁.inv = m₂.inv) : m₁ = m₂ := by
+    (h_inv : m₁.inv = m₂.inv) : m₁ = m₂ :=
+  by
   have h₁ : (@DivInvMonoid.toMonoid _ m₁).one = (@DivInvMonoid.toMonoid _ m₂).one :=
     congr_arg (@Monoid.one M) (Monoid.ext h_mul)
   set f : @MonoidHom M M (by letI := m₁ <;> infer_instance) (by letI := m₂ <;> infer_instance) :=
@@ -176,10 +182,10 @@ theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : 
       map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
   have hpow : (@DivInvMonoid.toMonoid _ m₁).npow = (@DivInvMonoid.toMonoid _ m₂).npow :=
     congr_arg (@Monoid.npow M) (Monoid.ext h_mul)
-  have hzpow : m₁.zpow = m₂.zpow := by 
+  have hzpow : m₁.zpow = m₂.zpow := by
     ext (m x)
     exact @MonoidHom.map_zpow' M M m₁ m₂ f (congr_fun h_inv) x m
-  have hdiv : m₁.div = m₂.div := by 
+  have hdiv : m₁.div = m₂.div := by
     ext (a b)
     exact @map_div' M M _ m₁ m₂ _ f (congr_fun h_inv) a b
   cases m₁
@@ -195,7 +201,8 @@ but is expected to have type
   forall {G : Type.{u1}} {{g₁ : Group.{u1} G}} {{g₂ : Group.{u1} G}}, (Eq.{succ u1} (G -> G -> G) (Mul.mul.{u1} G (Semigroup.toMul.{u1} G (Monoid.toSemigroup.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G g₁))))) (Mul.mul.{u1} G (Semigroup.toMul.{u1} G (Monoid.toSemigroup.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G g₂)))))) -> (Eq.{succ u1} (Group.{u1} G) g₁ g₂)
 Case conversion may be inaccurate. Consider using '#align group.ext Group.extₓ'. -/
 @[ext, to_additive]
-theorem Group.ext {G : Type _} ⦃g₁ g₂ : Group G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ := by
+theorem Group.ext {G : Type _} ⦃g₁ g₂ : Group G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
+  by
   set f :=
     @MonoidHom.mk' G G (by letI := g₁ <;> infer_instance) g₂ id fun a b =>
       congr_fun (congr_fun h_mul a) b

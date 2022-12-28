@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dagur Tómas Ásgeirsson, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.bool_indicator
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,12 +36,14 @@ noncomputable def boolIndicator (x : α) :=
 #align set.bool_indicator Set.boolIndicator
 -/
 
-theorem mem_iff_bool_indicator (x : α) : x ∈ s ↔ s.boolIndicator x = tt := by
+theorem mem_iff_bool_indicator (x : α) : x ∈ s ↔ s.boolIndicator x = tt :=
+  by
   unfold bool_indicator
   split_ifs <;> tauto
 #align set.mem_iff_bool_indicator Set.mem_iff_bool_indicator
 
-theorem not_mem_iff_bool_indicator (x : α) : x ∉ s ↔ s.boolIndicator x = ff := by
+theorem not_mem_iff_bool_indicator (x : α) : x ∉ s ↔ s.boolIndicator x = ff :=
+  by
   unfold bool_indicator
   split_ifs <;> tauto
 #align set.not_mem_iff_bool_indicator Set.not_mem_iff_bool_indicator
@@ -57,7 +59,8 @@ theorem preimage_bool_indicator_ff : s.boolIndicator ⁻¹' {false} = sᶜ :=
 open Classical
 
 theorem preimage_bool_indicator_eq_union (t : Set Bool) :
-    s.boolIndicator ⁻¹' t = (if tt ∈ t then s else ∅) ∪ if ff ∈ t then sᶜ else ∅ := by
+    s.boolIndicator ⁻¹' t = (if tt ∈ t then s else ∅) ∪ if ff ∈ t then sᶜ else ∅ :=
+  by
   ext x
   dsimp [bool_indicator]
   split_ifs <;> tauto
@@ -66,7 +69,7 @@ theorem preimage_bool_indicator_eq_union (t : Set Bool) :
 theorem preimage_bool_indicator (t : Set Bool) :
     s.boolIndicator ⁻¹' t = univ ∨
       s.boolIndicator ⁻¹' t = s ∨ s.boolIndicator ⁻¹' t = sᶜ ∨ s.boolIndicator ⁻¹' t = ∅ :=
-  by 
+  by
   simp only [preimage_bool_indicator_eq_union]
   split_ifs <;> simp [s.union_compl_self]
 #align set.preimage_bool_indicator Set.preimage_bool_indicator

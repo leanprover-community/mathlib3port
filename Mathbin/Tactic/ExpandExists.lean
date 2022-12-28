@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ian Wood
 
 ! This file was ported from Lean 3 source module tactic.expand_exists
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,12 +109,12 @@ unsafe def parse_props : parse_ctx_props → expr → tactic Unit
       | [n] => parse_one_prop ctx (app (app (const `and []) p) q)
       | n :: tail =>
         parse_one_prop
-            { ctx with 
+            { ctx with
               names := [n]
               project_proof := (fun p => (const `and.left []) p) ∘ ctx }
             p >>
           parse_props
-            { ctx with 
+            { ctx with
               names := tail
               project_proof := (fun p => (const `and.right []) p) ∘ ctx }
             q
@@ -142,7 +142,7 @@ unsafe def parse_exists : parse_ctx_exists → expr → tactic Unit
     let exists_decls := ctx.exists_decls.concat n
     let some_spec : pexpr := (const `classical.some_spec [lvl]) ctx.spec_chain
     let ctx : parse_ctx_exists :=
-      { ctx with 
+      { ctx with
         names
         spec_chain := some_spec
         exists_decls }
@@ -158,7 +158,7 @@ unsafe def parse_pis : parse_ctx → expr → tactic Unit
     let decl is_theorem name type val :=
       ctx.decl is_theorem Name (pi n bi ty type) (lam n bi (to_pexpr ty) val)
     parse_pis
-      { ctx with 
+      { ctx with
         decl
         pis_depth := ctx.pis_depth + 1 }
       body
@@ -166,7 +166,7 @@ unsafe def parse_pis : parse_ctx → expr → tactic Unit
     let with_args := fun e : expr =>
       (List.range ctx.pis_depth).foldr (fun n (e : expr) => e (var n)) e
     parse_exists
-      { ctx with 
+      { ctx with
         with_args
         spec_chain :=
           to_pexpr (with_args <| const ctx.original_decl.to_name ctx.original_decl.univ_levels) }
@@ -214,8 +214,8 @@ Note that without the last argument `nat_greater_nonzero`, `nat_greater_lt` woul
 ```
 -/
 @[user_attribute]
-unsafe def expand_exists_attr :
-    user_attribute Unit (List Name) where 
+unsafe def expand_exists_attr : user_attribute Unit (List Name)
+    where
   Name := "expand_exists"
   descr :=
     "From a proof that (a) value(s) exist(s) with certain properties, " ++
@@ -232,8 +232,7 @@ unsafe def expand_exists_attr :
                 tactic.add_decl
                   (if is_t then declaration.thm n d ty (pure val)
                   else declaration.defn n d ty val default tt)
-            names }
-          d
+            names } d
 #align tactic.expand_exists_attr tactic.expand_exists_attr
 
 add_tactic_doc

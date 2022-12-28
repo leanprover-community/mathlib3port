@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ open Nat
 namespace Int
 
 instance : LinearOrderedCommRing ℤ :=
-  { Int.commRing, Int.linearOrder, Int.nontrivial with
+  { Int.commRing, Int.linearOrder,
+    Int.nontrivial with
     add_le_add_left := @Int.add_le_add_left
     mul_pos := @Int.mul_pos
     zero_le_one := le_of_lt Int.zero_lt_one }
@@ -64,7 +65,7 @@ namespace Int
 
 /- warning: int.abs_eq_nat_abs -> Int.abs_eq_natAbs is a dubious translation:
 lean 3 declaration is
-  forall (a : Int), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Int.natAbs a))
+  forall (a : Int), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs a))
 but is expected to have type
   forall (a : Int), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a) (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs a))
 Case conversion may be inaccurate. Consider using '#align int.abs_eq_nat_abs Int.abs_eq_natAbsₓ'. -/
@@ -110,7 +111,7 @@ theorem coe_nat_ne_zero_iff_pos {n : ℕ} : (n : ℤ) ≠ 0 ↔ 0 < n :=
 
 /- warning: int.coe_nat_abs -> Int.coe_natAbs is a dubious translation:
 lean 3 declaration is
-  forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) n)
+  forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n)
 but is expected to have type
   forall (n : Nat), Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Nat.cast.{0} Int Int.instNatCastInt n)) (Nat.cast.{0} Int Int.instNatCastInt n)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_abs Int.coe_natAbsₓ'. -/
@@ -218,7 +219,8 @@ protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b)
 #print Int.le_induction /-
 /-- See `int.induction_on'` for an induction in both directions. -/
 protected theorem le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m)
-    (h1 : ∀ n : ℤ, m ≤ n → P n → P (n + 1)) (n : ℤ) : m ≤ n → P n := by
+    (h1 : ∀ n : ℤ, m ≤ n → P n → P (n + 1)) (n : ℤ) : m ≤ n → P n :=
+  by
   apply Int.inductionOn' n m
   · intro
     exact h0
@@ -233,7 +235,8 @@ protected theorem le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m)
 #print Int.le_induction_down /-
 /-- See `int.induction_on'` for an induction in both directions. -/
 protected theorem le_induction_down {P : ℤ → Prop} {m : ℤ} (h0 : P m)
-    (h1 : ∀ n : ℤ, n ≤ m → P n → P (n - 1)) (n : ℤ) : n ≤ m → P n := by
+    (h1 : ∀ n : ℤ, n ≤ m → P n → P (n - 1)) (n : ℤ) : n ≤ m → P n :=
+  by
   apply Int.inductionOn' n m
   · intro
     exact h0
@@ -259,7 +262,8 @@ but is expected to have type
   forall {a : Int} {b : Int}, Iff (Dvd.dvd.{0} Nat Nat.instDvdNat (Int.natAbs a) (Int.natAbs b)) (Dvd.dvd.{0} Int Int.instDvdInt a b)
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_dvd_iff_dvd Int.natAbs_dvd_natAbsₓ'. -/
 @[simp]
-theorem natAbs_dvd_natAbs {a b : ℤ} : a.natAbs ∣ b.natAbs ↔ a ∣ b := by
+theorem natAbs_dvd_natAbs {a b : ℤ} : a.natAbs ∣ b.natAbs ↔ a ∣ b :=
+  by
   refine' ⟨_, fun ⟨k, hk⟩ => ⟨k.natAbs, hk.symm ▸ nat_abs_mul a k⟩⟩
   rintro ⟨k, hk⟩
   rw [← nat_abs_of_nat k, ← nat_abs_mul, nat_abs_eq_nat_abs_iff, neg_mul_eq_mul_neg] at hk
@@ -294,7 +298,8 @@ protected theorem add_mul_ediv_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + 
     match a with
     | (m : ℕ) => congr_arg ofNat <| Nat.add_mul_div_right _ _ k.succ_pos
     | -[m+1] =>
-      show ((n * k.succ : ℕ) - m.succ : ℤ) / k.succ = n - (m / k.succ + 1 : ℕ) by
+      show ((n * k.succ : ℕ) - m.succ : ℤ) / k.succ = n - (m / k.succ + 1 : ℕ)
+        by
         cases' lt_or_ge m (n * k.succ) with h h
         · rw [← Int.ofNat_sub h, ← Int.ofNat_sub ((Nat.div_lt_iff_lt_mul k.succ_pos).2 h)]
           apply congr_arg of_nat
@@ -357,7 +362,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt c b) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) a b) c) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a c) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) b c)))
 Case conversion may be inaccurate. Consider using '#align int.add_div_of_dvd_right Int.add_ediv_of_dvd_rightₓ'. -/
-protected theorem add_ediv_of_dvd_right {a b c : ℤ} (H : c ∣ b) : (a + b) / c = a / c + b / c := by
+protected theorem add_ediv_of_dvd_right {a b c : ℤ} (H : c ∣ b) : (a + b) / c = a / c + b / c :=
+  by
   by_cases h1 : c = 0
   · simp [h1]
   cases' H with k hk
@@ -535,8 +541,9 @@ but is expected to have type
   forall (n : Int) {m : Int} {k : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m k) -> (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n k) m) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n m))
 Case conversion may be inaccurate. Consider using '#align int.mod_mod_of_dvd Int.emod_emod_of_dvdₓ'. -/
 @[simp]
-theorem emod_emod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m := by
-  conv => 
+theorem emod_emod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m :=
+  by
+  conv =>
     rhs
     rw [← mod_add_div n k]
   rcases h with ⟨t, rfl⟩; rw [mul_assoc, add_mul_mod_self_left]
@@ -545,14 +552,15 @@ theorem emod_emod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m
 #print Int.emod_emod /-
 @[simp]
 theorem emod_emod (a b : ℤ) : a % b % b = a % b := by
-  conv => 
+  conv =>
     rhs
     rw [← mod_add_div a b, add_mul_mod_self_left]
 #align int.mod_mod Int.emod_emod
 -/
 
 #print Int.sub_emod /-
-theorem sub_emod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n := by
+theorem sub_emod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n :=
+  by
   apply (mod_add_cancel_right b).mp
   rw [sub_add_cancel, ← add_mod_mod, sub_add_cancel, mod_mod]
 #align int.sub_mod Int.sub_emod
@@ -560,7 +568,8 @@ theorem sub_emod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n := by
 
 #print Int.ediv_emod_unique /-
 protected theorem ediv_emod_unique {a b r q : ℤ} (h : 0 < b) :
-    a / b = q ∧ a % b = r ↔ r + b * q = a ∧ 0 ≤ r ∧ r < b := by
+    a / b = q ∧ a % b = r ↔ r + b * q = a ∧ 0 ≤ r ∧ r < b :=
+  by
   constructor
   · rintro ⟨rfl, rfl⟩
     exact ⟨mod_add_div a b, mod_nonneg _ h.ne.symm, mod_lt_of_pos _ h⟩
@@ -582,7 +591,8 @@ theorem emod_eq_emod_iff_emod_sub_eq_zero {m n k : ℤ} : m % n = k % n ↔ (m -
 
 #print Int.neg_emod_two /-
 @[simp]
-theorem neg_emod_two (i : ℤ) : -i % 2 = i % 2 := by
+theorem neg_emod_two (i : ℤ) : -i % 2 = i % 2 :=
+  by
   apply int.mod_eq_mod_iff_mod_sub_eq_zero.mpr
   convert Int.mul_emod_right 2 (-i)
   simp only [two_mul, sub_eq_add_neg]
@@ -593,7 +603,8 @@ theorem neg_emod_two (i : ℤ) : -i % 2 = i % 2 := by
 
 
 #print Int.lt_ediv_add_one_mul_self /-
-theorem lt_ediv_add_one_mul_self (a : ℤ) {b : ℤ} (H : 0 < b) : a < (a / b + 1) * b := by
+theorem lt_ediv_add_one_mul_self (a : ℤ) {b : ℤ} (H : 0 < b) : a < (a / b + 1) * b :=
+  by
   rw [add_mul, one_mul, mul_comm, ← sub_lt_iff_lt_add', ← mod_def]
   exact mod_lt_of_pos _ H
 #align int.lt_div_add_one_mul_self Int.lt_ediv_add_one_mul_self
@@ -678,7 +689,8 @@ but is expected to have type
   forall {a : Int} {b : Int} {c : Int}, (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a b) c) -> (Dvd.dvd.{0} Int Int.instDvdInt b (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) a c))
 Case conversion may be inaccurate. Consider using '#align int.dvd_sub_of_mod_eq Int.dvd_sub_of_emod_eqₓ'. -/
 /-- If `a % b = c` then `b` divides `a - c`. -/
-theorem dvd_sub_of_emod_eq {a b c : ℤ} (h : a % b = c) : b ∣ a - c := by
+theorem dvd_sub_of_emod_eq {a b c : ℤ} (h : a % b = c) : b ∣ a - c :=
+  by
   have hx : a % b % b = c % b := by rw [h]
   rw [mod_mod, ← mod_sub_cancel_right c, sub_self, zero_mod] at hx
   exact dvd_of_mod_eq_zero hx
@@ -686,7 +698,7 @@ theorem dvd_sub_of_emod_eq {a b c : ℤ} (h : a % b = c) : b ∣ a - c := by
 
 /- warning: int.nat_abs_dvd -> Int.natAbs_dvd is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Int.natAbs a)) b) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b)
+  forall {a : Int} {b : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs a)) b) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b)
 but is expected to have type
   forall {a : Int} {b : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs a)) b) (Dvd.dvd.{0} Int Int.instDvdInt a b)
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_dvd Int.natAbs_dvdₓ'. -/
@@ -696,7 +708,7 @@ theorem natAbs_dvd {a b : ℤ} : (a.natAbs : ℤ) ∣ b ↔ a ∣ b :=
 
 /- warning: int.dvd_nat_abs -> Int.dvd_natAbs is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Int.natAbs b))) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b)
+  forall {a : Int} {b : Int}, Iff (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.natAbs b))) (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) a b)
 but is expected to have type
   forall {a : Int} {b : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt a (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs b))) (Dvd.dvd.{0} Int Int.instDvdInt a b)
 Case conversion may be inaccurate. Consider using '#align int.dvd_nat_abs Int.dvd_natAbsₓ'. -/
@@ -825,7 +837,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.div_left_inj Int.ediv_left_injₓ'. -/
 @[simp]
 protected theorem ediv_left_inj {a b d : ℤ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b :=
-  by 
+  by
   refine' ⟨fun h => _, congr_arg _⟩
   rw [← Int.mul_ediv_cancel' hda, ← Int.mul_ediv_cancel' hdb, h]
 #align int.div_left_inj Int.ediv_left_inj
@@ -849,7 +861,8 @@ Case conversion may be inaccurate. Consider using '#align int.exists_lt_and_lt_i
 /-- If `n > 0` then `m` is not divisible by `n` iff it is between `n * k` and `n * (k + 1)`
   for some `k`. -/
 theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) :
-    (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m := by
+    (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m :=
+  by
   constructor
   · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩
     rw [mul_lt_mul_left hn] at h1k h2k
@@ -906,7 +919,8 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Int) {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt c b) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) a b) c) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) a c) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) b c)))
 Case conversion may be inaccurate. Consider using '#align int.sub_div_of_dvd Int.sub_ediv_of_dvdₓ'. -/
-theorem sub_ediv_of_dvd (a : ℤ) {b c : ℤ} (hcb : c ∣ b) : (a - b) / c = a / c - b / c := by
+theorem sub_ediv_of_dvd (a : ℤ) {b c : ℤ} (hcb : c ∣ b) : (a - b) / c = a / c - b / c :=
+  by
   rw [sub_eq_add_neg, sub_eq_add_neg, Int.add_ediv_of_dvd_right ((dvd_neg c b).mpr hcb)]
   congr
   exact neg_div_of_dvd hcb
@@ -1067,7 +1081,8 @@ lean 3 declaration is
 but is expected to have type
   forall {s : Int} {t : Int}, (Dvd.dvd.{0} Int Int.instDvdInt s t) -> (Dvd.dvd.{0} Int Int.instDvdInt (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) t s) t)
 Case conversion may be inaccurate. Consider using '#align int.div_dvd_of_dvd Int.ediv_dvd_of_dvdₓ'. -/
-theorem ediv_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
+theorem ediv_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t :=
+  by
   rcases eq_or_ne s 0 with (rfl | hs)
   · simpa using hst
   rcases hst with ⟨c, hc⟩

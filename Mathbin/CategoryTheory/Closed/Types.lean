@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,10 +34,8 @@ variable {C : Type v₂} [Category.{v₁} C]
 
 section CartesianClosed
 
-instance (X : Type v₁) :
-    IsLeftAdjoint
-      (Types.binaryProductFunctor.obj
-        X) where 
+instance (X : Type v₁) : IsLeftAdjoint (Types.binaryProductFunctor.obj X)
+    where
   right :=
     { obj := fun Y => X ⟶ Y
       map := fun Y₁ Y₂ f g => g ≫ f }
@@ -49,21 +47,17 @@ instance (X : Type v₁) :
 instance : HasFiniteProducts (Type v₁) :=
   hasFiniteProductsOfHasProducts.{v₁} _
 
-instance :
-    CartesianClosed
-      (Type
-        v₁) where closed' X :=
+instance : CartesianClosed (Type v₁)
+    where closed' X :=
     { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
 
 instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u₁) :=
   hasFiniteProductsOfHasProducts.{u₁} _
 
-instance {C : Type v₁} [SmallCategory C] :
-    CartesianClosed
-      (C ⥤
-        Type
-          v₁) where closed' F :=
-    { isAdj := by 
+instance {C : Type v₁} [SmallCategory C] : CartesianClosed (C ⥤ Type v₁)
+    where closed' F :=
+    {
+      isAdj := by
         letI := functor_category.prod_preserves_colimits F
         apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) }
 

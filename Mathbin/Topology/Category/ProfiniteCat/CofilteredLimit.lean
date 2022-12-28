@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.cofiltered_limit
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,13 +100,13 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   · ext x
     constructor
     · intro hx
-      simp_rw [Set.preimage_Union, Set.mem_Union]
+      simp_rw [Set.preimage_unionᵢ, Set.mem_unionᵢ]
       obtain ⟨_, ⟨s, rfl⟩, _, ⟨hs, rfl⟩, hh⟩ := hG hx
       refine' ⟨s, hs, _⟩
       dsimp only [W] at hh⊢
       rwa [dif_pos hs, ← Set.preimage_comp, ← ProfiniteCat.coe_comp, C.w]
     · intro hx
-      simp_rw [Set.preimage_Union, Set.mem_Union] at hx
+      simp_rw [Set.preimage_unionᵢ, Set.mem_unionᵢ] at hx
       obtain ⟨s, hs, hx⟩ := hx
       rw [h]
       refine' ⟨s.1, s.2, _⟩
@@ -116,7 +116,8 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
 #align Profinite.exists_clopen_of_cofiltered ProfiniteCat.exists_clopen_of_cofiltered
 
 theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Fin 2)) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) := by
+    ∃ (j : J)(g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) :=
+  by
   let U := f ⁻¹' {0}
   have hU : IsClopen U := f.is_locally_constant.is_clopen_fiber _
   obtain ⟨j, V, hV, h⟩ := exists_clopen_of_cofiltered C hC hU
@@ -130,7 +131,7 @@ theorem exists_locally_constant_fin_two (f : LocallyConstant C.x (Fin 2)) :
 theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) (α → Fin 2)),
       (f.map fun a b => if a = b then (0 : Fin 2) else 1) = g.comap (C.π.app _) :=
-  by 
+  by
   cases nonempty_fintype α
   let ι : α → α → Fin 2 := fun x y => if x = y then 0 else 1
   let ff := (f.map ι).flip
@@ -138,7 +139,7 @@ theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : Locall
   choose j g h using hff
   let G : Finset J := finset.univ.image j
   obtain ⟨j0, hj0⟩ := is_cofiltered.inf_objs_exists G
-  have hj : ∀ a, j a ∈ G := by 
+  have hj : ∀ a, j a ∈ G := by
     intro a
     simp [G]
   let fs : ∀ a : α, j0 ⟶ j a := fun a => (hj0 (hj a)).some
@@ -160,7 +161,7 @@ theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : Locall
   rw [h]
   dsimp [ggg, gg]
   ext1
-  repeat' 
+  repeat'
     rw [LocallyConstant.coe_comap]
     dsimp [LocallyConstant.flip, LocallyConstant.unflip]
   · congr 1
@@ -171,7 +172,8 @@ theorem exists_locally_constant_finite_aux {α : Type _} [Finite α] (f : Locall
 
 theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonempty α]
     (f : LocallyConstant C.x α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
+    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
+  by
   inhabit α
   obtain ⟨j, gg, h⟩ := exists_locally_constant_finite_aux _ hC f
   let ι : α → α → Fin 2 := fun a b => if a = b then 0 else 1
@@ -180,7 +182,8 @@ theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonem
   ext
   rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
   dsimp [σ]
-  have h1 : ι (f x) = gg (C.π.app j x) := by
+  have h1 : ι (f x) = gg (C.π.app j x) :=
+    by
     change f.map (fun a b => if a = b then (0 : Fin 2) else 1) x = _
     rw [h, LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
   have h2 : ∃ a : α, ι a = gg (C.π.app j x) := ⟨f x, h1⟩
@@ -201,7 +204,8 @@ theorem exists_locally_constant_finite_nonempty {α : Type _} [Finite α] [Nonem
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
 theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
-    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
+    ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
+  by
   let S := f.discrete_quotient
   let ff : S → α := f.lift
   cases isEmpty_or_nonempty S

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.clause
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,8 @@ def append (c1 c2 : Clause) : Clause :=
 #align omega.clause.append Omega.Clause.append
 
 theorem holds_append {v : Nat → Int} {c1 c2 : Clause} :
-    Holds v c1 → Holds v c2 → Holds v (append c1 c2) := by
+    Holds v c1 → Holds v c2 → Holds v (append c1 c2) :=
+  by
   intro h1 h2
   cases' c1 with eqs1 les1
   cases' c2 with eqs2 les2
@@ -72,7 +73,7 @@ theorem Clauses.unsat_nil : Clauses.Unsat [] := by intro h1; rcases h1 with ⟨c
 
 theorem Clauses.unsat_cons (c : Clause) (cs : List Clause) :
     Clause.Unsat c → Clauses.Unsat cs → Clauses.Unsat (c :: cs)
-  | h1, h2, h3 => by 
+  | h1, h2, h3 => by
     unfold clauses.sat at h3
     rw [List.exists_mem_cons_iff] at h3
     cases h3 <;> contradiction

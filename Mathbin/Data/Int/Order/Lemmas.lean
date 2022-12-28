@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ namespace Int
 variable {a b : ℤ} {n : ℕ}
 
 #print Int.natAbs_eq_iff_mul_self_eq /-
-theorem natAbs_eq_iff_mul_self_eq {a b : ℤ} : a.natAbs = b.natAbs ↔ a * a = b * b := by
+theorem natAbs_eq_iff_mul_self_eq {a b : ℤ} : a.natAbs = b.natAbs ↔ a * a = b * b :=
+  by
   rw [← abs_eq_iff_mul_self_eq, abs_eq_nat_abs, abs_eq_nat_abs]
   exact int.coe_nat_inj'.symm
 #align int.nat_abs_eq_iff_mul_self_eq Int.natAbs_eq_iff_mul_self_eq
@@ -43,14 +44,16 @@ theorem eq_natAbs_iff_mul_eq_zero : a.natAbs = n ↔ (a - n) * (a + n) = 0 := by
 -/
 
 #print Int.natAbs_lt_iff_mul_self_lt /-
-theorem natAbs_lt_iff_mul_self_lt {a b : ℤ} : a.natAbs < b.natAbs ↔ a * a < b * b := by
+theorem natAbs_lt_iff_mul_self_lt {a b : ℤ} : a.natAbs < b.natAbs ↔ a * a < b * b :=
+  by
   rw [← abs_lt_iff_mul_self_lt, abs_eq_nat_abs, abs_eq_nat_abs]
   exact int.coe_nat_lt.symm
 #align int.nat_abs_lt_iff_mul_self_lt Int.natAbs_lt_iff_mul_self_lt
 -/
 
 #print Int.natAbs_le_iff_mul_self_le /-
-theorem natAbs_le_iff_mul_self_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a * a ≤ b * b := by
+theorem natAbs_le_iff_mul_self_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a * a ≤ b * b :=
+  by
   rw [← abs_le_iff_mul_self_le, abs_eq_nat_abs, abs_eq_nat_abs]
   exact int.coe_nat_le.symm
 #align int.nat_abs_le_iff_mul_self_le Int.natAbs_le_iff_mul_self_le
@@ -62,7 +65,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) -> (Dvd.dvd.{0} Int Int.instDvdInt b (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) c a))
 Case conversion may be inaccurate. Consider using '#align int.dvd_div_of_mul_dvd Int.dvd_div_of_mul_dvdₓ'. -/
-theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a := by
+theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a :=
+  by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp only [Int.div_zero, dvd_zero]
   rcases h with ⟨d, rfl⟩
@@ -79,7 +83,8 @@ lean 3 declaration is
 but is expected to have type
   forall {m : Int} {x : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m x) -> (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) x) m) -> (Eq.{1} Int x (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_abs_lt_dvd Int.eq_zero_of_abs_lt_dvdₓ'. -/
-theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 := by
+theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 :=
+  by
   by_cases hm : m = 0;
   · subst m
     exact zero_dvd_iff.mp h1

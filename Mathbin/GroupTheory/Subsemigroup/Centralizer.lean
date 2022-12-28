@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.centralizer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem neg_mem_centralizer [Mul M] [HasDistribNeg M] (ha : a ∈ centralizer S)
 @[simp]
 theorem inv_mem_centralizer₀ [GroupWithZero M] (ha : a ∈ centralizer S) : a⁻¹ ∈ centralizer S :=
   (eq_or_ne a 0).elim
-    (fun h => by 
+    (fun h => by
       rw [h, inv_zero]
       exact zero_mem_centralizer S)
     fun ha0 c hc => by
@@ -97,14 +97,14 @@ theorem inv_mem_centralizer₀ [GroupWithZero M] (ha : a ∈ centralizer S) : a�
 
 @[simp, to_additive sub_mem_add_centralizer]
 theorem div_mem_centralizer [Group M] (ha : a ∈ centralizer S) (hb : b ∈ centralizer S) :
-    a / b ∈ centralizer S := by 
+    a / b ∈ centralizer S := by
   rw [div_eq_mul_inv]
   exact mul_mem_centralizer ha (inv_mem_centralizer hb)
 #align set.div_mem_centralizer Set.div_mem_centralizer
 
 @[simp]
 theorem div_mem_centralizer₀ [GroupWithZero M] (ha : a ∈ centralizer S) (hb : b ∈ centralizer S) :
-    a / b ∈ centralizer S := by 
+    a / b ∈ centralizer S := by
   rw [div_eq_mul_inv]
   exact mul_mem_centralizer ha (inv_mem_centralizer₀ hb)
 #align set.div_mem_centralizer₀ Set.div_mem_centralizer₀
@@ -138,7 +138,7 @@ variable {M} [Semigroup M] (S)
 
 /-- The centralizer of a subset of a semigroup `M`. -/
 @[to_additive "The centralizer of a subset of an additive semigroup."]
-def centralizer : Subsemigroup M where 
+def centralizer : Subsemigroup M where
   carrier := S.centralizer
   mul_mem' a b := Set.mul_mem_centralizer
 #align subsemigroup.centralizer Subsemigroup.centralizer

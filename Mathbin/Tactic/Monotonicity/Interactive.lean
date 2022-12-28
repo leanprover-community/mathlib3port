@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.monotonicity.interactive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,13 +58,13 @@ unsafe def mono_function.to_tactic_format : mono_function → tactic format
 #align
   tactic.interactive.mono_function.to_tactic_format tactic.interactive.mono_function.to_tactic_format
 
-unsafe instance has_to_tactic_format_mono_function :
-    has_to_tactic_format mono_function where to_tactic_format := mono_function.to_tactic_format
+unsafe instance has_to_tactic_format_mono_function : has_to_tactic_format mono_function
+    where to_tactic_format := mono_function.to_tactic_format
 #align
   tactic.interactive.has_to_tactic_format_mono_function tactic.interactive.has_to_tactic_format_mono_function
 
 unsafe structure ac_mono_ctx' (rel : Type) where
-  to_rel : rel
+  to_rel : Rel
   function : mono_function
   (left right rel_def : expr)
   deriving Traversable
@@ -89,12 +89,12 @@ unsafe def ac_mono_ctx.to_tactic_format (ctx : ac_mono_ctx) : tactic format := d
       f! "\{ function := {fn }
         , left  := {l }
         , right := {r }
-        , rel_def := {rel} }}"
+        , rel_def := {Rel} }}"
 #align
   tactic.interactive.ac_mono_ctx.to_tactic_format tactic.interactive.ac_mono_ctx.to_tactic_format
 
-unsafe instance has_to_tactic_format_mono_ctx :
-    has_to_tactic_format ac_mono_ctx where to_tactic_format := ac_mono_ctx.to_tactic_format
+unsafe instance has_to_tactic_format_mono_ctx : has_to_tactic_format ac_mono_ctx
+    where to_tactic_format := ac_mono_ctx.to_tactic_format
 #align
   tactic.interactive.has_to_tactic_format_mono_ctx tactic.interactive.has_to_tactic_format_mono_ctx
 
@@ -317,7 +317,7 @@ unsafe
             return
               ( e₀ , e₁ , id_rs , { function := f left := l right := r to_rel := none rel_def } )
       |
-        expr.app ( expr.app rel e₀ ) e₁
+        expr.app ( expr.app Rel e₀ ) e₁
         =>
         do
           let ( l , r , id_rs , f ) ← parse_ac_mono_function e₀ e₁
@@ -333,8 +333,8 @@ unsafe
                       function := f
                         left := l
                         right := r
-                        to_rel := expr.app ∘ expr.app rel
-                        rel_def := rel
+                        to_rel := expr.app ∘ expr.app Rel
+                        rel_def := Rel
                       }
                 )
       | _ => fail "invalid monotonicity goal"
@@ -387,8 +387,8 @@ unsafe def mono_law.to_tactic_format : mono_law → tactic format
     return f! "assoc {x₀ }; {x₁ } | {y₀ }; {y₁}"
 #align tactic.interactive.mono_law.to_tactic_format tactic.interactive.mono_law.to_tactic_format
 
-unsafe instance has_to_tactic_format_mono_law :
-    has_to_tactic_format mono_law where to_tactic_format := mono_law.to_tactic_format
+unsafe instance has_to_tactic_format_mono_law : has_to_tactic_format mono_law
+    where to_tactic_format := mono_law.to_tactic_format
 #align
   tactic.interactive.has_to_tactic_format_mono_law tactic.interactive.has_to_tactic_format_mono_law
 
@@ -469,7 +469,7 @@ unsafe def find_rule (ls : List Name) : mono_law → tactic (List expr)
 universe u v
 
 def applyRel {α : Sort u} (R : α → α → Sort v) {x y : α} (x' y' : α) (h : R x y) (hx : x = x')
-    (hy : y = y') : R x' y' := by 
+    (hy : y = y') : R x' y' := by
   rw [← hx, ← hy]
   apply h
 #align tactic.interactive.apply_rel Tactic.Interactive.applyRel
@@ -650,7 +650,7 @@ unsafe def mono (many : parse (tk "*")?) (dir : parse side)
   hyps fun pr => do
       let h ← get_unused_name `h
       note h none pr
-  when (¬simp_rules) (simp_core {  } failed tt simp_rules [] (loc.ns [none]) >> skip)
+  when (¬simp_rules) (simp_core { } failed tt simp_rules [] (loc.ns [none]) >> skip)
   if many then repeat <| mono_aux dir else mono_aux dir
   let gs ← get_goals
   set_goals <| hyps ++ gs
@@ -672,7 +672,7 @@ marked as `monotonic`.
 Special care is taken when `f` is the repeated application of an
 associative operator and if the operator is commutative
 -/
-unsafe def ac_mono_aux (cfg : MonoCfg := {  }) : tactic Unit :=
+unsafe def ac_mono_aux (cfg : MonoCfg := { }) : tactic Unit :=
   hide_meta_vars fun asms => do
     try sorry
     let tgt ← target >>= instantiate_mvars
@@ -786,8 +786,7 @@ by ac_mono* := h₁.
 By giving `ac_mono` the assumption `h₁`, we are asking `ac_refl` to
 stop earlier than it would normally would.
 -/
-unsafe def ac_mono (rep : parse arity) :
-    parse assert_or_rule ? → optParam MonoCfg {  } → tactic Unit
+unsafe def ac_mono (rep : parse arity) : parse assert_or_rule ? → optParam MonoCfg { } → tactic Unit
   | none, opt => focus1 <| repeat_or_not rep (ac_mono_aux opt) none
   | some (inl h), opt => do
     focus1 <| repeat_or_not rep (ac_mono_aux opt) (some <| done <|> to_expr h >>= ac_refine)

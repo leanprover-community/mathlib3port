@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.karoubi_karoubi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,10 +33,8 @@ variable (C : Type _) [Category C]
 
 /-- The canonical functor `karoubi (karoubi C) ⥤ karoubi C` -/
 @[simps]
-def inverse :
-    Karoubi (Karoubi C) ⥤
-      Karoubi
-        C where 
+def inverse : Karoubi (Karoubi C) ⥤ Karoubi C
+    where
   obj P := ⟨P.x.x, P.p.f, by simpa only [hom_ext] using P.idem⟩
   map P Q f := ⟨f.f.f, by simpa only [hom_ext] using f.comm⟩
 #align
@@ -53,21 +51,17 @@ def unitIso : 𝟭 (Karoubi C) ≅ toKaroubi (Karoubi C) ⋙ inverse C :=
 
 /-- The counit isomorphism of the equivalence -/
 @[simps]
-def counitIso :
-    inverse C ⋙ toKaroubi (Karoubi C) ≅
-      𝟭
-        (Karoubi
-          (Karoubi
-            C)) where 
+def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C))
+    where
   Hom :=
     { app := fun P =>
         { f :=
             { f := P.p.1
-              comm := by 
+              comm := by
                 have h := P.idem
                 simp only [hom_ext, comp_f] at h
                 erw [← assoc, h, comp_p] }
-          comm := by 
+          comm := by
             have h := P.idem
             simp only [hom_ext, comp_f] at h⊢
             erw [h, h] }
@@ -76,19 +70,19 @@ def counitIso :
     { app := fun P =>
         { f :=
             { f := P.p.1
-              comm := by 
+              comm := by
                 have h := P.idem
                 simp only [hom_ext, comp_f] at h
                 erw [h, p_comp] }
-          comm := by 
+          comm := by
             have h := P.idem
             simp only [hom_ext, comp_f] at h⊢
             erw [h, h] }
       naturality' := fun P Q f => by simpa only [hom_ext] using (p_comm f).symm }
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext P
     simpa only [hom_ext, id_eq] using P.idem
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext P
     simpa only [hom_ext, id_eq] using P.idem
 #align
@@ -96,9 +90,8 @@ def counitIso :
 
 /-- The equivalence `karoubi C ≌ karoubi (karoubi C)` -/
 @[simps]
-def equivalence :
-    Karoubi C ≌ Karoubi
-        (Karoubi C) where 
+def equivalence : Karoubi C ≌ Karoubi (Karoubi C)
+    where
   Functor := toKaroubi (Karoubi C)
   inverse := KaroubiKaroubi.inverse C
   unitIso := KaroubiKaroubi.unitIso C
@@ -107,14 +100,14 @@ def equivalence :
   category_theory.idempotents.karoubi_karoubi.equivalence CategoryTheory.Idempotents.KaroubiKaroubi.equivalence
 
 instance equivalence.additive_functor [Preadditive C] : Functor.Additive (equivalence C).Functor :=
-  by 
+  by
   dsimp
   infer_instance
 #align
   category_theory.idempotents.karoubi_karoubi.equivalence.additive_functor CategoryTheory.Idempotents.KaroubiKaroubi.equivalence.additive_functor
 
 instance equivalence.additive_inverse [Preadditive C] : Functor.Additive (equivalence C).inverse :=
-  by 
+  by
   dsimp
   infer_instance
 #align

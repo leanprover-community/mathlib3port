@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,8 @@ theorem one_pow (n : ℕ) : (1 : M) ^ n = 1 := by
 
 #print pow_mul /-
 @[to_additive mul_nsmul]
-theorem pow_mul (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ m) ^ n := by
+theorem pow_mul (a : M) (m n : ℕ) : a ^ (m * n) = (a ^ m) ^ n :=
+  by
   induction' n with n ih
   · rw [Nat.mul_zero, pow_zero, pow_zero]
   · rw [Nat.mul_succ, pow_add, pow_succ', ih]
@@ -212,7 +213,8 @@ Case conversion may be inaccurate. Consider using '#align pow_eq_pow_mod pow_eq_
 /-- If `x ^ n = 1`, then `x ^ m` is the same as `x ^ (m % n)` -/
 @[to_additive nsmul_eq_mod_nsmul "If `n • x = 0`, then `m • x` is the same as `(m % n) • x`"]
 theorem pow_eq_pow_mod {M : Type _} [Monoid M] {x : M} (m : ℕ) {n : ℕ} (h : x ^ n = 1) :
-    x ^ m = x ^ (m % n) := by
+    x ^ m = x ^ (m % n) :=
+  by
   have t := congr_arg (fun a => x ^ a) ((Nat.add_comm _ _).trans (Nat.mod_add_div _ _)).symm
   dsimp at t
   rw [t, pow_add, pow_mul, h, one_pow, one_mul]
@@ -292,7 +294,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {a : M} {b : M} (n : Nat), (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a b) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1)))) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) a n) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) b n)) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align pow_mul_pow_eq_one pow_mul_pow_eq_oneₓ'. -/
 @[to_additive]
-theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n = 1 := by
+theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n = 1 :=
+  by
   induction' n with n hn
   · simp
   ·
@@ -306,7 +309,7 @@ theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n =
 #print dvd_pow /-
 theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ y ^ n
   | 0, hn => (hn rfl).elim
-  | n + 1, hn => by 
+  | n + 1, hn => by
     rw [pow_succ]
     exact hxy.mul_right _
 #align dvd_pow dvd_pow
@@ -348,7 +351,7 @@ monoids. -/
 @[to_additive
       "Multiplication by a natural `n` on a commutative additive\nmonoid, considered as a morphism of additive monoids.",
   simps]
-def powMonoidHom (n : ℕ) : M →* M where 
+def powMonoidHom (n : ℕ) : M →* M where
   toFun := (· ^ n)
   map_one' := one_pow _
   map_mul' a b := mul_pow a b n
@@ -367,7 +370,8 @@ open Int
 
 #print zpow_one /-
 @[simp, to_additive one_zsmul]
-theorem zpow_one (a : G) : a ^ (1 : ℤ) = a := by
+theorem zpow_one (a : G) : a ^ (1 : ℤ) = a :=
+  by
   convert pow_one a using 1
   exact zpow_ofNat a 1
 #align zpow_one zpow_one
@@ -380,7 +384,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) a a)
 Case conversion may be inaccurate. Consider using '#align zpow_two zpow_twoₓ'. -/
 @[to_additive two_zsmul]
-theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by
+theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a :=
+  by
   convert pow_two a using 1
   exact zpow_ofNat a 2
 #align zpow_two zpow_two
@@ -398,7 +403,7 @@ theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
 
 /- warning: zpow_neg_coe_of_pos -> zpow_neg_coe_of_pos is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (Neg.neg.{0} Int Int.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) n))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G _inst_1) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) a n)))
+  forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (Neg.neg.{0} Int Int.hasNeg ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n))) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G _inst_1) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) a n)))
 but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (Neg.neg.{0} Int Int.instNegInt (Nat.cast.{0} Int Int.instNatCastInt n))) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G _inst_1) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) a n)))
 Case conversion may be inaccurate. Consider using '#align zpow_neg_coe_of_pos zpow_neg_coe_of_posₓ'. -/
@@ -447,10 +452,10 @@ Case conversion may be inaccurate. Consider using '#align zpow_neg zpow_negₓ'.
 @[simp, to_additive neg_zsmul]
 theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ (-n) = (a ^ n)⁻¹
   | (n + 1 : ℕ) => DivInvMonoid.zpow_neg' _ _
-  | 0 => by 
+  | 0 => by
     change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹
     simp
-  | -[n+1] => by 
+  | -[n+1] => by
     rw [zpow_negSucc, inv_inv, ← zpow_ofNat]
     rfl
 #align zpow_neg zpow_neg
@@ -565,7 +570,7 @@ homomorphism. -/
 @[to_additive
       "Multiplication by an integer `n` on a commutative additive group, considered as an\nadditive group homomorphism.",
   simps]
-def zpowGroupHom (n : ℤ) : α →* α where 
+def zpowGroupHom (n : ℤ) : α →* α where
   toFun := (· ^ n)
   map_one' := one_zpow n
   map_mul' a b := mul_zpow a b n

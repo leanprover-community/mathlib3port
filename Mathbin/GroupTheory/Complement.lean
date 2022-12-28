@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.complement
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,8 @@ theorem IsComplement.exists_unique (h : IsComplement S T) (g : G) :
 #align subgroup.is_complement.exists_unique Subgroup.IsComplement.exists_unique
 
 @[to_additive]
-theorem IsComplement'.symm (h : IsComplement' H K) : IsComplement' K H := by
+theorem IsComplement'.symm (h : IsComplement' H K) : IsComplement' K H :=
+  by
   let ϕ : H × K ≃ K × H :=
     Equiv.mk (fun x => ⟨x.2⁻¹, x.1⁻¹⟩) (fun x => ⟨x.2⁻¹, x.1⁻¹⟩)
       (fun x => Prod.ext (inv_inv _) (inv_inv _)) fun x => Prod.ext (inv_inv _) (inv_inv _)
@@ -111,7 +112,8 @@ theorem is_complement_singleton_top {g : G} : IsComplement ({g} : Set G) ⊤ :=
 #align subgroup.is_complement_singleton_top Subgroup.is_complement_singleton_top
 
 @[to_additive]
-theorem is_complement_singleton_left {g : G} : IsComplement {g} S ↔ S = ⊤ := by
+theorem is_complement_singleton_left {g : G} : IsComplement {g} S ↔ S = ⊤ :=
+  by
   refine'
     ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr is_complement_singleton_top⟩
   obtain ⟨⟨⟨z, rfl : z = g⟩, y, _⟩, hy⟩ := h.2 (g * x)
@@ -119,7 +121,8 @@ theorem is_complement_singleton_left {g : G} : IsComplement {g} S ↔ S = ⊤ :=
 #align subgroup.is_complement_singleton_left Subgroup.is_complement_singleton_left
 
 @[to_additive]
-theorem is_complement_singleton_right {g : G} : IsComplement S {g} ↔ S = ⊤ := by
+theorem is_complement_singleton_right {g : G} : IsComplement S {g} ↔ S = ⊤ :=
+  by
   refine'
     ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr is_complement_top_singleton⟩
   obtain ⟨y, hy⟩ := h.2 (x * g)
@@ -129,7 +132,8 @@ theorem is_complement_singleton_right {g : G} : IsComplement S {g} ↔ S = ⊤ :
 #align subgroup.is_complement_singleton_right Subgroup.is_complement_singleton_right
 
 @[to_additive]
-theorem is_complement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} := by
+theorem is_complement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} :=
+  by
   refine'
     ⟨fun h => set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
@@ -142,7 +146,8 @@ theorem is_complement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} := by
 #align subgroup.is_complement_top_left Subgroup.is_complement_top_left
 
 @[to_additive]
-theorem is_complement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} := by
+theorem is_complement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} :=
+  by
   refine'
     ⟨fun h => set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨_, fun a ha b hb => _⟩, _⟩
   · obtain ⟨a, ha⟩ := h.2 1
@@ -186,7 +191,8 @@ theorem is_complement'_top_right : IsComplement' H ⊤ ↔ H = ⊥ :=
 
 @[to_additive]
 theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
-    S ∈ leftTransversals T ↔ ∀ g : G, ∃! s : S, (s : G)⁻¹ * g ∈ T := by
+    S ∈ leftTransversals T ↔ ∀ g : G, ∃! s : S, (s : G)⁻¹ * g ∈ T :=
+  by
   rw [left_transversals, Set.mem_setOf_eq, is_complement_iff_exists_unique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
@@ -202,7 +208,8 @@ theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
 
 @[to_additive]
 theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
-    S ∈ rightTransversals T ↔ ∀ g : G, ∃! s : S, g * (s : G)⁻¹ ∈ T := by
+    S ∈ rightTransversals T ↔ ∀ g : G, ∃! s : S, g * (s : G)⁻¹ ∈ T :=
+  by
   rw [right_transversals, Set.mem_setOf_eq, is_complement_iff_exists_unique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
@@ -288,7 +295,7 @@ theorem range_mem_right_transversals {f : Quotient (QuotientGroup.rightRel H) �
 
 @[to_additive]
 theorem exists_left_transversal (g : G) : ∃ S ∈ leftTransversals (H : Set G), g ∈ S := by
-  classical 
+  classical
     refine'
       ⟨Set.range (Function.update Quotient.out' (↑g) g), range_mem_left_transversals fun q => _, g,
         Function.update_same g g Quotient.out'⟩
@@ -299,7 +306,7 @@ theorem exists_left_transversal (g : G) : ∃ S ∈ leftTransversals (H : Set G)
 
 @[to_additive]
 theorem exists_right_transversal (g : G) : ∃ S ∈ rightTransversals (H : Set G), g ∈ S := by
-  classical 
+  classical
     refine'
       ⟨Set.range (Function.update Quotient.out' _ g), range_mem_right_transversals fun q => _,
         Quotient.mk' g, Function.update_same (Quotient.mk' g) g Quotient.out'⟩
@@ -324,7 +331,8 @@ theorem mk'_to_equiv (hS : S ∈ Subgroup.leftTransversals (H : Set G)) (q : G �
 
 @[to_additive]
 theorem to_equiv_apply {f : G ⧸ H → G} (hf : ∀ q, (f q : G ⧸ H) = q) (q : G ⧸ H) :
-    (toEquiv (range_mem_left_transversals hf) q : G) = f q := by
+    (toEquiv (range_mem_left_transversals hf) q : G) = f q :=
+  by
   refine' (subtype.ext_iff.mp _).trans (Subtype.coe_mk (f q) ⟨q, rfl⟩)
   exact (to_equiv (range_mem_left_transversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
 #align subgroup.mem_left_transversals.to_equiv_apply Subgroup.MemLeftTransversals.to_equiv_apply
@@ -371,7 +379,8 @@ theorem mk'_to_equiv (hS : S ∈ Subgroup.rightTransversals (H : Set G))
 @[to_additive]
 theorem to_equiv_apply {f : Quotient (QuotientGroup.rightRel H) → G}
     (hf : ∀ q, Quotient.mk' (f q) = q) (q : Quotient (QuotientGroup.rightRel H)) :
-    (toEquiv (range_mem_right_transversals hf) q : G) = f q := by
+    (toEquiv (range_mem_right_transversals hf) q : G) = f q :=
+  by
   refine' (subtype.ext_iff.mp _).trans (Subtype.coe_mk (f q) ⟨q, rfl⟩)
   exact (to_equiv (range_mem_right_transversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
 #align subgroup.mem_right_transversals.to_equiv_apply Subgroup.MemRightTransversals.to_equiv_apply
@@ -409,14 +418,10 @@ open MulAction MemLeftTransversals
 variable {F : Type _} [Group F] [MulAction F G] [QuotientAction F H]
 
 @[to_additive]
-instance :
-    MulAction F
-      (leftTransversals
-        (H :
-          Set
-            G)) where 
+instance : MulAction F (leftTransversals (H : Set G))
+    where
   smul f T :=
-    ⟨f • T, by 
+    ⟨f • T, by
       refine' mem_left_transversals_iff_exists_unique_inv_mul_mem.mpr fun g => _
       obtain ⟨t, ht1, ht2⟩ := mem_left_transversals_iff_exists_unique_inv_mul_mem.mp T.2 (f⁻¹ • g)
       refine' ⟨⟨f • t, Set.smul_mem_smul_set t.2⟩, _, _⟩
@@ -461,7 +466,8 @@ instance : Inhabited (leftTransversals (H : Set G)) :=
 instance : Inhabited (rightTransversals (H : Set G)) :=
   ⟨⟨Set.range Quotient.out', range_mem_right_transversals Quotient.out_eq'⟩⟩
 
-theorem IsComplement'.is_compl (h : IsComplement' H K) : IsCompl H K := by
+theorem IsComplement'.is_compl (h : IsComplement' H K) : IsCompl H K :=
+  by
   refine'
     ⟨disjoint_iff_inf_le.mpr fun g ⟨p, q⟩ =>
         let x : H × K := ⟨⟨g, p⟩, 1⟩
@@ -496,7 +502,8 @@ theorem IsComplement'.card_mul [Fintype G] [Fintype H] [Fintype K] (h : IsComple
 #align subgroup.is_complement'.card_mul Subgroup.IsComplement'.card_mul
 
 theorem is_complement'_of_disjoint_and_mul_eq_univ (h1 : Disjoint H K)
-    (h2 : ↑H * ↑K = (Set.univ : Set G)) : IsComplement' H K := by
+    (h2 : ↑H * ↑K = (Set.univ : Set G)) : IsComplement' H K :=
+  by
   refine' ⟨mul_injective_of_disjoint h1, fun g => _⟩
   obtain ⟨h, k, hh, hk, hg⟩ := set.eq_univ_iff_forall.mp h2 g
   exact ⟨(⟨h, hh⟩, ⟨k, hk⟩), hg⟩
@@ -525,7 +532,8 @@ theorem is_complement'_of_coprime [Fintype G] [Fintype H] [Fintype K]
 
 theorem is_complement'_stabilizer {α : Type _} [MulAction G α] (a : α)
     (h1 : ∀ h : H, h • a = a → h = 1) (h2 : ∀ g : G, ∃ h : H, h • g • a = a) :
-    IsComplement' H (MulAction.stabilizer G a) := by
+    IsComplement' H (MulAction.stabilizer G a) :=
+  by
   refine' is_complement_iff_exists_unique.mpr fun g => _
   obtain ⟨h, hh⟩ := h2 g
   have hh' : (↑h * g) • a = a := by rwa [mul_smul]

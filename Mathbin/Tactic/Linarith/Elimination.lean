@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.elimination
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ unsafe def pcomp.cmp (p1 p2 : pcomp) : Ordering :=
 
 /-- `pcomp.scale c n` scales the coefficients of `c` by `n` and notes this in the `comp_source`. -/
 unsafe def pcomp.scale (c : pcomp) (n : ℕ) : pcomp :=
-  { c with 
+  { c with
     c := c.c.scale n
     src := c.src.scale n }
 #align linarith.pcomp.scale linarith.pcomp.scale

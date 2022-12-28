@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.erased
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,8 @@ theorem out_proof {p : Prop} (a : Erased p) : p :=
 
 #print Erased.out_mk /-
 @[simp]
-theorem out_mk {α} (a : α) : (mk a).out = a := by
+theorem out_mk {α} (a : α) : (mk a).out = a :=
+  by
   let h; show Classical.choose h = a
   have := Classical.choose_spec h
   exact cast (congr_fun this a).symm rfl
@@ -179,7 +180,7 @@ Case conversion may be inaccurate. Consider using '#align erased.map_out Erased.
 theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.out := by simp [map]
 #align erased.map_out Erased.map_out
 
-instance : Monad Erased where 
+instance : Monad Erased where
   pure := @mk
   bind := @bind
   map := @map

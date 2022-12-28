@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.hom.ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,8 +142,8 @@ def toOrderMonoidWithZeroHom (f : α →+*o β) : α →*₀o β :=
   { f with }
 #align order_ring_hom.to_order_monoid_with_zero_hom OrderRingHom.toOrderMonoidWithZeroHom
 
-instance : OrderRingHomClass (α →+*o β) α
-      β where 
+instance : OrderRingHomClass (α →+*o β) α β
+    where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_mul f := f.map_mul'
@@ -334,11 +334,11 @@ def toOrderIso (f : α ≃+*o β) : α ≃o β :=
   ⟨f.toRingEquiv.toEquiv, fun _ _ => f.map_le_map_iff'⟩
 #align order_ring_iso.to_order_iso OrderRingIso.toOrderIso
 
-instance : OrderRingIsoClass (α ≃+*o β) α
-      β where 
+instance : OrderRingIsoClass (α ≃+*o β) α β
+    where
   coe f := f.toFun
   inv f := f.invFun
-  coe_injective' f g h₁ h₂ := by 
+  coe_injective' f g h₁ h₂ := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -511,7 +511,7 @@ conditionally complete.
 linear ordered field. -/
 instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField β] [Archimedean β] :
     Subsingleton (α →+*o β) :=
-  ⟨fun f g => by 
+  ⟨fun f g => by
     ext x
     by_contra' h
     wlog h : f x < g x using f g, g f

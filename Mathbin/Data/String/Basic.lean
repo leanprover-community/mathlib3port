@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.string.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,7 +22,7 @@ namespace String
 
 /-- `<` on string iterators. This coincides with `<` on strings as lists. -/
 def ltb : Iterator → Iterator → Bool
-  | s₁, s₂ => by 
+  | s₁, s₂ => by
     cases s₂.has_next; · exact ff
     cases h₁ : s₁.has_next; · exact tt
     exact
@@ -45,7 +45,8 @@ instance decidableLt : @DecidableRel String (· < ·) := by infer_instance
 -- short-circuit type class inference
 @[simp]
 theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toList < s₂.toList
-  | ⟨i₁⟩, ⟨i₂⟩ => by
+  | ⟨i₁⟩, ⟨i₂⟩ =>
+    by
     suffices ∀ {p₁ p₂ s₁ s₂}, ltb ⟨p₁, s₁⟩ ⟨p₂, s₂⟩ ↔ s₁ < s₂ from this
     intros
     induction' s₁ with a s₁ IH generalizing p₁ p₂ s₂ <;> cases' s₂ with b s₂ <;> rw [ltb] <;>
@@ -90,7 +91,8 @@ theorem to_list_empty : "".toList = [] :=
   rfl
 #align string.to_list_empty String.to_list_empty
 
-theorem as_string_inv_to_list (s : String) : s.toList.asString = s := by
+theorem as_string_inv_to_list (s : String) : s.toList.asString = s :=
+  by
   cases s
   rfl
 #align string.as_string_inv_to_list String.as_string_inv_to_list
@@ -110,7 +112,8 @@ theorem head_empty : "".head = default :=
 #align string.head_empty String.head_empty
 
 @[simp]
-theorem popn_empty {n : ℕ} : "".popn n = "" := by
+theorem popn_empty {n : ℕ} : "".popn n = "" :=
+  by
   induction' n with n hn
   · rfl
   · rcases hs : "" with ⟨_ | ⟨hd, tl⟩⟩
@@ -120,20 +123,20 @@ theorem popn_empty {n : ℕ} : "".popn n = "" := by
     · simpa only [← to_list_inj] using hs
 #align string.popn_empty String.popn_empty
 
-instance : LinearOrder String where 
+instance : LinearOrder String where
   lt := (· < ·)
   le := (· ≤ ·)
   decidableLt := by infer_instance
   decidableLe := String.decidableLe
   DecidableEq := by infer_instance
   le_refl a := le_iff_to_list_le.2 le_rfl
-  le_trans a b c := by 
+  le_trans a b c := by
     simp only [le_iff_to_list_le]
     exact fun h₁ h₂ => h₁.trans h₂
-  le_total a b := by 
+  le_total a b := by
     simp only [le_iff_to_list_le]
     exact le_total _ _
-  le_antisymm a b := by 
+  le_antisymm a b := by
     simp only [le_iff_to_list_le, ← to_list_inj]
     apply le_antisymm
   lt_iff_le_not_le a b := by simp only [le_iff_to_list_le, lt_iff_to_list_lt, lt_iff_le_not_le]
@@ -142,7 +145,8 @@ end String
 
 open String
 
-theorem List.to_list_inv_as_string (l : List Char) : l.asString.toList = l := by
+theorem List.to_list_inv_as_string (l : List Char) : l.asString.toList = l :=
+  by
   cases hl : l.as_string
   exact StringImp.mk.inj hl.symm
 #align list.to_list_inv_as_string List.to_list_inv_as_string

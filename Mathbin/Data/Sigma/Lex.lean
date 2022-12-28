@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sigma.lex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u2, u1} ι (fun (i : ι) => α i)} {b : Sigma.{u2, u1} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r s a b) (Or (r (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => s (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) (Eq.rec.{succ u1, succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.390 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.389 : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.390) => α x._@.Mathlib.Data.Sigma.Lex._hyg.390) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
 Case conversion may be inaccurate. Consider using '#align sigma.lex_iff Sigma.lex_iffₓ'. -/
-theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
+theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
+  by
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
     · exact Or.inl hij
@@ -85,7 +86,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : Sigma.{u2, u1} ι (fun (i : ι) => α i)} {b : Sigma.{u2, u1} ι (fun (i : ι) => α i)}, (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r₁ s₁ a b) -> (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r₂ s₂ a b))
 Case conversion may be inaccurate. Consider using '#align sigma.lex.mono Sigma.Lex.monoₓ'. -/
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i}
-    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
+    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b :=
+  by
   obtain ⟨a, b, hij⟩ | ⟨a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
   · exact lex.right _ _ (hs _ _ _ hab)
@@ -129,13 +131,13 @@ instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
   ⟨fun ⟨i, a⟩ => Lex.right _ _ <| refl _⟩
 
 instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (Lex r s) :=
-  ⟨by 
+  ⟨by
     rintro _ (⟨a, b, hi⟩ | ⟨a, b, ha⟩)
     · exact irrefl _ hi
     · exact irrefl _ ha⟩
 
 instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (Lex r s) :=
-  ⟨by 
+  ⟨by
     rintro _ _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩) (⟨_, c, hk⟩ | ⟨_, c, hc⟩)
     · exact lex.left _ _ (trans hij hk)
     · exact lex.left _ _ hij
@@ -143,7 +145,7 @@ instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (Lex r s) :=
     · exact lex.right _ _ (trans hab hc)⟩
 
 instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (Lex r s) :=
-  ⟨by 
+  ⟨by
     rintro _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
     · exact lex.left _ _ (symm hij)
     · exact lex.right _ _ (symm hab)⟩
@@ -151,7 +153,7 @@ instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (Lex r s) :=
 attribute [local instance] IsAsymm.is_irrefl
 
 instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s) :=
-  ⟨by 
+  ⟨by
     rintro _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩) (⟨_, _, hji⟩ | ⟨_, _, hba⟩)
     · exact (asymm hij hji).elim
     · exact (irrefl _ hij).elim
@@ -159,7 +161,7 @@ instance [IsAsymm ι r] [∀ i, IsAntisymm (α i) (s i)] : IsAntisymm _ (Lex r s
     · exact ext rfl (heq_of_eq <| antisymm hab hba)⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (Lex r s) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
@@ -169,7 +171,7 @@ instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (Lex r 
     · exact Or.inr (lex.left _ _ hji)⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTrichotomous (α i) (s i)] : IsTrichotomous _ (Lex r s) :=
-  ⟨by 
+  ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
     · exact Or.inl (lex.left _ _ hij)
@@ -195,7 +197,7 @@ but is expected to have type
   forall {ι : Sort.{u2}} {α : ι -> Sort.{u1}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : PSigma.{u2, u1} ι (fun (i : ι) => α i)} {b : PSigma.{u2, u1} ι (fun (i : ι) => α i)}, Iff (PSigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r s a b) (Or (r (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => s (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) (Eq.rec.{u1, u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.2412 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.2411 : Eq.{u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.2412) => α x._@.Mathlib.Data.Sigma.Lex._hyg.2412) (PSigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (PSigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
 Case conversion may be inaccurate. Consider using '#align psigma.lex_iff PSigma.lex_iffₓ'. -/
 theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
-  by 
+  by
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨i, hab⟩)
     · exact Or.inl hij
@@ -223,7 +225,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align psigma.lex.mono PSigma.Lex.monoₓ'. -/
 theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop}
     (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ'i, α i}
-    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
+    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b :=
+  by
   obtain ⟨a, b, hij⟩ | ⟨i, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
   · exact lex.right _ (hs _ _ _ hab)

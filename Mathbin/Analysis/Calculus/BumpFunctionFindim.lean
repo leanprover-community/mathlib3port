@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_findim
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ values in `[0, 1]`, supported in `s` and with `f x = 1`. -/
 theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     ∃ f : E → ℝ,
       tsupport f ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ Icc 0 1 ∧ f x = 1 :=
-  by 
+  by
   obtain ⟨d, d_pos, hd⟩ : ∃ (d : ℝ)(hr : 0 < d), Euclidean.closedBall x d ⊆ s
   exact euclidean.nhds_basis_closed_ball.mem_iff.1 hs
   let c : ContDiffBumpOfInner (toEuclidean x) :=
@@ -53,12 +53,14 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
       r_pos := half_pos d_pos
       r_lt_R := half_lt_self d_pos }
   let f : E → ℝ := c ∘ toEuclidean
-  have f_supp : f.support ⊆ Euclidean.ball x d := by
+  have f_supp : f.support ⊆ Euclidean.ball x d :=
+    by
     intro y hy
     have : toEuclidean y ∈ Function.support c := by
       simpa only [f, Function.mem_support, Function.comp_apply, Ne.def] using hy
     rwa [c.support_eq] at this
-  have f_tsupp : tsupport f ⊆ Euclidean.closedBall x d := by
+  have f_tsupp : tsupport f ⊆ Euclidean.closedBall x d :=
+    by
     rw [tsupport, ← Euclidean.closure_ball _ d_pos.ne']
     exact closure_mono f_supp
   refine' ⟨f, f_tsupp.trans hd, _, _, _, _⟩
@@ -94,8 +96,10 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       ⟨fun x => 0, Function.support_zero, contDiffConst, by
         simp only [range_const, singleton_subset_iff, left_mem_Icc, zero_le_one]⟩
   let ι := { f : E → ℝ // f.support ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ Icc 0 1 }
-  obtain ⟨T, T_count, hT⟩ : ∃ T : Set ι, T.Countable ∧ (⋃ f ∈ T, support (f : E → ℝ)) = s := by
-    have : (⋃ f : ι, (f : E → ℝ).support) = s := by
+  obtain ⟨T, T_count, hT⟩ : ∃ T : Set ι, T.Countable ∧ (⋃ f ∈ T, support (f : E → ℝ)) = s :=
+    by
+    have : (⋃ f : ι, (f : E → ℝ).support) = s :=
+      by
       refine' subset.antisymm (Union_subset fun f => f.2.1) _
       intro x hx
       rcases exists_smooth_tsupport_subset (hs.mem_nhds hx) with ⟨f, hf⟩
@@ -107,7 +111,8 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     apply is_open_Union_countable
     rintro ⟨f, hf⟩
     exact hf.2.2.1.Continuous.is_open_support
-  obtain ⟨g0, hg⟩ : ∃ g0 : ℕ → ι, T = range g0 := by
+  obtain ⟨g0, hg⟩ : ∃ g0 : ℕ → ι, T = range g0 :=
+    by
     apply countable.exists_eq_range T_count
     rcases eq_empty_or_nonempty T with (rfl | hT)
     · simp only [Union_false, Union_empty] at hT
@@ -116,7 +121,8 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     · exact hT
   let g : ℕ → E → ℝ := fun n => (g0 n).1
   have g_s : ∀ n, support (g n) ⊆ s := fun n => (g0 n).2.1
-  have s_g : ∀ x ∈ s, ∃ n, x ∈ support (g n) := by
+  have s_g : ∀ x ∈ s, ∃ n, x ∈ support (g n) :=
+    by
     intro x hx
     rw [← hT] at hx
     obtain ⟨i, iT, hi⟩ : ∃ (i : ι)(hi : i ∈ T), x ∈ support (i : E → ℝ) := by
@@ -131,11 +137,14 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   obtain ⟨δ, δpos, c, δc, c_lt⟩ :
     ∃ δ : ℕ → ℝ≥0, (∀ i : ℕ, 0 < δ i) ∧ ∃ c : Nnreal, HasSum δ c ∧ c < 1
   exact Nnreal.exists_pos_sum_of_countable one_ne_zero ℕ
-  have : ∀ n : ℕ, ∃ r : ℝ, 0 < r ∧ ∀ i ≤ n, ∀ x, ‖iteratedFderiv ℝ i (r • g n) x‖ ≤ δ n := by
+  have : ∀ n : ℕ, ∃ r : ℝ, 0 < r ∧ ∀ i ≤ n, ∀ x, ‖iteratedFderiv ℝ i (r • g n) x‖ ≤ δ n :=
+    by
     intro n
-    have : ∀ i, ∃ R, ∀ x, ‖iteratedFderiv ℝ i (fun x => g n x) x‖ ≤ R := by
+    have : ∀ i, ∃ R, ∀ x, ‖iteratedFderiv ℝ i (fun x => g n x) x‖ ≤ R :=
+      by
       intro i
-      have : BddAbove (range fun x => ‖iteratedFderiv ℝ i (fun x : E => g n x) x‖) := by
+      have : BddAbove (range fun x => ‖iteratedFderiv ℝ i (fun x : E => g n x) x‖) :=
+        by
         apply
           ((g_smooth n).continuous_iterated_fderiv
                 le_top).norm.bdd_above_range_of_has_compact_support
@@ -147,7 +156,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     let M := max (((Finset.range (n + 1)).image R).max' (by simp)) 1
     have M_pos : 0 < M := zero_lt_one.trans_le (le_max_right _ _)
     have δnpos : 0 < δ n := δpos n
-    have IR : ∀ i ≤ n, R i ≤ M := by 
+    have IR : ∀ i ≤ n, R i ≤ M := by
       intro i hi
       refine' le_trans _ (le_max_left _ _)
       apply Finset.le_max'
@@ -156,17 +165,20 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       linarith
     refine' ⟨M⁻¹ * δ n, by positivity, fun i hi x => _⟩
     calc
-      ‖iteratedFderiv ℝ i ((M⁻¹ * δ n) • g n) x‖ = ‖(M⁻¹ * δ n) • iteratedFderiv ℝ i (g n) x‖ := by
+      ‖iteratedFderiv ℝ i ((M⁻¹ * δ n) • g n) x‖ = ‖(M⁻¹ * δ n) • iteratedFderiv ℝ i (g n) x‖ :=
+        by
         rw [iterated_fderiv_const_smul_apply]
         exact (g_smooth n).of_le le_top
-      _ = M⁻¹ * δ n * ‖iteratedFderiv ℝ i (g n) x‖ := by
+      _ = M⁻¹ * δ n * ‖iteratedFderiv ℝ i (g n) x‖ :=
+        by
         rw [norm_smul, Real.norm_of_nonneg]
         positivity
       _ ≤ M⁻¹ * δ n * M := mul_le_mul_of_nonneg_left ((hR i x).trans (IR i hi)) (by positivity)
       _ = δ n := by field_simp [M_pos.ne']
       
   choose r rpos hr using this
-  have S : ∀ x, Summable fun n => (r n • g n) x := by
+  have S : ∀ x, Summable fun n => (r n • g n) x :=
+    by
     intro x
     refine' summable_of_nnnorm_bounded _ δc.summable fun n => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm]
@@ -176,7 +188,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     · intro x hx
       simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, mem_support, Ne.def] at hx
       contrapose! hx
-      have : ∀ n, g n x = 0 := by 
+      have : ∀ n, g n x = 0 := by
         intro n
         contrapose! hx
         exact g_s n hx

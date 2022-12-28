@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.funext
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,8 @@ namespace MvPolynomial
 variable {R : Type _} [CommRing R] [IsDomain R] [Infinite R]
 
 private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
-    (h : ∀ x : Fin n → R, eval x p = 0) : p = 0 := by
+    (h : ∀ x : Fin n → R, eval x p = 0) : p = 0 :=
+  by
   induction' n with n ih generalizing R
   · let e := MvPolynomial.isEmptyRingEquiv R (Fin 0)
     apply e.injective
@@ -40,7 +41,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     suffices
       (eval₂_hom (RingHom.id _) (IsEmpty.elim' Fin.is_empty)) p =
         (eval finZeroElim : MvPolynomial (Fin 0) R →+* R) p
-      by 
+      by
       rw [← this]
       simp only [coe_eval₂_hom, is_empty_ring_equiv_apply, RingEquiv.trans_apply,
         aeval_eq_eval₂_hom]
@@ -83,8 +84,10 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
 /-- Two multivariate polynomials over an infinite integral domain are equal
 if they are equal upon evaluating them on an arbitrary assignment of the variables. -/
 theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, eval x p = eval x q) :
-    p = q := by
-  suffices ∀ p, (∀ x : σ → R, eval x p = 0) → p = 0 by
+    p = q :=
+  by
+  suffices ∀ p, (∀ x : σ → R, eval x p = 0) → p = 0
+    by
     rw [← sub_eq_zero, this (p - q)]
     simp only [h, RingHom.map_sub, forall_const, sub_self]
   clear h p q
@@ -93,7 +96,7 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   suffices p = 0 by rw [this, AlgHom.map_zero]
   apply funext_fin
   intro x
-  classical 
+  classical
     convert h (Function.extend f x 0)
     simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
 #align mv_polynomial.funext MvPolynomial.funext

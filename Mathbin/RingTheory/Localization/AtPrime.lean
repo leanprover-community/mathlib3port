@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.at_prime
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ include hp
 namespace Ideal
 
 /-- The complement of a prime ideal `I ⊆ R` is a submonoid of `R`. -/
-def primeCompl : Submonoid R where 
+def primeCompl : Submonoid R where
   carrier := (Iᶜ : Set R)
   one_mem' := by convert I.ne_top_iff_one.1 hp.1 <;> rfl
   mul_mem' x y hnx hny hxy := Or.cases_on (hp.mem_or_mem hxy) hnx hny
@@ -77,7 +77,8 @@ protected abbrev Localization.AtPrime :=
 namespace IsLocalization
 
 theorem AtPrime.nontrivial [IsLocalization.AtPrime S I] : Nontrivial S :=
-  (nontrivial_of_ne (0 : S) 1) fun hze => by
+  (nontrivial_of_ne (0 : S) 1) fun hze =>
+    by
     rw [← (algebraMap R S).map_one, ← (algebraMap R S).map_zero] at hze
     obtain ⟨t, ht⟩ := (eq_iff_exists I.prime_compl S).1 hze
     have htz : (t : R) = 0 := by simpa using ht.symm
@@ -88,7 +89,7 @@ attribute [local instance] at_prime.nontrivial
 
 theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
   LocalRing.of_nonunits_add
-    (by 
+    (by
       intro x y hx hy hu
       cases' isUnit_iff_exists_inv.1 hu with z hxyz
       have : ∀ {r : R} {s : I.prime_compl}, mk' S r s ∈ nonunits S → r ∈ I :=
@@ -144,7 +145,7 @@ include hI
 
 theorem is_unit_to_map_iff (x : R) : IsUnit ((algebraMap R S) x) ↔ x ∈ I.primeCompl :=
   ⟨fun h hx =>
-    (is_prime_of_is_prime_disjoint I.primeCompl S I hI disjoint_compl_left).ne_top <|
+    (isPrimeOfIsPrimeDisjoint I.primeCompl S I hI disjoint_compl_left).ne_top <|
       (Ideal.map (algebraMap R S) I).eq_top_of_is_unit_mem (Ideal.mem_map_of_mem _ hx) h,
     fun h => map_units S ⟨x, h⟩⟩
 #align is_localization.at_prime.is_unit_to_map_iff IsLocalization.AtPrime.is_unit_to_map_iff
@@ -199,14 +200,14 @@ it is the unique maximal ideal given by the local ring structure `at_prime.local
 theorem AtPrime.map_eq_maximal_ideal :
     Ideal.map (algebraMap R (Localization.AtPrime I)) I =
       LocalRing.maximalIdeal (Localization I.primeCompl) :=
-  by 
+  by
   convert congr_arg (Ideal.map _) at_prime.comap_maximal_ideal.symm
   rw [map_comap I.prime_compl]
 #align localization.at_prime.map_eq_maximal_ideal Localization.AtPrime.map_eq_maximal_ideal
 
 theorem le_comap_prime_compl_iff {J : Ideal P} [hJ : J.IsPrime] {f : R →+* P} :
     I.primeCompl ≤ J.primeCompl.comap f ↔ J.comap f ≤ I :=
-  ⟨fun h x hx => by 
+  ⟨fun h x hx => by
     contrapose! hx
     exact h hx, fun h x hx hfxJ => hx (h hfxJ)⟩
 #align localization.le_comap_prime_compl_iff Localization.le_comap_prime_compl_iff
@@ -239,7 +240,8 @@ theorem local_ring_hom_mk' (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ :
 
 instance is_local_ring_hom_local_ring_hom (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P)
     (hIJ : I = J.comap f) : IsLocalRingHom (localRingHom I J f hIJ) :=
-  IsLocalRingHom.mk fun x hx => by
+  IsLocalRingHom.mk fun x hx =>
+    by
     rcases IsLocalization.mk'_surjective I.prime_compl x with ⟨r, s, rfl⟩
     rw [local_ring_hom_mk'] at hx
     rw [at_prime.is_unit_mk'_iff] at hx⊢

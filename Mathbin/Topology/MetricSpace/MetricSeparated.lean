@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metric_separated
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,8 @@ theorem monoRight {t'} (h' : IsMetricSeparated s t') (ht : t ⊆ t') : IsMetricS
 #align is_metric_separated.mono_right IsMetricSeparated.monoRight
 
 theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t) :
-    IsMetricSeparated (s ∪ s') t := by
+    IsMetricSeparated (s ∪ s') t :=
+  by
   rcases h, h' with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩
   refine' ⟨min r r', _, fun x hx y hy => hx.elim _ _⟩
   · rw [← pos_iff_ne_zero] at r0 r0'⊢
@@ -108,7 +109,8 @@ theorem union_right_iff {t'} :
 #align is_metric_separated.union_right_iff IsMetricSeparated.union_right_iff
 
 theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι → Set X} {t : Set X} :
-    IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, IsMetricSeparated (s i) t := by
+    IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, IsMetricSeparated (s i) t :=
+  by
   refine' finite.induction_on hI (by simp) fun i I hi _ hI => _
   rw [bUnion_insert, ball_insert_iff, union_left_iff, hI]
 #align is_metric_separated.finite_Union_left_iff IsMetricSeparated.finite_Union_left_iff

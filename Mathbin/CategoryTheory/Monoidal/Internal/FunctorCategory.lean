@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.functor_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,11 +51,8 @@ variable {C D}
 to a functor into the category of monoid objects.
 -/
 @[simps]
-def functor :
-    Mon_ (C ⥤ D) ⥤
-      C ⥤
-        Mon_
-          D where 
+def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D
+    where
   obj A :=
     { obj := fun X =>
         { x := A.x.obj X
@@ -66,23 +63,24 @@ def functor :
           mul_assoc' := congr_app A.mul_assoc X }
       map := fun X Y f =>
         { Hom := A.x.map f
-          one_hom' := by 
+          one_hom' := by
             rw [← A.one.naturality, tensor_unit_map]
             dsimp
             rw [category.id_comp]
-          mul_hom' := by 
+          mul_hom' := by
             dsimp
             rw [← A.mul.naturality, tensor_obj_map] }
-      map_id' := fun X => by 
+      map_id' := fun X => by
         ext
         dsimp
         rw [CategoryTheory.Functor.map_id]
-      map_comp' := fun X Y Z f g => by 
+      map_comp' := fun X Y Z f g => by
         ext
         dsimp
         rw [functor.map_comp] }
   map A B f :=
-    { app := fun X =>
+    {
+      app := fun X =>
         { Hom := f.Hom.app X
           one_hom' := congr_app f.OneHom X
           mul_hom' := congr_app f.MulHom X } }
@@ -93,33 +91,30 @@ def functor :
 to a monoid object in the functor category
 -/
 @[simps]
-def inverse :
-    (C ⥤ Mon_ D) ⥤
-      Mon_
-        (C ⥤
-          D) where 
+def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D)
+    where
   obj F :=
     { x := F ⋙ Mon_.forget D
       one := { app := fun X => (F.obj X).one }
       mul := { app := fun X => (F.obj X).mul }
-      one_mul' := by 
+      one_mul' := by
         ext X
         exact (F.obj X).one_mul
-      mul_one' := by 
+      mul_one' := by
         ext X
         exact (F.obj X).mul_one
-      mul_assoc' := by 
+      mul_assoc' := by
         ext X
         exact (F.obj X).mul_assoc }
   map F G α :=
     { Hom :=
         { app := fun X => (α.app X).Hom
           naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) }
-      one_hom' := by 
+      one_hom' := by
         ext x
         dsimp
         rw [(α.app x).OneHom]
-      mul_hom' := by 
+      mul_hom' := by
         ext x
         dsimp
         rw [(α.app x).MulHom] }
@@ -134,25 +129,25 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
     (fun A =>
       { Hom :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by 
+            one_hom' := by
               ext X
               dsimp
               simp only [category.comp_id]
-            mul_hom' := by 
+            mul_hom' := by
               ext X
               dsimp
               simp only [tensor_id, category.id_comp, category.comp_id] }
         inv :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by 
+            one_hom' := by
               ext X
               dsimp
               simp only [category.comp_id]
-            mul_hom' := by 
+            mul_hom' := by
               ext X
               dsimp
               simp only [tensor_id, category.id_comp, category.comp_id] } })
-    fun A B f => by 
+    fun A B f => by
     ext X
     simp only [functor.id_map, functor.comp_map, functor_map_app_hom, Mon_.comp_hom',
       category.id_comp, category.comp_id, inverse_map_hom_app, nat_trans.comp_app]
@@ -183,8 +178,8 @@ monoid objects in `C ⥤ D` are the same thing
 as functors from `C` into the monoid objects of `D`.
 -/
 @[simps]
-def monFunctorCategoryEquivalence :
-    Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D where 
+def monFunctorCategoryEquivalence : Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D
+    where
   Functor := Functor
   inverse := inverse
   unitIso := unitIso
@@ -202,11 +197,8 @@ variable {C D}
 to a functor into the category of commutative monoid objects.
 -/
 @[simps]
-def functor :
-    CommMon_ (C ⥤ D) ⥤
-      C ⥤
-        CommMon_
-          D where 
+def functor : CommMon_ (C ⥤ D) ⥤ C ⥤ CommMon_ D
+    where
   obj A :=
     { (monFunctorCategoryEquivalence C D).Functor.obj A.toMon_ with
       obj := fun X =>
@@ -220,14 +212,11 @@ def functor :
 to a commutative monoid object in the functor category
 -/
 @[simps]
-def inverse :
-    (C ⥤ CommMon_ D) ⥤
-      CommMon_
-        (C ⥤
-          D) where 
+def inverse : (C ⥤ CommMon_ D) ⥤ CommMon_ (C ⥤ D)
+    where
   obj F :=
     { (monFunctorCategoryEquivalence C D).inverse.obj (F ⋙ CommMon_.forget₂Mon_ D) with
-      mul_comm' := by 
+      mul_comm' := by
         ext X
         exact (F.obj X).mul_comm }
   map F G α := (monFunctorCategoryEquivalence C D).inverse.map (whiskerRight α _)
@@ -242,25 +231,25 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
     (fun A =>
       { Hom :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by 
+            one_hom' := by
               ext X
               dsimp
               simp only [category.comp_id]
-            mul_hom' := by 
+            mul_hom' := by
               ext X
               dsimp
               simp only [tensor_id, category.id_comp, category.comp_id] }
         inv :=
           { Hom := { app := fun _ => 𝟙 _ }
-            one_hom' := by 
+            one_hom' := by
               ext X
               dsimp
               simp only [category.comp_id]
-            mul_hom' := by 
+            mul_hom' := by
               ext X
               dsimp
               simp only [tensor_id, category.id_comp, category.comp_id] } })
-    fun A B f => by 
+    fun A B f => by
     ext X
     dsimp
     simp only [category.id_comp, category.comp_id]
@@ -291,9 +280,8 @@ commutative monoid objects in `C ⥤ D` are the same thing
 as functors from `C` into the commutative monoid objects of `D`.
 -/
 @[simps]
-def commMonFunctorCategoryEquivalence :
-    CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_
-          D where 
+def commMonFunctorCategoryEquivalence : CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_ D
+    where
   Functor := Functor
   inverse := inverse
   unitIso := unitIso

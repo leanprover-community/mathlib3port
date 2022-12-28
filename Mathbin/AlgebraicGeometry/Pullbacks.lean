@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.pullbacks
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,8 @@ def v (i j : 𝒰.J) : SchemeCat :=
 
 /-- The canonical transition map `(Uᵢ ×[Z] Y) ×[X] Uⱼ ⟶ (Uⱼ ×[Z] Y) ×[X] Uᵢ` given by the fact
 that pullbacks are associative and symmetric. -/
-def t (i j : 𝒰.J) : v 𝒰 f g i j ⟶ v 𝒰 f g j i := by
+def t (i j : 𝒰.J) : v 𝒰 f g i j ⟶ v 𝒰 f g j i :=
+  by
   haveI : has_pullback (pullback.snd ≫ 𝒰.map i ≫ f) g :=
     has_pullback_assoc_symm (𝒰.map j) (𝒰.map i) (𝒰.map i ≫ f) g
   haveI : has_pullback (pullback.snd ≫ 𝒰.map j ≫ f) g :=
@@ -68,7 +69,8 @@ def t (i j : 𝒰.J) : v 𝒰 f g i j ⟶ v 𝒰 f g j i := by
 #align algebraic_geometry.Scheme.pullback.t AlgebraicGeometry.SchemeCat.Pullback.t
 
 @[simp, reassoc.1]
-theorem t_fst_fst (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.fst ≫ pullback.fst = pullback.snd := by
+theorem t_fst_fst (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.fst ≫ pullback.fst = pullback.snd :=
+  by
   delta t
   simp only [category.assoc, id.def, pullback_symmetry_hom_comp_fst_assoc,
     pullback_assoc_hom_snd_fst, pullback.lift_fst_assoc, pullback_symmetry_hom_comp_snd,
@@ -77,7 +79,8 @@ theorem t_fst_fst (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.fst ≫ pullback.
 
 @[simp, reassoc.1]
 theorem t_fst_snd (i j : 𝒰.J) :
-    t 𝒰 f g i j ≫ pullback.fst ≫ pullback.snd = pullback.fst ≫ pullback.snd := by
+    t 𝒰 f g i j ≫ pullback.fst ≫ pullback.snd = pullback.fst ≫ pullback.snd :=
+  by
   delta t
   simp only [pullback_symmetry_hom_comp_snd_assoc, category.comp_id, category.assoc, id.def,
     pullback_symmetry_hom_comp_fst_assoc, pullback_assoc_hom_snd_snd, pullback.lift_snd,
@@ -85,14 +88,16 @@ theorem t_fst_snd (i j : 𝒰.J) :
 #align algebraic_geometry.Scheme.pullback.t_fst_snd AlgebraicGeometry.SchemeCat.Pullback.t_fst_snd
 
 @[simp, reassoc.1]
-theorem t_snd (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.snd = pullback.fst ≫ pullback.fst := by
+theorem t_snd (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.snd = pullback.fst ≫ pullback.fst :=
+  by
   delta t
   simp only [pullback_symmetry_hom_comp_snd_assoc, category.assoc, id.def,
     pullback_symmetry_hom_comp_snd, pullback_assoc_hom_fst, pullback.lift_fst_assoc,
     pullback_symmetry_hom_comp_fst, pullback_assoc_inv_fst_snd]
 #align algebraic_geometry.Scheme.pullback.t_snd AlgebraicGeometry.SchemeCat.Pullback.t_snd
 
-theorem t_id (i : 𝒰.J) : t 𝒰 f g i i = 𝟙 _ := by
+theorem t_id (i : 𝒰.J) : t 𝒰 f g i i = 𝟙 _ :=
+  by
   apply pullback.hom_ext <;> rw [category.id_comp]
   apply pullback.hom_ext
   · rw [← cancel_mono (𝒰.map i)]
@@ -110,7 +115,8 @@ abbrev fV (i j : 𝒰.J) : v 𝒰 f g i j ⟶ pullback (𝒰.map i ≫ f) g :=
 /-- The map `((Xᵢ ×[Z] Y) ×[X] Xⱼ) ×[Xᵢ ×[Z] Y] ((Xᵢ ×[Z] Y) ×[X] Xₖ)` ⟶
   `((Xⱼ ×[Z] Y) ×[X] Xₖ) ×[Xⱼ ×[Z] Y] ((Xⱼ ×[Z] Y) ×[X] Xᵢ)` needed for gluing   -/
 def t' (i j k : 𝒰.J) :
-    pullback (fV 𝒰 f g i j) (fV 𝒰 f g i k) ⟶ pullback (fV 𝒰 f g j k) (fV 𝒰 f g j i) := by
+    pullback (fV 𝒰 f g i j) (fV 𝒰 f g i k) ⟶ pullback (fV 𝒰 f g j k) (fV 𝒰 f g j i) :=
+  by
   refine' (pullback_right_pullback_fst_iso _ _ _).Hom ≫ _
   refine' _ ≫ (pullback_symmetry _ _).Hom
   refine' _ ≫ (pullback_right_pullback_fst_iso _ _ _).inv
@@ -125,7 +131,8 @@ end
 
 @[simp, reassoc.1]
 theorem t'_fst_fst_fst (i j k : 𝒰.J) :
-    t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
+    t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
+  by
   delta t'
   simp only [category.assoc, pullback_symmetry_hom_comp_fst_assoc,
     pullback_right_pullback_fst_iso_inv_snd_fst_assoc, pullback.lift_fst_assoc, t_fst_fst,
@@ -137,7 +144,7 @@ theorem t'_fst_fst_fst (i j k : 𝒰.J) :
 theorem t'_fst_fst_snd (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.fst ≫ pullback.snd =
       pullback.fst ≫ pullback.fst ≫ pullback.snd :=
-  by 
+  by
   delta t'
   simp only [category.assoc, pullback_symmetry_hom_comp_fst_assoc,
     pullback_right_pullback_fst_iso_inv_snd_fst_assoc, pullback.lift_fst_assoc, t_fst_snd,
@@ -147,7 +154,8 @@ theorem t'_fst_fst_snd (i j k : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem t'_fst_snd (i j k : 𝒰.J) :
-    t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
+    t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
+  by
   delta t'
   simp only [category.comp_id, category.assoc, pullback_symmetry_hom_comp_fst_assoc,
     pullback_right_pullback_fst_iso_inv_snd_snd, pullback.lift_snd,
@@ -156,7 +164,8 @@ theorem t'_fst_snd (i j k : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem t'_snd_fst_fst (i j k : 𝒰.J) :
-    t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd := by
+    t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
+  by
   delta t'
   simp only [category.assoc, pullback_symmetry_hom_comp_snd_assoc,
     pullback_right_pullback_fst_iso_inv_fst_assoc, pullback.lift_fst_assoc, t_fst_fst,
@@ -168,7 +177,7 @@ theorem t'_snd_fst_fst (i j k : 𝒰.J) :
 theorem t'_snd_fst_snd (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.fst ≫ pullback.snd =
       pullback.fst ≫ pullback.fst ≫ pullback.snd :=
-  by 
+  by
   delta t'
   simp only [category.assoc, pullback_symmetry_hom_comp_snd_assoc,
     pullback_right_pullback_fst_iso_inv_fst_assoc, pullback.lift_fst_assoc, t_fst_snd,
@@ -178,7 +187,8 @@ theorem t'_snd_fst_snd (i j k : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem t'_snd_snd (i j k : 𝒰.J) :
-    t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst ≫ pullback.fst := by
+    t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst ≫ pullback.fst :=
+  by
   delta t'
   simp only [category.assoc, pullback_symmetry_hom_comp_snd_assoc,
     pullback_right_pullback_fst_iso_inv_fst_assoc, pullback.lift_fst_assoc, t_snd,
@@ -209,7 +219,7 @@ theorem cocycle_fst_snd (i j k : 𝒰.J) :
 theorem cocycle_snd_fst_fst (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t' 𝒰 f g k i j ≫ pullback.snd ≫ pullback.fst ≫ pullback.fst =
       pullback.snd ≫ pullback.fst ≫ pullback.fst :=
-  by 
+  by
   rw [← cancel_mono (𝒰.map i)]
   simp only [pullback.condition_assoc, t'_snd_fst_fst, t'_fst_snd, t'_snd_snd]
 #align
@@ -230,7 +240,8 @@ theorem cocycle_snd_snd (i j k : 𝒰.J) :
   algebraic_geometry.Scheme.pullback.cocycle_snd_snd AlgebraicGeometry.SchemeCat.Pullback.cocycle_snd_snd
 
 -- `by tidy` should solve it, but it times out.
-theorem cocycle (i j k : 𝒰.J) : t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t' 𝒰 f g k i j = 𝟙 _ := by
+theorem cocycle (i j k : 𝒰.J) : t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t' 𝒰 f g k i j = 𝟙 _ :=
+  by
   apply pullback.hom_ext <;> rw [category.id_comp]
   · apply pullback.hom_ext
     · apply pullback.hom_ext
@@ -252,7 +263,7 @@ theorem cocycle (i j k : 𝒰.J) : t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t
 
 /-- Given `Uᵢ ×[Z] Y`, this is the glued fibered product `X ×[Z] Y`. -/
 @[simps]
-def gluing : SchemeCat.GlueData.{u} where 
+def gluing : SchemeCat.GlueData.{u} where
   J := 𝒰.J
   U i := pullback (𝒰.map i ≫ f) g
   V := fun ⟨i, j⟩ => v 𝒰 f g i j
@@ -263,7 +274,7 @@ def gluing : SchemeCat.GlueData.{u} where
   t i j := t 𝒰 f g i j
   t_id i := t_id 𝒰 f g i
   t' i j k := t' 𝒰 f g i j k
-  t_fac i j k := by 
+  t_fac i j k := by
     apply pullback.hom_ext
     apply pullback.hom_ext
     all_goals
@@ -273,7 +284,8 @@ def gluing : SchemeCat.GlueData.{u} where
 #align algebraic_geometry.Scheme.pullback.gluing AlgebraicGeometry.SchemeCat.Pullback.gluing
 
 /-- The first projection from the glued scheme into `X`. -/
-def p1 : (gluing 𝒰 f g).glued ⟶ X := by
+def p1 : (gluing 𝒰 f g).glued ⟶ X :=
+  by
   fapply multicoequalizer.desc
   exact fun i => pullback.fst ≫ 𝒰.map i
   rintro ⟨i, j⟩
@@ -286,7 +298,8 @@ def p1 : (gluing 𝒰 f g).glued ⟶ X := by
 #align algebraic_geometry.Scheme.pullback.p1 AlgebraicGeometry.SchemeCat.Pullback.p1
 
 /-- The second projection from the glued scheme into `Y`. -/
-def p2 : (gluing 𝒰 f g).glued ⟶ Y := by
+def p2 : (gluing 𝒰 f g).glued ⟶ Y :=
+  by
   fapply multicoequalizer.desc
   exact fun i => pullback.snd
   rintro ⟨i, j⟩
@@ -295,7 +308,8 @@ def p2 : (gluing 𝒰 f g).glued ⟶ Y := by
   exact (t_fst_snd _ _ _ _ _).symm
 #align algebraic_geometry.Scheme.pullback.p2 AlgebraicGeometry.SchemeCat.Pullback.p2
 
-theorem p_comm : p1 𝒰 f g ≫ f = p2 𝒰 f g ≫ g := by
+theorem p_comm : p1 𝒰 f g ≫ f = p2 𝒰 f g ≫ g :=
+  by
   apply multicoequalizer.hom_ext
   intro i
   erw [multicoequalizer.π_desc_assoc, multicoequalizer.π_desc_assoc]
@@ -311,7 +325,7 @@ This is used in `glued_lift`. -/
 def gluedLiftPullbackMap (i j : 𝒰.J) :
     pullback ((𝒰.pullbackCover s.fst).map i) ((𝒰.pullbackCover s.fst).map j) ⟶
       (gluing 𝒰 f g).V ⟨i, j⟩ :=
-  by 
+  by
   change pullback pullback.fst pullback.fst ⟶ pullback _ _
   refine' (pullback_right_pullback_fst_iso _ _ _).Hom ≫ _
   refine' pullback.map _ _ _ _ _ (𝟙 _) (𝟙 _) _ _
@@ -330,7 +344,7 @@ theorem glued_lift_pullback_map_fst (i j : 𝒰.J) :
       pullback.fst ≫
         (pullbackSymmetry _ _).Hom ≫
           pullback.map _ _ _ _ (𝟙 _) s.snd f (Category.id_comp _).symm s.condition :=
-  by 
+  by
   delta glued_lift_pullback_map
   simp only [category.assoc, id.def, pullback.lift_fst,
     pullback_right_pullback_fst_iso_hom_fst_assoc]
@@ -339,7 +353,8 @@ theorem glued_lift_pullback_map_fst (i j : 𝒰.J) :
 
 @[reassoc.1]
 theorem glued_lift_pullback_map_snd (i j : 𝒰.J) :
-    gluedLiftPullbackMap 𝒰 f g s i j ≫ pullback.snd = pullback.snd ≫ pullback.snd := by
+    gluedLiftPullbackMap 𝒰 f g s i j ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
+  by
   delta glued_lift_pullback_map
   simp only [category.assoc, category.comp_id, id.def, pullback.lift_snd,
     pullback_right_pullback_fst_iso_hom_snd]
@@ -356,7 +371,8 @@ to glue these into a map `s.X ⟶ Uᵢ ×[Z] Y`, we need to show that the maps a
 `(s.fst ⁻¹' Uᵢ) ×[s.X] (s.fst ⁻¹' Uⱼ) ⟶ Uᵢ ×[Z] Y`. This is achieved by showing that both of these
 maps factors through `glued_lift_pullback_map`.
 -/
-def gluedLift : s.x ⟶ (gluing 𝒰 f g).glued := by
+def gluedLift : s.x ⟶ (gluing 𝒰 f g).glued :=
+  by
   fapply (𝒰.pullback_cover s.fst).glueMorphisms
   ·
     exact fun i =>
@@ -381,7 +397,8 @@ def gluedLift : s.x ⟶ (gluing 𝒰 f g).glued := by
     exact pullback.condition_assoc _
 #align algebraic_geometry.Scheme.pullback.glued_lift AlgebraicGeometry.SchemeCat.Pullback.gluedLift
 
-theorem glued_lift_p1 : gluedLift 𝒰 f g s ≫ p1 𝒰 f g = s.fst := by
+theorem glued_lift_p1 : gluedLift 𝒰 f g s ≫ p1 𝒰 f g = s.fst :=
+  by
   rw [← cancel_epi (𝒰.pullback_cover s.fst).fromGlued]
   apply multicoequalizer.hom_ext
   intro b
@@ -395,7 +412,8 @@ theorem glued_lift_p1 : gluedLift 𝒰 f g s ≫ p1 𝒰 f g = s.fst := by
 #align
   algebraic_geometry.Scheme.pullback.glued_lift_p1 AlgebraicGeometry.SchemeCat.Pullback.glued_lift_p1
 
-theorem glued_lift_p2 : gluedLift 𝒰 f g s ≫ p2 𝒰 f g = s.snd := by
+theorem glued_lift_p2 : gluedLift 𝒰 f g s ≫ p2 𝒰 f g = s.snd :=
+  by
   rw [← cancel_epi (𝒰.pullback_cover s.fst).fromGlued]
   apply multicoequalizer.hom_ext
   intro b
@@ -425,7 +443,8 @@ def pullbackFstιToV (i j : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem pullback_fst_ι_to_V_fst (i j : 𝒰.J) :
-    pullbackFstιToV 𝒰 f g i j ≫ pullback.fst = pullback.snd := by
+    pullbackFstιToV 𝒰 f g i j ≫ pullback.fst = pullback.snd :=
+  by
   delta pullback_fst_ι_to_V
   simp only [iso.trans_hom, pullback.congr_hom_hom, category.assoc, pullback.lift_fst,
     category.comp_id, pullback_right_pullback_fst_iso_hom_fst, pullback_symmetry_hom_comp_fst]
@@ -434,7 +453,8 @@ theorem pullback_fst_ι_to_V_fst (i j : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem pullback_fst_ι_to_V_snd (i j : 𝒰.J) :
-    pullbackFstιToV 𝒰 f g i j ≫ pullback.snd = pullback.fst ≫ pullback.snd := by
+    pullbackFstιToV 𝒰 f g i j ≫ pullback.snd = pullback.fst ≫ pullback.snd :=
+  by
   delta pullback_fst_ι_to_V
   simp only [iso.trans_hom, pullback.congr_hom_hom, category.assoc, pullback.lift_snd,
     category.comp_id, pullback_right_pullback_fst_iso_hom_snd, pullback_symmetry_hom_comp_snd_assoc]
@@ -451,7 +471,7 @@ theorem lift_comp_ι (i : 𝒰.J) :
           (by rw [← pullback.condition_assoc, category.assoc, p_comm]) ≫
         (gluing 𝒰 f g).ι i =
       (pullback.fst : pullback (p1 𝒰 f g) (𝒰.map i) ⟶ _) :=
-  by 
+  by
   apply ((gluing 𝒰 f g).OpenCover.pullbackCover pullback.fst).hom_ext
   intro j
   dsimp only [open_cover.pullback_cover]
@@ -474,7 +494,8 @@ theorem lift_comp_ι (i : 𝒰.J) :
 
 /-- The canonical isomorphism between `W ×[X] Uᵢ` and `Uᵢ ×[X] Y`. That is, the preimage of `Uᵢ` in
 `W` along `p1` is indeed `Uᵢ ×[X] Y`. -/
-def pullbackP1Iso (i : 𝒰.J) : pullback (p1 𝒰 f g) (𝒰.map i) ≅ pullback (𝒰.map i ≫ f) g := by
+def pullbackP1Iso (i : 𝒰.J) : pullback (p1 𝒰 f g) (𝒰.map i) ≅ pullback (𝒰.map i ≫ f) g :=
+  by
   fconstructor
   exact
     pullback.lift pullback.snd (pullback.fst ≫ p2 𝒰 f g)
@@ -492,7 +513,8 @@ def pullbackP1Iso (i : 𝒰.J) : pullback (p1 𝒰 f g) (𝒰.map i) ≅ pullbac
 
 @[simp, reassoc.1]
 theorem pullback_p1_iso_hom_fst (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.fst = pullback.snd := by
+    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.fst = pullback.snd :=
+  by
   delta pullback_p1_iso
   simp only [pullback.lift_fst]
 #align
@@ -500,7 +522,8 @@ theorem pullback_p1_iso_hom_fst (i : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem pullback_p1_iso_hom_snd (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.snd = pullback.fst ≫ p2 𝒰 f g := by
+    (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.snd = pullback.fst ≫ p2 𝒰 f g :=
+  by
   delta pullback_p1_iso
   simp only [pullback.lift_snd]
 #align
@@ -508,7 +531,8 @@ theorem pullback_p1_iso_hom_snd (i : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem pullback_p1_iso_inv_fst (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.fst = (gluing 𝒰 f g).ι i := by
+    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.fst = (gluing 𝒰 f g).ι i :=
+  by
   delta pullback_p1_iso
   simp only [pullback.lift_fst]
 #align
@@ -516,7 +540,8 @@ theorem pullback_p1_iso_inv_fst (i : 𝒰.J) :
 
 @[simp, reassoc.1]
 theorem pullback_p1_iso_inv_snd (i : 𝒰.J) :
-    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.snd = pullback.fst := by
+    (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.snd = pullback.fst :=
+  by
   delta pullback_p1_iso
   simp only [pullback.lift_snd]
 #align
@@ -530,7 +555,8 @@ theorem pullback_p1_iso_hom_ι (i : 𝒰.J) :
   algebraic_geometry.Scheme.pullback.pullback_p1_iso_hom_ι AlgebraicGeometry.SchemeCat.Pullback.pullback_p1_iso_hom_ι
 
 /-- The glued scheme (`(gluing 𝒰 f g).glued`) is indeed the pullback of `f` and `g`. -/
-def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) := by
+def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) :=
+  by
   apply pullback_cone.is_limit_aux'
   intro s
   refine' ⟨glued_lift 𝒰 f g s, glued_lift_p1 𝒰 f g s, glued_lift_p2 𝒰 f g s, _⟩
@@ -570,7 +596,8 @@ theorem has_pullback_of_cover : HasPullback f g :=
 
 instance affine_has_pullback {A B C : CommRingCat}
     (f : spec.obj (Opposite.op A) ⟶ spec.obj (Opposite.op C))
-    (g : spec.obj (Opposite.op B) ⟶ spec.obj (Opposite.op C)) : HasPullback f g := by
+    (g : spec.obj (Opposite.op B) ⟶ spec.obj (Opposite.op C)) : HasPullback f g :=
+  by
   rw [← Spec.image_preimage f, ← Spec.image_preimage g]
   exact
     ⟨⟨⟨_, is_limit_of_has_pullback_of_preserves_limit Spec (Spec.preimage f) (Spec.preimage g)⟩⟩⟩
@@ -593,7 +620,8 @@ instance base_affine_has_pullback {C : CommRingCat} {X Y : SchemeCat}
   algebraic_geometry.Scheme.pullback.base_affine_has_pullback AlgebraicGeometry.SchemeCat.Pullback.base_affine_has_pullback
 
 instance left_affine_comp_pullback_has_pullback {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z)
-    (i : Z.affineCover.J) : HasPullback ((Z.affineCover.pullbackCover f).map i ≫ f) g := by
+    (i : Z.affineCover.J) : HasPullback ((Z.affineCover.pullbackCover f).map i ≫ f) g :=
+  by
   let Xᵢ := pullback f (Z.affine_cover.map i)
   let Yᵢ := pullback g (Z.affine_cover.map i)
   let W := pullback (pullback.snd : Yᵢ ⟶ _) (pullback.snd : Xᵢ ⟶ _)
@@ -624,7 +652,8 @@ instance {X Y Z : SchemeCat} (f : X ⟶ Z) (g : Y ⟶ Z) [IsAffine X] [IsAffine 
 
 /-- Given an open cover `{ Xᵢ }` of `X`, then `X ×[Z] Y` is covered by `Xᵢ ×[Z] Y`. -/
 @[simps J obj map]
-def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) :=
+  by
   fapply
     ((gluing 𝒰 f g).OpenCover.pushforwardIso
           (limit.iso_limit_cone ⟨_, glued_is_limit 𝒰 f g⟩).inv).copy
@@ -635,7 +664,7 @@ def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover
   change pullback.map _ _ _ _ _ _ _ _ _ = 𝟙 _ ≫ (gluing 𝒰 f g).ι i ≫ _
   refine' Eq.trans _ (category.id_comp _).symm
   apply pullback.hom_ext
-  all_goals 
+  all_goals
     dsimp
     simp only [limit.iso_limit_cone_inv_π, pullback_cone.mk_π_app_left, category.comp_id,
       pullback_cone.mk_π_app_right, category.assoc, pullback.lift_fst, pullback.lift_snd]
@@ -646,7 +675,8 @@ def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover
 
 /-- Given an open cover `{ Yᵢ }` of `Y`, then `X ×[Z] Y` is covered by `X ×[Z] Yᵢ`. -/
 @[simps J obj map]
-def openCoverOfRight (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfRight (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) :=
+  by
   fapply
     ((open_cover_of_left 𝒰 g f).pushforwardIso (pullback_symmetry _ _).Hom).copy 𝒰.J
       (fun i => pullback f (𝒰.map i ≫ g))
@@ -662,7 +692,8 @@ def openCoverOfRight (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCove
 `X ×[Z] Y` is covered by `Xᵢ ×[Z] Yⱼ`. -/
 @[simps J obj map]
 def openCoverOfLeftRight (𝒰X : X.OpenCover) (𝒰Y : Y.OpenCover) (f : X ⟶ Z) (g : Y ⟶ Z) :
-    (pullback f g).OpenCover := by
+    (pullback f g).OpenCover :=
+  by
   fapply
     ((open_cover_of_left 𝒰X f g).bind fun x => open_cover_of_right 𝒰Y (𝒰X.map x ≫ f) g).copy
       (𝒰X.J × 𝒰Y.J) (fun ij => pullback (𝒰X.map ij.1 ≫ f) (𝒰Y.map ij.2 ≫ g))
@@ -676,7 +707,8 @@ def openCoverOfLeftRight (𝒰X : X.OpenCover) (𝒰Y : Y.OpenCover) (f : X ⟶ 
   algebraic_geometry.Scheme.pullback.open_cover_of_left_right AlgebraicGeometry.SchemeCat.Pullback.openCoverOfLeftRight
 
 /-- (Implementation). Use `open_cover_of_base` instead. -/
-def openCoverOfBase' (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfBase' (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) :=
+  by
   apply (open_cover_of_left (𝒰.pullback_cover f) f g).bind
   intro i
   let Xᵢ := pullback f (𝒰.map i)
@@ -700,7 +732,8 @@ def openCoverOfBase' (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCove
 /-- Given an open cover `{ Zᵢ }` of `Z`, then `X ×[Z] Y` is covered by `Xᵢ ×[Zᵢ] Yᵢ`, where
   `Xᵢ = X ×[Z] Zᵢ` and `Yᵢ = Y ×[Z] Zᵢ` is the preimage of `Zᵢ` in `X` and `Y`. -/
 @[simps J obj map]
-def openCoverOfBase (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) := by
+def openCoverOfBase (𝒰 : OpenCover Z) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover (pullback f g) :=
+  by
   apply
     (open_cover_of_base' 𝒰 f g).copy 𝒰.J
       (fun i =>
@@ -731,7 +764,8 @@ namespace AlgebraicGeometry
 instance {X Y S X' Y' S' : SchemeCat} (f : X ⟶ S) (g : Y ⟶ S) (f' : X' ⟶ S') (g' : Y' ⟶ S')
     (i₁ : X ⟶ X') (i₂ : Y ⟶ Y') (i₃ : S ⟶ S') (e₁ : f ≫ i₃ = i₁ ≫ f') (e₂ : g ≫ i₃ = i₂ ≫ g')
     [IsOpenImmersion i₁] [IsOpenImmersion i₂] [Mono i₃] :
-    IsOpenImmersion (pullback.map f g f' g' i₁ i₂ i₃ e₁ e₂) := by
+    IsOpenImmersion (pullback.map f g f' g' i₁ i₂ i₃ e₁ e₂) :=
+  by
   rw [pullback_map_eq_pullback_fst_fst_iso_inv]
   infer_instance
 

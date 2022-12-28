@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.measure_preserving
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ protected theorem Measurable.measurePreserving {f : α → β} (h : Measurable f
 namespace MeasurePreserving
 
 protected theorem id (μ : Measure α) : MeasurePreserving id μ μ :=
-  ⟨measurableId, map_id⟩
+  ⟨measurable_id, map_id⟩
 #align measure_theory.measure_preserving.id MeasureTheory.MeasurePreserving.id
 
 protected theorem aeMeasurable {f : α → β} (hf : MeasurePreserving f μa μb) : AeMeasurable f μa :=
@@ -108,14 +108,16 @@ protected theorem comp {g : β → γ} {f : α → β} (hg : MeasurePreserving g
 #align measure_theory.measure_preserving.comp MeasureTheory.MeasurePreserving.comp
 
 protected theorem comp_left_iff {g : α → β} {e : β ≃ᵐ γ} (h : MeasurePreserving e μb μc) :
-    MeasurePreserving (e ∘ g) μa μc ↔ MeasurePreserving g μa μb := by
+    MeasurePreserving (e ∘ g) μa μc ↔ MeasurePreserving g μa μb :=
+  by
   refine' ⟨fun hg => _, fun hg => h.comp hg⟩
   convert (measure_preserving.symm e h).comp hg
   simp [← Function.comp.assoc e.symm e g]
 #align measure_theory.measure_preserving.comp_left_iff MeasureTheory.MeasurePreserving.comp_left_iff
 
 protected theorem comp_right_iff {g : α → β} {e : γ ≃ᵐ α} (h : MeasurePreserving e μc μa) :
-    MeasurePreserving (g ∘ e) μc μb ↔ MeasurePreserving g μa μb := by
+    MeasurePreserving (g ∘ e) μc μb ↔ MeasurePreserving g μa μb :=
+  by
   refine' ⟨fun hg => _, fun hg => hg.comp h⟩
   convert hg.comp (measure_preserving.symm e h)
   simp [Function.comp.assoc g e e.symm]
@@ -150,7 +152,8 @@ variable {μ : Measure α} {f : α → α} {s : Set α}
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
 theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f μ μ)
     (hs : MeasurableSet s) {n : ℕ} (hvol : μ (univ : Set α) < n * μ s) :
-    ∃ x ∈ s, ∃ m ∈ Ioo 0 n, (f^[m]) x ∈ s := by
+    ∃ x ∈ s, ∃ m ∈ Ioo 0 n, (f^[m]) x ∈ s :=
+  by
   have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs
   have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s := fun m => (hf.iterate m).measure_preimage hs
   have : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s) := by
@@ -172,7 +175,8 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about
 `measure_theory.conservative`. -/
 theorem exists_mem_image_mem [IsFiniteMeasure μ] (hf : MeasurePreserving f μ μ)
-    (hs : MeasurableSet s) (hs' : μ s ≠ 0) : ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s := by
+    (hs : MeasurableSet s) (hs' : μ s ≠ 0) : ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s :=
+  by
   rcases Ennreal.exists_nat_mul_gt hs' (measure_ne_top μ (univ : Set α)) with ⟨N, hN⟩
   rcases hf.exists_mem_image_mem_of_volume_lt_mul_volume hs hN with ⟨x, hx, m, hm, hmx⟩
   exact ⟨x, hx, m, hm.1.ne', hmx⟩

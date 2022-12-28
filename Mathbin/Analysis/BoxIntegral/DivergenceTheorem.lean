@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.divergence_theorem
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       ‖f' (Pi.single i (I.upper i - I.lower i)) -
             (f (i.insert_nth (I.upper i) y) - f (i.insert_nth (I.lower i) y))‖ ≤
         2 * ε * diam I.Icc :=
-    by 
+    by
     intro y hy
     set g := fun y => f y - a - f' (y - x) with hg
     change ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * ‖y - x‖ at hε
@@ -147,7 +147,8 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       exact
         mul_le_mul_of_nonneg_left (I.diam_Icc_le_of_distortion_le i hc)
           (mul_nonneg zero_le_two h0.le)
-    _ = 2 * ε * c * ∏ j, I.upper j - I.lower j := by
+    _ = 2 * ε * c * ∏ j, I.upper j - I.lower j :=
+      by
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
     
@@ -177,7 +178,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
   /- Note that `f` is continuous on `I.Icc`, hence it is integrable on the faces of all boxes
     `J ≤ I`, thus the difference of integrals over `x i = J.upper i` and `x i = J.lower i` is a
     box-additive function of `J ≤ I`. -/
-  have Hc : ContinuousOn f I.Icc := by 
+  have Hc : ContinuousOn f I.Icc := by
     intro x hx
     by_cases hxs : x ∈ s
     exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
@@ -189,8 +190,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
   -- Thus our statement follows from some local estimates.
   change has_integral I GP (fun x => f' x (Pi.single i 1)) _ (F I)
   refine' has_integral_of_le_Henstock_of_forall_is_o GP_le _ _ _ s hs _ _
-  ·
-    -- We use the volume as an upper estimate.
+  ·-- We use the volume as an upper estimate.
     exact (volume : Measure ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
   · exact fun J => Ennreal.to_real_nonneg
   · intro c x hx ε ε0
@@ -204,7 +204,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
           (∀ (y₁) (_ : y₁ ∈ closed_ball x δ ∩ I.Icc) (y₂) (_ : y₂ ∈ closed_ball x δ ∩ I.Icc),
               ‖f y₁ - f y₂‖ ≤ ε / 2) ∧
             (2 * δ) ^ (n + 1) * ‖f' x (Pi.single i 1)‖ ≤ ε / 2 :=
-      by 
+      by
       refine' eventually.and _ (eventually.and _ _)
       · exact Ioc_mem_nhds_within_Ioi ⟨le_rfl, one_half_pos⟩
       · rcases((nhds_within_has_basis nhds_basis_closed_ball _).tendsto_iff
@@ -247,7 +247,8 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
     · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]
       refine' (mul_le_mul_of_nonneg_right _ <| norm_nonneg _).trans hδ
-      have : ∀ j, |J.upper j - J.lower j| ≤ 2 * δ := by
+      have : ∀ j, |J.upper j - J.lower j| ≤ 2 * δ :=
+        by
         intro j
         calc
           dist (J.upper j) (J.lower j) ≤ dist J.upper J.lower := dist_le_pi_dist _ _ _
@@ -312,7 +313,7 @@ theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → E�
             BoxAdditiveMap.volume -
           integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.lower i) x) i)
             BoxAdditiveMap.volume) :=
-  by 
+  by
   refine' has_integral_sum fun i hi => _; clear hi
   simp only [has_fderiv_within_at_pi', continuous_within_at_pi] at Hd Hs
   convert has_integral_GP_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i

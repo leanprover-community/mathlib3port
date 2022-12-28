@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.BoolAlg
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,9 +74,8 @@ section
 attribute [local instance] BoundedLatticeHomClass.toBiheytingHomClass
 
 @[simps]
-instance hasForgetToHeytAlg :
-    HasForget₂ BoolAlgCat
-      HeytAlgCat where forget₂ :=
+instance hasForgetToHeytAlg : HasForget₂ BoolAlgCat HeytAlgCat
+    where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => show BoundedLatticeHom X Y from f }
 #align BoolAlg.has_forget_to_HeytAlg BoolAlgCat.hasForgetToHeytAlg
@@ -85,21 +84,21 @@ end
 
 /-- Constructs an equivalence between Boolean algebras from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : BoolAlgCat.{u}} (e : α ≃o β) :
-    α ≅ β where 
+def Iso.mk {α β : BoolAlgCat.{u}} (e : α ≃o β) : α ≅ β
+    where
   Hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
 #align BoolAlg.iso.mk BoolAlgCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : BoolAlgCat ⥤ BoolAlgCat where 
+def dual : BoolAlgCat ⥤ BoolAlgCat where
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
 #align BoolAlg.dual BoolAlgCat.dual

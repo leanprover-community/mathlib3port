@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.induction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,13 +41,15 @@ variable [Semiring R] {p q r : R[X]}
 @[elab_as_elim]
 protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c a))
     (h_add : ∀ p q, M p → M q → M (p + q))
-    (h_monomial : ∀ (n : ℕ) (a : R), M (c a * X ^ n) → M (c a * X ^ (n + 1))) : M p := by
-  have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by 
+    (h_monomial : ∀ (n : ℕ) (a : R), M (c a * X ^ n) → M (c a * X ^ (n + 1))) : M p :=
+  by
+  have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
     intro n a
     induction' n with n ih
     · simp only [pow_zero, mul_one, h_C]
     · exact h_monomial _ _ ih
-  have B : ∀ s : Finset ℕ, M (s.Sum fun n : ℕ => C (p.coeff n) * X ^ n) := by
+  have B : ∀ s : Finset ℕ, M (s.Sum fun n : ℕ => C (p.coeff n) * X ^ n) :=
+    by
     apply Finset.induction
     · convert h_C 0
       exact C_0.symm
@@ -65,7 +67,8 @@ and it holds for monomials.
 @[elab_as_elim]
 protected theorem induction_on' {M : R[X] → Prop} (p : R[X]) (h_add : ∀ p q, M p → M q → M (p + q))
     (h_monomial : ∀ (n : ℕ) (a : R), M (monomial n a)) : M p :=
-  Polynomial.induction_on p (h_monomial 0) h_add fun n a h => by
+  Polynomial.induction_on p (h_monomial 0) h_add fun n a h =>
+    by
     rw [C_mul_X_pow_eq_monomial]
     exact h_monomial _ _
 #align polynomial.induction_on' Polynomial.induction_on'
@@ -77,17 +80,19 @@ variable {f : R[X]} {I : Ideal R[X]}
 /-- If the coefficients of a polynomial belong to an ideal, then that ideal contains
 the ideal spanned by the coefficients of the polynomial. -/
 theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) :
-    Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I := by
+    Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I :=
+  by
   simp (config := { singlePass := true }) only [@eq_comm _ _ (C _)]
   exact (ideal.span_le.trans range_subset_iff).mpr cf
 #align polynomial.span_le_of_C_coeff_mem Polynomial.span_le_of_C_coeff_mem
 
-theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) } := by
+theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) } :=
+  by
   let p := Ideal.span { g : R[X] | ∃ i : ℕ, g = C (coeff f i) }
   nth_rw 1 [(sum_C_mul_X_pow_eq f).symm]
   refine' Submodule.sum_mem _ fun n hn => _
   dsimp
-  have : C (coeff f n) ∈ p := by 
+  have : C (coeff f n) ∈ p := by
     apply subset_span
     simp
   have : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this

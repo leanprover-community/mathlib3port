@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.support
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,8 @@ theorem disjoint_mul_support_iff {f : α → M} {s : Set α} : Disjoint s (mulSu
 #align function.disjoint_mul_support_iff Function.disjoint_mul_support_iff
 
 @[simp, to_additive]
-theorem mul_support_eq_empty_iff {f : α → M} : mulSupport f = ∅ ↔ f = 1 := by
+theorem mul_support_eq_empty_iff {f : α → M} : mulSupport f = ∅ ↔ f = 1 :=
+  by
   simp_rw [← subset_empty_iff, mul_support_subset_iff', funext_iff]
   simp
 #align function.mul_support_eq_empty_iff Function.mul_support_eq_empty_iff
@@ -127,7 +128,8 @@ theorem mul_support_one : (mulSupport fun x : α => (1 : M)) = ∅ :=
 #align function.mul_support_one Function.mul_support_one
 
 @[to_additive]
-theorem mul_support_const {c : M} (hc : c ≠ 1) : (mulSupport fun x : α => c) = Set.univ := by
+theorem mul_support_const {c : M} (hc : c ≠ 1) : (mulSupport fun x : α => c) = Set.univ :=
+  by
   ext x
   simp [hc]
 #align function.mul_support_const Function.mul_support_const
@@ -164,7 +166,8 @@ theorem mul_support_min [LinearOrder M] (f g : α → M) :
 
 @[to_additive]
 theorem mul_support_supr [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
-    (mulSupport fun x => ⨆ i, f i x) ⊆ ⋃ i, mulSupport (f i) := by
+    (mulSupport fun x => ⨆ i, f i x) ⊆ ⋃ i, mulSupport (f i) :=
+  by
   rw [mul_support_subset_iff']
   simp only [mem_Union, not_exists, nmem_mul_support]
   intro x hx
@@ -234,7 +237,8 @@ theorem mul_support_mul [MulOneClass M] (f g : α → M) :
 
 @[to_additive]
 theorem mul_support_pow [Monoid M] (f : α → M) (n : ℕ) :
-    (mulSupport fun x => f x ^ n) ⊆ mulSupport f := by
+    (mulSupport fun x => f x ^ n) ⊆ mulSupport f :=
+  by
   induction' n with n hfn
   · simpa only [pow_zero, mul_support_one] using empty_subset _
   · simpa only [pow_succ] using (mul_support_mul f _).trans (union_subset subset.rfl hfn)
@@ -266,7 +270,7 @@ theorem mul_support_div : (mulSupport fun x => f x / g x) ⊆ mulSupport f ∪ m
 
 end DivisionMonoid
 
-theorem support_smul [Zero R] [Zero M] [SmulWithZero R M] [NoZeroSmulDivisors R M] (f : α → R)
+theorem support_smul [Zero R] [Zero M] [SMulWithZero R M] [NoZeroSmulDivisors R M] (f : α → R)
     (g : α → M) : support (f • g) = support f ∩ support g :=
   ext fun x => smul_ne_zero_iff
 #align function.support_smul Function.support_smul
@@ -292,7 +296,7 @@ theorem support_smul_subset_right [AddMonoid A] [Monoid B] [DistribMulAction B A
   hbf <| by rw [Pi.smul_apply, hf, smul_zero]
 #align function.support_smul_subset_right Function.support_smul_subset_right
 
-theorem support_smul_subset_left [Zero M] [Zero β] [SmulWithZero M β] (f : α → M) (g : α → β) :
+theorem support_smul_subset_left [Zero M] [Zero β] [SMulWithZero M β] (f : α → M) (g : α → β) :
     support (f • g) ⊆ support f := fun x hfg hf => hfg <| by rw [Pi.smul_apply', hf, zero_smul]
 #align function.support_smul_subset_left Function.support_smul_subset_left
 
@@ -313,7 +317,8 @@ theorem support_div [GroupWithZero G₀] (f g : α → G₀) :
 
 @[to_additive]
 theorem mul_support_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
-    (mulSupport fun x => ∏ i in s, f i x) ⊆ ⋃ i ∈ s, mulSupport (f i) := by
+    (mulSupport fun x => ∏ i in s, f i x) ⊆ ⋃ i ∈ s, mulSupport (f i) :=
+  by
   rw [mul_support_subset_iff']
   simp only [mem_Union, not_exists, nmem_mul_support]
   exact fun x => Finset.prod_eq_one
@@ -321,13 +326,13 @@ theorem mul_support_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
 
 theorem support_prod_subset [CommMonoidWithZero A] (s : Finset α) (f : α → β → A) :
     (support fun x => ∏ i in s, f i x) ⊆ ⋂ i ∈ s, support (f i) := fun x hx =>
-  mem_Inter₂.2 fun i hi H => hx <| Finset.prod_eq_zero hi H
+  mem_interᵢ₂.2 fun i hi H => hx <| Finset.prod_eq_zero hi H
 #align function.support_prod_subset Function.support_prod_subset
 
 theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s : Finset α)
     (f : α → β → A) : (support fun x => ∏ i in s, f i x) = ⋂ i ∈ s, support (f i) :=
   Set.ext fun x => by
-    simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_Inter, not_exists]
+    simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_interᵢ, not_exists]
 #align function.support_prod Function.support_prod
 
 theorem mul_support_one_add [One R] [AddLeftCancelMonoid R] (f : α → R) :

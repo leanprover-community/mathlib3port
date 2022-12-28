@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.finite_type
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ class LocallyOfFiniteType (f : X ⟶ Y) : Prop where
       (f.appLe e).FiniteType
 #align algebraic_geometry.locally_of_finite_type AlgebraicGeometry.LocallyOfFiniteType
 
-theorem locally_of_finite_type_eq : @LocallyOfFiniteType = affineLocally @RingHom.FiniteType := by
+theorem locally_of_finite_type_eq : @LocallyOfFiniteType = affineLocally @RingHom.FiniteType :=
+  by
   ext (X Y f)
   rw [locally_of_finite_type_iff, affine_locally_iff_affine_opens_le]
   exact RingHom.finite_type_respects_iso
@@ -70,7 +71,8 @@ instance locally_of_finite_type_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y �
 #align algebraic_geometry.locally_of_finite_type_comp AlgebraicGeometry.locally_of_finite_type_comp
 
 theorem locally_of_finite_type_of_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
-    [hf : LocallyOfFiniteType (f ≫ g)] : LocallyOfFiniteType f := by
+    [hf : LocallyOfFiniteType (f ≫ g)] : LocallyOfFiniteType f :=
+  by
   revert hf
   rw [locally_of_finite_type_eq]
   apply ring_hom.finite_type_is_local.affine_locally_of_comp

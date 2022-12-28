@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,13 +55,15 @@ variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass
   {s t : Set α}
 
 @[to_additive]
-theorem cSup_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : supₛ s⁻¹ = (infₛ s)⁻¹ := by
+theorem cSup_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : supₛ s⁻¹ = (infₛ s)⁻¹ :=
+  by
   rw [← image_inv]
   exact ((OrderIso.inv α).map_cInf' hs₀ hs₁).symm
 #align cSup_inv cSup_inv
 
 @[to_additive]
-theorem cInf_inv (hs₀ : s.Nonempty) (hs₁ : BddAbove s) : infₛ s⁻¹ = (supₛ s)⁻¹ := by
+theorem cInf_inv (hs₀ : s.Nonempty) (hs₁ : BddAbove s) : infₛ s⁻¹ = (supₛ s)⁻¹ :=
+  by
   rw [← image_inv]
   exact ((OrderIso.inv α).map_cSup' hs₀ hs₁).symm
 #align cInf_inv cInf_inv
@@ -122,13 +124,15 @@ variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass
   (s t : Set α)
 
 @[to_additive]
-theorem Sup_inv (s : Set α) : supₛ s⁻¹ = (infₛ s)⁻¹ := by
+theorem Sup_inv (s : Set α) : supₛ s⁻¹ = (infₛ s)⁻¹ :=
+  by
   rw [← image_inv, supₛ_image]
   exact ((OrderIso.inv α).map_Inf _).symm
 #align Sup_inv Sup_inv
 
 @[to_additive]
-theorem Inf_inv (s : Set α) : infₛ s⁻¹ = (supₛ s)⁻¹ := by
+theorem Inf_inv (s : Set α) : infₛ s⁻¹ = (supₛ s)⁻¹ :=
+  by
   rw [← image_inv, infₛ_image]
   exact ((OrderIso.inv α).map_Sup _).symm
 #align Inf_inv Inf_inv
@@ -165,7 +169,8 @@ open Set
 
 include hr
 
-theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) := by
+theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) :=
+  by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioo]
   constructor
@@ -179,7 +184,8 @@ theorem smul_Ioo : r • Ioo a b = Ioo (r • a) (r • b) := by
     rw [mul_div_cancel' _ (ne_of_gt hr)]
 #align linear_ordered_field.smul_Ioo LinearOrderedField.smul_Ioo
 
-theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) := by
+theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) :=
+  by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Icc]
   constructor
@@ -193,7 +199,8 @@ theorem smul_Icc : r • Icc a b = Icc (r • a) (r • b) := by
     rw [mul_div_cancel' _ (ne_of_gt hr)]
 #align linear_ordered_field.smul_Icc LinearOrderedField.smul_Icc
 
-theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) := by
+theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) :=
+  by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ico]
   constructor
@@ -207,7 +214,8 @@ theorem smul_Ico : r • Ico a b = Ico (r • a) (r • b) := by
     rw [mul_div_cancel' _ (ne_of_gt hr)]
 #align linear_ordered_field.smul_Ico LinearOrderedField.smul_Ico
 
-theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) := by
+theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) :=
+  by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioc]
   constructor
@@ -221,7 +229,7 @@ theorem smul_Ioc : r • Ioc a b = Ioc (r • a) (r • b) := by
     rw [mul_div_cancel' _ (ne_of_gt hr)]
 #align linear_ordered_field.smul_Ioc LinearOrderedField.smul_Ioc
 
-theorem smul_Ioi : r • Ioi a = Ioi (r • a) := by 
+theorem smul_Ioi : r • Ioi a = Ioi (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
@@ -234,7 +242,7 @@ theorem smul_Ioi : r • Ioi a = Ioi (r • a) := by
     exact mul_div_cancel' _ (ne_of_gt hr)
 #align linear_ordered_field.smul_Ioi LinearOrderedField.smul_Ioi
 
-theorem smul_Iio : r • Iio a = Iio (r • a) := by 
+theorem smul_Iio : r • Iio a = Iio (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor
@@ -247,7 +255,7 @@ theorem smul_Iio : r • Iio a = Iio (r • a) := by
     exact mul_div_cancel' _ (ne_of_gt hr)
 #align linear_ordered_field.smul_Iio LinearOrderedField.smul_Iio
 
-theorem smul_Ici : r • Ici a = Ici (r • a) := by 
+theorem smul_Ici : r • Ici a = Ici (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Ioi]
   constructor
@@ -260,7 +268,7 @@ theorem smul_Ici : r • Ici a = Ici (r • a) := by
     exact mul_div_cancel' _ (ne_of_gt hr)
 #align linear_ordered_field.smul_Ici LinearOrderedField.smul_Ici
 
-theorem smul_Iic : r • Iic a = Iic (r • a) := by 
+theorem smul_Iic : r • Iic a = Iic (r • a) := by
   ext x
   simp only [mem_smul_set, smul_eq_mul, mem_Iio]
   constructor

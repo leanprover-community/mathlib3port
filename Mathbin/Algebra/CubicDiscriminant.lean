@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebra.cubic_discriminant
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,6 +67,20 @@ def toPoly (P : Cubic R) : R[X] :=
   c P.a * X ^ 3 + c P.b * X ^ 2 + c P.c * X + c P.d
 #align cubic.to_poly Cubic.toPoly
 
+theorem C_mul_prod_X_sub_C_eq [CommRing S] {w x y z : S} :
+    c w * (X - c x) * (X - c y) * (X - c z) =
+      toPoly ⟨w, w * -(x + y + z), w * (x * y + x * z + y * z), w * -(x * y * z)⟩ :=
+  by
+  simp only [to_poly, C_neg, C_add, C_mul]
+  ring1
+#align cubic.C_mul_prod_X_sub_C_eq Cubic.C_mul_prod_X_sub_C_eq
+
+theorem prod_X_sub_C_eq [CommRing S] {x y z : S} :
+    (X - c x) * (X - c y) * (X - c z) =
+      toPoly ⟨1, -(x + y + z), x * y + x * z + y * z, -(x * y * z)⟩ :=
+  by rw [← one_mul <| X - C x, ← C_1, C_mul_prod_X_sub_C_eq, one_mul, one_mul, one_mul]
+#align cubic.prod_X_sub_C_eq Cubic.prod_X_sub_C_eq
+
 /-! ### Coefficients -/
 
 
@@ -76,7 +90,7 @@ private theorem coeffs :
     (∀ n > 3, P.toPoly.coeff n = 0) ∧
       P.toPoly.coeff 3 = P.a ∧
         P.toPoly.coeff 2 = P.b ∧ P.toPoly.coeff 1 = P.c ∧ P.toPoly.coeff 0 = P.d :=
-  by 
+  by
   simp only [to_poly, coeff_add, coeff_C, coeff_C_mul_X, coeff_C_mul_X_pow]
   norm_num
   intro n hn
@@ -166,7 +180,8 @@ theorem to_poly_eq_zero_iff (P : Cubic R) : P.toPoly = 0 ↔ P = 0 := by
   rw [← zero, to_poly_injective]
 #align cubic.to_poly_eq_zero_iff Cubic.to_poly_eq_zero_iff
 
-private theorem ne_zero (h0 : P.a ≠ 0 ∨ P.b ≠ 0 ∨ P.c ≠ 0 ∨ P.d ≠ 0) : P.toPoly ≠ 0 := by
+private theorem ne_zero (h0 : P.a ≠ 0 ∨ P.b ≠ 0 ∨ P.c ≠ 0 ∨ P.d ≠ 0) : P.toPoly ≠ 0 :=
+  by
   contrapose! h0
   rw [(to_poly_eq_zero_iff P).mp h0]
   exact ⟨rfl, rfl, rfl, rfl⟩
@@ -228,10 +243,11 @@ theorem leading_coeff_of_c_eq_zero' : (toPoly ⟨0, 0, 0, d⟩).leadingCoeff = d
   leading_coeff_of_c_eq_zero rfl rfl rfl
 #align cubic.leading_coeff_of_c_eq_zero' Cubic.leading_coeff_of_c_eq_zero'
 
-theorem monic_of_a_eq_one (ha : P.a = 1) : P.toPoly.Monic := by
+theorem monic_of_a_eq_one (ha : P.a = 1) : P.toPoly.Monic :=
+  by
   nontriviality
   rw [monic,
-    leading_coeff_of_a_ne_zero <| by 
+    leading_coeff_of_a_ne_zero <| by
       rw [ha]
       exact one_ne_zero,
     ha]
@@ -241,10 +257,11 @@ theorem monic_of_a_eq_one' : (toPoly ⟨1, b, c, d⟩).Monic :=
   monic_of_a_eq_one rfl
 #align cubic.monic_of_a_eq_one' Cubic.monic_of_a_eq_one'
 
-theorem monic_of_b_eq_one (ha : P.a = 0) (hb : P.b = 1) : P.toPoly.Monic := by
+theorem monic_of_b_eq_one (ha : P.a = 0) (hb : P.b = 1) : P.toPoly.Monic :=
+  by
   nontriviality
   rw [monic,
-    leading_coeff_of_b_ne_zero ha <| by 
+    leading_coeff_of_b_ne_zero ha <| by
       rw [hb]
       exact one_ne_zero,
     hb]
@@ -254,10 +271,11 @@ theorem monic_of_b_eq_one' : (toPoly ⟨0, 1, c, d⟩).Monic :=
   monic_of_b_eq_one rfl rfl
 #align cubic.monic_of_b_eq_one' Cubic.monic_of_b_eq_one'
 
-theorem monic_of_c_eq_one (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 1) : P.toPoly.Monic := by
+theorem monic_of_c_eq_one (ha : P.a = 0) (hb : P.b = 0) (hc : P.c = 1) : P.toPoly.Monic :=
+  by
   nontriviality
   rw [monic,
-    leading_coeff_of_c_ne_zero ha hb <| by 
+    leading_coeff_of_c_ne_zero ha hb <| by
       rw [hc]
       exact one_ne_zero,
     hc]
@@ -284,14 +302,12 @@ section Degree
 
 /-- The equivalence between cubic polynomials and polynomials of degree at most three. -/
 @[simps]
-def equiv :
-    Cubic R ≃
-      { p : R[X] //
-        p.degree ≤ 3 } where 
+def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 }
+    where
   toFun P := ⟨P.toPoly, degree_cubic_le⟩
   invFun f := ⟨coeff f 3, coeff f 2, coeff f 1, coeff f 0⟩
   left_inv P := by ext <;> simp only [Subtype.coe_mk, coeffs]
-  right_inv f := by 
+  right_inv f := by
     ext (_ | _ | _ | _ | n) <;> simp only [Subtype.coe_mk, coeffs]
     have h3 : 3 < n + 4 := by linarith only
     rw [coeff_eq_zero h3,
@@ -481,18 +497,20 @@ theorem map_roots [IsDomain S] : (map φ P).roots = (Polynomial.map φ P.toPoly)
 #align cubic.map_roots Cubic.map_roots
 
 theorem mem_roots_iff [IsDomain R] (h0 : P.toPoly ≠ 0) (x : R) :
-    x ∈ P.roots ↔ P.a * x ^ 3 + P.b * x ^ 2 + P.c * x + P.d = 0 := by
+    x ∈ P.roots ↔ P.a * x ^ 3 + P.b * x ^ 2 + P.c * x + P.d = 0 :=
+  by
   rw [roots, mem_roots h0, is_root, to_poly]
   simp only [eval_C, eval_X, eval_add, eval_mul, eval_pow]
 #align cubic.mem_roots_iff Cubic.mem_roots_iff
 
-theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3 := by
+theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3 :=
+  by
   apply (to_finset_card_le P.to_poly.roots).trans
   by_cases hP : P.to_poly = 0
   ·
     exact
       (card_roots' P.to_poly).trans
-        (by 
+        (by
           rw [hP, nat_degree_zero]
           exact zero_le 3)
   · exact WithBot.coe_le_coe.1 ((card_roots hP).trans degree_cubic_le)
@@ -507,7 +525,8 @@ variable {P : Cubic F} [Field F] [Field K] {φ : F →+* K} {x y z : K}
 
 section Split
 
-theorem splits_iff_card_roots (ha : P.a ≠ 0) : Splits φ P.toPoly ↔ (map φ P).roots.card = 3 := by
+theorem splits_iff_card_roots (ha : P.a ≠ 0) : Splits φ P.toPoly ↔ (map φ P).roots.card = 3 :=
+  by
   replace ha : (map φ P).a ≠ 0 := (_root_.map_ne_zero φ).mpr ha
   nth_rw_lhs 1 [← RingHom.id_comp φ]
   rw [roots, ← splits_map_iff, ← map_to_poly, splits_iff_card_roots, ←
@@ -520,7 +539,8 @@ theorem splits_iff_roots_eq_three (ha : P.a ≠ 0) :
 #align cubic.splits_iff_roots_eq_three Cubic.splits_iff_roots_eq_three
 
 theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
-    (map φ P).toPoly = c (φ P.a) * (X - c x) * (X - c y) * (X - c z) := by
+    (map φ P).toPoly = c (φ P.a) * (X - c x) * (X - c y) * (X - c z) :=
+  by
   rw [map_to_poly,
     eq_prod_roots_of_splits <|
       (splits_iff_roots_eq_three ha).mpr <| Exists.intro x <| Exists.intro y <| Exists.intro z h3,
@@ -532,12 +552,10 @@ theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z})
 theorem eq_sum_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     map φ P =
       ⟨φ P.a, φ P.a * -(x + y + z), φ P.a * (x * y + x * z + y * z), φ P.a * -(x * y * z)⟩ :=
-  by 
+  by
   apply_fun to_poly
   any_goals exact fun P Q => (to_poly_injective P Q).mp
-  rw [eq_prod_three_roots ha h3, to_poly]
-  simp only [C_neg, C_add, C_mul]
-  ring1
+  rw [eq_prod_three_roots ha h3, C_mul_prod_X_sub_C_eq]
 #align cubic.eq_sum_three_roots Cubic.eq_sum_three_roots
 
 theorem b_eq_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
@@ -566,7 +584,8 @@ def disc {R : Type _} [Ring R] (P : Cubic R) : R :=
 #align cubic.disc Cubic.disc
 
 theorem disc_eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
-    φ P.disc = (φ P.a * φ P.a * (x - y) * (x - z) * (y - z)) ^ 2 := by
+    φ P.disc = (φ P.a * φ P.a * (x - y) * (x - z) * (y - z)) ^ 2 :=
+  by
   simp only [disc, RingHom.map_add, RingHom.map_sub, RingHom.map_mul, map_pow]
   simp only [RingHom.map_one, map_bit0, map_bit1]
   rw [b_eq_three_roots ha h3, c_eq_three_roots ha h3, d_eq_three_roots ha h3]
@@ -574,14 +593,16 @@ theorem disc_eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y
 #align cubic.disc_eq_prod_three_roots Cubic.disc_eq_prod_three_roots
 
 theorem disc_ne_zero_iff_roots_ne (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
-    P.disc ≠ 0 ↔ x ≠ y ∧ x ≠ z ∧ y ≠ z := by
+    P.disc ≠ 0 ↔ x ≠ y ∧ x ≠ z ∧ y ≠ z :=
+  by
   rw [← _root_.map_ne_zero φ, disc_eq_prod_three_roots ha h3, pow_two]
   simp_rw [mul_ne_zero_iff, sub_ne_zero, _root_.map_ne_zero, and_self_iff, and_iff_right ha,
     and_assoc']
 #align cubic.disc_ne_zero_iff_roots_ne Cubic.disc_ne_zero_iff_roots_ne
 
 theorem disc_ne_zero_iff_roots_nodup (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
-    P.disc ≠ 0 ↔ (map φ P).roots.Nodup := by
+    P.disc ≠ 0 ↔ (map φ P).roots.Nodup :=
+  by
   rw [disc_ne_zero_iff_roots_ne ha h3, h3]
   change _ ↔ (x ::ₘ y ::ₘ {z}).Nodup
   rw [nodup_cons, nodup_cons, mem_cons, mem_singleton, mem_singleton]
@@ -590,7 +611,8 @@ theorem disc_ne_zero_iff_roots_nodup (ha : P.a ≠ 0) (h3 : (map φ P).roots = {
 #align cubic.disc_ne_zero_iff_roots_nodup Cubic.disc_ne_zero_iff_roots_nodup
 
 theorem card_roots_of_disc_ne_zero [DecidableEq K] (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z})
-    (hd : P.disc ≠ 0) : (map φ P).roots.toFinset.card = 3 := by
+    (hd : P.disc ≠ 0) : (map φ P).roots.toFinset.card = 3 :=
+  by
   rw [to_finset_card_of_nodup <| (disc_ne_zero_iff_roots_nodup ha h3).mp hd, ←
     splits_iff_card_roots ha, splits_iff_roots_eq_three ha]
   exact ⟨x, ⟨y, ⟨z, h3⟩⟩⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Zhao
 
 ! This file was ported from Lean 3 source module number_theory.frobenius_number
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,8 @@ variable {m n : ℕ}
 /-- The **Chicken Mcnugget theorem** stating that the Frobenius number
   of positive numbers `m` and `n` is `m * n - m - n`. -/
 theorem is_frobenius_number_pair (cop : Coprime m n) (hm : 1 < m) (hn : 1 < n) :
-    IsFrobeniusNumber (m * n - m - n) {m, n} := by
+    IsFrobeniusNumber (m * n - m - n) {m, n} :=
+  by
   simp_rw [IsFrobeniusNumber, AddSubmonoid.mem_closure_pair]
   have hmn : m + n ≤ m * n := add_le_mul hm hn
   constructor

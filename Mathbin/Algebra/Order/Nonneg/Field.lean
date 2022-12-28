@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.nonneg.field
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,16 +109,16 @@ instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { 
     ⟨n, show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
 #align nonneg.archimedean Nonneg.archimedean
 
-instance floorSemiring [OrderedSemiring α] [FloorSemiring α] :
-    FloorSemiring { r : α // 0 ≤
-          r } where 
+instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring { r : α // 0 ≤ r }
+    where
   floor a := ⌊(a : α)⌋₊
   ceil a := ⌈(a : α)⌉₊
   floor_of_neg a ha := FloorSemiring.floor_of_neg ha
-  gc_floor a n ha := by
+  gc_floor a n ha :=
+    by
     refine' (FloorSemiring.gc_floor (show 0 ≤ (a : α) from ha)).trans _
     rw [← Subtype.coe_le_coe, Nonneg.coe_nat_cast]
-  gc_ceil a n := by 
+  gc_ceil a n := by
     refine' (FloorSemiring.gc_ceil (a : α) n).trans _
     rw [← Subtype.coe_le_coe, Nonneg.coe_nat_cast]
 #align nonneg.floor_semiring Nonneg.floorSemiring

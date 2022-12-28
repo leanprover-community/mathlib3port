@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.minimal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem minimals_empty : minimals r ∅ = ∅ :=
 theorem maximals_singleton : maximals r {a} = {a} :=
   (maximals_subset _ _).antisymm <|
     singleton_subset_iff.2 <|
-      ⟨rfl, by 
+      ⟨rfl, by
         rintro b (rfl : b = a)
         exact id⟩
 #align maximals_singleton maximals_singleton
@@ -106,7 +106,8 @@ theorem minimals_antichain : IsAntichain r (minimals r s) :=
 
 end IsAntisymm
 
-theorem maximals_eq_minimals [IsSymm α r] : maximals r s = minimals r s := by
+theorem maximals_eq_minimals [IsSymm α r] : maximals r s = minimals r s :=
+  by
   congr
   ext (a b)
   exact comm
@@ -124,7 +125,7 @@ theorem Set.Subsingleton.minimals_eq (h : s.Subsingleton) : minimals r s = s :=
 
 theorem maximals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
     maximals r₂ s ⊆ maximals r₁ s := fun a ha =>
-  ⟨ha.1, fun b hb hab => by 
+  ⟨ha.1, fun b hb hab => by
     have := eq_of_mem_maximals ha hb (h _ _ hab)
     subst this
     exact hab⟩
@@ -132,13 +133,14 @@ theorem maximals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) 
 
 theorem minimals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
     minimals r₂ s ⊆ minimals r₁ s := fun a ha =>
-  ⟨ha.1, fun b hb hab => by 
+  ⟨ha.1, fun b hb hab => by
     have := eq_of_mem_minimals ha hb (h _ _ hab)
     subst this
     exact hab⟩
 #align minimals_mono minimals_mono
 
-theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t := by
+theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t :=
+  by
   intro a ha
   obtain h | h := ha.1
   · exact Or.inl ⟨h, fun b hb => ha.2 <| Or.inl hb⟩
@@ -167,7 +169,7 @@ theorem inter_minimals_subset : s ∩ minimals r t ⊆ minimals r (s ∩ t) :=
 
 theorem IsAntichain.maximals_eq (h : IsAntichain r s) : maximals r s = s :=
   (maximals_subset _ _).antisymm fun a ha =>
-    ⟨ha, fun b hb hab => by 
+    ⟨ha, fun b hb hab => by
       have := h.eq ha hb hab
       subst this
       exact hab⟩
@@ -175,7 +177,7 @@ theorem IsAntichain.maximals_eq (h : IsAntichain r s) : maximals r s = s :=
 
 theorem IsAntichain.minimals_eq (h : IsAntichain r s) : minimals r s = s :=
   (minimals_subset _ _).antisymm fun a ha =>
-    ⟨ha, fun b hb hab => by 
+    ⟨ha, fun b hb hab => by
       have := h.eq hb ha hab
       subst this
       exact hab⟩
@@ -194,7 +196,8 @@ theorem minimals_idem : minimals r (minimals r s) = minimals r s :=
 /-- If `maximals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem IsAntichain.max_maximals (ht : IsAntichain r t) (h : maximals r s ⊆ t)
-    (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ maximals r s, r b a) : maximals r s = t := by
+    (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ maximals r s, r b a) : maximals r s = t :=
+  by
   refine' h.antisymm fun a ha => _
   obtain ⟨b, hb, hr⟩ := hs ha
   rwa [of_not_not fun hab => ht (h hb) ha (Ne.symm hab) hr]
@@ -203,7 +206,8 @@ theorem IsAntichain.max_maximals (ht : IsAntichain r t) (h : maximals r s ⊆ t)
 /-- If `minimals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem IsAntichain.max_minimals (ht : IsAntichain r t) (h : minimals r s ⊆ t)
-    (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ minimals r s, r a b) : minimals r s = t := by
+    (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ minimals r s, r a b) : minimals r s = t :=
+  by
   refine' h.antisymm fun a ha => _
   obtain ⟨b, hb, hr⟩ := hs ha
   rwa [of_not_not fun hab => ht ha (h hb) hab hr]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.identities
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,13 +43,14 @@ def powAddExpansion {R : Type _} [CommSemiring R] (x y : R) :
     ∀ n : ℕ, { k // (x + y) ^ n = x ^ n + n * x ^ (n - 1) * y + k * y ^ 2 }
   | 0 => ⟨0, by simp⟩
   | 1 => ⟨0, by simp⟩
-  | n + 2 => by 
+  | n + 2 => by
     cases' pow_add_expansion (n + 1) with z hz
     exists x * z + (n + 1) * x ^ n + z * y
     calc
       (x + y) ^ (n + 2) = (x + y) * (x + y) ^ (n + 1) := by ring
       _ = (x + y) * (x ^ (n + 1) + ↑(n + 1) * x ^ (n + 1 - 1) * y + z * y ^ 2) := by rw [hz]
-      _ = x ^ (n + 2) + ↑(n + 2) * x ^ (n + 1) * y + (x * z + (n + 1) * x ^ n + z * y) * y ^ 2 := by
+      _ = x ^ (n + 2) + ↑(n + 2) * x ^ (n + 1) * y + (x * z + (n + 1) * x ^ n + z * y) * y ^ 2 :=
+        by
         push_cast
         ring!
       
@@ -58,7 +59,8 @@ def powAddExpansion {R : Type _} [CommSemiring R] (x y : R) :
 variable [CommRing R]
 
 private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
-    { k : R // a * (x + y) ^ e = a * (x ^ e + e * x ^ (e - 1) * y + k * y ^ 2) } := by
+    { k : R // a * (x + y) ^ e = a * (x ^ e + e * x ^ (e - 1) * y + k * y ^ 2) } :=
+  by
   exists (pow_add_expansion x y e).val
   congr
   apply (pow_add_expansion _ _ _).property
@@ -67,7 +69,7 @@ private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
 private theorem poly_binom_aux2 (f : R[X]) (x y : R) :
     f.eval (x + y) =
       f.Sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) :=
-  by 
+  by
   unfold eval eval₂; congr with (n z)
   apply (poly_binom_aux1 x y _ _).property
 #align polynomial.poly_binom_aux2 polynomial.poly_binom_aux2
@@ -76,7 +78,7 @@ private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
     f.eval (x + y) =
       ((f.Sum fun e a => a * x ^ e) + f.Sum fun e a => a * e * x ^ (e - 1) * y) +
         f.Sum fun e a => a * (polyBinomAux1 x y e a).val * y ^ 2 :=
-  by 
+  by
   rw [poly_binom_aux2]
   simp [left_distrib, sum_add, mul_assoc]
 #align polynomial.poly_binom_aux3 polynomial.poly_binom_aux3
@@ -86,7 +88,8 @@ the evaluation of `f` at `x`, plus `y` times the (polynomial) derivative of `f` 
 plus some element `k : R` times `y^2`.
 -/
 def binomExpansion (f : R[X]) (x y : R) :
-    { k : R // f.eval (x + y) = f.eval x + f.derivative.eval x * y + k * y ^ 2 } := by
+    { k : R // f.eval (x + y) = f.eval x + f.derivative.eval x * y + k * y ^ 2 } :=
+  by
   exists f.sum fun e a => a * (poly_binom_aux1 x y e a).val
   rw [poly_binom_aux3]
   congr
@@ -101,7 +104,7 @@ def binomExpansion (f : R[X]) (x y : R) :
 def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
   | 0 => ⟨0, by simp⟩
   | 1 => ⟨1, by simp⟩
-  | k + 2 => by 
+  | k + 2 => by
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
     linear_combination (norm := ring) x * hz
@@ -110,7 +113,8 @@ def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x -
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.
 -/
-def evalSubFactor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } := by
+def evalSubFactor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } :=
+  by
   refine' ⟨f.sum fun i r => r * (pow_sub_pow_factor x y i).val, _⟩
   delta eval eval₂
   simp only [Sum, ← Finset.sum_sub_distrib, Finset.sum_mul]

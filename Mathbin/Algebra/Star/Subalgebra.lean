@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.subalgebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,20 +50,20 @@ instance : SetLike (StarSubalgebra R A) A :=
 
 instance : StarMemClass (StarSubalgebra R A) A where star_mem s a := s.star_mem'
 
-instance : SubsemiringClass (StarSubalgebra R A)
-      A where 
+instance : SubsemiringClass (StarSubalgebra R A) A
+    where
   add_mem := add_mem'
   mul_mem := mul_mem'
   one_mem := one_mem'
   zero_mem := zero_mem'
 
 instance {R A} [CommRing R] [StarRing R] [Ring A] [StarRing A] [Algebra R A] [StarModule R A] :
-    SubringClass (StarSubalgebra R A)
-      A where neg_mem s a ha := show -a ∈ s.toSubalgebra from neg_mem ha
+    SubringClass (StarSubalgebra R A) A
+    where neg_mem s a ha := show -a ∈ s.toSubalgebra from neg_mem ha
 
 -- this uses the `has_star` instance `s` inherits from `star_mem_class (star_subalgebra R A) A`
-instance (s : StarSubalgebra R A) :
-    StarRing s where 
+instance (s : StarSubalgebra R A) : StarRing s
+    where
   star := star
   star_involutive r := Subtype.ext (star_star r)
   star_mul r₁ r₂ := Subtype.ext (star_mul r₁ r₂)
@@ -72,8 +72,8 @@ instance (s : StarSubalgebra R A) :
 instance (s : StarSubalgebra R A) : Algebra R s :=
   s.toSubalgebra.algebra'
 
-instance (s : StarSubalgebra R A) :
-    StarModule R s where star_smul r a := Subtype.ext (star_smul r a)
+instance (s : StarSubalgebra R A) : StarModule R s
+    where star_smul r a := Subtype.ext (star_smul r a)
 
 @[simp]
 theorem mem_carrier {s : StarSubalgebra R A} {x : A} : x ∈ s.carrier ↔ x ∈ s :=
@@ -111,8 +111,8 @@ theorem to_subalgebra_le_iff {S₁ S₂ : StarSubalgebra R A} :
 
 /-- Copy of a star subalgebra with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (S : StarSubalgebra R A) (s : Set A) (hs : s = ↑S) :
-    StarSubalgebra R A where 
+protected def copy (S : StarSubalgebra R A) (s : Set A) (hs : s = ↑S) : StarSubalgebra R A
+    where
   carrier := s
   add_mem' _ _ := hs.symm ▸ S.add_mem'
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
@@ -170,8 +170,8 @@ theorem to_subalgebra_subtype : S.toSubalgebra.val = S.Subtype.toAlgHom :=
 
 /-- The inclusion map between `star_subalgebra`s given by `subtype.map id` as a `star_alg_hom`. -/
 @[simps]
-def inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂) :
-    S₁ →⋆ₐ[R] S₂ where 
+def inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂) : S₁ →⋆ₐ[R] S₂
+    where
   toFun := Subtype.map id h
   map_one' := rfl
   map_mul' x y := rfl
@@ -197,7 +197,7 @@ section Map
 /-- Transport a star subalgebra via a star algebra homomorphism. -/
 def map (f : A →⋆ₐ[R] B) (S : StarSubalgebra R A) : StarSubalgebra R B :=
   { S.toSubalgebra.map f.toAlgHom with
-    star_mem' := by 
+    star_mem' := by
       rintro _ ⟨a, ha, rfl⟩
       exact map_star f a ▸ Set.mem_image_of_mem _ (S.star_mem' ha) }
 #align star_subalgebra.map StarSubalgebra.map
@@ -331,17 +331,17 @@ variable [Semiring A] [Algebra R A] [StarRing A] [StarModule R A]
 variable [Semiring B] [Algebra R B] [StarRing B] [StarModule R B]
 
 /-- The pointwise `star` of a subalgebra is a subalgebra. -/
-instance :
-    HasInvolutiveStar
-      (Subalgebra R
-        A) where 
+instance : HasInvolutiveStar (Subalgebra R A)
+    where
   star S :=
     { carrier := star S.carrier
-      mul_mem' := fun x y hx hy => by
+      mul_mem' := fun x y hx hy =>
+        by
         simp only [Set.mem_star, Subalgebra.mem_carrier] at *
         exact (star_mul x y).symm ▸ mul_mem hy hx
       one_mem' := Set.mem_star.mp ((star_one A).symm ▸ one_mem S : star (1 : A) ∈ S)
-      add_mem' := fun x y hx hy => by
+      add_mem' := fun x y hx hy =>
+        by
         simp only [Set.mem_star, Subalgebra.mem_carrier] at *
         exact (star_add x y).symm ▸ add_mem hx hy
       zero_mem' := Set.mem_star.mp ((star_zero A).symm ▸ zero_mem S : star (0 : A) ∈ S)
@@ -386,7 +386,8 @@ containing both `S` and `star S`. -/
 @[simps]
 def starClosure (S : Subalgebra R A) : StarSubalgebra R A :=
   { S ⊔ star S with
-    star_mem' := fun a ha => by
+    star_mem' := fun a ha =>
+      by
       simp only [Subalgebra.mem_carrier, ← (@Algebra.gi R A _ _ _).l_sup_u _ _] at *
       rw [← mem_star_iff _ a, star_adjoin_comm]
       convert ha
@@ -458,7 +459,8 @@ theorem star_self_mem_adjoin_singleton (x : A) : star x ∈ adjoin R ({x} : Set 
 
 variable {R}
 
-protected theorem gc : GaloisConnection (adjoin R : Set A → StarSubalgebra R A) coe := by
+protected theorem gc : GaloisConnection (adjoin R : Set A → StarSubalgebra R A) coe :=
+  by
   intro s S
   rw [← to_subalgebra_le_iff, adjoin_to_subalgebra, Algebra.adjoin_le_iff, coe_to_subalgebra]
   exact
@@ -467,9 +469,8 @@ protected theorem gc : GaloisConnection (adjoin R : Set A → StarSubalgebra R A
 #align star_subalgebra.gc StarSubalgebra.gc
 
 /-- Galois insertion between `adjoin` and `coe`. -/
-protected def gi :
-    GaloisInsertion (adjoin R : Set A → StarSubalgebra R A)
-      coe where 
+protected def gi : GaloisInsertion (adjoin R : Set A → StarSubalgebra R A) coe
+    where
   choice s hs := (adjoin R s).copy s <| le_antisymm (StarSubalgebra.gc.le_u_l s) hs
   gc := StarSubalgebra.gc
   le_l_u S := (StarSubalgebra.gc (S : Set A) (adjoin R S)).1 <| le_rfl
@@ -511,7 +512,8 @@ theorem adjoin_induction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a
     (Hmul_left : ∀ x₁ x₂ y : A, p x₁ y → p x₂ y → p (x₁ * x₂) y)
     (Hmul_right : ∀ x y₁ y₂ : A, p x y₁ → p x y₂ → p x (y₁ * y₂))
     (Hstar : ∀ x y : A, p x y → p (star x) (star y)) (Hstar_left : ∀ x y : A, p x y → p (star x) y)
-    (Hstar_right : ∀ x y : A, p x y → p x (star y)) : p a b := by
+    (Hstar_right : ∀ x y : A, p x y → p x (star y)) : p a b :=
+  by
   refine'
     Algebra.adjoin_induction₂ ha hb (fun x hx y hy => _) Halg (fun r x hx => _) (fun r x hx => _)
       Hadd_left Hadd_right Hmul_left Hmul_right
@@ -530,7 +532,8 @@ theorem adjoin_induction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
     (Hs : ∀ (x) (h : x ∈ s), p ⟨x, subset_adjoin R s h⟩) (Halg : ∀ r, p (algebraMap R _ r))
     (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y))
     (Hstar : ∀ x, p x → p (star x)) : p a :=
-  (Subtype.recOn a) fun b hb => by
+  (Subtype.recOn a) fun b hb =>
+    by
     refine' Exists.elim _ fun (hb : b ∈ adjoin R s) (hc : p ⟨b, hb⟩) => hc
     apply adjoin_induction hb
     exacts[fun x hx => ⟨subset_adjoin R s hx, Hs x hx⟩, fun r =>
@@ -552,14 +555,14 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a : A, a ∈ s → ∀ b :
     (hcomm_star : ∀ a : A, a ∈ s → ∀ b : A, b ∈ s → a * star b = star b * a) :
     CommSemiring (adjoin R s) :=
   { (adjoin R s).toSubalgebra.toSemiring with
-    mul_comm := by 
+    mul_comm := by
       rintro ⟨x, hx⟩ ⟨y, hy⟩
       ext
       simp only [[anonymous], MulMemClass.mk_mul_mk]
       rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy
       letI : CommSemiring (Algebra.adjoin R (s ∪ star s)) :=
         Algebra.adjoinCommSemiringOfComm R
-          (by 
+          (by
             intro a ha b hb
             cases ha <;> cases hb
             exacts[hcomm _ ha _ hb, star_star b ▸ hcomm_star _ ha _ hb,
@@ -585,10 +588,10 @@ if `x` is normal. -/
 instance adjoinCommSemiringOfIsStarNormal (x : A) [IsStarNormal x] :
     CommSemiring (adjoin R ({x} : Set A)) :=
   adjoinCommSemiringOfComm R
-    (fun a ha b hb => by 
+    (fun a ha b hb => by
       rw [Set.mem_singleton_iff] at ha hb
       rw [ha, hb])
-    fun a ha b hb => by 
+    fun a ha b hb => by
     rw [Set.mem_singleton_iff] at ha hb
     simpa only [ha, hb] using (star_comm_self' x).symm
 #align
@@ -673,7 +676,7 @@ theorem coe_Inf (S : Set (StarSubalgebra R A)) : (↑(infₛ S) : Set A) = ⋂ s
 #align star_subalgebra.coe_Inf StarSubalgebra.coe_Inf
 
 theorem mem_Inf {S : Set (StarSubalgebra R A)} {x : A} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p := by
-  simp only [← SetLike.mem_coe, coe_Inf, Set.mem_Inter₂]
+  simp only [← SetLike.mem_coe, coe_Inf, Set.mem_interᵢ₂]
 #align star_subalgebra.mem_Inf StarSubalgebra.mem_Inf
 
 @[simp]
@@ -684,11 +687,11 @@ theorem Inf_to_subalgebra (S : Set (StarSubalgebra R A)) :
 
 @[simp, norm_cast]
 theorem coe_infi {ι : Sort _} {S : ι → StarSubalgebra R A} : (↑(⨅ i, S i) : Set A) = ⋂ i, S i := by
-  simp [infi]
+  simp [infᵢ]
 #align star_subalgebra.coe_infi StarSubalgebra.coe_infi
 
 theorem mem_infi {ι : Sort _} {S : ι → StarSubalgebra R A} {x : A} :
-    (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by simp only [infi, mem_Inf, Set.forall_range_iff]
+    (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by simp only [infᵢ, mem_Inf, Set.forall_range_iff]
 #align star_subalgebra.mem_infi StarSubalgebra.mem_infi
 
 @[simp]
@@ -697,7 +700,8 @@ theorem infi_to_subalgebra {ι : Sort _} (S : ι → StarSubalgebra R A) :
   SetLike.coe_injective <| by simp
 #align star_subalgebra.infi_to_subalgebra StarSubalgebra.infi_to_subalgebra
 
-theorem bot_to_subalgebra : (⊥ : StarSubalgebra R A).toSubalgebra = ⊥ := by
+theorem bot_to_subalgebra : (⊥ : StarSubalgebra R A).toSubalgebra = ⊥ :=
+  by
   change Algebra.adjoin R (∅ ∪ star ∅) = Algebra.adjoin R ∅
   simp
 #align star_subalgebra.bot_to_subalgebra StarSubalgebra.bot_to_subalgebra
@@ -733,8 +737,8 @@ variable [hF : StarAlgHomClass F R A B] (f g : F)
 include hF
 
 /-- The equalizer of two star `R`-algebra homomorphisms. -/
-def equalizer : StarSubalgebra R
-      A where 
+def equalizer : StarSubalgebra R A
+    where
   carrier := { a | f a = g a }
   mul_mem' a b (ha : f a = g a) (hb : f b = g b) := by
     rw [Set.mem_setOf_eq, map_mul f, map_mul g, ha, hb]
@@ -766,7 +770,8 @@ theorem map_adjoin [StarModule R B] (f : A →⋆ₐ[R] B) (s : Set A) :
 #align star_alg_hom.map_adjoin StarAlgHom.map_adjoin
 
 theorem ext_adjoin {s : Set A} [StarAlgHomClass F R (adjoin R s) B] {f g : F}
-    (h : ∀ x : adjoin R s, (x : A) ∈ s → f x = g x) : f = g := by
+    (h : ∀ x : adjoin R s, (x : A) ∈ s → f x = g x) : f = g :=
+  by
   refine'
     FunLike.ext f g fun a =>
       adjoin_induction' a (fun x hx => _) (fun r => _) (fun x y hx hy => _) (fun x y hx hy => _)

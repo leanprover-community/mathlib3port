@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,14 +91,14 @@ theorem IsLowerSet.compl (hs : IsLowerSet s) : IsUpperSet (sᶜ) := fun a b h hb
 
 @[simp]
 theorem is_upper_set_compl : IsUpperSet (sᶜ) ↔ IsLowerSet s :=
-  ⟨fun h => by 
+  ⟨fun h => by
     convert h.compl
     rw [compl_compl], IsLowerSet.compl⟩
 #align is_upper_set_compl is_upper_set_compl
 
 @[simp]
 theorem is_lower_set_compl : IsLowerSet (sᶜ) ↔ IsUpperSet s :=
-  ⟨fun h => by 
+  ⟨fun h => by
     convert h.compl
     rw [compl_compl], IsUpperSet.compl⟩
 #align is_lower_set_compl is_lower_set_compl
@@ -251,13 +251,15 @@ theorem IsLowerSet.preimage (hs : IsLowerSet s) {f : β → α} (hf : Monotone f
     IsLowerSet (f ⁻¹' s : Set β) := fun x y hxy => hs <| hf hxy
 #align is_lower_set.preimage IsLowerSet.preimage
 
-theorem IsUpperSet.image (hs : IsUpperSet s) (f : α ≃o β) : IsUpperSet (f '' s : Set β) := by
+theorem IsUpperSet.image (hs : IsUpperSet s) (f : α ≃o β) : IsUpperSet (f '' s : Set β) :=
+  by
   change IsUpperSet ((f : α ≃ β) '' s)
   rw [Set.image_equiv_eq_preimage_symm]
   exact hs.preimage f.symm.monotone
 #align is_upper_set.image IsUpperSet.image
 
-theorem IsLowerSet.image (hs : IsLowerSet s) (f : α ≃o β) : IsLowerSet (f '' s : Set β) := by
+theorem IsLowerSet.image (hs : IsLowerSet s) (f : α ≃o β) : IsLowerSet (f '' s : Set β) :=
+  by
   change IsLowerSet ((f : α ≃ β) '' s)
   rw [Set.image_equiv_eq_preimage_symm]
   exact hs.preimage f.symm.monotone
@@ -323,7 +325,8 @@ section NoMaxOrder
 
 variable [NoMaxOrder α] (a)
 
-theorem IsUpperSet.not_bdd_above (hs : IsUpperSet s) : s.Nonempty → ¬BddAbove s := by
+theorem IsUpperSet.not_bdd_above (hs : IsUpperSet s) : s.Nonempty → ¬BddAbove s :=
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   obtain ⟨c, hc⟩ := exists_gt b
   exact hc.not_le (hb <| hs ((hb ha).trans hc.le) ha)
@@ -343,7 +346,8 @@ section NoMinOrder
 
 variable [NoMinOrder α] (a)
 
-theorem IsLowerSet.not_bdd_below (hs : IsLowerSet s) : s.Nonempty → ¬BddBelow s := by
+theorem IsLowerSet.not_bdd_below (hs : IsLowerSet s) : s.Nonempty → ¬BddBelow s :=
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   obtain ⟨c, hc⟩ := exists_lt b
   exact hc.not_le (hb <| hs (hc.le.trans <| hb ha) ha)
@@ -408,9 +412,9 @@ structure LowerSet (α : Type _) [LE α] where
 
 namespace UpperSet
 
-instance : SetLike (UpperSet α) α where 
+instance : SetLike (UpperSet α) α where
   coe := UpperSet.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     cases s
     cases t
     congr
@@ -438,9 +442,9 @@ end UpperSet
 
 namespace LowerSet
 
-instance : SetLike (LowerSet α) α where 
+instance : SetLike (LowerSet α) α where
   coe := LowerSet.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     cases s
     cases t
     congr
@@ -546,7 +550,7 @@ theorem coe_supr (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, 
 #align upper_set.coe_supr UpperSet.coe_supr
 
 @[simp, norm_cast]
-theorem coe_infi (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋃ i, f i := by simp [infi]
+theorem coe_infi (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋃ i, f i := by simp [infᵢ]
 #align upper_set.coe_infi UpperSet.coe_infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -594,13 +598,15 @@ theorem mem_Inf_iff : a ∈ infₛ S ↔ ∃ s ∈ S, a ∈ s :=
 #align upper_set.mem_Inf_iff UpperSet.mem_Inf_iff
 
 @[simp]
-theorem mem_supr_iff {f : ι → UpperSet α} : (a ∈ ⨆ i, f i) ↔ ∀ i, a ∈ f i := by
+theorem mem_supr_iff {f : ι → UpperSet α} : (a ∈ ⨆ i, f i) ↔ ∀ i, a ∈ f i :=
+  by
   rw [← SetLike.mem_coe, coe_supr]
   exact mem_Inter
 #align upper_set.mem_supr_iff UpperSet.mem_supr_iff
 
 @[simp]
-theorem mem_infi_iff {f : ι → UpperSet α} : (a ∈ ⨅ i, f i) ↔ ∃ i, a ∈ f i := by
+theorem mem_infi_iff {f : ι → UpperSet α} : (a ∈ ⨅ i, f i) ↔ ∃ i, a ∈ f i :=
+  by
   rw [← SetLike.mem_coe, coe_infi]
   exact mem_Union
 #align upper_set.mem_infi_iff UpperSet.mem_infi_iff
@@ -703,7 +709,7 @@ theorem coe_supr (f : ι → LowerSet α) : (↑(⨆ i, f i) : Set α) = ⋃ i, 
 
 @[simp, norm_cast]
 theorem coe_infi (f : ι → LowerSet α) : (↑(⨅ i, f i) : Set α) = ⋂ i, f i := by
-  simp_rw [infi, coe_Inf, mem_range, Inter_exists, Inter_Inter_eq']
+  simp_rw [infᵢ, coe_Inf, mem_range, Inter_exists, Inter_Inter_eq']
 #align lower_set.coe_infi LowerSet.coe_infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -751,13 +757,15 @@ theorem mem_Inf_iff : a ∈ infₛ S ↔ ∀ s ∈ S, a ∈ s :=
 #align lower_set.mem_Inf_iff LowerSet.mem_Inf_iff
 
 @[simp]
-theorem mem_supr_iff {f : ι → LowerSet α} : (a ∈ ⨆ i, f i) ↔ ∃ i, a ∈ f i := by
+theorem mem_supr_iff {f : ι → LowerSet α} : (a ∈ ⨆ i, f i) ↔ ∃ i, a ∈ f i :=
+  by
   rw [← SetLike.mem_coe, coe_supr]
   exact mem_Union
 #align lower_set.mem_supr_iff LowerSet.mem_supr_iff
 
 @[simp]
-theorem mem_infi_iff {f : ι → LowerSet α} : (a ∈ ⨅ i, f i) ↔ ∀ i, a ∈ f i := by
+theorem mem_infi_iff {f : ι → LowerSet α} : (a ∈ ⨅ i, f i) ↔ ∀ i, a ∈ f i :=
+  by
   rw [← SetLike.mem_coe, coe_infi]
   exact mem_Inter
 #align lower_set.mem_infi_iff LowerSet.mem_infi_iff
@@ -948,8 +956,8 @@ end LowerSet
 
 /-- Upper sets are order-isomorphic to lower sets under complementation. -/
 @[simps]
-def upperSetIsoLowerSet :
-    UpperSet α ≃o LowerSet α where 
+def upperSetIsoLowerSet : UpperSet α ≃o LowerSet α
+    where
   toFun := UpperSet.compl
   invFun := LowerSet.compl
   left_inv := UpperSet.compl_compl
@@ -971,9 +979,8 @@ namespace UpperSet
 variable {f : α ≃o β} {s t : UpperSet α} {a : α} {b : β}
 
 /-- An order isomorphism of preorders induces an order isomorphism of their upper sets. -/
-def map (f : α ≃o β) :
-    UpperSet α ≃o UpperSet
-        β where 
+def map (f : α ≃o β) : UpperSet α ≃o UpperSet β
+    where
   toFun s := ⟨f '' s, s.upper.image f⟩
   invFun t := ⟨f ⁻¹' t, t.upper.Preimage f.Monotone⟩
   left_inv _ := ext <| f.preimage_image _
@@ -987,19 +994,22 @@ theorem symm_map (f : α ≃o β) : (map f).symm = map f.symm :=
 #align upper_set.symm_map UpperSet.symm_map
 
 @[simp]
-theorem mem_map : b ∈ map f s ↔ f.symm b ∈ s := by
+theorem mem_map : b ∈ map f s ↔ f.symm b ∈ s :=
+  by
   rw [← f.symm_symm, ← symm_map, f.symm_symm]
   rfl
 #align upper_set.mem_map UpperSet.mem_map
 
 @[simp]
-theorem map_refl : map (OrderIso.refl α) = OrderIso.refl _ := by
+theorem map_refl : map (OrderIso.refl α) = OrderIso.refl _ :=
+  by
   ext
   simp
 #align upper_set.map_refl UpperSet.map_refl
 
 @[simp]
-theorem map_map (g : β ≃o γ) (f : α ≃o β) : map g (map f s) = map (f.trans g) s := by
+theorem map_map (g : β ≃o γ) (f : α ≃o β) : map g (map f s) = map (f.trans g) s :=
+  by
   ext
   simp
 #align upper_set.map_map UpperSet.map_map
@@ -1033,28 +1043,28 @@ protected theorem map_bot : map f ⊥ = ⊥ :=
 
 @[simp]
 protected theorem map_Sup (S : Set (UpperSet α)) : map f (supₛ S) = ⨆ s ∈ S, map f s :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Inter₂ f.bijective _
 #align upper_set.map_Sup UpperSet.map_Sup
 
 @[simp]
 protected theorem map_Inf (S : Set (UpperSet α)) : map f (infₛ S) = ⨅ s ∈ S, map f s :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Union₂ _ _
 #align upper_set.map_Inf UpperSet.map_Inf
 
 @[simp]
 protected theorem map_supr (g : ι → UpperSet α) : map f (⨆ i, g i) = ⨆ i, map f (g i) :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Inter f.bijective _
 #align upper_set.map_supr UpperSet.map_supr
 
 @[simp]
 protected theorem map_infi (g : ι → UpperSet α) : map f (⨅ i, g i) = ⨅ i, map f (g i) :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Union
 #align upper_set.map_infi UpperSet.map_infi
@@ -1066,9 +1076,8 @@ namespace LowerSet
 variable {f : α ≃o β} {s t : LowerSet α} {a : α} {b : β}
 
 /-- An order isomorphism of preorders induces an order isomorphism of their lower sets. -/
-def map (f : α ≃o β) :
-    LowerSet α ≃o LowerSet
-        β where 
+def map (f : α ≃o β) : LowerSet α ≃o LowerSet β
+    where
   toFun s := ⟨f '' s, s.lower.image f⟩
   invFun t := ⟨f ⁻¹' t, t.lower.Preimage f.Monotone⟩
   left_inv _ := SetLike.coe_injective <| f.preimage_image _
@@ -1082,19 +1091,22 @@ theorem symm_map (f : α ≃o β) : (map f).symm = map f.symm :=
 #align lower_set.symm_map LowerSet.symm_map
 
 @[simp]
-theorem mem_map {f : α ≃o β} {b : β} : b ∈ map f s ↔ f.symm b ∈ s := by
+theorem mem_map {f : α ≃o β} {b : β} : b ∈ map f s ↔ f.symm b ∈ s :=
+  by
   rw [← f.symm_symm, ← symm_map, f.symm_symm]
   rfl
 #align lower_set.mem_map LowerSet.mem_map
 
 @[simp]
-theorem map_refl : map (OrderIso.refl α) = OrderIso.refl _ := by
+theorem map_refl : map (OrderIso.refl α) = OrderIso.refl _ :=
+  by
   ext
   simp
 #align lower_set.map_refl LowerSet.map_refl
 
 @[simp]
-theorem map_map (g : β ≃o γ) (f : α ≃o β) : map g (map f s) = map (f.trans g) s := by
+theorem map_map (g : β ≃o γ) (f : α ≃o β) : map g (map f s) = map (f.trans g) s :=
+  by
   ext
   simp
 #align lower_set.map_map LowerSet.map_map
@@ -1128,25 +1140,25 @@ protected theorem map_bot : map f ⊥ = ⊥ :=
 
 @[simp]
 protected theorem map_Sup (S : Set (LowerSet α)) : map f (supₛ S) = ⨆ s ∈ S, map f s :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Union₂ _ _
 #align lower_set.map_Sup LowerSet.map_Sup
 
 protected theorem map_Inf (S : Set (LowerSet α)) : map f (infₛ S) = ⨅ s ∈ S, map f s :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Inter₂ f.bijective _
 #align lower_set.map_Inf LowerSet.map_Inf
 
 protected theorem map_supr (g : ι → LowerSet α) : map f (⨆ i, g i) = ⨆ i, map f (g i) :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Union
 #align lower_set.map_supr LowerSet.map_supr
 
 protected theorem map_infi (g : ι → LowerSet α) : map f (⨅ i, g i) = ⨅ i, map f (g i) :=
-  ext <| by 
+  ext <| by
     push_cast
     exact image_Inter f.bijective _
 #align lower_set.map_infi LowerSet.map_infi
@@ -1213,13 +1225,15 @@ theorem mem_Ioi_iff : b ∈ ioi a ↔ a < b :=
 #align upper_set.mem_Ioi_iff UpperSet.mem_Ioi_iff
 
 @[simp]
-theorem map_Ici (f : α ≃o β) (a : α) : map f (ici a) = ici (f a) := by
+theorem map_Ici (f : α ≃o β) (a : α) : map f (ici a) = ici (f a) :=
+  by
   ext
   simp
 #align upper_set.map_Ici UpperSet.map_Ici
 
 @[simp]
-theorem map_Ioi (f : α ≃o β) (a : α) : map f (ioi a) = ioi (f a) := by
+theorem map_Ioi (f : α ≃o β) (a : α) : map f (ioi a) = ioi (f a) :=
+  by
   ext
   simp
 #align upper_set.map_Ioi UpperSet.map_Ioi
@@ -1341,13 +1355,15 @@ theorem mem_Iio_iff : b ∈ iio a ↔ b < a :=
 #align lower_set.mem_Iio_iff LowerSet.mem_Iio_iff
 
 @[simp]
-theorem map_Iic (f : α ≃o β) (a : α) : map f (iic a) = iic (f a) := by
+theorem map_Iic (f : α ≃o β) (a : α) : map f (iic a) = iic (f a) :=
+  by
   ext
   simp
 #align lower_set.map_Iic LowerSet.map_Iic
 
 @[simp]
-theorem map_Iio (f : α ≃o β) (a : α) : map f (iio a) = iio (f a) := by
+theorem map_Iio (f : α ≃o β) (a : α) : map f (iio a) = iio (f a) :=
+  by
   ext
   simp
 #align lower_set.map_Iio LowerSet.map_Iio
@@ -1510,7 +1526,8 @@ protected theorem LowerSet.lower_closure (s : LowerSet α) : lowerClosure (s : S
 
 @[simp]
 theorem upper_closure_image (f : α ≃o β) :
-    upperClosure (f '' s) = UpperSet.map f (upperClosure s) := by
+    upperClosure (f '' s) = UpperSet.map f (upperClosure s) :=
+  by
   rw [← f.symm_symm, ← UpperSet.symm_map, f.symm_symm]
   ext
   simp [-UpperSet.symm_map, UpperSet.map, OrderIso.symm, ← f.le_symm_apply]
@@ -1518,20 +1535,23 @@ theorem upper_closure_image (f : α ≃o β) :
 
 @[simp]
 theorem lower_closure_image (f : α ≃o β) :
-    lowerClosure (f '' s) = LowerSet.map f (lowerClosure s) := by
+    lowerClosure (f '' s) = LowerSet.map f (lowerClosure s) :=
+  by
   rw [← f.symm_symm, ← LowerSet.symm_map, f.symm_symm]
   ext
   simp [-LowerSet.symm_map, LowerSet.map, OrderIso.symm, ← f.symm_apply_le]
 #align lower_closure_image lower_closure_image
 
 @[simp]
-theorem UpperSet.infi_Ici (s : Set α) : (⨅ a ∈ s, UpperSet.ici a) = upperClosure s := by
+theorem UpperSet.infi_Ici (s : Set α) : (⨅ a ∈ s, UpperSet.ici a) = upperClosure s :=
+  by
   ext
   simp
 #align upper_set.infi_Ici UpperSet.infi_Ici
 
 @[simp]
-theorem LowerSet.supr_Iic (s : Set α) : (⨆ a ∈ s, LowerSet.iic a) = lowerClosure s := by
+theorem LowerSet.supr_Iic (s : Set α) : (⨆ a ∈ s, LowerSet.iic a) = lowerClosure s :=
+  by
   ext
   simp
 #align lower_set.supr_Iic LowerSet.supr_Iic
@@ -1550,9 +1570,8 @@ theorem gc_lower_closure_coe : GaloisConnection (lowerClosure : Set α → Lower
 
 /-- `upper_closure` forms a reversed Galois insertion with the coercion from upper sets to sets. -/
 def giUpperClosureCoe :
-    GaloisInsertion (to_dual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ)
-      (coe ∘
-        of_dual) where 
+    GaloisInsertion (to_dual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ) (coe ∘ of_dual)
+    where
   choice s hs := toDual (⟨s, fun a b hab ha => hs ⟨a, ha, hab⟩⟩ : UpperSet α)
   gc := gc_upper_closure_coe
   le_l_u _ := subset_upper_closure
@@ -1560,9 +1579,8 @@ def giUpperClosureCoe :
 #align gi_upper_closure_coe giUpperClosureCoe
 
 /-- `lower_closure` forms a Galois insertion with the coercion from lower sets to sets. -/
-def giLowerClosureCoe :
-    GaloisInsertion (lowerClosure : Set α → LowerSet α)
-      coe where 
+def giLowerClosureCoe : GaloisInsertion (lowerClosure : Set α → LowerSet α) coe
+    where
   choice s hs := ⟨s, fun a b hba ha => hs ⟨a, ha, hba⟩⟩
   gc := gc_lower_closure_coe
   le_l_u _ := subset_lower_closure
@@ -1578,25 +1596,29 @@ theorem lower_closure_mono : Monotone (lowerClosure : Set α → LowerSet α) :=
 #align lower_closure_mono lower_closure_mono
 
 @[simp]
-theorem upper_closure_empty : upperClosure (∅ : Set α) = ⊤ := by
+theorem upper_closure_empty : upperClosure (∅ : Set α) = ⊤ :=
+  by
   ext
   simp
 #align upper_closure_empty upper_closure_empty
 
 @[simp]
-theorem lower_closure_empty : lowerClosure (∅ : Set α) = ⊥ := by
+theorem lower_closure_empty : lowerClosure (∅ : Set α) = ⊥ :=
+  by
   ext
   simp
 #align lower_closure_empty lower_closure_empty
 
 @[simp]
-theorem upper_closure_singleton (a : α) : upperClosure ({a} : Set α) = UpperSet.ici a := by
+theorem upper_closure_singleton (a : α) : upperClosure ({a} : Set α) = UpperSet.ici a :=
+  by
   ext
   simp
 #align upper_closure_singleton upper_closure_singleton
 
 @[simp]
-theorem lower_closure_singleton (a : α) : lowerClosure ({a} : Set α) = LowerSet.iic a := by
+theorem lower_closure_singleton (a : α) : lowerClosure ({a} : Set α) = LowerSet.iic a :=
+  by
   ext
   simp
 #align lower_closure_singleton lower_closure_singleton
@@ -1613,42 +1635,46 @@ theorem lower_closure_univ : lowerClosure (univ : Set α) = ⊤ :=
 
 @[simp]
 theorem upper_closure_eq_top_iff : upperClosure s = ⊤ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_upper_closure.trans (congr_arg coe h).Subset, by
+  ⟨fun h => subset_empty_iff.1 <| subset_upper_closure.trans (congr_arg coe h).Subset,
+    by
     rintro rfl
     exact upper_closure_empty⟩
 #align upper_closure_eq_top_iff upper_closure_eq_top_iff
 
 @[simp]
 theorem lower_closure_eq_bot_iff : lowerClosure s = ⊥ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_lower_closure.trans (congr_arg coe h).Subset, by
+  ⟨fun h => subset_empty_iff.1 <| subset_lower_closure.trans (congr_arg coe h).Subset,
+    by
     rintro rfl
     exact lower_closure_empty⟩
 #align lower_closure_eq_bot_iff lower_closure_eq_bot_iff
 
 @[simp]
 theorem upper_closure_union (s t : Set α) :
-    upperClosure (s ∪ t) = upperClosure s ⊓ upperClosure t := by
+    upperClosure (s ∪ t) = upperClosure s ⊓ upperClosure t :=
+  by
   ext
   simp [or_and_right, exists_or]
 #align upper_closure_union upper_closure_union
 
 @[simp]
 theorem lower_closure_union (s t : Set α) :
-    lowerClosure (s ∪ t) = lowerClosure s ⊔ lowerClosure t := by
+    lowerClosure (s ∪ t) = lowerClosure s ⊔ lowerClosure t :=
+  by
   ext
   simp [or_and_right, exists_or]
 #align lower_closure_union lower_closure_union
 
 @[simp]
 theorem upper_closure_Union (f : ι → Set α) : upperClosure (⋃ i, f i) = ⨅ i, upperClosure (f i) :=
-  by 
+  by
   ext
   simp [← exists_and_right, @exists_comm α]
 #align upper_closure_Union upper_closure_Union
 
 @[simp]
 theorem lower_closure_Union (f : ι → Set α) : lowerClosure (⋃ i, f i) = ⨆ i, lowerClosure (f i) :=
-  by 
+  by
   ext
   simp [← exists_and_right, @exists_comm α]
 #align lower_closure_Union lower_closure_Union
@@ -1671,7 +1697,8 @@ theorem Set.OrdConnected.upper_closure_inter_lower_closure (h : s.OrdConnected) 
   set.ord_connected.upper_closure_inter_lower_closure Set.OrdConnected.upper_closure_inter_lower_closure
 
 theorem ord_connected_iff_upper_closure_inter_lower_closure :
-    s.OrdConnected ↔ ↑(upperClosure s) ∩ ↑(lowerClosure s) = s := by
+    s.OrdConnected ↔ ↑(upperClosure s) ∩ ↑(lowerClosure s) = s :=
+  by
   refine' ⟨Set.OrdConnected.upper_closure_inter_lower_closure, fun h => _⟩
   rw [← h]
   exact (UpperSet.upper _).OrdConnected.inter (LowerSet.lower _).OrdConnected
@@ -1839,7 +1866,8 @@ theorem prod_le_prod_iff : s₁ ×ˢ t₁ ≤ s₂ ×ˢ t₂ ↔ s₁ ≤ s₂ �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_eq_top : s ×ˢ t = ⊤ ↔ s = ⊤ ∨ t = ⊤ := by
+theorem prod_eq_top : s ×ˢ t = ⊤ ↔ s = ⊤ ∨ t = ⊤ :=
+  by
   simp_rw [SetLike.ext'_iff]
   exact prod_eq_empty_iff
 #align upper_set.prod_eq_top UpperSet.prod_eq_top
@@ -1989,7 +2017,8 @@ theorem prod_le_prod_iff : s₁ ×ˢ t₁ ≤ s₂ ×ˢ t₂ ↔ s₁ ≤ s₂ �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_eq_bot : s ×ˢ t = ⊥ ↔ s = ⊥ ∨ t = ⊥ := by
+theorem prod_eq_bot : s ×ˢ t = ⊥ ↔ s = ⊥ ∨ t = ⊥ :=
+  by
   simp_rw [SetLike.ext'_iff]
   exact prod_eq_empty_iff
 #align lower_set.prod_eq_bot LowerSet.prod_eq_bot
@@ -2007,7 +2036,8 @@ end LowerSet
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem upper_closure_prod (s : Set α) (t : Set β) :
-    upperClosure (s ×ˢ t) = upperClosure s ×ˢ upperClosure t := by
+    upperClosure (s ×ˢ t) = upperClosure s ×ˢ upperClosure t :=
+  by
   ext
   simp [Prod.le_def, and_and_and_comm _ (_ ∈ t)]
 #align upper_closure_prod upper_closure_prod
@@ -2016,7 +2046,8 @@ theorem upper_closure_prod (s : Set α) (t : Set β) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem lower_closure_prod (s : Set α) (t : Set β) :
-    lowerClosure (s ×ˢ t) = lowerClosure s ×ˢ lowerClosure t := by
+    lowerClosure (s ×ˢ t) = lowerClosure s ×ˢ lowerClosure t :=
+  by
   ext
   simp [Prod.le_def, and_and_and_comm _ (_ ∈ t)]
 #align lower_closure_prod lower_closure_prod

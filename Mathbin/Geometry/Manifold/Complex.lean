@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.complex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,8 @@ variable {M : Type _} [TopologicalSpace M] [CompactSpace M] [ChartedSpace E M]
 
 /-- A holomorphic function on a compact complex manifold is locally constant. -/
 protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
-    IsLocallyConstant f := by
+    IsLocallyConstant f :=
+  by
   haveI : LocallyConnectedSpace M := ChartedSpace.locally_connected_space E M
   apply IsLocallyConstant.of_constant_on_preconnected_clopens
   intro s hs₂ hs₃ a ha b hb
@@ -78,13 +79,15 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   rintro p ⟨hp : f p = _, hps⟩
   -- let `p` be  in this set
   have hps' : s ∈ 𝓝 p := hs₃.1.mem_nhds hps
-  have key₁ : (chart_at E p).symm ⁻¹' s ∈ 𝓝 (chart_at E p p) := by
+  have key₁ : (chart_at E p).symm ⁻¹' s ∈ 𝓝 (chart_at E p p) :=
+    by
     rw [← Filter.mem_map, (chart_at E p).symm_map_nhds_eq (mem_chart_source E p)]
     exact hps'
   have key₂ : (chart_at E p).target ∈ 𝓝 (chart_at E p p) :=
     (LocalHomeomorph.open_target _).mem_nhds (mem_chart_target E p)
   -- `f` pulled back by the chart at `p` is differentiable around `chart_at E p p`
-  have hf' : ∀ᶠ z : E in 𝓝 (chart_at E p p), DifferentiableAt ℂ (f ∘ (chart_at E p).symm) z := by
+  have hf' : ∀ᶠ z : E in 𝓝 (chart_at E p p), DifferentiableAt ℂ (f ∘ (chart_at E p).symm) z :=
+    by
     refine' Filter.eventually_of_mem key₂ fun z hz => _
     have H₁ : (chart_at E p).symm z ∈ (chart_at E p).source := (chart_at E p).map_target hz
     have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).source := trivial
@@ -92,7 +95,8 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
     simp only [differentiable_within_at_univ, mfld_simps] at H
     simpa [LocalHomeomorph.right_inv _ hz] using H.2
   -- `f` pulled back by the chart at `p` has a local max at `chart_at E p p`
-  have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) := by
+  have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) :=
+    by
     refine' Filter.eventually_of_mem key₁ fun z hz => _
     refine' (hp₀ ((chart_at E p).symm z) hz).trans (_ : ‖f p₀‖ ≤ ‖f _‖)
     rw [← hp, LocalHomeomorph.left_inv _ (mem_chart_source E p)]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.of_fn
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem nth_of_fn_aux {n} (f : Fin n → α) (i) :
   | 0, h, l, H => H i
   | succ m, h, l, H =>
     nth_of_fn_aux m _ _
-      (by 
+      (by
         intro j; cases' j with j
         · simp only [nth, of_fn_nth_val, zero_add, dif_pos (show m < n from h)]
         · simp only [nth, H, add_succ, succ_add])
@@ -86,7 +86,8 @@ theorem map_of_fn {β : Type _} {n : ℕ} (f : Fin n → α) (g : α → β) :
 #align list.map_of_fn List.map_of_fn
 
 /-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
-theorem array_eq_of_fn {n} (a : Array' n α) : a.toList = ofFn a.read := by
+theorem array_eq_of_fn {n} (a : Array' n α) : a.toList = ofFn a.read :=
+  by
   suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAux (DArray.read a) m h l
     from this
   intros ; induction' m with m IH generalizing l; · rfl
@@ -95,7 +96,8 @@ theorem array_eq_of_fn {n} (a : Array' n α) : a.toList = ofFn a.read := by
 
 @[congr]
 theorem of_fn_congr {m n : ℕ} (h : m = n) (f : Fin m → α) :
-    ofFn f = ofFn fun i : Fin n => f (Fin.cast h.symm i) := by
+    ofFn f = ofFn fun i : Fin n => f (Fin.cast h.symm i) :=
+  by
   subst h
   simp_rw [Fin.cast_refl, OrderIso.refl_apply]
 #align list.of_fn_congr List.of_fn_congr
@@ -107,7 +109,8 @@ theorem of_fn_zero (f : Fin 0 → α) : ofFn f = [] :=
 #align list.of_fn_zero List.of_fn_zero
 
 @[simp]
-theorem of_fn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => f i.succ := by
+theorem of_fn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => f i.succ :=
+  by
   suffices
     ∀ {m h l}, ofFnAux f (succ m) (succ_le_succ h) l = f 0 :: ofFnAux (fun i => f i.succ) m h l from
     this
@@ -116,7 +119,8 @@ theorem of_fn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i =>
 #align list.of_fn_succ List.of_fn_succ
 
 theorem of_fn_succ' {n} (f : Fin (succ n) → α) :
-    ofFn f = (ofFn fun i => f i.cast_succ).concat (f (Fin.last _)) := by
+    ofFn f = (ofFn fun i => f i.cast_succ).concat (f (Fin.last _)) :=
+  by
   induction' n with n IH
   · rw [of_fn_zero, concat_nil, of_fn_succ, of_fn_zero]
     rfl
@@ -145,7 +149,7 @@ theorem last_of_fn_succ {n : ℕ} (f : Fin n.succ → α)
 theorem of_fn_add {m n} (f : Fin (m + n) → α) :
     List.ofFn f =
       (List.ofFn fun i => f (Fin.castAdd n i)) ++ List.ofFn fun j => f (Fin.natAdd m j) :=
-  by 
+  by
   induction' n with n IH
   · rw [of_fn_zero, append_nil, Fin.cast_add_zero, Fin.cast_refl]
     rfl
@@ -166,7 +170,7 @@ theorem of_fn_mul {m n} (f : Fin (m * n) → α) :
                     (add_lt_add_left j.Prop _).trans_eq (add_one_mul _ _).symm
                   _ ≤ _ := Nat.mul_le_mul_right _ i.Prop
                   ⟩) :=
-  by 
+  by
   induction' m with m IH
   · simp_rw [of_fn_zero, zero_mul, of_fn_zero, join]
   · simp_rw [of_fn_succ', succ_mul, join_concat, of_fn_add, IH]
@@ -191,7 +195,7 @@ theorem of_fn_mul' {m n} (f : Fin (m * n) → α) :
 
 theorem of_fn_nth_le : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
   | [] => rfl
-  | a :: l => by 
+  | a :: l => by
     rw [of_fn_succ]
     congr
     simp only [Fin.coe_succ]
@@ -200,7 +204,8 @@ theorem of_fn_nth_le : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
 
 -- not registered as a simp lemma, as otherwise it fires before `forall_mem_of_fn_iff` which
 -- is much more useful
-theorem mem_of_fn {n} (f : Fin n → α) (a : α) : a ∈ ofFn f ↔ a ∈ Set.range f := by
+theorem mem_of_fn {n} (f : Fin n → α) (a : α) : a ∈ ofFn f ↔ a ∈ Set.range f :=
+  by
   simp only [mem_iff_nth_le, Set.mem_range, nth_le_of_fn']
   exact
     ⟨fun ⟨i, hi, h⟩ => ⟨_, h⟩, fun ⟨i, hi⟩ => ⟨i.1, (length_of_fn f).symm ▸ i.2, by simpa using hi⟩⟩
@@ -218,9 +223,8 @@ theorem of_fn_const (n : ℕ) (c : α) : (ofFn fun i : Fin n => c) = repeat c n 
 
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/
 @[simps]
-def equivSigmaTuple :
-    List α ≃ Σn,
-        Fin n → α where 
+def equivSigmaTuple : List α ≃ Σn, Fin n → α
+    where
   toFun l := ⟨l.length, fun i => l.nthLe (↑i) i.2⟩
   invFun f := List.ofFn f.2
   left_inv := List.of_fn_nth_le

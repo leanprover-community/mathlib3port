@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.surjective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,10 +43,10 @@ variable {A : Type u'} [Category.{v'} A] [ConcreteCategory.{w'} A]
 /-- Given `f : F ⟶ G`, a morphism between presieves, and `s : G.obj (op U)`, this is the sieve
 of `U` consisting of the `i : V ⟶ U` such that `s` restricted along `i` is in the image of `f`. -/
 @[simps (config := lemmasOnly)]
-def imageSieve {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : G.obj (op U)) :
-    Sieve U where 
+def imageSieve {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : G.obj (op U)) : Sieve U
+    where
   arrows V i := ∃ t : F.obj (op V), f.app _ t = G.map i.op s
-  downward_closed' := by 
+  downward_closed' := by
     rintro V W i ⟨t, ht⟩ j
     refine' ⟨F.map j.op t, _⟩
     rw [op_comp, G.map_comp, comp_apply, ← ht, elementwise_of f.naturality]
@@ -64,7 +64,7 @@ theorem image_sieve_whisker_forget {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (
 #align category_theory.image_sieve_whisker_forget CategoryTheory.image_sieve_whisker_forget
 
 theorem image_sieve_app {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : F.obj (op U)) :
-    imageSieve f (f.app _ s) = ⊤ := by 
+    imageSieve f (f.app _ s) = ⊤ := by
   ext (V i)
   simp only [sieve.top_apply, iff_true_iff, image_sieve_apply]
   have := elementwise_of (f.naturality i.op)
@@ -78,7 +78,8 @@ def IsLocallySurjective {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) : Prop :=
 #align category_theory.is_locally_surjective CategoryTheory.IsLocallySurjective
 
 theorem is_locally_surjective_iff_image_presheaf_sheafify_eq_top {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) :
-    IsLocallySurjective J f ↔ (imagePresheaf (whiskerRight f (forget A))).sheafify J = ⊤ := by
+    IsLocallySurjective J f ↔ (imagePresheaf (whiskerRight f (forget A))).sheafify J = ⊤ :=
+  by
   simp only [subpresheaf.ext_iff, Function.funext_iff, Set.ext_iff, top_subpresheaf_obj,
     Set.top_eq_univ, Set.mem_univ, iff_true_iff]
   exact ⟨fun H U => H (unop U), fun H U => H (op U)⟩
@@ -86,7 +87,8 @@ theorem is_locally_surjective_iff_image_presheaf_sheafify_eq_top {F G : Cᵒᵖ 
   category_theory.is_locally_surjective_iff_image_presheaf_sheafify_eq_top CategoryTheory.is_locally_surjective_iff_image_presheaf_sheafify_eq_top
 
 theorem is_locally_surjective_iff_image_presheaf_sheafify_eq_top' {F G : Cᵒᵖ ⥤ Type w} (f : F ⟶ G) :
-    IsLocallySurjective J f ↔ (imagePresheaf f).sheafify J = ⊤ := by
+    IsLocallySurjective J f ↔ (imagePresheaf f).sheafify J = ⊤ :=
+  by
   simp only [subpresheaf.ext_iff, Function.funext_iff, Set.ext_iff, top_subpresheaf_obj,
     Set.top_eq_univ, Set.mem_univ, iff_true_iff]
   exact ⟨fun H U => H (unop U), fun H U => H (op U)⟩
@@ -94,7 +96,8 @@ theorem is_locally_surjective_iff_image_presheaf_sheafify_eq_top' {F G : Cᵒᵖ
   category_theory.is_locally_surjective_iff_image_presheaf_sheafify_eq_top' CategoryTheory.is_locally_surjective_iff_image_presheaf_sheafify_eq_top'
 
 theorem is_locally_surjective_iff_is_iso {F G : SheafCat J (Type w)} (f : F ⟶ G) :
-    IsLocallySurjective J f.1 ↔ IsIso (imageSheafι f) := by
+    IsLocallySurjective J f.1 ↔ IsIso (imageSheafι f) :=
+  by
   rw [image_sheaf_ι, is_locally_surjective_iff_image_presheaf_sheafify_eq_top',
     subpresheaf.eq_top_iff_is_iso]
   exact
@@ -110,7 +113,8 @@ theorem is_locally_surjective_iff_whisker_forget {F G : Cᵒᵖ ⥤ A} (f : F �
   category_theory.is_locally_surjective_iff_whisker_forget CategoryTheory.is_locally_surjective_iff_whisker_forget
 
 theorem is_locally_surjective_of_surjective {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G)
-    (H : ∀ U, Function.Surjective (f.app U)) : IsLocallySurjective J f := by
+    (H : ∀ U, Function.Surjective (f.app U)) : IsLocallySurjective J f :=
+  by
   intro U s
   obtain ⟨t, rfl⟩ := H _ s
   rw [image_sieve_app]
@@ -119,7 +123,8 @@ theorem is_locally_surjective_of_surjective {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G)
   category_theory.is_locally_surjective_of_surjective CategoryTheory.is_locally_surjective_of_surjective
 
 theorem is_locally_surjective_of_iso {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) [IsIso f] :
-    IsLocallySurjective J f := by
+    IsLocallySurjective J f :=
+  by
   apply is_locally_surjective_of_surjective
   intro U
   apply Function.Bijective.surjective
@@ -129,11 +134,11 @@ theorem is_locally_surjective_of_iso {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) [IsIso 
 
 theorem IsLocallySurjective.comp {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} {f₁ : F₁ ⟶ F₂} {f₂ : F₂ ⟶ F₃}
     (h₁ : IsLocallySurjective J f₁) (h₂ : IsLocallySurjective J f₂) :
-    IsLocallySurjective J (f₁ ≫ f₂) := by 
+    IsLocallySurjective J (f₁ ≫ f₂) := by
   intro U s
   have :
     (sieve.bind (image_sieve f₂ s) fun _ _ h => image_sieve f₁ h.some) ≤ image_sieve (f₁ ≫ f₂) s :=
-    by 
+    by
     rintro V i ⟨W, i, j, H, ⟨t', ht'⟩, rfl⟩
     refine' ⟨t', _⟩
     rw [op_comp, F₃.map_comp, nat_trans.comp_app, comp_apply, comp_apply, ht',
@@ -151,9 +156,8 @@ variable (F : Cᵒᵖ ⥤ Type max u v)
 
 /-- The image of `F` in `J.sheafify F` is isomorphic to the sheafification. -/
 noncomputable def sheafificationIsoImagePresheaf :
-    J.sheafify F ≅
-      ((imagePresheaf (J.toSheafify F)).sheafify
-          J).toPresheaf where 
+    J.sheafify F ≅ ((imagePresheaf (J.toSheafify F)).sheafify J).toPresheaf
+    where
   Hom :=
     J.sheafifyLift (toImagePresheafSheafify J _)
       ((is_sheaf_iff_is_sheaf_of_type J _).mpr <|
@@ -162,7 +166,8 @@ noncomputable def sheafificationIsoImagePresheaf :
   inv := Subpresheaf.ι _
   hom_inv_id' :=
     J.sheafify_hom_ext _ _ (J.sheafify_is_sheaf _) (by simp [to_image_presheaf_sheafify])
-  inv_hom_id' := by
+  inv_hom_id' :=
+    by
     rw [← cancel_mono (subpresheaf.ι _), category.id_comp, category.assoc]
     refine' Eq.trans _ (category.comp_id _)
     congr 1
@@ -182,7 +187,7 @@ variable {B : Type w} [Category.{max u v} B] [ConcreteCategory.{max u v} B]
       Limits.HasLimitsOfShape (Limits.WalkingMulticospan fst snd) B]
 
 theorem to_sheafify_is_locally_surjective (F : Cᵒᵖ ⥤ B) : IsLocallySurjective J (J.toSheafify F) :=
-  by 
+  by
   rw [is_locally_surjective_iff_whisker_forget, ← to_sheafify_comp_sheafify_comp_iso_inv]
   apply is_locally_surjective.comp
   · rw [is_locally_surjective_iff_image_presheaf_sheafify_eq_top, subpresheaf.eq_top_iff_is_iso]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.monoid
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -187,14 +187,16 @@ theorem R_apply : (𝑹 I g) h = h * g :=
 
 @[simp]
 theorem L_mul {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G]
-    (g h : G) : 𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) := by
+    (g h : G) : 𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) :=
+  by
   ext
   simp only [ContMdiffMap.comp_apply, L_apply, mul_assoc]
 #align L_mul L_mul
 
 @[simp]
 theorem R_mul {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G]
-    (g h : G) : 𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) := by
+    (g h : G) : 𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) :=
+  by
   ext
   simp only [ContMdiffMap.comp_apply, R_apply, mul_assoc]
 #align R_mul R_mul
@@ -239,7 +241,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
   {G' : Type _} [Monoid G'] [TopologicalSpace G'] [ChartedSpace H' G'] [HasSmoothMul I' G']
 
 theorem smoothPow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
-  | 0 => by 
+  | 0 => by
     simp only [pow_zero]
     exact smoothConst
   | k + 1 => by simpa [pow_succ] using smooth_id.mul (smoothPow _)
@@ -313,7 +315,8 @@ theorem contMdiffFinsetProd' (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
 
 @[to_additive]
 theorem contMdiffWithinAtFinsetProd (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
-    ContMdiffWithinAt I' I n (fun x => ∏ i in t, f i x) s x := by
+    ContMdiffWithinAt I' I n (fun x => ∏ i in t, f i x) s x :=
+  by
   simp only [← Finset.prod_apply]
   exact contMdiffWithinAtFinsetProd' h
 #align cont_mdiff_within_at_finset_prod contMdiffWithinAtFinsetProd
@@ -385,7 +388,8 @@ open Function Filter
 
 @[to_additive]
 theorem contMdiffFinprod (h : ∀ i, ContMdiff I' I n (f i))
-    (hfin : LocallyFinite fun i => mulSupport (f i)) : ContMdiff I' I n fun x => ∏ᶠ i, f i x := by
+    (hfin : LocallyFinite fun i => mulSupport (f i)) : ContMdiff I' I n fun x => ∏ᶠ i, f i x :=
+  by
   intro x
   rcases finprod_eventually_eq_prod hfin x with ⟨s, hs⟩
   exact (contMdiffFinsetProd (fun i hi => h i) x).congr_of_eventually_eq hs
@@ -394,7 +398,8 @@ theorem contMdiffFinprod (h : ∀ i, ContMdiff I' I n (f i))
 @[to_additive]
 theorem contMdiffFinprodCond (hc : ∀ i, p i → ContMdiff I' I n (f i))
     (hf : LocallyFinite fun i => mulSupport (f i)) :
-    ContMdiff I' I n fun x => ∏ᶠ (i) (hi : p i), f i x := by
+    ContMdiff I' I n fun x => ∏ᶠ (i) (hi : p i), f i x :=
+  by
   simp only [← finprod_subtype_eq_finprod_cond]
   exact contMdiffFinprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
 #align cont_mdiff_finprod_cond contMdiffFinprodCond

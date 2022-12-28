@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Extends the theory on functors, applicatives and monads.
 
 ! This file was ported from Lean 3 source module control.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,7 +20,7 @@ notation:1 a " $< " f:1 => f a
 
 section Functor
 
-variable {f : Type u → Type v} [Functor f] [IsLawfulFunctor f]
+variable {f : Type u → Type v} [Functor f] [LawfulFunctor f]
 
 run_cmd
   mk_simp_attr `functor_norm
@@ -84,7 +84,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align seq_map_assoc seq_map_assocₓ'. -/
 @[functor_norm]
 theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) :
-    x <*> f <$> y = (fun m : α → β => m ∘ f) <$> x <*> y := by
+    x <*> f <$> y = (fun m : α → β => m ∘ f) <$> x <*> y :=
+  by
   simp [(pure_seq_eq_map _ _).symm]
   simp [seq_assoc, (comp_map _ _ _).symm, (· ∘ ·)]
   simp [pure_seq_eq_map]
@@ -282,26 +283,24 @@ protected def bind {α β} : Sum e α → (α → Sum e β) → Sum e β
 #align sum.bind Sum.bind
 -/
 
-instance : Monad (Sum.{v, u} e) where 
+instance : Monad (Sum.{v, u} e) where
   pure := @Sum.inr e
   bind := @Sum.bind e
 
-instance : IsLawfulFunctor (Sum.{v, u} e) := by refine' { .. } <;> intros <;> casesm Sum _ _ <;> rfl
+instance : LawfulFunctor (Sum.{v, u} e) := by refine' { .. } <;> intros <;> casesm Sum _ _ <;> rfl
 
-instance :
-    LawfulMonad
-      (Sum.{v, u}
-        e) where 
-  bind_assoc := by 
+instance : LawfulMonad (Sum.{v, u} e)
+    where
+  bind_assoc := by
     intros
     casesm Sum _ _ <;> rfl
-  pure_bind := by 
+  pure_bind := by
     intros
     rfl
-  bind_pure_comp_eq_map := by 
+  bind_pure_comp_eq_map := by
     intros
     casesm Sum _ _ <;> rfl
-  bind_map_eq_seq := by 
+  bind_map_eq_seq := by
     intros
     cases f <;> rfl
 

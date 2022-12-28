@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.int.absolute_value
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem AbsoluteValue.map_units_int_smul (abv : AbsoluteValue R S) (x : ℤˣ) (
 
 /-- `int.nat_abs` as a bundled monoid with zero hom. -/
 @[simps]
-def Int.natAbsHom : ℤ →*₀ ℕ where 
+def Int.natAbsHom : ℤ →*₀ ℕ where
   toFun := Int.natAbs
   map_mul' := Int.natAbs_mul
   map_one' := Int.natAbs_one

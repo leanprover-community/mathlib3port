@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.filter
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,10 +61,10 @@ theorem is_open_set_of_mem {s : Set α} : IsOpen { l : Filter α | s ∈ l } := 
 
 theorem is_topological_basis_Iic_principal :
     IsTopologicalBasis (range (Iic ∘ 𝓟 : Set α → Set (Filter α))) :=
-  { exists_subset_inter := by 
+  { exists_subset_inter := by
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl
       exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩
-    sUnion_eq := sUnion_eq_univ_iff.2 fun l => ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩
+    sUnion_eq := unionₛ_eq_univ_iff.2 fun l => ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩
     eq_generate_from := rfl }
 #align filter.is_topological_basis_Iic_principal Filter.is_topological_basis_Iic_principal
 
@@ -89,7 +89,8 @@ protected theorem tendsto_nhds {la : Filter α} {lb : Filter β} {f : α → Fil
 #align filter.tendsto_nhds Filter.tendsto_nhds
 
 theorem HasBasis.nhds {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
-    HasBasis (𝓝 l) p fun i => Iic (𝓟 (s i)) := by
+    HasBasis (𝓝 l) p fun i => Iic (𝓟 (s i)) :=
+  by
   rw [nhds_eq]
   exact h.lift' monotone_principal.Iic
 #align filter.has_basis.nhds Filter.HasBasis.nhds
@@ -131,7 +132,8 @@ theorem nhds_pure (x : α) : 𝓝 (pure x : Filter α) = 𝓟 {⊥, pure x} := b
 #align filter.nhds_pure Filter.nhds_pure
 
 @[simp]
-theorem nhds_infi (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) := by
+theorem nhds_infi (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
+  by
   simp only [nhds_eq]
   apply lift'_infi_of_map_univ <;> simp
 #align filter.nhds_infi Filter.nhds_infi
@@ -151,7 +153,8 @@ theorem Inter_nhds (l : Filter α) : ⋂₀ { s | s ∈ 𝓝 l } = Iic l := by
 #align filter.Inter_nhds Filter.Inter_nhds
 
 @[simp]
-theorem nhds_mono {l₁ l₂ : Filter α} : 𝓝 l₁ ≤ 𝓝 l₂ ↔ l₁ ≤ l₂ := by
+theorem nhds_mono {l₁ l₂ : Filter α} : 𝓝 l₁ ≤ 𝓝 l₂ ↔ l₁ ≤ l₂ :=
+  by
   refine' ⟨fun h => _, fun h => monotone_nhds h⟩
   rw [← Iic_subset_Iic, ← Inter_nhds, ← Inter_nhds]
   exact sInter_subset_sInter h
@@ -168,7 +171,8 @@ protected theorem mem_closure {s : Set (Filter α)} {l : Filter α} :
 #align filter.mem_closure Filter.mem_closure
 
 @[simp]
-protected theorem closure_singleton (l : Filter α) : closure {l} = Ici l := by
+protected theorem closure_singleton (l : Filter α) : closure {l} = Ici l :=
+  by
   ext l'
   simp [Filter.mem_closure, Filter.le_def]
 #align filter.closure_singleton Filter.closure_singleton

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Edward Ayers, Thomas Read
 
 ! This file was ported from Lean 3 source module category_theory.closed.cartesian
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,7 +213,8 @@ theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) 
 #align
   category_theory.cartesian_closed.uncurry_id_eq_ev CategoryTheory.CartesianClosed.uncurry_id_eq_ev
 
-theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X := by
+theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X :=
+  by
   rw [curry_eq, (exp A).map_id (A ⨯ _)]
   apply comp_id
 #align
@@ -288,19 +289,20 @@ theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [
 end Pre
 
 /-- The internal hom functor given by the cartesian closed structure. -/
-def internalHom [CartesianClosed C] :
-    Cᵒᵖ ⥤ C ⥤ C where 
+def internalHom [CartesianClosed C] : Cᵒᵖ ⥤ C ⥤ C
+    where
   obj X := exp X.unop
   map X Y f := pre f.unop
 #align category_theory.internal_hom CategoryTheory.internalHom
 
 /-- If an initial object `I` exists in a CCC, then `A ⨯ I ≅ I`. -/
 @[simps]
-def zeroMul {I : C} (t : IsInitial I) :
-    A ⨯ I ≅ I where 
+def zeroMul {I : C} (t : IsInitial I) : A ⨯ I ≅ I
+    where
   Hom := Limits.prod.snd
   inv := t.to _
-  hom_inv_id' := by
+  hom_inv_id' :=
+    by
     have : (limits.prod.snd : A ⨯ I ⟶ I) = cartesian_closed.uncurry (t.to _)
     rw [← curry_eq_iff]
     apply t.hom_ext
@@ -315,11 +317,12 @@ def mulZero {I : C} (t : IsInitial I) : I ⨯ A ≅ I :=
 #align category_theory.mul_zero CategoryTheory.mulZero
 
 /-- If an initial object `0` exists in a CCC then `0^B ≅ 1` for any `B`. -/
-def powZero {I : C} (t : IsInitial I) [CartesianClosed C] :
-    I ⟹ B ≅ ⊤_ C where 
+def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C
+    where
   Hom := default
   inv := CartesianClosed.curry ((mulZero t).Hom ≫ t.to _)
-  hom_inv_id' := by
+  hom_inv_id' :=
+    by
     rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]
     · apply t.hom_ext
     · infer_instance
@@ -330,19 +333,17 @@ def powZero {I : C} (t : IsInitial I) [CartesianClosed C] :
 -- TODO: Define a distributive category, so that zero_mul and friends can be derived from this.
 /-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
 def prodCoprodDistrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) :
-    (Z ⨯ X) ⨿ Z ⨯ Y ≅
-      Z ⨯
-        X ⨿
-          Y where 
+    (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y
+    where
   Hom := coprod.desc (Limits.prod.map (𝟙 _) coprod.inl) (Limits.prod.map (𝟙 _) coprod.inr)
   inv :=
     CartesianClosed.uncurry
       (coprod.desc (CartesianClosed.curry coprod.inl) (CartesianClosed.curry coprod.inr))
-  hom_inv_id' := by 
+  hom_inv_id' := by
     apply coprod.hom_ext
     rw [coprod.inl_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inl_desc, uncurry_curry]
     rw [coprod.inr_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inr_desc, uncurry_curry]
-  inv_hom_id' := by 
+  inv_hom_id' := by
     rw [← uncurry_natural_right, ← eq_curry_iff]
     apply coprod.hom_ext
     rw [coprod.inl_desc_assoc, ← curry_natural_right, coprod.inl_desc, ← curry_natural_left,
@@ -356,7 +357,8 @@ i.e. any morphism to `I` is an iso.
 This actually shows a slightly stronger version: any morphism to an initial object from an
 exponentiable object is an isomorphism.
 -/
-theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f := by
+theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f :=
+  by
   haveI : mono (limits.prod.lift (𝟙 A) f ≫ (zero_mul t).Hom) := mono_comp _ _
   rw [zero_mul_hom, prod.lift_snd] at _inst
   haveI : is_split_epi f := is_split_epi.mk' ⟨t.to _, t.hom_ext _ _⟩
@@ -369,7 +371,7 @@ instance to_initial_is_iso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
 
 /-- If an initial object `0` exists in a CCC then every morphism from it is monic. -/
 theorem initial_mono {I : C} (B : C) (t : IsInitial I) [CartesianClosed C] : Mono (t.to B) :=
-  ⟨fun B g h _ => by 
+  ⟨fun B g h _ => by
     haveI := strict_initial t g
     haveI := strict_initial t h
     exact eq_of_inv_eq_inv (t.hom_ext _ _)⟩
@@ -390,10 +392,10 @@ variable [HasFiniteProducts D]
 Note we didn't require any coherence between the choice of finite products here, since we transport
 along the `prod_comparison` isomorphism.
 -/
-def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
-    CartesianClosed
-      D where closed' X :=
-    { isAdj := by 
+def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClosed D
+    where closed' X :=
+    {
+      isAdj := by
         haveI q : exponentiable (e.inverse.obj X) := inferInstance
         have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
         have : e.functor ⋙ prod.functor.obj X ⋙ e.inverse ≅ prod.functor.obj (e.inverse.obj X)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_top
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.covariant_class_add_le WithTop.covariantClass_add_leₓ'. -/
 instance covariantClass_add_le [LE α] [CovariantClass α α (· + ·) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (· + ·) (· ≤ ·) :=
-  ⟨fun a b c h => by 
+  ⟨fun a b c h => by
     cases a <;> cases c <;> try exact le_top
     rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
     exact coe_le_coe.2 (add_le_add_left (coe_le_coe.1 h) _)⟩
@@ -211,7 +211,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.covariant_class_swap_add_le WithTop.covariantClass_swap_add_leₓ'. -/
 instance covariantClass_swap_add_le [LE α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· ≤ ·) :=
-  ⟨fun a b c h => by 
+  ⟨fun a b c h => by
     cases a <;> cases c <;> try exact le_top
     rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
     exact coe_le_coe.2 (add_le_add_right (coe_le_coe.1 h) _)⟩
@@ -225,7 +225,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.contravariant_class_add_lt WithTop.contravariantClass_add_ltₓ'. -/
 instance contravariantClass_add_lt [LT α] [ContravariantClass α α (· + ·) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (· + ·) (· < ·) :=
-  ⟨fun a b c h => by 
+  ⟨fun a b c h => by
     induction a using WithTop.recTopCoe; · exact (not_none_lt _ h).elim
     induction b using WithTop.recTopCoe; · exact (not_none_lt _ h).elim
     induction c using WithTop.recTopCoe
@@ -241,7 +241,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.contravariant_class_swap_add_lt WithTop.contravariantClass_swap_add_ltₓ'. -/
 instance contravariantClass_swap_add_lt [LT α] [ContravariantClass α α (swap (· + ·)) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· < ·) :=
-  ⟨fun a b c h => by 
+  ⟨fun a b c h => by
     cases a <;> cases b <;> try exact (not_none_lt _ h).elim
     cases c
     · exact coe_lt_top _
@@ -255,7 +255,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α} {c : WithTop.{u1} α} [_inst_2 : LE.{u1} α] [_inst_3 : ContravariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1800 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1802 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1800 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1802) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1815 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1817 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1815 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1817)], (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_2) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) a b) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) a c)) -> (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_2) b c)
 Case conversion may be inaccurate. Consider using '#align with_top.le_of_add_le_add_left WithTop.le_of_add_le_add_leftₓ'. -/
 protected theorem le_of_add_le_add_left [LE α] [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤)
-    (h : a + b ≤ a + c) : b ≤ c := by 
+    (h : a + b ≤ a + c) : b ≤ c := by
   lift a to α using ha
   induction c using WithTop.recTopCoe; · exact le_top
   induction b using WithTop.recTopCoe; · exact (not_top_le_coe _ h).elim
@@ -270,7 +270,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α} {c : WithTop.{u1} α} [_inst_2 : LE.{u1} α] [_inst_3 : ContravariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1916 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1918 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1916 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1918)) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1931 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1933 : α) => LE.le.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1931 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.1933)], (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_2) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) b a) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) c a)) -> (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_2) b c)
 Case conversion may be inaccurate. Consider using '#align with_top.le_of_add_le_add_right WithTop.le_of_add_le_add_rightₓ'. -/
 protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap (· + ·)) (· ≤ ·)]
-    (ha : a ≠ ⊤) (h : b + a ≤ c + a) : b ≤ c := by
+    (ha : a ≠ ⊤) (h : b + a ≤ c + a) : b ≤ c :=
+  by
   lift a to α using ha
   cases c
   · exact le_top
@@ -286,7 +287,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α} {c : WithTop.{u1} α} [_inst_2 : LT.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2040 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2042 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2040 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2042) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2055 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2057 : α) => LT.lt.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2055 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2057)], (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_2) b c) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_2) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) a b) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) a c))
 Case conversion may be inaccurate. Consider using '#align with_top.add_lt_add_left WithTop.add_lt_add_leftₓ'. -/
 protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤)
-    (h : b < c) : a + b < a + c := by 
+    (h : b < c) : a + b < a + c := by
   lift a to α using ha
   rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
@@ -301,7 +302,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α} {c : WithTop.{u1} α} [_inst_2 : LT.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2158 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2160 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2158 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2160)) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2173 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2175 : α) => LT.lt.{u1} α _inst_2 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2173 x._@.Mathlib.Algebra.Order.Monoid.WithTop._hyg.2175)], (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_2) b c) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_2) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) b a) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) c a))
 Case conversion may be inaccurate. Consider using '#align with_top.add_lt_add_right WithTop.add_lt_add_rightₓ'. -/
 protected theorem add_lt_add_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤)
-    (h : b < c) : b + a < c + a := by 
+    (h : b < c) : b + a < c + a := by
   lift a to α using ha
   rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
@@ -378,7 +379,8 @@ Case conversion may be inaccurate. Consider using '#align with_top.map_add WithT
 --  There is no `with_top.map_mul_of_mul_hom`, since `with_top` does not have a multiplication.
 @[simp]
 protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : WithTop α) :
-    (a + b).map f = a.map f + b.map f := by
+    (a + b).map f = a.map f + b.map f :=
+  by
   induction a using WithTop.recTopCoe
   · exact (top_add _).symm
   · induction b using WithTop.recTopCoe
@@ -400,13 +402,14 @@ instance [AddCommSemigroup α] : AddCommSemigroup (WithTop α) :=
       repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_comm] }
 
 instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
-  { WithTop.hasZero, WithTop.add with
-    zero_add := by 
+  { WithTop.hasZero,
+    WithTop.add with
+    zero_add := by
       refine' WithTop.recTopCoe _ _
       · simp
       · intro
         rw [← WithTop.coe_zero, ← WithTop.coe_add, zero_add]
-    add_zero := by 
+    add_zero := by
       refine' WithTop.recTopCoe _ _
       · simp
       · intro
@@ -419,7 +422,8 @@ instance [AddCommMonoid α] : AddCommMonoid (WithTop α) :=
   { WithTop.addMonoid, WithTop.addCommSemigroup with }
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne (WithTop α) :=
-  { WithTop.one, WithTop.addMonoid with
+  { WithTop.one,
+    WithTop.addMonoid with
     natCast := fun n => ↑(n : α)
     nat_cast_zero := by rw [Nat.cast_zero, WithTop.coe_zero]
     nat_cast_succ := fun n => by rw [Nat.cast_add_one, WithTop.coe_add, WithTop.coe_one] }
@@ -429,7 +433,7 @@ instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne (WithTop α) :=
 
 instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithTop α) :=
   { WithTop.partialOrder, WithTop.addCommMonoid with
-    add_le_add_left := by 
+    add_le_add_left := by
       rintro a b h (_ | c); · simp [none_eq_top]
       rcases b with (_ | b); · simp [none_eq_top]
       rcases le_coe_iff.1 h with ⟨a, rfl, h⟩
@@ -445,7 +449,8 @@ instance [LE α] [Add α] [ExistsAddOfLE α] : ExistsAddOfLE (WithTop α) :=
     match a, b with
     | ⊤, ⊤ => by simp
     | (a : α), ⊤ => fun _ => ⟨⊤, rfl⟩
-    | (a : α), (b : α) => fun h => by
+    | (a : α), (b : α) => fun h =>
+      by
       obtain ⟨c, rfl⟩ := exists_add_of_le (WithTop.coe_le_coe.1 h)
       exact ⟨c, rfl⟩
     | ⊤, (b : α) => fun h => (not_top_le_coe _ h).elim⟩
@@ -522,7 +527,7 @@ theorem zero_lt_coe [OrderedAddCommMonoid α] (a : α) : (0 : WithTop α) < a �
 @[to_additive "A version of `with_top.map` for `zero_hom`s",
   simps (config := { fullyApplied := false })]
 protected def OneHom.withTopMap {M N : Type _} [One M] [One N] (f : OneHom M N) :
-    OneHom (WithTop M) (WithTop N) where 
+    OneHom (WithTop M) (WithTop N) where
   toFun := WithTop.map f
   map_one' := by rw [WithTop.map_one, map_one, coe_one]
 #align one_hom.with_top_map OneHom.withTopMap
@@ -532,7 +537,7 @@ protected def OneHom.withTopMap {M N : Type _} [One M] [One N] (f : OneHom M N) 
 /-- A version of `with_top.map` for `add_hom`s. -/
 @[simps (config := { fullyApplied := false })]
 protected def AddHom.withTopMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
-    AddHom (WithTop M) (WithTop N) where 
+    AddHom (WithTop M) (WithTop N) where
   toFun := WithTop.map f
   map_add' := WithTop.map_add f
 #align add_hom.with_top_map AddHom.withTopMap
@@ -741,7 +746,7 @@ protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : With
 @[to_additive "A version of `with_bot.map` for `zero_hom`s",
   simps (config := { fullyApplied := false })]
 protected def OneHom.withBotMap {M N : Type _} [One M] [One N] (f : OneHom M N) :
-    OneHom (WithBot M) (WithBot N) where 
+    OneHom (WithBot M) (WithBot N) where
   toFun := WithBot.map f
   map_one' := by rw [WithBot.map_one, map_one, coe_one]
 #align one_hom.with_bot_map OneHom.withBotMap
@@ -751,7 +756,7 @@ protected def OneHom.withBotMap {M N : Type _} [One M] [One N] (f : OneHom M N) 
 /-- A version of `with_bot.map` for `add_hom`s. -/
 @[simps (config := { fullyApplied := false })]
 protected def AddHom.withBotMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
-    AddHom (WithBot M) (WithBot N) where 
+    AddHom (WithBot M) (WithBot N) where
   toFun := WithBot.map f
   map_add' := WithBot.map_add f
 #align add_hom.with_bot_map AddHom.withBotMap
@@ -768,18 +773,18 @@ protected def AddMonoidHom.withBotMap {M N : Type _} [AddZeroClass M] [AddZeroCl
 
 variable [Preorder α]
 
-#print WithBot.covariant_class_add_le /-
-instance covariant_class_add_le [CovariantClass α α (· + ·) (· ≤ ·)] :
+#print WithBot.covariantClass_add_le /-
+instance covariantClass_add_le [CovariantClass α α (· + ·) (· ≤ ·)] :
     CovariantClass (WithBot α) (WithBot α) (· + ·) (· ≤ ·) :=
   @OrderDual.covariantClass_add_le (WithTop αᵒᵈ) _ _ _
-#align with_bot.covariant_class_add_le WithBot.covariant_class_add_le
+#align with_bot.covariant_class_add_le WithBot.covariantClass_add_le
 -/
 
-#print WithBot.covariant_class_swap_add_le /-
-instance covariant_class_swap_add_le [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
+#print WithBot.covariantClass_swap_add_le /-
+instance covariantClass_swap_add_le [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
     CovariantClass (WithBot α) (WithBot α) (swap (· + ·)) (· ≤ ·) :=
   @OrderDual.covariantClass_swap_add_le (WithTop αᵒᵈ) _ _ _
-#align with_bot.covariant_class_swap_add_le WithBot.covariant_class_swap_add_le
+#align with_bot.covariant_class_swap_add_le WithBot.covariantClass_swap_add_le
 -/
 
 #print WithBot.contravariantClass_add_lt /-

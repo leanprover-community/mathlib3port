@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.char_zero.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,14 +37,15 @@ def castEmbedding : ℕ ↪ R :=
 
 @[simp]
 theorem cast_pow_eq_one {R : Type _} [Semiring R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
-    (q : R) ^ n = 1 ↔ q = 1 := by 
+    (q : R) ^ n = 1 ↔ q = 1 := by
   rw [← cast_pow, cast_eq_one]
   exact pow_eq_one_iff hn
 #align nat.cast_pow_eq_one Nat.cast_pow_eq_one
 
 @[simp, norm_cast]
 theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℕ} (n_dvd : n ∣ m) :
-    ((m / n : ℕ) : k) = m / n := by
+    ((m / n : ℕ) : k) = m / n :=
+  by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
   · exact cast_div n_dvd (cast_ne_zero.2 hn)
@@ -57,7 +58,7 @@ section
 variable (M : Type _) [AddMonoidWithOne M] [CharZero M]
 
 instance CharZero.NeZero.two : NeZero (2 : M) :=
-  ⟨by 
+  ⟨by
     have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 (by decide)
     rwa [Nat.cast_two] at this⟩
 #align char_zero.ne_zero.two CharZero.NeZero.two
@@ -79,7 +80,8 @@ theorem bit0_eq_zero {a : R} : bit0 a = 0 ↔ a = 0 :=
 #align bit0_eq_zero bit0_eq_zero
 
 @[simp]
-theorem zero_eq_bit0 {a : R} : 0 = bit0 a ↔ a = 0 := by
+theorem zero_eq_bit0 {a : R} : 0 = bit0 a ↔ a = 0 :=
+  by
   rw [eq_comm]
   exact bit0_eq_zero
 #align zero_eq_bit0 zero_eq_bit0
@@ -106,7 +108,8 @@ theorem eq_neg_self_iff {a : R} : a = -a ↔ a = 0 :=
   eq_neg_iff_add_eq_zero.trans add_self_eq_zero
 #align eq_neg_self_iff eq_neg_self_iff
 
-theorem nat_mul_inj {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) : n = 0 ∨ a = b := by
+theorem nat_mul_inj {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) : n = 0 ∨ a = b :=
+  by
   rw [← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero] at h
   exact_mod_cast h
 #align nat_mul_inj nat_mul_inj
@@ -115,14 +118,16 @@ theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n 
   simpa [w] using nat_mul_inj h
 #align nat_mul_inj' nat_mul_inj'
 
-theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h => by
+theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h =>
+  by
   dsimp [bit0] at h
   simp only [(two_mul a).symm, (two_mul b).symm] at h
   refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h
 #align bit0_injective bit0_injective
 
-theorem bit1_injective : Function.Injective (bit1 : R → R) := fun a b h => by
+theorem bit1_injective : Function.Injective (bit1 : R → R) := fun a b h =>
+  by
   simp only [bit1, add_left_inj] at h
   exact bit0_injective h
 #align bit1_injective bit1_injective
@@ -143,7 +148,8 @@ theorem bit1_eq_one {a : R} : bit1 a = 1 ↔ a = 0 := by
 #align bit1_eq_one bit1_eq_one
 
 @[simp]
-theorem one_eq_bit1 {a : R} : 1 = bit1 a ↔ a = 0 := by
+theorem one_eq_bit1 {a : R} : 1 = bit1 a ↔ a = 0 :=
+  by
   rw [eq_comm]
   exact bit1_eq_one
 #align one_eq_bit1 one_eq_bit1
@@ -172,11 +178,8 @@ end
 
 namespace WithTop
 
-instance {R : Type _} [AddMonoidWithOne R] [CharZero R] :
-    CharZero
-      (WithTop
-        R) where cast_injective m n h := by
-    rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
+instance {R : Type _} [AddMonoidWithOne R] [CharZero R] : CharZero (WithTop R)
+    where cast_injective m n h := by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 
 end WithTop
 

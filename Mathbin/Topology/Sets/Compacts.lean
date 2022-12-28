@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.compacts
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,9 +46,9 @@ namespace Compacts
 
 variable {α}
 
-instance : SetLike (Compacts α) α where 
+instance : SetLike (Compacts α) α where
   coe := Compacts.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     cases s
     cases t
     congr
@@ -128,7 +128,7 @@ theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} :
     (↑(s.sup f) : Set α) = s.sup fun i => f i := by
-  classical 
+  classical
     refine' Finset.induction_on s rfl fun a s _ h => _
     simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
     congr
@@ -146,14 +146,14 @@ theorem coe_map {f : α → β} (hf : Continuous f) (s : Compacts α) : (s.map f
 
 /-- A homeomorphism induces an equivalence on compact sets, by taking the image. -/
 @[simp]
-protected def equiv (f : α ≃ₜ β) :
-    Compacts α ≃ Compacts β where 
+protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β
+    where
   toFun := Compacts.map f f.Continuous
   invFun := Compacts.map _ f.symm.Continuous
-  left_inv s := by 
+  left_inv s := by
     ext1
     simp only [coe_map, ← image_comp, f.symm_comp_self, image_id]
-  right_inv s := by 
+  right_inv s := by
     ext1
     simp only [coe_map, ← image_comp, f.self_comp_symm, image_id]
 #align topological_space.compacts.equiv TopologicalSpace.Compacts.equiv
@@ -165,8 +165,8 @@ theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
-protected def prod (K : Compacts α) (L : Compacts β) :
-    Compacts (α × β) where 
+protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β)
+    where
   carrier := K ×ˢ L
   is_compact' := IsCompact.prod K.2 L.2
 #align topological_space.compacts.prod TopologicalSpace.Compacts.prod
@@ -189,10 +189,10 @@ structure NonemptyCompacts (α : Type _) [TopologicalSpace α] extends Compacts 
 
 namespace NonemptyCompacts
 
-instance : SetLike (NonemptyCompacts α)
-      α where 
+instance : SetLike (NonemptyCompacts α) α
+    where
   coe s := s.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
@@ -289,10 +289,10 @@ structure PositiveCompacts (α : Type _) [TopologicalSpace α] extends Compacts 
 
 namespace PositiveCompacts
 
-instance : SetLike (PositiveCompacts α)
-      α where 
+instance : SetLike (PositiveCompacts α) α
+    where
   coe s := s.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr
@@ -374,7 +374,8 @@ instance nonempty' [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCo
 /-- The product of two `positive_compacts`, as a `positive_compacts` in the product space. -/
 protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : PositiveCompacts (α × β) :=
   { K.toCompacts.Prod L.toCompacts with
-    interior_nonempty' := by
+    interior_nonempty' :=
+      by
       simp only [compacts.carrier_eq_coe, compacts.coe_prod, interior_prod_eq]
       exact K.interior_nonempty.prod L.interior_nonempty }
 #align topological_space.positive_compacts.prod TopologicalSpace.PositiveCompacts.prod
@@ -399,10 +400,10 @@ structure CompactOpens (α : Type _) [TopologicalSpace α] extends Compacts α w
 
 namespace CompactOpens
 
-instance : SetLike (CompactOpens α)
-      α where 
+instance : SetLike (CompactOpens α) α
+    where
   coe s := s.carrier
-  coe_injective' s t h := by 
+  coe_injective' s t h := by
     obtain ⟨⟨_, _⟩, _⟩ := s
     obtain ⟨⟨_, _⟩, _⟩ := t
     congr

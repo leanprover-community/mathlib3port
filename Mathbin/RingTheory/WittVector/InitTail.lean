@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.init_tail
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,8 @@ def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if P n then x n else 0
 #align witt_vector.select_poly WittVector.selectPoly
 
-theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) := by
+theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) :=
+  by
   dsimp [select, select_poly]
   split_ifs with hi
   · rw [aeval_X]
@@ -109,7 +110,8 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coe
 #align witt_vector.coeff_select WittVector.coeff_select
 
 @[is_poly]
-theorem select_is_poly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x := by
+theorem select_is_poly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :=
+  by
   use select_poly P
   rintro R _Rcr x
   funext i
@@ -118,7 +120,8 @@ theorem select_is_poly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x 
 
 include hp
 
-theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬P i) x = x := by
+theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬P i) x = x :=
+  by
   ghost_calc _
   intro n
   simp only [RingHom.map_add]
@@ -126,7 +129,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
     (bind₁ (select_poly P)) (wittPolynomial p ℤ n) +
         (bind₁ (select_poly fun i => ¬P i)) (wittPolynomial p ℤ n) =
       wittPolynomial p ℤ n
-    by 
+    by
     apply_fun aeval x.coeff  at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
   simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow,
@@ -141,17 +144,18 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
 #align witt_vector.select_add_select_not WittVector.select_add_select_not
 
 theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coeff n = 0) :
-    (x + y).coeff n = x.coeff n + y.coeff n := by
+    (x + y).coeff n = x.coeff n + y.coeff n :=
+  by
   let P : ℕ → Prop := fun n => y.coeff n = 0
   haveI : DecidablePred P := Classical.decPred P
   set z := mk p fun n => if P n then x.coeff n else y.coeff n with hz
-  have hx : select P z = x := by 
+  have hx : select P z = x := by
     ext1 n
     rw [select, coeff_mk, coeff_mk]
     split_ifs with hn
     · rfl
     · rw [(h n).resolve_right hn]
-  have hy : select (fun i => ¬P i) z = y := by 
+  have hy : select (fun i => ¬P i) z = y := by
     ext1 n
     rw [select, coeff_mk, coeff_mk]
     split_ifs with hn

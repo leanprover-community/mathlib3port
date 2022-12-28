@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -289,8 +289,8 @@ theorem inv_hom_whisker_right {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) :
 
 /-- The left whiskering of a 2-isomorphism is a 2-isomorphism. -/
 @[simps]
-def whiskerLeftIso (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) :
-    f ≫ g ≅ f ≫ h where 
+def whiskerLeftIso (f : a ⟶ b) {g h : b ⟶ c} (η : g ≅ h) : f ≫ g ≅ f ≫ h
+    where
   Hom := f ◁ η.Hom
   inv := f ◁ η.inv
 #align category_theory.bicategory.whisker_left_iso CategoryTheory.Bicategory.whiskerLeftIso
@@ -301,15 +301,15 @@ instance whisker_left_is_iso (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [IsIso
 
 @[simp]
 theorem inv_whisker_left (f : a ⟶ b) {g h : b ⟶ c} (η : g ⟶ h) [IsIso η] :
-    inv (f ◁ η) = f ◁ inv η := by 
+    inv (f ◁ η) = f ◁ inv η := by
   ext
   simp only [← whisker_left_comp, whisker_left_id, is_iso.hom_inv_id]
 #align category_theory.bicategory.inv_whisker_left CategoryTheory.Bicategory.inv_whisker_left
 
 /-- The right whiskering of a 2-isomorphism is a 2-isomorphism. -/
 @[simps]
-def whiskerRightIso {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) :
-    f ≫ h ≅ g ≫ h where 
+def whiskerRightIso {f g : a ⟶ b} (η : f ≅ g) (h : b ⟶ c) : f ≫ h ≅ g ≫ h
+    where
   Hom := η.Hom ▷ h
   inv := η.inv ▷ h
 #align category_theory.bicategory.whisker_right_iso CategoryTheory.Bicategory.whiskerRightIso
@@ -321,7 +321,7 @@ instance whisker_right_is_iso {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [IsIs
 
 @[simp]
 theorem inv_whisker_right {f g : a ⟶ b} (η : f ⟶ g) (h : b ⟶ c) [IsIso η] :
-    inv (η ▷ h) = inv η ▷ h := by 
+    inv (η ▷ h) = inv η ▷ h := by
   ext
   simp only [← comp_whisker_right, id_whisker_right, is_iso.hom_inv_id]
 #align category_theory.bicategory.inv_whisker_right CategoryTheory.Bicategory.inv_whisker_right
@@ -337,7 +337,7 @@ theorem pentagon_inv (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : d ⟶ e) :
 theorem pentagon_inv_inv_hom_hom_inv (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : d ⟶ e) :
     (α_ f (g ≫ h) i).inv ≫ (α_ f g h).inv ▷ i ≫ (α_ (f ≫ g) h i).Hom =
       f ◁ (α_ g h i).Hom ≫ (α_ f g (h ≫ i)).inv :=
-  by 
+  by
   rw [← cancel_epi (f ◁ (α_ g h i).inv), ← cancel_mono (α_ (f ≫ g) h i).inv]
   simp
 #align
@@ -371,7 +371,7 @@ theorem pentagon_hom_hom_inv_hom_hom (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (
 theorem pentagon_hom_inv_inv_inv_hom (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d) (i : d ⟶ e) :
     (α_ f g (h ≫ i)).Hom ≫ f ◁ (α_ g h i).inv ≫ (α_ f (g ≫ h) i).inv =
       (α_ (f ≫ g) h i).inv ≫ (α_ f g h).Hom ▷ i :=
-  by 
+  by
   rw [← cancel_epi (α_ f g (h ≫ i)).inv, ← cancel_mono ((α_ f g h).inv ▷ i)]
   simp
 #align

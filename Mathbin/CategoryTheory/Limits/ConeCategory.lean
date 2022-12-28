@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.cone_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,12 +41,11 @@ variable {C : Type u₃} [Category.{v₃} C] {D : Type u₄} [Category.{v₄} D]
 /-- Construct an object of the category `(Δ ↓ F)` from a cone on `F`. This is part of an
     equivalence, see `cone.equiv_costructured_arrow`. -/
 @[simps]
-def Cone.toCostructuredArrow (F : J ⥤ C) :
-    Cone F ⥤ CostructuredArrow (const J)
-        F where 
+def Cone.toCostructuredArrow (F : J ⥤ C) : Cone F ⥤ CostructuredArrow (const J) F
+    where
   obj c := CostructuredArrow.mk c.π
   map c d f :=
-    CostructuredArrow.homMk f.Hom <| by 
+    CostructuredArrow.homMk f.Hom <| by
       ext
       simp
 #align
@@ -55,13 +54,12 @@ def Cone.toCostructuredArrow (F : J ⥤ C) :
 /-- Construct a cone on `F` from an object of the category `(Δ ↓ F)`. This is part of an
     equivalence, see `cone.equiv_costructured_arrow`. -/
 @[simps]
-def Cone.fromCostructuredArrow (F : J ⥤ C) :
-    CostructuredArrow (const J) F ⥤
-      Cone F where 
+def Cone.fromCostructuredArrow (F : J ⥤ C) : CostructuredArrow (const J) F ⥤ Cone F
+    where
   obj c := ⟨c.left, c.Hom⟩
   map c d f :=
     { Hom := f.left
-      w' := fun j => by 
+      w' := fun j => by
         convert congr_fun (congr_arg nat_trans.app f.w) j
         dsimp
         simp }
@@ -138,12 +136,11 @@ def IsLimit.ofReflectsConeTerminal {F : J ⥤ C} {F' : K ⥤ D} (G : Cone F ⥤ 
 /-- Construct an object of the category `(F ↓ Δ)` from a cocone on `F`. This is part of an
     equivalence, see `cocone.equiv_structured_arrow`. -/
 @[simps]
-def Cocone.toStructuredArrow (F : J ⥤ C) :
-    Cocone F ⥤ StructuredArrow F
-        (const J) where 
+def Cocone.toStructuredArrow (F : J ⥤ C) : Cocone F ⥤ StructuredArrow F (const J)
+    where
   obj c := StructuredArrow.mk c.ι
   map c d f :=
-    StructuredArrow.homMk f.Hom <| by 
+    StructuredArrow.homMk f.Hom <| by
       ext
       simp
 #align
@@ -152,13 +149,12 @@ def Cocone.toStructuredArrow (F : J ⥤ C) :
 /-- Construct a cocone on `F` from an object of the category `(F ↓ Δ)`. This is part of an
     equivalence, see `cocone.equiv_structured_arrow`. -/
 @[simps]
-def Cocone.fromStructuredArrow (F : J ⥤ C) :
-    StructuredArrow F (const J) ⥤
-      Cocone F where 
+def Cocone.fromStructuredArrow (F : J ⥤ C) : StructuredArrow F (const J) ⥤ Cocone F
+    where
   obj c := ⟨c.right, c.Hom⟩
   map c d f :=
     { Hom := f.right
-      w' := fun j => by 
+      w' := fun j => by
         convert (congr_fun (congr_arg nat_trans.app f.w) j).symm
         dsimp
         simp }

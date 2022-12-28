@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yuma Mizuno, Oleksandr Manzyuk
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.coherence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,8 +52,8 @@ instance liftObjUnit : LiftObj (𝟙_ C) where lift := Unit
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance liftObjTensor (X Y : C) [LiftObj X] [LiftObj Y] :
-    LiftObj (X ⊗ Y) where lift := LiftObj.lift X ⊗ LiftObj.lift Y
+instance liftObjTensor (X Y : C) [LiftObj X] [LiftObj Y] : LiftObj (X ⊗ Y)
+    where lift := LiftObj.lift X ⊗ LiftObj.lift Y
 #align
   category_theory.monoidal_category.lift_obj_tensor CategoryTheory.MonoidalCategory.liftObjTensor
 
@@ -68,23 +68,23 @@ class LiftHom {X Y : C} [LiftObj X] [LiftObj Y] (f : X ⟶ Y) where
 instance liftHomId (X : C) [LiftObj X] : LiftHom (𝟙 X) where lift := 𝟙 _
 #align category_theory.monoidal_category.lift_hom_id CategoryTheory.MonoidalCategory.liftHomId
 
-instance liftHomLeftUnitorHom (X : C) [LiftObj X] :
-    LiftHom (λ_ X).Hom where lift := (λ_ (LiftObj.lift X)).Hom
+instance liftHomLeftUnitorHom (X : C) [LiftObj X] : LiftHom (λ_ X).Hom
+    where lift := (λ_ (LiftObj.lift X)).Hom
 #align
   category_theory.monoidal_category.lift_hom_left_unitor_hom CategoryTheory.MonoidalCategory.liftHomLeftUnitorHom
 
-instance liftHomLeftUnitorInv (X : C) [LiftObj X] :
-    LiftHom (λ_ X).inv where lift := (λ_ (LiftObj.lift X)).inv
+instance liftHomLeftUnitorInv (X : C) [LiftObj X] : LiftHom (λ_ X).inv
+    where lift := (λ_ (LiftObj.lift X)).inv
 #align
   category_theory.monoidal_category.lift_hom_left_unitor_inv CategoryTheory.MonoidalCategory.liftHomLeftUnitorInv
 
-instance liftHomRightUnitorHom (X : C) [LiftObj X] :
-    LiftHom (ρ_ X).Hom where lift := (ρ_ (LiftObj.lift X)).Hom
+instance liftHomRightUnitorHom (X : C) [LiftObj X] : LiftHom (ρ_ X).Hom
+    where lift := (ρ_ (LiftObj.lift X)).Hom
 #align
   category_theory.monoidal_category.lift_hom_right_unitor_hom CategoryTheory.MonoidalCategory.liftHomRightUnitorHom
 
-instance liftHomRightUnitorInv (X : C) [LiftObj X] :
-    LiftHom (ρ_ X).inv where lift := (ρ_ (LiftObj.lift X)).inv
+instance liftHomRightUnitorInv (X : C) [LiftObj X] : LiftHom (ρ_ X).inv
+    where lift := (ρ_ (LiftObj.lift X)).inv
 #align
   category_theory.monoidal_category.lift_hom_right_unitor_inv CategoryTheory.MonoidalCategory.liftHomRightUnitorInv
 
@@ -105,8 +105,8 @@ instance liftHomComp {X Y Z : C} [LiftObj X] [LiftObj Y] [LiftObj Z] (f : X ⟶ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftObj Z] (f : W ⟶ X)
-    (g : Y ⟶ Z) [LiftHom f] [LiftHom g] :
-    LiftHom (f ⊗ g) where lift := LiftHom.lift f ⊗ LiftHom.lift g
+    (g : Y ⟶ Z) [LiftHom f] [LiftHom g] : LiftHom (f ⊗ g)
+    where lift := LiftHom.lift f ⊗ LiftHom.lift g
 #align
   category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
 
@@ -293,7 +293,8 @@ example {W X Y Z : C} (f : W ⟶ (X ⊗ Y) ⊗ Z) : W ⟶ X ⊗ Y ⊗ Z :=
   f ⊗≫ 𝟙 _
 
 @[simp]
-theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g := by
+theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g :=
+  by
   dsimp [monoidal_comp]
   simp
 #align
@@ -404,7 +405,8 @@ unsafe def liftable_prefixes : tactic Unit := do
 #align tactic.coherence.liftable_prefixes tactic.coherence.liftable_prefixes
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.coherence.liftable_prefixes -/
-example {W X Y Z : C} (f : Y ⟶ Z) (g) (w : False) : (λ_ _).Hom ≫ f = g := by
+example {W X Y Z : C} (f : Y ⟶ Z) (g) (w : False) : (λ_ _).Hom ≫ f = g :=
+  by
   run_tac
     liftable_prefixes
   guard_target =ₐ (𝟙 _ ≫ (λ_ _).Hom) ≫ f = 𝟙 _ ≫ g

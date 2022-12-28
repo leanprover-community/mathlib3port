@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.dual
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,8 @@ theorem innerSL_norm [Nontrivial E] : ‖(innerSL : E →L⋆[𝕜] E →L[𝕜]
 variable {𝕜}
 
 theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
-    (h : ∀ i : ι, ⟪b i, x⟫ = ⟪b i, y⟫) : x = y := by
+    (h : ∀ i : ι, ⟪b i, x⟫ = ⟪b i, y⟫) : x = y :=
+  by
   apply (to_dual_map 𝕜 E).map_eq_iff.mp
   refine' (Function.Injective.eq_iff ContinuousLinearMap.coe_injective).mp (Basis.ext b _)
   intro i
@@ -96,7 +97,8 @@ theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
 #align inner_product_space.ext_inner_left_basis InnerProductSpace.ext_inner_left_basis
 
 theorem ext_inner_right_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
-    (h : ∀ i : ι, ⟪x, b i⟫ = ⟪y, b i⟫) : x = y := by
+    (h : ∀ i : ι, ⟪x, b i⟫ = ⟪y, b i⟫) : x = y :=
+  by
   refine' ext_inner_left_basis b fun i => _
   rw [← inner_conj_sym]
   nth_rw_rhs 1 [← inner_conj_sym]
@@ -110,11 +112,11 @@ variable (𝕜) (E) [CompleteSpace E]
 -/
 def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
   LinearIsometryEquiv.ofSurjective (toDualMap 𝕜 E)
-    (by 
+    (by
       intro ℓ
       set Y := LinearMap.ker ℓ with hY
       by_cases htriv : Y = ⊤
-      · have hℓ : ℓ = 0 := by 
+      · have hℓ : ℓ = 0 := by
           have h' := linear_map.ker_eq_top.mp htriv
           rw [← coe_zero] at h'
           apply coe_injective
@@ -126,14 +128,16 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
         obtain ⟨z : E, hz : z ∈ Yᗮ, z_ne_0 : z ≠ 0⟩ := htriv
         refine' ⟨(ℓ z† / ⟪z, z⟫) • z, _⟩
         ext x
-        have h₁ : ℓ z • x - ℓ x • z ∈ Y := by
+        have h₁ : ℓ z • x - ℓ x • z ∈ Y :=
+          by
           rw [LinearMap.mem_ker, map_sub, ContinuousLinearMap.map_smul,
             ContinuousLinearMap.map_smul, Algebra.id.smul_eq_mul, Algebra.id.smul_eq_mul, mul_comm]
           exact sub_self (ℓ x * ℓ z)
         have h₂ : ℓ z * ⟪z, x⟫ = ℓ x * ⟪z, z⟫ :=
           haveI h₃ :=
             calc
-              0 = ⟪z, ℓ z • x - ℓ x • z⟫ := by
+              0 = ⟪z, ℓ z • x - ℓ x • z⟫ :=
+                by
                 rw [(Y.mem_orthogonal' z).mp hz]
                 exact h₁
               _ = ⟪z, ℓ z • x⟫ - ⟪z, ℓ x • z⟫ := by rw [inner_sub_right]
@@ -145,8 +149,9 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
             ⟪(ℓ z† / ⟪z, z⟫) • z, x⟫ = ℓ z / ⟪z, z⟫ * ⟪z, x⟫ := by simp [inner_smul_left, conj_conj]
             _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by rw [← div_mul_eq_mul_div]
             _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by rw [h₂]
-            _ = ℓ x := by
-              have : ⟪z, z⟫ ≠ 0 := by 
+            _ = ℓ x :=
+              by
+              have : ⟪z, z⟫ ≠ 0 := by
                 change z = 0 → False at z_ne_0
                 rwa [← inner_self_eq_zero] at z_ne_0
               field_simp [this]
@@ -162,7 +167,8 @@ theorem to_dual_apply {x y : E} : toDual 𝕜 E x y = ⟪x, y⟫ :=
 #align inner_product_space.to_dual_apply InnerProductSpace.to_dual_apply
 
 @[simp]
-theorem to_dual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x := by
+theorem to_dual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x :=
+  by
   rw [← to_dual_apply]
   simp only [LinearIsometryEquiv.apply_symm_apply]
 #align inner_product_space.to_dual_symm_apply InnerProductSpace.to_dual_symm_apply
@@ -190,7 +196,7 @@ theorem continuous_linear_map_of_bilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w
   inner_product_space.continuous_linear_map_of_bilin_apply InnerProductSpace.continuous_linear_map_of_bilin_apply
 
 theorem unique_continuous_linear_map_of_bilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) :
-    f = B♯ v := by 
+    f = B♯ v := by
   refine' ext_inner_right 𝕜 _
   intro w
   rw [continuous_linear_map_of_bilin_apply]

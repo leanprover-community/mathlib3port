@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.free_monoid.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,8 +80,8 @@ theorem of_list_comp_to_list : @ofList α ∘ to_list = id :=
 #align free_monoid.of_list_comp_to_list FreeMonoid.of_list_comp_to_list
 
 @[to_additive]
-instance : CancelMonoid (FreeMonoid
-        α) where 
+instance : CancelMonoid (FreeMonoid α)
+    where
   one := ofList []
   mul x y := ofList (x.toList ++ y.toList)
   mul_one := List.append_nil
@@ -209,10 +209,8 @@ theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x))
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/
 @[to_additive
       "Equivalence between maps `α → A` and additive monoid homomorphisms\n`free_add_monoid α →+ A`."]
-def lift :
-    (α → M) ≃
-      (FreeMonoid α →*
-        M) where 
+def lift : (α → M) ≃ (FreeMonoid α →* M)
+    where
   toFun f :=
     ⟨fun l => (l.toList.map f).Prod, rfl, fun l₁ l₂ => by
       simp only [to_list_mul, List.map_append, List.prod_append]⟩
@@ -247,7 +245,8 @@ theorem lift_restrict (f : FreeMonoid α →* M) : lift (f ∘ of) = f :=
 #align free_monoid.lift_restrict FreeMonoid.lift_restrict
 
 @[to_additive]
-theorem comp_lift (g : M →* N) (f : α → M) : g.comp (lift f) = lift (g ∘ f) := by
+theorem comp_lift (g : M →* N) (f : α → M) : g.comp (lift f) = lift (g ∘ f) :=
+  by
   ext
   simp
 #align free_monoid.comp_lift FreeMonoid.comp_lift
@@ -259,8 +258,8 @@ theorem hom_map_lift (g : M →* N) (f : α → M) (x : FreeMonoid α) : g (lift
 
 /-- Define a multiplicative action of `free_monoid α` on `β`. -/
 @[to_additive "Define an additive action of `free_add_monoid α` on `β`."]
-def mkMulAction (f : α → β → β) :
-    MulAction (FreeMonoid α) β where 
+def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β
+    where
   smul l b := l.toList.foldr f b
   one_smul x := rfl
   mul_smul xs ys b := List.foldr_append _ _ _ _
@@ -292,9 +291,8 @@ theorem of_smul (f : α → β → β) (x : α) (y : β) :
 each `of x` to `of (f x)`. -/
 @[to_additive
       "The unique additive monoid homomorphism `free_add_monoid α →+ free_add_monoid β`\nthat sends each `of x` to `of (f x)`."]
-def map (f : α → β) :
-    FreeMonoid α →* FreeMonoid
-        β where 
+def map (f : α → β) : FreeMonoid α →* FreeMonoid β
+    where
   toFun l := of_list <| l.toList.map f
   map_one' := rfl
   map_mul' l₁ l₂ := List.map_append _ _ _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.invariant_basis_number
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Fin n → 
 theorem strong_rank_condition_iff_succ :
     StrongRankCondition R ↔
       ∀ (n : ℕ) (f : (Fin (n + 1) → R) →ₗ[R] Fin n → R), ¬Function.Injective f :=
-  by 
+  by
   refine' ⟨fun h n => fun f hf => _, fun h => ⟨fun n m f hf => _⟩⟩
   · letI : StrongRankCondition R := h
     exact Nat.not_succ_le_self n (le_of_fin_injective R f hf)
@@ -107,7 +107,8 @@ theorem strong_rank_condition_iff_succ :
 #align strong_rank_condition_iff_succ strong_rank_condition_iff_succ
 
 theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β]
-    (f : (α → R) →ₗ[R] β → R) (i : Injective f) : Fintype.card α ≤ Fintype.card β := by
+    (f : (α → R) →ₗ[R] β → R) (i : Injective f) : Fintype.card α ≤ Fintype.card β :=
+  by
   let P := LinearEquiv.funCongrLeft R R (Fintype.equivFin α)
   let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
   exact
@@ -116,7 +117,8 @@ theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype �
 #align card_le_of_injective card_le_of_injective
 
 theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β]
-    (f : (α →₀ R) →ₗ[R] β →₀ R) (i : Injective f) : Fintype.card α ≤ Fintype.card β := by
+    (f : (α →₀ R) →ₗ[R] β →₀ R) (i : Injective f) : Fintype.card α ≤ Fintype.card β :=
+  by
   let P := Finsupp.linearEquivFunOnFinite R R β
   let Q := (Finsupp.linearEquivFunOnFinite R R α).symm
   exact
@@ -136,7 +138,8 @@ theorem le_of_fin_surjective [RankCondition R] {n m : ℕ} (f : (Fin n → R) �
 #align le_of_fin_surjective le_of_fin_surjective
 
 theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [Fintype β]
-    (f : (α → R) →ₗ[R] β → R) (i : Surjective f) : Fintype.card β ≤ Fintype.card α := by
+    (f : (α → R) →ₗ[R] β → R) (i : Surjective f) : Fintype.card β ≤ Fintype.card α :=
+  by
   let P := LinearEquiv.funCongrLeft R R (Fintype.equivFin α)
   let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
   exact
@@ -145,7 +148,8 @@ theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [F
 #align card_le_of_surjective card_le_of_surjective
 
 theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [Fintype β]
-    (f : (α →₀ R) →ₗ[R] β →₀ R) (i : Surjective f) : Fintype.card β ≤ Fintype.card α := by
+    (f : (α →₀ R) →ₗ[R] β →₀ R) (i : Surjective f) : Fintype.card β ≤ Fintype.card α :=
+  by
   let P := Finsupp.linearEquivFunOnFinite R R β
   let Q := (Finsupp.linearEquivFunOnFinite R R α).symm
   exact
@@ -157,11 +161,11 @@ theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [
 has an injective splitting `(fin m → R) →ₗ[R] (fin n → R)`
 from which the strong rank condition gives the necessary inequality for the rank condition.
 -/
-instance (priority := 100) rank_condition_of_strong_rank_condition [StrongRankCondition R] :
-    RankCondition
-      R where le_of_fin_surjective n m f s :=
+instance (priority := 100) rankConditionOfStrongRankCondition [StrongRankCondition R] :
+    RankCondition R
+    where le_of_fin_surjective n m f s :=
     le_of_fin_injective R _ (f.splitting_of_fun_on_fintype_surjective_injective s)
-#align rank_condition_of_strong_rank_condition rank_condition_of_strong_rank_condition
+#align rank_condition_of_strong_rank_condition rankConditionOfStrongRankCondition
 
 /-- We say that `R` has the invariant basis number property if `(fin n → R) ≃ₗ[R] (fin m → R)`
     implies `n = m`. This gives rise to a well-defined notion of rank of a finitely generated free
@@ -170,12 +174,12 @@ class InvariantBasisNumber : Prop where
   eq_of_fin_equiv : ∀ {n m : ℕ}, ((Fin n → R) ≃ₗ[R] Fin m → R) → n = m
 #align invariant_basis_number InvariantBasisNumber
 
-instance (priority := 100) invariant_basis_number_of_rank_condition [RankCondition R] :
-    InvariantBasisNumber
-      R where eq_of_fin_equiv n m e :=
+instance (priority := 100) invariantBasisNumberOfRankCondition [RankCondition R] :
+    InvariantBasisNumber R
+    where eq_of_fin_equiv n m e :=
     le_antisymm (le_of_fin_surjective R e.symm.toLinearMap e.symm.Surjective)
       (le_of_fin_surjective R e.toLinearMap e.Surjective)
-#align invariant_basis_number_of_rank_condition invariant_basis_number_of_rank_condition
+#align invariant_basis_number_of_rank_condition invariantBasisNumberOfRankCondition
 
 end
 
@@ -194,14 +198,15 @@ theorem card_eq_of_lequiv {α β : Type _} [Fintype α] [Fintype β] (f : (α �
       (LinearEquiv.funCongrLeft R R (Fintype.equivFin β)).symm)
 #align card_eq_of_lequiv card_eq_of_lequiv
 
-theorem nontrivial_of_invariant_basis_number : Nontrivial R := by
+theorem nontrivial_of_invariant_basis_number : Nontrivial R :=
+  by
   by_contra h
   refine' zero_ne_one (eq_of_fin_equiv R _)
   haveI := not_nontrivial_iff_subsingleton.1 h
   haveI : Subsingleton (Fin 1 → R) := ⟨fun a b => funext fun x => Subsingleton.elim _ _⟩
   refine' { .. } <;>
     first
-      |· 
+      |·
         intros
         exact 0|tidy
 #align nontrivial_of_invariant_basis_number nontrivial_of_invariant_basis_number
@@ -220,7 +225,8 @@ An injective map `((fin n ⊕ fin (1 + m)) → R) →ₗ[R] (fin n → R)` for s
 would force `fin (1 + m) → R ≃ₗ punit` (via `is_noetherian.equiv_punit_of_prod_injective`),
 which is not the case!
 -/
-instance (priority := 100) noetherian_ring_strong_rank_condition : StrongRankCondition R := by
+instance (priority := 100) noetherianRingStrongRankCondition : StrongRankCondition R :=
+  by
   fconstructor
   intro m n f i
   by_contra h
@@ -236,7 +242,7 @@ instance (priority := 100) noetherian_ring_strong_rank_condition : StrongRankCon
   apply @zero_ne_one (Fin (1 + m) → R) _ _
   apply (IsNoetherian.equivPunitOfProdInjective f' i').Injective
   ext
-#align noetherian_ring_strong_rank_condition noetherian_ring_strong_rank_condition
+#align noetherian_ring_strong_rank_condition noetherianRingStrongRankCondition
 
 end
 
@@ -263,7 +269,7 @@ variable {R : Type u} [CommRing R] (I : Ideal R) {ι : Type v} [Fintype ι] {ι'
 private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
     (ι → R) ⧸ I.pi ι → (ι' → R) ⧸ I.pi ι' := fun x =>
   Quotient.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
-    (by 
+    (by
       refine' fun a b hab => Ideal.Quotient.eq.2 fun h => _
       rw [Submodule.quotient_rel_r_def] at hab
       rw [← LinearMap.map_sub]
@@ -273,11 +279,12 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) :
 /-- An isomorphism of `R`-modules `R^n ≃ R^m` induces an isomorphism of `R/I`-modules
     `R^n/I^n ≃ R^m/I^m`. -/
 private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] ι' → R) :
-    ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' := by
+    ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' :=
+  by
   refine'
     { toFun := induced_map I e
       invFun := induced_map I e.symm.. }
-  all_goals 
+  all_goals
     first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
     congr
@@ -296,14 +303,13 @@ attribute [local instance] Ideal.Quotient.field
 In fact, any nontrivial commutative ring satisfies the strong rank condition, see
 `comm_ring_strong_rank_condition`. We prove this instance separately to avoid dependency on
 `linear_algebra.charpoly.basic`. -/
-instance (priority := 100) invariant_basis_number_of_nontrivial_of_comm_ring {R : Type u}
-    [CommRing R] [Nontrivial R] : InvariantBasisNumber R :=
+instance (priority := 100) invariantBasisNumberOfNontrivialOfCommRing {R : Type u} [CommRing R]
+    [Nontrivial R] : InvariantBasisNumber R :=
   ⟨fun n m e =>
     let ⟨I, hI⟩ := Ideal.exists_maximal R
     eq_of_fin_equiv (R ⧸ I)
       ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (induced_equiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
-#align
-  invariant_basis_number_of_nontrivial_of_comm_ring invariant_basis_number_of_nontrivial_of_comm_ring
+#align invariant_basis_number_of_nontrivial_of_comm_ring invariantBasisNumberOfNontrivialOfCommRing
 
 end
 

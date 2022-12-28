@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.disjoint_coproduct
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,8 @@ attribute [instance] coproducts_disjoint.coproduct_disjoint
 general that `C` has strict initial objects, for instance consider the category of types and
 partial functions. -/
 theorem initial_mono_class_of_disjoint_coproducts [CoproductsDisjoint C] : InitialMonoClass C :=
-  { is_initial_mono_from := fun I X hI =>
+  {
+    is_initial_mono_from := fun I X hI =>
       CoproductDisjoint.mono_inl _ _ (𝟙 X)
         { desc := fun s : BinaryCofan _ _ => s.inr
           fac' := fun s j =>

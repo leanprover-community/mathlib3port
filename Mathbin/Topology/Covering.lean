@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module topology.covering
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,8 @@ protected theorem continuous_on (hf : IsCoveringMapOn f s) : ContinuousOn f (f �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem is_locally_homeomorph_on (hf : IsCoveringMapOn f s) :
-    IsLocallyHomeomorphOn f (f ⁻¹' s) := by
+    IsLocallyHomeomorphOn f (f ⁻¹' s) :=
+  by
   refine' IsLocallyHomeomorphOn.mk f (f ⁻¹' s) fun x hx => _
   let e := (hf (f x) hx).toTrivialization
   have h := (hf (f x) hx).mem_to_trivialization_base_set

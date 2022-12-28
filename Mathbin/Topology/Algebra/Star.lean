@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.algebra.star
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,10 +96,8 @@ instance [HasStar R] [HasStar S] [TopologicalSpace R] [TopologicalSpace S] [HasC
   ⟨(continuous_star.comp continuous_fst).prod_mk (continuous_star.comp continuous_snd)⟩
 
 instance {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, HasStar (C i)]
-    [∀ i, HasContinuousStar (C i)] :
-    HasContinuousStar
-      (∀ i,
-        C i) where continuous_star := continuous_pi fun i => Continuous.star (continuous_apply i)
+    [∀ i, HasContinuousStar (C i)] : HasContinuousStar (∀ i, C i)
+    where continuous_star := continuous_pi fun i => Continuous.star (continuous_apply i)
 
 instance [HasStar R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.star⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.smodeq
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,12 +85,14 @@ theorem trans (hxy : x ≡ y [SMOD U]) (hyz : y ≡ z [SMOD U]) : x ≡ z [SMOD 
   hxy.trans hyz
 #align smodeq.trans Smodeq.trans
 
-theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] := by
+theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] :=
+  by
   rw [Smodeq.def] at hxy₁ hxy₂⊢
   simp_rw [quotient.mk_add, hxy₁, hxy₂]
 #align smodeq.add Smodeq.add
 
-theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] := by
+theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] :=
+  by
   rw [Smodeq.def] at hxy⊢
   simp_rw [quotient.mk_smul, hxy]
 #align smodeq.smul Smodeq.smul
@@ -108,7 +110,7 @@ theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V
 #align smodeq.comap Smodeq.comap
 
 theorem eval {R : Type _} [CommRing R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :
-    f.eval x ≡ f.eval y [SMOD I] := by 
+    f.eval x ≡ f.eval y [SMOD I] := by
   rw [Smodeq.def] at h⊢
   show Ideal.Quotient.mk I (f.eval x) = Ideal.Quotient.mk I (f.eval y)
   change Ideal.Quotient.mk I x = Ideal.Quotient.mk I y at h

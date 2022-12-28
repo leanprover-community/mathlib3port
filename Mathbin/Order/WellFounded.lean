@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.well_founded
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,8 @@ but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop}, Iff (WellFounded.{succ u1} α r) (forall (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Not (r x m))))))
 Case conversion may be inaccurate. Consider using '#align well_founded.well_founded_iff_has_min WellFounded.wellFounded_iff_has_minₓ'. -/
 theorem wellFounded_iff_has_min {r : α → α → Prop} :
-    WellFounded r ↔ ∀ s : Set α, s.Nonempty → ∃ m ∈ s, ∀ x ∈ s, ¬r x m := by
+    WellFounded r ↔ ∀ s : Set α, s.Nonempty → ∃ m ∈ s, ∀ x ∈ s, ¬r x m :=
+  by
   refine' ⟨fun h => h.has_min, fun h => ⟨fun x => _⟩⟩
   by_contra hx
   obtain ⟨m, hm, hm'⟩ := h _ ⟨x, hx⟩
@@ -110,7 +111,8 @@ theorem wellFounded_iff_has_min {r : α → α → Prop} :
 #align well_founded.well_founded_iff_has_min WellFounded.wellFounded_iff_has_min
 
 #print WellFounded.eq_iff_not_lt_of_le /-
-theorem eq_iff_not_lt_of_le {α} [PartialOrder α] {x y : α} : x ≤ y → y = x ↔ ¬x < y := by
+theorem eq_iff_not_lt_of_le {α} [PartialOrder α] {x y : α} : x ≤ y → y = x ↔ ¬x < y :=
+  by
   constructor
   · intro xle nge
     cases le_not_le_of_lt nge
@@ -126,7 +128,7 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrder α] {x y : α} : x ≤ y → y = 
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], Iff (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) (forall (p : Set.{u1} α), (Set.Nonempty.{u1} α p) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m p) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m p) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x p) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m x) -> (Eq.{succ u1} α x m)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], Iff (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WellFounded._hyg.635 : α) (x._@.Mathlib.Order.WellFounded._hyg.637 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.WellFounded._hyg.635 x._@.Mathlib.Order.WellFounded._hyg.637)) (forall (p : Set.{u1} α), (Set.Nonempty.{u1} α p) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m p) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x p) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m x) -> (Eq.{succ u1} α x m)))))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], Iff (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WellFounded._hyg.640 : α) (x._@.Mathlib.Order.WellFounded._hyg.642 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.WellFounded._hyg.640 x._@.Mathlib.Order.WellFounded._hyg.642)) (forall (p : Set.{u1} α), (Set.Nonempty.{u1} α p) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m p) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x p) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m x) -> (Eq.{succ u1} α x m)))))
 Case conversion may be inaccurate. Consider using '#align well_founded.well_founded_iff_has_max' WellFounded.wellFounded_iff_has_max'ₓ'. -/
 theorem wellFounded_iff_has_max' [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔
@@ -177,7 +179,7 @@ protected noncomputable def succ {r : α → α → Prop} (wf : WellFounded r) (
 
 #print WellFounded.lt_succ /-
 protected theorem lt_succ {r : α → α → Prop} (wf : WellFounded r) {x : α} (h : ∃ y, r x y) :
-    r x (wf.succ x) := by 
+    r x (wf.succ x) := by
   rw [WellFounded.succ, dif_pos h]
   apply min_mem
 #align well_founded.lt_succ WellFounded.lt_succ
@@ -187,10 +189,11 @@ end
 
 #print WellFounded.lt_succ_iff /-
 protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {x : α} (h : ∃ y, r x y)
-    (y : α) : r y (wo.wf.succ x) ↔ r y x ∨ y = x := by
+    (y : α) : r y (wo.wf.succ x) ↔ r y x ∨ y = x :=
+  by
   constructor
   · intro h'
-    have : ¬r x y := by 
+    have : ¬r x y := by
       intro hy
       rw [WellFounded.succ, dif_pos] at h'
       exact wo.wf.not_lt_min _ h hy h'
@@ -218,8 +221,9 @@ theorem min_le {x : β} {s : Set β} (hx : x ∈ s) (hne : s.Nonempty := ⟨x, h
 
 private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f)
     (hg : StrictMono g) (hfg : Set.range f = Set.range g) {b : β} (H : ∀ a < b, f a = g a) :
-    f b ≤ g b := by
-  obtain ⟨c, hc⟩ : g b ∈ Set.range f := by 
+    f b ≤ g b :=
+  by
+  obtain ⟨c, hc⟩ : g b ∈ Set.range f := by
     rw [hfg]
     exact Set.mem_range_self b
   cases' lt_or_le c b with hcb hbc
@@ -236,11 +240,11 @@ include h
 lean 3 declaration is
   forall {β : Type.{u1}} [_inst_1 : LinearOrder.{u1} β], (WellFounded.{succ u1} β (LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (LinearOrder.toLattice.{u1} β _inst_1))))))) -> (forall {γ : Type.{u2}} [_inst_2 : PartialOrder.{u2} γ] {f : β -> γ} {g : β -> γ}, (StrictMono.{u1, u2} β γ (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (LinearOrder.toLattice.{u1} β _inst_1)))) (PartialOrder.toPreorder.{u2} γ _inst_2) f) -> (StrictMono.{u1, u2} β γ (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (LinearOrder.toLattice.{u1} β _inst_1)))) (PartialOrder.toPreorder.{u2} γ _inst_2) g) -> (Iff (Eq.{succ u2} (Set.{u2} γ) (Set.range.{u2, succ u1} γ β f) (Set.range.{u2, succ u1} γ β g)) (Eq.{max (succ u1) (succ u2)} (β -> γ) f g)))
 but is expected to have type
-  forall {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β], (WellFounded.{succ u2} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1493 : β) (x._@.Mathlib.Order.WellFounded._hyg.1495 : β) => LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1)))))) x._@.Mathlib.Order.WellFounded._hyg.1493 x._@.Mathlib.Order.WellFounded._hyg.1495)) -> (forall {γ : Type.{u1}} [_inst_2 : PartialOrder.{u1} γ] {f : β -> γ} {g : β -> γ}, (StrictMono.{u2, u1} β γ (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1))))) (PartialOrder.toPreorder.{u1} γ _inst_2) f) -> (StrictMono.{u2, u1} β γ (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1))))) (PartialOrder.toPreorder.{u1} γ _inst_2) g) -> (Iff (Eq.{succ u1} (Set.{u1} γ) (Set.range.{u1, succ u2} γ β f) (Set.range.{u1, succ u2} γ β g)) (Eq.{max (succ u2) (succ u1)} (β -> γ) f g)))
+  forall {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β], (WellFounded.{succ u2} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1498 : β) (x._@.Mathlib.Order.WellFounded._hyg.1500 : β) => LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1)))))) x._@.Mathlib.Order.WellFounded._hyg.1498 x._@.Mathlib.Order.WellFounded._hyg.1500)) -> (forall {γ : Type.{u1}} [_inst_2 : PartialOrder.{u1} γ] {f : β -> γ} {g : β -> γ}, (StrictMono.{u2, u1} β γ (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1))))) (PartialOrder.toPreorder.{u1} γ _inst_2) f) -> (StrictMono.{u2, u1} β γ (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1))))) (PartialOrder.toPreorder.{u1} γ _inst_2) g) -> (Iff (Eq.{succ u1} (Set.{u1} γ) (Set.range.{u1, succ u2} γ β f) (Set.range.{u1, succ u2} γ β g)) (Eq.{max (succ u2) (succ u1)} (β -> γ) f g)))
 Case conversion may be inaccurate. Consider using '#align well_founded.eq_strict_mono_iff_eq_range WellFounded.eq_strictMono_iff_eq_rangeₓ'. -/
 theorem eq_strictMono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g) :
     Set.range f = Set.range g ↔ f = g :=
-  ⟨fun hfg => by 
+  ⟨fun hfg => by
     funext a
     apply h.induction a
     exact fun b H =>
@@ -250,7 +254,8 @@ theorem eq_strictMono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : S
 #align well_founded.eq_strict_mono_iff_eq_range WellFounded.eq_strictMono_iff_eq_range
 
 #print WellFounded.self_le_of_strictMono /-
-theorem self_le_of_strictMono {f : β → β} (hf : StrictMono f) : ∀ n, n ≤ f n := by
+theorem self_le_of_strictMono {f : β → β} (hf : StrictMono f) : ∀ n, n ≤ f n :=
+  by
   by_contra' h₁
   have h₂ := h.min_mem _ h₁
   exact h.not_lt_min _ h₁ (hf h₂) h₂
@@ -281,7 +286,7 @@ noncomputable def argmin [Nonempty α] : α :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) [_inst_1 : LT.{u2} β] (h : WellFounded.{succ u2} β (LT.lt.{u2} β _inst_1)) [_inst_2 : Nonempty.{succ u1} α] (a : α), Not (LT.lt.{u2} β _inst_1 (f a) (f (Function.argmin.{u1, u2} α β f _inst_1 h _inst_2)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LT.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1799 : β) (x._@.Mathlib.Order.WellFounded._hyg.1801 : β) => LT.lt.{u1} β _inst_1 x._@.Mathlib.Order.WellFounded._hyg.1799 x._@.Mathlib.Order.WellFounded._hyg.1801)) [_inst_2 : Nonempty.{succ u2} α] (a : α), Not (LT.lt.{u1} β _inst_1 (f a) (f (Function.argmin.{u2, u1} α β f _inst_1 h _inst_2)))
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LT.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1804 : β) (x._@.Mathlib.Order.WellFounded._hyg.1806 : β) => LT.lt.{u1} β _inst_1 x._@.Mathlib.Order.WellFounded._hyg.1804 x._@.Mathlib.Order.WellFounded._hyg.1806)) [_inst_2 : Nonempty.{succ u2} α] (a : α), Not (LT.lt.{u1} β _inst_1 (f a) (f (Function.argmin.{u2, u1} α β f _inst_1 h _inst_2)))
 Case conversion may be inaccurate. Consider using '#align function.not_lt_argmin Function.not_lt_argminₓ'. -/
 theorem not_lt_argmin [Nonempty α] (a : α) : ¬f a < f (argmin f h) :=
   WellFounded.not_lt_min (InvImage.wf f h) _ _ (Set.mem_univ a)
@@ -300,7 +305,7 @@ noncomputable def argminOn (s : Set α) (hs : s.Nonempty) : α :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) [_inst_1 : LT.{u2} β] (h : WellFounded.{succ u2} β (LT.lt.{u2} β _inst_1)) (s : Set.{u1} α) (hs : Set.Nonempty.{u1} α s), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Function.argminOn.{u1, u2} α β f _inst_1 h s hs) s
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LT.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1907 : β) (x._@.Mathlib.Order.WellFounded._hyg.1909 : β) => LT.lt.{u1} β _inst_1 x._@.Mathlib.Order.WellFounded._hyg.1907 x._@.Mathlib.Order.WellFounded._hyg.1909)) (s : Set.{u2} α) (hs : Set.Nonempty.{u2} α s), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Function.argminOn.{u2, u1} α β f _inst_1 h s hs) s
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LT.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1912 : β) (x._@.Mathlib.Order.WellFounded._hyg.1914 : β) => LT.lt.{u1} β _inst_1 x._@.Mathlib.Order.WellFounded._hyg.1912 x._@.Mathlib.Order.WellFounded._hyg.1914)) (s : Set.{u2} α) (hs : Set.Nonempty.{u2} α s), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Function.argminOn.{u2, u1} α β f _inst_1 h s hs) s
 Case conversion may be inaccurate. Consider using '#align function.argmin_on_mem Function.argminOn_memₓ'. -/
 @[simp]
 theorem argminOn_mem (s : Set α) (hs : s.Nonempty) : argminOn f h s hs ∈ s :=
@@ -311,7 +316,7 @@ theorem argminOn_mem (s : Set α) (hs : s.Nonempty) : argminOn f h s hs ∈ s :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) [_inst_1 : LT.{u2} β] (h : WellFounded.{succ u2} β (LT.lt.{u2} β _inst_1)) (s : Set.{u1} α) {a : α} (ha : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (hs : optParam.{0} (Set.Nonempty.{u1} α s) (Set.nonempty_of_mem.{u1} α s a ha)), Not (LT.lt.{u2} β _inst_1 (f a) (f (Function.argminOn.{u1, u2} α β f _inst_1 h s hs)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LT.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1956 : β) (x._@.Mathlib.Order.WellFounded._hyg.1958 : β) => LT.lt.{u1} β _inst_1 x._@.Mathlib.Order.WellFounded._hyg.1956 x._@.Mathlib.Order.WellFounded._hyg.1958)) (s : Set.{u2} α) {a : α} (ha : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (hs : optParam.{0} (Set.Nonempty.{u2} α s) (Set.nonempty_of_mem.{u2} α s a ha)), Not (LT.lt.{u1} β _inst_1 (f a) (f (Function.argminOn.{u2, u1} α β f _inst_1 h s hs)))
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LT.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.1961 : β) (x._@.Mathlib.Order.WellFounded._hyg.1963 : β) => LT.lt.{u1} β _inst_1 x._@.Mathlib.Order.WellFounded._hyg.1961 x._@.Mathlib.Order.WellFounded._hyg.1963)) (s : Set.{u2} α) {a : α} (ha : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (hs : optParam.{0} (Set.Nonempty.{u2} α s) (Set.nonempty_of_mem.{u2} α s a ha)), Not (LT.lt.{u1} β _inst_1 (f a) (f (Function.argminOn.{u2, u1} α β f _inst_1 h s hs)))
 Case conversion may be inaccurate. Consider using '#align function.not_lt_argmin_on Function.not_lt_argminOnₓ'. -/
 @[simp]
 theorem not_lt_argminOn (s : Set α) {a : α} (ha : a ∈ s)
@@ -329,7 +334,7 @@ variable [LinearOrder β] (h : WellFounded ((· < ·) : β → β → Prop))
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) [_inst_1 : LinearOrder.{u2} β] (h : WellFounded.{succ u2} β (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))))) (a : α) [_inst_2 : Nonempty.{succ u1} α], LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))) (f (Function.argmin.{u1, u2} α β f (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))) h _inst_2)) (f a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LinearOrder.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.2062 : β) (x._@.Mathlib.Order.WellFounded._hyg.2064 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.WellFounded._hyg.2062 x._@.Mathlib.Order.WellFounded._hyg.2064)) (a : α) [_inst_2 : Nonempty.{succ u2} α], LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f (Function.argmin.{u2, u1} α β f (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) h _inst_2)) (f a)
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LinearOrder.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.2067 : β) (x._@.Mathlib.Order.WellFounded._hyg.2069 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.WellFounded._hyg.2067 x._@.Mathlib.Order.WellFounded._hyg.2069)) (a : α) [_inst_2 : Nonempty.{succ u2} α], LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f (Function.argmin.{u2, u1} α β f (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) h _inst_2)) (f a)
 Case conversion may be inaccurate. Consider using '#align function.argmin_le Function.argmin_leₓ'. -/
 @[simp]
 theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=
@@ -340,7 +345,7 @@ theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) [_inst_1 : LinearOrder.{u2} β] (h : WellFounded.{succ u2} β (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))))) (s : Set.{u1} α) {a : α} (ha : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (hs : optParam.{0} (Set.Nonempty.{u1} α s) (Set.nonempty_of_mem.{u1} α s a ha)), LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))) (f (Function.argminOn.{u1, u2} α β f (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))) h s hs)) (f a)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LinearOrder.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.2117 : β) (x._@.Mathlib.Order.WellFounded._hyg.2119 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.WellFounded._hyg.2117 x._@.Mathlib.Order.WellFounded._hyg.2119)) (s : Set.{u2} α) {a : α} (ha : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (hs : optParam.{0} (Set.Nonempty.{u2} α s) (Set.nonempty_of_mem.{u2} α s a ha)), LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f (Function.argminOn.{u2, u1} α β f (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) h s hs)) (f a)
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) [_inst_1 : LinearOrder.{u1} β] (h : WellFounded.{succ u1} β (fun (x._@.Mathlib.Order.WellFounded._hyg.2122 : β) (x._@.Mathlib.Order.WellFounded._hyg.2124 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) x._@.Mathlib.Order.WellFounded._hyg.2122 x._@.Mathlib.Order.WellFounded._hyg.2124)) (s : Set.{u2} α) {a : α} (ha : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (hs : optParam.{0} (Set.Nonempty.{u2} α s) (Set.nonempty_of_mem.{u2} α s a ha)), LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f (Function.argminOn.{u2, u1} α β f (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) h s hs)) (f a)
 Case conversion may be inaccurate. Consider using '#align function.argmin_on_le Function.argminOn_leₓ'. -/
 @[simp]
 theorem argminOn_le (s : Set α) {a : α} (ha : a ∈ s) (hs : s.Nonempty := Set.nonempty_of_mem ha) :

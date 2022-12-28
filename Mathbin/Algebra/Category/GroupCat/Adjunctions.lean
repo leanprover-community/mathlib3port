@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.category.Group.adjunctions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ open Classical
 /-- The free functor `Type u ⥤ AddCommGroup` sending a type `X` to the
 free abelian group with generators `x : X`.
 -/
-def free : Type u ⥤ AddCommGroupCat where 
+def free : Type u ⥤ AddCommGroupCat
+    where
   obj α := of (FreeAbelianGroup α)
   map X Y := FreeAbelianGroup.map
   map_id' X := AddMonoidHom.ext FreeAbelianGroup.map_id_apply
@@ -72,7 +73,7 @@ theorem free_map_coe {α β : Type u} {f : α → β} (x : FreeAbelianGroup α) 
 def adj : free ⊣ forget AddCommGroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeAbelianGroup.lift.symm
-      hom_equiv_naturality_left_symm' := by 
+      hom_equiv_naturality_left_symm' := by
         intros
         ext
         rfl }
@@ -95,14 +96,14 @@ namespace GroupCat
 
 /-- The free functor `Type u ⥤ Group` sending a type `X` to the free group with generators `x : X`.
 -/
-def free : Type u ⥤ GroupCat where 
+def free : Type u ⥤ GroupCat where
   obj α := of (FreeGroup α)
   map X Y := FreeGroup.map
-  map_id' := by 
+  map_id' := by
     intros
     ext1
     rfl
-  map_comp' := by 
+  map_comp' := by
     intros
     ext1
     rfl
@@ -113,7 +114,8 @@ def free : Type u ⥤ GroupCat where
 def adj : free ⊣ forget GroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeGroup.lift.symm
-      hom_equiv_naturality_left_symm' := fun X Y G f g => by
+      hom_equiv_naturality_left_symm' := fun X Y G f g =>
+        by
         ext1
         rfl }
 #align Group.adj GroupCat.adj
@@ -127,9 +129,8 @@ section Abelianization
 
 /-- The abelianization functor `Group ⥤ CommGroup` sending a group `G` to its abelianization `Gᵃᵇ`.
  -/
-def abelianize :
-    GroupCat.{u} ⥤
-      CommGroupCat.{u} where 
+def abelianize : GroupCat.{u} ⥤ CommGroupCat.{u}
+    where
   obj G :=
     { α := Abelianization G
       str := by infer_instance }
@@ -138,12 +139,12 @@ def abelianize :
       { toFun := fun x => Abelianization.of (f x)
         map_one' := by simp
         map_mul' := by simp }
-  map_id' := by 
+  map_id' := by
     intros
     simp only [MonoidHom.mk_coe, coe_id]
     ext1
     rfl
-  map_comp' := by 
+  map_comp' := by
     intros
     simp only [coe_comp]
     ext1
@@ -154,7 +155,8 @@ def abelianize :
 def abelianizeAdj : abelianize ⊣ forget₂ CommGroupCat.{u} GroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun G A => Abelianization.lift.symm
-      hom_equiv_naturality_left_symm' := fun G H A f g => by
+      hom_equiv_naturality_left_symm' := fun G H A f g =>
+        by
         ext1
         rfl }
 #align abelianize_adj abelianizeAdj
@@ -163,8 +165,8 @@ end Abelianization
 
 /-- The functor taking a monoid to its subgroup of units. -/
 @[simps]
-def MonCat.units : MonCat.{u} ⥤
-      GroupCat.{u} where 
+def MonCat.units : MonCat.{u} ⥤ GroupCat.{u}
+    where
   obj R := GroupCat.of Rˣ
   map R S f := GroupCat.ofHom <| Units.map f
   map_id' X := MonoidHom.ext fun x => Units.ext rfl
@@ -172,9 +174,8 @@ def MonCat.units : MonCat.{u} ⥤
 #align Mon.units MonCat.units
 
 /-- The forgetful-units adjunction between `Group` and `Mon`. -/
-def GroupCat.forget₂MonAdj :
-    forget₂ GroupCat MonCat ⊣
-      MonCat.units.{u} where 
+def GroupCat.forget₂MonAdj : forget₂ GroupCat MonCat ⊣ MonCat.units.{u}
+    where
   homEquiv X Y :=
     { toFun := fun f => MonoidHom.toHomUnits f
       invFun := fun f => (Units.coeHom Y).comp f
@@ -195,8 +196,8 @@ instance : IsRightAdjoint MonCat.units.{u} :=
 
 /-- The functor taking a monoid to its subgroup of units. -/
 @[simps]
-def CommMonCat.units :
-    CommMonCat.{u} ⥤ CommGroupCat.{u} where 
+def CommMonCat.units : CommMonCat.{u} ⥤ CommGroupCat.{u}
+    where
   obj R := CommGroupCat.of Rˣ
   map R S f := CommGroupCat.ofHom <| Units.map f
   map_id' X := MonoidHom.ext fun x => Units.ext rfl
@@ -204,9 +205,8 @@ def CommMonCat.units :
 #align CommMon.units CommMonCat.units
 
 /-- The forgetful-units adjunction between `CommGroup` and `CommMon`. -/
-def CommGroupCat.forget₂CommMonAdj :
-    forget₂ CommGroupCat CommMonCat ⊣
-      CommMonCat.units.{u} where 
+def CommGroupCat.forget₂CommMonAdj : forget₂ CommGroupCat CommMonCat ⊣ CommMonCat.units.{u}
+    where
   homEquiv X Y :=
     { toFun := fun f => MonoidHom.toHomUnits f
       invFun := fun f => (Units.coeHom Y).comp f

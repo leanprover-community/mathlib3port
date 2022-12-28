@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.compact
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,9 +51,10 @@ equivalent to `C(α, β)`.
 -/
 @[simps (config := { fullyApplied := false })]
 def equivBoundedOfCompact : C(α, β) ≃ (α →ᵇ β) :=
-  ⟨mkOfCompact, BoundedContinuousFunction.toContinuousMap, fun f => by
+  ⟨mkOfCompact, BoundedContinuousFunction.toContinuousMap, fun f =>
+    by
     ext
-    rfl, fun f => by 
+    rfl, fun f => by
     ext
     rfl⟩
 #align continuous_map.equiv_bounded_of_compact ContinuousMap.equivBoundedOfCompact
@@ -93,8 +94,8 @@ instance : MetricSpace C(α, β) :=
 isometric to `C(α, β)`.
 -/
 @[simps (config := { fullyApplied := false }) toEquiv apply symmApply]
-def isometricBoundedOfCompact :
-    C(α, β) ≃ᵢ (α →ᵇ β) where 
+def isometricBoundedOfCompact : C(α, β) ≃ᵢ (α →ᵇ β)
+    where
   isometryToFun x y := rfl
   toEquiv := equivBoundedOfCompact α β
 #align continuous_map.isometric_bounded_of_compact ContinuousMap.isometricBoundedOfCompact
@@ -187,15 +188,15 @@ theorem BoundedContinuousFunction.norm_to_continuous_map_eq (f : α →ᵇ E) :
 open BoundedContinuousFunction
 
 instance : NormedAddCommGroup C(α, E) :=
-  { ContinuousMap.metricSpace _ _, ContinuousMap.addCommGroup with
+  { ContinuousMap.metricSpace _ _,
+    ContinuousMap.addCommGroup with
     dist_eq := fun x y => by
       rw [← norm_mk_of_compact, ← dist_mk_of_compact, dist_eq_norm, mk_of_compact_sub]
     dist := dist
     norm := norm }
 
-instance [Nonempty α] [One E] [NormOneClass E] :
-    NormOneClass
-      C(α, E) where norm_one := by simp only [← norm_mk_of_compact, mk_of_compact_one, norm_one]
+instance [Nonempty α] [One E] [NormOneClass E] : NormOneClass C(α, E)
+    where norm_one := by simp only [← norm_mk_of_compact, mk_of_compact_one, norm_one]
 
 section
 
@@ -276,8 +277,10 @@ the `𝕜`-algebra of bounded continuous maps `α →ᵇ β` is
 `𝕜`-linearly isometric to `C(α, β)`.
 -/
 def linearIsometryBoundedOfCompact : C(α, E) ≃ₗᵢ[𝕜] α →ᵇ E :=
-  { addEquivBoundedOfCompact α E with
-    map_smul' := fun c f => by 
+  {
+    addEquivBoundedOfCompact α
+      E with
+    map_smul' := fun c f => by
       ext
       simp
     norm_map' := fun f => rfl }
@@ -401,7 +404,8 @@ protected def ContinuousLinearMap.compLeftContinuousCompact (g : β →L[𝕜] �
 
 @[simp]
 theorem ContinuousLinearMap.to_linear_comp_left_continuous_compact (g : β →L[𝕜] γ) :
-    (g.compLeftContinuousCompact X : C(X, β) →ₗ[𝕜] C(X, γ)) = g.compLeftContinuous 𝕜 X := by
+    (g.compLeftContinuousCompact X : C(X, β) →ₗ[𝕜] C(X, γ)) = g.compLeftContinuous 𝕜 X :=
+  by
   ext f
   rfl
 #align
@@ -435,10 +439,10 @@ section CompRight
 /-- Precomposition by a continuous map is itself a continuous map between spaces of continuous maps.
 -/
 def compRightContinuousMap {X Y : Type _} (T : Type _) [TopologicalSpace X] [CompactSpace X]
-    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : C(X, Y)) :
-    C(C(Y, T), C(X, T)) where 
+    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : C(X, Y)) : C(C(Y, T), C(X, T))
+    where
   toFun g := g.comp f
-  continuous_to_fun := by 
+  continuous_to_fun := by
     refine' metric.continuous_iff.mpr _
     intro g ε ε_pos
     refine' ⟨ε, ε_pos, fun g' h => _⟩
@@ -456,9 +460,8 @@ theorem comp_right_continuous_map_apply {X Y : Type _} (T : Type _) [Topological
 /-- Precomposition by a homeomorphism is itself a homeomorphism between spaces of continuous maps.
 -/
 def compRightHomeomorph {X Y : Type _} (T : Type _) [TopologicalSpace X] [CompactSpace X]
-    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : X ≃ₜ Y) :
-    C(Y, T) ≃ₜ C(X,
-        T) where 
+    [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : X ≃ₜ Y) : C(Y, T) ≃ₜ C(X, T)
+    where
   toFun := compRightContinuousMap T f.toContinuousMap
   invFun := compRightContinuousMap T f.symm.toContinuousMap
   left_inv g := ext fun _ => congr_arg g (f.apply_symm_apply _)
@@ -483,10 +486,12 @@ variable {X : Type _} [TopologicalSpace X] [T2Space X] [LocallyCompactSpace X]
 variable {E : Type _} [NormedAddCommGroup E] [CompleteSpace E]
 
 theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
-    (hF : ∀ K : Compacts X, Summable fun i => ‖(F i).restrict K‖) : Summable F := by
+    (hF : ∀ K : Compacts X, Summable fun i => ‖(F i).restrict K‖) : Summable F :=
+  by
   refine' (ContinuousMap.exists_tendsto_compact_open_iff_forall _).2 fun K hK => _
   lift K to compacts X using hK
-  have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) := by
+  have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) :=
+    by
     intro s
     ext1 x
     simp
@@ -516,10 +521,8 @@ theorem BoundedContinuousFunction.mk_of_compact_star [CompactSpace α] (f : C(α
   rfl
 #align bounded_continuous_function.mk_of_compact_star BoundedContinuousFunction.mk_of_compact_star
 
-instance [CompactSpace α] :
-    NormedStarGroup
-      C(α,
-        β) where norm_star f := by
+instance [CompactSpace α] : NormedStarGroup C(α, β)
+    where norm_star f := by
     rw [← BoundedContinuousFunction.norm_mk_of_compact,
       BoundedContinuousFunction.mk_of_compact_star, norm_star,
       BoundedContinuousFunction.norm_mk_of_compact]
@@ -532,9 +535,8 @@ variable {α : Type _} {β : Type _}
 
 variable [TopologicalSpace α] [NormedRing β] [StarRing β]
 
-instance [CompactSpace α] [CstarRing β] :
-    CstarRing
-      C(α, β) where norm_star_mul_self := by 
+instance [CompactSpace α] [CstarRing β] : CstarRing C(α, β)
+    where norm_star_mul_self := by
     intro f
     refine' le_antisymm _ _
     · rw [← sq, ContinuousMap.norm_le _ (sq_nonneg _)]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -203,7 +203,8 @@ structure HasFtaylorSeriesUpToOn (n : ℕ∞) (f : E → F) (p : E → FormalMul
 #align has_ftaylor_series_up_to_on HasFtaylorSeriesUpToOn
 
 theorem HasFtaylorSeriesUpToOn.zero_eq' (h : HasFtaylorSeriesUpToOn n f p s) {x : E} (hx : x ∈ s) :
-    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by
+    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
+  by
   rw [← h.zero_eq x hx]
   symm
   exact ContinuousMultilinearMap.uncurry0_curry0 _
@@ -212,7 +213,8 @@ theorem HasFtaylorSeriesUpToOn.zero_eq' (h : HasFtaylorSeriesUpToOn n f p s) {x 
 /-- If two functions coincide on a set `s`, then a Taylor series for the first one is as well a
 Taylor series for the second one. -/
 theorem HasFtaylorSeriesUpToOn.congr (h : HasFtaylorSeriesUpToOn n f p s)
-    (h₁ : ∀ x ∈ s, f₁ x = f x) : HasFtaylorSeriesUpToOn n f₁ p s := by
+    (h₁ : ∀ x ∈ s, f₁ x = f x) : HasFtaylorSeriesUpToOn n f₁ p s :=
+  by
   refine' ⟨fun x hx => _, h.fderiv_within, h.cont⟩
   rw [h₁ x hx]
   exact h.zero_eq x hx
@@ -231,19 +233,22 @@ theorem HasFtaylorSeriesUpToOn.ofLe (h : HasFtaylorSeriesUpToOn n f p s) (hmn : 
 #align has_ftaylor_series_up_to_on.of_le HasFtaylorSeriesUpToOn.ofLe
 
 theorem HasFtaylorSeriesUpToOn.continuous_on (h : HasFtaylorSeriesUpToOn n f p s) :
-    ContinuousOn f s := by
+    ContinuousOn f s :=
+  by
   have := (h.cont 0 bot_le).congr fun x hx => (h.zero_eq' hx).symm
   rwa [LinearIsometryEquiv.comp_continuous_on_iff] at this
 #align has_ftaylor_series_up_to_on.continuous_on HasFtaylorSeriesUpToOn.continuous_on
 
 theorem has_ftaylor_series_up_to_on_zero_iff :
-    HasFtaylorSeriesUpToOn 0 f p s ↔ ContinuousOn f s ∧ ∀ x ∈ s, (p x 0).uncurry0 = f x := by
+    HasFtaylorSeriesUpToOn 0 f p s ↔ ContinuousOn f s ∧ ∀ x ∈ s, (p x 0).uncurry0 = f x :=
+  by
   refine'
     ⟨fun H => ⟨H.ContinuousOn, H.zero_eq⟩, fun H =>
       ⟨H.2, fun m hm => False.elim (not_le.2 hm bot_le), _⟩⟩
   intro m hm
   obtain rfl : m = 0 := by exact_mod_cast hm.antisymm (zero_le _)
-  have : ∀ x ∈ s, p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by
+  have : ∀ x ∈ s, p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
+    by
     intro x hx
     rw [← H.2 x hx]
     symm
@@ -253,7 +258,8 @@ theorem has_ftaylor_series_up_to_on_zero_iff :
 #align has_ftaylor_series_up_to_on_zero_iff has_ftaylor_series_up_to_on_zero_iff
 
 theorem has_ftaylor_series_up_to_on_top_iff :
-    HasFtaylorSeriesUpToOn ∞ f p s ↔ ∀ n : ℕ, HasFtaylorSeriesUpToOn n f p s := by
+    HasFtaylorSeriesUpToOn ∞ f p s ↔ ∀ n : ℕ, HasFtaylorSeriesUpToOn n f p s :=
+  by
   constructor
   · intro H n
     exact H.of_le le_top
@@ -269,8 +275,10 @@ theorem has_ftaylor_series_up_to_on_top_iff :
 /-- If a function has a Taylor series at order at least `1`, then the term of order `1` of this
 series is a derivative of `f`. -/
 theorem HasFtaylorSeriesUpToOn.hasFderivWithinAt (h : HasFtaylorSeriesUpToOn n f p s) (hn : 1 ≤ n)
-    (hx : x ∈ s) : HasFderivWithinAt f (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) s x := by
-  have A : ∀ y ∈ s, f y = (continuousMultilinearCurryFin0 𝕜 E F) (p y 0) := by
+    (hx : x ∈ s) : HasFderivWithinAt f (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) s x :=
+  by
+  have A : ∀ y ∈ s, f y = (continuousMultilinearCurryFin0 𝕜 E F) (p y 0) :=
+    by
     intro y hy
     rw [← h.zero_eq y hy]
     rfl
@@ -323,7 +331,7 @@ theorem has_ftaylor_series_up_to_on_succ_iff_left {n : ℕ} :
       HasFtaylorSeriesUpToOn n f p s ∧
         (∀ x ∈ s, HasFderivWithinAt (fun y => p y n) (p x n.succ).curryLeft s x) ∧
           ContinuousOn (fun x => p x (n + 1)) s :=
-  by 
+  by
   constructor
   · intro h
     exact
@@ -354,7 +362,7 @@ theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
         (∀ x ∈ s, HasFderivWithinAt (fun y => p y 0) (p x 1).curryLeft s x) ∧
           HasFtaylorSeriesUpToOn n (fun x => continuousMultilinearCurryFin1 𝕜 E F (p x 1))
             (fun x => (p x).shift) s :=
-  by 
+  by
   constructor
   · intro H
     refine' ⟨H.zero_eq, H.fderiv_within 0 (WithTop.coe_lt_coe.2 (Nat.succ_pos n)), _⟩
@@ -362,7 +370,8 @@ theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
     · intro x hx
       rfl
     · intro m(hm : (m : ℕ∞) < n)x(hx : x ∈ s)
-      have A : (m.succ : ℕ∞) < n.succ := by
+      have A : (m.succ : ℕ∞) < n.succ :=
+        by
         rw [WithTop.coe_lt_coe] at hm⊢
         exact nat.lt_succ_iff.mpr hm
       change
@@ -377,7 +386,8 @@ theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
           (p x (Nat.succ (Nat.succ m))) (cons y v)
       rw [← cons_snoc_eq_snoc_cons, snoc_init_self]
     · intro m(hm : (m : ℕ∞) ≤ n)
-      have A : (m.succ : ℕ∞) ≤ n.succ := by
+      have A : (m.succ : ℕ∞) ≤ n.succ :=
+        by
         rw [WithTop.coe_le_coe] at hm⊢
         exact nat.pred_le_iff.mp hm
       change
@@ -391,7 +401,7 @@ theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
     · intro m(hm : (m : ℕ∞) < n.succ)x(hx : x ∈ s)
       cases m
       · exact Hfderiv_zero x hx
-      · have A : (m : ℕ∞) < n := by 
+      · have A : (m : ℕ∞) < n := by
           rw [WithTop.coe_lt_coe] at hm⊢
           exact Nat.lt_of_succ_lt_succ hm
         have :
@@ -411,7 +421,7 @@ theorem has_ftaylor_series_up_to_on_succ_iff_right {n : ℕ} :
       · have : DifferentiableOn 𝕜 (fun x => p x 0) s := fun x hx =>
           (Hfderiv_zero x hx).DifferentiableWithinAt
         exact this.continuous_on
-      · have A : (m : ℕ∞) ≤ n := by 
+      · have A : (m : ℕ∞) ≤ n := by
           rw [WithTop.coe_le_coe] at hm⊢
           exact nat.lt_succ_iff.mp hm
         have :
@@ -464,7 +474,8 @@ theorem cont_diff_within_at_top :
 #align cont_diff_within_at_top cont_diff_within_at_top
 
 theorem ContDiffWithinAt.continuous_within_at (h : ContDiffWithinAt 𝕜 n f s x) :
-    ContinuousWithinAt f s x := by
+    ContinuousWithinAt f s x :=
+  by
   rcases h 0 bot_le with ⟨u, hu, p, H⟩
   rw [mem_nhds_within_insert] at hu
   exact (H.continuous_on.continuous_within_at hu.1).mono_of_mem hu.2
@@ -505,7 +516,7 @@ theorem ContDiffWithinAt.congr' (h : ContDiffWithinAt 𝕜 n f s x) (h₁ : ∀ 
 #align cont_diff_within_at.congr' ContDiffWithinAt.congr'
 
 theorem ContDiffWithinAt.monoOfMem (h : ContDiffWithinAt 𝕜 n f s x) {t : Set E} (hst : s ∈ 𝓝[t] x) :
-    ContDiffWithinAt 𝕜 n f t x := by 
+    ContDiffWithinAt 𝕜 n f t x := by
   intro m hm
   rcases h m hm with ⟨u, hu, p, H⟩
   exact ⟨u, nhds_within_le_of_mem (insert_mem_nhds_within_insert hst) hu, p, H⟩
@@ -537,7 +548,8 @@ theorem cont_diff_within_at_inter (h : t ∈ 𝓝 x) :
 #align cont_diff_within_at_inter cont_diff_within_at_inter
 
 theorem cont_diff_within_at_insert {y : E} :
-    ContDiffWithinAt 𝕜 n f (insert y s) x ↔ ContDiffWithinAt 𝕜 n f s x := by
+    ContDiffWithinAt 𝕜 n f (insert y s) x ↔ ContDiffWithinAt 𝕜 n f s x :=
+  by
   simp_rw [ContDiffWithinAt]
   rcases eq_or_ne x y with (rfl | h)
   · simp_rw [insert_eq_of_mem (mem_insert _ _)]
@@ -554,7 +566,8 @@ theorem ContDiffWithinAt.insert (h : ContDiffWithinAt 𝕜 n f s x) :
 /-- If a function is `C^n` within a set at a point, with `n ≥ 1`, then it is differentiable
 within this set at this point. -/
 theorem ContDiffWithinAt.differentiableWithinAt' (h : ContDiffWithinAt 𝕜 n f s x) (hn : 1 ≤ n) :
-    DifferentiableWithinAt 𝕜 f (insert x s) x := by
+    DifferentiableWithinAt 𝕜 f (insert x s) x :=
+  by
   rcases h 1 hn with ⟨u, hu, p, H⟩
   rcases mem_nhds_within.1 hu with ⟨t, t_open, xt, tu⟩
   rw [inter_comm] at tu
@@ -573,7 +586,7 @@ theorem cont_diff_within_at_succ_iff_has_fderiv_within_at {n : ℕ} :
       ∃ u ∈ 𝓝[insert x s] x,
         ∃ f' : E → E →L[𝕜] F,
           (∀ x ∈ u, HasFderivWithinAt f (f' x) u x) ∧ ContDiffWithinAt 𝕜 n f' u x :=
-  by 
+  by
   constructor
   · intro h
     rcases h n.succ le_rfl with ⟨u, hu, p, Hp⟩
@@ -629,7 +642,7 @@ theorem cont_diff_within_at_succ_iff_has_fderiv_within_at' {n : ℕ} :
         u ⊆ insert x s ∧
           ∃ f' : E → E →L[𝕜] F,
             (∀ x ∈ u, HasFderivWithinAt f (f' x) s x) ∧ ContDiffWithinAt 𝕜 n f' s x :=
-  by 
+  by
   refine' ⟨fun hf => _, _⟩
   · obtain ⟨u, hu, f', huf', hf'⟩ := cont_diff_within_at_succ_iff_has_fderiv_within_at.mp hf
     obtain ⟨w, hw, hxw, hwu⟩ := mem_nhds_within.mp hu
@@ -671,7 +684,8 @@ theorem ContDiffOn.contDiffWithinAt (h : ContDiffOn 𝕜 n f s) (hx : x ∈ s) :
 #align cont_diff_on.cont_diff_within_at ContDiffOn.contDiffWithinAt
 
 theorem ContDiffWithinAt.cont_diff_on {m : ℕ} (hm : (m : ℕ∞) ≤ n) (h : ContDiffWithinAt 𝕜 n f s x) :
-    ∃ u ∈ 𝓝[insert x s] x, u ⊆ insert x s ∧ ContDiffOn 𝕜 m f u := by
+    ∃ u ∈ 𝓝[insert x s] x, u ⊆ insert x s ∧ ContDiffOn 𝕜 m f u :=
+  by
   rcases h m hm with ⟨u, u_nhd, p, hp⟩
   refine' ⟨u ∩ insert x s, Filter.inter_mem u_nhd self_mem_nhds_within, inter_subset_right _ _, _⟩
   intro y hy m' hm'
@@ -681,7 +695,8 @@ theorem ContDiffWithinAt.cont_diff_on {m : ℕ} (hm : (m : ℕ∞) ≤ n) (h : C
 #align cont_diff_within_at.cont_diff_on ContDiffWithinAt.cont_diff_on
 
 protected theorem ContDiffWithinAt.eventually {n : ℕ} (h : ContDiffWithinAt 𝕜 n f s x) :
-    ∀ᶠ y in 𝓝[insert x s] x, ContDiffWithinAt 𝕜 n f s y := by
+    ∀ᶠ y in 𝓝[insert x s] x, ContDiffWithinAt 𝕜 n f s y :=
+  by
   rcases h.cont_diff_on le_rfl with ⟨u, hu, hu_sub, hd⟩
   have : ∀ᶠ y : E in 𝓝[insert x s] x, u ∈ 𝓝[insert x s] y ∧ y ∈ u :=
     (eventually_nhds_within_nhds_within.2 hu).And hu
@@ -710,7 +725,8 @@ theorem cont_diff_on_top : ContDiffOn 𝕜 ∞ f s ↔ ∀ n : ℕ, ContDiffOn �
   cont_diff_on_iff_forall_nat_le.trans <| by simp only [le_top, forall_prop_of_true]
 #align cont_diff_on_top cont_diff_on_top
 
-theorem cont_diff_on_all_iff_nat : (∀ n, ContDiffOn 𝕜 n f s) ↔ ∀ n : ℕ, ContDiffOn 𝕜 n f s := by
+theorem cont_diff_on_all_iff_nat : (∀ n, ContDiffOn 𝕜 n f s) ↔ ∀ n : ℕ, ContDiffOn 𝕜 n f s :=
+  by
   refine' ⟨fun H n => H n, _⟩
   rintro H (_ | n)
   exacts[cont_diff_on_top.2 H, H n]
@@ -744,7 +760,8 @@ theorem ContDiffOn.differentiableOn (h : ContDiffOn 𝕜 n f s) (hn : 1 ≤ n) :
 
 /-- If a function is `C^n` around each point in a set, then it is `C^n` on the set. -/
 theorem contDiffOnOfLocallyContDiffOn
-    (h : ∀ x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ ContDiffOn 𝕜 n f (s ∩ u)) : ContDiffOn 𝕜 n f s := by
+    (h : ∀ x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ ContDiffOn 𝕜 n f (s ∩ u)) : ContDiffOn 𝕜 n f s :=
+  by
   intro x xs
   rcases h x xs with ⟨u, u_open, xu, hu⟩
   apply (cont_diff_within_at_inter _).1 (hu x ⟨xs, xu⟩)
@@ -757,7 +774,7 @@ theorem cont_diff_on_succ_iff_has_fderiv_within_at {n : ℕ} :
       ∀ x ∈ s,
         ∃ u ∈ 𝓝[insert x s] x,
           ∃ f' : E → E →L[𝕜] F, (∀ x ∈ u, HasFderivWithinAt f (f' x) u x) ∧ ContDiffOn 𝕜 n f' u :=
-  by 
+  by
   constructor
   · intro h x hx
     rcases(h x hx) n.succ le_rfl with ⟨u, hu, p, Hp⟩
@@ -836,7 +853,7 @@ theorem iterated_fderiv_within_succ_apply_right {n : ℕ} (hs : UniqueDiffOn �
     (m : Fin (n + 1) → E) :
     (iteratedFderivWithin 𝕜 (n + 1) f s x : (Fin (n + 1) → E) → F) m =
       iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s x (init m) (m (last n)) :=
-  by 
+  by
   induction' n with n IH generalizing x
   · rw [iterated_fderiv_within_succ_eq_comp_left, iterated_fderiv_within_zero_eq_comp,
       iterated_fderiv_within_zero_apply, Function.comp_apply,
@@ -847,7 +864,7 @@ theorem iterated_fderiv_within_succ_apply_right {n : ℕ} (hs : UniqueDiffOn �
       ∀ y ∈ s,
         iteratedFderivWithin 𝕜 n.succ f s y =
           (I ∘ iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) y :=
-      by 
+      by
       intro y hy
       ext m
       rw [@IH m y hy]
@@ -866,7 +883,7 @@ theorem iterated_fderiv_within_succ_apply_right {n : ℕ} (hs : UniqueDiffOn �
           (I ∘ fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n (fderivWithin 𝕜 f s) s) s x :
               E → E[×n + 1]→L[𝕜] F)
             (m 0) (tail m) :=
-        by 
+        by
         rw [LinearIsometryEquiv.comp_fderiv_within _ (hs x hx)]
         rfl
       _ =
@@ -877,7 +894,7 @@ theorem iterated_fderiv_within_succ_apply_right {n : ℕ} (hs : UniqueDiffOn �
       _ =
           iteratedFderivWithin 𝕜 (Nat.succ n) (fun y => fderivWithin 𝕜 f s y) s x (init m)
             (m (last (n + 1))) :=
-        by 
+        by
         rw [iterated_fderiv_within_succ_apply_left, tail_init_eq_init_tail]
         rfl
       
@@ -890,7 +907,7 @@ theorem iterated_fderiv_within_succ_eq_comp_right {n : ℕ} (hs : UniqueDiffOn �
       (continuousMultilinearCurryRightEquiv' 𝕜 n E F ∘
           iteratedFderivWithin 𝕜 n (fun y => fderivWithin 𝕜 f s y) s)
         x :=
-  by 
+  by
   ext m
   rw [iterated_fderiv_within_succ_apply_right hs hx]
   rfl
@@ -904,7 +921,7 @@ theorem norm_iterated_fderiv_within_fderiv_within {n : ℕ} (hs : UniqueDiffOn �
 @[simp]
 theorem iterated_fderiv_within_one_apply (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) (m : Fin 1 → E) :
     (iteratedFderivWithin 𝕜 1 f s x : (Fin 1 → E) → F) m = (fderivWithin 𝕜 f s x : E → F) (m 0) :=
-  by 
+  by
   rw [iterated_fderiv_within_succ_apply_right hs hx, iterated_fderiv_within_zero_apply]
   rfl
 #align iterated_fderiv_within_one_apply iterated_fderiv_within_one_apply
@@ -912,7 +929,8 @@ theorem iterated_fderiv_within_one_apply (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ 
 /-- If two functions coincide on a set `s` of unique differentiability, then their iterated
 differentials within this set coincide. -/
 theorem iterated_fderiv_within_congr {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hL : ∀ y ∈ s, f₁ y = f y)
-    (hx : x ∈ s) : iteratedFderivWithin 𝕜 n f₁ s x = iteratedFderivWithin 𝕜 n f s x := by
+    (hx : x ∈ s) : iteratedFderivWithin 𝕜 n f₁ s x = iteratedFderivWithin 𝕜 n f s x :=
+  by
   induction' n with n IH generalizing x
   · ext m
     simp [hL x hx]
@@ -927,7 +945,8 @@ theorem iterated_fderiv_within_congr {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hL : 
 /-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
 `s` with an open set containing `x`. -/
 theorem iterated_fderiv_within_inter_open {n : ℕ} (hu : IsOpen u) (hs : UniqueDiffOn 𝕜 (s ∩ u))
-    (hx : x ∈ s ∩ u) : iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x := by
+    (hx : x ∈ s ∩ u) : iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
+  by
   induction' n with n IH generalizing x
   · ext m
     simp
@@ -947,15 +966,18 @@ theorem iterated_fderiv_within_inter_open {n : ℕ} (hu : IsOpen u) (hs : Unique
 /-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
 `s` with a neighborhood of `x` within `s`. -/
 theorem iterated_fderiv_within_inter' {n : ℕ} (hu : u ∈ 𝓝[s] x) (hs : UniqueDiffOn 𝕜 s)
-    (xs : x ∈ s) : iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x := by
+    (xs : x ∈ s) : iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
+  by
   obtain ⟨v, v_open, xv, vu⟩ : ∃ v, IsOpen v ∧ x ∈ v ∧ v ∩ s ⊆ u := mem_nhds_within.1 hu
-  have A : s ∩ u ∩ v = s ∩ v := by
+  have A : s ∩ u ∩ v = s ∩ v :=
+    by
     apply subset.antisymm (inter_subset_inter (inter_subset_left _ _) (subset.refl _))
     exact fun y ⟨ys, yv⟩ => ⟨⟨ys, vu ⟨yv, ys⟩⟩, yv⟩
   have : iteratedFderivWithin 𝕜 n f (s ∩ v) x = iteratedFderivWithin 𝕜 n f s x :=
     iterated_fderiv_within_inter_open v_open (hs.inter v_open) ⟨xs, xv⟩
   rw [← this]
-  have : iteratedFderivWithin 𝕜 n f (s ∩ u ∩ v) x = iteratedFderivWithin 𝕜 n f (s ∩ u) x := by
+  have : iteratedFderivWithin 𝕜 n f (s ∩ u ∩ v) x = iteratedFderivWithin 𝕜 n f (s ∩ u) x :=
+    by
     refine' iterated_fderiv_within_inter_open v_open _ ⟨⟨xs, vu ⟨xv, xs⟩⟩, xv⟩
     rw [A]
     exact hs.inter v_open
@@ -971,7 +993,8 @@ theorem iterated_fderiv_within_inter {n : ℕ} (hu : u ∈ 𝓝 x) (hs : UniqueD
 #align iterated_fderiv_within_inter iterated_fderiv_within_inter
 
 @[simp]
-theorem cont_diff_on_zero : ContDiffOn 𝕜 0 f s ↔ ContinuousOn f s := by
+theorem cont_diff_on_zero : ContDiffOn 𝕜 0 f s ↔ ContinuousOn f s :=
+  by
   refine' ⟨fun H => H.ContinuousOn, fun H => _⟩
   intro x hx m hm
   have : (m : ℕ∞) = 0 := le_antisymm hm bot_le
@@ -982,7 +1005,8 @@ theorem cont_diff_on_zero : ContDiffOn 𝕜 0 f s ↔ ContinuousOn f s := by
 #align cont_diff_on_zero cont_diff_on_zero
 
 theorem cont_diff_within_at_zero (hx : x ∈ s) :
-    ContDiffWithinAt 𝕜 0 f s x ↔ ∃ u ∈ 𝓝[s] x, ContinuousOn f (s ∩ u) := by
+    ContDiffWithinAt 𝕜 0 f s x ↔ ∃ u ∈ 𝓝[s] x, ContinuousOn f (s ∩ u) :=
+  by
   constructor
   · intro h
     obtain ⟨u, H, p, hp⟩ := h 0 (by norm_num)
@@ -1000,7 +1024,8 @@ theorem cont_diff_within_at_zero (hx : x ∈ s) :
 with the one we have chosen in `iterated_fderiv_within 𝕜 m f s`. -/
 theorem HasFtaylorSeriesUpToOn.eq_ftaylor_series_of_unique_diff_on
     (h : HasFtaylorSeriesUpToOn n f p s) {m : ℕ} (hmn : (m : ℕ∞) ≤ n) (hs : UniqueDiffOn 𝕜 s)
-    (hx : x ∈ s) : p x m = iteratedFderivWithin 𝕜 m f s x := by
+    (hx : x ∈ s) : p x m = iteratedFderivWithin 𝕜 m f s x :=
+  by
   induction' m with m IH generalizing x
   · rw [h.zero_eq' hx, iterated_fderiv_within_zero_eq_comp]
   · have A : (m : ℕ∞) < n := lt_of_lt_of_le (WithTop.coe_lt_coe.2 (lt_add_one m)) hmn
@@ -1017,7 +1042,8 @@ theorem HasFtaylorSeriesUpToOn.eq_ftaylor_series_of_unique_diff_on
 /-- When a function is `C^n` in a set `s` of unique differentiability, it admits
 `ftaylor_series_within 𝕜 f s` as a Taylor series up to order `n` in `s`. -/
 theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s) :
-    HasFtaylorSeriesUpToOn n f (ftaylorSeriesWithin 𝕜 f s) s := by
+    HasFtaylorSeriesUpToOn n f (ftaylorSeriesWithin 𝕜 f s) s :=
+  by
   constructor
   · intro x hx
     simp only [ftaylorSeriesWithin, ContinuousMultilinearMap.uncurry0_apply,
@@ -1027,12 +1053,14 @@ theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueD
     rw [insert_eq_of_mem hx] at hu
     rcases mem_nhds_within.1 hu with ⟨o, o_open, xo, ho⟩
     rw [inter_comm] at ho
-    have : p x m.succ = ftaylorSeriesWithin 𝕜 f s x m.succ := by
+    have : p x m.succ = ftaylorSeriesWithin 𝕜 f s x m.succ :=
+      by
       change p x m.succ = iteratedFderivWithin 𝕜 m.succ f s x
       rw [← iterated_fderiv_within_inter (IsOpen.mem_nhds o_open xo) hs hx]
       exact (Hp.mono ho).eq_ftaylor_series_of_unique_diff_on le_rfl (hs.inter o_open) ⟨hx, xo⟩
     rw [← this, ← has_fderiv_within_at_inter (IsOpen.mem_nhds o_open xo)]
-    have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m := by
+    have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m :=
+      by
       rintro y ⟨hy, yo⟩
       change p y m = iteratedFderivWithin 𝕜 m f s y
       rw [← iterated_fderiv_within_inter (IsOpen.mem_nhds o_open yo) hs hy]
@@ -1050,7 +1078,8 @@ theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueD
     rw [insert_eq_of_mem hx] at ho
     rw [inter_comm] at ho
     refine' ⟨o, o_open, xo, _⟩
-    have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m := by
+    have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m :=
+      by
       rintro y ⟨hy, yo⟩
       change p y m = iteratedFderivWithin 𝕜 m f s y
       rw [← iterated_fderiv_within_inter (IsOpen.mem_nhds o_open yo) hs hy]
@@ -1062,7 +1091,7 @@ theorem contDiffOnOfContinuousOnDifferentiableOn
     (Hcont : ∀ m : ℕ, (m : ℕ∞) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s)
     (Hdiff :
       ∀ m : ℕ, (m : ℕ∞) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s) :
-    ContDiffOn 𝕜 n f s := by 
+    ContDiffOn 𝕜 n f s := by
   intro x hx m hm
   rw [insert_eq_of_mem hx]
   refine' ⟨s, self_mem_nhds_within, ftaylorSeriesWithin 𝕜 f s, _⟩
@@ -1103,7 +1132,7 @@ theorem cont_diff_on_iff_continuous_on_differentiable_on (hs : UniqueDiffOn 𝕜
     ContDiffOn 𝕜 n f s ↔
       (∀ m : ℕ, (m : ℕ∞) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s) ∧
         ∀ m : ℕ, (m : ℕ∞) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s :=
-  by 
+  by
   constructor
   · intro h
     constructor
@@ -1117,7 +1146,8 @@ theorem cont_diff_on_iff_continuous_on_differentiable_on (hs : UniqueDiffOn 𝕜
   cont_diff_on_iff_continuous_on_differentiable_on cont_diff_on_iff_continuous_on_differentiable_on
 
 theorem contDiffOnSuccOfFderivWithin {n : ℕ} (hf : DifferentiableOn 𝕜 f s)
-    (h : ContDiffOn 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) : ContDiffOn 𝕜 (n + 1 : ℕ) f s := by
+    (h : ContDiffOn 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) : ContDiffOn 𝕜 (n + 1 : ℕ) f s :=
+  by
   intro x hx
   rw [cont_diff_within_at_succ_iff_has_fderiv_within_at, insert_eq_of_mem hx]
   exact
@@ -1129,7 +1159,7 @@ differentiable there, and its derivative (expressed with `fderiv_within`) is `C^
 theorem cont_diff_on_succ_iff_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f s ↔
       DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 n (fun y => fderivWithin 𝕜 f s y) s :=
-  by 
+  by
   refine' ⟨fun H => _, fun h => contDiffOnSuccOfFderivWithin h.1 h.2⟩
   refine' ⟨H.differentiable_on (WithTop.coe_le_coe.2 (Nat.le_add_left 1 n)), fun x hx => _⟩
   rcases cont_diff_within_at_succ_iff_has_fderiv_within_at.1 (H x hx) with ⟨u, hu, f', hff', hf'⟩
@@ -1152,7 +1182,7 @@ differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
 theorem cont_diff_on_succ_iff_fderiv_of_open {n : ℕ} (hs : IsOpen s) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f s ↔
       DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 n (fun y => fderiv 𝕜 f y) s :=
-  by 
+  by
   rw [cont_diff_on_succ_iff_fderiv_within hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
@@ -1166,7 +1196,7 @@ there, and its derivative (expressed with `fderiv_within`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_fderiv_within (hs : UniqueDiffOn 𝕜 s) :
     ContDiffOn 𝕜 ∞ f s ↔
       DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 ∞ (fun y => fderivWithin 𝕜 f s y) s :=
-  by 
+  by
   constructor
   · intro h
     refine' ⟨h.differentiable_on le_top, _⟩
@@ -1183,7 +1213,8 @@ theorem cont_diff_on_top_iff_fderiv_within (hs : UniqueDiffOn 𝕜 s) :
 /-- A function is `C^∞` on an open domain if and only if it is differentiable there, and its
 derivative (expressed with `fderiv`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_fderiv_of_open (hs : IsOpen s) :
-    ContDiffOn 𝕜 ∞ f s ↔ DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 ∞ (fun y => fderiv 𝕜 f y) s := by
+    ContDiffOn 𝕜 ∞ f s ↔ DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 ∞ (fun y => fderiv 𝕜 f y) s :=
+  by
   rw [cont_diff_on_top_iff_fderiv_within hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
@@ -1193,7 +1224,8 @@ theorem cont_diff_on_top_iff_fderiv_of_open (hs : IsOpen s) :
 #align cont_diff_on_top_iff_fderiv_of_open cont_diff_on_top_iff_fderiv_of_open
 
 theorem ContDiffOn.fderivWithin (hf : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s)
-    (hmn : m + 1 ≤ n) : ContDiffOn 𝕜 m (fun y => fderivWithin 𝕜 f s y) s := by
+    (hmn : m + 1 ≤ n) : ContDiffOn 𝕜 m (fun y => fderivWithin 𝕜 f s y) s :=
+  by
   cases m
   · change ∞ + 1 ≤ n at hmn
     have : n = ∞ := by simpa using hmn
@@ -1232,14 +1264,16 @@ structure HasFtaylorSeriesUpTo (n : ℕ∞) (f : E → F) (p : E → FormalMulti
 #align has_ftaylor_series_up_to HasFtaylorSeriesUpTo
 
 theorem HasFtaylorSeriesUpTo.zero_eq' (h : HasFtaylorSeriesUpTo n f p) (x : E) :
-    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) := by
+    p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
+  by
   rw [← h.zero_eq x]
   symm
   exact ContinuousMultilinearMap.uncurry0_curry0 _
 #align has_ftaylor_series_up_to.zero_eq' HasFtaylorSeriesUpTo.zero_eq'
 
 theorem has_ftaylor_series_up_to_on_univ_iff :
-    HasFtaylorSeriesUpToOn n f p univ ↔ HasFtaylorSeriesUpTo n f p := by
+    HasFtaylorSeriesUpToOn n f p univ ↔ HasFtaylorSeriesUpTo n f p :=
+  by
   constructor
   · intro H
     constructor
@@ -1268,12 +1302,14 @@ theorem HasFtaylorSeriesUpTo.hasFtaylorSeriesUpToOn (h : HasFtaylorSeriesUpTo n 
   has_ftaylor_series_up_to.has_ftaylor_series_up_to_on HasFtaylorSeriesUpTo.hasFtaylorSeriesUpToOn
 
 theorem HasFtaylorSeriesUpTo.ofLe (h : HasFtaylorSeriesUpTo n f p) (hmn : m ≤ n) :
-    HasFtaylorSeriesUpTo m f p := by
+    HasFtaylorSeriesUpTo m f p :=
+  by
   rw [← has_ftaylor_series_up_to_on_univ_iff] at h⊢
   exact h.of_le hmn
 #align has_ftaylor_series_up_to.of_le HasFtaylorSeriesUpTo.ofLe
 
-theorem HasFtaylorSeriesUpTo.continuous (h : HasFtaylorSeriesUpTo n f p) : Continuous f := by
+theorem HasFtaylorSeriesUpTo.continuous (h : HasFtaylorSeriesUpTo n f p) : Continuous f :=
+  by
   rw [← has_ftaylor_series_up_to_on_univ_iff] at h
   rw [continuous_iff_continuous_on_univ]
   exact h.continuous_on
@@ -1288,7 +1324,8 @@ theorem has_ftaylor_series_up_to_zero_iff :
 /-- If a function has a Taylor series at order at least `1`, then the term of order `1` of this
 series is a derivative of `f`. -/
 theorem HasFtaylorSeriesUpTo.hasFderivAt (h : HasFtaylorSeriesUpTo n f p) (hn : 1 ≤ n) (x : E) :
-    HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) x := by
+    HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p x 1)) x :=
+  by
   rw [← has_fderiv_within_at_univ]
   exact (has_ftaylor_series_up_to_on_univ_iff.2 h).HasFderivWithinAt hn (mem_univ _)
 #align has_ftaylor_series_up_to.has_fderiv_at HasFtaylorSeriesUpTo.hasFderivAt
@@ -1363,7 +1400,7 @@ theorem ContDiffAt.differentiableAt (h : ContDiffAt 𝕜 n f x) (hn : 1 ≤ n) :
 theorem cont_diff_at_succ_iff_has_fderiv_at {n : ℕ} :
     ContDiffAt 𝕜 (n + 1 : ℕ) f x ↔
       ∃ f' : E → E →L[𝕜] F, (∃ u ∈ 𝓝 x, ∀ x ∈ u, HasFderivAt f (f' x) x) ∧ ContDiffAt 𝕜 n f' x :=
-  by 
+  by
   rw [← cont_diff_within_at_univ, cont_diff_within_at_succ_iff_has_fderiv_within_at]
   simp only [nhds_within_univ, exists_prop, mem_univ, insert_eq_of_mem]
   constructor
@@ -1399,7 +1436,8 @@ def ContDiff (n : ℕ∞) (f : E → F) : Prop :=
 
 variable {𝕜}
 
-theorem cont_diff_on_univ : ContDiffOn 𝕜 n f univ ↔ ContDiff 𝕜 n f := by
+theorem cont_diff_on_univ : ContDiffOn 𝕜 n f univ ↔ ContDiff 𝕜 n f :=
+  by
   constructor
   · intro H
     use ftaylorSeriesWithin 𝕜 f univ
@@ -1434,12 +1472,14 @@ theorem ContDiff.contDiffOn (h : ContDiff 𝕜 n f) : ContDiffOn 𝕜 n f s :=
 #align cont_diff.cont_diff_on ContDiff.contDiffOn
 
 @[simp]
-theorem cont_diff_zero : ContDiff 𝕜 0 f ↔ Continuous f := by
+theorem cont_diff_zero : ContDiff 𝕜 0 f ↔ Continuous f :=
+  by
   rw [← cont_diff_on_univ, continuous_iff_continuous_on_univ]
   exact cont_diff_on_zero
 #align cont_diff_zero cont_diff_zero
 
-theorem cont_diff_at_zero : ContDiffAt 𝕜 0 f x ↔ ∃ u ∈ 𝓝 x, ContinuousOn f u := by
+theorem cont_diff_at_zero : ContDiffAt 𝕜 0 f x ↔ ∃ u ∈ 𝓝 x, ContinuousOn f u :=
+  by
   rw [← cont_diff_within_at_univ]
   simp [cont_diff_within_at_zero, nhds_within_univ]
 #align cont_diff_at_zero cont_diff_at_zero
@@ -1474,7 +1514,8 @@ theorem ContDiff.differentiable (h : ContDiff 𝕜 n f) (hn : 1 ≤ n) : Differe
   differentiable_on_univ.1 <| (cont_diff_on_univ.2 h).DifferentiableOn hn
 #align cont_diff.differentiable ContDiff.differentiable
 
-theorem cont_diff_iff_forall_nat_le : ContDiff 𝕜 n f ↔ ∀ m : ℕ, ↑m ≤ n → ContDiff 𝕜 m f := by
+theorem cont_diff_iff_forall_nat_le : ContDiff 𝕜 n f ↔ ∀ m : ℕ, ↑m ≤ n → ContDiff 𝕜 m f :=
+  by
   simp_rw [← cont_diff_on_univ]
   exact cont_diff_on_iff_forall_nat_le
 #align cont_diff_iff_forall_nat_le cont_diff_iff_forall_nat_le
@@ -1512,7 +1553,8 @@ theorem norm_iterated_fderiv_zero : ‖iteratedFderiv 𝕜 0 f x‖ = ‖f x‖ 
   rw [iterated_fderiv_zero_eq_comp, LinearIsometryEquiv.norm_map]
 #align norm_iterated_fderiv_zero norm_iterated_fderiv_zero
 
-theorem iterated_fderiv_with_zero_eq : iteratedFderivWithin 𝕜 0 f s = iteratedFderiv 𝕜 0 f := by
+theorem iterated_fderiv_with_zero_eq : iteratedFderivWithin 𝕜 0 f s = iteratedFderiv 𝕜 0 f :=
+  by
   ext
   rfl
 #align iterated_fderiv_with_zero_eq iterated_fderiv_with_zero_eq
@@ -1538,14 +1580,15 @@ theorem fderiv_iterated_fderiv {n : ℕ} :
     fderiv 𝕜 (iteratedFderiv 𝕜 n f) =
       (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E) F).symm ∘
         iteratedFderiv 𝕜 (n + 1) f :=
-  by 
+  by
   rw [iterated_fderiv_succ_eq_comp_left]
   ext1 x
   simp only [Function.comp_apply, LinearIsometryEquiv.symm_apply_apply]
 #align fderiv_iterated_fderiv fderiv_iterated_fderiv
 
 theorem HasCompactSupport.iterated_fderiv (hf : HasCompactSupport f) (n : ℕ) :
-    HasCompactSupport (iteratedFderiv 𝕜 n f) := by
+    HasCompactSupport (iteratedFderiv 𝕜 n f) :=
+  by
   induction' n with n IH
   · rw [iterated_fderiv_zero_eq_comp]
     apply hf.comp_left
@@ -1561,7 +1604,8 @@ theorem norm_fderiv_iterated_fderiv {n : ℕ} :
 #align norm_fderiv_iterated_fderiv norm_fderiv_iterated_fderiv
 
 theorem iterated_fderiv_within_univ {n : ℕ} :
-    iteratedFderivWithin 𝕜 n f univ = iteratedFderiv 𝕜 n f := by
+    iteratedFderivWithin 𝕜 n f univ = iteratedFderiv 𝕜 n f :=
+  by
   induction' n with n IH
   · ext x
     simp
@@ -1573,7 +1617,8 @@ theorem iterated_fderiv_within_univ {n : ℕ} :
 /-- In an open set, the iterated derivative within this set coincides with the global iterated
 derivative. -/
 theorem iterated_fderiv_within_of_is_open (n : ℕ) (hs : IsOpen s) :
-    EqOn (iteratedFderivWithin 𝕜 n f s) (iteratedFderiv 𝕜 n f) s := by
+    EqOn (iteratedFderivWithin 𝕜 n f s) (iteratedFderiv 𝕜 n f) s :=
+  by
   induction' n with n IH
   · intro x hx
     ext1 m
@@ -1588,7 +1633,8 @@ theorem iterated_fderiv_within_of_is_open (n : ℕ) (hs : IsOpen s) :
     exact IH
 #align iterated_fderiv_within_of_is_open iterated_fderiv_within_of_is_open
 
-theorem ftaylor_series_within_univ : ftaylorSeriesWithin 𝕜 f univ = ftaylorSeries 𝕜 f := by
+theorem ftaylor_series_within_univ : ftaylorSeriesWithin 𝕜 f univ = ftaylorSeries 𝕜 f :=
+  by
   ext1 x; ext1 n
   change iteratedFderivWithin 𝕜 n f univ x = iteratedFderiv 𝕜 n f x
   rw [iterated_fderiv_within_univ]
@@ -1597,7 +1643,7 @@ theorem ftaylor_series_within_univ : ftaylorSeriesWithin 𝕜 f univ = ftaylorSe
 theorem iterated_fderiv_succ_apply_right {n : ℕ} (m : Fin (n + 1) → E) :
     (iteratedFderiv 𝕜 (n + 1) f x : (Fin (n + 1) → E) → F) m =
       iteratedFderiv 𝕜 n (fun y => fderiv 𝕜 f y) x (init m) (m (last n)) :=
-  by 
+  by
   rw [← iterated_fderiv_within_univ, ← iterated_fderiv_within_univ, ← fderiv_within_univ]
   exact iterated_fderiv_within_succ_apply_right uniqueDiffOnUniv (mem_univ _) _
 #align iterated_fderiv_succ_apply_right iterated_fderiv_succ_apply_right
@@ -1608,7 +1654,7 @@ theorem iterated_fderiv_succ_eq_comp_right {n : ℕ} :
     iteratedFderiv 𝕜 (n + 1) f x =
       (continuousMultilinearCurryRightEquiv' 𝕜 n E F ∘ iteratedFderiv 𝕜 n fun y => fderiv 𝕜 f y)
         x :=
-  by 
+  by
   ext m
   rw [iterated_fderiv_succ_apply_right]
   rfl
@@ -1621,7 +1667,8 @@ theorem norm_iterated_fderiv_fderiv {n : ℕ} :
 
 @[simp]
 theorem iterated_fderiv_one_apply (m : Fin 1 → E) :
-    (iteratedFderiv 𝕜 1 f x : (Fin 1 → E) → F) m = (fderiv 𝕜 f x : E → F) (m 0) := by
+    (iteratedFderiv 𝕜 1 f x : (Fin 1 → E) → F) m = (fderiv 𝕜 f x : E → F) (m 0) :=
+  by
   rw [iterated_fderiv_succ_apply_right, iterated_fderiv_zero_apply]
   rfl
 #align iterated_fderiv_one_apply iterated_fderiv_one_apply
@@ -1629,7 +1676,8 @@ theorem iterated_fderiv_one_apply (m : Fin 1 → E) :
 /-- When a function is `C^n` in a set `s` of unique differentiability, it admits
 `ftaylor_series_within 𝕜 f s` as a Taylor series up to order `n` in `s`. -/
 theorem cont_diff_on_iff_ftaylor_series :
-    ContDiff 𝕜 n f ↔ HasFtaylorSeriesUpTo n f (ftaylorSeries 𝕜 f) := by
+    ContDiff 𝕜 n f ↔ HasFtaylorSeriesUpTo n f (ftaylorSeries 𝕜 f) :=
+  by
   constructor
   · rw [← cont_diff_on_univ, ← has_ftaylor_series_up_to_on_univ_iff, ← ftaylor_series_within_univ]
     exact fun h => ContDiffOn.ftaylorSeriesWithin h uniqueDiffOnUniv
@@ -1679,7 +1727,8 @@ theorem cont_diff_one_iff_fderiv : ContDiff 𝕜 1 f ↔ Differentiable 𝕜 f �
 /-- A function is `C^∞` if and only if it is differentiable,
 and its derivative (formulated in terms of `fderiv`) is `C^∞`. -/
 theorem cont_diff_top_iff_fderiv :
-    ContDiff 𝕜 ∞ f ↔ Differentiable 𝕜 f ∧ ContDiff 𝕜 ∞ fun y => fderiv 𝕜 f y := by
+    ContDiff 𝕜 ∞ f ↔ Differentiable 𝕜 f ∧ ContDiff 𝕜 ∞ fun y => fderiv 𝕜 f y :=
+  by
   simp only [← cont_diff_on_univ, ← differentiable_on_univ, ← fderiv_within_univ]
   rw [cont_diff_on_top_iff_fderiv_within uniqueDiffOnUniv]
 #align cont_diff_top_iff_fderiv cont_diff_top_iff_fderiv
@@ -1703,7 +1752,8 @@ theorem ContDiff.continuous_fderiv_apply (h : ContDiff 𝕜 n f) (hn : 1 ≤ n) 
 
 
 @[simp]
-theorem iterated_fderiv_zero_fun {n : ℕ} : (iteratedFderiv 𝕜 n fun x : E => (0 : F)) = 0 := by
+theorem iterated_fderiv_zero_fun {n : ℕ} : (iteratedFderiv 𝕜 n fun x : E => (0 : F)) = 0 :=
+  by
   induction' n with n IH
   · ext m
     simp
@@ -1714,7 +1764,8 @@ theorem iterated_fderiv_zero_fun {n : ℕ} : (iteratedFderiv 𝕜 n fun x : E =>
     rfl
 #align iterated_fderiv_zero_fun iterated_fderiv_zero_fun
 
-theorem contDiffZeroFun : ContDiff 𝕜 n fun x : E => (0 : F) := by
+theorem contDiffZeroFun : ContDiff 𝕜 n fun x : E => (0 : F) :=
+  by
   apply contDiffOfDifferentiableIteratedFderiv fun m hm => _
   rw [iterated_fderiv_zero_fun]
   exact differentiableConst (0 : E[×m]→L[𝕜] F)
@@ -1722,7 +1773,8 @@ theorem contDiffZeroFun : ContDiff 𝕜 n fun x : E => (0 : F) := by
 
 /-- Constants are `C^∞`.
 -/
-theorem contDiffConst {c : F} : ContDiff 𝕜 n fun x : E => c := by
+theorem contDiffConst {c : F} : ContDiff 𝕜 n fun x : E => c :=
+  by
   suffices h : ContDiff 𝕜 ∞ fun x : E => c; · exact h.of_le le_top
   rw [cont_diff_top_iff_fderiv]
   refine' ⟨differentiableConst c, _⟩
@@ -1743,25 +1795,29 @@ theorem contDiffWithinAtConst {c : F} : ContDiffWithinAt 𝕜 n (fun x : E => c)
 #align cont_diff_within_at_const contDiffWithinAtConst
 
 @[nontriviality]
-theorem contDiffOfSubsingleton [Subsingleton F] : ContDiff 𝕜 n f := by
+theorem contDiffOfSubsingleton [Subsingleton F] : ContDiff 𝕜 n f :=
+  by
   rw [Subsingleton.elim f fun _ => 0]
   exact contDiffConst
 #align cont_diff_of_subsingleton contDiffOfSubsingleton
 
 @[nontriviality]
-theorem contDiffAtOfSubsingleton [Subsingleton F] : ContDiffAt 𝕜 n f x := by
+theorem contDiffAtOfSubsingleton [Subsingleton F] : ContDiffAt 𝕜 n f x :=
+  by
   rw [Subsingleton.elim f fun _ => 0]
   exact contDiffAtConst
 #align cont_diff_at_of_subsingleton contDiffAtOfSubsingleton
 
 @[nontriviality]
-theorem contDiffWithinAtOfSubsingleton [Subsingleton F] : ContDiffWithinAt 𝕜 n f s x := by
+theorem contDiffWithinAtOfSubsingleton [Subsingleton F] : ContDiffWithinAt 𝕜 n f s x :=
+  by
   rw [Subsingleton.elim f fun _ => 0]
   exact contDiffWithinAtConst
 #align cont_diff_within_at_of_subsingleton contDiffWithinAtOfSubsingleton
 
 @[nontriviality]
-theorem contDiffOnOfSubsingleton [Subsingleton F] : ContDiffOn 𝕜 n f s := by
+theorem contDiffOnOfSubsingleton [Subsingleton F] : ContDiffOn 𝕜 n f s :=
+  by
   rw [Subsingleton.elim f fun _ => 0]
   exact contDiffOnConst
 #align cont_diff_on_of_subsingleton contDiffOnOfSubsingleton
@@ -1771,7 +1827,8 @@ theorem contDiffOnOfSubsingleton [Subsingleton F] : ContDiffOn 𝕜 n f s := by
 
 /-- Unbundled bounded linear functions are `C^∞`.
 -/
-theorem IsBoundedLinearMap.contDiff (hf : IsBoundedLinearMap 𝕜 f) : ContDiff 𝕜 n f := by
+theorem IsBoundedLinearMap.contDiff (hf : IsBoundedLinearMap 𝕜 f) : ContDiff 𝕜 n f :=
+  by
   suffices h : ContDiff 𝕜 ∞ f; · exact h.of_le le_top
   rw [cont_diff_top_iff_fderiv]
   refine' ⟨hf.differentiable, _⟩
@@ -1815,7 +1872,8 @@ theorem contDiffOnId {s} : ContDiffOn 𝕜 n (id : E → E) s :=
 
 /-- Bilinear functions are `C^∞`.
 -/
-theorem IsBoundedBilinearMap.contDiff (hb : IsBoundedBilinearMap 𝕜 b) : ContDiff 𝕜 n b := by
+theorem IsBoundedBilinearMap.contDiff (hb : IsBoundedBilinearMap 𝕜 b) : ContDiff 𝕜 n b :=
+  by
   suffices h : ContDiff 𝕜 ∞ b; · exact h.of_le le_top
   rw [cont_diff_top_iff_fderiv]
   refine' ⟨hb.differentiable, _⟩
@@ -1827,7 +1885,8 @@ theorem IsBoundedBilinearMap.contDiff (hb : IsBoundedBilinearMap 𝕜 b) : ContD
 series whose `k`-th term is given by `g ∘ (p k)`. -/
 theorem HasFtaylorSeriesUpToOn.continuousLinearMapComp (g : F →L[𝕜] G)
     (hf : HasFtaylorSeriesUpToOn n f p s) :
-    HasFtaylorSeriesUpToOn n (g ∘ f) (fun x k => g.compContinuousMultilinearMap (p x k)) s := by
+    HasFtaylorSeriesUpToOn n (g ∘ f) (fun x k => g.compContinuousMultilinearMap (p x k)) s :=
+  by
   set L : ∀ m : ℕ, (E[×m]→L[𝕜] F) →L[𝕜] E[×m]→L[𝕜] G := fun m =>
     ContinuousLinearMap.compContinuousMultilinearMapL 𝕜 (fun _ => E) F G g
   constructor
@@ -1842,7 +1901,7 @@ theorem HasFtaylorSeriesUpToOn.continuousLinearMapComp (g : F →L[𝕜] G)
 /-- Composition by continuous linear maps on the left preserves `C^n` functions in a domain
 at a point. -/
 theorem ContDiffWithinAt.continuousLinearMapComp (g : F →L[𝕜] G) (hf : ContDiffWithinAt 𝕜 n f s x) :
-    ContDiffWithinAt 𝕜 n (g ∘ f) s x := by 
+    ContDiffWithinAt 𝕜 n (g ∘ f) s x := by
   intro m hm
   rcases hf m hm with ⟨u, hu, p, hp⟩
   exact ⟨u, hu, _, hp.continuous_linear_map_comp g⟩
@@ -1930,7 +1989,8 @@ theorem HasFtaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFtaylorSeriesUpT
 /-- Composition by continuous linear maps on the right preserves `C^n` functions at a point on
 a domain. -/
 theorem ContDiffWithinAt.compContinuousLinearMap {x : G} (g : G →L[𝕜] E)
-    (hf : ContDiffWithinAt 𝕜 n f s (g x)) : ContDiffWithinAt 𝕜 n (f ∘ g) (g ⁻¹' s) x := by
+    (hf : ContDiffWithinAt 𝕜 n f s (g x)) : ContDiffWithinAt 𝕜 n (f ∘ g) (g ⁻¹' s) x :=
+  by
   intro m hm
   rcases hf m hm with ⟨u, hu, p, hp⟩
   refine' ⟨g ⁻¹' u, _, _, hp.comp_continuous_linear_map g⟩
@@ -1955,7 +2015,8 @@ theorem ContDiff.compContinuousLinearMap {f : E → F} {g : G →L[𝕜] E} (hf 
 /-- Composition by continuous linear equivs on the right respects higher differentiability at a
 point in a domain. -/
 theorem ContinuousLinearEquiv.cont_diff_within_at_comp_iff (e : G ≃L[𝕜] E) :
-    ContDiffWithinAt 𝕜 n (f ∘ e) (e ⁻¹' s) (e.symm x) ↔ ContDiffWithinAt 𝕜 n f s x := by
+    ContDiffWithinAt 𝕜 n (f ∘ e) (e ⁻¹' s) (e.symm x) ↔ ContDiffWithinAt 𝕜 n f s x :=
+  by
   constructor
   · intro H
     simpa [← preimage_comp, (· ∘ ·)] using H.comp_continuous_linear_map (e.symm : E →L[𝕜] G)
@@ -1968,7 +2029,8 @@ theorem ContinuousLinearEquiv.cont_diff_within_at_comp_iff (e : G ≃L[𝕜] E) 
 /-- Composition by continuous linear equivs on the right respects higher differentiability at a
 point. -/
 theorem ContinuousLinearEquiv.cont_diff_at_comp_iff (e : G ≃L[𝕜] E) :
-    ContDiffAt 𝕜 n (f ∘ e) (e.symm x) ↔ ContDiffAt 𝕜 n f x := by
+    ContDiffAt 𝕜 n (f ∘ e) (e.symm x) ↔ ContDiffAt 𝕜 n f x :=
+  by
   rw [← cont_diff_within_at_univ, ← cont_diff_within_at_univ, ← preimage_univ]
   exact e.cont_diff_within_at_comp_iff
 #align continuous_linear_equiv.cont_diff_at_comp_iff ContinuousLinearEquiv.cont_diff_at_comp_iff
@@ -1976,13 +2038,15 @@ theorem ContinuousLinearEquiv.cont_diff_at_comp_iff (e : G ≃L[𝕜] E) :
 /-- Composition by continuous linear equivs on the right respects higher differentiability on
 domains. -/
 theorem ContinuousLinearEquiv.cont_diff_on_comp_iff (e : G ≃L[𝕜] E) :
-    ContDiffOn 𝕜 n (f ∘ e) (e ⁻¹' s) ↔ ContDiffOn 𝕜 n f s := by
+    ContDiffOn 𝕜 n (f ∘ e) (e ⁻¹' s) ↔ ContDiffOn 𝕜 n f s :=
+  by
   refine' ⟨fun H => _, fun H => H.compContinuousLinearMap (e : G →L[𝕜] E)⟩
-  have A : f = (f ∘ e) ∘ e.symm := by 
+  have A : f = (f ∘ e) ∘ e.symm := by
     ext y
     simp only [Function.comp_apply]
     rw [e.apply_symm_apply y]
-  have B : e.symm ⁻¹' (e ⁻¹' s) = s := by
+  have B : e.symm ⁻¹' (e ⁻¹' s) = s :=
+    by
     rw [← preimage_comp, e.self_comp_symm]
     rfl
   rw [A, ← B]
@@ -1991,7 +2055,8 @@ theorem ContinuousLinearEquiv.cont_diff_on_comp_iff (e : G ≃L[𝕜] E) :
 
 /-- Composition by continuous linear equivs on the right respects higher differentiability. -/
 theorem ContinuousLinearEquiv.cont_diff_comp_iff (e : G ≃L[𝕜] E) :
-    ContDiff 𝕜 n (f ∘ e) ↔ ContDiff 𝕜 n f := by
+    ContDiff 𝕜 n (f ∘ e) ↔ ContDiff 𝕜 n f :=
+  by
   rw [← cont_diff_on_univ, ← cont_diff_on_univ, ← preimage_univ]
   exact e.cont_diff_on_comp_iff
 #align continuous_linear_equiv.cont_diff_comp_iff ContinuousLinearEquiv.cont_diff_comp_iff
@@ -2000,7 +2065,8 @@ theorem ContinuousLinearEquiv.cont_diff_comp_iff (e : G ≃L[𝕜] E) :
 product of `f` and `g` admits the cartesian product of `p` and `q` as a Taylor series. -/
 theorem HasFtaylorSeriesUpToOn.prod (hf : HasFtaylorSeriesUpToOn n f p s) {g : E → G}
     {q : E → FormalMultilinearSeries 𝕜 E G} (hg : HasFtaylorSeriesUpToOn n g q s) :
-    HasFtaylorSeriesUpToOn n (fun y => (f y, g y)) (fun y k => (p y k).Prod (q y k)) s := by
+    HasFtaylorSeriesUpToOn n (fun y => (f y, g y)) (fun y k => (p y k).Prod (q y k)) s :=
+  by
   set L := fun m => ContinuousMultilinearMap.prodL 𝕜 (fun i : Fin m => E) F G
   constructor
   · intro x hx
@@ -2016,7 +2082,8 @@ theorem HasFtaylorSeriesUpToOn.prod (hf : HasFtaylorSeriesUpToOn n f p s) {g : E
 
 /-- The cartesian product of `C^n` functions at a point in a domain is `C^n`. -/
 theorem ContDiffWithinAt.prod {s : Set E} {f : E → F} {g : E → G} (hf : ContDiffWithinAt 𝕜 n f s x)
-    (hg : ContDiffWithinAt 𝕜 n g s x) : ContDiffWithinAt 𝕜 n (fun x : E => (f x, g x)) s x := by
+    (hg : ContDiffWithinAt 𝕜 n g s x) : ContDiffWithinAt 𝕜 n (fun x : E => (f x, g x)) s x :=
+  by
   intro m hm
   rcases hf m hm with ⟨u, hu, p, hp⟩
   rcases hg m hm with ⟨v, hv, q, hq⟩
@@ -2080,7 +2147,8 @@ private theorem cont_diff_on.comp_same_univ {Eu : Type u} [NormedAddCommGroup Eu
     {Fu : Type u} [NormedAddCommGroup Fu] [NormedSpace 𝕜 Fu] {Gu : Type u} [NormedAddCommGroup Gu]
     [NormedSpace 𝕜 Gu] {s : Set Eu} {t : Set Fu} {g : Fu → Gu} {f : Eu → Fu}
     (hg : ContDiffOn 𝕜 n g t) (hf : ContDiffOn 𝕜 n f s) (st : s ⊆ f ⁻¹' t) :
-    ContDiffOn 𝕜 n (g ∘ f) s := by
+    ContDiffOn 𝕜 n (g ∘ f) s :=
+  by
   induction' n using Enat.nat_induction with n IH Itop generalizing Eu Fu Gu
   · rw [cont_diff_on_zero] at hf hg⊢
     exact ContinuousOn.comp hg hf st
@@ -2146,13 +2214,15 @@ theorem ContDiffOn.comp {s : Set E} {t : Set F} {g : F → G} {f : E → F} (hg 
   let gu : Fu → Gu := (isoG.symm ∘ g) ∘ isoF
   have gu_diff : ContDiffOn 𝕜 n gu (isoF ⁻¹' t) := by
     rwa [isoF.cont_diff_on_comp_iff, isoG.symm.comp_cont_diff_on_iff]
-  have main : ContDiffOn 𝕜 n (gu ∘ fu) (isoE ⁻¹' s) := by
+  have main : ContDiffOn 𝕜 n (gu ∘ fu) (isoE ⁻¹' s) :=
+    by
     apply cont_diff_on.comp_same_univ gu_diff fu_diff
     intro y hy
     simp only [fu, ContinuousLinearEquiv.coe_apply, Function.comp_apply, mem_preimage]
     rw [isoF.apply_symm_apply (f (isoE y))]
     exact st hy
-  have : gu ∘ fu = (isoG.symm ∘ g ∘ f) ∘ isoE := by
+  have : gu ∘ fu = (isoG.symm ∘ g ∘ f) ∘ isoE :=
+    by
     ext y
     simp only [Function.comp_apply, gu, fu]
     rw [isoF.apply_symm_apply (f (isoE y))]
@@ -2181,14 +2251,15 @@ theorem ContDiff.comp {g : F → G} {f : E → F} (hg : ContDiff 𝕜 n g) (hf :
 /-- The composition of `C^n` functions at points in domains is `C^n`. -/
 theorem ContDiffWithinAt.comp {s : Set E} {t : Set F} {g : F → G} {f : E → F} (x : E)
     (hg : ContDiffWithinAt 𝕜 n g t (f x)) (hf : ContDiffWithinAt 𝕜 n f s x) (st : s ⊆ f ⁻¹' t) :
-    ContDiffWithinAt 𝕜 n (g ∘ f) s x := by 
+    ContDiffWithinAt 𝕜 n (g ∘ f) s x := by
   intro m hm
   rcases hg.cont_diff_on hm with ⟨u, u_nhd, ut, hu⟩
   rcases hf.cont_diff_on hm with ⟨v, v_nhd, vs, hv⟩
   have xmem : x ∈ f ⁻¹' u ∩ v :=
     ⟨(mem_of_mem_nhds_within (mem_insert (f x) _) u_nhd : _),
       mem_of_mem_nhds_within (mem_insert x s) v_nhd⟩
-  have : f ⁻¹' u ∈ 𝓝[insert x s] x := by
+  have : f ⁻¹' u ∈ 𝓝[insert x s] x :=
+    by
     apply hf.continuous_within_at.insert_self.preimage_mem_nhds_within'
     apply nhds_within_mono _ _ u_nhd
     rw [image_insert_eq]
@@ -2196,8 +2267,10 @@ theorem ContDiffWithinAt.comp {s : Set E} {t : Set F} {g : F → G} {f : E → F
   have Z :=
     (hu.comp (hv.mono (inter_subset_right (f ⁻¹' u) v)) (inter_subset_left _ _)).ContDiffWithinAt
       xmem m le_rfl
-  have : 𝓝[f ⁻¹' u ∩ v] x = 𝓝[insert x s] x := by
-    have A : f ⁻¹' u ∩ v = insert x s ∩ (f ⁻¹' u ∩ v) := by
+  have : 𝓝[f ⁻¹' u ∩ v] x = 𝓝[insert x s] x :=
+    by
+    have A : f ⁻¹' u ∩ v = insert x s ∩ (f ⁻¹' u ∩ v) :=
+      by
       apply subset.antisymm _ (inter_subset_right _ _)
       rintro y ⟨hy1, hy2⟩
       simp [hy1, hy2, vs hy2]
@@ -2427,8 +2500,10 @@ theorem contDiffProdAssocSymm : ContDiff 𝕜 ⊤ <| (Equiv.prodAssoc E F G).sym
 
 theorem ContDiffWithinAt.fderivWithin' (hf : ContDiffWithinAt 𝕜 n f s x)
     (hs : ∀ᶠ y in 𝓝[insert x s] x, UniqueDiffWithinAt 𝕜 s y) (hmn : m + 1 ≤ n) :
-    ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x := by
-  have : ∀ k : ℕ, (k + 1 : ℕ∞) ≤ n → ContDiffWithinAt 𝕜 k (fderivWithin 𝕜 f s) s x := by
+    ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x :=
+  by
+  have : ∀ k : ℕ, (k + 1 : ℕ∞) ≤ n → ContDiffWithinAt 𝕜 k (fderivWithin 𝕜 f s) s x :=
+    by
     intro k hkn
     obtain ⟨v, hv, -, f', hvf', hf'⟩ :=
       cont_diff_within_at_succ_iff_has_fderiv_within_at'.mp (hf.of_le hkn)
@@ -2445,7 +2520,7 @@ theorem ContDiffWithinAt.fderivWithin' (hf : ContDiffWithinAt 𝕜 n f s x)
 theorem ContDiffWithinAt.fderivWithin (hf : ContDiffWithinAt 𝕜 n f s x) (hs : UniqueDiffOn 𝕜 s)
     (hmn : (m + 1 : ℕ∞) ≤ n) (hxs : x ∈ s) : ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x :=
   hf.fderivWithin'
-    (by 
+    (by
       rw [insert_eq_of_mem hxs]
       exact eventually_of_mem self_mem_nhds_within hs)
     hmn
@@ -2477,7 +2552,8 @@ theorem ContDiffOn.continuous_on_fderiv_within_apply (hf : ContDiffOn 𝕜 n f s
 
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
 theorem ContDiff.contDiffFderivApply {f : E → F} (hf : ContDiff 𝕜 n f) (hmn : m + 1 ≤ n) :
-    ContDiff 𝕜 m fun p : E × E => (fderiv 𝕜 f p.1 : E →L[𝕜] F) p.2 := by
+    ContDiff 𝕜 m fun p : E × E => (fderiv 𝕜 f p.1 : E →L[𝕜] F) p.2 :=
+  by
   rw [← cont_diff_on_univ] at hf⊢
   rw [← fderiv_within_univ, ← univ_prod_univ]
   exact contDiffOnFderivWithinApply hf uniqueDiffOnUniv hmn
@@ -2498,7 +2574,7 @@ theorem has_ftaylor_series_up_to_on_pi :
     HasFtaylorSeriesUpToOn n (fun x i => φ i x)
         (fun x m => ContinuousMultilinearMap.pi fun i => p' i x m) s ↔
       ∀ i, HasFtaylorSeriesUpToOn n (φ i) (p' i) s :=
-  by 
+  by
   set pr := @ContinuousLinearMap.proj 𝕜 _ ι F' _ _ _
   letI : ∀ (m : ℕ) (i : ι), NormedSpace 𝕜 (E[×m]→L[𝕜] F' i) := fun m i => inferInstance
   set L : ∀ m : ℕ, (∀ i, E[×m]→L[𝕜] F' i) ≃ₗᵢ[𝕜] E[×m]→L[𝕜] ∀ i, F' i := fun m =>
@@ -2525,14 +2601,15 @@ theorem has_ftaylor_series_up_to_on_pi' :
           (fun x m =>
             (@ContinuousLinearMap.proj 𝕜 _ ι F' _ _ _ i).compContinuousMultilinearMap (P' x m))
           s :=
-  by 
+  by
   convert has_ftaylor_series_up_to_on_pi
   ext
   rfl
 #align has_ftaylor_series_up_to_on_pi' has_ftaylor_series_up_to_on_pi'
 
 theorem cont_diff_within_at_pi :
-    ContDiffWithinAt 𝕜 n Φ s x ↔ ∀ i, ContDiffWithinAt 𝕜 n (fun x => Φ x i) s x := by
+    ContDiffWithinAt 𝕜 n Φ s x ↔ ∀ i, ContDiffWithinAt 𝕜 n (fun x => Φ x i) s x :=
+  by
   set pr := @ContinuousLinearMap.proj 𝕜 _ ι F' _ _ _
   refine' ⟨fun h i => h.continuousLinearMapComp (pr i), fun h m hm => _⟩
   choose u hux p hp using fun i => h i m hm
@@ -2609,7 +2686,7 @@ theorem iterated_fderiv_within_add_apply {f g : E → F} (hf : ContDiffOn 𝕜 i
     (hg : ContDiffOn 𝕜 i g s) (hu : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
     iteratedFderivWithin 𝕜 i (f + g) s x =
       iteratedFderivWithin 𝕜 i f s x + iteratedFderivWithin 𝕜 i g s x :=
-  by 
+  by
   induction' i with i hi generalizing x
   · ext h
     simp
@@ -2628,7 +2705,7 @@ theorem iterated_fderiv_within_add_apply {f g : E → F} (hf : ContDiffOn 𝕜 i
       _ =
           fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s + iteratedFderivWithin 𝕜 i g s) s x (h 0)
             (Fin.tail h) :=
-        by 
+        by
         congr 2
         exact fderiv_within_congr (hu x hx) (fun _ => hi hcdf hcdg) (hi hcdf hcdg hx)
       _ =
@@ -2642,7 +2719,8 @@ theorem iterated_fderiv_within_add_apply {f g : E → F} (hf : ContDiffOn 𝕜 i
 
 theorem iterated_fderiv_add_apply {i : ℕ} {f g : E → F} (hf : ContDiff 𝕜 i f)
     (hg : ContDiff 𝕜 i g) :
-    iteratedFderiv 𝕜 i (f + g) x = iteratedFderiv 𝕜 i f x + iteratedFderiv 𝕜 i g x := by
+    iteratedFderiv 𝕜 i (f + g) x = iteratedFderiv 𝕜 i f x + iteratedFderiv 𝕜 i g x :=
+  by
   simp_rw [← cont_diff_on_univ, ← iterated_fderiv_within_univ] at hf hg⊢
   exact iterated_fderiv_within_add_apply hf hg uniqueDiffOnUniv (Set.mem_univ _)
 #align iterated_fderiv_add_apply iterated_fderiv_add_apply
@@ -2684,7 +2762,8 @@ theorem ContDiffOn.neg {s : Set E} {f : E → F} (hf : ContDiffOn 𝕜 n f s) :
 variable {i : ℕ}
 
 theorem iterated_fderiv_within_neg_apply {f : E → F} (hu : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
-    iteratedFderivWithin 𝕜 i (-f) s x = -iteratedFderivWithin 𝕜 i f s x := by
+    iteratedFderivWithin 𝕜 i (-f) s x = -iteratedFderivWithin 𝕜 i f s x :=
+  by
   induction' i with i hi generalizing x
   · ext h
     simp
@@ -2694,7 +2773,8 @@ theorem iterated_fderiv_within_neg_apply {f : E → F} (hu : UniqueDiffOn 𝕜 s
       iteratedFderivWithin 𝕜 (i + 1) (-f) s x h =
           fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i (-f) s) s x (h 0) (Fin.tail h) :=
         rfl
-      _ = fderivWithin 𝕜 (-iteratedFderivWithin 𝕜 i f s) s x (h 0) (Fin.tail h) := by
+      _ = fderivWithin 𝕜 (-iteratedFderivWithin 𝕜 i f s) s x (h 0) (Fin.tail h) :=
+        by
         congr 2
         exact fderiv_within_congr (hu x hx) (fun _ => hi) (hi hx)
       _ = -(fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s) s) x (h 0) (Fin.tail h) := by
@@ -2704,7 +2784,8 @@ theorem iterated_fderiv_within_neg_apply {f : E → F} (hu : UniqueDiffOn 𝕜 s
 #align iterated_fderiv_within_neg_apply iterated_fderiv_within_neg_apply
 
 theorem iterated_fderiv_neg_apply {i : ℕ} {f : E → F} :
-    iteratedFderiv 𝕜 i (-f) x = -iteratedFderiv 𝕜 i f x := by
+    iteratedFderiv 𝕜 i (-f) x = -iteratedFderiv 𝕜 i f x :=
+  by
   simp_rw [← iterated_fderiv_within_univ]
   exact iterated_fderiv_within_neg_apply uniqueDiffOnUniv (Set.mem_univ _)
 #align iterated_fderiv_neg_apply iterated_fderiv_neg_apply
@@ -2743,7 +2824,7 @@ theorem ContDiff.sub {f g : E → F} (hf : ContDiff 𝕜 n f) (hg : ContDiff �
 theorem ContDiffWithinAt.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {t : Set E} {x : E}
     (h : ∀ i ∈ s, ContDiffWithinAt 𝕜 n (fun x => f i x) t x) :
     ContDiffWithinAt 𝕜 n (fun x => ∑ i in s, f i x) t x := by
-  classical 
+  classical
     induction' s using Finset.induction_on with i s is IH
     · simp [contDiffWithinAtConst]
     · simp only [is, Finset.sum_insert, not_false_iff]
@@ -2964,7 +3045,8 @@ theorem ContDiffOn.constSmul {s : Set E} {f : E → F} (c : R) (hf : ContDiffOn 
 variable {i : ℕ} {a : R}
 
 theorem iterated_fderiv_within_const_smul_apply (hf : ContDiffOn 𝕜 i f s) (hu : UniqueDiffOn 𝕜 s)
-    (hx : x ∈ s) : iteratedFderivWithin 𝕜 i (a • f) s x = a • iteratedFderivWithin 𝕜 i f s x := by
+    (hx : x ∈ s) : iteratedFderivWithin 𝕜 i (a • f) s x = a • iteratedFderivWithin 𝕜 i f s x :=
+  by
   induction' i with i hi generalizing x
   · ext
     simp
@@ -2977,7 +3059,8 @@ theorem iterated_fderiv_within_const_smul_apply (hf : ContDiffOn 𝕜 i f s) (hu
       iteratedFderivWithin 𝕜 (i + 1) (a • f) s x h =
           fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i (a • f) s) s x (h 0) (Fin.tail h) :=
         rfl
-      _ = fderivWithin 𝕜 (a • iteratedFderivWithin 𝕜 i f s) s x (h 0) (Fin.tail h) := by
+      _ = fderivWithin 𝕜 (a • iteratedFderivWithin 𝕜 i f s) s x (h 0) (Fin.tail h) :=
+        by
         congr 2
         exact fderiv_within_congr (hu x hx) (fun _ => hi hcdf) (hi hcdf hx)
       _ = (a • fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s)) s x (h 0) (Fin.tail h) := by
@@ -2987,7 +3070,8 @@ theorem iterated_fderiv_within_const_smul_apply (hf : ContDiffOn 𝕜 i f s) (hu
 #align iterated_fderiv_within_const_smul_apply iterated_fderiv_within_const_smul_apply
 
 theorem iterated_fderiv_const_smul_apply {x : E} (hf : ContDiff 𝕜 i f) :
-    iteratedFderiv 𝕜 i (a • f) x = a • iteratedFderiv 𝕜 i f x := by
+    iteratedFderiv 𝕜 i (a • f) x = a • iteratedFderiv 𝕜 i f x :=
+  by
   simp_rw [← cont_diff_on_univ, ← iterated_fderiv_within_univ] at *
   refine' iterated_fderiv_within_const_smul_apply hf uniqueDiffOnUniv (Set.mem_univ _)
 #align iterated_fderiv_const_smul_apply iterated_fderiv_const_smul_apply
@@ -3032,7 +3116,8 @@ theorem ContDiffOn.prodMap {E' : Type _} [NormedAddCommGroup E'] [NormedSpace �
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem ContDiffAt.prodMap {f : E → F} {g : E' → F'} {x : E} {y : E'} (hf : ContDiffAt 𝕜 n f x)
-    (hg : ContDiffAt 𝕜 n g y) : ContDiffAt 𝕜 n (Prod.map f g) (x, y) := by
+    (hg : ContDiffAt 𝕜 n g y) : ContDiffAt 𝕜 n (Prod.map f g) (x, y) :=
+  by
   rw [ContDiffAt] at *
   convert hf.prod_map hg
   simp only [univ_prod_univ]
@@ -3041,14 +3126,16 @@ theorem ContDiffAt.prodMap {f : E → F} {g : E' → F'} {x : E} {y : E'} (hf : 
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem ContDiffAt.prodMap' {f : E → F} {g : E' → F'} {p : E × E'} (hf : ContDiffAt 𝕜 n f p.1)
-    (hg : ContDiffAt 𝕜 n g p.2) : ContDiffAt 𝕜 n (Prod.map f g) p := by
+    (hg : ContDiffAt 𝕜 n g p.2) : ContDiffAt 𝕜 n (Prod.map f g) p :=
+  by
   rcases p with ⟨⟩
   exact ContDiffAt.prodMap hf hg
 #align cont_diff_at.prod_map' ContDiffAt.prodMap'
 
 /-- The product map of two `C^n` functions is `C^n`. -/
 theorem ContDiff.prodMap {f : E → F} {g : E' → F'} (hf : ContDiff 𝕜 n f) (hg : ContDiff 𝕜 n g) :
-    ContDiff 𝕜 n (Prod.map f g) := by
+    ContDiff 𝕜 n (Prod.map f g) :=
+  by
   rw [cont_diff_iff_cont_diff_at] at *
   exact fun ⟨x, y⟩ => (hf x).prod_map (hg y)
 #align cont_diff.prod_map ContDiff.prodMap
@@ -3075,7 +3162,8 @@ open NormedRing ContinuousLinearMap Ring
 /-- In a complete normed algebra, the operation of inversion is `C^n`, for all `n`, at each
 invertible element.  The proof is by induction, bootstrapping using an identity expressing the
 derivative of inversion as a bilinear map of inversion itself. -/
-theorem contDiffAtRingInverse [CompleteSpace R] (x : Rˣ) : ContDiffAt 𝕜 n Ring.inverse (x : R) := by
+theorem contDiffAtRingInverse [CompleteSpace R] (x : Rˣ) : ContDiffAt 𝕜 n Ring.inverse (x : R) :=
+  by
   induction' n using Enat.nat_induction with n IH Itop
   · intro m hm
     refine' ⟨{ y : R | IsUnit y }, _, _⟩
@@ -3129,7 +3217,8 @@ theorem ContDiffAt.inv {f : E → 𝕜'} {n} (hf : ContDiffAt 𝕜 n f x) (hx : 
 #align cont_diff_at.inv ContDiffAt.inv
 
 theorem ContDiff.inv {f : E → 𝕜'} {n} (hf : ContDiff 𝕜 n f) (h : ∀ x, f x ≠ 0) :
-    ContDiff 𝕜 n fun x => (f x)⁻¹ := by
+    ContDiff 𝕜 n fun x => (f x)⁻¹ :=
+  by
   rw [cont_diff_iff_cont_diff_at]
   exact fun x => hf.cont_diff_at.inv (h x)
 #align cont_diff.inv ContDiff.inv
@@ -3152,7 +3241,8 @@ theorem ContDiffAt.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (hf : ContDif
 #align cont_diff_at.div ContDiffAt.div
 
 theorem ContDiff.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (hf : ContDiff 𝕜 n f) (hg : ContDiff 𝕜 n g)
-    (h0 : ∀ x, g x ≠ 0) : ContDiff 𝕜 n fun x => f x / g x := by
+    (h0 : ∀ x, g x ≠ 0) : ContDiff 𝕜 n fun x => f x / g x :=
+  by
   simp only [cont_diff_iff_cont_diff_at] at *
   exact fun x => (hf x).div (hg x) (h0 x)
 #align cont_diff.div ContDiff.div
@@ -3169,7 +3259,8 @@ open ContinuousLinearMap
 /-- At a continuous linear equivalence `e : E ≃L[𝕜] F` between Banach spaces, the operation of
 inversion is `C^n`, for all `n`. -/
 theorem contDiffAtMapInverse [CompleteSpace E] (e : E ≃L[𝕜] F) :
-    ContDiffAt 𝕜 n inverse (e : E →L[𝕜] F) := by
+    ContDiffAt 𝕜 n inverse (e : E →L[𝕜] F) :=
+  by
   nontriviality E
   -- first, we use the lemma `to_ring_inverse` to rewrite in terms of `ring.inverse` in the ring
   -- `E →L[𝕜] E`
@@ -3215,7 +3306,8 @@ theorem LocalHomeomorph.contDiffAtSymm [CompleteSpace E] (f : LocalHomeomorph E 
     -- This follows by a bootstrapping formula expressing the derivative as a function of `f` itself
     refine' ⟨inverse ∘ f' ∘ f.symm, _, _⟩
     · -- We first check that the derivative of `f` is that formula
-      have h_nhds : { y : E | ∃ e : E ≃L[𝕜] F, ↑e = f' y } ∈ 𝓝 (f.symm a) := by
+      have h_nhds : { y : E | ∃ e : E ≃L[𝕜] F, ↑e = f' y } ∈ 𝓝 (f.symm a) :=
+        by
         have hf₀' := f₀'.nhds
         rw [← eq_f₀'] at hf₀'
         exact hf'.continuous_at.preimage_mem_nhds hf₀'
@@ -3226,17 +3318,20 @@ theorem LocalHomeomorph.contDiffAtSymm [CompleteSpace E] (f : LocalHomeomorph E 
       · exact mem_inter ha (mem_preimage.mpr htf)
       intro x hx
       obtain ⟨hxu, e, he⟩ := htu hx.2
-      have h_deriv : HasFderivAt f (↑e) (f.symm x) := by
+      have h_deriv : HasFderivAt f (↑e) (f.symm x) :=
+        by
         rw [he]
         exact hff' (f.symm x) hxu
       convert f.has_fderiv_at_symm hx.1 h_deriv
       simp [← he]
     · -- Then we check that the formula, being a composition of `cont_diff` pieces, is
       -- itself `cont_diff`
-      have h_deriv₁ : ContDiffAt 𝕜 n inverse (f' (f.symm a)) := by
+      have h_deriv₁ : ContDiffAt 𝕜 n inverse (f' (f.symm a)) :=
+        by
         rw [eq_f₀']
         exact contDiffAtMapInverse _
-      have h_deriv₂ : ContDiffAt 𝕜 n f.symm a := by
+      have h_deriv₂ : ContDiffAt 𝕜 n f.symm a :=
+        by
         refine' IH (hf.of_le _)
         norm_cast
         exact Nat.le_succ n
@@ -3297,7 +3392,8 @@ variable [CompleteSpace 𝕜]
 
 /-- A family of continuous linear maps is `C^n` on `s` if all its applications are. -/
 theorem cont_diff_on_clm_apply {n : ℕ∞} {f : E → F →L[𝕜] G} {s : Set E} [FiniteDimensional 𝕜 F] :
-    ContDiffOn 𝕜 n f s ↔ ∀ y, ContDiffOn 𝕜 n (fun x => f x y) s := by
+    ContDiffOn 𝕜 n f s ↔ ∀ y, ContDiffOn 𝕜 n (fun x => f x y) s :=
+  by
   refine' ⟨fun h y => (ContinuousLinearMap.apply 𝕜 G y).ContDiff.compContDiffOn h, fun h => _⟩
   let d := finrank 𝕜 F
   have hd : d = finrank 𝕜 (Fin d → 𝕜) := (finrank_fin_fun 𝕜).symm
@@ -3366,7 +3462,7 @@ theorem HasFtaylorSeriesUpToOn.hasStrictFderivAt {s : Set E'} {f : E' → F'} {x
 us as `f'`, then `f'` is also a strict derivative. -/
 theorem ContDiffAt.hasStrictFderivAt' {f : E' → F'} {f' : E' →L[𝕂] F'} {x : E'}
     (hf : ContDiffAt 𝕂 n f x) (hf' : HasFderivAt f f' x) (hn : 1 ≤ n) : HasStrictFderivAt f f' x :=
-  by 
+  by
   rcases hf 1 hn with ⟨u, H, p, hp⟩
   simp only [nhds_within_univ, mem_univ, insert_eq_of_mem] at H
   have := hp.has_strict_fderiv_at le_rfl H
@@ -3412,7 +3508,8 @@ theorem HasFtaylorSeriesUpToOn.exists_lipschitz_on_with_of_nnnorm_lt {E F : Type
     [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] {f : E → F}
     {p : E → FormalMultilinearSeries ℝ E F} {s : Set E} {x : E}
     (hf : HasFtaylorSeriesUpToOn 1 f p (insert x s)) (hs : Convex ℝ s) (K : ℝ≥0)
-    (hK : ‖p x 1‖₊ < K) : ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t := by
+    (hK : ‖p x 1‖₊ < K) : ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
+  by
   set f' := fun y => continuousMultilinearCurryFin1 ℝ E F (p y 1)
   have hder : ∀ y ∈ s, HasFderivWithinAt f (f' y) s y := fun y hy =>
     (hf.has_fderiv_within_at le_rfl (subset_insert x s hy)).mono (subset_insert x s)
@@ -3443,7 +3540,8 @@ within `s`. -/
 theorem ContDiffWithinAt.exists_lipschitz_on_with {E F : Type _} [NormedAddCommGroup E]
     [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] {f : E → F} {s : Set E} {x : E}
     (hf : ContDiffWithinAt ℝ 1 f s x) (hs : Convex ℝ s) :
-    ∃ K : ℝ≥0, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t := by
+    ∃ K : ℝ≥0, ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
+  by
   rcases hf 1 le_rfl with ⟨t, hst, p, hp⟩
   rcases metric.mem_nhds_within_iff.mp hst with ⟨ε, ε0, hε⟩
   replace hp : HasFtaylorSeriesUpToOn 1 f p (Metric.ball x ε ∩ insert x s) := hp.mono hε
@@ -3491,19 +3589,21 @@ differentiable there, and its derivative (formulated with `deriv_within`) is `C^
 theorem cont_diff_on_succ_iff_deriv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s₂) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f₂ s₂ ↔
       DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 n (derivWithin f₂ s₂) s₂ :=
-  by 
+  by
   rw [cont_diff_on_succ_iff_fderiv_within hs]
   congr 2
   apply le_antisymm
   · intro h
-    have : derivWithin f₂ s₂ = (fun u : 𝕜 →L[𝕜] F => u 1) ∘ fderivWithin 𝕜 f₂ s₂ := by
+    have : derivWithin f₂ s₂ = (fun u : 𝕜 →L[𝕜] F => u 1) ∘ fderivWithin 𝕜 f₂ s₂ :=
+      by
       ext x
       rfl
     simp only [this]
     apply ContDiff.compContDiffOn _ h
     exact (is_bounded_bilinear_map_apply.is_bounded_linear_map_left _).ContDiff
   · intro h
-    have : fderivWithin 𝕜 f₂ s₂ = smul_right (1 : 𝕜 →L[𝕜] 𝕜) ∘ derivWithin f₂ s₂ := by
+    have : fderivWithin 𝕜 f₂ s₂ = smul_right (1 : 𝕜 →L[𝕜] 𝕜) ∘ derivWithin f₂ s₂ :=
+      by
       ext x
       simp [derivWithin]
     simp only [this]
@@ -3516,7 +3616,8 @@ theorem cont_diff_on_succ_iff_deriv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s�
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (formulated with `deriv`) is `C^n`. -/
 theorem cont_diff_on_succ_iff_deriv_of_open {n : ℕ} (hs : IsOpen s₂) :
-    ContDiffOn 𝕜 (n + 1 : ℕ) f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 n (deriv f₂) s₂ := by
+    ContDiffOn 𝕜 (n + 1 : ℕ) f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 n (deriv f₂) s₂ :=
+  by
   rw [cont_diff_on_succ_iff_deriv_within hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
@@ -3526,7 +3627,8 @@ theorem cont_diff_on_succ_iff_deriv_of_open {n : ℕ} (hs : IsOpen s₂) :
 /-- A function is `C^∞` on a domain with unique derivatives if and only if it is differentiable
 there, and its derivative (formulated with `deriv_within`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_deriv_within (hs : UniqueDiffOn 𝕜 s₂) :
-    ContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 ∞ (derivWithin f₂ s₂) s₂ := by
+    ContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 ∞ (derivWithin f₂ s₂) s₂ :=
+  by
   constructor
   · intro h
     refine' ⟨h.differentiable_on le_top, _⟩
@@ -3543,7 +3645,8 @@ theorem cont_diff_on_top_iff_deriv_within (hs : UniqueDiffOn 𝕜 s₂) :
 /-- A function is `C^∞` on an open domain if and only if it is differentiable
 there, and its derivative (formulated with `deriv`) is `C^∞`. -/
 theorem cont_diff_on_top_iff_deriv_of_open (hs : IsOpen s₂) :
-    ContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 ∞ (deriv f₂) s₂ := by
+    ContDiffOn 𝕜 ∞ f₂ s₂ ↔ DifferentiableOn 𝕜 f₂ s₂ ∧ ContDiffOn 𝕜 ∞ (deriv f₂) s₂ :=
+  by
   rw [cont_diff_on_top_iff_deriv_within hs.unique_diff_on]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
@@ -3551,7 +3654,8 @@ theorem cont_diff_on_top_iff_deriv_of_open (hs : IsOpen s₂) :
 #align cont_diff_on_top_iff_deriv_of_open cont_diff_on_top_iff_deriv_of_open
 
 theorem ContDiffOn.derivWithin (hf : ContDiffOn 𝕜 n f₂ s₂) (hs : UniqueDiffOn 𝕜 s₂)
-    (hmn : m + 1 ≤ n) : ContDiffOn 𝕜 m (derivWithin f₂ s₂) s₂ := by
+    (hmn : m + 1 ≤ n) : ContDiffOn 𝕜 m (derivWithin f₂ s₂) s₂ :=
+  by
   cases m
   · change ∞ + 1 ≤ n at hmn
     have : n = ∞ := by simpa using hmn
@@ -3591,7 +3695,7 @@ theorem cont_diff_one_iff_deriv : ContDiff 𝕜 1 f₂ ↔ Differentiable 𝕜 f
 /-- A function is `C^∞` if and only if it is differentiable,
 and its derivative (formulated in terms of `deriv`) is `C^∞`. -/
 theorem cont_diff_top_iff_deriv : ContDiff 𝕜 ∞ f₂ ↔ Differentiable 𝕜 f₂ ∧ ContDiff 𝕜 ∞ (deriv f₂) :=
-  by 
+  by
   simp only [← cont_diff_on_univ, ← differentiable_on_univ, ← deriv_within_univ]
   rw [cont_diff_on_top_iff_deriv_within uniqueDiffOnUniv]
 #align cont_diff_top_iff_deriv cont_diff_top_iff_deriv
@@ -3625,7 +3729,7 @@ variable {p' : E → FormalMultilinearSeries 𝕜' E F}
 theorem HasFtaylorSeriesUpToOn.restrictScalars (h : HasFtaylorSeriesUpToOn n f p' s) :
     HasFtaylorSeriesUpToOn n f (fun x => (p' x).restrictScalars 𝕜) s :=
   { zero_eq := fun x hx => h.zero_eq x hx
-    fderivWithin := by 
+    fderivWithin := by
       intro m hm x hx
       convert
         (ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFderivAt.compHasFderivWithinAt _
@@ -3635,7 +3739,7 @@ theorem HasFtaylorSeriesUpToOn.restrictScalars (h : HasFtaylorSeriesUpToOn n f p
 #align has_ftaylor_series_up_to_on.restrict_scalars HasFtaylorSeriesUpToOn.restrictScalars
 
 theorem ContDiffWithinAt.restrictScalars (h : ContDiffWithinAt 𝕜' n f s x) :
-    ContDiffWithinAt 𝕜 n f s x := by 
+    ContDiffWithinAt 𝕜 n f s x := by
   intro m hm
   rcases h m hm with ⟨u, u_mem, p', hp'⟩
   exact ⟨u, u_mem, _, hp'.restrict_scalars _⟩

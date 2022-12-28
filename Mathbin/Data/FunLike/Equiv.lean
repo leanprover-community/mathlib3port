@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fun_like.equiv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,8 +174,8 @@ theorem inv_injective : Function.Injective (EquivLike.inv : E → β → α) := 
 #align equiv_like.inv_injective EquivLike.inv_injective
 
 #print EquivLike.toEmbeddingLike /-
-instance (priority := 100) toEmbeddingLike :
-    EmbeddingLike E α β where 
+instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β
+    where
   coe := (coe : E → α → β)
   coe_injective' e g h :=
     coe_injective' e g h ((left_inv e).eq_right_inverse (h.symm ▸ right_inv g))

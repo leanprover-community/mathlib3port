@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.colimits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,8 +100,8 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
 
 /-- The setoid corresponding to monoid expressions modulo monoid relations and identifications.
 -/
-def colimitSetoid : Setoid (Prequotient
-        F) where 
+def colimitSetoid : Setoid (Prequotient F)
+    where
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 #align Mon.colimits.colimit_setoid MonCat.Colimits.colimitSetoid
@@ -114,11 +114,9 @@ def ColimitType : Type v :=
   Quotient (colimitSetoid F)deriving Inhabited
 #align Mon.colimits.colimit_type MonCat.Colimits.ColimitType
 
-instance monoidColimitType :
-    Monoid
-      (ColimitType
-        F) where 
-  mul := by 
+instance monoidColimitType : Monoid (ColimitType F)
+    where
+  mul := by
     fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
     · intro x
       fapply @Quot.lift
@@ -135,7 +133,7 @@ instance monoidColimitType :
       · exact relation.mul_1 _ _ _ r
       · rfl
   one := Quot.mk _ one
-  mul_assoc x y z := by 
+  mul_assoc x y z := by
     induction x
     induction y
     induction z
@@ -145,13 +143,13 @@ instance monoidColimitType :
     rfl
     rfl
     rfl
-  one_mul x := by 
+  one_mul x := by
     induction x
     dsimp
     apply Quot.sound
     apply relation.one_mul
     rfl
-  mul_one x := by 
+  mul_one x := by
     induction x
     dsimp
     apply Quot.sound
@@ -181,8 +179,8 @@ def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
 #align Mon.colimits.cocone_fun MonCat.Colimits.coconeFun
 
 /-- The monoid homomorphism from a given monoid in the diagram to the colimit monoid. -/
-def coconeMorphism (j : J) :
-    F.obj j ⟶ colimit F where 
+def coconeMorphism (j : J) : F.obj j ⟶ colimit F
+    where
   toFun := coconeFun F j
   map_one' := Quot.sound (Relation.one _)
   map_mul' x y := Quot.sound (Relation.mul _ _ _)
@@ -190,7 +188,8 @@ def coconeMorphism (j : J) :
 
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
-    F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
+    F.map f ≫ coconeMorphism F j' = coconeMorphism F j :=
+  by
   ext
   apply Quot.sound
   apply relation.map
@@ -198,13 +197,14 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
 
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
-    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
+    (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x :=
+  by
   rw [← cocone_naturality F f]
   rfl
 #align Mon.colimits.cocone_naturality_components MonCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit monoid. -/
-def colimitCocone : Cocone F where 
+def colimitCocone : Cocone F where
   x := colimit F
   ι := { app := coconeMorphism F }
 #align Mon.colimits.colimit_cocone MonCat.Colimits.colimitCocone
@@ -218,7 +218,8 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
 #align Mon.colimits.desc_fun_lift MonCat.Colimits.descFunLift
 
 /-- The function from the colimit monoid to the cone point of any other cocone. -/
-def descFun (s : Cocone F) : ColimitType F → s.x := by
+def descFun (s : Cocone F) : ColimitType F → s.x :=
+  by
   fapply Quot.lift
   · exact desc_fun_lift F s
   · intro x y r
@@ -248,18 +249,18 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
 #align Mon.colimits.desc_fun MonCat.Colimits.descFun
 
 /-- The monoid homomorphism from the colimit monoid to the cone point of any other cocone. -/
-def descMorphism (s : Cocone F) :
-    colimit F ⟶ s.x where 
+def descMorphism (s : Cocone F) : colimit F ⟶ s.x
+    where
   toFun := descFun F s
   map_one' := rfl
   map_mul' x y := by induction x <;> induction y <;> rfl
 #align Mon.colimits.desc_morphism MonCat.Colimits.descMorphism
 
 /-- Evidence that the proposed colimit is the colimit. -/
-def colimitIsColimit :
-    IsColimit (colimitCocone F) where 
+def colimitIsColimit : IsColimit (colimitCocone F)
+    where
   desc s := descMorphism F s
-  uniq' s m w := by 
+  uniq' s m w := by
     ext
     induction x
     induction x
@@ -272,10 +273,10 @@ def colimitIsColimit :
     rfl
 #align Mon.colimits.colimit_is_colimit MonCat.Colimits.colimitIsColimit
 
-instance has_colimits_Mon :
-    HasColimits
-      MonCat where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F =>
+instance has_colimits_Mon : HasColimits MonCat
+    where HasColimitsOfShape J 𝒥 :=
+    {
+      HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_is_colimit F } }

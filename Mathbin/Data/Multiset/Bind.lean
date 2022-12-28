@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.bind
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,8 @@ theorem card_join (S) : card (@join α S) = sum (map card S) :=
   Multiset.induction_on S (by simp) (by simp)
 #align multiset.card_join Multiset.card_join
 
-theorem rel_join {r : α → β → Prop} {s t} (h : Rel (Rel r) s t) : Rel r s.join t.join := by
+theorem rel_join {r : α → β → Prop} {s t} (h : Rel (Rel r) s t) : Rel r s.join t.join :=
+  by
   induction h
   case zero => simp
   case cons a b s t hab hst ih => simpa using hab.add ih
@@ -187,7 +188,8 @@ theorem prod_bind [CommMonoid β] (s : Multiset α) (t : α → Multiset β) :
 #align multiset.prod_bind Multiset.prod_bind
 
 theorem rel_bind {r : α → β → Prop} {p : γ → δ → Prop} {s t} {f : α → Multiset γ}
-    {g : β → Multiset δ} (h : (r ⇒ Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) := by
+    {g : β → Multiset δ} (h : (r ⇒ Rel p) f g) (hst : Rel r s t) : Rel p (s.bind f) (t.bind g) :=
+  by
   apply rel_join
   rw [rel_map]
   exact hst.mono fun a ha b hb hr => h hr
@@ -205,7 +207,7 @@ theorem count_bind [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {
 
 theorem le_bind {α β : Type _} {f : α → Multiset β} (S : Multiset α) {x : α} (hx : x ∈ S) :
     f x ≤ S.bind f := by
-  classical 
+  classical
     rw [le_iff_count]
     intro a
     rw [count_bind]
@@ -241,7 +243,8 @@ infixr:82
   Multiset.product
 
 @[simp]
-theorem coe_product (l₁ : List α) (l₂ : List β) : @product α β l₁ l₂ = l₁.product l₂ := by
+theorem coe_product (l₁ : List α) (l₂ : List β) : @product α β l₁ l₂ = l₁.product l₂ :=
+  by
   rw [product, List.product, ← coe_bind]
   simp
 #align multiset.coe_product Multiset.coe_product

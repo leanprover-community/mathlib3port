@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,9 +54,8 @@ end Prio
 variable [NormedField α] [SeminormedAddCommGroup β]
 
 -- see Note [lower instance priority]
-instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] :
-    HasBoundedSmul α
-      β where 
+instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] : HasBoundedSmul α β
+    where
   dist_smul_pair' x y₁ y₂ := by
     simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
   dist_pair_smul' x₁ x₂ y := by
@@ -67,11 +66,12 @@ instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] :
 -- noncomputable.
 instance : Module ℝ ℝ := by infer_instance
 
-instance NormedField.toNormedSpace :
-    NormedSpace α α where norm_smul_le a b := le_of_eq (norm_mul a b)
+instance NormedField.toNormedSpace : NormedSpace α α
+    where norm_smul_le a b := le_of_eq (norm_mul a b)
 #align normed_field.to_normed_space NormedField.toNormedSpace
 
-theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖ = ‖s‖ * ‖x‖ := by
+theorem norm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖ = ‖s‖ * ‖x‖ :=
+  by
   by_cases h : s = 0
   · simp [h]
   · refine' le_antisymm (NormedSpace.norm_smul_le s x) _
@@ -144,7 +144,8 @@ theorem Filter.IsBoundedUnder.smul_tendsto_zero {f : ι → α} {g : ι → E} {
 #align filter.is_bounded_under.smul_tendsto_zero Filter.IsBoundedUnder.smul_tendsto_zero
 
 theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
-    closure (ball x r) = closedBall x r := by
+    closure (ball x r) = closedBall x r :=
+  by
   refine' subset.antisymm closure_ball_subset_closed_ball fun y hy => _
   have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Ico 0 1) 1 :=
     ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
@@ -161,13 +162,15 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
 #align closure_ball closure_ball
 
 theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
-    frontier (ball x r) = sphere x r := by
+    frontier (ball x r) = sphere x r :=
+  by
   rw [frontier, closure_ball x hr, is_open_ball.interior_eq]
   ext x; exact (@eq_iff_le_not_lt ℝ _ _ _).symm
 #align frontier_ball frontier_ball
 
 theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
-    interior (closedBall x r) = ball x r := by
+    interior (closedBall x r) = ball x r :=
+  by
   cases' hr.lt_or_lt with hr hr
   · rw [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
   refine' subset.antisymm _ ball_subset_interior_closed_ball
@@ -175,7 +178,8 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
   rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
   · exact hr
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
-  suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1 by
+  suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1
+    by
     have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
     have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closed_ball x <| dist y x) := by simpa [f]
     have h1 : (1 : ℝ) ∈ interior (Icc (-1 : ℝ) 1) :=
@@ -193,7 +197,8 @@ theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0
 #align frontier_closed_ball frontier_closed_ball
 
 instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
-    DiscreteTopology <| AddSubgroup.zmultiples e := by
+    DiscreteTopology <| AddSubgroup.zmultiples e :=
+  by
   rcases eq_or_ne e 0 with (rfl | he)
   · rw [AddSubgroup.zmultiples_zero_eq_bot]
     infer_instance
@@ -215,12 +220,10 @@ In many cases the actual implementation is not important, so we don't mark the p
 See also `cont_diff_homeomorph_unit_ball` and `cont_diff_on_homeomorph_unit_ball_symm` for
 smoothness properties that hold when `E` is an inner-product space. -/
 @[simps (config := { attrs := [] })]
-noncomputable def homeomorphUnitBall [NormedSpace ℝ E] :
-    E ≃ₜ
-      ball (0 : E)
-        1 where 
+noncomputable def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E) 1
+    where
   toFun x :=
-    ⟨(1 + ‖x‖ ^ 2).sqrt⁻¹ • x, by 
+    ⟨(1 + ‖x‖ ^ 2).sqrt⁻¹ • x, by
       have : 0 < 1 + ‖x‖ ^ 2 := by positivity
       rw [mem_ball_zero_iff, norm_smul, Real.norm_eq_abs, abs_inv, ← div_eq_inv_mul,
         div_lt_one (abs_pos.mpr <| real.sqrt_ne_zero'.mpr this), ← abs_norm_eq_norm x, ← sq_lt_sq,
@@ -230,16 +233,18 @@ noncomputable def homeomorphUnitBall [NormedSpace ℝ E] :
   left_inv x := by
     field_simp [norm_smul, smul_smul, (zero_lt_one_add_norm_sq x).ne',
       Real.sq_sqrt (zero_lt_one_add_norm_sq x).le, ← Real.sqrt_div (zero_lt_one_add_norm_sq x).le]
-  right_inv y := by
+  right_inv y :=
+    by
     have : 0 < 1 - ‖(y : E)‖ ^ 2 := by
       nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ‖(y : E)‖ < 1)]
     field_simp [norm_smul, smul_smul, this.ne', Real.sq_sqrt this.le, ← Real.sqrt_div this.le]
-  continuous_to_fun := by 
+  continuous_to_fun := by
     suffices : Continuous fun x => (1 + ‖x‖ ^ 2).sqrt⁻¹;
     exact (this.smul continuous_id).subtype_mk _
     refine' Continuous.inv₀ _ fun x => real.sqrt_ne_zero'.mpr (by positivity)
     continuity
-  continuous_inv_fun := by
+  continuous_inv_fun :=
+    by
     suffices ∀ y : ball (0 : E) 1, (1 - ‖(y : E)‖ ^ 2).sqrt ≠ 0 by continuity
     intro y
     rw [Real.sqrt_ne_zero']
@@ -265,11 +270,8 @@ instance Prod.normedSpace : NormedSpace α (E × F) :=
 
 /-- The product of finitely many normed spaces is a normed space, with the sup norm. -/
 instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCommGroup (E i)]
-    [∀ i, NormedSpace α (E i)] :
-    NormedSpace α
-      (∀ i,
-        E
-          i) where norm_smul_le a f :=
+    [∀ i, NormedSpace α (E i)] : NormedSpace α (∀ i, E i)
+    where norm_smul_le a f :=
     le_of_eq <|
       show
         (↑(Finset.sup Finset.univ fun b : ι => ‖a • f b‖₊) : ℝ) =
@@ -288,11 +290,11 @@ moved by scalar multiplication to any shell of width `‖c‖`. Also recap infor
 the rescaling element that shows up in applications. -/
 theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ‖c‖) {ε : ℝ} (εpos : 0 < ε) {x : E}
     (hx : ‖x‖ ≠ 0) : ∃ d : α, d ≠ 0 ∧ ‖d • x‖ < ε ∧ ε / ‖c‖ ≤ ‖d • x‖ ∧ ‖d‖⁻¹ ≤ ε⁻¹ * ‖c‖ * ‖x‖ :=
-  by 
+  by
   have xεpos : 0 < ‖x‖ / ε := div_pos ((Ne.symm hx).le_iff_lt.1 (norm_nonneg x)) εpos
   rcases exists_mem_Ico_zpow xεpos hc with ⟨n, hn⟩
   have cpos : 0 < ‖c‖ := lt_trans (zero_lt_one : (0 : ℝ) < 1) hc
-  have cnpos : 0 < ‖c ^ (n + 1)‖ := by 
+  have cnpos : 0 < ‖c ^ (n + 1)‖ := by
     rw [norm_zpow]
     exact lt_trans xεpos hn.2
   refine' ⟨(c ^ (n + 1))⁻¹, _, _, _, _⟩
@@ -321,9 +323,8 @@ See note [reducible non-instances] -/
 @[reducible]
 def NormedSpace.induced {F : Type _} (α β γ : Type _) [NormedField α] [AddCommGroup β] [Module α β]
     [SeminormedAddCommGroup γ] [NormedSpace α γ] [LinearMapClass F α β γ] (f : F) :
-    @NormedSpace α β _
-      (SeminormedAddCommGroup.induced β γ
-        f) where norm_smul_le a b := by 
+    @NormedSpace α β _ (SeminormedAddCommGroup.induced β γ f)
+    where norm_smul_le a b := by
     unfold norm
     exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
 #align normed_space.induced NormedSpace.induced
@@ -360,7 +361,8 @@ section Surj
 
 variable (E) [NormedSpace ℝ E] [Nontrivial E]
 
-theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ‖x‖ = c := by
+theorem exists_norm_eq {c : ℝ} (hc : 0 ≤ c) : ∃ x : E, ‖x‖ = c :=
+  by
   rcases exists_ne (0 : E) with ⟨x, hx⟩
   rw [← norm_ne_zero_iff] at hx
   use c • ‖x‖⁻¹ • x
@@ -384,7 +386,8 @@ theorem range_nnnorm : range (nnnorm : E → ℝ≥0) = univ :=
 end Surj
 
 theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
-    interior (closedBall x r) = ball x r := by
+    interior (closedBall x r) = ball x r :=
+  by
   rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero, ball_zero, interior_singleton]
   · exact interior_closed_ball x hr
@@ -416,7 +419,8 @@ include 𝕜
 
 /-- If `E` is a nontrivial normed space over a nontrivially normed field `𝕜`, then `E` is unbounded:
 for any `c : ℝ`, there exists a vector `x : E` with norm strictly greater than `c`. -/
-theorem NormedSpace.exists_lt_norm (c : ℝ) : ∃ x : E, c < ‖x‖ := by
+theorem NormedSpace.exists_lt_norm (c : ℝ) : ∃ x : E, c < ‖x‖ :=
+  by
   rcases exists_ne (0 : E) with ⟨x, hx⟩
   rcases NormedField.exists_lt_norm 𝕜 (c / ‖x‖) with ⟨r, hr⟩
   use r • x
@@ -467,8 +471,8 @@ class NormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [SemiNor
 
 variable {𝕜 : Type _} (𝕜' : Type _) [NormedField 𝕜] [SemiNormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-instance (priority := 100) NormedAlgebra.toNormedSpace :
-    NormedSpace 𝕜 𝕜' where norm_smul_le := NormedAlgebra.norm_smul_le
+instance (priority := 100) NormedAlgebra.toNormedSpace : NormedSpace 𝕜 𝕜'
+    where norm_smul_le := NormedAlgebra.norm_smul_le
 #align normed_algebra.to_normed_space NormedAlgebra.toNormedSpace
 
 /-- While this may appear identical to `normed_algebra.to_normed_space`, it contains an implicit
@@ -487,7 +491,8 @@ instance (priority := 100) NormedAlgebra.toNormedSpace' {𝕜'} [NormedRing 𝕜
     NormedSpace 𝕜 𝕜' := by infer_instance
 #align normed_algebra.to_normed_space' NormedAlgebra.toNormedSpace'
 
-theorem norm_algebra_map (x : 𝕜) : ‖algebraMap 𝕜 𝕜' x‖ = ‖x‖ * ‖(1 : 𝕜')‖ := by
+theorem norm_algebra_map (x : 𝕜) : ‖algebraMap 𝕜 𝕜' x‖ = ‖x‖ * ‖(1 : 𝕜')‖ :=
+  by
   rw [Algebra.algebra_map_eq_smul_one]
   exact norm_smul _ _
 #align norm_algebra_map norm_algebra_map
@@ -525,7 +530,8 @@ end Nnreal
 variable (𝕜 𝕜')
 
 /-- In a normed algebra, the inclusion of the base field in the extended field is an isometry. -/
-theorem algebraMapIsometry [NormOneClass 𝕜'] : Isometry (algebraMap 𝕜 𝕜') := by
+theorem algebraMapIsometry [NormOneClass 𝕜'] : Isometry (algebraMap 𝕜 𝕜') :=
+  by
   refine' Isometry.ofDistEq fun x y => _
   rw [dist_eq_norm, dist_eq_norm, ← RingHom.map_sub, norm_algebra_map']
 #align algebra_map_isometry algebraMapIsometry
@@ -540,13 +546,13 @@ normed algebra over the rationals.
 Phrased another way, if `𝕜` is a normed algebra over the reals, then `algebra_rat` respects that
 norm. -/
 instance normedAlgebraRat {𝕜} [NormedDivisionRing 𝕜] [CharZero 𝕜] [NormedAlgebra ℝ 𝕜] :
-    NormedAlgebra ℚ
-      𝕜 where norm_smul_le q x := by
+    NormedAlgebra ℚ 𝕜
+    where norm_smul_le q x := by
     rw [← smul_one_smul ℝ q x, Rat.smul_one_eq_coe, norm_smul, Rat.norm_cast_real]
 #align normed_algebra_rat normedAlgebraRat
 
-instance PUnit.normedAlgebra :
-    NormedAlgebra 𝕜 PUnit where norm_smul_le q x := by simp only [PUnit.norm_eq_zero, mul_zero]
+instance PUnit.normedAlgebra : NormedAlgebra 𝕜 PUnit
+    where norm_smul_le q x := by simp only [PUnit.norm_eq_zero, mul_zero]
 #align punit.normed_algebra PUnit.normedAlgebra
 
 instance : NormedAlgebra 𝕜 (ULift 𝕜') :=
@@ -573,9 +579,8 @@ See note [reducible non-instances] -/
 @[reducible]
 def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Ring β] [Algebra α β]
     [SemiNormedRing γ] [NormedAlgebra α γ] [NonUnitalAlgHomClass F α β γ] (f : F) :
-    @NormedAlgebra α β _
-      (SemiNormedRing.induced β γ
-        f) where norm_smul_le a b := by 
+    @NormedAlgebra α β _ (SemiNormedRing.induced β γ f)
+    where norm_smul_le a b := by
     unfold norm
     exact (map_smul f a b).symm ▸ (norm_smul a (f b)).le
 #align normed_algebra.induced NormedAlgebra.induced

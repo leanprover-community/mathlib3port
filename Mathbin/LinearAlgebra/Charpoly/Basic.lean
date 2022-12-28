@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.charpoly.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,8 @@ section CayleyHamilton
 to the linear map itself, is zero.
 
 See `matrix.aeval_self_charpoly` for the equivalent statement about matrices. -/
-theorem aeval_self_charpoly : aeval f f.charpoly = 0 := by
+theorem aeval_self_charpoly : aeval f f.charpoly = 0 :=
+  by
   apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix (choose_basis R M)).toLinearEquiv).1
   rw [AlgEquiv.to_linear_equiv_apply, ← AlgEquiv.coe_alg_hom, ←
     Polynomial.aeval_alg_hom_apply _ _ _, charpoly_def]
@@ -99,15 +100,17 @@ theorem pow_eq_aeval_mod_charpoly (k : ℕ) : f ^ k = aeval f (X ^ k %ₘ f.char
 variable {f}
 
 theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R f).coeff 0 ≠ 0 :=
-  by 
+  by
   intro h
   obtain ⟨P, hP⟩ := X_dvd_iff.2 h
-  have hdegP : P.degree < (minpoly R f).degree := by
+  have hdegP : P.degree < (minpoly R f).degree :=
+    by
     rw [hP, mul_comm]
     refine' degree_lt_degree_mul_X fun h => _
     rw [h, mul_zero] at hP
     exact minpoly.ne_zero (IsIntegral f) hP
-  have hPmonic : P.monic := by
+  have hPmonic : P.monic :=
+    by
     suffices (minpoly R f).Monic by
       rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this
     exact minpoly.monic (IsIntegral f)

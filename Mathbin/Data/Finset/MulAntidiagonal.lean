@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.mul_antidiagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,8 @@ open Pointwise
 variable {α : Type _} {s t : Set α}
 
 @[to_additive]
-theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s * t) := by
+theorem IsPwo.mul [OrderedCancelCommMonoid α] (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s * t) :=
+  by
   rw [← image_mul_prod]
   exact (hs.prod ht).image_of_monotone (monotone_fst.mul' monotone_snd)
 #align set.is_pwo.mul Set.IsPwo.mul
@@ -39,7 +40,8 @@ theorem IsWf.mul (hs : s.IsWf) (ht : t.IsWf) : IsWf (s * t) :=
 
 @[to_additive]
 theorem IsWf.min_mul (hs : s.IsWf) (ht : t.IsWf) (hsn : s.Nonempty) (htn : t.Nonempty) :
-    (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn := by
+    (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn :=
+  by
   refine' le_antisymm (is_wf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _
   rw [is_wf.le_min_iff]
   rintro _ ⟨x, y, hx, hy, rfl⟩
@@ -92,7 +94,7 @@ theorem swap_mem_mul_antidiagonal :
 
 @[to_additive]
 theorem support_mul_antidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t :=
-  fun a ⟨b, hb⟩ => by 
+  fun a ⟨b, hb⟩ => by
   rw [mem_mul_antidiagonal] at hb
   exact ⟨b.1, b.2, hb⟩
 #align finset.support_mul_antidiagonal_subset_mul Finset.support_mul_antidiagonal_subset_mul
@@ -105,7 +107,8 @@ theorem is_pwo_support_mul_antidiagonal : { a | (mulAntidiagonal hs ht a).Nonemp
 @[to_additive]
 theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s t : Set α}
     (hs : s.IsWf) (ht : t.IsWf) (hns : s.Nonempty) (hnt : t.Nonempty) :
-    mulAntidiagonal hs.IsPwo ht.IsPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} := by
+    mulAntidiagonal hs.IsPwo ht.IsPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} :=
+  by
   ext ⟨a, b⟩
   simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iff]
   constructor

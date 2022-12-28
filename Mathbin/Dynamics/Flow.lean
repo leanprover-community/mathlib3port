@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.flow
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ instance : CoeFun (Flow τ α) fun _ => τ → α → α :=
 
 @[ext]
 theorem ext : ∀ {ϕ₁ ϕ₂ : Flow τ α}, (∀ t x, ϕ₁ t x = ϕ₂ t x) → ϕ₁ = ϕ₂
-  | ⟨f₁, _, _, _⟩, ⟨f₂, _, _, _⟩, h => by 
+  | ⟨f₁, _, _, _⟩, ⟨f₂, _, _, _⟩, h => by
     congr
     funext
     exact h _ _
@@ -140,8 +140,8 @@ theorem map_zero_apply (x : α) : ϕ 0 x = x :=
 
 /-- Iterations of a continuous function from a topological space `α`
     to itself defines a semiflow by `ℕ` on `α`. -/
-def fromIter {g : α → α} (h : Continuous g) :
-    Flow ℕ α where 
+def fromIter {g : α → α} (h : Continuous g) : Flow ℕ α
+    where
   toFun n x := (g^[n]) x
   cont' := continuous_uncurry_of_discrete_topology_left (Continuous.iterate h)
   map_add' := iterate_add_apply _
@@ -149,8 +149,8 @@ def fromIter {g : α → α} (h : Continuous g) :
 #align flow.from_iter Flow.fromIter
 
 /-- Restriction of a flow onto an invariant set. -/
-def restrict {s : Set α} (h : IsInvariant ϕ s) :
-    Flow τ ↥s where 
+def restrict {s : Set α} (h : IsInvariant ϕ s) : Flow τ ↥s
+    where
   toFun t := (h t).restrict _ _ _
   cont' := (ϕ.Continuous continuous_fst continuous_subtype_coe.snd').subtype_mk _
   map_add' _ _ _ := Subtype.ext (map_add _ _ _ _)
@@ -173,7 +173,7 @@ theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ 
 
 /-- The time-reversal of a flow `ϕ` by a (commutative, additive) group
     is defined `ϕ.reverse t x = ϕ (-t) x`. -/
-def reverse : Flow τ α where 
+def reverse : Flow τ α where
   toFun t := ϕ (-t)
   cont' := ϕ.Continuous continuous_fst.neg continuous_snd
   map_add' _ _ _ := by rw [neg_add, map_add]
@@ -181,7 +181,7 @@ def reverse : Flow τ α where
 #align flow.reverse Flow.reverse
 
 /-- The map `ϕ t` as a homeomorphism. -/
-def toHomeomorph (t : τ) : α ≃ₜ α where 
+def toHomeomorph (t : τ) : α ≃ₜ α where
   toFun := ϕ t
   invFun := ϕ (-t)
   left_inv x := by rw [← map_add, neg_add_self, map_zero_apply]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.vector3
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,8 @@ def nil : Vector3 α 0 :=
 
 /-- The vector cons operation -/
 @[match_pattern]
-def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by
+def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i =>
+  by
   refine' i.cases' _ _
   exact a
   exact v
@@ -191,7 +192,7 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
 @[simp]
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
     insert a (b::v) (fs i) = b::insert a v i :=
-  funext fun j => by 
+  funext fun j => by
     refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
     refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
 #align vector3.insert_fs Vector3.insert_fs
@@ -200,7 +201,8 @@ theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (succ n))
     (e : succ n + m = succ (n + m)) :
-    insert a (t +-+ v) (Eq.recOn e (i.add m)) = Eq.recOn e (t +-+ insert a v i) := by
+    insert a (t +-+ v) (Eq.recOn e (i.add m)) = Eq.recOn e (t +-+ insert a v i) :=
+  by
   refine' Vector3.recOn t (fun e => _) (fun k b t IH e => _) e; rfl
   have e' := succ_add n k
   change
@@ -284,13 +286,13 @@ theorem vector_allp_cons (p : α → Prop) (x : α) (v : Vector3 α n) :
 #align vector_allp_cons vector_allp_cons
 
 theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp p v ↔ ∀ i, p (v i) :=
-  by 
+  by
   refine' v.rec_on _ _
   · exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
   · simp
     refine' fun n a v IH =>
       (and_congr_right fun _ => IH).trans
-        ⟨fun ⟨pa, h⟩ i => by 
+        ⟨fun ⟨pa, h⟩ i => by
           refine' i.cases' _ _
           exacts[pa, h], fun h => ⟨_, fun i => _⟩⟩
     · have h0 := h fz

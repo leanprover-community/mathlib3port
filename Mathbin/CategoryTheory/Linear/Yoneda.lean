@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.linear.yoneda
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,11 +36,8 @@ variable (R : Type w) [Ring R] (C : Type u) [Category.{v} C] [Preadditive C] [Li
 sending an object `X : C` to the `Module R`-valued presheaf on `C`,
 with value on `Y : Cᵒᵖ` given by `Module.of R (unop Y ⟶ X)`. -/
 @[simps]
-def linearYoneda :
-    C ⥤
-      Cᵒᵖ ⥤
-        ModuleCat
-          R where 
+def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R
+    where
   obj X :=
     { obj := fun Y => ModuleCat.of R (unop Y ⟶ X)
       map := fun Y Y' f => Linear.leftComp R _ f.unop
@@ -70,11 +67,8 @@ def linearYoneda :
 sending an object `Y : Cᵒᵖ` to the `Module R`-valued copresheaf on `C`,
 with value on `X : C` given by `Module.of R (unop Y ⟶ X)`. -/
 @[simps]
-def linearCoyoneda :
-    Cᵒᵖ ⥤
-      C ⥤
-        ModuleCat
-          R where 
+def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R
+    where
   obj Y :=
     { obj := fun X => ModuleCat.of R (unop Y ⟶ X)
       map := fun Y Y' => Linear.rightComp _ _

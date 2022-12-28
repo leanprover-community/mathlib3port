@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.zorn_atoms
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,7 @@ theorem IsCoatomic.of_is_chain_bounded {α : Type _} [PartialOrder α] [OrderTop
     (h :
       ∀ c : Set α,
         IsChain (· ≤ ·) c → c.Nonempty → ⊤ ∉ c → ∃ (x : _)(_ : x ≠ ⊤), x ∈ upperBounds c) :
-    IsCoatomic α := by 
+    IsCoatomic α := by
   refine' ⟨fun x => le_top.eq_or_lt.imp_right fun hx => _⟩
   rcases zorn_nonempty_partial_order₀ (Ico x ⊤) (fun c hxc hc y hy => _) x (left_mem_Ico.2 hx) with
     ⟨y, ⟨hxy, hy⟩, -, hy'⟩

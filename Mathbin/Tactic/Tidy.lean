@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.tidy
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,7 +19,8 @@ namespace Tidy
 /-- Tag interactive tactics (locally) with `[tidy]` to add them to the list of default tactics
 called by `tidy`. -/
 @[user_attribute]
-unsafe def tidy_attribute : user_attribute where 
+unsafe def tidy_attribute : user_attribute
+    where
   Name := `tidy
   descr := "A tactic that should be called by `tidy`."
 #align tactic.tidy.tidy_attribute tactic.tidy.tidy_attribute
@@ -72,7 +73,7 @@ initialize
   registerTraceClass.1 `tidy
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `cfg -/
-unsafe def core (cfg : cfg := {  }) : tactic (List String) := do
+unsafe def core (cfg : cfg := { }) : tactic (List String) := do
   let results ← chain cfg.tactics
   when (cfg cfg.trace_result) <| trace (cfg ++ ", ".intercalate results)
   return results
@@ -80,7 +81,7 @@ unsafe def core (cfg : cfg := {  }) : tactic (List String) := do
 
 end Tidy
 
-unsafe def tidy (cfg : tidy.cfg := {  }) :=
+unsafe def tidy (cfg : tidy.cfg := { }) :=
   tactic.tidy.core cfg >> skip
 #align tactic.tidy tactic.tidy
 
@@ -104,7 +105,7 @@ can report a usable tactic script.)
 
 Tactics can also be added to the list by tagging them (locally) with the
 `[tidy]` attribute. -/
-unsafe def tidy (trace : parse <| optional (tk "?")) (cfg : tidy.cfg := {  }) :=
+unsafe def tidy (trace : parse <| optional (tk "?")) (cfg : tidy.cfg := { }) :=
   tactic.tidy { cfg with trace_result := trace.isSome }
 #align tactic.interactive.tidy tactic.interactive.tidy
 
@@ -120,7 +121,8 @@ add_tactic_doc
 the same name, replacing the hole with the tactic script `tidy` produces.
 -/
 @[hole_command]
-unsafe def tidy_hole_cmd : hole_command where 
+unsafe def tidy_hole_cmd : hole_command
+    where
   Name := "tidy"
   descr := "Use `tidy` to complete the goal."
   action _ := do

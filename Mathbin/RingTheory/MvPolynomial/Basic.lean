@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,9 +55,8 @@ namespace MvPolynomial
 
 section CharP
 
-instance [CharP R p] :
-    CharP (MvPolynomial σ R)
-      p where cast_eq_zero_iff n := by rw [← C_eq_coe_nat, ← C_0, C_inj, CharP.cast_eq_zero_iff R p]
+instance [CharP R p] : CharP (MvPolynomial σ R) p
+    where cast_eq_zero_iff n := by rw [← C_eq_coe_nat, ← C_0, C_inj, CharP.cast_eq_zero_iff R p]
 
 end CharP
 
@@ -92,19 +91,22 @@ def restrictDegree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
 variable {R}
 
 theorem mem_restrict_total_degree (p : MvPolynomial σ R) :
-    p ∈ restrictTotalDegree σ R m ↔ p.totalDegree ≤ m := by
+    p ∈ restrictTotalDegree σ R m ↔ p.totalDegree ≤ m :=
+  by
   rw [total_degree, Finset.sup_le_iff]
   rfl
 #align mv_polynomial.mem_restrict_total_degree MvPolynomial.mem_restrict_total_degree
 
 theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
-    p ∈ restrictDegree σ R n ↔ ∀ s ∈ p.support, ∀ i, (s : σ →₀ ℕ) i ≤ n := by
+    p ∈ restrictDegree σ R n ↔ ∀ s ∈ p.support, ∀ i, (s : σ →₀ ℕ) i ≤ n :=
+  by
   rw [restrict_degree, Finsupp.mem_supported]
   rfl
 #align mv_polynomial.mem_restrict_degree MvPolynomial.mem_restrict_degree
 
 theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
-    p ∈ restrictDegree σ R n ↔ ∀ i, p.degrees.count i ≤ n := by
+    p ∈ restrictDegree σ R n ↔ ∀ i, p.degrees.count i ≤ n :=
+  by
   simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_to_multiset,
     Finset.sup_le_iff]
   exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.embedding.set
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,11 +70,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.embedding.option_embedding_equiv Function.Embedding.optionEmbeddingEquivₓ'. -/
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]
-def optionEmbeddingEquiv (α β) :
-    (Option α ↪ β) ≃
-      Σf : α ↪ β,
-        ↥(Set.range
-              fᶜ) where 
+def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.range fᶜ)
+    where
   toFun f := ⟨some.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
   invFun f := f.1.optionElim f.2 f.2.2
   left_inv f := ext <| by rintro (_ | _) <;> simp [Option.coe_def]
@@ -119,7 +116,8 @@ namespace Set
 /-- The injection map is an embedding between subsets. -/
 @[simps apply]
 def embeddingOfSubset {α} (s t : Set α) (h : s ⊆ t) : s ↪ t :=
-  ⟨fun x => ⟨x.1, h x.2⟩, fun ⟨x, hx⟩ ⟨y, hy⟩ h => by
+  ⟨fun x => ⟨x.1, h x.2⟩, fun ⟨x, hx⟩ ⟨y, hy⟩ h =>
+    by
     congr
     injection h⟩
 #align set.embedding_of_subset Set.embeddingOfSubset
@@ -139,20 +137,19 @@ subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right, wh
 See also `equiv.sum_compl`, for when `is_compl p q`.  -/
 @[simps apply]
 def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
-    { x // p x ∨ q x } ≃
-      Sum { x // p x }
-        { x // q x } where 
+    { x // p x ∨ q x } ≃ Sum { x // p x } { x // q x }
+    where
   toFun := subtypeOrLeftEmbedding p q
   invFun :=
     Sum.elim (Subtype.impEmbedding _ _ fun x hx => (Or.inl hx : p x ∨ q x))
       (Subtype.impEmbedding _ _ fun x hx => (Or.inr hx : p x ∨ q x))
-  left_inv x := by 
+  left_inv x := by
     by_cases hx : p x
     · rw [subtypeOrLeftEmbedding_apply_left _ hx]
       simp [Subtype.ext_iff]
     · rw [subtypeOrLeftEmbedding_apply_right _ hx]
       simp [Subtype.ext_iff]
-  right_inv x := by 
+  right_inv x := by
     cases x
     · simp only [Sum.elim_inl]
       rw [subtypeOrLeftEmbedding_apply_left]

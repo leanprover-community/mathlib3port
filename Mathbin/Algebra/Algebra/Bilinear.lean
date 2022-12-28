@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.bilinear
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,12 +120,13 @@ variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [SMu
 
 A weaker version of this for non-unital non-associative algebras exists as `linear_map.mul`. -/
 def NonUnitalAlgHom.lmul : A →ₙₐ[R] EndCat R A :=
-  { mul R A with
-    map_mul' := by 
+  {
+    mul R A with
+    map_mul' := by
       intro a b
       ext c
       exact mul_assoc a b c
-    map_zero' := by 
+    map_zero' := by
       ext a
       exact zero_mul a }
 #align non_unital_alg_hom.lmul NonUnitalAlgHom.lmul
@@ -137,19 +138,22 @@ theorem NonUnitalAlgHom.coe_lmul_eq_mul : ⇑(NonUnitalAlgHom.lmul R A) = mul R 
   rfl
 #align non_unital_alg_hom.coe_lmul_eq_mul NonUnitalAlgHom.coe_lmul_eq_mul
 
-theorem commute_mul_left_right (a b : A) : Commute (mulLeft R a) (mulRight R b) := by
+theorem commute_mul_left_right (a b : A) : Commute (mulLeft R a) (mulRight R b) :=
+  by
   ext c
   exact (mul_assoc a c b).symm
 #align linear_map.commute_mul_left_right LinearMap.commute_mul_left_right
 
 @[simp]
-theorem mul_left_mul (a b : A) : mulLeft R (a * b) = (mulLeft R a).comp (mulLeft R b) := by
+theorem mul_left_mul (a b : A) : mulLeft R (a * b) = (mulLeft R a).comp (mulLeft R b) :=
+  by
   ext
   simp only [mul_left_apply, comp_apply, mul_assoc]
 #align linear_map.mul_left_mul LinearMap.mul_left_mul
 
 @[simp]
-theorem mul_right_mul (a b : A) : mulRight R (a * b) = (mulRight R b).comp (mulRight R a) := by
+theorem mul_right_mul (a b : A) : mulRight R (a * b) = (mulRight R b).comp (mulRight R a) :=
+  by
   ext
   simp only [mul_right_apply, comp_apply, mul_assoc]
 #align linear_map.mul_right_mul LinearMap.mul_right_mul
@@ -165,18 +169,20 @@ the algebra.
 
 A weaker version of this for non-unital algebras exists as `non_unital_alg_hom.mul`. -/
 def Algebra.lmul : A →ₐ[R] EndCat R A :=
-  { LinearMap.mul R A with
-    map_one' := by 
+  {
+    LinearMap.mul R
+      A with
+    map_one' := by
       ext a
       exact one_mul a
-    map_mul' := by 
+    map_mul' := by
       intro a b
       ext c
       exact mul_assoc a b c
-    map_zero' := by 
+    map_zero' := by
       ext a
       exact zero_mul a
-    commutes' := by 
+    commutes' := by
       intro r
       ext a
       exact (Algebra.smul_def r a).symm }
@@ -190,7 +196,8 @@ theorem Algebra.coe_lmul_eq_mul : ⇑(Algebra.lmul R A) = mul R A :=
 #align algebra.coe_lmul_eq_mul Algebra.coe_lmul_eq_mul
 
 @[simp]
-theorem mul_left_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 := by
+theorem mul_left_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 :=
+  by
   constructor <;> intro h
   · rw [← mul_one a, ← mul_left_apply a 1, h, LinearMap.zero_apply]
   · rw [h]
@@ -198,7 +205,8 @@ theorem mul_left_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 := by
 #align linear_map.mul_left_eq_zero_iff LinearMap.mul_left_eq_zero_iff
 
 @[simp]
-theorem mul_right_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 := by
+theorem mul_right_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 :=
+  by
   constructor <;> intro h
   · rw [← one_mul a, ← mul_right_apply a 1, h, LinearMap.zero_apply]
   · rw [h]
@@ -206,13 +214,15 @@ theorem mul_right_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 := by
 #align linear_map.mul_right_eq_zero_iff LinearMap.mul_right_eq_zero_iff
 
 @[simp]
-theorem mul_left_one : mulLeft R (1 : A) = LinearMap.id := by
+theorem mul_left_one : mulLeft R (1 : A) = LinearMap.id :=
+  by
   ext
   simp only [LinearMap.id_coe, one_mul, id.def, mul_left_apply]
 #align linear_map.mul_left_one LinearMap.mul_left_one
 
 @[simp]
-theorem mul_right_one : mulRight R (1 : A) = LinearMap.id := by
+theorem mul_right_one : mulRight R (1 : A) = LinearMap.id :=
+  by
   ext
   simp only [LinearMap.id_coe, mul_one, id.def, mul_right_apply]
 #align linear_map.mul_right_one LinearMap.mul_right_one
@@ -223,7 +233,8 @@ theorem pow_mul_left (a : A) (n : ℕ) : mulLeft R a ^ n = mulLeft R (a ^ n) := 
 #align linear_map.pow_mul_left LinearMap.pow_mul_left
 
 @[simp]
-theorem pow_mul_right (a : A) (n : ℕ) : mulRight R a ^ n = mulRight R (a ^ n) := by
+theorem pow_mul_right (a : A) (n : ℕ) : mulRight R a ^ n = mulRight R (a ^ n) :=
+  by
   simp only [mul_right, ← Algebra.coe_lmul_eq_mul]
   exact LinearMap.coe_injective (((mul_right R a).coe_pow n).symm ▸ mul_right_iterate a n)
 #align linear_map.pow_mul_right LinearMap.pow_mul_right
@@ -235,20 +246,23 @@ section Ring
 variable {R A : Type _} [CommSemiring R] [Ring A] [Algebra R A]
 
 theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
-    Function.Injective (mulLeft R x) := by
+    Function.Injective (mulLeft R x) :=
+  by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
   letI := NoZeroDivisors.toIsDomain A
   exact mul_right_injective₀ hx
 #align linear_map.mul_left_injective LinearMap.mul_left_injective
 
 theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
-    Function.Injective (mulRight R x) := by
+    Function.Injective (mulRight R x) :=
+  by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
   letI := NoZeroDivisors.toIsDomain A
   exact mul_left_injective₀ hx
 #align linear_map.mul_right_injective LinearMap.mul_right_injective
 
-theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) := by
+theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) :=
+  by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
   letI := NoZeroDivisors.toIsDomain A
   exact mul_right_injective₀ hx

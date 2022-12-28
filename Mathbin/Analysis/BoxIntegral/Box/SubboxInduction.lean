@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.box.subbox_induction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,17 +47,18 @@ variable {ι : Type _} {I J : Box ι}
 /-- For a box `I`, the hyperplanes passing through its center split `I` into `2 ^ card ι` boxes.
 `box_integral.box.split_center_box I s` is one of these boxes. See also
 `box_integral.partition.split_center` for the corresponding `box_integral.partition`. -/
-def splitCenterBox (I : Box ι) (s : Set ι) :
-    Box ι where 
+def splitCenterBox (I : Box ι) (s : Set ι) : Box ι
+    where
   lower := s.piecewise (fun i => (I.lower i + I.upper i) / 2) I.lower
   upper := s.piecewise I.upper fun i => (I.lower i + I.upper i) / 2
-  lower_lt_upper i := by 
+  lower_lt_upper i := by
     dsimp only [Set.piecewise]
     split_ifs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper]
 #align box_integral.box.split_center_box BoxIntegral.Box.splitCenterBox
 
 theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
-    y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s := by
+    y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s :=
+  by
   simp only [split_center_box, mem_def, ← forall_and]
   refine' forall_congr' fun i => _
   dsimp only [Set.piecewise]
@@ -73,7 +74,8 @@ theorem split_center_box_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I
 #align box_integral.box.split_center_box_le BoxIntegral.Box.split_center_box_le
 
 theorem disjoint_split_center_box (I : Box ι) {s t : Set ι} (h : s ≠ t) :
-    Disjoint (I.splitCenterBox s : Set (ι → ℝ)) (I.splitCenterBox t) := by
+    Disjoint (I.splitCenterBox s : Set (ι → ℝ)) (I.splitCenterBox t) :=
+  by
   rw [disjoint_iff_inf_le]
   rintro y ⟨hs, ht⟩; apply h
   ext i
@@ -99,7 +101,8 @@ def splitCenterBoxEmb (I : Box ι) : Set ι ↪ Box ι :=
 #align box_integral.box.split_center_box_emb BoxIntegral.Box.splitCenterBoxEmb
 
 @[simp]
-theorem Union_coe_split_center_box (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I := by
+theorem Union_coe_split_center_box (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I :=
+  by
   ext x
   simp
 #align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.Union_coe_split_center_box
@@ -137,7 +140,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
               z ∈ J.IccCat →
                 J.IccCat ⊆ U →
                   (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
-    p I := by 
+    p I := by
   by_contra hpI
   -- First we use `H_ind` to construct a decreasing sequence of boxes such that `∀ m, ¬p (J m)`.
   replace H_ind := fun J hJ => not_imp_not.2 (H_ind J hJ)
@@ -152,7 +155,8 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   have hJle : ∀ m, J m ≤ I := fun m => hJmono (zero_le m)
   have hJp : ∀ m, ¬p (J m) := fun m =>
     Nat.recOn m hpI fun m => by simpa only [J_succ] using hs (J m) (hJle m)
-  have hJsub : ∀ m i, (J m).upper i - (J m).lower i = (I.upper i - I.lower i) / 2 ^ m := by
+  have hJsub : ∀ m i, (J m).upper i - (J m).lower i = (I.upper i - I.lower i) / 2 ^ m :=
+    by
     intro m i
     induction' m with m ihm
     · simp [J]
@@ -172,7 +176,8 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_Icc
   have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z) :=
     tendsto_at_top_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
-  have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) := by
+  have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) :=
+    by
     suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this
     refine' tendsto_pi_nhds.2 fun i => _
     simpa [hJsub] using

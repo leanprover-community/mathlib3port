@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.units
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem units_inv_eq_self (u : ℤˣ) : u⁻¹ = u := by rw [inv_eq_iff_mul_eq_o
 
 /- warning: int.units_coe_mul_self -> Int.units_coe_mul_self is a dubious translation:
 lean 3 declaration is
-  forall (u : Units.{0} Int Int.monoid), Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} Int Int.monoid) Int (HasLiftT.mk.{1, 1} (Units.{0} Int Int.monoid) Int (CoeTCₓ.coe.{1, 1} (Units.{0} Int Int.monoid) Int (CoeTCₓ.mk.{1, 1} (Units.{0} Int Int.monoid) Int (Units.val.{0} Int Int.monoid)))) u) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} Int Int.monoid) Int (HasLiftT.mk.{1, 1} (Units.{0} Int Int.monoid) Int (CoeTCₓ.coe.{1, 1} (Units.{0} Int Int.monoid) Int (CoeTCₓ.mk.{1, 1} (Units.{0} Int Int.monoid) Int (Units.val.{0} Int Int.monoid)))) u)) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))
+  forall (u : Units.{0} Int Int.monoid), Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} Int Int.monoid) Int (HasLiftT.mk.{1, 1} (Units.{0} Int Int.monoid) Int (CoeTCₓ.coe.{1, 1} (Units.{0} Int Int.monoid) Int (coeBase.{1, 1} (Units.{0} Int Int.monoid) Int (Units.hasCoe.{0} Int Int.monoid)))) u) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Units.{0} Int Int.monoid) Int (HasLiftT.mk.{1, 1} (Units.{0} Int Int.monoid) Int (CoeTCₓ.coe.{1, 1} (Units.{0} Int Int.monoid) Int (coeBase.{1, 1} (Units.{0} Int Int.monoid) Int (Units.hasCoe.{0} Int Int.monoid)))) u)) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))
 but is expected to have type
   forall (u : Units.{0} Int Int.instMonoidInt), Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Units.val.{0} Int Int.instMonoidInt u) (Units.val.{0} Int Int.instMonoidInt u)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))
 Case conversion may be inaccurate. Consider using '#align int.units_coe_mul_self Int.units_coe_mul_selfₓ'. -/
@@ -124,7 +124,7 @@ but is expected to have type
   forall (u : Units.{0} Int Int.instMonoidInt) (n : Nat), Eq.{1} (Units.{0} Int Int.instMonoidInt) (HPow.hPow.{0, 0, 0} (Units.{0} Int Int.instMonoidInt) Nat (Units.{0} Int Int.instMonoidInt) (instHPow.{0, 0} (Units.{0} Int Int.instMonoidInt) Nat (Monoid.Pow.{0} (Units.{0} Int Int.instMonoidInt) (DivInvMonoid.toMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Group.toDivInvMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Units.instGroupUnits.{0} Int Int.instMonoidInt))))) u n) (HPow.hPow.{0, 0, 0} (Units.{0} Int Int.instMonoidInt) Nat (Units.{0} Int Int.instMonoidInt) (instHPow.{0, 0} (Units.{0} Int Int.instMonoidInt) Nat (Monoid.Pow.{0} (Units.{0} Int Int.instMonoidInt) (DivInvMonoid.toMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Group.toDivInvMonoid.{0} (Units.{0} Int Int.instMonoidInt) (Units.instGroupUnits.{0} Int Int.instMonoidInt))))) u (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))))
 Case conversion may be inaccurate. Consider using '#align int.units_pow_eq_pow_mod_two Int.units_pow_eq_pow_mod_twoₓ'. -/
 theorem units_pow_eq_pow_mod_two (u : ℤˣ) (n : ℕ) : u ^ n = u ^ (n % 2) := by
-  conv => 
+  conv =>
       lhs
       rw [← Nat.mod_add_div n 2] <;>
     rw [pow_add, pow_mul, units_sq, one_pow, mul_one]

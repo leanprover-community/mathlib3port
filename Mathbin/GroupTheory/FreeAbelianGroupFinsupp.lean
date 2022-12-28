@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module group_theory.free_abelian_group_finsupp
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ open Finsupp FreeAbelianGroup
 theorem Finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
     Finsupp.toFreeAbelianGroup.comp (Finsupp.singleAddHom x) =
       (smulAddHom ℤ (FreeAbelianGroup X)).flip (of x) :=
-  by 
+  by
   ext
   simp only [AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply, one_smul,
     to_free_abelian_group, Finsupp.lift_add_hom_apply_single]
@@ -61,7 +61,8 @@ theorem Finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
 
 @[simp]
 theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
-    toFinsupp.comp toFreeAbelianGroup = AddMonoidHom.id (X →₀ ℤ) := by
+    toFinsupp.comp toFreeAbelianGroup = AddMonoidHom.id (X →₀ ℤ) :=
+  by
   ext (x y); simp only [AddMonoidHom.id_comp]
   rw [AddMonoidHom.comp_assoc, Finsupp.to_free_abelian_group_comp_single_add_hom]
   simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply,
@@ -71,7 +72,8 @@ theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
 
 @[simp]
 theorem Finsupp.to_free_abelian_group_comp_to_finsupp :
-    toFreeAbelianGroup.comp toFinsupp = AddMonoidHom.id (FreeAbelianGroup X) := by
+    toFreeAbelianGroup.comp toFinsupp = AddMonoidHom.id (FreeAbelianGroup X) :=
+  by
   ext
   rw [to_free_abelian_group, to_finsupp, AddMonoidHom.comp_apply, lift.of,
     lift_add_hom_apply_single, AddMonoidHom.flip_apply, smul_add_hom_apply, one_smul,
@@ -106,8 +108,8 @@ variable (X)
 
 /-- The additive equivalence between `free_abelian_group X` and `(X →₀ ℤ)`. -/
 @[simps]
-def equivFinsupp : FreeAbelianGroup X ≃+
-      (X →₀ ℤ) where 
+def equivFinsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ)
+    where
   toFun := toFinsupp
   invFun := toFreeAbelianGroup
   left_inv := to_free_abelian_group_to_finsupp
@@ -163,12 +165,14 @@ def support (a : FreeAbelianGroup X) : Finset X :=
   a.toFinsupp.support
 #align free_abelian_group.support FreeAbelianGroup.support
 
-theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.support ↔ coeff x a ≠ 0 := by
+theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.support ↔ coeff x a ≠ 0 :=
+  by
   rw [support, Finsupp.mem_support_iff]
   exact Iff.rfl
 #align free_abelian_group.mem_support_iff FreeAbelianGroup.mem_support_iff
 
-theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.support ↔ coeff x a = 0 := by
+theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.support ↔ coeff x a = 0 :=
+  by
   rw [support, Finsupp.not_mem_support_iff]
   exact Iff.rfl
 #align free_abelian_group.not_mem_support_iff FreeAbelianGroup.not_mem_support_iff
@@ -190,7 +194,7 @@ theorem support_neg (a : FreeAbelianGroup X) : support (-a) = support a := by
 
 @[simp]
 theorem support_zsmul (k : ℤ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a :=
-  by 
+  by
   ext x
   simp only [mem_support_iff, AddMonoidHom.map_zsmul]
   simp only [h, zsmul_int_int, false_or_iff, Ne.def, mul_eq_zero]
@@ -198,14 +202,15 @@ theorem support_zsmul (k : ℤ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support
 
 @[simp]
 theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a :=
-  by 
+  by
   apply support_zsmul k _ a
   exact_mod_cast h
 #align free_abelian_group.support_nsmul FreeAbelianGroup.support_nsmul
 
 open Classical
 
-theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.support ∪ b.support := by
+theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.support ∪ b.support :=
+  by
   simp only [support, AddMonoidHom.map_add]
   apply Finsupp.support_add
 #align free_abelian_group.support_add FreeAbelianGroup.support_add

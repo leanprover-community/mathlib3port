@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.euclidean.inversion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ theorem inversion_self (c : P) (R : ℝ) : inversion c R c = c := by simp [inver
 #align euclidean_geometry.inversion_self EuclideanGeometry.inversion_self
 
 @[simp]
-theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x := by
+theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x :=
+  by
   rcases eq_or_ne x c with (rfl | hne)
   · apply inversion_self
   · rw [inversion, div_self, one_pow, one_smul, vsub_vadd]
@@ -67,7 +68,8 @@ theorem inversion_of_mem_sphere (h : x ∈ Metric.sphere c R) : inversion c R x 
 
 /-- Distance from the image of a point under inversion to the center. This formula accidentally
 works for `x = c`. -/
-theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R ^ 2 / dist x c := by
+theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R ^ 2 / dist x c :=
+  by
   rcases eq_or_ne x c with (rfl | hx)
   · simp
   have : dist x c ≠ 0 := dist_ne_zero.2 hx
@@ -82,7 +84,8 @@ theorem dist_center_inversion (c x : P) (R : ℝ) : dist c (inversion c R x) = R
 
 @[simp]
 theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) :
-    inversion c R (inversion c R x) = x := by
+    inversion c R (inversion c R x) = x :=
+  by
   rcases eq_or_ne x c with (rfl | hne)
   · rw [inversion_self, inversion_self]
   · rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_pow,
@@ -109,7 +112,8 @@ theorem inversion_bijective (c : P) {R : ℝ} (hR : R ≠ 0) : Bijective (invers
 
 /-- Distance between the images of two points under an inversion. -/
 theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
-    dist (inversion c R x) (inversion c R y) = R ^ 2 / (dist x c * dist y c) * dist x y := by
+    dist (inversion c R x) (inversion c R y) = R ^ 2 / (dist x c * dist y c) * dist x y :=
+  by
   dsimp only [inversion]
   simp_rw [dist_vadd_cancel_right, dist_eq_norm_vsub V _ c]
   simpa only [dist_vsub_cancel_right] using

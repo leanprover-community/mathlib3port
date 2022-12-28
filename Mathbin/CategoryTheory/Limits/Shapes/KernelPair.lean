@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.kernel_pair
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ namespace IsKernelPair
 
 /-- The data expressing that `(a, b)` is a kernel pair is subsingleton. -/
 instance : Subsingleton (IsKernelPair f a b) :=
-  ⟨fun P Q => by 
+  ⟨fun P Q => by
     cases P
     cases Q
     congr ⟩
@@ -96,7 +96,8 @@ theorem cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b �
     (big_k : IsKernelPair (f₁ ≫ f₂) a b) : IsKernelPair f₁ a b :=
   { w := comm
     is_limit' :=
-      ⟨(PullbackCone.isLimitAux' _) fun s => by
+      ⟨(PullbackCone.isLimitAux' _) fun s =>
+          by
           let s' : pullback_cone (f₁ ≫ f₂) (f₁ ≫ f₂) :=
             pullback_cone.mk s.fst s.snd (s.condition_assoc _)
           refine'
@@ -126,7 +127,8 @@ theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : Is
     IsKernelPair (f₁ ≫ f₂) a b :=
   { w := by rw [small_k.w_assoc]
     is_limit' :=
-      ⟨(PullbackCone.isLimitAux' _) fun s => by
+      ⟨(PullbackCone.isLimitAux' _) fun s =>
+          by
           refine' ⟨_, _, _, _⟩
           apply (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).1
           rw [← cancel_mono f₂, assoc, s.condition, assoc]
@@ -143,7 +145,8 @@ theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : Is
 If `(a,b)` is the kernel pair of `f`, and `f` is a coequalizer morphism for some parallel pair, then
 `f` is a coequalizer morphism of `a` and `b`.
 -/
-def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofork.ofπ f k.w) := by
+def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofork.ofπ f k.w) :=
+  by
   let t := k.is_limit.lift (pullback_cone.mk _ _ r.w)
   have ht : t ≫ a = r.left := k.is_limit.fac _ walking_cospan.left
   have kt : t ≫ b = r.right := k.is_limit.fac _ walking_cospan.right
@@ -172,7 +175,7 @@ protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h 
     IsKernelPair (pullback.fst : pullback f g ⟶ X)
       (pullback.map f _ f _ (𝟙 X) a₁ (𝟙 Z) (by simp) <| Category.comp_id _)
       (pullback.map _ _ _ _ (𝟙 X) a₂ (𝟙 Z) (by simp) <| (Category.comp_id _).trans h.1.1) :=
-  by 
+  by
   refine' ⟨⟨_⟩, ⟨_⟩⟩
   · rw [pullback.lift_fst, pullback.lift_fst]
   · fapply pullback_cone.is_limit_aux'
@@ -206,7 +209,8 @@ protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h 
         · conv_rhs => rw [← h₂, category.assoc, pullback_cone.mk_snd, pullback.lift_snd]
 #align category_theory.is_kernel_pair.pullback CategoryTheory.IsKernelPair.pullback
 
-theorem mono_of_is_iso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f := by
+theorem mono_of_is_iso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f :=
+  by
   obtain ⟨l, h₁, h₂⟩ := limits.pullback_cone.is_limit.lift' h.is_limit (𝟙 _) (𝟙 _) (by simp [h.w])
   rw [is_pullback.cone_fst, ← is_iso.eq_comp_inv, category.id_comp] at h₁
   rw [h₁, is_iso.inv_comp_eq, category.comp_id] at h₂
@@ -217,7 +221,8 @@ theorem mono_of_is_iso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f := by
 #align
   category_theory.is_kernel_pair.mono_of_is_iso_fst CategoryTheory.IsKernelPair.mono_of_is_iso_fst
 
-theorem is_iso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a := by
+theorem is_iso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a :=
+  by
   rw [←
     show _ = a from
       (category.comp_id _).symm.trans
@@ -226,7 +231,8 @@ theorem is_iso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a := by
   infer_instance
 #align category_theory.is_kernel_pair.is_iso_of_mono CategoryTheory.IsKernelPair.is_iso_of_mono
 
-theorem of_is_iso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a := by
+theorem of_is_iso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a :=
+  by
   delta is_kernel_pair
   convert_to is_pullback a (a ≫ 𝟙 X) (𝟙 X ≫ f) f
   · rw [category.comp_id]; · rw [category.id_comp]

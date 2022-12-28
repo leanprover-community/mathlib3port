@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.grothendieck
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,8 @@ structure Hom (X Y : Grothendieck F) where
 
 @[ext]
 theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
-    (w_fiber : eqToHom (by rw [w_base]) ≫ f.fiber = g.fiber) : f = g := by
+    (w_fiber : eqToHom (by rw [w_base]) ≫ f.fiber = g.fiber) : f = g :=
+  by
   cases f <;> cases g
   congr
   dsimp at w_base
@@ -89,7 +90,7 @@ theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
 /-- The identity morphism in the Grothendieck category.
 -/
 @[simps]
-def id (X : Grothendieck F) : Hom X X where 
+def id (X : Grothendieck F) : Hom X X where
   base := 𝟙 X.base
   fiber := eqToHom (by erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber])
 #align category_theory.grothendieck.id CategoryTheory.Grothendieck.id
@@ -100,8 +101,8 @@ instance (X : Grothendieck F) : Inhabited (Hom X X) :=
 /-- Composition of morphisms in the Grothendieck category.
 -/
 @[simps]
-def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) :
-    Hom X Z where 
+def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) : Hom X Z
+    where
   base := f.base ≫ g.base
   fiber :=
     eqToHom (by erw [functor.map_comp, functor.comp_obj]) ≫ (F.map g.base).map f.fiber ≫ g.fiber
@@ -109,12 +110,12 @@ def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) :
 
 attribute [local simp] eq_to_hom_map
 
-instance : Category (Grothendieck
-        F) where 
+instance : Category (Grothendieck F)
+    where
   Hom X Y := Grothendieck.Hom X Y
   id X := Grothendieck.id X
   comp X Y Z f g := Grothendieck.comp f g
-  comp_id' X Y f := by 
+  comp_id' X Y f := by
     ext
     · dsimp
       -- We need to turn `F.map_id` (which is an equation between functors)
@@ -123,7 +124,7 @@ instance : Category (Grothendieck
       simp
     · simp
   id_comp' X Y f := by ext <;> simp
-  assoc' W X Y Z f g h := by 
+  assoc' W X Y Z f g h := by
     ext; swap
     · simp
     · dsimp
@@ -138,7 +139,8 @@ theorem id_fiber' (X : Grothendieck F) :
 #align category_theory.grothendieck.id_fiber' CategoryTheory.Grothendieck.id_fiber'
 
 theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) :
-    f.fiber = eqToHom (by subst h) ≫ g.fiber := by
+    f.fiber = eqToHom (by subst h) ≫ g.fiber :=
+  by
   subst h
   dsimp
   simp
@@ -150,7 +152,7 @@ variable (F)
 
 /-- The forgetful functor from `grothendieck F` to the source category. -/
 @[simps]
-def forget : Grothendieck F ⥤ C where 
+def forget : Grothendieck F ⥤ C where
   obj X := X.1
   map X Y f := f.1
 #align category_theory.grothendieck.forget CategoryTheory.Grothendieck.forget
@@ -163,9 +165,8 @@ variable (G : C ⥤ Type w)
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
-def grothendieckTypeToCatFunctor :
-    Grothendieck (G ⋙ Type_to_Cat) ⥤
-      G.Elements where 
+def grothendieckTypeToCatFunctor : Grothendieck (G ⋙ Type_to_Cat) ⥤ G.Elements
+    where
   obj X := ⟨X.1, X.2.as⟩
   map X Y f := ⟨f.1, f.2.1.1⟩
 #align
@@ -173,9 +174,8 @@ def grothendieckTypeToCatFunctor :
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
-def grothendieckTypeToCatInverse :
-    G.Elements ⥤ Grothendieck
-        (G ⋙ Type_to_Cat) where 
+def grothendieckTypeToCatInverse : G.Elements ⥤ Grothendieck (G ⋙ Type_to_Cat)
+    where
   obj X := ⟨X.1, ⟨X.2⟩⟩
   map X Y f := ⟨f.1, ⟨⟨f.2⟩⟩⟩
 #align
@@ -186,17 +186,16 @@ def grothendieckTypeToCatInverse :
 is the same as the 'category of elements' construction.
 -/
 @[simps]
-def grothendieckTypeToCat :
-    Grothendieck (G ⋙ Type_to_Cat) ≌
-      G.Elements where 
+def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements
+    where
   Functor := grothendieckTypeToCatFunctor G
   inverse := grothendieckTypeToCatInverse G
   unitIso :=
     NatIso.ofComponents
-      (fun X => by 
+      (fun X => by
         rcases X with ⟨_, ⟨⟩⟩
         exact iso.refl _)
-      (by 
+      (by
         rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩
         dsimp at *
         subst f
@@ -204,16 +203,16 @@ def grothendieckTypeToCat :
         simp)
   counitIso :=
     NatIso.ofComponents
-      (fun X => by 
+      (fun X => by
         cases X
         exact iso.refl _)
-      (by 
+      (by
         rintro ⟨⟩ ⟨⟩ ⟨f, e⟩
         dsimp at *
         subst e
         ext
         simp)
-  functor_unit_iso_comp' := by 
+  functor_unit_iso_comp' := by
     rintro ⟨_, ⟨⟩⟩
     dsimp
     simp

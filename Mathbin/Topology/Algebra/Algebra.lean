@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,8 @@ variable [CommSemiring R] [Semiring A] [Algebra R A]
 variable [TopologicalSpace R] [TopologicalSpace A] [TopologicalSemiring A]
 
 theorem continuous_algebra_map_iff_smul :
-    Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 := by
+    Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · simp only [Algebra.smul_def]
     exact (h.comp continuous_fst).mul continuous_snd
@@ -66,7 +67,7 @@ variable [HasContinuousSmul R A]
 /-- The inclusion of the base ring in a topological algebra as a continuous linear map. -/
 @[simps]
 def algebraMapClm : R →L[R] A :=
-  { Algebra.linearMap R A with 
+  { Algebra.linearMap R A with
     toFun := algebraMap R A
     cont := continuous_algebra_map R A }
 #align algebra_map_clm algebraMapClm
@@ -98,7 +99,8 @@ variable [TopologicalSemiring A]
 
 /-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
-  { s.toSubsemiring.topologicalClosure with
+  {
+    s.toSubsemiring.topologicalClosure with
     carrier := closure (s : Set A)
     algebra_map_mem' := fun r => s.toSubsemiring.le_topological_closure (s.algebra_map_mem r) }
 #align subalgebra.topological_closure Subalgebra.topologicalClosure
@@ -139,7 +141,8 @@ along with a witness that as functions they are the same.
 -/
 theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B : Type _}
     [TopologicalSpace B] [Ring B] [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A)
-    (w : (f : B → A) = f') : s.topologicalClosure.comap f = (s.comap f).topologicalClosure := by
+    (w : (f : B → A) = f') : s.topologicalClosure.comap f = (s.comap f).topologicalClosure :=
+  by
   apply SetLike.ext'
   simp only [Subalgebra.topological_closure_coe]
   simp only [Subalgebra.coe_comap, Subsemiring.coe_comap, AlgHom.coe_to_ring_hom]
@@ -185,7 +188,8 @@ variable {R}
 instance [T2Space A] {x : A} : CommRing (Algebra.elementalAlgebra R x) :=
   Subalgebra.commRingTopologicalClosure _
     letI : CommRing (Algebra.adjoin R ({x} : Set A)) :=
-      Algebra.adjoinCommRingOfComm R fun y hy z hz => by
+      Algebra.adjoinCommRingOfComm R fun y hy z hz =>
+        by
         rw [mem_singleton_iff] at hy hz
         rw [hy, hz]
     fun _ _ => mul_comm _ _

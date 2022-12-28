@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.affine_isometry
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.LinearIsometry
 import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.LinearAlgebra.AffineSpace.Restrict
 
 /-!
 # Affine isometries
@@ -71,7 +72,8 @@ protected def linearIsometry : V →ₗᵢ[𝕜] V₂ :=
 #align affine_isometry.linear_isometry AffineIsometry.linearIsometry
 
 @[simp]
-theorem linear_eq_linear_isometry : f.linear = f.LinearIsometry.toLinearMap := by
+theorem linear_eq_linear_isometry : f.linear = f.LinearIsometry.toLinearMap :=
+  by
   ext
   rfl
 #align affine_isometry.linear_eq_linear_isometry AffineIsometry.linear_eq_linear_isometry
@@ -122,7 +124,8 @@ theorem coe_to_affine_isometry : ⇑(f.toAffineIsometry : V →ᵃⁱ[𝕜] V₂
 #align linear_isometry.coe_to_affine_isometry LinearIsometry.coe_to_affine_isometry
 
 @[simp]
-theorem to_affine_isometry_linear_isometry : f.toAffineIsometry.LinearIsometry = f := by
+theorem to_affine_isometry_linear_isometry : f.toAffineIsometry.LinearIsometry = f :=
+  by
   ext
   rfl
 #align
@@ -275,7 +278,7 @@ theorem comp_assoc (f : P₃ →ᵃⁱ[𝕜] P₄) (g : P₂ →ᵃⁱ[𝕜] P�
 
 omit V₂ V₃ V₄
 
-instance : Monoid (P →ᵃⁱ[𝕜] P) where 
+instance : Monoid (P →ᵃⁱ[𝕜] P) where
   one := id
   mul := comp
   mul_assoc := comp_assoc
@@ -355,7 +358,8 @@ protected def linearIsometryEquiv : V ≃ₗᵢ[𝕜] V₂ :=
 #align affine_isometry_equiv.linear_isometry_equiv AffineIsometryEquiv.linearIsometryEquiv
 
 @[simp]
-theorem linear_eq_linear_isometry : e.linear = e.LinearIsometryEquiv.toLinearEquiv := by
+theorem linear_eq_linear_isometry : e.linear = e.LinearIsometryEquiv.toLinearEquiv :=
+  by
   ext
   rfl
 #align affine_isometry_equiv.linear_eq_linear_isometry AffineIsometryEquiv.linear_eq_linear_isometry
@@ -412,7 +416,7 @@ theorem coe_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) : ⇑
 
 @[simp]
 theorem linear_isometry_equiv_mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p h) :
-    (mk' e e' p h).LinearIsometryEquiv = e' := by 
+    (mk' e e' p h).LinearIsometryEquiv = e' := by
   ext
   rfl
 #align affine_isometry_equiv.linear_isometry_equiv_mk' AffineIsometryEquiv.linear_isometry_equiv_mk'
@@ -436,7 +440,8 @@ theorem coe_to_affine_isometry_equiv : ⇑(e.toAffineIsometryEquiv : V ≃ᵃⁱ
 
 @[simp]
 theorem to_affine_isometry_equiv_linear_isometry_equiv :
-    e.toAffineIsometryEquiv.LinearIsometryEquiv = e := by
+    e.toAffineIsometryEquiv.LinearIsometryEquiv = e :=
+  by
   ext
   rfl
 #align
@@ -480,7 +485,8 @@ theorem coe_to_isometric : ⇑e.toIsometric = e :=
 
 include V V₂
 
-theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.range e = Set.univ := by
+theorem range_eq_univ (e : P ≃ᵃⁱ[𝕜] P₂) : Set.range e = Set.univ :=
+  by
   rw [← coe_to_isometric]
   exact Isometric.range_eq_univ _
 #align affine_isometry_equiv.range_eq_univ AffineIsometryEquiv.range_eq_univ
@@ -638,7 +644,7 @@ theorem trans_assoc (ePP₂ : P ≃ᵃⁱ[𝕜] P₂) (eP₂G : P₂ ≃ᵃⁱ[�
 omit V₂ V₃ V₄
 
 /-- The group of affine isometries of a `normed_add_torsor`, `P`. -/
-instance : Group (P ≃ᵃⁱ[𝕜] P) where 
+instance : Group (P ≃ᵃⁱ[𝕜] P) where
   mul e₁ e₂ := e₂.trans e₁
   one := refl _ _
   inv := symm
@@ -788,7 +794,7 @@ theorem coe_const_vsub (p : P) : ⇑(constVsub 𝕜 p) = (· -ᵥ ·) p :=
 theorem symm_const_vsub (p : P) :
     (constVsub 𝕜 p).symm =
       (LinearIsometryEquiv.neg 𝕜).toAffineIsometryEquiv.trans (vaddConst 𝕜 p) :=
-  by 
+  by
   ext
   rfl
 #align affine_isometry_equiv.symm_const_vsub AffineIsometryEquiv.symm_const_vsub
@@ -820,7 +826,8 @@ include 𝕜 V
 /-- The map `g` from `V` to `V₂` corresponding to a map `f` from `P` to `P₂`, at a base point `p`,
 is an isometry if `f` is one. -/
 theorem vaddVsub {f : P → P₂} (hf : Isometry f) {p : P} {g : V → V₂}
-    (hg : ∀ v, g v = f (v +ᵥ p) -ᵥ f p) : Isometry g := by
+    (hg : ∀ v, g v = f (v +ᵥ p) -ᵥ f p) : Isometry g :=
+  by
   convert (vadd_const 𝕜 (f p)).symm.Isometry.comp (hf.comp (vadd_const 𝕜 p).Isometry)
   exact funext hg
 #align affine_isometry_equiv.vadd_vsub AffineIsometryEquiv.vaddVsub
@@ -911,13 +918,14 @@ end AffineIsometryEquiv
 include V V₂
 
 /-- If `f` is an affine map, then its linear part is continuous iff `f` is continuous. -/
-theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f.linear ↔ Continuous f := by
+theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f.linear ↔ Continuous f :=
+  by
   inhabit P
   have :
     (f.linear : V → V₂) =
       (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
-    by 
+    by
     ext v
     simp
   rw [this]
@@ -925,16 +933,74 @@ theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f
 #align affine_map.continuous_linear_iff AffineMap.continuous_linear_iff
 
 /-- If `f` is an affine map, then its linear part is an open map iff `f` is an open map. -/
-theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f.linear ↔ IsOpenMap f := by
+theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f.linear ↔ IsOpenMap f :=
+  by
   inhabit P
   have :
     (f.linear : V → V₂) =
       (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
-    by 
+    by
     ext v
     simp
   rw [this]
   simp only [Homeomorph.comp_is_open_map_iff, Homeomorph.comp_is_open_map_iff']
 #align affine_map.is_open_map_linear_iff AffineMap.is_open_map_linear_iff
+
+attribute [local instance, local nolint fails_quickly] AffineSubspace.nonempty_map
+
+include V₁
+
+omit V
+
+namespace AffineSubspace
+
+/-- An affine subspace is isomorphic to its image under an injective affine map.
+This is the affine version of `submodule.equiv_map_of_injective`.
+-/
+@[simps]
+noncomputable def equivMapOfInjective (E : AffineSubspace 𝕜 P₁) [Nonempty E] (φ : P₁ →ᵃ[𝕜] P₂)
+    (hφ : Function.Injective φ) : E ≃ᵃ[𝕜] E.map φ :=
+  {
+    Equiv.Set.image _ (E : Set P₁)
+      hφ with
+    linear :=
+      (E.direction.equivMapOfInjective φ.linear (φ.linear_injective_iff.mpr hφ)).trans
+        (LinearEquiv.ofEq _ _ (AffineSubspace.map_direction _ _).symm)
+    map_vadd' := fun p v => Subtype.ext <| φ.map_vadd p v }
+#align affine_subspace.equiv_map_of_injective AffineSubspace.equivMapOfInjective
+
+/-- Restricts an affine isometry to an affine isometry equivalence between a nonempty affine
+subspace `E` and its image.
+
+This is an isometry version of `affine_subspace.equiv_map`, having a stronger premise and a stronger
+conclusion.
+-/
+noncomputable def isometryEquivMap (φ : P₁ →ᵃⁱ[𝕜] P₂) (E : AffineSubspace 𝕜 P₁) [Nonempty E] :
+    E ≃ᵃⁱ[𝕜] E.map φ.toAffineMap :=
+  ⟨E.equivMapOfInjective φ.toAffineMap φ.Injective, fun _ => φ.norm_map _⟩
+#align affine_subspace.isometry_equiv_map AffineSubspace.isometryEquivMap
+
+@[simp]
+theorem isometryEquivMap.apply_symm_apply {E : AffineSubspace 𝕜 P₁} [Nonempty E] {φ : P₁ →ᵃⁱ[𝕜] P₂}
+    (x : E.map φ.toAffineMap) : φ ((E.isometryEquivMap φ).symm x) = x :=
+  congr_arg coe <| (E.isometryEquivMap φ).apply_symm_apply _
+#align
+  affine_subspace.isometry_equiv_map.apply_symm_apply AffineSubspace.isometryEquivMap.apply_symm_apply
+
+@[simp]
+theorem isometryEquivMap.coe_apply (φ : P₁ →ᵃⁱ[𝕜] P₂) (E : AffineSubspace 𝕜 P₁) [Nonempty E]
+    (g : E) : ↑(E.isometryEquivMap φ g) = φ g :=
+  rfl
+#align affine_subspace.isometry_equiv_map.coe_apply AffineSubspace.isometryEquivMap.coe_apply
+
+@[simp]
+theorem isometryEquivMap.to_affine_map_eq (φ : P₁ →ᵃⁱ[𝕜] P₂) (E : AffineSubspace 𝕜 P₁)
+    [Nonempty E] :
+    (E.isometryEquivMap φ).toAffineMap = E.equivMapOfInjective φ.toAffineMap φ.Injective :=
+  rfl
+#align
+  affine_subspace.isometry_equiv_map.to_affine_map_eq AffineSubspace.isometryEquivMap.to_affine_map_eq
+
+end AffineSubspace
 

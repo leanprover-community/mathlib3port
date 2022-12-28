@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.cartan_matrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,12 +161,14 @@ def adF : B × B → FreeLieAlgebra R (Generators B) :=
   uncurry fun i j => ad (F i) ^ (-A i j).toNat <| ⁅F i, F j⁆
 #align cartan_matrix.relations.ad_F CartanMatrix.Relations.adF
 
-private theorem ad_E_of_eq_eq_zero (i : B) (h : A i i = 2) : adE R A ⟨i, i⟩ = 0 := by
+private theorem ad_E_of_eq_eq_zero (i : B) (h : A i i = 2) : adE R A ⟨i, i⟩ = 0 :=
+  by
   have h' : (-2 : ℤ).toNat = 0 := by rfl
   simp [ad_E, h, h']
 #align cartan_matrix.relations.ad_E_of_eq_eq_zero cartan_matrix.relations.ad_E_of_eq_eq_zero
 
-private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ = 0 := by
+private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ = 0 :=
+  by
   have h' : (-2 : ℤ).toNat = 0 := by rfl
   simp [ad_F, h, h']
 #align cartan_matrix.relations.ad_F_of_eq_eq_zero cartan_matrix.relations.ad_F_of_eq_eq_zero

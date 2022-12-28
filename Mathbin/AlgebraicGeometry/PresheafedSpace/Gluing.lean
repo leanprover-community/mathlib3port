@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space.gluing
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,8 @@ abbrev toTopGlueData : TopCat.GlueData :=
 #align
   algebraic_geometry.PresheafedSpace.glue_data.to_Top_glue_data AlgebraicGeometry.PresheafedSpaceCat.GlueData.toTopGlueData
 
-theorem ι_open_embedding [HasLimits C] (i : D.J) : OpenEmbedding (𝖣.ι i).base := by
+theorem ι_open_embedding [HasLimits C] (i : D.J) : OpenEmbedding (𝖣.ι i).base :=
+  by
   rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) _]
   exact
     OpenEmbedding.comp
@@ -138,7 +139,8 @@ theorem ι_open_embedding [HasLimits C] (i : D.J) : OpenEmbedding (𝖣.ι i).ba
   algebraic_geometry.PresheafedSpace.glue_data.ι_open_embedding AlgebraicGeometry.PresheafedSpaceCat.GlueData.ι_open_embedding
 
 theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).carrier) :
-    (π₂ i, j, k) '' ((π₁ i, j, k) ⁻¹' S) = D.f i k ⁻¹' (D.f i j '' S) := by
+    (π₂ i, j, k) '' ((π₁ i, j, k) ⁻¹' S) = D.f i k ⁻¹' (D.f i j '' S) :=
+  by
   have eq₁ : _ = (π₁ i, j, k).base := preserves_pullback.iso_hom_fst (forget C) _ _
   have eq₂ : _ = (π₂ i, j, k).base := preserves_pullback.iso_hom_snd (forget C) _ _
   rw [coe_to_fun_eq, coe_to_fun_eq, ← eq₁, ← eq₂, coe_comp, Set.image_comp, coe_comp,
@@ -157,12 +159,12 @@ theorem f_inv_app_f_app (i j k : D.J) (U : Opens (D.V (i, j)).carrier) :
         (π₂⁻¹ i, j, k) (unop _) ≫
           (D.V _).Presheaf.map
             (eqToHom
-              (by 
+              (by
                 delta is_open_immersion.open_functor
                 dsimp only [functor.op, IsOpenMap.functor, opens.map, unop_op]
                 congr
                 apply pullback_base)) :=
-  by 
+  by
   have := PresheafedSpace.congr_app (@pullback.condition _ _ _ _ _ (D.f i j) (D.f i k) _)
   dsimp only [comp_c_app] at this
   rw [← cancel_epi (inv ((D.f_open i j).invApp U)), is_iso.inv_hom_id_assoc,
@@ -184,7 +186,7 @@ theorem snd_inv_app_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k
     ∃ eq,
       (π₂⁻¹ i, j, k) U ≫ (D.t k i).c.app _ ≫ (D.V (k, i)).Presheaf.map (eqToHom Eq) =
         (D.t' k i j).c.app _ ≫ (π₁⁻¹ k, j, i) (unop _) :=
-  by 
+  by
   constructor
   rw [← is_iso.eq_inv_comp, is_open_immersion.inv_inv_app, category.assoc,
     (D.t' k i j).c.naturality_assoc]
@@ -215,7 +217,7 @@ theorem snd_inv_app_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
       (D.t' k i j).c.app _ ≫
         (π₁⁻¹ k, j, i) (unop _) ≫
           (D.V (k, i)).Presheaf.map (eqToHom (D.snd_inv_app_t_app' i j k U).some.symm) :=
-  by 
+  by
   have e := (D.snd_inv_app_t_app' i j k U).some_spec
   reassoc! e
   rw [← e]
@@ -229,7 +231,7 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
     (Opens.map (𝖣.ι j).base).obj ((D.ι_open_embedding i).IsOpenMap.Functor.obj U) =
       (D.f_open j i).openFunctor.obj
         ((Opens.map (𝖣.t j i).base).obj ((Opens.map (𝖣.f i j).base).obj U)) :=
-  by 
+  by
   dsimp only [opens.map, IsOpenMap.functor]
   congr 1
   rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) i, ←
@@ -266,7 +268,7 @@ theorem opens_image_preimage_map_app' (i j k : D.J) (U : Opens (D.U i).carrier) 
       D.opensImagePreimageMap i j U ≫ (D.f j k).c.app _ =
         ((π₁ j, i, k) ≫ D.t j i ≫ D.f i j).c.app (op U) ≫
           (π₂⁻¹ j, i, k) (unop _) ≫ (D.V (j, k)).Presheaf.map (eqToHom Eq) :=
-  by 
+  by
   constructor
   delta opens_image_preimage_map
   simp_rw [category.assoc]
@@ -321,7 +323,8 @@ abbrev diagramOverOpenπ {i : D.J} (U : Opens (D.U i).carrier) (j : D.J) :=
 /-- (Implementation) We construct the map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_V, U_V)` for each `V` in the gluing
 diagram. We will lift these maps into `ι_inv_app`. -/
 def ιInvAppπApp {i : D.J} (U : Opens (D.U i).carrier) (j) :
-    (𝖣.U i).Presheaf.obj (op U) ⟶ (D.diagramOverOpen U).obj (op j) := by
+    (𝖣.U i).Presheaf.obj (op U) ⟶ (D.diagramOverOpen U).obj (op j) :=
+  by
   rcases j with (⟨j, k⟩ | j)
   · refine'
       D.opens_image_preimage_map i j U ≫ (D.f j k).c.app _ ≫ (D.V (j, k)).Presheaf.map (eq_to_hom _)
@@ -396,7 +399,8 @@ def ιInvApp {i : D.J} (U : Opens (D.U i).carrier) :
 
 /-- `ι_inv_app` is the left inverse of `D.ι i` on `U`. -/
 theorem ι_inv_app_π {i : D.J} (U : Opens (D.U i).carrier) :
-    ∃ eq, D.ιInvApp U ≫ D.diagramOverOpenπ U i = (D.U i).Presheaf.map (eqToHom Eq) := by
+    ∃ eq, D.ιInvApp U ≫ D.diagramOverOpenπ U i = (D.U i).Presheaf.map (eqToHom Eq) :=
+  by
   constructor
   delta ι_inv_app
   rw [limit.lift_π]
@@ -455,7 +459,8 @@ theorem π_ι_inv_app_π (i j : D.J) (U : Opens (D.U i).carrier) :
 
 /-- `ι_inv_app` is the inverse of `D.ι i` on `U`. -/
 theorem π_ι_inv_app_eq_id (i : D.J) (U : Opens (D.U i).carrier) :
-    D.diagramOverOpenπ U i ≫ D.ιInvAppπEqMap U ≫ D.ιInvApp U = 𝟙 _ := by
+    D.diagramOverOpenπ U i ≫ D.ιInvAppπEqMap U ≫ D.ιInvApp U = 𝟙 _ :=
+  by
   ext j
   induction j using Opposite.rec
   rcases j with (⟨j, k⟩ | ⟨j⟩)
@@ -473,7 +478,8 @@ theorem π_ι_inv_app_eq_id (i : D.J) (U : Opens (D.U i).carrier) :
   algebraic_geometry.PresheafedSpace.glue_data.π_ι_inv_app_eq_id AlgebraicGeometry.PresheafedSpaceCat.GlueData.π_ι_inv_app_eq_id
 
 instance componentwise_diagram_π_is_iso (i : D.J) (U : Opens (D.U i).carrier) :
-    IsIso (D.diagramOverOpenπ U i) := by
+    IsIso (D.diagramOverOpenπ U i) :=
+  by
   use D.ι_inv_app_π_eq_map U ≫ D.ι_inv_app U
   constructor
   · apply π_ι_inv_app_eq_id
@@ -482,10 +488,10 @@ instance componentwise_diagram_π_is_iso (i : D.J) (U : Opens (D.U i).carrier) :
 #align
   algebraic_geometry.PresheafedSpace.glue_data.componentwise_diagram_π_is_iso AlgebraicGeometry.PresheafedSpaceCat.GlueData.componentwise_diagram_π_is_iso
 
-instance ιIsOpenImmersion (i : D.J) :
-    IsOpenImmersion (𝖣.ι i) where 
+instance ιIsOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i)
+    where
   base_open := D.ι_open_embedding i
-  c_iso U := by 
+  c_iso U := by
     erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]
     infer_instance
 #align
@@ -594,7 +600,8 @@ theorem ι_iso_PresheafedSpace_inv (i : D.J) :
 #align
   algebraic_geometry.SheafedSpace.glue_data.ι_iso_PresheafedSpace_inv AlgebraicGeometry.SheafedSpaceCat.GlueData.ι_iso_PresheafedSpace_inv
 
-instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
+instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
+  by
   rw [← D.ι_iso_PresheafedSpace_inv]
   infer_instance
 #align
@@ -676,7 +683,8 @@ theorem ι_iso_SheafedSpace_inv (i : D.J) :
 #align
   algebraic_geometry.LocallyRingedSpace.glue_data.ι_iso_SheafedSpace_inv AlgebraicGeometry.LocallyRingedSpaceCat.GlueData.ι_iso_SheafedSpace_inv
 
-instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
+instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
+  by
   delta is_open_immersion
   rw [← D.ι_iso_SheafedSpace_inv]
   apply PresheafedSpace.is_open_immersion.comp

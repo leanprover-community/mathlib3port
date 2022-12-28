@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.module.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,9 +29,8 @@ variable (N : Type _) [AddCommMonoid N] [Module k N] [Module A N] [IsScalarTower
 /-- Restriction of scalars for linear maps between modules over a `k`-algebra is itself `k`-linear.
 -/
 @[simps]
-def restrictScalarsLinearMap :
-    (M →ₗ[A] N) →ₗ[k] M →ₗ[k]
-        N where 
+def restrictScalarsLinearMap : (M →ₗ[A] N) →ₗ[k] M →ₗ[k] N
+    where
   toFun := LinearMap.restrictScalars k
   map_add' := by tidy
   map_smul' := by tidy

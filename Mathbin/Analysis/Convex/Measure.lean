@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.measure
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
     -/
   suffices H : ∀ t : Set E, Convex ℝ t → x ∈ interior t → bounded t → μ (frontier t) = 0
   · set B : ℕ → Set E := fun n => ball x (n + 1)
-    have : μ (⋃ n : ℕ, frontier (s ∩ B n)) = 0 := by
+    have : μ (⋃ n : ℕ, frontier (s ∩ B n)) = 0 :=
+      by
       refine'
         measure_Union_null fun n =>
           H _ (hs.inter (convex_ball _ _)) _ (bounded_ball.mono (inter_subset_right _ _))
@@ -59,7 +60,7 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
     clear this
     set N : ℕ := ⌊dist y x⌋₊
     refine' mem_Union.2 ⟨N, _⟩
-    have hN : y ∈ B N := by 
+    have hN : y ∈ B N := by
       simp only [B, N]
       simp [Nat.lt_floor_add_one]
     suffices : y ∈ frontier (s ∩ B N) ∩ B N
@@ -79,7 +80,8 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
     `closure s ⊆ homothety x r '' interior s`, hence `μ (closure s) ≤ r ^ d * μ (interior s)`,
     where `d = finrank ℝ E`. -/
   set d : ℕ := FiniteDimensional.finrank ℝ E
-  have : ∀ r : ℝ≥0, 1 < r → μ (closure s) ≤ ↑(r ^ d) * μ (interior s) := by
+  have : ∀ r : ℝ≥0, 1 < r → μ (closure s) ≤ ↑(r ^ d) * μ (interior s) :=
+    by
     intro r hr
     refine'
       (measure_mono <| hs.closure_subset_image_homothety_interior_of_one_lt hx r hr).trans_eq _

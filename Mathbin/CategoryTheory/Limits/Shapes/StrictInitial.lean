@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.strict_initial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,8 @@ theorem IsInitial.is_iso_to (hI : IsInitial I) {A : C} (f : A ⟶ I) : IsIso f :
   HasStrictInitialObjects.out f hI
 #align category_theory.limits.is_initial.is_iso_to CategoryTheory.Limits.IsInitial.is_iso_to
 
-theorem IsInitial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f = g := by
+theorem IsInitial.strict_hom_ext (hI : IsInitial I) {A : C} (f g : A ⟶ I) : f = g :=
+  by
   haveI := hI.is_iso_to f
   haveI := hI.is_iso_to g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
@@ -87,9 +88,8 @@ theorem IsInitial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A �
 #align
   category_theory.limits.is_initial.subsingleton_to CategoryTheory.Limits.IsInitial.subsingleton_to
 
-instance (priority := 100) initial_mono_of_strict_initial_objects :
-    InitialMonoClass
-      C where is_initial_mono_from I A hI :=
+instance (priority := 100) initial_mono_of_strict_initial_objects : InitialMonoClass C
+    where is_initial_mono_from I A hI :=
     { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ }
 #align
   category_theory.limits.initial_mono_of_strict_initial_objects CategoryTheory.Limits.initial_mono_of_strict_initial_objects
@@ -167,7 +167,8 @@ end
 has strict initial objects. -/
 theorem has_strict_initial_objects_of_initial_is_strict [HasInitial C]
     (h : ∀ (A) (f : A ⟶ ⊥_ C), IsIso f) : HasStrictInitialObjects C :=
-  { out := fun I A f hI =>
+  {
+    out := fun I A f hI =>
       haveI := h A (f ≫ hI.to _)
       ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
 #align
@@ -198,7 +199,8 @@ theorem IsTerminal.is_iso_from (hI : IsTerminal I) {A : C} (f : I ⟶ A) : IsIso
   HasStrictTerminalObjects.out f hI
 #align category_theory.limits.is_terminal.is_iso_from CategoryTheory.Limits.IsTerminal.is_iso_from
 
-theorem IsTerminal.strict_hom_ext (hI : IsTerminal I) {A : C} (f g : I ⟶ A) : f = g := by
+theorem IsTerminal.strict_hom_ext (hI : IsTerminal I) {A : C} (f g : I ⟶ A) : f = g :=
+  by
   haveI := hI.is_iso_from f
   haveI := hI.is_iso_from g
   exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
@@ -217,14 +219,14 @@ variable {J : Type v} [SmallCategory J]
 said object via `limit.π`. -/
 theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     (H : ∀ (j) (_ : j ≠ i), IsTerminal (F.obj j)) [Subsingleton (i ⟶ i)] : IsIso (limit.π F i) := by
-  classical 
+  classical
     refine' ⟨⟨limit.lift _ ⟨_, ⟨_, _⟩⟩, _, _⟩⟩
     ·
       exact fun j =>
         dite (j = i)
           (fun h =>
             eq_to_hom
-              (by 
+              (by
                 cases h
                 rfl))
           fun h => (H _ h).from _
@@ -277,7 +279,8 @@ end
 has strict terminal objects. -/
 theorem has_strict_terminal_objects_of_terminal_is_strict (I : C) (h : ∀ (A) (f : I ⟶ A), IsIso f) :
     HasStrictTerminalObjects C :=
-  { out := fun I' A f hI' =>
+  {
+    out := fun I' A f hI' =>
       haveI := h A (hI'.from _ ≫ f)
       ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by rw [assoc, is_iso.inv_hom_id]⟩⟩ }
 #align

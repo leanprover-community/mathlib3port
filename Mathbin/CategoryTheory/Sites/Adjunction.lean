@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.adjunction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,14 +72,14 @@ def composeEquiv (adj : G ⊣ F) (X : SheafCat J E) (Y : SheafCat J D) :
   let A := adj.whiskerRight Cᵒᵖ
   { toFun := fun η => ⟨A.homEquiv _ _ (J.toSheafify _ ≫ η.val)⟩
     invFun := fun γ => ⟨J.sheafifyLift ((A.homEquiv _ _).symm ((sheafToPresheaf _ _).map γ)) Y.2⟩
-    left_inv := by 
+    left_inv := by
       intro η
       ext1
       dsimp
       symm
       apply J.sheafify_lift_unique
       rw [Equiv.symm_apply_apply]
-    right_inv := by 
+    right_inv := by
       intro γ
       ext1
       dsimp
@@ -93,11 +93,13 @@ and `F` preserves the correct limits. -/
 def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
   Adjunction.mkOfHomEquiv
     { homEquiv := composeEquiv J adj
-      hom_equiv_naturality_left_symm' := fun X' X Y f g => by
+      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+        by
         ext1
         dsimp
         simp
-      hom_equiv_naturality_right' := fun X Y Y' f g => by
+      hom_equiv_naturality_right' := fun X Y Y' f g =>
+        by
         ext1
         dsimp
         simp }
@@ -127,7 +129,7 @@ theorem adjunction_to_types_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ f
     ((adjunctionToTypes J adj).Unit.app Y).val =
       (adj.whiskerRight _).Unit.app ((sheafOfTypesToPresheaf J).obj Y) ≫
         whiskerRight (J.toSheafify _) (forget D) :=
-  by 
+  by
   dsimp [adjunction_to_types, adjunction.comp]
   simpa
 #align
@@ -138,7 +140,7 @@ theorem adjunction_to_types_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣
     (X : SheafCat J D) :
     ((adjunctionToTypes J adj).counit.app X).val =
       J.sheafifyLift ((Functor.associator _ _ _).Hom ≫ (adj.whiskerRight _).counit.app _) X.2 :=
-  by 
+  by
   dsimp [adjunction_to_types, adjunction.comp, adjunction.whisker_right]
   rw [category.id_comp]
   apply J.sheafify_lift_unique

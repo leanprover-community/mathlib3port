@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.intervals
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,23 +46,27 @@ theorem zero_bot (n : ℕ) : ico 0 n = range n := by rw [Ico, tsub_zero, range_e
 #align list.Ico.zero_bot List.ico.zero_bot
 
 @[simp]
-theorem length (n m : ℕ) : length (ico n m) = m - n := by
+theorem length (n m : ℕ) : length (ico n m) = m - n :=
+  by
   dsimp [Ico]
   simp only [length_range']
 #align list.Ico.length List.ico.length
 
-theorem pairwise_lt (n m : ℕ) : Pairwise (· < ·) (ico n m) := by
+theorem pairwise_lt (n m : ℕ) : Pairwise (· < ·) (ico n m) :=
+  by
   dsimp [Ico]
   simp only [pairwise_lt_range']
 #align list.Ico.pairwise_lt List.ico.pairwise_lt
 
-theorem nodup (n m : ℕ) : Nodup (ico n m) := by
+theorem nodup (n m : ℕ) : Nodup (ico n m) :=
+  by
   dsimp [Ico]
   simp only [nodup_range']
 #align list.Ico.nodup List.ico.nodup
 
 @[simp]
-theorem mem {n m l : ℕ} : l ∈ ico n m ↔ n ≤ l ∧ l < m := by
+theorem mem {n m l : ℕ} : l ∈ ico n m ↔ n ≤ l ∧ l < m :=
+  by
   suffices n ≤ l ∧ l < n + (m - n) ↔ n ≤ l ∧ l < m by simp [Ico, this]
   cases' le_total n m with hnm hmn
   · rw [add_tsub_cancel_of_le hnm]
@@ -95,7 +99,7 @@ theorem eq_empty_iff {n m : ℕ} : ico n m = [] ↔ m ≤ n :=
 #align list.Ico.eq_empty_iff List.ico.eq_empty_iff
 
 theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) : ico n m ++ ico m l = ico n l :=
-  by 
+  by
   dsimp only [Ico]
   convert range'_append _ _ _
   · exact (add_tsub_cancel_of_le hnm).symm
@@ -103,7 +107,8 @@ theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) : ico n
 #align list.Ico.append_consecutive List.ico.append_consecutive
 
 @[simp]
-theorem inter_consecutive (n m l : ℕ) : ico n m ∩ ico m l = [] := by
+theorem inter_consecutive (n m l : ℕ) : ico n m ∩ ico m l = [] :=
+  by
   apply eq_nil_iff_forall_not_mem.2
   intro a
   simp only [and_imp, not_and, not_lt, List.mem_inter, List.ico.mem]
@@ -118,29 +123,34 @@ theorem bag_inter_consecutive (n m l : ℕ) : List.bagInter (ico n m) (ico m l) 
 #align list.Ico.bag_inter_consecutive List.ico.bag_inter_consecutive
 
 @[simp]
-theorem succ_singleton {n : ℕ} : ico n (n + 1) = [n] := by
+theorem succ_singleton {n : ℕ} : ico n (n + 1) = [n] :=
+  by
   dsimp [Ico]
   simp [add_tsub_cancel_left]
 #align list.Ico.succ_singleton List.ico.succ_singleton
 
-theorem succ_top {n m : ℕ} (h : n ≤ m) : ico n (m + 1) = ico n m ++ [m] := by
+theorem succ_top {n m : ℕ} (h : n ≤ m) : ico n (m + 1) = ico n m ++ [m] :=
+  by
   rwa [← succ_singleton, append_consecutive]
   exact Nat.le_succ _
 #align list.Ico.succ_top List.ico.succ_top
 
-theorem eq_cons {n m : ℕ} (h : n < m) : ico n m = n :: ico (n + 1) m := by
+theorem eq_cons {n m : ℕ} (h : n < m) : ico n m = n :: ico (n + 1) m :=
+  by
   rw [← append_consecutive (Nat.le_succ n) h, succ_singleton]
   rfl
 #align list.Ico.eq_cons List.ico.eq_cons
 
 @[simp]
-theorem pred_singleton {m : ℕ} (h : 0 < m) : ico (m - 1) m = [m - 1] := by
+theorem pred_singleton {m : ℕ} (h : 0 < m) : ico (m - 1) m = [m - 1] :=
+  by
   dsimp [Ico]
   rw [tsub_tsub_cancel_of_le (succ_le_of_lt h)]
   simp
 #align list.Ico.pred_singleton List.ico.pred_singleton
 
-theorem chain'_succ (n m : ℕ) : Chain' (fun a b => b = succ a) (ico n m) := by
+theorem chain'_succ (n m : ℕ) : Chain' (fun a b => b = succ a) (ico n m) :=
+  by
   by_cases n < m
   · rw [eq_cons h]
     exact chain_succ_range' _ _
@@ -162,7 +172,7 @@ theorem filter_lt_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((ico n m).filter fu
 #align list.Ico.filter_lt_of_le_bot List.ico.filter_lt_of_le_bot
 
 theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((ico n m).filter fun x => x < l) = ico n l :=
-  by 
+  by
   cases' le_total n l with hnl hln
   ·
     rw [← append_consecutive hnl hlm, filter_append, filter_lt_of_top_le (le_refl l),
@@ -171,7 +181,8 @@ theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((ico n m).filter fun x 
 #align list.Ico.filter_lt_of_ge List.ico.filter_lt_of_ge
 
 @[simp]
-theorem filter_lt (n m l : ℕ) : ((ico n m).filter fun x => x < l) = ico n (min m l) := by
+theorem filter_lt (n m l : ℕ) : ((ico n m).filter fun x => x < l) = ico n (min m l) :=
+  by
   cases' le_total m l with hml hlm
   · rw [min_eq_left hml, filter_lt_of_top_le hml]
   · rw [min_eq_right hlm, filter_lt_of_ge hlm]
@@ -187,7 +198,7 @@ theorem filter_le_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((ico n m).filter fu
 #align list.Ico.filter_le_of_top_le List.ico.filter_le_of_top_le
 
 theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((ico n m).filter fun x => l ≤ x) = ico l m :=
-  by 
+  by
   cases' le_total l m with hlm hml
   ·
     rw [← append_consecutive hnl hlm, filter_append, filter_le_of_top_le (le_refl l),
@@ -196,20 +207,23 @@ theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((ico n m).filter fun x 
 #align list.Ico.filter_le_of_le List.ico.filter_le_of_le
 
 @[simp]
-theorem filter_le (n m l : ℕ) : ((ico n m).filter fun x => l ≤ x) = ico (max n l) m := by
+theorem filter_le (n m l : ℕ) : ((ico n m).filter fun x => l ≤ x) = ico (max n l) m :=
+  by
   cases' le_total n l with hnl hln
   · rw [max_eq_right hnl, filter_le_of_le hnl]
   · rw [max_eq_left hln, filter_le_of_le_bot hln]
 #align list.Ico.filter_le List.ico.filter_le
 
 theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) :
-    ((ico n m).filter fun x => x < n + 1) = [n] := by
+    ((ico n m).filter fun x => x < n + 1) = [n] :=
+  by
   have r : min m (n + 1) = n + 1 := (@inf_eq_right _ _ m (n + 1)).mpr hnm
   simp [filter_lt n m (n + 1), r]
 #align list.Ico.filter_lt_of_succ_bot List.ico.filter_lt_of_succ_bot
 
 @[simp]
-theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((ico n m).filter fun x => x ≤ n) = [n] := by
+theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((ico n m).filter fun x => x ≤ n) = [n] :=
+  by
   rw [← filter_lt_of_succ_bot hnm]
   exact filter_congr' fun _ _ => lt_succ_iff.symm
 #align list.Ico.filter_le_of_bot List.ico.filter_le_of_bot
@@ -219,7 +233,8 @@ theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((ico n m).filter fun x => 
 2. n ≥ b
 3. n ∈ Ico a b
 -/
-theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ ico a b := by
+theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ ico a b :=
+  by
   by_cases h₁ : n < a
   · left
     exact h₁

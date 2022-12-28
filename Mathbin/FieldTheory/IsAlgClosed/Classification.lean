@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.classification
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,16 +47,17 @@ theorem cardinal_mk_le_sigma_polynomial :
   @mk_le_of_injective L (Σp : R[X], { x : L | x ∈ (p.map (algebraMap R L)).roots })
     (fun x : L =>
       let p := Classical.indefiniteDescription _ (halg x)
-      ⟨p.1, x, by 
+      ⟨p.1, x, by
         dsimp
-        have h : p.1.map (algebraMap R L) ≠ 0 := by
+        have h : p.1.map (algebraMap R L) ≠ 0 :=
+          by
           rw [Ne.def, ← Polynomial.degree_eq_bot,
             Polynomial.degree_map_eq_of_injective (NoZeroSmulDivisors.algebra_map_injective R L),
             Polynomial.degree_eq_bot]
           exact p.2.1
         erw [Polynomial.mem_roots h, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def,
           p.2.2]⟩)
-    fun x y => by 
+    fun x y => by
     intro h
     simp only at h
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
@@ -118,7 +119,8 @@ variable (hw : AlgebraicIndependent R w)
 closed fields have equipotent transcendence bases and the same characteristic then they are
 isomorphic. -/
 def equivOfTranscendenceBasis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ)
-    (hv : IsTranscendenceBasis R v) (hw : IsTranscendenceBasis R w) : K ≃+* L := by
+    (hv : IsTranscendenceBasis R v) (hw : IsTranscendenceBasis R w) : K ≃+* L :=
+  by
   letI := is_alg_closure_of_transcendence_basis v hv <;>
       letI := is_alg_closure_of_transcendence_basis w hw <;>
     have e : Algebra.adjoin R (Set.range v) ≃+* Algebra.adjoin R (Set.range w)
@@ -173,7 +175,7 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [Nontrivial R]
   le_antisymm
     (calc
       (#K) ≤ max (max (#R) (#ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
-      _ = (#ι) := by 
+      _ = (#ι) := by
         rw [max_eq_left, max_eq_right]
         · exact le_trans hR this
         · exact le_max_of_le_right this
@@ -190,7 +192,7 @@ variable {K L : Type} [Field K] [Field L] [IsAlgClosed K] [IsAlgClosed L]
 if they have the same cardinality. -/
 @[nolint def_lemma]
 theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ < (#K))
-    (hKL : (#K) = (#L)) : K ≃+* L := by 
+    (hKL : (#K) = (#L)) : K ≃+* L := by
   apply Classical.choice
   cases'
     exists_is_transcendence_basis ℤ
@@ -200,7 +202,8 @@ theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ <
     exists_is_transcendence_basis ℤ
       (show Function.Injective (algebraMap ℤ L) from Int.cast_injective) with
     t ht
-  have : (#s) = (#t) := by
+  have : (#s) = (#t) :=
+    by
     rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (le_of_eq mk_int) hK, ←
       cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (le_of_eq mk_int), hKL]
     rwa [← hKL]
@@ -210,7 +213,8 @@ theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ <
   is_alg_closed.ring_equiv_of_cardinal_eq_of_char_zero IsAlgClosed.ringEquivOfCardinalEqOfCharZero
 
 private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [CharP K p] [CharP L p]
-    (hK : ℵ₀ < (#K)) (hKL : (#K) = (#L)) : K ≃+* L := by
+    (hK : ℵ₀ < (#K)) (hKL : (#K) = (#L)) : K ≃+* L :=
+  by
   apply Classical.choice
   cases'
     exists_is_transcendence_basis (Zmod p)
@@ -220,7 +224,8 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
     exists_is_transcendence_basis (Zmod p)
       (show Function.Injective (algebraMap (Zmod p) L) from RingHom.injective _) with
     t ht
-  have : (#s) = (#t) := by
+  have : (#s) = (#t) :=
+    by
     rw [←
       cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (lt_aleph_0_of_finite (Zmod p)).le
         hK,
@@ -238,7 +243,7 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
 if they have the same cardinality and the same characteristic. -/
 @[nolint def_lemma]
 theorem ringEquivOfCardinalEqOfCharEq (p : ℕ) [CharP K p] [CharP L p] (hK : ℵ₀ < (#K))
-    (hKL : (#K) = (#L)) : K ≃+* L := by 
+    (hKL : (#K) = (#L)) : K ≃+* L := by
   apply Classical.choice
   rcases CharP.char_is_prime_or_zero K p with (hp | hp)
   · haveI : Fact p.prime := ⟨hp⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.bounded
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ instance (priority := 100) OrderIsoClass.toTopHomClass [LE α] [OrderTop α] [Pa
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toBotHomClass [LE α] [OrderBot α] [PartialOrder β]
     [OrderBot β] [OrderIsoClass F α β] : BotHomClass F α β :=
-  { --⟨λ f, le_bot_iff.1 $ (le_map_inv_iff f).1 bot_le⟩
+  {--⟨λ f, le_bot_iff.1 $ (le_map_inv_iff f).1 bot_le⟩
     show OrderHomClass F α β from inferInstance with
     map_bot := fun f => le_bot_iff.1 <| (le_map_inv_iff f).1 bot_le }
 #align order_iso_class.to_bot_hom_class OrderIsoClass.toBotHomClass
@@ -144,7 +144,7 @@ instance [Bot α] [Bot β] [BotHomClass F α β] : CoeTC F (BotHom α β) :=
 instance [Preorder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] [BoundedOrderHomClass F α β] :
     CoeTC F (BoundedOrderHom α β) :=
   ⟨fun f =>
-    { (f : α →o β) with 
+    { (f : α →o β) with
       toFun := f
       map_top' := map_top f
       map_bot' := map_bot f }⟩
@@ -160,8 +160,8 @@ section Top
 
 variable [Top β] [Top γ] [Top δ]
 
-instance : TopHomClass (TopHom α β) α
-      β where 
+instance : TopHomClass (TopHom α β) α β
+    where
   coe := TopHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_top := TopHom.map_top'
@@ -186,8 +186,8 @@ theorem ext {f g : TopHom α β} (h : ∀ a, f a = g a) : f = g :=
 
 /-- Copy of a `top_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : TopHom α β) (f' : α → β) (h : f' = f) :
-    TopHom α β where 
+protected def copy (f : TopHom α β) (f' : α → β) (h : f' = f) : TopHom α β
+    where
   toFun := f'
   map_top' := h.symm ▸ f.map_top'
 #align top_hom.copy TopHom.copy
@@ -224,8 +224,8 @@ theorem id_apply (a : α) : TopHom.id α a = a :=
 #align top_hom.id_apply TopHom.id_apply
 
 /-- Composition of `top_hom`s as a `top_hom`. -/
-def comp (f : TopHom β γ) (g : TopHom α β) :
-    TopHom α γ where 
+def comp (f : TopHom β γ) (g : TopHom α β) : TopHom α γ
+    where
   toFun := f ∘ g
   map_top' := by rw [comp_apply, map_top, map_top]
 #align top_hom.comp TopHom.comp
@@ -357,8 +357,8 @@ section Bot
 
 variable [Bot β] [Bot γ] [Bot δ]
 
-instance : BotHomClass (BotHom α β) α
-      β where 
+instance : BotHomClass (BotHom α β) α β
+    where
   coe := BotHom.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_bot := BotHom.map_bot'
@@ -383,8 +383,8 @@ theorem ext {f g : BotHom α β} (h : ∀ a, f a = g a) : f = g :=
 
 /-- Copy of a `bot_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : BotHom α β) (f' : α → β) (h : f' = f) :
-    BotHom α β where 
+protected def copy (f : BotHom α β) (f' : α → β) (h : f' = f) : BotHom α β
+    where
   toFun := f'
   map_bot' := h.symm ▸ f.map_bot'
 #align bot_hom.copy BotHom.copy
@@ -421,8 +421,8 @@ theorem id_apply (a : α) : BotHom.id α a = a :=
 #align bot_hom.id_apply BotHom.id_apply
 
 /-- Composition of `bot_hom`s as a `bot_hom`. -/
-def comp (f : BotHom β γ) (g : BotHom α β) :
-    BotHom α γ where 
+def comp (f : BotHom β γ) (g : BotHom α β) : BotHom α γ
+    where
   toFun := f ∘ g
   map_bot' := by rw [comp_apply, map_bot, map_bot]
 #align bot_hom.comp BotHom.comp
@@ -561,8 +561,8 @@ def toBotHom (f : BoundedOrderHom α β) : BotHom α β :=
   { f with }
 #align bounded_order_hom.to_bot_hom BoundedOrderHom.toBotHom
 
-instance : BoundedOrderHomClass (BoundedOrderHom α β) α
-      β where 
+instance : BoundedOrderHomClass (BoundedOrderHom α β) α β
+    where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_rel f := f.monotone'
@@ -695,8 +695,8 @@ variable [LE α] [OrderTop α] [LE β] [OrderTop β] [LE γ] [OrderTop γ]
 
 /-- Reinterpret a top homomorphism as a bot homomorphism between the dual lattices. -/
 @[simps]
-protected def dual :
-    TopHom α β ≃ BotHom αᵒᵈ βᵒᵈ where 
+protected def dual : TopHom α β ≃ BotHom αᵒᵈ βᵒᵈ
+    where
   toFun f := ⟨f, f.map_top'⟩
   invFun f := ⟨f, f.map_bot'⟩
   left_inv f := TopHom.ext fun _ => rfl
@@ -732,8 +732,8 @@ variable [LE α] [OrderBot α] [LE β] [OrderBot β] [LE γ] [OrderBot γ]
 
 /-- Reinterpret a bot homomorphism as a top homomorphism between the dual lattices. -/
 @[simps]
-protected def dual :
-    BotHom α β ≃ TopHom αᵒᵈ βᵒᵈ where 
+protected def dual : BotHom α β ≃ TopHom αᵒᵈ βᵒᵈ
+    where
   toFun f := ⟨f, f.map_bot'⟩
   invFun f := ⟨f, f.map_top'⟩
   left_inv f := BotHom.ext fun _ => rfl
@@ -770,10 +770,8 @@ variable [Preorder α] [BoundedOrder α] [Preorder β] [BoundedOrder β] [Preord
 /-- Reinterpret a bounded order homomorphism as a bounded order homomorphism between the dual
 orders. -/
 @[simps]
-protected def dual :
-    BoundedOrderHom α β ≃
-      BoundedOrderHom αᵒᵈ
-        βᵒᵈ where 
+protected def dual : BoundedOrderHom α β ≃ BoundedOrderHom αᵒᵈ βᵒᵈ
+    where
   toFun f := ⟨f.toOrderHom.dual, f.map_bot', f.map_top'⟩
   invFun f := ⟨OrderHom.dual.symm f.toOrderHom, f.map_bot', f.map_top'⟩
   left_inv f := ext fun a => rfl

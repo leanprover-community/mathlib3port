@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.algebra_map
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,16 +41,17 @@ variable [CommSemiring R] {p q r : R[X]}
 variable [Semiring A] [Algebra R A]
 
 /-- Note that this instance also provides `algebra R R[X]`. -/
-instance algebraOfAlgebra :
-    Algebra R
-      A[X] where 
+instance algebraOfAlgebra : Algebra R A[X]
+    where
   smul_def' r p :=
-    to_finsupp_injective <| by
+    to_finsupp_injective <|
+      by
       dsimp only [RingHom.toFun_eq_coe, RingHom.comp_apply]
       rw [to_finsupp_smul, to_finsupp_mul, to_finsupp_C]
       exact Algebra.smul_def' _ _
   commutes' r p :=
-    to_finsupp_injective <| by
+    to_finsupp_injective <|
+      by
       dsimp only [RingHom.toFun_eq_coe, RingHom.comp_apply]
       simp_rw [to_finsupp_mul, to_finsupp_C]
       convert Algebra.commutes' r p.to_finsupp
@@ -63,7 +64,8 @@ theorem algebra_map_apply (r : R) : algebraMap R A[X] r = c (algebraMap R A r) :
 
 @[simp]
 theorem to_finsupp_algebra_map (r : R) : (algebraMap R A[X] r).toFinsupp = algebraMap R _ r :=
-  show toFinsupp (c (algebraMap _ _ r)) = _ by
+  show toFinsupp (c (algebraMap _ _ r)) = _
+    by
     rw [to_finsupp_C]
     rfl
 #align polynomial.to_finsupp_algebra_map Polynomial.to_finsupp_algebra_map
@@ -99,7 +101,7 @@ implementation detail, but it can be useful to transfer results from `finsupp` t
 @[simps]
 def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
   { toFinsuppIso R with
-    commutes' := fun r => by 
+    commutes' := fun r => by
       dsimp
       exact to_finsupp_algebra_map _ }
 #align polynomial.to_finsupp_iso_alg Polynomial.toFinsuppIsoAlg
@@ -107,7 +109,7 @@ def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
 variable {R}
 
 instance [Nontrivial A] : Nontrivial (Subalgebra R A[X]) :=
-  ⟨⟨⊥, ⊤, by 
+  ⟨⟨⊥, ⊤, by
       rw [Ne.def, SetLike.ext_iff, not_forall]
       refine' ⟨X, _⟩
       simp only [Algebra.mem_bot, not_exists, Set.mem_range, iff_true_iff, Algebra.mem_top,
@@ -120,14 +122,16 @@ instance [Nontrivial A] : Nontrivial (Subalgebra R A[X]) :=
 @[simp]
 theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiring R] [Semiring A] [Semiring B]
     [Algebra R A] [Algebra R B] (p : R[X]) (f : A →ₐ[R] B) (a : A) :
-    f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p := by
+    f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p :=
+  by
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, eq_int_cast, map_int_cast, AlgHom.commutes]
 #align polynomial.alg_hom_eval₂_algebra_map Polynomial.alg_hom_eval₂_algebra_map
 
 @[simp]
 theorem eval₂_algebra_map_X {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (p : R[X])
-    (f : R[X] →ₐ[R] A) : eval₂ (algebraMap R A) (f x) p = f p := by
+    (f : R[X] →ₐ[R] A) : eval₂ (algebraMap R A) (f x) p = f p :=
+  by
   conv_rhs => rw [← Polynomial.sum_C_mul_X_pow_eq p]
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, eq_int_cast, map_int_cast]
@@ -171,7 +175,8 @@ def aeval : R[X] →ₐ[R] A :=
 variable {R A}
 
 @[simp]
-theorem adjoin_X : Algebra.adjoin R ({x} : Set R[X]) = ⊤ := by
+theorem adjoin_X : Algebra.adjoin R ({x} : Set R[X]) = ⊤ :=
+  by
   refine' top_unique fun p hp => _
   set S := Algebra.adjoin R ({X} : Set R[X])
   rw [← sum_monomial_eq p]; simp only [← smul_X_eq_monomial, Sum]
@@ -264,7 +269,8 @@ theorem eval_unique (φ : R[X] →ₐ[R] A) (p) : φ p = eval₂ (algebraMap R A
 #align polynomial.eval_unique Polynomial.eval_unique
 
 theorem aeval_alg_hom_apply {F : Type _} [AlgHomClass F R A B] (f : F) (x : A) (p : R[X]) :
-    aeval (f x) p = f (aeval x p) := by
+    aeval (f x) p = f (aeval x p) :=
+  by
   refine' Polynomial.induction_on p (by simp) (fun p q hp hq => _) (by simp)
   rw [map_add, hp, hq, ← map_add, ← map_add]
 #align polynomial.aeval_alg_hom_apply Polynomial.aeval_alg_hom_apply
@@ -318,19 +324,21 @@ section CommSemiring
 variable [CommSemiring S] {f : R →+* S}
 
 theorem aeval_eq_sum_range [Algebra R S] {p : R[X]} (x : S) :
-    aeval x p = ∑ i in Finset.range (p.natDegree + 1), p.coeff i • x ^ i := by
+    aeval x p = ∑ i in Finset.range (p.natDegree + 1), p.coeff i • x ^ i :=
+  by
   simp_rw [Algebra.smul_def]
   exact eval₂_eq_sum_range (algebraMap R S) x
 #align polynomial.aeval_eq_sum_range Polynomial.aeval_eq_sum_range
 
 theorem aeval_eq_sum_range' [Algebra R S] {p : R[X]} {n : ℕ} (hn : p.natDegree < n) (x : S) :
-    aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i := by
+    aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i :=
+  by
   simp_rw [Algebra.smul_def]
   exact eval₂_eq_sum_range' (algebraMap R S) hn x
 #align polynomial.aeval_eq_sum_range' Polynomial.aeval_eq_sum_range'
 
 theorem is_root_of_eval₂_map_eq_zero (hf : Function.Injective f) {r : R} :
-    eval₂ f (f r) p = 0 → p.IsRoot r := by 
+    eval₂ f (f r) p = 0 → p.IsRoot r := by
   intro h
   apply hf
   rw [← eval₂_hom, h, f.map_zero]
@@ -391,13 +399,15 @@ theorem aeval_tower_comp_to_alg_hom : (aevalTower g y).comp (IsScalarTower.toAlg
 #align polynomial.aeval_tower_comp_to_alg_hom Polynomial.aeval_tower_comp_to_alg_hom
 
 @[simp]
-theorem aeval_tower_id : aevalTower (AlgHom.id S S) = aeval := by
+theorem aeval_tower_id : aevalTower (AlgHom.id S S) = aeval :=
+  by
   ext
   simp only [eval_X, aeval_tower_X, coe_aeval_eq_eval]
 #align polynomial.aeval_tower_id Polynomial.aeval_tower_id
 
 @[simp]
-theorem aeval_tower_of_id : aevalTower (Algebra.ofId S A') = aeval := by
+theorem aeval_tower_of_id : aevalTower (Algebra.ofId S A') = aeval :=
+  by
   ext
   simp only [aeval_X, aeval_tower_X]
 #align polynomial.aeval_tower_of_id Polynomial.aeval_tower_of_id
@@ -412,7 +422,8 @@ variable [CommRing S] {f : R →+* S}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
-    (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
+    (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i :=
+  by
   by_cases hi : i ∈ f.support
   · rw [eval, eval₂, Sum] at dvd_eval
     rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval
@@ -445,7 +456,8 @@ when evaluated at `r`.
 
 This is the key step in our proof of the Cayley-Hamilton theorem.
 -/
-theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 := by
+theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 :=
+  by
   simp only [eval, eval₂, RingHom.id_apply]
   have bound :=
     calc
@@ -457,7 +469,7 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 := by
   swap
   · simp
   rw [sum_range_succ']
-  conv_lhs => 
+  conv_lhs =>
     congr
     apply_congr
     skip
@@ -472,7 +484,8 @@ theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - c r) :=
 end Ring
 
 theorem aeval_endomorphism {M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (f : M →ₗ[R] M)
-    (v : M) (p : R[X]) : aeval f p v = p.Sum fun n b => b • (f ^ n) v := by
+    (v : M) (p : R[X]) : aeval f p v = p.Sum fun n b => b • (f ^ n) v :=
+  by
   rw [aeval_def, eval₂]
   exact (LinearMap.applyₗ v).map_sum
 #align polynomial.aeval_endomorphism Polynomial.aeval_endomorphism

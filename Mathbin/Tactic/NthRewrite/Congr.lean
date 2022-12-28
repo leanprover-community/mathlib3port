@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.nth_rewrite.congr
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,7 +20,7 @@ open NthRewrite
 /-- Helper function which just tries to rewrite `e` using the equality `r` without assigning any
 metavariables in the tactic state, and without creating any metavariables which cannot be
 discharged by `cfg.discharger` in the process. -/
-unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := {  }) :
+unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := { }) :
     tactic (expr × expr) :=
   lock_tactic_state do
     -- This makes sure that we forget everything in between rewrites;
@@ -76,7 +76,7 @@ unsafe def rewrite_at_lens (cfg : nth_rewrite.cfg) (r : expr × Bool) (l : expr_
 
 /-- List of all rewrites of an expression `e` by `r : expr × bool`.
 Here `r.1` is the substituting expression and `r.2` flags the direction of the rewrite. -/
-unsafe def all_rewrites (e : expr) (r : expr × Bool) (cfg : nth_rewrite.cfg := {  }) :
+unsafe def all_rewrites (e : expr) (r : expr × Bool) (cfg : nth_rewrite.cfg := { }) :
     tactic (List tracked_rewrite) :=
   e.app_map (rewrite_at_lens cfg r)
 #align tactic.nth_rewrite.congr.all_rewrites tactic.nth_rewrite.congr.all_rewrites

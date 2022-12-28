@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.conjugation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,8 @@ theorem involute_ι (m : M) : involute (ι Q m) = -ι Q m :=
 #align clifford_algebra.involute_ι CliffordAlgebra.involute_ι
 
 @[simp]
-theorem involute_comp_involute : involute.comp involute = AlgHom.id R (CliffordAlgebra Q) := by
+theorem involute_comp_involute : involute.comp involute = AlgHom.id R (CliffordAlgebra Q) :=
+  by
   ext
   simp
 #align clifford_algebra.involute_comp_involute CliffordAlgebra.involute_comp_involute
@@ -114,7 +115,7 @@ theorem reverse.map_mul (a b : CliffordAlgebra Q) : reverse (a * b) = reverse b 
 
 @[simp]
 theorem reverse_comp_reverse : reverse.comp reverse = (LinearMap.id : _ →ₗ[R] CliffordAlgebra Q) :=
-  by 
+  by
   ext m
   simp only [LinearMap.id_apply, LinearMap.comp_apply]
   induction m using CliffordAlgebra.induction
@@ -144,7 +145,7 @@ def reverseEquiv : CliffordAlgebra Q ≃ₗ[R] CliffordAlgebra Q :=
 theorem reverse_comp_involute :
     reverse.comp involute.toLinearMap =
       (involute.toLinearMap.comp reverse : _ →ₗ[R] CliffordAlgebra Q) :=
-  by 
+  by
   ext
   simp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply]
   induction x using CliffordAlgebra.induction
@@ -251,7 +252,8 @@ theorem submodule_map_reverse_eq_comap (p : Submodule R (CliffordAlgebra Q)) :
 
 @[simp]
 theorem ι_range_map_reverse :
-    (ι Q).range.map (reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q) = (ι Q).range := by
+    (ι Q).range.map (reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q) = (ι Q).range :=
+  by
   rw [reverse, Submodule.map_comp, ι_range_map_lift, LinearMap.range_comp, ← Submodule.map_comp]
   exact Submodule.map_id _
 #align clifford_algebra.ι_range_map_reverse CliffordAlgebra.ι_range_map_reverse
@@ -329,7 +331,8 @@ TODO: show that these are `iff`s when `invertible (2 : R)`.
 -/
 
 
-theorem involute_eq_of_mem_even {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 0) : involute x = x := by
+theorem involute_eq_of_mem_even {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 0) : involute x = x :=
+  by
   refine' even_induction Q (AlgHom.commutes _) _ _ x h
   · rintro x y hx hy ihx ihy
     rw [map_add, ihx, ihy]
@@ -337,7 +340,8 @@ theorem involute_eq_of_mem_even {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 0) 
     rw [map_mul, map_mul, involute_ι, involute_ι, ihx, neg_mul_neg]
 #align clifford_algebra.involute_eq_of_mem_even CliffordAlgebra.involute_eq_of_mem_even
 
-theorem involute_eq_of_mem_odd {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 1) : involute x = -x := by
+theorem involute_eq_of_mem_odd {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 1) : involute x = -x :=
+  by
   refine' odd_induction Q involute_ι _ _ x h
   · rintro x y hx hy ihx ihy
     rw [map_add, ihx, ihy, neg_add]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.functor.const
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,9 +36,8 @@ variable {C : Type u₂} [Category.{v₂} C]
 /-- The functor sending `X : C` to the constant functor `J ⥤ C` sending everything to `X`.
 -/
 @[simps]
-def const :
-    C ⥤ J ⥤
-        C where 
+def const : C ⥤ J ⥤ C
+    where
   obj X :=
     { obj := fun j => X
       map := fun j j' f => 𝟙 X }
@@ -55,9 +54,8 @@ variable {J}
 is (naturally isomorphic to) the opposite of the constant functor `J ⥤ C` sending everything to `X`.
 -/
 @[simps]
-def opObjOp (X : C) :
-    (const Jᵒᵖ).obj (op X) ≅
-      ((const J).obj X).op where 
+def opObjOp (X : C) : (const Jᵒᵖ).obj (op X) ≅ ((const J).obj X).op
+    where
   Hom := { app := fun j => 𝟙 _ }
   inv := { app := fun j => 𝟙 _ }
 #align category_theory.functor.const.op_obj_op CategoryTheory.Functor.const.opObjOp
@@ -66,9 +64,8 @@ def opObjOp (X : C) :
 is (naturally isomorphic to) the opposite of
 the constant functor `J ⥤ Cᵒᵖ` sending everything to `X`.
 -/
-def opObjUnop (X : Cᵒᵖ) :
-    (const Jᵒᵖ).obj (unop X) ≅
-      ((const J).obj X).leftOp where 
+def opObjUnop (X : Cᵒᵖ) : (const Jᵒᵖ).obj (unop X) ≅ ((const J).obj X).leftOp
+    where
   Hom := { app := fun j => 𝟙 _ }
   inv := { app := fun j => 𝟙 _ }
 #align category_theory.functor.const.op_obj_unop CategoryTheory.Functor.const.opObjUnop
@@ -103,18 +100,15 @@ variable {D : Type u₃} [Category.{v₃} D]
   (the equality requires F.map (𝟙 _) = 𝟙 _). A natural isomorphism is
   more convenient than an equality between functors (compare id_to_iso). -/
 @[simps]
-def constComp (X : C) (F : C ⥤ D) :
-    (const J).obj X ⋙ F ≅
-      (const J).obj (F.obj X) where 
+def constComp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (F.obj X)
+    where
   Hom := { app := fun _ => 𝟙 _ }
   inv := { app := fun _ => 𝟙 _ }
 #align category_theory.functor.const_comp CategoryTheory.Functor.constComp
 
 /-- If `J` is nonempty, then the constant functor over `J` is faithful. -/
-instance [Nonempty J] :
-    Faithful
-      (const J :
-        C ⥤ J ⥤ C) where map_injective' X Y f g e := NatTrans.congr_app e (Classical.arbitrary J)
+instance [Nonempty J] : Faithful (const J : C ⥤ J ⥤ C)
+    where map_injective' X Y f g e := NatTrans.congr_app e (Classical.arbitrary J)
 
 end
 

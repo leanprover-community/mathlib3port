@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.integrally_closed
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,8 @@ open BigOperators Polynomial
 variable {R A : Type _} [CommRing R] [IsDomain R] [GcdMonoid R] [CommRing A] [Algebra R A]
 
 theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A] (z : A) :
-    ∃ a b : R, IsUnit (gcd a b) ∧ z * algebraMap R A b = algebraMap R A a := by
+    ∃ a b : R, IsUnit (gcd a b) ∧ z * algebraMap R A b = algebraMap R A a :=
+  by
   obtain ⟨x, ⟨y, hy⟩, rfl⟩ := IsLocalization.mk'_surjective M z
   obtain ⟨x', y', hx', hy', hu⟩ := extract_gcd x y
   use x', y', hu
@@ -36,12 +37,13 @@ theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A]
 #align is_localization.surj_of_gcd_domain IsLocalization.surj_of_gcd_domain
 
 instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=
-  ⟨fun X ⟨p, hp₁, hp₂⟩ => by
+  ⟨fun X ⟨p, hp₁, hp₂⟩ =>
+    by
     obtain ⟨x, y, hg, he⟩ := IsLocalization.surj_of_gcd_domain (nonZeroDivisors R) X
     have :=
       Polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero (IsFractionRing.injective R <| FractionRing R)
         hp₁ y x _ hp₂ (by rw [mul_comm, he])
-    have : IsUnit y := by 
+    have : IsUnit y := by
       rw [isUnit_iff_dvd_one, ← one_pow]
       exact
         (dvd_gcd this <| dvd_refl y).trans

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,8 @@ theorem ord_connected_iff : OrdConnected s ↔ ∀ x ∈ s, ∀ y ∈ s, x ≤ y
 #align set.ord_connected_iff Set.ord_connected_iff
 
 theorem ord_connected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
-    (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → Ioo x y ⊆ s) : OrdConnected s := by
+    (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → Ioo x y ⊆ s) : OrdConnected s :=
+  by
   rw [ord_connected_iff]
   intro x hx y hy hxy
   rcases eq_or_lt_of_le hxy with (rfl | hxy'); · simpa
@@ -173,7 +174,7 @@ theorem ord_connected_Ioo {a b : α} : OrdConnected (Ioo a b) :=
 
 @[instance]
 theorem ord_connected_singleton {α : Type _} [PartialOrder α] {a : α} :
-    OrdConnected ({a} : Set α) := by 
+    OrdConnected ({a} : Set α) := by
   rw [← Icc_self]
   exact ord_connected_Icc
 #align set.ord_connected_singleton Set.ord_connected_singleton
@@ -202,7 +203,8 @@ theorem ord_connected_preimage {F : Type _} [OrderHomClass F α β] (f : F) {s :
 
 @[instance]
 theorem ord_connected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set α}
-    [hs : OrdConnected s] : OrdConnected (e '' s) := by
+    [hs : OrdConnected s] : OrdConnected (e '' s) :=
+  by
   erw [(e : α ≃o β).image_eq_preimage]
   apply ord_connected_preimage
 #align set.ord_connected_image Set.ord_connected_image
@@ -213,7 +215,8 @@ theorem ord_connected_range {E : Type _} [OrderIsoClass E α β] (e : E) : OrdCo
 #align set.ord_connected_range Set.ord_connected_range
 
 @[simp]
-theorem dual_ord_connected_iff {s : Set α} : OrdConnected (of_dual ⁻¹' s) ↔ OrdConnected s := by
+theorem dual_ord_connected_iff {s : Set α} : OrdConnected (of_dual ⁻¹' s) ↔ OrdConnected s :=
+  by
   simp_rw [ord_connected_def, to_dual.surjective.forall, dual_Icc, Subtype.forall']
   exact forall_swap
 #align set.dual_ord_connected_iff Set.dual_ord_connected_iff

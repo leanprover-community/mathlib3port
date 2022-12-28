@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_mul_action
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,8 @@ is. -/
       "If an additive action is central, then its right action is uniform\ncontinuous when its left action,is."]
 instance (priority := 100) HasUniformContinuousConstSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X]
     [HasUniformContinuousConstSmul M X] : HasUniformContinuousConstSmul Mᵐᵒᵖ X :=
-  ⟨MulOpposite.rec' fun c => by
+  ⟨MulOpposite.rec' fun c =>
+      by
       change UniformContinuous fun m => MulOpposite.op c • m
       simp_rw [op_smul_eq_smul]
       exact uniform_continuous_const_smul c⟩
@@ -156,7 +157,8 @@ instance : HasUniformContinuousConstSmul M (Completion X) :=
 @[to_additive]
 instance [HasSmul N X] [HasSmul M N] [HasUniformContinuousConstSmul M X]
     [HasUniformContinuousConstSmul N X] [IsScalarTower M N X] : IsScalarTower M N (Completion X) :=
-  ⟨fun m n x => by
+  ⟨fun m n x =>
+    by
     have : _ = (_ : completion X → completion X) :=
       map_comp (uniform_continuous_const_smul m) (uniform_continuous_const_smul n)
     refine' Eq.trans _ (congr_fun this.symm x)
@@ -165,7 +167,8 @@ instance [HasSmul N X] [HasSmul M N] [HasUniformContinuousConstSmul M X]
 @[to_additive]
 instance [HasSmul N X] [SMulCommClass M N X] [HasUniformContinuousConstSmul M X]
     [HasUniformContinuousConstSmul N X] : SMulCommClass M N (Completion X) :=
-  ⟨fun m n x => by
+  ⟨fun m n x =>
+    by
     have hmn : m • n • x = (completion.map (HasSmul.smul m) ∘ completion.map (HasSmul.smul n)) x :=
       rfl
     have hnm : n • m • x = (completion.map (HasSmul.smul n) ∘ completion.map (HasSmul.smul m)) x :=
@@ -188,8 +191,8 @@ theorem coe_smul (c : M) (x : X) : ↑(c • x) = (c • x : Completion X) :=
 end HasSmul
 
 @[to_additive]
-instance [Monoid M] [MulAction M X] [HasUniformContinuousConstSmul M X] :
-    MulAction M (Completion X) where 
+instance [Monoid M] [MulAction M X] [HasUniformContinuousConstSmul M X] : MulAction M (Completion X)
+    where
   smul := (· • ·)
   one_smul := (ext' (continuous_const_smul _) continuous_id) fun a => by rw [← coe_smul, one_smul]
   mul_smul x y :=

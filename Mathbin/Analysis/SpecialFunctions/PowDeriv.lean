@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow_deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem hasStrictFderivAtCpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0
         (p.1 ^ p.2 * log p.1) • ContinuousLinearMap.snd ℂ ℂ ℂ)
       p :=
   by
-  have A : p.1 ≠ 0 := by 
+  have A : p.1 ≠ 0 := by
     intro h
     simpa [h, lt_irrefl] using hp
   have : (fun x : ℂ × ℂ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
@@ -57,7 +57,8 @@ theorem hasStrictFderivAtCpow' {x y : ℂ} (hp : 0 < x.re ∨ x.im ≠ 0) :
 #align complex.has_strict_fderiv_at_cpow' Complex.hasStrictFderivAtCpow'
 
 theorem hasStrictDerivAtConstCpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
-    HasStrictDerivAt (fun y => x ^ y) (x ^ y * log x) y := by
+    HasStrictDerivAt (fun y => x ^ y) (x ^ y * log x) y :=
+  by
   rcases em (x = 0) with (rfl | hx)
   · replace h := h.neg_resolve_left rfl
     rw [log_zero, mul_zero]
@@ -267,7 +268,8 @@ theorem hasStrictFderivAtRpowOfNeg (p : ℝ × ℝ) (hp : p.1 < 0) :
 
 /-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
 theorem contDiffAtRpowOfNe (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : ℕ∞} :
-    ContDiffAt ℝ n (fun p : ℝ × ℝ => p.1 ^ p.2) p := by
+    ContDiffAt ℝ n (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
+  by
   cases' hp.lt_or_lt with hneg hpos
   exacts[(((cont_diff_at_fst.log hneg.ne).mul contDiffAtSnd).exp.mul
           (cont_diff_at_snd.mul contDiffAtConst).cos).congr_of_eventually_eq
@@ -294,7 +296,8 @@ theorem HasStrictDerivAt.rpow {f g : ℝ → ℝ} {f' g' : ℝ} (hf : HasStrictD
 #align has_strict_deriv_at.rpow HasStrictDerivAt.rpow
 
 theorem hasStrictDerivAtRpowConstOfNe {x : ℝ} (hx : x ≠ 0) (p : ℝ) :
-    HasStrictDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x := by
+    HasStrictDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x :=
+  by
   cases' hx.lt_or_lt with hx hx
   · have :=
       (has_strict_fderiv_at_rpow_of_neg (x, p) hx).compHasStrictDerivAt x
@@ -326,7 +329,8 @@ namespace Real
 variable {z x y : ℝ}
 
 theorem hasDerivAtRpowConst {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) :
-    HasDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x := by
+    HasDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x :=
+  by
   rcases ne_or_eq x 0 with (hx | rfl)
   · exact (has_strict_deriv_at_rpow_const_of_ne hx _).HasDerivAt
   replace h : 1 ≤ p := h.neg_resolve_left rfl
@@ -355,7 +359,8 @@ theorem contDiffAtRpowConstOfNe {x p : ℝ} {n : ℕ∞} (h : x ≠ 0) :
   (contDiffAtRpowOfNe (x, p) h).comp x (contDiffAtId.Prod contDiffAtConst)
 #align real.cont_diff_at_rpow_const_of_ne Real.contDiffAtRpowConstOfNe
 
-theorem contDiffRpowConstOfLe {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDiff ℝ n fun x : ℝ => x ^ p := by
+theorem contDiffRpowConstOfLe {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDiff ℝ n fun x : ℝ => x ^ p :=
+  by
   induction' n with n ihn generalizing p
   · exact cont_diff_zero.2 (continuous_id.rpow_const fun x => by exact_mod_cast Or.inr h)
   · have h1 : 1 ≤ p := le_trans (by simp) h
@@ -526,7 +531,8 @@ theorem ContDiffWithinAt.rpowConstOfLe (hf : ContDiffWithinAt ℝ m f s x) (h : 
 #align cont_diff_within_at.rpow_const_of_le ContDiffWithinAt.rpowConstOfLe
 
 theorem ContDiffAt.rpowConstOfLe (hf : ContDiffAt ℝ m f x) (h : ↑m ≤ p) :
-    ContDiffAt ℝ m (fun x => f x ^ p) x := by
+    ContDiffAt ℝ m (fun x => f x ^ p) x :=
+  by
   rw [← cont_diff_within_at_univ] at *
   exact hf.rpow_const_of_le h
 #align cont_diff_at.rpow_const_of_le ContDiffAt.rpowConstOfLe
@@ -549,26 +555,28 @@ theorem HasDerivWithinAt.rpow (hf : HasDerivWithinAt f f' s x) (hg : HasDerivWit
     (h : 0 < f x) :
     HasDerivWithinAt (fun x => f x ^ g x) (f' * g x * f x ^ (g x - 1) + g' * f x ^ g x * log (f x))
       s x :=
-  by 
+  by
   convert (hf.has_fderiv_within_at.rpow hg.has_fderiv_within_at h).HasDerivWithinAt using 1
   dsimp; ring
 #align has_deriv_within_at.rpow HasDerivWithinAt.rpow
 
 theorem HasDerivAt.rpow (hf : HasDerivAt f f' x) (hg : HasDerivAt g g' x) (h : 0 < f x) :
     HasDerivAt (fun x => f x ^ g x) (f' * g x * f x ^ (g x - 1) + g' * f x ^ g x * log (f x)) x :=
-  by 
+  by
   rw [← has_deriv_within_at_univ] at *
   exact hf.rpow hg h
 #align has_deriv_at.rpow HasDerivAt.rpow
 
 theorem HasDerivWithinAt.rpowConst (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0 ∨ 1 ≤ p) :
-    HasDerivWithinAt (fun y => f y ^ p) (f' * p * f x ^ (p - 1)) s x := by
+    HasDerivWithinAt (fun y => f y ^ p) (f' * p * f x ^ (p - 1)) s x :=
+  by
   convert (has_deriv_at_rpow_const hx).compHasDerivWithinAt x hf using 1
   ring
 #align has_deriv_within_at.rpow_const HasDerivWithinAt.rpowConst
 
 theorem HasDerivAt.rpowConst (hf : HasDerivAt f f' x) (hx : f x ≠ 0 ∨ 1 ≤ p) :
-    HasDerivAt (fun y => f y ^ p) (f' * p * f x ^ (p - 1)) x := by
+    HasDerivAt (fun y => f y ^ p) (f' * p * f x ^ (p - 1)) x :=
+  by
   rw [← has_deriv_within_at_univ] at *
   exact hf.rpow_const hx
 #align has_deriv_at.rpow_const HasDerivAt.rpowConst
@@ -595,7 +603,8 @@ open Real Filter
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞`. -/
 theorem tendsto_one_plus_div_rpow_exp (t : ℝ) :
-    Tendsto (fun x : ℝ => (1 + t / x) ^ x) atTop (𝓝 (exp t)) := by
+    Tendsto (fun x : ℝ => (1 + t / x) ^ x) atTop (𝓝 (exp t)) :=
+  by
   apply ((real.continuous_exp.tendsto _).comp (tendsto_mul_log_one_plus_div_at_top t)).congr' _
   have h₁ : (1 : ℝ) / 2 < 1 := by linarith
   have h₂ : tendsto (fun x : ℝ => 1 + t / x) at_top (𝓝 1) := by

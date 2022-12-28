@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.is_open_comap_C
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ def imageOfDf (f) : Set (PrimeSpectrum R) :=
   { p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.asIdeal }
 #align algebraic_geometry.polynomial.image_of_Df AlgebraicGeometry.Polynomial.imageOfDf
 
-theorem is_open_image_of_Df : IsOpen (imageOfDf f) := by
+theorem is_open_image_of_Df : IsOpen (imageOfDf f) :=
+  by
   rw [image_of_Df, set_of_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.asIdeal]
   exact is_open_Union fun i => is_open_basic_open
 #align
@@ -57,7 +58,8 @@ theorem comap_C_mem_image_of_Df {I : PrimeSpectrum R[X]}
 /-- The open set `image_of_Df f` coincides with the image of `basic_open f` under the
 morphism `C⁺ : Spec R[x] → Spec R`. -/
 theorem image_of_Df_eq_comap_C_compl_zero_locus :
-    imageOfDf f = PrimeSpectrum.comap (c : R →+* R[X]) '' zeroLocus {f}ᶜ := by
+    imageOfDf f = PrimeSpectrum.comap (c : R →+* R[X]) '' zeroLocus {f}ᶜ :=
+  by
   ext x
   refine' ⟨fun hx => ⟨⟨map C x.as_ideal, is_prime_map_C_of_is_prime x.is_prime⟩, ⟨_, _⟩⟩, _⟩
   · rw [mem_compl_iff, mem_zero_locus, singleton_subset_iff]
@@ -77,7 +79,8 @@ Stacks Project "Lemma 00FB", first part.
 
 https://stacks.math.columbia.edu/tag/00FB
 -/
-theorem is_open_map_comap_C : IsOpenMap (PrimeSpectrum.comap (c : R →+* R[X])) := by
+theorem is_open_map_comap_C : IsOpenMap (PrimeSpectrum.comap (c : R →+* R[X])) :=
+  by
   rintro U ⟨s, z⟩
   rw [← compl_compl U, ← z, ← Union_of_singleton_coe s, zero_locus_Union, compl_Inter, image_Union]
   simp_rw [← image_of_Df_eq_comap_C_compl_zero_locus]

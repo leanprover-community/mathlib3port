@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.monad
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,7 +157,8 @@ theorem bind₂_X_right (f : R →+* MvPolynomial σ S) (i : σ) : bind₂ f (x 
 #align mv_polynomial.bind₂_X_right MvPolynomial.bind₂_X_right
 
 @[simp]
-theorem bind₁_X_left : bind₁ (x : σ → MvPolynomial σ R) = AlgHom.id R _ := by
+theorem bind₁_X_left : bind₁ (x : σ → MvPolynomial σ R) = AlgHom.id R _ :=
+  by
   ext1 i
   simp
 #align mv_polynomial.bind₁_X_left MvPolynomial.bind₁_X_left
@@ -219,7 +220,8 @@ theorem bind₁_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ →
 #align mv_polynomial.bind₁_bind₁ MvPolynomial.bind₁_bind₁
 
 theorem bind₁_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → MvPolynomial υ R) :
-    (bind₁ g).comp (bind₁ f) = bind₁ fun i => bind₁ g (f i) := by
+    (bind₁ g).comp (bind₁ f) = bind₁ fun i => bind₁ g (f i) :=
+  by
   ext1
   apply bind₁_bind₁
 #align mv_polynomial.bind₁_comp_bind₁ MvPolynomial.bind₁_comp_bind₁
@@ -234,7 +236,8 @@ theorem bind₂_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* MvPolynomia
 #align mv_polynomial.bind₂_bind₂ MvPolynomial.bind₂_bind₂
 
 theorem rename_comp_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → υ) :
-    (rename g).comp (bind₁ f) = bind₁ fun i => rename g <| f i := by
+    (rename g).comp (bind₁ f) = bind₁ fun i => rename g <| f i :=
+  by
   ext1 i
   simp
 #align mv_polynomial.rename_comp_bind₁ MvPolynomial.rename_comp_bind₁
@@ -245,14 +248,16 @@ theorem rename_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → 
 #align mv_polynomial.rename_bind₁ MvPolynomial.rename_bind₁
 
 theorem map_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* T) (φ : MvPolynomial σ R) :
-    map g (bind₂ f φ) = bind₂ ((map g).comp f) φ := by
+    map g (bind₂ f φ) = bind₂ ((map g).comp f) φ :=
+  by
   simp only [bind₂, eval₂_comp_right, coe_eval₂_hom, eval₂_map]
   congr 1 with : 1
   simp only [Function.comp_apply, map_X]
 #align mv_polynomial.map_bind₂ MvPolynomial.map_bind₂
 
 theorem bind₁_comp_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → τ) :
-    (bind₁ f).comp (rename g) = bind₁ (f ∘ g) := by
+    (bind₁ f).comp (rename g) = bind₁ (f ∘ g) :=
+  by
   ext1 i
   simp
 #align mv_polynomial.bind₁_comp_rename MvPolynomial.bind₁_comp_rename
@@ -267,7 +272,8 @@ theorem bind₂_map (f : S →+* MvPolynomial σ T) (g : R →+* S) (φ : MvPoly
 #align mv_polynomial.bind₂_map MvPolynomial.bind₂_map
 
 @[simp]
-theorem map_comp_C (f : R →+* S) : (map f).comp (c : R →+* MvPolynomial σ R) = c.comp f := by
+theorem map_comp_C (f : R →+* S) : (map f).comp (c : R →+* MvPolynomial σ R) = c.comp f :=
+  by
   ext1
   apply map_C
 #align mv_polynomial.map_comp_C MvPolynomial.map_comp_C
@@ -279,13 +285,15 @@ theorem hom_bind₁ (f : MvPolynomial τ R →+* S) (g : σ → MvPolynomial τ 
 #align mv_polynomial.hom_bind₁ MvPolynomial.hom_bind₁
 
 theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-    map f (bind₁ g φ) = bind₁ (fun i : σ => (map f) (g i)) (map f φ) := by
+    map f (bind₁ g φ) = bind₁ (fun i : σ => (map f) (g i)) (map f φ) :=
+  by
   rw [hom_bind₁, map_comp_C, ← eval₂_hom_map_hom]
   rfl
 #align mv_polynomial.map_bind₁ MvPolynomial.map_bind₁
 
 @[simp]
-theorem eval₂_hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂Hom f g).comp c = f := by
+theorem eval₂_hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂Hom f g).comp c = f :=
+  by
   ext1 r
   exact eval₂_C f g r
 #align mv_polynomial.eval₂_hom_comp_C MvPolynomial.eval₂_hom_comp_C
@@ -302,7 +310,8 @@ theorem aeval_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R
 #align mv_polynomial.aeval_bind₁ MvPolynomial.aeval_bind₁
 
 theorem aeval_comp_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R) :
-    (aeval f).comp (bind₁ g) = aeval fun i => aeval f (g i) := by
+    (aeval f).comp (bind₁ g) = aeval fun i => aeval f (g i) :=
+  by
   ext1
   apply aeval_bind₁
 #align mv_polynomial.aeval_comp_bind₁ MvPolynomial.aeval_comp_bind₁
@@ -342,24 +351,21 @@ theorem bind₂_monomial_one (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ)
     bind₂ f (monomial d 1) = monomial d 1 := by rw [bind₂_monomial, f.map_one, one_mul]
 #align mv_polynomial.bind₂_monomial_one MvPolynomial.bind₂_monomial_one
 
-instance monad :
-    Monad fun σ => MvPolynomial σ
-        R where 
+instance monad : Monad fun σ => MvPolynomial σ R
+    where
   map α β f p := rename f p
   pure _ := x
   bind _ _ p f := bind₁ f p
 #align mv_polynomial.monad MvPolynomial.monad
 
-instance is_lawful_functor :
-    IsLawfulFunctor fun σ =>
-      MvPolynomial σ R where 
+instance is_lawful_functor : LawfulFunctor fun σ => MvPolynomial σ R
+    where
   id_map := by intros <;> simp [(· <$> ·)]
   comp_map := by intros <;> simp [(· <$> ·)]
 #align mv_polynomial.is_lawful_functor MvPolynomial.is_lawful_functor
 
-instance is_lawful_monad :
-    LawfulMonad fun σ =>
-      MvPolynomial σ R where 
+instance is_lawful_monad : LawfulMonad fun σ => MvPolynomial σ R
+    where
   pure_bind := by intros <;> simp [pure, bind]
   bind_assoc := by intros <;> simp [bind, ← bind₁_comp_bind₁]
 #align mv_polynomial.is_lawful_monad MvPolynomial.is_lawful_monad

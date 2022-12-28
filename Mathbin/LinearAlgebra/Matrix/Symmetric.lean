@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.symmetric
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,8 +133,9 @@ theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonal v)
     if `A` and `D` are symmetric and `Bᵀ = C`. -/
 theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
     {D : Matrix n n α} (hA : A.IsSymm) (hBC : Bᵀ = C) (hD : D.IsSymm) :
-    (A.fromBlocks B C D).IsSymm := by
-  have hCB : Cᵀ = B := by 
+    (A.fromBlocks B C D).IsSymm :=
+  by
+  have hCB : Cᵀ = B := by
     rw [← hBC]
     simp
   unfold Matrix.IsSymm

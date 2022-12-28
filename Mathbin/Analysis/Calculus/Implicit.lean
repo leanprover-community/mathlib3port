@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.implicit
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,7 +211,8 @@ theorem map_nhds_eq : map φ.leftFun (𝓝 φ.pt) = 𝓝 (φ.leftFun φ.pt) :=
 theorem implicitFunctionHasStrictFderivAt (g'inv : G →L[𝕜] E)
     (hg'inv : φ.rightDeriv.comp g'inv = ContinuousLinearMap.id 𝕜 G)
     (hg'invf : φ.leftDeriv.comp g'inv = 0) :
-    HasStrictFderivAt (φ.implicitFunction (φ.leftFun φ.pt)) g'inv (φ.rightFun φ.pt) := by
+    HasStrictFderivAt (φ.implicitFunction (φ.leftFun φ.pt)) g'inv (φ.rightFun φ.pt) :=
+  by
   have := φ.has_strict_fderiv_at.to_local_inverse
   simp only [prod_fun] at this
   convert this.comp (φ.right_fun φ.pt) ((hasStrictFderivAtConst _ _).Prod (hasStrictFderivAtId _))
@@ -254,8 +255,8 @@ variable (f f')
 differentiable map such that its derivative is surjective and has a complemented kernel. -/
 @[simp]
 def implicitFunctionDataOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤)
-    (hker : (ker f').ClosedComplemented) :
-    ImplicitFunctionData 𝕜 E F (ker f') where 
+    (hker : (ker f').ClosedComplemented) : ImplicitFunctionData 𝕜 E F (ker f')
+    where
   leftFun := f
   leftDeriv := f'
   rightFun x := Classical.choose hker (x - a)
@@ -362,7 +363,8 @@ theorem eq_implicit_function_of_complemented (hf : HasStrictFderivAt f f' a) (hf
 @[simp]
 theorem implicit_function_of_complemented_apply_image (hf : HasStrictFderivAt f f' a)
     (hf' : range f' = ⊤) (hker : (ker f').ClosedComplemented) :
-    hf.implicitFunctionOfComplemented f f' hf' hker (f a) 0 = a := by
+    hf.implicitFunctionOfComplemented f f' hf' hker (f a) 0 = a :=
+  by
   convert
     (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).left_inv
       (hf.mem_implicit_to_local_homeomorph_of_complemented_source hf' hker)
@@ -468,7 +470,8 @@ theorem mem_implicit_to_local_homeomorph_target (hf : HasStrictFderivAt f f' a)
 theorem tendsto_implicit_function (hf : HasStrictFderivAt f f' a) (hf' : range f' = ⊤) {α : Type _}
     {l : Filter α} {g₁ : α → F} {g₂ : α → ker f'} (h₁ : Tendsto g₁ l (𝓝 <| f a))
     (h₂ : Tendsto g₂ l (𝓝 0)) :
-    Tendsto (fun t => hf.implicitFunction f f' hf' (g₁ t) (g₂ t)) l (𝓝 a) := by
+    Tendsto (fun t => hf.implicitFunction f f' hf' (g₁ t) (g₂ t)) l (𝓝 a) :=
+  by
   refine'
     ((hf.implicit_to_local_homeomorph f f' hf').tendsto_symm
           (hf.mem_implicit_to_local_homeomorph_source hf')).comp

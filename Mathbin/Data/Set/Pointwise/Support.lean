@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module data.set.pointwise.support
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,13 +27,15 @@ section Group
 variable {α β γ : Type _} [Group α] [MulAction α β]
 
 theorem mul_support_comp_inv_smul [One γ] (c : α) (f : β → γ) :
-    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f := by
+    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f :=
+  by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_mul_support]
 #align mul_support_comp_inv_smul mul_support_comp_inv_smul
 
 theorem support_comp_inv_smul [Zero γ] (c : α) (f : β → γ) :
-    (support fun x => f (c⁻¹ • x)) = c • support f := by
+    (support fun x => f (c⁻¹ • x)) = c • support f :=
+  by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_support]
 #align support_comp_inv_smul support_comp_inv_smul
@@ -47,13 +49,15 @@ section GroupWithZero
 variable {α β γ : Type _} [GroupWithZero α] [MulAction α β]
 
 theorem mul_support_comp_inv_smul₀ [One γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f := by
+    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f :=
+  by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_mul_support]
 #align mul_support_comp_inv_smul₀ mul_support_comp_inv_smul₀
 
 theorem support_comp_inv_smul₀ [Zero γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-    (support fun x => f (c⁻¹ • x)) = c • support f := by
+    (support fun x => f (c⁻¹ • x)) = c • support f :=
+  by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_support]
 #align support_comp_inv_smul₀ support_comp_inv_smul₀

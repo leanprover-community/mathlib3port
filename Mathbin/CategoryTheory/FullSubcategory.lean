@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.full_subcategory
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,9 +67,8 @@ instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] :
   ⟨fun c => ↥(F c)⟩
 #align category_theory.induced_category.has_coe_to_sort CategoryTheory.InducedCategory.hasCoeToSort
 
-instance InducedCategory.category :
-    Category.{v} (InducedCategory D
-        F) where 
+instance InducedCategory.category : Category.{v} (InducedCategory D F)
+    where
   Hom X Y := F X ⟶ F Y
   id X := 𝟙 (F X)
   comp _ _ _ f g := f ≫ g
@@ -79,8 +78,8 @@ instance InducedCategory.category :
 forgetting the extra data.
 -/
 @[simps]
-def inducedFunctor : InducedCategory D F ⥤
-      D where 
+def inducedFunctor : InducedCategory D F ⥤ D
+    where
   obj := F
   map x y f := f
 #align category_theory.induced_functor CategoryTheory.inducedFunctor
@@ -146,9 +145,8 @@ variable {Z} {Z' : C → Prop}
 
 /-- An implication of predicates `Z → Z'` induces a functor between full subcategories. -/
 @[simps]
-def FullSubcategory.map (h : ∀ ⦃X⦄, Z X → Z' X) :
-    FullSubcategory Z ⥤ FullSubcategory
-        Z' where 
+def FullSubcategory.map (h : ∀ ⦃X⦄, Z X → Z' X) : FullSubcategory Z ⥤ FullSubcategory Z'
+    where
   obj X := ⟨X.1, h X.2⟩
   map X Y f := f
 #align category_theory.full_subcategory.map CategoryTheory.FullSubcategory.map
@@ -170,8 +168,8 @@ variable {D : Type u₂} [Category.{v₂} D] (P Q : D → Prop)
 /-- A functor which maps objects to objects satisfying a certain property induces a lift through
     the full subcategory of objects satisfying that property. -/
 @[simps]
-def FullSubcategory.lift (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) :
-    C ⥤ FullSubcategory P where 
+def FullSubcategory.lift (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) : C ⥤ FullSubcategory P
+    where
   obj X := ⟨F.obj X, hF X⟩
   map X Y f := F.map f
 #align category_theory.full_subcategory.lift CategoryTheory.FullSubcategory.lift

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.monotone
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,9 +48,12 @@ to almost everywhere differentiability of monotone functions. -/
 theorem tendsto_apply_add_mul_sq_div_sub {f : ℝ → ℝ} {x a c d : ℝ} {l : Filter ℝ} (hl : l ≤ 𝓝[≠] x)
     (hf : Tendsto (fun y => (f y - d) / (y - x)) l (𝓝 a))
     (h' : Tendsto (fun y => y + c * (y - x) ^ 2) l l) :
-    Tendsto (fun y => (f (y + c * (y - x) ^ 2) - d) / (y - x)) l (𝓝 a) := by
-  have L : tendsto (fun y => (y + c * (y - x) ^ 2 - x) / (y - x)) l (𝓝 1) := by
-    have : tendsto (fun y => 1 + c * (y - x)) l (𝓝 (1 + c * (x - x))) := by
+    Tendsto (fun y => (f (y + c * (y - x) ^ 2) - d) / (y - x)) l (𝓝 a) :=
+  by
+  have L : tendsto (fun y => (y + c * (y - x) ^ 2 - x) / (y - x)) l (𝓝 1) :=
+    by
+    have : tendsto (fun y => 1 + c * (y - x)) l (𝓝 (1 + c * (x - x))) :=
+      by
       apply tendsto.mono_left _ (hl.trans nhds_within_le_nhds)
       exact ((tendsto_id.sub_const x).const_mul c).const_add 1
     simp only [_root_.sub_self, add_zero, mul_zero] at this
@@ -83,7 +86,8 @@ theorem StieltjesFunction.ae_has_deriv_at (f : StieltjesFunction) :
     rn_deriv_lt_top f.measure volume, f.countable_left_lim_ne.ae_not_mem volume] with x hx h'x h''x
   -- Limit on the right, following from differentiation of measures
   have L1 :
-    tendsto (fun y => (f y - f x) / (y - x)) (𝓝[>] x) (𝓝 (rn_deriv f.measure volume x).toReal) := by
+    tendsto (fun y => (f y - f x) / (y - x)) (𝓝[>] x) (𝓝 (rn_deriv f.measure volume x).toReal) :=
+    by
     apply
       tendsto.congr' _
         ((Ennreal.tendsto_to_real h'x.ne).comp (hx.comp (Real.tendsto_Icc_vitali_family_right x)))
@@ -111,14 +115,15 @@ theorem StieltjesFunction.ae_has_deriv_at (f : StieltjesFunction) :
   have L3 :
     tendsto (fun y => (left_lim f (y + 1 * (y - x) ^ 2) - f x) / (y - x)) (𝓝[<] x)
       (𝓝 (rn_deriv f.measure volume x).toReal) :=
-    by 
+    by
     apply tendsto_apply_add_mul_sq_div_sub (nhds_left'_le_nhds_ne x) L2
     apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
     · apply tendsto.mono_left _ nhds_within_le_nhds
       have : tendsto (fun y : ℝ => y + 1 * (y - x) ^ 2) (𝓝 x) (𝓝 (x + 1 * (x - x) ^ 2)) :=
         tendsto_id.add (((tendsto_id.sub_const x).pow 2).const_mul 1)
       simpa using this
-    · have : Ioo (x - 1) x ∈ 𝓝[<] x := by
+    · have : Ioo (x - 1) x ∈ 𝓝[<] x :=
+        by
         apply Ioo_mem_nhds_within_Iio
         exact ⟨by linarith, le_refl _⟩
       filter_upwards [this]
@@ -127,7 +132,8 @@ theorem StieltjesFunction.ae_has_deriv_at (f : StieltjesFunction) :
       nlinarith
   -- Deduce the correct limit on the left, by sandwiching.
   have L4 :
-    tendsto (fun y => (f y - f x) / (y - x)) (𝓝[<] x) (𝓝 (rn_deriv f.measure volume x).toReal) := by
+    tendsto (fun y => (f y - f x) / (y - x)) (𝓝[<] x) (𝓝 (rn_deriv f.measure volume x).toReal) :=
+    by
     apply tendsto_of_tendsto_of_tendsto_of_le_of_le' L3 L2
     · filter_upwards [self_mem_nhds_within]
       rintro y (hy : y < x)
@@ -156,7 +162,8 @@ theorem Monotone.ae_has_deriv_at {f : ℝ → ℝ} (hf : Monotone f) :
     scale `y - x`.)-/
   filter_upwards [hf.stieltjes_function.ae_has_deriv_at,
     hf.countable_not_continuous_at.ae_not_mem volume] with x hx h'x
-  have A : hf.stieltjes_function x = f x := by
+  have A : hf.stieltjes_function x = f x :=
+    by
     rw [not_not, hf.continuous_at_iff_left_lim_eq_right_lim] at h'x
     apply le_antisymm _ (hf.le_right_lim (le_refl _))
     rw [← h'x]
@@ -172,14 +179,15 @@ theorem Monotone.ae_has_deriv_at {f : ℝ → ℝ} (hf : Monotone f) :
     have :
       tendsto (fun y => (hf.stieltjes_function (y + -1 * (y - x) ^ 2) - f x) / (y - x)) (𝓝[>] x)
         (𝓝 (rn_deriv hf.stieltjes_function.measure volume x).toReal) :=
-      by 
+      by
       apply tendsto_apply_add_mul_sq_div_sub (nhds_right'_le_nhds_ne x) hx.2
       apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
       · apply tendsto.mono_left _ nhds_within_le_nhds
         have : tendsto (fun y : ℝ => y + -1 * (y - x) ^ 2) (𝓝 x) (𝓝 (x + -1 * (x - x) ^ 2)) :=
           tendsto_id.add (((tendsto_id.sub_const x).pow 2).const_mul (-1))
         simpa using this
-      · have : Ioo x (x + 1) ∈ 𝓝[>] x := by
+      · have : Ioo x (x + 1) ∈ 𝓝[>] x :=
+          by
           apply Ioo_mem_nhds_within_Ioi
           exact ⟨le_refl _, by linarith⟩
         filter_upwards [this]
@@ -206,14 +214,15 @@ theorem Monotone.ae_has_deriv_at {f : ℝ → ℝ} (hf : Monotone f) :
     have :
       tendsto (fun y => (hf.stieltjes_function (y + -1 * (y - x) ^ 2) - f x) / (y - x)) (𝓝[<] x)
         (𝓝 (rn_deriv hf.stieltjes_function.measure volume x).toReal) :=
-      by 
+      by
       apply tendsto_apply_add_mul_sq_div_sub (nhds_left'_le_nhds_ne x) hx.1
       apply tendsto_nhds_within_of_tendsto_nhds_of_eventually_within
       · apply tendsto.mono_left _ nhds_within_le_nhds
         have : tendsto (fun y : ℝ => y + -1 * (y - x) ^ 2) (𝓝 x) (𝓝 (x + -1 * (x - x) ^ 2)) :=
           tendsto_id.add (((tendsto_id.sub_const x).pow 2).const_mul (-1))
         simpa using this
-      · have : Ioo (x - 1) x ∈ 𝓝[<] x := by
+      · have : Ioo (x - 1) x ∈ 𝓝[<] x :=
+          by
           apply Ioo_mem_nhds_within_Iio
           exact ⟨by linarith, le_refl _⟩
         filter_upwards [this]
@@ -272,7 +281,8 @@ this set. This version assumes that `s` is measurable and uses `volume.restrict 
 For a formulation without measurability assumption,
 see `monotone_on.ae_differentiable_within_at_of_mem`. -/
 theorem MonotoneOn.ae_differentiable_within_at {f : ℝ → ℝ} {s : Set ℝ} (hf : MonotoneOn f s)
-    (hs : MeasurableSet s) : ∀ᵐ x ∂volume.restrict s, DifferentiableWithinAt ℝ f s x := by
+    (hs : MeasurableSet s) : ∀ᵐ x ∂volume.restrict s, DifferentiableWithinAt ℝ f s x :=
+  by
   rw [ae_restrict_iff' hs]
   exact hf.ae_differentiable_within_at_of_mem
 #align monotone_on.ae_differentiable_within_at MonotoneOn.ae_differentiable_within_at

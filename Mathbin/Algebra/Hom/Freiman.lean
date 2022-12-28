@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.hom.freiman
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,8 @@ theorem map_prod_eq_map_prod [FreimanHomClass F A β n] (f : F) {s t : Multiset 
 
 @[to_additive]
 theorem map_mul_map_eq_map_mul_map [FreimanHomClass F A β 2] (f : F) (ha : a ∈ A) (hb : b ∈ A)
-    (hc : c ∈ A) (hd : d ∈ A) (h : a * b = c * d) : f a * f b = f c * f d := by
+    (hc : c ∈ A) (hd : d ∈ A) (h : a * b = c * d) : f a * f b = f c * f d :=
+  by
   simp_rw [← prod_pair] at h⊢
   refine' map_prod_eq_map_prod f _ _ (card_pair _ _) (card_pair _ _) h <;> simp [ha, hb, hc, hd]
 #align map_mul_map_eq_map_mul_map map_mul_map_eq_map_mul_map
@@ -124,15 +125,15 @@ theorem map_mul_map_eq_map_mul_map [FreimanHomClass F A β 2] (f : F) (ha : a �
 namespace FreimanHom
 
 @[to_additive]
-instance funLike : FunLike (A →*[n] β) α fun _ =>
-      β where 
+instance funLike : FunLike (A →*[n] β) α fun _ => β
+    where
   coe := toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
 #align freiman_hom.fun_like FreimanHom.funLike
 
 @[to_additive]
-instance freimanHomClass :
-    FreimanHomClass (A →*[n] β) A β n where map_prod_eq_map_prod' := map_prod_eq_map_prod'
+instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n
+    where map_prod_eq_map_prod' := map_prod_eq_map_prod'
 #align freiman_hom.freiman_hom_class FreimanHom.freimanHomClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -172,18 +173,19 @@ theorem mk_coe (f : A →*[n] β) (h) : mk f h = f :=
 
 /-- The identity map from a commutative monoid to itself. -/
 @[to_additive "The identity map from an additive commutative monoid to itself.", simps]
-protected def id (A : Set α) (n : ℕ) :
-    A →*[n] α where 
+protected def id (A : Set α) (n : ℕ) : A →*[n] α
+    where
   toFun x := x
   map_prod_eq_map_prod' s t _ _ _ _ h := by rw [map_id', map_id', h]
 #align freiman_hom.id FreimanHom.id
 
 /-- Composition of Freiman homomorphisms as a Freiman homomorphism. -/
 @[to_additive "Composition of additive Freiman homomorphisms as an additive Freiman homomorphism."]
-protected def comp (f : B →*[n] γ) (g : A →*[n] β) (hAB : A.MapsTo g B) :
-    A →*[n] γ where 
+protected def comp (f : B →*[n] γ) (g : A →*[n] β) (hAB : A.MapsTo g B) : A →*[n] γ
+    where
   toFun := f ∘ g
-  map_prod_eq_map_prod' s t hsA htA hs ht h := by
+  map_prod_eq_map_prod' s t hsA htA hs ht h :=
+    by
     rw [← map_map,
       map_prod_eq_map_prod f _ _ ((s.card_map _).trans hs) ((t.card_map _).trans ht)
         (map_prod_eq_map_prod g hsA htA hs ht h),
@@ -238,8 +240,8 @@ theorem id_comp (f : A →*[n] β) {hf} : (FreimanHom.id B n).comp f hf = f :=
 
 /-- `freiman_hom.const A n b` is the Freiman homomorphism sending everything to `b`. -/
 @[to_additive "`add_freiman_hom.const n b` is the Freiman homomorphism sending everything to `b`."]
-def const (A : Set α) (n : ℕ) (b : β) :
-    A →*[n] β where 
+def const (A : Set α) (n : ℕ) (b : β) : A →*[n] β
+    where
   toFun _ := b
   map_prod_eq_map_prod' s t _ _ hs ht _ := by
     rw [Multiset.map_const, Multiset.map_const, prod_repeat, prod_repeat, hs, ht]
@@ -341,29 +343,29 @@ theorem div_comp (f₁ f₂ : B →*[n] G) (g : A →*[n] β) {hf hf₁ hf₂} :
 
 /-- `A →*[n] β` is a `comm_monoid`. -/
 @[to_additive "`α →+[n] β` is an `add_comm_monoid`."]
-instance : CommMonoid (A →*[n] β) where 
+instance : CommMonoid (A →*[n] β) where
   mul := (· * ·)
-  mul_assoc a b c := by 
+  mul_assoc a b c := by
     ext
     apply mul_assoc
   one := 1
-  one_mul a := by 
+  one_mul a := by
     ext
     apply one_mul
-  mul_one a := by 
+  mul_one a := by
     ext
     apply mul_one
-  mul_comm a b := by 
+  mul_comm a b := by
     ext
     apply mul_comm
   npow m f :=
     { toFun := fun x => f x ^ m
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_pow, prod_map_pow, map_prod_eq_map_prod f hsA htA hs ht h] }
-  npow_zero' f := by 
+  npow_zero' f := by
     ext x
     exact pow_zero _
-  npow_succ' n f := by 
+  npow_succ' n f := by
     ext x
     exact pow_succ _ _
 
@@ -371,14 +373,14 @@ instance : CommMonoid (A →*[n] β) where
 @[to_additive
       "If `β` is an additive commutative group, then `A →*[n] β` is an additive commutative\ngroup too."]
 instance {β} [CommGroup β] : CommGroup (A →*[n] β) :=
-  { FreimanHom.commMonoid with 
+  { FreimanHom.commMonoid with
     inv := Inv.inv
     div := Div.div
-    div_eq_mul_inv := by 
+    div_eq_mul_inv := by
       intros
       ext
       apply div_eq_mul_inv
-    mul_left_inv := by 
+    mul_left_inv := by
       intros
       ext
       apply mul_left_inv
@@ -386,13 +388,13 @@ instance {β} [CommGroup β] : CommGroup (A →*[n] β) :=
       { toFun := fun x => f x ^ n
         map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
           rw [prod_map_zpow, prod_map_zpow, map_prod_eq_map_prod f hsA htA hs ht h] }
-    zpow_zero' := fun f => by 
+    zpow_zero' := fun f => by
       ext x
       exact zpow_zero _
-    zpow_succ' := fun n f => by 
+    zpow_succ' := fun n f => by
       ext x
       simp_rw [zpow_ofNat, pow_succ, mul_apply, coe_mk]
-    zpow_neg' := fun n f => by 
+    zpow_neg' := fun n f => by
       ext x
       simp_rw [zpow_negSucc, zpow_ofNat]
       rfl }
@@ -410,16 +412,15 @@ We can't leave the domain `A : set α` of the `freiman_hom` a free variable, sin
 inferrable. -/
 @[to_additive
       " An additive monoid homomorphism is naturally an `add_freiman_hom` on its entire\ndomain.\n\nWe can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be\ninferrable."]
-instance MonoidHom.freimanHomClass :
-    FreimanHomClass (α →* β) Set.univ β
-      n where map_prod_eq_map_prod' f s t _ _ _ _ h := by
+instance MonoidHom.freimanHomClass : FreimanHomClass (α →* β) Set.univ β n
+    where map_prod_eq_map_prod' f s t _ _ _ _ h := by
     rw [← f.map_multiset_prod, h, f.map_multiset_prod]
 #align monoid_hom.freiman_hom_class MonoidHom.freimanHomClass
 
 /-- A `monoid_hom` is naturally a `freiman_hom`. -/
 @[to_additive AddMonoidHom.toAddFreimanHom "An `add_monoid_hom` is naturally an\n`add_freiman_hom`"]
-def MonoidHom.toFreimanHom (A : Set α) (n : ℕ) (f : α →* β) :
-    A →*[n] β where 
+def MonoidHom.toFreimanHom (A : Set α) (n : ℕ) (f : α →* β) : A →*[n] β
+    where
   toFun := f
   map_prod_eq_map_prod' s t hsA htA :=
     map_prod_eq_map_prod f (fun _ _ => Set.mem_univ _) fun _ _ => Set.mem_univ _
@@ -445,13 +446,15 @@ variable [CommMonoid α] [CancelCommMonoid β] {A : Set α} {m n : ℕ}
 @[to_additive]
 theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Multiset α}
     (hsA : ∀ x ∈ s, x ∈ A) (htA : ∀ x ∈ t, x ∈ A) (hs : s.card = m) (ht : t.card = m)
-    (hst : s.Prod = t.Prod) (h : m ≤ n) : (s.map f).Prod = (t.map f).Prod := by
+    (hst : s.Prod = t.Prod) (h : m ≤ n) : (s.map f).Prod = (t.map f).Prod :=
+  by
   obtain rfl | hm := m.eq_zero_or_pos
   · rw [card_eq_zero] at hs ht
     rw [hs, ht]
   rw [← hs, card_pos_iff_exists_mem] at hm
   obtain ⟨a, ha⟩ := hm
-  suffices ((s + repeat a (n - m)).map f).Prod = ((t + repeat a (n - m)).map f).Prod by
+  suffices ((s + repeat a (n - m)).map f).Prod = ((t + repeat a (n - m)).map f).Prod
+    by
     simp_rw [Multiset.map_add, prod_add] at this
     exact mul_right_cancel this
   replace ha := hsA _ ha
@@ -473,8 +476,8 @@ theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Mul
 /-- `α →*[n] β` is naturally included in  `A →*[m] β` for any `m ≤ n`. -/
 @[to_additive AddFreimanHom.toAddFreimanHom
       "`α →+[n] β` is naturally included in  `α →+[m] β`\nfor any `m ≤ n`"]
-def FreimanHom.toFreimanHom (h : m ≤ n) (f : A →*[n] β) :
-    A →*[m] β where 
+def FreimanHom.toFreimanHom (h : m ≤ n) (f : A →*[n] β) : A →*[m] β
+    where
   toFun := f
   map_prod_eq_map_prod' s t hsA htA hs ht hst := map_prod_eq_map_prod_of_le f hsA htA hs ht hst h
 #align freiman_hom.to_freiman_hom FreimanHom.toFreimanHom
@@ -482,9 +485,8 @@ def FreimanHom.toFreimanHom (h : m ≤ n) (f : A →*[n] β) :
 /-- A `n`-Freiman homomorphism is also a `m`-Freiman homomorphism for any `m ≤ n`. -/
 @[to_additive AddFreimanHom.addFreimanHomClassOfLe
       "An additive `n`-Freiman homomorphism is\nalso an additive `m`-Freiman homomorphism for any `m ≤ n`."]
-def FreimanHom.freimanHomClassOfLe [FreimanHomClass F A β n] (h : m ≤ n) :
-    FreimanHomClass F A β
-      m where map_prod_eq_map_prod' f s t hsA htA hs ht hst :=
+def FreimanHom.freimanHomClassOfLe [FreimanHomClass F A β n] (h : m ≤ n) : FreimanHomClass F A β m
+    where map_prod_eq_map_prod' f s t hsA htA hs ht hst :=
     map_prod_eq_map_prod_of_le f hsA htA hs ht hst h
 #align freiman_hom.freiman_hom_class_of_le FreimanHom.freimanHomClassOfLe
 

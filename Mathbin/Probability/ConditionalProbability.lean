@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rishikesh Vaishnav
 
 ! This file was ported from Lean 3 source module probability.conditional_probability
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ scoped notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
 is a probability measure. -/
 theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) :
     is_probability_measure <| μ[|s] :=
-  ⟨by 
+  ⟨by
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
 #align probability_theory.cond_is_probability_measure ProbabilityTheory.condIsProbabilityMeasure
@@ -107,7 +107,8 @@ theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.univ] = μ := by
 #align probability_theory.cond_univ ProbabilityTheory.cond_univ
 
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/
-theorem cond_apply (hms : MeasurableSet s) (t : Set Ω) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) := by
+theorem cond_apply (hms : MeasurableSet s) (t : Set Ω) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) :=
+  by
   rw [cond, measure.smul_apply, measure.restrict_apply' hms, Set.inter_comm]
   rfl
 #align probability_theory.cond_apply ProbabilityTheory.cond_apply
@@ -116,7 +117,8 @@ theorem cond_inter_self (hms : MeasurableSet s) (t : Set Ω) : μ[s ∩ t|s] = �
   rw [cond_apply _ hms, ← Set.inter_assoc, Set.inter_self, ← cond_apply _ hms]
 #align probability_theory.cond_inter_self ProbabilityTheory.cond_inter_self
 
-theorem inter_pos_of_cond_ne_zero (hms : MeasurableSet s) (hcst : μ[t|s] ≠ 0) : 0 < μ (s ∩ t) := by
+theorem inter_pos_of_cond_ne_zero (hms : MeasurableSet s) (hcst : μ[t|s] ≠ 0) : 0 < μ (s ∩ t) :=
+  by
   refine' pos_iff_ne_zero.mpr (right_ne_zero_of_mul _)
   · exact (μ s)⁻¹
   convert hcst
@@ -124,14 +126,16 @@ theorem inter_pos_of_cond_ne_zero (hms : MeasurableSet s) (hcst : μ[t|s] ≠ 0)
 #align probability_theory.inter_pos_of_cond_ne_zero ProbabilityTheory.inter_pos_of_cond_ne_zero
 
 theorem cond_pos_of_inter_ne_zero [IsFiniteMeasure μ] (hms : MeasurableSet s)
-    (hci : μ (s ∩ t) ≠ 0) : 0 < (μ[|s]) t := by
+    (hci : μ (s ∩ t) ≠ 0) : 0 < (μ[|s]) t :=
+  by
   rw [cond_apply _ hms]
   refine' Ennreal.mul_pos _ hci
   exact ennreal.inv_ne_zero.mpr (measure_ne_top _ _)
 #align probability_theory.cond_pos_of_inter_ne_zero ProbabilityTheory.cond_pos_of_inter_ne_zero
 
 theorem cond_cond_eq_cond_inter' (hms : MeasurableSet s) (hmt : MeasurableSet t) (hcs : μ s ≠ ∞)
-    (hci : μ (s ∩ t) ≠ 0) : μ[|s][|t] = μ[|s ∩ t] := by
+    (hci : μ (s ∩ t) ≠ 0) : μ[|s][|t] = μ[|s ∩ t] :=
+  by
   have hcs : μ s ≠ 0 :=
     (μ.to_outer_measure.pos_of_subset_ne_zero (Set.inter_subset_left _ _) hci).ne'
   ext u
@@ -158,7 +162,8 @@ theorem cond_mul_eq_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ
 
 /-- A version of the law of total probability. -/
 theorem cond_add_cond_compl_eq [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ s ≠ 0)
-    (hcs' : μ (sᶜ) ≠ 0) : μ[t|s] * μ s + μ[t|sᶜ] * μ (sᶜ) = μ t := by
+    (hcs' : μ (sᶜ) ≠ 0) : μ[t|s] * μ s + μ[t|sᶜ] * μ (sᶜ) = μ t :=
+  by
   rw [cond_mul_eq_inter μ hms hcs, cond_mul_eq_inter μ hms.compl hcs', Set.inter_comm _ t,
     Set.inter_comm _ t]
   exact measure_inter_add_diff t hms
@@ -166,7 +171,8 @@ theorem cond_add_cond_compl_eq [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs
 
 /-- **Bayes' Theorem** -/
 theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s)
-    (hmt : MeasurableSet t) : μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t := by
+    (hmt : MeasurableSet t) : μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t :=
+  by
   by_cases ht : μ t = 0
   · simp [cond, ht, measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
   · rw [mul_assoc, cond_mul_eq_inter μ hmt ht s, Set.inter_comm, cond_apply _ hms]

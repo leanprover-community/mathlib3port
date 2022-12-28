@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.mul_antidiagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,12 +62,12 @@ variable [CancelCommMonoid α] {s t : Set α} {a : α} {x y : mulAntidiagonal s 
 theorem fst_eq_fst_iff_snd_eq_snd : (x : α × α).1 = (y : α × α).1 ↔ (x : α × α).2 = (y : α × α).2 :=
   ⟨fun h =>
     mul_left_cancel
-      (y.Prop.2.2.trans <| by 
+      (y.Prop.2.2.trans <| by
           rw [← h]
           exact x.2.2.2.symm).symm,
     fun h =>
     mul_right_cancel
-      (y.Prop.2.2.trans <| by 
+      (y.Prop.2.2.trans <| by
           rw [← h]
           exact x.2.2.2.symm).symm⟩
 #align set.mul_antidiagonal.fst_eq_fst_iff_snd_eq_snd Set.mulAntidiagonal.fst_eq_fst_iff_snd_eq_snd
@@ -101,7 +101,8 @@ theorem eq_of_fst_le_fst_of_snd_le_snd (h₁ : (x : α × α).1 ≤ (y : α × �
 variable {s t}
 
 @[to_additive]
-theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (mulAntidiagonal s t a).Finite := by
+theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (mulAntidiagonal s t a).Finite :=
+  by
   refine' not_infinite.1 fun h => _
   have h1 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.fst ⁻¹'o (· ≤ ·)) := fun f hf =>
     hs (Prod.fst ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).1

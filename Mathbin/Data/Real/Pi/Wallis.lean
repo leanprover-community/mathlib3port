@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module data.real.pi.wallis
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,17 +28,18 @@ theorem integral_sin_pow_div_tendsto_one :
   have h₄ :
     ∀ n,
       ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≥ 2 * n / (2 * n + 1) :=
-    by 
+    by
     rintro ⟨n⟩
     · have : 0 ≤ (1 + 1) / π := div_nonneg (by norm_num) pi_pos.le
       simp [this]
     calc
       ((∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n.succ)) ≥
           (∫ x in 0 ..π, sin x ^ (2 * n.succ + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n + 1) :=
-        by 
+        by
         refine' div_le_div (integral_sin_pow_pos _).le le_rfl (integral_sin_pow_pos _) _
         convert integral_sin_pow_succ_le (2 * n + 1) using 1
-      _ = 2 * ↑n.succ / (2 * ↑n.succ + 1) := by
+      _ = 2 * ↑n.succ / (2 * ↑n.succ + 1) :=
+        by
         rw [div_eq_iff (integral_sin_pow_pos (2 * n + 1)).ne']
         convert integral_sin_pow (2 * n + 1)
         simp [field_simps]
@@ -46,24 +47,25 @@ theorem integral_sin_pow_div_tendsto_one :
       
   refine' tendsto_of_tendsto_of_tendsto_of_le_of_le _ _ (fun n => (h₄ n).le) fun n => h₃ n
   · refine' metric.tendsto_at_top.mpr fun ε hε => ⟨⌈1 / ε⌉₊, fun n hn => _⟩
-    have h : (2 : ℝ) * n / (2 * n + 1) - 1 = -1 / (2 * n + 1) := by
-      conv_lhs => 
+    have h : (2 : ℝ) * n / (2 * n + 1) - 1 = -1 / (2 * n + 1) :=
+      by
+      conv_lhs =>
         congr
         skip
         rw [←
           @div_self _ _ ((2 : ℝ) * n + 1)
-            (by 
+            (by
               norm_cast
               linarith)]
       rw [← sub_div, ← sub_sub, sub_self, zero_sub]
-    have hpos : (0 : ℝ) < 2 * n + 1 := by 
+    have hpos : (0 : ℝ) < 2 * n + 1 := by
       norm_cast
       norm_num
     rw [dist_eq, h, abs_div, abs_neg, abs_one, abs_of_pos hpos, one_div_lt hpos hε]
     calc
       1 / ε ≤ ⌈1 / ε⌉₊ := Nat.le_ceil _
       _ ≤ n := by exact_mod_cast hn.le
-      _ < 2 * n + 1 := by 
+      _ < 2 * n + 1 := by
         norm_cast
         linarith
       

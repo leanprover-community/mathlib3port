@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys
 
 ! This file was ported from Lean 3 source module algebra.order.rearrangement
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,13 +64,13 @@ variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [O
 `f` and `g` monovary together. Stated by permuting the entries of `g`. -/
 theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
     (hσ : { x | σ x ≠ x } ⊆ s) : (∑ i in s, f i • g (σ i)) ≤ ∑ i in s, f i • g i := by
-  classical 
+  classical
     revert hσ σ hfg
     apply Finset.induction_on_max_value (fun i => toLex (g i, f i)) s
     · simp only [le_rfl, Finset.sum_empty, imp_true_iff]
     intro a s has hamax hind σ hfg hσ
     set τ : perm ι := σ.trans (swap a (σ a)) with hτ
-    have hτs : { x | τ x ≠ x } ⊆ s := by 
+    have hτs : { x | τ x ≠ x } ⊆ s := by
       intro x hx
       simp only [Ne.def, Set.mem_setOf_eq, Equiv.coe_trans, Equiv.swap_comp_apply] at hx
       split_ifs  at hx with h₁ h₂ h₃
@@ -84,7 +84,7 @@ theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s)
     refine' le_trans _ (add_le_add_left hind _)
     obtain hσa | hσa := eq_or_ne a (σ a)
     · rw [hτ, ← hσa, swap_self, trans_refl]
-    have h1s : σ⁻¹ a ∈ s := by 
+    have h1s : σ⁻¹ a ∈ s := by
       rw [Ne.def, ← inv_eq_iff_eq] at hσa
       refine' mem_of_mem_insert_of_ne (hσ fun h => hσa _) hσa
       rwa [apply_inv_self, eq_comm] at h
@@ -114,13 +114,14 @@ together. Stated by permuting the entries of `g`. -/
 theorem MonovaryOn.sum_smul_comp_perm_eq_sum_smul_iff (hfg : MonovaryOn f g s)
     (hσ : { x | σ x ≠ x } ⊆ s) :
     ((∑ i in s, f i • g (σ i)) = ∑ i in s, f i • g i) ↔ MonovaryOn f (g ∘ σ) s := by
-  classical 
+  classical
     refine' ⟨not_imp_not.1 fun h => _, fun h => (hfg.sum_smul_comp_perm_le_sum_smul hσ).antisymm _⟩
     · rw [MonovaryOn] at h
       push_neg  at h
       obtain ⟨x, hx, y, hy, hgxy, hfxy⟩ := h
       set τ : perm ι := (swap x y).trans σ
-      have hτs : { x | τ x ≠ x } ⊆ s := by
+      have hτs : { x | τ x ≠ x } ⊆ s :=
+        by
         refine' (set_support_mul_subset σ <| swap x y).trans ((Set.union_subset hσ) fun z hz => _)
         obtain ⟨_, rfl | rfl⟩ := swap_apply_ne_self_iff.1 hz <;> assumption
       refine' ((hfg.sum_smul_comp_perm_le_sum_smul hτs).trans_lt' _).Ne
@@ -150,7 +151,8 @@ theorem MonovaryOn.sum_smul_comp_perm_lt_sum_smul_iff (hfg : MonovaryOn f g s)
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` monovary together. Stated by permuting the entries of `f`. -/
 theorem MonovaryOn.sum_comp_perm_smul_le_sum_smul (hfg : MonovaryOn f g s)
-    (hσ : { x | σ x ≠ x } ⊆ s) : (∑ i in s, f (σ i) • g i) ≤ ∑ i in s, f i • g i := by
+    (hσ : { x | σ x ≠ x } ⊆ s) : (∑ i in s, f (σ i) • g i) ≤ ∑ i in s, f i • g i :=
+  by
   convert
     hfg.sum_smul_comp_perm_le_sum_smul
       (show { x | σ⁻¹ x ≠ x } ⊆ s by simp only [set_support_inv_eq, hσ]) using
@@ -163,7 +165,8 @@ which monovary together, is unchanged by a permutation if and only if `f ∘ σ`
 together. Stated by permuting the entries of `f`. -/
 theorem MonovaryOn.sum_comp_perm_smul_eq_sum_smul_iff (hfg : MonovaryOn f g s)
     (hσ : { x | σ x ≠ x } ⊆ s) :
-    ((∑ i in s, f (σ i) • g i) = ∑ i in s, f i • g i) ↔ MonovaryOn (f ∘ σ) g s := by
+    ((∑ i in s, f (σ i) • g i) = ∑ i in s, f i • g i) ↔ MonovaryOn (f ∘ σ) g s :=
+  by
   have hσinv : { x | σ⁻¹ x ≠ x } ⊆ s := (set_support_inv_eq _).Subset.trans hσ
   refine'
     (Iff.trans _ <| hfg.sum_smul_comp_perm_eq_sum_smul_iff hσinv).trans ⟨fun h => _, fun h => _⟩

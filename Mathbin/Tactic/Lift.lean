@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.lift
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,11 +34,8 @@ instance : CanLift ℤ ℕ coe ((· ≤ ·) 0) :=
 /-- Enable automatic handling of pi types in `can_lift`. -/
 instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i → α i) (P : ∀ i, α i → Prop)
     [∀ i : ι, CanLift (α i) (β i) (coe i) (P i)] :
-    CanLift (∀ i : ι, α i) (∀ i : ι, β i) (fun f i => coe i (f i)) fun f =>
-      ∀ i,
-        P i
-          (f
-            i) where prf f hf :=
+    CanLift (∀ i : ι, α i) (∀ i : ι, β i) (fun f i => coe i (f i)) fun f => ∀ i, P i (f i)
+    where prf f hf :=
     ⟨fun i => Classical.choose (CanLift.prf (f i) (hf i)),
       funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
 #align pi.can_lift Pi.canLift
@@ -46,15 +43,15 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)]
     {p : ι → Prop} (f : ∀ i : Subtype p, α i) :
     ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
-  classical 
+  classical
     refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
     rintro ⟨i, hi⟩
     exact dif_pos hi
 #align subtype.exists_pi_extension Subtype.exists_pi_extension
 
 instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
-    CanLift (∀ i : Subtype p, α i) (∀ i, α i) (fun f i => f i) fun _ =>
-      True where prf f _ := Subtype.exists_pi_extension f
+    CanLift (∀ i : Subtype p, α i) (∀ i, α i) (fun f i => f i) fun _ => True
+    where prf f _ := Subtype.exists_pi_extension f
 #align pi_subtype.can_lift PiSubtype.canLift
 
 instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : ι → Prop) :
@@ -62,8 +59,8 @@ instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : 
   PiSubtype.canLift ι (fun _ => α) p
 #align pi_subtype.can_lift' PiSubtype.canLift'
 
-instance Subtype.canLift {α : Sort _} (p : α → Prop) :
-    CanLift α { x // p x } coe p where prf a ha := ⟨⟨a, ha⟩, rfl⟩
+instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } coe p
+    where prf a ha := ⟨⟨a, ha⟩, rfl⟩
 #align subtype.can_lift Subtype.canLift
 
 open Tactic

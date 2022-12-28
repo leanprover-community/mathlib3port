@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.aut
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,8 +88,8 @@ section Semiring
 variable {G R : Type _} [Group G] [Semiring R]
 
 /-- The tautological action by the group of automorphism of a ring `R` on `R`.-/
-instance applyMulSemiringAction :
-    MulSemiringAction (RingAut R) R where 
+instance applyMulSemiringAction : MulSemiringAction (RingAut R) R
+    where
   smul := (· <| ·)
   smul_zero := RingEquiv.map_zero
   smul_add := RingEquiv.map_add
@@ -115,8 +115,8 @@ variable (G R)
 This is a stronger version of `distrib_mul_action.to_add_aut` and
 `mul_distrib_mul_action.to_mul_aut`. -/
 @[simps]
-def MulSemiringAction.toRingAut [MulSemiringAction G R] :
-    G →* RingAut R where 
+def MulSemiringAction.toRingAut [MulSemiringAction G R] : G →* RingAut R
+    where
   toFun := MulSemiringAction.toRingEquiv G R
   map_mul' g h := RingEquiv.ext <| mul_smul g h
   map_one' := RingEquiv.ext <| one_smul _

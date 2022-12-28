@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.subbox_induction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,11 +45,11 @@ variable {ι : Type _} [Fintype ι] {I J : Box ι}
 namespace Prepartition
 
 /-- Split a box in `ℝⁿ` into `2 ^ n` boxes by hyperplanes passing through its center. -/
-def splitCenter (I : Box ι) :
-    Prepartition I where 
+def splitCenter (I : Box ι) : Prepartition I
+    where
   boxes := Finset.univ.map (Box.splitCenterBoxEmb I)
   le_of_mem' := by simp [I.split_center_box_le]
-  PairwiseDisjoint := by 
+  PairwiseDisjoint := by
     rw [Finset.coe_map, Finset.coe_univ, image_univ]
     rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ Hne
     exact I.disjoint_split_center_box (mt (congr_arg _) Hne)
@@ -98,7 +98,8 @@ theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι)
               z ∈ J.IccCat →
                 J.IccCat ⊆ U →
                   (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
-    p I := by
+    p I :=
+  by
   refine' subbox_induction_on' I (fun J hle hs => (H_ind J hle) fun J' h' => _) H_nhds
   rcases mem_split_center.1 h' with ⟨s, rfl⟩
   exact hs s
@@ -121,7 +122,7 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
           π.IsSubordinate r ∧
             (∀ J ∈ π, ∃ m : ℕ, ∀ i, (J : _).upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) ∧
               π.distortion = I.distortion :=
-  by 
+  by
   refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
   · choose! πi hP hHen hr Hn Hd using hJ
     choose! n hn using Hn
@@ -130,7 +131,7 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
     have hsub :
       ∀ J' ∈ (split_center J).bUnionTagged πi,
         ∃ n : ℕ, ∀ i, (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n :=
-      by 
+      by
       intro J' hJ'
       rcases(split_center J).mem_bUnion_tagged.1 hJ' with ⟨J₁, h₁, h₂⟩
       refine' ⟨n J₁ J' + 1, fun i => _⟩
@@ -173,7 +174,7 @@ theorem exists_tagged_le_is_Henstock_is_subordinate_Union_eq {I : Box ι} (r : (
     ∃ π' : TaggedPrepartition I,
       π'.toPrepartition ≤ π ∧
         π'.IsHenstock ∧ π'.IsSubordinate r ∧ π'.distortion = π.distortion ∧ π'.union = π.union :=
-  by 
+  by
   have := fun J => box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic J r
   choose! πi πip πiH πir hsub πid; clear hsub
   refine'

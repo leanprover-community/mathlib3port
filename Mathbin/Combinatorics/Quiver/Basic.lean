@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Scott Morrison
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,10 +81,10 @@ theorem ext {V : Type u} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] {F 
     (h_map :
       ∀ (X Y : V) (f : X ⟶ Y),
         F.map f = Eq.recOn (h_obj Y).symm (Eq.recOn (h_obj X).symm (G.map f))) :
-    F = G := by 
+    F = G := by
   cases' F with F_obj _
   cases' G with G_obj _
-  obtain rfl : F_obj = G_obj := by 
+  obtain rfl : F_obj = G_obj := by
     ext X
     apply h_obj
   congr
@@ -97,8 +97,8 @@ theorem ext {V : Type u} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] {F 
 /-- The identity morphism between quivers.
 -/
 @[simps]
-def id (V : Type _) [Quiver V] : Prefunctor V
-      V where 
+def id (V : Type _) [Quiver V] : Prefunctor V V
+    where
   obj := id
   map X Y f := f
 #align prefunctor.id Prefunctor.id
@@ -112,8 +112,8 @@ instance (V : Type _) [Quiver V] : Inhabited (Prefunctor V V) :=
 -/
 @[simps]
 def comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W]
-    (F : Prefunctor U V) (G : Prefunctor V W) :
-    Prefunctor U W where 
+    (F : Prefunctor U V) (G : Prefunctor V W) : Prefunctor U W
+    where
   obj X := G.obj (F.obj X)
   map X Y f := G.map (F.map f)
 #align prefunctor.comp Prefunctor.comp
@@ -127,7 +127,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prefunctor.comp_id Prefunctor.comp_idₓ'. -/
 @[simp]
 theorem comp_id {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
-    F.comp (id _) = F := by 
+    F.comp (id _) = F := by
   cases F
   rfl
 #align prefunctor.comp_id Prefunctor.comp_id
@@ -140,7 +140,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prefunctor.id_comp Prefunctor.id_compₓ'. -/
 @[simp]
 theorem id_comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
-    (id _).comp F = F := by 
+    (id _).comp F = F := by
   cases F
   rfl
 #align prefunctor.id_comp Prefunctor.id_comp

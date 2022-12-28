@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.prod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,12 +36,15 @@ variable (R A B)
 open Algebra
 
 instance algebra : Algebra R (A × B) :=
-  { Prod.module, RingHom.prod (algebraMap R A) (algebraMap R B) with
-    commutes' := by 
+  { Prod.module,
+    RingHom.prod (algebraMap R A)
+      (algebraMap R
+        B) with
+    commutes' := by
       rintro r ⟨a, b⟩
       dsimp
       rw [commutes r a, commutes r b]
-    smul_def' := by 
+    smul_def' := by
       rintro r ⟨a, b⟩
       dsimp
       rw [Algebra.smul_def r a, Algebra.smul_def r b] }
@@ -101,9 +104,8 @@ theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
 /-- Taking the product of two maps with the same domain is equivalent to taking the product of
 their codomains. -/
 @[simps]
-def prodEquiv :
-    (A →ₐ[R] B) × (A →ₐ[R] C) ≃
-      (A →ₐ[R] B × C) where 
+def prodEquiv : (A →ₐ[R] B) × (A →ₐ[R] C) ≃ (A →ₐ[R] B × C)
+    where
   toFun f := f.1.Prod f.2
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   left_inv f := by ext <;> rfl

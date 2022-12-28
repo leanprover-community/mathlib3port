@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.algebraic_closure
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,14 +77,16 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
 #align algebraic_closure.to_splitting_field AlgebraicClosure.toSplittingField
 
 theorem to_splitting_field_eval_X_self {s : Finset (MonicIrreducible k)} {f} (hf : f ∈ s) :
-    toSplittingField k s (evalXSelf k f) = 0 := by
+    toSplittingField k s (evalXSelf k f) = 0 :=
+  by
   rw [to_splitting_field, eval_X_self, ← AlgHom.coe_to_ring_hom, hom_eval₂, AlgHom.coe_to_ring_hom,
     MvPolynomial.aeval_X, dif_pos hf, ← algebra_map_eq, AlgHom.comp_algebra_map]
   exact map_root_of_splits _ _ _
 #align
   algebraic_closure.to_splitting_field_eval_X_self AlgebraicClosure.to_splitting_field_eval_X_self
 
-theorem span_eval_ne_top : spanEval k ≠ ⊤ := by
+theorem span_eval_ne_top : spanEval k ≠ ⊤ :=
+  by
   rw [Ideal.ne_top_iff_one, span_eval, Ideal.span, ← Set.image_univ,
     Finsupp.mem_span_image_iff_total]
   rintro ⟨v, _, hv⟩
@@ -100,9 +102,9 @@ def maxIdeal : Ideal (MvPolynomial (MonicIrreducible k) k) :=
   Classical.choose <| Ideal.exists_le_maximal _ <| span_eval_ne_top k
 #align algebraic_closure.max_ideal AlgebraicClosure.maxIdeal
 
-instance maxIdeal.is_maximal : (maxIdeal k).IsMaximal :=
+instance maxIdeal.isMaximal : (maxIdeal k).IsMaximal :=
   (Classical.choose_spec <| Ideal.exists_le_maximal _ <| span_eval_ne_top k).1
-#align algebraic_closure.max_ideal.is_maximal AlgebraicClosure.maxIdeal.is_maximal
+#align algebraic_closure.max_ideal.is_maximal AlgebraicClosure.maxIdeal.isMaximal
 
 theorem le_max_ideal : spanEval k ≤ maxIdeal k :=
   (Classical.choose_spec <| Ideal.exists_le_maximal _ <| span_eval_ne_top k).2
@@ -140,14 +142,16 @@ theorem AdjoinMonic.is_integral (z : AdjoinMonic k) : IsIntegral k z :=
     MvPolynomial.induction_on p (fun x => is_integral_algebra_map) (fun p q => is_integral_add)
       fun p f ih =>
       @is_integral_mul _ _ _ _ _ _ (Ideal.Quotient.mk _ _) ih
-        ⟨f, f.2.1, by
+        ⟨f, f.2.1,
+          by
           erw [adjoin_monic.algebra_map, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
           exact le_max_ideal k (Ideal.subset_span ⟨f, rfl⟩)⟩
 #align algebraic_closure.adjoin_monic.is_integral AlgebraicClosure.AdjoinMonic.is_integral
 
 theorem AdjoinMonic.exists_root {f : k[X]} (hfm : f.Monic) (hfi : Irreducible f) :
     ∃ x : AdjoinMonic k, f.eval₂ (toAdjoinMonic k) x = 0 :=
-  ⟨Ideal.Quotient.mk _ <| x (⟨f, hfm, hfi⟩ : MonicIrreducible k), by
+  ⟨Ideal.Quotient.mk _ <| x (⟨f, hfm, hfi⟩ : MonicIrreducible k),
+    by
     rw [to_adjoin_monic, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
     exact le_max_ideal k (Ideal.subset_span <| ⟨_, rfl⟩)⟩
 #align algebraic_closure.adjoin_monic.exists_root AlgebraicClosure.AdjoinMonic.exists_root
@@ -191,20 +195,19 @@ theorem toStepSucc.exists_root {n} {f : Polynomial (Step k n)} (hfm : f.Monic)
 #align algebraic_closure.to_step_succ.exists_root AlgebraicClosure.toStepSucc.exists_root
 
 /-- The canonical ring homomorphism to a step with a greater index. -/
-def toStepOfLe (m n : ℕ) (h : m ≤ n) :
-    Step k m →+* Step k
-        n where 
+def toStepOfLe (m n : ℕ) (h : m ≤ n) : Step k m →+* Step k n
+    where
   toFun := Nat.leRecOn h fun n => toStepSucc k n
-  map_one' := by 
+  map_one' := by
     induction' h with n h ih; · exact Nat.leRecOn_self 1
     rw [Nat.leRecOn_succ h, ih, RingHom.map_one]
-  map_mul' x y := by 
+  map_mul' x y := by
     induction' h with n h ih; · simp_rw [Nat.leRecOn_self]
     simp_rw [Nat.leRecOn_succ h, ih, RingHom.map_mul]
-  map_zero' := by 
+  map_zero' := by
     induction' h with n h ih; · exact Nat.leRecOn_self 0
     rw [Nat.leRecOn_succ h, ih, RingHom.map_zero]
-  map_add' x y := by 
+  map_add' x y := by
     induction' h with n h ih; · simp_rw [Nat.leRecOn_self]
     simp_rw [Nat.leRecOn_succ h, ih, RingHom.map_add]
 #align algebraic_closure.to_step_of_le AlgebraicClosure.toStepOfLe
@@ -260,7 +263,8 @@ instance algebraOfStep (n) : Algebra (Step k n) (AlgebraicClosure k) :=
 
 theorem of_step_succ (n : ℕ) : (ofStep k (n + 1)).comp (toStepSucc k n) = ofStep k n :=
   RingHom.ext fun x =>
-    show Ring.DirectLimit.of (Step k) (fun i j h => toStepOfLe k i j h) _ _ = _ by
+    show Ring.DirectLimit.of (Step k) (fun i j h => toStepOfLe k i j h) _ _ = _
+      by
       convert Ring.DirectLimit.of_f n.le_succ x
       ext x
       exact (Nat.leRecOn_succ' x).symm
@@ -272,7 +276,8 @@ theorem exists_of_step (z : AlgebraicClosure k) : ∃ n x, ofStep k n x = z :=
 
 -- slow
 theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi : Irreducible f) :
-    ∃ x : AlgebraicClosure k, f.eval x = 0 := by
+    ∃ x : AlgebraicClosure k, f.eval x = 0 :=
+  by
   have : ∃ n p, Polynomial.map (of_step k n) p = f := by
     convert Ring.DirectLimit.Polynomial.exists_of f
   obtain ⟨n, p, rfl⟩ := this

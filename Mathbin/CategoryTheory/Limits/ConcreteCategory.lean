@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.limits.concrete_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,14 +35,15 @@ variable {C : Type u} [Category.{v} C] [ConcreteCategory.{max w v} C] {J : Type 
   (F : J ⥤ C) [PreservesLimit F (forget C)]
 
 theorem Concrete.to_product_injective_of_is_limit {D : Cone F} (hD : IsLimit D) :
-    Function.Injective fun (x : D.x) (j : J) => D.π.app j x := by
+    Function.Injective fun (x : D.x) (j : J) => D.π.app j x :=
+  by
   let E := (forget C).mapCone D
   let hE : is_limit E := is_limit_of_preserves _ hD
   let G := Types.limitCone.{w, v} (F ⋙ forget C)
   let hG := Types.limitConeIsLimit.{w, v} (F ⋙ forget C)
   let T : E.X ≅ G.X := hE.cone_point_unique_up_to_iso hG
   change Function.Injective (T.hom ≫ fun x j => G.π.app j x)
-  have h : Function.Injective T.hom := by 
+  have h : Function.Injective T.hom := by
     intro a b h
     suffices T.inv (T.hom a) = T.inv (T.hom b) by simpa
     rw [h]
@@ -69,7 +70,8 @@ open WidePullbackShape
 
 theorem Concrete.wide_pullback_ext {B : C} {ι : Type w} {X : ι → C} (f : ∀ j : ι, X j ⟶ B)
     [HasWidePullback B X f] [PreservesLimit (wideCospan B X f) (forget C)]
-    (x y : widePullback B X f) (h₀ : base f x = base f y) (h : ∀ j, π f j x = π f j y) : x = y := by
+    (x y : widePullback B X f) (h₀ : base f x = base f y) (h : ∀ j, π f j x = π f j y) : x = y :=
+  by
   apply concrete.limit_ext
   rintro (_ | j)
   · exact h₀
@@ -80,7 +82,8 @@ theorem Concrete.wide_pullback_ext {B : C} {ι : Type w} {X : ι → C} (f : ∀
 theorem Concrete.wide_pullback_ext' {B : C} {ι : Type w} [Nonempty ι] {X : ι → C}
     (f : ∀ j : ι, X j ⟶ B) [HasWidePullback.{w} B X f]
     [PreservesLimit (wideCospan B X f) (forget C)] (x y : widePullback B X f)
-    (h : ∀ j, π f j x = π f j y) : x = y := by
+    (h : ∀ j, π f j x = π f j y) : x = y :=
+  by
   apply concrete.wide_pullback_ext _ _ _ _ h
   inhabit ι
   simp only [← π_arrow f (Inhabited.default _), comp_apply, h]
@@ -93,7 +96,8 @@ section Multiequalizer
 
 theorem Concrete.multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequalizer I]
     [PreservesLimit I.multicospan (forget C)] (x y : multiequalizer I)
-    (h : ∀ t : I.L, multiequalizer.ι I t x = multiequalizer.ι I t y) : x = y := by
+    (h : ∀ t : I.L, multiequalizer.ι I t x = multiequalizer.ι I t y) : x = y :=
+  by
   apply concrete.limit_ext
   rintro (a | b)
   · apply h
@@ -104,14 +108,11 @@ theorem Concrete.multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequali
 /-- An auxiliary equivalence to be used in `multiequalizer_equiv` below.-/
 def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
     (I.multicospan ⋙ forget C).sections ≃
-      { x : ∀ i : I.L, I.left i //
-        ∀ i : I.R,
-          I.fst i (x _) =
-            I.snd i
-              (x
-                _) } where 
+      { x : ∀ i : I.L, I.left i // ∀ i : I.R, I.fst i (x _) = I.snd i (x _) }
+    where
   toFun x :=
-    ⟨fun i => x.1 (WalkingMulticospan.left _), fun i => by
+    ⟨fun i => x.1 (WalkingMulticospan.left _), fun i =>
+      by
       have a := x.2 (walking_multicospan.hom.fst i)
       have b := x.2 (walking_multicospan.hom.snd i)
       rw [← b] at a
@@ -121,7 +122,7 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
         match j with
         | walking_multicospan.left a => x.1 _
         | walking_multicospan.right b => I.fst b (x.1 _)
-      property := by 
+      property := by
         rintro (a | b) (a' | b') (f | f | f)
         · change (I.multicospan.map (𝟙 _)) _ = _
           simp
@@ -131,13 +132,13 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
           rfl
         · change (I.multicospan.map (𝟙 _)) _ = _
           simp }
-  left_inv := by 
+  left_inv := by
     intro x; ext (a | b)
     · rfl
     · change _ = x.val _
       rw [← x.2 (walking_multicospan.hom.fst b)]
       rfl
-  right_inv := by 
+  right_inv := by
     intro x
     ext i
     rfl
@@ -175,7 +176,8 @@ section Colimits
 -- We don't mark this as an `@[ext]` lemma as we don't always want to work elementwise.
 theorem cokernel_funext {C : Type _} [Category C] [HasZeroMorphisms C] [ConcreteCategory C]
     {M N K : C} {f : M ⟶ N} [HasCokernel f] {g h : cokernel f ⟶ K}
-    (w : ∀ n : N, g (cokernel.π f n) = h (cokernel.π f n)) : g = h := by
+    (w : ∀ n : N, g (cokernel.π f n) = h (cokernel.π f n)) : g = h :=
+  by
   apply coequalizer.hom_ext
   apply concrete_category.hom_ext _ _
   simpa using w
@@ -187,7 +189,7 @@ variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {J : Type v} [Sm
 theorem Concrete.from_union_surjective_of_is_colimit {D : Cocone F} (hD : IsColimit D) :
     let ff : (Σj : J, F.obj j) → D.x := fun a => D.ι.app a.1 a.2
     Function.Surjective ff :=
-  by 
+  by
   intro ff
   let E := (forget C).mapCocone D
   let hE : is_colimit E := is_colimit_of_preserves _ hD
@@ -195,14 +197,15 @@ theorem Concrete.from_union_surjective_of_is_colimit {D : Cocone F} (hD : IsColi
   let hG := Types.colimitCoconeIsColimit.{v, v} (F ⋙ forget C)
   let T : E ≅ G := hE.unique_up_to_iso hG
   let TX : E.X ≅ G.X := (cocones.forget _).mapIso T
-  suffices Function.Surjective (TX.hom ∘ ff) by 
+  suffices Function.Surjective (TX.hom ∘ ff) by
     intro a
     obtain ⟨b, hb⟩ := this (TX.hom a)
     refine' ⟨b, _⟩
     apply_fun TX.inv  at hb
     change (TX.hom ≫ TX.inv) (ff b) = (TX.hom ≫ TX.inv) _ at hb
     simpa only [TX.hom_inv_id] using hb
-  have : TX.hom ∘ ff = fun a => G.ι.app a.1 a.2 := by
+  have : TX.hom ∘ ff = fun a => G.ι.app a.1 a.2 :=
+    by
     ext a
     change (E.ι.app a.1 ≫ hE.desc G) a.2 = _
     rw [hE.fac]
@@ -213,7 +216,8 @@ theorem Concrete.from_union_surjective_of_is_colimit {D : Cocone F} (hD : IsColi
   category_theory.limits.concrete.from_union_surjective_of_is_colimit CategoryTheory.Limits.Concrete.from_union_surjective_of_is_colimit
 
 theorem Concrete.is_colimit_exists_rep {D : Cocone F} (hD : IsColimit D) (x : D.x) :
-    ∃ (j : J)(y : F.obj j), D.ι.app j y = x := by
+    ∃ (j : J)(y : F.obj j), D.ι.app j y = x :=
+  by
   obtain ⟨a, rfl⟩ := concrete.from_union_surjective_of_is_colimit F hD x
   exact ⟨a.1, a.2, rfl⟩
 #align
@@ -227,7 +231,7 @@ theorem Concrete.colimit_exists_rep [HasColimit F] (x : colimit F) :
 
 theorem Concrete.is_colimit_rep_eq_of_exists {D : Cocone F} {i j : J} (hD : IsColimit D)
     (x : F.obj i) (y : F.obj j) (h : ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y) :
-    D.ι.app i x = D.ι.app j y := by 
+    D.ι.app i x = D.ι.app j y := by
   let E := (forget C).mapCocone D
   let hE : is_colimit E := is_colimit_of_preserves _ hD
   let G := Types.colimitCocone.{v, v} (F ⋙ forget C)
@@ -262,7 +266,8 @@ variable [IsFiltered J]
 
 theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsColimit D)
     (x : F.obj i) (y : F.obj j) (h : D.ι.app _ x = D.ι.app _ y) :
-    ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y := by
+    ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y :=
+  by
   let E := (forget C).mapCocone D
   let hE : is_colimit E := is_colimit_of_preserves _ hD
   let G := Types.colimitCocone.{v, v} (F ⋙ forget C)
@@ -279,15 +284,15 @@ theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCo
     by exact this ⟨i, x⟩ ⟨j, y⟩ h
   intro a b h
   induction h
-  case rel x y hh => 
+  case rel x y hh =>
     obtain ⟨e, he⟩ := hh
     use y.1, e, 𝟙 _
     simpa using he.symm
   case refl x => use x.1, 𝟙 _, 𝟙 _, rfl
-  case symm x y _ hh => 
+  case symm x y _ hh =>
     obtain ⟨k, f, g, hh⟩ := hh
     use k, g, f, hh.symm
-  case trans x y z _ _ hh1 hh2 => 
+  case trans x y z _ _ hh1 hh2 =>
     obtain ⟨k1, f1, g1, h1⟩ := hh1
     obtain ⟨k2, f2, g2, h2⟩ := hh2
     let k0 : J := is_filtered.max k1 k2
@@ -332,7 +337,8 @@ open WidePushoutShape
 
 theorem Concrete.wide_pushout_exists_rep {B : C} {α : Type _} {X : α → C} (f : ∀ j : α, B ⟶ X j)
     [HasWidePushout.{v} B X f] [PreservesColimit (wideSpan B X f) (forget C)]
-    (x : widePushout B X f) : (∃ y : B, head f y = x) ∨ ∃ (i : α)(y : X i), ι f i y = x := by
+    (x : widePushout B X f) : (∃ y : B, head f y = x) ∨ ∃ (i : α)(y : X i), ι f i y = x :=
+  by
   obtain ⟨_ | j, y, rfl⟩ := concrete.colimit_exists_rep _ x
   · use y
   · right
@@ -342,7 +348,8 @@ theorem Concrete.wide_pushout_exists_rep {B : C} {α : Type _} {X : α → C} (f
 
 theorem Concrete.wide_pushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X : α → C}
     (f : ∀ j : α, B ⟶ X j) [HasWidePushout.{v} B X f] [PreservesColimit (wideSpan B X f) (forget C)]
-    (x : widePushout B X f) : ∃ (i : α)(y : X i), ι f i y = x := by
+    (x : widePushout B X f) : ∃ (i : α)(y : X i), ι f i y = x :=
+  by
   rcases concrete.wide_pushout_exists_rep f x with (⟨y, rfl⟩ | ⟨i, y, rfl⟩)
   · inhabit α
     use Inhabited.default _, f _ y

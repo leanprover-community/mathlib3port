@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.skolem
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,8 @@ def skolem₁ : Language :=
 variable {L}
 
 theorem card_functions_sum_skolem₁ :
-    (#Σn, (L.Sum L.skolem₁).Functions n) = (#Σn, L.BoundedFormula Empty (n + 1)) := by
+    (#Σn, (L.Sum L.skolem₁).Functions n) = (#Σn, L.BoundedFormula Empty (n + 1)) :=
+  by
   simp only [card_functions_sum, skolem₁_functions, lift_id', mk_sigma, sum_add_distrib']
   rw [add_comm, add_eq_max, max_eq_left]
   · refine' sum_le_sum _ _ fun n => _
@@ -63,7 +64,8 @@ theorem card_functions_sum_skolem₁ :
 #align
   first_order.language.card_functions_sum_skolem₁ FirstOrder.Language.card_functions_sum_skolem₁
 
-theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
+theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card :=
+  by
   rw [card_functions_sum_skolem₁]
   trans #Σn, L.bounded_formula Empty n
   ·
@@ -85,7 +87,8 @@ noncomputable instance skolem₁Structure : L.skolem₁.StructureCat M :=
 namespace Substructure
 
 theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) :
-    (LhomCat.sumInl.substructureReduct S).IsElementary := by
+    (LhomCat.sumInl.substructureReduct S).IsElementary :=
+  by
   apply (Lhom.sum_inl.substructure_reduct S).is_elementary_of_exists
   intro n φ x a h
   let φ' : (L.sum L.skolem₁).Functions n := Lhom.sum_inr.on_function φ
@@ -114,7 +117,8 @@ open Substructure
 
 variable (L) (M)
 
-instance : Small (⊥ : (L.Sum L.skolem₁).Substructure M).elementarySkolem₁Reduct := by
+instance : Small (⊥ : (L.Sum L.skolem₁).Substructure M).elementarySkolem₁Reduct :=
+  by
   rw [coe_sort_elementary_skolem₁_reduct]
   infer_instance
 
@@ -134,7 +138,8 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
     (h2 : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} κ)
     (h3 : Cardinal.lift.{w'} L.card ≤ Cardinal.lift.{max u v} κ)
     (h4 : Cardinal.lift.{w} κ ≤ Cardinal.lift.{w'} (#M)) :
-    ∃ S : L.ElementarySubstructure M, s ⊆ S ∧ Cardinal.lift.{w'} (#S) = Cardinal.lift.{w} κ := by
+    ∃ S : L.ElementarySubstructure M, s ⊆ S ∧ Cardinal.lift.{w'} (#S) = Cardinal.lift.{w} κ :=
+  by
   obtain ⟨s', hs'⟩ := Cardinal.le_mk_iff_exists_set.1 h4
   rw [← aleph_0_le_lift] at h1
   rw [← hs'] at *

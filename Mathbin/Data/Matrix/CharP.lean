@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.matrix.char_p
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,7 +21,7 @@ open Matrix
 variable {n : Type _} [Fintype n] {R : Type _} [Ring R]
 
 instance Matrix.char_p [DecidableEq n] [Nonempty n] (p : ℕ) [CharP R p] : CharP (Matrix n n R) p :=
-  ⟨by 
+  ⟨by
     intro k
     rw [← CharP.cast_eq_zero_iff R p k, ← Nat.cast_zero, ← map_nat_cast <| scalar n]
     convert scalar_inj; · simp; · assumption⟩

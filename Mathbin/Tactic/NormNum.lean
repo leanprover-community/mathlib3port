@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_num
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1708,9 +1708,8 @@ Propositions are treated like any other term. The normal form for propositions i
 used to help here.
 -/
 @[user_attribute]
-protected unsafe def attr :
-    user_attribute (expr → tactic (expr × expr))
-      Unit where 
+protected unsafe def attr : user_attribute (expr → tactic (expr × expr)) Unit
+    where
   Name := `norm_num
   descr := "Add norm_num derivers"
   cache_cfg :=
@@ -1742,7 +1741,7 @@ unsafe def derive' (step : expr → tactic (expr × expr)) : expr → tactic (ex
   | e => do
     let e ← instantiate_mvars e
     let (_, e', pr) ←
-      ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed) (fun _ _ _ _ _ => failed)
+      ext_simplify_core () { } simp_lemmas.mk (fun _ => failed) (fun _ _ _ _ _ => failed)
           (fun _ _ _ _ e => do
             let (new_e, pr) ← step e
             guard ¬new_e == e
@@ -1779,7 +1778,7 @@ unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List si
     (l : Interactive.Loc) : tactic Unit :=
   repeat1 <|
     orelse' (tactic.norm_num1 step l) <|
-      interactive.simp_core {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) false
+      interactive.simp_core { } (tactic.norm_num1 step (Interactive.Loc.ns [none])) false
           (simp_arg_type.except `` one_div :: hs) [] l >>
         skip
 #align tactic.norm_num tactic.norm_num
@@ -1792,7 +1791,7 @@ unsafe def _root_.expr.norm_num (step : expr → tactic (expr × expr)) (no_dflt
     (hs : List simp_arg_type := []) (attr_names : List Name := []) : expr → tactic (expr × expr) :=
   let simp_step (e : expr) := do
     let (e', p, _) ←
-      e.simp {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) no_dflt attr_names
+      e.simp { } (tactic.norm_num1 step (Interactive.Loc.ns [none])) no_dflt attr_names
           (simp_arg_type.except `` one_div :: hs)
     return (e', p)
   or_refl_conv fun e => do

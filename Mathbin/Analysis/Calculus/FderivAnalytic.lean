@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv_analytic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,8 @@ variable {p : FormalMultilinearSeries 𝕜 E F} {r : ℝ≥0∞}
 variable {f : E → F} {x : E} {s : Set E}
 
 theorem HasFpowerSeriesAt.hasStrictFderivAt (h : HasFpowerSeriesAt f p x) :
-    HasStrictFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p 1)) x := by
+    HasStrictFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p 1)) x :=
+  by
   refine' h.is_O_image_sub_norm_mul_norm_sub.trans_is_o (is_o.of_norm_right _)
   refine' is_o_iff_exists_eq_mul.2 ⟨fun y => ‖y - (x, x)‖, _, eventually_eq.rfl⟩
   refine' (continuous_id.sub continuous_const).norm.tendsto' _ _ _
@@ -121,7 +122,7 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
 
 /-- If a function is analytic on a set `s`, so is its Fréchet derivative. -/
 theorem AnalyticOn.fderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : AnalyticOn 𝕜 (fderiv 𝕜 f) s :=
-  by 
+  by
   intro y hy
   rcases h y hy with ⟨p, r, hp⟩
   exact hp.fderiv.analytic_at
@@ -129,7 +130,8 @@ theorem AnalyticOn.fderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : Analytic
 
 /-- If a function is analytic on a set `s`, so are its successive Fréchet derivative. -/
 theorem AnalyticOn.iteratedFderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n : ℕ) :
-    AnalyticOn 𝕜 (iteratedFderiv 𝕜 n f) s := by
+    AnalyticOn 𝕜 (iteratedFderiv 𝕜 n f) s :=
+  by
   induction' n with n IH
   · rw [iterated_fderiv_zero_eq_comp]
     exact ((continuousMultilinearCurryFin0 𝕜 E F).symm : F →L[𝕜] E[×0]→L[𝕜] F).compAnalyticOn h
@@ -142,7 +144,7 @@ theorem AnalyticOn.iteratedFderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n
 
 /-- An analytic function is infinitely differentiable. -/
 theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : ℕ∞} :
-    ContDiffOn 𝕜 n f s := by 
+    ContDiffOn 𝕜 n f s := by
   let t := { x | AnalyticAt 𝕜 f x }
   suffices : ContDiffOn 𝕜 n f t; exact this.mono h
   have H : AnalyticOn 𝕜 f t := fun x hx => hx

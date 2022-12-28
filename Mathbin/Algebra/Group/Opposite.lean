@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.group.opposite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,8 @@ instance [AddMonoid α] : AddMonoid αᵐᵒᵖ :=
   unop_injective.AddMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne αᵐᵒᵖ :=
-  { MulOpposite.addMonoid α, MulOpposite.hasOne α with
+  { MulOpposite.addMonoid α,
+    MulOpposite.hasOne α with
     natCast := fun n => op n
     nat_cast_zero := show op ((0 : ℕ) : α) = 0 by simp
     nat_cast_succ := show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by simp }
@@ -70,7 +71,8 @@ instance [AddGroup α] : AddGroup αᵐᵒᵖ :=
     fun _ _ => rfl
 
 instance [AddGroupWithOne α] : AddGroupWithOne αᵐᵒᵖ :=
-  { MulOpposite.addMonoidWithOne α, MulOpposite.addGroup α with
+  { MulOpposite.addMonoidWithOne α,
+    MulOpposite.addGroup α with
     intCast := fun n => op n
     int_cast_of_nat := fun n => show op ((n : ℤ) : α) = op n by rw [Int.cast_ofNat]
     int_cast_neg_succ_of_nat := fun n =>
@@ -109,13 +111,16 @@ instance [CommSemigroup α] : CommSemigroup αᵐᵒᵖ :=
 
 @[to_additive]
 instance [MulOneClass α] : MulOneClass αᵐᵒᵖ :=
-  { MulOpposite.hasMul α, MulOpposite.hasOne α with
+  { MulOpposite.hasMul α,
+    MulOpposite.hasOne
+      α with
     one_mul := fun x => unop_injective <| mul_one <| unop x
     mul_one := fun x => unop_injective <| one_mul <| unop x }
 
 @[to_additive]
 instance [Monoid α] : Monoid αᵐᵒᵖ :=
-  { MulOpposite.semigroup α, MulOpposite.mulOneClass α with
+  { MulOpposite.semigroup α,
+    MulOpposite.mulOneClass α with
     npow := fun n x => op <| x.unop ^ n
     npow_zero' := fun x => unop_injective <| Monoid.npow_zero x.unop
     npow_succ' := fun n x => unop_injective <| pow_succ' x.unop n }
@@ -142,7 +147,8 @@ instance [CancelCommMonoid α] : CancelCommMonoid αᵐᵒᵖ :=
 
 @[to_additive AddOpposite.subNegMonoid]
 instance [DivInvMonoid α] : DivInvMonoid αᵐᵒᵖ :=
-  { MulOpposite.monoid α, MulOpposite.hasInv α with
+  { MulOpposite.monoid α,
+    MulOpposite.hasInv α with
     zpow := fun n x => op <| x.unop ^ n
     zpow_zero' := fun x => unop_injective <| DivInvMonoid.zpow_zero' x.unop
     zpow_succ' := fun n x =>
@@ -151,7 +157,9 @@ instance [DivInvMonoid α] : DivInvMonoid αᵐᵒᵖ :=
 
 @[to_additive AddOpposite.subtractionMonoid]
 instance [DivisionMonoid α] : DivisionMonoid αᵐᵒᵖ :=
-  { MulOpposite.divInvMonoid α, MulOpposite.hasInvolutiveInv α with
+  { MulOpposite.divInvMonoid α,
+    MulOpposite.hasInvolutiveInv
+      α with
     mul_inv_rev := fun a b => unop_injective <| mul_inv_rev _ _
     inv_eq_of_mul := fun a b h => unop_injective <| inv_eq_of_mul_eq_one_left <| congr_arg unop h }
 
@@ -380,8 +388,8 @@ defines a semigroup homomorphism to `Nᵐᵒᵖ`. -/
       "An additive semigroup homomorphism `f : add_hom M N` such that `f x` additively\ncommutes with `f y` for all `x, y` defines an additive semigroup homomorphism to `Sᵃᵒᵖ`.",
   simps (config := { fullyApplied := false })]
 def MulHom.toOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
-    (hf : ∀ x y, Commute (f x) (f y)) :
-    M →ₙ* Nᵐᵒᵖ where 
+    (hf : ∀ x y, Commute (f x) (f y)) : M →ₙ* Nᵐᵒᵖ
+    where
   toFun := MulOpposite.op ∘ f
   map_mul' x y := by simp [(hf x y).Eq]
 #align mul_hom.to_opposite MulHom.toOpposite
@@ -394,8 +402,8 @@ defines a semigroup homomorphism from `Mᵐᵒᵖ`. -/
       "An additive semigroup homomorphism `f : add_hom M N` such that `f x` additively\ncommutes with `f y` for all `x`, `y` defines an additive semigroup homomorphism from `Mᵃᵒᵖ`.",
   simps (config := { fullyApplied := false })]
 def MulHom.fromOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
-    (hf : ∀ x y, Commute (f x) (f y)) :
-    Mᵐᵒᵖ →ₙ* N where 
+    (hf : ∀ x y, Commute (f x) (f y)) : Mᵐᵒᵖ →ₙ* N
+    where
   toFun := f ∘ MulOpposite.unop
   map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
 #align mul_hom.from_opposite MulHom.fromOpposite
@@ -405,7 +413,7 @@ def MulHom.fromOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), (forall (x : M) (y : M), Commute.{u2} N (MulOneClass.toHasMul.{u2} N _inst_2) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MonoidHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f x) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MonoidHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f y)) -> (MonoidHom.{u1, u2} M (MulOpposite.{u2} N) _inst_1 (MulOpposite.mulOneClass.{u2} N _inst_2))
 but is expected to have type
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), (forall (x : M) (y : M), Commute.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) (MulOneClass.toMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) _inst_2) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f y)) -> (MonoidHom.{u1, u2} M (MulOpposite.{u2} N) _inst_1 (MulOpposite.instMulOneClassMulOpposite.{u2} N _inst_2))
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), (forall (x : M) (y : M), Commute.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) (MulOneClass.toMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) _inst_2) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f y)) -> (MonoidHom.{u1, u2} M (MulOpposite.{u2} N) _inst_1 (MulOpposite.instMulOneClassMulOpposite.{u2} N _inst_2))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.to_opposite MonoidHom.toOppositeₓ'. -/
 /-- A monoid homomorphism `f : M →* N` such that `f x` commutes with `f y` for all `x, y` defines
 a monoid homomorphism to `Nᵐᵒᵖ`. -/
@@ -413,8 +421,8 @@ a monoid homomorphism to `Nᵐᵒᵖ`. -/
       "An additive monoid homomorphism `f : M →+ N` such that `f x` additively commutes\nwith `f y` for all `x, y` defines an additive monoid homomorphism to `Sᵃᵒᵖ`.",
   simps (config := { fullyApplied := false })]
 def MonoidHom.toOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M →* N)
-    (hf : ∀ x y, Commute (f x) (f y)) :
-    M →* Nᵐᵒᵖ where 
+    (hf : ∀ x y, Commute (f x) (f y)) : M →* Nᵐᵒᵖ
+    where
   toFun := MulOpposite.op ∘ f
   map_one' := congr_arg op f.map_one
   map_mul' x y := by simp [(hf x y).Eq]
@@ -424,7 +432,7 @@ def MonoidHom.toOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M �
 lean 3 declaration is
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), (forall (x : M) (y : M), Commute.{u2} N (MulOneClass.toHasMul.{u2} N _inst_2) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MonoidHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f x) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MonoidHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f y)) -> (MonoidHom.{u1, u2} (MulOpposite.{u1} M) N (MulOpposite.mulOneClass.{u1} M _inst_1) _inst_2)
 but is expected to have type
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), (forall (x : M) (y : M), Commute.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) (MulOneClass.toMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) x) _inst_2) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f y)) -> (MonoidHom.{u1, u2} (MulOpposite.{u1} M) N (MulOpposite.instMulOneClassMulOpposite.{u1} M _inst_1) _inst_2)
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), (forall (x : M) (y : M), Commute.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) (MulOneClass.toMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) x) _inst_2) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : M) => N) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u1} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u1, u2} M N _inst_1 _inst_2))) f y)) -> (MonoidHom.{u1, u2} (MulOpposite.{u1} M) N (MulOpposite.instMulOneClassMulOpposite.{u1} M _inst_1) _inst_2)
 Case conversion may be inaccurate. Consider using '#align monoid_hom.from_opposite MonoidHom.fromOppositeₓ'. -/
 /-- A monoid homomorphism `f : M →* N` such that `f x` commutes with `f y` for all `x, y` defines
 a monoid homomorphism from `Mᵐᵒᵖ`. -/
@@ -432,8 +440,8 @@ a monoid homomorphism from `Mᵐᵒᵖ`. -/
       "An additive monoid homomorphism `f : M →+ N` such that `f x` additively commutes\nwith `f y` for all `x`, `y` defines an additive monoid homomorphism from `Mᵃᵒᵖ`.",
   simps (config := { fullyApplied := false })]
 def MonoidHom.fromOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M →* N)
-    (hf : ∀ x y, Commute (f x) (f y)) :
-    Mᵐᵒᵖ →* N where 
+    (hf : ∀ x y, Commute (f x) (f y)) : Mᵐᵒᵖ →* N
+    where
   toFun := f ∘ MulOpposite.unop
   map_one' := f.map_one
   map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
@@ -448,9 +456,8 @@ Case conversion may be inaccurate. Consider using '#align units.op_equiv Units.o
 /-- The units of the opposites are equivalent to the opposites of the units. -/
 @[to_additive
       "The additive units of the additive opposites are equivalent to the additive opposites\nof the additive units."]
-def Units.opEquiv {M} [Monoid M] :
-    Mᵐᵒᵖˣ ≃*
-      Mˣᵐᵒᵖ where 
+def Units.opEquiv {M} [Monoid M] : Mᵐᵒᵖˣ ≃* Mˣᵐᵒᵖ
+    where
   toFun u := op ⟨unop u, unop ↑u⁻¹, op_injective u.4, op_injective u.3⟩
   invFun := MulOpposite.rec' fun u => ⟨op ↑u, op ↑u⁻¹, unop_injective <| u.4, unop_injective u.3⟩
   map_mul' x y := unop_injective <| Units.ext <| rfl
@@ -460,7 +467,7 @@ def Units.opEquiv {M} [Monoid M] :
 
 /- warning: units.coe_unop_op_equiv -> Units.coe_unop_opEquiv is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)), Eq.{succ u1} M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.val.{u1} M _inst_1)))) (MulOpposite.unop.{u1} (Units.{u1} M _inst_1) (coeFn.{succ u1, succ u1} (MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)))) (fun (_x : MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)))) => (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) -> (MulOpposite.{u1} (Units.{u1} M _inst_1))) (MulEquiv.hasCoeToFun.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)))) (Units.opEquiv.{u1} M _inst_1) u))) (MulOpposite.unop.{u1} M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (Units.val.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))))) u))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)), Eq.{succ u1} M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))) (MulOpposite.unop.{u1} (Units.{u1} M _inst_1) (coeFn.{succ u1, succ u1} (MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)))) (fun (_x : MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)))) => (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) -> (MulOpposite.{u1} (Units.{u1} M _inst_1))) (MulEquiv.hasCoeToFun.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1)))) (Units.opEquiv.{u1} M _inst_1) u))) (MulOpposite.unop.{u1} M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (coeBase.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (Units.hasCoe.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))))) u))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)), Eq.{succ u1} M (Units.val.{u1} M _inst_1 (MulOpposite.unop.{u1} (Units.{u1} M _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1)))) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (fun (_x : Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) => MulOpposite.{u1} (Units.{u1} M _inst_1)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1)))) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1)))) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulEquivClass.toEquivLike.{u1, u1, u1} (MulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1)))) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (MulEquiv.instMulEquivClassMulEquiv.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))))))) (Units.opEquiv.{u1} M _inst_1) u))) (MulOpposite.unop.{u1} M (Units.val.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1) u))
 Case conversion may be inaccurate. Consider using '#align units.coe_unop_op_equiv Units.coe_unop_opEquivₓ'. -/
@@ -472,7 +479,7 @@ theorem Units.coe_unop_opEquiv {M} [Monoid M] (u : Mᵐᵒᵖˣ) :
 
 /- warning: units.coe_op_equiv_symm -> Units.coe_opEquiv_symm is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : MulOpposite.{u1} (Units.{u1} M _inst_1)), Eq.{succ u1} (MulOpposite.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (Units.val.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))))) (coeFn.{succ u1, succ u1} (MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)))) (fun (_x : MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)))) => (MulOpposite.{u1} (Units.{u1} M _inst_1)) -> (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulEquiv.hasCoeToFun.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)))) (MulEquiv.symm.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (Units.opEquiv.{u1} M _inst_1)) u)) (MulOpposite.op.{u1} M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.val.{u1} M _inst_1)))) (MulOpposite.unop.{u1} (Units.{u1} M _inst_1) u)))
+  forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : MulOpposite.{u1} (Units.{u1} M _inst_1)), Eq.{succ u1} (MulOpposite.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (coeBase.{succ u1, succ u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} M) (Units.hasCoe.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))))) (coeFn.{succ u1, succ u1} (MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)))) (fun (_x : MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)))) => (MulOpposite.{u1} (Units.{u1} M _inst_1)) -> (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulEquiv.hasCoeToFun.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)))) (MulEquiv.symm.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toHasMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1)) (Units.mulOneClass.{u1} (MulOpposite.{u1} M) (MulOpposite.monoid.{u1} M _inst_1))) (MulOpposite.hasMul.{u1} (Units.{u1} M _inst_1) (MulOneClass.toHasMul.{u1} (Units.{u1} M _inst_1) (Units.mulOneClass.{u1} M _inst_1))) (Units.opEquiv.{u1} M _inst_1)) u)) (MulOpposite.op.{u1} M ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))) (MulOpposite.unop.{u1} (Units.{u1} M _inst_1) u)))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : MulOpposite.{u1} (Units.{u1} M _inst_1)), Eq.{succ u1} (MulOpposite.{u1} M) (Units.val.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)))) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (fun (_x : MulOpposite.{u1} (Units.{u1} M _inst_1)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : MulOpposite.{u1} (Units.{u1} M _inst_1)) => Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)))) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)))) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulEquivClass.toEquivLike.{u1, u1, u1} (MulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)))) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulEquiv.instMulEquivClassMulEquiv.{u1, u1} (MulOpposite.{u1} (Units.{u1} M _inst_1)) (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))))))) (MulEquiv.symm.{u1, u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (MulOpposite.{u1} (Units.{u1} M _inst_1)) (MulOneClass.toMul.{u1} (Units.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1)) (Units.instMulOneClassUnits.{u1} (MulOpposite.{u1} M) (MulOpposite.instMonoidMulOpposite.{u1} M _inst_1))) (MulOpposite.instMulMulOpposite.{u1} (Units.{u1} M _inst_1) (MulOneClass.toMul.{u1} (Units.{u1} M _inst_1) (Units.instMulOneClassUnits.{u1} M _inst_1))) (Units.opEquiv.{u1} M _inst_1)) u)) (MulOpposite.op.{u1} M (Units.val.{u1} M _inst_1 (MulOpposite.unop.{u1} (Units.{u1} M _inst_1) u)))
 Case conversion may be inaccurate. Consider using '#align units.coe_op_equiv_symm Units.coe_opEquiv_symmₓ'. -/
@@ -488,20 +495,18 @@ theorem Units.coe_opEquiv_symm {M} [Monoid M] (u : Mˣᵐᵒᵖ) :
 @[to_additive
       "An additive semigroup homomorphism `add_hom M N` can equivalently be viewed as an\nadditive semigroup homomorphism `add_hom Mᵃᵒᵖ Nᵃᵒᵖ`. This is the action of the (fully faithful)\n`ᵃᵒᵖ`-functor on morphisms.",
   simps]
-def MulHom.op {M N} [Mul M] [Mul N] :
-    (M →ₙ* N) ≃
-      (Mᵐᵒᵖ →ₙ*
-        Nᵐᵒᵖ) where 
+def MulHom.op {M N} [Mul M] [Mul N] : (M →ₙ* N) ≃ (Mᵐᵒᵖ →ₙ* Nᵐᵒᵖ)
+    where
   toFun f :=
     { toFun := op ∘ f ∘ unop
       map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
   invFun f :=
     { toFun := unop ∘ f ∘ op
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext x
     simp
 #align mul_hom.op MulHom.op
@@ -522,20 +527,18 @@ def MulHom.unop {M N} [Mul M] [Mul N] : (Mᵐᵒᵖ →ₙ* Nᵐᵒᵖ) ≃ (M �
 homomorphism `add_hom Mᵐᵒᵖ Nᵐᵒᵖ`. This is the action of the (fully faithful) `ᵐᵒᵖ`-functor on
 morphisms. -/
 @[simps]
-def AddHom.mulOp {M N} [Add M] [Add N] :
-    AddHom M N ≃
-      AddHom Mᵐᵒᵖ
-        Nᵐᵒᵖ where 
+def AddHom.mulOp {M N} [Add M] [Add N] : AddHom M N ≃ AddHom Mᵐᵒᵖ Nᵐᵒᵖ
+    where
   toFun f :=
     { toFun := op ∘ f ∘ unop
       map_add' := fun x y => unop_injective (f.map_add x.unop y.unop) }
   invFun f :=
     { toFun := unop ∘ f ∘ op
       map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     simp
 #align add_hom.mul_op AddHom.mulOp
@@ -561,10 +564,8 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.op MonoidHo
 @[to_additive
       "An additive monoid homomorphism `M →+ N` can equivalently be viewed as an\nadditive monoid homomorphism `Mᵃᵒᵖ →+ Nᵃᵒᵖ`. This is the action of the (fully faithful)\n`ᵃᵒᵖ`-functor on morphisms.",
   simps]
-def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] :
-    (M →* N) ≃
-      (Mᵐᵒᵖ →*
-        Nᵐᵒᵖ) where 
+def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] : (M →* N) ≃ (Mᵐᵒᵖ →* Nᵐᵒᵖ)
+    where
   toFun f :=
     { toFun := op ∘ f ∘ unop
       map_one' := congr_arg op f.map_one
@@ -573,10 +574,10 @@ def MonoidHom.op {M N} [MulOneClass M] [MulOneClass N] :
     { toFun := unop ∘ f ∘ op
       map_one' := congr_arg unop f.map_one
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext x
     simp
 #align monoid_hom.op MonoidHom.op
@@ -604,10 +605,8 @@ Case conversion may be inaccurate. Consider using '#align add_monoid_hom.mul_op 
 /-- An additive homomorphism `M →+ N` can equivalently be viewed as an additive homomorphism
 `Mᵐᵒᵖ →+ Nᵐᵒᵖ`. This is the action of the (fully faithful) `ᵐᵒᵖ`-functor on morphisms. -/
 @[simps]
-def AddMonoidHom.mulOp {M N} [AddZeroClass M] [AddZeroClass N] :
-    (M →+ N) ≃
-      (Mᵐᵒᵖ →+
-        Nᵐᵒᵖ) where 
+def AddMonoidHom.mulOp {M N} [AddZeroClass M] [AddZeroClass N] : (M →+ N) ≃ (Mᵐᵒᵖ →+ Nᵐᵒᵖ)
+    where
   toFun f :=
     { toFun := op ∘ f ∘ unop
       map_zero' := unop_injective f.map_zero
@@ -616,10 +615,10 @@ def AddMonoidHom.mulOp {M N} [AddZeroClass M] [AddZeroClass N] :
     { toFun := unop ∘ f ∘ op
       map_zero' := congr_arg unop f.map_zero
       map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     simp
 #align add_monoid_hom.mul_op AddMonoidHom.mulOp
@@ -640,15 +639,14 @@ def AddMonoidHom.mulUnop {α β} [AddZeroClass α] [AddZeroClass β] : (αᵐᵒ
 #print AddEquiv.mulOp /-
 /-- A iso `α ≃+ β` can equivalently be viewed as an iso `αᵐᵒᵖ ≃+ βᵐᵒᵖ`. -/
 @[simps]
-def AddEquiv.mulOp {α β} [Add α] [Add β] :
-    α ≃+ β ≃
-      (αᵐᵒᵖ ≃+ βᵐᵒᵖ) where 
+def AddEquiv.mulOp {α β} [Add α] [Add β] : α ≃+ β ≃ (αᵐᵒᵖ ≃+ βᵐᵒᵖ)
+    where
   toFun f := opAddEquiv.symm.trans (f.trans opAddEquiv)
   invFun f := opAddEquiv.trans (f.trans opAddEquiv.symm)
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     simp
 #align add_equiv.mul_op AddEquiv.mulOp
@@ -665,10 +663,8 @@ def AddEquiv.mulUnop {α β} [Add α] [Add β] : αᵐᵒᵖ ≃+ βᵐᵒᵖ �
 #print MulEquiv.op /-
 /-- A iso `α ≃* β` can equivalently be viewed as an iso `αᵐᵒᵖ ≃* βᵐᵒᵖ`. -/
 @[to_additive "A iso `α ≃+ β` can equivalently be viewed as an iso `αᵃᵒᵖ ≃+ βᵃᵒᵖ`.", simps]
-def MulEquiv.op {α β} [Mul α] [Mul β] :
-    α ≃* β ≃
-      (αᵐᵒᵖ ≃*
-        βᵐᵒᵖ) where 
+def MulEquiv.op {α β} [Mul α] [Mul β] : α ≃* β ≃ (αᵐᵒᵖ ≃* βᵐᵒᵖ)
+    where
   toFun f :=
     { toFun := op ∘ f ∘ unop
       invFun := op ∘ f.symm ∘ unop
@@ -681,10 +677,10 @@ def MulEquiv.op {α β} [Mul α] [Mul β] :
       left_inv := fun x => by simp
       right_inv := fun x => by simp
       map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     simp
 #align mul_equiv.op MulEquiv.op

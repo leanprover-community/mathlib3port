@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,14 +97,14 @@ Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`
 -/
 theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β]
     (f : PartialIso α β) (a : α) : ∃ b : β, ∀ p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b :=
-  by 
+  by
   by_cases h : ∃ b, (a, b) ∈ f.val
   · cases' h with b hb
     exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
   have :
     ∀ x ∈ (f.val.filter fun p : α × β => p.fst < a).image Prod.snd,
       ∀ y ∈ (f.val.filter fun p : α × β => a < p.fst).image Prod.snd, x < y :=
-    by 
+    by
     intro x hx y hy
     rw [Finset.mem_image] at hx hy
     rcases hx with ⟨p, hp1, rfl⟩
@@ -132,11 +132,11 @@ protected def comm : PartialIso α β → PartialIso β α :=
   (Subtype.map (Finset.image (Equiv.prodComm _ _))) fun f hf p hp q hq =>
     Eq.symm <|
       hf ((Equiv.prodComm α β).symm p)
-        (by 
+        (by
           rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hp
           rwa [← Finset.mem_coe])
         ((Equiv.prodComm α β).symm q)
-        (by 
+        (by
           rw [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq
           rwa [← Finset.mem_coe])
 #align order.partial_iso.comm Order.PartialIso.comm
@@ -146,10 +146,10 @@ variable (β)
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
 def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) :
-    Cofinal (PartialIso α
-        β) where 
+    Cofinal (PartialIso α β)
+    where
   carrier f := ∃ b : β, (a, b) ∈ f.val
-  mem_gt f := by 
+  mem_gt f := by
     cases' exists_across f a with b a_b
     refine'
       ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩,
@@ -168,9 +168,9 @@ variable (α) {β}
 /-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
-    Cofinal (PartialIso α β) where 
+    Cofinal (PartialIso α β) where
   carrier f := ∃ a, (a, b) ∈ f.val
-  mem_gt f := by 
+  mem_gt f := by
     rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
     refine' ⟨f'.comm, ⟨a, _⟩, _⟩
     · change (a, b) ∈ f'.val.image _
@@ -207,7 +207,7 @@ variable (α β)
 
 /-- Any countable linear order embeds in any nontrivial dense linear order. -/
 theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] :
-    Nonempty (α ↪o β) := by 
+    Nonempty (α ↪o β) := by
   rcases exists_pair_lt β with ⟨x, y, hxy⟩
   cases' exists_between hxy with a ha
   haveI : Nonempty (Set.Ioo x y) := ⟨⟨a, ha⟩⟩
@@ -232,7 +232,8 @@ theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal
   let F a := funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
   let G b := invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
-  ⟨(OrderIso.ofCmpEqCmp (fun a => (F a).val) fun b => (G b).val) fun a b => by
+  ⟨(OrderIso.ofCmpEqCmp (fun a => (F a).val) fun b => (G b).val) fun a b =>
+      by
       rcases(F a).Prop with ⟨f, hf, ha⟩
       rcases(G b).Prop with ⟨g, hg, hb⟩
       rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩

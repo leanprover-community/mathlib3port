@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.biproducts
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,13 +49,12 @@ namespace Biproducts
 /-- The `bicone` used in order to obtain the existence of
 the biproduct of a functor `J ⥤ karoubi C` when the category `C` is additive. -/
 @[simps]
-def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) :
-    Bicone
-      F where 
+def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) : Bicone F
+    where
   x :=
     { x := biproduct fun j => (F j).x
       p := biproduct.map fun j => (F j).p
-      idem := by 
+      idem := by
         ext j
         simp only [biproduct.ι_map_assoc, biproduct.ι_map]
         slice_lhs 1 2 => rw [(F j).idem] }
@@ -68,7 +67,7 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
       comm := by
         rw [biproduct.ι_map, ← assoc, ← assoc, (F j).idem, assoc, biproduct.ι_map, ← assoc,
           (F j).idem] }
-  ι_π j j' := by 
+  ι_π j j' := by
     split_ifs
     · subst h
       simp only [assoc, idem, biproduct.map_π, biproduct.map_π_assoc, eq_to_hom_refl, id_eq,
@@ -82,9 +81,11 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
 end Biproducts
 
 theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
-  { out := fun n =>
-      { HasBiproduct := fun F => by
-          classical 
+  {
+    out := fun n =>
+      {
+        HasBiproduct := fun F => by
+          classical
             apply has_biproduct_of_total (biproducts.bicone F)
             ext1
             ext1
@@ -113,17 +114,16 @@ theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts
 #align
   category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubiHasFiniteBiproducts
 
-instance {D : Type _} [Category D] [AdditiveCategory D] :
-    AdditiveCategory (Karoubi
-        D) where 
+instance {D : Type _} [Category D] [AdditiveCategory D] : AdditiveCategory (Karoubi D)
+    where
   toPreadditive := inferInstance
   toHasFiniteBiproducts := karoubiHasFiniteBiproducts
 
 /-- `P.complement` is the formal direct factor of `P.X` given by the idempotent
 endomorphism `𝟙 P.X - P.p` -/
 @[simps]
-def complement (P : Karoubi C) : Karoubi
-      C where 
+def complement (P : Karoubi C) : Karoubi C
+    where
   x := P.x
   p := 𝟙 _ - P.p
   idem := idem_of_id_sub_idem P.p P.idem
@@ -137,11 +137,13 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
       inl := P.decompIdI
       inr := P.complement.decompIdI
       inl_fst' := P.decomp_id.symm
-      inl_snd' := by
+      inl_snd' :=
+        by
         simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp_f, hom_ext,
           quiver.hom.add_comm_group_zero_f, P.idem]
         erw [comp_id, sub_self]
-      inr_fst' := by
+      inr_fst' :=
+        by
         simp only [decomp_id_i_f, complement_p, decomp_id_p_f, sub_comp, comp_f, hom_ext,
           quiver.hom.add_comm_group_zero_f, P.idem]
         erw [id_comp, sub_self]
@@ -153,13 +155,11 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
 /-- A formal direct factor `P : karoubi C` of an object `P.X : C` in a
 preadditive category is actually a direct factor of the image `(to_karoubi C).obj P.X`
 of `P.X` in the category `karoubi C` -/
-def decomposition (P : Karoubi C) :
-    P ⊞ P.complement ≅
-      (toKaroubi _).obj
-        P.x where 
+def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
+    where
   Hom := biprod.desc P.decompIdI P.complement.decompIdI
   inv := biprod.lift P.decompIdP P.complement.decompIdP
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext1
     · simp only [← assoc, biprod.inl_desc, comp_id, biprod.lift_eq, comp_add, ← decomp_id, id_comp,
         add_right_eq_self]
@@ -175,7 +175,7 @@ def decomposition (P : Karoubi C) :
       simp only [decomp_id_i_f, decomp_id_p_f, complement_p, sub_comp, comp_f,
         quiver.hom.add_comm_group_zero_f, P.idem]
       erw [id_comp, sub_self]
-  inv_hom_id' := by 
+  inv_hom_id' := by
     rw [biprod.lift_desc]
     simp only [← decomp_p]
     ext

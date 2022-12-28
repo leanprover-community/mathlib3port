@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.of_biproducts
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,8 @@ theorem is_unital_right_add : EckmannHilton.IsUnital (· +ᵣ ·) 0 :=
 #align
   category_theory.semiadditive_of_binary_biproducts.is_unital_right_add CategoryTheory.SemiadditiveOfBinaryBiproducts.is_unital_right_add
 
-theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ g +ₗ k := by
+theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ g +ₗ k :=
+  by
   let diag : X ⊞ X ⟶ Y ⊞ Y := biprod.lift (biprod.desc f g) (biprod.desc h k)
   have hd₁ : biprod.inl ≫ diag = biprod.lift f h := by ext <;> simp
   have hd₂ : biprod.inr ≫ diag = biprod.lift g k := by ext <;> simp
@@ -82,8 +83,8 @@ theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ
   category_theory.semiadditive_of_binary_biproducts.distrib CategoryTheory.SemiadditiveOfBinaryBiproducts.distrib
 
 /-- In a category with binary biproducts, the morphisms form a commutative monoid. -/
-def addCommMonoidHomOfHasBinaryBiproducts :
-    AddCommMonoid (X ⟶ Y) where 
+def addCommMonoidHomOfHasBinaryBiproducts : AddCommMonoid (X ⟶ Y)
+    where
   add := (· +ᵣ ·)
   add_assoc :=
     (EckmannHilton.mul_assoc (is_unital_left_add X Y) (is_unital_right_add X Y) (distrib X Y)).assoc
@@ -114,14 +115,16 @@ theorem add_eq_left_addition (f g : X ⟶ Y) : f + g = biprod.lift f g ≫ bipro
 #align
   category_theory.semiadditive_of_binary_biproducts.add_eq_left_addition CategoryTheory.SemiadditiveOfBinaryBiproducts.add_eq_left_addition
 
-theorem add_comp (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f ≫ h + g ≫ h := by
+theorem add_comp (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f ≫ h + g ≫ h :=
+  by
   simp only [add_eq_right_addition, category.assoc]
   congr
   ext <;> simp
 #align
   category_theory.semiadditive_of_binary_biproducts.add_comp CategoryTheory.SemiadditiveOfBinaryBiproducts.add_comp
 
-theorem comp_add (f : X ⟶ Y) (g h : Y ⟶ Z) : f ≫ (g + h) = f ≫ g + f ≫ h := by
+theorem comp_add (f : X ⟶ Y) (g h : Y ⟶ Z) : f ≫ (g + h) = f ≫ g + f ≫ h :=
+  by
   simp only [add_eq_left_addition, ← category.assoc]
   congr
   ext <;> simp

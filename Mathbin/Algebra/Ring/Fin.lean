@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.ring.fin
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,7 @@ This file collects some basic results involving rings and the `fin` type
 @[simps]
 def RingEquiv.piFinTwo (R : Fin 2 → Type _) [∀ i, Semiring (R i)] :
     (∀ i : Fin 2, R i) ≃+* R 0 × R 1 :=
-  { piFinTwoEquiv R with 
+  { piFinTwoEquiv R with
     toFun := piFinTwoEquiv R
     map_add' := fun a b => rfl
     map_mul' := fun a b => rfl }

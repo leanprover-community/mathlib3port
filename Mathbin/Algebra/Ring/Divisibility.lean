@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.divisibility
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align dvd_of_dvd_neg dvd_of_dvd_negₓ'. -/
-theorem dvd_of_dvd_neg (h : a ∣ -b) : a ∣ b := by
+theorem dvd_of_dvd_neg (h : a ∣ -b) : a ∣ b :=
+  by
   let t := dvd_neg_of_dvd h
   rwa [neg_neg] at t
 #align dvd_of_dvd_neg dvd_of_dvd_neg
@@ -121,7 +122,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semigroup.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1)] {a : α} {b : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (Semigroup.toMul.{u1} α _inst_1) _inst_2)) a) b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align dvd_of_neg_dvd dvd_of_neg_dvdₓ'. -/
-theorem dvd_of_neg_dvd (h : -a ∣ b) : a ∣ b := by
+theorem dvd_of_neg_dvd (h : -a ∣ b) : a ∣ b :=
+  by
   let t := neg_dvd_of_dvd h
   rwa [neg_neg] at t
 #align dvd_of_neg_dvd dvd_of_neg_dvd
@@ -151,7 +153,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c))
 Case conversion may be inaccurate. Consider using '#align dvd_sub dvd_subₓ'. -/
-theorem dvd_sub (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b - c := by
+theorem dvd_sub (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b - c :=
+  by
   rw [sub_eq_add_neg]
   exact dvd_add h₁ (dvd_neg_of_dvd h₂)
 #align dvd_sub dvd_sub
@@ -206,7 +209,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonUnitalRing.{u1} α] {a : α} {b : α} {c : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α _inst_1)))))) b c)) -> (Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a b) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α _inst_1)))) a c))
 Case conversion may be inaccurate. Consider using '#align dvd_iff_dvd_of_dvd_sub dvd_iff_dvd_of_dvd_subₓ'. -/
-theorem dvd_iff_dvd_of_dvd_sub {a b c : α} (h : a ∣ b - c) : a ∣ b ↔ a ∣ c := by
+theorem dvd_iff_dvd_of_dvd_sub {a b c : α} (h : a ∣ b - c) : a ∣ b ↔ a ∣ c :=
+  by
   constructor
   · intro h'
     convert dvd_sub h' h
@@ -269,7 +273,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonUnitalCommRing.{u1} α] {k : α} {a : α} {b : α} {x : α} {y : α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) a b)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) x y)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))) k (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))) a x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))) b y)))
 Case conversion may be inaccurate. Consider using '#align dvd_mul_sub_mul dvd_mul_sub_mulₓ'. -/
 theorem dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) : k ∣ a * x - b * y :=
-  by 
+  by
   convert dvd_add (hxy.mul_left a) (hab.mul_right y)
   rw [mul_sub_left_distrib, mul_sub_right_distrib]
   simp only [sub_eq_add_neg, add_assoc, neg_add_cancel_left]

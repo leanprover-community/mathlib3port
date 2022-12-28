@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.subobject
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,8 @@ variable {C : Type u} [Category.{v} C]
     Implemented here using subobjects in the opposite category,
     since mathlib does not have a notion of quotient objects at the time of writing. -/
 @[simps]
-def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (op X))ᵒᵈ := by
+def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (op X))ᵒᵈ :=
+  by
   refine' OrderIso.ofHomInv (cokernel_order_hom X) (kernel_order_hom X) _ _
   · change (cokernel_order_hom X).comp (kernel_order_hom X) = _
     refine' OrderHom.ext _ _ (funext (subobject.ind _ _))
@@ -68,9 +69,8 @@ def subobjectIsoSubobjectOp [Abelian C] (X : C) : Subobject X ≃o (Subobject (o
   category_theory.abelian.subobject_iso_subobject_op CategoryTheory.Abelian.subobjectIsoSubobjectOp
 
 /-- A well-powered abelian category is also well-copowered. -/
-instance well_powered_opposite [Abelian C] [WellPowered C] :
-    WellPowered
-      Cᵒᵖ where subobject_small X :=
+instance well_powered_opposite [Abelian C] [WellPowered C] : WellPowered Cᵒᵖ
+    where subobject_small X :=
     (small_congr (subobjectIsoSubobjectOp (unop X)).toEquiv).1 inferInstance
 #align category_theory.abelian.well_powered_opposite CategoryTheory.Abelian.well_powered_opposite
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,9 +70,8 @@ namespace QuaternionAlgebra
 
 /-- The equivalence between a quaternion algebra over R and R × R × R × R. -/
 @[simps]
-def equivProd {R : Type _} (c₁ c₂ : R) :
-    ℍ[R,c₁,c₂] ≃ R × R × R ×
-            R where 
+def equivProd {R : Type _} (c₁ c₂ : R) : ℍ[R,c₁,c₂] ≃ R × R × R × R
+    where
   toFun a := ⟨a.1, a.2, a.3, a.4⟩
   invFun a := ⟨a.1, a.2.1, a.2.2.1, a.2.2.2⟩
   left_inv := fun ⟨a₁, a₂, a₃, a₄⟩ => rfl
@@ -202,8 +201,8 @@ theorem mk_mul_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
 #align quaternion_algebra.mk_mul_mk QuaternionAlgebra.mk_mul_mk
 
 instance : AddCommGroup ℍ[R,c₁,c₂] := by
-  refine_struct
-              { add := (· + ·)
+  refine_struct {
+                add := (· + ·)
                 neg := Neg.neg
                 sub := Sub.sub
                 zero := (0 : ℍ[R,c₁,c₂])
@@ -216,7 +215,8 @@ instance : AddCommGroup ℍ[R,c₁,c₂] := by
     ring
 
 instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
-  { QuaternionAlgebra.addCommGroup with
+  {
+    QuaternionAlgebra.addCommGroup with
     natCast := fun n => ((n : R) : ℍ[R,c₁,c₂])
     nat_cast_zero := by simp
     nat_cast_succ := by simp
@@ -228,7 +228,8 @@ instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
 
 instance : Ring ℍ[R,c₁,c₂] := by
   refine_struct
-              { QuaternionAlgebra.addGroupWithOne, QuaternionAlgebra.addCommGroup with
+              { QuaternionAlgebra.addGroupWithOne,
+                QuaternionAlgebra.addCommGroup with
                 add := (· + ·)
                 mul := (· * ·)
                 one := 1
@@ -239,8 +240,8 @@ instance : Ring ℍ[R,c₁,c₂] := by
       simp <;>
     ring
 
-instance :
-    Algebra R ℍ[R,c₁,c₂] where 
+instance : Algebra R ℍ[R,c₁,c₂]
+    where
   smul r a := ⟨r * a.1, r * a.2, r * a.3, r * a.4⟩
   toFun := coe
   map_one' := rfl
@@ -286,7 +287,7 @@ variable (R c₁ c₂)
 
 /-- `quaternion_algebra.re` as a `linear_map`-/
 @[simps]
-def reLm : ℍ[R,c₁,c₂] →ₗ[R] R where 
+def reLm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := re
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -294,7 +295,7 @@ def reLm : ℍ[R,c₁,c₂] →ₗ[R] R where
 
 /-- `quaternion_algebra.im_i` as a `linear_map`-/
 @[simps]
-def imILm : ℍ[R,c₁,c₂] →ₗ[R] R where 
+def imILm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := imI
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -302,7 +303,7 @@ def imILm : ℍ[R,c₁,c₂] →ₗ[R] R where
 
 /-- `quaternion_algebra.im_j` as a `linear_map`-/
 @[simps]
-def imJLm : ℍ[R,c₁,c₂] →ₗ[R] R where 
+def imJLm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := imJ
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -310,7 +311,7 @@ def imJLm : ℍ[R,c₁,c₂] →ₗ[R] R where
 
 /-- `quaternion_algebra.im_k` as a `linear_map`-/
 @[simps]
-def imKLm : ℍ[R,c₁,c₂] →ₗ[R] R where 
+def imKLm : ℍ[R,c₁,c₂] →ₗ[R] R where
   toFun := imK
   map_add' x y := rfl
   map_smul' r x := rfl
@@ -420,7 +421,8 @@ theorem conj_eq_two_re_sub : a.conj = ↑(2 * a.re) - a :=
   eq_sub_iff_add_eq.2 a.conj_add_self'
 #align quaternion_algebra.conj_eq_two_re_sub QuaternionAlgebra.conj_eq_two_re_sub
 
-theorem commute_conj_self : Commute a.conj a := by
+theorem commute_conj_self : Commute a.conj a :=
+  by
   rw [a.conj_eq_two_re_sub]
   exact (coe_commute (2 * a.re) a).sub_left (Commute.refl a)
 #align quaternion_algebra.commute_conj_self QuaternionAlgebra.commute_conj_self
@@ -468,7 +470,8 @@ theorem conj_fixed {R : Type _} [CommRing R] [NoZeroDivisors R] [CharZero R] {c�
 theorem conj_mul_eq_coe : conj a * a = (conj a * a).re := by ext <;> simp <;> ring
 #align quaternion_algebra.conj_mul_eq_coe QuaternionAlgebra.conj_mul_eq_coe
 
-theorem mul_conj_eq_coe : a * conj a = (a * conj a).re := by
+theorem mul_conj_eq_coe : a * conj a = (a * conj a).re :=
+  by
   rw [a.commute_self_conj.eq]
   exact a.conj_mul_eq_coe
 #align quaternion_algebra.mul_conj_eq_coe QuaternionAlgebra.mul_conj_eq_coe
@@ -485,7 +488,7 @@ theorem conj_sub : (a - b).conj = a.conj - b.conj :=
   (conj : ℍ[R,c₁,c₂] ≃ₗ[R] _).map_sub a b
 #align quaternion_algebra.conj_sub QuaternionAlgebra.conj_sub
 
-instance : StarRing ℍ[R,c₁,c₂] where 
+instance : StarRing ℍ[R,c₁,c₂] where
   star := conj
   star_involutive := conj_conj
   star_add := conj_add
@@ -500,7 +503,7 @@ open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
 def conjAe : ℍ[R,c₁,c₂] ≃ₐ[R] ℍ[R,c₁,c₂]ᵐᵒᵖ :=
-  { conj.toAddEquiv.trans opAddEquiv with 
+  { conj.toAddEquiv.trans opAddEquiv with
     toFun := op ∘ conj
     invFun := conj ∘ unop
     map_mul' := fun x y => by simp
@@ -934,7 +937,7 @@ theorem coe_conj_ae : ⇑(conjAe : ℍ[R] ≃ₐ[R] ℍ[R]ᵐᵒᵖ) = op ∘ co
 #align quaternion.coe_conj_ae Quaternion.coe_conj_ae
 
 /-- Square of the norm. -/
-def normSq : ℍ[R] →*₀ R where 
+def normSq : ℍ[R] →*₀ R where
   toFun a := (a * a.conj).re
   map_zero' := by rw [conj_zero, zero_mul, zero_re]
   map_one' := by rw [conj_one, one_mul, one_re]
@@ -984,7 +987,8 @@ variable [LinearOrderedCommRing R] {a : ℍ[R]}
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 @[simp]
-theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
+theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 :=
+  by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
   rw [norm_sq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h
   exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
@@ -1032,7 +1036,8 @@ instance : Inv ℍ[R] :=
   ⟨fun a => (normSq a)⁻¹ • a.conj⟩
 
 instance : DivisionRing ℍ[R] :=
-  { Quaternion.nontrivial, Quaternion.ring with
+  { Quaternion.nontrivial,
+    Quaternion.ring with
     inv := Inv.inv
     inv_zero := by rw [has_inv_inv, conj_zero, smul_zero]
     mul_inv_cancel := fun a ha => by
@@ -1066,7 +1071,8 @@ private theorem pow_four [Infinite R] : (#R) ^ 4 = (#R) :=
 #align cardinal.pow_four cardinal.pow_four
 
 /-- The cardinality of a quaternion algebra, as a type. -/
-theorem mk_quaternion_algebra : (#ℍ[R,c₁,c₂]) = (#R) ^ 4 := by
+theorem mk_quaternion_algebra : (#ℍ[R,c₁,c₂]) = (#R) ^ 4 :=
+  by
   rw [mk_congr (QuaternionAlgebra.equivProd c₁ c₂)]
   simp only [mk_prod, lift_id]
   ring

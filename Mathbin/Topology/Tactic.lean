@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.tactic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ used by `continuity`.
 
 /-- User attribute used to mark tactics used by `continuity`. -/
 @[user_attribute]
-unsafe def continuity : user_attribute where 
+unsafe def continuity : user_attribute
+    where
   Name := `continuity
   descr := "lemmas usable to prove continuity"
 #align continuity continuity
@@ -85,7 +86,7 @@ namespace Interactive
 /-- Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
 -/
 unsafe def continuity (bang : parse <| optional (tk "!")) (trace : parse <| optional (tk "?"))
-    (cfg : tidy.cfg := {  }) : tactic Unit :=
+    (cfg : tidy.cfg := { }) : tactic Unit :=
   let md := if bang.isSome then semireducible else reducible
   let continuity_core := tactic.tidy { cfg with tactics := continuity_tactics md }
   let trace_fn := if trace.isSome then show_term else id
@@ -94,7 +95,7 @@ unsafe def continuity (bang : parse <| optional (tk "!")) (trace : parse <| opti
 
 /-- Version of `continuity` for use with auto_param. -/
 unsafe def continuity' : tactic Unit :=
-  continuity none none {  }
+  continuity none none { }
 #align tactic.interactive.continuity' tactic.interactive.continuity'
 
 /-- `continuity` solves goals of the form `continuous f` by applying lemmas tagged with the

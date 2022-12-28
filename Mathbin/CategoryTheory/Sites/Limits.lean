@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.limits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,14 +64,14 @@ See `is_limit_multifork_of_is_limit` for more on how this definition is used.
 -/
 def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (X : C)
     (W : J.cover X) (S : Multifork (W.index E.x)) :
-    Cone (F ⋙ sheafToPresheaf J D ⋙
-          (evaluation Cᵒᵖ D).obj (op X)) where 
+    Cone (F ⋙ sheafToPresheaf J D ⋙ (evaluation Cᵒᵖ D).obj (op X))
+    where
   x := S.x
   π :=
     { app := fun k =>
         (Presheaf.isLimitOfIsSheaf J (F.obj k).1 W (F.obj k).2).lift <|
           Multifork.ofι _ S.x (fun i => S.ι i ≫ (E.π.app k).app (op i.y))
-            (by 
+            (by
               intro i
               simp only [category.assoc]
               erw [← (E.π.app k).naturality, ← (E.π.app k).naturality]
@@ -79,7 +79,7 @@ def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPre
               simp only [← category.assoc]
               congr 1
               apply S.condition)
-      naturality' := by 
+      naturality' := by
         intro i j f
         dsimp [presheaf.is_limit_of_is_sheaf]
         rw [category.id_comp]
@@ -107,7 +107,7 @@ def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToP
     (fun S =>
       (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).lift <|
         multifork_evaluation_cone F E X W S)
-    (by 
+    (by
       intro S i
       apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op i.Y)) hE).hom_ext
       intro k
@@ -120,7 +120,7 @@ def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToP
       dsimp [multifork_evaluation_cone, presheaf.is_limit_of_is_sheaf]
       erw [presheaf.is_sheaf.amalgamate_map]
       rfl)
-    (by 
+    (by
       intro S m hm
       apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).hom_ext
       intro k
@@ -142,7 +142,8 @@ then the limit presheaf is again a sheaf.
 This is used to show that the forgetful functor from sheaves to presheaves creates limits.
 -/
 theorem is_sheaf_of_is_limit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D))
-    (hE : IsLimit E) : Presheaf.IsSheaf J E.x := by
+    (hE : IsLimit E) : Presheaf.IsSheaf J E.x :=
+  by
   rw [presheaf.is_sheaf_iff_multifork]
   intro X S
   exact ⟨is_limit_multifork_of_is_limit _ _ hE _ _⟩
@@ -154,15 +155,15 @@ instance (F : K ⥤ SheafCat J D) : CreatesLimit F (sheafToPresheaf J D) :=
         ⟨⟨E.x, is_sheaf_of_is_limit _ _ hE⟩,
           ⟨fun t => ⟨E.π.app _⟩, fun u v e => SheafCat.Hom.ext _ _ <| E.π.naturality _⟩⟩
       validLift :=
-        (Cones.ext (eqToIso rfl)) fun j => by 
+        (Cones.ext (eqToIso rfl)) fun j => by
           dsimp
           simp
       makesLimit :=
         { lift := fun S => ⟨hE.lift ((sheafToPresheaf J D).mapCone S)⟩
-          fac' := fun S j => by 
+          fac' := fun S j => by
             ext1
             apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j
-          uniq' := fun S m hm => by 
+          uniq' := fun S m hm => by
             ext1
             exact
               hE.uniq ((Sheaf_to_presheaf J D).mapCone S) m.val fun j =>
@@ -210,13 +211,12 @@ variable [ReflectsIsomorphisms (forget D)]
 over a functor which factors through sheaves.
 In `is_colimit_sheafify_cocone`, we show that this is a colimit cocone when `E` is a colimit. -/
 @[simps]
-def sheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J D)) :
-    Cocone
-      F where 
+def sheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J D)) : Cocone F
+    where
   x := ⟨J.sheafify E.x, GrothendieckTopology.Plus.is_sheaf_plus_plus _ _⟩
   ι :=
     { app := fun k => ⟨E.ι.app k ≫ J.toSheafify E.x⟩
-      naturality' := fun i j f => by 
+      naturality' := fun i j f => by
         ext1
         dsimp
         erw [category.comp_id, ← category.assoc, E.w f] }
@@ -226,18 +226,16 @@ def sheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J
 then `sheafify_cocone E` is a colimit cocone. -/
 @[simps]
 def isColimitSheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J D))
-    (hE : IsColimit E) :
-    IsColimit
-      (sheafify_cocone
-        E) where 
+    (hE : IsColimit E) : IsColimit (sheafify_cocone E)
+    where
   desc S := ⟨J.sheafifyLift (hE.desc ((sheafToPresheaf J D).mapCocone S)) S.x.2⟩
-  fac' := by 
+  fac' := by
     intro S j
     ext1
     dsimp [sheafify_cocone]
     erw [category.assoc, J.to_sheafify_sheafify_lift, hE.fac]
     rfl
-  uniq' := by 
+  uniq' := by
     intro S m hm
     ext1
     apply J.sheafify_lift_unique

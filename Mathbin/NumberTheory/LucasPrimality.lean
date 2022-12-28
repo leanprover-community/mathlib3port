@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.lucas_primality
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,15 +43,17 @@ is prime. This is true because `a` has order `p-1` in the multiplicative group m
 group must itself have order `p-1`, which only happens when `p` is prime.
 -/
 theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : a ^ (p - 1) = 1)
-    (hd : ∀ q : ℕ, q.Prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.Prime := by
-  have h0 : p ≠ 0 := by 
+    (hd : ∀ q : ℕ, q.Prime → q ∣ p - 1 → a ^ ((p - 1) / q) ≠ 1) : p.Prime :=
+  by
+  have h0 : p ≠ 0 := by
     rintro ⟨⟩
     exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
-  have h1 : p ≠ 1 := by 
+  have h1 : p ≠ 1 := by
     rintro ⟨⟩
     exact hd 2 Nat.prime_two (dvd_zero _) (pow_zero _)
   have hp1 : 1 < p := lt_of_le_of_ne h0.bot_lt h1.symm
-  have order_of_a : orderOf a = p - 1 := by
+  have order_of_a : orderOf a = p - 1 :=
+    by
     apply order_of_eq_of_pow_and_pow_div_prime _ ha hd
     exact tsub_pos_of_lt hp1
   haveI : NeZero p := ⟨h0⟩

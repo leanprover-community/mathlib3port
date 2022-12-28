@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.bounds.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -257,8 +257,8 @@ theorem IsGLB.dual (h : IsGLB s a) : IsLUB (of_dual ⁻¹' s) (toDual a) :=
 #print IsLeast.orderBot /-
 /-- If `a` is the least element of a set `s`, then subtype `s` is an order with bottom element. -/
 @[reducible]
-def IsLeast.orderBot (h : IsLeast s a) :
-    OrderBot s where 
+def IsLeast.orderBot (h : IsLeast s a) : OrderBot s
+    where
   bot := ⟨a, h.1⟩
   bot_le := Subtype.forall.2 h.2
 #align is_least.order_bot IsLeast.orderBot
@@ -267,8 +267,8 @@ def IsLeast.orderBot (h : IsLeast s a) :
 #print IsGreatest.orderTop /-
 /-- If `a` is the greatest element of a set `s`, then subtype `s` is an order with top element. -/
 @[reducible]
-def IsGreatest.orderTop (h : IsGreatest s a) :
-    OrderTop s where 
+def IsGreatest.orderTop (h : IsGreatest s a) : OrderTop s
+    where
   top := ⟨a, h.1⟩
   le_top := Subtype.forall.2 h.2
 #align is_greatest.order_top IsGreatest.orderTop
@@ -439,14 +439,16 @@ theorem IsGreatest.upperBounds_eq (h : IsGreatest s a) : upperBounds s = Ici a :
 -/
 
 #print isLUB_le_iff /-
-theorem isLUB_le_iff (h : IsLUB s a) : a ≤ b ↔ b ∈ upperBounds s := by
+theorem isLUB_le_iff (h : IsLUB s a) : a ≤ b ↔ b ∈ upperBounds s :=
+  by
   rw [h.upper_bounds_eq]
   rfl
 #align is_lub_le_iff isLUB_le_iff
 -/
 
 #print le_isGLB_iff /-
-theorem le_isGLB_iff (h : IsGLB s a) : b ≤ a ↔ b ∈ lowerBounds s := by
+theorem le_isGLB_iff (h : IsGLB s a) : b ≤ a ↔ b ∈ lowerBounds s :=
+  by
   rw [h.lower_bounds_eq]
   rfl
 #align le_is_glb_iff le_isGLB_iff
@@ -630,7 +632,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bdd_above.union BddAbove.unionₓ'. -/
 /-- If `s` and `t` are bounded above sets in a `semilattice_sup`, then so is `s ∪ t`. -/
 theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} :
-    BddAbove s → BddAbove t → BddAbove (s ∪ t) := by
+    BddAbove s → BddAbove t → BddAbove (s ∪ t) :=
+  by
   rintro ⟨bs, hs⟩ ⟨bt, ht⟩
   use bs ⊔ bt
   rw [upperBounds_union]
@@ -754,7 +757,8 @@ theorem IsGLB.inter_Iic_of_mem [LinearOrder γ] {s : Set γ} {a b : γ} (ha : Is
 
 #print bddAbove_iff_exists_ge /-
 theorem bddAbove_iff_exists_ge [SemilatticeSup γ] {s : Set γ} (x₀ : γ) :
-    BddAbove s ↔ ∃ x, x₀ ≤ x ∧ ∀ y ∈ s, y ≤ x := by
+    BddAbove s ↔ ∃ x, x₀ ≤ x ∧ ∀ y ∈ s, y ≤ x :=
+  by
   rw [bddAbove_def, exists_ge_and_iff_exists]
   exact Monotone.ball fun x hx => monotone_le
 #align bdd_above_iff_exists_ge bddAbove_iff_exists_ge
@@ -862,7 +866,8 @@ theorem le_glb_Ioi (a : α) (hb : IsGLB (Set.Ioi a) b) : a ≤ b :=
 
 #print lub_Iio_eq_self_or_Iio_eq_Iic /-
 theorem lub_Iio_eq_self_or_Iio_eq_Iic [PartialOrder γ] {j : γ} (i : γ) (hj : IsLUB (Set.Iio i) j) :
-    j = i ∨ Set.Iio i = Set.Iic j := by
+    j = i ∨ Set.Iio i = Set.Iic j :=
+  by
   cases' eq_or_lt_of_le (lub_Iio_le i hj) with hj_eq_i hj_lt_i
   · exact Or.inl hj_eq_i
   · right
@@ -882,7 +887,8 @@ section
 variable [LinearOrder γ]
 
 #print exists_lub_Iio /-
-theorem exists_lub_Iio (i : γ) : ∃ j, IsLUB (Set.Iio i) j := by
+theorem exists_lub_Iio (i : γ) : ∃ j, IsLUB (Set.Iio i) j :=
+  by
   by_cases h_exists_lt : ∃ j, j ∈ upperBounds (Set.Iio i) ∧ j < i
   · obtain ⟨j, hj_ub, hj_lt_i⟩ := h_exists_lt
     exact ⟨j, hj_ub, fun k hk_ub => hk_ub hj_lt_i⟩
@@ -1115,7 +1121,8 @@ variable [SemilatticeSup γ] [DenselyOrdered γ]
 
 #print isGLB_Ioo /-
 theorem isGLB_Ioo {a b : γ} (h : a < b) : IsGLB (Ioo a b) a :=
-  ⟨fun x hx => hx.1.le, fun x hx => by
+  ⟨fun x hx => hx.1.le, fun x hx =>
+    by
     cases' eq_or_lt_of_le (le_sup_right : a ≤ x ⊔ a) with h₁ h₂
     · exact h₁.symm ▸ le_sup_left
     obtain ⟨y, lty, ylt⟩ := exists_between h₂
@@ -1409,7 +1416,7 @@ theorem BddBelow.insert [SemilatticeInf γ] (a : γ) {s : Set γ} (hs : BddBelow
 
 #print IsLUB.insert /-
 theorem IsLUB.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLUB s b) :
-    IsLUB (insert a s) (a ⊔ b) := by 
+    IsLUB (insert a s) (a ⊔ b) := by
   rw [insert_eq]
   exact is_lub_singleton.union hs
 #align is_lub.insert IsLUB.insert
@@ -1417,7 +1424,7 @@ theorem IsLUB.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLUB s b) :
 
 #print IsGLB.insert /-
 theorem IsGLB.insert [SemilatticeInf γ] (a) {b} {s : Set γ} (hs : IsGLB s b) :
-    IsGLB (insert a s) (a ⊓ b) := by 
+    IsGLB (insert a s) (a ⊓ b) := by
   rw [insert_eq]
   exact is_glb_singleton.union hs
 #align is_glb.insert IsGLB.insert
@@ -1430,7 +1437,7 @@ but is expected to have type
   forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] (a : γ) {b : γ} {s : Set.{u1} γ}, (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s b) -> (IsGreatest.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.instInsertSet.{u1} γ) a s) (Max.max.{u1} γ (LinearOrder.toMax.{u1} γ _inst_3) a b))
 Case conversion may be inaccurate. Consider using '#align is_greatest.insert IsGreatest.insertₓ'. -/
 theorem IsGreatest.insert [LinearOrder γ] (a) {b} {s : Set γ} (hs : IsGreatest s b) :
-    IsGreatest (insert a s) (max a b) := by 
+    IsGreatest (insert a s) (max a b) := by
   rw [insert_eq]
   exact is_greatest_singleton.union hs
 #align is_greatest.insert IsGreatest.insert
@@ -1442,7 +1449,7 @@ but is expected to have type
   forall {γ : Type.{u1}} [_inst_3 : LinearOrder.{u1} γ] (a : γ) {b : γ} {s : Set.{u1} γ}, (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) s b) -> (IsLeast.{u1} γ (PartialOrder.toPreorder.{u1} γ (SemilatticeInf.toPartialOrder.{u1} γ (Lattice.toSemilatticeInf.{u1} γ (DistribLattice.toLattice.{u1} γ (instDistribLattice.{u1} γ _inst_3))))) (Insert.insert.{u1, u1} γ (Set.{u1} γ) (Set.instInsertSet.{u1} γ) a s) (Min.min.{u1} γ (LinearOrder.toMin.{u1} γ _inst_3) a b))
 Case conversion may be inaccurate. Consider using '#align is_least.insert IsLeast.insertₓ'. -/
 theorem IsLeast.insert [LinearOrder γ] (a) {b} {s : Set γ} (hs : IsLeast s b) :
-    IsLeast (insert a s) (min a b) := by 
+    IsLeast (insert a s) (min a b) := by
   rw [insert_eq]
   exact is_least_singleton.union hs
 #align is_least.insert IsLeast.insert
@@ -1765,7 +1772,8 @@ theorem mem_lowerBounds_image_self : a ∈ lowerBounds t → a ∈ t → f a ∈
 -/
 
 theorem image_upper_bounds_subset_upper_bounds_image (Hst : s ⊆ t) :
-    f '' (upperBounds s ∩ t) ⊆ upperBounds (f '' s) := by
+    f '' (upperBounds s ∩ t) ⊆ upperBounds (f '' s) :=
+  by
   rintro _ ⟨a, ha, rfl⟩
   exact Hf.mem_upper_bounds_image Hst ha.1 ha.2
 #align
@@ -1929,7 +1937,8 @@ theorem mem_lowerBounds_image (Ha : a ∈ lowerBounds s) : f a ∈ lowerBounds (
 -/
 
 #print Monotone.image_upperBounds_subset_upperBounds_image /-
-theorem image_upperBounds_subset_upperBounds_image : f '' upperBounds s ⊆ upperBounds (f '' s) := by
+theorem image_upperBounds_subset_upperBounds_image : f '' upperBounds s ⊆ upperBounds (f '' s) :=
+  by
   rintro _ ⟨a, ha, rfl⟩
   exact Hf.mem_upper_bounds_image ha
 #align
@@ -2062,7 +2071,8 @@ theorem mem_lowerBounds_image2 (ha : a ∈ lowerBounds s) (hb : b ∈ lowerBound
 
 #print image2_upperBounds_upperBounds_subset /-
 theorem image2_upperBounds_upperBounds_subset :
-    image2 f (upperBounds s) (upperBounds t) ⊆ upperBounds (image2 f s t) := by
+    image2 f (upperBounds s) (upperBounds t) ⊆ upperBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2 h₀ h₁ ha hb
 #align image2_upper_bounds_upper_bounds_subset image2_upperBounds_upperBounds_subset
@@ -2070,7 +2080,8 @@ theorem image2_upperBounds_upperBounds_subset :
 
 #print image2_lowerBounds_lowerBounds_subset /-
 theorem image2_lowerBounds_lowerBounds_subset :
-    image2 f (lowerBounds s) (lowerBounds t) ⊆ lowerBounds (image2 f s t) := by
+    image2 f (lowerBounds s) (lowerBounds t) ⊆ lowerBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_lowerBounds_image2 h₀ h₁ ha hb
 #align image2_lower_bounds_lower_bounds_subset image2_lowerBounds_lowerBounds_subset
@@ -2078,7 +2089,8 @@ theorem image2_lowerBounds_lowerBounds_subset :
 
 #print BddAbove.image2 /-
 /-- See also `monotone.map_bdd_above`. -/
-theorem BddAbove.image2 : BddAbove s → BddAbove t → BddAbove (image2 f s t) := by
+theorem BddAbove.image2 : BddAbove s → BddAbove t → BddAbove (image2 f s t) :=
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_upperBounds_image2 h₀ h₁ ha hb⟩
 #align bdd_above.image2 BddAbove.image2
@@ -2086,7 +2098,8 @@ theorem BddAbove.image2 : BddAbove s → BddAbove t → BddAbove (image2 f s t) 
 
 #print BddBelow.image2 /-
 /-- See also `monotone.map_bdd_below`. -/
-theorem BddBelow.image2 : BddBelow s → BddBelow t → BddBelow (image2 f s t) := by
+theorem BddBelow.image2 : BddBelow s → BddBelow t → BddBelow (image2 f s t) :=
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_lowerBounds_image2 h₀ h₁ ha hb⟩
 #align bdd_below.image2 BddBelow.image2
@@ -2130,7 +2143,8 @@ theorem mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds (ha : a ∈
 -/
 
 theorem image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 :
-    image2 f (upperBounds s) (lowerBounds t) ⊆ upperBounds (image2 f s t) := by
+    image2 f (upperBounds s) (lowerBounds t) ⊆ upperBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds h₀ h₁ ha hb
 #align
@@ -2138,7 +2152,8 @@ theorem image2_upper_bounds_lower_bounds_subset_upper_bounds_image2 :
 
 #print image2_lowerBounds_upperBounds_subset_lowerBounds_image2 /-
 theorem image2_lowerBounds_upperBounds_subset_lowerBounds_image2 :
-    image2 f (lowerBounds s) (upperBounds t) ⊆ lowerBounds (image2 f s t) := by
+    image2 f (lowerBounds s) (upperBounds t) ⊆ lowerBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds h₀ h₁ ha hb
 #align
@@ -2147,7 +2162,7 @@ theorem image2_lowerBounds_upperBounds_subset_lowerBounds_image2 :
 
 #print BddAbove.bddAbove_image2_of_bddBelow /-
 theorem BddAbove.bddAbove_image2_of_bddBelow : BddAbove s → BddBelow t → BddAbove (image2 f s t) :=
-  by 
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds h₀ h₁ ha hb⟩
 #align bdd_above.bdd_above_image2_of_bdd_below BddAbove.bddAbove_image2_of_bddBelow
@@ -2155,7 +2170,7 @@ theorem BddAbove.bddAbove_image2_of_bddBelow : BddAbove s → BddBelow t → Bdd
 
 #print BddBelow.bddBelow_image2_of_bddAbove /-
 theorem BddBelow.bddBelow_image2_of_bddAbove : BddBelow s → BddAbove t → BddBelow (image2 f s t) :=
-  by 
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_upperBounds h₀ h₁ ha hb⟩
 #align bdd_below.bdd_below_image2_of_bdd_above BddBelow.bddBelow_image2_of_bddAbove
@@ -2201,7 +2216,8 @@ theorem mem_lowerBounds_image2_of_mem_upperBounds (ha : a ∈ upperBounds s)
 
 #print image2_upperBounds_upperBounds_subset_upperBounds_image2 /-
 theorem image2_upperBounds_upperBounds_subset_upperBounds_image2 :
-    image2 f (lowerBounds s) (lowerBounds t) ⊆ upperBounds (image2 f s t) := by
+    image2 f (lowerBounds s) (lowerBounds t) ⊆ upperBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2_of_mem_lowerBounds h₀ h₁ ha hb
 #align
@@ -2210,7 +2226,8 @@ theorem image2_upperBounds_upperBounds_subset_upperBounds_image2 :
 
 #print image2_lowerBounds_lowerBounds_subset_lowerBounds_image2 /-
 theorem image2_lowerBounds_lowerBounds_subset_lowerBounds_image2 :
-    image2 f (upperBounds s) (upperBounds t) ⊆ lowerBounds (image2 f s t) := by
+    image2 f (upperBounds s) (upperBounds t) ⊆ lowerBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_lowerBounds_image2_of_mem_upperBounds h₀ h₁ ha hb
 #align
@@ -2218,14 +2235,16 @@ theorem image2_lowerBounds_lowerBounds_subset_lowerBounds_image2 :
 -/
 
 #print BddBelow.image2_bddAbove /-
-theorem BddBelow.image2_bddAbove : BddBelow s → BddBelow t → BddAbove (image2 f s t) := by
+theorem BddBelow.image2_bddAbove : BddBelow s → BddBelow t → BddAbove (image2 f s t) :=
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_upperBounds_image2_of_mem_lowerBounds h₀ h₁ ha hb⟩
 #align bdd_below.image2_bdd_above BddBelow.image2_bddAbove
 -/
 
 #print BddAbove.image2_bddBelow /-
-theorem BddAbove.image2_bddBelow : BddAbove s → BddAbove t → BddBelow (image2 f s t) := by
+theorem BddAbove.image2_bddBelow : BddAbove s → BddAbove t → BddBelow (image2 f s t) :=
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_lowerBounds_image2_of_mem_upperBounds h₀ h₁ ha hb⟩
 #align bdd_above.image2_bdd_below BddAbove.image2_bddBelow
@@ -2271,7 +2290,8 @@ theorem mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds (ha : a ∈
 
 #print image2_lowerBounds_upperBounds_subset_upperBounds_image2 /-
 theorem image2_lowerBounds_upperBounds_subset_upperBounds_image2 :
-    image2 f (lowerBounds s) (upperBounds t) ⊆ upperBounds (image2 f s t) := by
+    image2 f (lowerBounds s) (upperBounds t) ⊆ upperBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds h₀ h₁ ha hb
 #align
@@ -2280,7 +2300,8 @@ theorem image2_lowerBounds_upperBounds_subset_upperBounds_image2 :
 
 #print image2_upperBounds_lowerBounds_subset_lowerBounds_image2 /-
 theorem image2_upperBounds_lowerBounds_subset_lowerBounds_image2 :
-    image2 f (upperBounds s) (lowerBounds t) ⊆ lowerBounds (image2 f s t) := by
+    image2 f (upperBounds s) (lowerBounds t) ⊆ lowerBounds (image2 f s t) :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds h₀ h₁ ha hb
 #align
@@ -2289,7 +2310,7 @@ theorem image2_upperBounds_lowerBounds_subset_lowerBounds_image2 :
 
 #print BddBelow.bddAbove_image2_of_bddAbove /-
 theorem BddBelow.bddAbove_image2_of_bddAbove : BddBelow s → BddAbove t → BddAbove (image2 f s t) :=
-  by 
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds h₀ h₁ ha hb⟩
 #align bdd_below.bdd_above_image2_of_bdd_above BddBelow.bddAbove_image2_of_bddAbove
@@ -2297,7 +2318,7 @@ theorem BddBelow.bddAbove_image2_of_bddAbove : BddBelow s → BddAbove t → Bdd
 
 #print BddAbove.bddBelow_image2_of_bddAbove /-
 theorem BddAbove.bddBelow_image2_of_bddAbove : BddAbove s → BddBelow t → BddBelow (image2 f s t) :=
-  by 
+  by
   rintro ⟨a, ha⟩ ⟨b, hb⟩
   exact ⟨f a b, mem_lowerBounds_image2_of_mem_lowerBounds_of_mem_lowerBounds h₀ h₁ ha hb⟩
 #align bdd_above.bdd_below_image2_of_bdd_above BddAbove.bddBelow_image2_of_bddAbove
@@ -2346,7 +2367,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_lub_pi isLUB_piₓ'. -/
 theorem isLUB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsLUB s f ↔ ∀ a, IsLUB (Function.eval a '' s) (f a) := by
-  classical 
+  classical
     refine'
       ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H =>
         ⟨_, _⟩⟩
@@ -2375,7 +2396,8 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{max u2 u1} (Prod.{u1, u2} α β)} (p : Prod.{u1, u2} α β), Iff (IsLUB.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2) s p) (And (IsLUB.{u1} α _inst_1 (Set.image.{max u2 u1, u1} (Prod.{u1, u2} α β) α (Prod.fst.{u1, u2} α β) s) (Prod.fst.{u1, u2} α β p)) (IsLUB.{u2} β _inst_2 (Set.image.{max u2 u1, u2} (Prod.{u1, u2} α β) β (Prod.snd.{u1, u2} α β) s) (Prod.snd.{u1, u2} α β p)))
 Case conversion may be inaccurate. Consider using '#align is_lub_prod isLUB_prodₓ'. -/
 theorem isLUB_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × β) :
-    IsLUB s p ↔ IsLUB (Prod.fst '' s) p.1 ∧ IsLUB (Prod.snd '' s) p.2 := by
+    IsLUB s p ↔ IsLUB (Prod.fst '' s) p.1 ∧ IsLUB (Prod.snd '' s) p.2 :=
+  by
   refine'
     ⟨fun H =>
       ⟨⟨monotone_fst.mem_upper_bounds_image H.1, fun a ha => _⟩,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -721,7 +721,7 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency)
           let a ← read_ref atoms
           let norm_rec := if recursive then fun e => normalize' e tt else fun _ => failed
           let (a, e', pr) ←
-            ext_simplify_core a {  } simp_lemmas.mk (fun _ => failed)
+            ext_simplify_core a { } simp_lemmas.mk (fun _ => failed)
                 (fun a _ _ p e => do
                   guard (inner → p)
                   write_ref atoms a
@@ -825,7 +825,7 @@ which rewrites all ring expressions into a normal form. When writing a normal fo
 `ring_nf!` will use a more aggressive reducibility setting to identify atoms.
 -/
 unsafe def ring_nf (red : parse (tk "!")?) (SOP : parse ring.mode) (loc : parse location)
-    (cfg : RingNfCfg := {  }) : tactic Unit := do
+    (cfg : RingNfCfg := { }) : tactic Unit := do
   let ns ← loc.get_locals
   let transp := if red.isSome then semireducible else reducible
   let tt ←
@@ -880,7 +880,7 @@ local postfix:1024 "?" => optional
 Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
 -/
 unsafe def ring_nf (red : parse (lean.parser.tk "!")?) (SOP : parse ring.mode)
-    (cfg : Ring.RingNfCfg := {  }) : conv Unit :=
+    (cfg : Ring.RingNfCfg := { }) : conv Unit :=
   let transp := if red.isSome then semireducible else reducible
   replace_lhs (normalize transp SOP cfg.recursive) <|> fail "ring_nf failed to simplify"
 #align conv.interactive.ring_nf conv.interactive.ring_nf

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.UniformSpace
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,9 +84,8 @@ theorem hom_ext {X Y : UniformSpaceCat} {f g : X ⟶ Y} : (f : X → Y) = g → 
 #align UniformSpace.hom_ext UniformSpaceCat.hom_ext
 
 /-- The forgetful functor from uniform spaces to topological spaces. -/
-instance hasForgetToTop :
-    HasForget₂ UniformSpaceCat.{u}
-      TopCat.{u} where forget₂ :=
+instance hasForgetToTop : HasForget₂ UniformSpaceCat.{u} TopCat.{u}
+    where forget₂ :=
     { obj := fun X => TopCat.of X
       map := fun X Y f =>
         { toFun := f
@@ -162,9 +161,8 @@ open UniformSpace
 open CpltSepUniformSpaceCat
 
 /-- The functor turning uniform spaces into complete separated uniform spaces. -/
-noncomputable def completionFunctor :
-    UniformSpaceCat ⥤
-      CpltSepUniformSpaceCat where 
+noncomputable def completionFunctor : UniformSpaceCat ⥤ CpltSepUniformSpaceCat
+    where
   obj X := CpltSepUniformSpaceCat.of (Completion X)
   map X Y f := ⟨Completion.map f.1, Completion.uniform_continuous_map⟩
   map_id' X := Subtype.eq Completion.map_id
@@ -173,10 +171,8 @@ noncomputable def completionFunctor :
 
 /-- The inclusion of a uniform space into its completion. -/
 def completionHom (X : UniformSpaceCat) :
-    X ⟶
-      (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj
-        (completionFunctor.obj
-          X) where 
+    X ⟶ (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj (completionFunctor.obj X)
+    where
   val := (coe : X → Completion X)
   property := Completion.uniform_continuous_coe X
 #align UniformSpace.completion_hom UniformSpaceCat.completionHom
@@ -188,9 +184,8 @@ theorem completion_hom_val (X : UniformSpaceCat) (x) : (completionHom X) x = (x 
 
 /-- The mate of a morphism from a `UniformSpace` to a `CpltSepUniformSpace`. -/
 noncomputable def extensionHom {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
-    (f : X ⟶ (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj Y) :
-    completionFunctor.obj X ⟶
-      Y where 
+    (f : X ⟶ (forget₂ CpltSepUniformSpaceCat UniformSpaceCat).obj Y) : completionFunctor.obj X ⟶ Y
+    where
   val := Completion.extension f
   property := Completion.uniform_continuous_extension
 #align UniformSpace.extension_hom UniformSpaceCat.extensionHom
@@ -204,7 +199,8 @@ theorem extension_hom_val {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
 @[simp]
 theorem extension_comp_coe {X : UniformSpaceCat} {Y : CpltSepUniformSpaceCat}
     (f : toUniformSpace (CpltSepUniformSpaceCat.of (Completion X)) ⟶ toUniformSpace Y) :
-    extensionHom (completionHom X ≫ f) = f := by
+    extensionHom (completionHom X ≫ f) = f :=
+  by
   apply Subtype.eq
   funext x
   exact congr_fun (completion.extension_comp_coe f.property) x
@@ -216,15 +212,16 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpaceCat 
     { homEquiv := fun X Y =>
         { toFun := fun f => completionHom X ≫ f
           invFun := fun f => extensionHom f
-          left_inv := fun f => by 
+          left_inv := fun f => by
             dsimp
             erw [extension_comp_coe]
-          right_inv := fun f => by 
+          right_inv := fun f => by
             apply Subtype.eq; funext x; cases f
             exact
               @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpaceCat.separated_space _)
                 f_property _ }
-      hom_equiv_naturality_left_symm' := fun X X' Y f g => by
+      hom_equiv_naturality_left_symm' := fun X X' Y f g =>
+        by
         apply hom_ext; funext x; dsimp
         erw [coe_comp, ← completion.extension_map]
         rfl; exact g.property; exact f.property }

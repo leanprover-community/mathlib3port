@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,8 @@ section Pointwise
 variable {R : Type _} {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
 theorem mul_to_submodule_le (S T : Subalgebra R A) :
-    S.toSubmodule * T.toSubmodule ≤ (S ⊔ T).toSubmodule := by
+    S.toSubmodule * T.toSubmodule ≤ (S ⊔ T).toSubmodule :=
+  by
   rw [Submodule.mul_le]
   intro y hy z hz
   show y * z ∈ S ⊔ T
@@ -37,7 +38,8 @@ theorem mul_to_submodule_le (S T : Subalgebra R A) :
 
 /-- As submodules, subalgebras are idempotent. -/
 @[simp]
-theorem mul_self (S : Subalgebra R A) : S.toSubmodule * S.toSubmodule = S.toSubmodule := by
+theorem mul_self (S : Subalgebra R A) : S.toSubmodule * S.toSubmodule = S.toSubmodule :=
+  by
   apply le_antisymm
   · refine' (mul_to_submodule_le _ _).trans_eq _
     rw [sup_idem]
@@ -48,7 +50,8 @@ theorem mul_self (S : Subalgebra R A) : S.toSubmodule * S.toSubmodule = S.toSubm
 
 /-- When `A` is commutative, `subalgebra.mul_to_submodule_le` is strict. -/
 theorem mul_to_submodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemiring A] [Algebra R A]
-    (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule = (S ⊔ T).toSubmodule := by
+    (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule = (S ⊔ T).toSubmodule :=
+  by
   refine' le_antisymm (mul_to_submodule_le _ _) _
   rintro x (hx : x ∈ Algebra.adjoin R (S ∪ T : Set A))
   refine'
@@ -71,10 +74,8 @@ variable {R' : Type _} [Semiring R'] [MulSemiringAction R' A] [SMulCommClass R' 
 /-- The action on a subalgebra corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwiseMulAction :
-    MulAction R'
-      (Subalgebra R
-        A) where 
+protected def pointwiseMulAction : MulAction R' (Subalgebra R A)
+    where
   smul a S := S.map (MulSemiringAction.toAlgHom _ _ a)
   one_smul S := (congr_arg (fun f => S.map f) (AlgHom.ext <| one_smul R')).trans S.map_id
   mul_smul a₁ a₂ S :=

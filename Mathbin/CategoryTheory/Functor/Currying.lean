@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.currying
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,21 +30,21 @@ variable {B : Type u₁} [Category.{v₁} B] {C : Type u₂} [Category.{v₂} C]
 /-- The uncurrying functor, taking a functor `C ⥤ (D ⥤ E)` and producing a functor `(C × D) ⥤ E`.
 -/
 @[simps]
-def uncurry :
-    (C ⥤ D ⥤ E) ⥤
-      C × D ⥤
-        E where 
+def uncurry : (C ⥤ D ⥤ E) ⥤ C × D ⥤ E
+    where
   obj F :=
     { obj := fun X => (F.obj X.1).obj X.2
       map := fun X Y f => (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2
-      map_comp' := fun X Y Z f g => by
+      map_comp' := fun X Y Z f g =>
+        by
         simp only [prod_comp_fst, prod_comp_snd, functor.map_comp, nat_trans.comp_app,
           category.assoc]
         slice_lhs 2 3 => rw [← nat_trans.naturality]
         rw [category.assoc] }
   map F G T :=
     { app := fun X => (T.app X.1).app X.2
-      naturality' := fun X Y f => by
+      naturality' := fun X Y f =>
+        by
         simp only [prod_comp_fst, prod_comp_snd, category.comp_id, category.assoc, Functor.map_id,
           functor.map_comp, nat_trans.id_app, nat_trans.comp_app]
         slice_lhs 2 3 => rw [nat_trans.naturality]
@@ -54,10 +54,8 @@ def uncurry :
 
 /-- The object level part of the currying functor. (See `curry` for the functorial version.)
 -/
-def curryObj (F : C × D ⥤ E) :
-    C ⥤
-      D ⥤
-        E where 
+def curryObj (F : C × D ⥤ E) : C ⥤ D ⥤ E
+    where
   obj X :=
     { obj := fun Y => F.obj (X, Y)
       map := fun Y Y' g => F.map (𝟙 X, g) }
@@ -67,15 +65,15 @@ def curryObj (F : C × D ⥤ E) :
 /-- The currying functor, taking a functor `(C × D) ⥤ E` and producing a functor `C ⥤ (D ⥤ E)`.
 -/
 @[simps obj_obj_obj obj_obj_map obj_map_app map_app_app]
-def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where 
+def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
   obj F := curryObj F
   map F G T :=
     { app := fun X =>
         { app := fun Y => T.app (X, Y)
-          naturality' := fun Y Y' g => by 
+          naturality' := fun Y Y' g => by
             dsimp [curry_obj]
             rw [nat_trans.naturality] }
-      naturality' := fun X X' f => by 
+      naturality' := fun X X' f => by
         ext; dsimp [curry_obj]
         rw [nat_trans.naturality] }
 #align category_theory.curry CategoryTheory.curry

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.constructions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ section Pushout
 variable {R A B : CommRingCat.{u}} (f : R ⟶ A) (g : R ⟶ B)
 
 /-- The explicit cocone with tensor products as the fibered product in `CommRing`. -/
-def pushoutCocone : Limits.PushoutCocone f g := by
+def pushoutCocone : Limits.PushoutCocone f g :=
+  by
   letI := RingHom.toAlgebra f
   letI := RingHom.toAlgebra g
   apply limits.pushout_cocone.mk
@@ -56,7 +57,7 @@ def pushoutCocone : Limits.PushoutCocone f g := by
 
 @[simp]
 theorem pushout_cocone_inl :
-    (pushoutCocone f g).inl = by 
+    (pushoutCocone f g).inl = by
       letI := f.to_algebra
       letI := g.to_algebra
       exact algebra.tensor_product.include_left.to_ring_hom :=
@@ -65,7 +66,7 @@ theorem pushout_cocone_inl :
 
 @[simp]
 theorem pushout_cocone_inr :
-    (pushoutCocone f g).inr = by 
+    (pushoutCocone f g).inr = by
       letI := f.to_algebra
       letI := g.to_algebra
       exact algebra.tensor_product.include_right.to_ring_hom :=
@@ -74,7 +75,7 @@ theorem pushout_cocone_inr :
 
 @[simp]
 theorem pushout_cocone_X :
-    (pushoutCocone f g).x = by 
+    (pushoutCocone f g).x = by
       letI := f.to_algebra
       letI := g.to_algebra
       exact CommRingCat.of (A ⊗[R] B) :=
@@ -83,18 +84,19 @@ theorem pushout_cocone_X :
 
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
 def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
-  Limits.PushoutCocone.isColimitAux' _ fun s => by
+  Limits.PushoutCocone.isColimitAux' _ fun s =>
+    by
     letI := RingHom.toAlgebra f
     letI := RingHom.toAlgebra g
     letI := RingHom.toAlgebra (f ≫ s.inl)
     let f' : A →ₐ[R] s.X :=
       { s.inl with
-        commutes' := fun r => by 
+        commutes' := fun r => by
           change s.inl.to_fun (f r) = (f ≫ s.inl) r
           rfl }
     let g' : B →ₐ[R] s.X :=
       { s.inr with
-        commutes' := fun r => by 
+        commutes' := fun r => by
           change (g ≫ s.inr) r = (f ≫ s.inl) r
           congr 1
           exact
@@ -112,11 +114,12 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
     intro h eq1 eq2
     let h' : A ⊗[R] B →ₐ[R] s.X :=
       { h with
-        commutes' := fun r => by 
+        commutes' := fun r => by
           change h (f r ⊗ₜ[R] 1) = s.inl (f r)
           rw [← eq1]
           simp }
-    suffices h' = Algebra.TensorProduct.productMap f' g' by
+    suffices h' = Algebra.TensorProduct.productMap f' g'
+      by
       ext x
       change h' x = Algebra.TensorProduct.productMap f' g' x
       rw [this]
@@ -130,17 +133,19 @@ end Pushout
 section Terminal
 
 /-- The trivial ring is the (strict) terminal object of `CommRing`. -/
-def punitIsTerminal : IsTerminal (CommRingCat.of.{u} PUnit) := by
+def punitIsTerminal : IsTerminal (CommRingCat.of.{u} PUnit) :=
+  by
   apply (config := { instances := false }) is_terminal.of_unique
   tidy
 #align CommRing.punit_is_terminal CommRingCat.punitIsTerminal
 
-instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRingCat.{u} := by
+instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRingCat.{u} :=
+  by
   apply has_strict_terminal_objects_of_terminal_is_strict (CommRingCat.of PUnit)
   intro X f
   refine' ⟨⟨by tidy, by ext, _⟩⟩
   ext
-  have e : (0 : X) = 1 := by 
+  have e : (0 : X) = 1 := by
     rw [← f.map_one, ← f.map_zero]
     congr
   replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
@@ -155,7 +160,8 @@ theorem subsingleton_of_is_terminal {X : CommRingCat} (hX : IsTerminal X) : Subs
 #align CommRing.subsingleton_of_is_terminal CommRingCat.subsingleton_of_is_terminal
 
 /-- `ℤ` is the initial object of `CommRing`. -/
-def zIsInitial : IsInitial (CommRingCat.of ℤ) := by
+def zIsInitial : IsInitial (CommRingCat.of ℤ) :=
+  by
   apply (config := { instances := false }) is_initial.of_unique
   exact fun R => ⟨⟨Int.castRingHom R⟩, fun a => a.ext_int _⟩
 #align CommRing.Z_is_initial CommRingCat.zIsInitial
@@ -173,16 +179,14 @@ def prodFan : BinaryFan A B :=
 #align CommRing.prod_fan CommRingCat.prodFan
 
 /-- The product in `CommRing` is the cartesian product. -/
-def prodFanIsLimit :
-    IsLimit
-      (prodFan A
-        B) where 
+def prodFanIsLimit : IsLimit (prodFan A B)
+    where
   lift c := RingHom.prod (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩)
-  fac' c j := by 
+  fac' c j := by
     ext
     rcases j with ⟨⟨⟩⟩ <;>
       simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
-  uniq' s m h := by 
+  uniq' s m h := by
     ext
     · simpa using congr_hom (h ⟨walking_pair.left⟩) x
     · simpa using congr_hom (h ⟨walking_pair.right⟩) x
@@ -197,13 +201,14 @@ variable {A B : CommRingCat.{u}} (f g : A ⟶ B)
 /-- The equalizer in `CommRing` is the equalizer as sets. This is the equalizer fork. -/
 def equalizerFork : Fork f g :=
   Fork.ofι (CommRingCat.ofHom (RingHom.eqLocus f g).Subtype)
-    (by 
+    (by
       ext ⟨x, e⟩
       simpa using e)
 #align CommRing.equalizer_fork CommRingCat.equalizerFork
 
 /-- The equalizer in `CommRing` is the equalizer as sets. -/
-def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
+def equalizerForkIsLimit : IsLimit (equalizerFork f g) :=
+  by
   fapply fork.is_limit.mk'
   intro s
   use s.ι.cod_restrict _ fun x => (concrete_category.congr_hom s.condition x : _)
@@ -215,10 +220,12 @@ def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
     exact concrete_category.congr_hom hm x
 #align CommRing.equalizer_fork_is_limit CommRingCat.equalizerForkIsLimit
 
-instance : IsLocalRingHom (equalizerFork f g).ι := by
+instance : IsLocalRingHom (equalizerFork f g).ι :=
+  by
   constructor
   rintro ⟨a, h₁ : _ = _⟩ (⟨⟨x, y, h₃, h₄⟩, rfl : x = _⟩ : IsUnit a)
-  have : y ∈ RingHom.eqLocus f g := by
+  have : y ∈ RingHom.eqLocus f g :=
+    by
     apply (f.is_unit_map ⟨⟨x, y, h₃, h₄⟩, rfl⟩ : IsUnit (f x)).mul_left_inj.mp
     conv_rhs => rw [h₁]
     rw [← f.map_mul, ← g.map_mul, h₄, f.map_one, g.map_one]
@@ -226,7 +233,8 @@ instance : IsLocalRingHom (equalizerFork f g).ι := by
   exact ⟨⟨y, this⟩, Subtype.eq h₃⟩
 
 instance equalizer_ι_is_local_ring_hom (F : walking_parallel_pair ⥤ CommRingCat.{u}) :
-    IsLocalRingHom (limit.π F WalkingParallelPair.zero) := by
+    IsLocalRingHom (limit.π F WalkingParallelPair.zero) :=
+  by
   have := lim_map_π (diagram_iso_parallel_pair F).Hom walking_parallel_pair.zero
   rw [← is_iso.comp_inv_eq] at this
   rw [← this]
@@ -245,7 +253,8 @@ open CategoryTheory.Limits.WalkingParallelPair Opposite
 open CategoryTheory.Limits.WalkingParallelPairHom
 
 instance equalizer_ι_is_local_ring_hom' (F : walking_parallel_pairᵒᵖ ⥤ CommRingCat.{u}) :
-    IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) := by
+    IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) :=
+  by
   have : _ = limit.π F (walking_parallel_pair_op_equiv.functor.obj _) :=
     (limit.iso_limit_cone_inv_π
         ⟨_, is_limit.whisker_equivalence (limit.is_limit F) walking_parallel_pair_op_equiv⟩
@@ -270,14 +279,15 @@ def pullbackCone {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : Pullbac
     (CommRingCat.ofHom <|
       (RingHom.snd A B).comp
         (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
-    (by 
+    (by
       ext ⟨x, e⟩
       simpa [CommRingCat.ofHom] using e)
 #align CommRing.pullback_cone CommRingCat.pullbackCone
 
 /-- The constructed pullback cone is indeed the limit. -/
 def pullbackConeIsLimit {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) :
-    IsLimit (pullbackCone f g) := by
+    IsLimit (pullbackCone f g) :=
+  by
   fapply pullback_cone.is_limit.mk
   · intro s
     apply (s.fst.prod s.snd).codRestrict

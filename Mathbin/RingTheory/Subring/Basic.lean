@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module ring_theory.subring.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,12 +204,12 @@ def toSubmonoid (s : Subring R) : Submonoid R :=
   { s.toSubsemiring.toSubmonoid with carrier := s.carrier }
 #align subring.to_submonoid Subring.toSubmonoid
 
-instance : SetLike (Subring R) R where 
+instance : SetLike (Subring R) R where
   coe := Subring.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
-instance : SubringClass (Subring R)
-      R where 
+instance : SubringClass (Subring R) R
+    where
   zero_mem := zero_mem'
   add_mem := add_mem'
   one_mem := one_mem'
@@ -248,7 +248,7 @@ theorem ext {S T : Subring R} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 /-- Copy of a subring with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (S : Subring R) (s : Set R) (hs : s = ↑S) : Subring R :=
-  { S.toSubsemiring.copy s hs with 
+  { S.toSubsemiring.copy s hs with
     carrier := s
     neg_mem' := fun _ => hs.symm ▸ S.neg_mem' }
 #align subring.copy Subring.copy
@@ -307,7 +307,7 @@ theorem to_submonoid_mono : Monotone (toSubmonoid : Subring R → Submonoid R) :
 /-- Construct a `subring R` from a set `s`, a submonoid `sm`, and an additive
 subgroup `sa` such that `x ∈ s ↔ x ∈ sm ↔ x ∈ sa`. -/
 protected def mk' (s : Set R) (sm : Submonoid R) (sa : AddSubgroup R) (hm : ↑sm = s)
-    (ha : ↑sa = s) : Subring R where 
+    (ha : ↑sa = s) : Subring R where
   carrier := s
   zero_mem' := ha ▸ sa.zero_mem
   one_mem' := hm ▸ sm.one_mem
@@ -345,7 +345,7 @@ end Subring
 /-- A `subsemiring` containing -1 is a `subring`. -/
 def Subsemiring.toSubring (s : Subsemiring R) (hneg : (-1 : R) ∈ s) : Subring R :=
   { s.toSubmonoid, s.toAddSubmonoid with
-    neg_mem' := by 
+    neg_mem' := by
       rintro x
       rw [← neg_one_mul]
       apply Subsemiring.mul_mem
@@ -647,7 +647,9 @@ theorem gc_map_comap (f : R →+* S) : GaloisConnection (map f) (comap f) := fun
 
 /-- A subring is isomorphic to its image under an injective function -/
 noncomputable def equivMapOfInjective (f : R →+* S) (hf : Function.Injective f) : s ≃+* s.map f :=
-  { Equiv.Set.image f s hf with
+  {
+    Equiv.Set.image f s
+      hf with
     map_mul' := fun _ _ => Subtype.ext (f.map_mul _ _)
     map_add' := fun _ _ => Subtype.ext (f.map_add _ _) }
 #align subring.equiv_map_of_injective Subring.equivMapOfInjective
@@ -682,7 +684,8 @@ theorem mem_range {f : R →+* S} {y : S} : y ∈ f.range ↔ ∃ x, f x = y :=
   Iff.rfl
 #align ring_hom.mem_range RingHom.mem_range
 
-theorem range_eq_map (f : R →+* S) : f.range = Subring.map f ⊤ := by
+theorem range_eq_map (f : R →+* S) : f.range = Subring.map f ⊤ :=
+  by
   ext
   simp
 #align ring_hom.range_eq_map RingHom.range_eq_map
@@ -752,16 +755,16 @@ theorem coe_Inf (S : Set (Subring R)) : ((infₛ S : Subring R) : Set R) = ⋂ s
 #align subring.coe_Inf Subring.coe_Inf
 
 theorem mem_Inf {S : Set (Subring R)} {x : R} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
-  Set.mem_Inter₂
+  Set.mem_interᵢ₂
 #align subring.mem_Inf Subring.mem_Inf
 
 @[simp, norm_cast]
 theorem coe_infi {ι : Sort _} {S : ι → Subring R} : (↑(⨅ i, S i) : Set R) = ⋂ i, S i := by
-  simp only [infi, coe_Inf, Set.bInter_range]
+  simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
 #align subring.coe_infi Subring.coe_infi
 
 theorem mem_infi {ι : Sort _} {S : ι → Subring R} {x : R} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infi, mem_Inf, Set.forall_range_iff]
+  simp only [infᵢ, mem_Inf, Set.forall_range_iff]
 #align subring.mem_infi Subring.mem_infi
 
 @[simp]
@@ -778,7 +781,8 @@ theorem Inf_to_add_subgroup (s : Set (Subring R)) :
 
 /-- Subrings of a ring form a complete lattice. -/
 instance : CompleteLattice (Subring R) :=
-  { completeLatticeOfInf (Subring R) fun s =>
+  {
+    completeLatticeOfInf (Subring R) fun s =>
       IsGLB.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
         is_glb_binfi with
     bot := ⊥
@@ -805,7 +809,7 @@ variable (R)
 
 /-- The center of a ring `R` is the set of elements that commute with everything in `R` -/
 def center : Subring R :=
-  { Subsemiring.center R with 
+  { Subsemiring.center R with
     carrier := Set.center R
     neg_mem' := fun a => Set.neg_mem_center }
 #align subring.center Subring.center
@@ -845,7 +849,8 @@ section DivisionRing
 variable {K : Type u} [DivisionRing K]
 
 instance : Field (center K) :=
-  { (center K).Nontrivial, center.commRing with
+  { (center K).Nontrivial,
+    center.commRing with
     inv := fun a => ⟨a⁻¹, Set.inv_mem_center₀ a.Prop⟩
     mul_inv_cancel := fun ⟨a, ha⟩ h => Subtype.ext <| mul_inv_cancel <| Subtype.coe_injective.Ne h
     div := fun a b => ⟨a / b, Set.div_mem_center₀ a.Prop b.Prop⟩
@@ -921,7 +926,8 @@ theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {a b : R} (ha : 
     (Hadd_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ + x₂) y)
     (Hadd_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ + y₂))
     (Hmul_left : ∀ x₁ x₂ y, p x₁ y → p x₂ y → p (x₁ * x₂) y)
-    (Hmul_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ * y₂)) : p a b := by
+    (Hmul_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ * y₂)) : p a b :=
+  by
   refine'
     closure_induction hb _ (H0_right _) (H1_right _) (Hadd_right a) (Hneg_right a) (Hmul_right a)
   refine' closure_induction ha Hs (fun x _ => H0_left x) (fun x _ => H1_left x) _ _ _
@@ -944,12 +950,12 @@ theorem mem_closure_iff {s : Set R} {x} :
             (fun p hp => AddSubgroup.subset_closure ((Submonoid.closure s).mul_mem hp hq))
             (by rw [zero_mul q]; apply AddSubgroup.zero_mem _)
             (fun p₁ p₂ ihp₁ ihp₂ => by rw [add_mul p₁ p₂ q]; apply AddSubgroup.add_mem _ ihp₁ ihp₂)
-            fun x hx => by 
+            fun x hx => by
             have f : -x * q = -(x * q) := by simp
             rw [f]; apply AddSubgroup.neg_mem _ hx)
         (by rw [mul_zero x]; apply AddSubgroup.zero_mem _)
         (fun q₁ q₂ ihq₁ ihq₂ => by rw [mul_add x q₁ q₂]; apply AddSubgroup.add_mem _ ihq₁ ihq₂)
-        fun z hz => by 
+        fun z hz => by
         have f : x * -z = -(x * z) := by simp
         rw [f]; apply AddSubgroup.neg_mem _ hz,
     fun h =>
@@ -964,7 +970,7 @@ theorem mem_closure_iff {s : Set R} {x} :
 def closureCommRingOfComm {s : Set R} (hcomm : ∀ a ∈ s, ∀ b ∈ s, a * b = b * a) :
     CommRing (closure s) :=
   { (closure s).toRing with
-    mul_comm := fun x y => by 
+    mul_comm := fun x y => by
       ext
       simp only [Subring.coe_mul]
       refine'
@@ -984,7 +990,7 @@ theorem exists_list_of_mem_closure {s : Set R} {x : R} (h : x ∈ closure s) :
   AddSubgroup.closure_induction (mem_closure_iff.1 h)
     (fun x hx =>
       let ⟨l, hl, h⟩ := Submonoid.exists_list_of_mem_closure hx
-      ⟨[l], by simp [h] <;> clear_aux_decl <;> tauto!⟩)
+      ⟨[l], by simp [h] <;> clear_aux_decl <;> tauto⟩)
     ⟨[], by simp⟩
     (fun x y ⟨l, hl1, hl2⟩ ⟨m, hm1, hm2⟩ =>
       ⟨l ++ m, fun t ht => (List.mem_append.1 ht).elim (hl1 t) (hm1 t), by simp [hl2, hm2]⟩)
@@ -999,9 +1005,8 @@ theorem exists_list_of_mem_closure {s : Set R} {x : R} (h : x ∈ closure s) :
 variable (R)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
-protected def gi :
-    GaloisInsertion (@closure R _)
-      coe where 
+protected def gi : GaloisInsertion (@closure R _) coe
+    where
   choice s _ := closure s
   gc s t := closure_le
   le_l_u s := subset_closure
@@ -1051,7 +1056,7 @@ theorem comap_inf (s t : Subring S) (f : R →+* S) : (s ⊓ t).comap f = s.coma
 #align subring.comap_inf Subring.comap_inf
 
 theorem comap_infi {ι : Sort _} (f : R →+* S) (s : ι → Subring S) :
-    (infi s).comap f = ⨅ i, (s i).comap f :=
+    (infᵢ s).comap f = ⨅ i, (s i).comap f :=
   (gc_map_comap f).u_infi
 #align subring.comap_infi Subring.comap_infi
 
@@ -1111,7 +1116,7 @@ theorem top_prod_top : (⊤ : Subring R).Prod (⊤ : Subring S) = ⊤ :=
 
 /-- Product of subrings is isomorphic to their product as rings. -/
 def prodEquiv (s : Subring R) (t : Subring S) : s.Prod t ≃+* s × t :=
-  { Equiv.Set.prod ↑s ↑t with 
+  { Equiv.Set.prod ↑s ↑t with
     map_mul' := fun x y => rfl
     map_add' := fun x y => rfl }
 #align subring.prod_equiv Subring.prodEquiv
@@ -1120,14 +1125,15 @@ def prodEquiv (s : Subring R) (t : Subring S) : s.Prod t ≃+* s × t :=
   Note that this fails without the directedness assumption (the union of two subrings is
   typically not a subring) -/
 theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S)
-    {x : R} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
+    {x : R} : (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i :=
+  by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   let U : Subring R :=
     Subring.mk' (⋃ i, (S i : Set R)) (⨆ i, (S i).toSubmonoid) (⨆ i, (S i).toAddSubgroup)
       (Submonoid.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id)
       (AddSubgroup.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id)
   suffices (⨆ i, S i) ≤ U by simpa using @this x
-  exact supᵢ_le fun i x hx => Set.mem_Union.2 ⟨i, hx⟩
+  exact supᵢ_le fun i x hx => Set.mem_unionᵢ.2 ⟨i, hx⟩
 #align subring.mem_supr_of_directed Subring.mem_supr_of_directed
 
 theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS : Directed (· ≤ ·) S) :
@@ -1136,7 +1142,8 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS
 #align subring.coe_supr_of_directed Subring.coe_supr_of_directed
 
 theorem mem_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S)
-    {x : R} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s := by
+    {x : R} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
+  by
   haveI : Nonempty S := Sne.to_subtype
   simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align subring.mem_Sup_of_directed_on Subring.mem_Sup_of_directed_on
@@ -1281,7 +1288,8 @@ variable {s t : Subring R}
 /-- Makes the identity isomorphism from a proof two subrings of a multiplicative
     monoid are equal. -/
 def subringCongr (h : s = t) : s ≃+* t :=
-  { Equiv.setCongr <| congr_arg _ h with
+  {
+    Equiv.setCongr <| congr_arg _ h with
     map_mul' := fun _ _ => rfl
     map_add' := fun _ _ => rfl }
 #align ring_equiv.subring_congr RingEquiv.subringCongr
@@ -1289,7 +1297,7 @@ def subringCongr (h : s = t) : s ≃+* t :=
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.range`. -/
 def ofLeftInverse {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) : R ≃+* f.range :=
-  { f.range_restrict with 
+  { f.range_restrict with
     toFun := fun x => f.range_restrict x
     invFun := fun x => (g ∘ f.range.Subtype) x
     left_inv := h
@@ -1331,14 +1339,14 @@ attribute [local reducible] closure
 @[elab_as_elim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1)
     (hneg1 : C (-1)) (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) :
-    C x := by 
+    C x := by
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
   clear hx
   induction' L with hd tl ih
   · exact h0
   rw [List.forall_mem_cons] at HL
-  suffices C (List.prod hd) by 
+  suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
   replace HL := HL.1
@@ -1382,7 +1390,7 @@ theorem closure_preimage_le (f : R →+* S) (s : Set S) : closure (f ⁻¹' s) �
 end Subring
 
 theorem AddSubgroup.int_mul_mem {G : AddSubgroup R} (k : ℤ) {g : R} (h : g ∈ G) : (k : R) * g ∈ G :=
-  by 
+  by
   convert AddSubgroup.zsmul_mem G h k
   simp
 #align add_subgroup.int_mul_mem AddSubgroup.int_mul_mem
@@ -1442,7 +1450,7 @@ instance [Monoid α] [MulDistribMulAction R α] (S : Subring R) : MulDistribMulA
   S.toSubsemiring.MulDistribMulAction
 
 /-- The action by a subring is the action by the underlying ring. -/
-instance [Zero α] [SmulWithZero R α] (S : Subring R) : SmulWithZero S α :=
+instance [Zero α] [SMulWithZero R α] (S : Subring R) : SMulWithZero S α :=
   S.toSubsemiring.SmulWithZero
 
 /-- The action by a subring is the action by the underlying ring. -/
@@ -1475,7 +1483,9 @@ end Actions
 -- both ordered ring structures and submonoids available
 /-- The subgroup of positive units of a linear ordered semiring. -/
 def Units.posSubgroup (R : Type _) [LinearOrderedSemiring R] : Subgroup Rˣ :=
-  { (posSubmonoid R).comap (Units.coeHom R) with
+  {
+    (posSubmonoid R).comap
+      (Units.coeHom R) with
     carrier := { x | (0 : R) < x }
     inv_mem' := fun x => Units.inv_pos.mpr }
 #align units.pos_subgroup Units.posSubgroup

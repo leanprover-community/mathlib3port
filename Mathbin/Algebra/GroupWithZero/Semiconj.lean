@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.semiconj
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,8 @@ lean 3 declaration is
 but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] {a : G₀} {x : G₀} {y : G₀}, (SemiconjBy.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a x y) -> (SemiconjBy.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_1) x) (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_1) y))
 Case conversion may be inaccurate. Consider using '#align semiconj_by.inv_right₀ SemiconjBy.inv_right₀ₓ'. -/
-theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ := by
+theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ :=
+  by
   by_cases ha : a = 0
   · simp only [ha, zero_left]
   by_cases hx : x = 0
@@ -107,7 +108,8 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] {a : G₀} {x : G₀} {y : G₀} {x' : G₀} {y' : G₀}, (SemiconjBy.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a x y) -> (SemiconjBy.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a x' y') -> (SemiconjBy.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_1)) x x') (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_1)) y y'))
 Case conversion may be inaccurate. Consider using '#align semiconj_by.div_right SemiconjBy.div_rightₓ'. -/
 theorem div_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') :
-    SemiconjBy a (x / x') (y / y') := by
+    SemiconjBy a (x / x') (y / y') :=
+  by
   rw [div_eq_mul_inv, div_eq_mul_inv]
   exact h.mul_right h'.inv_right₀
 #align semiconj_by.div_right SemiconjBy.div_right

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module logic.equiv.fintype
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,8 @@ theorem Function.Embedding.to_equiv_range_symm_apply_self (a : α) :
   function.embedding.to_equiv_range_symm_apply_self Function.Embedding.to_equiv_range_symm_apply_self
 
 theorem Function.Embedding.to_equiv_range_eq_of_injective :
-    f.toEquivRange = Equiv.ofInjective f f.Injective := by
+    f.toEquivRange = Equiv.ofInjective f f.Injective :=
+  by
   ext
   simp
 #align
@@ -74,7 +75,8 @@ def Equiv.Perm.viaFintypeEmbedding : Equiv.Perm β :=
 
 @[simp]
 theorem Equiv.Perm.via_fintype_embedding_apply_image (a : α) :
-    e.viaFintypeEmbedding f (f a) = f (e a) := by
+    e.viaFintypeEmbedding f (f a) = f (e a) :=
+  by
   rw [Equiv.Perm.viaFintypeEmbedding]
   convert Equiv.Perm.extendDomain_apply_image e _ _
 #align equiv.perm.via_fintype_embedding_apply_image Equiv.Perm.via_fintype_embedding_apply_image
@@ -120,27 +122,29 @@ noncomputable abbrev extendSubtype (e : { x // p x } ≃ { x // q x }) : Perm α
 #align equiv.extend_subtype Equiv.extendSubtype
 
 theorem extend_subtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) :
-    e.extendSubtype x = e ⟨x, hx⟩ := by
+    e.extendSubtype x = e ⟨x, hx⟩ :=
+  by
   dsimp only [extend_subtype]
   simp only [subtype_congr, Equiv.trans_apply, Equiv.sum_congr_apply]
   rw [sum_compl_apply_symm_of_pos _ _ hx, Sum.map_inl, sum_compl_apply_inl]
 #align equiv.extend_subtype_apply_of_mem Equiv.extend_subtype_apply_of_mem
 
 theorem extend_subtype_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) :
-    q (e.extendSubtype x) := by 
+    q (e.extendSubtype x) := by
   convert (e ⟨x, hx⟩).2
   rw [e.extend_subtype_apply_of_mem _ hx, Subtype.val_eq_coe]
 #align equiv.extend_subtype_mem Equiv.extend_subtype_mem
 
 theorem extend_subtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) :
-    e.extendSubtype x = e.toCompl ⟨x, hx⟩ := by
+    e.extendSubtype x = e.toCompl ⟨x, hx⟩ :=
+  by
   dsimp only [extend_subtype]
   simp only [subtype_congr, Equiv.trans_apply, Equiv.sum_congr_apply]
   rw [sum_compl_apply_symm_of_neg _ _ hx, Sum.map_inr, sum_compl_apply_inr]
 #align equiv.extend_subtype_apply_of_not_mem Equiv.extend_subtype_apply_of_not_mem
 
 theorem extend_subtype_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) :
-    ¬q (e.extendSubtype x) := by 
+    ¬q (e.extendSubtype x) := by
   convert (e.to_compl ⟨x, hx⟩).2
   rw [e.extend_subtype_apply_of_not_mem _ hx, Subtype.val_eq_coe]
 #align equiv.extend_subtype_not_mem Equiv.extend_subtype_not_mem

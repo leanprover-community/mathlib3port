@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,8 +85,8 @@ namespace AddMonoidHom
 
 #print AddMonoidHom.mulLeft /-
 /-- Left multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
-def mulLeft {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
-    R →+ R where 
+def mulLeft {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R
+    where
   toFun := (· * ·) r
   map_zero' := mul_zero r
   map_add' := mul_add r
@@ -107,8 +107,8 @@ theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
 
 #print AddMonoidHom.mulRight /-
 /-- Right multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
-def mulRight {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
-    R →+ R where 
+def mulRight {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R
+    where
   toFun a := a * r
   map_zero' := zero_mul r
   map_add' _ _ := add_mul _ _ r
@@ -149,7 +149,9 @@ variable [Mul α] [HasDistribNeg α]
 open MulOpposite
 
 instance : HasDistribNeg αᵐᵒᵖ :=
-  { MulOpposite.hasInvolutiveNeg _ with
+  {
+    MulOpposite.hasInvolutiveNeg
+      _ with
     neg_mul := fun _ _ => unop_injective <| mul_neg _ _
     mul_neg := fun _ _ => unop_injective <| neg_mul _ _ }
 
@@ -191,7 +193,8 @@ Case conversion may be inaccurate. Consider using '#align Vieta_formula_quadrati
   polynomial, then there is another root `y` such that `x + y` is negative the `a_1` coefficient
   and `x * y` is the `a_0` coefficient. -/
 theorem Vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
-    ∃ y : α, y * y - b * y + c = 0 ∧ x + y = b ∧ x * y = c := by
+    ∃ y : α, y * y - b * y + c = 0 ∧ x + y = b ∧ x * y = c :=
+  by
   have : c = x * (b - x) := (eq_neg_of_add_eq_zero_right h).trans (by simp [mul_sub, mul_comm])
   refine' ⟨b - x, _, by simp, by rw [this]⟩
   rw [this, sub_add, ← sub_mul, sub_self]
@@ -230,7 +233,7 @@ but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsLeftCancelMulZero.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))], NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.toNoZeroDivisorsₓ'. -/
 theorem IsLeftCancelMulZero.toNoZeroDivisors [Ring α] [IsLeftCancelMulZero α] : NoZeroDivisors α :=
-  by 
+  by
   refine' ⟨fun x y h => _⟩
   by_cases hx : x = 0
   · left
@@ -248,7 +251,7 @@ but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsRightCancelMulZero.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))], NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.toNoZeroDivisorsₓ'. -/
 theorem IsRightCancelMulZero.toNoZeroDivisors [Ring α] [IsRightCancelMulZero α] :
-    NoZeroDivisors α := by 
+    NoZeroDivisors α := by
   refine' ⟨fun x y h => _⟩
   by_cases hy : y = 0
   · right
@@ -266,12 +269,14 @@ but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))], IsCancelMulZero.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.toIsCancelMulZeroₓ'. -/
 instance (priority := 100) NoZeroDivisors.toIsCancelMulZero [Ring α] [NoZeroDivisors α] :
-    IsCancelMulZero
-      α where 
-  mul_left_cancel_of_ne_zero a b c ha h := by
+    IsCancelMulZero α
+    where
+  mul_left_cancel_of_ne_zero a b c ha h :=
+    by
     rw [← sub_eq_zero, ← mul_sub] at h
     exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
-  mul_right_cancel_of_ne_zero a b c hb h := by
+  mul_right_cancel_of_ne_zero a b c hb h :=
+    by
     rw [← sub_eq_zero, ← sub_mul] at h
     exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb)
 #align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.toIsCancelMulZero

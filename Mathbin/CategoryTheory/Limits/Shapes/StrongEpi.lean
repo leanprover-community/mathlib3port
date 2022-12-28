@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.strong_epi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ variable {R : C} (f : P ⟶ Q) (g : Q ⟶ R)
 /-- The composition of two strong epimorphisms is a strong epimorphism. -/
 theorem strong_epi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
   { Epi := epi_comp _ _
-    llp := by 
+    llp := by
       intros
       infer_instance }
 #align category_theory.strong_epi_comp CategoryTheory.strong_epi_comp
@@ -106,7 +106,7 @@ theorem strong_epi_comp [StrongEpi f] [StrongEpi g] : StrongEpi (f ≫ g) :=
 /-- The composition of two strong monomorphisms is a strong monomorphism. -/
 theorem strong_mono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
   { Mono := mono_comp _ _
-    rlp := by 
+    rlp := by
       intros
       infer_instance }
 #align category_theory.strong_mono_comp CategoryTheory.strong_mono_comp
@@ -114,7 +114,7 @@ theorem strong_mono_comp [StrongMono f] [StrongMono g] : StrongMono (f ≫ g) :=
 /-- If `f ≫ g` is a strong epimorphism, then so is `g`. -/
 theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
   { Epi := epi_of_epi f g
-    llp := by 
+    llp := by
       intros
       constructor
       intro u v sq
@@ -128,7 +128,7 @@ theorem strong_epi_of_strong_epi [StrongEpi (f ≫ g)] : StrongEpi g :=
 /-- If `f ≫ g` is a strong monomorphism, then so is `f`. -/
 theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
   { Mono := mono_of_mono f g
-    rlp := by 
+    rlp := by
       intros
       constructor
       intro u v sq
@@ -137,49 +137,51 @@ theorem strong_mono_of_strong_mono [StrongMono (f ≫ g)] : StrongMono f :=
 #align category_theory.strong_mono_of_strong_mono CategoryTheory.strong_mono_of_strong_mono
 
 /-- An isomorphism is in particular a strong epimorphism. -/
-instance (priority := 100) strong_epi_of_is_iso [IsIso f] :
-    StrongEpi f where 
+instance (priority := 100) strong_epi_of_is_iso [IsIso f] : StrongEpi f
+    where
   Epi := by infer_instance
   llp X Y z hz := HasLiftingProperty.of_left_iso _ _
 #align category_theory.strong_epi_of_is_iso CategoryTheory.strong_epi_of_is_iso
 
 /-- An isomorphism is in particular a strong monomorphism. -/
-instance (priority := 100) strong_mono_of_is_iso [IsIso f] :
-    StrongMono f where 
+instance (priority := 100) strong_mono_of_is_iso [IsIso f] : StrongMono f
+    where
   Mono := by infer_instance
   rlp X Y z hz := HasLiftingProperty.of_right_iso _ _
 #align category_theory.strong_mono_of_is_iso CategoryTheory.strong_mono_of_is_iso
 
 theorem StrongEpi.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
     (e : Arrow.mk f ≅ Arrow.mk g) [h : StrongEpi f] : StrongEpi g :=
-  { Epi := by 
+  { Epi := by
       rw [arrow.iso_w' e]
       haveI := epi_comp f e.hom.right
       apply epi_comp
-    llp := fun X Y z => by 
+    llp := fun X Y z => by
       intro
       apply has_lifting_property.of_arrow_iso_left e z }
 #align category_theory.strong_epi.of_arrow_iso CategoryTheory.StrongEpi.of_arrow_iso
 
 theorem StrongMono.of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
     (e : Arrow.mk f ≅ Arrow.mk g) [h : StrongMono f] : StrongMono g :=
-  { Mono := by 
+  { Mono := by
       rw [arrow.iso_w' e]
       haveI := mono_comp f e.hom.right
       apply mono_comp
-    rlp := fun X Y z => by 
+    rlp := fun X Y z => by
       intro
       apply has_lifting_property.of_arrow_iso_right z e }
 #align category_theory.strong_mono.of_arrow_iso CategoryTheory.StrongMono.of_arrow_iso
 
 theorem StrongEpi.iff_of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
-    (e : Arrow.mk f ≅ Arrow.mk g) : StrongEpi f ↔ StrongEpi g := by
+    (e : Arrow.mk f ≅ Arrow.mk g) : StrongEpi f ↔ StrongEpi g :=
+  by
   constructor <;> intro
   exacts[strong_epi.of_arrow_iso e, strong_epi.of_arrow_iso e.symm]
 #align category_theory.strong_epi.iff_of_arrow_iso CategoryTheory.StrongEpi.iff_of_arrow_iso
 
 theorem StrongMono.iff_of_arrow_iso {A B A' B' : C} {f : A ⟶ B} {g : A' ⟶ B'}
-    (e : Arrow.mk f ≅ Arrow.mk g) : StrongMono f ↔ StrongMono g := by
+    (e : Arrow.mk f ≅ Arrow.mk g) : StrongMono f ↔ StrongMono g :=
+  by
   constructor <;> intro
   exacts[strong_mono.of_arrow_iso e, strong_mono.of_arrow_iso e.symm]
 #align category_theory.strong_mono.iff_of_arrow_iso CategoryTheory.StrongMono.iff_of_arrow_iso
@@ -224,8 +226,8 @@ section
 
 attribute [local instance] strong_epi_of_epi
 
-instance (priority := 100) balanced_of_strong_epi_category [StrongEpiCategory C] :
-    Balanced C where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_mono_of_strong_epi _
+instance (priority := 100) balanced_of_strong_epi_category [StrongEpiCategory C] : Balanced C
+    where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_mono_of_strong_epi _
 #align
   category_theory.balanced_of_strong_epi_category CategoryTheory.balanced_of_strong_epi_category
 
@@ -235,8 +237,8 @@ section
 
 attribute [local instance] strong_mono_of_mono
 
-instance (priority := 100) balanced_of_strong_mono_category [StrongMonoCategory C] :
-    Balanced C where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_epi_of_strong_mono _
+instance (priority := 100) balanced_of_strong_mono_category [StrongMonoCategory C] : Balanced C
+    where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_epi_of_strong_mono _
 #align
   category_theory.balanced_of_strong_mono_category CategoryTheory.balanced_of_strong_mono_category
 

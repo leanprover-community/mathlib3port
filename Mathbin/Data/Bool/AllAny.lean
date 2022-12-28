@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.bool.all_any
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,8 @@ theorem all_cons (p : α → Bool) (a : α) (l : List α) : all (a :: l) p = (p 
   rfl
 #align list.all_cons List.all_cons
 
-theorem all_iff_forall {p : α → Bool} : all l p ↔ ∀ a ∈ l, p a := by
+theorem all_iff_forall {p : α → Bool} : all l p ↔ ∀ a ∈ l, p a :=
+  by
   induction' l with a l ih
   · exact iff_of_true rfl (forall_mem_nil _)
   simp only [all_cons, Bool.and_coe_iff, ih, forall_mem_cons]
@@ -68,7 +69,8 @@ theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = (p 
   rfl
 #align list.any_cons List.any_cons
 
-theorem any_iff_exists {p : α → Bool} : any l p ↔ ∃ a ∈ l, p a := by
+theorem any_iff_exists {p : α → Bool} : any l p ↔ ∃ a ∈ l, p a :=
+  by
   induction' l with a l ih
   · exact iff_of_false Bool.not_false' (not_exists_mem_nil _)
   simp only [any_cons, Bool.or_coe_iff, ih, exists_mem_cons_iff]

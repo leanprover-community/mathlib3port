@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.group_action.quotient
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,10 +76,8 @@ instance right_quotient_action' [hH : H.Normal] : QuotientAction αᵐᵒᵖ H :
 #align mul_action.right_quotient_action' MulAction.right_quotient_action'
 
 @[to_additive]
-instance quotient [QuotientAction β H] :
-    MulAction β
-      (α ⧸
-        H) where 
+instance quotient [QuotientAction β H] : MulAction β (α ⧸ H)
+    where
   smul b :=
     Quotient.map' ((· • ·) b) fun a a' h =>
       left_rel_apply.mpr <| QuotientAction.inv_mul_mem b <| left_rel_apply.mp h
@@ -168,7 +166,7 @@ theorem of_quotient_stabilizer_smul (g : α) (g' : α ⧸ MulAction.stabilizer �
 theorem injective_of_quotient_stabilizer : Function.Injective (ofQuotientStabilizer α x) :=
   fun y₁ y₂ =>
   (Quotient.inductionOn₂' y₁ y₂) fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
-    Quotient.sound' <| by 
+    Quotient.sound' <| by
       rw [left_rel_apply]
       show (g₁⁻¹ * g₂) • x = x
       rw [mul_smul, ← H, inv_smul_smul]
@@ -209,7 +207,8 @@ theorem orbit_equiv_quotient_stabilizer_symm_apply (b : β) (a : α) :
 
 @[simp, to_additive]
 theorem stabilizer_quotient {G} [Group G] (H : Subgroup G) :
-    MulAction.stabilizer G ((1 : G) : G ⧸ H) = H := by
+    MulAction.stabilizer G ((1 : G) : G ⧸ H) = H :=
+  by
   ext
   simp [QuotientGroup.eq]
 #align mul_action.stabilizer_quotient MulAction.stabilizer_quotient
@@ -246,12 +245,12 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
 theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [Fintype Ω]
     [∀ b : β, Fintype <| stabilizer α b] {φ : Ω → β} (hφ : LeftInverse Quotient.mk' φ) :
     Fintype.card β = ∑ ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) := by
-  classical 
+  classical
     have :
       ∀ ω : Ω,
         Fintype.card α / Fintype.card ↥(stabilizer α (φ ω)) =
           Fintype.card (α ⧸ stabilizer α (φ ω)) :=
-      by 
+      by
       intro ω
       rw [Fintype.card_congr (@Subgroup.groupEquivQuotientTimesSubgroup α _ (stabilizer α <| φ ω)),
         Fintype.card_prod, Nat.mul_div_cancel]
@@ -317,9 +316,8 @@ theorem sum_card_fixed_by_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fin
   mul_action.sum_card_fixed_by_eq_card_orbits_mul_card_group MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group
 
 @[to_additive]
-instance is_pretransitive_quotient (G) [Group G] (H : Subgroup G) :
-    IsPretransitive G
-      (G ⧸ H) where exists_smul_eq := by 
+instance is_pretransitive_quotient (G) [Group G] (H : Subgroup G) : IsPretransitive G (G ⧸ H)
+    where exists_smul_eq := by
     rintro ⟨x⟩ ⟨y⟩
     refine' ⟨y * x⁻¹, quotient_group.eq.mpr _⟩
     simp only [smul_eq_mul, H.one_mem, mul_left_inv, inv_mul_cancel_right]
@@ -331,7 +329,8 @@ namespace Subgroup
 
 variable {G : Type _} [Group G] (H : Subgroup G)
 
-theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ker := by
+theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ker :=
+  by
   refine'
     le_antisymm
       (fun g hg =>

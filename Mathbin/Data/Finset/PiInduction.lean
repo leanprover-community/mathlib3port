@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.finset.pi_induction
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     (step :
       ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i),
         r i x (g i) → p g → p (update g i (insert x (g i)))) :
-    p f := by 
+    p f := by
   cases nonempty_fintype ι
   induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f; subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne
@@ -53,7 +53,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
     set g := update f i ((f i).erase x) with hg
     clear_value g
-    have hx' : x ∉ g i := by 
+    have hx' : x ∉ g i := by
       rw [hg, update_same]
       apply not_mem_erase
     obtain rfl : f = update g i (insert x (g i)) := by

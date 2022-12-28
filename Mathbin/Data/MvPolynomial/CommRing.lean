@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.comm_ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,8 @@ theorem vars_sub_subset : (p - q).vars ⊆ p.vars ∪ q.vars := by
 variable {p q}
 
 @[simp]
-theorem vars_sub_of_disjoint (hpq : Disjoint p.vars q.vars) : (p - q).vars = p.vars ∪ q.vars := by
+theorem vars_sub_of_disjoint (hpq : Disjoint p.vars q.vars) : (p - q).vars = p.vars ∪ q.vars :=
+  by
   rw [← vars_neg q] at hpq
   convert vars_add_of_disjoint hpq using 2 <;> simp [sub_eq_add_neg]
 #align mv_polynomial.vars_sub_of_disjoint MvPolynomial.vars_sub_of_disjoint
@@ -156,21 +157,21 @@ is determined by the evaluations f(X_1), f(X_2), ... -/
 theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →+* S) (x : MvPolynomial R ℤ) :
     eval₂ c (f ∘ X) x = f x :=
   MvPolynomial.induction_on x
-    (fun n => by 
+    (fun n => by
       rw [hom_C f, eval₂_C]
       exact eq_int_cast c n)
-    (fun p q hp hq => by 
+    (fun p q hp hq => by
       rw [eval₂_add, hp, hq]
       exact (f.map_add _ _).symm)
-    fun p n hp => by 
+    fun p n hp => by
     rw [eval₂_mul, eval₂_X, hp]
     exact (f.map_mul _ _).symm
 #align mv_polynomial.eval₂_hom_X MvPolynomial.eval₂_hom_X
 
 /-- Ring homomorphisms out of integer polynomials on a type `σ` are the same as
 functions out of the type `σ`, -/
-def homEquiv : (MvPolynomial σ ℤ →+* S) ≃
-      (σ → S) where 
+def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S)
+    where
   toFun f := ⇑f ∘ X
   invFun f := eval₂Hom (Int.castRingHom S) f
   left_inv f := RingHom.ext <| eval₂_hom_X _ _
@@ -184,7 +185,7 @@ section DegreeOf
 theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
     (hf : ∀ m : σ →₀ ℕ, m ∈ f.support → k ≤ m x → coeff m f = coeff m g)
     (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degreeOf x (f - g) < k :=
-  by 
+  by
   rw [degree_of_lt_iff h]
   intro m hm
   by_contra hc

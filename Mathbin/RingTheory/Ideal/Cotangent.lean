@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.cotangent
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,8 @@ instance Cotangent.moduleOfTower : Module S I.Cotangent :=
   Submodule.Quotient.module' _
 #align ideal.cotangent.module_of_tower Ideal.Cotangent.moduleOfTower
 
-instance : IsScalarTower S S' I.Cotangent := by
+instance : IsScalarTower S S' I.Cotangent :=
+  by
   delta cotangent
   constructor
   intro s s' x
@@ -54,7 +55,8 @@ instance : IsScalarTower S S' I.Cotangent := by
     ← IsScalarTower.to_alg_hom_apply S S' R, map_smul]
   rfl
 
-instance [IsNoetherian R I] : IsNoetherian R I.Cotangent := by
+instance [IsNoetherian R I] : IsNoetherian R I.Cotangent :=
+  by
   delta cotangent
   infer_instance
 
@@ -68,12 +70,14 @@ theorem map_to_cotangent_ker : I.toCotangent.ker.map I.Subtype = I ^ 2 := by
   simp [Ideal.toCotangent, Submodule.map_smul'', pow_two]
 #align ideal.map_to_cotangent_ker Ideal.map_to_cotangent_ker
 
-theorem mem_to_cotangent_ker {x : I} : x ∈ I.toCotangent.ker ↔ (x : R) ∈ I ^ 2 := by
+theorem mem_to_cotangent_ker {x : I} : x ∈ I.toCotangent.ker ↔ (x : R) ∈ I ^ 2 :=
+  by
   rw [← I.map_to_cotangent_ker]
   simp
 #align ideal.mem_to_cotangent_ker Ideal.mem_to_cotangent_ker
 
-theorem to_cotangent_eq {x y : I} : I.toCotangent x = I.toCotangent y ↔ (x - y : R) ∈ I ^ 2 := by
+theorem to_cotangent_eq {x y : I} : I.toCotangent x = I.toCotangent y ↔ (x - y : R) ∈ I ^ 2 :=
+  by
   rw [← sub_eq_zero, ← map_sub]
   exact I.mem_to_cotangent_ker
 #align ideal.to_cotangent_eq Ideal.to_cotangent_eq
@@ -90,7 +94,8 @@ theorem to_cotangent_range : I.toCotangent.range = ⊤ :=
   Submodule.range_mkq _
 #align ideal.to_cotangent_range Ideal.to_cotangent_range
 
-theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentElem I := by
+theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentElem I :=
+  by
   constructor
   · intro H
     refine' (pow_two I).symm.trans (le_antisymm (Ideal.pow_le_self two_ne_zero) _)
@@ -123,16 +128,18 @@ theorem to_cotangent_to_quotient_square (x : I) :
 #align ideal.to_cotangent_to_quotient_square Ideal.to_cotangent_to_quotient_square
 
 /-- `I ⧸ I ^ 2` as an ideal of `R ⧸ I ^ 2`. -/
-def cotangentIdeal (I : Ideal R) : Ideal (R ⧸ I ^ 2) := by
+def cotangentIdeal (I : Ideal R) : Ideal (R ⧸ I ^ 2) :=
+  by
   haveI : @RingHomSurjective R (R ⧸ I ^ 2) _ _ _ := ⟨Ideal.Quotient.mk_surjective⟩
   let rq := I ^ 2
   exact Submodule.map rq.to_semilinear_map I
 #align ideal.cotangent_ideal Ideal.cotangentIdeal
 
-theorem cotangent_ideal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ := by
+theorem cotangent_ideal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ :=
+  by
   rw [eq_bot_iff, pow_two I.cotangent_ideal, ← smul_eq_mul]
   intro x hx
-  apply Submodule.smul_induction_on hx
+  apply Submodule.smulInductionOn hx
   · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
     apply (Submodule.Quotient.eq _).mpr _
     rw [sub_zero, pow_two]
@@ -142,7 +149,8 @@ theorem cotangent_ideal_square (I : Ideal R) : I.cotangentIdeal ^ 2 = ⊥ := by
 #align ideal.cotangent_ideal_square Ideal.cotangent_ideal_square
 
 theorem to_quotient_square_range :
-    I.cotangentToQuotientSquare.range = I.cotangentIdeal.restrictScalars R := by
+    I.cotangentToQuotientSquare.range = I.cotangentIdeal.restrictScalars R :=
+  by
   trans (I.cotangent_to_quotient_square.comp I.to_cotangent).range
   · rw [LinearMap.range_comp, I.to_cotangent_range, Submodule.map_top]
   · rw [to_quotient_square_comp_to_cotangent, LinearMap.range_comp, I.range_subtype]
@@ -152,9 +160,12 @@ theorem to_quotient_square_range :
 
 /-- The equivalence of the two definitions of `I / I ^ 2`, either as the quotient of `I` or the
 ideal of `R / I ^ 2`. -/
-noncomputable def cotangentEquivIdeal : I.Cotangent ≃ₗ[R] I.cotangentIdeal := by
+noncomputable def cotangentEquivIdeal : I.Cotangent ≃ₗ[R] I.cotangentIdeal :=
+  by
   refine'
-    { I.cotangent_to_quotient_square.cod_restrict (I.cotangent_ideal.restrict_scalars R) fun x => by
+    {
+      I.cotangent_to_quotient_square.cod_restrict (I.cotangent_ideal.restrict_scalars R) fun x =>
+        by
         rw [← to_quotient_square_range]
         exact LinearMap.mem_range_self _ _,
       Equiv.ofBijective _ ⟨_, _⟩ with }
@@ -178,7 +189,7 @@ theorem cotangent_equiv_ideal_apply (x : I.Cotangent) :
 theorem cotangent_equiv_ideal_symm_apply (x : R) (hx : x ∈ I) :
     I.cotangentEquivIdeal.symm ⟨(I ^ 2).mkq x, Submodule.mem_map_of_mem hx⟩ =
       I.toCotangent ⟨x, hx⟩ :=
-  by 
+  by
   apply I.cotangent_equiv_ideal.injective
   rw [I.cotangent_equiv_ideal.apply_symm_apply]
   ext
@@ -188,7 +199,8 @@ theorem cotangent_equiv_ideal_symm_apply (x : R) (hx : x ∈ I) :
 variable {A B : Type _} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
 /-- The lift of `f : A →ₐ[R] B` to `A ⧸ J ^ 2 →ₐ[R] B` with `J` being the kernel of `f`. -/
-def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[R] B := by
+def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[R] B :=
+  by
   refine' { Ideal.Quotient.lift (f.to_ring_hom.ker ^ 2) f.to_ring_hom _ with commutes' := _ }
   · intro a ha
     exact Ideal.pow_le_self two_ne_zero ha
@@ -199,7 +211,8 @@ def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[
 #align alg_hom.ker_square_lift AlgHom.kerSquareLift
 
 theorem AlgHom.ker_ker_sqare_lift (f : A →ₐ[R] B) :
-    f.kerSquareLift.toRingHom.ker = f.toRingHom.ker.cotangentIdeal := by
+    f.kerSquareLift.toRingHom.ker = f.toRingHom.ker.cotangentIdeal :=
+  by
   apply le_antisymm
   · intro x hx
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -209,7 +222,8 @@ theorem AlgHom.ker_ker_sqare_lift (f : A →ₐ[R] B) :
 #align alg_hom.ker_ker_sqare_lift AlgHom.ker_ker_sqare_lift
 
 /-- The quotient ring of `I ⧸ I ^ 2` is `R ⧸ I`. -/
-def quotCotangent : (R ⧸ I ^ 2) ⧸ I.cotangentIdeal ≃+* R ⧸ I := by
+def quotCotangent : (R ⧸ I ^ 2) ⧸ I.cotangentIdeal ≃+* R ⧸ I :=
+  by
   refine' (Ideal.quotEquivOfEq (Ideal.map_eq_submodule_map _ _).symm).trans _
   refine' (DoubleQuot.quotQuotEquivQuotSup _ _).trans _
   exact Ideal.quotEquivOfEq (sup_eq_right.mpr <| Ideal.pow_le_self two_ne_zero)
@@ -234,7 +248,7 @@ instance : IsScalarTower R (ResidueField R) (CotangentSpace R) :=
   Module.IsTorsionBySet.is_scalar_tower _
 
 instance [IsNoetherianRing R] : FiniteDimensional (ResidueField R) (CotangentSpace R) :=
-  Module.Finite.of_restrict_scalars_finite R _ _
+  Module.Finite.ofRestrictScalarsFinite R _ _
 
 end LocalRing
 

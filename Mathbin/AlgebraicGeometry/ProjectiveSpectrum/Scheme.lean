@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.scheme
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ theorem MemCarrier.clear_denominator' [DecidableEq (Away f)] {z : Localization.A
         algebraMap A (Away f)
           (∑ i in c.support.attach,
             acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * i.1.2.some) :=
-  by 
+  by
   rw [← submodule_span_eq, Finsupp.span_eq_range_total, LinearMap.mem_range] at hz
   rcases hz with ⟨c, eq1⟩
   rw [Finsupp.total_apply, Finsupp.sum] at eq1
@@ -202,7 +202,7 @@ theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_ f} (hz : 
   algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.mem_carrier.clear_denominator AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.MemCarrier.clear_denominator
 
 theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.powers f : Set A) :=
-  by 
+  by
   by_contra rid
   rw [Set.not_disjoint_iff] at rid
   choose g hg using rid
@@ -216,9 +216,10 @@ theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.
 #align
   algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.disjoint AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.disjoint
 
-theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ := by
+theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ :=
+  by
   have eq_top := Disjoint x
-  classical 
+  classical
     contrapose! eq_top
     obtain ⟨c, N, acd, eq1⟩ :=
       mem_carrier.clear_denominator _ x ((Ideal.eq_top_iff_one _).mp eq_top)
@@ -244,7 +245,7 @@ variable (f)
 -/
 def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
   ⟨carrier 𝒜 x, carrier_ne_top x, fun x1 x2 hx12 => by
-    classical 
+    classical
       simp only [mem_carrier_iff] at hx12⊢
       let J := span (⇑(algebraMap A (away f)) '' x.val.as_homogeneous_ideal)
       suffices h : ∀ x y : Localization.Away f, x * y ∈ J → x ∈ J ∨ y ∈ J
@@ -295,7 +296,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
           Set (PrimeSpectrum (HomogeneousLocalization.Away 𝒜 f))) =
       { x | x.1 ∈ (pbo f) ⊓ pbo a } :=
   by
-  classical 
+  classical
     ext1 y
     constructor <;> intro hy
     · refine' ⟨y.2, _⟩
@@ -306,7 +307,8 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
       rw [to_fun, mem_carrier_iff, HomogeneousLocalization.val_mk', Subtype.coe_mk]
       dsimp
       rcases b_mem2 with ⟨k, hk⟩
-      simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1 by
+      simp only [show (mk a ⟨b, ⟨k, hk⟩⟩ : away f) = mk 1 ⟨f ^ k, ⟨_, rfl⟩⟩ * mk a 1
+          by
           rw [mk_mul, one_mul, mul_one]
           congr
           rw [hk]]
@@ -345,11 +347,11 @@ variable {𝒜}
 /-- The continuous function between the basic open set `D(f)` in `Proj` to the corresponding basic
 open set in `Spec A⁰_f`.
 -/
-def toSpec {f : A} :
-    (Proj.T| pbo f) ⟶ Spec.T A⁰_
-          f where 
+def toSpec {f : A} : (Proj.T| pbo f) ⟶ Spec.T A⁰_ f
+    where
   toFun := ToSpec.toFun 𝒜 f
-  continuous_to_fun := by
+  continuous_to_fun :=
+    by
     apply is_topological_basis.continuous PrimeSpectrum.is_topological_basis_basic_opens
     rintro _ ⟨⟨k, ⟨a, ha⟩, ⟨b, hb1⟩, ⟨k', hb2⟩⟩, rfl⟩; dsimp
     erw [to_Spec.preimage_eq f a b k ha hb1 ⟨k', hb2⟩]
@@ -439,7 +441,7 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
         (Localization.mk (proj 𝒜 i a ^ m) ⟨f ^ i, ⟨i, rfl⟩⟩ : Localization.Away f) ∈
           algebraMap (HomogeneousLocalization.Away 𝒜 f) (Localization.Away f) '' q.1.1 :=
   (mem_carrier_iff f_deg q a).trans
-    (by 
+    (by
       constructor <;> intro h i <;> specialize h i
       · rw [Set.mem_image]
         refine' ⟨_, h, rfl⟩
@@ -462,7 +464,8 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3069849967.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3069849967.mem_tac -/
 theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg q)
-    (hb : b ∈ carrier f_deg q) : a + b ∈ carrier f_deg q := by
+    (hb : b ∈ carrier f_deg q) : a + b ∈ carrier f_deg q :=
+  by
   refine' fun i => (q.2.mem_or_mem _).elim id id
   change (Quotient.mk' ⟨_, _, _, _⟩ : A⁰_ f) ∈ q.1; dsimp only [Subtype.coe_mk]
   simp_rw [← pow_add, map_add, add_pow, mul_comm, ← nsmul_eq_mul]
@@ -545,7 +548,8 @@ variable (hm : 0 < m) (q : Spec.T A⁰_ f)
 
 include hm
 
-theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i => by
+theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i =>
+  by
   convert Submodule.zero_mem q.1 using 1
   rw [ext_iff_val, val_mk', zero_val]; simp_rw [map_zero, zero_pow hm]
   convert Localization.mk_zero _ using 1
@@ -554,7 +558,8 @@ theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i => by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3069849967.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3069849967.mem_tac -/
-theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ carrier f_deg q := by
+theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ carrier f_deg q :=
+  by
   revert c
   refine' DirectSum.Decomposition.induction_on 𝒜 _ _ _
   · rw [zero_smul]
@@ -591,7 +596,7 @@ theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ ca
 
 /-- For a prime ideal `q` in `A⁰_f`, the set `{a | aᵢᵐ/fⁱ ∈ q}` as an ideal.
 -/
-def carrier.asIdeal : Ideal A where 
+def carrier.asIdeal : Ideal A where
   carrier := carrier f_deg q
   zero_mem' := carrier.zero_mem f_deg hm q
   add_mem' a b := carrier.add_mem f_deg q
@@ -602,7 +607,8 @@ def carrier.asIdeal : Ideal A where
 theorem carrier.asIdeal.homogeneous : (carrier.asIdeal f_deg hm q).IsHomogeneous 𝒜 :=
   fun i a ha j =>
   (em (i = j)).elim (fun h => h ▸ by simpa only [proj_apply, decompose_coe, of_eq_same] using ha _)
-    fun h => by
+    fun h =>
+    by
     simp only [proj_apply, decompose_of_mem_ne 𝒜 (Submodule.coe_mem (decompose 𝒜 a i)) h,
       zero_pow hm]
     convert carrier.zero_mem f_deg hm q j; rw [map_zero, zero_pow hm]
@@ -619,7 +625,7 @@ def carrier.asHomogeneousIdeal : HomogeneousIdeal 𝒜 :=
 theorem carrier.denom_not_mem : f ∉ carrier.asIdeal f_deg hm q := fun rid =>
   q.IsPrime.ne_top <|
     (Ideal.eq_top_iff_one _).mpr
-      (by 
+      (by
         convert rid m
         simpa only [ext_iff_val, one_val, proj_apply, decompose_of_mem_same _ f_deg, val_mk'] using
           (mk_self (⟨_, m, rfl⟩ : Submonoid.powers f)).symm)
@@ -637,17 +643,18 @@ theorem carrier.asIdeal.ne_top : carrier.asIdeal f_deg hm q ≠ ⊤ := fun rid =
   algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal.ne_top AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.ne_top
 
 theorem carrier.asIdeal.prime : (carrier.asIdeal f_deg hm q).IsPrime :=
-  ((carrier.asIdeal.homogeneous f_deg hm q).is_prime_of_homogeneous_mem_or_mem
+  ((carrier.asIdeal.homogeneous f_deg hm q).isPrimeOfHomogeneousMemOrMem
       (carrier.asIdeal.ne_top f_deg hm q))
     fun x y ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
-    show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _ by
+    show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _
+      by
       rw [← and_forall_ne nx, and_iff_left, ← and_forall_ne ny, and_iff_left]
       · apply q.2.mem_or_mem
         convert hxy (nx + ny) using 1
         simp_rw [proj_apply, decompose_of_mem_same 𝒜 hnx, decompose_of_mem_same 𝒜 hny,
           decompose_of_mem_same 𝒜 (mul_mem hnx hny), mul_pow, pow_add]
         simpa only [ext_iff_val, val_mk', mul_val, mk_mul]
-      all_goals 
+      all_goals
         intro n hn; convert q.1.zero_mem using 1
         rw [ext_iff_val, val_mk', zero_val]; simp_rw [proj_apply, Subtype.coe_mk]
         convert mk_zero _; rw [decompose_of_mem_ne 𝒜 _ hn.symm, zero_pow hm]

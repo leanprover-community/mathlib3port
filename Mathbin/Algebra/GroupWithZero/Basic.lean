@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,8 +176,8 @@ Case conversion may be inaccurate. Consider using '#align unique_of_zero_eq_one 
 
 Somewhat arbitrarily, we define the default element to be `0`.
 All other elements will be provably equal to it, but not necessarily definitionally equal. -/
-def uniqueOfZeroEqOne (h : (0 : M₀) = 1) :
-    Unique M₀ where 
+def uniqueOfZeroEqOne (h : (0 : M₀) = 1) : Unique M₀
+    where
   default := 0
   uniq := eq_zero_of_zero_eq_one h
 #align unique_of_zero_eq_one uniqueOfZeroEqOne
@@ -257,7 +257,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.toNoZeroDivisorsₓ'. -/
 -- see Note [lower instance priority]
 instance (priority := 10) CancelMonoidWithZero.toNoZeroDivisors : NoZeroDivisors M₀ :=
-  ⟨fun a b ab0 => by 
+  ⟨fun a b ab0 => by
     by_cases a = 0
     · left
       exact h
@@ -473,13 +473,13 @@ private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b := by
 #print GroupWithZero.toDivisionMonoid /-
 -- See note [lower instance priority]
 instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ :=
-  { ‹GroupWithZero G₀› with 
+  { ‹GroupWithZero G₀› with
     inv := Inv.inv
-    inv_inv := fun a => by 
+    inv_inv := fun a => by
       by_cases h : a = 0
       · simp [h]
       · exact left_inv_eq_right_inv (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
-    mul_inv_rev := fun a b => by 
+    mul_inv_rev := fun a b => by
       by_cases ha : a = 0; · simp [ha]
       by_cases hb : b = 0; · simp [hb]
       refine' inv_eq_of_mul _
@@ -523,7 +523,8 @@ Case conversion may be inaccurate. Consider using '#align mul_self_mul_inv mul_s
 /-- Multiplying `a` by itself and then by its inverse results in `a`
 (whether or not `a` is zero). -/
 @[simp]
-theorem mul_self_mul_inv (a : G₀) : a * a * a⁻¹ = a := by
+theorem mul_self_mul_inv (a : G₀) : a * a * a⁻¹ = a :=
+  by
   by_cases h : a = 0
   · rw [h, inv_zero, mul_zero]
   · rw [mul_assoc, mul_inv_cancel h, mul_one]
@@ -538,7 +539,8 @@ Case conversion may be inaccurate. Consider using '#align mul_inv_mul_self mul_i
 /-- Multiplying `a` by its inverse and then by itself results in `a`
 (whether or not `a` is zero). -/
 @[simp]
-theorem mul_inv_mul_self (a : G₀) : a * a⁻¹ * a = a := by
+theorem mul_inv_mul_self (a : G₀) : a * a⁻¹ * a = a :=
+  by
   by_cases h : a = 0
   · rw [h, inv_zero, mul_zero]
   · rw [mul_inv_cancel h, one_mul]
@@ -553,7 +555,8 @@ Case conversion may be inaccurate. Consider using '#align inv_mul_mul_self inv_m
 /-- Multiplying `a⁻¹` by `a` twice results in `a` (whether or not `a`
 is zero). -/
 @[simp]
-theorem inv_mul_mul_self (a : G₀) : a⁻¹ * a * a = a := by
+theorem inv_mul_mul_self (a : G₀) : a⁻¹ * a * a = a :=
+  by
   by_cases h : a = 0
   · rw [h, inv_zero, mul_zero]
   · rw [inv_mul_cancel h, one_mul]
@@ -639,7 +642,8 @@ Case conversion may be inaccurate. Consider using '#align div_div_self div_div_s
 /-- Dividing `a` by the result of dividing `a` by itself results in
 `a` (whether or not `a` is zero). -/
 @[simp]
-theorem div_div_self (a : G₀) : a / (a / a) = a := by
+theorem div_div_self (a : G₀) : a / (a / a) = a :=
+  by
   rw [div_div_eq_mul_div]
   exact mul_self_div_self a
 #align div_div_self div_div_self

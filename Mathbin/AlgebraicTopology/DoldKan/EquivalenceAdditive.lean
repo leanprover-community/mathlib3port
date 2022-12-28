@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.equivalence_additive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,14 +50,13 @@ def Γ : Karoubi (ChainComplex C ℕ) ⥤ Karoubi (SimplicialObject C) :=
 /-- The Dold-Kan equivalence `karoubi (simplicial_object C) ≌ karoubi (chain_complex C ℕ)`
 for additive categories. -/
 @[simps]
-def equivalence :
-    Karoubi (SimplicialObject C) ≌
-      Karoubi (ChainComplex C ℕ) where 
+def equivalence : Karoubi (SimplicialObject C) ≌ Karoubi (ChainComplex C ℕ)
+    where
   Functor := n
   inverse := Γ
   unitIso := Γ₂N₂
   counitIso := n₂Γ₂
-  functor_unit_iso_comp' P := by 
+  functor_unit_iso_comp' P := by
     let α := N.map_iso (Γ₂N₂.app P)
     let β := N₂Γ₂.app (N.obj P)
     symm

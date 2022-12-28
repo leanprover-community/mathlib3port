@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.bornology.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,15 +64,14 @@ and showing that they satisfy the appropriate conditions. -/
 def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
     (union_mem : ∀ (s₁) (_ : s₁ ∈ B) (s₂) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B)
-    (singleton_mem : ∀ x, {x} ∈ B) :
-    Bornology
-      α where 
+    (singleton_mem : ∀ x, {x} ∈ B) : Bornology α
+    where
   cobounded :=
     { sets := { s : Set α | sᶜ ∈ B }
       univ_sets := by rwa [← compl_univ] at empty_mem
       sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy)
       inter_sets := fun x y hx hy => by simpa [compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
-  le_cofinite := by 
+  le_cofinite := by
     rw [le_cofinite_iff_compl_singleton_mem]
     intro x
     change {x}ᶜᶜ ∈ B
@@ -88,7 +87,8 @@ def Bornology.ofBounded' {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B
     (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
     (union_mem : ∀ (s₁) (_ : s₁ ∈ B) (s₂) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀B = univ) :
     Bornology α :=
-  (Bornology.ofBounded B empty_mem subset_mem union_mem) fun x => by
+  (Bornology.ofBounded B empty_mem subset_mem union_mem) fun x =>
+    by
     rw [sUnion_eq_univ_iff] at sUnion_univ
     rcases sUnion_univ x with ⟨s, hs, hxs⟩
     exact subset_mem s hs {x} (singleton_subset_iff.mpr hxs)
@@ -134,13 +134,15 @@ alias is_bounded_compl_iff ↔ is_bounded.of_compl is_cobounded.compl
 alias is_cobounded_compl_iff ↔ is_cobounded.of_compl is_bounded.compl
 
 @[simp]
-theorem is_bounded_empty : IsBounded (∅ : Set α) := by
+theorem is_bounded_empty : IsBounded (∅ : Set α) :=
+  by
   rw [is_bounded_def, compl_empty]
   exact univ_mem
 #align bornology.is_bounded_empty Bornology.is_bounded_empty
 
 @[simp]
-theorem is_bounded_singleton : IsBounded ({x} : Set α) := by
+theorem is_bounded_singleton : IsBounded ({x} : Set α) :=
+  by
   rw [is_bounded_def]
   exact le_cofinite _ (finite_singleton x).compl_mem_cofinite
 #align bornology.is_bounded_singleton Bornology.is_bounded_singleton
@@ -178,11 +180,12 @@ theorem IsBounded.subset (ht : IsBounded t) (hs : s ⊆ t) : IsBounded s :=
 
 @[simp]
 theorem sUnion_bounded_univ : ⋃₀{ s : Set α | IsBounded s } = univ :=
-  sUnion_eq_univ_iff.2 fun a => ⟨{a}, is_bounded_singleton, mem_singleton a⟩
+  unionₛ_eq_univ_iff.2 fun a => ⟨{a}, is_bounded_singleton, mem_singleton a⟩
 #align bornology.sUnion_bounded_univ Bornology.sUnion_bounded_univ
 
 theorem comap_cobounded_le_iff [Bornology β] {f : α → β} :
-    (cobounded β).comap f ≤ cobounded α ↔ ∀ ⦃s⦄, IsBounded s → IsBounded (f '' s) := by
+    (cobounded β).comap f ≤ cobounded α ↔ ∀ ⦃s⦄, IsBounded s → IsBounded (f '' s) :=
+  by
   refine'
     ⟨fun h s hs => _, fun h t ht =>
       ⟨(f '' tᶜ)ᶜ, h <| is_cobounded.compl ht, compl_subset_comm.1 <| subset_preimage_image _ _⟩⟩
@@ -200,7 +203,7 @@ theorem ext_iff' {t t' : Bornology α} :
 
 theorem ext_iff_is_bounded {t t' : Bornology α} :
     t = t' ↔ ∀ s, @IsBounded α t s ↔ @IsBounded α t' s :=
-  ⟨fun h s => h ▸ Iff.rfl, fun h => by 
+  ⟨fun h s => h ▸ Iff.rfl, fun h => by
     ext
     simpa only [is_bounded_def, compl_compl] using h (sᶜ)⟩
 #align bornology.ext_iff_is_bounded Bornology.ext_iff_is_bounded
@@ -273,8 +276,8 @@ instance : Bornology PUnit :=
 
 /-- The cofinite filter as a bornology -/
 @[reducible]
-def Bornology.cofinite : Bornology
-      α where 
+def Bornology.cofinite : Bornology α
+    where
   cobounded := cofinite
   le_cofinite := le_rfl
 #align bornology.cofinite Bornology.cofinite

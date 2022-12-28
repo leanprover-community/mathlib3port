@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.free.coherence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,27 +126,27 @@ def normalizeMapAux :
       (X ⟶ᵐ Y) → ((Discrete.functor (normalizeObj X) : _ ⥤ N C) ⟶ Discrete.functor (normalizeObj Y))
   | _, _, id _ => 𝟙 _
   | _, _, α_hom _ _ _ =>
-    ⟨fun X => 𝟙 _, by 
+    ⟨fun X => 𝟙 _, by
       rintro ⟨X⟩ ⟨Y⟩ f
       simp⟩
   | _, _, α_inv _ _ _ =>
-    ⟨fun X => 𝟙 _, by 
+    ⟨fun X => 𝟙 _, by
       rintro ⟨X⟩ ⟨Y⟩ f
       simp⟩
   | _, _, l_hom _ =>
-    ⟨fun X => 𝟙 _, by 
+    ⟨fun X => 𝟙 _, by
       rintro ⟨X⟩ ⟨Y⟩ f
       simp⟩
   | _, _, l_inv _ =>
-    ⟨fun X => 𝟙 _, by 
+    ⟨fun X => 𝟙 _, by
       rintro ⟨X⟩ ⟨Y⟩ f
       simp⟩
   | _, _, ρ_hom _ =>
-    ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by 
+    ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by
       rintro ⟨X⟩ ⟨Y⟩ f
       simp⟩
   | _, _, ρ_inv _ =>
-    ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by 
+    ⟨fun ⟨X⟩ => ⟨⟨by simp⟩⟩, by
       rintro ⟨X⟩ ⟨Y⟩ f
       simp⟩
   | X, Y, @comp _ U V W f g => normalize_map_aux f ≫ normalize_map_aux g
@@ -168,8 +168,8 @@ variable (C)
     out to be very easy), and then obtain a functor `F C ⥤ N C` by plugging in the normal object
     `𝟙_ C`. -/
 @[simp]
-def normalize : F C ⥤
-      N C ⥤ N C where 
+def normalize : F C ⥤ N C ⥤ N C
+    where
   obj X := Discrete.functor (normalizeObj X)
   map X Y := Quotient.lift normalizeMapAux (by tidy)
 #align
@@ -185,8 +185,8 @@ def normalize' : F C ⥤ N C ⥤ F C :=
   category_theory.free_monoidal_category.normalize' CategoryTheory.FreeMonoidalCategory.normalize'
 
 /-- The normalization functor for the free monoidal category over `C`. -/
-def fullNormalize :
-    F C ⥤ N C where 
+def fullNormalize : F C ⥤ N C
+    where
   obj X := ((normalize C).obj X).obj ⟨NormalMonoidalObject.unit⟩
   map X Y f := ((normalize C).map f).app ⟨NormalMonoidalObject.unit⟩
 #align
@@ -197,12 +197,11 @@ def fullNormalize :
 /-- Given an object `X` of the free monoidal category and an object `n` in normal form, taking
     the tensor product `n ⊗ X` in the free monoidal category is functorial in both `X` and `n`. -/
 @[simp]
-def tensorFunc :
-    F C ⥤ N C ⥤
-        F C where 
+def tensorFunc : F C ⥤ N C ⥤ F C
+    where
   obj X := Discrete.functor fun n => inclusion.obj ⟨n⟩ ⊗ X
   map X Y f :=
-    ⟨fun n => 𝟙 _ ⊗ f, by 
+    ⟨fun n => 𝟙 _ ⊗ f, by
       rintro ⟨X⟩ ⟨Y⟩
       tidy⟩
 #align
@@ -216,7 +215,8 @@ theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
-    ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z := by
+    ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z :=
+  by
   cases n
   cases n'
   tidy
@@ -254,7 +254,7 @@ theorem normalize_iso_app_unitor (n : N C) : normalizeIsoApp C (𝟙_ (F C)) n =
 @[simp]
 def normalizeIsoAux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X :=
   NatIso.ofComponents (normalizeIsoApp C X)
-    (by 
+    (by
       rintro ⟨X⟩ ⟨Y⟩
       tidy)
 #align
@@ -284,7 +284,7 @@ end
     of our proof of the coherence theorem. -/
 def normalizeIso : tensorFunc C ≅ normalize' C :=
   NatIso.ofComponents (normalizeIsoAux C)
-    (by 
+    (by
       rintro X Y f
       apply Quotient.induction_on f
       intro f
@@ -359,7 +359,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
 def fullNormalizeIso : 𝟭 (F C) ≅ fullNormalize C ⋙ inclusion :=
   NatIso.ofComponents
     (fun X => (λ_ X).symm ≪≫ ((normalizeIso C).app X).app ⟨NormalMonoidalObject.unit⟩)
-    (by 
+    (by
       intro X Y f
       dsimp
       rw [left_unitor_inv_naturality_assoc, category.assoc, iso.cancel_iso_inv_left]
@@ -373,7 +373,8 @@ end
 
 /-- The monoidal coherence theorem. -/
 instance subsingleton_hom : Quiver.IsThin (F C) := fun _ _ =>
-  ⟨fun f g => by
+  ⟨fun f g =>
+    by
     have : (fullNormalize C).map f = (fullNormalize C).map g := Subsingleton.elim _ _
     rw [← functor.id_map f, ← functor.id_map g]
     simp [← nat_iso.naturality_2 (fullNormalizeIso.{u} C), this]⟩

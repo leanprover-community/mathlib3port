@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.continuous_function.locally_constant
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,13 +27,13 @@ monoid hom. -/
 @[to_additive
       "The inclusion of locally-constant functions into continuous functions as an\nadditive monoid hom.",
   simps]
-def toContinuousMapMonoidHom [Monoid Y] [HasContinuousMul Y] :
-    LocallyConstant X Y →* C(X, Y) where 
+def toContinuousMapMonoidHom [Monoid Y] [HasContinuousMul Y] : LocallyConstant X Y →* C(X, Y)
+    where
   toFun := coe
-  map_one' := by 
+  map_one' := by
     ext
     simp
-  map_mul' x y := by 
+  map_mul' x y := by
     ext
     simp
 #align locally_constant.to_continuous_map_monoid_hom LocallyConstant.toContinuousMapMonoidHom
@@ -41,13 +41,13 @@ def toContinuousMapMonoidHom [Monoid Y] [HasContinuousMul Y] :
 /-- The inclusion of locally-constant functions into continuous functions as a linear map. -/
 @[simps]
 def toContinuousMapLinearMap (R : Type _) [Semiring R] [AddCommMonoid Y] [Module R Y]
-    [HasContinuousAdd Y] [HasContinuousConstSmul R Y] :
-    LocallyConstant X Y →ₗ[R] C(X, Y) where 
+    [HasContinuousAdd Y] [HasContinuousConstSmul R Y] : LocallyConstant X Y →ₗ[R] C(X, Y)
+    where
   toFun := coe
-  map_add' x y := by 
+  map_add' x y := by
     ext
     simp
-  map_smul' x y := by 
+  map_smul' x y := by
     ext
     simp
 #align locally_constant.to_continuous_map_linear_map LocallyConstant.toContinuousMapLinearMap
@@ -55,22 +55,22 @@ def toContinuousMapLinearMap (R : Type _) [Semiring R] [AddCommMonoid Y] [Module
 /-- The inclusion of locally-constant functions into continuous functions as an algebra map. -/
 @[simps]
 def toContinuousMapAlgHom (R : Type _) [CommSemiring R] [Semiring Y] [Algebra R Y]
-    [TopologicalSemiring Y] :
-    LocallyConstant X Y →ₐ[R] C(X, Y) where 
+    [TopologicalSemiring Y] : LocallyConstant X Y →ₐ[R] C(X, Y)
+    where
   toFun := coe
-  map_one' := by 
+  map_one' := by
     ext
     simp
-  map_mul' x y := by 
+  map_mul' x y := by
     ext
     simp
-  map_zero' := by 
+  map_zero' := by
     ext
     simp
-  map_add' x y := by 
+  map_add' x y := by
     ext
     simp
-  commutes' r := by 
+  commutes' r := by
     ext x
     simp [Algebra.smul_def]
 #align locally_constant.to_continuous_map_alg_hom LocallyConstant.toContinuousMapAlgHom

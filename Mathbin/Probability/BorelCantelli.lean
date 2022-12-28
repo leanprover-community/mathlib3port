@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.borel_cantelli
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,8 @@ variable {ι β : Type _} [LinearOrder ι] [mβ : MeasurableSpace β] [NormedAdd
 
 theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
     (hfi : IndepFun (fun i => mβ) f μ) (hij : i < j) :
-    Indep (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ := by
+    Indep (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ :=
+  by
   suffices
     indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ)
       (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ
@@ -56,14 +57,14 @@ theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [Compl
     [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
     (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
   condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _)
-    (comapMeasurable <| f j).StronglyMeasurable (hfi.indepComapNaturalOfLt hf hij)
+    (comap_measurable <| f j).StronglyMeasurable (hfi.indepComapNaturalOfLt hf hij)
 #align
   probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 
 theorem IndepSet.condexp_indicator_filtration_of_set_ae_eq (hsm : ∀ n, MeasurableSet (s n))
     (hs : IndepSet s μ) (hij : i < j) :
     μ[(s j).indicator (fun ω => 1 : Ω → ℝ)|filtrationOfSet hsm i] =ᵐ[μ] fun ω => (μ (s j)).toReal :=
-  by 
+  by
   rw [filtration.filtration_of_set_eq_natural hsm]
   refine' (Indep_fun.condexp_natrual_ae_eq_of_lt _ hs.Indep_fun_indicator hij).trans _
   · simp only [integral_indicator_const _ (hsm _), Algebra.id.smul_eq_mul, mul_one]
@@ -76,7 +77,8 @@ open Filter
 /-- **The second Borel-Cantelli lemma**: Given a sequence of independent sets `(sₙ)` such that
 `∑ n, μ sₙ = ∞`, `limsup sₙ` has measure 1. -/
 theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ)
-    (hs' : (∑' n, μ (s n)) = ∞) : μ (limsup s atTop) = 1 := by
+    (hs' : (∑' n, μ (s n)) = ∞) : μ (limsup s atTop) = 1 :=
+  by
   rw [measure_congr
       (eventually_eq_set.2 (ae_mem_limsup_at_top_iff μ <| measurable_set_filtration_of_set' hsm) :
         (limsup s at_top : Set Ω) =ᵐ[μ]
@@ -99,7 +101,8 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
   filter_upwards [this] with ω hω
   refine' eq_true (_ : tendsto _ _ _)
   simp_rw [hω]
-  have htends : tendsto (fun n => ∑ k in Finset.range n, μ (s (k + 1))) at_top (𝓝 ∞) := by
+  have htends : tendsto (fun n => ∑ k in Finset.range n, μ (s (k + 1))) at_top (𝓝 ∞) :=
+    by
     rw [← Ennreal.tsum_add_one_eq_top hs' (measure_ne_top _ _)]
     exact Ennreal.tendsto_nat_tsum _
   rw [Ennreal.tendsto_nhds_top_iff_nnreal] at htends

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.hindman
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,8 @@ from a subsequence of `M` starting sufficiently late. -/
 @[to_additive
       "If `m` and `m'` are finite sums in `M`, then so is `m + m'`, provided that `m'`\nis obtained from a subsequence of `M` starting sufficiently late."]
 theorem fP.mul {M} [Semigroup M] {a : Stream' M} {m : M} (hm : m ∈ fP a) :
-    ∃ n, ∀ m' ∈ fP (a.drop n), m * m' ∈ fP a := by
+    ∃ n, ∀ m' ∈ fP (a.drop n), m * m' ∈ fP a :=
+  by
   induction' hm with a a m hm ih a m hm ih
   · exact ⟨1, fun m hm => FP.cons a m hm⟩
   · cases' ih with n hn
@@ -124,7 +125,8 @@ theorem fP.mul {M} [Semigroup M] {a : Stream' M} {m : M} (hm : m ∈ fP a) :
 
 @[to_additive exists_idempotent_ultrafilter_le_FS]
 theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
-    ∃ U : Ultrafilter M, U * U = U ∧ ∀ᶠ m in U, m ∈ fP a := by
+    ∃ U : Ultrafilter M, U * U = U ∧ ∀ᶠ m in U, m ∈ fP a :=
+  by
   let S : Set (Ultrafilter M) := ⋂ n, { U | ∀ᶠ m in U, m ∈ FP (a.drop n) }
   obtain ⟨U, hU, U_idem⟩ := exists_idempotent_in_compact_subsemigroup _ S _ _ _
   · refine' ⟨U, U_idem, _⟩
@@ -142,7 +144,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
       apply ultrafilter_is_closed_basic
   · exact IsClosed.is_compact (is_closed_Inter fun i => ultrafilter_is_closed_basic _)
   · intro U hU V hV
-    rw [Set.mem_Inter] at *
+    rw [Set.mem_interᵢ] at *
     intro n
     rw [Set.mem_setOf_eq, Ultrafilter.eventually_mul]
     apply eventually.mono (hU n)
@@ -166,7 +168,7 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
   have exists_elem : ∀ {s : Set M} (hs : s ∈ U), (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty :=
     fun s hs =>
     Ultrafilter.nonempty_of_mem
-      (inter_mem hs <| by 
+      (inter_mem hs <| by
         rw [← U_idem] at hs
         exact hs)
   let elem : { s // s ∈ U } → M := fun p => (exists_elem p.property).some
@@ -174,7 +176,8 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
     ⟨p.val ∩ { m | elem p * m ∈ p.val },
       inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
   use Stream'.corec elem succ (Subtype.mk s₀ sU)
-  suffices ∀ (a : Stream' M), ∀ m ∈ FP a, ∀ p, a = Stream'.corec elem succ p → m ∈ p.val by
+  suffices ∀ (a : Stream' M), ∀ m ∈ FP a, ∀ p, a = Stream'.corec elem succ p → m ∈ p.val
+    by
     intro m hm
     exact this _ m hm ⟨s₀, sU⟩ rfl
   clear sU s₀
@@ -216,14 +219,16 @@ theorem exists_FP_of_finite_cover {M} [Semigroup M] [Nonempty M] (s : Set (Set M
 #align hindman.exists_FP_of_finite_cover Hindman.exists_FP_of_finite_cover
 
 @[to_additive FS_iter_tail_sub_FS]
-theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream' M) (n : ℕ) : fP (a.drop n) ⊆ fP a := by
+theorem FP_drop_subset_FP {M} [Semigroup M] (a : Stream' M) (n : ℕ) : fP (a.drop n) ⊆ fP a :=
+  by
   induction' n with n ih; · rfl
   rw [Nat.succ_eq_one_add, ← Stream'.drop_drop]
   exact trans (FP.tail _) ih
 #align hindman.FP_drop_subset_FP Hindman.FP_drop_subset_FP
 
 @[to_additive]
-theorem fP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.nth i ∈ fP a := by
+theorem fP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.nth i ∈ fP a :=
+  by
   induction' i with i ih generalizing a
   · apply FP.head
   · apply FP.tail
@@ -232,7 +237,7 @@ theorem fP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.nth i ∈ f
 
 @[to_additive]
 theorem fP.mul_two {M} [Semigroup M] (a : Stream' M) (i j : ℕ) (ij : i < j) :
-    a.nth i * a.nth j ∈ fP a := by 
+    a.nth i * a.nth j ∈ fP a := by
   refine' FP_drop_subset_FP _ i _
   rw [← Stream'.head_drop]
   apply FP.cons
@@ -245,7 +250,8 @@ theorem fP.mul_two {M} [Semigroup M] (a : Stream' M) (i j : ℕ) (ij : i < j) :
 
 @[to_additive]
 theorem fP.finset_prod {M} [CommMonoid M] (a : Stream' M) (s : Finset ℕ) (hs : s.Nonempty) :
-    (s.Prod fun i => a.nth i) ∈ fP a := by
+    (s.Prod fun i => a.nth i) ∈ fP a :=
+  by
   refine' FP_drop_subset_FP _ (s.min' hs) _
   induction' s using Finset.strongInduction with s ih
   rw [← Finset.mul_prod_erase _ _ (s.min'_mem hs), ← Stream'.head_drop]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module logic.hydra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ variable {r : α → α → Prop}
 theorem cut_expand_le_inv_image_lex [hi : IsIrrefl α r] :
     CutExpand r ≤ InvImage (Finsupp.Lex (rᶜ ⊓ (· ≠ ·)) (· < ·)) toFinsupp :=
   fun s t ⟨u, a, hr, he⟩ => by
-  classical 
+  classical
     refine' ⟨a, fun b h => _, _⟩ <;> simp_rw [to_finsupp_apply]
     · apply_fun count b  at he
       simp_rw [count_add] at he
@@ -93,7 +93,7 @@ theorem cut_expand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpan
 
 theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
     CutExpand r s' s ↔ ∃ (t : Multiset α)(a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.erase a + t :=
-  by 
+  by
   simp_rw [cut_expand, add_singleton_eq_iff]
   refine' exists₂_congr fun t a => ⟨_, _⟩
   · rintro ⟨ht, ha, rfl⟩
@@ -104,7 +104,7 @@ theorem cut_expand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
 #align relation.cut_expand_iff Relation.cut_expand_iff
 
 theorem not_cut_expand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
-  classical 
+  classical
     rw [cut_expand_iff]
     rintro ⟨_, _, _, ⟨⟩, _⟩
 #align relation.not_cut_expand_zero Relation.not_cut_expand_zero
@@ -112,9 +112,10 @@ theorem not_cut_expand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
 /-- For any relation `r` on `α`, multiset addition `multiset α × multiset α → multiset α` is a
   fibration between the game sum of `cut_expand r` with itself and `cut_expand r` itself. -/
 theorem cut_expand_fibration (r : α → α → Prop) :
-    Fibration (GameAdd (CutExpand r) (CutExpand r)) (CutExpand r) fun s => s.1 + s.2 := by
+    Fibration (GameAdd (CutExpand r) (CutExpand r)) (CutExpand r) fun s => s.1 + s.2 :=
+  by
   rintro ⟨s₁, s₂⟩ s ⟨t, a, hr, he⟩; dsimp at he⊢
-  classical 
+  classical
     obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
     rw [add_assoc, mem_add] at ha
     obtain h | h := ha
@@ -129,7 +130,8 @@ theorem cut_expand_fibration (r : α → α → Prop) :
 /-- A multiset is accessible under `cut_expand` if all its singleton subsets are,
   assuming `r` is irreflexive. -/
 theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
-    (∀ a ∈ s, Acc (CutExpand r) {a}) → Acc (CutExpand r) s := by
+    (∀ a ∈ s, Acc (CutExpand r) {a}) → Acc (CutExpand r) s :=
+  by
   refine' Multiset.induction _ _ s
   · exact fun _ => (Acc.intro 0) fun s h => (not_cut_expand_zero s h).elim
   · intro a s ih hacc
@@ -142,10 +144,11 @@ theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
 
 /-- A singleton `{a}` is accessible under `cut_expand r` if `a` is accessible under `r`,
   assuming `r` is irreflexive. -/
-theorem Acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (CutExpand r) {a} := by
+theorem Acc.cut_expand [IsIrrefl α r] {a : α} (hacc : Acc r a) : Acc (CutExpand r) {a} :=
+  by
   induction' hacc with a h ih
   refine' Acc.intro _ fun s => _
-  classical 
+  classical
     rw [cut_expand_iff]
     rintro ⟨t, a, hr, rfl | ⟨⟨⟩⟩, rfl⟩
     refine' acc_of_singleton fun a' => _

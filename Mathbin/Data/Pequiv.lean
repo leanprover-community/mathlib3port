@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pequiv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,9 +83,10 @@ theorem coe_mk_apply (f₁ : α → Option β) (f₂ : β → Option α) (h) (x 
 #print PEquiv.ext /-
 @[ext]
 theorem ext : ∀ {f g : α ≃. β} (h : ∀ x, f x = g x), f = g
-  | ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h => by
+  | ⟨f₁, f₂, hf⟩, ⟨g₁, g₂, hg⟩, h =>
+    by
     have h : f₁ = g₁ := funext h
-    have : ∀ b, f₂ b = g₂ b := by 
+    have : ∀ b, f₂ b = g₂ b := by
       subst h
       intro b
       have hf := fun a => hf a b
@@ -108,8 +109,8 @@ theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
 #print PEquiv.refl /-
 /-- The identity map as a partial equivalence. -/
 @[refl]
-protected def refl (α : Type _) : α ≃.
-      α where 
+protected def refl (α : Type _) : α ≃. α
+    where
   toFun := some
   invFun := some
   inv _ _ := eq_comm
@@ -119,8 +120,8 @@ protected def refl (α : Type _) : α ≃.
 #print PEquiv.symm /-
 /-- The inverse partial equivalence. -/
 @[symm]
-protected def symm (f : α ≃. β) : β ≃.
-      α where 
+protected def symm (f : α ≃. β) : β ≃. α
+    where
   toFun := f.2
   invFun := f.1
   inv _ _ := (f.inv _ _).symm
@@ -142,8 +143,8 @@ theorem eq_some_iff (f : α ≃. β) : ∀ {a : α} {b : β}, f.symm b = some a 
 #print PEquiv.trans /-
 /-- Composition of partial equivalences `f : α ≃. β` and `g : β ≃. γ`. -/
 @[trans]
-protected def trans (f : α ≃. β) (g : β ≃. γ) :
-    α ≃. γ where 
+protected def trans (f : α ≃. β) (g : β ≃. γ) : α ≃. γ
+    where
   toFun a := (f a).bind g
   invFun a := (g.symm a).bind f.symm
   inv a b := by simp_all [and_comm, eq_some_iff f, eq_some_iff g]
@@ -199,7 +200,8 @@ theorem trans_eq_some (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) :
 
 #print PEquiv.trans_eq_none /-
 theorem trans_eq_none (f : α ≃. β) (g : β ≃. γ) (a : α) :
-    f.trans g a = none ↔ ∀ b c, b ∉ f a ∨ c ∉ g b := by
+    f.trans g a = none ↔ ∀ b c, b ∉ f a ∨ c ∉ g b :=
+  by
   simp only [eq_none_iff_forall_not_mem, mem_trans, imp_iff_not_or.symm]
   push_neg; tauto
 #align pequiv.trans_eq_none PEquiv.trans_eq_none
@@ -231,7 +233,7 @@ theorem injective_of_forall_ne_isSome (f : α ≃. β) (a₂ : α)
     (h : ∀ a₁ : α, a₁ ≠ a₂ → isSome (f a₁)) : Injective f :=
   HasLeftInverse.injective
     ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by
-      classical 
+      classical
         cases hfx : f x
         · have : x = a₂ := not_imp_comm.1 (h x) (hfx.symm ▸ by simp)
           simp [this]
@@ -256,11 +258,11 @@ variable (s : Set α) [DecidablePred (· ∈ s)]
 
 #print PEquiv.ofSet /-
 /-- Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
-def ofSet (s : Set α) [DecidablePred (· ∈ s)] :
-    α ≃. α where 
+def ofSet (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α
+    where
   toFun a := if a ∈ s then some a else none
   invFun a := if a ∈ s then some a else none
-  inv a b := by 
+  inv a b := by
     split_ifs with hb ha ha
     · simp [eq_comm]
     · simp [ne_of_mem_of_not_mem hb ha]
@@ -277,7 +279,7 @@ theorem mem_ofSet_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a 
 
 #print PEquiv.mem_ofSet_iff /-
 theorem mem_ofSet_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} :
-    a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by 
+    a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by
   dsimp [of_set]
   split_ifs
   · simp only [iff_self_and, eq_comm]
@@ -323,7 +325,7 @@ theorem ofSet_univ : ofSet Set.univ = PEquiv.refl α :=
 @[simp]
 theorem ofSet_eq_refl {s : Set α} [DecidablePred (· ∈ s)] :
     ofSet s = PEquiv.refl α ↔ s = Set.univ :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rw [Set.eq_univ_iff_forall]
     intro
     rw [← mem_of_set_self_iff, h]
@@ -340,7 +342,8 @@ theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.
 -/
 
 #print PEquiv.self_trans_symm /-
-theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).isSome } := by
+theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).isSome } :=
+  by
   ext
   dsimp [PEquiv.trans]
   simp only [eq_some_iff f, Option.isSome_iff_exists, Option.mem_def, bind_eq_some',
@@ -413,8 +416,8 @@ variable [DecidableEq α] [DecidableEq β] [DecidableEq γ]
 
 #print PEquiv.single /-
 /-- Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
-def single (a : α) (b : β) :
-    α ≃. β where 
+def single (a : α) (b : β) : α ≃. β
+    where
   toFun x := if x = a then some b else none
   invFun x := if x = b then some a else none
   inv _ _ := by simp <;> split_ifs <;> cc
@@ -455,7 +458,7 @@ theorem single_apply_of_ne {a₁ a₂ : α} (h : a₁ ≠ a₂) (b : β) : singl
 
 #print PEquiv.single_trans_of_mem /-
 theorem single_trans_of_mem (a : α) {b : β} {c : γ} {f : β ≃. γ} (h : c ∈ f b) :
-    (single a b).trans f = single a c := by 
+    (single a b).trans f = single a c := by
   ext
   dsimp [single, PEquiv.trans]
   split_ifs <;> simp_all
@@ -479,7 +482,8 @@ theorem single_trans_single (a : α) (b : β) (c : γ) :
 
 #print PEquiv.single_subsingleton_eq_refl /-
 @[simp]
-theorem single_subsingleton_eq_refl [Subsingleton α] (a b : α) : single a b = PEquiv.refl α := by
+theorem single_subsingleton_eq_refl [Subsingleton α] (a b : α) : single a b = PEquiv.refl α :=
+  by
   ext (i j)
   dsimp [single]
   rw [if_pos (Subsingleton.elim i a), Subsingleton.elim i j, Subsingleton.elim b j]
@@ -488,7 +492,7 @@ theorem single_subsingleton_eq_refl [Subsingleton α] (a b : α) : single a b = 
 
 #print PEquiv.trans_single_of_eq_none /-
 theorem trans_single_of_eq_none {b : β} (c : γ) {f : δ ≃. β} (h : f.symm b = none) :
-    f.trans (single b c) = ⊥ := by 
+    f.trans (single b c) = ⊥ := by
   ext
   simp only [eq_none_iff_forall_not_mem, Option.mem_def, f.eq_some_iff] at h
   dsimp [PEquiv.trans, single]
@@ -516,14 +520,14 @@ end Single
 
 section Order
 
-instance : PartialOrder
-      (α ≃. β) where 
+instance : PartialOrder (α ≃. β)
+    where
   le f g := ∀ (a : α) (b : β), b ∈ f a → b ∈ g a
   le_refl _ _ _ := id
   le_trans f g h fg gh a b := gh a b ∘ fg a b
   le_antisymm f g fg gf :=
     ext
-      (by 
+      (by
         intro a
         cases' h : g a with b
         · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
@@ -543,12 +547,12 @@ instance : OrderBot (α ≃. β) :=
   { PEquiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
 
 instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
-  { -- `split_ifs; finish` closes this goal from here
+  {-- `split_ifs; finish` closes this goal from here
     PEquiv.partialOrder with
     inf := fun f g =>
       { toFun := fun a => if f a = g a then f a else none
         invFun := fun b => if f.symm b = g.symm b then f.symm b else none
-        inv := fun a b => by 
+        inv := fun a b => by
           have hf := @mem_iff_mem _ _ f a b
           have hg := @mem_iff_mem _ _ g a b
           split_ifs with h1 h2 h2 <;> try simp [hf]
@@ -564,7 +568,7 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
             rw [hf, hg] }
     inf_le_left := fun _ _ _ _ => by simp <;> split_ifs <;> cc
     inf_le_right := fun _ _ _ _ => by simp <;> split_ifs <;> cc
-    le_inf := fun f g h fg gh a b => by 
+    le_inf := fun f g h fg gh a b => by
       intro H
       have hf := fg a b H
       have hg := gh a b H
@@ -581,7 +585,7 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 
 #print Equiv.toPEquiv /-
 /-- Turns an `equiv` into a `pequiv` of the whole type. -/
-def toPEquiv (f : α ≃ β) : α ≃. β where 
+def toPEquiv (f : α ≃ β) : α ≃. β where
   toFun := some ∘ f
   invFun := some ∘ f.symm
   inv := by simp [Equiv.eq_symm_apply, eq_comm]

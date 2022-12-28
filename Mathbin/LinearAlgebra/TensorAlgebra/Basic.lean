@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_algebra.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,10 +54,10 @@ the associated quotient.
 -/
 inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be linear
 
-  | add {a b : M} : rel (FreeAlgebra.ι R (a + b)) (FreeAlgebra.ι R a + FreeAlgebra.ι R b)
+  | add {a b : M} : Rel (FreeAlgebra.ι R (a + b)) (FreeAlgebra.ι R a + FreeAlgebra.ι R b)
   |
   smul {r : R} {a : M} :
-    rel (FreeAlgebra.ι R (r • a)) (algebraMap R (FreeAlgebra R M) r * FreeAlgebra.ι R a)
+    Rel (FreeAlgebra.ι R (r • a)) (algebraMap R (FreeAlgebra R M) r * FreeAlgebra.ι R a)
 #align tensor_algebra.rel TensorAlgebra.Rel
 
 end TensorAlgebra
@@ -79,15 +79,13 @@ variable {M}
 
 /-- The canonical linear map `M →ₗ[R] tensor_algebra R M`.
 -/
-def ι :
-    M →ₗ[R]
-      TensorAlgebra R
-        M where 
+def ι : M →ₗ[R] TensorAlgebra R M
+    where
   toFun m := RingQuot.mkAlgHom R _ (FreeAlgebra.ι R m)
-  map_add' x y := by 
+  map_add' x y := by
     rw [← AlgHom.map_add]
     exact RingQuot.mk_alg_hom_rel R rel.add
-  map_smul' r x := by 
+  map_smul' r x := by
     rw [← AlgHom.map_smul]
     exact RingQuot.mk_alg_hom_rel R rel.smul
 #align tensor_algebra.ι TensorAlgebra.ι
@@ -102,10 +100,8 @@ theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) :
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 -/
 @[simps symmApply]
-def lift {A : Type _} [Semiring A] [Algebra R A] :
-    (M →ₗ[R] A) ≃
-      (TensorAlgebra R M →ₐ[R]
-        A) where 
+def lift {A : Type _} [Semiring A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A)
+    where
   toFun :=
     RingQuot.liftAlgHom R ∘ fun f =>
       ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by
@@ -131,7 +127,7 @@ theorem ι_comp_lift {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A) (x) :
-    lift R f (ι R x) = f x := by 
+    lift R f (ι R x) = f x := by
   dsimp [lift, ι]
   rfl
 #align tensor_algebra.lift_ι_apply TensorAlgebra.lift_ι_apply
@@ -147,7 +143,8 @@ theorem lift_unique {A : Type _} [Semiring A] [Algebra R A] (f : M →ₗ[R] A)
 -- For now, we avoid this by not marking it irreducible.
 @[simp]
 theorem lift_comp_ι {A : Type _} [Semiring A] [Algebra R A] (g : TensorAlgebra R M →ₐ[R] A) :
-    lift R (g.toLinearMap.comp (ι R)) = g := by
+    lift R (g.toLinearMap.comp (ι R)) = g :=
+  by
   rw [← lift_symm_apply]
   exact (lift R).apply_symm_apply g
 #align tensor_algebra.lift_comp_ι TensorAlgebra.lift_comp_ι
@@ -155,7 +152,8 @@ theorem lift_comp_ι {A : Type _} [Semiring A] [Algebra R A] (g : TensorAlgebra 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : TensorAlgebra R M →ₐ[R] A}
-    (w : f.toLinearMap.comp (ι R) = g.toLinearMap.comp (ι R)) : f = g := by
+    (w : f.toLinearMap.comp (ι R) = g.toLinearMap.comp (ι R)) : f = g :=
+  by
   rw [← lift_symm_apply, ← lift_symm_apply] at w
   exact (lift R).symm.Injective w
 #align tensor_algebra.hom_ext TensorAlgebra.hom_ext
@@ -178,7 +176,8 @@ theorem induction {C : TensorAlgebra R M → Prop}
       algebra_map_mem' := h_grade0 }
   let of : M →ₗ[R] s := (ι R).codRestrict s.to_submodule h_grade1
   -- the mapping through the subalgebra is the identity
-  have of_id : AlgHom.id R (TensorAlgebra R M) = s.val.comp (lift R of) := by
+  have of_id : AlgHom.id R (TensorAlgebra R M) = s.val.comp (lift R of) :=
+    by
     ext
     simp [of]
   -- finding a proof is finding an element of the subalgebra
@@ -253,7 +252,8 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0
 variable {R}
 
 @[simp]
-theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 := by
+theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 :=
+  by
   refine' ⟨fun h => _, _⟩
   · have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := lift_ι_apply _ _
     rw [h, AlgHom.commutes] at hf0
@@ -264,7 +264,8 @@ theorem ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x 
 #align tensor_algebra.ι_eq_algebra_map_iff TensorAlgebra.ι_eq_algebra_map_iff
 
 @[simp]
-theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
+theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 :=
+  by
   rw [← (algebraMap R (TensorAlgebra R M)).map_one, Ne.def, ι_eq_algebra_map_iff]
   exact one_ne_zero ∘ And.right
 #align tensor_algebra.ι_ne_one TensorAlgebra.ι_ne_one
@@ -273,7 +274,7 @@ theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
 theorem ι_range_disjoint_one :
     Disjoint (LinearMap.range (ι R : M →ₗ[R] TensorAlgebra R M))
       (1 : Submodule R (TensorAlgebra R M)) :=
-  by 
+  by
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
   rw [ι_eq_algebra_map_iff x] at hx

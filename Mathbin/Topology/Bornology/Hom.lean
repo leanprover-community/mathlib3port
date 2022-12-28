@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.bornology.hom
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,10 +65,10 @@ namespace LocallyBoundedMap
 
 variable [Bornology α] [Bornology β] [Bornology γ] [Bornology δ]
 
-instance : LocallyBoundedMapClass (LocallyBoundedMap α β) α
-      β where 
+instance : LocallyBoundedMapClass (LocallyBoundedMap α β) α β
+    where
   coe f := f.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     cases f
     cases g
     congr
@@ -143,8 +143,8 @@ theorem id_apply (a : α) : LocallyBoundedMap.id α a = a :=
 #align locally_bounded_map.id_apply LocallyBoundedMap.id_apply
 
 /-- Composition of `locally_bounded_map`s as a `locally_bounded_map`. -/
-def comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) :
-    LocallyBoundedMap α γ where 
+def comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) : LocallyBoundedMap α γ
+    where
   toFun := f ∘ g
   comap_cobounded_le' :=
     comap_comap.ge.trans <| (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'

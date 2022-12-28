@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.adic_topology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,17 +55,17 @@ open TopologicalSpace Pointwise
 namespace Ideal
 
 theorem adicBasis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • ⊤ : Ideal R) :=
-  { inter := by 
+  { inter := by
       suffices ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j by simpa
       intro i j
       exact ⟨max i j, pow_le_pow (le_max_left i j), pow_le_pow (le_max_right i j)⟩
-    leftMul := by 
+    leftMul := by
       suffices ∀ (a : R) (i : ℕ), ∃ j : ℕ, a • I ^ j ≤ I ^ i by simpa
       intro r n
       use n
       rintro a ⟨x, hx, rfl⟩
       exact (I ^ n).smul_mem r hx
-    mul := by 
+    mul := by
       suffices ∀ i : ℕ, ∃ j : ℕ, ↑(I ^ j) * ↑(I ^ j) ⊆ ↑(I ^ i) by simpa
       intro n
       use n
@@ -92,7 +92,7 @@ theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
 theorem has_basis_nhds_zero_adic (I : Ideal R) :
     HasBasis (@nhds R I.adicTopology (0 : R)) (fun n : ℕ => True) fun n =>
       ((I ^ n : Ideal R) : Set R) :=
-  ⟨by 
+  ⟨by
     intro U
     rw [I.ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
     constructor
@@ -106,7 +106,7 @@ theorem has_basis_nhds_zero_adic (I : Ideal R) :
 theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
     HasBasis (@nhds R I.adicTopology x) (fun n : ℕ => True) fun n =>
       (fun y => x + y) '' (I ^ n : Ideal R) :=
-  by 
+  by
   letI := I.adic_topology
   have := I.has_basis_nhds_zero_adic.map fun y => x + y
   rwa [map_add_left_nhds_zero x] at this
@@ -122,7 +122,8 @@ theorem adicModuleBasis :
           ⟨smul_mono_left <| pow_le_pow (le_max_left i j),
             smul_mono_left <| pow_le_pow (le_max_right i j)⟩⟩
     smul := fun m i =>
-      ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
+      ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in =>
+        by
         replace a_in : a ∈ I ^ i := by simpa [(I ^ i).mul_top] using a_in
         exact smul_mem_smul a_in mem_top⟩ }
 #align ideal.adic_module_basis Ideal.adicModuleBasis
@@ -138,7 +139,7 @@ def adicModuleTopology : TopologicalSpace M :=
 on a `R`-module `M`, seen as open additive subgroups of `M`. -/
 def openAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
   { (I ^ n).toAddSubgroup with
-    is_open' := by 
+    is_open' := by
       letI := I.adic_topology
       convert (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).IsOpen
       simp }
@@ -160,7 +161,7 @@ theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R}
     IsAdic J ↔
       (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧
         ∀ s ∈ 𝓝 (0 : R), ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s :=
-  by 
+  by
   constructor
   · intro H
     change _ = _ at H
@@ -188,7 +189,8 @@ theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R}
 
 variable [TopologicalSpace R] [TopologicalRing R]
 
-theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : IsAdic (J ^ n) := by
+theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : IsAdic (J ^ n) :=
+  by
   rw [is_adic_iff] at h⊢
   constructor
   · intro m
@@ -207,7 +209,8 @@ theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : 
 #align is_ideal_adic_pow is_ideal_adic_pow
 
 theorem is_bot_adic_iff {A : Type _} [CommRing A] [TopologicalSpace A] [TopologicalRing A] :
-    IsAdic (⊥ : Ideal A) ↔ DiscreteTopology A := by
+    IsAdic (⊥ : Ideal A) ↔ DiscreteTopology A :=
+  by
   rw [is_adic_iff]
   constructor
   · rintro ⟨h, h'⟩

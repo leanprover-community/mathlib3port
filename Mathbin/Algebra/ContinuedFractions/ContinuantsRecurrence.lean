@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.continuants_recurrence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,8 @@ theorem continuants_recurrence_aux {gp ppred pred : Pair K} (nth_s_eq : g.s.nth 
 /-- Shows that `Aₙ = bₙ * Aₙ₋₁ + aₙ * Aₙ₋₂` and `Bₙ = bₙ * Bₙ₋₁ + aₙ * Bₙ₋₂`. -/
 theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
     (nth_conts_eq : g.continuants n = ppred) (succ_nth_conts_eq : g.continuants (n + 1) = pred) :
-    g.continuants (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
+    g.continuants (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ :=
+  by
   rw [nth_cont_eq_succ_nth_cont_aux] at nth_conts_eq succ_nth_conts_eq
   exact continuants_recurrence_aux succ_nth_s_eq nth_conts_eq succ_nth_conts_eq
 #align
@@ -56,7 +57,8 @@ theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.nth
 theorem numerators_recurrence {gp : Pair K} {ppredA predA : K}
     (succ_nth_s_eq : g.s.nth (n + 1) = some gp) (nth_num_eq : g.numerators n = ppredA)
     (succ_nth_num_eq : g.numerators (n + 1) = predA) :
-    g.numerators (n + 2) = gp.b * predA + gp.a * ppredA := by
+    g.numerators (n + 2) = gp.b * predA + gp.a * ppredA :=
+  by
   obtain ⟨ppredConts, nth_conts_eq, ⟨rfl⟩⟩ : ∃ conts, g.continuants n = conts ∧ conts.a = ppredA
   exact exists_conts_a_of_num nth_num_eq
   obtain ⟨predConts, succ_nth_conts_eq, ⟨rfl⟩⟩ :
@@ -70,7 +72,8 @@ theorem numerators_recurrence {gp : Pair K} {ppredA predA : K}
 theorem denominators_recurrence {gp : Pair K} {ppredB predB : K}
     (succ_nth_s_eq : g.s.nth (n + 1) = some gp) (nth_denom_eq : g.denominators n = ppredB)
     (succ_nth_denom_eq : g.denominators (n + 1) = predB) :
-    g.denominators (n + 2) = gp.b * predB + gp.a * ppredB := by
+    g.denominators (n + 2) = gp.b * predB + gp.a * ppredB :=
+  by
   obtain ⟨ppredConts, nth_conts_eq, ⟨rfl⟩⟩ : ∃ conts, g.continuants n = conts ∧ conts.b = ppredB
   exact exists_conts_b_of_denom nth_denom_eq
   obtain ⟨predConts, succ_nth_conts_eq, ⟨rfl⟩⟩ :

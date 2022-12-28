@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.commuting_probability
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ theorem comm_prob_pos [h : Nonempty M] : 0 < commProb M :=
       (pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2)
 #align comm_prob_pos comm_prob_pos
 
-theorem comm_prob_le_one : commProb M ≤ 1 := by
+theorem comm_prob_le_one : commProb M ≤ 1 :=
+  by
   refine' div_le_one_of_le _ (sq_nonneg (Nat.card M))
   rw [← Nat.cast_pow, Nat.cast_le, sq, ← Nat.card_prod]
   apply Finite.card_subtype_le
@@ -63,7 +64,8 @@ theorem comm_prob_le_one : commProb M ≤ 1 := by
 variable {M}
 
 theorem comm_prob_eq_one_iff [h : Nonempty M] :
-    commProb M = 1 ↔ Commutative ((· * ·) : M → M → M) := by
+    commProb M = 1 ↔ Commutative ((· * ·) : M → M → M) :=
+  by
   haveI := Fintype.ofFinite M
   rw [commProb, ← Set.coe_setOf, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
   rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod,
@@ -75,7 +77,8 @@ theorem comm_prob_eq_one_iff [h : Nonempty M] :
 variable (G : Type _) [Group G] [Finite G]
 
 theorem card_comm_eq_card_conj_classes_mul_card :
-    Nat.card { p : G × G // p.1 * p.2 = p.2 * p.1 } = Nat.card (ConjClasses G) * Nat.card G := by
+    Nat.card { p : G × G // p.1 * p.2 = p.2 * p.1 } = Nat.card (ConjClasses G) * Nat.card G :=
+  by
   haveI := Fintype.ofFinite G
   simp only [Nat.card_eq_fintype_card]
   convert
@@ -88,14 +91,16 @@ theorem card_comm_eq_card_conj_classes_mul_card :
           card_congr' <| congr_arg _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
       _ = card (Quotient (MulAction.orbitRel (ConjAct G) G)) * card G :=
         MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group (ConjAct G) G
-      _ = card (Quotient (IsConj.setoid G)) * card G := by
+      _ = card (Quotient (IsConj.setoid G)) * card G :=
+        by
         have this : MulAction.orbitRel (ConjAct G) G = IsConj.setoid G :=
           Setoid.ext fun g h => (Setoid.comm' _).trans is_conj_iff.symm
         cc
       
 #align card_comm_eq_card_conj_classes_mul_card card_comm_eq_card_conj_classes_mul_card
 
-theorem comm_prob_def' : commProb G = Nat.card (ConjClasses G) / Nat.card G := by
+theorem comm_prob_def' : commProb G = Nat.card (ConjClasses G) / Nat.card G :=
+  by
   rw [commProb, card_comm_eq_card_conj_classes_mul_card, Nat.cast_mul, sq]
   exact mul_div_mul_right _ _ (nat.cast_ne_zero.mpr finite.card_pos.ne')
 #align comm_prob_def' comm_prob_def'

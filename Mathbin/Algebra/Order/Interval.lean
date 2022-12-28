@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,8 +260,8 @@ instance [OrderedCommMonoid α] : CommMonoid (NonemptyInterval α) :=
 end NonemptyInterval
 
 @[to_additive]
-instance [OrderedCommMonoid α] :
-    MulOneClass (Interval α) where 
+instance [OrderedCommMonoid α] : MulOneClass (Interval α)
+    where
   mul := (· * ·)
   one := 1
   one_mul s :=
@@ -273,7 +273,8 @@ instance [OrderedCommMonoid α] :
 
 @[to_additive]
 instance [OrderedCommMonoid α] : CommMonoid (Interval α) :=
-  { Interval.mulOneClass with
+  {
+    Interval.mulOneClass with
     mul_comm := fun _ _ => Option.map₂_comm mul_comm
     mul_assoc := fun _ _ _ => Option.map₂_assoc mul_assoc }
 
@@ -492,7 +493,8 @@ namespace NonemptyInterval
 variable [OrderedCommGroup α] {s t : NonemptyInterval α}
 
 @[to_additive]
-protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 := by
+protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
+  by
   refine' ⟨fun h => _, _⟩
   · rw [ext_iff, Prod.ext_iff] at h
     have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le
@@ -503,25 +505,27 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pur
 #align nonempty_interval.mul_eq_one_iff NonemptyInterval.mul_eq_one_iff
 
 instance {α : Type u} [OrderedAddCommGroup α] : SubtractionCommMonoid (NonemptyInterval α) :=
-  { NonemptyInterval.addCommMonoid with 
+  { NonemptyInterval.addCommMonoid with
     neg := Neg.neg
     sub := Sub.sub
     sub_eq_add_neg := fun s t => by ext <;> exact sub_eq_add_neg _ _
     neg_neg := fun s => by ext <;> exact neg_neg _
     neg_add_rev := fun s t => by ext <;> exact neg_add_rev _ _
-    neg_eq_of_add := fun s t h => by
+    neg_eq_of_add := fun s t h =>
+      by
       obtain ⟨a, b, rfl, rfl, hab⟩ := NonemptyInterval.add_eq_zero_iff.1 h
       rw [neg_pure, neg_eq_of_add_eq_zero_right hab] }
 
 @[to_additive NonemptyInterval.subtractionCommMonoid]
 instance : DivisionCommMonoid (NonemptyInterval α) :=
-  { NonemptyInterval.commMonoid with 
+  { NonemptyInterval.commMonoid with
     inv := Inv.inv
     div := (· / ·)
     div_eq_mul_inv := fun s t => by ext <;> exact div_eq_mul_inv _ _
     inv_inv := fun s => by ext <;> exact inv_inv _
     mul_inv_rev := fun s t => by ext <;> exact mul_inv_rev _ _
-    inv_eq_of_mul := fun s t h => by
+    inv_eq_of_mul := fun s t h =>
+      by
       obtain ⟨a, b, rfl, rfl, hab⟩ := NonemptyInterval.mul_eq_one_iff.1 h
       rw [inv_pure, inv_eq_of_mul_eq_one_right hab] }
 
@@ -532,7 +536,8 @@ namespace Interval
 variable [OrderedCommGroup α] {s t : Interval α}
 
 @[to_additive]
-protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 := by
+protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
+  by
   cases s
   · simp [WithBot.none_eq_bot]
   cases t
@@ -541,7 +546,7 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pur
 #align interval.mul_eq_one_iff Interval.mul_eq_one_iff
 
 instance {α : Type u} [OrderedAddCommGroup α] : SubtractionCommMonoid (Interval α) :=
-  { Interval.addCommMonoid with 
+  { Interval.addCommMonoid with
     neg := Neg.neg
     sub := Sub.sub
     sub_eq_add_neg := by
@@ -555,7 +560,7 @@ instance {α : Type u} [OrderedAddCommGroup α] : SubtractionCommMonoid (Interva
 
 @[to_additive Interval.subtractionCommMonoid]
 instance : DivisionCommMonoid (Interval α) :=
-  { Interval.commMonoid with 
+  { Interval.commMonoid with
     inv := Inv.inv
     div := (· / ·)
     div_eq_mul_inv := by

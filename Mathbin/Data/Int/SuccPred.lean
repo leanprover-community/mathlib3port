@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.int.succ_pred
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,7 @@ instance : SuccOrder ℤ :=
 
 -- so that Lean reads `int.pred` through `pred_order.pred`
 @[reducible]
-instance : PredOrder ℤ where 
+instance : PredOrder ℤ where
   pred := pred
   pred_le a := (sub_one_lt_of_le le_rfl).le
   min_of_le_pred a ha := ((sub_one_lt_of_le le_rfl).not_le ha).elim
@@ -52,14 +52,14 @@ theorem pos_iff_one_le {a : ℤ} : 0 < a ↔ 1 ≤ a :=
 
 theorem succ_iterate (a : ℤ) : ∀ n, (succ^[n]) a = a + n
   | 0 => (add_zero a).symm
-  | n + 1 => by 
+  | n + 1 => by
     rw [Function.iterate_succ', Int.ofNat_succ, ← add_assoc]
     exact congr_arg _ (succ_iterate n)
 #align int.succ_iterate Int.succ_iterate
 
 theorem pred_iterate (a : ℤ) : ∀ n, (pred^[n]) a = a - n
   | 0 => (sub_zero a).symm
-  | n + 1 => by 
+  | n + 1 => by
     rw [Function.iterate_succ', Int.ofNat_succ, ← sub_sub]
     exact congr_arg _ (pred_iterate n)
 #align int.pred_iterate Int.pred_iterate
@@ -92,7 +92,8 @@ theorem covby_add_one (z : ℤ) : z ⋖ z + 1 :=
 end Int
 
 @[simp, norm_cast]
-theorem Nat.cast_int_covby_iff {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b := by
+theorem Nat.cast_int_covby_iff {a b : ℕ} : (a : ℤ) ⋖ b ↔ a ⋖ b :=
+  by
   rw [Nat.covby_iff_succ_eq, Int.covby_iff_succ_eq]
   exact Int.coe_nat_inj'
 #align nat.cast_int_covby_iff Nat.cast_int_covby_iff

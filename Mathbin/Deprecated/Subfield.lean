@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
 
 ! This file was ported from Lean 3 source module deprecated.subfield
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,13 +40,13 @@ structure IsSubfield extends IsSubring S : Prop where
 #align is_subfield IsSubfield
 
 theorem IsSubfield.div_mem {S : Set F} (hS : IsSubfield S) {x y : F} (hx : x ∈ S) (hy : y ∈ S) :
-    x / y ∈ S := by 
+    x / y ∈ S := by
   rw [div_eq_mul_inv]
   exact hS.to_is_subring.to_is_submonoid.mul_mem hx (hS.inv_mem hy)
 #align is_subfield.div_mem IsSubfield.div_mem
 
 theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h : a ∈ s) :
-    a ^ n ∈ s := by 
+    a ^ n ∈ s := by
   cases n
   · rw [zpow_ofNat]
     exact hs.to_is_subring.to_is_submonoid.pow_mem h
@@ -62,7 +62,7 @@ theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} 
     IsSubfield (f ⁻¹' s) :=
   { f.is_subring_preimage hs.to_is_subring with
     inv_mem := fun a (ha : f a ∈ s) =>
-      show f a⁻¹ ∈ s by 
+      show f a⁻¹ ∈ s by
         rw [map_inv₀]
         exact hs.inv_mem ha }
 #align preimage.is_subfield Preimage.is_subfield
@@ -73,7 +73,8 @@ theorem Image.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set F} (hs
     inv_mem := fun a ⟨x, xmem, ha⟩ => ⟨x⁻¹, hs.inv_mem xmem, ha ▸ map_inv₀ f _⟩ }
 #align image.is_subfield Image.is_subfield
 
-theorem Range.is_subfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (Set.range f) := by
+theorem Range.is_subfield {K : Type _} [Field K] (f : F →+* K) : IsSubfield (Set.range f) :=
+  by
   rw [← Set.image_univ]
   apply Image.is_subfield _ Univ.is_subfield
 #align range.is_subfield Range.is_subfield
@@ -104,12 +105,13 @@ theorem closure.is_submonoid : IsSubmonoid (closure S) :=
 theorem closure.is_subfield : IsSubfield (closure S) :=
   have h0 : (0 : F) ∈ closure S :=
     ring_closure_subset <| Ring.closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
-  { closure.is_submonoid with
-    add_mem := by 
+  {
+    closure.is_submonoid with
+    add_mem := by
       intro a b ha hb
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
-      classical 
+      classical
         by_cases hq0 : q = 0
         · simp [hb, hq0]
         by_cases hs0 : s = 0
@@ -122,10 +124,10 @@ theorem closure.is_subfield : IsSubfield (closure S) :=
             q * s, ring.closure.is_subring.to_is_submonoid.mul_mem hq hs,
             (div_add_div p r hq0 hs0).symm⟩
     zero_mem := h0
-    neg_mem := by 
+    neg_mem := by
       rintro _ ⟨p, hp, q, hq, rfl⟩
       exact ⟨-p, ring.closure.is_subring.to_is_add_subgroup.neg_mem hp, q, hq, neg_div q p⟩
-    inv_mem := by 
+    inv_mem := by
       rintro _ ⟨p, hp, q, hq, rfl⟩
       exact ⟨q, hq, p, hp, (inv_div _ _).symm⟩ }
 #align field.closure.is_subfield Field.closure.is_subfield
@@ -158,8 +160,8 @@ theorem is_subfield_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι 
     (hs : ∀ i, IsSubfield (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubfield (⋃ i, s i) :=
   { inv_mem := fun x hx =>
-      let ⟨i, hi⟩ := Set.mem_Union.1 hx
-      Set.mem_Union.2 ⟨i, (hs i).inv_mem hi⟩
+      let ⟨i, hi⟩ := Set.mem_unionᵢ.1 hx
+      Set.mem_unionᵢ.2 ⟨i, (hs i).inv_mem hi⟩
     to_is_subring := is_subring_Union_of_directed (fun i => (hs i).to_is_subring) Directed }
 #align is_subfield_Union_of_directed is_subfield_Union_of_directed
 
@@ -170,8 +172,8 @@ theorem IsSubfield.inter {S₁ S₂ : Set F} (hS₁ : IsSubfield S₁) (hS₂ : 
 #align is_subfield.inter IsSubfield.inter
 
 theorem IsSubfield.Inter {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) :
-    IsSubfield (Set.inter S) :=
+    IsSubfield (Set.interᵢ S) :=
   { IsSubring.Inter fun y => (h y).to_is_subring with
-    inv_mem := fun x hx => Set.mem_Inter.2 fun y => (h y).inv_mem <| Set.mem_Inter.1 hx y }
+    inv_mem := fun x hx => Set.mem_interᵢ.2 fun y => (h y).inv_mem <| Set.mem_interᵢ.1 hx y }
 #align is_subfield.Inter IsSubfield.Inter
 

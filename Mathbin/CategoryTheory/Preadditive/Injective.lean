@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.injective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,14 +85,16 @@ section
 
 open ZeroObject
 
-instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] :
-    Injective (0 : C) where Factors X Y g f mono := ⟨0, by ext⟩
+instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] : Injective (0 : C)
+    where Factors X Y g f mono := ⟨0, by ext⟩
 #align category_theory.injective.zero_injective CategoryTheory.Injective.zero_injective
 
 end
 
 theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Injective P) : Injective Q :=
-  { Factors := fun X Y g f mono => by
+  {
+    Factors := fun X Y g f mono =>
+      by
       obtain ⟨h, h_eq⟩ := @injective.factors C _ P _ _ _ (g ≫ i.inv) f mono
       refine' ⟨h ≫ i.hom, _⟩
       rw [← category.assoc, h_eq, category.assoc, iso.inv_hom_id, category.comp_id] }
@@ -103,13 +105,12 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
 #align category_theory.injective.iso_iff CategoryTheory.Injective.iso_iff
 
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
-instance (X : Type u₁) [Nonempty X] :
-    Injective
-      X where Factors Y Z g f mono :=
+instance (X : Type u₁) [Nonempty X] : Injective X
+    where Factors Y Z g f mono :=
     ⟨fun z => by
       classical exact
           if h : z ∈ Set.range f then g (Classical.choose h) else Nonempty.some inferInstance,
-      by 
+      by
       ext y
       change dite _ _ _ = _
       split_ifs
@@ -117,23 +118,20 @@ instance (X : Type u₁) [Nonempty X] :
         rw [mono (Classical.choose_spec h)]
       · exact False.elim (h ⟨y, rfl⟩)⟩
 
-instance TypeCat.enough_injectives :
-    EnoughInjectives
-      (Type
-        u₁) where presentation X :=
+instance TypeCat.enough_injectives : EnoughInjectives (Type u₁)
+    where presentation X :=
     Nonempty.intro
       { j := WithBot X
         Injective := inferInstance
         f := Option.some
-        Mono := by 
+        Mono := by
           rw [mono_iff_injective]
           exact Option.some_injective X }
 #align
   category_theory.injective.Type.enough_injectives CategoryTheory.Injective.TypeCat.enough_injectives
 
-instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] :
-    Injective
-      (P ⨯ Q) where Factors X Y g f mono := by 
+instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] : Injective (P ⨯ Q)
+    where Factors X Y g f mono := by
     skip
     use limits.prod.lift (factor_thru (g ≫ limits.prod.fst) f) (factor_thru (g ≫ limits.prod.snd) f)
     simp only [prod.comp_lift, comp_factor_thru]
@@ -141,17 +139,16 @@ instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] :
     · simp only [prod.lift_fst]
     · simp only [prod.lift_snd]
 
-instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] :
-    Injective (∏
-        c) where Factors X Y g f mono := by 
+instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] : Injective (∏ c)
+    where Factors X Y g f mono := by
     skip
     refine' ⟨pi.lift fun b => factor_thru (g ≫ pi.π c _) f, _⟩
     ext ⟨j⟩
     simp only [category.assoc, limit.lift_π, fan.mk_π_app, comp_factor_thru]
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [Injective Q] :
-    Injective
-      (P ⊞ Q) where Factors X Y g f mono := by 
+    Injective (P ⊞ Q)
+    where Factors X Y g f mono := by
     skip
     refine' ⟨biprod.lift (factor_thru (g ≫ biprod.fst) f) (factor_thru (g ≫ biprod.snd) f), _⟩
     ext
@@ -159,35 +156,27 @@ instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [
     · simp only [category.assoc, biprod.lift_snd, comp_factor_thru]
 
 instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] :
-    Injective (⨁
-        c) where Factors X Y g f mono := by 
+    Injective (⨁ c)
+    where Factors X Y g f mono := by
     skip
     refine' ⟨biproduct.lift fun b => factor_thru (g ≫ biproduct.π _ _) f, _⟩
     ext
     simp only [category.assoc, biproduct.lift_π, comp_factor_thru]
 
-instance {P : Cᵒᵖ} [Projective P] :
-    Injective
-      (unop
-        P) where Factors X Y g f mono :=
+instance {P : Cᵒᵖ} [Projective P] : Injective (unop P)
+    where Factors X Y g f mono :=
     ⟨(@projective.factor_thru Cᵒᵖ _ P _ _ _ g.op f.op _).unop, Quiver.Hom.op_inj (by simp)⟩
 
-instance {J : Cᵒᵖ} [Injective J] :
-    Projective
-      (unop
-        J) where Factors E X f e he :=
+instance {J : Cᵒᵖ} [Injective J] : Projective (unop J)
+    where Factors E X f e he :=
     ⟨(@factor_thru Cᵒᵖ _ J _ _ _ f.op e.op _).unop, Quiver.Hom.op_inj (by simp)⟩
 
-instance {J : C} [Injective J] :
-    Projective
-      (op
-        J) where Factors E X f e epi :=
+instance {J : C} [Injective J] : Projective (op J)
+    where Factors E X f e epi :=
     ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
 
-instance {P : C} [Projective P] :
-    Injective
-      (op
-        P) where Factors X Y g f mono :=
+instance {P : C} [Projective P] : Injective (op P)
+    where Factors X Y g f mono :=
     ⟨(@projective.factor_thru C _ P _ _ _ g.unop f.unop _).op, Quiver.Hom.unop_inj (by simp)⟩
 
 theorem injective_iff_projective_op {J : C} : Injective J ↔ Projective (op J) :=
@@ -201,7 +190,8 @@ theorem projective_iff_injective_op {P : C} : Projective P ↔ Injective (op P) 
   category_theory.injective.projective_iff_injective_op CategoryTheory.Injective.projective_iff_injective_op
 
 theorem injective_iff_preserves_epimorphisms_yoneda_obj (J : C) :
-    Injective J ↔ (yoneda.obj J).PreservesEpimorphisms := by
+    Injective J ↔ (yoneda.obj J).PreservesEpimorphisms :=
+  by
   rw [injective_iff_projective_op, projective.projective_iff_preserves_epimorphisms_coyoneda_obj]
   exact functor.preserves_epimorphisms.iso_iff (coyoneda.obj_op_op _)
 #align
@@ -228,7 +218,8 @@ section Preadditive
 variable [Preadditive C]
 
 theorem injective_iff_preserves_epimorphisms_preadditive_yoneda_obj (J : C) :
-    Injective J ↔ (preadditiveYoneda.obj J).PreservesEpimorphisms := by
+    Injective J ↔ (preadditiveYoneda.obj J).PreservesEpimorphisms :=
+  by
   rw [injective_iff_preserves_epimorphisms_yoneda_obj]
   refine' ⟨fun h : (preadditive_yoneda.obj J ⋙ forget _).PreservesEpimorphisms => _, _⟩
   ·
@@ -240,7 +231,8 @@ theorem injective_iff_preserves_epimorphisms_preadditive_yoneda_obj (J : C) :
   category_theory.injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj CategoryTheory.Injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj
 
 theorem injective_iff_preserves_epimorphisms_preadditive_yoneda_obj' (J : C) :
-    Injective J ↔ (preadditiveYonedaObj J).PreservesEpimorphisms := by
+    Injective J ↔ (preadditiveYonedaObj J).PreservesEpimorphisms :=
+  by
   rw [injective_iff_preserves_epimorphisms_yoneda_obj]
   refine' ⟨fun h : (preadditive_yoneda_obj J ⋙ forget _).PreservesEpimorphisms => _, _⟩
   ·
@@ -358,7 +350,7 @@ variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
 
 theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : Injective I) :
     Injective (G.obj I) :=
-  ⟨fun X Y f g => by 
+  ⟨fun X Y f g => by
     intro
     rcases hI.factors (F.map f ≫ adj.counit.app _) (F.map g) with ⟨⟩
     use adj.unit.app Y ≫ G.map w
@@ -368,7 +360,7 @@ theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : I
 
 theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
     (hI : Injective (G.obj I)) : Injective I :=
-  ⟨fun X Y f g => by 
+  ⟨fun X Y f g => by
     intro
     haveI := adj.right_adjoint_preserves_limits
     rcases hI.factors (G.map f) (G.map g) with ⟨⟩
@@ -381,8 +373,8 @@ theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
 /-- Given an adjunction `F ⊣ G` such that `F` preserves monos, `G` maps an injective presentation
 of `X` to an injective presentation of `G(X)`. -/
 def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D)
-    (I : InjectivePresentation X) :
-    InjectivePresentation (G.obj X) where 
+    (I : InjectivePresentation X) : InjectivePresentation (G.obj X)
+    where
   j := G.obj I.j
   Injective := adj.map_injective _ I.Injective
   f := G.map I.f
@@ -399,8 +391,8 @@ variable {D : Type _} [Category D] (F : C ≌ D)
 /-- Given an equivalence of categories `F`, an injective presentation of `F(X)` induces an
 injective presentation of `X.` -/
 def injectivePresentationOfMapInjectivePresentation (X : C)
-    (I : InjectivePresentation (F.Functor.obj X)) :
-    InjectivePresentation X where 
+    (I : InjectivePresentation (F.Functor.obj X)) : InjectivePresentation X
+    where
   j := F.inverse.obj I.j
   Injective := Adjunction.map_injective F.toAdjunction I.j I.Injective
   f := F.Unit.app _ ≫ F.inverse.map I.f
@@ -408,7 +400,8 @@ def injectivePresentationOfMapInjectivePresentation (X : C)
 #align
   category_theory.equivalence.injective_presentation_of_map_injective_presentation CategoryTheory.Equivalence.injectivePresentationOfMapInjectivePresentation
 
-theorem enough_injectives_iff (F : C ≌ D) : EnoughInjectives C ↔ EnoughInjectives D := by
+theorem enough_injectives_iff (F : C ≌ D) : EnoughInjectives C ↔ EnoughInjectives D :=
+  by
   constructor
   all_goals intro H; constructor; intro X; constructor
   ·

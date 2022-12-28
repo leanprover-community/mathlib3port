@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.copy
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,8 @@ variable {α : Type u}
 with possibly different definitional equalities. -/
 def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : α)
     (eq_top : top = @BoundedOrder.top α _ c) (bot : α) (eq_bot : bot = @BoundedOrder.bot α _ c)
-    (le_eq : ∀ x y : α, (@LE.le α h) x y ↔ x ≤ y) : @BoundedOrder α h := by
+    (le_eq : ∀ x y : α, (@LE.le α h) x y ↔ x ≤ y) : @BoundedOrder α h :=
+  by
   refine'
     { top
       bot.. }
@@ -40,7 +41,8 @@ def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : 
 with possibly different definitional equalities. -/
 def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Lattice.Le α c)
     (sup : α → α → α) (eq_sup : sup = @Lattice.sup α c) (inf : α → α → α)
-    (eq_inf : inf = @Lattice.inf α c) : Lattice α := by
+    (eq_inf : inf = @Lattice.inf α c) : Lattice α :=
+  by
   refine'
     { le
       sup
@@ -52,7 +54,8 @@ def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Latti
 with possibly different definitional equalities. -/
 def DistribLattice.copy (c : DistribLattice α) (le : α → α → Prop)
     (eq_le : le = @DistribLattice.Le α c) (sup : α → α → α) (eq_sup : sup = @DistribLattice.sup α c)
-    (inf : α → α → α) (eq_inf : inf = @DistribLattice.inf α c) : DistribLattice α := by
+    (inf : α → α → α) (eq_inf : inf = @DistribLattice.inf α c) : DistribLattice α :=
+  by
   refine'
     { le
       sup
@@ -68,9 +71,12 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop)
     (eq_sup : sup = @CompleteLattice.sup α c) (inf : α → α → α)
     (eq_inf : inf = @CompleteLattice.inf α c) (Sup : Set α → α)
     (eq_Sup : Sup = @CompleteLattice.sup α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @CompleteLattice.inf α c) : CompleteLattice α := by
+    (eq_Inf : Inf = @CompleteLattice.inf α c) : CompleteLattice α :=
+  by
   refine'
-    { Lattice.copy (@CompleteLattice.toLattice α c) le eq_le sup eq_sup inf eq_inf with
+    {
+      Lattice.copy (@CompleteLattice.toLattice α c) le eq_le sup eq_sup inf
+        eq_inf with
       le
       top
       bot
@@ -87,9 +93,11 @@ def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le 
     (eq_top : top = @Frame.top α c) (bot : α) (eq_bot : bot = @Frame.bot α c) (sup : α → α → α)
     (eq_sup : sup = @Frame.sup α c) (inf : α → α → α) (eq_inf : inf = @Frame.inf α c)
     (Sup : Set α → α) (eq_Sup : Sup = @Frame.sup α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @Frame.inf α c) : Frame α := by
+    (eq_Inf : Inf = @Frame.inf α c) : Frame α :=
+  by
   refine'
-    { CompleteLattice.copy (@frame.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup
+    {
+      CompleteLattice.copy (@frame.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup
         eq_sup inf eq_inf Sup eq_Sup Inf eq_Inf with
       le
       top
@@ -107,9 +115,11 @@ def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Cofra
     (eq_top : top = @Coframe.top α c) (bot : α) (eq_bot : bot = @Coframe.bot α c) (sup : α → α → α)
     (eq_sup : sup = @Coframe.sup α c) (inf : α → α → α) (eq_inf : inf = @Coframe.inf α c)
     (Sup : Set α → α) (eq_Sup : Sup = @Coframe.sup α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @Coframe.inf α c) : Coframe α := by
+    (eq_Inf : Inf = @Coframe.inf α c) : Coframe α :=
+  by
   refine'
-    { CompleteLattice.copy (@coframe.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup
+    {
+      CompleteLattice.copy (@coframe.to_complete_lattice α c) le eq_le top eq_top bot eq_bot sup
         eq_sup inf eq_inf Sup eq_Sup Inf eq_Inf with
       le
       top
@@ -131,7 +141,8 @@ def CompleteDistribLattice.copy (c : CompleteDistribLattice α) (le : α → α 
     (eq_inf : inf = @CompleteDistribLattice.inf α c) (Sup : Set α → α)
     (eq_Sup : Sup = @CompleteDistribLattice.sup α c) (Inf : Set α → α)
     (eq_Inf : Inf = @CompleteDistribLattice.inf α c) : CompleteDistribLattice α :=
-  { Frame.copy (@CompleteDistribLattice.toFrame α c) le eq_le top eq_top bot eq_bot sup eq_sup inf
+  {
+    Frame.copy (@CompleteDistribLattice.toFrame α c) le eq_le top eq_top bot eq_bot sup eq_sup inf
       eq_inf Sup eq_Sup Inf eq_Inf,
     Coframe.copy (@CompleteDistribLattice.toCoframe α c) le eq_le top eq_top bot eq_bot sup eq_sup
       inf eq_inf Sup eq_Sup Inf eq_Inf with }
@@ -144,7 +155,8 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
     (eq_sup : sup = @ConditionallyCompleteLattice.sup α c) (inf : α → α → α)
     (eq_inf : inf = @ConditionallyCompleteLattice.inf α c) (Sup : Set α → α)
     (eq_Sup : Sup = @ConditionallyCompleteLattice.sup α c) (Inf : Set α → α)
-    (eq_Inf : Inf = @ConditionallyCompleteLattice.inf α c) : ConditionallyCompleteLattice α := by
+    (eq_Inf : Inf = @ConditionallyCompleteLattice.inf α c) : ConditionallyCompleteLattice α :=
+  by
   refine'
     { le
       sup

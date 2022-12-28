@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.valuation
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,11 +37,11 @@ variable (v : Valuation R Γ₀)
 
 /-- The basis of open subgroups for the topology on a ring determined by a valuation. -/
 theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup γ : AddSubgroup R) :=
-  { inter := by 
+  { inter := by
       rintro γ₀ γ₁
       use min γ₀ γ₁
       simp [Valuation.ltAddSubgroup] <;> tauto
-    mul := by 
+    mul := by
       rintro γ
       cases' exists_square_le γ with γ₀ h
       use γ₀
@@ -51,7 +51,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         _ < γ₀ * γ₀ := mul_lt_mul₀ r_in s_in
         _ ≤ γ := by exact_mod_cast h
         
-    leftMul := by 
+    leftMul := by
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
       · use (1 : Γ₀ˣ)
@@ -66,7 +66,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         rw [Valuation.map_mul, Hx, mul_comm]
         rw [Units.val_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
-    rightMul := by 
+    rightMul := by
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
       · use 1
@@ -107,7 +107,8 @@ def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
   { V
     toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
     to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroups_basis.topology _
-    is_topological_valuation := by
+    is_topological_valuation :=
+      by
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
       intro s
       rw [filter.has_basis_iff.mp v.subgroups_basis.has_basis_nhds_zero s]
@@ -124,7 +125,8 @@ theorem has_basis_nhds_zero :
 #align valued.has_basis_nhds_zero Valued.has_basis_nhds_zero
 
 theorem has_basis_uniformity :
-    (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } := by
+    (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } :=
+  by
   rw [uniformity_eq_comap_nhds_zero]
   exact (has_basis_nhds_zero R Γ₀).comap _
 #align valued.has_basis_uniformity Valued.has_basis_uniformity
@@ -146,7 +148,8 @@ theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x
   simp only [mem_nhds, sub_zero]
 #align valued.mem_nhds_zero Valued.mem_nhds_zero
 
-theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x := by
+theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x :=
+  by
   rw [mem_nhds]
   rcases units.exists_iff_ne_zero.mpr h with ⟨γ, hx⟩
   use γ
@@ -162,7 +165,7 @@ instance (priority := 100) : TopologicalRing R :=
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔
       F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), (v (y - x) : Γ₀) < γ :=
-  by 
+  by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
   apply and_congr Iff.rfl
   simp_rw [valued.v.subgroups_basis.mem_add_group_filter_basis_iff]

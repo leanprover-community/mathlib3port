@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.indicator_function
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,8 @@ theorem nnnorm_indicator_eq_indicator_nnnorm :
 #align nnnorm_indicator_eq_indicator_nnnorm nnnorm_indicator_eq_indicator_nnnorm
 
 theorem norm_indicator_le_of_subset (h : s ⊆ t) (f : α → E) (a : α) :
-    ‖indicator s f a‖ ≤ ‖indicator t f a‖ := by
+    ‖indicator s f a‖ ≤ ‖indicator t f a‖ :=
+  by
   simp only [norm_indicator_eq_indicator_norm]
   exact indicator_le_indicator_of_subset ‹_› (fun _ => norm_nonneg _) _
 #align norm_indicator_le_of_subset norm_indicator_le_of_subset
@@ -44,7 +45,8 @@ theorem indicator_norm_le_norm_self : indicator s (fun a => ‖f a‖) a ≤ ‖
   indicator_le_self' (fun _ _ => norm_nonneg _) a
 #align indicator_norm_le_norm_self indicator_norm_le_norm_self
 
-theorem norm_indicator_le_norm_self : ‖indicator s f a‖ ≤ ‖f a‖ := by
+theorem norm_indicator_le_norm_self : ‖indicator s f a‖ ≤ ‖f a‖ :=
+  by
   rw [norm_indicator_eq_indicator_norm]
   apply indicator_norm_le_norm_self
 #align norm_indicator_le_norm_self norm_indicator_le_norm_self

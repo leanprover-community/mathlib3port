@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set.pointwise.list_of_fn
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,8 @@ open Pointwise
 
 @[to_additive]
 theorem mem_prod_list_of_fn {a : α} {s : Fin n → Set α} :
-    a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a := by
+    a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a :=
+  by
   induction' n with n ih generalizing a
   · simp_rw [List.of_fn_zero, List.prod_nil, Fin.exists_fin_zero_pi, eq_comm, Set.mem_one]
   ·
@@ -42,7 +43,7 @@ theorem mem_list_prod {l : List (Set α)} {a : α} :
     a ∈ l.Prod ↔
       ∃ l' : List (Σs : Set α, ↥s),
         List.prod (l'.map fun x => (Sigma.snd x : α)) = a ∧ l'.map Sigma.fst = l :=
-  by 
+  by
   induction' l using List.ofFnRec with n f
   simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', and_left_comm,
     exists_and_left, exists_eq_left, heq_iff_eq, Function.comp, mem_prod_list_of_fn]

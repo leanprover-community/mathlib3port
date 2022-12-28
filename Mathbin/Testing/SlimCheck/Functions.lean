@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.functions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,8 +135,8 @@ protected def shrink : ShrinkFn (TotalFunction α β)
 
 variable [Repr α] [Repr β]
 
-instance Pi.sampleableExt :
-    SampleableExt (α → β) where 
+instance Pi.sampleableExt : SampleableExt (α → β)
+    where
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.apply
   sample := do
@@ -169,11 +169,11 @@ def zeroDefaultSupp : TotalFunction α β → Finset α
 
 /-- Create a finitely supported function from a total function by taking the default value to
 zero. -/
-def applyFinsupp (tf : TotalFunction α β) :
-    α →₀ β where 
+def applyFinsupp (tf : TotalFunction α β) : α →₀ β
+    where
   support := zeroDefaultSupp tf
   toFun := tf.zeroDefault.apply
-  mem_support_to_fun := by 
+  mem_support_to_fun := by
     intro a
     rcases tf with ⟨A, y⟩
     simp only [apply, zero_default_supp, List.mem_map, List.mem_filter, exists_and_right,
@@ -196,8 +196,8 @@ def applyFinsupp (tf : TotalFunction α β) :
 
 variable [Sampleable α] [Sampleable β]
 
-instance Finsupp.sampleableExt [Repr α] [Repr β] :
-    SampleableExt (α →₀ β) where 
+instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β)
+    where
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.applyFinsupp
   sample := do
@@ -209,9 +209,8 @@ instance Finsupp.sampleableExt [Repr α] [Repr β] :
   slim_check.total_function.finsupp.sampleable_ext SlimCheck.TotalFunction.Finsupp.sampleableExt
 
 -- TODO: support a non-constant codomain type
-instance Dfinsupp.sampleableExt [Repr α] [Repr β] :
-    SampleableExt (Π₀ a : α,
-        β) where 
+instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : α, β)
+    where
   ProxyRepr := TotalFunction α β
   interp := Finsupp.toDfinsupp ∘ total_function.apply_finsupp
   sample := do
@@ -229,8 +228,8 @@ section SampleableExt
 open SampleableExt
 
 instance (priority := 2000) PiPred.sampleableExt [SampleableExt (α → Bool)] :
-    SampleableExt.{u + 1}
-      (α → Prop) where 
+    SampleableExt.{u + 1} (α → Prop)
+    where
   ProxyRepr := ProxyRepr (α → Bool)
   interp m x := interp (α → Bool) m x
   sample := sample (α → Bool)
@@ -238,8 +237,8 @@ instance (priority := 2000) PiPred.sampleableExt [SampleableExt (α → Bool)] :
 #align slim_check.total_function.pi_pred.sampleable_ext SlimCheck.TotalFunction.PiPred.sampleableExt
 
 instance (priority := 2000) PiUncurry.sampleableExt [SampleableExt (α × β → γ)] :
-    SampleableExt.{imax (u + 1) (v + 1) w}
-      (α → β → γ) where 
+    SampleableExt.{imax (u + 1) (v + 1) w} (α → β → γ)
+    where
   ProxyRepr := ProxyRepr (α × β → γ)
   interp m x y := interp (α × β → γ) m (x, y)
   sample := sample (α × β → γ)
@@ -312,10 +311,11 @@ open _Root_.Nat
 
 theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs)
     (h₁ : xs.length = ys.length) (x y : α) (i : ℕ) (h₂ : xs.nth i = some x) :
-    List.applyId.{u} (xs.zip ys) x = y ↔ ys.nth i = some y := by
+    List.applyId.{u} (xs.zip ys) x = y ↔ ys.nth i = some y :=
+  by
   induction xs generalizing ys i
   case nil ys i h₁ h₂ => cases h₂
-  case cons x' xs xs_ih ys i h₁ h₂ => 
+  case cons x' xs xs_ih ys i h₁ h₂ =>
     cases i
     · injection h₂ with h₀ h₁
       subst h₀
@@ -337,7 +337,8 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
 theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
-    (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
+    (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=
+  by
   simp only [list.apply_id]
   cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
   · dsimp [Option.getD]
@@ -347,7 +348,7 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup x
     dsimp
     induction xs generalizing ys
     case nil ys h₃ h₂ h₁ => contradiction
-    case cons x' xs xs_ih ys h₃ h₂ h₁ => 
+    case cons x' xs xs_ih ys h₃ h₂ h₁ =>
       cases' ys with y ys
       · cases h₃
       dsimp [lookup] at h₃; split_ifs  at h₃
@@ -360,7 +361,7 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup x
         specialize xs_ih h₅ ys h₃ h₄ h₆
         simp only [Ne.symm h, xs_ih, mem_cons_iff, false_or_iff]
         suffices : val ∈ ys
-        tauto!
+        tauto
         erw [← Option.mem_def, mem_lookup_iff] at h₃
         simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
         rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
@@ -372,7 +373,8 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup x
 #align slim_check.injective_function.apply_id_mem_iff SlimCheck.InjectiveFunction.apply_id_mem_iff
 
 theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
-    x ∉ xs → List.applyId.{u} (xs.zip ys) x = x := by
+    x ∉ xs → List.applyId.{u} (xs.zip ys) x = x :=
+  by
   intro h
   dsimp [list.apply_id]
   rw [lookup_eq_none.2]; rfl
@@ -384,7 +386,8 @@ theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
   slim_check.injective_function.list.apply_id_eq_self SlimCheck.InjectiveFunction.List.apply_id_eq_self
 
 theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) :
-    Injective.{u + 1, u + 1} (List.applyId (xs.zip ys)) := by
+    Injective.{u + 1, u + 1} (List.applyId (xs.zip ys)) :=
+  by
   intro x y h
   by_cases hx : x ∈ xs <;> by_cases hy : y ∈ xs
   · rw [mem_iff_nth] at hx hy
@@ -500,17 +503,20 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.Nodup) : InjectiveFunc
     (by simp only [list.to_finmap', comp, map_snd_zip, *, Prod.snd_toSigma, map_map])
 #align slim_check.injective_function.mk SlimCheck.InjectiveFunction.mk
 
-protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Injective (apply f) := by
+protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Injective (apply f) :=
+  by
   cases' f with xs hperm hnodup
   generalize h₀ : map Sigma.fst xs = xs₀
   generalize h₁ : xs.map (@id ((Σ_ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
   dsimp [id] at h₁
-  have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) := by
+  have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) :=
+    by
     rw [← h₀, ← h₁, list.to_finmap']
     clear h₀ h₁ xs₀ xs₁ hperm hnodup
     induction xs
     case nil => simp only [zip_nil_right, map_nil]
-    case cons xs_hd xs_tl xs_ih =>
+    case
+      cons xs_hd xs_tl xs_ih =>
       simp only [true_and_iff, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
       exact xs_ih
   revert hperm hnodup
@@ -521,10 +527,8 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   · rwa [← hxs, h₀, h₁] at hperm
 #align slim_check.injective_function.injective SlimCheck.InjectiveFunction.injective
 
-instance PiInjective.sampleableExt :
-    SampleableExt
-      { f : ℤ → ℤ //
-        Function.Injective f } where 
+instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function.Injective f }
+    where
   ProxyRepr := InjectiveFunction ℤ
   interp f := ⟨apply f, f.Injective⟩
   sample :=

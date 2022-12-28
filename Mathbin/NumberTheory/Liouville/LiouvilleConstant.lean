@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.liouville_constant
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
           summable_one_div_pow_of_le
           m1 fun j => Nat.le.intro rfl)
     _ = ∑' i, (1 / m) ^ i * (1 / m ^ (n + 1)!) :=-- split the sum in the exponent and massage
-    by 
+    by
       congr
       ext i
       rw [pow_add, ← div_div, div_eq_mul_one_div, one_div_pow]
@@ -188,7 +188,8 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) :
 /-- The sum of the `k` initial terms of the Liouville number to base `m` is a ratio of natural
 numbers where the denominator is `m ^ k!`. -/
 theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
-    ∃ p : ℕ, liouvilleNumberInitialTerms m k = p / m ^ k ! := by
+    ∃ p : ℕ, liouvilleNumberInitialTerms m k = p / m ^ k ! :=
+  by
   induction' k with k h
   · exact ⟨1, by rw [liouville_number_initial_terms, range_one, sum_singleton, Nat.cast_one]⟩
   · rcases h with ⟨p_k, h_k⟩
@@ -207,10 +208,10 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
 theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) :=
   by
   -- two useful inequalities
-  have mZ1 : 1 < (m : ℤ) := by 
+  have mZ1 : 1 < (m : ℤ) := by
     norm_cast
     exact one_lt_two.trans_le hm
-  have m1 : 1 < (m : ℝ) := by 
+  have m1 : 1 < (m : ℝ) := by
     norm_cast
     exact one_lt_two.trans_le hm
   intro n

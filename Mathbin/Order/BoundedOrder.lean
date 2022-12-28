@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.bounded_order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,8 @@ section OrderTop
 #print topOrderOrNoTopOrder /-
 /-- An order is (noncomputably) either an `order_top` or a `no_order_top`. Use as
 `casesI bot_order_or_no_bot_order α`. -/
-noncomputable def topOrderOrNoTopOrder (α : Type _) [LE α] : PSum (OrderTop α) (NoTopOrder α) := by
+noncomputable def topOrderOrNoTopOrder (α : Type _) [LE α] : PSum (OrderTop α) (NoTopOrder α) :=
+  by
   by_cases H : ∀ a : α, ∃ b, ¬b ≤ a
   · exact PSum.inr ⟨H⟩
   · push_neg  at H
@@ -365,7 +366,7 @@ Case conversion may be inaccurate. Consider using '#align strict_mono.maximal_pr
 theorem StrictMono.maximal_preimage_top [LinearOrder α] [Preorder β] [OrderTop β] {f : α → β}
     (H : StrictMono f) {a} (h_top : f a = ⊤) (x : α) : x ≤ a :=
   H.maximal_of_maximal_image
-    (fun p => by 
+    (fun p => by
       rw [h_top]
       exact le_top)
     x
@@ -392,7 +393,8 @@ theorem OrderTop.ext_top {α} {hA : PartialOrder α} (A : OrderTop α) {hB : Par
 #align order_top.ext_top OrderTop.ext_top
 
 #print OrderTop.ext /-
-theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B := by
+theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B :=
+  by
   have tt := OrderTop.ext_top A B fun _ _ => Iff.rfl
   cases' A with _ ha; cases' B with _ hb
   congr
@@ -413,7 +415,8 @@ section OrderBot
 #print botOrderOrNoBotOrder /-
 /-- An order is (noncomputably) either an `order_bot` or a `no_order_bot`. Use as
 `casesI bot_order_or_no_bot_order α`. -/
-noncomputable def botOrderOrNoBotOrder (α : Type _) [LE α] : PSum (OrderBot α) (NoBotOrder α) := by
+noncomputable def botOrderOrNoBotOrder (α : Type _) [LE α] : PSum (OrderBot α) (NoBotOrder α) :=
+  by
   by_cases H : ∀ a : α, ∃ b, ¬a ≤ b
   · exact PSum.inr ⟨H⟩
   · push_neg  at H
@@ -737,7 +740,7 @@ Case conversion may be inaccurate. Consider using '#align strict_mono.minimal_pr
 theorem StrictMono.minimal_preimage_bot [LinearOrder α] [PartialOrder β] [OrderBot β] {f : α → β}
     (H : StrictMono f) {a} (h_bot : f a = ⊥) (x : α) : a ≤ x :=
   H.minimal_of_minimal_image
-    (fun p => by 
+    (fun p => by
       rw [h_bot]
       exact bot_le)
     x
@@ -764,7 +767,8 @@ theorem OrderBot.ext_bot {α} {hA : PartialOrder α} (A : OrderBot α) {hB : Par
 #align order_bot.ext_bot OrderBot.ext_bot
 
 #print OrderBot.ext /-
-theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B := by
+theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B :=
+  by
   have tt := OrderBot.ext_bot A B fun _ _ => Iff.rfl
   cases' A with a ha; cases' B with b hb
   congr
@@ -919,7 +923,8 @@ instance (α : Type u) [LE α] [BoundedOrder α] : BoundedOrder αᵒᵈ :=
   { OrderDual.orderTop α, OrderDual.orderBot α with }
 
 #print BoundedOrder.ext /-
-theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B := by
+theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B :=
+  by
   have ht : @BoundedOrder.toOrderTop α _ A = @BoundedOrder.toOrderTop α _ B := OrderTop.ext
   have hb : @BoundedOrder.toOrderBot α _ A = @BoundedOrder.toOrderBot α _ B := OrderBot.ext
   cases A
@@ -1151,7 +1156,7 @@ Case conversion may be inaccurate. Consider using '#align order_top.lift OrderTo
 def OrderTop.lift [LE α] [Top α] [LE β] [OrderTop β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
     (map_top : f ⊤ = ⊤) : OrderTop α :=
   ⟨⊤, fun a =>
-    map_le _ _ <| by 
+    map_le _ _ <| by
       rw [map_top]
       exact le_top⟩
 #align order_top.lift OrderTop.lift
@@ -1168,7 +1173,7 @@ Case conversion may be inaccurate. Consider using '#align order_bot.lift OrderBo
 def OrderBot.lift [LE α] [Bot α] [LE β] [OrderBot β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
     (map_bot : f ⊥ = ⊥) : OrderBot α :=
   ⟨⊥, fun a =>
-    map_le _ _ <| by 
+    map_le _ _ <| by
       rw [map_bot]
       exact bot_le⟩
 #align order_bot.lift OrderBot.lift
@@ -1205,8 +1210,8 @@ Case conversion may be inaccurate. Consider using '#align subtype.order_bot Subt
 -- See note [reducible non-instances]
 /-- A subtype remains a `⊥`-order if the property holds at `⊥`. -/
 @[reducible]
-protected def orderBot [LE α] [OrderBot α] (hbot : p ⊥) :
-    OrderBot { x : α // p x } where 
+protected def orderBot [LE α] [OrderBot α] (hbot : p ⊥) : OrderBot { x : α // p x }
+    where
   bot := ⟨⊥, hbot⟩
   bot_le _ := bot_le
 #align subtype.order_bot Subtype.orderBot
@@ -1220,8 +1225,8 @@ Case conversion may be inaccurate. Consider using '#align subtype.order_top Subt
 -- See note [reducible non-instances]
 /-- A subtype remains a `⊤`-order if the property holds at `⊤`. -/
 @[reducible]
-protected def orderTop [LE α] [OrderTop α] (htop : p ⊤) :
-    OrderTop { x : α // p x } where 
+protected def orderTop [LE α] [OrderTop α] (htop : p ⊤) : OrderTop { x : α // p x }
+    where
   top := ⟨⊤, htop⟩
   le_top _ := le_top
 #align subtype.order_top Subtype.orderTop
@@ -1266,7 +1271,7 @@ theorem mk_top [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) : mk ⊤ htop
 
 /- warning: subtype.coe_bot -> Subtype.coe_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderBot.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α p) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α p) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α p) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α p) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => p x) x))))) (Bot.bot.{u1} (Subtype.{succ u1} α p) (OrderBot.toHasBot.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderBot.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α p) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α p) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α p) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α p) α (coeSubtype.{succ u1} α (fun (x : α) => p x))))) (Bot.bot.{u1} (Subtype.{succ u1} α p) (OrderBot.toHasBot.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderBot.{u1} (Subtype.{succ u1} α p) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (Eq.{succ u1} α (Subtype.val.{succ u1} α p (Bot.bot.{u1} (Subtype.{succ u1} α p) (OrderBot.toBot.{u1} (Subtype.{succ u1} α p) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align subtype.coe_bot Subtype.coe_botₓ'. -/
@@ -1276,7 +1281,7 @@ theorem coe_bot [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) : ((⊥ : Su
 
 /- warning: subtype.coe_top -> Subtype.coe_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderTop.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α p) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α p) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α p) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α p) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => p x) x))))) (Top.top.{u1} (Subtype.{succ u1} α p) (OrderTop.toHasTop.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderTop.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α p) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α p) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α p) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α p) α (coeSubtype.{succ u1} α (fun (x : α) => p x))))) (Top.top.{u1} (Subtype.{succ u1} α p) (OrderTop.toHasTop.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderTop.{u1} (Subtype.{succ u1} α p) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (Eq.{succ u1} α (Subtype.val.{succ u1} α p (Top.top.{u1} (Subtype.{succ u1} α p) (OrderTop.toTop.{u1} (Subtype.{succ u1} α p) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align subtype.coe_top Subtype.coe_topₓ'. -/
@@ -1286,7 +1291,7 @@ theorem coe_top [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) : ((⊤ : Su
 
 /- warning: subtype.coe_eq_bot_iff -> Subtype.coe_eq_bot_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderBot.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (forall {x : Subtype.{succ u1} α (fun (x : α) => p x)}, Iff (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => p x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => p x) x))))) x) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) x (Bot.bot.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (OrderBot.toHasBot.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))))
+  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderBot.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (forall {x : Subtype.{succ u1} α (fun (x : α) => p x)}, Iff (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => p x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (coeSubtype.{succ u1} α (fun (x : α) => p x))))) x) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) x (Bot.bot.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (OrderBot.toHasBot.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))))
 but is expected to have type
   forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderBot.{u1} (Subtype.{succ u1} α p) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (forall {x : Subtype.{succ u1} α (fun (x : α) => p x)}, Iff (Eq.{succ u1} α (Subtype.val.{succ u1} α (fun (x : α) => p x) x) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) x (Bot.bot.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (OrderBot.toBot.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => p x)) _inst_3))))
 Case conversion may be inaccurate. Consider using '#align subtype.coe_eq_bot_iff Subtype.coe_eq_bot_iffₓ'. -/
@@ -1297,7 +1302,7 @@ theorem coe_eq_bot_iff [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) {x : 
 
 /- warning: subtype.coe_eq_top_iff -> Subtype.coe_eq_top_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderTop.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (forall {x : Subtype.{succ u1} α (fun (x : α) => p x)}, Iff (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => p x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => p x) x))))) x) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) x (Top.top.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (OrderTop.toHasTop.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))))
+  forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderTop.{u1} (Subtype.{succ u1} α p) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (forall {x : Subtype.{succ u1} α (fun (x : α) => p x)}, Iff (Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subtype.{succ u1} α (fun (x : α) => p x)) α (HasLiftT.mk.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (CoeTCₓ.coe.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (coeBase.{succ u1, succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) α (coeSubtype.{succ u1} α (fun (x : α) => p x))))) x) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) x (Top.top.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (OrderTop.toHasTop.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p) _inst_3))))
 but is expected to have type
   forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : OrderTop.{u1} (Subtype.{succ u1} α p) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) p)], (p (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (forall {x : Subtype.{succ u1} α (fun (x : α) => p x)}, Iff (Eq.{succ u1} α (Subtype.val.{succ u1} α (fun (x : α) => p x) x) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} (Subtype.{succ u1} α (fun (x : α) => p x)) x (Top.top.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (OrderTop.toTop.{u1} (Subtype.{succ u1} α (fun (x : α) => p x)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => p x)) _inst_3))))
 Case conversion may be inaccurate. Consider using '#align subtype.coe_eq_top_iff Subtype.coe_eq_top_iffₓ'. -/
@@ -1526,7 +1531,7 @@ section Bool
 
 open Bool
 
-instance : BoundedOrder Bool where 
+instance : BoundedOrder Bool where
   top := true
   le_top x := le_true
   bot := false

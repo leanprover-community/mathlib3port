@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.away
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,8 @@ noncomputable def invSelf : S :=
 #align is_localization.away.inv_self IsLocalization.Away.invSelf
 
 @[simp]
-theorem mul_inv_self : algebraMap R S x * invSelf x = 1 := by
+theorem mul_inv_self : algebraMap R S x * invSelf x = 1 :=
+  by
   convert IsLocalization.mk'_mul_mk'_eq_one _ 1
   symm
   apply IsLocalization.mk'_one
@@ -70,7 +71,7 @@ variable {g : R →+* P}
 `z : S` to `g y * (g x)⁻ⁿ`, where `y : R, n : ℕ` are such that `z = F y * (F x)⁻ⁿ`. -/
 noncomputable def lift (hg : IsUnit (g x)) : S →+* P :=
   IsLocalization.lift fun y : Submonoid.powers x =>
-    show IsUnit (g y.1) by 
+    show IsUnit (g y.1) by
       obtain ⟨n, hn⟩ := y.2
       rw [← hn, g.map_pow]
       exact IsUnit.map (powMonoidHom n : P →* P) hg
@@ -101,7 +102,8 @@ variable (S) (Q : Type _) [CommSemiring Q] [Algebra P Q]
 noncomputable def map (f : R →+* P) (r : R) [IsLocalization.Away r S]
     [IsLocalization.Away (f r) Q] : S →+* Q :=
   IsLocalization.map Q f
-    (show Submonoid.powers r ≤ (Submonoid.powers (f r)).comap f by
+    (show Submonoid.powers r ≤ (Submonoid.powers (f r)).comap f
+      by
       rintro x ⟨n, rfl⟩
       use n
       simp)
@@ -118,7 +120,8 @@ section AtUnits
 variable (R) (S) (M)
 
 /-- The localization at a module of units is isomorphic to the ring -/
-noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S := by
+noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
+  by
   refine' AlgEquiv.ofBijective (Algebra.ofId R S) ⟨_, _⟩
   · intro x y hxy
     obtain ⟨c, eq⟩ := (IsLocalization.eq_iff_exists M S).mp hxy
@@ -134,7 +137,8 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S := by
 #align is_localization.at_units IsLocalization.atUnits
 
 /-- The localization away from a unit is isomorphic to the ring -/
-noncomputable def atUnit (x : R) (e : IsUnit x) [IsLocalization.Away x S] : R ≃ₐ[R] S := by
+noncomputable def atUnit (x : R) (e : IsUnit x) [IsLocalization.Away x S] : R ≃ₐ[R] S :=
+  by
   apply at_units R (Submonoid.powers x)
   rintro ⟨xn, n, hxn⟩
   obtain ⟨u, hu⟩ := e
@@ -151,13 +155,13 @@ noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
 theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S]
     [Algebra R S] {r : R} (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) :
     IsLocalization.Away r S :=
-  { map_units := by 
+  { map_units := by
       rintro ⟨_, n, rfl⟩
       exact (algebraMap R S).is_unit_map (hr.pow _)
-    surj := fun z => by 
+    surj := fun z => by
       obtain ⟨z', rfl⟩ := H.2 z
       exact ⟨⟨z', 1⟩, by simp⟩
-    eq_iff_exists := fun x y => by 
+    eq_iff_exists := fun x y => by
       erw [H.1.eq_iff]
       constructor
       · rintro rfl

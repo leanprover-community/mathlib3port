@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module topology.sheaves.functors
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ namespace TopCat
 namespace Presheaf.SheafConditionPairwiseIntersections
 
 theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Opens.map f).obj ∘ U) :=
-  by 
+  by
   apply functor.hext
   abstract obj_eq intro i; cases i <;> rfl
   intro i j g; apply Subsingleton.helim
@@ -53,7 +53,7 @@ theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Op
 
 theorem map_cocone :
     HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise.cocone ((Opens.map f).obj ∘ U)) :=
-  by 
+  by
   unfold functor.map_cocone cocones.functoriality; dsimp; congr
   iterate 2 rw [map_diagram]; rw [opens.map_supr]
   apply Subsingleton.helim; rw [map_diagram, opens.map_supr]
@@ -62,7 +62,8 @@ theorem map_cocone :
   Top.presheaf.sheaf_condition_pairwise_intersections.map_cocone TopCat.Presheaf.SheafConditionPairwiseIntersections.map_cocone
 
 theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseIntersections) :
-    (f _* F).IsSheafPairwiseIntersections := fun ι U => by
+    (f _* F).IsSheafPairwiseIntersections := fun ι U =>
+  by
   convert h ((opens.map f).obj ∘ U) using 2
   rw [← map_diagram]; rfl
   change HEq (F.map_cone ((opens.map f).mapCocone _).op) _
@@ -85,9 +86,8 @@ theorem pushforward_sheaf_of_sheaf {F : X.Presheaf C} (h : F.IsSheaf) : (f _* F)
 
 /-- The pushforward functor.
 -/
-def pushforward (f : X ⟶ Y) :
-    X.Sheaf C ⥤
-      Y.Sheaf C where 
+def pushforward (f : X ⟶ Y) : X.Sheaf C ⥤ Y.Sheaf C
+    where
   obj ℱ := ⟨f _* ℱ.1, pushforward_sheaf_of_sheaf f ℱ.2⟩
   map _ _ g := ⟨pushforwardMap f g.1⟩
 #align Top.sheaf.pushforward TopCat.Sheaf.pushforward

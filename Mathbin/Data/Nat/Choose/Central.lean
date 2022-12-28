@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Thomas Browning
 
 ! This file was ported from Lean 3 source module data.nat.choose.central
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,8 @@ theorem succ_mul_central_binom_succ (n : ℕ) :
 This bound is of interest because it appears in
 [Tochiori's refinement of Erdős's proof of Bertrand's postulate](tochiori_bertrand).
 -/
-theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * centralBinom n := by
+theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * centralBinom n :=
+  by
   induction' n using Nat.strong_induction_on with n IH
   rcases lt_trichotomy n 4 with (hn | rfl | hn)
   · clear IH
@@ -99,7 +100,8 @@ theorem four_pow_lt_mul_central_binom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * 
   calc
     4 ^ (n + 1) < 4 * (n * central_binom n) :=
       (mul_lt_mul_left <| zero_lt_four' ℕ).mpr (IH n n.lt_succ_self (Nat.le_of_lt_succ hn))
-    _ ≤ 2 * (2 * n + 1) * central_binom n := by
+    _ ≤ 2 * (2 * n + 1) * central_binom n :=
+      by
       rw [← mul_assoc]
       linarith
     _ = (n + 1) * central_binom (n + 1) := (succ_mul_central_binom_succ n).symm
@@ -119,27 +121,31 @@ theorem four_pow_le_two_mul_self_mul_central_binom :
   | n@(m + 4), _ =>
     calc
       4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_central_binom _ le_add_self).le
-      _ ≤ 2 * n * centralBinom n := by 
+      _ ≤ 2 * n * centralBinom n := by
         rw [mul_assoc]
         refine' le_mul_of_pos_left zero_lt_two
       
 #align nat.four_pow_le_two_mul_self_mul_central_binom Nat.four_pow_le_two_mul_self_mul_central_binom
 
-theorem two_dvd_central_binom_succ (n : ℕ) : 2 ∣ centralBinom (n + 1) := by
+theorem two_dvd_central_binom_succ (n : ℕ) : 2 ∣ centralBinom (n + 1) :=
+  by
   use (n + 1 + n).choose n
   rw [central_binom_eq_two_mul_choose, two_mul, ← add_assoc, choose_succ_succ, choose_symm_add, ←
     two_mul]
 #align nat.two_dvd_central_binom_succ Nat.two_dvd_central_binom_succ
 
-theorem two_dvd_central_binom_of_one_le {n : ℕ} (h : 0 < n) : 2 ∣ centralBinom n := by
+theorem two_dvd_central_binom_of_one_le {n : ℕ} (h : 0 < n) : 2 ∣ centralBinom n :=
+  by
   rw [← Nat.succ_pred_eq_of_pos h]
   exact two_dvd_central_binom_succ n.pred
 #align nat.two_dvd_central_binom_of_one_le Nat.two_dvd_central_binom_of_one_le
 
 /-- A crucial lemma to ensure that Catalan numbers can be defined via their explicit formula
   `catalan n = n.central_binom / (n + 1)`. -/
-theorem succ_dvd_central_binom (n : ℕ) : n + 1 ∣ n.centralBinom := by
-  have h_s : (n + 1).Coprime (2 * n + 1) := by
+theorem succ_dvd_central_binom (n : ℕ) : n + 1 ∣ n.centralBinom :=
+  by
+  have h_s : (n + 1).Coprime (2 * n + 1) :=
+    by
     rw [two_mul, add_assoc, coprime_add_self_right, coprime_self_add_left]
     exact coprime_one_left n
   apply h_s.dvd_of_dvd_mul_left

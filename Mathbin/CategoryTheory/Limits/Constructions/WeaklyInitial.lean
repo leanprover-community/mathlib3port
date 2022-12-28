@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.weakly_initial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,17 +48,20 @@ The initial object is constructed as the wide equalizer of all endomorphisms on 
 initial object.
 -/
 theorem has_initial_of_weakly_initial_and_has_wide_equalizers [HasWideEqualizers.{v} C] {T : C}
-    (hT : ∀ X, Nonempty (T ⟶ X)) : HasInitial C := by
+    (hT : ∀ X, Nonempty (T ⟶ X)) : HasInitial C :=
+  by
   let endos := T ⟶ T
   let i := wide_equalizer.ι (id : endos → endos)
   haveI : Nonempty endos := ⟨𝟙 _⟩
-  have : ∀ X : C, Unique (wide_equalizer (id : endos → endos) ⟶ X) := by
+  have : ∀ X : C, Unique (wide_equalizer (id : endos → endos) ⟶ X) :=
+    by
     intro X
     refine' ⟨⟨i ≫ Classical.choice (hT X)⟩, fun a => _⟩
     let E := equalizer a (i ≫ Classical.choice (hT _))
     let e : E ⟶ wide_equalizer id := equalizer.ι _ _
     let h : T ⟶ E := Classical.choice (hT E)
-    have : ((i ≫ h) ≫ e) ≫ i = i ≫ 𝟙 _ := by
+    have : ((i ≫ h) ≫ e) ≫ i = i ≫ 𝟙 _ :=
+      by
       rw [category.assoc, category.assoc]
       apply wide_equalizer.condition (id : endos → endos) (h ≫ e ≫ i)
     rw [category.comp_id, cancel_mono_id i] at this

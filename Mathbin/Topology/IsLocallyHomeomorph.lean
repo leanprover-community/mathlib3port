@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module topology.is_locally_homeomorph
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,11 +43,11 @@ namespace IsLocallyHomeomorphOn
 definition of `is_locally_homeomorph_on f s`, since it only requires `e : local_homeomorph X Y` to
 agree with `f` on its source `e.source`, as opposed to on the whole space `X`. -/
 theorem mk (h : ∀ x ∈ s, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ ∀ y ∈ e.source, f y = e y) :
-    IsLocallyHomeomorphOn f s := by 
+    IsLocallyHomeomorphOn f s := by
   intro x hx
   obtain ⟨e, hx, he⟩ := h x hx
   exact
-    ⟨{ e with 
+    ⟨{ e with
         toFun := f
         map_source' := fun x hx => by rw [he x hx] <;> exact e.map_source' hx
         left_inv' := fun x hx => by rw [he x hx] <;> exact e.left_inv' hx
@@ -73,7 +73,8 @@ protected theorem continuous_on (hf : IsLocallyHomeomorphOn f s) : ContinuousOn 
 #align is_locally_homeomorph_on.continuous_on IsLocallyHomeomorphOn.continuous_on
 
 protected theorem comp (hg : IsLocallyHomeomorphOn g t) (hf : IsLocallyHomeomorphOn f s)
-    (h : Set.MapsTo f s t) : IsLocallyHomeomorphOn (g ∘ f) s := by
+    (h : Set.MapsTo f s t) : IsLocallyHomeomorphOn (g ∘ f) s :=
+  by
   intro x hx
   obtain ⟨eg, hxg, rfl⟩ := hg (f x) (h hx)
   obtain ⟨ef, hxf, rfl⟩ := hf x hx

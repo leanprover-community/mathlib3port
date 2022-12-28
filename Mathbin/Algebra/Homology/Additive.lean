@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.additive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,9 +123,8 @@ instance boundaries_additive : (boundariesFunctor V c i).Additive where
 
 variable [HasEqualizers V] [HasCokernels V]
 
-instance homology_additive :
-    (homologyFunctor V c
-        i).Additive where map_add' C D f g := by
+instance homology_additive : (homologyFunctor V c i).Additive
+    where map_add' C D f g := by
     dsimp [homologyFunctor]
     ext
     simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
@@ -144,9 +143,8 @@ This is sometimes called the "prolongation".
 -/
 @[simps]
 def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
-    HomologicalComplex V c ⥤
-      HomologicalComplex W
-        c where 
+    HomologicalComplex V c ⥤ HomologicalComplex W c
+    where
   obj C :=
     { x := fun i => F.obj (C.x i)
       d := fun i j => F.map (C.d i j)
@@ -154,7 +152,7 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
       d_comp_d' := fun i j k _ _ => by rw [← F.map_comp, C.d_comp_d, F.map_zero] }
   map C D f :=
     { f := fun i => F.map (f.f i)
-      comm' := fun i j h => by 
+      comm' := fun i j h => by
         dsimp
         rw [← F.map_comp, ← F.map_comp, f.comm] }
 #align category_theory.functor.map_homological_complex CategoryTheory.Functor.mapHomologicalComplex
@@ -167,7 +165,7 @@ instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : 
 instance Functor.map_homological_complex_reflects_iso (F : V ⥤ W) [F.Additive]
     [ReflectsIsomorphisms F] (c : ComplexShape ι) :
     ReflectsIsomorphisms (F.mapHomologicalComplex c) :=
-  ⟨fun X Y f => by 
+  ⟨fun X Y f => by
     intro
     haveI : ∀ n : ι, is_iso (F.map (f.f n)) := fun n =>
       is_iso.of_iso
@@ -182,8 +180,8 @@ between those functors applied to homological complexes.
 -/
 @[simps]
 def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G)
-    (c : ComplexShape ι) :
-    F.mapHomologicalComplex c ⟶ G.mapHomologicalComplex c where app C := { f := fun i => α.app _ }
+    (c : ComplexShape ι) : F.mapHomologicalComplex c ⟶ G.mapHomologicalComplex c
+    where app C := { f := fun i => α.app _ }
 #align
   category_theory.nat_trans.map_homological_complex CategoryTheory.NatTrans.mapHomologicalComplex
 
@@ -224,7 +222,7 @@ theorem map_chain_complex_of (F : V ⥤ W) [F.Additive] (X : α → V) (d : ∀ 
     (F.mapHomologicalComplex _).obj (ChainComplex.of X d sq) =
       ChainComplex.of (fun n => F.obj (X n)) (fun n => F.map (d n)) fun n => by
         rw [← F.map_comp, sq n, functor.map_zero] :=
-  by 
+  by
   refine' HomologicalComplex.ext rfl _
   rintro i j (rfl : j + 1 = i)
   simp only [CategoryTheory.Functor.map_homological_complex_obj_d, of_d, eq_to_hom_refl, comp_id,
@@ -248,21 +246,21 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
     (fun X =>
       { Hom := { f := fun i => if h : i = j then eqToHom (by simp [h]) else 0 }
         inv := { f := fun i => if h : i = j then eqToHom (by simp [h]) else 0 }
-        hom_inv_id' := by 
+        hom_inv_id' := by
           ext i
           dsimp
           split_ifs with h
           · simp [h]
           · rw [zero_comp, if_neg h]
             exact (zero_of_source_iso_zero _ F.map_zero_object).symm
-        inv_hom_id' := by 
+        inv_hom_id' := by
           ext i
           dsimp
           split_ifs with h
           · simp [h]
           · rw [zero_comp, if_neg h]
             simp })
-    fun X Y f => by 
+    fun X Y f => by
     ext i
     dsimp
     split_ifs with h <;> simp [h]
@@ -311,16 +309,18 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
   NatIso.ofComponents
     (fun X =>
       { Hom :=
-          { f := fun i =>
+          {
+            f := fun i =>
               match i with
               | 0 => 𝟙 _
               | i + 1 => F.mapZeroObject.Hom }
         inv :=
-          { f := fun i =>
+          {
+            f := fun i =>
               match i with
               | 0 => 𝟙 _
               | i + 1 => F.mapZeroObject.inv }
-        hom_inv_id' := by 
+        hom_inv_id' := by
           ext (_ | i)
           · unfold_aux
             simp
@@ -380,16 +380,18 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
   NatIso.ofComponents
     (fun X =>
       { Hom :=
-          { f := fun i =>
+          {
+            f := fun i =>
               match i with
               | 0 => 𝟙 _
               | i + 1 => F.mapZeroObject.Hom }
         inv :=
-          { f := fun i =>
+          {
+            f := fun i =>
               match i with
               | 0 => 𝟙 _
               | i + 1 => F.mapZeroObject.inv }
-        hom_inv_id' := by 
+        hom_inv_id' := by
           ext (_ | i)
           · unfold_aux
             simp

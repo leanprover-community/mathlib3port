@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.solve_by_elim
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,7 +262,7 @@ for each application, which might otherwise get stuck.
 
 See also the simpler tactic `apply_rules`, which does not perform backtracking.
 -/
-unsafe def solve_by_elim (opt : opt := {  }) : tactic Unit := do
+unsafe def solve_by_elim (opt : opt := { }) : tactic Unit := do
   tactic.fail_if_no_goals
   let (lemmas, ctx_lemmas) ← opt.get_lemma_thunks
   (if opt then id else focus1) do
@@ -295,7 +295,7 @@ Optional arguments:
   the next one will be attempted.
 -/
 unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list))
-    (opt : apply_any_opt := {  }) (tac : tactic Unit := skip) : tactic Unit := do
+    (opt : apply_any_opt := { }) (tac : tactic Unit := skip) : tactic Unit := do
   let lemmas ←
     match lemmas with
       | none => local_context
@@ -348,10 +348,10 @@ optional arguments passed via a configuration argument as `solve_by_elim { ... }
 -/
 unsafe def solve_by_elim (all_goals : parse <| parser.optional (tk "*")) (no_dflt : parse only_flag)
     (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
-    (opt : solve_by_elim.opt := {  }) : tactic Unit := do
+    (opt : solve_by_elim.opt := { }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names
   tactic.solve_by_elim
-      { opt with 
+      { opt with
         backtrack_all_goals := all_goals ∨ opt
         lemma_thunks := some lemma_thunks
         ctx_thunk }

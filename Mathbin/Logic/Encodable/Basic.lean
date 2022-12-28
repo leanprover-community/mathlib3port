@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.encodable.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,8 @@ theorem decode₂_eq_some [Encodable α] {n : ℕ} {a : α} : decode₂ α n = s
 #align encodable.decode₂_eq_some Encodable.decode₂_eq_some
 
 @[simp]
-theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = some a := by
+theorem decode₂_encode [Encodable α] (a : α) : decode₂ α (encode a) = some a :=
+  by
   ext
   simp [mem_decode₂, eq_comm]
 #align encodable.decode₂_encode Encodable.decode₂_encode
@@ -233,20 +234,17 @@ def decidableRangeEncode (α : Type _) [Encodable α] : DecidablePred (· ∈ Se
 #align encodable.decidable_range_encode Encodable.decidableRangeEncode
 
 /-- An encodable type is equivalent to the range of its encoding function. -/
-def equivRangeEncode (α : Type _) [Encodable α] :
-    α ≃
-      Set.range
-        (@encode α
-          _) where 
+def equivRangeEncode (α : Type _) [Encodable α] : α ≃ Set.range (@encode α _)
+    where
   toFun := fun a : α => ⟨encode a, Set.mem_range_self _⟩
   invFun n :=
     Option.get
       (show isSome (decode₂ α n.1) by cases' n.2 with x hx <;> rw [← hx, encodek₂] <;> exact rfl)
   left_inv a := by dsimp <;> rw [← Option.some_inj, Option.some_get, encodek₂]
-  right_inv := fun ⟨n, x, hx⟩ => by 
+  right_inv := fun ⟨n, x, hx⟩ => by
     apply Subtype.eq
     dsimp
-    conv => 
+    conv =>
       rhs
       rw [← hx]
     rw [encode_injective.eq_iff, ← Option.some_inj, Option.some_get, ← hx, encodek₂]
@@ -320,12 +318,13 @@ theorem decode_one : decode Bool 1 = some true :=
   rfl
 #align encodable.decode_one Encodable.decode_one
 
-theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none := by
-  suffices decode_sum n = none by 
+theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none :=
+  by
+  suffices decode_sum n = none by
     change (decode_sum n).map _ = none
     rw [this]
     rfl
-  have : 1 ≤ div2 n := by 
+  have : 1 ≤ div2 n := by
     rw [div2_val, Nat.le_div_iff_mul_le]
     exacts[h, by decide]
   cases' exists_eq_succ_of_ne_zero (ne_of_gt this) with m e
@@ -634,7 +633,8 @@ protected noncomputable def sequence {r : β → β → Prop} (f : α → β) (h
 #align directed.sequence Directed.sequence
 
 theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directed r f) (n : ℕ) :
-    r (f (hf.sequence f n)) (f (hf.sequence f (n + 1))) := by
+    r (f (hf.sequence f n)) (f (hf.sequence f (n + 1))) :=
+  by
   dsimp [Directed.sequence]
   generalize eq : hf.sequence f n = p
   cases' h : decode α n with a
@@ -643,7 +643,8 @@ theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directe
 #align directed.sequence_mono_nat Directed.sequence_mono_nat
 
 theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f) (a : α) :
-    r (f a) (f (hf.sequence f (encode a + 1))) := by
+    r (f a) (f (hf.sequence f (encode a + 1))) :=
+  by
   simp only [Directed.sequence, encodek]
   exact (Classical.choose_spec (hf _ a)).2
 #align directed.rel_sequence Directed.rel_sequence

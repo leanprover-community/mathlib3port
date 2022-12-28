@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.glue_data
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,8 @@ namespace GlueData
 variable {C} (D : GlueData C)
 
 @[simp]
-theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom := by
+theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom :=
+  by
   have eq₁ := D.t_fac i i j
   have eq₂ := (is_iso.eq_comp_inv (D.f i i)).mpr (@pullback.condition _ _ _ _ _ _ (D.f i j) _)
   rw [D.t_id, category.comp_id, eq₂] at eq₁
@@ -86,18 +87,21 @@ theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom := by
       ((mono.right_cancellation _ _ eq₃).trans (pullback_symmetry_hom_comp_fst _ _).symm)
 #align category_theory.glue_data.t'_iij CategoryTheory.GlueData.t'_iij
 
-theorem t'_jii (i j : D.J) : D.t' j i i = pullback.fst ≫ D.t j i ≫ inv pullback.snd := by
+theorem t'_jii (i j : D.J) : D.t' j i i = pullback.fst ≫ D.t j i ≫ inv pullback.snd :=
+  by
   rw [← category.assoc, ← D.t_fac]
   simp
 #align category_theory.glue_data.t'_jii CategoryTheory.GlueData.t'_jii
 
-theorem t'_iji (i j : D.J) : D.t' i j i = pullback.fst ≫ D.t i j ≫ inv pullback.snd := by
+theorem t'_iji (i j : D.J) : D.t' i j i = pullback.fst ≫ D.t i j ≫ inv pullback.snd :=
+  by
   rw [← category.assoc, ← D.t_fac]
   simp
 #align category_theory.glue_data.t'_iji CategoryTheory.GlueData.t'_iji
 
 @[simp, reassoc.1, elementwise]
-theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ := by
+theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ :=
+  by
   have eq : (pullback_symmetry (D.f i i) (D.f i j)).Hom = pullback.snd ≫ inv pullback.fst := by simp
   have := D.cocycle i j i
   rw [D.t'_iij, D.t'_jii, D.t'_iji, fst_eq_snd_of_mono_eq, Eq] at this
@@ -107,7 +111,8 @@ theorem t_inv (i j : D.J) : D.t i j ≫ D.t j i = 𝟙 _ := by
 #align category_theory.glue_data.t_inv CategoryTheory.GlueData.t_inv
 
 theorem t'_inv (i j k : D.J) :
-    D.t' i j k ≫ (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom = 𝟙 _ := by
+    D.t' i j k ≫ (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom = 𝟙 _ :=
+  by
   rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
   simp [t_fac, t_fac_assoc]
 #align category_theory.glue_data.t'_inv CategoryTheory.GlueData.t'_inv
@@ -124,7 +129,7 @@ instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
     D.t' j k i ≫ D.t' k i j =
       (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom :=
-  by 
+  by
   trans inv (D.t' i j k)
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
   · rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
@@ -138,7 +143,7 @@ def sigmaOpens [HasCoproduct D.U] : C :=
 #align category_theory.glue_data.sigma_opens CategoryTheory.GlueData.sigmaOpens
 
 /-- (Implementation) The diagram to take colimit of. -/
-def diagram : MultispanIndex C where 
+def diagram : MultispanIndex C where
   L := D.J × D.J
   R := D.J
   fstFrom := Prod.fst
@@ -221,7 +226,7 @@ def π : D.sigmaOpens ⟶ D.glued :=
   multicoequalizer.sigmaπ D.diagram
 #align category_theory.glue_data.π CategoryTheory.GlueData.π
 
-instance π_epi : Epi D.π := by 
+instance π_epi : Epi D.π := by
   unfold π
   infer_instance
 #align category_theory.glue_data.π_epi CategoryTheory.GlueData.π_epi
@@ -233,7 +238,8 @@ theorem types_π_surjective (D : GlueData (Type _)) : Function.Surjective D.π :
 #align category_theory.glue_data.types_π_surjective CategoryTheory.GlueData.types_π_surjective
 
 theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) :
-    ∃ (i : _)(y : D.U i), D.ι i y = x := by
+    ∃ (i : _)(y : D.U i), D.ι i y = x :=
+  by
   delta CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π D.diagram]
   rcases D.types_π_surjective x with ⟨x', rfl⟩
@@ -256,7 +262,7 @@ instance (i j k : D.J) : HasPullback (F.map (D.f i j)) (F.map (D.f i k)) :=
 
 /-- A functor that preserves the pullbacks of `f i j` and `f i k` can map a family of glue data. -/
 @[simps]
-def mapGlueData : GlueData C' where 
+def mapGlueData : GlueData C' where
   J := D.J
   U i := F.obj (D.U i)
   V i := F.obj (D.V i)
@@ -264,7 +270,7 @@ def mapGlueData : GlueData C' where
   f_mono i j := preserves_mono_of_preserves_limit _ _
   f_id i := inferInstance
   t i j := F.map (D.t i j)
-  t_id i := by 
+  t_id i := by
     rw [D.t_id i]
     simp
   t' i j k :=
@@ -285,7 +291,7 @@ def diagramIso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multisp
       match x with
       | walking_multispan.left a => Iso.refl _
       | walking_multispan.right b => Iso.refl _)
-    (by 
+    (by
       rintro (⟨_, _⟩ | _) _ (_ | _ | _)
       · erw [category.comp_id, category.id_comp, Functor.map_id]
         rfl
@@ -363,7 +369,8 @@ def gluedIso : F.obj D.glued ≅ (D.mapGlueData F).glued :=
 #align category_theory.glue_data.glued_iso CategoryTheory.GlueData.gluedIso
 
 @[simp, reassoc.1]
-theorem ι_glued_iso_hom (i : D.J) : F.map (D.ι i) ≫ (D.gluedIso F).Hom = (D.mapGlueData F).ι i := by
+theorem ι_glued_iso_hom (i : D.J) : F.map (D.ι i) ≫ (D.gluedIso F).Hom = (D.mapGlueData F).ι i :=
+  by
   erw [ι_preserves_colimits_iso_hom_assoc]
   rw [has_colimit.iso_of_nat_iso_ι_hom]
   erw [category.id_comp]
@@ -378,7 +385,8 @@ theorem ι_glued_iso_inv (i : D.J) : (D.mapGlueData F).ι i ≫ (D.gluedIso F).i
 /-- If `F` preserves the gluing, and reflects the pullback of `U i ⟶ glued` and `U j ⟶ glued`,
 then `F` reflects the fact that `V_pullback_cone` is a pullback. -/
 def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι j)) F]
-    (hc : IsLimit ((D.mapGlueData F).vPullbackCone i j)) : IsLimit (D.vPullbackCone i j) := by
+    (hc : IsLimit ((D.mapGlueData F).vPullbackCone i j)) : IsLimit (D.vPullbackCone i j) :=
+  by
   apply is_limit_of_reflects F
   apply (is_limit_map_cone_pullback_cone_equiv _ _).symm _
   let e :
@@ -386,7 +394,7 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
       cospan ((D.map_glue_data F).ι i) ((D.map_glue_data F).ι j)
   exact
     nat_iso.of_components
-      (fun x => by 
+      (fun x => by
         cases x
         exacts[D.glued_iso F, iso.refl _])
       (by rintro (_ | _) (_ | _) (_ | _ | _) <;> simp)
@@ -405,7 +413,8 @@ omit H
 be jointly surjective. -/
 theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.multispan F]
     [∀ i j k : D.J, PreservesLimit (cospan (D.f i j) (D.f i k)) F] (x : F.obj D.glued) :
-    ∃ (i : _)(y : F.obj (D.U i)), F.map (D.ι i) y = x := by
+    ∃ (i : _)(y : F.obj (D.U i)), F.map (D.ι i) y = x :=
+  by
   let e := D.glued_iso F
   obtain ⟨i, y, eq⟩ := (D.map_glue_data F).types_ι_jointly_surjective (e.hom x)
   replace eq := congr_arg e.inv Eq

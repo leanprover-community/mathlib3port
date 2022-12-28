@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.finite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,13 +79,15 @@ noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (
 arbitrary universe. -/
 def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
     (h :
-      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥),
+        by
         skip
         exact preserves_limits_of_shape J F) :
     PreservesFiniteLimits F :=
-  ⟨fun J hJ hhJ => by 
+  ⟨fun J hJ hhJ => by
     skip
-    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
+    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) :=
+      by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
@@ -100,7 +102,7 @@ instance idPreservesFiniteLimits : PreservesFiniteLimits (𝟭 C) where
 /-- The composition of two left exact functors is left exact. -/
 def compPreservesFiniteLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteLimits F]
     [PreservesFiniteLimits G] : PreservesFiniteLimits (F ⋙ G) :=
-  ⟨fun _ _ _ => by 
+  ⟨fun _ _ _ => by
     skip
     infer_instance⟩
 #align
@@ -139,13 +141,15 @@ noncomputable instance (priority := 100) PreservesColimits.preservesFiniteColimi
 arbitrary universe. -/
 def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
     (h :
-      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥),
+        by
         skip
         exact preserves_colimits_of_shape J F) :
     PreservesFiniteColimits F :=
-  ⟨fun J hJ hhJ => by 
+  ⟨fun J hJ hhJ => by
     skip
-    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
+    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) :=
+      by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
@@ -160,7 +164,7 @@ instance idPreservesFiniteColimits : PreservesFiniteColimits (𝟭 C) where
 /-- The composition of two right exact functors is right exact. -/
 def compPreservesFiniteColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteColimits F]
     [PreservesFiniteColimits G] : PreservesFiniteColimits (F ⋙ G) :=
-  ⟨fun _ _ _ => by 
+  ⟨fun _ _ _ => by
     skip
     infer_instance⟩
 #align

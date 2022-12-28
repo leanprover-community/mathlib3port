@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.whitney_embedding
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,9 +58,8 @@ variable [T2Space M] [hi : Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I 
 include hi
 
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
-def embeddingPiTangent :
-    C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ),
-      ι → E × ℝ⟯ where 
+def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯
+    where
   toFun x i := (f i x • extChartAt I (f.c i) x, f i x)
   contMdiffToFun :=
     cont_mdiff_pi_space.2 fun i => ((f i).smoothSmul contMdiffOnExtChartAt).prodMkSpace (f i).Smooth
@@ -72,7 +71,8 @@ theorem embedding_pi_tangent_coe :
   rfl
 #align smooth_bump_covering.embedding_pi_tangent_coe SmoothBumpCovering.embedding_pi_tangent_coe
 
-theorem embedding_pi_tangent_inj_on : InjOn f.embeddingPiTangent s := by
+theorem embedding_pi_tangent_inj_on : InjOn f.embeddingPiTangent s :=
+  by
   intro x hx y hy h
   simp only [embedding_pi_tangent_coe, funext_iff] at h
   obtain ⟨h₁, h₂⟩ := Prod.mk.inj_iff.1 (h (f.ind x hx))
@@ -110,7 +110,8 @@ theorem comp_embedding_pi_tangent_mfderiv (x : M) (hx : x ∈ s) :
   smooth_bump_covering.comp_embedding_pi_tangent_mfderiv SmoothBumpCovering.comp_embedding_pi_tangent_mfderiv
 
 theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
-    LinearMap.ker (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) = ⊥ := by
+    LinearMap.ker (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) = ⊥ :=
+  by
   apply bot_unique
   rw [←
     (mdifferentiableChart I (f.c (f.ind x hx))).ker_mfderiv_eq_bot (f.mem_chart_at_ind_source x hx),
@@ -133,7 +134,7 @@ Euclidean space. -/
 theorem exists_immersion_euclidean [Finite ι] (f : SmoothBumpCovering ι I M) :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ Injective e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
-  by 
+  by
   cases nonempty_fintype ι
   set F := EuclideanSpace ℝ (Fin <| finrank ℝ (ι → E × ℝ))
   letI : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.quotients
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,10 +44,8 @@ class Prestructure (s : Setoid M) where
 
 variable {L} {s : Setoid M} [ps : L.Prestructure s]
 
-instance quotientStructure :
-    L.StructureCat
-      (Quotient
-        s) where 
+instance quotientStructure : L.StructureCat (Quotient s)
+    where
   funMap n f x :=
     Quotient.map (@funMap L M ps.toStructure n f) Prestructure.fun_equiv (Quotient.finChoice x)
   rel_map n r x :=
@@ -59,7 +57,8 @@ variable (s)
 include s
 
 theorem fun_map_quotient_mk {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
-    (funMap f fun i => ⟦x i⟧) = ⟦@funMap _ _ ps.toStructure _ f x⟧ := by
+    (funMap f fun i => ⟦x i⟧) = ⟦@funMap _ _ ps.toStructure _ f x⟧ :=
+  by
   change
     Quotient.map (@fun_map L M ps.to_structure n f) prestructure.fun_equiv (Quotient.finChoice _) =
       _
@@ -67,7 +66,8 @@ theorem fun_map_quotient_mk {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
 #align first_order.language.fun_map_quotient_mk FirstOrder.Language.fun_map_quotient_mk
 
 theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
-    (RelMap r fun i => ⟦x i⟧) ↔ @RelMap _ _ ps.toStructure _ r x := by
+    (RelMap r fun i => ⟦x i⟧) ↔ @RelMap _ _ ps.toStructure _ r x :=
+  by
   change
     Quotient.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotient.finChoice _) ↔
       _
@@ -75,7 +75,8 @@ theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
 #align first_order.language.rel_map_quotient_mk FirstOrder.Language.rel_map_quotient_mk
 
 theorem Term.realize_quotient_mk {β : Type _} (t : L.term β) (x : β → M) :
-    (t.realize fun i => ⟦x i⟧) = ⟦@Term.realize _ _ ps.toStructure _ x t⟧ := by
+    (t.realize fun i => ⟦x i⟧) = ⟦@Term.realize _ _ ps.toStructure _ x t⟧ :=
+  by
   induction' t with _ _ _ _ ih
   · rfl
   · simp only [ih, fun_map_quotient_mk, term.realize]

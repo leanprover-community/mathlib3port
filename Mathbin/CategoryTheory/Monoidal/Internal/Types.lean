@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,8 +28,8 @@ open CategoryTheory
 
 namespace monTypeEquivalenceMon
 
-instance monMonoid (A : Mon_ (Type u)) :
-    Monoid A.x where 
+instance monMonoid (A : Mon_ (Type u)) : Monoid A.x
+    where
   one := A.one PUnit.unit
   mul x y := A.mul (x, y)
   one_mul x := by convert congr_fun A.one_mul (PUnit.unit, x)
@@ -39,7 +39,8 @@ instance monMonoid (A : Mon_ (Type u)) :
 
 /-- Converting a monoid object in `Type` to a bundled monoid.
 -/
-def functor : Mon_ (Type u) ⥤ MonCat.{u} where 
+def functor : Mon_ (Type u) ⥤ MonCat.{u}
+    where
   obj A := ⟨A.x⟩
   map A B f :=
     { toFun := f.Hom
@@ -49,23 +50,21 @@ def functor : Mon_ (Type u) ⥤ MonCat.{u} where
 
 /-- Converting a bundled monoid to a monoid object in `Type`.
 -/
-def inverse :
-    MonCat.{u} ⥤
-      Mon_ (Type
-          u) where 
+def inverse : MonCat.{u} ⥤ Mon_ (Type u)
+    where
   obj A :=
     { x := A
       one := fun _ => 1
       mul := fun p => p.1 * p.2
-      one_mul' := by 
+      one_mul' := by
         ext ⟨_, _⟩
         dsimp
         simp
-      mul_one' := by 
+      mul_one' := by
         ext ⟨_, _⟩
         dsimp
         simp
-      mul_assoc' := by 
+      mul_assoc' := by
         ext ⟨⟨x, y⟩, z⟩
         simp [mul_assoc] }
   map A B f := { Hom := f }
@@ -78,8 +77,8 @@ open monTypeEquivalenceMon
 /-- The category of internal monoid objects in `Type`
 is equivalent to the category of "native" bundled monoids.
 -/
-def monTypeEquivalenceMon :
-    Mon_ (Type u) ≌ MonCat.{u} where 
+def monTypeEquivalenceMon : Mon_ (Type u) ≌ MonCat.{u}
+    where
   Functor := Functor
   inverse := inverse
   unitIso :=
@@ -124,22 +123,19 @@ instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.x :=
 
 /-- Converting a commutative monoid object in `Type` to a bundled commutative monoid.
 -/
-def functor : CommMon_ (Type u) ⥤
-      CommMonCat.{u} where 
+def functor : CommMon_ (Type u) ⥤ CommMonCat.{u}
+    where
   obj A := ⟨A.x⟩
   map A B f := MonTypeEquivalenceMon.functor.map f
 #align CommMon_Type_equivalence_CommMon.functor CommMonTypeEquivalenceCommMon.functor
 
 /-- Converting a bundled commutative monoid to a commutative monoid object in `Type`.
 -/
-def inverse :
-    CommMonCat.{u} ⥤
-      CommMon_
-        (Type
-          u) where 
+def inverse : CommMonCat.{u} ⥤ CommMon_ (Type u)
+    where
   obj A :=
     { MonTypeEquivalenceMon.inverse.obj ((forget₂ CommMonCat MonCat).obj A) with
-      mul_comm' := by 
+      mul_comm' := by
         ext ⟨x, y⟩
         exact CommMonoid.mul_comm y x }
   map A B f := MonTypeEquivalenceMon.inverse.map f
@@ -152,8 +148,8 @@ open commMonTypeEquivalenceCommMon
 /-- The category of internal commutative monoid objects in `Type`
 is equivalent to the category of "native" bundled commutative monoids.
 -/
-def commMonTypeEquivalenceCommMon :
-    CommMon_ (Type u) ≌ CommMonCat.{u} where 
+def commMonTypeEquivalenceCommMon : CommMon_ (Type u) ≌ CommMonCat.{u}
+    where
   Functor := Functor
   inverse := inverse
   unitIso :=

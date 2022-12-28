@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module logic.equiv.embedding
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,13 +29,10 @@ namespace Equiv
 #print Equiv.sumEmbeddingEquivProdEmbeddingDisjoint /-
 /-- Embeddings from a sum type are equivalent to two separate embeddings with disjoint ranges. -/
 def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
-    (Sum α β ↪ γ) ≃
-      { f : (α ↪ γ) × (β ↪ γ) //
-        Disjoint (Set.range f.1)
-          (Set.range
-            f.2) } where 
+    (Sum α β ↪ γ) ≃ { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.range f.1) (Set.range f.2) }
+    where
   toFun f :=
-    ⟨(inl.trans f, inr.trans f), by 
+    ⟨(inl.trans f, inr.trans f), by
       rw [Set.disjoint_left]
       rintro _ ⟨a, h⟩ ⟨b, rfl⟩
       simp only [trans_apply, inl_apply, inr_apply] at h
@@ -58,11 +55,11 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
         exfalso
         exact disj.le_bot ⟨⟨a₂, by simp⟩, ⟨b₁, by simp [f_eq]⟩⟩
       · rw [g.injective f_eq]⟩
-  left_inv f := by 
+  left_inv f := by
     dsimp only
     ext
     cases x <;> simp!
-  right_inv := fun ⟨⟨f, g⟩, _⟩ => by 
+  right_inv := fun ⟨⟨f, g⟩, _⟩ => by
     simp only [Prod.mk.inj_iff]
     constructor <;> ext <;> simp!
 #align
@@ -72,9 +69,8 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
 #print Equiv.codRestrict /-
 /-- Embeddings whose range lies within a set are equivalent to embeddings to that set.
 This is `function.embedding.cod_restrict` as an equiv. -/
-def codRestrict (α : Type _) {β : Type _} (bs : Set β) :
-    { f : α ↪ β // ∀ a, f a ∈ bs } ≃
-      (α ↪ bs) where 
+def codRestrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // ∀ a, f a ∈ bs } ≃ (α ↪ bs)
+    where
   toFun f := (f : α ↪ β).codRestrict bs f.Prop
   invFun f := ⟨f.trans (Function.Embedding.subtype _), fun a => (f a).Prop⟩
   left_inv x := by ext <;> rfl
@@ -91,7 +87,7 @@ def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
   (subtype_prod_equiv_sigma_subtype fun (a : α ↪ γ) (b : β ↪ _) =>
         Disjoint (Set.range a) (Set.range b)).trans <|
     Equiv.sigmaCongrRight fun a =>
-      (subtype_equiv_prop <| by 
+      (subtype_equiv_prop <| by
             ext f
             rw [← Set.range_subset_iff, Set.subset_compl_iff_disjoint_right, Disjoint.comm]).trans
         (codRestrict _ _)
@@ -117,11 +113,11 @@ def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} :
 
 #print Equiv.uniqueEmbeddingEquivResult /-
 /-- Embeddings from a single-member type are equivalent to members of the target type. -/
-def uniqueEmbeddingEquivResult {α β : Type _} [Unique α] :
-    (α ↪ β) ≃ β where 
+def uniqueEmbeddingEquivResult {α β : Type _} [Unique α] : (α ↪ β) ≃ β
+    where
   toFun f := f default
   invFun x := ⟨fun _ => x, fun _ _ _ => Subsingleton.elim _ _⟩
-  left_inv _ := by 
+  left_inv _ := by
     ext
     simp_rw [Function.Embedding.coeFn_mk]
     congr

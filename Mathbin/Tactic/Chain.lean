@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.chain
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ unsafe def tactic_script.to_string : TacticScript String → String
 
 unsafe instance : ToString (TacticScript String) where toString s := s.toString
 
-unsafe instance tactic_script_unit_has_to_string :
-    ToString (TacticScript Unit) where toString s := "[chain tactic]"
+unsafe instance tactic_script_unit_has_to_string : ToString (TacticScript Unit)
+    where toString s := "[chain tactic]"
 #align tactic.tactic_script_unit_has_to_string tactic.tactic_script_unit_has_to_string
 
 unsafe def abstract_if_success (tac : expr → tactic α) (g : expr) : tactic α := do

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,24 +63,26 @@ end
 
 variable [Semiring B] [Galgebra R A] [Algebra R B]
 
-instance : Algebra R
-      (⨁ i, A i) where 
+instance : Algebra R (⨁ i, A i)
+    where
   toFun := (DirectSum.of A 0).comp Galgebra.toFun
   map_zero' := AddMonoidHom.map_zero _
   map_add' := AddMonoidHom.map_add _
   map_one' := (DirectSum.of A 0).congr_arg Galgebra.map_one
-  map_mul' a b := by 
+  map_mul' a b := by
     simp only [AddMonoidHom.comp_apply]
     rw [of_mul_of]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.map_mul a b)
-  commutes' r x := by
+  commutes' r x :=
+    by
     change AddMonoidHom.mul (DirectSum.of _ _ _) x = add_monoid_hom.mul.flip (DirectSum.of _ _ _) x
     apply AddMonoidHom.congr_fun _ x
     ext (i xi) : 2
     dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.mul_apply, AddMonoidHom.flip_apply]
     rw [of_mul_of, of_mul_of]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.commutes r ⟨i, xi⟩)
-  smul_def' r x := by
+  smul_def' r x :=
+    by
     change DistribMulAction.toAddMonoidHom _ r x = AddMonoidHom.mul (DirectSum.of _ _ _) x
     apply AddMonoidHom.congr_fun _ x
     ext (i xi) : 2
@@ -110,7 +112,9 @@ can be discharged by `rfl`. -/
 def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one = 1)
     (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai * f _ aj)
     (hcommutes : ∀ r, (f 0) (Galgebra.toFun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
-  { toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul with
+  {
+    toSemiring (fun i => (f i).toAddMonoidHom) hone
+      @hmul with
     toFun := toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul
     commutes' := fun r => (DirectSum.to_semiring_of _ _ _ _ _).trans (hcommutes r) }
 #align direct_sum.to_algebra DirectSum.toAlgebra
@@ -138,9 +142,8 @@ end DirectSum
 -/
 @[simps]
 instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι] [CommSemiring R]
-    [Semiring A] [Algebra R A] :
-    DirectSum.Galgebra R fun i : ι =>
-      A where 
+    [Semiring A] [Algebra R A] : DirectSum.Galgebra R fun i : ι => A
+    where
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
   map_mul a b := Sigma.ext (zero_add _).symm (heq_of_eq <| (algebraMap R A).map_mul a b)

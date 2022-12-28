@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.functor.flat
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,9 +69,8 @@ variable {K : J ⥤ C} (F : C ⥤ D) (c : Cone K)
 arrows over `X` with `f` as the cone point. This is the underlying diagram.
 -/
 @[simps]
-def toDiagram :
-    J ⥤ StructuredArrow c.x
-        K where 
+def toDiagram : J ⥤ StructuredArrow c.x K
+    where
   obj j := StructuredArrow.mk (c.π.app j)
   map j k g := StructuredArrow.homMk g (by simpa)
 #align category_theory.structured_arrow_cone.to_diagram CategoryTheory.StructuredArrowCone.toDiagram
@@ -88,13 +87,12 @@ def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F
 arrows over `X` with `f` as the cone point.
 -/
 @[simps]
-def toCone {X : D} (f : X ⟶ F.obj c.x) :
-    Cone (toDiagram (F.mapCone c) ⋙
-        map f ⋙ pre _ K F) where 
+def toCone {X : D} (f : X ⟶ F.obj c.x) : Cone (toDiagram (F.mapCone c) ⋙ map f ⋙ pre _ K F)
+    where
   x := mk f
   π :=
     { app := fun j => homMk (c.π.app j) rfl
-      naturality' := fun j k g => by 
+      naturality' := fun j k g => by
         ext
         dsimp
         simp }
@@ -119,7 +117,8 @@ attribute [instance] representably_flat.cofiltered
 
 attribute [local instance] is_cofiltered.nonempty
 
-instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
+instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) :=
+  by
   constructor
   intro X
   haveI : Nonempty (structured_arrow X (𝟭 C)) := ⟨structured_arrow.mk (𝟙 _)⟩
@@ -138,10 +137,12 @@ instance RepresentablyFlat.id : RepresentablyFlat (𝟭 C) := by
 #align category_theory.representably_flat.id CategoryTheory.RepresentablyFlat.id
 
 instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F]
-    [RepresentablyFlat G] : RepresentablyFlat (F ⋙ G) := by
+    [RepresentablyFlat G] : RepresentablyFlat (F ⋙ G) :=
+  by
   constructor
   intro X
-  have : Nonempty (structured_arrow X (F ⋙ G)) := by
+  have : Nonempty (structured_arrow X (F ⋙ G)) :=
+    by
     have f₁ : structured_arrow X G := Nonempty.some inferInstance
     have f₂ : structured_arrow f₁.right F := Nonempty.some inferInstance
     exact ⟨structured_arrow.mk (f₁.hom ≫ G.map f₂.hom)⟩
@@ -199,7 +200,8 @@ theorem cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C :=
 theorem flat_of_preserves_finite_limits [HasFiniteLimits C] (F : C ⥤ D) [PreservesFiniteLimits F] :
     RepresentablyFlat F :=
   ⟨fun X =>
-    haveI : has_finite_limits (structured_arrow X F) := by
+    haveI : has_finite_limits (structured_arrow X F) :=
+      by
       apply hasFiniteLimitsOfHasFiniteLimitsOfSize.{v₁} (structured_arrow X F)
       intro J sJ fJ; skip; constructor
     cofiltered_of_has_finite_limits⟩
@@ -1853,7 +1855,8 @@ end PreservesFiniteLimitsOfFlat
 
 /-- Representably flat functors preserve finite limits. -/
 noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F] :
-    PreservesFiniteLimits F := by
+    PreservesFiniteLimits F :=
+  by
   apply preserves_finite_limits_of_preserves_finite_limits_of_size
   intro J _ _; constructor
   intro K; constructor
@@ -1861,7 +1864,7 @@ noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F
   exact
     { lift := preserves_finite_limits_of_flat.lift F hc
       fac' := preserves_finite_limits_of_flat.fac F hc
-      uniq' := fun s m h => by 
+      uniq' := fun s m h => by
         apply preserves_finite_limits_of_flat.uniq F hc
         exact h
         exact preserves_finite_limits_of_flat.fac F hc s }
@@ -1871,13 +1874,12 @@ noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F
 finite limits.
 -/
 noncomputable def preservesFiniteLimitsIffFlat [HasFiniteLimits C] (F : C ⥤ D) :
-    RepresentablyFlat F ≃
-      PreservesFiniteLimits
-        F where 
+    RepresentablyFlat F ≃ PreservesFiniteLimits F
+    where
   toFun _ := preserves_finite_limits_of_flat F
   invFun _ := flat_of_preserves_finite_limits F
   left_inv _ := proof_irrel _ _
-  right_inv x := by 
+  right_inv x := by
     cases x
     unfold preserves_finite_limits_of_flat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]
@@ -1898,7 +1900,7 @@ noncomputable def lanEvaluationIsoColim (F : C ⥤ D) (X : D)
     lan F ⋙ (evaluation D E).obj X ≅
       (whiskeringLeft _ _ E).obj (CostructuredArrow.proj F X) ⋙ colim :=
   NatIso.ofComponents (fun G => colim.mapIso (Iso.refl _))
-    (by 
+    (by
       intro G H i
       ext
       simp only [functor.comp_map, colimit.ι_desc_assoc, functor.map_iso_refl, evaluation_obj_map,
@@ -1920,7 +1922,8 @@ variable [PreservesLimits (forget E)]
 `Lan F.op` that takes presheaves over `C` to presheaves over `D` preserves finite limits.
 -/
 noncomputable instance lanPreservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F] :
-    PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) := by
+    PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) :=
+  by
   apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
   intro J _ _; skip
   apply preserves_limits_of_shape_of_evaluation (Lan F.op : (Cᵒᵖ ⥤ E) ⥤ Dᵒᵖ ⥤ E) J
@@ -1939,7 +1942,8 @@ instance Lan_flat_of_flat (F : C ⥤ D) [RepresentablyFlat F] :
 variable [HasFiniteLimits C]
 
 noncomputable instance lanPreservesFiniteLimitsOfPreservesFiniteLimits (F : C ⥤ D)
-    [PreservesFiniteLimits F] : PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) := by
+    [PreservesFiniteLimits F] : PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ E) :=
+  by
   haveI := flat_of_preserves_finite_limits F
   infer_instance
 #align
@@ -1947,10 +1951,11 @@ noncomputable instance lanPreservesFiniteLimitsOfPreservesFiniteLimits (F : C �
 
 theorem flat_iff_Lan_flat (F : C ⥤ D) :
     RepresentablyFlat F ↔ RepresentablyFlat (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁) :=
-  ⟨fun H => inferInstance, fun H => by 
+  ⟨fun H => inferInstance, fun H => by
     skip
     haveI := preserves_finite_limits_of_flat (Lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁)
-    haveI : preserves_finite_limits F := by
+    haveI : preserves_finite_limits F :=
+      by
       apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
       intros ; skip; apply preserves_limit_of_Lan_presesrves_limit
     apply flat_of_preserves_finite_limits⟩
@@ -1960,18 +1965,16 @@ theorem flat_iff_Lan_flat (F : C ⥤ D) :
 `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves finite limits.
 -/
 noncomputable def preservesFiniteLimitsIffLanPreservesFiniteLimits (F : C ⥤ D) :
-    PreservesFiniteLimits F ≃
-      PreservesFiniteLimits
-        (lan F.op : _ ⥤ Dᵒᵖ ⥤
-              Type u₁) where 
+    PreservesFiniteLimits F ≃ PreservesFiniteLimits (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u₁)
+    where
   toFun _ := inferInstance
-  invFun _ := by 
+  invFun _ := by
     apply preservesFiniteLimitsOfPreservesFiniteLimitsOfSize.{u₁}
     intros ; skip; apply preserves_limit_of_Lan_presesrves_limit
-  left_inv x := by 
+  left_inv x := by
     cases x; unfold preserves_finite_limits_of_flat
     dsimp only [preserves_finite_limits_of_preserves_finite_limits_of_size]; congr
-  right_inv x := by 
+  right_inv x := by
     cases x
     unfold preserves_finite_limits_of_flat
     congr

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.ring.seminorm
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,9 +113,8 @@ section NonUnitalRing
 
 variable [NonUnitalRing R]
 
-instance ringSeminormClass :
-    RingSeminormClass (RingSeminorm R)
-      R where 
+instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R
+    where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -155,7 +154,7 @@ instance : Inhabited (RingSeminorm R) :=
 every other element. -/
 instance [DecidableEq R] : One (RingSeminorm R) :=
   ⟨{ (1 : AddGroupSeminorm R) with
-      mul_le' := fun x y => by 
+      mul_le' := fun x y => by
         by_cases h : x * y = 0
         ·
           refine' (if_pos h).trans_le (mul_nonneg _ _) <;>
@@ -176,11 +175,12 @@ section Ring
 
 variable [Ring R] (p : RingSeminorm R)
 
-theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 := by
+theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :=
+  by
   refine'
     ⟨fun h =>
       ne_zero_iff.mpr
-        ⟨1, by 
+        ⟨1, by
           rw [h]
           exact one_ne_zero⟩,
       fun h => _⟩
@@ -197,7 +197,7 @@ end RingSeminorm
 
 /-- The norm of a `non_unital_semi_normed_ring` as a `ring_seminorm`. -/
 def normRingSeminorm (R : Type _) [NonUnitalSemiNormedRing R] : RingSeminorm R :=
-  { normAddGroupSeminorm R with 
+  { normAddGroupSeminorm R with
     toFun := norm
     mul_le' := norm_mul_le }
 #align norm_ring_seminorm normRingSeminorm
@@ -206,8 +206,8 @@ namespace RingNorm
 
 variable [NonUnitalRing R]
 
-instance ringNormClass :
-    RingNormClass (RingNorm R) R where 
+instance ringNormClass : RingNormClass (RingNorm R) R
+    where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -252,9 +252,8 @@ namespace MulRingSeminorm
 
 variable [NonAssocRing R]
 
-instance mulRingSeminormClass :
-    MulRingSeminormClass (MulRingSeminorm R)
-      R where 
+instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R
+    where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -283,9 +282,9 @@ variable [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 /-- The trivial seminorm on a ring `R` is the `mul_ring_seminorm` taking value `0` at `0` and `1` at
 every other element. -/
 instance : One (MulRingSeminorm R) :=
-  ⟨{ (1 : AddGroupSeminorm R) with 
+  ⟨{ (1 : AddGroupSeminorm R) with
       map_one' := if_neg one_ne_zero
-      map_mul' := fun x y => by 
+      map_mul' := fun x y => by
         obtain rfl | hx := eq_or_ne x 0
         · simp
         obtain rfl | hy := eq_or_ne y 0
@@ -306,9 +305,8 @@ namespace MulRingNorm
 
 variable [NonAssocRing R]
 
-instance mulRingNormClass :
-    MulRingNormClass (MulRingNorm R)
-      R where 
+instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R
+    where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_zero f := f.map_zero'
@@ -354,10 +352,12 @@ end MulRingNorm
 def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f ≠ 0) :
     RingNorm K :=
   { f with
-    eq_zero_of_map_eq_zero' := fun x hx => by
+    eq_zero_of_map_eq_zero' := fun x hx =>
+      by
       obtain ⟨c, hc⟩ := ring_seminorm.ne_zero_iff.mp hnt
       by_contra hn0
-      have hc0 : f c = 0 := by
+      have hc0 : f c = 0 :=
+        by
         rw [← mul_one c, ← mul_inv_cancel hn0, ← mul_assoc, mul_comm c, mul_assoc]
         exact
           le_antisymm

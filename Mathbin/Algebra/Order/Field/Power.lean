@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.power
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,8 @@ variable [LinearOrderedSemifield α] {a b c d e : α} {m n : ℤ}
 /-! ### Integer powers -/
 
 
-theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n := by
+theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n :=
+  by
   have ha₀ : 0 < a := one_pos.trans_le ha
   lift n - m to ℕ using sub_nonneg.2 h with k hk
   calc
@@ -48,7 +49,8 @@ theorem one_le_zpow_of_nonneg (ha : 1 ≤ a) (hn : 0 ≤ n) : 1 ≤ a ^ n :=
   (zpow_zero _).symm.trans_le <| zpow_le_of_le ha hn
 #align one_le_zpow_of_nonneg one_le_zpow_of_nonneg
 
-protected theorem Nat.zpow_pos_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : 0 < (a : α) ^ n := by
+protected theorem Nat.zpow_pos_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : 0 < (a : α) ^ n :=
+  by
   apply zpow_pos_of_pos
   exact_mod_cast h
 #align nat.zpow_pos_of_pos Nat.zpow_pos_of_pos
@@ -95,7 +97,8 @@ theorem div_pow_le (ha : 0 ≤ a) (hb : 1 ≤ b) (k : ℕ) : a / b ^ k ≤ a :=
   div_le_self ha <| one_le_pow_of_one_le hb _
 #align div_pow_le div_pow_le
 
-theorem zpow_injective (h₀ : 0 < a) (h₁ : a ≠ 1) : Injective ((· ^ ·) a : ℤ → α) := by
+theorem zpow_injective (h₀ : 0 < a) (h₁ : a ≠ 1) : Injective ((· ^ ·) a : ℤ → α) :=
+  by
   rcases h₁.lt_or_lt with (H | H)
   · exact (zpow_strict_anti h₀ H).Injective
   · exact (zpow_strict_mono H).Injective
@@ -144,7 +147,7 @@ theorem zpow_two_pos_of_ne_zero (h : a ≠ 0) : 0 < a ^ (2 : ℤ) :=
 
 @[simp]
 theorem zpow_bit0_pos_iff (hn : n ≠ 0) : 0 < a ^ bit0 n ↔ a ≠ 0 :=
-  ⟨by 
+  ⟨by
     rintro h rfl
     refine' (zero_zpow _ _).not_gt h
     rwa [bit0_ne_zero], fun h => zpow_bit0_pos h _⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.hom
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,10 +30,8 @@ variable [Monoid R] [Monoid S] [AddMonoid A] [AddCommMonoid B]
 
 variable [DistribMulAction R B] [DistribMulAction S B]
 
-instance :
-    DistribMulAction R
-      (A →+
-        B) where 
+instance : DistribMulAction R (A →+ B)
+    where
   smul r f :=
     { toFun := r • f
       map_zero' := by simp
@@ -64,7 +62,8 @@ instance [DistribMulAction Rᵐᵒᵖ B] [IsCentralScalar R B] : IsCentralScalar
 end
 
 instance [Semiring R] [AddMonoid A] [AddCommMonoid B] [Module R B] : Module R (A →+ B) :=
-  { AddMonoidHom.distribMulAction with
+  {
+    AddMonoidHom.distribMulAction with
     add_smul := fun r s x => ext fun y => by simp [add_smul]
     zero_smul := fun x => ext fun y => by simp [zero_smul] }
 

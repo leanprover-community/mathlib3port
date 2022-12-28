@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.simps
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,9 +134,8 @@ used by the `@[simps]` attribute.
 - The second argument is a list that consists of the projection data for each projection.
 -/
 @[user_attribute]
-unsafe def simps_str_attr :
-    user_attribute Unit
-      (List Name × List projection_data) where 
+unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_data)
+    where
   Name := `_simps_str
   descr := "An attribute specifying the projection of the given structure."
   parser := failed
@@ -152,9 +151,8 @@ unsafe def simps_str_attr :
     of the structure)
 -/
 @[user_attribute]
-unsafe def notation_class_attr :
-    user_attribute Unit
-      (Bool × Option Name) where 
+unsafe def notation_class_attr : user_attribute Unit (Bool × Option Name)
+    where
   Name := `notation_class
   descr := "An attribute specifying that this is a notation class. Used by @[simps]."
   parser := Prod.mk <$> Option.isNone <$> parser.optional (tk "*") <*> parser.optional ident
@@ -322,7 +320,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
               if old_nm ∈ projs fun x => x then
                 projs fun proj =>
                   if proj = old_nm then
-                    { proj with 
+                    { proj with
                       new_name := new_nm
                       isPrefix }
                   else proj
@@ -331,7 +329,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
               if nm ∈ projs fun x => x then
                 projs fun proj =>
                   if proj = nm then
-                    { proj with 
+                    { proj with
                       is_default := ff
                       isPrefix }
                   else proj
@@ -397,7 +395,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                         not been overrriden by the user. -/
                 do
                   let (is_class, proj_nm) ← notation_class_attr class_nm
-                  let proj_nm ← proj_nm <|> (e class_nm).map List.head
+                  let proj_nm ← proj_nm <|> (e class_nm).map List.headI
                   let (raw_expr, lambda_raw_expr) ←
                     if is_class then do
                         guard <| args = 1
@@ -675,7 +673,8 @@ unsafe def simps_get_projection_exprs (e : environment) (tgt : expr) (rhs : expr
   let new_proj_data : List <| expr × projection_data :=
     proj_data.map fun proj =>
       (rhs_args.inth proj.proj_nrs.head,
-        { proj with
+        {
+          proj with
           expr := (proj.expr.instantiate_univ_params univs).instantiate_lambdas_or_apps params
           proj_nrs := proj.proj_nrs.tail })
   return new_proj_data
@@ -855,7 +854,7 @@ unsafe def simps_add_projections :
                               >   {← rhs_ap}
                               > Retrying with the options \{ rhs_md := semireducible, simp_rhs := tt}.")
               simps_add_projections e nm type lhs rhs args univs must_be_str
-                  { cfg with 
+                  { cfg with
                     rhsMd := semireducible
                     simpRhs := tt }
                   todo to_apply
@@ -889,8 +888,8 @@ unsafe def simps_add_projections :
   If `todo` is non-empty, it will generate exactly the names in `todo`.
   If `short_nm` is true, the generated names will only use the last projection name.
   If `trc` is true, trace as if `trace.simps.verbose` is true. -/
-unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List String := [])
-    (trc := false) : tactic Unit := do
+unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := { }) (todo : List String := []) (trc := false) :
+    tactic Unit := do
   let e ← get_env
   let d ← e.get nm
   let lhs : expr := const d.to_name d.univ_levels
@@ -917,7 +916,7 @@ unsafe def simps_parser : parser (Bool × List String × SimpsCfg) := do
         is_some <$> parser.optional (tk "?") <*>
       (Prod.mk <$> many (name.last <$> ident) <*> do
         let some e ← parser.optional parser.pexpr |
-          return {  }
+          return { }
         eval_pexpr SimpsCfg e)
 #align simps_parser simps_parser
 
@@ -1022,9 +1021,8 @@ derives two `simp` lemmas:
   `simp` lemmas.
 -/
 @[user_attribute]
-unsafe def simps_attr :
-    user_attribute Unit
-      (Bool × List String × SimpsCfg) where 
+unsafe def simps_attr : user_attribute Unit (Bool × List String × SimpsCfg)
+    where
   Name := `simps
   descr := "Automatically derive lemmas specifying the projections of this declaration."
   parser := simps_parser

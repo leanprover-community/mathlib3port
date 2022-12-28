@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Weiser
 
 ! This file was ported from Lean 3 source module algebra.star.free
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,8 +26,8 @@ namespace FreeMonoid
 
 variable {α : Type _}
 
-instance : StarSemigroup (FreeMonoid
-        α) where 
+instance : StarSemigroup (FreeMonoid α)
+    where
   star := List.reverse
   star_involutive := List.reverse_reverse
   star_mul := List.reverse_append
@@ -50,12 +50,10 @@ namespace FreeAlgebra
 variable {R : Type _} [CommSemiring R] {X : Type _}
 
 /-- The star ring formed by reversing the elements of products -/
-instance :
-    StarRing
-      (FreeAlgebra R
-        X) where 
+instance : StarRing (FreeAlgebra R X)
+    where
   star := MulOpposite.unop ∘ lift R (MulOpposite.op ∘ ι R)
-  star_involutive x := by 
+  star_involutive x := by
     unfold HasStar.star
     simp only [Function.comp_apply]
     refine' FreeAlgebra.induction R X _ _ _ _ x

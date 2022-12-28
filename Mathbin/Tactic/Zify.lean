@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.zify
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,8 +47,8 @@ between `nat` and `int`.
 For example, `int.coe_nat_le_coe_nat_iff : ∀ (m n : ℕ), ↑m ≤ ↑n ↔ m ≤ n` is a `zify` lemma.
 -/
 @[user_attribute]
-unsafe def zify_attr :
-    user_attribute simp_lemmas Unit where 
+unsafe def zify_attr : user_attribute simp_lemmas Unit
+    where
   Name := `zify
   descr := "Used to tag lemmas for use in the `zify` tactic"
   cache_cfg :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.countable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem countable_range [Countable ι] (f : ι → β) : (range f).Countable :=
 
 theorem countable_iff_exists_subset_range [Nonempty α] {s : Set α} :
     s.Countable ↔ ∃ f : ℕ → α, s ⊆ range f :=
-  ⟨fun h => by 
+  ⟨fun h => by
     inhabit α
     exact ⟨enumerate_countable h default, subset_range_enumerate _ _⟩, fun ⟨f, hsf⟩ =>
     (countable_range f).mono hsf⟩
@@ -119,7 +119,8 @@ theorem countable_univ [Countable α] : (univ : Set α).Countable :=
 /-- If `s : set α` is a nonempty countable set, then there exists a map
 `f : ℕ → α` such that `s = range f`. -/
 theorem Countable.exists_eq_range {s : Set α} (hc : s.Countable) (hs : s.Nonempty) :
-    ∃ f : ℕ → α, s = range f := by
+    ∃ f : ℕ → α, s = range f :=
+  by
   rcases hc.exists_surjective hs with ⟨f, hf⟩
   refine' ⟨coe ∘ f, _⟩
   rw [hf.range_comp, Subtype.range_coe]
@@ -135,7 +136,8 @@ theorem countable_singleton (a : α) : ({a} : Set α).Countable :=
   ⟨ofEquiv _ (Equiv.Set.singleton a)⟩
 #align set.countable_singleton Set.countable_singleton
 
-theorem Countable.image {s : Set α} (hs : s.Countable) (f : α → β) : (f '' s).Countable := by
+theorem Countable.image {s : Set α} (hs : s.Countable) (f : α → β) : (f '' s).Countable :=
+  by
   rw [image_eq_range]
   haveI := hs.to_subtype
   apply countable_range
@@ -160,7 +162,7 @@ protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α →
 theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔
       ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ supₛ S = ⊤ :=
-  by 
+  by
   constructor
   · rintro ⟨s, hps, hs⟩
     refine' ⟨range s, countable_range s, forall_range_iff.2 hps, _⟩
@@ -189,7 +191,7 @@ theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (
 #align set.countable_of_injective_of_countable_image Set.countable_of_injective_of_countable_image
 
 theorem countable_Union {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :
-    (⋃ i, t i).Countable := by 
+    (⋃ i, t i).Countable := by
   haveI := fun a => (ht a).to_subtype
   rw [Union_eq_range_psigma]
   apply countable_range
@@ -198,11 +200,12 @@ theorem countable_Union {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Co
 @[simp]
 theorem countable_Union_iff [Countable ι] {t : ι → Set α} :
     (⋃ i, t i).Countable ↔ ∀ i, (t i).Countable :=
-  ⟨fun h i => h.mono <| subset_Union _ _, countable_Union⟩
+  ⟨fun h i => h.mono <| subset_unionᵢ _ _, countable_Union⟩
 #align set.countable_Union_iff Set.countable_Union_iff
 
 theorem Countable.bUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :
-    (⋃ a ∈ s, t a ‹_›).Countable ↔ ∀ a ∈ s, (t a ‹_›).Countable := by
+    (⋃ a ∈ s, t a ‹_›).Countable ↔ ∀ a ∈ s, (t a ‹_›).Countable :=
+  by
   haveI := hs.to_subtype
   rw [bUnion_eq_Union, countable_Union_iff, SetCoe.forall']
 #align set.countable.bUnion_iff Set.Countable.bUnion_iff
@@ -257,7 +260,7 @@ theorem countable_is_bot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.
 /-- The set of finite subsets of a countable set is countable. -/
 theorem countable_set_of_finite_subset {s : Set α} :
     s.Countable → { t | Set.Finite t ∧ t ⊆ s }.Countable
-  | ⟨h⟩ => by 
+  | ⟨h⟩ => by
     skip
     refine'
       countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
@@ -279,14 +282,15 @@ theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (h
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Countable.prod {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable) :
-    Set.Countable (s ×ˢ t) := by 
+    Set.Countable (s ×ˢ t) := by
   haveI : Countable s := hs.to_subtype
   haveI : Countable t := ht.to_subtype
   exact (Countable.of_equiv _ <| (Equiv.Set.prod _ _).symm).to_set
 #align set.countable.prod Set.Countable.prod
 
 theorem Countable.image2 {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Countable)
-    (f : α → β → γ) : (image2 f s t).Countable := by
+    (f : α → β → γ) : (image2 f s t).Countable :=
+  by
   rw [← image_prod]
   exact (hs.prod ht).image _
 #align set.countable.image2 Set.Countable.image2

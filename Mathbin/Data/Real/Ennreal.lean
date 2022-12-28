@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,9 @@ instance covariant_class_add_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· + ·)
 #align ennreal.covariant_class_add_le Ennreal.covariant_class_add_le
 
 noncomputable instance : LinearOrderedCommMonoidWithZero ℝ≥0∞ :=
-  { Ennreal.linearOrderedAddCommMonoidWithTop, show CommSemiring ℝ≥0∞ from inferInstance with
+  { Ennreal.linearOrderedAddCommMonoidWithTop,
+    show CommSemiring ℝ≥0∞ from
+      inferInstance with
     mul_le_mul_left := fun a b => mul_le_mul_left'
     zero_le_one := zero_le 1 }
 
@@ -119,9 +121,8 @@ instance : Inhabited ℝ≥0∞ :=
 instance : Coe ℝ≥0 ℝ≥0∞ :=
   ⟨Option.some⟩
 
-instance canLift :
-    CanLift ℝ≥0∞ ℝ≥0 coe fun r =>
-      r ≠ ∞ where prf x hx := ⟨Option.get <| Option.ne_none_iff_isSome.1 hx, Option.some_get _⟩
+instance canLift : CanLift ℝ≥0∞ ℝ≥0 coe fun r => r ≠ ∞
+    where prf x hx := ⟨Option.get <| Option.ne_none_iff_isSome.1 hx, Option.some_get _⟩
 #align ennreal.can_lift Ennreal.canLift
 
 @[simp]
@@ -179,7 +180,8 @@ theorem coe_to_nnreal_le_self : ∀ {a : ℝ≥0∞}, ↑a.toNnreal ≤ a
   | none => le_top
 #align ennreal.coe_to_nnreal_le_self Ennreal.coe_to_nnreal_le_self
 
-theorem coe_nnreal_eq (r : ℝ≥0) : (r : ℝ≥0∞) = Ennreal.ofReal r := by
+theorem coe_nnreal_eq (r : ℝ≥0) : (r : ℝ≥0∞) = Ennreal.ofReal r :=
+  by
   rw [Ennreal.ofReal, Real.toNnreal]
   cases' r with r h
   congr
@@ -188,7 +190,8 @@ theorem coe_nnreal_eq (r : ℝ≥0) : (r : ℝ≥0∞) = Ennreal.ofReal r := by
 #align ennreal.coe_nnreal_eq Ennreal.coe_nnreal_eq
 
 theorem of_real_eq_coe_nnreal {x : ℝ} (h : 0 ≤ x) :
-    Ennreal.ofReal x = @coe ℝ≥0 ℝ≥0∞ _ (⟨x, h⟩ : ℝ≥0) := by
+    Ennreal.ofReal x = @coe ℝ≥0 ℝ≥0∞ _ (⟨x, h⟩ : ℝ≥0) :=
+  by
   rw [coe_nnreal_eq]
   rfl
 #align ennreal.of_real_eq_coe_nnreal Ennreal.of_real_eq_coe_nnreal
@@ -277,19 +280,19 @@ theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p
 #align ennreal.exists_ne_top Ennreal.exists_ne_top
 
 theorem to_nnreal_eq_zero_iff (x : ℝ≥0∞) : x.toNnreal = 0 ↔ x = 0 ∨ x = ∞ :=
-  ⟨by 
+  ⟨by
     cases x
     · simp [none_eq_top]
     · rintro (rfl : x = 0)
-      exact Or.inl rfl,
-    by rintro (h | h) <;> simp [h]⟩
+      exact Or.inl rfl, by rintro (h | h) <;> simp [h]⟩
 #align ennreal.to_nnreal_eq_zero_iff Ennreal.to_nnreal_eq_zero_iff
 
 theorem to_real_eq_zero_iff (x : ℝ≥0∞) : x.toReal = 0 ↔ x = 0 ∨ x = ∞ := by
   simp [Ennreal.toReal, to_nnreal_eq_zero_iff]
 #align ennreal.to_real_eq_zero_iff Ennreal.to_real_eq_zero_iff
 
-theorem to_nnreal_eq_one_iff (x : ℝ≥0∞) : x.toNnreal = 1 ↔ x = 1 := by
+theorem to_nnreal_eq_one_iff (x : ℝ≥0∞) : x.toNnreal = 1 ↔ x = 1 :=
+  by
   refine' ⟨fun h => _, congr_arg _⟩
   cases x
   · exact False.elim (zero_ne_one <| ennreal.top_to_nnreal.symm.trans h)
@@ -418,7 +421,8 @@ theorem coe_two : ((2 : ℝ≥0) : ℝ≥0∞) = 2 := by norm_cast
 #align ennreal.coe_two Ennreal.coe_two
 
 theorem to_nnreal_eq_to_nnreal_iff (x y : ℝ≥0∞) :
-    x.toNnreal = y.toNnreal ↔ x = y ∨ x = 0 ∧ y = ⊤ ∨ x = ⊤ ∧ y = 0 := by
+    x.toNnreal = y.toNnreal ↔ x = y ∨ x = 0 ∧ y = ⊤ ∨ x = ⊤ ∧ y = 0 :=
+  by
   cases x
   ·
     simp only [@eq_comm ℝ≥0 _ y.to_nnreal, @eq_comm ℝ≥0∞ _ y, to_nnreal_eq_zero_iff, none_eq_top,
@@ -481,8 +485,8 @@ instance fact_one_le_top_ennreal : Fact ((1 : ℝ≥0∞) ≤ ∞) :=
 #align fact_one_le_top_ennreal fact_one_le_top_ennreal
 
 /-- The set of numbers in `ℝ≥0∞` that are not equal to `∞` is equivalent to `ℝ≥0`. -/
-def neTopEquivNnreal :
-    { a | a ≠ ∞ } ≃ ℝ≥0 where 
+def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0
+    where
   toFun x := Ennreal.toNnreal x
   invFun x := ⟨x, coe_ne_top⟩
   left_inv := fun ⟨x, hx⟩ => Subtype.eq <| coe_to_nnreal hx
@@ -550,16 +554,16 @@ theorem smul_def {M : Type _} [MulAction ℝ≥0∞ M] (c : ℝ≥0) (x : M) : c
 #align ennreal.smul_def Ennreal.smul_def
 
 instance {M N : Type _} [MulAction ℝ≥0∞ M] [MulAction ℝ≥0∞ N] [HasSmul M N]
-    [IsScalarTower ℝ≥0∞ M N] :
-    IsScalarTower ℝ≥0 M N where smul_assoc r := (smul_assoc (r : ℝ≥0∞) : _)
+    [IsScalarTower ℝ≥0∞ M N] : IsScalarTower ℝ≥0 M N
+    where smul_assoc r := (smul_assoc (r : ℝ≥0∞) : _)
 
 instance smul_comm_class_left {M N : Type _} [MulAction ℝ≥0∞ N] [HasSmul M N]
     [SMulCommClass ℝ≥0∞ M N] : SMulCommClass ℝ≥0 M N where smul_comm r := (smul_comm (r : ℝ≥0∞) : _)
 #align ennreal.smul_comm_class_left Ennreal.smul_comm_class_left
 
 instance smul_comm_class_right {M N : Type _} [MulAction ℝ≥0∞ N] [HasSmul M N]
-    [SMulCommClass M ℝ≥0∞ N] :
-    SMulCommClass M ℝ≥0 N where smul_comm m r := (smul_comm m (r : ℝ≥0∞) : _)
+    [SMulCommClass M ℝ≥0∞ N] : SMulCommClass M ℝ≥0 N
+    where smul_comm m r := (smul_comm m (r : ℝ≥0∞) : _)
 #align ennreal.smul_comm_class_right Ennreal.smul_comm_class_right
 
 /-- A `distrib_mul_action` over `ℝ≥0∞` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
@@ -572,8 +576,8 @@ noncomputable instance {M : Type _} [AddCommMonoid M] [Module ℝ≥0∞ M] : Mo
   Module.compHom M ofNnrealHom
 
 /-- An `algebra` over `ℝ≥0∞` restricts to an `algebra` over `ℝ≥0`. -/
-noncomputable instance {A : Type _} [Semiring A] [Algebra ℝ≥0∞ A] :
-    Algebra ℝ≥0 A where 
+noncomputable instance {A : Type _} [Semiring A] [Algebra ℝ≥0∞ A] : Algebra ℝ≥0 A
+    where
   smul := (· • ·)
   commutes' r x := by simp [Algebra.commutes]
   smul_def' r x := by simp [← Algebra.smul_def (r : ℝ≥0∞) x, smul_def]
@@ -616,7 +620,8 @@ theorem add_lt_top : a + b < ∞ ↔ a < ∞ ∧ b < ∞ :=
 #align ennreal.add_lt_top Ennreal.add_lt_top
 
 theorem to_nnreal_add {r₁ r₂ : ℝ≥0∞} (h₁ : r₁ ≠ ∞) (h₂ : r₂ ≠ ∞) :
-    (r₁ + r₂).toNnreal = r₁.toNnreal + r₂.toNnreal := by
+    (r₁ + r₂).toNnreal = r₁.toNnreal + r₂.toNnreal :=
+  by
   lift r₁ to ℝ≥0 using h₁
   lift r₂ to ℝ≥0 using h₂
   rfl
@@ -665,7 +670,8 @@ theorem lt_top_of_mul_ne_top_right (h : a * b ≠ ∞) (ha : a ≠ 0) : b < ∞ 
   lt_top_of_mul_ne_top_left (by rwa [mul_comm]) ha
 #align ennreal.lt_top_of_mul_ne_top_right Ennreal.lt_top_of_mul_ne_top_right
 
-theorem mul_lt_top_iff {a b : ℝ≥0∞} : a * b < ∞ ↔ a < ∞ ∧ b < ∞ ∨ a = 0 ∨ b = 0 := by
+theorem mul_lt_top_iff {a b : ℝ≥0∞} : a * b < ∞ ↔ a < ∞ ∧ b < ∞ ∨ a = 0 ∨ b = 0 :=
+  by
   constructor
   · intro h
     rw [← or_assoc', or_iff_not_imp_right, or_iff_not_imp_right]
@@ -674,7 +680,8 @@ theorem mul_lt_top_iff {a b : ℝ≥0∞} : a * b < ∞ ↔ a < ∞ ∧ b < ∞ 
   · rintro (⟨ha, hb⟩ | rfl | rfl) <;> [exact mul_lt_top ha.ne hb.ne, simp, simp]
 #align ennreal.mul_lt_top_iff Ennreal.mul_lt_top_iff
 
-theorem mul_self_lt_top_iff {a : ℝ≥0∞} : a * a < ⊤ ↔ a < ⊤ := by
+theorem mul_self_lt_top_iff {a : ℝ≥0∞} : a * a < ⊤ ↔ a < ⊤ :=
+  by
   rw [Ennreal.mul_lt_top_iff, and_self_iff, or_self_iff, or_iff_left_iff_imp]
   rintro rfl
   norm_num
@@ -689,7 +696,8 @@ theorem mul_pos (ha : a ≠ 0) (hb : b ≠ 0) : 0 < a * b :=
 #align ennreal.mul_pos Ennreal.mul_pos
 
 @[simp]
-theorem pow_eq_top_iff {n : ℕ} : a ^ n = ∞ ↔ a = ∞ ∧ n ≠ 0 := by
+theorem pow_eq_top_iff {n : ℕ} : a ^ n = ∞ ↔ a = ∞ ∧ n ≠ 0 :=
+  by
   induction' n with n ihn; · simp
   rw [pow_succ, mul_eq_top, ihn]
   fconstructor
@@ -804,7 +812,8 @@ theorem lt_iff_exists_coe : a < b ↔ ∃ p : ℝ≥0, a = p ∧ ↑p < b :=
 #align ennreal.lt_iff_exists_coe Ennreal.lt_iff_exists_coe
 
 theorem to_real_le_coe_of_le_coe {a : ℝ≥0∞} {b : ℝ≥0} (h : a ≤ b) : a.toReal ≤ b :=
-  show ↑a.toNnreal ≤ ↑b by
+  show ↑a.toNnreal ≤ ↑b
+    by
     have : ↑a.to_nnreal = a := Ennreal.coe_to_nnreal (lt_of_le_of_lt h coe_lt_top).Ne
     rw [← this] at h
     exact_mod_cast h
@@ -815,7 +824,8 @@ theorem coe_finset_sup {s : Finset α} {f : α → ℝ≥0} : ↑(s.sup f) = s.s
   Finset.comp_sup_eq_sup_comp_of_is_total _ coe_mono rfl
 #align ennreal.coe_finset_sup Ennreal.coe_finset_sup
 
-theorem pow_le_pow {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m := by
+theorem pow_le_pow {n m : ℕ} (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
+  by
   cases a
   · cases m
     · rw [eq_bot_iff.mpr h]
@@ -912,7 +922,8 @@ theorem lt_add_right (ha : a ≠ ∞) (hb : b ≠ 0) : a < a + b := by
 
 theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ ε : ℝ≥0, 0 < ε → b < ∞ → a ≤ b + ε) → a ≤ b
   | a, none, h => le_top
-  | none, some a, h => by
+  | none, some a, h =>
+    by
     have : ∞ ≤ ↑a + ↑(1 : ℝ≥0) := h 1 zero_lt_one coe_lt_top
     rw [← coe_add] at this <;> exact (not_top_le_coe this).elim
   | some a, some b, h => by
@@ -923,7 +934,7 @@ theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ ε : ℝ≥0, 0 <
 
 theorem lt_iff_exists_rat_btwn :
     a < b ↔ ∃ q : ℚ, 0 ≤ q ∧ a < Real.toNnreal q ∧ (Real.toNnreal q : ℝ≥0∞) < b :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rcases lt_iff_exists_coe.1 h with ⟨p, rfl, _⟩
     rcases exists_between h with ⟨c, pc, cb⟩
     rcases lt_iff_exists_coe.1 cb with ⟨r, rfl, _⟩
@@ -944,19 +955,21 @@ theorem lt_iff_exists_nnreal_btwn : a < b ↔ ∃ r : ℝ≥0, a < r ∧ (r : �
   WithTop.lt_iff_exists_coe_btwn
 #align ennreal.lt_iff_exists_nnreal_btwn Ennreal.lt_iff_exists_nnreal_btwn
 
-theorem lt_iff_exists_add_pos_lt : a < b ↔ ∃ r : ℝ≥0, 0 < r ∧ a + r < b := by
+theorem lt_iff_exists_add_pos_lt : a < b ↔ ∃ r : ℝ≥0, 0 < r ∧ a + r < b :=
+  by
   refine' ⟨fun hab => _, fun ⟨r, rpos, hr⟩ => lt_of_le_of_lt le_self_add hr⟩
   cases a
   · simpa using hab
   rcases lt_iff_exists_real_btwn.1 hab with ⟨c, c_nonneg, ac, cb⟩
   let d : ℝ≥0 := ⟨c, c_nonneg⟩
-  have ad : a < d := by 
+  have ad : a < d := by
     rw [of_real_eq_coe_nnreal c_nonneg] at ac
     exact coe_lt_coe.1 ac
   refine' ⟨d - a, tsub_pos_iff_lt.2 ad, _⟩
   rw [some_eq_coe, ← coe_add]
   convert cb
-  have : Real.toNnreal c = d := by
+  have : Real.toNnreal c = d :=
+    by
     rw [← Nnreal.coe_eq, Real.coe_to_nnreal _ c_nonneg]
     rfl
   rw [add_comm, this]
@@ -987,14 +1000,16 @@ theorem coe_nat_le_coe_nat {m n : ℕ} : (m : ℝ≥0∞) ≤ n ↔ m ≤ n :=
 instance : CharZero ℝ≥0∞ :=
   ⟨coe_nat_mono.Injective⟩
 
-protected theorem exists_nat_gt {r : ℝ≥0∞} (h : r ≠ ∞) : ∃ n : ℕ, r < n := by
+protected theorem exists_nat_gt {r : ℝ≥0∞} (h : r ≠ ∞) : ∃ n : ℕ, r < n :=
+  by
   lift r to ℝ≥0 using h
   rcases exists_nat_gt r with ⟨n, hn⟩
   exact ⟨n, coe_lt_coe_nat.2 hn⟩
 #align ennreal.exists_nat_gt Ennreal.exists_nat_gt
 
 @[simp]
-theorem Union_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ := by
+theorem Union_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ :=
+  by
   ext x
   rw [mem_Union]
   exact ⟨fun ⟨n, hn⟩ => ne_top_of_lt hn, Ennreal.exists_nat_gt⟩
@@ -1003,7 +1018,7 @@ theorem Union_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ := by
 @[simp]
 theorem Union_Iic_coe_nat : (⋃ n : ℕ, Iic (n : ℝ≥0∞)) = {∞}ᶜ :=
   Subset.antisymm (Union_subset fun n x hx => ne_top_of_le_ne_top (nat_ne_top n) hx) <|
-    Union_Iio_coe_nat ▸ Union_mono fun n => Iio_subset_Iic_self
+    Union_Iio_coe_nat ▸ unionᵢ_mono fun n => Iio_subset_Iic_self
 #align ennreal.Union_Iic_coe_nat Ennreal.Union_Iic_coe_nat
 
 @[simp]
@@ -1036,7 +1051,8 @@ theorem Inter_Ioi_coe_nat : (⋂ n : ℕ, Ioi (n : ℝ≥0∞)) = {∞} := by
   simp only [← compl_Iic, ← compl_Union, Union_Iic_coe_nat, compl_compl]
 #align ennreal.Inter_Ioi_coe_nat Ennreal.Inter_Ioi_coe_nat
 
-theorem add_lt_add (ac : a < c) (bd : b < d) : a + b < c + d := by
+theorem add_lt_add (ac : a < c) (bd : b < d) : a + b < c + d :=
+  by
   lift a to ℝ≥0 using ne_top_of_lt ac
   lift b to ℝ≥0 using ne_top_of_lt bd
   cases c; · simp; cases d; · simp
@@ -1055,7 +1071,8 @@ theorem coe_max : ((max r p : ℝ≥0) : ℝ≥0∞) = max r p :=
 #align ennreal.coe_max Ennreal.coe_max
 
 theorem le_of_top_imp_top_of_to_nnreal_le {a b : ℝ≥0∞} (h : a = ⊤ → b = ⊤)
-    (h_nnreal : a ≠ ⊤ → b ≠ ⊤ → a.toNnreal ≤ b.toNnreal) : a ≤ b := by
+    (h_nnreal : a ≠ ⊤ → b ≠ ⊤ → a.toNnreal ≤ b.toNnreal) : a ≤ b :=
+  by
   by_cases ha : a = ⊤
   · rw [h ha]
     exact le_top
@@ -1097,7 +1114,8 @@ theorem mul_le_mul : a ≤ b → c ≤ d → a * c ≤ b * d :=
 #align ennreal.mul_le_mul Ennreal.mul_le_mul
 
 @[mono]
-theorem mul_lt_mul (ac : a < c) (bd : b < d) : a * b < c * d := by
+theorem mul_lt_mul (ac : a < c) (bd : b < d) : a * b < c * d :=
+  by
   rcases lt_iff_exists_nnreal_btwn.1 ac with ⟨a', aa', a'c⟩
   lift a to ℝ≥0 using ne_top_of_lt aa'
   rcases lt_iff_exists_nnreal_btwn.1 bd with ⟨b', bb', b'd⟩
@@ -1117,7 +1135,8 @@ theorem mul_left_mono : Monotone ((· * ·) a) := fun b c => mul_le_mul le_rfl
 theorem mul_right_mono : Monotone fun x => x * a := fun b c h => mul_le_mul h le_rfl
 #align ennreal.mul_right_mono Ennreal.mul_right_mono
 
-theorem pow_strict_mono {n : ℕ} (hn : n ≠ 0) : StrictMono fun x : ℝ≥0∞ => x ^ n := by
+theorem pow_strict_mono {n : ℕ} (hn : n ≠ 0) : StrictMono fun x : ℝ≥0∞ => x ^ n :=
+  by
   intro x y hxy
   obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
   induction' n with n IH
@@ -1143,7 +1162,8 @@ theorem mul_eq_mul_right : c ≠ 0 → c ≠ ∞ → (a * c = b * c ↔ a = b) :
   mul_comm c a ▸ mul_comm c b ▸ mul_eq_mul_left
 #align ennreal.mul_eq_mul_right Ennreal.mul_eq_mul_right
 
-theorem mul_le_mul_left : a ≠ 0 → a ≠ ∞ → (a * b ≤ a * c ↔ b ≤ c) := by
+theorem mul_le_mul_left : a ≠ 0 → a ≠ ∞ → (a * b ≤ a * c ↔ b ≤ c) :=
+  by
   cases a <;> cases b <;> cases c <;>
     simp (config := { contextual := true }) [none_eq_top, some_eq_coe, mul_top, top_mul, -coe_mul,
       coe_mul.symm]
@@ -1168,7 +1188,8 @@ section Cancel
 
 /-- An element `a` is `add_le_cancellable` if `a + b ≤ a + c` implies `b ≤ c` for all `b` and `c`.
   This is true in `ℝ≥0∞` for all elements except `∞`. -/
-theorem add_le_cancellable_iff_ne {a : ℝ≥0∞} : AddLECancellable a ↔ a ≠ ∞ := by
+theorem add_le_cancellable_iff_ne {a : ℝ≥0∞} : AddLECancellable a ↔ a ≠ ∞ :=
+  by
   constructor
   · rintro h rfl
     refine' zero_lt_one.not_le (h _)
@@ -1267,7 +1288,8 @@ protected theorem add_sub_cancel_right (hb : b ≠ ∞) : a + b - b = a :=
   (cancel_of_ne hb).add_tsub_cancel_right
 #align ennreal.add_sub_cancel_right Ennreal.add_sub_cancel_right
 
-protected theorem lt_add_of_sub_lt_left (h : a ≠ ∞ ∨ b ≠ ∞) : a - b < c → a < b + c := by
+protected theorem lt_add_of_sub_lt_left (h : a ≠ ∞ ∨ b ≠ ∞) : a - b < c → a < b + c :=
+  by
   obtain rfl | hb := eq_or_ne b ∞
   · rw [top_add, lt_top_iff_ne_top]
     exact fun _ => h.resolve_right (not_not.2 rfl)
@@ -1316,13 +1338,15 @@ theorem sub_right_inj {a b c : ℝ≥0∞} (ha : a ≠ ∞) (hb : b ≤ a) (hc :
     (cancel_of_ne <| ne_top_of_le_ne_top ha hc) hb hc
 #align ennreal.sub_right_inj Ennreal.sub_right_inj
 
-theorem sub_mul (h : 0 < b → b < a → c ≠ ∞) : (a - b) * c = a * c - b * c := by
+theorem sub_mul (h : 0 < b → b < a → c ≠ ∞) : (a - b) * c = a * c - b * c :=
+  by
   cases' le_or_lt a b with hab hab; · simp [hab, mul_right_mono hab]
   rcases eq_or_lt_of_le (zero_le b) with (rfl | hb); · simp
   exact (cancel_of_ne <| mul_ne_top hab.ne_top (h hb hab)).tsub_mul
 #align ennreal.sub_mul Ennreal.sub_mul
 
-theorem mul_sub (h : 0 < c → c < b → a ≠ ∞) : a * (b - c) = a * b - a * c := by
+theorem mul_sub (h : 0 < c → c < b → a ≠ ∞) : a * (b - c) = a * b - a * c :=
+  by
   simp only [mul_comm a]
   exact sub_mul h
 #align ennreal.mul_sub Ennreal.mul_sub
@@ -1361,7 +1385,8 @@ theorem lt_top_of_sum_ne_top {s : Finset α} {f : α → ℝ≥0∞} (h : (∑ x
 /-- seeing `ℝ≥0∞` as `ℝ≥0` does not change their sum, unless one of the `ℝ≥0∞` is
 infinity -/
 theorem to_nnreal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a ∈ s, f a ≠ ∞) :
-    Ennreal.toNnreal (∑ a in s, f a) = ∑ a in s, Ennreal.toNnreal (f a) := by
+    Ennreal.toNnreal (∑ a in s, f a) = ∑ a in s, Ennreal.toNnreal (f a) :=
+  by
   rw [← coe_eq_coe, coe_to_nnreal, coe_finset_sum, sum_congr rfl]
   · intro x hx
     exact (coe_to_nnreal (hf x hx)).symm
@@ -1370,19 +1395,22 @@ theorem to_nnreal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a ∈ s,
 
 /-- seeing `ℝ≥0∞` as `real` does not change their sum, unless one of the `ℝ≥0∞` is infinity -/
 theorem to_real_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a ∈ s, f a ≠ ∞) :
-    Ennreal.toReal (∑ a in s, f a) = ∑ a in s, Ennreal.toReal (f a) := by
+    Ennreal.toReal (∑ a in s, f a) = ∑ a in s, Ennreal.toReal (f a) :=
+  by
   rw [Ennreal.toReal, to_nnreal_sum hf, Nnreal.coe_sum]
   rfl
 #align ennreal.to_real_sum Ennreal.to_real_sum
 
 theorem of_real_sum_of_nonneg {s : Finset α} {f : α → ℝ} (hf : ∀ i, i ∈ s → 0 ≤ f i) :
-    Ennreal.ofReal (∑ i in s, f i) = ∑ i in s, Ennreal.ofReal (f i) := by
+    Ennreal.ofReal (∑ i in s, f i) = ∑ i in s, Ennreal.ofReal (f i) :=
+  by
   simp_rw [Ennreal.ofReal, ← coe_finset_sum, coe_eq_coe]
   exact Real.to_nnreal_sum_of_nonneg hf
 #align ennreal.of_real_sum_of_nonneg Ennreal.of_real_sum_of_nonneg
 
 theorem sum_lt_sum_of_nonempty {s : Finset α} (hs : s.Nonempty) {f g : α → ℝ≥0∞}
-    (Hlt : ∀ i ∈ s, f i < g i) : (∑ i in s, f i) < ∑ i in s, g i := by
+    (Hlt : ∀ i ∈ s, f i < g i) : (∑ i in s, f i) < ∑ i in s, g i :=
+  by
   induction' hs using Finset.Nonempty.cons_induction with a a s as hs IH
   · simp [Hlt _ (Finset.mem_singleton_self _)]
   · simp only [as, Finset.sum_cons, not_false_iff]
@@ -1392,7 +1420,8 @@ theorem sum_lt_sum_of_nonempty {s : Finset α} (hs : s.Nonempty) {f g : α → �
 #align ennreal.sum_lt_sum_of_nonempty Ennreal.sum_lt_sum_of_nonempty
 
 theorem exists_le_of_sum_le {s : Finset α} (hs : s.Nonempty) {f g : α → ℝ≥0∞}
-    (Hle : (∑ i in s, f i) ≤ ∑ i in s, g i) : ∃ i ∈ s, f i ≤ g i := by
+    (Hle : (∑ i in s, f i) ≤ ∑ i in s, g i) : ∃ i ∈ s, f i ≤ g i :=
+  by
   contrapose! Hle
   apply Ennreal.sum_lt_sum_of_nonempty hs Hle
 #align ennreal.exists_le_of_sum_le Ennreal.exists_le_of_sum_le
@@ -1526,7 +1555,7 @@ theorem inv_top : ∞⁻¹ = 0 :=
 
 theorem coe_inv_le : (↑r⁻¹ : ℝ≥0∞) ≤ (↑r)⁻¹ :=
   le_infₛ fun b (hb : 1 ≤ ↑r * b) =>
-    coe_le_iff.2 <| by 
+    coe_le_iff.2 <| by
       rintro b rfl
       apply Nnreal.inv_le_of_le_mul
       rwa [← coe_mul, ← coe_one, coe_le_coe] at hb
@@ -1553,14 +1582,16 @@ instance : DivInvOneMonoid ℝ≥0∞ :=
   { Ennreal.divInvMonoid with
     inv_one := by simpa only [coe_inv one_ne_zero, coe_one] using coe_eq_coe.2 inv_one }
 
-protected theorem inv_pow {n : ℕ} : (a ^ n)⁻¹ = a⁻¹ ^ n := by
+protected theorem inv_pow {n : ℕ} : (a ^ n)⁻¹ = a⁻¹ ^ n :=
+  by
   cases n; · simp only [pow_zero, inv_one]
   induction a using WithTop.recTopCoe; · simp [top_pow n.succ_pos]
   rcases eq_or_ne a 0 with (rfl | ha); · simp [top_pow, zero_pow, n.succ_pos]
   rw [← coe_inv ha, ← coe_pow, ← coe_inv (pow_ne_zero _ ha), ← inv_pow, coe_pow]
 #align ennreal.inv_pow Ennreal.inv_pow
 
-theorem mul_inv_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : a * a⁻¹ = 1 := by
+theorem mul_inv_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : a * a⁻¹ = 1 :=
+  by
   lift a to ℝ≥0 using ht
   norm_cast  at *
   exact mul_inv_cancel h0
@@ -1578,7 +1609,7 @@ theorem mul_div_cancel' (h0 : a ≠ 0) (hI : a ≠ ∞) : a * (b / a) = b := by
   rw [mul_comm, div_mul_cancel h0 hI]
 #align ennreal.mul_div_cancel' Ennreal.mul_div_cancel'
 
-instance : InvolutiveInv ℝ≥0∞ where 
+instance : InvolutiveInv ℝ≥0∞ where
   inv := Inv.inv
   inv_inv a := by
     by_cases a = 0 <;> cases a <;> simp_all [none_eq_top, some_eq_coe, -coe_inv, (coe_inv _).symm]
@@ -1608,7 +1639,8 @@ theorem inv_eq_zero : a⁻¹ = 0 ↔ a = ∞ :=
 theorem inv_ne_zero : a⁻¹ ≠ 0 ↔ a ≠ ∞ := by simp
 #align ennreal.inv_ne_zero Ennreal.inv_ne_zero
 
-theorem mul_inv {a b : ℝ≥0∞} (ha : a ≠ 0 ∨ b ≠ ∞) (hb : a ≠ ∞ ∨ b ≠ 0) : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by
+theorem mul_inv {a b : ℝ≥0∞} (ha : a ≠ 0 ∨ b ≠ ∞) (hb : a ≠ ∞ ∨ b ≠ 0) : (a * b)⁻¹ = a⁻¹ * b⁻¹ :=
+  by
   induction b using WithTop.recTopCoe
   · replace ha : a ≠ 0 := ha.neg_resolve_right rfl
     simp [ha]
@@ -1628,7 +1660,8 @@ theorem mul_inv {a b : ℝ≥0∞} (ha : a ≠ 0 ∨ b ≠ ∞) (hb : a ≠ ∞ 
   simp [h'a, h'b]
 #align ennreal.mul_inv Ennreal.mul_inv
 
-protected theorem sub_div (h : 0 < b → b < a → c ≠ 0) : (a - b) / c = a / c - b / c := by
+protected theorem sub_div (h : 0 < b → b < a → c ≠ 0) : (a - b) / c = a / c - b / c :=
+  by
   simp_rw [div_eq_mul_inv]
   exact Ennreal.sub_mul (by simpa using h)
 #align ennreal.sub_div Ennreal.sub_div
@@ -1638,7 +1671,8 @@ theorem inv_pos : 0 < a⁻¹ ↔ a ≠ ∞ :=
   pos_iff_ne_zero.trans inv_ne_zero
 #align ennreal.inv_pos Ennreal.inv_pos
 
-theorem inv_strict_anti : StrictAnti (Inv.inv : ℝ≥0∞ → ℝ≥0∞) := by
+theorem inv_strict_anti : StrictAnti (Inv.inv : ℝ≥0∞ → ℝ≥0∞) :=
+  by
   intro a b h
   lift a to ℝ≥0 using h.ne_top
   induction b using WithTop.recTopCoe; · simp
@@ -1687,8 +1721,8 @@ theorem inv_lt_one : a⁻¹ < 1 ↔ 1 < a :=
 
 /-- The inverse map `λ x, x⁻¹` is an order isomorphism between `ℝ≥0∞` and its `order_dual` -/
 @[simps apply]
-def OrderIso.invEnnreal :
-    ℝ≥0∞ ≃o ℝ≥0∞ᵒᵈ where 
+def OrderIso.invEnnreal : ℝ≥0∞ ≃o ℝ≥0∞ᵒᵈ
+    where
   map_rel_iff' a b := Ennreal.inv_le_inv
   toEquiv := (Equiv.inv ℝ≥0∞).trans OrderDual.toDual
 #align order_iso.inv_ennreal OrderIso.invEnnreal
@@ -1698,7 +1732,8 @@ theorem OrderIso.inv_ennreal_symm_apply : OrderIso.invEnnreal.symm a = (OrderDua
   rfl
 #align order_iso.inv_ennreal_symm_apply OrderIso.inv_ennreal_symm_apply
 
-theorem pow_le_pow_of_le_one {n m : ℕ} (ha : a ≤ 1) (h : n ≤ m) : a ^ m ≤ a ^ n := by
+theorem pow_le_pow_of_le_one {n m : ℕ} (ha : a ≤ 1) (h : n ≤ m) : a ^ m ≤ a ^ n :=
+  by
   rw [← inv_inv a, ← Ennreal.inv_pow, ← @Ennreal.inv_pow a⁻¹, inv_le_inv]
   exact pow_le_pow (one_le_inv.2 ha) h
 #align ennreal.pow_le_pow_of_le_one Ennreal.pow_le_pow_of_le_one
@@ -1711,7 +1746,8 @@ theorem div_top : a / ∞ = 0 := by rw [div_eq_mul_inv, inv_top, mul_zero]
 theorem top_div_coe : ∞ / p = ∞ := by simp [div_eq_mul_inv, top_mul]
 #align ennreal.top_div_coe Ennreal.top_div_coe
 
-theorem top_div_of_ne_top (h : a ≠ ∞) : ∞ / a = ∞ := by
+theorem top_div_of_ne_top (h : a ≠ ∞) : ∞ / a = ∞ :=
+  by
   lift a to ℝ≥0 using h
   exact top_div_coe
 #align ennreal.top_div_of_ne_top Ennreal.top_div_of_ne_top
@@ -1733,7 +1769,8 @@ theorem div_eq_top : a / b = ∞ ↔ a ≠ 0 ∧ b = 0 ∨ a = ∞ ∧ b ≠ ∞
   simp [div_eq_mul_inv, Ennreal.mul_eq_top]
 #align ennreal.div_eq_top Ennreal.div_eq_top
 
-theorem le_div_iff_mul_le (h0 : b ≠ 0 ∨ c ≠ 0) (ht : b ≠ ∞ ∨ c ≠ ∞) : a ≤ c / b ↔ a * b ≤ c := by
+theorem le_div_iff_mul_le (h0 : b ≠ 0 ∨ c ≠ 0) (ht : b ≠ ∞ ∨ c ≠ ∞) : a ≤ c / b ↔ a * b ≤ c :=
+  by
   induction b using WithTop.recTopCoe
   · lift c to ℝ≥0 using ht.neg_resolve_left rfl
     rw [div_top, nonpos_iff_eq_zero, mul_top]
@@ -1745,7 +1782,8 @@ theorem le_div_iff_mul_le (h0 : b ≠ 0 ∨ c ≠ 0) (ht : b ≠ ∞ ∨ c ≠ �
     rw [← Ennreal.mul_le_mul_right hb coe_ne_top, div_mul_cancel hb coe_ne_top]
 #align ennreal.le_div_iff_mul_le Ennreal.le_div_iff_mul_le
 
-theorem div_le_iff_le_mul (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c ≠ 0) : a / b ≤ c ↔ a ≤ c * b := by
+theorem div_le_iff_le_mul (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c ≠ 0) : a / b ≤ c ↔ a ≤ c * b :=
+  by
   suffices a * b⁻¹ ≤ c ↔ a ≤ c / b⁻¹ by simpa [div_eq_mul_inv]
   refine' (le_div_iff_mul_le _ _).symm <;> simpa
 #align ennreal.div_le_iff_le_mul Ennreal.div_le_iff_le_mul
@@ -1754,7 +1792,8 @@ theorem lt_div_iff_mul_lt (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c �
   lt_iff_lt_of_le_iff_le (div_le_iff_le_mul hb0 hbt)
 #align ennreal.lt_div_iff_mul_lt Ennreal.lt_div_iff_mul_lt
 
-theorem div_le_of_le_mul (h : a ≤ b * c) : a / c ≤ b := by
+theorem div_le_of_le_mul (h : a ≤ b * c) : a / c ≤ b :=
+  by
   by_cases h0 : c = 0
   · have : a = 0 := by simpa [h0] using h
     simp [*]
@@ -1766,7 +1805,8 @@ theorem div_le_of_le_mul' (h : a ≤ b * c) : a / b ≤ c :=
   div_le_of_le_mul <| mul_comm b c ▸ h
 #align ennreal.div_le_of_le_mul' Ennreal.div_le_of_le_mul'
 
-theorem mul_le_of_le_div (h : a ≤ b / c) : a * c ≤ b := by
+theorem mul_le_of_le_div (h : a ≤ b / c) : a * c ≤ b :=
+  by
   rw [← inv_inv c]
   exact div_le_of_le_mul h
 #align ennreal.mul_le_of_le_div Ennreal.mul_le_of_le_div
@@ -1779,7 +1819,8 @@ protected theorem div_lt_iff (h0 : b ≠ 0 ∨ c ≠ 0) (ht : b ≠ ∞ ∨ c �
   lt_iff_lt_of_le_iff_le <| le_div_iff_mul_le h0 ht
 #align ennreal.div_lt_iff Ennreal.div_lt_iff
 
-theorem mul_lt_of_lt_div (h : a < b / c) : a * c < b := by
+theorem mul_lt_of_lt_div (h : a < b / c) : a * c < b :=
+  by
   contrapose! h
   exact Ennreal.div_le_of_le_mul h
 #align ennreal.mul_lt_of_lt_div Ennreal.mul_lt_of_lt_div
@@ -1788,7 +1829,8 @@ theorem mul_lt_of_lt_div' (h : a < b / c) : c * a < b :=
   mul_comm a c ▸ mul_lt_of_lt_div h
 #align ennreal.mul_lt_of_lt_div' Ennreal.mul_lt_of_lt_div'
 
-theorem inv_le_iff_le_mul (h₁ : b = ∞ → a ≠ 0) (h₂ : a = ∞ → b ≠ 0) : a⁻¹ ≤ b ↔ 1 ≤ a * b := by
+theorem inv_le_iff_le_mul (h₁ : b = ∞ → a ≠ 0) (h₂ : a = ∞ → b ≠ 0) : a⁻¹ ≤ b ↔ 1 ≤ a * b :=
+  by
   rw [← one_div, div_le_iff_le_mul, mul_comm]
   exacts[or_not_of_imp h₁, not_or_of_imp h₂]
 #align ennreal.inv_le_iff_le_mul Ennreal.inv_le_iff_le_mul
@@ -1812,8 +1854,9 @@ protected theorem div_le_div_right (h : a ≤ b) (c : ℝ≥0∞) : a / c ≤ b 
   Ennreal.div_le_div h le_rfl
 #align ennreal.div_le_div_right Ennreal.div_le_div_right
 
-theorem eq_inv_of_mul_eq_one_left (h : a * b = 1) : a = b⁻¹ := by
-  have hb : b ≠ ∞ := by 
+theorem eq_inv_of_mul_eq_one_left (h : a * b = 1) : a = b⁻¹ :=
+  by
+  have hb : b ≠ ∞ := by
     rintro rfl
     simpa [left_ne_zero_of_mul_eq_one h] using h
   rw [← mul_one a, ← mul_inv_cancel (right_ne_zero_of_mul_eq_one h) hb, ← mul_assoc, h, one_mul]
@@ -1823,7 +1866,8 @@ theorem mul_le_iff_le_inv {a b r : ℝ≥0∞} (hr₀ : r ≠ 0) (hr₁ : r ≠ 
   rw [← @Ennreal.mul_le_mul_left _ a _ hr₀ hr₁, ← mul_assoc, mul_inv_cancel hr₀ hr₁, one_mul]
 #align ennreal.mul_le_iff_le_inv Ennreal.mul_le_iff_le_inv
 
-theorem le_of_forall_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r : ℝ≥0, ↑r < x → ↑r ≤ y) : x ≤ y := by
+theorem le_of_forall_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r : ℝ≥0, ↑r < x → ↑r ≤ y) : x ≤ y :=
+  by
   refine' le_of_forall_ge_of_dense fun r hr => _
   lift r to ℝ≥0 using ne_top_of_lt hr
   exact h r hr
@@ -1861,7 +1905,7 @@ theorem eq_div_iff (ha : a ≠ 0) (ha' : a ≠ ∞) : b = c / a ↔ a * b = c :=
 #align ennreal.eq_div_iff Ennreal.eq_div_iff
 
 theorem div_eq_div_iff (ha : a ≠ 0) (ha' : a ≠ ∞) (hb : b ≠ 0) (hb' : b ≠ ∞) :
-    c / b = d / a ↔ a * c = b * d := by 
+    c / b = d / a ↔ a * c = b * d := by
   rw [eq_div_iff ha ha']
   conv_rhs => rw [eq_comm]
   rw [← eq_div_iff hb hb', mul_div_assoc, eq_comm]
@@ -1904,7 +1948,8 @@ theorem one_half_lt_one : (2⁻¹ : ℝ≥0∞) < 1 :=
   inv_lt_one.2 <| one_lt_two
 #align ennreal.one_half_lt_one Ennreal.one_half_lt_one
 
-theorem half_lt_self {a : ℝ≥0∞} (hz : a ≠ 0) (ht : a ≠ ∞) : a / 2 < a := by
+theorem half_lt_self {a : ℝ≥0∞} (hz : a ≠ 0) (ht : a ≠ ∞) : a / 2 < a :=
+  by
   lift a to ℝ≥0 using ht
   rw [coe_ne_zero] at hz
   rw [← coe_two, ← coe_div, coe_lt_coe]
@@ -1915,7 +1960,8 @@ theorem half_le_self : a / 2 ≤ a :=
   le_add_self.trans_eq (add_halves _)
 #align ennreal.half_le_self Ennreal.half_le_self
 
-theorem sub_half (h : a ≠ ∞) : a - a / 2 = a / 2 := by
+theorem sub_half (h : a ≠ ∞) : a - a / 2 = a / 2 :=
+  by
   lift a to ℝ≥0 using h
   exact sub_eq_of_add_eq (mul_ne_top coe_ne_top <| by simp) (add_halves a)
 #align ennreal.sub_half Ennreal.sub_half
@@ -1927,7 +1973,8 @@ theorem one_sub_inv_two : (1 : ℝ≥0∞) - 2⁻¹ = 2⁻¹ := by
 
 /-- The birational order isomorphism between `ℝ≥0∞` and the unit interval `set.Iic (1 : ℝ≥0∞)`. -/
 @[simps apply_coe]
-def orderIsoIicOneBirational : ℝ≥0∞ ≃o Iic (1 : ℝ≥0∞) := by
+def orderIsoIicOneBirational : ℝ≥0∞ ≃o Iic (1 : ℝ≥0∞) :=
+  by
   refine'
     StrictMono.orderIsoOfRightInverse (fun x => ⟨(x⁻¹ + 1)⁻¹, inv_le_one.2 <| le_add_self⟩)
       (fun x y hxy => _) (fun x => (x⁻¹ - 1)⁻¹) fun x => Subtype.ext _
@@ -1977,7 +2024,8 @@ theorem exists_inv_nat_lt {a : ℝ≥0∞} (h : a ≠ 0) : ∃ n : ℕ, (n : ℝ
   inv_inv a ▸ by simp only [inv_lt_inv, Ennreal.exists_nat_gt (inv_ne_top.2 h)]
 #align ennreal.exists_inv_nat_lt Ennreal.exists_inv_nat_lt
 
-theorem exists_nat_pos_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ n > 0, b < (n : ℕ) * a := by
+theorem exists_nat_pos_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ n > 0, b < (n : ℕ) * a :=
+  by
   have : b / a ≠ ∞ := mul_ne_top hb (inv_ne_top.2 ha)
   refine' (Ennreal.exists_nat_gt this).imp fun n hn => _
   have : ↑0 < (n : ℝ≥0∞) := lt_of_le_of_lt (by simp) hn
@@ -1990,7 +2038,7 @@ theorem exists_nat_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ n : ℕ, b < n *
 #align ennreal.exists_nat_mul_gt Ennreal.exists_nat_mul_gt
 
 theorem exists_nat_pos_inv_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, ((n : ℕ) : ℝ≥0∞)⁻¹ * a < b :=
-  by 
+  by
   rcases exists_nat_pos_mul_gt hb ha with ⟨n, npos, hn⟩
   have : (n : ℝ≥0∞) ≠ 0 := Nat.cast_ne_zero.2 npos.lt.ne'
   use n, npos
@@ -1998,13 +2046,15 @@ theorem exists_nat_pos_inv_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, (
     mul_lt_mul_left (inv_ne_zero.2 <| nat_ne_top _) (inv_ne_top.2 this)]
 #align ennreal.exists_nat_pos_inv_mul_lt Ennreal.exists_nat_pos_inv_mul_lt
 
-theorem exists_nnreal_pos_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, ↑(n : ℝ≥0) * a < b := by
+theorem exists_nnreal_pos_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ n > 0, ↑(n : ℝ≥0) * a < b :=
+  by
   rcases exists_nat_pos_inv_mul_lt ha hb with ⟨n, npos : 0 < n, hn⟩
   use (n : ℝ≥0)⁻¹
   simp [*, npos.ne', zero_lt_one]
 #align ennreal.exists_nnreal_pos_mul_lt Ennreal.exists_nnreal_pos_mul_lt
 
-theorem exists_inv_two_pow_lt (ha : a ≠ 0) : ∃ n : ℕ, 2⁻¹ ^ n < a := by
+theorem exists_inv_two_pow_lt (ha : a ≠ 0) : ∃ n : ℕ, 2⁻¹ ^ n < a :=
+  by
   rcases exists_inv_nat_lt ha with ⟨n, hn⟩
   refine' ⟨n, lt_trans _ hn⟩
   rw [← Ennreal.inv_pow, inv_lt_inv]
@@ -2013,31 +2063,36 @@ theorem exists_inv_two_pow_lt (ha : a ≠ 0) : ∃ n : ℕ, 2⁻¹ ^ n < a := by
 #align ennreal.exists_inv_two_pow_lt Ennreal.exists_inv_two_pow_lt
 
 @[simp, norm_cast]
-theorem coe_zpow (hr : r ≠ 0) (n : ℤ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n := by
+theorem coe_zpow (hr : r ≠ 0) (n : ℤ) : (↑(r ^ n) : ℝ≥0∞) = r ^ n :=
+  by
   cases n
   · simp only [Int.ofNat_eq_coe, coe_pow, zpow_ofNat]
   · have : r ^ n.succ ≠ 0 := pow_ne_zero (n + 1) hr
     simp only [zpow_negSucc, coe_inv this, coe_pow]
 #align ennreal.coe_zpow Ennreal.coe_zpow
 
-theorem zpow_pos (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : 0 < a ^ n := by
+theorem zpow_pos (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : 0 < a ^ n :=
+  by
   cases n
   · exact Ennreal.pow_pos ha.bot_lt n
   · simp only [h'a, pow_eq_top_iff, zpow_negSucc, Ne.def, not_false_iff, inv_pos, false_and_iff]
 #align ennreal.zpow_pos Ennreal.zpow_pos
 
-theorem zpow_lt_top (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : a ^ n < ∞ := by
+theorem zpow_lt_top (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : a ^ n < ∞ :=
+  by
   cases n
   · exact Ennreal.pow_lt_top h'a.lt_top _
   · simp only [Ennreal.pow_pos ha.bot_lt (n + 1), zpow_negSucc, inv_lt_top]
 #align ennreal.zpow_lt_top Ennreal.zpow_lt_top
 
 theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
-    ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ (n + 1)) :=
+  by
   lift x to ℝ≥0 using h'x
   lift y to ℝ≥0 using h'y
   have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
-  obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n ≤ x ∧ x < y ^ (n + 1) := by
+  obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n ≤ x ∧ x < y ^ (n + 1) :=
+    by
     refine' Nnreal.exists_mem_Ico_zpow _ (one_lt_coe_iff.1 hy)
     simpa only [Ne.def, coe_eq_zero] using hx
   refine' ⟨n, _, _⟩
@@ -2046,11 +2101,13 @@ theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
 #align ennreal.exists_mem_Ico_zpow Ennreal.exists_mem_Ico_zpow
 
 theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
-    ∃ n : ℤ, x ∈ Ioc (y ^ n) (y ^ (n + 1)) := by
+    ∃ n : ℤ, x ∈ Ioc (y ^ n) (y ^ (n + 1)) :=
+  by
   lift x to ℝ≥0 using h'x
   lift y to ℝ≥0 using h'y
   have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
-  obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n < x ∧ x ≤ y ^ (n + 1) := by
+  obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n < x ∧ x ≤ y ^ (n + 1) :=
+    by
     refine' Nnreal.exists_mem_Ioc_zpow _ (one_lt_coe_iff.1 hy)
     simpa only [Ne.def, coe_eq_zero] using hx
   refine' ⟨n, _, _⟩
@@ -2059,7 +2116,8 @@ theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
 #align ennreal.exists_mem_Ioc_zpow Ennreal.exists_mem_Ioc_zpow
 
 theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y ≠ ⊤) :
-    Ioo (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃ n : ℤ, Ico (y ^ n) (y ^ (n + 1)) := by
+    Ioo (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃ n : ℤ, Ico (y ^ n) (y ^ (n + 1)) :=
+  by
   ext x
   simp only [mem_Union, mem_Ioo, mem_Ico]
   constructor
@@ -2073,7 +2131,8 @@ theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y �
       exact Ennreal.zpow_lt_top (zero_lt_one.trans hy).ne' h'y _
 #align ennreal.Ioo_zero_top_eq_Union_Ico_zpow Ennreal.Ioo_zero_top_eq_Union_Ico_zpow
 
-theorem zpow_le_of_le {x : ℝ≥0∞} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) : x ^ a ≤ x ^ b := by
+theorem zpow_le_of_le {x : ℝ≥0∞} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) : x ^ a ≤ x ^ b :=
+  by
   induction' a with a a <;> induction' b with b b
   · simp only [Int.ofNat_eq_coe, zpow_ofNat]
     exact pow_le_pow hx (Int.le_of_ofNat_le_ofNat h)
@@ -2091,7 +2150,8 @@ theorem monotone_zpow {x : ℝ≥0∞} (hx : 1 ≤ x) : Monotone ((· ^ ·) x : 
   zpow_le_of_le hx h
 #align ennreal.monotone_zpow Ennreal.monotone_zpow
 
-theorem zpow_add {x : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (m n : ℤ) : x ^ (m + n) = x ^ m * x ^ n := by
+theorem zpow_add {x : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (m n : ℤ) : x ^ (m + n) = x ^ m * x ^ n :=
+  by
   lift x to ℝ≥0 using h'x
   replace hx : x ≠ 0; · simpa only [Ne.def, coe_eq_zero] using hx
   simp only [← coe_zpow hx, zpow_add₀ hx, coe_mul]
@@ -2101,20 +2161,23 @@ end Inv
 
 section Real
 
-theorem to_real_add (ha : a ≠ ∞) (hb : b ≠ ∞) : (a + b).toReal = a.toReal + b.toReal := by
+theorem to_real_add (ha : a ≠ ∞) (hb : b ≠ ∞) : (a + b).toReal = a.toReal + b.toReal :=
+  by
   lift a to ℝ≥0 using ha
   lift b to ℝ≥0 using hb
   rfl
 #align ennreal.to_real_add Ennreal.to_real_add
 
 theorem to_real_sub_of_le {a b : ℝ≥0∞} (h : b ≤ a) (ha : a ≠ ∞) :
-    (a - b).toReal = a.toReal - b.toReal := by
+    (a - b).toReal = a.toReal - b.toReal :=
+  by
   lift b to ℝ≥0 using ne_top_of_le_ne_top ha h
   lift a to ℝ≥0 using ha
   simp only [← Ennreal.coe_sub, Ennreal.coe_to_real, Nnreal.coe_sub (ennreal.coe_le_coe.mp h)]
 #align ennreal.to_real_sub_of_le Ennreal.to_real_sub_of_le
 
-theorem le_to_real_sub {a b : ℝ≥0∞} (hb : b ≠ ∞) : a.toReal - b.toReal ≤ (a - b).toReal := by
+theorem le_to_real_sub {a b : ℝ≥0∞} (hb : b ≠ ∞) : a.toReal - b.toReal ≤ (a - b).toReal :=
+  by
   lift b to ℝ≥0 using hb
   induction a using WithTop.recTopCoe
   · simp
@@ -2140,7 +2203,8 @@ theorem of_real_add_le {p q : ℝ} : Ennreal.ofReal (p + q) ≤ Ennreal.ofReal p
 #align ennreal.of_real_add_le Ennreal.of_real_add_le
 
 @[simp]
-theorem to_real_le_to_real (ha : a ≠ ∞) (hb : b ≠ ∞) : a.toReal ≤ b.toReal ↔ a ≤ b := by
+theorem to_real_le_to_real (ha : a ≠ ∞) (hb : b ≠ ∞) : a.toReal ≤ b.toReal ↔ a ≤ b :=
+  by
   lift a to ℝ≥0 using ha
   lift b to ℝ≥0 using hb
   norm_cast
@@ -2151,7 +2215,8 @@ theorem to_real_mono (hb : b ≠ ∞) (h : a ≤ b) : a.toReal ≤ b.toReal :=
 #align ennreal.to_real_mono Ennreal.to_real_mono
 
 @[simp]
-theorem to_real_lt_to_real (ha : a ≠ ∞) (hb : b ≠ ∞) : a.toReal < b.toReal ↔ a < b := by
+theorem to_real_lt_to_real (ha : a ≠ ∞) (hb : b ≠ ∞) : a.toReal < b.toReal ↔ a < b :=
+  by
   lift a to ℝ≥0 using ha
   lift b to ℝ≥0 using hb
   norm_cast
@@ -2265,7 +2330,8 @@ theorem zero_eq_of_real {p : ℝ} : 0 = Ennreal.ofReal p ↔ p ≤ 0 :=
 alias of_real_eq_zero ↔ _ of_real_of_nonpos
 
 theorem of_real_sub (p : ℝ) {q : ℝ} (hq : 0 ≤ q) :
-    Ennreal.ofReal (p - q) = Ennreal.ofReal p - Ennreal.ofReal q := by
+    Ennreal.ofReal (p - q) = Ennreal.ofReal p - Ennreal.ofReal q :=
+  by
   obtain h | h := le_total p q
   · rw [of_real_of_nonpos (sub_nonpos_of_le h), tsub_eq_zero_of_le (of_real_le_of_real h)]
   refine' Ennreal.eq_sub_of_add_eq of_real_ne_top _
@@ -2273,19 +2339,22 @@ theorem of_real_sub (p : ℝ) {q : ℝ} (hq : 0 ≤ q) :
 #align ennreal.of_real_sub Ennreal.of_real_sub
 
 theorem of_real_le_iff_le_to_real {a : ℝ} {b : ℝ≥0∞} (hb : b ≠ ∞) :
-    Ennreal.ofReal a ≤ b ↔ a ≤ Ennreal.toReal b := by
+    Ennreal.ofReal a ≤ b ↔ a ≤ Ennreal.toReal b :=
+  by
   lift b to ℝ≥0 using hb
   simpa [Ennreal.ofReal, Ennreal.toReal] using Real.to_nnreal_le_iff_le_coe
 #align ennreal.of_real_le_iff_le_to_real Ennreal.of_real_le_iff_le_to_real
 
 theorem of_real_lt_iff_lt_to_real {a : ℝ} {b : ℝ≥0∞} (ha : 0 ≤ a) (hb : b ≠ ∞) :
-    Ennreal.ofReal a < b ↔ a < Ennreal.toReal b := by
+    Ennreal.ofReal a < b ↔ a < Ennreal.toReal b :=
+  by
   lift b to ℝ≥0 using hb
   simpa [Ennreal.ofReal, Ennreal.toReal] using Real.to_nnreal_lt_iff_lt_coe ha
 #align ennreal.of_real_lt_iff_lt_to_real Ennreal.of_real_lt_iff_lt_to_real
 
 theorem le_of_real_iff_to_real_le {a : ℝ≥0∞} {b : ℝ} (ha : a ≠ ∞) (hb : 0 ≤ b) :
-    a ≤ Ennreal.ofReal b ↔ Ennreal.toReal a ≤ b := by
+    a ≤ Ennreal.ofReal b ↔ Ennreal.toReal a ≤ b :=
+  by
   lift a to ℝ≥0 using ha
   simpa [Ennreal.ofReal, Ennreal.toReal] using Real.le_to_nnreal_iff_coe_le hb
 #align ennreal.le_of_real_iff_to_real_le Ennreal.le_of_real_iff_to_real_le
@@ -2297,7 +2366,8 @@ theorem to_real_le_of_le_of_real {a : ℝ≥0∞} {b : ℝ} (hb : 0 ≤ b) (h : 
 #align ennreal.to_real_le_of_le_of_real Ennreal.to_real_le_of_le_of_real
 
 theorem lt_of_real_iff_to_real_lt {a : ℝ≥0∞} {b : ℝ} (ha : a ≠ ∞) :
-    a < Ennreal.ofReal b ↔ Ennreal.toReal a < b := by
+    a < Ennreal.ofReal b ↔ Ennreal.toReal a < b :=
+  by
   lift a to ℝ≥0 using ha
   simpa [Ennreal.ofReal, Ennreal.toReal] using Real.lt_to_nnreal_iff_coe_lt
 #align ennreal.lt_of_real_iff_to_real_lt Ennreal.lt_of_real_iff_to_real_lt
@@ -2342,13 +2412,14 @@ theorem to_nnreal_top_mul (a : ℝ≥0∞) : Ennreal.toNnreal (∞ * a) = 0 := b
 #align ennreal.to_nnreal_top_mul Ennreal.to_nnreal_top_mul
 
 @[simp]
-theorem smul_to_nnreal (a : ℝ≥0) (b : ℝ≥0∞) : (a • b).toNnreal = a * b.toNnreal := by
+theorem smul_to_nnreal (a : ℝ≥0) (b : ℝ≥0∞) : (a • b).toNnreal = a * b.toNnreal :=
+  by
   change ((a : ℝ≥0∞) * b).toNnreal = a * b.to_nnreal
   simp only [Ennreal.to_nnreal_mul, Ennreal.to_nnreal_coe]
 #align ennreal.smul_to_nnreal Ennreal.smul_to_nnreal
 
 /-- `ennreal.to_nnreal` as a `monoid_hom`. -/
-def toNnrealHom : ℝ≥0∞ →* ℝ≥0 where 
+def toNnrealHom : ℝ≥0∞ →* ℝ≥0 where
   toFun := Ennreal.toNnreal
   map_one' := to_nnreal_coe
   map_mul' _ _ := to_nnreal_mul
@@ -2395,19 +2466,22 @@ theorem to_real_mul_top (a : ℝ≥0∞) : Ennreal.toReal (a * ∞) = 0 := by
   rw [to_real_mul, top_to_real, mul_zero]
 #align ennreal.to_real_mul_top Ennreal.to_real_mul_top
 
-theorem to_real_top_mul (a : ℝ≥0∞) : Ennreal.toReal (∞ * a) = 0 := by
+theorem to_real_top_mul (a : ℝ≥0∞) : Ennreal.toReal (∞ * a) = 0 :=
+  by
   rw [mul_comm]
   exact to_real_mul_top _
 #align ennreal.to_real_top_mul Ennreal.to_real_top_mul
 
 theorem to_real_eq_to_real (ha : a ≠ ∞) (hb : b ≠ ∞) :
-    Ennreal.toReal a = Ennreal.toReal b ↔ a = b := by
+    Ennreal.toReal a = Ennreal.toReal b ↔ a = b :=
+  by
   lift a to ℝ≥0 using ha
   lift b to ℝ≥0 using hb
   simp only [coe_eq_coe, Nnreal.coe_eq, coe_to_real]
 #align ennreal.to_real_eq_to_real Ennreal.to_real_eq_to_real
 
-theorem to_real_smul (r : ℝ≥0) (s : ℝ≥0∞) : (r • s).toReal = r • s.toReal := by
+theorem to_real_smul (r : ℝ≥0) (s : ℝ≥0∞) : (r • s).toReal = r • s.toReal :=
+  by
   rw [Ennreal.smul_def, smul_eq_mul, to_real_mul, coe_to_real]
   rfl
 #align ennreal.to_real_smul Ennreal.to_real_smul
@@ -2422,7 +2496,7 @@ protected theorem trichotomy₂ {p q : ℝ≥0∞} (hpq : p ≤ q) :
         p = 0 ∧ 0 < q.toReal ∨
           p = ∞ ∧ q = ∞ ∨
             0 < p.toReal ∧ q = ∞ ∨ 0 < p.toReal ∧ 0 < q.toReal ∧ p.toReal ≤ q.toReal :=
-  by 
+  by
   rcases eq_or_lt_of_le (bot_le : 0 ≤ p) with ((rfl : 0 = p) | (hp : 0 < p))
   · simpa using q.trichotomy
   rcases eq_or_lt_of_le (le_top : q ≤ ∞) with (rfl | hq)
@@ -2446,7 +2520,8 @@ theorem to_real_pos_iff_ne_top (p : ℝ≥0∞) [Fact (1 ≤ p)] : 0 < p.toReal 
     fun h => zero_lt_one.trans_le (p.dichotomy.resolve_left h)⟩
 #align ennreal.to_real_pos_iff_ne_top Ennreal.to_real_pos_iff_ne_top
 
-theorem to_nnreal_inv (a : ℝ≥0∞) : a⁻¹.toNnreal = a.toNnreal⁻¹ := by
+theorem to_nnreal_inv (a : ℝ≥0∞) : a⁻¹.toNnreal = a.toNnreal⁻¹ :=
+  by
   induction a using WithTop.recTopCoe; · simp
   rcases eq_or_ne a 0 with (rfl | ha); · simp
   rw [← coe_inv ha, to_nnreal_coe, to_nnreal_coe]
@@ -2456,7 +2531,8 @@ theorem to_nnreal_div (a b : ℝ≥0∞) : (a / b).toNnreal = a.toNnreal / b.toN
   rw [div_eq_mul_inv, to_nnreal_mul, to_nnreal_inv, div_eq_mul_inv]
 #align ennreal.to_nnreal_div Ennreal.to_nnreal_div
 
-theorem to_real_inv (a : ℝ≥0∞) : a⁻¹.toReal = a.toReal⁻¹ := by
+theorem to_real_inv (a : ℝ≥0∞) : a⁻¹.toReal = a.toReal⁻¹ :=
+  by
   simp_rw [Ennreal.toReal]
   norm_cast
   exact to_nnreal_inv a
@@ -2467,13 +2543,15 @@ theorem to_real_div (a b : ℝ≥0∞) : (a / b).toReal = a.toReal / b.toReal :=
 #align ennreal.to_real_div Ennreal.to_real_div
 
 theorem of_real_prod_of_nonneg {s : Finset α} {f : α → ℝ} (hf : ∀ i, i ∈ s → 0 ≤ f i) :
-    Ennreal.ofReal (∏ i in s, f i) = ∏ i in s, Ennreal.ofReal (f i) := by
+    Ennreal.ofReal (∏ i in s, f i) = ∏ i in s, Ennreal.ofReal (f i) :=
+  by
   simp_rw [Ennreal.ofReal, ← coe_finset_prod, coe_eq_coe]
   exact Real.to_nnreal_prod_of_nonneg hf
 #align ennreal.of_real_prod_of_nonneg Ennreal.of_real_prod_of_nonneg
 
 @[simp]
-theorem to_nnreal_bit0 {x : ℝ≥0∞} : (bit0 x).toNnreal = bit0 x.toNnreal := by
+theorem to_nnreal_bit0 {x : ℝ≥0∞} : (bit0 x).toNnreal = bit0 x.toNnreal :=
+  by
   induction x using WithTop.recTopCoe
   · simp
   · exact to_nnreal_add coe_ne_top coe_ne_top
@@ -2505,11 +2583,11 @@ theorem of_real_bit1 {r : ℝ} (hr : 0 ≤ r) : Ennreal.ofReal (bit1 r) = bit1 (
 
 end Real
 
-section infi
+section infᵢ
 
 variable {ι : Sort _} {f g : ι → ℝ≥0∞}
 
-theorem infi_add : infi f + a = ⨅ i, f i + a :=
+theorem infi_add : infᵢ f + a = ⨅ i, f i + a :=
   le_antisymm (le_infᵢ fun i => add_le_add (infᵢ_le _ _) <| le_rfl)
     (tsub_le_iff_right.1 <| le_infᵢ fun i => tsub_le_iff_right.2 <| infᵢ_le _ _)
 #align ennreal.infi_add Ennreal.infi_add
@@ -2519,7 +2597,8 @@ theorem supr_sub : (⨆ i, f i) - a = ⨆ i, f i - a :=
     (supᵢ_le fun i => tsub_le_tsub (le_supᵢ _ _) (le_refl a))
 #align ennreal.supr_sub Ennreal.supr_sub
 
-theorem sub_infi : (a - ⨅ i, f i) = ⨆ i, a - f i := by
+theorem sub_infi : (a - ⨅ i, f i) = ⨆ i, a - f i :=
+  by
   refine' eq_of_forall_ge_iff fun c => _
   rw [tsub_le_iff_right, add_comm, infi_add]
   simp [tsub_le_iff_right, sub_eq_add_neg, add_comm]
@@ -2528,13 +2607,13 @@ theorem sub_infi : (a - ⨅ i, f i) = ⨆ i, a - f i := by
 theorem Inf_add {s : Set ℝ≥0∞} : infₛ s + a = ⨅ b ∈ s, b + a := by simp [infₛ_eq_infᵢ, infi_add]
 #align ennreal.Inf_add Ennreal.Inf_add
 
-theorem add_infi {a : ℝ≥0∞} : a + infi f = ⨅ b, a + f b := by
+theorem add_infi {a : ℝ≥0∞} : a + infᵢ f = ⨅ b, a + f b := by
   rw [add_comm, infi_add] <;> simp [add_comm]
 #align ennreal.add_infi Ennreal.add_infi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a a') -/
-theorem infi_add_infi (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : infi f + infi g = ⨅ a, f a + g a :=
-  suffices (⨅ a, f a + g a) ≤ infi f + infi g from
+theorem infi_add_infi (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : infᵢ f + infᵢ g = ⨅ a, f a + g a :=
+  suffices (⨅ a, f a + g a) ≤ infᵢ f + infᵢ g from
     le_antisymm (le_infᵢ fun a => add_le_add (infᵢ_le _ _) (infᵢ_le _ _)) this
   calc
     (⨅ a, f a + g a) ≤ ⨅ (a) (a'), f a + g a' :=
@@ -2542,16 +2621,18 @@ theorem infi_add_infi (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : infi f + i
         le_infᵢ fun a' =>
           let ⟨k, h⟩ := h a a'
           infᵢ_le_of_le k h
-    _ = infi f + infi g := by simp [add_infi, infi_add]
+    _ = infᵢ f + infᵢ g := by simp [add_infi, infi_add]
     
 #align ennreal.infi_add_infi Ennreal.infi_add_infi
 
 theorem infi_sum {f : ι → α → ℝ≥0∞} {s : Finset α} [Nonempty ι]
     (h : ∀ (t : Finset α) (i j : ι), ∃ k, ∀ a ∈ t, f k a ≤ f i a ∧ f k a ≤ f j a) :
-    (⨅ i, ∑ a in s, f i a) = ∑ a in s, ⨅ i, f i a := by
+    (⨅ i, ∑ a in s, f i a) = ∑ a in s, ⨅ i, f i a :=
+  by
   induction' s using Finset.induction_on with a s ha ih
   · simp
-  have : ∀ i j : ι, ∃ k : ι, (f k a + ∑ b in s, f k b) ≤ f i a + ∑ b in s, f j b := by
+  have : ∀ i j : ι, ∃ k : ι, (f k a + ∑ b in s, f k b) ≤ f i a + ∑ b in s, f j b :=
+    by
     intro i j
     obtain ⟨k, hk⟩ := h (insert a s) i j
     exact
@@ -2564,7 +2645,7 @@ theorem infi_sum {f : ι → α → ℝ≥0∞} {s : Finset α} [Nonempty ι]
 /-- If `x ≠ 0` and `x ≠ ∞`, then right multiplication by `x` maps infimum to infimum.
 See also `ennreal.infi_mul` that assumes `[nonempty ι]` but does not require `x ≠ 0`. -/
 theorem infi_mul_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠ 0) (h : x ≠ ∞) :
-    infi f * x = ⨅ i, f i * x :=
+    infᵢ f * x = ⨅ i, f i * x :=
   le_antisymm mul_right_mono.map_infi_le
     ((div_le_iff_le_mul (Or.inl h0) <| Or.inl h).mp <|
       le_infᵢ fun i => (div_le_iff_le_mul (Or.inl h0) <| Or.inl h).mpr <| infᵢ_le _ _)
@@ -2573,7 +2654,7 @@ theorem infi_mul_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠
 /-- If `x ≠ ∞`, then right multiplication by `x` maps infimum over a nonempty type to infimum. See
 also `ennreal.infi_mul_of_ne` that assumes `x ≠ 0` but does not require `[nonempty ι]`. -/
 theorem infi_mul {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) :
-    infi f * x = ⨅ i, f i * x := by 
+    infᵢ f * x = ⨅ i, f i * x := by
   by_cases h0 : x = 0
   · simp only [h0, mul_zero, infᵢ_const]
   · exact infi_mul_of_ne h0 h
@@ -2582,19 +2663,19 @@ theorem infi_mul {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h 
 /-- If `x ≠ ∞`, then left multiplication by `x` maps infimum over a nonempty type to infimum. See
 also `ennreal.mul_infi_of_ne` that assumes `x ≠ 0` but does not require `[nonempty ι]`. -/
 theorem mul_infi {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) :
-    x * infi f = ⨅ i, x * f i := by simpa only [mul_comm] using infi_mul h
+    x * infᵢ f = ⨅ i, x * f i := by simpa only [mul_comm] using infi_mul h
 #align ennreal.mul_infi Ennreal.mul_infi
 
 /-- If `x ≠ 0` and `x ≠ ∞`, then left multiplication by `x` maps infimum to infimum.
 See also `ennreal.mul_infi` that assumes `[nonempty ι]` but does not require `x ≠ 0`. -/
 theorem mul_infi_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠ 0) (h : x ≠ ∞) :
-    x * infi f = ⨅ i, x * f i := by simpa only [mul_comm] using infi_mul_of_ne h0 h
+    x * infᵢ f = ⨅ i, x * f i := by simpa only [mul_comm] using infi_mul_of_ne h0 h
 #align ennreal.mul_infi_of_ne Ennreal.mul_infi_of_ne
 
 /-! `supr_mul`, `mul_supr` and variants are in `topology.instances.ennreal`. -/
 
 
-end infi
+end infᵢ
 
 section supᵢ
 
@@ -2629,7 +2710,8 @@ theorem preimage_coe_nnreal_ennreal (h : u.OrdConnected) : (coe ⁻¹' u : Set �
   h.preimage_mono Ennreal.coe_mono
 #align set.ord_connected.preimage_coe_nnreal_ennreal Set.OrdConnected.preimage_coe_nnreal_ennreal
 
-theorem image_coe_nnreal_ennreal (h : t.OrdConnected) : (coe '' t : Set ℝ≥0∞).OrdConnected := by
+theorem image_coe_nnreal_ennreal (h : t.OrdConnected) : (coe '' t : Set ℝ≥0∞).OrdConnected :=
+  by
   refine' ⟨ball_image_iff.2 fun x hx => ball_image_iff.2 fun y hy z hz => _⟩
   rcases Ennreal.le_coe_iff.1 hz.2 with ⟨z, rfl, hzy⟩
   exact mem_image_of_mem _ (h.out hx hy ⟨Ennreal.coe_le_coe.1 hz.1, Ennreal.coe_le_coe.1 hz.2⟩)

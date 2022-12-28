@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.generator
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,8 @@ namespace CategoryTheory.Abelian
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
 theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG : IsSeparator G) :
-    ∃ G : C, Injective G ∧ IsCoseparator G := by
+    ∃ G : C, Injective G ∧ IsCoseparator G :=
+  by
   haveI : well_powered C := well_powered_of_is_detector G hG.is_detector
   haveI : has_products_of_shape (subobject (op G)) C := has_products_of_shape_of_small _ _
   let T : C := injective.under (pi_obj fun P : subobject (op G) => unop P)
@@ -58,7 +59,8 @@ theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG
   category_theory.abelian.has_injective_coseparator CategoryTheory.Abelian.has_injective_coseparator
 
 theorem has_projective_separator [HasColimits C] [EnoughProjectives C] (G : C)
-    (hG : IsCoseparator G) : ∃ G : C, Projective G ∧ IsSeparator G := by
+    (hG : IsCoseparator G) : ∃ G : C, Projective G ∧ IsSeparator G :=
+  by
   obtain ⟨T, hT₁, hT₂⟩ := has_injective_coseparator (op G) ((is_separator_op_iff _).2 hG)
   exact ⟨unop T, inferInstance, (is_separator_unop_iff _).2 hT₂⟩
 #align

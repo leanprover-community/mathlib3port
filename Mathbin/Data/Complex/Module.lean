@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,33 +75,30 @@ theorem real_smul {x : ℝ} {z : ℂ} : x • z = x * z :=
 
 end
 
-instance [HasSmul R ℝ] [HasSmul S ℝ] [SMulCommClass R S ℝ] :
-    SMulCommClass R S ℂ where smul_comm r s x := by ext <;> simp [smul_re, smul_im, smul_comm]
+instance [HasSmul R ℝ] [HasSmul S ℝ] [SMulCommClass R S ℝ] : SMulCommClass R S ℂ
+    where smul_comm r s x := by ext <;> simp [smul_re, smul_im, smul_comm]
 
-instance [HasSmul R S] [HasSmul R ℝ] [HasSmul S ℝ] [IsScalarTower R S ℝ] :
-    IsScalarTower R S ℂ where smul_assoc r s x := by ext <;> simp [smul_re, smul_im, smul_assoc]
+instance [HasSmul R S] [HasSmul R ℝ] [HasSmul S ℝ] [IsScalarTower R S ℝ] : IsScalarTower R S ℂ
+    where smul_assoc r s x := by ext <;> simp [smul_re, smul_im, smul_assoc]
 
-instance [HasSmul R ℝ] [HasSmul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] :
-    IsCentralScalar R
-      ℂ where op_smul_eq_smul r x := by ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
+instance [HasSmul R ℝ] [HasSmul Rᵐᵒᵖ ℝ] [IsCentralScalar R ℝ] : IsCentralScalar R ℂ
+    where op_smul_eq_smul r x := by ext <;> simp [smul_re, smul_im, op_smul_eq_smul]
 
-instance [Monoid R] [MulAction R ℝ] :
-    MulAction R
-      ℂ where 
+instance [Monoid R] [MulAction R ℝ] : MulAction R ℂ
+    where
   one_smul x := by ext <;> simp [smul_re, smul_im, one_smul]
   mul_smul r s x := by ext <;> simp [smul_re, smul_im, mul_smul]
 
-instance [DistribSMul R ℝ] :
-    DistribSMul R
-      ℂ where 
+instance [DistribSMul R ℝ] : DistribSMul R ℂ
+    where
   smul_add r x y := by ext <;> simp [smul_re, smul_im, smul_add]
   smul_zero r := by ext <;> simp [smul_re, smul_im, smul_zero]
 
 instance [Semiring R] [DistribMulAction R ℝ] : DistribMulAction R ℂ :=
   { Complex.distribSmul with }
 
-instance [Semiring R] [Module R ℝ] :
-    Module R ℂ where 
+instance [Semiring R] [Module R ℝ] : Module R ℂ
+    where
   add_smul r s x := by ext <;> simp [smul_re, smul_im, add_smul]
   zero_smul r := by ext <;> simp [smul_re, smul_im, zero_smul]
 
@@ -132,7 +129,8 @@ theorem AlgHom.map_coe_real_complex (f : ℂ →ₐ[ℝ] A) (x : ℝ) : f x = al
 
 /-- Two `ℝ`-algebra homomorphisms from ℂ are equal if they agree on `complex.I`. -/
 @[ext]
-theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f i = g i) : f = g := by
+theorem alg_hom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f i = g i) : f = g :=
+  by
   ext ⟨x, y⟩
   simp only [mk_eq_add_mul_I, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
 #align complex.alg_hom_ext Complex.alg_hom_ext
@@ -159,7 +157,7 @@ noncomputable def basisOneI : Basis (Fin 2) ℝ ℂ :=
     { toFun := fun z => ![z.re, z.im]
       invFun := fun c => c 0 + c 1 • I
       left_inv := fun z => by simp
-      right_inv := fun c => by 
+      right_inv := fun c => by
         ext i
         fin_cases i <;> simp
       map_add' := fun z z' => by simp
@@ -234,8 +232,8 @@ theorem Complex.coe_smul {E : Type _} [AddCommGroup E] [Module ℂ E] (x : ℝ) 
 /-- The scalar action of `ℝ` on a `ℂ`-module `E` induced by `module.complex_to_real` commutes with
 another scalar action of `M` on `E` whenever the action of `ℂ` commutes with the action of `M`. -/
 instance (priority := 900) SMulCommClass.complex_to_real {M E : Type _} [AddCommGroup E]
-    [Module ℂ E] [HasSmul M E] [SMulCommClass ℂ M E] :
-    SMulCommClass ℝ M E where smul_comm r _ _ := (smul_comm (r : ℂ) _ _ : _)
+    [Module ℂ E] [HasSmul M E] [SMulCommClass ℂ M E] : SMulCommClass ℝ M E
+    where smul_comm r _ _ := (smul_comm (r : ℂ) _ _ : _)
 #align smul_comm_class.complex_to_real SMulCommClass.complex_to_real
 
 instance (priority := 100) FiniteDimensional.complex_to_real (E : Type _) [AddCommGroup E]
@@ -267,7 +265,7 @@ namespace Complex
 open ComplexConjugate
 
 /-- Linear map version of the real part function, from `ℂ` to `ℝ`. -/
-def reLm : ℂ →ₗ[ℝ] ℝ where 
+def reLm : ℂ →ₗ[ℝ] ℝ where
   toFun x := x.re
   map_add' := add_re
   map_smul' := by simp
@@ -279,7 +277,7 @@ theorem re_lm_coe : ⇑re_lm = re :=
 #align complex.re_lm_coe Complex.re_lm_coe
 
 /-- Linear map version of the imaginary part function, from `ℂ` to `ℝ`. -/
-def imLm : ℂ →ₗ[ℝ] ℝ where 
+def imLm : ℂ →ₗ[ℝ] ℝ where
   toFun x := x.im
   map_add' := add_im
   map_smul' := by simp
@@ -302,7 +300,7 @@ theorem of_real_am_coe : ⇑of_real_am = coe :=
 
 /-- `ℝ`-algebra isomorphism version of the complex conjugation function from `ℂ` to `ℂ` -/
 def conjAe : ℂ ≃ₐ[ℝ] ℂ :=
-  { conj with 
+  { conj with
     invFun := conj
     left_inv := star_star
     right_inv := star_star
@@ -322,14 +320,15 @@ theorem to_matrix_conj_ae :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
       «expr!![ »
         "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
-  by 
+  by
   ext (i j)
   simp [LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp
 #align complex.to_matrix_conj_ae Complex.to_matrix_conj_ae
 
 /-- The identity and the complex conjugation are the only two `ℝ`-algebra homomorphisms of `ℂ`. -/
-theorem real_alg_hom_eq_id_or_conj (f : ℂ →ₐ[ℝ] ℂ) : f = AlgHom.id ℝ ℂ ∨ f = conj_ae := by
+theorem real_alg_hom_eq_id_or_conj (f : ℂ →ₐ[ℝ] ℂ) : f = AlgHom.id ℝ ℂ ∨ f = conj_ae :=
+  by
   refine'
       (eq_or_eq_neg_of_sq_eq_sq (f I) I <| by rw [← map_pow, I_sq, map_neg, map_one]).imp _ _ <;>
     refine' fun h => alg_hom_ext _
@@ -351,7 +350,7 @@ def liftAux (I' : A) (hf : I' * I' = -1) : ℂ →ₐ[ℝ] A :=
     show
       algebraMap ℝ A (x₁ * x₂ - y₁ * y₂) + (x₁ * y₂ + y₁ * x₂) • I' =
         (algebraMap ℝ A x₁ + y₁ • I') * (algebraMap ℝ A x₂ + y₂ • I')
-      by 
+      by
       rw [add_mul, mul_add, mul_add, add_comm _ (y₁ • I' * y₂ • I'), add_add_add_comm]
       congr 1
       -- equate "real" and "imaginary" parts
@@ -379,9 +378,8 @@ This can be used to embed the complex numbers in the `quaternion`s.
 
 This isomorphism is named to match the very similar `zsqrtd.lift`. -/
 @[simps (config := { simpRhs := true })]
-def lift :
-    { I' : A // I' * I' = -1 } ≃
-      (ℂ →ₐ[ℝ] A) where 
+def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A)
+    where
   toFun I' := liftAux I' I'.Prop
   invFun F := ⟨F i, by rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
   left_inv I' := Subtype.ext <| lift_aux_apply_I I' I'.Prop
@@ -413,18 +411,16 @@ variable {A : Type _} [AddCommGroup A] [Module ℂ A] [StarAddMonoid A] [StarMod
 /-- Create a `self_adjoint` element from a `skew_adjoint` element by multiplying by the scalar
 `-complex.I`. -/
 @[simps]
-def skewAdjoint.negISmul :
-    skewAdjoint A →ₗ[ℝ]
-      selfAdjoint
-        A where 
+def skewAdjoint.negISmul : skewAdjoint A →ₗ[ℝ] selfAdjoint A
+    where
   toFun a :=
     ⟨-I • a, by
       simp only [selfAdjoint.mem_iff, neg_smul, star_neg, star_smul, star_def, conj_I,
         skewAdjoint.star_coe_eq, neg_smul_neg]⟩
-  map_add' a b := by 
+  map_add' a b := by
     ext
     simp only [AddSubgroup.coe_add, smul_add, AddMemClass.mk_add_mk]
-  map_smul' a b := by 
+  map_smul' a b := by
     ext
     simp only [neg_smul, skewAdjoint.coe_smul, AddSubgroup.coe_mk, RingHom.id_apply,
       selfAdjoint.coe_smul, smul_neg, neg_inj]
@@ -459,13 +455,15 @@ scoped[ComplexStarModule] notation "ℜ" => realPart
 scoped[ComplexStarModule] notation "ℑ" => imaginaryPart
 
 @[simp]
-theorem real_part_apply_coe (a : A) : (ℜ a : A) = (2 : ℝ)⁻¹ • (a + star a) := by
+theorem real_part_apply_coe (a : A) : (ℜ a : A) = (2 : ℝ)⁻¹ • (a + star a) :=
+  by
   unfold realPart
   simp only [self_adjoint_part_apply_coe, invOf_eq_inv]
 #align real_part_apply_coe real_part_apply_coe
 
 @[simp]
-theorem imaginary_part_apply_coe (a : A) : (ℑ a : A) = -I • (2 : ℝ)⁻¹ • (a - star a) := by
+theorem imaginary_part_apply_coe (a : A) : (ℑ a : A) = -I • (2 : ℝ)⁻¹ • (a - star a) :=
+  by
   unfold imaginaryPart
   simp only [LinearMap.coe_comp, skewAdjoint.neg_I_smul_apply_coe, skew_adjoint_part_apply_coe,
     invOf_eq_inv]
@@ -480,23 +478,27 @@ theorem real_part_add_I_smul_imaginary_part (a : A) : (ℜ a + I • ℑ a : A) 
 #align real_part_add_I_smul_imaginary_part real_part_add_I_smul_imaginary_part
 
 @[simp]
-theorem real_part_I_smul (a : A) : ℜ (I • a) = -ℑ a := by
+theorem real_part_I_smul (a : A) : ℜ (I • a) = -ℑ a :=
+  by
   ext
   simp [smul_comm I, smul_sub, sub_eq_add_neg, add_comm]
 #align real_part_I_smul real_part_I_smul
 
 @[simp]
-theorem imaginary_part_I_smul (a : A) : ℑ (I • a) = ℜ a := by
+theorem imaginary_part_I_smul (a : A) : ℑ (I • a) = ℜ a :=
+  by
   ext
   simp [smul_comm I, smul_smul I]
 #align imaginary_part_I_smul imaginary_part_I_smul
 
-theorem real_part_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a := by
+theorem real_part_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a :=
+  by
   nth_rw 1 [← re_add_im z]
   simp [-re_add_im, add_smul, ← smul_smul, sub_eq_add_neg]
 #align real_part_smul real_part_smul
 
-theorem imaginary_part_smul (z : ℂ) (a : A) : ℑ (z • a) = z.re • ℑ a + z.im • ℜ a := by
+theorem imaginary_part_smul (z : ℂ) (a : A) : ℑ (z • a) = z.re • ℑ a + z.im • ℜ a :=
+  by
   nth_rw 1 [← re_add_im z]
   simp [-re_add_im, add_smul, ← smul_smul]
 #align imaginary_part_smul imaginary_part_smul

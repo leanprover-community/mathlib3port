@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Binder elimination
 
 ! This file was ported from Lean 3 source module tactic.converter.binders
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,8 +189,8 @@ theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a =
     fun h => ⟨a, rfl, h⟩⟩
 #align exists_elim_eq_right exists_elim_eq_right
 
-unsafe def exists_eq_elim :
-    binder_eq_elim where 
+unsafe def exists_eq_elim : binder_eq_elim
+    where
   match_binder e := do
     let q(@Exists $(β) $(f)) ← return e
     return (β, f)
@@ -219,8 +219,8 @@ theorem forall_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a =
     | _, rfl => h⟩
 #align forall_elim_eq_right forall_elim_eq_right
 
-unsafe def forall_eq_elim :
-    binder_eq_elim where 
+unsafe def forall_eq_elim : binder_eq_elim
+    where
   match_binder e := do
     let expr.pi n bi d bd ← return e
     return (d, expr.lam n bi d bd)
@@ -230,8 +230,8 @@ unsafe def forall_eq_elim :
   apply_elim_eq := apply' `` forall_elim_eq_left <|> apply' `` forall_elim_eq_right
 #align forall_eq_elim forall_eq_elim
 
-unsafe def supr_eq_elim :
-    binder_eq_elim where 
+unsafe def supr_eq_elim : binder_eq_elim
+    where
   match_binder e := do
     let q(@supᵢ $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
@@ -244,10 +244,10 @@ unsafe def supr_eq_elim :
   apply_elim_eq := applyc `` supᵢ_supᵢ_eq_left <|> applyc `` supᵢ_supᵢ_eq_right
 #align supr_eq_elim supr_eq_elim
 
-unsafe def infi_eq_elim :
-    binder_eq_elim where 
+unsafe def infi_eq_elim : binder_eq_elim
+    where
   match_binder e := do
-    let q(@infi $(α) $(cl) $(β) $(f)) ← return e
+    let q(@infᵢ $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
   adapt_rel c := do
     let r ← current_relation
@@ -267,13 +267,15 @@ section
 variable [CompleteLattice α]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
-example {s : Set β} {f : β → α} : infₛ (Set.image f s) = ⨅ a ∈ s, f a := by
+example {s : Set β} {f : β → α} : infₛ (Set.image f s) = ⨅ a ∈ s, f a :=
+  by
   simp [infₛ_eq_infᵢ, infᵢ_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic old_conv.conversion -/
-example {s : Set β} {f : β → α} : supₛ (Set.image f s) = ⨆ a ∈ s, f a := by
+example {s : Set β} {f : β → α} : supₛ (Set.image f s) = ⨆ a ∈ s, f a :=
+  by
   simp [supₛ_eq_supᵢ, supᵢ_and]
   run_tac
     conversion supr_eq_elim.old_conv

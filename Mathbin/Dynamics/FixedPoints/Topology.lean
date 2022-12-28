@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module dynamics.fixed_points.topology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ open TopologicalSpace
 /-- If the iterates `f^[n] x` converge to `y` and `f` is continuous at `y`,
 then `y` is a fixed point for `f`. -/
 theorem is_fixed_pt_of_tendsto_iterate {x y : α} (hy : Tendsto (fun n => (f^[n]) x) atTop (𝓝 y))
-    (hf : ContinuousAt f y) : IsFixedPt f y := by
+    (hf : ContinuousAt f y) : IsFixedPt f y :=
+  by
   refine' tendsto_nhds_unique ((tendsto_add_at_top_iff_nat 1).1 _) hy
   simp only [iterate_succ' f]
   exact hf.tendsto.comp hy

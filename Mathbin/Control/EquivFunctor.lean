@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module control.equiv_functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,13 +56,13 @@ variable (f : Type u₀ → Type u₁) [EquivFunctor f] {α β : Type u₀} (e :
 
 #print EquivFunctor.mapEquiv /-
 /-- An `equiv_functor` in fact takes every equiv to an equiv. -/
-def mapEquiv : f α ≃ f β where 
+def mapEquiv : f α ≃ f β where
   toFun := EquivFunctor.map e
   invFun := EquivFunctor.map e.symm
-  left_inv x := by 
+  left_inv x := by
     convert (congr_fun (EquivFunctor.map_trans e e.symm) x).symm
     simp
-  right_inv y := by 
+  right_inv y := by
     convert (congr_fun (EquivFunctor.map_trans e.symm e) y).symm
     simp
 #align equiv_functor.map_equiv EquivFunctor.mapEquiv
@@ -109,22 +109,18 @@ theorem mapEquiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
 
 end
 
-/- warning: equiv_functor.of_is_lawful_functor -> EquivFunctor.ofLawfulFunctor is a dubious translation:
-lean 3 declaration is
-  forall (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : IsLawfulFunctor.{u1, u2} f _inst_1], EquivFunctor.{u1, u2} f
-but is expected to have type
-  forall (f : Type.{u1} -> Type.{u2}) [_inst_1 : Functor.{u1, u2} f] [_inst_2 : LawfulFunctor.{u1, u2} f _inst_1], EquivFunctor.{u1, u2} f
-Case conversion may be inaccurate. Consider using '#align equiv_functor.of_is_lawful_functor EquivFunctor.ofLawfulFunctorₓ'. -/
-instance (priority := 100) ofLawfulFunctor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
-    EquivFunctor f where 
+#print EquivFunctor.ofLawfulFunctor /-
+instance (priority := 100) ofLawfulFunctor (f : Type u₀ → Type u₁) [Functor f] [LawfulFunctor f] :
+    EquivFunctor f where
   map α β e := Functor.map e
-  map_refl' α := by 
+  map_refl' α := by
     ext
-    apply IsLawfulFunctor.id_map
-  map_trans' α β γ k h := by 
+    apply LawfulFunctor.id_map
+  map_trans' α β γ k h := by
     ext x
-    apply IsLawfulFunctor.comp_map k h x
+    apply LawfulFunctor.comp_map k h x
 #align equiv_functor.of_is_lawful_functor EquivFunctor.ofLawfulFunctor
+-/
 
 #print EquivFunctor.mapEquiv.injective /-
 theorem mapEquiv.injective (f : Type u₀ → Type u₁) [Applicative f] [LawfulApplicative f]

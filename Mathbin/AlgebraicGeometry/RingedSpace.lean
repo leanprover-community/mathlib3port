@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.ringed_space
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ neighborhood around `x`.
 -/
 theorem is_unit_res_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x : U)
     (h : IsUnit (X.Presheaf.germ x f)) :
-    ∃ (V : Opens X)(i : V ⟶ U)(hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) := by
+    ∃ (V : Opens X)(i : V ⟶ U)(hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) :=
+  by
   obtain ⟨g', heq⟩ := h.exists_right_inv
   obtain ⟨V, hxV, g, rfl⟩ := X.presheaf.germ_exist x.1 g'
   let W := U ⊓ V
@@ -77,7 +78,7 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
   by
   -- We pick a cover of `U` by open sets `V x`, such that `f` is a unit on each `V x`.
   choose V iVU m h_unit using fun x : U => X.is_unit_res_of_is_unit_germ U f x (h x)
-  have hcover : U ≤ supᵢ V := by 
+  have hcover : U ≤ supᵢ V := by
     intro x hxU
     rw [opens.mem_coe, opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
@@ -106,10 +107,10 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
 /-- The basic open of a section `f` is the set of all points `x`, such that the germ of `f` at
 `x` is a unit.
 -/
-def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
-    Opens X where 
+def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X
+    where
   val := coe '' { x : U | IsUnit (X.Presheaf.germ x f) }
-  property := by 
+  property := by
     rw [is_open_iff_forall_mem_open]
     rintro _ ⟨x, hx, rfl⟩
     obtain ⟨V, i, hxV, hf⟩ := X.is_unit_res_of_is_unit_germ U f x hx
@@ -126,7 +127,8 @@ def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
 
 @[simp]
 theorem mem_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) (x : U) :
-    ↑x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ x f) := by
+    ↑x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ x f) :=
+  by
   constructor
   · rintro ⟨x, hx, a⟩
     cases Subtype.eq a
@@ -142,14 +144,16 @@ theorem mem_top_basic_open (f : X.Presheaf.obj (op ⊤)) (x : X) :
 #align
   algebraic_geometry.RingedSpace.mem_top_basic_open AlgebraicGeometry.RingedSpaceCat.mem_top_basic_open
 
-theorem basic_open_le {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ≤ U := by
+theorem basic_open_le {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ≤ U :=
+  by
   rintro _ ⟨x, hx, rfl⟩
   exact x.2
 #align algebraic_geometry.RingedSpace.basic_open_le AlgebraicGeometry.RingedSpaceCat.basic_open_le
 
 /-- The restriction of a section `f` to the basic open of `f` is a unit. -/
 theorem is_unit_res_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) :
-    IsUnit (X.Presheaf.map (@homOfLe (Opens X) _ _ _ (X.basic_open_le f)).op f) := by
+    IsUnit (X.Presheaf.map (@homOfLe (Opens X) _ _ _ (X.basic_open_le f)).op f) :=
+  by
   apply is_unit_of_is_unit_germ
   rintro ⟨_, ⟨x, hx, rfl⟩⟩
   convert hx
@@ -160,7 +164,8 @@ theorem is_unit_res_basic_open {U : Opens X} (f : X.Presheaf.obj (op U)) :
 
 @[simp]
 theorem basic_open_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U) :
-    @basicOpen X (unop V) (X.Presheaf.map i f) = unop V ⊓ @basicOpen X (unop U) f := by
+    @basicOpen X (unop V) (X.Presheaf.map i f) = unop V ⊓ @basicOpen X (unop U) f :=
+  by
   induction U using Opposite.rec
   induction V using Opposite.rec
   let g := i.unop; have : i = g.op := rfl; clear_value g; subst this
@@ -176,7 +181,8 @@ theorem basic_open_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj
 -- This should fire before `basic_open_res`.
 @[simp]
 theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.Presheaf.obj U) :
-    @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpaceCat.basicOpen X (unop U) f := by
+    @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpaceCat.basicOpen X (unop U) f :=
+  by
   apply le_antisymm
   · rw [X.basic_open_res i f]
     exact inf_le_right
@@ -189,7 +195,8 @@ theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X
 
 @[simp]
 theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
-    X.basicOpen (f * g) = X.basicOpen f ⊓ X.basicOpen g := by
+    X.basicOpen (f * g) = X.basicOpen f ⊓ X.basicOpen g :=
+  by
   ext1
   dsimp [RingedSpace.basic_open]
   rw [← Set.image_inter Subtype.coe_injective]
@@ -200,7 +207,7 @@ theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
 #align algebraic_geometry.RingedSpace.basic_open_mul AlgebraicGeometry.RingedSpaceCat.basic_open_mul
 
 theorem basic_open_of_is_unit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : IsUnit f) :
-    X.basicOpen f = U := by 
+    X.basicOpen f = U := by
   apply le_antisymm
   · exact X.basic_open_le f
   intro x hx

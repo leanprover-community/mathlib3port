@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.order.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i
 instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] :
     OrderedCancelCommMonoid (∀ i : I, f i) := by
   refine_struct
-      { Pi.partialOrder, Pi.monoid with 
+      { Pi.partialOrder, Pi.monoid with
         mul := (· * ·)
         one := (1 : ∀ i, f i)
         le := (· ≤ ·)
@@ -71,7 +71,7 @@ instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] :
 
 @[to_additive]
 instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (∀ i : I, f i) :=
-  { Pi.commGroup, Pi.orderedCommMonoid with 
+  { Pi.commGroup, Pi.orderedCommMonoid with
     mul := (· * ·)
     one := (1 : ∀ i, f i)
     le := (· ≤ ·)
@@ -80,7 +80,8 @@ instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (�
 #align pi.ordered_comm_group Pi.orderedCommGroup
 
 instance [∀ i, OrderedSemiring (f i)] : OrderedSemiring (∀ i, f i) :=
-  { Pi.semiring, Pi.partialOrder with
+  { Pi.semiring,
+    Pi.partialOrder with
     add_le_add_left := fun a b hab c i => add_le_add_left (hab _) _
     zero_le_one := fun _ => zero_le_one
     mul_le_mul_of_nonneg_left := fun a b c hab hc i => mul_le_mul_of_nonneg_left (hab _) <| hc _

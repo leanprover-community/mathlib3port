@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.lin_comb
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,8 +32,10 @@ theorem lin_comb_holds {v : Nat → Int} :
   | [], [], h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
   | [], _ :: _, h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
   | _ :: _, [], h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
-  | t :: ts, n :: ns, h => by
-    have : 0 ≤ ↑n * term.val v t + term.val v (lin_comb ns ts) := by
+  | t :: ts, n :: ns, h =>
+    by
+    have : 0 ≤ ↑n * term.val v t + term.val v (lin_comb ns ts) :=
+      by
       apply add_nonneg
       · apply mul_nonneg
         apply Int.coe_nat_nonneg
@@ -50,13 +52,15 @@ def UnsatLinComb (ns : List Nat) (ts : List Term) : Prop :=
 #align omega.unsat_lin_comb Omega.UnsatLinComb
 
 theorem unsat_lin_comb_of (ns : List Nat) (ts : List Term) :
-    (linComb ns ts).fst < 0 → (∀ x ∈ (linComb ns ts).snd, x = (0 : Int)) → UnsatLinComb ns ts := by
+    (linComb ns ts).fst < 0 → (∀ x ∈ (linComb ns ts).snd, x = (0 : Int)) → UnsatLinComb ns ts :=
+  by
   intro h1 h2
   exact ⟨h1, h2⟩
 #align omega.unsat_lin_comb_of Omega.unsat_lin_comb_of
 
 theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List Term) :
-    UnsatLinComb ns ts → Clause.Unsat ([], ts) := by
+    UnsatLinComb ns ts → Clause.Unsat ([], ts) :=
+  by
   intro h1 h2; cases' h2 with v h2
   have h3 := lin_comb_holds ns h2.right
   cases' h1 with hl hr

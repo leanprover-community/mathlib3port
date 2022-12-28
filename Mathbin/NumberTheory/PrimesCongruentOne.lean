@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.primes_congruent_one
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,9 +25,11 @@ open Polynomial Nat Filter
 
 /-- For any positive `k : ℕ` there are infinitely many primes `p` such that `p ≡ 1 [MOD k]`. -/
 theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
-    ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] := by
+    ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] :=
+  by
   let b := 3 * (k * n.factorial)
-  have hgt : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs := by
+  have hgt : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs :=
+    by
     have hkey : ∀ l : ℕ, 2 < 3 * (l.succ * n.factorial) := fun l =>
       lt_mul_of_lt_of_one_le (2 : ℕ).lt_succ_self
         (le_mul_of_le_of_one_le (Nat.succ_pos _) n.factorial_pos)
@@ -41,7 +43,7 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
       norm_cast
       rwa [one_mul] at hkey
     calc
-      1 ≤ _ := by 
+      1 ≤ _ := by
         rw [le_tsub_iff_left (one_le_two.trans (hkey _).le)]
         exact (hkey _).le
       _ < _ :=
@@ -50,7 +52,8 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
       
   let p := min_fac (eval (↑b) (cyclotomic k ℤ)).natAbs
   haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_lt hgt).symm⟩
-  have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) := by
+  have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) :=
+    by
     rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_ofNat,
       ← Int.coe_castRingHom, eval₂_hom, Int.coe_castRingHom, Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
     apply Int.dvd_natAbs.1
@@ -74,7 +77,8 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
 #align nat.exists_prime_ge_modeq_one Nat.exists_prime_ge_modeq_one
 
 theorem frequently_at_top_modeq_one {k : ℕ} (hpos : 0 < k) :
-    ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] := by
+    ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] :=
+  by
   refine' frequently_at_top.2 fun n => _
   obtain ⟨p, hp⟩ := exists_prime_ge_modeq_one n hpos
   exact ⟨p, ⟨hp.2.1, hp.1, hp.2.2⟩⟩

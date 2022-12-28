@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.fold
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,8 @@ theorem foldr_mul (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (a b : CliffordAl
 
 /-- This lemma demonstrates the origin of the `foldr` name. -/
 theorem foldr_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) :
-    foldr Q f hf n (l.map <| ι Q).Prod = List.foldr (fun m n => f m n) n l := by
+    foldr Q f hf n (l.map <| ι Q).Prod = List.foldr (fun m n => f m n) n l :=
+  by
   induction' l with hd tl ih
   · rw [List.map_nil, List.prod_nil, List.foldr_nil, foldr_one]
   · rw [List.map_cons, List.prod_cons, List.foldr_cons, foldr_mul, foldr_ι, ih]
@@ -142,7 +143,7 @@ theorem foldl_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n :
 
 end Foldl
 
-theorem right_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
+theorem rightInduction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
     (h_add : ∀ x y, P x → P y → P (x + y)) (h_ι_mul : ∀ m x, P x → P (x * ι Q m)) : ∀ x, P x :=
   by
   /- It would be neat if we could prove this via `foldr` like how we prove
@@ -150,29 +151,31 @@ theorem right_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alg
   intro x
   have : x ∈ ⊤ := Submodule.mem_top
   rw [← supr_ι_range_eq_top] at this
-  apply Submodule.supr_induction _ this (fun i x hx => _) _ h_add
-  · refine' Submodule.pow_induction_on_right _ hr h_add (fun x px m => _) hx
+  apply Submodule.suprInduction _ this (fun i x hx => _) _ h_add
+  · refine' Submodule.powInductionOnRight _ hr h_add (fun x px m => _) hx
     rintro ⟨m, rfl⟩
     exact h_ι_mul _ _ px
   · simpa only [map_zero] using hr 0
-#align clifford_algebra.right_induction CliffordAlgebra.right_induction
+#align clifford_algebra.right_induction CliffordAlgebra.rightInduction
 
-theorem left_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
-    (h_add : ∀ x y, P x → P y → P (x + y)) (h_mul_ι : ∀ x m, P x → P (ι Q m * x)) : ∀ x, P x := by
+theorem leftInduction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
+    (h_add : ∀ x y, P x → P y → P (x + y)) (h_mul_ι : ∀ x m, P x → P (ι Q m * x)) : ∀ x, P x :=
+  by
   refine' reverse_involutive.surjective.forall.2 _
   intro x
-  induction' x using CliffordAlgebra.right_induction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.rightInduction with r x y hx hy m x hx
   · simpa only [reverse.commutes] using hr r
   · simpa only [map_add] using h_add _ _ hx hy
   · simpa only [reverse.map_mul, reverse_ι] using h_mul_ι _ _ hx
-#align clifford_algebra.left_induction CliffordAlgebra.left_induction
+#align clifford_algebra.left_induction CliffordAlgebra.leftInduction
 
 /-! ### Versions with extra state -/
 
 
 /-- Auxiliary definition for `clifford_algebra.foldr'` -/
 def foldr'Aux (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) :
-    M →ₗ[R] Module.EndCat R (CliffordAlgebra Q × N) := by
+    M →ₗ[R] Module.EndCat R (CliffordAlgebra Q × N) :=
+  by
   have v_mul := (Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
   have l := v_mul.compl₂ (LinearMap.fst _ _ N)
   exact
@@ -193,7 +196,8 @@ theorem foldr'_aux_apply_apply (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R]
 
 theorem foldr'_aux_foldr'_aux (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
     (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx) (v : M) (x_fx) :
-    foldr'Aux Q f v (foldr'Aux Q f v x_fx) = Q v • x_fx := by
+    foldr'Aux Q f v (foldr'Aux Q f v x_fx) = Q v • x_fx :=
+  by
   cases' x_fx with x fx
   simp only [foldr'_aux_apply_apply]
   rw [← mul_assoc, ι_sq_scalar, ← Algebra.smul_def, hf, Prod.smul_mk]
@@ -222,12 +226,13 @@ theorem foldr'_ι (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
 
 theorem foldr'_ι_mul (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
     (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx) (n m) (x) :
-    foldr' Q f hf n (ι Q m * x) = f m (x, foldr' Q f hf n x) := by
+    foldr' Q f hf n (ι Q m * x) = f m (x, foldr' Q f hf n x) :=
+  by
   dsimp [foldr']
   rw [foldr_mul, foldr_ι, foldr'_aux_apply_apply]
   refine' congr_arg (f m) (prod.mk.eta.symm.trans _)
   congr 1
-  induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
   · simp_rw [foldr_algebra_map, Prod.smul_mk, Algebra.algebra_map_eq_smul_one]
   · rw [map_add, Prod.fst_add, hx, hy]
   · rw [foldr_mul, foldr_ι, foldr'_aux_apply_apply, hx]

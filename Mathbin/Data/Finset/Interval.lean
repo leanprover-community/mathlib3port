@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,23 +30,22 @@ namespace Finset
 
 variable [DecidableEq α] (s t : Finset α)
 
-instance :
-    LocallyFiniteOrder
-      (Finset α) where 
+instance : LocallyFiniteOrder (Finset α)
+    where
   finsetIcc s t := t.powerset.filter ((· ⊆ ·) s)
   finsetIco s t := t.ssubsets.filter ((· ⊆ ·) s)
   finsetIoc s t := t.powerset.filter ((· ⊂ ·) s)
   finsetIoo s t := t.ssubsets.filter ((· ⊂ ·) s)
-  finset_mem_Icc s t u := by 
+  finset_mem_Icc s t u := by
     rw [mem_filter, mem_powerset]
     exact and_comm' _ _
-  finset_mem_Ico s t u := by 
+  finset_mem_Ico s t u := by
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
-  finset_mem_Ioc s t u := by 
+  finset_mem_Ioc s t u := by
     rw [mem_filter, mem_powerset]
     exact and_comm' _ _
-  finset_mem_Ioo s t u := by 
+  finset_mem_Ioo s t u := by
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
 
@@ -76,7 +75,8 @@ theorem Iio_eq_ssubsets : iio s = s.ssubsets :=
 
 variable {s t}
 
-theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).powerset.image ((· ∪ ·) s) := by
+theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).powerset.image ((· ∪ ·) s) :=
+  by
   ext u
   simp_rw [mem_Icc, mem_image, exists_prop, mem_powerset]
   constructor
@@ -86,7 +86,8 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).powerset.image (
     exact ⟨le_sup_left, union_subset h <| hv.trans <| sdiff_subset _ _⟩
 #align finset.Icc_eq_image_powerset Finset.Icc_eq_image_powerset
 
-theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.image ((· ∪ ·) s) := by
+theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.image ((· ∪ ·) s) :=
+  by
   ext u
   simp_rw [mem_Ico, mem_image, exists_prop, mem_ssubsets]
   constructor
@@ -97,7 +98,8 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : ico s t = (t \ s).ssubsets.image (
 #align finset.Ico_eq_image_ssubsets Finset.Ico_eq_image_ssubsets
 
 /-- Cardinality of a non-empty `Icc` of finsets. -/
-theorem card_Icc_finset (h : s ⊆ t) : (icc s t).card = 2 ^ (t.card - s.card) := by
+theorem card_Icc_finset (h : s ⊆ t) : (icc s t).card = 2 ^ (t.card - s.card) :=
+  by
   rw [← card_sdiff h, ← card_powerset, Icc_eq_image_powerset h, Finset.card_image_iff]
   rintro u hu v hv (huv : s ⊔ u = s ⊔ v)
   rw [mem_coe, mem_powerset] at hu hv

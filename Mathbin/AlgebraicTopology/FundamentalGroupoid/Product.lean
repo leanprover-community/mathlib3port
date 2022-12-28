@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.product
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,11 +59,11 @@ theorem proj_map (i : I) (x₀ x₁ : πₓ (TopCat.of (∀ i, X i))) (p : x₀ 
 groupoid of the pi product. This is actually an isomorphism (see `pi_iso`)
 -/
 @[simps]
-def piToPiTop : (∀ i, πₓ (X i)) ⥤
-      πₓ (TopCat.of (∀ i, X i)) where 
+def piToPiTop : (∀ i, πₓ (X i)) ⥤ πₓ (TopCat.of (∀ i, X i))
+    where
   obj g := g
   map v₁ v₂ p := Path.Homotopic.pi p
-  map_id' := by 
+  map_id' := by
     intro x
     change (Path.Homotopic.pi fun i => 𝟙 (x i)) = _
     simp only [FundamentalGroupoid.id_eq_path_refl, Path.Homotopic.pi_lift]
@@ -75,18 +75,16 @@ def piToPiTop : (∀ i, πₓ (X i)) ⥤
 of the induced projections. This shows that `fundamental_groupoid_functor` preserves products.
 -/
 @[simps]
-def piIso :
-    CategoryTheory.GroupoidCat.of (∀ i : I, πₓ (X i)) ≅
-      πₓ (TopCat.of (∀ i, X i)) where 
+def piIso : CategoryTheory.GroupoidCat.of (∀ i : I, πₓ (X i)) ≅ πₓ (TopCat.of (∀ i, X i))
+    where
   Hom := piToPiTop X
   inv := CategoryTheory.Functor.pi' (proj X)
-  hom_inv_id' := by 
+  hom_inv_id' := by
     change pi_to_pi_Top X ⋙ CategoryTheory.Functor.pi' (proj X) = 𝟭 _
     apply CategoryTheory.Functor.ext <;> intros
     · ext
-      simp;
-    · rfl
-  inv_hom_id' := by 
+      simp; · rfl
+  inv_hom_id' := by
     change CategoryTheory.Functor.pi' (proj X) ⋙ pi_to_pi_Top X = 𝟭 _
     apply CategoryTheory.Functor.ext <;> intros
     · suffices Path.Homotopic.pi ((CategoryTheory.Functor.pi' (proj X)).map f) = f by simpa
@@ -116,7 +114,8 @@ theorem cone_discrete_comp_obj_map_cone :
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
 def piTopToPiCone :
     Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) ⟶
-      GroupoidCat.piLimitFan fun i : I => πₓ (X i) where Hom := CategoryTheory.Functor.pi' (proj X)
+      GroupoidCat.piLimitFan fun i : I => πₓ (X i)
+    where Hom := CategoryTheory.Functor.pi' (proj X)
 #align fundamental_groupoid_functor.pi_Top_to_pi_cone FundamentalGroupoidFunctor.piTopToPiCone
 
 instance : IsIso (piTopToPiCone X) :=
@@ -124,7 +123,8 @@ instance : IsIso (piTopToPiCone X) :=
   limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
 
 /-- The fundamental groupoid functor preserves products -/
-def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π := by
+def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π :=
+  by
   apply limits.preserves_limit_of_preserves_limit_cone (TopCat.piFanIsLimit.{u} X)
   apply (limits.is_limit.of_cone_equiv (cone_discrete_comp X)).toFun
   simp only [cone_discrete_comp_obj_map_cone]
@@ -167,13 +167,13 @@ The map taking the product of two fundamental groupoids to the fundamental group
 of the two topological spaces. This is in fact an isomorphism (see `prod_iso`).
 -/
 @[simps obj]
-def prodToProdTop : πₓ A × πₓ B ⥤
-      πₓ (TopCat.of (A × B)) where 
+def prodToProdTop : πₓ A × πₓ B ⥤ πₓ (TopCat.of (A × B))
+    where
   obj g := g
   map x y p :=
     match x, y, p with
     | (x₀, x₁), (y₀, y₁), (p₀, p₁) => Path.Homotopic.prod p₀ p₁
-  map_id' := by 
+  map_id' := by
     rintro ⟨x₀, x₁⟩
     simp only [CategoryTheory.prod_id, FundamentalGroupoid.id_eq_path_refl]
     unfold_aux; rw [Path.Homotopic.prod_lift]; rfl
@@ -194,12 +194,12 @@ theorem prod_to_prod_Top_map {x₀ x₁ : πₓ A} {y₀ y₁ : πₓ B} (p₀ :
 of the induced left and right projections.
 -/
 @[simps]
-def prodIso :
-    CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅
-      πₓ (TopCat.of (A × B)) where 
+def prodIso : CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅ πₓ (TopCat.of (A × B))
+    where
   Hom := prodToProdTop A B
   inv := (projLeft A B).prod' (projRight A B)
-  hom_inv_id' := by
+  hom_inv_id' :=
+    by
     change prod_to_prod_Top A B ⋙ (proj_left A B).prod' (proj_right A B) = 𝟭 _
     apply CategoryTheory.Functor.hext;
     · intros
@@ -207,7 +207,8 @@ def prodIso :
     rintro ⟨x₀, x₁⟩ ⟨y₀, y₁⟩ ⟨f₀, f₁⟩
     have := And.intro (Path.Homotopic.proj_left_prod f₀ f₁) (Path.Homotopic.proj_right_prod f₀ f₁)
     simpa
-  inv_hom_id' := by
+  inv_hom_id' :=
+    by
     change (proj_left A B).prod' (proj_right A B) ⋙ prod_to_prod_Top A B = 𝟭 _
     apply CategoryTheory.Functor.hext;
     · intros

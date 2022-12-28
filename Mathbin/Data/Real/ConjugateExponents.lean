@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.conjugate_exponents
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem one_div_ne_zero : 1 / p ≠ 0 :=
   ne_of_gt h.one_div_pos
 #align real.is_conjugate_exponent.one_div_ne_zero Real.IsConjugateExponent.one_div_ne_zero
 
-theorem conj_eq : q = p / (p - 1) := by
+theorem conj_eq : q = p / (p - 1) :=
+  by
   have := h.inv_add_inv_conj
   rw [← eq_sub_iff_add_eq', one_div, inv_eq_iff_inv_eq] at this
   field_simp [← this, h.ne_zero]
@@ -102,18 +103,20 @@ theorem mul_eq_add : p * q = p + q := by
 
 @[symm]
 protected theorem symm : q.IsConjugateExponent p :=
-  { one_lt := by 
+  { one_lt := by
       rw [h.conj_eq]
       exact (one_lt_div h.sub_one_pos).mpr (sub_one_lt p)
     inv_add_inv_conj := by simpa [add_comm] using h.inv_add_inv_conj }
 #align real.is_conjugate_exponent.symm Real.IsConjugateExponent.symm
 
-theorem div_conj_eq_sub_one : p / q = p - 1 := by
+theorem div_conj_eq_sub_one : p / q = p - 1 :=
+  by
   field_simp [h.symm.ne_zero]
   rw [h.sub_one_mul_conj]
 #align real.is_conjugate_exponent.div_conj_eq_sub_one Real.IsConjugateExponent.div_conj_eq_sub_one
 
-theorem one_lt_nnreal : 1 < Real.toNnreal p := by
+theorem one_lt_nnreal : 1 < Real.toNnreal p :=
+  by
   rw [← Real.to_nnreal_one, Real.to_nnreal_lt_to_nnreal_iff h.pos]
   exact h.one_lt
 #align real.is_conjugate_exponent.one_lt_nnreal Real.IsConjugateExponent.one_lt_nnreal

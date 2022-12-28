@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.equiv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,15 +78,15 @@ namespace Homeomorph
 
 /-- Any homeomorphism is a homotopy equivalence.
 -/
-def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ
-      Y where 
+def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ Y
+    where
   toFun := ⟨h⟩
   invFun := ⟨h.symm⟩
-  left_inv := by 
+  left_inv := by
     convert ContinuousMap.Homotopic.refl _
     ext
     simp
-  right_inv := by 
+  right_inv := by
     convert ContinuousMap.Homotopic.refl _
     ext
     simp
@@ -105,7 +105,7 @@ namespace HomotopyEquiv
 
 /-- If `X` is homotopy equivalent to `Y`, then `Y` is homotopy equivalent to `X`.
 -/
-def symm (h : X ≃ₕ Y) : Y ≃ₕ X where 
+def symm (h : X ≃ₕ Y) : Y ≃ₕ X where
   toFun := h.invFun
   invFun := h.toFun
   left_inv := h.right_inv
@@ -147,11 +147,11 @@ If `X` is homotopy equivalent to `Y`, and `Y` is homotopy equivalent to `Z`, the
 equivalent to `Z`.
 -/
 @[simps]
-def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) :
-    X ≃ₕ Z where 
+def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : X ≃ₕ Z
+    where
   toFun := h₂.toFun.comp h₁.toFun
   invFun := h₁.invFun.comp h₂.invFun
-  left_inv := by 
+  left_inv := by
     refine' homotopic.trans _ h₁.left_inv
     change (h₁.inv_fun.comp h₂.inv_fun).comp (h₂.to_fun.comp h₁.to_fun) with
       h₁.inv_fun.comp ((h₂.inv_fun.comp h₂.to_fun).comp h₁.to_fun)
@@ -159,7 +159,7 @@ def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) :
     refine' homotopic.trans ((homotopic.refl _).hcomp h₂.left_inv) _
     -- simp,
     rw [ContinuousMap.id_comp]
-  right_inv := by 
+  right_inv := by
     refine' homotopic.trans _ h₂.right_inv
     change (h₂.to_fun.comp h₁.to_fun).comp (h₁.inv_fun.comp h₂.inv_fun) with
       h₂.to_fun.comp ((h₁.to_fun.comp h₁.inv_fun).comp h₂.inv_fun)

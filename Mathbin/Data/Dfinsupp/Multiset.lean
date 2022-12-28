@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.dfinsupp.multiset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,10 +49,8 @@ namespace Multiset
 variable [DecidableEq α]
 
 /-- A computable version of `multiset.to_finsupp` -/
-def toDfinsupp :
-    Multiset α →+
-      Π₀ a : α,
-        ℕ where 
+def toDfinsupp : Multiset α →+ Π₀ a : α, ℕ
+    where
   toFun s :=
     { toFun := fun n => s.count n
       support' := Trunc.mk ⟨s, fun i => (em (i ∈ s)).imp_right Multiset.count_eq_zero_of_not_mem⟩ }
@@ -72,7 +70,8 @@ theorem to_dfinsupp_support (s : Multiset α) : s.toDfinsupp.support = s.toFinse
 
 @[simp]
 theorem to_dfinsupp_repeat (a : α) (n : ℕ) :
-    toDfinsupp (Multiset.repeat a n) = Dfinsupp.single a n := by
+    toDfinsupp (Multiset.repeat a n) = Dfinsupp.single a n :=
+  by
   ext i
   dsimp [to_dfinsupp]
   simp [count_repeat, eq_comm]
@@ -87,10 +86,10 @@ theorem to_dfinsupp_singleton (a : α) : toDfinsupp {a} = Dfinsupp.single a 1 :=
 @[simps apply symmApply]
 def equivDfinsupp : Multiset α ≃+ Π₀ a : α, ℕ :=
   AddMonoidHom.toAddEquiv Multiset.toDfinsupp Dfinsupp.toMultiset
-    (by 
+    (by
       ext x : 1
       simp)
-    (by 
+    (by
       refine' @Dfinsupp.add_hom_ext α (fun _ => ℕ) _ _ _ _ _ _ fun i hi => _
       simp)
 #align multiset.equiv_dfinsupp Multiset.equivDfinsupp

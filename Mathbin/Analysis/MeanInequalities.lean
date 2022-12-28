@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,14 +139,15 @@ theorem geom_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀ i 
     (hw' : (∑ i in s, w i) = 1) (hz : ∀ i ∈ s, 0 ≤ z i) (hx : ∀ i ∈ s, w i ≠ 0 → z i = x) :
     (∏ i in s, z i ^ w i) = x :=
   calc
-    (∏ i in s, z i ^ w i) = ∏ i in s, x ^ w i := by
+    (∏ i in s, z i ^ w i) = ∏ i in s, x ^ w i :=
+      by
       refine' prod_congr rfl fun i hi => _
       cases' eq_or_ne (w i) 0 with h₀ h₀
       · rw [h₀, rpow_zero, rpow_zero]
       · rw [hx i hi h₀]
-    _ = x := by 
+    _ = x := by
       rw [← rpow_sum_of_nonneg _ hw, hw', rpow_one]
-      have : (∑ i in s, w i) ≠ 0 := by 
+      have : (∑ i in s, w i) ≠ 0 := by
         rw [hw']
         exact one_ne_zero
       obtain ⟨i, his, hi⟩ := exists_ne_zero_of_sum_ne_zero this
@@ -158,7 +159,8 @@ theorem geom_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀ i 
 theorem arith_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw' : (∑ i in s, w i) = 1)
     (hx : ∀ i ∈ s, w i ≠ 0 → z i = x) : (∑ i in s, w i * z i) = x :=
   calc
-    (∑ i in s, w i * z i) = ∑ i in s, w i * x := by
+    (∑ i in s, w i * z i) = ∑ i in s, w i * x :=
+      by
       refine' sum_congr rfl fun i hi => _
       cases' eq_or_ne (w i) 0 with hwi hwi
       · rw [hwi, zero_mul, zero_mul]
@@ -285,7 +287,8 @@ theorem young_inequality (a b : ℝ≥0) {p q : ℝ≥0} (hp : 1 < p) (hpq : 1 /
 
 /-- Young's inequality, `ℝ≥0` version with real conjugate exponents. -/
 theorem young_inequality_real (a b : ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
-    a * b ≤ a ^ p / Real.toNnreal p + b ^ q / Real.toNnreal q := by
+    a * b ≤ a ^ p / Real.toNnreal p + b ^ q / Real.toNnreal q :=
+  by
   nth_rw 1 [← Real.coe_to_nnreal p hpq.nonneg]
   nth_rw 1 [← Real.coe_to_nnreal q hpq.symm.nonneg]
   exact young_inequality a b hpq.one_lt_nnreal hpq.inv_add_inv_conj_nnreal
@@ -297,7 +300,8 @@ namespace Ennreal
 
 /-- Young's inequality, `ℝ≥0∞` version with real conjugate exponents. -/
 theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
-    a * b ≤ a ^ p / Ennreal.ofReal p + b ^ q / Ennreal.ofReal q := by
+    a * b ≤ a ^ p / Ennreal.ofReal p + b ^ q / Ennreal.ofReal q :=
+  by
   by_cases h : a = ⊤ ∨ b = ⊤
   · refine' le_trans le_top (le_of_eq _)
     repeat' rw [div_eq_mul_inv]
@@ -324,7 +328,8 @@ namespace Nnreal
 
 private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0) {p q : ℝ}
     (hpq : p.IsConjugateExponent q) (hf : (∑ i in s, f i ^ p) ≤ 1) (hg : (∑ i in s, g i ^ q) ≤ 1) :
-    (∑ i in s, f i * g i) ≤ 1 := by
+    (∑ i in s, f i * g i) ≤ 1 :=
+  by
   have hp_ne_zero : Real.toNnreal p ≠ 0 := (zero_lt_one.trans hpq.one_lt_nnreal).Ne.symm
   have hq_ne_zero : Real.toNnreal q ≠ 0 := (zero_lt_one.trans hpq.symm.one_lt_nnreal).Ne.symm
   calc
@@ -332,7 +337,8 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0) {p q : 
       Finset.sum_le_sum fun i his => young_inequality_real (f i) (g i) hpq
     _ = (∑ i in s, f i ^ p) / Real.toNnreal p + (∑ i in s, g i ^ q) / Real.toNnreal q := by
       rw [sum_add_distrib, sum_div, sum_div]
-    _ ≤ 1 / Real.toNnreal p + 1 / Real.toNnreal q := by
+    _ ≤ 1 / Real.toNnreal p + 1 / Real.toNnreal q :=
+      by
       refine' add_le_add _ _
       · rwa [div_le_iff hp_ne_zero, div_mul_cancel _ hp_ne_zero]
       · rwa [div_le_iff hq_ne_zero, div_mul_cancel _ hq_ne_zero]
@@ -342,7 +348,8 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0) {p q : 
 
 private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0) {p q : ℝ}
     (hpq : p.IsConjugateExponent q) (hf : (∑ i in s, f i ^ p) = 0) :
-    (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
+    (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) :=
+  by
   simp only [hf, hpq.ne_zero, one_div, sum_eq_zero_iff, zero_rpow, zero_mul, inv_eq_zero, Ne.def,
     not_false_iff, le_zero_iff, mul_eq_zero]
   intro i his
@@ -355,13 +362,15 @@ private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0) {p q :
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with `ℝ≥0`-valued functions. -/
 theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
-    (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
+    (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) :=
+  by
   by_cases hF_zero : (∑ i in s, f i ^ p) = 0
   · exact inner_le_Lp_mul_Lp_of_norm_eq_zero s f g hpq hF_zero
   by_cases hG_zero : (∑ i in s, g i ^ q) = 0
   ·
     calc
-      (∑ i in s, f i * g i) = ∑ i in s, g i * f i := by
+      (∑ i in s, f i * g i) = ∑ i in s, g i * f i :=
+        by
         congr with i
         rw [mul_comm]
       _ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
@@ -370,7 +379,8 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjuga
       
   let f' i := f i / (∑ i in s, f i ^ p) ^ (1 / p)
   let g' i := g i / (∑ i in s, g i ^ q) ^ (1 / q)
-  suffices (∑ i in s, f' i * g' i) ≤ 1 by
+  suffices (∑ i in s, f' i * g' i) ≤ 1
+    by
     simp_rw [f', g', div_mul_div_comm, ← sum_div] at this
     rwa [div_le_iff, one_mul] at this
     refine' mul_ne_zero _ _
@@ -398,14 +408,15 @@ theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0} {p q : ℝ} (hpq : p.IsCo
   by
   have H₁ :
     ∀ s : Finset ι, (∑ i in s, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) :=
-    by 
+    by
     intro s
     refine' le_trans (inner_le_Lp_mul_Lq s f g hpq) (mul_le_mul _ _ bot_le bot_le)
     · rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr hpq.pos)]
       exact sum_le_tsum _ (fun _ _ => zero_le _) hf
     · rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr hpq.symm.pos)]
       exact sum_le_tsum _ (fun _ _ => zero_le _) hg
-  have bdd : BddAbove (Set.range fun s => ∑ i in s, f i * g i) := by
+  have bdd : BddAbove (Set.range fun s => ∑ i in s, f i * g i) :=
+    by
     refine' ⟨(∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q), _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s
@@ -431,7 +442,8 @@ functions. For an alternative version, convenient if the infinite sums are not a
 `p`-th powers, see `inner_le_Lp_mul_Lq_tsum`.  -/
 theorem inner_le_Lp_mul_Lq_has_sum {f g : ι → ℝ≥0} {A B : ℝ≥0} {p q : ℝ}
     (hpq : p.IsConjugateExponent q) (hf : HasSum (fun i => f i ^ p) (A ^ p))
-    (hg : HasSum (fun i => g i ^ q) (B ^ q)) : ∃ C, C ≤ A * B ∧ HasSum (fun i => f i * g i) C := by
+    (hg : HasSum (fun i => g i ^ q) (B ^ q)) : ∃ C, C ≤ A * B ∧ HasSum (fun i => f i * g i) C :=
+  by
   obtain ⟨H₁, H₂⟩ := inner_le_Lp_mul_Lq_tsum hpq hf.summable hg.summable
   have hA : A = (∑' i : ι, f i ^ p) ^ (1 / p) := by rw [hf.tsum_eq, rpow_inv_rpow_self hpq.ne_zero]
   have hB : B = (∑' i : ι, g i ^ q) ^ (1 / q) := by
@@ -445,13 +457,14 @@ theorem inner_le_Lp_mul_Lq_has_sum {f g : ι → ℝ≥0} {A B : ℝ≥0} {p q :
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ≥0`-valued functions.
 -/
 theorem rpow_sum_le_const_mul_sum_rpow (f : ι → ℝ≥0) {p : ℝ} (hp : 1 ≤ p) :
-    (∑ i in s, f i) ^ p ≤ card s ^ (p - 1) * ∑ i in s, f i ^ p := by
+    (∑ i in s, f i) ^ p ≤ card s ^ (p - 1) * ∑ i in s, f i ^ p :=
+  by
   cases' eq_or_lt_of_le hp with hp hp
   · simp [← hp]
   let q : ℝ := p / (p - 1)
   have hpq : p.is_conjugate_exponent q := by rw [Real.is_conjugate_exponent_iff hp]
   have hp₁ : 1 / p * p = 1 := one_div_mul_cancel hpq.ne_zero
-  have hq : 1 / q * p = p - 1 := by 
+  have hq : 1 / q * p = p - 1 := by
     rw [← hpq.div_conj_eq_sub_one]
     ring
   simpa only [Nnreal.mul_rpow, ← Nnreal.rpow_mul, hp₁, hq, one_mul, one_rpow, rpow_one,
@@ -464,13 +477,14 @@ theorem rpow_sum_le_const_mul_sum_rpow (f : ι → ℝ≥0) {p : ℝ} (hp : 1 �
 theorem is_greatest_Lp (f : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
     IsGreatest ((fun g : ι → ℝ≥0 => ∑ i in s, f i * g i) '' { g | (∑ i in s, g i ^ q) ≤ 1 })
       ((∑ i in s, f i ^ p) ^ (1 / p)) :=
-  by 
+  by
   constructor
   · use fun i => f i ^ p / f i / (∑ i in s, f i ^ p) ^ (1 / q)
     by_cases hf : (∑ i in s, f i ^ p) = 0
     · simp [hf, hpq.ne_zero, hpq.symm.ne_zero]
     · have A : p + q - q ≠ 0 := by simp [hpq.ne_zero]
-      have B : ∀ y : ℝ≥0, y * y ^ p / y = y ^ p := by
+      have B : ∀ y : ℝ≥0, y * y ^ p / y = y ^ p :=
+        by
         refine' fun y => mul_div_cancel_left_of_imp fun h => _
         simpa [h, hpq.ne_zero]
       simp only [Set.mem_setOf_eq, div_rpow, ← sum_div, ← rpow_mul,
@@ -510,19 +524,20 @@ theorem Lp_add_le_tsum {f g : ι → ℝ≥0} {p : ℝ} (hp : 1 ≤ p) (hf : Sum
     (hg : Summable fun i => g i ^ p) :
     (Summable fun i => (f i + g i) ^ p) ∧
       (∑' i, (f i + g i) ^ p) ^ (1 / p) ≤ (∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p) :=
-  by 
+  by
   have pos : 0 < p := lt_of_lt_of_le zero_lt_one hp
   have H₁ :
     ∀ s : Finset ι,
       (∑ i in s, (f i + g i) ^ p) ≤ ((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p :=
-    by 
+    by
     intro s
     rw [← Nnreal.rpow_one_div_le_iff Pos]
     refine' le_trans (Lp_add_le s f g hp) (add_le_add _ _) <;>
         rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr Pos)] <;>
       refine' sum_le_tsum _ (fun _ _ => zero_le _) _
     exacts[hf, hg]
-  have bdd : BddAbove (Set.range fun s => ∑ i in s, (f i + g i) ^ p) := by
+  have bdd : BddAbove (Set.range fun s => ∑ i in s, (f i + g i) ^ p) :=
+    by
     refine' ⟨((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p, _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s
@@ -549,7 +564,8 @@ exist. A version for `nnreal`-valued functions. For an alternative version, conv
 infinite sums are not already expressed as `p`-th powers, see `Lp_add_le_tsum_of_nonneg`.  -/
 theorem Lp_add_le_has_sum {f g : ι → ℝ≥0} {A B : ℝ≥0} {p : ℝ} (hp : 1 ≤ p)
     (hf : HasSum (fun i => f i ^ p) (A ^ p)) (hg : HasSum (fun i => g i ^ p) (B ^ p)) :
-    ∃ C, C ≤ A + B ∧ HasSum (fun i => (f i + g i) ^ p) (C ^ p) := by
+    ∃ C, C ≤ A + B ∧ HasSum (fun i => (f i + g i) ^ p) (C ^ p) :=
+  by
   have hp' : p ≠ 0 := (lt_of_lt_of_le zero_lt_one hp).ne'
   obtain ⟨H₁, H₂⟩ := Lp_add_le_tsum hp hf.summable hg.summable
   have hA : A = (∑' i : ι, f i ^ p) ^ (1 / p) := by rw [hf.tsum_eq, rpow_inv_rpow_self hp']
@@ -569,7 +585,8 @@ variable (f g : ι → ℝ) {p q : ℝ}
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued functions. -/
 theorem inner_le_Lp_mul_Lq (hpq : IsConjugateExponent p q) :
-    (∑ i in s, f i * g i) ≤ (∑ i in s, |f i| ^ p) ^ (1 / p) * (∑ i in s, |g i| ^ q) ^ (1 / q) := by
+    (∑ i in s, f i * g i) ≤ (∑ i in s, |f i| ^ p) ^ (1 / p) * (∑ i in s, |g i| ^ q) ^ (1 / q) :=
+  by
   have :=
     Nnreal.coe_le_coe.2
       (Nnreal.inner_le_Lp_mul_Lq s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩)
@@ -582,7 +599,8 @@ theorem inner_le_Lp_mul_Lq (hpq : IsConjugateExponent p q) :
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ`-valued functions. -/
 theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
-    (∑ i in s, |f i|) ^ p ≤ card s ^ (p - 1) * ∑ i in s, |f i| ^ p := by
+    (∑ i in s, |f i|) ^ p ≤ card s ^ (p - 1) * ∑ i in s, |f i| ^ p :=
+  by
   have :=
     Nnreal.coe_le_coe.2
       (Nnreal.rpow_sum_le_const_mul_sum_rpow s (fun i => ⟨_, abs_nonneg (f i)⟩) hp)
@@ -626,7 +644,7 @@ theorem inner_le_Lp_mul_Lq_tsum_of_nonneg (hpq : p.IsConjugateExponent q) (hf : 
     (hg : ∀ i, 0 ≤ g i) (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ q) :
     (Summable fun i => f i * g i) ∧
       (∑' i, f i * g i) ≤ (∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q) :=
-  by 
+  by
   lift f to ι → ℝ≥0 using hf
   lift g to ι → ℝ≥0 using hg
   norm_cast  at *
@@ -652,7 +670,8 @@ functions. For an alternative version, convenient if the infinite sums are not a
 theorem inner_le_Lp_mul_Lq_has_sum_of_nonneg (hpq : p.IsConjugateExponent q) {A B : ℝ} (hA : 0 ≤ A)
     (hB : 0 ≤ B) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i)
     (hf_sum : HasSum (fun i => f i ^ p) (A ^ p)) (hg_sum : HasSum (fun i => g i ^ q) (B ^ q)) :
-    ∃ C : ℝ, 0 ≤ C ∧ C ≤ A * B ∧ HasSum (fun i => f i * g i) C := by
+    ∃ C : ℝ, 0 ≤ C ∧ C ≤ A * B ∧ HasSum (fun i => f i * g i) C :=
+  by
   lift f to ι → ℝ≥0 using hf
   lift g to ι → ℝ≥0 using hg
   lift A to ℝ≥0 using hA
@@ -693,7 +712,7 @@ theorem Lp_add_le_tsum_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : �
     (hf_sum : Summable fun i => f i ^ p) (hg_sum : Summable fun i => g i ^ p) :
     (Summable fun i => (f i + g i) ^ p) ∧
       (∑' i, (f i + g i) ^ p) ^ (1 / p) ≤ (∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p) :=
-  by 
+  by
   lift f to ι → ℝ≥0 using hf
   lift g to ι → ℝ≥0 using hg
   norm_cast  at *
@@ -719,7 +738,8 @@ sums are not already expressed as `p`-th powers, see `Lp_add_le_tsum_of_nonneg`.
 theorem Lp_add_le_has_sum_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : ∀ i, 0 ≤ g i) {A B : ℝ}
     (hA : 0 ≤ A) (hB : 0 ≤ B) (hfA : HasSum (fun i => f i ^ p) (A ^ p))
     (hgB : HasSum (fun i => g i ^ p) (B ^ p)) :
-    ∃ C, 0 ≤ C ∧ C ≤ A + B ∧ HasSum (fun i => (f i + g i) ^ p) (C ^ p) := by
+    ∃ C, 0 ≤ C ∧ C ≤ A + B ∧ HasSum (fun i => (f i + g i) ^ p) (C ^ p) :=
+  by
   lift f to ι → ℝ≥0 using hf
   lift g to ι → ℝ≥0 using hg
   lift A to ℝ≥0 using hA
@@ -741,7 +761,8 @@ variable (f g : ι → ℝ≥0∞) {p q : ℝ}
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with `ℝ≥0∞`-valued functions. -/
 theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
-    (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := by
+    (∑ i in s, f i * g i) ≤ (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) :=
+  by
   by_cases H : (∑ i in s, f i ^ p) ^ (1 / p) = 0 ∨ (∑ i in s, g i ^ q) ^ (1 / q) = 0
   · replace H : (∀ i ∈ s, f i = 0) ∨ ∀ i ∈ s, g i = 0
     ·
@@ -772,13 +793,14 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ≥0∞`-valued functions.
 -/
 theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
-    (∑ i in s, f i) ^ p ≤ card s ^ (p - 1) * ∑ i in s, f i ^ p := by
+    (∑ i in s, f i) ^ p ≤ card s ^ (p - 1) * ∑ i in s, f i ^ p :=
+  by
   cases' eq_or_lt_of_le hp with hp hp
   · simp [← hp]
   let q : ℝ := p / (p - 1)
   have hpq : p.is_conjugate_exponent q := by rw [Real.is_conjugate_exponent_iff hp]
   have hp₁ : 1 / p * p = 1 := one_div_mul_cancel hpq.ne_zero
-  have hq : 1 / q * p = p - 1 := by 
+  have hq : 1 / q * p = p - 1 := by
     rw [← hpq.div_conj_eq_sub_one]
     ring
   simpa only [Ennreal.mul_rpow_of_nonneg _ _ hpq.nonneg, ← Ennreal.rpow_mul, hp₁, hq, coe_one,
@@ -792,7 +814,7 @@ functions. -/
 theorem Lp_add_le (hp : 1 ≤ p) :
     (∑ i in s, (f i + g i) ^ p) ^ (1 / p) ≤
       (∑ i in s, f i ^ p) ^ (1 / p) + (∑ i in s, g i ^ p) ^ (1 / p) :=
-  by 
+  by
   by_cases H' : (∑ i in s, f i ^ p) ^ (1 / p) = ⊤ ∨ (∑ i in s, g i ^ p) ^ (1 / p) = ⊤
   · cases H' <;> simp [H', -one_div]
   have pos : 0 < p := lt_of_lt_of_le zero_lt_one hp

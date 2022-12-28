@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Bhavik Mehta, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.big_operators.multiset.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ namespace Commute
 variable [NonUnitalNonAssocSemiring α] {a : α} {s : Multiset ι} {f : ι → α}
 
 theorem multiset_sum_right (s : Multiset α) (a : α) (h : ∀ b ∈ s, Commute a b) : Commute a s.Sum :=
-  by 
+  by
   induction s using Quotient.induction_on
   rw [quot_mk_to_coe, coe_sum]
   exact Commute.list_sum_right _ _ h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.discrete
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,9 +31,8 @@ variable (M : Type u) [Monoid M]
 namespace CategoryTheory
 
 @[to_additive Discrete.addMonoidal, simps tensor_obj_as tensor_unit_as]
-instance Discrete.monoidal :
-    MonoidalCategory (Discrete
-        M) where 
+instance Discrete.monoidal : MonoidalCategory (Discrete M)
+    where
   tensorUnit := Discrete.mk 1
   tensorObj X Y := Discrete.mk (X.as * Y.as)
   tensorHom W X Y Z f g := eqToHom (by rw [eq_of_hom f, eq_of_hom g])
@@ -50,9 +49,8 @@ discrete monoidal categories.
 @[to_additive Discrete.addMonoidalFunctor
       "An additive morphism between add_monoids gives a\n  monoidal functor between the corresponding discrete monoidal categories.",
   simps]
-def Discrete.monoidalFunctor (F : M →* N) :
-    MonoidalFunctor (Discrete M)
-      (Discrete N) where 
+def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Discrete N)
+    where
   obj X := Discrete.mk (F X.as)
   map X Y f := Discrete.eqToHom (F.congr_arg (eq_of_hom f))
   ε := Discrete.eqToHom F.map_one.symm
@@ -67,9 +65,8 @@ variable {K : Type u} [Monoid K]
 @[to_additive Discrete.addMonoidalFunctorComp
       "The monoidal natural isomorphism corresponding to\ncomposing two additive morphisms."]
 def Discrete.monoidalFunctorComp (F : M →* N) (G : N →* K) :
-    Discrete.monoidalFunctor F ⊗⋙ Discrete.monoidalFunctor G ≅
-      Discrete.monoidalFunctor
-        (G.comp F) where 
+    Discrete.monoidalFunctor F ⊗⋙ Discrete.monoidalFunctor G ≅ Discrete.monoidalFunctor (G.comp F)
+    where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.discrete.monoidal_functor_comp CategoryTheory.Discrete.monoidalFunctorComp

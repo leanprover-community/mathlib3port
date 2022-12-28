@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.number_field.norm
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem coe_algebra_map_norm [IsSeparable K L] (x : 𝓞 L) :
 #align ring_of_integers.coe_algebra_map_norm RingOfIntegers.coe_algebra_map_norm
 
 theorem is_unit_norm [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x := by
-  classical 
+  classical
     refine' ⟨fun hx => _, IsUnit.map _⟩
     replace hx : IsUnit (algebraMap (𝓞 K) (𝓞 L) <| norm K x) := hx.map (algebraMap (𝓞 K) <| 𝓞 L)
     refine'
@@ -69,7 +69,7 @@ theorem is_unit_norm [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit 
 /-- If `L/K` is a finite Galois extension of fields, then, for all `(x : 𝓞 L)` we have that
 `x ∣ algebra_map (𝓞 K) (𝓞 L) (norm K x)`. -/
 theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L) (norm K x) := by
-  classical 
+  classical
     have hint : (∏ σ : L ≃ₐ[K] L in univ.erase AlgEquiv.refl, σ x) ∈ 𝓞 L :=
       Subalgebra.prod_mem _ fun σ hσ =>
         (mem_ring_of_integers _ _).2 (map_is_integral σ (ring_of_integers.is_integral_coe x))

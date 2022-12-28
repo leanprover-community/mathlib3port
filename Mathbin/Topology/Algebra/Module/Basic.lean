@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,13 +50,13 @@ theorem HasContinuousSmul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup 
     (hmul : Tendsto (fun p : R × M => p.1 • p.2) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0))
     (hmulleft : ∀ m : M, Tendsto (fun a : R => a • m) (𝓝 0) (𝓝 0))
     (hmulright : ∀ a : R, Tendsto (fun m : M => a • m) (𝓝 0) (𝓝 0)) : HasContinuousSmul R M :=
-  ⟨by 
+  ⟨by
     rw [continuous_iff_continuous_at]
     rintro ⟨a₀, m₀⟩
     have key :
       ∀ p : R × M,
         p.1 • p.2 = a₀ • m₀ + ((p.1 - a₀) • m₀ + a₀ • (p.2 - m₀) + (p.1 - a₀) • (p.2 - m₀)) :=
-      by 
+      by
       rintro ⟨a, m⟩
       simp [sub_smul, smul_sub]
       abel
@@ -65,21 +65,25 @@ theorem HasContinuousSmul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup 
     refine' tendsto_const_nhds.add (tendsto.add (tendsto.add _ _) _)
     · rw [sub_self, zero_smul]
       apply (hmulleft m₀).comp
-      rw [show (fun p : R × M => p.1 - a₀) = (fun a => a - a₀) ∘ Prod.fst by
+      rw [show (fun p : R × M => p.1 - a₀) = (fun a => a - a₀) ∘ Prod.fst
+          by
           ext
           rfl,
         nhds_prod_eq]
-      have : tendsto (fun a => a - a₀) (𝓝 a₀) (𝓝 0) := by
+      have : tendsto (fun a => a - a₀) (𝓝 a₀) (𝓝 0) :=
+        by
         rw [← sub_self a₀]
         exact tendsto_id.sub tendsto_const_nhds
       exact this.comp tendsto_fst
     · rw [sub_self, smul_zero]
       apply (hmulright a₀).comp
-      rw [show (fun p : R × M => p.2 - m₀) = (fun m => m - m₀) ∘ Prod.snd by
+      rw [show (fun p : R × M => p.2 - m₀) = (fun m => m - m₀) ∘ Prod.snd
+          by
           ext
           rfl,
         nhds_prod_eq]
-      have : tendsto (fun m => m - m₀) (𝓝 m₀) (𝓝 0) := by
+      have : tendsto (fun m => m - m₀) (𝓝 m₀) (𝓝 0) :=
+        by
         rw [← sub_self m₀]
         exact tendsto_id.sub tendsto_const_nhds
       exact this.comp tendsto_snd
@@ -87,7 +91,7 @@ theorem HasContinuousSmul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup 
         show
           (fun p : R × M => (p.fst - a₀) • (p.snd - m₀)) =
             (fun p : R × M => p.1 • p.2) ∘ Prod.map (fun a => a - a₀) fun m => m - m₀
-          by 
+          by
           ext
           rfl]
       apply hmul.comp (tendsto.prod_map _ _) <;>
@@ -106,7 +110,8 @@ variable {R : Type _} {M : Type _} [Ring R] [TopologicalSpace R] [TopologicalSpa
 `⊤` is the only submodule of `M` with a nonempty interior.
 This is the case, e.g., if `R` is a nontrivially normed field. -/
 theorem Submodule.eq_top_of_nonempty_interior' [NeBot (𝓝[{ x : R | IsUnit x }] 0)]
-    (s : Submodule R M) (hs : (interior (s : Set M)).Nonempty) : s = ⊤ := by
+    (s : Submodule R M) (hs : (interior (s : Set M)).Nonempty) : s = ⊤ :=
+  by
   rcases hs with ⟨y, hy⟩
   refine' Submodule.eq_top_iff'.2 fun x => _
   rw [mem_interior_iff_mem_nhds] at hy
@@ -132,7 +137,8 @@ unknown `?m_1`. We register this as an instance for `R = ℝ` in `real.punctured
 One can also use `haveI := module.punctured_nhds_ne_bot R M` in a proof.
 -/
 theorem Module.punctured_nhds_ne_bot [Nontrivial M] [NeBot (𝓝[≠] (0 : R))] [NoZeroSmulDivisors R M]
-    (x : M) : NeBot (𝓝[≠] x) := by
+    (x : M) : NeBot (𝓝[≠] x) :=
+  by
   rcases exists_ne (0 : M) with ⟨y, hy⟩
   suffices : tendsto (fun c : R => x + c • y) (𝓝[≠] 0) (𝓝[≠] x); exact this.ne_bot
   refine' tendsto.inf _ (tendsto_principal_principal.2 <| _)
@@ -151,7 +157,8 @@ variable {ι R M₁ M₂ : Type _} [Semiring R] [AddCommMonoid M₁] [AddCommMon
   (f : M₁ →ₗ[R] M₂)
 
 theorem has_continuous_smul_induced : @HasContinuousSmul R M₁ _ u (t.induced f) :=
-  { continuous_smul := by 
+  {
+    continuous_smul := by
       letI : TopologicalSpace M₁ := t.induced f
       refine' continuous_induced_rng.2 _
       simp_rw [Function.comp, f.map_smul]
@@ -165,9 +172,9 @@ namespace Submodule
 variable {α β : Type _} [TopologicalSpace β]
 
 instance [TopologicalSpace α] [Semiring α] [AddCommMonoid β] [Module α β] [HasContinuousSmul α β]
-    (S : Submodule α β) :
-    HasContinuousSmul α
-      S where continuous_smul := by
+    (S : Submodule α β) : HasContinuousSmul α S
+    where continuous_smul :=
+    by
     rw [embedding_subtype_coe.to_inducing.continuous_iff]
     exact continuous_fst.smul (continuous_subtype_coe.comp continuous_snd)
 
@@ -195,7 +202,7 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
       by simp [closure_prod_eq]
     _ ⊆ closure ((fun p : R × M => p.1 • p.2) '' Set.univ ×ˢ s) :=
       image_closure_subset_closure_image continuous_smul
-    _ = closure s := by 
+    _ = closure s := by
       congr
       ext x
       refine' ⟨_, fun hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩⟩
@@ -215,7 +222,8 @@ variable [HasContinuousAdd M]
 /-- The (topological-space) closure of a submodule of a topological `R`-module `M` is itself
 a submodule. -/
 def Submodule.topologicalClosure (s : Submodule R M) : Submodule R M :=
-  { s.toAddSubmonoid.topologicalClosure with
+  {
+    s.toAddSubmonoid.topologicalClosure with
     carrier := closure (s : Set M)
     smul_mem' := fun c x hx => s.closure_smul_self_subset ⟨⟨c, x⟩, ⟨Set.mem_univ _, hx⟩, rfl⟩ }
 #align submodule.topological_closure Submodule.topologicalClosure
@@ -252,7 +260,8 @@ theorem IsClosed.submodule_topological_closure_eq {s : Submodule R M} (hs : IsCl
 
 /-- A subspace is dense iff its topological closure is the entire space. -/
 theorem Submodule.dense_iff_topological_closure_eq_top {s : Submodule R M} :
-    Dense (s : Set M) ↔ s.topologicalClosure = ⊤ := by
+    Dense (s : Set M) ↔ s.topologicalClosure = ⊤ :=
+  by
   rw [← SetLike.coe_set_eq, dense_iff_closure_eq]
   simp
 #align submodule.dense_iff_topological_closure_eq_top Submodule.dense_iff_topological_closure_eq_top
@@ -271,7 +280,8 @@ theorem Submodule.is_closed_or_dense_of_is_coatom (s : Submodule R M) (hs : IsCo
 #align submodule.is_closed_or_dense_of_is_coatom Submodule.is_closed_or_dense_of_is_coatom
 
 theorem LinearMap.is_closed_or_dense_ker [HasContinuousAdd M'] [IsSimpleModule R' R']
-    (l : M' →ₗ[R'] R') : IsClosed (l.ker : Set M') ∨ Dense (l.ker : Set M') := by
+    (l : M' →ₗ[R'] R') : IsClosed (l.ker : Set M') ∨ Dense (l.ker : Set M') :=
+  by
   rcases l.surjective_or_eq_zero with (hl | rfl)
   · refine' l.ker.is_closed_or_dense_of_is_coatom (LinearMap.is_coatom_ker_of_surjective hl)
   · rw [LinearMap.ker_zero]
@@ -379,7 +389,7 @@ include σ'
 @[nolint dangerous_instance]
 instance (priority := 100) [s : ContinuousSemilinearEquivClass F σ M M₂] :
     ContinuousSemilinearMapClass F σ M M₂ :=
-  { s with 
+  { s with
     coe := (coe : F → M → M₂)
     coe_injective' := @FunLike.coe_injective F _ _ _ }
 
@@ -396,8 +406,9 @@ section
 
 variable (M₁ M₂) (σ : R →+* S)
 
-theorem is_closed_set_of_map_smul : IsClosed { f : M₁ → M₂ | ∀ c x, f (c • x) = σ c • f x } := by
-  simp only [Set.set_of_forall]
+theorem is_closed_set_of_map_smul : IsClosed { f : M₁ → M₂ | ∀ c x, f (c • x) = σ c • f x } :=
+  by
+  simp only [Set.setOf_forall]
   exact
     is_closed_Inter fun c =>
       is_closed_Inter fun x => is_closed_eq (continuous_apply _) ((continuous_apply _).const_smul _)
@@ -412,7 +423,7 @@ closure of the set of linear maps. -/
 @[simps (config := { fullyApplied := false })]
 def linearMapOfMemClosureRangeCoe (f : M₁ → M₂)
     (hf : f ∈ closure (Set.range (coeFn : (M₁ →ₛₗ[σ] M₂) → M₁ → M₂))) : M₁ →ₛₗ[σ] M₂ :=
-  { addMonoidHomOfMemClosureRangeCoe f hf with 
+  { addMonoidHomOfMemClosureRangeCoe f hf with
     toFun := f
     map_smul' :=
       (is_closed_set_of_map_smul M₁ M₂ σ).closure_subset_iff.2
@@ -461,16 +472,16 @@ theorem to_linear_map_eq_coe (f : M₁ →SL[σ₁₂] M₂) : f.toLinearMap = f
   rfl
 #align continuous_linear_map.to_linear_map_eq_coe ContinuousLinearMap.to_linear_map_eq_coe
 
-theorem coe_injective : Function.Injective (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) := by
+theorem coe_injective : Function.Injective (coe : (M₁ →SL[σ₁₂] M₂) → M₁ →ₛₗ[σ₁₂] M₂) :=
+  by
   intro f g H
   cases f
   cases g
   congr
 #align continuous_linear_map.coe_injective ContinuousLinearMap.coe_injective
 
-instance :
-    ContinuousSemilinearMapClass (M₁ →SL[σ₁₂] M₂) σ₁₂ M₁
-      M₂ where 
+instance : ContinuousSemilinearMapClass (M₁ →SL[σ₁₂] M₂) σ₁₂ M₁ M₂
+    where
   coe f := f.toFun
   coe_injective' f g h := coe_injective (FunLike.coe_injective h)
   map_add f := map_add f.toLinearMap
@@ -537,8 +548,8 @@ theorem ext_iff {f g : M₁ →SL[σ₁₂] M₂} : f = g ↔ ∀ x, f x = g x :
 
 /-- Copy of a `continuous_linear_map` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
-protected def copy (f : M₁ →SL[σ₁₂] M₂) (f' : M₁ → M₂) (h : f' = ⇑f) :
-    M₁ →SL[σ₁₂] M₂ where 
+protected def copy (f : M₁ →SL[σ₁₂] M₂) (f' : M₁ → M₂) (h : f' = ⇑f) : M₁ →SL[σ₁₂] M₂
+    where
   toLinearMap := f.toLinearMap.copy f' h
   cont := show Continuous f' from h.symm ▸ f.Continuous
 #align continuous_linear_map.copy ContinuousLinearMap.copy
@@ -627,7 +638,8 @@ another such submodule.  That is, the image of a dense set under a map with dens
 theorem DenseRange.topological_closure_map_submodule [RingHomSurjective σ₁₂] [TopologicalSpace R₁]
     [TopologicalSpace R₂] [HasContinuousSmul R₁ M₁] [HasContinuousAdd M₁] [HasContinuousSmul R₂ M₂]
     [HasContinuousAdd M₂] {f : M₁ →SL[σ₁₂] M₂} (hf' : DenseRange f) {s : Submodule R₁ M₁}
-    (hs : s.topologicalClosure = ⊤) : (s.map (f : M₁ →ₛₗ[σ₁₂] M₂)).topologicalClosure = ⊤ := by
+    (hs : s.topologicalClosure = ⊤) : (s.map (f : M₁ →ₛₗ[σ₁₂] M₂)).topologicalClosure = ⊤ :=
+  by
   rw [SetLike.ext'_iff] at hs⊢
   simp only [Submodule.topological_closure_coe, Submodule.top_coe, ← dense_iff_closure_eq] at hs⊢
   exact hf'.dense_image f.continuous hs
@@ -641,10 +653,8 @@ variable [DistribMulAction S₂ M₂] [SMulCommClass R₂ S₂ M₂] [HasContinu
 
 variable [DistribMulAction T₂ M₂] [SMulCommClass R₂ T₂ M₂] [HasContinuousConstSmul T₂ M₂]
 
-instance :
-    MulAction S₂
-      (M₁ →SL[σ₁₂]
-        M₂) where 
+instance : MulAction S₂ (M₁ →SL[σ₁₂] M₂)
+    where
   smul c f := ⟨c • f, (f.2.const_smul _ : Continuous fun x => c • f x)⟩
   one_smul f := ext fun x => one_smul _ _
   mul_smul a b f := ext fun x => mul_smul _ _ _
@@ -709,7 +719,8 @@ instance uniqueOfRight [Subsingleton M₂] : Unique (M₁ →SL[σ₁₂] M₂) 
   coe_injective.unique
 #align continuous_linear_map.unique_of_right ContinuousLinearMap.uniqueOfRight
 
-theorem exists_ne_zero {f : M₁ →SL[σ₁₂] M₂} (hf : f ≠ 0) : ∃ x, f x ≠ 0 := by
+theorem exists_ne_zero {f : M₁ →SL[σ₁₂] M₂} (hf : f ≠ 0) : ∃ x, f x ≠ 0 :=
+  by
   by_contra' h
   exact hf (ContinuousLinearMap.ext h)
 #align continuous_linear_map.exists_ne_zero ContinuousLinearMap.exists_ne_zero
@@ -782,8 +793,8 @@ theorem coe_add' (f g : M₁ →SL[σ₁₂] M₂) : ⇑(f + g) = f + g :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr zero_add, ",", expr add_assoc, ",", expr add_zero, ",", expr add_left_neg, ",", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-instance : AddCommMonoid
-      (M₁ →SL[σ₁₂] M₂) where 
+instance : AddCommMonoid (M₁ →SL[σ₁₂] M₂)
+    where
   zero := (0 : M₁ →SL[σ₁₂] M₂)
   add := (· + ·)
   zero_add := by
@@ -803,10 +814,10 @@ instance : AddCommMonoid
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr zero_add, \",\", expr add_assoc, \",\", expr add_zero, \",\", expr add_left_neg, \",\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   nsmul := (· • ·)
-  nsmul_zero' f := by 
+  nsmul_zero' f := by
     ext
     simp
-  nsmul_succ' n f := by 
+  nsmul_succ' n f := by
     ext
     simp [Nat.succ_eq_one_add, add_smul]
 
@@ -871,20 +882,23 @@ theorem id_comp (f : M₁ →SL[σ₁₂] M₂) : (id R₂ M₂).comp f = f :=
 include σ₁₃
 
 @[simp]
-theorem comp_zero (g : M₂ →SL[σ₂₃] M₃) : g.comp (0 : M₁ →SL[σ₁₂] M₂) = 0 := by
+theorem comp_zero (g : M₂ →SL[σ₂₃] M₃) : g.comp (0 : M₁ →SL[σ₁₂] M₂) = 0 :=
+  by
   ext
   simp
 #align continuous_linear_map.comp_zero ContinuousLinearMap.comp_zero
 
 @[simp]
-theorem zero_comp (f : M₁ →SL[σ₁₂] M₂) : (0 : M₂ →SL[σ₂₃] M₃).comp f = 0 := by
+theorem zero_comp (f : M₁ →SL[σ₁₂] M₂) : (0 : M₂ →SL[σ₂₃] M₃).comp f = 0 :=
+  by
   ext
   simp
 #align continuous_linear_map.zero_comp ContinuousLinearMap.zero_comp
 
 @[simp]
 theorem comp_add [HasContinuousAdd M₂] [HasContinuousAdd M₃] (g : M₂ →SL[σ₂₃] M₃)
-    (f₁ f₂ : M₁ →SL[σ₁₂] M₂) : g.comp (f₁ + f₂) = g.comp f₁ + g.comp f₂ := by
+    (f₁ f₂ : M₁ →SL[σ₁₂] M₂) : g.comp (f₁ + f₂) = g.comp f₁ + g.comp f₂ :=
+  by
   ext
   simp
 #align continuous_linear_map.comp_add ContinuousLinearMap.comp_add
@@ -921,8 +935,8 @@ theorem mul_apply (f g : M₁ →L[R₁] M₁) (x : M₁) : (f * g) x = f (g x) 
   rfl
 #align continuous_linear_map.mul_apply ContinuousLinearMap.mul_apply
 
-instance : MonoidWithZero (M₁ →L[R₁]
-        M₁) where 
+instance : MonoidWithZero (M₁ →L[R₁] M₁)
+    where
   mul := (· * ·)
   one := 1
   zero := 0
@@ -933,7 +947,8 @@ instance : MonoidWithZero (M₁ →L[R₁]
   mul_assoc _ _ _ := ext fun _ => rfl
 
 instance [HasContinuousAdd M₁] : Semiring (M₁ →L[R₁] M₁) :=
-  { ContinuousLinearMap.monoidWithZero, ContinuousLinearMap.addCommMonoid with
+  { ContinuousLinearMap.monoidWithZero,
+    ContinuousLinearMap.addCommMonoid with
     mul := (· * ·)
     one := 1
     left_distrib := fun f g h => ext fun x => map_add f (g x) (h x)
@@ -941,8 +956,8 @@ instance [HasContinuousAdd M₁] : Semiring (M₁ →L[R₁] M₁) :=
 
 /-- `continuous_linear_map.to_linear_map` as a `ring_hom`.-/
 @[simps]
-def toLinearMapRingHom [HasContinuousAdd M₁] :
-    (M₁ →L[R₁] M₁) →+* M₁ →ₗ[R₁] M₁ where 
+def toLinearMapRingHom [HasContinuousAdd M₁] : (M₁ →L[R₁] M₁) →+* M₁ →ₗ[R₁] M₁
+    where
   toFun := toLinearMap
   map_zero' := rfl
   map_one' := rfl
@@ -971,12 +986,12 @@ instance apply_has_faithful_smul : FaithfulSMul (M₁ →L[R₁] M₁) M₁ :=
   ⟨fun _ _ => ContinuousLinearMap.ext⟩
 #align continuous_linear_map.apply_has_faithful_smul ContinuousLinearMap.apply_has_faithful_smul
 
-instance apply_smul_comm_class :
-    SMulCommClass R₁ (M₁ →L[R₁] M₁) M₁ where smul_comm r e m := (e.map_smul r m).symm
+instance apply_smul_comm_class : SMulCommClass R₁ (M₁ →L[R₁] M₁) M₁
+    where smul_comm r e m := (e.map_smul r m).symm
 #align continuous_linear_map.apply_smul_comm_class ContinuousLinearMap.apply_smul_comm_class
 
-instance apply_smul_comm_class' :
-    SMulCommClass (M₁ →L[R₁] M₁) R₁ M₁ where smul_comm := ContinuousLinearMap.map_smul
+instance apply_smul_comm_class' : SMulCommClass (M₁ →L[R₁] M₁) R₁ M₁
+    where smul_comm := ContinuousLinearMap.map_smul
 #align continuous_linear_map.apply_smul_comm_class' ContinuousLinearMap.apply_smul_comm_class'
 
 instance : HasContinuousConstSmul (M₁ →L[R₁] M₁) M₁ :=
@@ -1064,8 +1079,8 @@ theorem ker_prod [Module R₁ M₂] [Module R₁ M₃] (f : M₁ →L[R₁] M₂
 #align continuous_linear_map.ker_prod ContinuousLinearMap.ker_prod
 
 /-- Restrict codomain of a continuous linear map. -/
-def codRestrict (f : M₁ →SL[σ₁₂] M₂) (p : Submodule R₂ M₂) (h : ∀ x, f x ∈ p) :
-    M₁ →SL[σ₁₂] p where 
+def codRestrict (f : M₁ →SL[σ₁₂] M₂) (p : Submodule R₂ M₂) (h : ∀ x, f x ∈ p) : M₁ →SL[σ₁₂] p
+    where
   cont := f.Continuous.subtype_mk _
   toLinearMap := (f : M₁ →ₛₗ[σ₁₂] M₂).codRestrict p h
 #align continuous_linear_map.cod_restrict ContinuousLinearMap.codRestrict
@@ -1089,8 +1104,8 @@ theorem ker_cod_restrict (f : M₁ →SL[σ₁₂] M₂) (p : Submodule R₂ M�
 #align continuous_linear_map.ker_cod_restrict ContinuousLinearMap.ker_cod_restrict
 
 /-- `submodule.subtype` as a `continuous_linear_map`. -/
-def Submodule.subtypeL (p : Submodule R₁ M₁) :
-    p →L[R₁] M₁ where 
+def Submodule.subtypeL (p : Submodule R₁ M₁) : p →L[R₁] M₁
+    where
   cont := continuous_subtype_val
   toLinearMap := p.Subtype
 #align submodule.subtypeL Submodule.subtypeL
@@ -1123,15 +1138,15 @@ theorem Submodule.ker_subtypeL (p : Submodule R₁ M₁) : ker p.subtypeL = ⊥ 
 variable (R₁ M₁ M₂)
 
 /-- `prod.fst` as a `continuous_linear_map`. -/
-def fst [Module R₁ M₂] : M₁ × M₂ →L[R₁]
-      M₁ where 
+def fst [Module R₁ M₂] : M₁ × M₂ →L[R₁] M₁
+    where
   cont := continuous_fst
   toLinearMap := LinearMap.fst R₁ M₁ M₂
 #align continuous_linear_map.fst ContinuousLinearMap.fst
 
 /-- `prod.snd` as a `continuous_linear_map`. -/
-def snd [Module R₁ M₂] : M₁ × M₂ →L[R₁]
-      M₂ where 
+def snd [Module R₁ M₂] : M₁ × M₂ →L[R₁] M₂
+    where
   cont := continuous_snd
   toLinearMap := LinearMap.snd R₁ M₁ M₂
 #align continuous_linear_map.snd ContinuousLinearMap.snd
@@ -1252,7 +1267,7 @@ theorem smul_right_one_eq_iff {f f' : M₂} :
 theorem smul_right_comp [HasContinuousMul R₁] {x : M₂} {c : R₁} :
     (smulRight (1 : R₁ →L[R₁] R₁) x).comp (smulRight (1 : R₁ →L[R₁] R₁) c) =
       smulRight (1 : R₁ →L[R₁] R₁) (c • x) :=
-  by 
+  by
   ext
   simp [mul_smul]
 #align continuous_linear_map.smul_right_comp ContinuousLinearMap.smul_right_comp
@@ -1285,7 +1300,8 @@ theorem pi_apply (f : ∀ i, M →L[R] φ i) (c : M) (i : ι) : pi f c i = f i c
   rfl
 #align continuous_linear_map.pi_apply ContinuousLinearMap.pi_apply
 
-theorem pi_eq_zero (f : ∀ i, M →L[R] φ i) : pi f = 0 ↔ ∀ i, f i = 0 := by
+theorem pi_eq_zero (f : ∀ i, M →L[R] φ i) : pi f = 0 ↔ ∀ i, f i = 0 :=
+  by
   simp only [ext_iff, pi_apply, Function.funext_iff]
   exact forall_swap
 #align continuous_linear_map.pi_eq_zero ContinuousLinearMap.pi_eq_zero
@@ -1323,11 +1339,12 @@ variable (R φ)
 of `φ` is linearly equivalent to the product over `I`. -/
 def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J)
     (hu : Set.univ ⊆ I ∪ J) :
-    (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →L[R] φ i) : Submodule R (∀ i, φ i)) ≃L[R]
-      ∀ i : I, φ i where 
+    (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →L[R] φ i) : Submodule R (∀ i, φ i)) ≃L[R] ∀ i : I, φ i
+    where
   toLinearEquiv := LinearMap.infiKerProjEquiv R φ hd hu
   continuous_to_fun :=
-    continuous_pi fun i => by
+    continuous_pi fun i =>
+      by
       have :=
         @continuous_subtype_coe _ _ fun x =>
           x ∈ (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →L[R] φ i) : Submodule R (∀ i, φ i))
@@ -1420,7 +1437,7 @@ instance : Sub (M →SL[σ₁₂] M₂) :=
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
   refine'
-          { ContinuousLinearMap.addCommMonoid with 
+          { ContinuousLinearMap.addCommMonoid with
             zero := 0
             add := (· + ·)
             neg := Neg.neg
@@ -1428,13 +1445,13 @@ instance : AddCommGroup (M →SL[σ₁₂] M₂) := by
             sub_eq_add_neg := _
             nsmul := (· • ·)
             zsmul := (· • ·)
-            zsmul_zero' := fun f => by 
+            zsmul_zero' := fun f => by
               ext
               simp
-            zsmul_succ' := fun n f => by 
+            zsmul_succ' := fun n f => by
               ext
               simp [add_smul, add_comm]
-            zsmul_neg' := fun n f => by 
+            zsmul_neg' := fun n f => by
               ext
               simp [Nat.succ_eq_add_one, add_smul].. } <;>
         intros <;>
@@ -1460,39 +1477,45 @@ end
 
 @[simp]
 theorem comp_neg [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₂] [TopologicalAddGroup M₃]
-    (g : M₂ →SL[σ₂₃] M₃) (f : M →SL[σ₁₂] M₂) : g.comp (-f) = -g.comp f := by
+    (g : M₂ →SL[σ₂₃] M₃) (f : M →SL[σ₁₂] M₂) : g.comp (-f) = -g.comp f :=
+  by
   ext
   simp
 #align continuous_linear_map.comp_neg ContinuousLinearMap.comp_neg
 
 @[simp]
 theorem neg_comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₃] (g : M₂ →SL[σ₂₃] M₃)
-    (f : M →SL[σ₁₂] M₂) : (-g).comp f = -g.comp f := by
+    (f : M →SL[σ₁₂] M₂) : (-g).comp f = -g.comp f :=
+  by
   ext
   simp
 #align continuous_linear_map.neg_comp ContinuousLinearMap.neg_comp
 
 @[simp]
 theorem comp_sub [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₂] [TopologicalAddGroup M₃]
-    (g : M₂ →SL[σ₂₃] M₃) (f₁ f₂ : M →SL[σ₁₂] M₂) : g.comp (f₁ - f₂) = g.comp f₁ - g.comp f₂ := by
+    (g : M₂ →SL[σ₂₃] M₃) (f₁ f₂ : M →SL[σ₁₂] M₂) : g.comp (f₁ - f₂) = g.comp f₁ - g.comp f₂ :=
+  by
   ext
   simp
 #align continuous_linear_map.comp_sub ContinuousLinearMap.comp_sub
 
 @[simp]
 theorem sub_comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [TopologicalAddGroup M₃] (g₁ g₂ : M₂ →SL[σ₂₃] M₃)
-    (f : M →SL[σ₁₂] M₂) : (g₁ - g₂).comp f = g₁.comp f - g₂.comp f := by
+    (f : M →SL[σ₁₂] M₂) : (g₁ - g₂).comp f = g₁.comp f - g₂.comp f :=
+  by
   ext
   simp
 #align continuous_linear_map.sub_comp ContinuousLinearMap.sub_comp
 
 instance [TopologicalAddGroup M] : Ring (M →L[R] M) :=
-  { ContinuousLinearMap.semiring, ContinuousLinearMap.addCommGroup with
+  { ContinuousLinearMap.semiring,
+    ContinuousLinearMap.addCommGroup with
     mul := (· * ·)
     one := 1 }
 
 theorem smul_right_one_pow [TopologicalSpace R] [TopologicalRing R] (c : R) (n : ℕ) :
-    smulRight (1 : R →L[R] R) c ^ n = smulRight (1 : R →L[R] R) (c ^ n) := by
+    smulRight (1 : R →L[R] R) c ^ n = smulRight (1 : R →L[R] R) (c ^ n) :=
+  by
   induction' n with n ihn
   · ext
     simp
@@ -1582,7 +1605,8 @@ variable [DistribMulAction S N₂] [HasContinuousConstSmul S N₂] [SMulCommClas
 
 @[simp]
 theorem comp_smul [LinearMap.CompatibleSmul N₂ N₃ S R] (hₗ : N₂ →L[R] N₃) (c : S)
-    (fₗ : M →L[R] N₂) : hₗ.comp (c • fₗ) = c • hₗ.comp fₗ := by
+    (fₗ : M →L[R] N₂) : hₗ.comp (c • fₗ) = c • hₗ.comp fₗ :=
+  by
   ext x
   exact hₗ.map_smul_of_tower c (fₗ x)
 #align continuous_linear_map.comp_smul ContinuousLinearMap.comp_smul
@@ -1592,7 +1616,7 @@ include σ₁₃
 @[simp]
 theorem comp_smulₛₗ [SMulCommClass R₂ R₂ M₂] [SMulCommClass R₃ R₃ M₃] [HasContinuousConstSmul R₂ M₂]
     [HasContinuousConstSmul R₃ M₃] (h : M₂ →SL[σ₂₃] M₃) (c : R₂) (f : M →SL[σ₁₂] M₂) :
-    h.comp (c • f) = σ₂₃ c • h.comp f := by 
+    h.comp (c • f) = σ₂₃ c • h.comp f := by
   ext x
   simp only [coe_smul', coe_comp', Function.comp_apply, Pi.smul_apply,
     ContinuousLinearMap.map_smulₛₗ]
@@ -1600,10 +1624,8 @@ theorem comp_smulₛₗ [SMulCommClass R₂ R₂ M₂] [SMulCommClass R₃ R₃ 
 
 omit σ₁₃
 
-instance [HasContinuousAdd M₂] :
-    DistribMulAction S₃
-      (M →SL[σ₁₂]
-        M₂) where 
+instance [HasContinuousAdd M₂] : DistribMulAction S₃ (M →SL[σ₁₂] M₂)
+    where
   smul_add a f g := ext fun x => smul_add a (f x) (g x)
   smul_zero a := ext fun x => smul_zero _
 
@@ -1624,9 +1646,8 @@ variable {R R₂ R₃ S S₃ : Type _} [Semiring R] [Semiring R₂] [Semiring R�
 
 /-- `continuous_linear_map.prod` as an `equiv`. -/
 @[simps apply]
-def prodEquiv :
-    (M →L[R] N₂) × (M →L[R] N₃) ≃
-      (M →L[R] N₂ × N₃) where 
+def prodEquiv : (M →L[R] N₂) × (M →L[R] N₃) ≃ (M →L[R] N₂ × N₃)
+    where
   toFun f := f.1.Prod f.2
   invFun f := ⟨(fst _ _ _).comp f, (snd _ _ _).comp f⟩
   left_inv f := by ext <;> rfl
@@ -1634,7 +1655,8 @@ def prodEquiv :
 #align continuous_linear_map.prod_equiv ContinuousLinearMap.prodEquiv
 
 theorem prod_ext_iff {f g : M × N₂ →L[R] N₃} :
-    f = g ↔ f.comp (inl _ _ _) = g.comp (inl _ _ _) ∧ f.comp (inr _ _ _) = g.comp (inr _ _ _) := by
+    f = g ↔ f.comp (inl _ _ _) = g.comp (inl _ _ _) ∧ f.comp (inr _ _ _) = g.comp (inr _ _ _) :=
+  by
   simp only [← coe_inj, LinearMap.prod_ext_iff]
   rfl
 #align continuous_linear_map.prod_ext_iff ContinuousLinearMap.prod_ext_iff
@@ -1647,28 +1669,28 @@ theorem prod_ext {f g : M × N₂ →L[R] N₃} (hl : f.comp (inl _ _ _) = g.com
 
 variable [HasContinuousAdd M₂] [HasContinuousAdd M₃] [HasContinuousAdd N₂]
 
-instance : Module S₃
-      (M →SL[σ₁₃] M₃) where 
+instance : Module S₃ (M →SL[σ₁₃] M₃)
+    where
   zero_smul _ := ext fun _ => zero_smul _ _
   add_smul _ _ _ := ext fun _ => add_smul _ _ _
 
-instance [Module S₃ᵐᵒᵖ M₃] [IsCentralScalar S₃ M₃] :
-    IsCentralScalar S₃ (M →SL[σ₁₃] M₃) where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
+instance [Module S₃ᵐᵒᵖ M₃] [IsCentralScalar S₃ M₃] : IsCentralScalar S₃ (M →SL[σ₁₃] M₃)
+    where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
 
 variable (S) [HasContinuousAdd N₃]
 
 /-- `continuous_linear_map.prod` as a `linear_equiv`. -/
 @[simps apply]
 def prodₗ : ((M →L[R] N₂) × (M →L[R] N₃)) ≃ₗ[S] M →L[R] N₂ × N₃ :=
-  { prodEquiv with 
+  { prodEquiv with
     map_add' := fun f g => rfl
     map_smul' := fun c f => rfl }
 #align continuous_linear_map.prodₗ ContinuousLinearMap.prodₗ
 
 /-- The coercion from `M →L[R] M₂` to `M →ₗ[R] M₂`, as a linear map. -/
 @[simps]
-def coeLm : (M →L[R] N₃) →ₗ[S] M →ₗ[R]
-        N₃ where 
+def coeLm : (M →L[R] N₃) →ₗ[S] M →ₗ[R] N₃
+    where
   toFun := coe
   map_add' f g := coe_add f g
   map_smul' c f := coe_smul c f
@@ -1678,8 +1700,8 @@ variable {S} (σ₁₃)
 
 /-- The coercion from `M →SL[σ] M₂` to `M →ₛₗ[σ] M₂`, as a linear map. -/
 @[simps]
-def coeLmₛₗ : (M →SL[σ₁₃] M₃) →ₗ[S₃]
-      M →ₛₗ[σ₁₃] M₃ where 
+def coeLmₛₗ : (M →SL[σ₁₃] M₃) →ₗ[S₃] M →ₛₗ[σ₁₃] M₃
+    where
   toFun := coe
   map_add' f g := coe_add f g
   map_smul' c f := coe_smul c f
@@ -1699,13 +1721,13 @@ variable {R S T M M₂ : Type _} [Semiring R] [Semiring S] [Semiring T] [Module 
 
 /-- Given `c : E →L[𝕜] 𝕜`, `c.smul_rightₗ` is the linear map from `F` to `E →L[𝕜] F`
 sending `f` to `λ e, c e • f`. See also `continuous_linear_map.smul_rightL`. -/
-def smulRightₗ (c : M →L[R] S) :
-    M₂ →ₗ[T] M →L[R] M₂ where 
+def smulRightₗ (c : M →L[R] S) : M₂ →ₗ[T] M →L[R] M₂
+    where
   toFun := c.smul_right
-  map_add' x y := by 
+  map_add' x y := by
     ext e
     apply smul_add
-  map_smul' a x := by 
+  map_smul' a x := by
     ext e
     dsimp
     apply smul_comm
@@ -1792,9 +1814,8 @@ variable (A M M₂ R S) [TopologicalAddGroup M₂]
 
 /-- `continuous_linear_map.restrict_scalars` as a `linear_map`. See also
 `continuous_linear_map.restrict_scalarsL`. -/
-def restrictScalarsₗ :
-    (M →L[A] M₂) →ₗ[S] M →L[R]
-        M₂ where 
+def restrictScalarsₗ : (M →L[A] M₂) →ₗ[S] M →L[R] M₂
+    where
   toFun := restrictScalars R
   map_add' := restrict_scalars_add
   map_smul' := restrict_scalars_smul
@@ -1836,11 +1857,11 @@ def toContinuousLinearMap (e : M₁ ≃SL[σ₁₂] M₂) : M₁ →SL[σ₁₂]
 instance : Coe (M₁ ≃SL[σ₁₂] M₂) (M₁ →SL[σ₁₂] M₂) :=
   ⟨toContinuousLinearMap⟩
 
-instance : ContinuousSemilinearEquivClass (M₁ ≃SL[σ₁₂] M₂) σ₁₂ M₁
-      M₂ where 
+instance : ContinuousSemilinearEquivClass (M₁ ≃SL[σ₁₂] M₂) σ₁₂ M₁ M₂
+    where
   coe f := f
   inv f := f.invFun
-  coe_injective' f g h₁ h₂ := by 
+  coe_injective' f g h₁ h₂ := by
     cases' f with f' _
     cases' g with g' _
     cases f'
@@ -1999,7 +2020,7 @@ variable (R₁ M₁)
 /-- The identity map as a continuous linear equivalence. -/
 @[refl]
 protected def refl : M₁ ≃L[R₁] M₁ :=
-  { LinearEquiv.refl R₁ M₁ with 
+  { LinearEquiv.refl R₁ M₁ with
     continuous_to_fun := continuous_id
     continuous_inv_fun := continuous_id }
 #align continuous_linear_equiv.refl ContinuousLinearEquiv.refl
@@ -2019,7 +2040,7 @@ theorem coe_refl' : ⇑(ContinuousLinearEquiv.refl R₁ M₁) = id :=
 /-- The inverse of a continuous linear equivalence as a continuous linear equivalence-/
 @[symm]
 protected def symm (e : M₁ ≃SL[σ₁₂] M₂) : M₂ ≃SL[σ₂₁] M₁ :=
-  { e.toLinearEquiv.symm with 
+  { e.toLinearEquiv.symm with
     continuous_to_fun := e.continuous_inv_fun
     continuous_inv_fun := e.continuous_to_fun }
 #align continuous_linear_equiv.symm ContinuousLinearEquiv.symm
@@ -2028,7 +2049,7 @@ include σ₂₁
 
 @[simp]
 theorem symm_to_linear_equiv (e : M₁ ≃SL[σ₁₂] M₂) : e.symm.toLinearEquiv = e.toLinearEquiv.symm :=
-  by 
+  by
   ext
   rfl
 #align continuous_linear_equiv.symm_to_linear_equiv ContinuousLinearEquiv.symm_to_linear_equiv
@@ -2063,7 +2084,9 @@ include σ₂₁ σ₃₂ σ₃₁
 /-- The composition of two continuous linear equivalences as a continuous linear equivalence. -/
 @[trans]
 protected def trans (e₁ : M₁ ≃SL[σ₁₂] M₂) (e₂ : M₂ ≃SL[σ₂₃] M₃) : M₁ ≃SL[σ₁₃] M₃ :=
-  { e₁.toLinearEquiv.trans e₂.toLinearEquiv with
+  {
+    e₁.toLinearEquiv.trans
+      e₂.toLinearEquiv with
     continuous_to_fun := e₂.continuous_to_fun.comp e₁.continuous_to_fun
     continuous_inv_fun := e₁.continuous_inv_fun.comp e₂.continuous_inv_fun }
 #align continuous_linear_equiv.trans ContinuousLinearEquiv.trans
@@ -2072,7 +2095,8 @@ include σ₁₃
 
 @[simp]
 theorem trans_to_linear_equiv (e₁ : M₁ ≃SL[σ₁₂] M₂) (e₂ : M₂ ≃SL[σ₂₃] M₃) :
-    (e₁.trans e₂).toLinearEquiv = e₁.toLinearEquiv.trans e₂.toLinearEquiv := by
+    (e₁.trans e₂).toLinearEquiv = e₁.toLinearEquiv.trans e₂.toLinearEquiv :=
+  by
   ext
   rfl
 #align continuous_linear_equiv.trans_to_linear_equiv ContinuousLinearEquiv.trans_to_linear_equiv
@@ -2082,7 +2106,9 @@ omit σ₁₃ σ₂₁ σ₃₂ σ₃₁
 /-- Product of two continuous linear equivalences. The map comes from `equiv.prod_congr`. -/
 def prod [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (e : M₁ ≃L[R₁] M₂) (e' : M₃ ≃L[R₁] M₄) :
     (M₁ × M₃) ≃L[R₁] M₂ × M₄ :=
-  { e.toLinearEquiv.Prod e'.toLinearEquiv with
+  {
+    e.toLinearEquiv.Prod
+      e'.toLinearEquiv with
     continuous_to_fun := e.continuous_to_fun.prod_map e'.continuous_to_fun
     continuous_inv_fun := e.continuous_inv_fun.prod_map e'.continuous_inv_fun }
 #align continuous_linear_equiv.prod ContinuousLinearEquiv.prod
@@ -2184,19 +2210,22 @@ theorem coe_symm_comp_coe (e : M₁ ≃SL[σ₁₂] M₂) :
 include σ₂₁
 
 @[simp]
-theorem symm_comp_self (e : M₁ ≃SL[σ₁₂] M₂) : (e.symm : M₂ → M₁) ∘ (e : M₁ → M₂) = id := by
+theorem symm_comp_self (e : M₁ ≃SL[σ₁₂] M₂) : (e.symm : M₂ → M₁) ∘ (e : M₁ → M₂) = id :=
+  by
   ext x
   exact symm_apply_apply e x
 #align continuous_linear_equiv.symm_comp_self ContinuousLinearEquiv.symm_comp_self
 
 @[simp]
-theorem self_comp_symm (e : M₁ ≃SL[σ₁₂] M₂) : (e : M₁ → M₂) ∘ (e.symm : M₂ → M₁) = id := by
+theorem self_comp_symm (e : M₁ ≃SL[σ₁₂] M₂) : (e : M₁ → M₂) ∘ (e.symm : M₂ → M₁) = id :=
+  by
   ext x
   exact apply_symm_apply e x
 #align continuous_linear_equiv.self_comp_symm ContinuousLinearEquiv.self_comp_symm
 
 @[simp]
-theorem symm_symm (e : M₁ ≃SL[σ₁₂] M₂) : e.symm.symm = e := by
+theorem symm_symm (e : M₁ ≃SL[σ₁₂] M₂) : e.symm.symm = e :=
+  by
   ext x
   rfl
 #align continuous_linear_equiv.symm_symm ContinuousLinearEquiv.symm_symm
@@ -2254,7 +2283,7 @@ protected theorem LinearEquiv.uniform_embedding {E₁ E₂ : Type _} [UniformSpa
     [UniformAddGroup E₂] (e : E₁ ≃ₛₗ[σ₁₂] E₂) (h₁ : Continuous e) (h₂ : Continuous e.symm) :
     UniformEmbedding e :=
   ContinuousLinearEquiv.uniform_embedding
-    ({ e with 
+    ({ e with
         continuous_to_fun := h₁
         continuous_inv_fun := h₂ } :
       E₁ ≃SL[σ₁₂] E₂)
@@ -2266,7 +2295,7 @@ omit σ₂₁
 inverse of each other. -/
 def equivOfInverse (f₁ : M₁ →SL[σ₁₂] M₂) (f₂ : M₂ →SL[σ₂₁] M₁) (h₁ : Function.LeftInverse f₂ f₁)
     (h₂ : Function.RightInverse f₂ f₁) : M₁ ≃SL[σ₁₂] M₂ :=
-  { f₁ with 
+  { f₁ with
     toFun := f₁
     continuous_to_fun := f₁.Continuous
     invFun := f₂
@@ -2294,21 +2323,21 @@ omit σ₂₁
 variable (M₁)
 
 /-- The continuous linear equivalences from `M` to itself form a group under composition. -/
-instance automorphismGroup :
-    Group (M₁ ≃L[R₁] M₁) where 
+instance automorphismGroup : Group (M₁ ≃L[R₁] M₁)
+    where
   mul f g := g.trans f
   one := ContinuousLinearEquiv.refl R₁ M₁
   inv f := f.symm
-  mul_assoc f g h := by 
+  mul_assoc f g h := by
     ext
     rfl
-  mul_one f := by 
+  mul_one f := by
     ext
     rfl
-  one_mul f := by 
+  one_mul f := by
     ext
     rfl
-  mul_left_inv f := by 
+  mul_left_inv f := by
     ext
     exact f.left_inv x
 #align continuous_linear_equiv.automorphism_group ContinuousLinearEquiv.automorphismGroup
@@ -2319,7 +2348,7 @@ variable {M₁} {R₄ : Type _} [Semiring R₄] [Module R₄ M₄] {σ₃₄ : R
 
 /-- The continuous linear equivalence between `ulift M₁` and `M₁`. -/
 def ulift : ULift M₁ ≃L[R₁] M₁ :=
-  { Equiv.ulift with 
+  { Equiv.ulift with
     map_add' := fun x y => rfl
     map_smul' := fun c x => rfl
     continuous_to_fun := continuous_ulift_down
@@ -2332,9 +2361,8 @@ include σ₂₁ σ₃₄ σ₂₃ σ₂₄ σ₁₃
 continuous linear maps. See also `continuous_linear_equiv.arrow_congr`. -/
 @[simps]
 def arrowCongrEquiv (e₁₂ : M₁ ≃SL[σ₁₂] M₂) (e₄₃ : M₄ ≃SL[σ₄₃] M₃) :
-    (M₁ →SL[σ₁₄] M₄) ≃
-      (M₂ →SL[σ₂₃]
-        M₃) where 
+    (M₁ →SL[σ₁₄] M₄) ≃ (M₂ →SL[σ₂₃] M₃)
+    where
   toFun f := (e₄₃ : M₄ →SL[σ₄₃] M₃).comp (f.comp (e₁₂.symm : M₂ →SL[σ₂₁] M₁))
   invFun f := (e₄₃.symm : M₃ →SL[σ₃₄] M₄).comp (f.comp (e₁₂ : M₁ →SL[σ₁₂] M₂))
   left_inv f :=
@@ -2359,7 +2387,9 @@ variable [TopologicalAddGroup M₄]
 /-- Equivalence given by a block lower diagonal matrix. `e` and `e'` are diagonal square blocks,
   and `f` is a rectangular block below the diagonal. -/
 def skewProd (e : M ≃L[R] M₂) (e' : M₃ ≃L[R] M₄) (f : M →L[R] M₄) : (M × M₃) ≃L[R] M₂ × M₄ :=
-  { e.toLinearEquiv.skewProd e'.toLinearEquiv ↑f with
+  {
+    e.toLinearEquiv.skewProd e'.toLinearEquiv
+      ↑f with
     continuous_to_fun :=
       (e.continuous_to_fun.comp continuous_fst).prod_mk
         ((e'.continuous_to_fun.comp continuous_snd).add <| f.Continuous.comp continuous_fst)
@@ -2414,20 +2444,19 @@ variable [TopologicalAddGroup M]
 
 /-- An invertible continuous linear map `f` determines a continuous equivalence from `M` to itself.
 -/
-def ofUnit (f : (M →L[R] M)ˣ) :
-    M ≃L[R]
-      M where 
+def ofUnit (f : (M →L[R] M)ˣ) : M ≃L[R] M
+    where
   toLinearEquiv :=
     { toFun := f.val
       map_add' := by simp
       map_smul' := by simp
       invFun := f.inv
       left_inv := fun x =>
-        show (f.inv * f.val) x = x by 
+        show (f.inv * f.val) x = x by
           rw [f.inv_val]
           simp
       right_inv := fun x =>
-        show (f.val * f.inv) x = x by 
+        show (f.val * f.inv) x = x by
           rw [f.val_inv]
           simp }
   continuous_to_fun := f.val.Continuous
@@ -2435,13 +2464,13 @@ def ofUnit (f : (M →L[R] M)ˣ) :
 #align continuous_linear_equiv.of_unit ContinuousLinearEquiv.ofUnit
 
 /-- A continuous equivalence from `M` to itself determines an invertible continuous linear map. -/
-def toUnit (f : M ≃L[R] M) : (M →L[R] M)ˣ where 
+def toUnit (f : M ≃L[R] M) : (M →L[R] M)ˣ where
   val := f
   inv := f.symm
-  val_inv := by 
+  val_inv := by
     ext
     simp
-  inv_val := by 
+  inv_val := by
     ext
     simp
 #align continuous_linear_equiv.to_unit ContinuousLinearEquiv.toUnit
@@ -2450,17 +2479,17 @@ variable (R M)
 
 /-- The units of the algebra of continuous `R`-linear endomorphisms of `M` is multiplicatively
 equivalent to the type of continuous linear equivalences between `M` and itself. -/
-def unitsEquiv : (M →L[R] M)ˣ ≃*
-      M ≃L[R] M where 
+def unitsEquiv : (M →L[R] M)ˣ ≃* M ≃L[R] M
+    where
   toFun := ofUnit
   invFun := toUnit
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     rfl
-  map_mul' x y := by 
+  map_mul' x y := by
     ext
     rfl
 #align continuous_linear_equiv.units_equiv ContinuousLinearEquiv.unitsEquiv
@@ -2477,10 +2506,8 @@ section
 variable (R) [TopologicalSpace R] [HasContinuousMul R]
 
 /-- Continuous linear equivalences `R ≃L[R] R` are enumerated by `Rˣ`. -/
-def unitsEquivAut :
-    Rˣ ≃
-      R ≃L[R]
-        R where 
+def unitsEquivAut : Rˣ ≃ R ≃L[R] R
+    where
   toFun u :=
     equivOfInverse (ContinuousLinearMap.smulRight (1 : R →L[R] R) ↑u)
       (ContinuousLinearMap.smulRight (1 : R →L[R] R) ↑u⁻¹) (fun x => by simp) fun x => by simp
@@ -2617,7 +2644,8 @@ noncomputable def inverse : (M →L[R] M₂) → M₂ →L[R] M := fun f =>
 
 /-- By definition, if `f` is invertible then `inverse f = f.symm`. -/
 @[simp]
-theorem inverse_equiv (e : M ≃L[R] M₂) : inverse (e : M →L[R] M₂) = e.symm := by
+theorem inverse_equiv (e : M ≃L[R] M₂) : inverse (e : M →L[R] M₂) = e.symm :=
+  by
   have h : ∃ e' : M ≃L[R] M₂, (e' : M →L[R] M₂) = ↑e := ⟨e, rfl⟩
   simp only [inverse, dif_pos h]
   congr
@@ -2641,7 +2669,8 @@ variable [AddCommGroup M] [TopologicalAddGroup M] [Module R M]
 variable [AddCommGroup M₂] [Module R M₂]
 
 @[simp]
-theorem ring_inverse_equiv (e : M ≃L[R] M) : Ring.inverse ↑e = inverse (e : M →L[R] M) := by
+theorem ring_inverse_equiv (e : M ≃L[R] M) : Ring.inverse ↑e = inverse (e : M →L[R] M) :=
+  by
   suffices Ring.inverse ((ContinuousLinearEquiv.unitsEquiv _ _).symm e : M →L[R] M) = inverse ↑e by
     convert this
   simp
@@ -2651,7 +2680,8 @@ theorem ring_inverse_equiv (e : M ≃L[R] M) : Ring.inverse ↑e = inverse (e : 
 /-- The function `continuous_linear_equiv.inverse` can be written in terms of `ring.inverse` for the
 ring of self-maps of the domain. -/
 theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
-    inverse f = Ring.inverse ((e.symm : M₂ →L[R] M).comp f) ∘L ↑e.symm := by
+    inverse f = Ring.inverse ((e.symm : M₂ →L[R] M).comp f) ∘L ↑e.symm :=
+  by
   by_cases h₁ : ∃ e' : M ≃L[R] M₂, ↑e' = f
   · obtain ⟨e', he'⟩ := h₁
     rw [← he']
@@ -2668,7 +2698,8 @@ theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
     simp
 #align continuous_linear_map.to_ring_inverse ContinuousLinearMap.to_ring_inverse
 
-theorem ring_inverse_eq_map_inverse : Ring.inverse = @inverse R M M _ _ _ _ _ _ _ := by
+theorem ring_inverse_eq_map_inverse : Ring.inverse = @inverse R M M _ _ _ _ _ _ _ :=
+  by
   ext
   simp [to_ring_inverse (ContinuousLinearEquiv.refl R M)]
 #align
@@ -2697,31 +2728,32 @@ theorem ClosedComplemented.has_closed_complement {p : Submodule R M} [T1Space p]
   submodule.closed_complemented.has_closed_complement Submodule.ClosedComplemented.has_closed_complement
 
 protected theorem ClosedComplemented.is_closed [TopologicalAddGroup M] [T1Space M]
-    {p : Submodule R M} (h : ClosedComplemented p) : IsClosed (p : Set M) := by
+    {p : Submodule R M} (h : ClosedComplemented p) : IsClosed (p : Set M) :=
+  by
   rcases h with ⟨f, hf⟩
   have : ker (id R M - p.subtypeL.comp f) = p := LinearMap.ker_id_sub_eq_of_proj hf
   exact this ▸ is_closed_ker _
 #align submodule.closed_complemented.is_closed Submodule.ClosedComplemented.is_closed
 
 @[simp]
-theorem closed_complemented_bot : ClosedComplemented (⊥ : Submodule R M) :=
+theorem closedComplementedBot : ClosedComplemented (⊥ : Submodule R M) :=
   ⟨0, fun x => by simp only [zero_apply, eq_zero_of_bot_submodule x]⟩
-#align submodule.closed_complemented_bot Submodule.closed_complemented_bot
+#align submodule.closed_complemented_bot Submodule.closedComplementedBot
 
 @[simp]
-theorem closed_complemented_top : ClosedComplemented (⊤ : Submodule R M) :=
+theorem closedComplementedTop : ClosedComplemented (⊤ : Submodule R M) :=
   ⟨(id R M).codRestrict ⊤ fun x => trivial, fun x => Subtype.ext_iff_val.2 <| by simp⟩
-#align submodule.closed_complemented_top Submodule.closed_complemented_top
+#align submodule.closed_complemented_top Submodule.closedComplementedTop
 
 end Submodule
 
-theorem ContinuousLinearMap.closed_complemented_ker_of_right_inverse {R : Type _} [Ring R]
-    {M : Type _} [TopologicalSpace M] [AddCommGroup M] {M₂ : Type _} [TopologicalSpace M₂]
-    [AddCommGroup M₂] [Module R M] [Module R M₂] [TopologicalAddGroup M] (f₁ : M →L[R] M₂)
-    (f₂ : M₂ →L[R] M) (h : Function.RightInverse f₂ f₁) : (ker f₁).ClosedComplemented :=
+theorem ContinuousLinearMap.closedComplementedKerOfRightInverse {R : Type _} [Ring R] {M : Type _}
+    [TopologicalSpace M] [AddCommGroup M] {M₂ : Type _} [TopologicalSpace M₂] [AddCommGroup M₂]
+    [Module R M] [Module R M₂] [TopologicalAddGroup M] (f₁ : M →L[R] M₂) (f₂ : M₂ →L[R] M)
+    (h : Function.RightInverse f₂ f₁) : (ker f₁).ClosedComplemented :=
   ⟨f₁.projKerOfRightInverse f₂ h, f₁.proj_ker_of_right_inverse_apply_idem f₂ h⟩
 #align
-  continuous_linear_map.closed_complemented_ker_of_right_inverse ContinuousLinearMap.closed_complemented_ker_of_right_inverse
+  continuous_linear_map.closed_complemented_ker_of_right_inverse ContinuousLinearMap.closedComplementedKerOfRightInverse
 
 section Quotient
 
@@ -2739,7 +2771,8 @@ instance topological_add_group_quotient [TopologicalAddGroup M] : TopologicalAdd
 #align submodule.topological_add_group_quotient Submodule.topological_add_group_quotient
 
 instance has_continuous_smul_quotient [TopologicalSpace R] [TopologicalAddGroup M]
-    [HasContinuousSmul R M] : HasContinuousSmul R (M ⧸ S) := by
+    [HasContinuousSmul R M] : HasContinuousSmul R (M ⧸ S) :=
+  by
   constructor
   have quot : QuotientMap fun au : R × M => (au.1, S.mkq au.2) :=
     IsOpenMap.to_quotient_map (is_open_map.id.prod S.is_open_map_mkq)

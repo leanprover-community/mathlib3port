@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.spaces
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,34 +46,36 @@ variable (T : Type u) [TopologicalSpace T]
 open CategoryTheory TopologicalSpace CategoryTheory.Limits
 
 /-- The Grothendieck topology associated to a topological space. -/
-def grothendieckTopology :
-    GrothendieckTopology
-      (Opens T) where 
+def grothendieckTopology : GrothendieckTopology (Opens T)
+    where
   sieves X S := ∀ x ∈ X, ∃ (U : _)(f : U ⟶ X), S f ∧ x ∈ U
   top_mem' X x hx := ⟨_, 𝟙 _, trivial, hx⟩
-  pullback_stable' X Y S f hf y hy := by
+  pullback_stable' X Y S f hf y hy :=
+    by
     rcases hf y (f.le hy) with ⟨U, g, hg, hU⟩
     refine' ⟨U ⊓ Y, hom_of_le inf_le_right, _, hU, hy⟩
     apply S.downward_closed hg (hom_of_le inf_le_left)
-  transitive' X S hS R hR x hx := by
+  transitive' X S hS R hR x hx :=
+    by
     rcases hS x hx with ⟨U, f, hf, hU⟩
     rcases hR hf _ hU with ⟨V, g, hg, hV⟩
     exact ⟨_, g ≫ f, hg, hV⟩
 #align opens.grothendieck_topology Opens.grothendieckTopology
 
 /-- The Grothendieck pretopology associated to a topological space. -/
-def pretopology :
-    Pretopology
-      (Opens T) where 
+def pretopology : Pretopology (Opens T)
+    where
   coverings X R := ∀ x ∈ X, ∃ (U : _)(f : U ⟶ X), R f ∧ x ∈ U
   has_isos X Y f i x hx := ⟨_, _, presieve.singleton_self _, (inv f).le hx⟩
-  pullbacks X Y f S hS x hx := by
+  pullbacks X Y f S hS x hx :=
+    by
     rcases hS _ (f.le hx) with ⟨U, g, hg, hU⟩
     refine' ⟨_, _, presieve.pullback_arrows.mk _ _ hg, _⟩
     have : U ⊓ Y ≤ pullback g f
     refine' le_of_hom (pullback.lift (hom_of_le inf_le_left) (hom_of_le inf_le_right) rfl)
     apply this ⟨hU, hx⟩
-  Transitive X S Ti hS hTi x hx := by
+  Transitive X S Ti hS hTi x hx :=
+    by
     rcases hS x hx with ⟨U, f, hf, hU⟩
     rcases hTi f hf x hU with ⟨V, g, hg, hV⟩
     exact ⟨_, _, ⟨_, g, f, hf, hg, rfl⟩, hV⟩
@@ -83,7 +85,8 @@ def pretopology :
     generates the Grothendieck topology associated to the space. -/
 @[simp]
 theorem pretopology_of_grothendieck :
-    Pretopology.ofGrothendieck _ (Opens.grothendieckTopology T) = Opens.pretopology T := by
+    Pretopology.ofGrothendieck _ (Opens.grothendieckTopology T) = Opens.pretopology T :=
+  by
   apply le_antisymm
   · intro X R hR x hx
     rcases hR x hx with ⟨U, f, ⟨V, g₁, g₂, hg₂, _⟩, hU⟩
@@ -97,7 +100,8 @@ theorem pretopology_of_grothendieck :
 -/
 @[simp]
 theorem pretopology_to_grothendieck :
-    Pretopology.toGrothendieck _ (Opens.pretopology T) = Opens.grothendieckTopology T := by
+    Pretopology.toGrothendieck _ (Opens.pretopology T) = Opens.grothendieckTopology T :=
+  by
   rw [← pretopology_of_grothendieck]
   apply (pretopology.gi (opens T)).l_u_eq
 #align opens.pretopology_to_grothendieck Opens.pretopology_to_grothendieck

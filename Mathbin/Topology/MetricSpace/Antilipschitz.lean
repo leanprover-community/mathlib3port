@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.antilipschitz
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,8 @@ section Metric
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
 
 theorem antilipschitz_with_iff_le_mul_nndist :
-    AntilipschitzWith K f ↔ ∀ x y, nndist x y ≤ K * nndist (f x) (f y) := by
+    AntilipschitzWith K f ↔ ∀ x y, nndist x y ≤ K * nndist (f x) (f y) :=
+  by
   simp only [AntilipschitzWith, edist_nndist]
   norm_cast
 #align antilipschitz_with_iff_le_mul_nndist antilipschitz_with_iff_le_mul_nndist
@@ -62,7 +63,8 @@ alias antilipschitz_with_iff_le_mul_nndist ↔
   AntilipschitzWith.le_mul_nndist AntilipschitzWith.ofLeMulNndist
 
 theorem antilipschitz_with_iff_le_mul_dist :
-    AntilipschitzWith K f ↔ ∀ x y, dist x y ≤ K * dist (f x) (f y) := by
+    AntilipschitzWith K f ↔ ∀ x y, dist x y ≤ K * dist (f x) (f y) :=
+  by
   simp only [antilipschitz_with_iff_le_mul_nndist, dist_nndist]
   norm_cast
 #align antilipschitz_with_iff_le_mul_dist antilipschitz_with_iff_le_mul_dist
@@ -107,7 +109,8 @@ protected theorem injective {α : Type _} {β : Type _} [EmetricSpace α] [Pseud
 #align antilipschitz_with.injective AntilipschitzWith.injective
 
 theorem mul_le_edist (hf : AntilipschitzWith K f) (x y : α) :
-    (K⁻¹ * edist x y : ℝ≥0∞) ≤ edist (f x) (f y) := by
+    (K⁻¹ * edist x y : ℝ≥0∞) ≤ edist (f x) (f y) :=
+  by
   rw [mul_comm, ← div_eq_mul_inv]
   exact Ennreal.div_le_of_le_mul' (hf x y)
 #align antilipschitz_with.mul_le_edist AntilipschitzWith.mul_le_edist
@@ -154,13 +157,14 @@ theorem toRightInvOn (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (
 #align antilipschitz_with.to_right_inv_on AntilipschitzWith.toRightInvOn
 
 theorem toRightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
-    LipschitzWith K g := by 
+    LipschitzWith K g := by
   intro x y
   have := hf (g x) (g y)
   rwa [hg x, hg y] at this
 #align antilipschitz_with.to_right_inverse AntilipschitzWith.toRightInverse
 
-theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α := by
+theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
+  by
   refine' ((uniformity_basis_edist.comap _).le_basis_iff uniformity_basis_edist).2 fun ε h₀ => _
   refine' ⟨K⁻¹ * ε, Ennreal.mul_pos (Ennreal.inv_ne_zero.2 Ennreal.coe_ne_top) h₀.ne', _⟩
   refine' fun x hx => (hf x.1 x.2).trans_lt _
@@ -236,7 +240,8 @@ theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α
 /-- The image of a proper space under an expanding onto map is proper. -/
 protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : α → β} [ProperSpace α]
     (hK : AntilipschitzWith K f) (f_cont : Continuous f) (hf : Function.Surjective f) :
-    ProperSpace β := by
+    ProperSpace β :=
+  by
   apply properSpaceOfCompactClosedBallOfLe 0 fun x₀ r hr => _
   let K := f ⁻¹' closed_ball x₀ r
   have A : IsClosed K := is_closed_ball.preimage f_cont

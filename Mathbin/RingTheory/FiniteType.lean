@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finite_type
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem self : FiniteType R R :=
 #align algebra.finite_type.self Algebra.FiniteType.self
 
 protected theorem polynomial : FiniteType R R[X] :=
-  ⟨⟨{Polynomial.x}, by 
+  ⟨⟨{Polynomial.x}, by
       rw [Finset.coe_singleton]
       exact Polynomial.adjoin_X⟩⟩
 #align algebra.finite_type.polynomial Algebra.FiniteType.polynomial
@@ -89,16 +89,18 @@ open Classical
 protected theorem mv_polynomial (ι : Type _) [Finite ι] : FiniteType R (MvPolynomial ι R) := by
   cases nonempty_fintype ι <;>
     exact
-      ⟨⟨finset.univ.image MvPolynomial.x, by
+      ⟨⟨finset.univ.image MvPolynomial.x,
+          by
           rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]
           exact MvPolynomial.adjoin_range_X⟩⟩
 #align algebra.finite_type.mv_polynomial Algebra.FiniteType.mv_polynomial
 
 theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB : FiniteType R B] :
-    FiniteType A B := by 
+    FiniteType A B := by
   obtain ⟨S, hS⟩ := hB.out
   refine' ⟨⟨S, eq_top_iff.2 fun b => _⟩⟩
-  have le : adjoin R (S : Set B) ≤ Subalgebra.restrictScalars R (adjoin A S) := by
+  have le : adjoin R (S : Set B) ≤ Subalgebra.restrictScalars R (adjoin A S) :=
+    by
     apply (Algebra.adjoin_le _ : _ ≤ Subalgebra.restrictScalars R (adjoin A ↑S))
     simp only [Subalgebra.coe_restrict_scalars]
     exact Algebra.subset_adjoin
@@ -109,7 +111,7 @@ theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB 
 variable {R A B}
 
 theorem of_surjective (hRA : FiniteType R A) (f : A →ₐ[R] B) (hf : Surjective f) : FiniteType R B :=
-  ⟨by 
+  ⟨by
     convert hRA.1.map f
     simpa only [map_top f, @eq_comm _ ⊤, eq_top_iff, AlgHom.mem_range] using hf⟩
 #align algebra.finite_type.of_surjective Algebra.FiniteType.of_surjective
@@ -126,7 +128,8 @@ theorem trans [Algebra A B] [IsScalarTower R A B] (hRA : FiniteType R A) (hAB : 
 /-- An algebra is finitely generated if and only if it is a quotient
 of a polynomial ring whose variables are indexed by a finset. -/
 theorem iff_quotient_mv_polynomial :
-    FiniteType R A ↔ ∃ (s : Finset A)(f : MvPolynomial { x // x ∈ s } R →ₐ[R] A), Surjective f := by
+    FiniteType R A ↔ ∃ (s : Finset A)(f : MvPolynomial { x // x ∈ s } R →ₐ[R] A), Surjective f :=
+  by
   constructor
   · rintro ⟨s, hs⟩
     use s, MvPolynomial.aeval coe
@@ -142,7 +145,7 @@ theorem iff_quotient_mv_polynomial :
 of a polynomial ring whose variables are indexed by a fintype. -/
 theorem iff_quotient_mv_polynomial' :
     FiniteType R A ↔ ∃ (ι : Type u_2)(_ : Fintype ι)(f : MvPolynomial ι R →ₐ[R] A), Surjective f :=
-  by 
+  by
   constructor
   · rw [iff_quotient_mv_polynomial]
     rintro ⟨s, ⟨f, hsur⟩⟩
@@ -156,7 +159,8 @@ theorem iff_quotient_mv_polynomial' :
 /-- An algebra is finitely generated if and only if it is a quotient of a polynomial ring in `n`
 variables. -/
 theorem iff_quotient_mv_polynomial'' :
-    FiniteType R A ↔ ∃ (n : ℕ)(f : MvPolynomial (Fin n) R →ₐ[R] A), Surjective f := by
+    FiniteType R A ↔ ∃ (n : ℕ)(f : MvPolynomial (Fin n) R →ₐ[R] A), Surjective f :=
+  by
   constructor
   · rw [iff_quotient_mv_polynomial']
     rintro ⟨ι, hfintype, ⟨f, hsur⟩⟩
@@ -171,13 +175,14 @@ theorem iff_quotient_mv_polynomial'' :
   algebra.finite_type.iff_quotient_mv_polynomial'' Algebra.FiniteType.iff_quotient_mv_polynomial''
 
 instance prod [hA : FiniteType R A] [hB : FiniteType R B] : FiniteType R (A × B) :=
-  ⟨by 
+  ⟨by
     rw [← Subalgebra.prod_top]
     exact hA.1.Prod hB.1⟩
 #align algebra.finite_type.prod Algebra.FiniteType.prod
 
 theorem is_noetherian_ring (R S : Type _) [CommRing R] [CommRing S] [Algebra R S]
-    [h : Algebra.FiniteType R S] [IsNoetherianRing R] : IsNoetherianRing S := by
+    [h : Algebra.FiniteType R S] [IsNoetherianRing R] : IsNoetherianRing S :=
+  by
   obtain ⟨s, hs⟩ := h.1
   apply
     is_noetherian_ring_of_surjective (MvPolynomial s R) S
@@ -230,13 +235,14 @@ variable {A}
 theorem comp_surjective {f : A →+* B} {g : B →+* C} (hf : f.FiniteType) (hg : Surjective g) :
     (g.comp f).FiniteType :=
   @Algebra.FiniteType.of_surjective A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra hf
-    { g with 
+    { g with
       toFun := g
       commutes' := fun a => rfl }
     hg
 #align ring_hom.finite_type.comp_surjective RingHom.FiniteType.comp_surjective
 
-theorem of_surjective (f : A →+* B) (hf : Surjective f) : f.FiniteType := by
+theorem of_surjective (f : A →+* B) (hf : Surjective f) : f.FiniteType :=
+  by
   rw [← f.comp_id]
   exact (id A).comp_surjective hf
 #align ring_hom.finite_type.of_surjective RingHom.FiniteType.of_surjective
@@ -244,7 +250,7 @@ theorem of_surjective (f : A →+* B) (hf : Surjective f) : f.FiniteType := by
 theorem comp {g : B →+* C} {f : A →+* B} (hg : g.FiniteType) (hf : f.FiniteType) :
     (g.comp f).FiniteType :=
   @Algebra.FiniteType.trans A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra g.toAlgebra
-    (by 
+    (by
       fconstructor
       intro a b c
       simp only [Algebra.smul_def, RingHom.map_mul, mul_assoc]
@@ -259,7 +265,7 @@ theorem of_finite {f : A →+* B} (hf : f.Finite) : f.FiniteType :=
 alias of_finite ← _root_.ring_hom.finite.to_finite_type
 
 theorem of_comp_finite_type {f : A →+* B} {g : B →+* C} (h : (g.comp f).FiniteType) :
-    g.FiniteType := by 
+    g.FiniteType := by
   letI := f.to_algebra
   letI := g.to_algebra
   letI := (g.comp f).toAlgebra
@@ -344,7 +350,8 @@ section Semiring
 variable [CommSemiring R] [AddMonoid M]
 
 /-- An element of `add_monoid_algebra R M` is in the subalgebra generated by its support. -/
-theorem mem_adjoin_support (f : AddMonoidAlgebra R M) : f ∈ adjoin R (of' R M '' f.support) := by
+theorem mem_adjoin_support (f : AddMonoidAlgebra R M) : f ∈ adjoin R (of' R M '' f.support) :=
+  by
   suffices span R (of' R M '' f.support) ≤ (adjoin R (of' R M '' f.support)).toSubmodule by
     exact this (mem_span_support f)
   rw [Submodule.span_le]
@@ -354,25 +361,29 @@ theorem mem_adjoin_support (f : AddMonoidAlgebra R M) : f ∈ adjoin R (of' R M 
 /-- If a set `S` generates, as algebra, `add_monoid_algebra R M`, then the set of supports of
 elements of `S` generates `add_monoid_algebra R M`. -/
 theorem support_gen_of_gen {S : Set (AddMonoidAlgebra R M)} (hS : Algebra.adjoin R S = ⊤) :
-    Algebra.adjoin R (⋃ f ∈ S, of' R M '' (f.support : Set M)) = ⊤ := by
+    Algebra.adjoin R (⋃ f ∈ S, of' R M '' (f.support : Set M)) = ⊤ :=
+  by
   refine' le_antisymm le_top _
   rw [← hS, adjoin_le_iff]
   intro f hf
   have hincl :
-    of' R M '' f.support ⊆ ⋃ (g : AddMonoidAlgebra R M) (H : g ∈ S), of' R M '' g.support := by
+    of' R M '' f.support ⊆ ⋃ (g : AddMonoidAlgebra R M) (H : g ∈ S), of' R M '' g.support :=
+    by
     intro s hs
-    exact Set.mem_Union₂.2 ⟨f, ⟨hf, hs⟩⟩
+    exact Set.mem_unionᵢ₂.2 ⟨f, ⟨hf, hs⟩⟩
   exact adjoin_mono hincl (mem_adjoin_support f)
 #align add_monoid_algebra.support_gen_of_gen AddMonoidAlgebra.support_gen_of_gen
 
 /-- If a set `S` generates, as algebra, `add_monoid_algebra R M`, then the image of the union of
 the supports of elements of `S` generates `add_monoid_algebra R M`. -/
 theorem support_gen_of_gen' {S : Set (AddMonoidAlgebra R M)} (hS : Algebra.adjoin R S = ⊤) :
-    Algebra.adjoin R (of' R M '' ⋃ f ∈ S, (f.support : Set M)) = ⊤ := by
-  suffices (of' R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of' R M '' (f.support : Set M) by
+    Algebra.adjoin R (of' R M '' ⋃ f ∈ S, (f.support : Set M)) = ⊤ :=
+  by
+  suffices (of' R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of' R M '' (f.support : Set M)
+    by
     rw [this]
     exact support_gen_of_gen hS
-  simp only [Set.image_Union]
+  simp only [Set.image_unionᵢ]
 #align add_monoid_algebra.support_gen_of_gen' AddMonoidAlgebra.support_gen_of_gen'
 
 end Semiring
@@ -384,7 +395,8 @@ variable [CommRing R] [AddCommMonoid M]
 /-- If `add_monoid_algebra R M` is of finite type, there there is a `G : finset M` such that its
 image generates, as algera, `add_monoid_algebra R M`. -/
 theorem exists_finset_adjoin_eq_top [h : FiniteType R (AddMonoidAlgebra R M)] :
-    ∃ G : Finset M, Algebra.adjoin R (of' R M '' G) = ⊤ := by
+    ∃ G : Finset M, Algebra.adjoin R (of' R M '' G) = ⊤ :=
+  by
   obtain ⟨S, hS⟩ := h
   letI : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
@@ -397,7 +409,8 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (AddMonoidAlgebra R M)] :
 /-- The image of an element `m : M` in `add_monoid_algebra R M` belongs the submodule generated by
 `S : set M` if and only if `m ∈ S`. -/
 theorem of'_mem_span [Nontrivial R] {m : M} {S : Set M} :
-    of' R M m ∈ span R (of' R M '' S) ↔ m ∈ S := by
+    of' R M m ∈ span R (of' R M '' S) ↔ m ∈ S :=
+  by
   refine' ⟨fun h => _, fun h => Submodule.subset_span <| Set.mem_image_of_mem (of R M) h⟩
   rw [of', ← Finsupp.supported_eq_span_single, Finsupp.mem_supported,
     Finsupp.support_single_ne_zero _ (one_ne_zero' R)] at h
@@ -409,7 +422,8 @@ If the image of an element `m : M` in `add_monoid_algebra R M` belongs the submo
 the closure of some `S : set M` then `m ∈ closure S`. -/
 theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
     (h : of' R M m ∈ span R (Submonoid.closure (of' R M '' S) : Set (AddMonoidAlgebra R M))) :
-    m ∈ closure S := by
+    m ∈ closure S :=
+  by
   suffices Multiplicative.ofAdd m ∈ Submonoid.closure (Multiplicative.toAdd ⁻¹' S) by
     simpa [← to_submonoid_closure]
   let S' := @Submonoid.closure M Multiplicative.mulOneClass S
@@ -432,7 +446,7 @@ theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M
     (hS : closure S = ⊤) :
     Function.Surjective
       (MvPolynomial.aeval fun s : S => of' R M ↑s : MvPolynomial S R → AddMonoidAlgebra R M) :=
-  by 
+  by
   refine' fun f => induction_on f (fun m => _) _ _
   · have : m ∈ closure S := hS.symm ▸ mem_top _
     refine' closure_induction this (fun m hm => _) _ _
@@ -456,7 +470,8 @@ variable (R M)
 /-- If an additive monoid `M` is finitely generated then `add_monoid_algebra R M` is of finite
 type. -/
 instance finite_type_of_fg [CommRing R] [h : AddMonoid.Fg M] :
-    FiniteType R (AddMonoidAlgebra R M) := by
+    FiniteType R (AddMonoidAlgebra R M) :=
+  by
   obtain ⟨S, hS⟩ := h.out
   exact
     (finite_type.mv_polynomial R (S : Set M)).ofSurjective
@@ -469,7 +484,8 @@ variable {R M}
 /-- An additive monoid `M` is finitely generated if and only if `add_monoid_algebra R M` is of
 finite type. -/
 theorem finite_type_iff_fg [CommRing R] [Nontrivial R] :
-    FiniteType R (AddMonoidAlgebra R M) ↔ AddMonoid.Fg M := by
+    FiniteType R (AddMonoidAlgebra R M) ↔ AddMonoid.Fg M :=
+  by
   refine' ⟨fun h => _, fun h => @AddMonoidAlgebra.finite_type_of_fg _ _ _ _ h⟩
   obtain ⟨S, hS⟩ := @exists_finset_adjoin_eq_top R M _ _ h
   refine' AddMonoid.fg_def.2 ⟨S, (eq_top_iff' _).2 fun m => _⟩
@@ -505,7 +521,8 @@ section Semiring
 variable [CommSemiring R] [Monoid M]
 
 /-- An element of `monoid_algebra R M` is in the subalgebra generated by its support. -/
-theorem mem_adjoin_support (f : MonoidAlgebra R M) : f ∈ adjoin R (of R M '' f.support) := by
+theorem mem_adjoin_support (f : MonoidAlgebra R M) : f ∈ adjoin R (of R M '' f.support) :=
+  by
   suffices span R (of R M '' f.support) ≤ (adjoin R (of R M '' f.support)).toSubmodule by
     exact this (mem_span_support f)
   rw [Submodule.span_le]
@@ -515,25 +532,28 @@ theorem mem_adjoin_support (f : MonoidAlgebra R M) : f ∈ adjoin R (of R M '' f
 /-- If a set `S` generates, as algebra, `monoid_algebra R M`, then the set of supports of elements
 of `S` generates `monoid_algebra R M`. -/
 theorem support_gen_of_gen {S : Set (MonoidAlgebra R M)} (hS : Algebra.adjoin R S = ⊤) :
-    Algebra.adjoin R (⋃ f ∈ S, of R M '' (f.support : Set M)) = ⊤ := by
+    Algebra.adjoin R (⋃ f ∈ S, of R M '' (f.support : Set M)) = ⊤ :=
+  by
   refine' le_antisymm le_top _
   rw [← hS, adjoin_le_iff]
   intro f hf
   have hincl : of R M '' f.support ⊆ ⋃ (g : MonoidAlgebra R M) (H : g ∈ S), of R M '' g.support :=
-    by 
+    by
     intro s hs
-    exact Set.mem_Union₂.2 ⟨f, ⟨hf, hs⟩⟩
+    exact Set.mem_unionᵢ₂.2 ⟨f, ⟨hf, hs⟩⟩
   exact adjoin_mono hincl (mem_adjoin_support f)
 #align monoid_algebra.support_gen_of_gen MonoidAlgebra.support_gen_of_gen
 
 /-- If a set `S` generates, as algebra, `monoid_algebra R M`, then the image of the union of the
 supports of elements of `S` generates `monoid_algebra R M`. -/
 theorem support_gen_of_gen' {S : Set (MonoidAlgebra R M)} (hS : Algebra.adjoin R S = ⊤) :
-    Algebra.adjoin R (of R M '' ⋃ f ∈ S, (f.support : Set M)) = ⊤ := by
-  suffices (of R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of R M '' (f.support : Set M) by
+    Algebra.adjoin R (of R M '' ⋃ f ∈ S, (f.support : Set M)) = ⊤ :=
+  by
+  suffices (of R M '' ⋃ f ∈ S, (f.support : Set M)) = ⋃ f ∈ S, of R M '' (f.support : Set M)
+    by
     rw [this]
     exact support_gen_of_gen hS
-  simp only [Set.image_Union]
+  simp only [Set.image_unionᵢ]
 #align monoid_algebra.support_gen_of_gen' MonoidAlgebra.support_gen_of_gen'
 
 end Semiring
@@ -545,7 +565,8 @@ variable [CommRing R] [CommMonoid M]
 /-- If `monoid_algebra R M` is of finite type, there there is a `G : finset M` such that its image
 generates, as algera, `monoid_algebra R M`. -/
 theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
-    ∃ G : Finset M, Algebra.adjoin R (of R M '' G) = ⊤ := by
+    ∃ G : Finset M, Algebra.adjoin R (of R M '' G) = ⊤ :=
+  by
   obtain ⟨S, hS⟩ := h
   letI : DecidableEq M := Classical.decEq M
   use Finset.bUnion S fun f => f.support
@@ -558,7 +579,8 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
 /-- The image of an element `m : M` in `monoid_algebra R M` belongs the submodule generated by
 `S : set M` if and only if `m ∈ S`. -/
 theorem of_mem_span_of_iff [Nontrivial R] {m : M} {S : Set M} :
-    of R M m ∈ span R (of R M '' S) ↔ m ∈ S := by
+    of R M m ∈ span R (of R M '' S) ↔ m ∈ S :=
+  by
   refine' ⟨fun h => _, fun h => Submodule.subset_span <| Set.mem_image_of_mem (of R M) h⟩
   rw [of, MonoidHom.coe_mk, ← Finsupp.supported_eq_span_single, Finsupp.mem_supported,
     Finsupp.support_single_ne_zero _ (one_ne_zero' R)] at h
@@ -570,7 +592,7 @@ If the image of an element `m : M` in `monoid_algebra R M` belongs the submodule
 closure of some `S : set M` then `m ∈ closure S`. -/
 theorem mem_closure_of_mem_span_closure [Nontrivial R] {m : M} {S : Set M}
     (h : of R M m ∈ span R (Submonoid.closure (of R M '' S) : Set (MonoidAlgebra R M))) :
-    m ∈ closure S := by 
+    m ∈ closure S := by
   rw [← MonoidHom.map_mclosure] at h
   simpa using of_mem_span_of_iff.1 h
 #align monoid_algebra.mem_closure_of_mem_span_closure MonoidAlgebra.mem_closure_of_mem_span_closure
@@ -587,7 +609,7 @@ theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiring R] {S : Set M
     (hS : closure S = ⊤) :
     Function.Surjective
       (MvPolynomial.aeval fun s : S => of R M ↑s : MvPolynomial S R → MonoidAlgebra R M) :=
-  by 
+  by
   refine' fun f => induction_on f (fun m => _) _ _
   · have : m ∈ closure S := hS.symm ▸ mem_top _
     refine' closure_induction this (fun m hm => _) _ _
@@ -657,11 +679,11 @@ include f
 
 theorem modulePolynomialOfEndo.is_scalar_tower :
     @IsScalarTower R R[X] M _
-      (by 
+      (by
         letI := modulePolynomialOfEndo f
         infer_instance)
       _ :=
-  by 
+  by
   letI := modulePolynomialOfEndo f
   constructor
   intro x y z
@@ -677,14 +699,16 @@ https://www.ams.org/journals/tran/1969-138-00/S0002-9947-1969-0238839-5/.
 This is similar to `is_noetherian.injective_of_surjective_endomorphism` but only applies in the
 commutative case, but does not use a Noetherian hypothesis. -/
 theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M]
-    (f_surj : Function.Surjective f) : Function.Injective f := by
+    (f_surj : Function.Surjective f) : Function.Injective f :=
+  by
   letI := modulePolynomialOfEndo f
   haveI : IsScalarTower R R[X] M := modulePolynomialOfEndo.is_scalar_tower f
   have hfgpoly : Finite R[X] M := finite.of_restrict_scalars_finite R _ _
-  have X_mul : ∀ o, (X : R[X]) • o = f o := by 
+  have X_mul : ∀ o, (X : R[X]) • o = f o := by
     intro
     simp
-  have : (⊤ : Submodule R[X] M) ≤ Ideal.span {X} • ⊤ := by
+  have : (⊤ : Submodule R[X] M) ≤ Ideal.span {X} • ⊤ :=
+    by
     intro a ha
     obtain ⟨y, rfl⟩ := f_surj a
     rw [← X_mul y]
@@ -696,7 +720,7 @@ theorem Module.Finite.injective_of_surjective_endomorphism [hfg : Finite R M]
   intro m hm
   rw [Ideal.mem_span_singleton'] at hFa
   obtain ⟨G, hG⟩ := hFa
-  suffices (F - 1) • m = 0 by 
+  suffices (F - 1) • m = 0 by
     have Fmzero := hFb m (by simp)
     rwa [← sub_add_cancel F 1, add_smul, one_smul, this, zero_add] at Fmzero
   rw [← hG, mul_smul, X_mul m, hm, smul_zero]

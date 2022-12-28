@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.gaussian_int
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,10 +266,11 @@ instance : Nontrivial ℤ[i] :=
   ⟨⟨0, 1, by decide⟩⟩
 
 instance : EuclideanDomain ℤ[i] :=
-  { GaussianInt.commRing, GaussianInt.nontrivial with
+  { GaussianInt.commRing,
+    GaussianInt.nontrivial with
     Quotient := (· / ·)
     remainder := (· % ·)
-    quotient_zero := by 
+    quotient_zero := by
       simp [div_def]
       rfl
     quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def]
@@ -285,13 +286,16 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
   hp.1.eq_two_or_odd.elim
     (fun hp2 =>
       absurd hpi
-        ((mt irreducible_iff_prime.2) fun ⟨hu, h⟩ => by
+        ((mt irreducible_iff_prime.2) fun ⟨hu, h⟩ =>
+          by
           have := h ⟨1, 1⟩ ⟨1, -1⟩ (hp2.symm ▸ rfl)
           rw [← norm_eq_one_iff, ← norm_eq_one_iff] at this
           exact absurd this (by decide)))
     fun hp1 =>
-    by_contradiction fun hp3 : p % 4 ≠ 3 => by
-      have hp41 : p % 4 = 1 := by
+    by_contradiction fun hp3 : p % 4 ≠ 3 =>
+      by
+      have hp41 : p % 4 = 1 :=
+        by
         rw [← Nat.mod_mul_left_mod p 2 2, show 2 * 2 = 4 from rfl] at hp1
         have := Nat.mod_lt p (show 0 < 4 by decide)
         revert this hp3 hp1

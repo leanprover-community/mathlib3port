@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.with_zero_topology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ theorem nhds_zero : 𝓝 (0 : Γ₀) = ⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ) :=
 
 /-- In a linearly ordered group with zero element adjoined, `U` is a neighbourhood of `0` if and
 only if there exists a nonzero element `γ₀` such that `Iio γ₀ ⊆ U`. -/
-theorem has_basis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ ≠ 0) Iio := by
+theorem has_basis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ ≠ 0) Iio :=
+  by
   rw [nhds_zero]
   refine' has_basis_binfi_principal _ ⟨1, one_ne_zero⟩
   exact directedOn_iff_directed.2 (directed_of_inf fun a b hab => Iio_subset_Iio hab)
@@ -131,7 +132,8 @@ theorem singleton_mem_nhds_of_ne_zero (h : γ ≠ 0) : ({γ} : Set Γ₀) ∈ �
   linear_ordered_comm_group_with_zero.singleton_mem_nhds_of_ne_zero LinearOrderedCommGroupWithZero.singleton_mem_nhds_of_ne_zero
 
 theorem has_basis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) :
-    HasBasis (𝓝 x) (fun i : Unit => True) fun i => {x} := by
+    HasBasis (𝓝 x) (fun i : Unit => True) fun i => {x} :=
+  by
   rw [nhds_of_ne_zero h]
   exact has_basis_pure _
 #align
@@ -163,7 +165,8 @@ theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
-theorem is_open_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _)(_ : γ ≠ 0), Iio γ ⊆ s := by
+theorem is_open_iff {s : Set Γ₀} : IsOpen s ↔ (0 : Γ₀) ∉ s ∨ ∃ (γ : _)(_ : γ ≠ 0), Iio γ ⊆ s :=
+  by
   rw [is_open_iff_mem_nhds, ← and_forall_ne (0 : Γ₀)]
   simp (config := { contextual := true }) [nhds_of_ne_zero, imp_iff_not_or,
     has_basis_nhds_zero.mem_iff]
@@ -188,9 +191,9 @@ theorem is_open_Iio {a : Γ₀} : IsOpen (Iio a) :=
 
 /-- The topology on a linearly ordered group with zero element adjoined is compatible with the order
 structure: the set `{p : Γ₀ × Γ₀ | p.1 ≤ p.2}` is closed. -/
-instance (priority := 100) order_closed_topology :
-    OrderClosedTopology
-      Γ₀ where is_closed_le' := by
+instance (priority := 100) order_closed_topology : OrderClosedTopology Γ₀
+    where is_closed_le' :=
+    by
     simp only [← is_open_compl_iff, compl_set_of, not_le, is_open_iff_mem_nhds]
     rintro ⟨a, b⟩ (hab : b < a)
     rw [nhds_prod_eq, nhds_of_ne_zero (zero_le'.trans_lt hab).ne', pure_prod]
@@ -199,10 +202,10 @@ instance (priority := 100) order_closed_topology :
   linear_ordered_comm_group_with_zero.order_closed_topology LinearOrderedCommGroupWithZero.order_closed_topology
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
-instance (priority := 100) t3Space :
-    T3Space
-      Γ₀ where toRegularSpace :=
-    RegularSpace.ofLift'Closure fun γ => by
+instance (priority := 100) t3Space : T3Space Γ₀
+    where toRegularSpace :=
+    RegularSpace.ofLift'Closure fun γ =>
+      by
       rcases ne_or_eq γ 0 with (h₀ | rfl)
       ·
         rw [nhds_of_ne_zero h₀, lift'_pure (monotone_closure Γ₀), closure_singleton,
@@ -216,7 +219,7 @@ instance (priority := 100) t3Space :
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=
-  ⟨by 
+  ⟨by
     rw [continuous_iff_continuous_at]
     rintro ⟨x, y⟩
     wlog (discharger := tactic.skip) hle : x ≤ y := le_total x y using x y, y x; swap
@@ -242,7 +245,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
       exact pure_le_nhds (x * y)⟩
 
 instance (priority := 100) : HasContinuousInv₀ Γ₀ :=
-  ⟨fun γ h => by 
+  ⟨fun γ h => by
     rw [ContinuousAt, nhds_of_ne_zero h]
     exact pure_le_nhds γ⁻¹⟩
 

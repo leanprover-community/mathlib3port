@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.midpoint
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,8 +277,8 @@ variable (R R' : Type _) {E F : Type _} [Ring R] [Invertible (2 : R)] [AddCommGr
 
 /-- A map `f : E → F` sending zero to zero and midpoints to midpoints is an `add_monoid_hom`. -/
 def ofMapMidpoint (f : E → F) (h0 : f 0 = 0)
-    (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) :
-    E →+ F where 
+    (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) : E →+ F
+    where
   toFun := f
   map_zero' := h0
   map_add' x y :=

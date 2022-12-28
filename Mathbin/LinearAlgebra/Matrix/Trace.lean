@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.trace
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,8 +79,8 @@ variable (n α R)
 
 /-- `matrix.trace` as an `add_monoid_hom` -/
 @[simps]
-def traceAddMonoidHom : Matrix n n R →+
-      R where 
+def traceAddMonoidHom : Matrix n n R →+ R
+    where
   toFun := trace
   map_zero' := trace_zero n R
   map_add' := trace_add
@@ -88,8 +88,8 @@ def traceAddMonoidHom : Matrix n n R →+
 
 /-- `matrix.trace` as a `linear_map` -/
 @[simps]
-def traceLinearMap [Semiring α] [Module α R] :
-    Matrix n n R →ₗ[α] R where 
+def traceLinearMap [Semiring α] [Module α R] : Matrix n n R →ₗ[α] R
+    where
   toFun := trace
   map_add' := trace_add
   map_smul' := trace_smul
@@ -195,7 +195,8 @@ theorem trace_fin_two (A : Matrix (Fin 2) (Fin 2) R) : trace A = A 0 0 + A 1 1 :
   congr_arg ((· + ·) _) (add_zero (A 1 1))
 #align matrix.trace_fin_two Matrix.trace_fin_two
 
-theorem trace_fin_three (A : Matrix (Fin 3) (Fin 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 := by
+theorem trace_fin_three (A : Matrix (Fin 3) (Fin 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 :=
+  by
   rw [← add_zero (A 2 2), add_assoc]
   rfl
 #align matrix.trace_fin_three Matrix.trace_fin_three

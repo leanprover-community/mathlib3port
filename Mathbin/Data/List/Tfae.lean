@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.list.tfae
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,8 @@ theorem tfae_singleton (p) : Tfae [p] := by simp [tfae, -eq_iff_iff]
 #align list.tfae_singleton List.tfae_singleton
 
 theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : Tfae (a :: l) ↔ (a ↔ b) ∧ Tfae l :=
-  ⟨fun H => ⟨H a (by simp) b (Or.inr h), fun p hp q hq => H _ (Or.inr hp) _ (Or.inr hq)⟩, by
+  ⟨fun H => ⟨H a (by simp) b (Or.inr h), fun p hp q hq => H _ (Or.inr hp) _ (Or.inr hq)⟩,
+    by
     rintro ⟨ab, H⟩ p (rfl | hp) q (rfl | hq)
     · rfl
     · exact ab.trans (H _ h _ hq)
@@ -55,7 +56,8 @@ theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a ∈ l, a ↔ b) : T
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/
 theorem tfae_of_cycle {a b} {l : List Prop} :
-    List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → Tfae (a :: b :: l) := by
+    List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → Tfae (a :: b :: l) :=
+  by
   induction' l with c l IH generalizing a b <;>
     simp only [tfae_cons_cons, tfae_singleton, and_true_iff, chain_cons, chain.nil] at *
   · intro a b

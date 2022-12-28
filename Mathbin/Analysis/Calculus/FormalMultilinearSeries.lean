@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.formal_multilinear_series
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,8 @@ section Module
 
 /- `derive` is not able to find the module structure, probably because Lean is confused by the
 dependent types. We register it explicitly. -/
-instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) := by
+instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) :=
+  by
   letI : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Fin n => E) F) := fun n => by
     infer_instance
   refine' Pi.module _ _ _
@@ -97,7 +98,7 @@ theorem remove_zero_coeff_succ (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) 
   formal_multilinear_series.remove_zero_coeff_succ FormalMultilinearSeries.remove_zero_coeff_succ
 
 theorem remove_zero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h : 0 < n) :
-    p.removeZero n = p n := by 
+    p.removeZero n = p n := by
   rw [← Nat.succ_pred_eq_of_pos h]
   rfl
 #align formal_multilinear_series.remove_zero_of_pos FormalMultilinearSeries.remove_zero_of_pos
@@ -106,7 +107,7 @@ theorem remove_zero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h :
 multilinear series are equal, then the values are also equal. -/
 theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Fin m → E} {w : Fin n → E}
     (h1 : m = n) (h2 : ∀ (i : ℕ) (him : i < m) (hin : i < n), v ⟨i, him⟩ = w ⟨i, hin⟩) :
-    p m v = p n w := by 
+    p m v = p n w := by
   cases h1
   congr with ⟨i, hi⟩
   exact h2 i hi hi
@@ -229,7 +230,7 @@ theorem order_eq_find' [DecidablePred fun n => p n ≠ 0] (hp : p ≠ 0) :
 #align formal_multilinear_series.order_eq_find' FormalMultilinearSeries.order_eq_find'
 
 theorem order_eq_zero_iff (hp : p ≠ 0) : p.order = 0 ↔ p 0 ≠ 0 := by
-  classical 
+  classical
     have : ∃ n, p n ≠ 0 := formal_multilinear_series.ne_iff.mp hp
     simp [order_eq_find this, hp]
 #align formal_multilinear_series.order_eq_zero_iff FormalMultilinearSeries.order_eq_zero_iff
@@ -239,7 +240,7 @@ theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by
 #align formal_multilinear_series.order_eq_zero_iff' FormalMultilinearSeries.order_eq_zero_iff'
 
 theorem apply_order_ne_zero (hp : p ≠ 0) : p p.order ≠ 0 := by
-  classical 
+  classical
     let h := formal_multilinear_series.ne_iff.mp hp
     exact (order_eq_find h).symm ▸ Nat.find_spec h
 #align formal_multilinear_series.apply_order_ne_zero FormalMultilinearSeries.apply_order_ne_zero
@@ -248,11 +249,12 @@ theorem apply_order_ne_zero' (hp : p.order ≠ 0) : p p.order ≠ 0 :=
   apply_order_ne_zero (ne_zero_of_order_ne_zero hp)
 #align formal_multilinear_series.apply_order_ne_zero' FormalMultilinearSeries.apply_order_ne_zero'
 
-theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 := by
+theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 :=
+  by
   by_cases p = 0
   · simp [h]
   ·
-    classical 
+    classical
       rw [order_eq_find' h] at hp
       simpa using Nat.find_min _ hp
 #align
@@ -278,7 +280,8 @@ theorem mk_pi_field_coeff_eq (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ)
 #align formal_multilinear_series.mk_pi_field_coeff_eq FormalMultilinearSeries.mk_pi_field_coeff_eq
 
 @[simp]
-theorem apply_eq_prod_smul_coeff : p n y = (∏ i, y i) • p.coeff n := by
+theorem apply_eq_prod_smul_coeff : p n y = (∏ i, y i) • p.coeff n :=
+  by
   convert (p n).toMultilinearMap.map_smul_univ y 1
   funext <;> simp only [Pi.one_apply, Algebra.id.smul_eq_mul, mul_one]
 #align
@@ -313,7 +316,8 @@ noncomputable def fslope (p : FormalMultilinearSeries 𝕜 𝕜 E) : FormalMulti
 #align formal_multilinear_series.fslope FormalMultilinearSeries.fslope
 
 @[simp]
-theorem coeff_fslope : p.fslope.coeff n = p.coeff (n + 1) := by
+theorem coeff_fslope : p.fslope.coeff n = p.coeff (n + 1) :=
+  by
   have : @Fin.cons n (fun _ => 𝕜) 1 (1 : Fin n → 𝕜) = 1 := Fin.cons_self_tail 1
   simp only [fslope, coeff, ContinuousMultilinearMap.curry_left_apply, this]
 #align formal_multilinear_series.coeff_fslope FormalMultilinearSeries.coeff_fslope

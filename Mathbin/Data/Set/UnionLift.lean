@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.set.Union_lift
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,19 +56,20 @@ it on each component, and proving that it agrees on the intersections. -/
 @[nolint unused_arguments]
 noncomputable def unionLift (S : ι → Set α) (f : ∀ (i) (x : S i), β)
     (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α)
-    (hT : T ⊆ union S) (x : T) : β :=
-  let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.Prop))
+    (hT : T ⊆ unionᵢ S) (x : T) : β :=
+  let i := Classical.indefiniteDescription _ (mem_unionᵢ.1 (hT x.Prop))
   f i ⟨x, i.Prop⟩
 #align set.Union_lift Set.unionLift
 
 variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
   {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α}
-  {hT : T ⊆ union S} (hT' : T = union S)
+  {hT : T ⊆ unionᵢ S} (hT' : T = unionᵢ S)
 
 @[simp]
 theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) :
-    unionLift S f hf T hT ⟨x, hx⟩ = f i x := by
-  let j := Classical.indefiniteDescription _ (mem_Union.1 (hT hx))
+    unionLift S f hf T hT ⟨x, hx⟩ = f i x :=
+  by
+  let j := Classical.indefiniteDescription _ (mem_unionᵢ.1 (hT hx))
   cases' x with x hx <;> exact hf j i x j.2 _
 #align set.Union_lift_mk Set.Union_lift_mk
 
@@ -87,8 +88,9 @@ theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) :
   For example, it could be used to prove that the lift of a collection
   of group homomorphisms on a union of subgroups preserves `1`. -/
 theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c) (cβ : β)
-    (h : ∀ i, f i (ci i) = cβ) : unionLift S f hf T hT c = cβ := by
-  let ⟨i, hi⟩ := Set.mem_Union.1 (hT c.Prop)
+    (h : ∀ i, f i (ci i) = cβ) : unionLift S f hf T hT c = cβ :=
+  by
+  let ⟨i, hi⟩ := Set.mem_unionᵢ.1 (hT c.Prop)
   have : ci i = ⟨c, hi⟩ := Subtype.ext (hci i)
   rw [Union_lift_of_mem _ hi, ← this, h]
 #align set.Union_lift_const Set.Union_lift_const
@@ -100,17 +102,19 @@ theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c
 theorem Union_lift_unary (u : T → T) (ui : ∀ i, S i → S i)
     (hui :
       ∀ (i) (x : S i),
-        u (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x) =
-          Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) (ui i x))
+        u (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_unionᵢ S i) x) =
+          Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_unionᵢ S i) (ui i x))
     (uβ : β → β) (h : ∀ (i) (x : S i), f i (ui i x) = uβ (f i x)) (x : T) :
-    unionLift S f hf T (le_of_eq hT') (u x) = uβ (unionLift S f hf T (le_of_eq hT') x) := by
+    unionLift S f hf T (le_of_eq hT') (u x) = uβ (unionLift S f hf T (le_of_eq hT') x) :=
+  by
   subst hT'
-  cases' Set.mem_Union.1 x.prop with i hi
+  cases' Set.mem_unionᵢ.1 x.prop with i hi
   rw [Union_lift_of_mem x hi, ← h i]
-  have : x = Set.inclusion (Set.subset_Union S i) ⟨x, hi⟩ := by
+  have : x = Set.inclusion (Set.subset_unionᵢ S i) ⟨x, hi⟩ :=
+    by
     cases x
     rfl
-  have hx' : (Set.inclusion (Set.subset_Union S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).Prop
+  have hx' : (Set.inclusion (Set.subset_unionᵢ S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).Prop
   conv_lhs => rw [this, hui, Union_lift_inclusion]
 #align set.Union_lift_unary Set.Union_lift_unary
 
@@ -121,25 +125,27 @@ theorem Union_lift_unary (u : T → T) (ui : ∀ i, S i → S i)
 theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (opi : ∀ i, S i → S i → S i)
     (hopi :
       ∀ i x y,
-        Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) (opi i x y) =
-          op (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x)
-            (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) y))
+        Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_unionᵢ S i) (opi i x y) =
+          op (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_unionᵢ S i) x)
+            (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_unionᵢ S i) y))
     (opβ : β → β → β) (h : ∀ (i) (x y : S i), f i (opi i x y) = opβ (f i x) (f i y)) (x y : T) :
     unionLift S f hf T (le_of_eq hT') (op x y) =
       opβ (unionLift S f hf T (le_of_eq hT') x) (unionLift S f hf T (le_of_eq hT') y) :=
-  by 
+  by
   subst hT'
-  cases' Set.mem_Union.1 x.prop with i hi
-  cases' Set.mem_Union.1 y.prop with j hj
+  cases' Set.mem_unionᵢ.1 x.prop with i hi
+  cases' Set.mem_unionᵢ.1 y.prop with j hj
   rcases dir i j with ⟨k, hik, hjk⟩
   rw [Union_lift_of_mem x (hik hi), Union_lift_of_mem y (hjk hj), ← h k]
-  have hx : x = Set.inclusion (Set.subset_Union S k) ⟨x, hik hi⟩ := by
+  have hx : x = Set.inclusion (Set.subset_unionᵢ S k) ⟨x, hik hi⟩ :=
+    by
     cases x
     rfl
-  have hy : y = Set.inclusion (Set.subset_Union S k) ⟨y, hjk hj⟩ := by
+  have hy : y = Set.inclusion (Set.subset_unionᵢ S k) ⟨y, hjk hj⟩ :=
+    by
     cases y
     rfl
-  have hxy : (Set.inclusion (Set.subset_Union S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
+  have hxy : (Set.inclusion (Set.subset_unionᵢ S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
     (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
   conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]
   simp only [coe_inclusion, Subtype.coe_eta]
@@ -149,13 +155,13 @@ end UnionLift
 
 variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
   {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩}
-  {hS : union S = univ}
+  {hS : unionᵢ S = univ}
 
 /-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/
 noncomputable def liftCover (S : ι → Set α) (f : ∀ (i) (x : S i), β)
     (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩)
-    (hS : union S = univ) (a : α) : β :=
+    (hS : unionᵢ S = univ) (a : α) : β :=
   unionLift S f hf univ (hS ▸ Set.Subset.refl _) ⟨a, trivial⟩
 #align set.lift_cover Set.liftCover
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ namespace Submodule
 
 /-- The set `{0}` is the bottom element of the lattice of submodules. -/
 instance : Bot (Submodule R M) :=
-  ⟨{ (⊥ : AddSubmonoid M) with 
+  ⟨{ (⊥ : AddSubmonoid M) with
       carrier := {0}
       smul_mem' := by simp (config := { contextual := true }) }⟩
 
@@ -86,7 +86,7 @@ instance uniqueBot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
 #align submodule.unique_bot Submodule.uniqueBot
 
-instance : OrderBot (Submodule R M) where 
+instance : OrderBot (Submodule R M) where
   bot := ⊥
   bot_le p x := by simp (config := { contextual := true }) [zero_mem]
 
@@ -96,13 +96,15 @@ protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀ x ∈ p, x = 
 #align submodule.eq_bot_iff Submodule.eq_bot_iff
 
 @[ext]
-protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y := by
+protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y :=
+  by
   rcases x with ⟨x, xm⟩; rcases y with ⟨y, ym⟩; congr
   rw [(Submodule.eq_bot_iff _).mp rfl x xm]
   rw [(Submodule.eq_bot_iff _).mp rfl y ym]
 #align submodule.bot_ext Submodule.bot_ext
 
-protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x ≠ (0 : M) := by
+protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ x ∈ p, x ≠ (0 : M) :=
+  by
   haveI := Classical.propDecidable
   simp_rw [Ne.def, p.eq_bot_iff, not_forall]
 #align submodule.ne_bot_iff Submodule.ne_bot_iff
@@ -119,25 +121,26 @@ theorem exists_mem_ne_zero_of_ne_bot {p : Submodule R M} (h : p ≠ ⊥) : ∃ b
 
 /-- The bottom submodule is linearly equivalent to punit as an `R`-module. -/
 @[simps]
-def botEquivPunit :
-    (⊥ : Submodule R M) ≃ₗ[R] PUnit where 
+def botEquivPunit : (⊥ : Submodule R M) ≃ₗ[R] PUnit
+    where
   toFun x := PUnit.unit
   invFun x := 0
-  map_add' := by 
+  map_add' := by
     intros
     ext
-  map_smul' := by 
+  map_smul' := by
     intros
     ext
-  left_inv := by 
+  left_inv := by
     intro x
     ext
-  right_inv := by 
+  right_inv := by
     intro x
     ext
 #align submodule.bot_equiv_punit Submodule.botEquivPunit
 
-theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ := by
+theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ :=
+  by
   rw [eq_bot_iff]
   intro v hv
   exact congr_arg coe (Subsingleton.elim (⟨v, hv⟩ : p) 0)
@@ -145,7 +148,7 @@ theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ :=
 
 /-- The universal set is the top element of the lattice of submodules. -/
 instance : Top (Submodule R M) :=
-  ⟨{ (⊤ : AddSubmonoid M) with 
+  ⟨{ (⊤ : AddSubmonoid M) with
       carrier := Set.univ
       smul_mem' := fun _ _ _ => trivial }⟩
 
@@ -180,7 +183,7 @@ theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = 
   simp [SetLike.ext_iff]
 #align submodule.restrict_scalars_eq_top_iff Submodule.restrict_scalars_eq_top_iff
 
-instance : OrderTop (Submodule R M) where 
+instance : OrderTop (Submodule R M) where
   top := ⊤
   le_top p x _ := trivial
 
@@ -192,21 +195,21 @@ theorem eq_top_iff' {p : Submodule R M} : p = ⊤ ↔ ∀ x, x ∈ p :=
 
 This is the module version of `add_submonoid.top_equiv`. -/
 @[simps]
-def topEquiv : (⊤ : Submodule R M) ≃ₗ[R]
-      M where 
+def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M
+    where
   toFun x := x
   invFun x := ⟨x, by simp⟩
-  map_add' := by 
+  map_add' := by
     intros
     rfl
-  map_smul' := by 
+  map_smul' := by
     intros
     rfl
-  left_inv := by 
+  left_inv := by
     intro x
     ext
     rfl
-  right_inv := by 
+  right_inv := by
     intro x
     rfl
 #align submodule.top_equiv Submodule.topEquiv
@@ -219,11 +222,11 @@ instance : InfSet (Submodule R M) :=
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
 private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → infₛ S ≤ p :=
-  Set.bInter_subset_of_mem
+  Set.binterᵢ_subset_of_mem
 #align submodule.Inf_le' submodule.Inf_le'
 
 private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q ∈ S, p ≤ q) → p ≤ infₛ S :=
-  Set.subset_Inter₂
+  Set.subset_interᵢ₂
 #align submodule.le_Inf' submodule.le_Inf'
 
 instance : HasInf (Submodule R M) :=
@@ -234,7 +237,8 @@ instance : HasInf (Submodule R M) :=
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
 instance : CompleteLattice (Submodule R M) :=
-  { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with
+  { Submodule.orderTop, Submodule.orderBot,
+    SetLike.partialOrder with
     sup := fun a b => infₛ { x | a ≤ x ∧ b ≤ x }
     le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha
     le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb
@@ -267,7 +271,8 @@ theorem Inf_coe (P : Set (Submodule R M)) : (↑(infₛ P) : Set M) = ⋂ p ∈ 
 
 @[simp]
 theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) :
-    (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
+    (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) :=
+  by
   letI := Classical.decEq ι
   refine' s.induction_on _ fun i s hi ih => _
   · simp
@@ -277,23 +282,23 @@ theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) :
 
 @[simp]
 theorem infi_coe {ι} (p : ι → Submodule R M) : (↑(⨅ i, p i) : Set M) = ⋂ i, ↑(p i) := by
-  rw [infi, Inf_coe] <;> ext a <;> simp <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
+  rw [infᵢ, Inf_coe] <;> ext a <;> simp <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
 #align submodule.infi_coe Submodule.infi_coe
 
 @[simp]
 theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
-  Set.mem_Inter₂
+  Set.mem_interᵢ₂
 #align submodule.mem_Inf Submodule.mem_Inf
 
 @[simp]
 theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ ∀ i, x ∈ p i := by
-  rw [← SetLike.mem_coe, infi_coe, Set.mem_Inter] <;> rfl
+  rw [← SetLike.mem_coe, infi_coe, Set.mem_interᵢ] <;> rfl
 #align submodule.mem_infi Submodule.mem_infi
 
 @[simp]
 theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} :
     x ∈ s.inf p ↔ ∀ i ∈ s, x ∈ p i := by
-  simp only [← SetLike.mem_coe, finset_inf_coe, Set.mem_Inter]
+  simp only [← SetLike.mem_coe, finset_inf_coe, Set.mem_interᵢ]
 #align submodule.mem_finset_inf Submodule.mem_finset_inf
 
 theorem mem_sup_left {S T : Submodule R M} : ∀ {x : M}, x ∈ S → x ∈ S ⊔ T :=
@@ -309,7 +314,8 @@ theorem add_mem_sup {S T : Submodule R M} {s t : M} (hs : s ∈ S) (ht : t ∈ T
 #align submodule.add_mem_sup Submodule.add_mem_sup
 
 theorem sub_mem_sup {R' M' : Type _} [Ring R'] [AddCommGroup M'] [Module R' M']
-    {S T : Submodule R' M'} {s t : M'} (hs : s ∈ S) (ht : t ∈ T) : s - t ∈ S ⊔ T := by
+    {S T : Submodule R' M'} {s t : M'} (hs : s ∈ S) (ht : t ∈ T) : s - t ∈ S ⊔ T :=
+  by
   rw [sub_eq_add_neg]
   exact add_mem_sup hs (neg_mem ht)
 #align submodule.sub_mem_sup Submodule.sub_mem_sup
@@ -359,10 +365,8 @@ end Submodule
 section NatSubmodule
 
 /-- An additive submonoid is equivalent to a ℕ-submodule. -/
-def AddSubmonoid.toNatSubmodule :
-    AddSubmonoid M ≃o
-      Submodule ℕ
-        M where 
+def AddSubmonoid.toNatSubmodule : AddSubmonoid M ≃o Submodule ℕ M
+    where
   toFun S := { S with smul_mem' := fun r s hs => show r • s ∈ S from nsmul_mem hs _ }
   invFun := Submodule.toAddSubmonoid
   left_inv := fun ⟨S, _, _⟩ => rfl
@@ -403,10 +407,8 @@ section IntSubmodule
 variable [AddCommGroup M]
 
 /-- An additive subgroup is equivalent to a ℤ-submodule. -/
-def AddSubgroup.toIntSubmodule :
-    AddSubgroup M ≃o
-      Submodule ℤ
-        M where 
+def AddSubgroup.toIntSubmodule : AddSubgroup M ≃o Submodule ℤ M
+    where
   toFun S := { S with smul_mem' := fun r s hs => S.zsmul_mem hs _ }
   invFun := Submodule.toAddSubgroup
   left_inv := fun ⟨S, _, _, _⟩ => rfl

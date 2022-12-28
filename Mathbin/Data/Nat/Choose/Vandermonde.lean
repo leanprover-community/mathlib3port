@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.nat.choose.vandermonde
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ open Polynomial Finset.Nat
 
 /-- Vandermonde's identity -/
 theorem Nat.add_choose_eq (m n k : ℕ) :
-    (m + n).choose k = ∑ ij : ℕ × ℕ in antidiagonal k, m.choose ij.1 * n.choose ij.2 := by
+    (m + n).choose k = ∑ ij : ℕ × ℕ in antidiagonal k, m.choose ij.1 * n.choose ij.2 :=
+  by
   calc
     (m + n).choose k = ((X + 1) ^ (m + n)).coeff k := _
     _ = ((X + 1) ^ m * (X + 1) ^ n).coeff k := by rw [pow_add]

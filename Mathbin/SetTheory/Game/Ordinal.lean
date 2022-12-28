@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.game.ordinal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,12 +58,14 @@ theorem to_pgame_right_moves (o : Ordinal) : o.toPgame.RightMoves = PEmpty := by
   rw [to_pgame, right_moves]
 #align ordinal.to_pgame_right_moves Ordinal.to_pgame_right_moves
 
-instance is_empty_zero_to_pgame_left_moves : IsEmpty (toPgame 0).LeftMoves := by
+instance is_empty_zero_to_pgame_left_moves : IsEmpty (toPgame 0).LeftMoves :=
+  by
   rw [to_pgame_left_moves]
   infer_instance
 #align ordinal.is_empty_zero_to_pgame_left_moves Ordinal.is_empty_zero_to_pgame_left_moves
 
-instance is_empty_to_pgame_right_moves (o : Ordinal) : IsEmpty o.toPgame.RightMoves := by
+instance is_empty_to_pgame_right_moves (o : Ordinal) : IsEmpty o.toPgame.RightMoves :=
+  by
   rw [to_pgame_right_moves]
   infer_instance
 #align ordinal.is_empty_to_pgame_right_moves Ordinal.is_empty_to_pgame_right_moves
@@ -81,7 +83,8 @@ theorem to_left_moves_to_pgame_symm_lt {o : Ordinal} (i : o.toPgame.LeftMoves) :
 #align ordinal.to_left_moves_to_pgame_symm_lt Ordinal.to_left_moves_to_pgame_symm_lt
 
 theorem to_pgame_move_left_heq {o : Ordinal} :
-    HEq o.toPgame.moveLeft fun x : o.out.α => (typein (· < ·) x).toPgame := by
+    HEq o.toPgame.moveLeft fun x : o.out.α => (typein (· < ·) x).toPgame :=
+  by
   rw [to_pgame]
   rfl
 #align ordinal.to_pgame_move_left_heq Ordinal.to_pgame_move_left_heq
@@ -125,12 +128,14 @@ noncomputable def oneToPgameRelabelling : toPgame 1 ≡r 1 :=
     simpa using zero_to_pgame_relabelling, isEmptyElim⟩
 #align ordinal.one_to_pgame_relabelling Ordinal.oneToPgameRelabelling
 
-theorem to_pgame_lf {a b : Ordinal} (h : a < b) : a.toPgame ⧏ b.toPgame := by
+theorem to_pgame_lf {a b : Ordinal} (h : a < b) : a.toPgame ⧏ b.toPgame :=
+  by
   convert move_left_lf (to_left_moves_to_pgame ⟨a, h⟩)
   rw [to_pgame_move_left]
 #align ordinal.to_pgame_lf Ordinal.to_pgame_lf
 
-theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame := by
+theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame :=
+  by
   refine' le_iff_forall_lf.2 ⟨fun i => _, isEmptyElim⟩
   rw [to_pgame_move_left']
   exact to_pgame_lf ((to_left_moves_to_pgame_symm_lt i).trans_le h)
@@ -146,7 +151,7 @@ theorem to_pgame_nonneg (a : Ordinal) : 0 ≤ a.toPgame :=
 
 @[simp]
 theorem to_pgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
-  ⟨by 
+  ⟨by
     contrapose
     rw [not_lt, not_lf]
     exact to_pgame_le, to_pgame_lf⟩
@@ -154,7 +159,7 @@ theorem to_pgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
 
 @[simp]
 theorem to_pgame_le_iff {a b : Ordinal} : a.toPgame ≤ b.toPgame ↔ a ≤ b :=
-  ⟨by 
+  ⟨by
     contrapose
     rw [not_le, Pgame.not_le]
     exact to_pgame_lf, to_pgame_le⟩
@@ -162,7 +167,7 @@ theorem to_pgame_le_iff {a b : Ordinal} : a.toPgame ≤ b.toPgame ↔ a ≤ b :=
 
 @[simp]
 theorem to_pgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
-  ⟨by 
+  ⟨by
     contrapose
     rw [not_lt]
     exact fun h => not_lt_of_le (to_pgame_le h), to_pgame_lt⟩
@@ -184,8 +189,8 @@ theorem to_pgame_eq_iff {a b : Ordinal} : a.toPgame = b.toPgame ↔ a = b :=
 
 /-- The order embedding version of `to_pgame`. -/
 @[simps]
-noncomputable def toPgameEmbedding :
-    Ordinal.{u} ↪o Pgame.{u} where 
+noncomputable def toPgameEmbedding : Ordinal.{u} ↪o Pgame.{u}
+    where
   toFun := Ordinal.toPgame
   inj' := to_pgame_injective
   map_rel_iff' := @to_pgame_le_iff
@@ -193,7 +198,8 @@ noncomputable def toPgameEmbedding :
 
 /-- The sum of ordinals as games corresponds to natural addition of ordinals. -/
 theorem to_pgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b).toPgame
-  | a, b => by
+  | a, b =>
+    by
     refine' ⟨le_of_forall_lf (fun i => _) isEmptyElim, le_of_forall_lf (fun i => _) isEmptyElim⟩
     · apply left_moves_add_cases i <;> intro i <;> let wf := to_left_moves_to_pgame_symm_lt i <;>
             try rw [add_move_left_inl] <;> try rw [add_move_left_inr] <;>
@@ -207,8 +213,7 @@ theorem to_pgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b
       · apply add_lf_add_right
         rwa [to_pgame_lf_iff]
       · apply add_lf_add_left
-        rwa [to_pgame_lf_iff]decreasing_by
-  solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
+        rwa [to_pgame_lf_iff]decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.to_pgame_add Ordinal.to_pgame_add
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Roberto Alvarez
 
 ! This file was ported from Lean 3 source module topology.homotopy.homotopy_group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,10 +101,11 @@ structure GenLoop (n : ℕ) (x : X) extends C(I^ n, X) where
 
 namespace GenLoop
 
-instance funLike : FunLike (GenLoop n x) (I^ n) fun _ =>
-      X where 
+instance funLike : FunLike (GenLoop n x) (I^ n) fun _ => X
+    where
   coe f := f.1
-  coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by
+  coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h =>
+    by
     congr
     exact h
 #align gen_loop.fun_like GenLoop.funLike
@@ -180,10 +181,10 @@ def HomotopyGroup (n : ℕ) (x : X) : Type _ :=
 local notation "π" => HomotopyGroup
 
 /-- The 0-dimensional generalized loops based at `x` are in 1-1 correspondence with `X`. -/
-def genLoopZeroEquiv : GenLoop 0 x ≃ X where 
+def genLoopZeroEquiv : GenLoop 0 x ≃ X where
   toFun f := f 0
   invFun x := ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0⟩
-  left_inv f := by 
+  left_inv f := by
     ext1
     exact congr_arg f (Subsingleton.elim _ _)
   right_inv _ := rfl
@@ -197,7 +198,7 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
       -- joined iff homotopic
       intros ;
       constructor <;> rintro ⟨H⟩
-      exacts[⟨{ 
+      exacts[⟨{
             toFun := fun t => H ⟨t, Fin.elim0⟩
             source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm)
             target' := (H.apply_one _).trans (congr_arg a₂ matrix.zero_empty.symm) }⟩,
@@ -210,25 +211,24 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
 /-- The 1-dimensional generalized loops based at `x` are in 1-1 correspondence with
   paths from `x` to itself. -/
 @[simps]
-def genLoopOneEquivPathSelf :
-    GenLoop 1 x ≃
-      Path x
-        x where 
+def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x
+    where
   toFun p :=
     Path.mk
-      ⟨fun t => p fun _ => t, by 
+      ⟨fun t => p fun _ => t, by
         continuity
         exact p.1.2⟩
       (p.boundary (fun _ => 0) ⟨0, Or.inl rfl⟩) (p.boundary (fun _ => 1) ⟨1, Or.inr rfl⟩)
   invFun p :=
     { toFun := fun c => p c.head
-      boundary := by
+      boundary :=
+        by
         rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans
         exacts[p.source, p.target] }
-  left_inv p := by 
+  left_inv p := by
     ext1
     exact congr_arg p y.one_char.symm
-  right_inv p := by 
+  right_inv p := by
     ext
     rfl
 #align gen_loop_one_equiv_path_self genLoopOneEquivPathSelf
@@ -236,25 +236,26 @@ def genLoopOneEquivPathSelf :
 /-- The first homotopy group at `x` is equivalent to the fundamental group,
 i.e. the loops based at `x` up to homotopy.
 -/
-def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x := by
+def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x :=
+  by
   refine' Equiv.trans _ (CategoryTheory.Groupoid.isoEquivHom _ _).symm
   refine' Quotient.congr genLoopOneEquivPathSelf _
   -- homotopic iff homotopic
   intros ;
   constructor <;> rintro ⟨H⟩
-  exacts[⟨{ 
+  exacts[⟨{
         toFun := fun tx => H (tx.fst, fun _ => tx.snd)
         map_zero_left' := fun _ => by convert H.apply_zero _
         map_one_left' := fun _ => by convert H.apply_one _
         prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
     ⟨{  toFun := fun tx => H (tx.fst, tx.snd.head)
-        map_zero_left' := fun y => by 
+        map_zero_left' := fun y => by
           convert H.apply_zero _
           exact y.one_char
-        map_one_left' := fun y => by 
+        map_one_left' := fun y => by
           convert H.apply_one _
           exact y.one_char
-        prop' := fun t y ⟨i, iH⟩ => by 
+        prop' := fun t y ⟨i, iH⟩ => by
           cases Unique.eq_default i; constructor
           · convert H.eq_fst _ _
             exacts[y.one_char, iH]

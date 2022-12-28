@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module data.nat.cast.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,10 +57,12 @@ It also contains data for the unique homomorphism `ℕ → R`.
 @[protect_proj]
 class AddMonoidWithOne (R : Type u) extends NatCast R, AddMonoid R, One R where
   natCast := Nat.unaryCast
-  nat_cast_zero : nat_cast 0 = (0 : R) := by 
+  nat_cast_zero : nat_cast 0 = (0 : R) := by
     intros
     rfl
-  nat_cast_succ : ∀ n, nat_cast (n + 1) = (nat_cast n + 1 : R) := by
+  nat_cast_succ :
+    ∀ n, nat_cast (n + 1) = (nat_cast n + 1 :
+          R) := by
     intros
     rfl
 #align add_monoid_with_one AddMonoidWithOne
@@ -193,7 +195,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddMonoidWithOne.{u1} R] (n : Nat), Eq.{succ u1} R (Nat.binCast.{u1} R (AddMonoid.toZero.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_1)) (AddMonoidWithOne.toOne.{u1} R _inst_1) (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_1))) n) (Nat.cast.{u1} R (AddMonoidWithOne.toNatCast.{u1} R _inst_1) n)
 Case conversion may be inaccurate. Consider using '#align nat.bin_cast_eq Nat.binCast_eqₓ'. -/
 @[simp]
-theorem binCast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : ℕ) : R) := by
+theorem binCast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : ℕ) : R) :=
+  by
   rw [Nat.binCast]
   apply binary_rec _ _ n
   · rw [binary_rec_zero, cast_zero]
@@ -250,10 +253,10 @@ protected def AddMonoidWithOne.unary {R : Type _} [AddMonoid R] [One R] : AddMon
 /-- `add_monoid_with_one` implementation using binary recursion. -/
 @[reducible]
 protected def AddMonoidWithOne.binary {R : Type _} [AddMonoid R] [One R] : AddMonoidWithOne R :=
-  { ‹One R›, ‹AddMonoid R› with 
+  { ‹One R›, ‹AddMonoid R› with
     natCast := Nat.binCast
     nat_cast_zero := by simp [Nat.binCast, Nat.cast]
-    nat_cast_succ := fun n => by 
+    nat_cast_succ := fun n => by
       simp only [Nat.cast]
       letI : AddMonoidWithOne R := AddMonoidWithOne.unary
       erw [Nat.binCast_eq, Nat.binCast_eq, Nat.cast_succ]
@@ -280,7 +283,7 @@ but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : AddMonoidWithOne.{u1} R] {n : Nat} [h : NeZero.{u1} R (AddMonoid.toZero.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_1)) (Nat.cast.{u1} R (AddMonoidWithOne.toNatCast.{u1} R _inst_1) n)], NeZero.{0} Nat (Zero.ofOfNat0.{0} Nat (instOfNatNat 0)) n
 Case conversion may be inaccurate. Consider using '#align ne_zero.of_ne_zero_coe NeZero.of_neZero_natCastₓ'. -/
 theorem of_neZero_natCast (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] : NeZero n :=
-  ⟨by 
+  ⟨by
     cases h
     rintro rfl
     · simpa using h⟩

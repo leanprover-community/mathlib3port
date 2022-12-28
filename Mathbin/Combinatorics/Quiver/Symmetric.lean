@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.symmetric
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.reverse_inj Quiver.reverse_injₓ'. -/
 @[simp]
 theorem reverse_inj [HasInvolutiveReverse V] {a b : V} (f g : a ⟶ b) :
-    reverse f = reverse g ↔ f = g := by 
+    reverse f = reverse g ↔ f = g := by
   constructor
   · rintro h
     simpa using congr_arg Quiver.reverse h
@@ -137,9 +137,8 @@ theorem Prefunctor.map_reverse (φ : U ⥤q V) [φ.MapReverse] {u v : U} (e : u 
 
 #print Prefunctor.mapReverseComp /-
 instance Prefunctor.mapReverseComp (φ : U ⥤q V) (ψ : V ⥤q W) [φ.MapReverse] [ψ.MapReverse] :
-    (φ ⋙q
-        ψ).MapReverse where map_reverse' u v e := by
-    simp only [Prefunctor.comp_map, Prefunctor.map_reverse]
+    (φ ⋙q ψ).MapReverse
+    where map_reverse' u v e := by simp only [Prefunctor.comp_map, Prefunctor.map_reverse]
 #align prefunctor.map_reverse_comp Prefunctor.mapReverseComp
 -/
 
@@ -153,8 +152,8 @@ end MapReverse
 instance : HasReverse (Symmetrify V) :=
   ⟨fun a b e => e.swap⟩
 
-instance : HasInvolutiveReverse
-      (Symmetrify V) where 
+instance : HasInvolutiveReverse (Symmetrify V)
+    where
   reverse' _ _ e := e.swap
   inv' _ _ e := congr_fun Sum.swap_swap_eq e
 
@@ -212,7 +211,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.path.reverse_comp Quiver.Path.reverse_compₓ'. -/
 @[simp]
 theorem Path.reverse_comp [HasReverse V] {a b c : V} (p : Path a b) (q : Path b c) :
-    (p.comp q).reverse = q.reverse.comp p.reverse := by
+    (p.comp q).reverse = q.reverse.comp p.reverse :=
+  by
   induction q
   · simp
   · simp [q_ih]
@@ -226,7 +226,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.path.reverse_reverse Quiver.Path.reverse_reverseₓ'. -/
 @[simp]
 theorem Path.reverse_reverse [HasInvolutiveReverse V] {a b : V} (p : Path a b) :
-    p.reverse.reverse = p := by 
+    p.reverse.reverse = p := by
   induction p
   · simp
   · simp only [path.reverse, path.reverse_comp, path.reverse_to_path, reverse_reverse, p_ih]
@@ -238,7 +238,7 @@ namespace Symmetrify
 #print Quiver.Symmetrify.of /-
 /-- The inclusion of a quiver in its symmetrification -/
 @[simps]
-def of : V ⥤q Symmetrify V where 
+def of : V ⥤q Symmetrify V where
   obj := id
   map X Y f := Sum.inl f
 #align quiver.symmetrify.of Quiver.Symmetrify.of
@@ -249,8 +249,8 @@ variable {V' : Type _} [Quiver.{v' + 1} V']
 #print Quiver.Symmetrify.lift /-
 /-- Given a quiver `V'` with reversible arrows, a prefunctor to `V'` can be lifted to one from
     `symmetrify V` to `V'` -/
-def lift [HasReverse V'] (φ : V ⥤q V') :
-    Symmetrify V ⥤q V' where 
+def lift [HasReverse V'] (φ : V ⥤q V') : Symmetrify V ⥤q V'
+    where
   obj := φ.obj
   map X Y f := Sum.rec (fun fwd => φ.map fwd) (fun bwd => reverse (φ.map bwd)) f
 #align quiver.symmetrify.lift Quiver.Symmetrify.lift
@@ -262,7 +262,8 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u1}} [_inst_2 : Quiver.{succ u3, u1} V] {V' : Type.{u2}} [_inst_4 : Quiver.{succ u4, u2} V'] [_inst_5 : Quiver.HasReverse.{u4, u2} V' _inst_4] (φ : Prefunctor.{succ u3, succ u4, u1, u2} V _inst_2 V' _inst_4), Eq.{max (max (max (succ u3) (succ u4)) (succ u1)) (succ u2)} (Prefunctor.{succ u3, succ u4, u1, u2} V _inst_2 V' _inst_4) (Prefunctor.comp.{u1, succ u3, u1, succ u3, u2, succ u4} V _inst_2 (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.of.{u3, u1} V _inst_2) (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 _inst_5 φ)) φ
 Case conversion may be inaccurate. Consider using '#align quiver.symmetrify.lift_spec Quiver.Symmetrify.lift_specₓ'. -/
-theorem lift_spec [HasReverse V'] (φ : V ⥤q V') : (of ⋙q lift φ) = φ := by
+theorem lift_spec [HasReverse V'] (φ : V ⥤q V') : (of ⋙q lift φ) = φ :=
+  by
   fapply Prefunctor.ext
   · rintro X
     rfl
@@ -277,7 +278,8 @@ but is expected to have type
   forall {V : Type.{u1}} [_inst_2 : Quiver.{succ u3, u1} V] {V' : Type.{u2}} [_inst_4 : Quiver.{succ u4, u2} V'] [h : Quiver.HasInvolutiveReverse.{u4, u2} V' _inst_4] (φ : Prefunctor.{succ u3, succ u4, u1, u2} V _inst_2 V' _inst_4) {X : Quiver.Symmetrify.{u1} V} {Y : Quiver.Symmetrify.{u1} V} (f : Quiver.Hom.{succ u3, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) X Y), Eq.{succ u4} (Quiver.Hom.{succ u4, u2} V' _inst_4 (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 (Quiver.HasInvolutiveReverse.toHasReverse.{u4, u2} V' _inst_4 h) φ) Y) (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 (Quiver.HasInvolutiveReverse.toHasReverse.{u4, u2} V' _inst_4 h) φ) X)) (Prefunctor.map.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 (Quiver.HasInvolutiveReverse.toHasReverse.{u4, u2} V' _inst_4 h) φ) Y X (Quiver.reverse.{u3, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) (Quiver.instHasReverseSymmetrifySymmetrifyQuiver.{u3, u1} V _inst_2) X Y f)) (Quiver.reverse.{u4, u2} V' _inst_4 (Quiver.HasInvolutiveReverse.toHasReverse.{u4, u2} V' _inst_4 h) (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 (Quiver.HasInvolutiveReverse.toHasReverse.{u4, u2} V' _inst_4 h) φ) X) (Prefunctor.obj.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 (Quiver.HasInvolutiveReverse.toHasReverse.{u4, u2} V' _inst_4 h) φ) Y) (Prefunctor.map.{succ u3, succ u4, u1, u2} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u3} V _inst_2) V' _inst_4 (Quiver.Symmetrify.lift.{u3, u4, u1, u2} V _inst_2 V' _inst_4 (Quiver.HasInvolutiveReverse.toHasReverse.{u4, u2} V' _inst_4 h) φ) X Y f))
 Case conversion may be inaccurate. Consider using '#align quiver.symmetrify.lift_reverse Quiver.Symmetrify.lift_reverseₓ'. -/
 theorem lift_reverse [h : HasInvolutiveReverse V'] (φ : V ⥤q V') {X Y : Symmetrify V} (f : X ⟶ Y) :
-    (lift φ).map (Quiver.reverse f) = Quiver.reverse ((lift φ).map f) := by
+    (lift φ).map (Quiver.reverse f) = Quiver.reverse ((lift φ).map f) :=
+  by
   dsimp [lift]; cases f
   · simp only
     rfl
@@ -293,7 +295,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.symmetrify.lift_unique Quiver.Symmetrify.lift_uniqueₓ'. -/
 /-- `lift φ` is the only prefunctor extending `φ` and preserving reverses. -/
 theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V') (hΦ : (of ⋙q Φ) = φ)
-    [hΦrev : Φ.MapReverse] : Φ = lift φ := by 
+    [hΦrev : Φ.MapReverse] : Φ = lift φ := by
   subst_vars
   fapply Prefunctor.ext
   · rintro X
@@ -307,8 +309,8 @@ theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V')
 
 /-- A prefunctor canonically defines a prefunctor of the symmetrifications. -/
 @[simps]
-def Prefunctor.symmetrify (φ : U ⥤q V) :
-    Symmetrify U ⥤q Symmetrify V where 
+def Prefunctor.symmetrify (φ : U ⥤q V) : Symmetrify U ⥤q Symmetrify V
+    where
   obj := φ.obj
   map X Y := Sum.map φ.map φ.map
 #align prefunctor.symmetrify Prefunctor.symmetrify
@@ -323,24 +325,21 @@ namespace Push
 
 variable {V' : Type _} (σ : V → V')
 
-instance [HasReverse V] :
-    HasReverse (Push
-        σ) where reverse' a b F := by 
+instance [HasReverse V] : HasReverse (Push σ)
+    where reverse' a b F := by
     cases F
     constructor
     apply reverse
     exact F_f
 
-instance [HasInvolutiveReverse V] :
-    HasInvolutiveReverse
-      (Push
-        σ) where 
-  reverse' a b F := by 
+instance [HasInvolutiveReverse V] : HasInvolutiveReverse (Push σ)
+    where
+  reverse' a b F := by
     cases F
     constructor
     apply reverse
     exact F_f
-  inv' a b F := by 
+  inv' a b F := by
     cases F
     dsimp [reverse]
     congr

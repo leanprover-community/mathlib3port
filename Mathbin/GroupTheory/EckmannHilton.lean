@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module group_theory.eckmann_hilton
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem one : e₁ = e₂ := by
 then these operations are equal.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
-theorem mul : m₁ = m₂ := by 
+theorem mul : m₁ = m₂ := by
   funext a b
   calc
     m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by
@@ -127,7 +127,7 @@ operations, then the magma structure is a commutative monoid. -/
       "If a type carries a unital additive magma structure that distributes over\na unital binary operations, then the additive magma structure is a commutative additive monoid."]
 def commMonoid [h : MulOneClass X]
     (distrib : ∀ a b c d, ((a * b) <m₁> c * d) = (a <m₁> c) * b <m₁> d) : CommMonoid X :=
-  { h with 
+  { h with
     mul := (· * ·)
     one := 1
     mul_comm := (mul_comm h₁ MulOneClass.isUnital Distrib).comm

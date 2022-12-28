@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.canonical.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : ContravariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.195 : α) (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.197 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.195 x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.197) (fun (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.210 : α) (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.212 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.210 x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.212)] [_inst_4 : ExistsMulOfLE.{u1} α (MulOneClass.toMul.{u1} α _inst_1) (Preorder.toLE.{u1} α _inst_2)] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) a b) -> (Exists.{succ u1} α (fun (c : α) => And (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1))) c) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) a c) b)))
 Case conversion may be inaccurate. Consider using '#align exists_one_lt_mul_of_lt' exists_one_lt_mul_of_lt'ₓ'. -/
 @[to_additive]
-theorem exists_one_lt_mul_of_lt' (h : a < b) : ∃ c, 1 < c ∧ a * c = b := by
+theorem exists_one_lt_mul_of_lt' (h : a < b) : ∃ c, 1 < c ∧ a * c = b :=
+  by
   obtain ⟨c, rfl⟩ := exists_mul_of_le h.le
   exact ⟨c, one_lt_of_lt_mul_right h, rfl⟩
 #align exists_one_lt_mul_of_lt' exists_one_lt_mul_of_lt'
@@ -94,7 +95,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_of_forall_one_lt_le_mul le_of_forall_one_lt_le_mulₓ'. -/
 @[to_additive]
 theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : a ≤ b :=
-  le_of_forall_le_of_dense fun x hxb => by
+  le_of_forall_le_of_dense fun x hxb =>
+    by
     obtain ⟨ε, rfl⟩ := exists_mul_of_le hxb.le
     exact h _ ((lt_mul_iff_one_lt_right' b).1 hxb)
 #align le_of_forall_one_lt_le_mul le_of_forall_one_lt_le_mul
@@ -207,7 +209,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} α] {a : α} {b : α}, LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) b a)
 Case conversion may be inaccurate. Consider using '#align le_mul_self le_mul_selfₓ'. -/
 @[to_additive]
-theorem le_mul_self : a ≤ b * a := by 
+theorem le_mul_self : a ≤ b * a := by
   rw [mul_comm]
   exact le_self_mul
 #align le_mul_self le_mul_self
@@ -264,7 +266,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_iff_exists_mul le_iff_exists_mulₓ'. -/
 @[to_additive]
 theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
-  ⟨exists_mul_of_le, by 
+  ⟨exists_mul_of_le, by
     rintro ⟨c, rfl⟩
     exact le_self_mul⟩
 #align le_iff_exists_mul le_iff_exists_mul
@@ -364,7 +366,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) a b) -> (Exists.{succ u1} α (fun (c : α) => Exists.{0} (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) c) (fun (hc : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) c) => Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) a c) b)))
 Case conversion may be inaccurate. Consider using '#align exists_one_lt_mul_of_lt exists_one_lt_mul_of_ltₓ'. -/
 @[to_additive]
-theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _)(hc : 1 < c), a * c = b := by
+theorem exists_one_lt_mul_of_lt (h : a < b) : ∃ (c : _)(hc : 1 < c), a * c = b :=
+  by
   obtain ⟨c, hc⟩ := le_iff_exists_mul.1 h.le
   refine' ⟨c, one_lt_iff_ne_one.2 _, hc.symm⟩
   rintro rfl
@@ -406,7 +409,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} α] {a : α} {b : α} [_inst_2 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1557 : α) (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1559 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1557 x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1559) (fun (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1572 : α) (x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1574 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1572 x._@.Mathlib.Algebra.Order.Monoid.Canonical.Defs._hyg.1574)], Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) a b) (Exists.{succ u1} α (fun (c : α) => And (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))) c (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1))))))) (Eq.{succ u1} α b (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α _inst_1)))))) a c))))
 Case conversion may be inaccurate. Consider using '#align lt_iff_exists_mul lt_iff_exists_mulₓ'. -/
 @[to_additive]
-theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔ ∃ c > 1, b = a * c := by
+theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔ ∃ c > 1, b = a * c :=
+  by
   simp_rw [lt_iff_le_and_ne, and_comm', le_iff_exists_mul, ← exists_and_left, exists_prop]
   apply exists_congr; intro c
   rw [and_congr_left_iff, gt_iff_lt]; rintro rfl
@@ -516,7 +520,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyLinearOrderedMonoid.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (Min.min.{u1} α (CanonicallyLinearOrderedMonoid.toMin.{u1} α _inst_1) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α (CanonicallyLinearOrderedMonoid.toCanonicallyOrderedMonoid.{u1} α _inst_1))))))) b c)) (Min.min.{u1} α (CanonicallyLinearOrderedMonoid.toMin.{u1} α _inst_1) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCommMonoid.toCommMonoid.{u1} α (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} α (CanonicallyLinearOrderedMonoid.toCanonicallyOrderedMonoid.{u1} α _inst_1))))))) (Min.min.{u1} α (CanonicallyLinearOrderedMonoid.toMin.{u1} α _inst_1) a b) (Min.min.{u1} α (CanonicallyLinearOrderedMonoid.toMin.{u1} α _inst_1) a c)))
 Case conversion may be inaccurate. Consider using '#align min_mul_distrib min_mul_distribₓ'. -/
 @[to_additive]
-theorem min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) := by
+theorem min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) :=
+  by
   cases' le_total a b with hb hb
   · simp [hb, le_mul_right]
   · cases' le_total a c with hc hc

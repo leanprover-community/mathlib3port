@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.enat.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,8 +72,8 @@ instance canLift : CanLift ℕ∞ ℕ coe fun n => n ≠ ⊤ :=
 #align enat.can_lift Enat.canLift
 
 /-- Conversion of `ℕ∞` to `ℕ` sending `∞` to `0`. -/
-def toNat : MonoidWithZeroHom ℕ∞
-      ℕ where 
+def toNat : MonoidWithZeroHom ℕ∞ ℕ
+    where
   toFun := WithTop.untop' 0
   map_one' := rfl
   map_zero' := rfl
@@ -101,13 +101,15 @@ theorem coe_to_nat_le_self (n : ℕ∞) : ↑(toNat n) ≤ n :=
   WithTop.recTopCoe le_top (fun k => le_rfl) n
 #align enat.coe_to_nat_le_self Enat.coe_to_nat_le_self
 
-theorem to_nat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n := by
+theorem to_nat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + n) = toNat m + toNat n :=
+  by
   lift m to ℕ using hm
   lift n to ℕ using hn
   rfl
 #align enat.to_nat_add Enat.to_nat_add
 
-theorem to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = toNat m - toNat n := by
+theorem to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = toNat m - toNat n :=
+  by
   lift n to ℕ using hn
   induction m using WithTop.recTopCoe
   · rw [WithTop.top_sub_coe, to_nat_top, zero_tsub]
@@ -144,7 +146,8 @@ theorem le_of_lt_add_one (h : m < n + 1) : m ≤ n :=
 
 @[elab_as_elim]
 theorem nat_induction {P : ℕ∞ → Prop} (a : ℕ∞) (h0 : P 0) (hsuc : ∀ n : ℕ, P n → P n.succ)
-    (htop : (∀ n : ℕ, P n) → P ⊤) : P a := by
+    (htop : (∀ n : ℕ, P n) → P ⊤) : P a :=
+  by
   have A : ∀ n : ℕ, P n := fun n => Nat.recOn n h0 hsuc
   cases a
   exacts[htop A, A a]

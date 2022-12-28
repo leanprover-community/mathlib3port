@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.finsupp.ne_locus
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,8 @@ theorem not_mem_ne_locus {f g : α →₀ N} {a : α} : a ∉ f.neLocus g ↔ f 
 #align finsupp.not_mem_ne_locus Finsupp.not_mem_ne_locus
 
 @[simp]
-theorem coe_ne_locus : ↑(f.neLocus g) = { x | f x ≠ g x } := by
+theorem coe_ne_locus : ↑(f.neLocus g) = { x | f x ≠ g x } :=
+  by
   ext
   exact mem_ne_locus
 #align finsupp.coe_ne_locus Finsupp.coe_ne_locus
@@ -74,7 +75,8 @@ theorem ne_locus_comm : f.neLocus g = g.neLocus f := by
 #align finsupp.ne_locus_comm Finsupp.ne_locus_comm
 
 @[simp]
-theorem ne_locus_zero_right : f.neLocus 0 = f.support := by
+theorem ne_locus_zero_right : f.neLocus 0 = f.support :=
+  by
   ext
   rw [mem_ne_locus, mem_support_iff, coe_zero, Pi.zero_apply]
 #align finsupp.ne_locus_zero_right Finsupp.ne_locus_zero_right
@@ -96,7 +98,8 @@ theorem subset_map_range_ne_locus [DecidableEq N] [Zero N] [DecidableEq M] [Zero
 theorem zip_with_ne_locus_eq_left [DecidableEq N] [Zero M] [DecidableEq P] [Zero P] [Zero N]
     {F : M → N → P} (F0 : F 0 0 = 0) (f : α →₀ M) (g₁ g₂ : α →₀ N)
     (hF : ∀ f, Function.Injective fun g => F f g) :
-    (zipWith F F0 f g₁).neLocus (zipWith F F0 f g₂) = g₁.neLocus g₂ := by
+    (zipWith F F0 f g₁).neLocus (zipWith F F0 f g₂) = g₁.neLocus g₂ :=
+  by
   ext
   simpa only [mem_ne_locus] using (hF _).ne_iff
 #align finsupp.zip_with_ne_locus_eq_left Finsupp.zip_with_ne_locus_eq_left
@@ -104,14 +107,16 @@ theorem zip_with_ne_locus_eq_left [DecidableEq N] [Zero M] [DecidableEq P] [Zero
 theorem zip_with_ne_locus_eq_right [DecidableEq M] [Zero M] [DecidableEq P] [Zero P] [Zero N]
     {F : M → N → P} (F0 : F 0 0 = 0) (f₁ f₂ : α →₀ M) (g : α →₀ N)
     (hF : ∀ g, Function.Injective fun f => F f g) :
-    (zipWith F F0 f₁ g).neLocus (zipWith F F0 f₂ g) = f₁.neLocus f₂ := by
+    (zipWith F F0 f₁ g).neLocus (zipWith F F0 f₂ g) = f₁.neLocus f₂ :=
+  by
   ext
   simpa only [mem_ne_locus] using (hF _).ne_iff
 #align finsupp.zip_with_ne_locus_eq_right Finsupp.zip_with_ne_locus_eq_right
 
 theorem map_range_ne_locus_eq [DecidableEq N] [DecidableEq M] [Zero M] [Zero N] (f g : α →₀ N)
     {F : N → M} (F0 : F 0 = 0) (hF : Function.Injective F) :
-    (f.mapRange F F0).neLocus (g.mapRange F F0) = f.neLocus g := by
+    (f.mapRange F F0).neLocus (g.mapRange F F0) = f.neLocus g :=
+  by
   ext
   simpa only [mem_ne_locus] using hF.ne_iff
 #align finsupp.map_range_ne_locus_eq Finsupp.map_range_ne_locus_eq

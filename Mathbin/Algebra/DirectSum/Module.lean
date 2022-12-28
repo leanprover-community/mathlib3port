@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.module
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -164,12 +164,12 @@ variable (ι M)
 between `⨁ i, M i` and `Π i, M i`. -/
 @[simps apply]
 def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
-  { Dfinsupp.equivFunOnFintype with 
+  { Dfinsupp.equivFunOnFintype with
     toFun := coeFn
-    map_add' := fun f g => by 
+    map_add' := fun f g => by
       ext
       simp only [add_apply, Pi.add_apply]
-    map_smul' := fun c f => by 
+    map_smul' := fun c f => by
       ext
       simp only [Dfinsupp.coe_smul, RingHom.id_apply] }
 #align direct_sum.linear_equiv_fun_on_fintype DirectSum.linearEquivFunOnFintype
@@ -178,7 +178,8 @@ variable {ι M}
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_lof [Fintype ι] [DecidableEq ι] (i : ι) (m : M i) :
-    (linearEquivFunOnFintype R ι M) (lof R ι M i m) = Pi.single i m := by
+    (linearEquivFunOnFintype R ι M) (lof R ι M i m) = Pi.single i m :=
+  by
   ext a
   change (Dfinsupp.equivFunOnFintype (lof R ι M i m)) a = _
   convert _root_.congr_fun (Dfinsupp.equiv_fun_on_fintype_single i m) a
@@ -186,7 +187,8 @@ theorem linear_equiv_fun_on_fintype_lof [Fintype ι] [DecidableEq ι] (i : ι) (
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_symm_single [Fintype ι] [DecidableEq ι] (i : ι) (m : M i) :
-    (linearEquivFunOnFintype R ι M).symm (Pi.single i m) = lof R ι M i m := by
+    (linearEquivFunOnFintype R ι M).symm (Pi.single i m) = lof R ι M i m :=
+  by
   ext a
   change (dfinsupp.equiv_fun_on_fintype.symm (Pi.single i m)) a = _
   rw [Dfinsupp.equiv_fun_on_fintype_symm_single i m]
@@ -196,7 +198,8 @@ theorem linear_equiv_fun_on_fintype_symm_single [Fintype ι] [DecidableEq ι] (i
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_symm_coe [Fintype ι] (f : ⨁ i, M i) :
-    (linearEquivFunOnFintype R ι M).symm f = f := by
+    (linearEquivFunOnFintype R ι M).symm f = f :=
+  by
   ext
   simp [linear_equiv_fun_on_fintype]
 #align
@@ -351,7 +354,8 @@ theorem coe_linear_map_of (i : ι) (x : A i) :
 variable {A}
 
 /-- If a direct sum of submodules is internal then the submodules span the module. -/
-theorem IsInternal.submodule_supr_eq_top (h : IsInternal A) : supᵢ A = ⊤ := by
+theorem IsInternal.submodule_supr_eq_top (h : IsInternal A) : supᵢ A = ⊤ :=
+  by
   rw [Submodule.supr_eq_range_dfinsupp_lsum, LinearMap.range_eq_top]
   exact Function.Bijective.surjective h
 #align direct_sum.is_internal.submodule_supr_eq_top DirectSum.IsInternal.submodule_supr_eq_top
@@ -364,9 +368,8 @@ theorem IsInternal.submodule_independent (h : IsInternal A) : CompleteLattice.In
 /-- Given an internal direct sum decomposition of a module `M`, and a basis for each of the
 components of the direct sum, the disjoint union of these bases is a basis for `M`. -/
 noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) :
-    Basis (Σi, α i) R
-      M where repr :=
+    (v : ∀ i, Basis (α i) R (A i)) : Basis (Σi, α i) R M
+    where repr :=
     ((LinearEquiv.ofBijective (DirectSum.coeLinearMap A) h).symm ≪≫ₗ
         Dfinsupp.mapRange.linearEquiv fun i => (v i).repr) ≪≫ₗ
       (sigmaFinsuppLequivDfinsupp R).symm
@@ -374,7 +377,8 @@ noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type
 
 @[simp]
 theorem IsInternal.collected_basis_coe (h : IsInternal A) {α : ι → Type _}
-    (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) := by
+    (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) :=
+  by
   funext a
   simp only [is_internal.collected_basis, to_module, coe_linear_map, [anonymous], Basis.coe_of_repr,
     Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linear_equiv_apply,
@@ -435,7 +439,8 @@ theorem is_internal_submodule_iff_independent_and_supr_eq_top (A : ι → Submod
 /-- If a collection of submodules has just two indices, `i` and `j`, then
 `direct_sum.is_internal` is equivalent to `is_compl`. -/
 theorem is_internal_submodule_iff_is_compl (A : ι → Submodule R M) {i j : ι} (hij : i ≠ j)
-    (h : (Set.univ : Set ι) = {i, j}) : IsInternal A ↔ IsCompl (A i) (A j) := by
+    (h : (Set.univ : Set ι) = {i, j}) : IsInternal A ↔ IsCompl (A i) (A j) :=
+  by
   have : ∀ k, k = i ∨ k = j := fun k => by simpa using set.ext_iff.mp h k
   rw [is_internal_submodule_iff_independent_and_supr_eq_top, supᵢ, ← Set.image_univ, h,
     Set.image_insert_eq, Set.image_singleton, supₛ_pair, CompleteLattice.independent_pair hij this]

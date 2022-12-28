@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.multiplicity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
     _ = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
       congr_arg coe <|
         congr_arg card <|
-          Finset.ext fun i => by
+          Finset.ext fun i =>
+            by
             rw [mem_filter, mem_Ico, mem_Ico, lt_succ_iff, ← @PartEnat.coe_le_coe i,
               PartEnat.coe_get, ← pow_dvd_iff_le_multiplicity, and_right_comm]
             refine' (and_iff_left_of_imp fun h => lt_of_le_of_lt _ hb).symm
@@ -115,7 +116,8 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
         by
         rw [multiplicity_factorial ((log_mono_right <| le_succ _).trans_lt hb), ←
           multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
-      _ = (∑ i in ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
+      _ = (∑ i in ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) :=
+        by
         rw [sum_add_distrib, sum_boole]
         simp
       _ = (∑ i in ico 1 b, (n + 1) / p ^ i : ℕ) :=
@@ -126,7 +128,8 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum
   of the multiplicities of `p` in `(p * n)!` and `n + 1`. -/
 theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
-    multiplicity p (p * (n + 1))! = multiplicity p (p * n)! + multiplicity p (n + 1) + 1 := by
+    multiplicity p (p * (n + 1))! = multiplicity p (p * n)! + multiplicity p (n + 1) + 1 :=
+  by
   have hp' := prime_iff.mp hp
   have h0 : 2 ≤ p := hp.two_le
   have h1 : 1 ≤ p * n + 1 := Nat.le_add_left _ _
@@ -134,11 +137,13 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
   linarith
   have h3 : p * n + 1 ≤ p * (n + 1) + 1
   linarith
-  have hm : multiplicity p (p * n)! ≠ ⊤ := by
+  have hm : multiplicity p (p * n)! ≠ ⊤ :=
+    by
     rw [Ne.def, eq_top_iff_not_finite, not_not, finite_nat_iff]
     exact ⟨hp.ne_one, factorial_pos _⟩
   revert hm
-  have h4 : ∀ m ∈ Ico (p * n + 1) (p * (n + 1)), multiplicity p m = 0 := by
+  have h4 : ∀ m ∈ Ico (p * n + 1) (p * (n + 1)), multiplicity p m = 0 :=
+    by
     intro m hm
     rw [multiplicity_eq_zero, ← not_dvd_iff_between_consec_multiples _ hp.pos]
     rw [mem_Ico] at hm
@@ -152,7 +157,8 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
 
 /-- The multiplicity of `p` in `(p * n)!` is `n` more than that of `n!`. -/
 theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.Prime) :
-    multiplicity p (p * n)! = multiplicity p n ! + n := by
+    multiplicity p (p * n)! = multiplicity p n ! + n :=
+  by
   induction' n with n ih
   · simp
   · simp only [succ_eq_add_one, multiplicity.mul, hp, prime_iff.mp hp, ih,
@@ -169,7 +175,8 @@ theorem pow_dvd_factorial_iff {p : ℕ} {n r b : ℕ} (hp : p.Prime) (hbn : log 
 #align nat.prime.pow_dvd_factorial_iff Nat.Prime.pow_dvd_factorial_iff
 
 theorem multiplicity_factorial_le_div_pred {p : ℕ} (hp : p.Prime) (n : ℕ) :
-    multiplicity p n ! ≤ (n / (p - 1) : ℕ) := by
+    multiplicity p n ! ≤ (n / (p - 1) : ℕ) :=
+  by
   rw [hp.multiplicity_factorial (lt_succ_self _), PartEnat.coe_le_coe]
   exact Nat.geom_sum_Ico_le hp.two_le _ _
 #align nat.prime.multiplicity_factorial_le_div_pred Nat.Prime.multiplicity_factorial_le_div_pred
@@ -218,7 +225,7 @@ theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) :
     ∀ n k : ℕ, multiplicity p n ≤ multiplicity p (choose n k) + multiplicity p k
   | _, 0 => by simp
   | 0, _ + 1 => by simp
-  | n + 1, k + 1 => by 
+  | n + 1, k + 1 => by
     rw [← hp.multiplicity_mul]
     refine' multiplicity_le_multiplicity_of_dvd_right _
     rw [← succ_mul_choose_eq]
@@ -247,7 +254,8 @@ theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ 
 
 end Prime
 
-theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicity 2 n ! < n := by
+theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicity 2 n ! < n :=
+  by
   have h2 := prime_iff.mp prime_two
   refine' binary_rec _ _
   · contradiction
@@ -256,7 +264,8 @@ theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (h : n ≠ 0), multiplicit
     · subst hn
       simp at h
       simp [h, one_right h2.not_unit]
-    have : multiplicity 2 (2 * n)! < (2 * n : ℕ) := by
+    have : multiplicity 2 (2 * n)! < (2 * n : ℕ) :=
+      by
       rw [prime_two.multiplicity_factorial_mul]
       refine' (PartEnat.add_lt_add_right (ih hn) (PartEnat.coe_ne_top _)).trans_le _
       rw [two_mul]

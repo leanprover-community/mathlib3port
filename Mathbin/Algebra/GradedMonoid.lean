@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.graded_monoid
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,8 +210,8 @@ class Gmonoid [AddMonoid ι] extends GhasMul A, GhasOne A where
 #align graded_monoid.gmonoid GradedMonoid.Gmonoid
 
 /-- `gmonoid` implies a `monoid (graded_monoid A)`. -/
-instance Gmonoid.toMonoid [AddMonoid ι] [Gmonoid A] :
-    Monoid (GradedMonoid A) where 
+instance Gmonoid.toMonoid [AddMonoid ι] [Gmonoid A] : Monoid (GradedMonoid A)
+    where
   one := 1
   mul := (· * ·)
   npow n a := GradedMonoid.mk _ (Gmonoid.gnpow n a.snd)
@@ -223,7 +223,8 @@ instance Gmonoid.toMonoid [AddMonoid ι] [Gmonoid A] :
 #align graded_monoid.gmonoid.to_monoid GradedMonoid.Gmonoid.toMonoid
 
 theorem mk_pow [AddMonoid ι] [Gmonoid A] {i} (a : A i) (n : ℕ) :
-    mk i a ^ n = mk (n • i) (Gmonoid.gnpow _ a) := by
+    mk i a ^ n = mk (n • i) (Gmonoid.gnpow _ a) :=
+  by
   induction' n with n
   · rw [pow_zero]
     exact (gmonoid.gnpow_zero' ⟨_, a⟩).symm
@@ -274,8 +275,8 @@ variable [AddZeroClass ι] [GhasMul A]
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.
 -/
-instance GradeZero.hasSmul (i : ι) :
-    HasSmul (A 0) (A i) where smul x y := (zero_add i).rec (GhasMul.mul x y)
+instance GradeZero.hasSmul (i : ι) : HasSmul (A 0) (A i)
+    where smul x y := (zero_add i).rec (GhasMul.mul x y)
 #align graded_monoid.grade_zero.has_smul GradedMonoid.GradeZero.hasSmul
 
 /-- `(*) : A 0 → A 0 → A 0` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
@@ -337,8 +338,8 @@ variable [AddMonoid ι] [Gmonoid A]
 
 /-- `graded_monoid.mk 0` is a `monoid_hom`, using the `graded_monoid.grade_zero.monoid` structure.
 -/
-def mkZeroMonoidHom : A 0 →* GradedMonoid
-        A where 
+def mkZeroMonoidHom : A 0 →* GradedMonoid A
+    where
   toFun := mk 0
   map_one' := rfl
   map_mul' := mk_zero_smul
@@ -381,7 +382,7 @@ theorem List.dprod_index_cons (a : α) (l : List α) (fι : α → ι) :
 #align list.dprod_index_cons List.dprod_index_cons
 
 theorem List.dprod_index_eq_map_sum (l : List α) (fι : α → ι) : l.dprodIndex fι = (l.map fι).Sum :=
-  by 
+  by
   dsimp only [List.dprodIndex]
   induction l
   · simp
@@ -412,7 +413,8 @@ theorem List.dprod_cons (fι : α → ι) (fA : ∀ a, A (fι a)) (a : α) (l : 
 #align list.dprod_cons List.dprod_cons
 
 theorem GradedMonoid.mk_list_dprod (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
-    GradedMonoid.mk _ (l.dprod fι fA) = (l.map fun a => GradedMonoid.mk (fι a) (fA a)).Prod := by
+    GradedMonoid.mk _ (l.dprod fι fA) = (l.map fun a => GradedMonoid.mk (fι a) (fA a)).Prod :=
+  by
   induction l
   · simp
     rfl
@@ -422,7 +424,8 @@ theorem GradedMonoid.mk_list_dprod (l : List α) (fι : α → ι) (fA : ∀ a, 
 
 /-- A variant of `graded_monoid.mk_list_dprod` for rewriting in the other direction. -/
 theorem GradedMonoid.list_prod_map_eq_dprod (l : List α) (f : α → GradedMonoid A) :
-    (l.map f).Prod = GradedMonoid.mk _ (l.dprod (fun i => (f i).1) fun i => (f i).2) := by
+    (l.map f).Prod = GradedMonoid.mk _ (l.dprod (fun i => (f i).1) fun i => (f i).2) :=
+  by
   rw [GradedMonoid.mk_list_dprod, GradedMonoid.mk]
   simp_rw [Sigma.eta]
 #align graded_monoid.list_prod_map_eq_dprod GradedMonoid.list_prod_map_eq_dprod
@@ -454,7 +457,9 @@ instance Mul.ghasMul [Add ι] [Mul R] : GradedMonoid.GhasMul fun i : ι => R whe
 structure. -/
 @[simps gnpow]
 instance Monoid.gmonoid [AddMonoid ι] [Monoid R] : GradedMonoid.Gmonoid fun i : ι => R :=
-  { One.ghasOne ι, Mul.ghasMul ι with
+  { One.ghasOne ι,
+    Mul.ghasMul
+      ι with
     one_mul := fun a => Sigma.ext (zero_add _) (heq_of_eq (one_mul _))
     mul_one := fun a => Sigma.ext (add_zero _) (heq_of_eq (mul_one _))
     mul_assoc := fun a b c => Sigma.ext (add_assoc _ _ _) (heq_of_eq (mul_assoc _ _ _))
@@ -474,7 +479,8 @@ instance CommMonoid.gcommMonoid [AddCommMonoid ι] [CommMonoid R] :
 /-- When all the indexed types are the same, the dependent product is just the regular product. -/
 @[simp]
 theorem List.dprod_monoid {α} [AddMonoid ι] [Monoid R] (l : List α) (fι : α → ι) (fA : α → R) :
-    (l.dprod fι fA : (fun i : ι => R) _) = ((l.map fA).Prod : _) := by
+    (l.dprod fι fA : (fun i : ι => R) _) = ((l.map fA).Prod : _) :=
+  by
   induction l
   · rw [List.dprod_nil, List.map_nil, List.prod_nil]
     rfl
@@ -502,8 +508,8 @@ theorem SetLike.one_mem_graded {S : Type _} [SetLike S R] [One R] [Zero ι] (A :
 #align set_like.one_mem_graded SetLike.one_mem_graded
 
 instance SetLike.ghasOne {S : Type _} [SetLike S R] [One R] [Zero ι] (A : ι → S)
-    [SetLike.HasGradedOne A] :
-    GradedMonoid.GhasOne fun i => A i where one := ⟨1, SetLike.one_mem_graded _⟩
+    [SetLike.HasGradedOne A] : GradedMonoid.GhasOne fun i => A i
+    where one := ⟨1, SetLike.one_mem_graded _⟩
 #align set_like.ghas_one SetLike.ghasOne
 
 @[simp]
@@ -523,9 +529,8 @@ theorem SetLike.mul_mem_graded {S : Type _} [SetLike S R] [Mul R] [Add ι] {A : 
 #align set_like.mul_mem_graded SetLike.mul_mem_graded
 
 instance SetLike.ghasMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S)
-    [SetLike.HasGradedMul A] :
-    GradedMonoid.GhasMul fun i =>
-      A i where mul i j a b := ⟨(a * b : R), SetLike.mul_mem_graded a.Prop b.Prop⟩
+    [SetLike.HasGradedMul A] : GradedMonoid.GhasMul fun i => A i
+    where mul i j a b := ⟨(a * b : R), SetLike.mul_mem_graded a.Prop b.Prop⟩
 #align set_like.ghas_mul SetLike.ghasMul
 
 @[simp]
@@ -546,7 +551,8 @@ variable {S : Type _} [SetLike S R] [Monoid R] [AddMonoid ι]
 
 variable {A : ι → S} [SetLike.GradedMonoid A]
 
-theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A (n • i) := by
+theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A (n • i) :=
+  by
   induction n
   · rw [pow_zero, zero_nsmul]
     exact one_mem_graded _
@@ -555,7 +561,8 @@ theorem pow_mem_graded (n : ℕ) {r : R} {i : ι} (h : r ∈ A i) : r ^ n ∈ A 
 #align set_like.pow_mem_graded SetLike.pow_mem_graded
 
 theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R)
-    (h : ∀ j ∈ l, r j ∈ A (i j)) : (l.map r).Prod ∈ A (l.map i).Sum := by
+    (h : ∀ j ∈ l, r j ∈ A (i j)) : (l.map r).Prod ∈ A (l.map i).Sum :=
+  by
   induction l
   · rw [List.map_nil, List.map_nil, List.prod_nil, List.sum_nil]
     exact one_mem_graded _
@@ -566,7 +573,8 @@ theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' 
 #align set_like.list_prod_map_mem_graded SetLike.list_prod_map_mem_graded
 
 theorem list_prod_of_fn_mem_graded {n} (i : Fin n → ι) (r : Fin n → R) (h : ∀ j, r j ∈ A (i j)) :
-    (List.ofFn r).Prod ∈ A (List.ofFn i).Sum := by
+    (List.ofFn r).Prod ∈ A (List.ofFn i).Sum :=
+  by
   rw [List.of_fn_eq_map, List.of_fn_eq_map]
   exact list_prod_map_mem_graded _ _ _ fun _ _ => h _
 #align set_like.list_prod_of_fn_mem_graded SetLike.list_prod_of_fn_mem_graded
@@ -576,7 +584,9 @@ end SetLike
 /-- Build a `gmonoid` instance for a collection of subobjects. -/
 instance SetLike.gmonoid {S : Type _} [SetLike S R] [Monoid R] [AddMonoid ι] (A : ι → S)
     [SetLike.GradedMonoid A] : GradedMonoid.Gmonoid fun i => A i :=
-  { SetLike.ghasOne A, SetLike.ghasMul A with
+  { SetLike.ghasOne A,
+    SetLike.ghasMul
+      A with
     one_mul := fun ⟨i, a, h⟩ => Sigma.subtype_ext (zero_add _) (one_mul _)
     mul_one := fun ⟨i, a, h⟩ => Sigma.subtype_ext (add_zero _) (mul_one _)
     mul_assoc := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ ⟨k, c, hc⟩ =>
@@ -611,7 +621,8 @@ coercions. -/
 @[simp]
 theorem SetLike.coe_list_dprod (A : ι → S) [SetLike.GradedMonoid A] (fι : α → ι)
     (fA : ∀ a, A (fι a)) (l : List α) :
-    ↑(l.dprod fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) := by
+    ↑(l.dprod fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) :=
+  by
   induction l
   · rw [List.dprod_nil, coe_ghas_one, List.map_nil, List.prod_nil]
   · rw [List.dprod_cons, coe_ghas_mul, List.map_cons, List.prod_cons, l_ih]
@@ -659,7 +670,7 @@ theorem SetLike.IsHomogeneous.mul [Add ι] [Mul R] {A : ι → S} [SetLike.HasGr
 
 /-- When `A` is a `set_like.graded_monoid A`, then the homogeneous elements forms a submonoid. -/
 def SetLike.homogeneousSubmonoid [AddMonoid ι] [Monoid R] (A : ι → S) [SetLike.GradedMonoid A] :
-    Submonoid R where 
+    Submonoid R where
   carrier := { a | SetLike.IsHomogeneous A a }
   one_mem' := SetLike.is_homogeneous_one A
   mul_mem' a b := SetLike.IsHomogeneous.mul

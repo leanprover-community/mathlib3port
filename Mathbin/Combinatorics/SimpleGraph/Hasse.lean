@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.hasse
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ section Preorder
 variable [Preorder α] [Preorder β]
 
 /-- The Hasse diagram of an order as a simple graph. The graph of the covering relation. -/
-def hasse : SimpleGraph α where 
+def hasse : SimpleGraph α where
   Adj a b := a ⋖ b ∨ b ⋖ a
   symm a b := Or.symm
   loopless a h := h.elim (irrefl _) (irrefl _)
@@ -71,7 +71,8 @@ section PartialOrder
 variable [PartialOrder α] [PartialOrder β]
 
 @[simp]
-theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by
+theorem hasse_prod : hasse (α × β) = hasse α □ hasse β :=
+  by
   ext (x y)
   simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,
     or_or_or_comm]
@@ -84,7 +85,7 @@ section LinearOrder
 variable [LinearOrder α]
 
 theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hasse α).Preconnected :=
-  fun a b => by 
+  fun a b => by
   rw [reachable_iff_refl_trans_gen]
   exact
     refl_trans_gen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max)
@@ -92,7 +93,7 @@ theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hass
 #align simple_graph.hasse_preconnected_of_succ SimpleGraph.hasse_preconnected_of_succ
 
 theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hasse α).Preconnected :=
-  fun a b => by 
+  fun a b => by
   rw [reachable_iff_refl_trans_gen, ← refl_trans_gen_swap]
   exact
     refl_trans_gen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min)

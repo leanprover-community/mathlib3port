@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.stone_cech
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ instance : TopologicalSpace (Ultrafilter α) :=
   TopologicalSpace.generateFrom (ultrafilterBasis α)
 
 theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (ultrafilterBasis α) :=
-  ⟨by 
+  ⟨by
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;> apply mem_of_superset hv <;>
       simp [inter_subset_right a b],
@@ -57,7 +57,8 @@ theorem ultrafilter_is_open_basic (s : Set α) : IsOpen { u : Ultrafilter α | s
 #align ultrafilter_is_open_basic ultrafilter_is_open_basic
 
 /-- The basic open sets for the topology on ultrafilters are also closed. -/
-theorem ultrafilter_is_closed_basic (s : Set α) : IsClosed { u : Ultrafilter α | s ∈ u } := by
+theorem ultrafilter_is_closed_basic (s : Set α) : IsClosed { u : Ultrafilter α | s ∈ u } :=
+  by
   rw [← is_open_compl_iff]
   convert ultrafilter_is_open_basic (sᶜ)
   ext u
@@ -91,19 +92,21 @@ instance Ultrafilter.t2Space : T2Space (Ultrafilter α) :=
     hx.trans hy.symm
 #align ultrafilter.t2_space Ultrafilter.t2Space
 
-instance : TotallyDisconnectedSpace (Ultrafilter α) := by
+instance : TotallyDisconnectedSpace (Ultrafilter α) :=
+  by
   rw [totally_disconnected_space_iff_connected_component_singleton]
   intro A
   simp only [Set.eq_singleton_iff_unique_mem, mem_connected_component, true_and_iff]
   intro B hB
   rw [← Ultrafilter.coe_le_coe]
   intro s hs
-  rw [connected_component_eq_Inter_clopen, Set.mem_Inter] at hB
+  rw [connected_component_eq_Inter_clopen, Set.mem_interᵢ] at hB
   let Z := { F : Ultrafilter α | s ∈ F }
   have hZ : IsClopen Z := ⟨ultrafilter_is_open_basic s, ultrafilter_is_closed_basic s⟩
   exact hB ⟨Z, hZ, hs⟩
 
-theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) ≤ b := by
+theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) ≤ b :=
+  by
   rw [TopologicalSpace.nhds_generate_from]
   simp only [comap_infi, comap_principal]
   intro s hs
@@ -115,7 +118,8 @@ theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) �
 
 section Embedding
 
-theorem ultrafilter_pure_injective : Function.Injective (pure : α → Ultrafilter α) := by
+theorem ultrafilter_pure_injective : Function.Injective (pure : α → Ultrafilter α) :=
+  by
   intro x y h
   have : {x} ∈ (pure x : Ultrafilter α) := singleton_mem_pure
   rw [h] at this
@@ -132,7 +136,8 @@ theorem dense_range_pure : DenseRange (pure : α → Ultrafilter α) := fun x =>
 
 /-- The map `pure : α → ultra_filter α` induces on `α` the discrete topology. -/
 theorem induced_topology_pure :
-    TopologicalSpace.induced (pure : α → Ultrafilter α) Ultrafilter.topologicalSpace = ⊥ := by
+    TopologicalSpace.induced (pure : α → Ultrafilter α) Ultrafilter.topologicalSpace = ⊥ :=
+  by
   apply eq_bot_of_singletons_open
   intro x
   use { u : Ultrafilter α | {x} ∈ u }, ultrafilter_is_open_basic _
@@ -172,7 +177,8 @@ def Ultrafilter.extend (f : α → γ) : Ultrafilter α → γ :=
 
 variable [T2Space γ]
 
-theorem ultrafilter_extend_extends (f : α → γ) : Ultrafilter.extend f ∘ pure = f := by
+theorem ultrafilter_extend_extends (f : α → γ) : Ultrafilter.extend f ∘ pure = f :=
+  by
   letI : TopologicalSpace α := ⊥
   haveI : DiscreteTopology α := ⟨rfl⟩
   exact funext (dense_inducing_pure.extend_eq continuous_of_discrete_topology)
@@ -180,7 +186,8 @@ theorem ultrafilter_extend_extends (f : α → γ) : Ultrafilter.extend f ∘ pu
 
 variable [CompactSpace γ]
 
-theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) := by
+theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) :=
+  by
   have : ∀ b : Ultrafilter α, ∃ c, Tendsto f (comap pure (𝓝 b)) (𝓝 c) := fun b =>
     -- b.map f is an ultrafilter on γ, which is compact, so it converges to some c in γ.
     let ⟨c, _, h⟩ :=
@@ -226,10 +233,8 @@ section StoneCech
   point of γ. -/
 variable (α : Type u) [TopologicalSpace α]
 
-instance stoneCechSetoid :
-    Setoid
-      (Ultrafilter
-        α) where 
+instance stoneCechSetoid : Setoid (Ultrafilter α)
+    where
   R x y :=
     ∀ (γ : Type u) [TopologicalSpace γ],
       ∀ [T2Space γ] [CompactSpace γ] (f : α → γ) (hf : Continuous f),
@@ -286,7 +291,8 @@ theorem continuous_stone_cech_extend : Continuous (stoneCechExtend hf) :=
 #align continuous_stone_cech_extend continuous_stone_cech_extend
 
 theorem stone_cech_hom_ext {g₁ g₂ : StoneCech α → γ'} (h₁ : Continuous g₁) (h₂ : Continuous g₂)
-    (h : g₁ ∘ stoneCechUnit = g₂ ∘ stoneCechUnit) : g₁ = g₂ := by
+    (h : g₁ ∘ stoneCechUnit = g₂ ∘ stoneCechUnit) : g₁ = g₂ :=
+  by
   apply Continuous.ext_on dense_range_stone_cech_unit h₁ h₂
   rintro x ⟨x, rfl⟩
   apply congr_fun h x
@@ -295,7 +301,7 @@ theorem stone_cech_hom_ext {g₁ g₂ : StoneCech α → γ'} (h₁ : Continuous
 end Extension
 
 theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x) : u ≈ pure x :=
-  fun γ tγ h₁ h₂ f hf => by 
+  fun γ tγ h₁ h₂ f hf => by
   skip
   trans f x; swap; symm
   all_goals refine' ultrafilter_extend_eq_iff.mpr (le_trans (map_mono _) (hf.tendsto _))
@@ -303,14 +309,16 @@ theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x)
 #align convergent_eqv_pure convergent_eqv_pure
 
 theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCech α) :=
-  continuous_iff_ultrafilter.mpr fun x g gx => by
+  continuous_iff_ultrafilter.mpr fun x g gx =>
+    by
     have : ↑(g.map pure) ≤ 𝓝 g := by rw [ultrafilter_converges_iff] <;> exact (bind_pure _).symm
     have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 ⟦g⟧ :=
       continuous_at_iff_ultrafilter.mp (continuous_quotient_mk.Tendsto g) _ this
     rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotient.sound <| convergent_eqv_pure gx] at this
 #align continuous_stone_cech_unit continuous_stone_cech_unit
 
-instance StoneCech.t2Space : T2Space (StoneCech α) := by
+instance StoneCech.t2Space : T2Space (StoneCech α) :=
+  by
   rw [t2_iff_ultrafilter]
   rintro ⟨x⟩ ⟨y⟩ g gx gy
   apply Quotient.sound

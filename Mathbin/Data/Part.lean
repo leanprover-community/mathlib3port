@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.part
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ def toOption (o : Part α) [Decidable o.Dom] : Option α :=
 #print Part.ext' /-
 /-- `part` extensionality -/
 theorem ext' : ∀ {o p : Part α} (H1 : o.Dom ↔ p.Dom) (H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂), o = p
-  | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 => by 
+  | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 => by
     have t : od = pd := propext H1
     cases t <;> rw [show o = p from funext fun p => H2 p p]
 #align part.ext' Part.ext'
@@ -243,7 +243,8 @@ theorem not_none_dom : ¬(none : Part α).Dom :=
 
 #print Part.some_ne_none /-
 @[simp]
-theorem some_ne_none (x : α) : some x ≠ none := by
+theorem some_ne_none (x : α) : some x ≠ none :=
+  by
   intro h
   change none.dom
   rw [← h]
@@ -259,7 +260,8 @@ theorem none_ne_some (x : α) : none ≠ some x :=
 -/
 
 #print Part.ne_none_iff /-
-theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x := by
+theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x :=
+  by
   constructor
   · rw [Ne, eq_none_iff', not_not]
     exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
@@ -302,7 +304,7 @@ theorem get_eq_iff_eq_some {a : Part α} {ha : a.Dom} {b : α} : a.get ha = b �
 
 #print Part.get_eq_get_of_eq /-
 theorem get_eq_get_of_eq (a : Part α) (ha : a.Dom) {b : Part α} (h : a = b) :
-    a.get ha = b.get (h ▸ ha) := by 
+    a.get ha = b.get (h ▸ ha) := by
   congr
   exact h
 #align part.get_eq_get_of_eq Part.get_eq_get_of_eq
@@ -384,7 +386,8 @@ theorem getOrElse_some (a : α) (d : α) [Decidable (some a).Dom] : getOrElse (s
 
 #print Part.mem_toOption /-
 @[simp]
-theorem mem_toOption {o : Part α} [Decidable o.Dom] {a : α} : a ∈ toOption o ↔ a ∈ o := by
+theorem mem_toOption {o : Part α} [Decidable o.Dom] {a : α} : a ∈ toOption o ↔ a ∈ o :=
+  by
   unfold to_option
   by_cases h : o.dom <;> simp [h]
   · exact ⟨fun h => ⟨_, h⟩, fun ⟨_, h⟩ => h⟩
@@ -412,7 +415,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align part.elim_to_option Part.elim_toOptionₓ'. -/
 @[simp]
 theorem elim_toOption {α β : Type _} (a : Part α) [Decidable a.Dom] (b : β) (f : α → β) :
-    a.toOption.elim b f = if h : a.Dom then f (a.get h) else b := by
+    a.toOption.elim b f = if h : a.Dom then f (a.get h) else b :=
+  by
   split_ifs
   · rw [h.to_option]
     rfl
@@ -513,16 +517,16 @@ noncomputable def equivOption : Part α ≃ Option α :=
 -/
 
 /-- We give `part α` the order where everything is greater than `none`. -/
-instance : PartialOrder (Part
-        α) where 
+instance : PartialOrder (Part α)
+    where
   le x y := ∀ i, i ∈ x → i ∈ y
   le_refl x y := id
   le_trans x y z f g i := g _ ∘ f _
   le_antisymm x y f g := Part.ext fun z => ⟨f _, g _⟩
 
-instance : OrderBot (Part α) where 
+instance : OrderBot (Part α) where
   bot := none
-  bot_le := by 
+  bot_le := by
     introv x
     rintro ⟨⟨_⟩, _⟩
 
@@ -533,7 +537,7 @@ but is expected to have type
   forall {α : Type.{u1}} {x : Part.{u1} α} {y : Part.{u1} α} (z : Part.{u1} α), (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) x z) -> (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) y z) -> (Or (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) x y) (LE.le.{u1} (Part.{u1} α) (Preorder.toLE.{u1} (Part.{u1} α) (PartialOrder.toPreorder.{u1} (Part.{u1} α) (Part.instPartialOrderPart.{u1} α))) y x))
 Case conversion may be inaccurate. Consider using '#align part.le_total_of_le_of_le Part.le_total_of_le_of_leₓ'. -/
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) :
-    x ≤ y ∨ y ≤ x := by 
+    x ≤ y ∨ y ≤ x := by
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
   · rw [h]
     left
@@ -622,7 +626,8 @@ theorem mem_assert_iff {p : Prop} {f : p → Part α} {a} : a ∈ assert p f ↔
 -/
 
 #print Part.assert_pos /-
-theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := by
+theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h :=
+  by
   dsimp [assert]
   cases h' : f h
   simp only [h', h, true_and_iff, iff_self_iff, exists_prop_of_true, eq_iff_iff]
@@ -633,7 +638,8 @@ theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := 
 -/
 
 #print Part.assert_neg /-
-theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none := by
+theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none :=
+  by
   dsimp [assert, none]; congr
   · simp only [h, not_false_iff, exists_prop_of_false]
   · apply Function.hfunext
@@ -671,7 +677,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {o : Part.{u2} α} (h : Part.Dom.{u2} α o) (f : α -> (Part.{u1} β)), Eq.{succ u1} (Part.{u1} β) (Part.bind.{u2, u1} α β o f) (f (Part.get.{u2} α o h))
 Case conversion may be inaccurate. Consider using '#align part.dom.bind Part.Dom.bindₓ'. -/
-protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) := by
+protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bind f = f (o.get h) :=
+  by
   ext b
   simp only [Part.mem_bind_iff, exists_prop]
   refine' ⟨_, fun hb => ⟨o.get h, Part.get_mem _, hb⟩⟩
@@ -722,7 +729,8 @@ theorem bind_some_eq_map (f : α → β) (x : Part α) : x.bind (some ∘ f) = m
 #print Part.bind_toOption /-
 theorem bind_toOption (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀ a, Decidable (f a).Dom]
     [Decidable (o.bind f).Dom] :
-    (o.bind f).toOption = o.toOption.elim Option.none fun a => (f a).toOption := by
+    (o.bind f).toOption = o.toOption.elim Option.none fun a => (f a).toOption :=
+  by
   by_cases o.dom
   · simp_rw [h.to_option, h.bind]
     rfl
@@ -775,13 +783,13 @@ theorem map_map (g : β → γ) (f : α → β) (o : Part α) : map g (map f o) 
   rw [← bind_some_eq_map, bind_map, bind_some_eq_map]
 #align part.map_map Part.map_map
 
-instance : Monad Part where 
+instance : Monad Part where
   pure := @some
   map := @map
   bind := @Part.bind
 
-instance : LawfulMonad
-      Part where 
+instance : LawfulMonad Part
+    where
   bind_pure_comp_eq_map := @bind_some_eq_map
   id_map β f := by cases f <;> rfl
   pure_bind := @bind_some
@@ -851,7 +859,8 @@ but is expected to have type
   forall {β : Type.{u1}} {α : Type.{u1}} (x : Part.{u1} α) (f : α -> (Part.{u1} β)) (y : Part.{u1} β), Iff (LE.le.{u1} (Part.{u1} β) (Preorder.toLE.{u1} (Part.{u1} β) (PartialOrder.toPreorder.{u1} (Part.{u1} β) (Part.instPartialOrderPart.{u1} β))) (Bind.bind.{u1, u1} Part.{u1} (Monad.toBind.{u1, u1} Part.{u1} Part.instMonadPart.{u1}) α β x f) y) (forall (a : α), (Membership.mem.{u1, u1} α (Part.{u1} α) (Part.instMembershipPart.{u1} α) a x) -> (LE.le.{u1} (Part.{u1} β) (Preorder.toLE.{u1} (Part.{u1} β) (PartialOrder.toPreorder.{u1} (Part.{u1} β) (Part.instPartialOrderPart.{u1} β))) (f a) y))
 Case conversion may be inaccurate. Consider using '#align part.bind_le Part.bind_leₓ'. -/
 theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
-    x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y := by
+    x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y :=
+  by
   constructor <;> intro h
   · intro a h' b
     replace h := h b
@@ -877,7 +886,8 @@ def restrict (p : Prop) (o : Part α) (H : p → o.Dom) : Part α :=
 #print Part.mem_restrict /-
 @[simp]
 theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) :
-    a ∈ restrict p o h ↔ p ∧ a ∈ o := by
+    a ∈ restrict p o h ↔ p ∧ a ∈ o :=
+  by
   dsimp [restrict, mem_eq]; constructor
   · rintro ⟨h₀, h₁⟩
     exact ⟨h₀, ⟨_, h₁⟩⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.fin.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,12 +115,14 @@ theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [← card_Ioo, Fintype.card_of_finset]
 #align fin.card_fintype_Ioo Fin.card_fintype_Ioo
 
-theorem Ici_eq_finset_subtype : ici a = (icc (a : ℕ) n).Fin n := by
+theorem Ici_eq_finset_subtype : ici a = (icc (a : ℕ) n).Fin n :=
+  by
   ext
   simp
 #align fin.Ici_eq_finset_subtype Fin.Ici_eq_finset_subtype
 
-theorem Ioi_eq_finset_subtype : ioi a = (ioc (a : ℕ) n).Fin n := by
+theorem Ioi_eq_finset_subtype : ioi a = (ioc (a : ℕ) n).Fin n :=
+  by
   ext
   simp
 #align fin.Ioi_eq_finset_subtype Fin.Ioi_eq_finset_subtype
@@ -134,7 +136,8 @@ theorem Iio_eq_finset_subtype : iio b = (iio (b : ℕ)).Fin n :=
 #align fin.Iio_eq_finset_subtype Fin.Iio_eq_finset_subtype
 
 @[simp]
-theorem map_subtype_embedding_Ici : (ici a).map Fin.coeEmbedding = icc a (n - 1) := by
+theorem map_subtype_embedding_Ici : (ici a).map Fin.coeEmbedding = icc a (n - 1) :=
+  by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
   constructor
@@ -146,7 +149,8 @@ theorem map_subtype_embedding_Ici : (ici a).map Fin.coeEmbedding = icc a (n - 1)
 #align fin.map_subtype_embedding_Ici Fin.map_subtype_embedding_Ici
 
 @[simp]
-theorem map_subtype_embedding_Ioi : (ioi a).map Fin.coeEmbedding = ioc a (n - 1) := by
+theorem map_subtype_embedding_Ioi : (ioi a).map Fin.coeEmbedding = ioc a (n - 1) :=
+  by
   ext x
   simp only [exists_prop, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
   constructor
@@ -168,7 +172,7 @@ theorem map_subtype_embedding_Iio : (iio b).map Fin.coeEmbedding = iio b := by
 #align fin.map_subtype_embedding_Iio Fin.map_subtype_embedding_Iio
 
 @[simp]
-theorem card_Ici : (ici a).card = n - a := by 
+theorem card_Ici : (ici a).card = n - a := by
   cases n
   · exact Fin.elim0 a
   rw [← card_map, map_subtype_embedding_Ici, Nat.card_Icc]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.ldl
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,13 +60,14 @@ theorem LDL.lower_inv_eq_gram_schmidt_basis :
       ((Pi.basisFun 𝕜 n).toMatrix
           (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _
             (Pi.basisFun 𝕜 n)))ᵀ :=
-  by 
+  by
   ext (i j)
   rw [LDL.lowerInv, Basis.CoePiBasisFun.to_matrix_eq_transpose, coe_gram_schmidt_basis]
   rfl
 #align LDL.lower_inv_eq_gram_schmidt_basis LDL.lower_inv_eq_gram_schmidt_basis
 
-noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) := by
+noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) :=
+  by
   rw [LDL.lower_inv_eq_gram_schmidt_basis]
   haveI :=
     Basis.invertibleToMatrix (Pi.basisFun 𝕜 n)
@@ -103,7 +104,8 @@ theorem LDL.lower_inv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j =
 
 /-- Inverse statement of **LDL decomposition**: we can conjugate a positive definite matrix
 by some lower triangular matrix and get a diagonal matrix. -/
-theorem LDL.diag_eq_lower_inv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL.lowerInv hS)ᴴ := by
+theorem LDL.diag_eq_lower_inv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL.lowerInv hS)ᴴ :=
+  by
   ext (i j)
   by_cases hij : i = j
   ·
@@ -124,7 +126,8 @@ noncomputable def LDL.lower :=
 
 /-- **LDL decomposition**: any positive definite matrix `S` can be
 decomposed as `S = LDLᴴ` where `L` is a lower-triangular matrix and `D` is a diagonal matrix.  -/
-theorem LDL.lower_conj_diag : LDL.lower hS ⬝ LDL.diag hS ⬝ (LDL.lower hS)ᴴ = S := by
+theorem LDL.lower_conj_diag : LDL.lower hS ⬝ LDL.diag hS ⬝ (LDL.lower hS)ᴴ = S :=
+  by
   rw [LDL.lower, conj_transpose_nonsing_inv, Matrix.mul_assoc,
     Matrix.inv_mul_eq_iff_eq_mul_of_invertible (LDL.lowerInv hS),
     Matrix.mul_inv_eq_iff_eq_mul_of_invertible]

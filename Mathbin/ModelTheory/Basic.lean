@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,8 @@ theorem lift_mk {i : ℕ} :
 #align first_order.sequence₂.lift_mk FirstOrder.Sequence₂.lift_mk
 
 @[simp]
-theorem sum_card : (Cardinal.sum fun i => #Sequence₂ a₀ a₁ a₂ i) = (#a₀) + (#a₁) + (#a₂) := by
+theorem sum_card : (Cardinal.sum fun i => #Sequence₂ a₀ a₁ a₂ i) = (#a₀) + (#a₁) + (#a₂) :=
+  by
   rw [sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ]
   simp [add_assoc]
 #align first_order.sequence₂.sum_card FirstOrder.Sequence₂.sum_card
@@ -244,7 +245,8 @@ instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v
 theorem empty_card : Language.empty.card = 0 := by simp [card_eq_card_functions_add_card_relations]
 #align first_order.language.empty_card FirstOrder.Language.empty_card
 
-instance is_empty_empty : IsEmpty Language.empty.Symbols := by
+instance is_empty_empty : IsEmpty Language.empty.Symbols :=
+  by
   simp only [language.symbols, isEmpty_sum, isEmpty_sigma]
   exact ⟨fun _ => inferInstance, fun _ => inferInstance⟩
 #align first_order.language.is_empty_empty FirstOrder.Language.is_empty_empty
@@ -268,7 +270,8 @@ theorem card_relations_sum (i : ℕ) :
 
 @[simp]
 theorem card_sum :
-    (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card := by
+    (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card :=
+  by
   simp only [card_eq_card_functions_add_card_relations, card_functions_sum, card_relations_sum,
     sum_add_distrib', lift_add, lift_sum, lift_lift]
   rw [add_assoc, ← add_assoc (Cardinal.sum fun i => (#L'.functions i).lift),
@@ -442,16 +445,16 @@ class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Typ
 #align first_order.language.strong_hom_class FirstOrder.Language.StrongHomClass
 
 instance (priority := 100) StrongHomClass.homClass {F M N} [L.StructureCat M] [L.StructureCat N]
-    [FunLike F M fun _ => N] [StrongHomClass L F M N] :
-    HomClass L F M N where 
+    [FunLike F M fun _ => N] [StrongHomClass L F M N] : HomClass L F M N
+    where
   map_fun := StrongHomClass.map_fun
   map_rel φ n R x := (StrongHomClass.map_rel φ R x).2
 #align first_order.language.strong_hom_class.hom_class FirstOrder.Language.StrongHomClass.homClass
 
 /-- Not an instance to avoid a loop. -/
 def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.StructureCat M]
-    [L.StructureCat N] [FunLike F M fun _ => N] [HomClass L F M N] :
-    StrongHomClass L F M N where 
+    [L.StructureCat N] [FunLike F M fun _ => N] [HomClass L F M N] : StrongHomClass L F M N
+    where
   map_fun := HomClass.map_fun
   map_rel φ n R x := (IsAlgebraic.empty_relations n).elim R
 #align
@@ -464,18 +467,18 @@ theorem HomClass.map_constants {F M N} [L.StructureCat M] [L.StructureCat N]
 
 namespace Hom
 
-instance funLike : FunLike (M →[L] N) M fun _ =>
-      N where 
+instance funLike : FunLike (M →[L] N) M fun _ => N
+    where
   coe := Hom.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     cases f
     cases g
     cases h
     rfl
 #align first_order.language.hom.fun_like FirstOrder.Language.Hom.funLike
 
-instance homClass : HomClass L (M →[L] N) M
-      N where 
+instance homClass : HomClass L (M →[L] N) M N
+    where
   map_fun := map_fun'
   map_rel := map_rel'
 #align first_order.language.hom.hom_class FirstOrder.Language.Hom.homClass
@@ -537,8 +540,8 @@ theorem id_apply (x : M) : id L M x = x :=
 
 /-- Composition of first-order homomorphisms -/
 @[trans]
-def comp (hnp : N →[L] P) (hmn : M →[L] N) :
-    M →[L] P where 
+def comp (hnp : N →[L] P) (hmn : M →[L] N) : M →[L] P
+    where
   toFun := hnp ∘ hmn
   map_rel' _ _ _ h := by simp [h]
 #align first_order.language.hom.comp FirstOrder.Language.Hom.comp
@@ -564,11 +567,11 @@ def HomClass.toHom {F M N} [L.StructureCat M] [L.StructureCat N] [FunLike F M fu
 
 namespace Embedding
 
-instance embeddingLike :
-    EmbeddingLike (M ↪[L] N) M N where 
+instance embeddingLike : EmbeddingLike (M ↪[L] N) M N
+    where
   coe f := f.toFun
   injective' f := f.toEmbedding.Injective
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     cases f
     cases g
     simp only
@@ -576,8 +579,8 @@ instance embeddingLike :
     exact Function.funext_iff.1 h x
 #align first_order.language.embedding.embedding_like FirstOrder.Language.Embedding.embeddingLike
 
-instance strongHomClass :
-    StrongHomClass L (M ↪[L] N) M N where 
+instance strongHomClass : StrongHomClass L (M ↪[L] N) M N
+    where
   map_fun := map_fun'
   map_rel := map_rel'
 #align first_order.language.embedding.strong_hom_class FirstOrder.Language.Embedding.strongHomClass
@@ -614,7 +617,7 @@ theorem coe_to_hom {f : M ↪[L] N} : (f.toHom : M → N) = f :=
 #align first_order.language.embedding.coe_to_hom FirstOrder.Language.Embedding.coe_to_hom
 
 theorem coe_injective : @Function.Injective (M ↪[L] N) (M → N) coeFn
-  | f, g, h => by 
+  | f, g, h => by
     cases f
     cases g
     simp only
@@ -638,7 +641,7 @@ theorem injective (f : M ↪[L] N) : Function.Injective f :=
 /-- In an algebraic language, any injective homomorphism is an embedding. -/
 @[simps]
 def ofInjective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) : M ↪[L] N :=
-  { f with 
+  { f with
     inj' := hf
     map_rel' := fun n r x => StrongHomClass.map_rel f r x }
 #align first_order.language.embedding.of_injective FirstOrder.Language.Embedding.ofInjective
@@ -652,7 +655,7 @@ theorem coe_fn_of_injective [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Inje
 
 @[simp]
 theorem of_injective_to_hom [L.IsAlgebraic] {f : M →[L] N} (hf : Function.Injective f) :
-    (ofInjective hf).toHom = f := by 
+    (ofInjective hf).toHom = f := by
   ext
   simp
 #align
@@ -677,8 +680,8 @@ theorem refl_apply (x : M) : refl L M x = x :=
 
 /-- Composition of first-order embeddings -/
 @[trans]
-def comp (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
-    M ↪[L] P where 
+def comp (hnp : N ↪[L] P) (hmn : M ↪[L] N) : M ↪[L] P
+    where
   toFun := hnp ∘ hmn
   inj' := hnp.Injective.comp hmn.Injective
 #align first_order.language.embedding.comp FirstOrder.Language.Embedding.comp
@@ -696,7 +699,8 @@ theorem comp_assoc (f : M ↪[L] N) (g : N ↪[L] P) (h : P ↪[L] Q) :
 
 @[simp]
 theorem comp_to_hom (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
-    (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom := by
+    (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom :=
+  by
   ext
   simp only [coe_to_hom, comp_apply, hom.comp_apply]
 #align first_order.language.embedding.comp_to_hom FirstOrder.Language.Embedding.comp_to_hom
@@ -713,33 +717,34 @@ def StrongHomClass.toEmbedding {F M N} [L.StructureCat M] [L.StructureCat N] [Em
 
 namespace Equiv
 
-instance : EquivLike (M ≃[L] N) M N where 
+instance : EquivLike (M ≃[L] N) M N where
   coe f := f.toFun
   inv f := f.invFun
   left_inv f := f.left_inv
   right_inv f := f.right_inv
-  coe_injective' f g h₁ h₂ := by 
+  coe_injective' f g h₁ h₂ := by
     cases f
     cases g
     simp only
     ext x
     exact Function.funext_iff.1 h₁ x
 
-instance : StrongHomClass L (M ≃[L] N) M
-      N where 
+instance : StrongHomClass L (M ≃[L] N) M N
+    where
   map_fun := map_fun'
   map_rel := map_rel'
 
 /-- The inverse of a first-order equivalence is a first-order equivalence. -/
 @[symm]
 def symm (f : M ≃[L] N) : N ≃[L] M :=
-  { f.toEquiv.symm with
-    map_fun' := fun n f' x => by 
+  {
+    f.toEquiv.symm with
+    map_fun' := fun n f' x => by
       simp only [Equiv.to_fun_as_coe]
       rw [Equiv.symm_apply_eq]
       refine' Eq.trans _ (f.map_fun' f' (f.to_equiv.symm ∘ x)).symm
       rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id]
-    map_rel' := fun n r x => by 
+    map_rel' := fun n r x => by
       simp only [Equiv.to_fun_as_coe]
       refine' (f.map_rel' r (f.to_equiv.symm ∘ x)).symm.trans _
       rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id] }
@@ -873,9 +878,8 @@ section SumStructure
 
 variable (L₁ L₂ : Language) (S : Type _) [L₁.StructureCat S] [L₂.StructureCat S]
 
-instance sumStructure :
-    (L₁.Sum L₂).StructureCat
-      S where 
+instance sumStructure : (L₁.Sum L₂).StructureCat S
+    where
   funMap n := Sum.elim funMap funMap
   rel_map n := Sum.elim RelMap RelMap
 #align first_order.language.sum_Structure FirstOrder.Language.sumStructure
@@ -936,7 +940,7 @@ instance emptyStructure : Language.empty.StructureCat M :=
 #align first_order.language.empty_Structure FirstOrder.Language.emptyStructure
 
 instance : Unique (Language.empty.StructureCat M) :=
-  ⟨⟨Language.emptyStructure⟩, fun a => by 
+  ⟨⟨Language.emptyStructure⟩, fun a => by
     ext (n f)
     · exact Empty.elim f
     · exact Subsingleton.elim _ _⟩
@@ -984,7 +988,7 @@ def inducedStructure (e : M ≃ N) : L.StructureCat N :=
 /-- A bijection as a first-order isomorphism with the induced structure on the codomain. -/
 @[simps]
 def inducedStructureEquiv (e : M ≃ N) : @Language.Equiv L M N _ (inducedStructure e) :=
-  { e with 
+  { e with
     map_fun' := fun n f x => by simp [← Function.comp.assoc e.symm e x]
     map_rel' := fun n r x => by simp [← Function.comp.assoc e.symm e x] }
 #align equiv.induced_Structure_equiv Equiv.inducedStructureEquiv

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.filtered
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,8 +86,8 @@ class IsFiltered extends IsFilteredOrEmpty C : Prop where
 #align category_theory.is_filtered CategoryTheory.IsFiltered
 
 instance (priority := 100) is_filtered_or_empty_of_semilattice_sup (α : Type u) [SemilatticeSup α] :
-    IsFilteredOrEmpty
-      α where 
+    IsFilteredOrEmpty α
+    where
   cocone_objs X Y := ⟨X ⊔ Y, homOfLe le_sup_left, homOfLe le_sup_right, trivial⟩
   cocone_maps X Y f g := ⟨Y, 𝟙 _, by ext⟩
 #align
@@ -99,9 +99,8 @@ instance (priority := 100) is_filtered_of_semilattice_sup_nonempty (α : Type u)
   category_theory.is_filtered_of_semilattice_sup_nonempty CategoryTheory.is_filtered_of_semilattice_sup_nonempty
 
 instance (priority := 100) is_filtered_or_empty_of_directed_le (α : Type u) [Preorder α]
-    [IsDirected α (· ≤ ·)] :
-    IsFilteredOrEmpty
-      α where 
+    [IsDirected α (· ≤ ·)] : IsFilteredOrEmpty α
+    where
   cocone_objs X Y :=
     let ⟨Z, h1, h2⟩ := exists_ge_ge X Y
     ⟨Z, homOfLe h1, homOfLe h2, trivial⟩
@@ -119,10 +118,8 @@ example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by in
 
 example (α : Type u) [SemilatticeSup α] [OrderTop α] : IsFiltered α := by infer_instance
 
-instance :
-    IsFiltered
-      (Discrete
-        PUnit) where 
+instance : IsFiltered (Discrete PUnit)
+    where
   cocone_objs X Y := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, ⟨⟨by decide⟩⟩, trivial⟩
   cocone_maps X Y f g := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, by decide⟩
   Nonempty := ⟨⟨PUnit.unit⟩⟩
@@ -183,7 +180,7 @@ open CategoryTheory.Limits
 /-- Any finite collection of objects in a filtered category has an object "to the right".
 -/
 theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (X ⟶ S) := by
-  classical 
+  classical
     apply Finset.induction_on O
     · exact ⟨is_filtered.nonempty.some, by rintro - ⟨⟩⟩
     · rintro X O' nm ⟨S', w'⟩
@@ -206,7 +203,7 @@ theorem sup_exists :
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
         (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by
-  classical 
+  classical
     apply Finset.induction_on H
     · obtain ⟨S, f⟩ := sup_objs_exists O
       refine' ⟨S, fun X mX => (f mX).some, _⟩
@@ -257,7 +254,7 @@ variable {J : Type v} [SmallCategory J] [FinCategory J]
 there exists a cocone over `F`.
 -/
 theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
-  classical 
+  classical
     let O := finset.univ.image F.obj
     let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
       finset.univ.bUnion fun X : J =>
@@ -355,14 +352,14 @@ noncomputable def coeq₃Hom {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : j₂ ⟶ 
 #align category_theory.is_filtered.coeq₃_hom CategoryTheory.IsFiltered.coeq₃Hom
 
 theorem coeq₃_condition₁ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = g ≫ coeq₃Hom f g h :=
-  by 
+  by
   dsimp [coeq₃_hom]
   slice_lhs 1 2 => rw [coeq_condition f g]
   simp only [category.assoc]
 #align category_theory.is_filtered.coeq₃_condition₁ CategoryTheory.IsFiltered.coeq₃_condition₁
 
 theorem coeq₃_condition₂ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : g ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h :=
-  by 
+  by
   dsimp [coeq₃_hom]
   slice_lhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_rhs 2 4 => rw [← category.assoc, coeq_condition _ _]
@@ -388,7 +385,8 @@ in a filtered category, we can construct an object `s` and two morphisms from `k
 making the resulting squares commute.
 -/
 theorem bowtie {j₁ j₂ k₁ k₂ : C} (f₁ : j₁ ⟶ k₁) (g₁ : j₁ ⟶ k₂) (f₂ : j₂ ⟶ k₁) (g₂ : j₂ ⟶ k₂) :
-    ∃ (s : C)(α : k₁ ⟶ s)(β : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = g₂ ≫ β := by
+    ∃ (s : C)(α : k₁ ⟶ s)(β : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = g₂ ≫ β :=
+  by
   let sa := max k₁ k₂
   let sb := coeq (f₁ ≫ left_to_max _ _) (g₁ ≫ right_to_max _ _)
   let sc := coeq (f₂ ≫ left_to_max _ _) (g₂ ≫ right_to_max _ _)
@@ -430,7 +428,7 @@ theorem tulip {j₁ j₂ j₃ k₁ k₂ l : C} (f₁ : j₁ ⟶ k₁) (f₂ : j�
     (g₁ : j₁ ⟶ l) (g₂ : j₃ ⟶ l) :
     ∃ (s : C)(α : k₁ ⟶ s)(β : l ⟶ s)(γ : k₂ ⟶ s),
       f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = f₃ ≫ γ ∧ f₄ ≫ γ = g₂ ≫ β :=
-  by 
+  by
   let sa := max₃ k₁ l k₂
   let sb := coeq (f₁ ≫ first_to_max₃ k₁ l k₂) (g₁ ≫ second_to_max₃ k₁ l k₂)
   let sc := coeq (f₂ ≫ first_to_max₃ k₁ l k₂) (f₃ ≫ third_to_max₃ k₁ l k₂)
@@ -484,9 +482,8 @@ class IsCofiltered extends IsCofilteredOrEmpty C : Prop where
 #align category_theory.is_cofiltered CategoryTheory.IsCofiltered
 
 instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type u)
-    [SemilatticeInf α] :
-    IsCofilteredOrEmpty
-      α where 
+    [SemilatticeInf α] : IsCofilteredOrEmpty α
+    where
   cocone_objs X Y := ⟨X ⊓ Y, homOfLe inf_le_left, homOfLe inf_le_right, trivial⟩
   cocone_maps X Y f g := ⟨X, 𝟙 _, by ext⟩
 #align
@@ -498,9 +495,8 @@ instance (priority := 100) is_cofiltered_of_semilattice_inf_nonempty (α : Type 
   category_theory.is_cofiltered_of_semilattice_inf_nonempty CategoryTheory.is_cofiltered_of_semilattice_inf_nonempty
 
 instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [Preorder α]
-    [IsDirected α (· ≥ ·)] :
-    IsCofilteredOrEmpty
-      α where 
+    [IsDirected α (· ≥ ·)] : IsCofilteredOrEmpty α
+    where
   cocone_objs X Y :=
     let ⟨Z, hX, hY⟩ := exists_le_le X Y
     ⟨Z, homOfLe hX, homOfLe hY, trivial⟩
@@ -518,10 +514,8 @@ example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by 
 
 example (α : Type u) [SemilatticeInf α] [OrderTop α] : IsCofiltered α := by infer_instance
 
-instance :
-    IsCofiltered
-      (Discrete
-        PUnit) where 
+instance : IsCofiltered (Discrete PUnit)
+    where
   cocone_objs X Y := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, ⟨⟨by decide⟩⟩, trivial⟩
   cocone_maps X Y f g := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, by decide⟩
   Nonempty := ⟨⟨PUnit.unit⟩⟩
@@ -582,7 +576,7 @@ open CategoryTheory.Limits
 /-- Any finite collection of objects in a cofiltered category has an object "to the left".
 -/
 theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (S ⟶ X) := by
-  classical 
+  classical
     apply Finset.induction_on O
     · exact ⟨is_cofiltered.nonempty.some, by rintro - ⟨⟩⟩
     · rintro X O' nm ⟨S', w'⟩
@@ -605,7 +599,7 @@ theorem inf_exists :
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
         (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by
-  classical 
+  classical
     apply Finset.induction_on H
     · obtain ⟨S, f⟩ := inf_objs_exists O
       refine' ⟨S, fun X mX => (f mX).some, _⟩
@@ -656,7 +650,7 @@ variable {J : Type w} [SmallCategory J] [FinCategory J]
 there exists a cone over `F`.
 -/
 theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
-  classical 
+  classical
     let O := finset.univ.image F.obj
     let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
       finset.univ.bUnion fun X : J =>
@@ -712,14 +706,14 @@ section Opposite
 
 open Opposite
 
-instance is_cofiltered_op_of_is_filtered [IsFiltered C] :
-    IsCofiltered
-      Cᵒᵖ where 
+instance is_cofiltered_op_of_is_filtered [IsFiltered C] : IsCofiltered Cᵒᵖ
+    where
   cocone_objs X Y :=
     ⟨op (IsFiltered.max X.unop Y.unop), (IsFiltered.leftToMax _ _).op,
       (IsFiltered.rightToMax _ _).op, trivial⟩
   cocone_maps X Y f g :=
-    ⟨op (IsFiltered.coeq f.unop g.unop), (IsFiltered.coeqHom _ _).op, by
+    ⟨op (IsFiltered.coeq f.unop g.unop), (IsFiltered.coeqHom _ _).op,
+      by
       rw [show f = f.unop.op by simp, show g = g.unop.op by simp, ← op_comp, ← op_comp]
       congr 1
       exact is_filtered.coeq_condition f.unop g.unop⟩
@@ -727,14 +721,14 @@ instance is_cofiltered_op_of_is_filtered [IsFiltered C] :
 #align
   category_theory.is_cofiltered_op_of_is_filtered CategoryTheory.is_cofiltered_op_of_is_filtered
 
-instance is_filtered_op_of_is_cofiltered [IsCofiltered C] :
-    IsFiltered
-      Cᵒᵖ where 
+instance is_filtered_op_of_is_cofiltered [IsCofiltered C] : IsFiltered Cᵒᵖ
+    where
   cocone_objs X Y :=
     ⟨op (IsCofiltered.min X.unop Y.unop), (IsCofiltered.minToLeft X.unop Y.unop).op,
       (IsCofiltered.minToRight X.unop Y.unop).op, trivial⟩
   cocone_maps X Y f g :=
-    ⟨op (IsCofiltered.eq f.unop g.unop), (IsCofiltered.eqHom f.unop g.unop).op, by
+    ⟨op (IsCofiltered.eq f.unop g.unop), (IsCofiltered.eqHom f.unop g.unop).op,
+      by
       rw [show f = f.unop.op by simp, show g = g.unop.op by simp, ← op_comp, ← op_comp]
       congr 1
       exact is_cofiltered.eq_condition f.unop g.unop⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.multiset.locally_finite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,8 @@ theorem right_not_mem_Ioo : b ∉ ioo a b :=
 #align multiset.right_not_mem_Ioo Multiset.right_not_mem_Ioo
 
 theorem Ico_filter_lt_of_le_left [DecidablePred (· < c)] (hca : c ≤ a) :
-    ((ico a b).filter fun x => x < c) = ∅ := by
+    ((ico a b).filter fun x => x < c) = ∅ :=
+  by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_left hca]
   rfl
 #align multiset.Ico_filter_lt_of_le_left Multiset.Ico_filter_lt_of_le_left
@@ -159,7 +160,8 @@ theorem Ico_filter_lt_of_right_le [DecidablePred (· < c)] (hbc : b ≤ c) :
 #align multiset.Ico_filter_lt_of_right_le Multiset.Ico_filter_lt_of_right_le
 
 theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
-    ((ico a b).filter fun x => x < c) = ico a c := by
+    ((ico a b).filter fun x => x < c) = ico a c :=
+  by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_right hcb]
   rfl
 #align multiset.Ico_filter_lt_of_le_right Multiset.Ico_filter_lt_of_le_right
@@ -170,13 +172,15 @@ theorem Ico_filter_le_of_le_left [DecidablePred ((· ≤ ·) c)] (hca : c ≤ a)
 #align multiset.Ico_filter_le_of_le_left Multiset.Ico_filter_le_of_le_left
 
 theorem Ico_filter_le_of_right_le [DecidablePred ((· ≤ ·) b)] :
-    ((ico a b).filter fun x => b ≤ x) = ∅ := by
+    ((ico a b).filter fun x => b ≤ x) = ∅ :=
+  by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_right_le]
   rfl
 #align multiset.Ico_filter_le_of_right_le Multiset.Ico_filter_le_of_right_le
 
 theorem Ico_filter_le_of_left_le [DecidablePred ((· ≤ ·) c)] (hac : a ≤ c) :
-    ((ico a b).filter fun x => c ≤ x) = ico c b := by
+    ((ico a b).filter fun x => c ≤ x) = ico c b :=
+  by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_left_le hac]
   rfl
 #align multiset.Ico_filter_le_of_left_le Multiset.Ico_filter_le_of_left_le
@@ -192,19 +196,19 @@ theorem Icc_self (a : α) : icc a a = {a} := by rw [Icc, Finset.Icc_self, Finset
 #align multiset.Icc_self Multiset.Icc_self
 
 theorem Ico_cons_right (h : a ≤ b) : b ::ₘ ico a b = icc a b := by
-  classical 
+  classical
     rw [Ico, ← Finset.insert_val_of_not_mem right_not_mem_Ico, Finset.Ico_insert_right h]
     rfl
 #align multiset.Ico_cons_right Multiset.Ico_cons_right
 
 theorem Ioo_cons_left (h : a < b) : a ::ₘ ioo a b = ico a b := by
-  classical 
+  classical
     rw [Ioo, ← Finset.insert_val_of_not_mem left_not_mem_Ioo, Finset.Ioo_insert_left h]
     rfl
 #align multiset.Ioo_cons_left Multiset.Ioo_cons_left
 
 theorem Ico_disjoint_Ico {a b c d : α} (h : b ≤ c) : (ico a b).Disjoint (ico c d) :=
-  fun x hab hbc => by 
+  fun x hab hbc => by
   rw [mem_Ico] at hab hbc
   exact hab.2.not_le (h.trans hbc.1)
 #align multiset.Ico_disjoint_Ico Multiset.Ico_disjoint_Ico
@@ -215,7 +219,8 @@ theorem Ico_inter_Ico_of_le [DecidableEq α] {a b c d : α} (h : b ≤ c) : ico 
 #align multiset.Ico_inter_Ico_of_le Multiset.Ico_inter_Ico_of_le
 
 theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
-    ((ico a b).filter fun x => x ≤ a) = {a} := by
+    ((ico a b).filter fun x => x ≤ a) = {a} :=
+  by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_left hab]
   rfl
 #align multiset.Ico_filter_le_left Multiset.Ico_filter_le_left
@@ -303,22 +308,26 @@ theorem map_add_left_Ioo (a b c : α) : (ioo a b).map ((· + ·) c) = ioo (c + a
       ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Ioo Multiset.map_add_left_Ioo
 
-theorem map_add_right_Icc (a b c : α) : ((icc a b).map fun x => x + c) = icc (a + c) (b + c) := by
+theorem map_add_right_Icc (a b c : α) : ((icc a b).map fun x => x + c) = icc (a + c) (b + c) :=
+  by
   simp_rw [add_comm _ c]
   exact map_add_left_Icc _ _ _
 #align multiset.map_add_right_Icc Multiset.map_add_right_Icc
 
-theorem map_add_right_Ico (a b c : α) : ((ico a b).map fun x => x + c) = ico (a + c) (b + c) := by
+theorem map_add_right_Ico (a b c : α) : ((ico a b).map fun x => x + c) = ico (a + c) (b + c) :=
+  by
   simp_rw [add_comm _ c]
   exact map_add_left_Ico _ _ _
 #align multiset.map_add_right_Ico Multiset.map_add_right_Ico
 
-theorem map_add_right_Ioc (a b c : α) : ((ioc a b).map fun x => x + c) = ioc (a + c) (b + c) := by
+theorem map_add_right_Ioc (a b c : α) : ((ioc a b).map fun x => x + c) = ioc (a + c) (b + c) :=
+  by
   simp_rw [add_comm _ c]
   exact map_add_left_Ioc _ _ _
 #align multiset.map_add_right_Ioc Multiset.map_add_right_Ioc
 
-theorem map_add_right_Ioo (a b c : α) : ((ioo a b).map fun x => x + c) = ioo (a + c) (b + c) := by
+theorem map_add_right_Ioo (a b c : α) : ((ioo a b).map fun x => x + c) = ioo (a + c) (b + c) :=
+  by
   simp_rw [add_comm _ c]
   exact map_add_left_Ioo _ _ _
 #align multiset.map_add_right_Ioo Multiset.map_add_right_Ioo

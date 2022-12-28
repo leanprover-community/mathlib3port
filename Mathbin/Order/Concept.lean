@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.concept
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,8 @@ variable {r α β} {c d : Concept α β r}
 attribute [simp] closure_fst closure_snd
 
 @[ext]
-theorem ext (h : c.fst = d.fst) : c = d := by
+theorem ext (h : c.fst = d.fst) : c = d :=
+  by
   obtain ⟨⟨s₁, t₁⟩, h₁, _⟩ := c
   obtain ⟨⟨s₂, t₂⟩, h₂, _⟩ := d
   dsimp at h₁ h₂ h
@@ -192,7 +193,8 @@ theorem ext (h : c.fst = d.fst) : c = d := by
   subst h₂
 #align concept.ext Concept.ext
 
-theorem ext' (h : c.snd = d.snd) : c = d := by
+theorem ext' (h : c.snd = d.snd) : c = d :=
+  by
   obtain ⟨⟨s₁, t₁⟩, _, h₁⟩ := c
   obtain ⟨⟨s₂, t₂⟩, _, h₂⟩ := d
   dsimp at h₁ h₂ h
@@ -239,7 +241,8 @@ theorem fst_ssubset_fst_iff : c.fst ⊂ d.fst ↔ c < d :=
 #align concept.fst_ssubset_fst_iff Concept.fst_ssubset_fst_iff
 
 @[simp]
-theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c := by
+theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · rw [← fst_subset_fst_iff, ← c.closure_snd, ← d.closure_snd]
     exact extent_closure_anti _ h
@@ -261,18 +264,16 @@ theorem strict_anti_snd : StrictAnti (Prod.snd ∘ to_prod : Concept α β r →
 #align concept.strict_anti_snd Concept.strict_anti_snd
 
 instance : Lattice (Concept α β r) :=
-  { Concept.semilatticeInf with 
+  { Concept.semilatticeInf with
     sup := (· ⊔ ·)
     le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _
     le_sup_right := fun c d => snd_subset_snd_iff.1 <| inter_subset_right _ _
-    sup_le := fun c d e => by 
+    sup_le := fun c d e => by
       simp_rw [← snd_subset_snd_iff]
       exact subset_inter }
 
-instance :
-    BoundedOrder
-      (Concept α β
-        r) where 
+instance : BoundedOrder (Concept α β r)
+    where
   top := ⟨⟨univ, intentClosure r univ⟩, rfl, eq_univ_of_forall fun a b hb => hb trivial⟩
   le_top _ := subset_univ _
   bot := ⟨⟨extentClosure r univ, univ⟩, eq_univ_of_forall fun b a ha => ha trivial, rfl⟩
@@ -297,14 +298,14 @@ instance : InfSet (Concept α β r) :=
           extent_closure_intent_closure_extent_closure] }⟩
 
 instance : CompleteLattice (Concept α β r) :=
-  { Concept.lattice, Concept.boundedOrder with 
+  { Concept.lattice, Concept.boundedOrder with
     sup := supₛ
-    le_Sup := fun S c hc => snd_subset_snd_iff.1 <| bInter_subset_of_mem hc
+    le_Sup := fun S c hc => snd_subset_snd_iff.1 <| binterᵢ_subset_of_mem hc
     Sup_le := fun S c hc =>
       snd_subset_snd_iff.1 <| subset_Inter₂ fun d hd => snd_subset_snd_iff.2 <| hc d hd
     inf := infₛ
-    Inf_le := fun S c => bInter_subset_of_mem
-    le_Inf := fun S c => subset_Inter₂ }
+    Inf_le := fun S c => binterᵢ_subset_of_mem
+    le_Inf := fun S c => subset_interᵢ₂ }
 
 @[simp]
 theorem top_fst : (⊤ : Concept α β r).fst = univ :=
@@ -394,10 +395,8 @@ theorem swap_lt_swap_iff : c.swap < d.swap ↔ d < c :=
 
 /-- The dual of a concept lattice is isomorphic to the concept lattice of the dual context. -/
 @[simps]
-def swapEquiv :
-    (Concept α β r)ᵒᵈ ≃o
-      Concept β α (Function.swap
-          r) where 
+def swapEquiv : (Concept α β r)ᵒᵈ ≃o Concept β α (Function.swap r)
+    where
   toFun := swap ∘ of_dual
   invFun := to_dual ∘ swap
   left_inv := swap_swap

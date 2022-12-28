@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.associated
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,8 @@ end Prime
 
 theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α} (hp : Prime p)
     {s : Multiset α} : (∀ r ∈ s, Prime r) → p ∣ s.Prod → ∃ q ∈ s, p ~ᵤ q :=
-  Multiset.induction_on s (by simp [mt isUnit_iff_dvd_one.2 hp.not_unit]) fun a s ih hs hps => by
+  Multiset.induction_on s (by simp [mt isUnit_iff_dvd_one.2 hp.not_unit]) fun a s ih hs hps =>
+    by
     rw [Multiset.prod_cons] at hps
     cases' hp.dvd_or_dvd hps with h h
     · have hap := hs a (Multiset.mem_cons.2 (Or.inl rfl))
@@ -69,7 +70,8 @@ theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α}
 
 theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
     [∀ a : α, DecidablePred (Associated a)] {s : Multiset α} (n : α) (h : ∀ a ∈ s, Prime a)
-    (div : ∀ a ∈ s, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) : s.Prod ∣ n := by
+    (div : ∀ a ∈ s, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) : s.Prod ∣ n :=
+  by
   induction' s using Multiset.induction_on with a s induct n primes divs generalizing n
   · simp only [Multiset.prod_zero, one_dvd]
   · rw [Multiset.prod_cons]
@@ -116,7 +118,8 @@ theorem finset_prod_mk {p : Finset β} {f : β → α} :
 #align associates.finset_prod_mk Associates.finset_prod_mk
 
 theorem rel_associated_iff_map_eq_map {p q : Multiset α} :
-    Multiset.Rel Associated p q ↔ p.map Associates.mk = q.map Associates.mk := by
+    Multiset.Rel Associated p q ↔ p.map Associates.mk = q.map Associates.mk :=
+  by
   rw [← Multiset.rel_eq, Multiset.rel_map]
   simp only [mk_eq_mk_iff_associated]
 #align associates.rel_associated_iff_map_eq_map Associates.rel_associated_iff_map_eq_map
@@ -127,7 +130,8 @@ theorem prod_eq_one_iff {p : Multiset (Associates α)} :
     (by simp (config := { contextual := true }) [mul_eq_one_iff, or_imp, forall_and])
 #align associates.prod_eq_one_iff Associates.prod_eq_one_iff
 
-theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.Prod ≤ q.Prod := by
+theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.Prod ≤ q.Prod :=
+  by
   haveI := Classical.decEq (Associates α)
   haveI := Classical.decEq α
   suffices p.prod ≤ (p + (q - p)).Prod by rwa [add_tsub_cancel_of_le h] at this

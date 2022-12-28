@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.option.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -568,7 +568,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.map_comp_map Option.map_comp_mapₓ'. -/
 @[simp]
 theorem map_comp_map (f : α → β) (g : β → γ) : Option.map g ∘ Option.map f = Option.map (g ∘ f) :=
-  by 
+  by
   ext x
   rw [comp_map]
 #align option.map_comp_map Option.map_comp_map
@@ -704,7 +704,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {p : α -> Prop} (f : forall (a : α), (p a) -> β) (x : Option.{u2} α) {a : α} (h : forall (a : α), (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) a x) -> (p a)) (ha : Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) a x), Membership.mem.{u1, u1} β (Option.{u1} β) (Option.instMembershipOption.{u1} β) (f a (h a ha)) (Option.pmap.{u2, u1} α β (fun (a : α) => p a) f x h)
 Case conversion may be inaccurate. Consider using '#align option.mem_pmem Option.mem_pmemₓ'. -/
-theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h := by
+theorem mem_pmem {a : α} (h : ∀ a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h :=
+  by
   rw [mem_def] at ha⊢
   subst ha
   rfl
@@ -776,7 +777,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {x : Option.{u2} α} {f : forall (a : α), (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) a x) -> (Option.{u1} β)}, (forall (a : α) (H : Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) a x), (Eq.{succ u1} (Option.{u1} β) (f a H) (Option.none.{u1} β)) -> (Eq.{succ u2} (Option.{u2} α) x (Option.none.{u2} α))) -> (Iff (Eq.{succ u1} (Option.{u1} β) (Option.pbind.{u2, u1} α β x f) (Option.none.{u1} β)) (Eq.{succ u2} (Option.{u2} α) x (Option.none.{u2} α)))
 Case conversion may be inaccurate. Consider using '#align option.pbind_eq_none Option.pbind_eq_noneₓ'. -/
 theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a ∈ x, f a H = none → x = none) :
-    x.pbind f = none ↔ x = none := by 
+    x.pbind f = none ↔ x = none := by
   cases x
   · simp
   · simp only [pbind, iff_false_iff]
@@ -791,7 +792,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {x : Option.{u2} α} {f : forall (a : α), (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) a x) -> (Option.{u1} β)} {y : β}, Iff (Eq.{succ u1} (Option.{u1} β) (Option.pbind.{u2, u1} α β x f) (Option.some.{u1} β y)) (Exists.{succ u2} α (fun (z : α) => Exists.{0} (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) z x) (fun (H : Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) z x) => Eq.{succ u1} (Option.{u1} β) (f z H) (Option.some.{u1} β y))))
 Case conversion may be inaccurate. Consider using '#align option.pbind_eq_some Option.pbind_eq_someₓ'. -/
 theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
-    x.pbind f = some y ↔ ∃ z ∈ x, f z H = some y := by
+    x.pbind f = some y ↔ ∃ z ∈ x, f z H = some y :=
+  by
   cases x
   · simp
   · simp only [pbind]
@@ -822,7 +824,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.pmap_eq_some_iff Option.pmap_eq_some_iffₓ'. -/
 @[simp]
 theorem pmap_eq_some_iff {hf} {y : β} :
-    pmap f x hf = some y ↔ ∃ (a : α)(H : x = some a), f a (hf a H) = y := by
+    pmap f x hf = some y ↔ ∃ (a : α)(H : x = some a), f a (hf a H) = y :=
+  by
   cases x
   · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
   · constructor
@@ -1035,7 +1038,8 @@ but is expected to have type
   forall {p : Prop} [_inst_1 : Decidable p] (u : Unit), Iff (Eq.{1} (Option.{0} Unit) (guard.{0} Option.{0} instAlternativeOption.{0} p _inst_1) (Option.some.{0} Unit u)) p
 Case conversion may be inaccurate. Consider using '#align option.guard_eq_some' Option.guard_eq_some'ₓ'. -/
 @[simp]
-theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guard p = some u ↔ p := by
+theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guard p = some u ↔ p :=
+  by
   cases u
   by_cases p <;> simp [_root_.guard, h] <;> first |rfl|contradiction
 #align option.guard_eq_some' Option.guard_eq_some'
@@ -1104,7 +1108,8 @@ theorem get_or_else_map (f : α → β) (x : α) (o : Option α) : getD (o.map f
 #align option.get_or_else_map Option.get_or_else_map
 
 theorem orelse_eq_some (o o' : Option α) (x : α) :
-    (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x := by
+    (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
+  by
   cases o
   · simp only [true_and_iff, false_or_iff, eq_self_iff_true, none_orelse]
   · simp only [some_orelse, or_false_iff, false_and_iff]
@@ -1116,7 +1121,8 @@ theorem orelse_eq_some' (o o' : Option α) (x : α) :
 #align option.orelse_eq_some' Option.orelse_eq_some'
 
 @[simp]
-theorem orelse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none := by
+theorem orelse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none :=
+  by
   cases o
   · simp only [true_and_iff, none_orelse, eq_self_iff_true]
   · simp only [some_orelse, false_and_iff]
@@ -1139,7 +1145,8 @@ noncomputable def choice (α : Type _) : Option α :=
 -/
 
 #print Option.choice_eq /-
-theorem choice_eq {α : Type _} [Subsingleton α] (a : α) : choice α = some a := by
+theorem choice_eq {α : Type _} [Subsingleton α] (a : α) : choice α = some a :=
+  by
   dsimp [choice]
   rw [dif_pos (⟨a⟩ : Nonempty α)]
   congr
@@ -1153,7 +1160,8 @@ theorem choice_eq_none (α : Type _) [IsEmpty α] : choice α = none :=
 -/
 
 #print Option.choice_isSome_iff_nonempty /-
-theorem choice_isSome_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonempty α := by
+theorem choice_isSome_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonempty α :=
+  by
   fconstructor
   · intro h
     exact ⟨Option.get h⟩

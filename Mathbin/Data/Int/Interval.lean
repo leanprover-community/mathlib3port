@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.int.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,9 +22,8 @@ intervals as finsets and fintypes.
 
 open Finset Int
 
-instance :
-    LocallyFiniteOrder
-      ℤ where 
+instance : LocallyFiniteOrder ℤ
+    where
   finsetIcc a b :=
     (Finset.range (b + 1 - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
   finsetIco a b := (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
@@ -32,7 +31,8 @@ instance :
     (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
   finsetIoo a b :=
     (Finset.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
-  finset_mem_Icc a b x := by
+  finset_mem_Icc a b x :=
+    by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
@@ -44,7 +44,8 @@ instance :
       rw [← lt_add_one_iff] at hb
       rw [to_nat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
-  finset_mem_Ico a b x := by
+  finset_mem_Ico a b x :=
+    by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
@@ -54,7 +55,8 @@ instance :
       use (x - a).toNat
       rw [to_nat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
-  finset_mem_Ioc a b x := by
+  finset_mem_Ioc a b x :=
+    by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
@@ -65,7 +67,8 @@ instance :
       use (x - (a + 1)).toNat
       rw [to_nat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel]
       exact ⟨sub_le_sub_right hb _, add_sub_cancel'_right _ _⟩
-  finset_mem_Ioo a b x := by
+  finset_mem_Ioo a b x :=
+    by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
@@ -105,25 +108,29 @@ theorem Ioo_eq_finset_map :
 #align int.Ioo_eq_finset_map Int.Ioo_eq_finset_map
 
 @[simp]
-theorem card_Icc : (icc a b).card = (b + 1 - a).toNat := by
+theorem card_Icc : (icc a b).card = (b + 1 - a).toNat :=
+  by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Icc Int.card_Icc
 
 @[simp]
-theorem card_Ico : (ico a b).card = (b - a).toNat := by
+theorem card_Ico : (ico a b).card = (b - a).toNat :=
+  by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Ico Int.card_Ico
 
 @[simp]
-theorem card_Ioc : (ioc a b).card = (b - a).toNat := by
+theorem card_Ioc : (ioc a b).card = (b - a).toNat :=
+  by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Ioc Int.card_Ioc
 
 @[simp]
-theorem card_Ioo : (ioo a b).card = (b - a - 1).toNat := by
+theorem card_Ioo : (ioo a b).card = (b - a - 1).toNat :=
+  by
   change (Finset.map _ _).card = _
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Ioo Int.card_Ioo
@@ -180,7 +187,8 @@ theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.Ioo a b) : ℤ) 
   rw [card_fintype_Ioo, sub_sub, to_nat_sub_of_le h]
 #align int.card_fintype_Ioo_of_lt Int.card_fintype_Ioo_of_lt
 
-theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).image (· % a) = ico 0 a := by
+theorem image_Ico_mod (n a : ℤ) (h : 0 ≤ a) : (ico n (n + a)).image (· % a) = ico 0 a :=
+  by
   obtain rfl | ha := eq_or_lt_of_le h
   · simp
   ext i

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.monotone
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ theorem log_mul_self_monotone_on : MonotoneOn (fun x : ℝ => log x * x) { x | 1
   rwa [le_log_iff_exp_le y_pos, Real.exp_zero]
 #align real.log_mul_self_monotone_on Real.log_mul_self_monotone_on
 
-theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | exp 1 ≤ x } := by
+theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | exp 1 ≤ x } :=
+  by
   simp only [AntitoneOn, mem_set_of_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := (exp_pos 1).trans_le hex
@@ -61,7 +62,8 @@ theorem log_div_self_antitone_on : AntitoneOn (fun x : ℝ => log x / x) { x | e
 #align real.log_div_self_antitone_on Real.log_div_self_antitone_on
 
 theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
-    AntitoneOn (fun x : ℝ => log x / x ^ a) { x | exp (1 / a) ≤ x } := by
+    AntitoneOn (fun x : ℝ => log x / x ^ a) { x | exp (1 / a) ≤ x } :=
+  by
   simp only [AntitoneOn, mem_set_of_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := lt_of_lt_of_le (exp_pos (1 / a)) hex
@@ -89,7 +91,8 @@ theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
     exact rpow_le_rpow x_nonneg hxy (le_of_lt ha)
 #align real.log_div_self_rpow_antitone_on Real.log_div_self_rpow_antitone_on
 
-theorem log_div_sqrt_antitone_on : AntitoneOn (fun x : ℝ => log x / sqrt x) { x | exp 2 ≤ x } := by
+theorem log_div_sqrt_antitone_on : AntitoneOn (fun x : ℝ => log x / sqrt x) { x | exp 2 ≤ x } :=
+  by
   simp_rw [sqrt_eq_rpow]
   convert @log_div_self_rpow_antitone_on (1 / 2) (by norm_num)
   norm_num

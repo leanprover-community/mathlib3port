@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.isometry
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ def refl (Q : QuadraticForm R M) : Q.Isometry Q :=
 @[symm]
 def symm (f : Q₁.Isometry Q₂) : Q₂.Isometry Q₁ :=
   { (f : M₁ ≃ₗ[R] M₂).symm with
-    map_app' := by 
+    map_app' := by
       intro m
       rw [← f.map_app]
       congr
@@ -95,7 +95,7 @@ def symm (f : Q₁.Isometry Q₂) : Q₂.Isometry Q₁ :=
 @[trans]
 def trans (f : Q₁.Isometry Q₂) (g : Q₂.Isometry Q₃) : Q₁.Isometry Q₃ :=
   { (f : M₁ ≃ₗ[R] M₂).trans (g : M₂ ≃ₗ[R] M₃) with
-    map_app' := by 
+    map_app' := by
       intro m
       rw [← f.map_app, ← g.map_app]
       rfl }
@@ -130,7 +130,7 @@ variable [Fintype ι] {v : Basis ι R M}
 def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) :
     Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
   { f.symm with
-    map_app' := by 
+    map_app' := by
       intro
       simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.to_fun_eq_coe,
         LinearEquiv.apply_symm_apply, f.apply_symm_apply] }
@@ -147,7 +147,8 @@ variable [Field K] [Invertible (2 : K)] [AddCommGroup V] [Module K V]
 /-- Given an orthogonal basis, a quadratic form is isometric with a weighted sum of squares. -/
 noncomputable def isometryWeightedSumSquares (Q : QuadraticForm K V)
     (v : Basis (Fin (FiniteDimensional.finrank K V)) K V) (hv₁ : (associated Q).IsOrtho v) :
-    Q.Isometry (weightedSumSquares K fun i => Q (v i)) := by
+    Q.Isometry (weightedSumSquares K fun i => Q (v i)) :=
+  by
   let iso := Q.isometry_basis_repr v
   refine' ⟨iso, fun m => _⟩
   convert iso.map_app m
@@ -160,13 +161,14 @@ open BilinForm
 
 theorem equivalent_weighted_sum_squares (Q : QuadraticForm K V) :
     ∃ w : Fin (FiniteDimensional.finrank K V) → K, Equivalent Q (weightedSumSquares K w) :=
-  let ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
+  let ⟨v, hv₁⟩ := exists_orthogonal_basis (associatedIsSymm _ Q)
   ⟨_, ⟨Q.isometryWeightedSumSquares v hv₁⟩⟩
 #align quadratic_form.equivalent_weighted_sum_squares QuadraticForm.equivalent_weighted_sum_squares
 
 theorem equivalent_weighted_sum_squares_units_of_nondegenerate' (Q : QuadraticForm K V)
     (hQ : (associated Q).Nondegenerate) :
-    ∃ w : Fin (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) := by
+    ∃ w : Fin (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) :=
+  by
   obtain ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
   have hv₂ := hv₁.not_is_ortho_basis_self_of_nondegenerate hQ
   simp_rw [is_ortho, associated_eq_self_apply] at hv₂

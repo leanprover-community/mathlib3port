@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.FinBoolAlg
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,9 +87,8 @@ instance forget_to_BoolAlg_faithful : Faithful (forget₂ FinBoolAlgCat BoolAlgC
 #align FinBoolAlg.forget_to_BoolAlg_faithful FinBoolAlgCat.forget_to_BoolAlg_faithful
 
 @[simps]
-instance hasForgetToFinPartialOrder :
-    HasForget₂ FinBoolAlgCat
-      FinPartialOrderCat where forget₂ :=
+instance hasForgetToFinPartialOrder : HasForget₂ FinBoolAlgCat FinPartialOrderCat
+    where forget₂ :=
     { obj := fun X => FinPartialOrderCat.of X
       map := fun X Y f => show OrderHom X Y from ↑(show BoundedLatticeHom X Y from f) }
 #align FinBoolAlg.has_forget_to_FinPartialOrder FinBoolAlgCat.hasForgetToFinPartialOrder
@@ -104,21 +103,22 @@ instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlgCat 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between
 them. -/
 @[simps]
-def Iso.mk {α β : FinBoolAlgCat.{u}} (e : α ≃o β) :
-    α ≅ β where 
+def Iso.mk {α β : FinBoolAlgCat.{u}} (e : α ≃o β) : α ≅ β
+    where
   hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply _
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
 #align FinBoolAlg.iso.mk FinBoolAlgCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : FinBoolAlgCat ⥤ FinBoolAlgCat where 
+def dual : FinBoolAlgCat ⥤ FinBoolAlgCat
+    where
   obj X := of Xᵒᵈ
   map X Y := BoundedLatticeHom.dual
 #align FinBoolAlg.dual FinBoolAlgCat.dual
@@ -135,8 +135,8 @@ end FinBoolAlgCat
 
 /-- The powerset functor. `set` as a functor. -/
 @[simps]
-def fintypeToFinBoolAlgOp :
-    FintypeCat ⥤ FinBoolAlgCatᵒᵖ where 
+def fintypeToFinBoolAlgOp : FintypeCat ⥤ FinBoolAlgCatᵒᵖ
+    where
   obj X := op <| FinBoolAlgCat.of (Set X)
   map X Y f :=
     Quiver.Hom.op <| (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))

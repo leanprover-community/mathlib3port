@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.nat.dist
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,8 @@ theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m 
 -/
 
 #print Nat.dist.triangle_inequality /-
-theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m + dist m k := by
+theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m + dist m k :=
+  by
   have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by
     simp [dist.def, add_comm, add_left_comm]
   rw [this, dist.def]

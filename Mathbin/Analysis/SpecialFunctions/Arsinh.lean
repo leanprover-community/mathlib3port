@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Arthur, Chris Hughes, Shing Tak Lam
 
 ! This file was ported from Lean 3 source module analysis.special_functions.arsinh
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,8 @@ def arsinh (x : ℝ) :=
   log (x + sqrt (1 + x ^ 2))
 #align real.arsinh Real.arsinh
 
-theorem exp_arsinh (x : ℝ) : exp (arsinh x) = x + sqrt (1 + x ^ 2) := by
+theorem exp_arsinh (x : ℝ) : exp (arsinh x) = x + sqrt (1 + x ^ 2) :=
+  by
   apply exp_log
   rw [← neg_lt_iff_pos_add']
   calc
@@ -71,7 +72,8 @@ theorem arsinh_zero : arsinh 0 = 0 := by simp [arsinh]
 #align real.arsinh_zero Real.arsinh_zero
 
 @[simp]
-theorem arsinh_neg (x : ℝ) : arsinh (-x) = -arsinh x := by
+theorem arsinh_neg (x : ℝ) : arsinh (-x) = -arsinh x :=
+  by
   rw [← exp_eq_exp, exp_arsinh, exp_neg, exp_arsinh]
   apply eq_inv_of_mul_eq_one_left
   rw [neg_sq, neg_add_eq_sub, add_comm x, mul_comm, ← sq_sub_sq, sq_sqrt, add_sub_cancel]
@@ -80,7 +82,8 @@ theorem arsinh_neg (x : ℝ) : arsinh (-x) = -arsinh x := by
 
 /-- `arsinh` is the right inverse of `sinh`. -/
 @[simp]
-theorem sinh_arsinh (x : ℝ) : sinh (arsinh x) = x := by
+theorem sinh_arsinh (x : ℝ) : sinh (arsinh x) = x :=
+  by
   rw [sinh_eq, ← arsinh_neg, exp_arsinh, exp_arsinh, neg_sq]
   field_simp
 #align real.sinh_arsinh Real.sinh_arsinh
@@ -108,7 +111,7 @@ theorem arsinh_sinh (x : ℝ) : arsinh (sinh x) = x :=
 
 /-- `real.sinh` as an `equiv`. -/
 @[simps]
-def sinhEquiv : ℝ ≃ ℝ where 
+def sinhEquiv : ℝ ≃ ℝ where
   toFun := sinh
   invFun := arsinh
   left_inv := arsinh_sinh
@@ -117,7 +120,7 @@ def sinhEquiv : ℝ ≃ ℝ where
 
 /-- `real.sinh` as an `order_iso`. -/
 @[simps (config := { fullyApplied := false })]
-def sinhOrderIso : ℝ ≃o ℝ where 
+def sinhOrderIso : ℝ ≃o ℝ where
   toEquiv := sinhEquiv
   map_rel_iff' := @sinh_le_sinh
 #align real.sinh_order_iso Real.sinhOrderIso
@@ -182,7 +185,8 @@ theorem arsinh_neg_iff : arsinh x < 0 ↔ x < 0 :=
   lt_iff_lt_of_le_iff_le arsinh_nonneg_iff
 #align real.arsinh_neg_iff Real.arsinh_neg_iff
 
-theorem hasStrictDerivAtArsinh (x : ℝ) : HasStrictDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x := by
+theorem hasStrictDerivAtArsinh (x : ℝ) : HasStrictDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x :=
+  by
   convert
     sinh_homeomorph.to_local_homeomorph.has_strict_deriv_at_symm (mem_univ x) (cosh_pos _).ne'
       (has_strict_deriv_at_sinh _)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.products
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,13 +51,13 @@ def widePullbackDiagramOfDiagramOver (B : C) {J : Type w} (F : Discrete J ⥤ Ov
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
 def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : Cone F) :
-    Cone (widePullbackDiagramOfDiagramOver B
-        F) where 
+    Cone (widePullbackDiagramOfDiagramOver B F)
+    where
   x := c.x.left
   π :=
     { app := fun X => Option.casesOn X c.x.Hom fun j : J => (c.π.app ⟨j⟩).left
       -- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
-      naturality' := fun X Y f => by 
+      naturality' := fun X Y f => by
         dsimp; cases X <;> cases Y <;> cases f
         · rw [category.id_comp, category.comp_id]
         · rw [over.w, category.id_comp]
@@ -68,14 +68,12 @@ def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : C
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
 def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
-    Cone F ⥤
-      Cone
-        (widePullbackDiagramOfDiagramOver B
-          F) where 
+    Cone F ⥤ Cone (widePullbackDiagramOfDiagramOver B F)
+    where
   obj := conesEquivInverseObj B F
   map c₁ c₂ f :=
     { Hom := f.Hom.left
-      w' := fun j => by 
+      w' := fun j => by
         cases j
         · simp
         · dsimp
@@ -89,13 +87,13 @@ attribute [local tidy] tactic.discrete_cases
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
 def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
-    Cone (widePullbackDiagramOfDiagramOver B F) ⥤
-      Cone
-        F where 
+    Cone (widePullbackDiagramOfDiagramOver B F) ⥤ Cone F
+    where
   obj c :=
     { x := Over.mk (c.π.app none)
       π :=
-        { app := fun ⟨j⟩ =>
+        {
+          app := fun ⟨j⟩ =>
             Over.homMk (c.π.app (some j)) (by apply c.w (wide_pullback_shape.hom.term j)) } }
   map c₁ c₂ f := { Hom := Over.homMk f.Hom }
 #align
@@ -112,8 +110,7 @@ def conesEquivUnitIso (B : C) (F : Discrete J ⥤ Over B) :
     (fun _ =>
       Cones.ext
         { Hom := 𝟙 _
-          inv := 𝟙 _ }
-        (by tidy))
+          inv := 𝟙 _ } (by tidy))
     (by tidy)
 #align
   category_theory.over.construct_products.cones_equiv_unit_iso CategoryTheory.Over.ConstructProducts.conesEquivUnitIso
@@ -126,8 +123,7 @@ def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
     (fun _ =>
       Cones.ext
         { Hom := Over.homMk (𝟙 _)
-          inv := Over.homMk (𝟙 _) }
-        (by tidy))
+          inv := Over.homMk (𝟙 _) } (by tidy))
     (by tidy)
 #align
   category_theory.over.construct_products.cones_equiv_counit_iso CategoryTheory.Over.ConstructProducts.conesEquivCounitIso
@@ -138,8 +134,8 @@ def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
 -/
 @[simps]
 def conesEquiv (B : C) (F : Discrete J ⥤ Over B) :
-    Cone (widePullbackDiagramOfDiagramOver B F) ≌
-      Cone F where 
+    Cone (widePullbackDiagramOfDiagramOver B F) ≌ Cone F
+    where
   Functor := conesEquivFunctor B F
   inverse := conesEquivInverse B F
   unitIso := conesEquivUnitIso B F
@@ -194,7 +190,8 @@ way we want to define terminal objects.
 `over_product_of_wide_pullback` above.)
 -/
 theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
-  { HasLimit := fun F =>
+  {
+    HasLimit := fun F =>
       HasLimit.mk
         { Cone :=
             { x := Over.mk (𝟙 _)
@@ -202,7 +199,7 @@ theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
           IsLimit :=
             { lift := fun s => Over.homMk _
               fac' := fun _ j => j.as.elim
-              uniq' := fun s m _ => by 
+              uniq' := fun s m _ => by
                 ext
                 rw [over.hom_mk_left]
                 have := m.w

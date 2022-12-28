@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ instance : Inhabited ℤ :=
 instance : Nontrivial ℤ :=
   ⟨⟨0, 1, Int.zero_ne_one⟩⟩
 
-instance : CommRing ℤ where 
+instance : CommRing ℤ where
   add := Int.add
   add_assoc := Int.add_assoc
   zero := Int.zero
@@ -154,7 +154,8 @@ theorem mul_def {a b : ℤ} : Int.mul a b = a * b :=
 
 #print Int.negSucc_not_nonneg /-
 @[simp]
-theorem negSucc_not_nonneg (n : ℕ) : 0 ≤ -[n+1] ↔ False := by
+theorem negSucc_not_nonneg (n : ℕ) : 0 ≤ -[n+1] ↔ False :=
+  by
   simp only [not_le, iff_false_iff]
   exact Int.negSucc_lt_zero n
 #align int.neg_succ_not_nonneg Int.negSucc_not_nonneg
@@ -218,7 +219,7 @@ theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
 
 /- warning: int.coe_nat_strict_mono -> Int.coe_nat_strictMono is a dubious translation:
 lean 3 declaration is
-  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))))
+  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))))
 but is expected to have type
   StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.888 : Nat) => Nat.cast.{0} Int Int.instNatCastInt x._@.Mathlib.Data.Int.Basic._hyg.888)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_strict_mono Int.coe_nat_strictMonoₓ'. -/
@@ -326,7 +327,8 @@ theorem add_one_le_iff {a b : ℤ} : a + 1 ≤ b ↔ a < b :=
 
 #print Int.coe_pred_of_pos /-
 @[norm_cast]
-theorem coe_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 := by
+theorem coe_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ) - 1 :=
+  by
   cases n
   cases h
   simp
@@ -336,12 +338,13 @@ theorem coe_pred_of_pos {n : ℕ} (h : 0 < n) : ((n - 1 : ℕ) : ℤ) = (n : ℤ
 #print Int.induction_on /-
 @[elab_as_elim]
 protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀ i : ℕ, p i → p (i + 1))
-    (hn : ∀ i : ℕ, p (-i) → p (-i - 1)) : p i := by
+    (hn : ∀ i : ℕ, p (-i) → p (-i - 1)) : p i :=
+  by
   induction i
   · induction i
     · exact hz
     · exact hp _ i_ih
-  · have : ∀ n : ℕ, p (-n) := by 
+  · have : ∀ n : ℕ, p (-n) := by
       intro n
       induction n
       · simp [hz]
@@ -359,8 +362,10 @@ variable {a b : ℤ} {n : ℕ}
 attribute [simp] nat_abs nat_abs_of_nat nat_abs_zero nat_abs_one
 
 #print Int.natAbs_add_le /-
-theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b := by
-  have : ∀ a b : ℕ, nat_abs (sub_nat_nat a (Nat.succ b)) ≤ Nat.succ (a + b) := by
+theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b :=
+  by
+  have : ∀ a b : ℕ, nat_abs (sub_nat_nat a (Nat.succ b)) ≤ Nat.succ (a + b) :=
+    by
     refine' fun a b : ℕ =>
       sub_nat_nat_elim a b.succ (fun m n i => n = b.succ → nat_abs i ≤ (m + b).succ) _
         (fun i n e => _) rfl
@@ -377,7 +382,8 @@ theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b := by
 -/
 
 #print Int.natAbs_sub_le /-
-theorem natAbs_sub_le (a b : ℤ) : natAbs (a - b) ≤ natAbs a + natAbs b := by
+theorem natAbs_sub_le (a b : ℤ) : natAbs (a - b) ≤ natAbs a + natAbs b :=
+  by
   rw [sub_eq_add_neg, ← Int.natAbs_neg b]
   apply nat_abs_add_le
 #align int.nat_abs_sub_le Int.natAbs_sub_le
@@ -434,7 +440,7 @@ theorem natAbs_ne_zero {a : ℤ} : a.natAbs ≠ 0 ↔ a ≠ 0 :=
 
 #print Int.natAbs_lt_natAbs_of_nonneg_of_lt /-
 theorem natAbs_lt_natAbs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a < b) :
-    a.natAbs < b.natAbs := by 
+    a.natAbs < b.natAbs := by
   lift b to ℕ using le_trans w₁ (le_of_lt w₂)
   lift a to ℕ using w₁
   simpa [coe_nat_lt] using w₂
@@ -442,7 +448,8 @@ theorem natAbs_lt_natAbs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a 
 -/
 
 #print Int.natAbs_eq_natAbs_iff /-
-theorem natAbs_eq_natAbs_iff {a b : ℤ} : a.natAbs = b.natAbs ↔ a = b ∨ a = -b := by
+theorem natAbs_eq_natAbs_iff {a b : ℤ} : a.natAbs = b.natAbs ↔ a = b ∨ a = -b :=
+  by
   constructor <;> intro h
   ·
     cases' Int.natAbs_eq a with h₁ h₁ <;> cases' Int.natAbs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;>
@@ -597,7 +604,8 @@ theorem mod_eq_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a % b = a :=
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat <| Nat.mod_eq_of_lt (lt_of_ofNat_lt_ofNat H2)
 #align int.mod_eq_of_lt Int.mod_eq_of_ltₓ
 
-theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[m+1] := by
+theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[m+1] :=
+  by
   rw [← sub_sub, neg_succ_of_nat_coe, sub_sub (n : ℤ)]
   apply eq_neg_of_eq_neg
   rw [neg_sub, sub_sub_self, add_right_comm]
@@ -618,12 +626,14 @@ theorem div_add_mod (a b : ℤ) : b * (a / b) + a % b = a :=
   (add_comm _ _).trans (mod_add_div _ _)
 #align int.div_add_mod Int.div_add_modₓ
 
-theorem mod_add_div' (m k : ℤ) : m % k + m / k * k = m := by
+theorem mod_add_div' (m k : ℤ) : m % k + m / k * k = m :=
+  by
   rw [mul_comm]
   exact mod_add_div _ _
 #align int.mod_add_div' Int.mod_add_div'ₓ
 
-theorem div_add_mod' (m k : ℤ) : m / k * k + m % k = m := by
+theorem div_add_mod' (m k : ℤ) : m / k * k + m % k = m :=
+  by
   rw [mul_comm]
   exact div_add_mod _ _
 #align int.div_add_mod' Int.div_add_mod'ₓ
@@ -649,7 +659,8 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
   | -[n+1], 0 => by rw [Int.ofNat_zero, mul_zero, Int.div_zero, Int.div_zero]
   | -[n+1], k + 1 =>
     congr_arg negSucc <|
-      show (m.succ * n + m) / (m.succ * k.succ) = n / k.succ by
+      show (m.succ * n + m) / (m.succ * k.succ) = n / k.succ
+        by
         apply Nat.div_eq_of_lt_le
         · refine' le_trans _ (Nat.le_add_right _ _)
           rw [← Nat.mul_div_mul _ _ m.succ_pos]
@@ -709,7 +720,8 @@ theorem natAbs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : z.sign.natAbs = 1 := b
 -/
 
 #print Int.sign_coe_nat_of_nonzero /-
-theorem sign_coe_nat_of_nonzero {n : ℕ} (hn : n ≠ 0) : Int.sign n = 1 := by
+theorem sign_coe_nat_of_nonzero {n : ℕ} (hn : n ≠ 0) : Int.sign n = 1 :=
+  by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
   exact Int.sign_of_succ n
 #align int.sign_coe_nat_of_nonzero Int.sign_coe_nat_of_nonzero
@@ -754,7 +766,8 @@ theorem mul_sign : ∀ i : ℤ, i * sign i = natAbs i
 -/
 
 #print Int.ofNat_add_negSucc_of_lt /-
-theorem ofNat_add_negSucc_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[n+1] = -[n - m+1] := by
+theorem ofNat_add_negSucc_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[n+1] = -[n - m+1] :=
+  by
   change sub_nat_nat _ _ = _
   have h' : n.succ - m = (n - m).succ
   apply succ_sub
@@ -777,7 +790,7 @@ theorem negSucc_add_negSucc (m n : ℕ) : -[m+1] + -[n+1] = -[Nat.succ (m + n)+1
 
 /- warning: int.to_nat_eq_max -> Int.toNat_eq_max is a dubious translation:
 lean 3 declaration is
-  forall (a : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Int.toNat a)) (LinearOrder.max.{0} Int Int.linearOrder a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
+  forall (a : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Int.toNat a)) (LinearOrder.max.{0} Int Int.linearOrder a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
   forall (a : Int), Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Int.toNat a)) (Max.max.{0} Int Int.instMaxInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.to_nat_eq_max Int.toNat_eq_maxₓ'. -/
@@ -834,7 +847,8 @@ theorem le_toNat {n : ℕ} {z : ℤ} (h : 0 ≤ z) : n ≤ z.toNat ↔ (n : ℤ)
 -/
 
 #print Int.toNat_add /-
-theorem toNat_add {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) : (a + b).toNat = a.toNat + b.toNat := by
+theorem toNat_add {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) : (a + b).toNat = a.toNat + b.toNat :=
+  by
   lift a to ℕ using ha
   lift b to ℕ using hb
   norm_cast
@@ -842,7 +856,8 @@ theorem toNat_add {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) : (a + b).toNat = a.
 -/
 
 #print Int.toNat_add_nat /-
-theorem toNat_add_nat {a : ℤ} (ha : 0 ≤ a) (n : ℕ) : (a + n).toNat = a.toNat + n := by
+theorem toNat_add_nat {a : ℤ} (ha : 0 ≤ a) (n : ℕ) : (a + n).toNat = a.toNat + n :=
+  by
   lift a to ℕ using ha
   norm_cast
 #align int.to_nat_add_nat Int.toNat_add_nat

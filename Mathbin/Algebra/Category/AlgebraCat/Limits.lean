@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Algebra.limits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,13 +36,15 @@ variable {R : Type u} [CommRing R]
 variable {J : Type v} [SmallCategory J]
 
 instance semiringObj (F : J ⥤ AlgebraCat.{max v w} R) (j) :
-    Semiring ((F ⋙ forget (AlgebraCat R)).obj j) := by
+    Semiring ((F ⋙ forget (AlgebraCat R)).obj j) :=
+  by
   change Semiring (F.obj j)
   infer_instance
 #align Algebra.semiring_obj AlgebraCat.semiringObj
 
 instance algebraObj (F : J ⥤ AlgebraCat.{max v w} R) (j) :
-    Algebra R ((F ⋙ forget (AlgebraCat R)).obj j) := by
+    Algebra R ((F ⋙ forget (AlgebraCat R)).obj j) :=
+  by
   change Algebra R (F.obj j)
   infer_instance
 #align Algebra.algebra_obj AlgebraCat.algebraObj
@@ -50,19 +52,22 @@ instance algebraObj (F : J ⥤ AlgebraCat.{max v w} R) (j) :
 /-- The flat sections of a functor into `Algebra R` form a submodule of all sections.
 -/
 def sectionsSubalgebra (F : J ⥤ AlgebraCat.{max v w} R) : Subalgebra R (∀ j, F.obj j) :=
-  { SemiRingCat.sectionsSubsemiring
+  {
+    SemiRingCat.sectionsSubsemiring
       (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w} ⋙ forget₂ RingCat SemiRingCat.{max v w}) with
     algebra_map_mem' := fun r j j' f => (F.map f).commutes r }
 #align Algebra.sections_subalgebra AlgebraCat.sectionsSubalgebra
 
 instance limitSemiring (F : J ⥤ AlgebraCat.{max v w} R) :
-    Ring (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).x := by
+    Ring (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).x :=
+  by
   change Ring (sections_subalgebra F)
   infer_instance
 #align Algebra.limit_semiring AlgebraCat.limitSemiring
 
 instance limitAlgebra (F : J ⥤ AlgebraCat.{max v w} R) :
-    Algebra R (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).x := by
+    Algebra R (Types.limitCone (F ⋙ forget (AlgebraCat.{max v w} R))).x :=
+  by
   have :
     Algebra R (types.limit_cone (F ⋙ forget (AlgebraCat.{max v w} R))).x =
       Algebra R (sections_subalgebra F) :=
@@ -75,7 +80,8 @@ instance limitAlgebra (F : J ⥤ AlgebraCat.{max v w} R) :
 def limitπAlgHom (F : J ⥤ AlgebraCat.{max v w} R) (j) :
     (Types.limitCone (F ⋙ forget (AlgebraCat R))).x →ₐ[R]
       (F ⋙ forget (AlgebraCat.{max v w} R)).obj j :=
-  { SemiRingCat.limitπRingHom
+  {
+    SemiRingCat.limitπRingHom
       (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w} ⋙ forget₂ RingCat SemiRingCat.{max v w}) j with
     commutes' := fun r => rfl }
 #align Algebra.limit_π_alg_hom AlgebraCat.limitπAlgHom
@@ -88,8 +94,8 @@ namespace HasLimits
 /-- Construction of a limit cone in `Algebra R`.
 (Internal use only; use the limits API.)
 -/
-def limitCone (F : J ⥤ AlgebraCat.{max v w} R) :
-    Cone F where 
+def limitCone (F : J ⥤ AlgebraCat.{max v w} R) : Cone F
+    where
   x := AlgebraCat.of R (Types.limitCone (F ⋙ forget _)).x
   π :=
     { app := limitπAlgHom F
@@ -100,7 +106,8 @@ def limitCone (F : J ⥤ AlgebraCat.{max v w} R) :
 /-- Witness that the limit cone in `Algebra R` is a limit cone.
 (Internal use only; use the limits API.)
 -/
-def limitConeIsLimit (F : J ⥤ AlgebraCat.{max v w} R) : IsLimit (limitCone F) := by
+def limitConeIsLimit (F : J ⥤ AlgebraCat.{max v w} R) : IsLimit (limitCone F) :=
+  by
   refine'
     is_limit.of_faithful (forget (AlgebraCat R)) (types.limit_cone_is_limit _) (fun s => { .. })
       fun s => rfl
@@ -126,8 +133,10 @@ open HasLimits
 /- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 /-- The category of R-algebras has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (AlgebraCat.{max v w} R) :=
-  { HasLimitsOfShape := fun J 𝒥 =>
-      { HasLimit := fun F =>
+  {
+    HasLimitsOfShape := fun J 𝒥 =>
+      {
+        HasLimit := fun F =>
           has_limit.mk
             { Cone := limit_cone F
               IsLimit := limit_cone_is_limit F } } }
@@ -140,11 +149,10 @@ instance has_limits : HasLimits (AlgebraCat.{w} R) :=
 /-- The forgetful functor from R-algebras to rings preserves all limits.
 -/
 instance forget₂RingPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v}
-      (forget₂ (AlgebraCat R)
-        RingCat.{max v
-            w}) where PreservesLimitsOfShape J 𝒥 :=
-    { PreservesLimit := fun F =>
+    PreservesLimitsOfSize.{v, v} (forget₂ (AlgebraCat R) RingCat.{max v w})
+    where PreservesLimitsOfShape J 𝒥 :=
+    {
+      PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (by apply RingCat.limitConeIsLimit (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w})) }
 #align Algebra.forget₂_Ring_preserves_limits_of_size AlgebraCat.forget₂RingPreservesLimitsOfSize
@@ -156,11 +164,10 @@ instance forget₂RingPreservesLimits : PreservesLimits (forget₂ (AlgebraCat R
 /-- The forgetful functor from R-algebras to R-modules preserves all limits.
 -/
 instance forget₂ModulePreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v}
-      (forget₂ (AlgebraCat R)
-        (ModuleCat.{max v w}
-          R)) where PreservesLimitsOfShape J 𝒥 :=
-    { PreservesLimit := fun F =>
+    PreservesLimitsOfSize.{v, v} (forget₂ (AlgebraCat R) (ModuleCat.{max v w} R))
+    where PreservesLimitsOfShape J 𝒥 :=
+    {
+      PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (by
             apply
@@ -176,11 +183,10 @@ instance forget₂ModulePreservesLimits :
 /-- The forgetful functor from R-algebras to types preserves all limits.
 -/
 instance forgetPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v}
-      (forget
-        (AlgebraCat.{max v w}
-          R)) where PreservesLimitsOfShape J 𝒥 :=
-    { PreservesLimit := fun F =>
+    PreservesLimitsOfSize.{v, v} (forget (AlgebraCat.{max v w} R))
+    where PreservesLimitsOfShape J 𝒥 :=
+    {
+      PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
           (types.limit_cone_is_limit (F ⋙ forget _)) }
 #align Algebra.forget_preserves_limits_of_size AlgebraCat.forgetPreservesLimitsOfSize

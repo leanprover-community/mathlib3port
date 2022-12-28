@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.tauto
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
       do
         let env ← get_env
           let rel := e . get_app_fn . const_name
-          let some symm ← pure <| environment.symm_for env rel | add_refl r e
+          let some symm ← pure <| environment.symm_for env Rel | add_refl r e
           (
               do
                 let e' ← mk_meta_var q( Prop )
@@ -335,7 +335,7 @@ unsafe structure tauto_cfg where
   closer : tactic Unit := pure ()
 #align tactic.tauto_cfg tactic.tauto_cfg
 
-unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
+unsafe def tautology (cfg : tauto_cfg := { }) : tactic Unit :=
   focus1 <|
     let basic_tauto_tacs : List (tactic Unit) :=
       [reflexivity, solve_by_elim,
@@ -382,7 +382,7 @@ The variant `tautology!` uses the law of excluded middle.
 `tautology {closer := tac}` will use `tac` on any subgoals created by `tautology`
 that it is unable to solve before failing.
 -/
-unsafe def tautology (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) :=
+unsafe def tautology (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := { }) :=
   tactic.tautology <| { cfg with classical := c.isSome }
 #align tactic.interactive.tautology tactic.interactive.tautology
 
@@ -396,7 +396,7 @@ The variant `tauto!` uses the law of excluded middle.
 `tauto {closer := tac}` will use `tac` on any subgoals created by `tauto`
 that it is unable to solve before failing.
 -/
-unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) : tactic Unit :=
+unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := { }) : tactic Unit :=
   tautology c cfg
 #align tactic.interactive.tauto tactic.interactive.tauto
 

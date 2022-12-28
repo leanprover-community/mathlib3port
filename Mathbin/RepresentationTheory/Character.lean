@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.character
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,13 +58,15 @@ theorem char_one (V : FdRep k G) : V.character 1 = FiniteDimensional.finrank k V
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The character is multiplicative under the tensor product. -/
 @[simp]
-theorem char_tensor (V W : FdRep k G) : (V ⊗ W).character = V.character * W.character := by
+theorem char_tensor (V W : FdRep k G) : (V ⊗ W).character = V.character * W.character :=
+  by
   ext g
   convert trace_tensor_product' (V.ρ g) (W.ρ g)
 #align fdRep.char_tensor FdRep.char_tensor
 
 /-- The character of isomorphic representations is the same. -/
-theorem char_iso {V W : FdRep k G} (i : V ≅ W) : V.character = W.character := by
+theorem char_iso {V W : FdRep k G} (i : V ≅ W) : V.character = W.character :=
+  by
   ext g
   simp only [character, FdRep.Iso.conj_ρ i]
   exact (trace_conj' (V.ρ g) _).symm
@@ -96,7 +98,8 @@ theorem char_lin_hom (V W : FdRep k G) (g : G) :
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 
 theorem average_char_eq_finrank_invariants (V : FdRep k G) :
-    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
+    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) :=
+  by
   rw [← (is_proj_average_map V.ρ).trace]
   simp [character, GroupAlgebra.average, _root_.map_sum]
 #align fdRep.average_char_eq_finrank_invariants FdRep.average_char_eq_finrank_invariants
@@ -119,7 +122,9 @@ theorem char_orthonormal (V W : FdRep k G) [Simple V] [Simple W] :
   by
   -- First, we can rewrite the summand `V.character g * W.character g⁻¹` as the character
   -- of the representation `V ⊗ W* ≅ Hom(W, V)` applied to `g`.
-  conv in V.character _ * W.character _ =>
+  conv in
+    V.character _ *
+      W.character _ =>
     rw [mul_comm, ← char_dual, ← Pi.mul_apply, ← char_tensor]
     rw [char_iso (FdRep.dualTensorIsoLinHom W.ρ V)]
   -- The average over the group of the character of a representation equals the dimension of the

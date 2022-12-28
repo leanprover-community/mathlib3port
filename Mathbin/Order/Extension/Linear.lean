@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.extension.linear
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,9 +28,11 @@ open Classical
 /-- Any partial order can be extended to a linear order.
 -/
 theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
-    ∃ (s : α → α → Prop)(_ : IsLinearOrder α s), r ≤ s := by
+    ∃ (s : α → α → Prop)(_ : IsLinearOrder α s), r ≤ s :=
+  by
   let S := { s | IsPartialOrder α s }
-  have hS : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub := by
+  have hS : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub :=
+    by
     rintro c hc₁ hc₂ s hs
     haveI := (hc₁ hs).1
     refine' ⟨Sup c, _, fun z hz => le_supₛ hz⟩
@@ -82,10 +84,8 @@ def LinearExtension (α : Type u) : Type u :=
   α
 #align linear_extension LinearExtension
 
-noncomputable instance {α : Type u} [PartialOrder α] :
-    LinearOrder
-      (LinearExtension
-        α) where 
+noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExtension α)
+    where
   le := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some
   le_refl := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.1.1
   le_trans := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.2.1
@@ -95,10 +95,8 @@ noncomputable instance {α : Type u} [PartialOrder α] :
 
 /-- The embedding of `α` into `linear_extension α` as a relation homomorphism. -/
 def toLinearExtension {α : Type u} [PartialOrder α] :
-    ((· ≤ ·) : α → α → Prop) →r
-      ((· ≤ ·) :
-        LinearExtension α →
-          LinearExtension α → Prop) where 
+    ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop)
+    where
   toFun x := x
   map_rel' a b := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
 #align to_linear_extension toLinearExtension

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.normed_space.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,9 +45,11 @@ theorem norm_le_norm_one (φ : characterSpace 𝕜 A) : ‖toNormedDual (φ : We
     mul_comm ‖a‖ ‖(1 : A)‖ ▸ spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum φ a)
 #align weak_dual.character_space.norm_le_norm_one WeakDual.characterSpace.norm_le_norm_one
 
-instance [ProperSpace 𝕜] : CompactSpace (characterSpace 𝕜 A) := by
+instance [ProperSpace 𝕜] : CompactSpace (characterSpace 𝕜 A) :=
+  by
   rw [← is_compact_iff_compact_space]
-  have h : character_space 𝕜 A ⊆ to_normed_dual ⁻¹' Metric.closedBall 0 ‖(1 : A)‖ := by
+  have h : character_space 𝕜 A ⊆ to_normed_dual ⁻¹' Metric.closedBall 0 ‖(1 : A)‖ :=
+    by
     intro φ hφ
     rw [Set.mem_preimage, mem_closed_ball_zero_iff]
     exact (norm_le_norm_one ⟨φ, ⟨hφ.1, hφ.2⟩⟩ : _)

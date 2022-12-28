@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.irrational
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x
 #align irrational_iff_ne_rational irrational_iff_ne_rational
 
 /-- A transcendental real number is irrational. -/
-theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrational r := by
+theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrational r :=
+  by
   rintro ⟨a, rfl⟩
   exact tr (is_algebraic_algebra_map a)
 #align transcendental.irrational Transcendental.irrational
@@ -51,17 +52,19 @@ theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrati
 /-- If `x^n`, `n > 0`, is integer and is not the `n`-th power of an integer, then
 `x` is irrational. -/
 theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n = m)
-    (hv : ¬∃ y : ℤ, x = y) (hnpos : 0 < n) : Irrational x := by
+    (hv : ¬∃ y : ℤ, x = y) (hnpos : 0 < n) : Irrational x :=
+  by
   rintro ⟨⟨N, D, P, C⟩, rfl⟩
   rw [← cast_pow] at hxr
-  have c1 : ((D : ℤ) : ℝ) ≠ 0 := by
+  have c1 : ((D : ℤ) : ℝ) ≠ 0 :=
+    by
     rw [Int.cast_ne_zero, Int.coe_nat_ne_zero]
     exact ne_of_gt P
   have c2 : ((D : ℤ) : ℝ) ^ n ≠ 0 := pow_ne_zero _ c1
   rw [num_denom', cast_pow, cast_mk, div_pow, div_eq_iff_mul_eq c2, ← Int.cast_pow, ← Int.cast_pow,
     ← Int.cast_mul, Int.cast_inj] at hxr
   have hdivn : ↑D ^ n ∣ N ^ n := Dvd.intro_left m hxr
-  rw [← Int.dvd_natAbs, ← Int.coe_nat_pow, Int.coe_nat_dvd, Int.nat_abs_pow,
+  rw [← Int.dvd_natAbs, ← Int.coe_nat_pow, Int.coe_nat_dvd, Int.natAbs_pow,
     Nat.pow_dvd_pow_iff hnpos] at hdivn
   obtain rfl : D = 1 := by rw [← Nat.gcd_eq_right hdivn, C.gcd_eq_one]
   refine' hv ⟨N, _⟩
@@ -73,7 +76,7 @@ is irrational. -/
 theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (hm : m ≠ 0) (p : ℕ)
     [hp : Fact p.Prime] (hxr : x ^ n = m)
     (hv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩) % n ≠ 0) :
-    Irrational x := by 
+    Irrational x := by
   rcases Nat.eq_zero_or_pos n with (rfl | hnpos)
   · rw [eq_comm, pow_zero, ← Int.cast_one, Int.cast_inj] at hxr
     simpa [hxr,
@@ -83,7 +86,7 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
   rintro ⟨y, rfl⟩
   rw [← Int.cast_pow, Int.cast_inj] at hxr
   subst m
-  have : y ≠ 0 := by 
+  have : y ≠ 0 := by
     rintro rfl
     rw [zero_pow hnpos] at hm
     exact hm rfl
@@ -162,7 +165,8 @@ variable {x : ℝ}
 theorem ne_rat (h : Irrational x) (q : ℚ) : x ≠ q := fun hq => h ⟨q, hq.symm⟩
 #align irrational.ne_rat Irrational.ne_rat
 
-theorem ne_int (h : Irrational x) (m : ℤ) : x ≠ m := by
+theorem ne_int (h : Irrational x) (m : ℤ) : x ≠ m :=
+  by
   rw [← Rat.cast_coe_int]
   exact h.ne_rat _
 #align irrational.ne_int Irrational.ne_int
@@ -201,7 +205,8 @@ variable (q : ℚ) {x y : ℝ}
 
 
 /-- If `x + y` is irrational, then at least one of `x` and `y` is irrational. -/
-theorem add_cases : Irrational (x + y) → Irrational x ∨ Irrational y := by
+theorem add_cases : Irrational (x + y) → Irrational x ∨ Irrational y :=
+  by
   delta Irrational
   contrapose!
   rintro ⟨⟨rx, rfl⟩, ⟨ry, rfl⟩⟩
@@ -224,7 +229,8 @@ theorem add_rat (h : Irrational x) : Irrational (x + q) :=
   add_comm (↑q) x ▸ h.rat_add q
 #align irrational.add_rat Irrational.add_rat
 
-theorem of_int_add (m : ℤ) (h : Irrational (m + x)) : Irrational x := by
+theorem of_int_add (m : ℤ) (h : Irrational (m + x)) : Irrational x :=
+  by
   rw [← cast_coe_int] at h
   exact h.of_rat_add m
 #align irrational.of_int_add Irrational.of_int_add
@@ -233,7 +239,8 @@ theorem of_add_int (m : ℤ) (h : Irrational (x + m)) : Irrational x :=
   of_int_add m <| add_comm x m ▸ h
 #align irrational.of_add_int Irrational.of_add_int
 
-theorem int_add (h : Irrational x) (m : ℤ) : Irrational (m + x) := by
+theorem int_add (h : Irrational x) (m : ℤ) : Irrational (m + x) :=
+  by
   rw [← cast_coe_int]
   exact h.rat_add m
 #align irrational.int_add Irrational.int_add
@@ -328,7 +335,8 @@ theorem of_nat_sub (m : ℕ) (h : Irrational (m - x)) : Irrational x :=
 -/
 
 
-theorem mul_cases : Irrational (x * y) → Irrational x ∨ Irrational y := by
+theorem mul_cases : Irrational (x * y) → Irrational x ∨ Irrational y :=
+  by
   delta Irrational
   contrapose!
   rintro ⟨⟨rx, rfl⟩, ⟨ry, rfl⟩⟩
@@ -359,7 +367,8 @@ theorem of_int_mul (m : ℤ) (h : Irrational (m * x)) : Irrational x :=
   of_rat_mul m <| by rwa [cast_coe_int]
 #align irrational.of_int_mul Irrational.of_int_mul
 
-theorem mul_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x * m) := by
+theorem mul_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x * m) :=
+  by
   rw [← cast_coe_int]
   refine' h.mul_rat _
   rwa [Int.cast_ne_zero]
@@ -418,7 +427,8 @@ theorem rat_div (h : Irrational x) {q : ℚ} (hq : q ≠ 0) : Irrational (q / x)
   h.inv.rat_mul hq
 #align irrational.rat_div Irrational.rat_div
 
-theorem div_rat (h : Irrational x) {q : ℚ} (hq : q ≠ 0) : Irrational (x / q) := by
+theorem div_rat (h : Irrational x) {q : ℚ} (hq : q ≠ 0) : Irrational (x / q) :=
+  by
   rw [div_eq_mul_inv, ← cast_inv]
   exact h.mul_rat (inv_ne_zero hq)
 #align irrational.div_rat Irrational.div_rat
@@ -435,7 +445,8 @@ theorem int_div (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (m / x)
   h.inv.int_mul hm
 #align irrational.int_div Irrational.int_div
 
-theorem div_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x / m) := by
+theorem div_int (h : Irrational x) {m : ℤ} (hm : m ≠ 0) : Irrational (x / m) :=
+  by
   rw [← cast_coe_int]
   refine' h.div_rat _
   rwa [Int.cast_ne_zero]
@@ -471,17 +482,17 @@ theorem of_mul_self (h : Irrational (x * x)) : Irrational x :=
 #align irrational.of_mul_self Irrational.of_mul_self
 
 theorem of_pow : ∀ n : ℕ, Irrational (x ^ n) → Irrational x
-  | 0 => fun h => by 
+  | 0 => fun h => by
     rw [pow_zero] at h
     exact (h ⟨1, cast_one⟩).elim
-  | n + 1 => fun h => by 
+  | n + 1 => fun h => by
     rw [pow_succ] at h
     exact h.mul_cases.elim id (of_pow n)
 #align irrational.of_pow Irrational.of_pow
 
 theorem of_zpow : ∀ m : ℤ, Irrational (x ^ m) → Irrational x
   | (n : ℕ) => of_pow n
-  | -[n+1] => fun h => by 
+  | -[n+1] => fun h => by
     rw [zpow_negSucc] at h
     exact h.of_inv.of_pow _
 #align irrational.of_zpow Irrational.of_zpow
@@ -497,7 +508,8 @@ open Polynomial
 variable (x : ℝ) (p : ℤ[X])
 
 theorem one_lt_nat_degree_of_irrational_root (hx : Irrational x) (p_nonzero : p ≠ 0)
-    (x_is_root : aeval x p = 0) : 1 < p.natDegree := by
+    (x_is_root : aeval x p = 0) : 1 < p.natDegree :=
+  by
   by_contra rid
   rcases exists_eq_X_add_C_of_nat_degree_le_one (not_lt.1 rid) with ⟨a, b, rfl⟩
   clear rid

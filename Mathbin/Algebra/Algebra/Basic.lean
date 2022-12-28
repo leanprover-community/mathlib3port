@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,7 +211,8 @@ theorem coe_inj {a b : R} : (↑a : A) = ↑b ↔ a = b :=
 #align algebra_map.coe_inj algebraMap.coe_inj
 
 @[norm_cast, simp]
-theorem lift_map_eq_zero_iff (a : R) : (↑a : A) = 0 ↔ a = 0 := by
+theorem lift_map_eq_zero_iff (a : R) : (↑a : A) = 0 ↔ a = 0 :=
+  by
   rw [show (0 : A) = ↑(0 : R) from (map_zero (algebraMap R A)).symm]
   norm_cast
 #align algebra_map.lift_map_eq_zero_iff algebraMap.lift_map_eq_zero_iff
@@ -222,8 +223,8 @@ end algebraMap
 
 /-- Creating an algebra from a morphism to the center of a semiring. -/
 def RingHom.toAlgebra' {R S} [CommSemiring R] [Semiring S] (i : R →+* S)
-    (h : ∀ c x, i c * x = x * i c) :
-    Algebra R S where 
+    (h : ∀ c x, i c * x = x * i c) : Algebra R S
+    where
   smul c x := i c * x
   commutes' := h
   smul_def' c x := rfl
@@ -251,8 +252,8 @@ over `R`.
 See note [reducible non-instances]. -/
 @[reducible]
 def ofModule' [CommSemiring R] [Semiring A] [Module R A] (h₁ : ∀ (r : R) (x : A), r • 1 * x = r • x)
-    (h₂ : ∀ (r : R) (x : A), x * r • 1 = r • x) :
-    Algebra R A where 
+    (h₂ : ∀ (r : R) (x : A), x * r • 1 = r • x) : Algebra R A
+    where
   toFun r := r • 1
   map_one' := one_smul _ _
   map_mul' r₁ r₂ := by rw [h₁, mul_smul]
@@ -298,7 +299,7 @@ theorem algebra_ext {R : Type _} [CommSemiring R] {A : Type _} [Semiring A] (P Q
           algebraMap R A r) =
           haveI := Q
           algebraMap R A r) :
-    P = Q := by 
+    P = Q := by
   rcases P with @⟨⟨P⟩⟩
   rcases Q with @⟨⟨Q⟩⟩
   congr
@@ -313,8 +314,8 @@ theorem algebra_ext {R : Type _} [CommSemiring R] {A : Type _} [Semiring A] (P Q
 #align algebra.algebra_ext Algebra.algebra_ext
 
 -- see Note [lower instance priority]
-instance (priority := 200) toModule :
-    Module R A where 
+instance (priority := 200) toModule : Module R A
+    where
   one_smul := by simp [smul_def'']
   mul_smul := by simp [smul_def'', mul_assoc]
   smul_add := by simp [smul_def'', mul_add]
@@ -416,7 +417,8 @@ theorem bit1_smul_bit0 : bit1 r • bit0 a = r • bit0 (bit0 a) + bit0 a := by
 #align algebra.bit1_smul_bit0 Algebra.bit1_smul_bit0
 
 @[simp]
-theorem bit1_smul_bit1 : bit1 r • bit1 a = r • bit0 (bit1 a) + bit1 a := by
+theorem bit1_smul_bit1 : bit1 r • bit1 a = r • bit0 (bit1 a) + bit1 a :=
+  by
   simp only [bit0, bit1, add_smul, smul_add, one_smul]
   abel
 #align algebra.bit1_smul_bit1 Algebra.bit1_smul_bit1
@@ -467,8 +469,8 @@ end id
 
 section PUnit
 
-instance PUnit.algebra : Algebra R
-      PUnit where 
+instance PUnit.algebra : Algebra R PUnit
+    where
   toFun x := PUnit.unit
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -488,7 +490,9 @@ end PUnit
 section ULift
 
 instance ULift.algebra : Algebra R (ULift A) :=
-  { ULift.module', (ULift.ringEquiv : ULift A ≃+* A).symm.toRingHom.comp (algebraMap R A) with
+  { ULift.module',
+    (ULift.ringEquiv : ULift A ≃+* A).symm.toRingHom.comp
+      (algebraMap R A) with
     toFun := fun r => ULift.up (algebraMap R A r)
     commutes' := fun r x => ULift.down_injective <| Algebra.commutes r x.down
     smul_def' := fun r x => ULift.down_injective <| Algebra.smul_def' r x.down }
@@ -507,7 +511,7 @@ end ULift
 
 /-- Algebra over a subsemiring. This builds upon `subsemiring.module`. -/
 instance ofSubsemiring (S : Subsemiring R) : Algebra S A :=
-  { (algebraMap R A).comp S.Subtype with 
+  { (algebraMap R A).comp S.Subtype with
     smul := (· • ·)
     commutes' := fun r x => Algebra.commutes r x
     smul_def' := fun r x => Algebra.smul_def r x }
@@ -570,7 +574,8 @@ theorem mul_sub_algebra_map_commutes [Ring A] [Algebra R A] (x : A) (r : R) :
 #align algebra.mul_sub_algebra_map_commutes Algebra.mul_sub_algebra_map_commutes
 
 theorem mul_sub_algebra_map_pow_commutes [Ring A] [Algebra R A] (x : A) (r : R) (n : ℕ) :
-    x * (x - algebraMap R A r) ^ n = (x - algebraMap R A r) ^ n * x := by
+    x * (x - algebraMap R A r) ^ n = (x - algebraMap R A r) ^ n * x :=
+  by
   induction' n with n ih
   · simp
   · rw [pow_succ, ← mul_assoc, mul_sub_algebra_map_commutes, mul_assoc, ih, ← mul_assoc]
@@ -600,10 +605,12 @@ namespace MulOpposite
 variable {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
 instance : Algebra R Aᵐᵒᵖ :=
-  { MulOpposite.hasSmul A R with
+  {
+    MulOpposite.hasSmul A
+      R with
     toRingHom := (algebraMap R A).toOpposite fun x y => Algebra.commutes _ _
     smul_def' := fun c x =>
-      unop_injective <| by 
+      unop_injective <| by
         dsimp
         simp only [op_mul, Algebra.smul_def, Algebra.commutes, op_unop]
     commutes' := fun r =>
@@ -667,7 +674,7 @@ theorem End_algebra_map_is_unit_inv_apply_eq_iff {x : R}
   { mp := fun H =>
       ((congr_arg h.Unit H).symm.trans (End_is_unit_apply_inv_apply_of_is_unit h _)).symm
     mpr := fun H =>
-      H.symm ▸ by 
+      H.symm ▸ by
         apply_fun h.unit using ((Module.End_is_unit_iff _).mp h).Injective
         erw [End_is_unit_apply_inv_apply_of_is_unit]
         rfl }
@@ -678,7 +685,7 @@ theorem End_algebra_map_is_unit_inv_apply_eq_iff' {x : R}
     (h : IsUnit (algebraMap R (Module.EndCat R M) x)) (m m' : M) : m' = h.Unit⁻¹ m ↔ m = x • m' :=
   { mp := fun H => ((congr_arg h.Unit H).trans (End_is_unit_apply_inv_apply_of_is_unit h _)).symm
     mpr := fun H =>
-      H.symm ▸ by 
+      H.symm ▸ by
         apply_fun h.unit using ((Module.End_is_unit_iff _).mp h).Injective
         erw [End_is_unit_apply_inv_apply_of_is_unit]
         rfl }
@@ -721,15 +728,15 @@ variable {R : Type _} [Semiring R]
 -- `ℕ`-algebras. This is only an issue since `algebra.id` and `algebra_nat` are not yet defeq.
 -- TODO: fix this by adding an `of_nat` field to semirings.
 /-- Semiring ⥤ ℕ-Alg -/
-instance (priority := 99) algebraNat :
-    Algebra ℕ R where 
+instance (priority := 99) algebraNat : Algebra ℕ R
+    where
   commutes' := Nat.cast_commute
   smul_def' _ _ := nsmul_eq_mul _ _
   toRingHom := Nat.castRingHom R
 #align algebra_nat algebraNat
 
 instance nat_algebra_subsingleton : Subsingleton (Algebra ℕ R) :=
-  ⟨fun P Q => by 
+  ⟨fun P Q => by
     ext
     simp⟩
 #align nat_algebra_subsingleton nat_algebra_subsingleton
@@ -752,8 +759,8 @@ end RingHom
 
 section Rat
 
-instance algebraRat {α} [DivisionRing α] [CharZero α] :
-    Algebra ℚ α where 
+instance algebraRat {α} [DivisionRing α] [CharZero α] : Algebra ℚ α
+    where
   smul := (· • ·)
   smul_def' := DivisionRing.qsmul_eq_mul'
   toRingHom := Rat.castHom α
@@ -783,8 +790,8 @@ variable (R : Type _) [Ring R]
 -- `ℤ`-algebras. This is only an issue since `algebra.id ℤ` and `algebra_int ℤ` are not yet defeq.
 -- TODO: fix this by adding an `of_int` field to rings.
 /-- Ring ⥤ ℤ-Alg -/
-instance (priority := 99) algebraInt :
-    Algebra ℤ R where 
+instance (priority := 99) algebraInt : Algebra ℤ R
+    where
   commutes' := Int.cast_commute
   smul_def' _ _ := zsmul_eq_mul _ _
   toRingHom := Int.castRingHom R
@@ -799,7 +806,7 @@ theorem algebra_map_int_eq : algebraMap ℤ R = Int.castRingHom R :=
 variable {R}
 
 instance int_algebra_subsingleton : Subsingleton (Algebra ℤ R) :=
-  ⟨fun P Q => by 
+  ⟨fun P Q => by
     ext
     simp⟩
 #align int_algebra_subsingleton int_algebra_subsingleton
@@ -828,7 +835,8 @@ variable (R A)
 
 theorem algebra_map_injective [CommRing R] [Ring A] [Nontrivial A] [Algebra R A]
     [NoZeroSmulDivisors R A] : Function.Injective (algebraMap R A) :=
-  suffices Function.Injective fun c : R => c • (1 : A) by
+  suffices Function.Injective fun c : R => c • (1 : A)
+    by
     convert this
     ext
     rw [Algebra.smul_def, mul_one]
@@ -903,7 +911,8 @@ theorem int_cast_smul {k V : Type _} [CommRing k] [AddCommGroup V] [Module k V] 
 
 theorem NoZeroSmulDivisors.trans (R A M : Type _) [CommRing R] [Ring A] [IsDomain A] [Algebra R A]
     [AddCommGroup M] [Module R M] [Module A M] [IsScalarTower R A M] [NoZeroSmulDivisors R A]
-    [NoZeroSmulDivisors A M] : NoZeroSmulDivisors R M := by
+    [NoZeroSmulDivisors A M] : NoZeroSmulDivisors R M :=
+  by
   refine' ⟨fun r m h => _⟩
   rw [algebra_compatible_smul A r m] at h
   cases' smul_eq_zero.1 h with H H
@@ -954,8 +963,8 @@ theorem coe_coe_is_scalar_tower (f : M →ₗ[A] N) : ((f : M →ₗ[R] N) : M �
 /-- `A`-linearly coerce a `R`-linear map from `M` to `A` to a function, given an algebra `A` over
 a commutative semiring `R` and `M` a module over `R`. -/
 def ltoFun (R : Type u) (M : Type v) (A : Type w) [CommSemiring R] [AddCommMonoid M] [Module R M]
-    [CommRing A] [Algebra R A] :
-    (M →ₗ[R] A) →ₗ[A] M → A where 
+    [CommRing A] [Algebra R A] : (M →ₗ[R] A) →ₗ[A] M → A
+    where
   toFun := LinearMap.toFun
   map_add' f g := rfl
   map_smul' c f := rfl
@@ -1001,7 +1010,8 @@ variable [Module R M] [Module A M] [IsScalarTower R A M]
 /-- If `A` is an `R`-algebra such that the induced morhpsim `R →+* A` is surjective, then the
 `R`-module generated by a set `X` equals the `A`-module generated by `X`. -/
 theorem span_eq_restrict_scalars (X : Set M) (hsur : Function.Surjective (algebraMap R A)) :
-    span R X = restrictScalars R (span A X) := by
+    span R X = restrictScalars R (span A X) :=
+  by
   apply (span_le_restrict_scalars R A X).antisymm fun m hm => _
   refine' span_induction hm subset_span (zero_mem _) (fun _ _ => add_mem) fun a m hm => _
   obtain ⟨r, rfl⟩ := hsur a

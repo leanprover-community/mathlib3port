@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module topology.homotopy.contractible
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,14 +34,14 @@ theorem nullhomotopic_of_constant (y : Y) : Nullhomotopic (ContinuousMap.const X
 #align continuous_map.nullhomotopic_of_constant ContinuousMap.nullhomotopic_of_constant
 
 theorem Nullhomotopic.comp_right {f : C(X, Y)} (hf : f.Nullhomotopic) (g : C(Y, Z)) :
-    (g.comp f).Nullhomotopic := by 
+    (g.comp f).Nullhomotopic := by
   cases' hf with y hy
   use g y
   exact homotopic.hcomp hy (homotopic.refl g)
 #align continuous_map.nullhomotopic.comp_right ContinuousMap.Nullhomotopic.comp_right
 
 theorem Nullhomotopic.comp_left {f : C(Y, Z)} (hf : f.Nullhomotopic) (g : C(X, Y)) :
-    (f.comp g).Nullhomotopic := by 
+    (f.comp g).Nullhomotopic := by
   cases' hf with y hy
   use y
   exact homotopic.hcomp (homotopic.refl g) hy
@@ -60,7 +60,8 @@ class ContractibleSpace (X : Type _) [TopologicalSpace X] : Prop where
 #align contractible_space ContractibleSpace
 
 theorem id_nullhomotopic (X : Type _) [TopologicalSpace X] [ContractibleSpace X] :
-    (ContinuousMap.id X).Nullhomotopic := by
+    (ContinuousMap.id X).Nullhomotopic :=
+  by
   obtain ⟨hv⟩ := ContractibleSpace.hequiv_unit X
   use hv.inv_fun ()
   convert hv.left_inv.symm
@@ -68,13 +69,15 @@ theorem id_nullhomotopic (X : Type _) [TopologicalSpace X] [ContractibleSpace X]
 #align id_nullhomotopic id_nullhomotopic
 
 theorem contractible_iff_id_nullhomotopic (Y : Type _) [TopologicalSpace Y] :
-    ContractibleSpace Y ↔ (ContinuousMap.id Y).Nullhomotopic := by
+    ContractibleSpace Y ↔ (ContinuousMap.id Y).Nullhomotopic :=
+  by
   constructor;
   · intro
     apply id_nullhomotopic
   rintro ⟨p, h⟩
   refine_struct
-    { hequiv_unit :=
+    {
+      hequiv_unit :=
         ⟨{  toFun := ContinuousMap.const _ ()
             invFun := ContinuousMap.const _ p }⟩ }
   · exact h.symm;
@@ -92,9 +95,9 @@ protected theorem ContinuousMap.HomotopyEquiv.contractible_space [ContractibleSp
 
 protected theorem ContinuousMap.HomotopyEquiv.contractible_space_iff (e : X ≃ₕ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
-  ⟨by 
+  ⟨by
     intro h
-    exact e.symm.contractible_space, by 
+    exact e.symm.contractible_space, by
     intro h
     exact e.contractible_space⟩
 #align
@@ -112,7 +115,8 @@ protected theorem Homeomorph.contractible_space_iff (e : X ≃ₜ Y) :
 
 namespace ContractibleSpace
 
-instance (priority := 100) [ContractibleSpace X] : PathConnectedSpace X := by
+instance (priority := 100) [ContractibleSpace X] : PathConnectedSpace X :=
+  by
   obtain ⟨p, ⟨h⟩⟩ := id_nullhomotopic X
   have : ∀ x, Joined p x := fun x => ⟨(h.eval_at x).symm⟩
   rw [path_connected_space_iff_eq]; use p; ext; tauto

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.transfer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [FiniteIndex H] (g : G)
           ⟨q.out'.out'⁻¹ * g ^ Function.minimalPeriod ((· • ·) g) q.out' * q.out'.out',
             QuotientGroup.out'_conj_pow_minimal_period_mem H g q.out'⟩ :=
   by
-  classical 
+  classical
     letI := H.fintype_quotient_of_finite_index
     calc
       transfer ϕ g = ∏ q : G ⧸ H, _ := transfer_def ϕ (transfer_transversal H g) g
@@ -143,12 +143,12 @@ theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [FiniteIndex H] (g : G)
 /-- Auxillary lemma in order to state `transfer_eq_pow`. -/
 theorem transfer_eq_pow_aux (g : G)
     (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g₀⁻¹ * g ^ k * g₀ = g ^ k) :
-    g ^ H.index ∈ H := by 
+    g ^ H.index ∈ H := by
   by_cases hH : H.index = 0
   · rw [hH, pow_zero]
     exact H.one_mem
   letI := fintype_of_index_ne_zero hH
-  classical 
+  classical
     replace key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g ^ k ∈ H := fun k g₀ hk =>
       (_root_.congr_arg (· ∈ H) (key k g₀ hk)).mp hk
     replace key : ∀ q : G ⧸ H, g ^ Function.minimalPeriod ((· • ·) g) q ∈ H := fun q =>
@@ -166,7 +166,7 @@ theorem transfer_eq_pow_aux (g : G)
 theorem transfer_eq_pow [FiniteIndex H] (g : G)
     (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g₀⁻¹ * g ^ k * g₀ = g ^ k) :
     transfer ϕ g = ϕ ⟨g ^ H.index, transfer_eq_pow_aux g key⟩ := by
-  classical 
+  classical
     letI := H.fintype_quotient_of_finite_index
     change ∀ (k g₀) (hk : g₀⁻¹ * g ^ k * g₀ ∈ H), ↑(⟨g₀⁻¹ * g ^ k * g₀, hk⟩ : H) = g ^ k at key
     rw [transfer_eq_prod_quotient_orbit_rel_zpowers_quot, ← Finset.prod_to_list, List.prod_map_hom]
@@ -188,9 +188,8 @@ theorem transfer_center_eq_pow [FiniteIndex (center G)] (g : G) :
 variable (G)
 
 /-- The transfer homomorphism `G →* center G`. -/
-noncomputable def transferCenterPow [FiniteIndex (center G)] :
-    G →* center
-        G where 
+noncomputable def transferCenterPow [FiniteIndex (center G)] : G →* center G
+    where
   toFun g := ⟨g ^ (center G).index, (center G).pow_index_mem g⟩
   map_one' := Subtype.ext (one_pow (center G).index)
   map_mul' a b := by simp_rw [← show ∀ g, (_ : center G) = _ from transfer_center_eq_pow, map_mul]
@@ -222,7 +221,8 @@ variable [Fact p.Prime] [Finite (Sylow p G)]
 
 /-- Auxillary lemma in order to state `transfer_sylow_eq_pow`. -/
 theorem transfer_sylow_eq_pow_aux (g : G) (hg : g ∈ P) (k : ℕ) (g₀ : G)
-    (h : g₀⁻¹ * g ^ k * g₀ ∈ P) : g₀⁻¹ * g ^ k * g₀ = g ^ k := by
+    (h : g₀⁻¹ * g ^ k * g₀ ∈ P) : g₀⁻¹ * g ^ k * g₀ = g ^ k :=
+  by
   haveI : (P : Subgroup G).IsCommutative :=
     ⟨⟨fun a b => Subtype.ext (hP (le_normalizer b.2) a a.2)⟩⟩
   replace hg := (P : Subgroup G).pow_mem hg k
@@ -244,7 +244,8 @@ theorem transfer_sylow_restrict_eq_pow :
 #align monoid_hom.transfer_sylow_restrict_eq_pow MonoidHom.transfer_sylow_restrict_eq_pow
 
 /-- Burnside's normal p-complement theorem: If `N(P) ≤ C(P)`, then `P` has a normal complement. -/
-theorem ker_transfer_sylow_is_complement' : IsComplement' (transferSylow P hP).ker P := by
+theorem ker_transfer_sylow_is_complement' : IsComplement' (transferSylow P hP).ker P :=
+  by
   have hf : Function.Bijective ((transfer_sylow P hP).restrict (P : Subgroup G)) :=
     (transfer_sylow_restrict_eq_pow P hP).symm ▸
       (P.2.powEquiv'

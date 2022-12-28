@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.normed_space.conformal_linear_map
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem isConformalMapId : IsConformalMap (id R M) :=
 #align is_conformal_map_id isConformalMapId
 
 theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) :=
-  by 
+  by
   rcases hf with ⟨c', hc', li, rfl⟩
   exact ⟨c * c', mul_ne_zero hc hc', li, smul_smul _ _ _⟩
 #align is_conformal_map.smul IsConformalMap.smul
@@ -85,7 +85,8 @@ theorem isConformalMapOfSubsingleton [Subsingleton M] (f' : M →L[R] N) : IsCon
 
 namespace IsConformalMap
 
-theorem comp (hg : IsConformalMap g) (hf : IsConformalMap f) : IsConformalMap (g.comp f) := by
+theorem comp (hg : IsConformalMap g) (hf : IsConformalMap f) : IsConformalMap (g.comp f) :=
+  by
   rcases hf with ⟨cf, hcf, lif, rfl⟩
   rcases hg with ⟨cg, hcg, lig, rfl⟩
   refine' ⟨cg * cf, mul_ne_zero hcg hcf, lig.comp lif, _⟩
@@ -93,12 +94,14 @@ theorem comp (hg : IsConformalMap g) (hf : IsConformalMap f) : IsConformalMap (g
   rfl
 #align is_conformal_map.comp IsConformalMap.comp
 
-protected theorem injective {f : M' →L[R] N} (h : IsConformalMap f) : Function.Injective f := by
+protected theorem injective {f : M' →L[R] N} (h : IsConformalMap f) : Function.Injective f :=
+  by
   rcases h with ⟨c, hc, li, rfl⟩
   exact (smul_right_injective _ hc).comp li.injective
 #align is_conformal_map.injective IsConformalMap.injective
 
-theorem ne_zero [Nontrivial M'] {f' : M' →L[R] N} (hf' : IsConformalMap f') : f' ≠ 0 := by
+theorem ne_zero [Nontrivial M'] {f' : M' →L[R] N} (hf' : IsConformalMap f') : f' ≠ 0 :=
+  by
   rintro rfl
   rcases exists_ne (0 : M') with ⟨a, ha⟩
   exact ha (hf'.injective rfl)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,8 @@ theorem star_preimage [HasStar α] : HasStar.star ⁻¹' s = s⋆ :=
 #align set.star_preimage Set.star_preimage
 
 @[simp]
-theorem image_star [HasInvolutiveStar α] : HasStar.star '' s = s⋆ := by
+theorem image_star [HasInvolutiveStar α] : HasStar.star '' s = s⋆ :=
+  by
   simp only [← star_preimage]
   rw [image_eq_preimage_of_inverse] <;> intro <;> simp only [star_star]
 #align set.image_star Set.image_star
@@ -107,8 +108,8 @@ theorem compl_star [HasStar α] : (sᶜ)⋆ = s⋆ᶜ :=
 #align set.compl_star Set.compl_star
 
 @[simp]
-instance [HasInvolutiveStar α] :
-    HasInvolutiveStar (Set α) where 
+instance [HasInvolutiveStar α] : HasInvolutiveStar (Set α)
+    where
   star := HasStar.star
   star_involutive s := by simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
 
@@ -125,7 +126,8 @@ theorem Finite.star [HasInvolutiveStar α] {s : Set α} (hs : s.Finite) : s⋆.F
   hs.Preimage <| star_injective.InjOn _
 #align set.finite.star Set.Finite.star
 
-theorem star_singleton {β : Type _} [HasInvolutiveStar β] (x : β) : ({x} : Set β)⋆ = {x⋆} := by
+theorem star_singleton {β : Type _} [HasInvolutiveStar β] (x : β) : ({x} : Set β)⋆ = {x⋆} :=
+  by
   ext1 y
   rw [mem_star, mem_singleton_iff, mem_singleton_iff, star_eq_iff_star_eq, eq_comm]
 #align set.star_singleton Set.star_singleton
@@ -141,19 +143,20 @@ protected theorem star_add [AddMonoid α] [StarAddMonoid α] (s t : Set α) : (s
 #align set.star_add Set.star_add
 
 @[simp]
-instance [HasStar α] [HasTrivialStar α] :
-    HasTrivialStar
-      (Set α) where star_trivial s := by 
+instance [HasStar α] [HasTrivialStar α] : HasTrivialStar (Set α)
+    where star_trivial s := by
     rw [← star_preimage]
     ext1
     simp [star_trivial]
 
-protected theorem star_inv [Group α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
+protected theorem star_inv [Group α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ :=
+  by
   ext
   simp only [mem_star, mem_inv, star_inv]
 #align set.star_inv Set.star_inv
 
-protected theorem star_inv' [DivisionRing α] [StarRing α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
+protected theorem star_inv' [DivisionRing α] [StarRing α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ :=
+  by
   ext
   simp only [mem_star, mem_inv, star_inv']
 #align set.star_inv' Set.star_inv'

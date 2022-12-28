@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.n_ary
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {s : Set.{u3} α} {t : Set.{u2} β} {a : α} {b : β}, (Function.Injective2.{succ u3, succ u2, succ u1} α β γ f) -> (Iff (Membership.mem.{u1, u1} γ (Set.{u1} γ) (Set.instMembershipSet.{u1} γ) (f a b) (Set.image2.{u3, u2, u1} α β γ f s t)) (And (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) a s) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b t)))
 Case conversion may be inaccurate. Consider using '#align set.mem_image2_iff Set.mem_image2_iffₓ'. -/
 theorem mem_image2_iff (hf : Injective2 f) : f a b ∈ image2 f s t ↔ a ∈ s ∧ b ∈ t :=
-  ⟨by 
+  ⟨by
     rintro ⟨a', b', ha', hb', h⟩
     rcases hf h with ⟨rfl, rfl⟩
     exact ⟨ha', hb'⟩, fun ⟨ha, hb⟩ => mem_image2_of_mem ha hb⟩
@@ -87,7 +87,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {s : Set.{u3} α} {s' : Set.{u3} α} {t : Set.{u2} β} {t' : Set.{u2} β}, (HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet_1.{u3} α) s s') -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet_1.{u2} β) t t') -> (HasSubset.Subset.{u1} (Set.{u1} γ) (Set.instHasSubsetSet_1.{u1} γ) (Set.image2.{u3, u2, u1} α β γ f s t) (Set.image2.{u3, u2, u1} α β γ f s' t'))
 Case conversion may be inaccurate. Consider using '#align set.image2_subset Set.image2_subsetₓ'. -/
 /-- image2 is monotone with respect to `⊆`. -/
-theorem image2_subset (hs : s ⊆ s') (ht : t ⊆ t') : image2 f s t ⊆ image2 f s' t' := by
+theorem image2_subset (hs : s ⊆ s') (ht : t ⊆ t') : image2 f s t ⊆ image2 f s' t' :=
+  by
   rintro _ ⟨a, b, ha, hb, rfl⟩
   exact mem_image2_of_mem (hs ha) (ht hb)
 #align set.image2_subset Set.image2_subset
@@ -166,9 +167,10 @@ Case conversion may be inaccurate. Consider using '#align set.image_prod Set.ima
 @[simp]
 theorem image_prod : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = image2 f s t :=
   ext fun a =>
-    ⟨by 
+    ⟨by
       rintro ⟨_, _, rfl⟩
-      exact ⟨_, _, (mem_prod.1 ‹_›).1, (mem_prod.1 ‹_›).2, rfl⟩, by
+      exact ⟨_, _, (mem_prod.1 ‹_›).1, (mem_prod.1 ‹_›).2, rfl⟩,
+      by
       rintro ⟨_, _, _, _, rfl⟩
       exact ⟨(_, _), ⟨‹_›, ‹_›⟩, rfl⟩⟩
 #align set.image_prod Set.image_prod
@@ -217,7 +219,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {s' : Set.{u2} α} {t : Set.{u1} β}, Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s s') t) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet_1.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) (Set.image2.{u2, u1, u3} α β γ f s' t))
 Case conversion may be inaccurate. Consider using '#align set.image2_union_left Set.image2_union_leftₓ'. -/
-theorem image2_union_left : image2 f (s ∪ s') t = image2 f s t ∪ image2 f s' t := by
+theorem image2_union_left : image2 f (s ∪ s') t = image2 f s t ∪ image2 f s' t :=
+  by
   ext c
   constructor
   · rintro ⟨a, b, ha | ha, hb, rfl⟩ <;> [left, right] <;> exact ⟨_, _, ‹_›, ‹_›, rfl⟩
@@ -232,7 +235,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {t : Set.{u1} β} {t' : Set.{u1} β}, Eq.{succ u3} (Set.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) t t')) (Union.union.{u3} (Set.{u3} γ) (Set.instUnionSet_1.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) (Set.image2.{u2, u1, u3} α β γ f s t'))
 Case conversion may be inaccurate. Consider using '#align set.image2_union_right Set.image2_union_rightₓ'. -/
-theorem image2_union_right : image2 f s (t ∪ t') = image2 f s t ∪ image2 f s t' := by
+theorem image2_union_right : image2 f s (t ∪ t') = image2 f s t ∪ image2 f s t' :=
+  by
   ext c
   constructor
   · rintro ⟨a, b, ha, h1b | h2b, rfl⟩ <;> [left, right] <;> exact ⟨_, _, ‹_›, ‹_›, rfl⟩
@@ -343,7 +347,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {s' : Set.{u2} α} {t : Set.{u1} β}, HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet_1.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s s') t) (Inter.inter.{u3} (Set.{u3} γ) (Set.instInterSet_1.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) (Set.image2.{u2, u1, u3} α β γ f s' t))
 Case conversion may be inaccurate. Consider using '#align set.image2_inter_subset_left Set.image2_inter_subset_leftₓ'. -/
-theorem image2_inter_subset_left : image2 f (s ∩ s') t ⊆ image2 f s t ∩ image2 f s' t := by
+theorem image2_inter_subset_left : image2 f (s ∩ s') t ⊆ image2 f s t ∩ image2 f s' t :=
+  by
   rintro _ ⟨a, b, ⟨h1a, h2a⟩, hb, rfl⟩
   constructor <;> exact ⟨_, _, ‹_›, ‹_›, rfl⟩
 #align set.image2_inter_subset_left Set.image2_inter_subset_left
@@ -354,7 +359,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {f : α -> β -> γ} {s : Set.{u2} α} {t : Set.{u1} β} {t' : Set.{u1} β}, HasSubset.Subset.{u3} (Set.{u3} γ) (Set.instHasSubsetSet_1.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t t')) (Inter.inter.{u3} (Set.{u3} γ) (Set.instInterSet_1.{u3} γ) (Set.image2.{u2, u1, u3} α β γ f s t) (Set.image2.{u2, u1, u3} α β γ f s t'))
 Case conversion may be inaccurate. Consider using '#align set.image2_inter_subset_right Set.image2_inter_subset_rightₓ'. -/
-theorem image2_inter_subset_right : image2 f s (t ∩ t') ⊆ image2 f s t ∩ image2 f s t' := by
+theorem image2_inter_subset_right : image2 f s (t ∩ t') ⊆ image2 f s t ∩ image2 f s t' :=
+  by
   rintro _ ⟨a, b, ha, ⟨h1b, h2b⟩, rfl⟩
   constructor <;> exact ⟨_, _, ‹_›, ‹_›, rfl⟩
 #align set.image2_inter_subset_right Set.image2_inter_subset_right
@@ -397,7 +403,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {f' : α -> β -> γ} {s : Set.{u3} α} {t : Set.{u2} β}, (forall (a : α), (Membership.mem.{u3, u3} α (Set.{u3} α) (Set.instMembershipSet.{u3} α) a s) -> (forall (b : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b t) -> (Eq.{succ u1} γ (f a b) (f' a b)))) -> (Eq.{succ u1} (Set.{u1} γ) (Set.image2.{u3, u2, u1} α β γ f s t) (Set.image2.{u3, u2, u1} α β γ f' s t))
 Case conversion may be inaccurate. Consider using '#align set.image2_congr Set.image2_congrₓ'. -/
 @[congr]
-theorem image2_congr (h : ∀ a ∈ s, ∀ b ∈ t, f a b = f' a b) : image2 f s t = image2 f' s t := by
+theorem image2_congr (h : ∀ a ∈ s, ∀ b ∈ t, f a b = f' a b) : image2 f s t = image2 f' s t :=
+  by
   ext
   constructor <;> rintro ⟨a, b, ha, hb, rfl⟩ <;> refine' ⟨a, b, ha, hb, by rw [h a ha b hb]⟩
 #align set.image2_congr Set.image2_congr
@@ -453,7 +460,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image3_congr Set.image3_congrₓ'. -/
 @[congr]
 theorem image3_congr (h : ∀ a ∈ s, ∀ b ∈ t, ∀ c ∈ u, g a b c = g' a b c) :
-    image3 g s t u = image3 g' s t u := by 
+    image3 g s t u = image3 g' s t u := by
   ext x
   constructor <;> rintro ⟨a, b, c, ha, hb, hc, rfl⟩ <;>
     exact ⟨a, b, c, ha, hb, hc, by rw [h a ha b hb c hc]⟩
@@ -477,7 +484,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {δ : Type.{u4}} {ε : Type.{u5}} {s : Set.{u2} α} {t : Set.{u1} β} {u : Set.{u3} γ} (f : δ -> γ -> ε) (g : α -> β -> δ), Eq.{succ u5} (Set.{u5} ε) (Set.image2.{u4, u3, u5} δ γ ε f (Set.image2.{u2, u1, u4} α β δ g s t) u) (Set.image3.{u2, u1, u3, u5} α β γ ε (fun (a : α) (b : β) (c : γ) => f (g a b) c) s t u)
 Case conversion may be inaccurate. Consider using '#align set.image2_image2_left Set.image2_image2_leftₓ'. -/
 theorem image2_image2_left (f : δ → γ → ε) (g : α → β → δ) :
-    image2 f (image2 g s t) u = image3 (fun a b c => f (g a b) c) s t u := by
+    image2 f (image2 g s t) u = image3 (fun a b c => f (g a b) c) s t u :=
+  by
   ext; constructor
   · rintro ⟨_, c, ⟨a, b, ha, hb, rfl⟩, hc, rfl⟩
     refine' ⟨a, b, c, ha, hb, hc, rfl⟩
@@ -492,7 +500,8 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u2}} {γ : Type.{u1}} {δ : Type.{u3}} {ε : Type.{u5}} {s : Set.{u4} α} {t : Set.{u2} β} {u : Set.{u1} γ} (f : α -> δ -> ε) (g : β -> γ -> δ), Eq.{succ u5} (Set.{u5} ε) (Set.image2.{u4, u3, u5} α δ ε f s (Set.image2.{u2, u1, u3} β γ δ g t u)) (Set.image3.{u4, u2, u1, u5} α β γ ε (fun (a : α) (b : β) (c : γ) => f a (g b c)) s t u)
 Case conversion may be inaccurate. Consider using '#align set.image2_image2_right Set.image2_image2_rightₓ'. -/
 theorem image2_image2_right (f : α → δ → ε) (g : β → γ → δ) :
-    image2 f s (image2 g t u) = image3 (fun a b c => f a (g b c)) s t u := by
+    image2 f s (image2 g t u) = image3 (fun a b c => f a (g b c)) s t u :=
+  by
   ext; constructor
   · rintro ⟨a, _, ha, ⟨b, c, hb, hc, rfl⟩, rfl⟩
     refine' ⟨a, b, c, ha, hb, hc, rfl⟩
@@ -507,7 +516,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {δ : Type.{u4}} {s : Set.{u2} α} {t : Set.{u1} β} (f : α -> β -> γ) (g : γ -> δ), Eq.{succ u4} (Set.{u4} δ) (Set.image.{u3, u4} γ δ g (Set.image2.{u2, u1, u3} α β γ f s t)) (Set.image2.{u2, u1, u4} α β δ (fun (a : α) (b : β) => g (f a b)) s t)
 Case conversion may be inaccurate. Consider using '#align set.image_image2 Set.image_image2ₓ'. -/
 theorem image_image2 (f : α → β → γ) (g : γ → δ) :
-    g '' image2 f s t = image2 (fun a b => g (f a b)) s t := by
+    g '' image2 f s t = image2 (fun a b => g (f a b)) s t :=
+  by
   ext; constructor
   · rintro ⟨_, ⟨a, b, ha, hb, rfl⟩, rfl⟩
     refine' ⟨a, b, ha, hb, rfl⟩
@@ -517,7 +527,8 @@ theorem image_image2 (f : α → β → γ) (g : γ → δ) :
 
 #print Set.image2_image_left /-
 theorem image2_image_left (f : γ → β → δ) (g : α → γ) :
-    image2 f (g '' s) t = image2 (fun a b => f (g a) b) s t := by
+    image2 f (g '' s) t = image2 (fun a b => f (g a) b) s t :=
+  by
   ext; constructor
   · rintro ⟨_, b, ⟨a, ha, rfl⟩, hb, rfl⟩
     refine' ⟨a, b, ha, hb, rfl⟩
@@ -533,7 +544,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {δ : Type.{u4}} {s : Set.{u3} α} {t : Set.{u1} β} (f : α -> γ -> δ) (g : β -> γ), Eq.{succ u4} (Set.{u4} δ) (Set.image2.{u3, u2, u4} α γ δ f s (Set.image.{u1, u2} β γ g t)) (Set.image2.{u3, u1, u4} α β δ (fun (a : α) (b : β) => f a (g b)) s t)
 Case conversion may be inaccurate. Consider using '#align set.image2_image_right Set.image2_image_rightₓ'. -/
 theorem image2_image_right (f : α → γ → δ) (g : β → γ) :
-    image2 f s (g '' t) = image2 (fun a b => f a (g b)) s t := by
+    image2 f s (g '' t) = image2 (fun a b => f a (g b)) s t :=
+  by
   ext; constructor
   · rintro ⟨a, _, ha, ⟨b, hb, rfl⟩, rfl⟩
     refine' ⟨a, b, ha, hb, rfl⟩
@@ -548,7 +560,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : α -> β -> γ) (s : Set.{u3} α) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} γ) (Set.image2.{u3, u2, u1} α β γ f s t) (Set.image2.{u2, u3, u1} β α γ (fun (a : β) (b : α) => f b a) t s)
 Case conversion may be inaccurate. Consider using '#align set.image2_swap Set.image2_swapₓ'. -/
 theorem image2_swap (f : α → β → γ) (s : Set α) (t : Set β) :
-    image2 f s t = image2 (fun a b => f b a) t s := by
+    image2 f s t = image2 (fun a b => f b a) t s :=
+  by
   ext
   constructor <;> rintro ⟨a, b, ha, hb, rfl⟩ <;> refine' ⟨b, a, hb, ha, rfl⟩
 #align set.image2_swap Set.image2_swap
@@ -601,7 +614,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image2_left_comm Set.image2_left_commₓ'. -/
 theorem image2_left_comm {f : α → δ → ε} {g : β → γ → δ} {f' : α → γ → δ'} {g' : β → δ' → ε}
     (h_left_comm : ∀ a b c, f a (g b c) = g' b (f' a c)) :
-    image2 f s (image2 g t u) = image2 g' t (image2 f' s u) := by
+    image2 f s (image2 g t u) = image2 g' t (image2 f' s u) :=
+  by
   rw [image2_swap f', image2_swap f]
   exact image2_assoc fun _ _ _ => h_left_comm _ _ _
 #align set.image2_left_comm Set.image2_left_comm
@@ -614,7 +628,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image2_right_comm Set.image2_right_commₓ'. -/
 theorem image2_right_comm {f : δ → γ → ε} {g : α → β → δ} {f' : α → γ → δ'} {g' : δ' → β → ε}
     (h_right_comm : ∀ a b c, f (g a b) c = g' (f' a c) b) :
-    image2 f (image2 g s t) u = image2 g' (image2 f' s u) t := by
+    image2 f (image2 g s t) u = image2 g' (image2 f' s u) t :=
+  by
   rw [image2_swap g, image2_swap g']
   exact image2_assoc fun _ _ _ => h_right_comm _ _ _
 #align set.image2_right_comm Set.image2_right_comm
@@ -692,7 +707,8 @@ Case conversion may be inaccurate. Consider using '#align set.image2_distrib_sub
 /-- The other direction does not hold because of the `s`-`s` cross terms on the RHS. -/
 theorem image2_distrib_subset_left {f : α → δ → ε} {g : β → γ → δ} {f₁ : α → β → β'}
     {f₂ : α → γ → γ'} {g' : β' → γ' → ε} (h_distrib : ∀ a b c, f a (g b c) = g' (f₁ a b) (f₂ a c)) :
-    image2 f s (image2 g t u) ⊆ image2 g' (image2 f₁ s t) (image2 f₂ s u) := by
+    image2 f s (image2 g t u) ⊆ image2 g' (image2 f₁ s t) (image2 f₂ s u) :=
+  by
   rintro _ ⟨a, _, ha, ⟨b, c, hb, hc, rfl⟩, rfl⟩
   rw [h_distrib]
   exact mem_image2_of_mem (mem_image2_of_mem ha hb) (mem_image2_of_mem ha hc)
@@ -707,7 +723,8 @@ Case conversion may be inaccurate. Consider using '#align set.image2_distrib_sub
 /-- The other direction does not hold because of the `u`-`u` cross terms on the RHS. -/
 theorem image2_distrib_subset_right {f : δ → γ → ε} {g : α → β → δ} {f₁ : α → γ → α'}
     {f₂ : β → γ → β'} {g' : α' → β' → ε} (h_distrib : ∀ a b c, f (g a b) c = g' (f₁ a c) (f₂ b c)) :
-    image2 f (image2 g s t) u ⊆ image2 g' (image2 f₁ s u) (image2 f₂ t u) := by
+    image2 f (image2 g s t) u ⊆ image2 g' (image2 f₁ s u) (image2 f₂ t u) :=
+  by
   rintro _ ⟨_, c, ⟨a, b, ha, hb, rfl⟩, hc, rfl⟩
   rw [h_distrib]
   exact mem_image2_of_mem (mem_image2_of_mem ha hc) (mem_image2_of_mem hb hc)
@@ -721,7 +738,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_image2_antidistrib Set.image_image2_antidistribₓ'. -/
 theorem image_image2_antidistrib {g : γ → δ} {f' : β' → α' → δ} {g₁ : β → β'} {g₂ : α → α'}
     (h_antidistrib : ∀ a b, g (f a b) = f' (g₁ b) (g₂ a)) :
-    (image2 f s t).image g = image2 f' (t.image g₁) (s.image g₂) := by
+    (image2 f s t).image g = image2 f' (t.image g₁) (s.image g₂) :=
+  by
   rw [image2_swap f]
   exact image_image2_distrib fun _ _ => h_antidistrib _ _
 #align set.image_image2_antidistrib Set.image_image2_antidistrib

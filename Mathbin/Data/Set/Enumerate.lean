@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.enumerate
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,14 +53,14 @@ theorem enumerate_eq_none_of_sel {s : Set α} (h : sel s = none) : ∀ {n}, enum
 #print Set.enumerate_eq_none /-
 theorem enumerate_eq_none : ∀ {s n₁ n₂}, enumerate s n₁ = none → n₁ ≤ n₂ → enumerate s n₂ = none
   | s, 0, m => fun h _ => enumerate_eq_none_of_sel h
-  | s, n + 1, m => fun h hm => by 
+  | s, n + 1, m => fun h hm => by
     cases hs : sel s
     · exact enumerate_eq_none_of_sel sel hs
     · cases m
-      case zero => 
+      case zero =>
         have : n + 1 = 0 := Nat.eq_zero_of_le_zero hm
         contradiction
-      case succ m' => 
+      case succ m' =>
         simp [hs, enumerate] at h⊢
         have hm : n ≤ m' := Nat.le_of_succ_le_succ hm
         exact enumerate_eq_none h hm
@@ -71,10 +71,10 @@ theorem enumerate_eq_none : ∀ {s n₁ n₂}, enumerate s n₁ = none → n₁ 
 theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) :
     ∀ {s n a}, enumerate s n = some a → a ∈ s
   | s, 0, a => h_sel s a
-  | s, n + 1, a => by 
+  | s, n + 1, a => by
     cases h : sel s
     case none => simp [enumerate_eq_none_of_sel, h]
-    case some a' => 
+    case some a' =>
       simp [enumerate, h]
       exact fun h' : enumerate _ (s \ {a'}) n = some a =>
         have : a ∈ s \ {a'} := enumerate_mem h'
@@ -84,12 +84,13 @@ theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) :
 
 #print Set.enumerate_inj /-
 theorem enumerate_inj {n₁ n₂ : ℕ} {a : α} {s : Set α} (h_sel : ∀ s a, sel s = some a → a ∈ s)
-    (h₁ : enumerate s n₁ = some a) (h₂ : enumerate s n₂ = some a) : n₁ = n₂ := by
+    (h₁ : enumerate s n₁ = some a) (h₂ : enumerate s n₂ = some a) : n₁ = n₂ :=
+  by
   wlog hn : n₁ ≤ n₂
   · rcases Nat.le.dest hn with ⟨m, rfl⟩
     clear hn
     induction n₁ generalizing s
-    case zero => 
+    case zero =>
       cases m
       case zero => rfl
       case succ m =>

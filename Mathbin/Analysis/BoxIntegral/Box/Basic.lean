@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.box.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,8 +198,8 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`h])
              []
              (Std.Tactic.Simpa.simpa
@@ -257,8 +257,8 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`h])
             []
             (Std.Tactic.Simpa.simpa
@@ -488,7 +488,8 @@ theorem le_iff_bounds : I ≤ J ↔ J.lower ≤ I.lower ∧ I.upper ≤ J.upper 
   (le_tfae I J).out 0 3
 #align box_integral.box.le_iff_bounds BoxIntegral.Box.le_iff_bounds
 
-theorem injective_coe : Injective (coe : Box ι → Set (ι → ℝ)) := by
+theorem injective_coe : Injective (coe : Box ι → Set (ι → ℝ)) :=
+  by
   rintro ⟨l₁, u₁, h₁⟩ ⟨l₂, u₂, h₂⟩ h
   simp only [subset.antisymm_iff, coe_subset_coe, le_iff_bounds] at h
   congr
@@ -565,7 +566,8 @@ instance : HasSup (Box ι) :=
       (min_le_left _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_left _ _)⟩⟩
 
 instance : SemilatticeSup (Box ι) :=
-  { Box.partialOrder, Box.hasSup with
+  { Box.partialOrder,
+    Box.hasSup with
     le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩
     le_sup_right := fun I J => le_iff_bounds.2 ⟨inf_le_right, le_sup_right⟩
     sup_le := fun I₁ I₂ J h₁ h₂ =>
@@ -595,10 +597,10 @@ theorem coe_coe : ((I : WithBot (Box ι)) : Set (ι → ℝ)) = I :=
 #align box_integral.box.coe_coe BoxIntegral.Box.coe_coe
 
 theorem is_some_iff : ∀ {I : WithBot (Box ι)}, I.isSome ↔ (I : Set (ι → ℝ)).Nonempty
-  | ⊥ => by 
+  | ⊥ => by
     erw [Option.isSome]
     simp
-  | (I : box ι) => by 
+  | (I : box ι) => by
     erw [Option.isSome]
     simp [I.nonempty_coe]
 #align box_integral.box.is_some_iff BoxIntegral.Box.is_some_iff
@@ -609,7 +611,8 @@ theorem bUnion_coe_eq_coe (I : WithBot (Box ι)) :
 #align box_integral.box.bUnion_coe_eq_coe BoxIntegral.Box.bUnion_coe_eq_coe
 
 @[simp, norm_cast]
-theorem with_bot_coe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J := by
+theorem with_bot_coe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J :=
+  by
   induction I using WithBot.recBotCoe; · simp
   induction J using WithBot.recBotCoe; · simp [subset_empty_iff]
   simp
@@ -628,13 +631,15 @@ def mk' (l u : ι → ℝ) : WithBot (Box ι) :=
 #align box_integral.box.mk' BoxIntegral.Box.mk'
 
 @[simp]
-theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i := by
+theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i :=
+  by
   rw [mk']
   split_ifs <;> simpa using h
 #align box_integral.box.mk'_eq_bot BoxIntegral.Box.mk'_eq_bot
 
 @[simp]
-theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.upper := by
+theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.upper :=
+  by
   cases' I with lI uI hI; rw [mk']; split_ifs
   · simp [WithBot.coe_eq_coe]
   · suffices l = lI → u ≠ uI by simpa
@@ -643,7 +648,8 @@ theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.up
 #align box_integral.box.mk'_eq_coe BoxIntegral.Box.mk'_eq_coe
 
 @[simp]
-theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun i => Ioc (l i) (u i) := by
+theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun i => Ioc (l i) (u i) :=
+  by
   rw [mk']; split_ifs
   · exact coe_eq_pi _
   · rcases not_forall.mp h with ⟨i, hi⟩
@@ -657,7 +663,8 @@ instance : HasInf (WithBot (Box ι)) :=
       (fun I J => WithBot.recBotCoe ⊥ (fun J => mk' (I.lower ⊔ J.lower) (I.upper ⊓ J.upper)) J) I⟩
 
 @[simp]
-theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I ∩ J := by
+theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I ∩ J :=
+  by
   induction I using WithBot.recBotCoe;
   · change ∅ = _
     simp
@@ -670,20 +677,23 @@ theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I
 #align box_integral.box.coe_inf BoxIntegral.Box.coe_inf
 
 instance : Lattice (WithBot (Box ι)) :=
-  { WithBot.semilatticeSup, Box.WithBot.hasInf with
-    inf_le_left := fun I J => by 
+  { WithBot.semilatticeSup,
+    Box.WithBot.hasInf with
+    inf_le_left := fun I J => by
       rw [← with_bot_coe_subset_iff, coe_inf]
       exact inter_subset_left _ _
-    inf_le_right := fun I J => by 
+    inf_le_right := fun I J => by
       rw [← with_bot_coe_subset_iff, coe_inf]
       exact inter_subset_right _ _
-    le_inf := fun I J₁ J₂ h₁ h₂ => by
+    le_inf := fun I J₁ J₂ h₁ h₂ =>
+      by
       simp only [← with_bot_coe_subset_iff, coe_inf] at *
       exact subset_inter h₁ h₂ }
 
 @[simp, norm_cast]
 theorem disjoint_with_bot_coe {I J : WithBot (Box ι)} :
-    Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J := by
+    Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J :=
+  by
   simp only [disjoint_iff_inf_le, ← with_bot_coe_subset_iff, coe_inf]
   rfl
 #align box_integral.box.disjoint_with_bot_coe BoxIntegral.Box.disjoint_with_bot_coe
@@ -749,9 +759,8 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) �
 
 
 /-- The interior of a box. -/
-protected def ioo :
-    Box ι →o
-      Set (ι → ℝ) where 
+protected def ioo : Box ι →o Set (ι → ℝ)
+    where
   toFun I := pi univ fun i => Ioo (I.lower i) (I.upper i)
   monotone' I J h :=
     pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
@@ -810,10 +819,10 @@ def distortion (I : Box ι) : ℝ≥0 :=
 
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J :=
-  by 
+  by
   simp only [distortion, nndist_pi_def, Real.nndist_eq', h, map_div₀]
   congr 1 with i
-  have : 0 < r := by 
+  have : 0 < r := by
     by_contra hr
     have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_lt.1 hr)
     rw [← h] at this
@@ -833,7 +842,8 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
 #align box_integral.box.nndist_le_distortion_mul BoxIntegral.Box.nndist_le_distortion_mul
 
 theorem dist_le_distortion_mul (I : Box ι) (i : ι) :
-    dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by
+    dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) :=
+  by
   have A : I.lower i - I.upper i < 0 := sub_neg.2 (I.lower_lt_upper i)
   simpa only [← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mul, Real.dist_eq, abs_of_neg A,
     neg_sub] using I.nndist_le_distortion_mul i

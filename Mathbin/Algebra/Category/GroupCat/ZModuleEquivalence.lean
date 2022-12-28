@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Group.Z_Module_equivalence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,10 +29,8 @@ universe u
 namespace ModuleCat
 
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is full. -/
-instance forget₂AddCommGroupFull :
-    Full
-      (forget₂ (ModuleCat ℤ)
-        AddCommGroupCat.{u}) where preimage A B
+instance forget₂AddCommGroupFull : Full (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
+    where preimage A B
     f :=-- `add_monoid_hom.to_int_linear_map` doesn't work here because `A` and `B` are not definitionally
     -- equal to the canonical `add_comm_group.int_module` module instances it expects.
     { toFun := f
@@ -42,10 +40,8 @@ instance forget₂AddCommGroupFull :
 #align Module.forget₂_AddCommGroup_full ModuleCat.forget₂AddCommGroupFull
 
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is essentially surjective. -/
-instance forget₂_AddCommGroup_ess_surj :
-    EssSurj
-      (forget₂ (ModuleCat ℤ)
-        AddCommGroupCat.{u}) where mem_ess_image A :=
+instance forget₂_AddCommGroup_ess_surj : EssSurj (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
+    where mem_ess_image A :=
     ⟨ModuleCat.of ℤ A,
       ⟨{  Hom := 𝟙 A
           inv := 𝟙 A }⟩⟩

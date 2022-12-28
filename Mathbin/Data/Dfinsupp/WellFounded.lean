@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.well_founded
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,11 +71,11 @@ open Relation Prod
 theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
     Fibration (InvImage (GameAdd (Dfinsupp.Lex r s) (Dfinsupp.Lex r s)) snd) (Dfinsupp.Lex r s)
       fun x => piecewise x.2.1 x.2.2 x.1 :=
-  by 
+  by
   rintro ⟨p, x₁, x₂⟩ x ⟨i, hr, hs⟩
   simp_rw [piecewise_apply] at hs hr
   split_ifs  at hs
-  classical 
+  classical
     on_goal 1 =>
       refine' ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
     on_goal 3 =>
@@ -102,7 +102,7 @@ variable {r s}
 theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
     (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.erase i) :
     Acc (Dfinsupp.Lex r s) x := by
-  classical 
+  classical
     convert ←
       @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
         (InvImage.accessible snd <| hs.prod_game_add hu)
@@ -118,9 +118,10 @@ theorem Lex.acc_zero : Acc (Dfinsupp.Lex r s) 0 :=
 #align dfinsupp.lex.acc_zero Dfinsupp.Lex.acc_zero
 
 theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i) :
-    (∀ i ∈ x.support, Acc (Dfinsupp.Lex r s) <| single i (x i)) → Acc (Dfinsupp.Lex r s) x := by
+    (∀ i ∈ x.support, Acc (Dfinsupp.Lex r s) <| single i (x i)) → Acc (Dfinsupp.Lex r s) x :=
+  by
   generalize ht : x.support = t; revert x
-  classical 
+  classical
     induction' t using Finset.induction with b t hb ih
     · intro x ht
       rw [support_eq_empty.1 ht]
@@ -136,12 +137,13 @@ variable (hs : ∀ i, WellFounded (s i))
 include hs
 
 theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)) i) :
-    ∀ a, Acc (Dfinsupp.Lex r s) (single i a) := by
+    ∀ a, Acc (Dfinsupp.Lex r s) (single i a) :=
+  by
   induction' hi with i hi ih
   refine' fun a => (hs i).induction a fun a ha => _
   refine' Acc.intro _ fun x => _
   rintro ⟨k, hr, hs⟩
-  classical 
+  classical
     rw [single_apply] at hs
     split_ifs  at hs with hik
     swap
@@ -187,7 +189,8 @@ open Dfinsupp
 variable (r : ι → ι → Prop) {s : ∀ i, α i → α i → Prop}
 
 theorem Pi.Lex.well_founded [IsStrictTotalOrder ι r] [Finite ι] (hs : ∀ i, WellFounded (s i)) :
-    WellFounded (Pi.Lex r s) := by
+    WellFounded (Pi.Lex r s) :=
+  by
   obtain h | ⟨⟨x⟩⟩ := isEmpty_or_nonempty (∀ i, α i)
   · convert empty_wf
     ext1 x
@@ -241,7 +244,7 @@ instance Dfinsupp.well_founded_lt' [∀ i, CanonicallyOrderedAddMonoid (α i)]
 
 instance Pi.well_founded_lt [Finite ι] [∀ i, Preorder (α i)] [hw : ∀ i, WellFoundedLt (α i)] :
     WellFoundedLt (∀ i, α i) :=
-  ⟨by 
+  ⟨by
     obtain h | ⟨⟨x⟩⟩ := isEmpty_or_nonempty (∀ i, α i)
     · convert empty_wf
       ext1 x

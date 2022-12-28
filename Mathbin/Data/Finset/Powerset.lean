@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.powerset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ theorem mem_powerset {s t : Finset α} : s ∈ powerset t ↔ s ⊆ t := by
 
 @[simp, norm_cast]
 theorem coe_powerset (s : Finset α) :
-    (s.powerset : Set (Finset α)) = coe ⁻¹' (s : Set α).powerset := by
+    (s.powerset : Set (Finset α)) = coe ⁻¹' (s : Set α).powerset :=
+  by
   ext
   simp
 #align finset.coe_powerset Finset.coe_powerset
@@ -92,13 +93,14 @@ theorem card_powerset (s : Finset α) : card (powerset s) = 2 ^ card s :=
 #align finset.card_powerset Finset.card_powerset
 
 theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t ∈ s.powerset)
-    (h : a ∉ s) : a ∉ t := by 
+    (h : a ∉ s) : a ∉ t := by
   apply mt _ h
   apply mem_powerset.1 ht
 #align finset.not_mem_of_mem_powerset_of_not_mem Finset.not_mem_of_mem_powerset_of_not_mem
 
 theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
-    powerset (insert a s) = s.powerset ∪ s.powerset.image (insert a) := by
+    powerset (insert a s) = s.powerset ∪ s.powerset.image (insert a) :=
+  by
   ext t
   simp only [exists_prop, mem_powerset, mem_image, mem_union, subset_insert_iff]
   by_cases h : a ∈ t
@@ -160,7 +162,8 @@ theorem mem_ssubsets {s t : Finset α} : t ∈ s.ssubsets ↔ t ⊂ s := by
   rw [ssubsets, mem_erase, mem_powerset, ssubset_iff_subset_ne, and_comm]
 #align finset.mem_ssubsets Finset.mem_ssubsets
 
-theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets := by
+theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets :=
+  by
   rw [mem_ssubsets, ssubset_iff_subset_ne]
   exact ⟨empty_subset s, h.ne_empty.symm⟩
 #align finset.empty_mem_ssubsets Finset.empty_mem_ssubsets
@@ -223,10 +226,11 @@ theorem card_powerset_len (n : ℕ) (s : Finset α) : card (powersetLen n s) = N
 #align finset.card_powerset_len Finset.card_powerset_len
 
 @[simp]
-theorem powerset_len_zero (s : Finset α) : Finset.powersetLen 0 s = {∅} := by
+theorem powerset_len_zero (s : Finset α) : Finset.powersetLen 0 s = {∅} :=
+  by
   ext; rw [mem_powerset_len, mem_singleton, card_eq_zero]
   refine'
-    ⟨fun h => h.2, fun h => by 
+    ⟨fun h => h.2, fun h => by
       rw [h]
       exact ⟨empty_subset s, rfl⟩⟩
 #align finset.powerset_len_zero Finset.powerset_len_zero
@@ -237,14 +241,15 @@ theorem powerset_len_empty (n : ℕ) {s : Finset α} (h : s.card < n) : powerset
 #align finset.powerset_len_empty Finset.powerset_len_empty
 
 theorem powerset_len_eq_filter {n} {s : Finset α} :
-    powersetLen n s = (powerset s).filter fun x => x.card = n := by
+    powersetLen n s = (powerset s).filter fun x => x.card = n :=
+  by
   ext
   simp [mem_powerset_len]
 #align finset.powerset_len_eq_filter Finset.powerset_len_eq_filter
 
 theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : x ∉ s) (n : ℕ) :
     powersetLen n.succ (insert x s) = powersetLen n.succ s ∪ (powersetLen n s).image (insert x) :=
-  by 
+  by
   rw [powerset_len_eq_filter, powerset_insert, filter_union, ← powerset_len_eq_filter]
   congr
   rw [powerset_len_eq_filter, image_filter]
@@ -258,7 +263,7 @@ theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : 
 
 theorem powerset_len_nonempty {n : ℕ} {s : Finset α} (h : n ≤ s.card) :
     (powersetLen n s).Nonempty := by
-  classical 
+  classical
     induction' s using Finset.induction_on with x s hx IH generalizing n
     · rw [card_empty, le_zero_iff] at h
       rw [h, powerset_len_zero]
@@ -272,7 +277,8 @@ theorem powerset_len_nonempty {n : ℕ} {s : Finset α} (h : n ≤ s.card) :
 #align finset.powerset_len_nonempty Finset.powerset_len_nonempty
 
 @[simp]
-theorem powerset_len_self (s : Finset α) : powersetLen s.card s = {s} := by
+theorem powerset_len_self (s : Finset α) : powersetLen s.card s = {s} :=
+  by
   ext
   rw [mem_powerset_len, mem_singleton]
   constructor
@@ -291,7 +297,7 @@ theorem powerset_card_disj_Union (s : Finset α) :
     Finset.powerset s =
       (range (s.card + 1)).disjUnion (fun i => powersetLen i s)
         (s.pairwise_disjoint_powerset_len.set_pairwise _) :=
-  by 
+  by
   refine' ext fun a => ⟨fun ha => _, fun ha => _⟩
   · rw [mem_disj_Union]
     exact

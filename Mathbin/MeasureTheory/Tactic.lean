@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.tactic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,8 +35,8 @@ copy the attribute to the additive version.
 
 /-- User attribute used to mark tactics used by `measurability`. -/
 @[user_attribute]
-unsafe def measurability :
-    user_attribute where 
+unsafe def measurability : user_attribute
+    where
   Name := `measurability
   descr := "lemmas usable to prove (ae)-measurability"
 #align measurability measurability
@@ -44,7 +44,7 @@ unsafe def measurability :
 /- Mark some measurability lemmas already defined in `measure_theory.measurable_space_def` and
 `measure_theory.measure_space_def` -/
 attribute [measurability]
-  measurableId measurableId' aeMeasurableId aeMeasurableId' measurableConst aeMeasurableConst AeMeasurable.measurableMk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurableSet MeasurableSet.union MeasurableSet.inter MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symmDiff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurableSetEq Finset.measurableSet MeasurableSpace.measurableSetTop
+  measurable_id measurable_id' aeMeasurableId aeMeasurableId' measurable_const aeMeasurableConst AeMeasurable.measurable_mk MeasurableSet.empty MeasurableSet.univ MeasurableSet.compl Subsingleton.measurable_set MeasurableSet.Union MeasurableSet.Inter MeasurableSet.union MeasurableSet.inter MeasurableSet.diff MeasurableSet.symm_diff MeasurableSet.ite MeasurableSet.cond MeasurableSet.disjointed MeasurableSet.const MeasurableSet.insert measurable_set_eq Finset.measurable_set MeasurableSpace.measurable_set_top
 
 namespace Tactic
 
@@ -126,7 +126,7 @@ namespace Interactive
 `measurable_set s`. `measurability?` reports back the proof term it found.
 -/
 unsafe def measurability (bang : parse <| optional (tk "!")) (trace : parse <| optional (tk "?"))
-    (cfg : tidy.cfg := {  }) : tactic Unit :=
+    (cfg : tidy.cfg := { }) : tactic Unit :=
   let md := if bang.isSome then semireducible else reducible
   let measurability_core := tactic.tidy { cfg with tactics := measurability_tactics md }
   let trace_fn := if trace.isSome then show_term else id
@@ -135,7 +135,7 @@ unsafe def measurability (bang : parse <| optional (tk "!")) (trace : parse <| o
 
 /-- Version of `measurability` for use with auto_param. -/
 unsafe def measurability' : tactic Unit :=
-  measurability none none {  }
+  measurability none none { }
 #align tactic.interactive.measurability' tactic.interactive.measurability'
 
 /-- `measurability` solves goals of the form `measurable f`, `ae_measurable f μ`,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,11 +52,9 @@ Recall that When `R` is the semiring corresponding to the nonnegative elements o
 `submodule R' M` is the type of cones of `M`. This instance reflects such cones about `0`.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def hasPointwiseNeg :
-    Neg
-      (Submodule R
-        M) where neg p :=
-    { -p.toAddSubmonoid with 
+protected def hasPointwiseNeg : Neg (Submodule R M)
+    where neg p :=
+    { -p.toAddSubmonoid with
       carrier := -(p : Set M)
       smul_mem' := fun r m hm => Set.mem_neg.2 <| smul_neg r m ▸ p.smul_mem r <| Set.mem_neg.1 hm }
 #align submodule.has_pointwise_neg Submodule.hasPointwiseNeg
@@ -83,8 +81,8 @@ theorem mem_neg {g : M} {S : Submodule R M} : g ∈ -S ↔ -g ∈ S :=
 /-- `submodule.has_pointwise_neg` is involutive.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def hasInvolutivePointwiseNeg :
-    InvolutiveNeg (Submodule R M) where 
+protected def hasInvolutivePointwiseNeg : InvolutiveNeg (Submodule R M)
+    where
   neg := Neg.neg
   neg_neg S := SetLike.coe_injective <| neg_neg _
 #align submodule.has_involutive_pointwise_neg Submodule.hasInvolutivePointwiseNeg
@@ -101,13 +99,14 @@ theorem neg_le (S T : Submodule R M) : -S ≤ T ↔ S ≤ -T :=
 #align submodule.neg_le Submodule.neg_le
 
 /-- `submodule.has_pointwise_neg` as an order isomorphism. -/
-def negOrderIso : Submodule R M ≃o
-      Submodule R M where 
+def negOrderIso : Submodule R M ≃o Submodule R M
+    where
   toEquiv := Equiv.neg _
   map_rel_iff' := neg_le_neg
 #align submodule.neg_order_iso Submodule.negOrderIso
 
-theorem closure_neg (s : Set M) : span R (-s) = -span R s := by
+theorem closure_neg (s : Set M) : span R (-s) = -span R s :=
+  by
   apply le_antisymm
   · rw [span_le, coe_set_neg, ← Set.neg_subset, neg_neg]
     exact subset_span
@@ -158,8 +157,8 @@ end Neg
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
-instance pointwiseAddCommMonoid :
-    AddCommMonoid (Submodule R M) where 
+instance pointwiseAddCommMonoid : AddCommMonoid (Submodule R M)
+    where
   add := (· ⊔ ·)
   add_assoc _ _ _ := sup_assoc
   zero := ⊥
@@ -179,7 +178,8 @@ theorem zero_eq_bot : (0 : Submodule R M) = ⊥ :=
 #align submodule.zero_eq_bot Submodule.zero_eq_bot
 
 instance : CanonicallyOrderedAddMonoid (Submodule R M) :=
-  { Submodule.pointwiseAddCommMonoid, Submodule.completeLattice with
+  { Submodule.pointwiseAddCommMonoid,
+    Submodule.completeLattice with
     zero := 0
     bot := ⊥
     add := (· + ·)
@@ -194,10 +194,8 @@ variable [Monoid α] [DistribMulAction α M] [SMulCommClass α R M]
 /-- The action on a submodule corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwiseDistribMulAction :
-    DistribMulAction α
-      (Submodule R
-        M) where 
+protected def pointwiseDistribMulAction : DistribMulAction α (Submodule R M)
+    where
   smul a S := S.map (DistribMulAction.toLinearMap R M a : M →ₗ[R] M)
   one_smul S :=
     (congr_arg (fun f : Module.EndCat R M => S.map f) (LinearMap.ext <| one_smul α)).trans S.map_id
@@ -261,7 +259,8 @@ instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ M] [SMulCommClas
 
 @[simp]
 theorem smul_le_self_of_tower {α : Type _} [Semiring α] [Module α R] [Module α M]
-    [SMulCommClass α R M] [IsScalarTower α R M] (a : α) (S : Submodule R M) : a • S ≤ S := by
+    [SMulCommClass α R M] [IsScalarTower α R M] (a : α) (S : Submodule R M) : a • S ≤ S :=
+  by
   rintro y ⟨x, hx, rfl⟩
   exact smul_of_tower_mem _ a hx
 #align submodule.smul_le_self_of_tower Submodule.smul_le_self_of_tower

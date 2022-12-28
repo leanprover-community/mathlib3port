@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.fix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,8 @@ protected def fix (x : α) : Part <| β x :=
 #align part.fix Part.fix
 
 protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
-    Part.fix f x = Fix.approx f (Nat.succ <| Nat.find h') x := by
+    Part.fix f x = Fix.approx f (Nat.succ <| Nat.find h') x :=
+  by
   let p := fun i : ℕ => (fix.approx f i x).Dom
   have : p (Nat.find h') := Nat.find_spec h'
   generalize hk : Nat.find h' = k
@@ -95,7 +96,8 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
   · rw [fix.approx, WellFounded.fix_eq, fix_aux]
     congr
     ext : 1
-    have hh : ¬(fix.approx f z.val x).Dom := by
+    have hh : ¬(fix.approx f z.val x).Dom :=
+      by
       apply Nat.find_min h'
       rw [hk, Nat.succ_add, ← Nat.add_succ]
       apply Nat.lt_of_succ_le

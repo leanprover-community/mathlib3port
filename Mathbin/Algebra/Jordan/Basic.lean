@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.jordan.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,9 +96,8 @@ class IsCommJordan [Mul A] where
 
 -- see Note [lower instance priority]
 /-- A (commutative) Jordan multiplication is also a Jordan multipication -/
-instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] :
-    IsJordan
-      A where 
+instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] : IsJordan A
+    where
   lmul_comm_rmul a b := by rw [IsCommJordan.mul_comm, IsCommJordan.mul_comm a b]
   lmul_lmul_comm_lmul a b := by
     rw [IsCommJordan.mul_comm (a * a) (a * b), IsCommJordan.lmul_comm_rmul_rmul,
@@ -113,8 +112,8 @@ instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] :
 
 -- see Note [lower instance priority]
 /-- Semigroup multiplication satisfies the (non-commutative) Jordan axioms-/
-instance (priority := 100) Semigroup.isJordan [Semigroup A] :
-    IsJordan A where 
+instance (priority := 100) Semigroup.isJordan [Semigroup A] : IsJordan A
+    where
   lmul_comm_rmul a b := by rw [mul_assoc]
   lmul_lmul_comm_lmul a b := by rw [mul_assoc, mul_assoc]
   lmul_comm_rmul_rmul a b := by rw [mul_assoc]
@@ -123,8 +122,8 @@ instance (priority := 100) Semigroup.isJordan [Semigroup A] :
 #align semigroup.is_jordan Semigroup.isJordan
 
 -- see Note [lower instance priority]
-instance (priority := 100) CommSemigroup.isCommJordan [CommSemigroup A] :
-    IsCommJordan A where 
+instance (priority := 100) CommSemigroup.isCommJordan [CommSemigroup A] : IsCommJordan A
+    where
   mul_comm := mul_comm
   lmul_comm_rmul_rmul a b := mul_assoc _ _ _
 #align comm_semigroup.is_comm_jordan CommSemigroup.isCommJordan
@@ -180,7 +179,8 @@ with a Lie Bracket via `ring.has_bracket`.
 
 
 theorem two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add (a b : A) :
-    2 • (⁅L a, L (a * b)⁆ + ⁅L b, L (b * a)⁆) = ⁅L (a * a), L b⁆ + ⁅L (b * b), L a⁆ := by
+    2 • (⁅L a, L (a * b)⁆ + ⁅L b, L (b * a)⁆) = ⁅L (a * a), L b⁆ + ⁅L (b * b), L a⁆ :=
+  by
   suffices 2 • ⁅L a, L (a * b)⁆ + 2 • ⁅L b, L (b * a)⁆ + ⁅L b, L (a * a)⁆ + ⁅L a, L (b * b)⁆ = 0 by
     rwa [← sub_eq_zero, ← sub_sub, sub_eq_add_neg, sub_eq_add_neg, lie_skew, lie_skew, nsmul_add]
   convert (commute_lmul_lmul_sq (a + b)).lie_eq
@@ -191,7 +191,8 @@ theorem two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add (a b : A) :
   two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add
 
 theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
-    2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) = 0 := by
+    2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) = 0 :=
+  by
   symm
   calc
     0 = ⁅L (a + b + c), L ((a + b + c) * (a + b + c))⁆ := by
@@ -211,7 +212,7 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
     _ =
         ⁅L a + L b + L c,
           L (a * a) + L (b * b) + L (c * c) + 2 • L (a * b) + 2 • L (c * a) + 2 • L (b * c)⁆ :=
-      by 
+      by
       rw [two_smul, two_smul, two_smul]
       simp only [lie_add, add_lie, commute_lmul_lmul_sq, zero_add, add_zero]
       abel
@@ -252,7 +253,8 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
             (⁅L b, L (c * c)⁆ + ⁅L c, L (b * b)⁆ + 2 • (⁅L b, L (b * c)⁆ + ⁅L c, L (b * c)⁆)) +
           (2 • ⁅L a, L (b * c)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L c, L (a * b)⁆) :=
       by abel
-    _ = 2 • ⁅L a, L (b * c)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L c, L (a * b)⁆ := by
+    _ = 2 • ⁅L a, L (b * c)⁆ + 2 • ⁅L b, L (c * a)⁆ + 2 • ⁅L c, L (a * b)⁆ :=
+      by
       rw [add_left_eq_self]
       nth_rw 2 [IsCommJordan.mul_comm a b]
       nth_rw 1 [IsCommJordan.mul_comm c a]

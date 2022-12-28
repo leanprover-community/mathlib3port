@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.faces
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ namespace HigherFacesVanish
 
 @[reassoc.1]
 theorem comp_δ_eq_zero {Y : C} {n : ℕ} {q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
-    (j : Fin (n + 2)) (hj₁ : j ≠ 0) (hj₂ : n + 2 ≤ (j : ℕ) + q) : φ ≫ X.δ j = 0 := by
+    (j : Fin (n + 2)) (hj₁ : j ≠ 0) (hj₂ : n + 2 ≤ (j : ℕ) + q) : φ ≫ X.δ j = 0 :=
+  by
   obtain ⟨i, hi⟩ := Fin.eq_succ_of_ne_zero hj₁
   subst hi
   apply v i
@@ -92,7 +93,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
           X.δ ⟨a + 1, Nat.succ_lt_succ (Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm))⟩ ≫
             X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro hnaq.symm)⟩ :=
   by
-  have hnaq_shift : ∀ d : ℕ, n + d = a + d + q := by
+  have hnaq_shift : ∀ d : ℕ, n + d = a + d + q :=
+    by
     intro d
     rw [add_assoc, add_comm d, ← add_assoc, hnaq]
   rw [Hσ, Homotopy.null_homotopic_map'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl),
@@ -108,7 +110,7 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
       simp only [this, Fin.nat_add_mk, Fin.cast_mk, zero_comp, smul_zero]
     convert
       v ⟨a + k + 1, by linarith⟩
-        (by 
+        (by
           rw [Fin.coe_mk]
           linarith)
     rw [Nat.succ_eq_add_one]
@@ -128,7 +130,7 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     · dsimp
       linarith
   -- leaving out three specific terms
-  conv_lhs => 
+  conv_lhs =>
     congr
     skip
     rw [Fin.sum_univ_cast_succ, Fin.sum_univ_cast_succ]
@@ -138,7 +140,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
   /- the purpose of the following `simplif` is to create three subgoals in order
       to finish the proof -/
   have simplif :
-    ∀ a b c d e f : Y ⟶ X _[n + 1], b = f → d + e = 0 → c + a = 0 → a + b + (c + d + e) = f := by
+    ∀ a b c d e f : Y ⟶ X _[n + 1], b = f → d + e = 0 → c + a = 0 → a + b + (c + d + e) = f :=
+    by
     intro a b c d e f h1 h2 h3
     rw [add_assoc c d e, h2, add_zero, add_comm a b, add_assoc, add_comm a c, h3, add_zero, h1]
   apply simplif
@@ -164,7 +167,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
   algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq AlgebraicTopology.DoldKan.HigherFacesVanish.comp_Hσ_eq
 
 theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
-    (hqn : n < q) : φ ≫ (hσ q).f (n + 1) = 0 := by
+    (hqn : n < q) : φ ≫ (hσ q).f (n + 1) = 0 :=
+  by
   simp only [Hσ, Homotopy.null_homotopic_map'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl)]
   rw [hσ'_eq_zero hqn (c_mk (n + 1) n rfl), comp_zero, zero_add]
   by_cases hqn' : n + 1 < q
@@ -194,7 +198,8 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
   algebraic_topology.dold_kan.higher_faces_vanish.comp_Hσ_eq_zero AlgebraicTopology.DoldKan.HigherFacesVanish.comp_Hσ_eq_zero
 
 theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
-    HigherFacesVanish (q + 1) (φ ≫ (𝟙 _ + hσ q).f (n + 1)) := by
+    HigherFacesVanish (q + 1) (φ ≫ (𝟙 _ + hσ q).f (n + 1)) :=
+  by
   intro j hj₁
   dsimp
   simp only [comp_add, add_comp, comp_id]
@@ -219,7 +224,7 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
   -- now, we assume j ≠ a (i.e. a < j)
   have haj : a < j := (Ne.le_iff_lt hj₂).mp (by linarith)
   have hj₃ := j.is_lt
-  have ham : a ≤ m := by 
+  have ham : a ≤ m := by
     by_contra
     rw [not_le, ← Nat.succ_le_iff] at h
     linarith

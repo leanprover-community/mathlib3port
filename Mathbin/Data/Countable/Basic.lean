@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.countable.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,8 @@ section Type
 
 variable {α : Type u} {β : Type v} {π : α → Type w}
 
-instance [Countable α] [Countable β] : Countable (Sum α β) := by
+instance [Countable α] [Countable β] : Countable (Sum α β) :=
+  by
   rcases exists_injective_nat α with ⟨f, hf⟩
   rcases exists_injective_nat β with ⟨g, hg⟩
   exact (equiv.nat_sum_nat_equiv_nat.injective.comp <| hf.sum_map hg).Countable
@@ -66,12 +67,14 @@ instance [Countable α] [Countable β] : Countable (Sum α β) := by
 instance [Countable α] : Countable (Option α) :=
   Countable.of_equiv _ (Equiv.optionEquivSumPUnit α).symm
 
-instance [Countable α] [Countable β] : Countable (α × β) := by
+instance [Countable α] [Countable β] : Countable (α × β) :=
+  by
   rcases exists_injective_nat α with ⟨f, hf⟩
   rcases exists_injective_nat β with ⟨g, hg⟩
   exact (nat.mkpair_equiv.injective.comp <| hf.prod_map hg).Countable
 
-instance [Countable α] [∀ a, Countable (π a)] : Countable (Sigma π) := by
+instance [Countable α] [∀ a, Countable (π a)] : Countable (Sigma π) :=
+  by
   rcases exists_injective_nat α with ⟨f, hf⟩
   choose g hg using fun a => exists_injective_nat (π a)
   exact ((Equiv.sigmaEquivProd ℕ ℕ).Injective.comp <| hf.sigma_map hg).Countable
@@ -100,8 +103,9 @@ instance [Countable α] [Countable β] : Countable (PProd α β) :=
 instance [Countable α] [∀ a, Countable (π a)] : Countable (PSigma π) :=
   Countable.of_equiv (Σa : PLift α, PLift (π a.down)) (Equiv.psigmaEquivSigmaPLift π).symm
 
-instance [Finite α] [∀ a, Countable (π a)] : Countable (∀ a, π a) := by
-  have : ∀ n, Countable (Fin n → ℕ) := by 
+instance [Finite α] [∀ a, Countable (π a)] : Countable (∀ a, π a) :=
+  by
+  have : ∀ n, Countable (Fin n → ℕ) := by
     intro n
     induction' n with n ihn
     · infer_instance

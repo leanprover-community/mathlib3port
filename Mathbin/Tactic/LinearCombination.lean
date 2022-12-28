@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abby J. Goldberg
 
 ! This file was ported from Lean 3 source module tactic.linear_combination
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -319,7 +319,7 @@ Note: The left and right sides of all the equalities should have the same
 * Output: N/A
 -/
 unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
-    (config : linear_combination_config := {  }) : tactic Unit := do
+    (config : linear_combination_config := { }) : tactic Unit := do
   let q(@Eq $(ext) _ _) ← target |
     fail "linear_combination can only be used to prove equality goals"
   let h_eqs ← h_eqs_names.mmap to_expr
@@ -440,7 +440,7 @@ by linear_combination 3 * h a b + hqc
 -/
 unsafe def _root_.tactic.interactive.linear_combination
     (input : parse (as_linear_combo false [] <$> texpr)?) (_ : parse (tk "with")?)
-    (config : linear_combination_config := {  }) : tactic Unit :=
+    (config : linear_combination_config := { }) : tactic Unit :=
   let (h_eqs_names, coeffs) := List.unzip (input.getOrElse [])
   linear_combination h_eqs_names coeffs config
 #align tactic.interactive.linear_combination tactic.interactive.linear_combination

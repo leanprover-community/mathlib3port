@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module data.rat.floor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,11 +40,11 @@ protected def floor : ℚ → ℤ
 -/
 
 protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z : ℚ) ≤ r
-  | ⟨n, d, h, c⟩ => by 
+  | ⟨n, d, h, c⟩ => by
     simp [Rat.floor]
     rw [num_denom']
     have h' := Int.ofNat_lt.2 h
-    conv => 
+    conv =>
       rhs
       rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_one]
     exact Int.le_ediv_iff_mul_le h'
@@ -53,17 +53,20 @@ protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z :
 instance : FloorRing ℚ :=
   (FloorRing.ofFloor ℚ Rat.floor) fun a z => Rat.le_floor.symm
 
-protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom := by
+protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom :=
+  by
   cases q
   rfl
 #align rat.floor_def Rat.floor_def
 
-theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d : ℚ)⌋ = n / (↑d : ℤ) := by
+theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d : ℚ)⌋ = n / (↑d : ℤ) :=
+  by
   rw [Rat.floor_def]
   obtain rfl | hd := @eq_zero_or_pos _ _ d
   · simp
   set q := (n : ℚ) / d with q_eq
-  obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom := by
+  obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom :=
+    by
     rw [q_eq]
     exact_mod_cast @Rat.exists_eq_mul_div_num_and_eq_mul_div_denom n d (by exact_mod_cast hd.ne')
   rw [n_eq_c_mul_num, d_eq_c_mul_denom]
@@ -82,7 +85,8 @@ theorem ceil_cast (x : ℚ) : ⌈(x : α)⌉ = ⌈x⌉ := by
 #align rat.ceil_cast Rat.ceil_cast
 
 @[simp, norm_cast]
-theorem round_cast (x : ℚ) : round (x : α) = round x := by
+theorem round_cast (x : ℚ) : round (x : α) = round x :=
+  by
   have : ((x + 1 / 2 : ℚ) : α) = x + 1 / 2 := by simp
   rw [round_eq, round_eq, ← this, floor_cast]
 #align rat.round_cast Rat.round_cast
@@ -99,7 +103,8 @@ theorem Int.mod_nat_eq_sub_mul_floor_rat_div {n : ℤ} {d : ℕ} : n % d = n - d
 #align int.mod_nat_eq_sub_mul_floor_rat_div Int.mod_nat_eq_sub_mul_floor_rat_div
 
 theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.Coprime d) :
-    ((n : ℤ) - d * ⌊(n : ℚ) / d⌋).natAbs.Coprime d := by
+    ((n : ℤ) - d * ⌊(n : ℚ) / d⌋).natAbs.Coprime d :=
+  by
   have : (n : ℤ) % d = n - d * ⌊(n : ℚ) / d⌋ := Int.mod_nat_eq_sub_mul_floor_rat_div
   rw [← this]
   have : d.coprime n := n_coprime_d.symm
@@ -108,12 +113,15 @@ theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : 
 
 namespace Rat
 
-theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom := by
+theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom :=
+  by
   suffices (q.num : ℚ) < (⌊q⌋ + 1) * q.denom by exact_mod_cast this
-  suffices (q.num : ℚ) < (q - fract q + 1) * q.denom by
+  suffices (q.num : ℚ) < (q - fract q + 1) * q.denom
+    by
     have : (⌊q⌋ : ℚ) = q - fract q := eq_sub_of_add_eq <| floor_add_fract q
     rwa [this]
-  suffices (q.num : ℚ) < q.num + (1 - fract q) * q.denom by
+  suffices (q.num : ℚ) < q.num + (1 - fract q) * q.denom
+    by
     have : (q - fract q + 1) * q.denom = q.num + (1 - fract q) * q.denom
     calc
       (q - fract q + 1) * q.denom = (q + (1 - fract q)) * q.denom := by ring
@@ -121,10 +129,11 @@ theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom 
       _ = q.num + (1 - fract q) * q.denom := by simp
       
     rwa [this]
-  suffices 0 < (1 - fract q) * q.denom by
+  suffices 0 < (1 - fract q) * q.denom
+    by
     rw [← sub_lt_iff_lt_add']
     simpa
-  have : 0 < 1 - fract q := by 
+  have : 0 < 1 - fract q := by
     have : fract q < 1 := fract_lt_one q
     have : 0 + fract q < 1 := by simp [this]
     rwa [lt_sub_iff_add_lt]
@@ -145,7 +154,8 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   suffices (q.denom : ℤ) - q.num * ⌊q_inv⌋ < q.num
     by
     -- use that `q.num` and `q.denom` are coprime to show that the numerator stays unreduced
-    have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ := by
+    have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ :=
+      by
       suffices ((q.denom : ℤ) - q.num * ⌊q_inv⌋).natAbs.Coprime q.num.nat_abs by
         exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos this
       have : (q.num.nat_abs : ℚ) = (q.num : ℚ) := by exact_mod_cast q_num_abs_eq_q_num
@@ -153,13 +163,15 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
       simpa only [this, q_num_abs_eq_q_num] using tmp
     rwa [this]
   -- to show the claim, start with the following inequality
-  have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom := by
+  have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom :=
+    by
     have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.denom := Rat.num_lt_succ_floor_mul_denom q⁻¹
     have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.denom + q⁻¹.denom := by rwa [right_distrib, one_mul] at this
     rwa [← sub_lt_iff_lt_add'] at this
   -- use that `q.num` and `q.denom` are coprime to show that q_inv is the unreduced reciprocal
   -- of `q`
-  have : q_inv.num = q.denom ∧ q_inv.denom = q.num.nat_abs := by
+  have : q_inv.num = q.denom ∧ q_inv.denom = q.num.nat_abs :=
+    by
     have coprime_q_denom_q_num : q.denom.coprime q.num.nat_abs := q.cop.symm
     have : Int.natAbs q.denom = q.denom := by simp
     rw [← this] at coprime_q_denom_q_num

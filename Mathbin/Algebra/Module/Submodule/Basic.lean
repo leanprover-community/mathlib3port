@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,13 +59,13 @@ namespace Submodule
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
-instance : SetLike (Submodule R M)
-      M where 
+instance : SetLike (Submodule R M) M
+    where
   coe := Submodule.carrier
   coe_injective' p q h := by cases p <;> cases q <;> congr
 
-instance : AddSubmonoidClass (Submodule R M)
-      M where 
+instance : AddSubmonoidClass (Submodule R M) M
+    where
   zero_mem := zero_mem'
   add_mem := add_mem'
 
@@ -101,8 +101,8 @@ theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 
 /-- Copy of a submodule with a new `carrier` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) :
-    Submodule R M where 
+protected def copy (p : Submodule R M) (s : Set M) (hs : s = ↑p) : Submodule R M
+    where
   carrier := s
   zero_mem' := hs.symm ▸ p.zero_mem'
   add_mem' _ _ := hs.symm ▸ p.add_mem'
@@ -327,7 +327,7 @@ theorem coe_mem (x : p) : (x : M) ∈ p :=
 variable (p)
 
 instance : AddCommMonoid p :=
-  { p.toAddSubmonoid.toAddCommMonoid with 
+  { p.toAddSubmonoid.toAddCommMonoid with
     add := (· + ·)
     zero := 0 }
 
@@ -377,8 +377,8 @@ variable (S) [Semiring S] [Module S M] [Module R M] [HasSmul S R] [IsScalarTower
 /-- `V.restrict_scalars S` is the `S`-submodule of the `S`-module given by restriction of scalars,
 corresponding to `V`, an `R`-submodule of the original `R`-module.
 -/
-def restrictScalars (V : Submodule R M) :
-    Submodule S M where 
+def restrictScalars (V : Submodule R M) : Submodule S M
+    where
   carrier := V
   zero_mem' := V.zero_mem
   smul_mem' c m h := V.smul_of_tower_mem c h
@@ -418,16 +418,14 @@ instance restrictScalars.origModule (p : Submodule R M) : Module R (p.restrictSc
   (by infer_instance : Module R p)
 #align submodule.restrict_scalars.orig_module Submodule.restrictScalars.origModule
 
-instance (p : Submodule R M) :
-    IsScalarTower S R
-      (p.restrictScalars S) where smul_assoc r s x := Subtype.ext <| smul_assoc r s (x : M)
+instance (p : Submodule R M) : IsScalarTower S R (p.restrictScalars S)
+    where smul_assoc r s x := Subtype.ext <| smul_assoc r s (x : M)
 
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
 the lattice of `S`-submodules. -/
 @[simps]
-def restrictScalarsEmbedding :
-    Submodule R M ↪o Submodule S
-        M where 
+def restrictScalarsEmbedding : Submodule R M ↪o Submodule S M
+    where
   toFun := restrictScalars S
   inj' := restrict_scalars_injective S R M
   map_rel_iff' p q := by simp [SetLike.le_def]
@@ -437,7 +435,7 @@ def restrictScalarsEmbedding :
 as turning it into a type and adding a module structure. -/
 @[simps (config := { simpRhs := true })]
 def restrictScalarsEquiv (p : Submodule R M) : p.restrictScalars S ≃ₗ[R] p :=
-  { AddEquiv.refl p with 
+  { AddEquiv.refl p with
     toFun := id
     invFun := id
     map_smul' := fun c x => rfl }
@@ -539,7 +537,7 @@ theorem sub_mem_iff_right (hx : x ∈ p) : x - y ∈ p ↔ y ∈ p := by
 #align submodule.sub_mem_iff_right Submodule.sub_mem_iff_right
 
 instance : AddCommGroup p :=
-  { p.toAddSubgroup.toAddCommGroup with 
+  { p.toAddSubgroup.toAddCommGroup with
     add := (· + ·)
     zero := 0
     neg := Neg.neg }
@@ -553,7 +551,8 @@ variable [Ring R] [IsDomain R]
 variable [AddCommGroup M] [Module R M] {b : ι → M}
 
 theorem not_mem_of_ortho {x : M} {N : Submodule R M}
-    (ortho : ∀ (c : R), ∀ y ∈ N, c • x + y = (0 : M) → c = 0) : x ∉ N := by
+    (ortho : ∀ (c : R), ∀ y ∈ N, c • x + y = (0 : M) → c = 0) : x ∉ N :=
+  by
   intro hx
   simpa using ortho (-1) x hx
 #align submodule.not_mem_of_ortho Submodule.not_mem_of_ortho

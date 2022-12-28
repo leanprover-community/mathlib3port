@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 
 ! This file was ported from Lean 3 source module data.prod.lex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,12 +96,13 @@ theorem lt_iff [LT α] [LT β] (a b : α × β) :
 #print Prod.Lex.preorder /-
 /-- Dictionary / lexicographic preorder for pairs. -/
 instance preorder (α β : Type _) [Preorder α] [Preorder β] : Preorder (α ×ₗ β) :=
-  { Prod.Lex.instLE α β, Prod.Lex.instLT α β with
+  { Prod.Lex.instLE α β,
+    Prod.Lex.instLT α β with
     le_refl := refl_of <| Prod.Lex _ _
     le_trans := fun _ _ _ => trans_of <| Prod.Lex _ _
     lt_iff_le_not_le := fun x₁ x₂ =>
       match x₁, x₂ with
-      | toLex (a₁, b₁), toLex (a₂, b₂) => by 
+      | toLex (a₁, b₁), toLex (a₂, b₂) => by
         constructor
         · rintro (⟨_, _, hlt⟩ | ⟨_, hlt⟩)
           · constructor
@@ -145,7 +146,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β], Monotone.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Lex.{max u1 u2} (Prod.{u2, u1} α β)) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (Prod.Lex.preorder.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (EmbeddingLike.toFunLike.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β)) (EquivLike.toEmbeddingLike.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β)) (Equiv.instEquivLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)))
 Case conversion may be inaccurate. Consider using '#align prod.lex.to_lex_mono Prod.Lex.toLex_monoₓ'. -/
-theorem toLex_mono : Monotone (toLex : α × β → α ×ₗ β) := by
+theorem toLex_mono : Monotone (toLex : α × β → α ×ₗ β) :=
+  by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨ha, hb⟩
   obtain rfl | ha : a₁ = a₂ ∨ _ := ha.eq_or_lt
   · exact right _ hb
@@ -158,7 +160,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β], StrictMono.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Lex.{max u1 u2} (Prod.{u2, u1} α β)) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (Prod.Lex.preorder.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2) (FunLike.coe.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : Prod.{u2, u1} α β) => Lex.{max u2 u1} (Prod.{u2, u1} α β)) _x) (EmbeddingLike.toFunLike.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β)) (EquivLike.toEmbeddingLike.{succ (max u2 u1), succ (max u2 u1), succ (max u2 u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))) (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β)) (Equiv.instEquivLikeEquiv.{succ (max u2 u1), succ (max u2 u1)} (Prod.{u2, u1} α β) (Lex.{max u2 u1} (Prod.{u2, u1} α β))))) (toLex.{max u2 u1} (Prod.{u2, u1} α β)))
 Case conversion may be inaccurate. Consider using '#align prod.lex.to_lex_strict_mono Prod.Lex.toLex_strictMonoₓ'. -/
-theorem toLex_strictMono : StrictMono (toLex : α × β → α ×ₗ β) := by
+theorem toLex_strictMono : StrictMono (toLex : α × β → α ×ₗ β) :=
+  by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ h
   obtain rfl | ha : a₁ = a₂ ∨ _ := h.le.1.eq_or_lt
   · exact right _ (Prod.mk_lt_mk_iff_right.1 h)
@@ -171,7 +174,8 @@ end Preorder
 /-- Dictionary / lexicographic partial_order for pairs. -/
 instance partialOrder (α β : Type _) [PartialOrder α] [PartialOrder β] : PartialOrder (α ×ₗ β) :=
   { Prod.Lex.preorder α β with
-    le_antisymm := by
+    le_antisymm :=
+      by
       haveI : IsStrictOrder α (· < ·) :=
         { irrefl := lt_irrefl
           trans := fun _ _ _ => lt_trans }
@@ -183,7 +187,7 @@ instance partialOrder (α β : Type _) [PartialOrder α] [PartialOrder β] : Par
 #print Prod.Lex.linearOrder /-
 /-- Dictionary / lexicographic linear_order for pairs. -/
 instance linearOrder (α β : Type _) [LinearOrder α] [LinearOrder β] : LinearOrder (α ×ₗ β) :=
-  { Prod.Lex.partialOrder α β with 
+  { Prod.Lex.partialOrder α β with
     le_total := total_of (Prod.Lex _ _)
     decidableLe := Prod.Lex.decidable _ _
     decidableLt := Prod.Lex.decidable _ _
@@ -192,16 +196,16 @@ instance linearOrder (α β : Type _) [LinearOrder α] [LinearOrder β] : Linear
 -/
 
 #print Prod.Lex.orderBot /-
-instance orderBot [PartialOrder α] [Preorder β] [OrderBot α] [OrderBot β] :
-    OrderBot (α ×ₗ β) where 
+instance orderBot [PartialOrder α] [Preorder β] [OrderBot α] [OrderBot β] : OrderBot (α ×ₗ β)
+    where
   bot := toLex ⊥
   bot_le a := toLex_mono bot_le
 #align prod.lex.order_bot Prod.Lex.orderBot
 -/
 
 #print Prod.Lex.orderTop /-
-instance orderTop [PartialOrder α] [Preorder β] [OrderTop α] [OrderTop β] :
-    OrderTop (α ×ₗ β) where 
+instance orderTop [PartialOrder α] [Preorder β] [OrderTop α] [OrderTop β] : OrderTop (α ×ₗ β)
+    where
   top := toLex ⊤
   le_top a := toLex_mono le_top
 #align prod.lex.order_top Prod.Lex.orderTop
@@ -216,7 +220,7 @@ instance boundedOrder [PartialOrder α] [Preorder β] [BoundedOrder α] [Bounded
 
 instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] :
     DenselyOrdered (α ×ₗ β) :=
-  ⟨by 
+  ⟨by
     rintro _ _ (@⟨a₁, b₁, a₂, b₂, h⟩ | @⟨a, b₁, b₂, h⟩)
     · obtain ⟨c, h₁, h₂⟩ := exists_between h
       exact ⟨(c, b₁), left _ _ h₁, left _ _ h₂⟩
@@ -225,7 +229,7 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] :
 
 #print Prod.Lex.noMaxOrder_of_left /-
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α ×ₗ β) :=
-  ⟨by 
+  ⟨by
     rintro ⟨a, b⟩
     obtain ⟨c, h⟩ := exists_gt a
     exact ⟨⟨c, b⟩, left _ _ h⟩⟩
@@ -234,7 +238,7 @@ instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxO
 
 #print Prod.Lex.noMinOrder_of_left /-
 instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α ×ₗ β) :=
-  ⟨by 
+  ⟨by
     rintro ⟨a, b⟩
     obtain ⟨c, h⟩ := exists_lt a
     exact ⟨⟨c, b⟩, left _ _ h⟩⟩
@@ -243,7 +247,7 @@ instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinO
 
 #print Prod.Lex.noMaxOrder_of_right /-
 instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α ×ₗ β) :=
-  ⟨by 
+  ⟨by
     rintro ⟨a, b⟩
     obtain ⟨c, h⟩ := exists_gt b
     exact ⟨⟨a, c⟩, right _ h⟩⟩
@@ -252,7 +256,7 @@ instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMax
 
 #print Prod.Lex.noMinOrder_of_right /-
 instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α ×ₗ β) :=
-  ⟨by 
+  ⟨by
     rintro ⟨a, b⟩
     obtain ⟨c, h⟩ := exists_lt b
     exact ⟨⟨a, c⟩, right _ h⟩⟩

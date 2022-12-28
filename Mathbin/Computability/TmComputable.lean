@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pim Spelier, Daan van Gent
 
 ! This file was ported from Lean 3 source module computability.tm_computable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,8 +102,8 @@ end
 end FinTm2
 
 /-- The initial configuration corresponding to a list in the input alphabet. -/
-def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) :
-    tm.Cfg where 
+def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) : tm.Cfg
+    where
   l := Option.some tm.main
   var := tm.initialState
   stk k :=
@@ -112,8 +112,8 @@ def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) :
 #align turing.init_list Turing.initList
 
 /-- The final configuration corresponding to a list in the output alphabet. -/
-def haltList (tm : FinTm2) (s : List (tm.Γ tm.k₁)) :
-    tm.Cfg where 
+def haltList (tm : FinTm2) (s : List (tm.Γ tm.k₁)) : tm.Cfg
+    where
   l := Option.none
   var := tm.initialState
   stk k :=
@@ -239,8 +239,8 @@ def Tm2ComputableInPolyTime.toTm2ComputableInTime {α β : Type} {ea : FinEncodi
 open Turing.TM2Cat.Stmt
 
 /-- A Turing machine computing the identity on α. -/
-def idComputer {α : Type} (ea : FinEncoding α) :
-    FinTm2 where 
+def idComputer {α : Type} (ea : FinEncoding α) : FinTm2
+    where
   K := Unit
   k₀ := ⟨⟩
   k₁ := ⟨⟩
@@ -260,9 +260,8 @@ instance inhabitedFinTm2 : Inhabited FinTm2 :=
 noncomputable section
 
 /-- A proof that the identity map on α is computable in polytime. -/
-def idComputableInPolyTime {α : Type} (ea : FinEncoding α) :
-    @Tm2ComputableInPolyTime α α ea ea
-      id where 
+def idComputableInPolyTime {α : Type} (ea : FinEncoding α) : @Tm2ComputableInPolyTime α α ea ea id
+    where
   tm := idComputer ea
   inputAlphabet := Equiv.cast rfl
   outputAlphabet := Equiv.cast rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.module
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ then `star` is a semilinear equivalence. -/
 @[simps]
 def starLinearEquiv (R : Type _) {A : Type _} [CommRing R] [StarRing R] [Semiring A] [StarRing A]
     [Module R A] [StarModule R A] : A ≃ₗ⋆[R] A :=
-  { starAddEquiv with 
+  { starAddEquiv with
     toFun := star
     map_smul' := star_smul }
 #align star_linear_equiv starLinearEquiv
@@ -102,37 +102,33 @@ variable {A} [Invertible (2 : R)]
 
 /-- The self-adjoint part of an element of a star module, as a linear map. -/
 @[simps]
-def selfAdjointPart :
-    A →ₗ[R]
-      selfAdjoint
-        A where 
+def selfAdjointPart : A →ₗ[R] selfAdjoint A
+    where
   toFun x :=
     ⟨(⅟ 2 : R) • (x + star x), by
       simp only [selfAdjoint.mem_iff, star_smul, add_comm, StarAddMonoid.star_add, star_inv',
         star_bit0, star_one, star_star, star_inv_of (2 : R), star_trivial]⟩
-  map_add' x y := by 
+  map_add' x y := by
     ext
     simp [add_add_add_comm]
-  map_smul' r x := by 
+  map_smul' r x := by
     ext
     simp [← mul_smul, show ⅟ 2 * r = r * ⅟ 2 from Commute.invOf_left (Commute.one_left r).bit0_left]
 #align self_adjoint_part selfAdjointPart
 
 /-- The skew-adjoint part of an element of a star module, as a linear map. -/
 @[simps]
-def skewAdjointPart :
-    A →ₗ[R]
-      skewAdjoint
-        A where 
+def skewAdjointPart : A →ₗ[R] skewAdjoint A
+    where
   toFun x :=
     ⟨(⅟ 2 : R) • (x - star x), by
       simp only [skewAdjoint.mem_iff, star_smul, star_sub, star_star, star_trivial, ← smul_neg,
         neg_sub]⟩
-  map_add' x y := by 
+  map_add' x y := by
     ext
     simp only [sub_add, ← smul_add, sub_sub_eq_add_sub, star_add, AddSubgroup.coe_mk,
       AddSubgroup.coe_add]
-  map_smul' r x := by 
+  map_smul' r x := by
     ext
     simp [← mul_smul, ← smul_sub,
       show r * ⅟ 2 = ⅟ 2 * r from Commute.invOf_right (Commute.one_right r).bit0_right]

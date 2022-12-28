@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.injective
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,23 +36,24 @@ namespace AddCommGroupCat
 
 theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
     CategoryTheory.Injective (⟨A⟩ : AddCommGroupCat) :=
-  { Factors := fun X Y g f m => by 
+  {
+    Factors := fun X Y g f m => by
       skip
       let G : (⟨X⟩ : ModuleCat ℤ) ⟶ ⟨A⟩ :=
         { g with
-          map_smul' := by 
+          map_smul' := by
             intros
             rw [RingHom.id_apply, g.to_fun_eq_coe, map_zsmul] }
       let F : (⟨X⟩ : ModuleCat ℤ) ⟶ ⟨Y⟩ :=
         { f with
-          map_smul' := by 
+          map_smul' := by
             intros
             rw [RingHom.id_apply, f.to_fun_eq_coe, map_zsmul] }
-      have : mono F := by 
+      have : mono F := by
         refine' ⟨fun Z α β eq1 => _⟩
         let α' : AddCommGroupCat.of Z ⟶ X := α.to_add_monoid_hom
         let β' : AddCommGroupCat.of Z ⟶ X := β.to_add_monoid_hom
-        have eq2 : α' ≫ f = β' ≫ f := by 
+        have eq2 : α' ≫ f = β' ≫ f := by
           ext
           simp only [CategoryTheory.comp_apply, LinearMap.to_add_monoid_hom_coe]
           simpa only [ModuleCat.coe_comp, LinearMap.coe_mk, Function.comp_apply] using
@@ -68,11 +69,12 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
 
 theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGroupCat)] :
     Injective (⟨A⟩ : ModuleCat ℤ) :=
-  { Factors := fun X Y g f m => by 
+  {
+    Factors := fun X Y g f m => by
       skip
       let G : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨A⟩ := g.to_add_monoid_hom
       let F : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨Y⟩ := f.to_add_monoid_hom
-      have : mono F := by 
+      have : mono F := by
         rw [mono_iff_injective]
         intro _ _ h
         exact ((ModuleCat.mono_iff_injective f).mp m) h
@@ -94,7 +96,8 @@ instance injective_of_divisible [DivisibleBy A ℤ] :
     CategoryTheory.Injective (⟨A⟩ : AddCommGroupCat) :=
   @injective_of_injective_as_module A _ <|
     @Module.injective_object_of_injective_module ℤ _ A _ _ <|
-      Module.BaerCat.injective fun I g => by
+      Module.BaerCat.injective fun I g =>
+        by
         rcases IsPrincipalIdealRing.principal I with ⟨m, rfl⟩
         by_cases m_eq_zero : m = 0
         · subst m_eq_zero

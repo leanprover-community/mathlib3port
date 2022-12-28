@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.multiset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,8 @@ theorem normalize_lcm (s : Multiset α) : normalize s.lcm = s.lcm :=
 #align multiset.normalize_lcm Multiset.normalize_lcm
 
 @[simp]
-theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : α) ∈ s := by
+theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : α) ∈ s :=
+  by
   induction' s using Multiset.induction_on with a s ihs
   · simp only [lcm_zero, one_ne_zero, not_mem_zero]
   · simp only [mem_cons, lcm_cons, lcm_eq_zero_iff, ihs, @eq_comm _ a]
@@ -93,7 +94,8 @@ variable [DecidableEq α]
 
 @[simp]
 theorem lcm_dedup (s : Multiset α) : (dedup s).lcm = s.lcm :=
-  (Multiset.induction_on s (by simp)) fun a s IH => by
+  (Multiset.induction_on s (by simp)) fun a s IH =>
+    by
     by_cases a ∈ s <;> simp [IH, h]
     unfold lcm
     rw [← cons_erase h, fold_cons_left, ← lcm_assoc, lcm_same]
@@ -101,19 +103,22 @@ theorem lcm_dedup (s : Multiset α) : (dedup s).lcm = s.lcm :=
 #align multiset.lcm_dedup Multiset.lcm_dedup
 
 @[simp]
-theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm := by
+theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm :=
+  by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
 #align multiset.lcm_ndunion Multiset.lcm_ndunion
 
 @[simp]
-theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm := by
+theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm :=
+  by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
 #align multiset.lcm_union Multiset.lcm_union
 
 @[simp]
-theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GcdMonoid.lcm a s.lcm := by
+theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GcdMonoid.lcm a s.lcm :=
+  by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_cons]
   simp
 #align multiset.lcm_ndinsert Multiset.lcm_ndinsert
@@ -168,7 +173,8 @@ theorem normalize_gcd (s : Multiset α) : normalize s.gcd = s.gcd :=
   (Multiset.induction_on s (by simp)) fun a s IH => by simp
 #align multiset.normalize_gcd Multiset.normalize_gcd
 
-theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s → x = 0 := by
+theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s → x = 0 :=
+  by
   constructor
   · intro h x hx
     apply eq_zero_of_zero_dvd
@@ -180,7 +186,8 @@ theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s �
     simp [h a (mem_cons_self a s), sgcd fun x hx => h x (mem_cons_of_mem hx)]
 #align multiset.gcd_eq_zero_iff Multiset.gcd_eq_zero_iff
 
-theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = normalize a * s.gcd := by
+theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = normalize a * s.gcd :=
+  by
   refine' s.induction_on _ fun b s ih => _
   · simp_rw [map_zero, gcd_zero, mul_zero]
   · simp_rw [map_cons, gcd_cons, ← gcd_mul_left]
@@ -194,7 +201,8 @@ variable [DecidableEq α]
 
 @[simp]
 theorem gcd_dedup (s : Multiset α) : (dedup s).gcd = s.gcd :=
-  (Multiset.induction_on s (by simp)) fun a s IH => by
+  (Multiset.induction_on s (by simp)) fun a s IH =>
+    by
     by_cases a ∈ s <;> simp [IH, h]
     unfold gcd
     rw [← cons_erase h, fold_cons_left, ← gcd_assoc, gcd_same]
@@ -202,19 +210,22 @@ theorem gcd_dedup (s : Multiset α) : (dedup s).gcd = s.gcd :=
 #align multiset.gcd_dedup Multiset.gcd_dedup
 
 @[simp]
-theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd := by
+theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd :=
+  by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
 #align multiset.gcd_ndunion Multiset.gcd_ndunion
 
 @[simp]
-theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd := by
+theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd :=
+  by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
 #align multiset.gcd_union Multiset.gcd_union
 
 @[simp]
-theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GcdMonoid.gcd a s.gcd := by
+theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GcdMonoid.gcd a s.gcd :=
+  by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_cons]
   simp
 #align multiset.gcd_ndinsert Multiset.gcd_ndinsert
@@ -225,14 +236,14 @@ theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α)
     (ht : s = t.map ((· * ·) s.gcd)) : t.gcd = 1 :=
   ((@mul_right_eq_self₀ _ _ s.gcd _).1 <| by
         conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <|
-    by 
+    by
     contrapose! hs
     exact s.gcd_eq_zero_iff.1 hs
 #align multiset.extract_gcd' Multiset.extract_gcd'
 
 theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) :
     ∃ t : Multiset α, s = t.map ((· * ·) s.gcd) ∧ t.gcd = 1 := by
-  classical 
+  classical
     by_cases h : ∀ x ∈ s, x = (0 : α)
     · use repeat 1 s.card
       rw [map_repeat, eq_repeat, mul_one, s.gcd_eq_zero_iff.2 h, ← nsmul_singleton, ← gcd_dedup]

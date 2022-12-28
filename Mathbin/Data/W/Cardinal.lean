@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.W.cardinal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,14 +40,15 @@ open Cardinal
 
 open Cardinal
 
-theorem cardinal_mk_eq_sum : (#WType β) = Sum fun a : α => (#WType β) ^ (#β a) := by
+theorem cardinal_mk_eq_sum : (#WType β) = Sum fun a : α => (#WType β) ^ (#β a) :=
+  by
   simp only [Cardinal.power_def, ← Cardinal.mk_sigma]
   exact mk_congr (equiv_sigma β)
 #align W_type.cardinal_mk_eq_sum WType.cardinal_mk_eq_sum
 
 /-- `#(W_type β)` is the least cardinal `κ` such that `sum (λ a : α, κ ^ #(β a)) ≤ κ` -/
 theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ (#β a)) ≤ κ) :
-    (#WType β) ≤ κ := by 
+    (#WType β) ≤ κ := by
   induction' κ using Cardinal.induction_on with γ
   simp only [Cardinal.power_def, ← Cardinal.mk_sigma, Cardinal.le_def] at hκ
   cases hκ
@@ -58,7 +59,7 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ 
   is at most the maximum of the cardinality of `α` and `ℵ₀`  -/
 theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : (#WType β) ≤ max (#α) ℵ₀ :=
   ((isEmpty_or_nonempty α).elim
-      (by 
+      (by
         intro h
         rw [Cardinal.mk_eq_zero (WType β)]
         exact zero_le _))
@@ -73,7 +74,7 @@ theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : (#WType β
               (csupr_le' fun i => pow_le (le_max_right _ _) (lt_aleph_0_of_finite _)) <|
             pos_iff_ne_zero.1 <|
               Order.succ_le_iff.1
-                (by 
+                (by
                   rw [succ_zero]
                   obtain ⟨a⟩ : Nonempty α; exact hn
                   refine' le_trans _ (le_csupr (bdd_above_range.{u, u} _) a)

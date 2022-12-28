@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.adjoint_functor_theorems
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,8 @@ variable {D : Type u} [Category.{v} D]
 variable (G : D ⥤ C)
 
 /-- If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
-theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : SolutionSetCondition G := by
+theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : SolutionSetCondition G :=
+  by
   intro A
   refine'
     ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
@@ -85,13 +86,15 @@ theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : Solution
 if `G` satisfies the solution set condition then `G` is a right adjoint.
 -/
 noncomputable def isRightAdjointOfPreservesLimitsOfSolutionSetCondition [HasLimits D]
-    [PreservesLimits G] (hG : SolutionSetCondition G) : IsRightAdjoint G := by
+    [PreservesLimits G] (hG : SolutionSetCondition G) : IsRightAdjoint G :=
+  by
   apply is_right_adjoint_of_structured_arrow_initials _
   intro A
   specialize hG A
   choose ι B f g using hG
   let B' : ι → structured_arrow A G := fun i => structured_arrow.mk (f i)
-  have hB' : ∀ A' : structured_arrow A G, ∃ i, Nonempty (B' i ⟶ A') := by
+  have hB' : ∀ A' : structured_arrow A G, ∃ i, Nonempty (B' i ⟶ A') :=
+    by
     intro A'
     obtain ⟨i, _, t⟩ := g _ A'.hom
     exact ⟨i, ⟨structured_arrow.hom_mk _ t⟩⟩
@@ -138,7 +141,8 @@ namespace Limits
     has a small coseparating set, then it is cocomplete. -/
 theorem has_colimits_of_has_limits_of_is_coseparating [HasLimits C] [WellPowered C] {𝒢 : Set C}
     [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) : HasColimits C :=
-  { HasColimitsOfShape := fun J hJ =>
+  {
+    HasColimitsOfShape := fun J hJ =>
       has_colimits_of_shape_iff_is_right_adjoint_const.2
         ⟨is_right_adjoint_of_preserves_limits_of_is_coseparating h𝒢 _⟩ }
 #align
@@ -148,7 +152,8 @@ theorem has_colimits_of_has_limits_of_is_coseparating [HasLimits C] [WellPowered
     has a small separating set, then it is complete. -/
 theorem has_limits_of_has_colimits_of_is_separating [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C}
     [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) : HasLimits C :=
-  { HasLimitsOfShape := fun J hJ =>
+  {
+    HasLimitsOfShape := fun J hJ =>
       has_limits_of_shape_iff_is_left_adjoint_const.2
         ⟨is_left_adjoint_of_preserves_colimits_of_is_separatig h𝒢 _⟩ }
 #align

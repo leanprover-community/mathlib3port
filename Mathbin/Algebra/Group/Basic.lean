@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,8 @@ variable (f : α → α → α) [IsAssociative α f] (x y : α)
 /-- Composing two associative operations of `f : α → α → α` on the left
 is equal to an associative operation on the left.
 -/
-theorem comp_assoc_left : f x ∘ f y = f (f x y) := by
+theorem comp_assoc_left : f x ∘ f y = f (f x y) :=
+  by
   ext z
   rw [Function.comp_apply, @IsAssociative.assoc _ f]
 #align comp_assoc_left comp_assoc_left
@@ -44,7 +45,8 @@ theorem comp_assoc_left : f x ∘ f y = f (f x y) := by
 /-- Composing two associative operations of `f : α → α → α` on the right
 is equal to an associative operation on the right.
 -/
-theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z (f y x) := by
+theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z (f y x) :=
+  by
   ext z
   rw [Function.comp_apply, @IsAssociative.assoc _ f]
 #align comp_assoc_right comp_assoc_right
@@ -1390,7 +1392,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {a : G} {b : G} {c : G}, Iff (Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b a) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) c a)) (Eq.{succ u1} G b c)
 Case conversion may be inaccurate. Consider using '#align div_left_inj div_left_injₓ'. -/
 @[simp, to_additive]
-theorem div_left_inj : b / a = c / a ↔ b = c := by
+theorem div_left_inj : b / a = c / a ↔ b = c :=
+  by
   rw [div_eq_mul_inv, div_eq_mul_inv]
   exact mul_left_inj _
 #align div_left_inj div_left_inj
@@ -1536,7 +1539,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_npow_eq_one_of_zpow_eq_one exists_npow_eq_one_of_zpow_eq_oneₓ'. -/
 @[to_additive]
 theorem exists_npow_eq_one_of_zpow_eq_one {n : ℤ} (hn : n ≠ 0) {x : G} (h : x ^ n = 1) :
-    ∃ n : ℕ, 0 < n ∧ x ^ n = 1 := by 
+    ∃ n : ℕ, 0 < n ∧ x ^ n = 1 := by
   cases' n with n n
   · rw [zpow_ofNat] at h
     refine' ⟨n, Nat.pos_of_ne_zero fun n0 => hn _, h⟩
@@ -1774,7 +1777,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : CommGroup.{u1} G] {a : G} {b : G} {c : G} {d : G}, Iff (Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1)))) a b) (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1)))) c d)) (Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1)))))) a d) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1)))))) c b))
 Case conversion may be inaccurate. Consider using '#align div_eq_div_iff_mul_eq_mul div_eq_div_iff_mul_eq_mulₓ'. -/
 @[to_additive]
-theorem div_eq_div_iff_mul_eq_mul : a / b = c / d ↔ a * d = c * b := by
+theorem div_eq_div_iff_mul_eq_mul : a / b = c / d ↔ a * d = c * b :=
+  by
   rw [div_eq_iff_eq_mul, div_mul_eq_mul_div, eq_comm, div_eq_iff_eq_mul']
   simp only [mul_comm, eq_comm]
 #align div_eq_div_iff_mul_eq_mul div_eq_div_iff_mul_eq_mul

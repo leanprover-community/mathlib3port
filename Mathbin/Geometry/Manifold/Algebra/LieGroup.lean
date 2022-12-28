@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.lie_group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,14 +107,14 @@ theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) :
 
 @[to_additive]
 theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) :=
-  by 
+  by
   rw [div_eq_mul_inv]
   exact ((smoothMul I).comp (hf.prod_mk hg.inv) : _)
 #align smooth.div Smooth.div
 
 @[to_additive]
 theorem SmoothOn.div {f g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) :
-    SmoothOn I' I (f / g) s := by 
+    SmoothOn I' I (f / g) s := by
   rw [div_eq_mul_inv]
   exact ((smoothMul I).compSmoothOn (hf.prod_mk hg.inv) : _)
 #align smooth_on.div SmoothOn.div
@@ -140,7 +140,8 @@ end ProdLieGroup
 
 instance normedSpaceLieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
-  { modelSpaceSmooth with
+  {
+    modelSpaceSmooth with
     smoothAdd := smooth_iff.2 ⟨continuous_add, fun x y => contDiffAdd.ContDiffOn⟩
     smoothNeg := smooth_iff.2 ⟨continuous_neg, fun x y => contDiffNeg.ContDiffOn⟩ }
 #align normed_space_lie_add_group normedSpaceLieAddGroup

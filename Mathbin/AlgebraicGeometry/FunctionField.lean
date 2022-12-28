@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.function_field
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,14 +50,16 @@ noncomputable instance [IrreducibleSpace X.carrier] (U : Opens X.carrier) [Nonem
     Algebra (X.Presheaf.obj (op U)) X.functionField :=
   (X.germToFunctionField U).toAlgebra
 
-noncomputable instance [IsIntegral X] : Field X.functionField := by
+noncomputable instance [IsIntegral X] : Field X.functionField :=
+  by
   apply fieldOfIsUnitOrEqZero
   intro a
   obtain ⟨U, m, s, rfl⟩ := TopCat.Presheaf.germ_exist _ _ a
   rw [or_iff_not_imp_right, ← (X.presheaf.germ ⟨_, m⟩).map_zero]
   intro ha
   replace ha := ne_of_apply_ne _ ha
-  have hs : genericPoint X.carrier ∈ RingedSpace.basic_open _ s := by
+  have hs : genericPoint X.carrier ∈ RingedSpace.basic_open _ s :=
+    by
     rw [← opens.mem_coe, (generic_point_spec X.carrier).mem_open_set_iff, Set.top_eq_univ,
       Set.univ_inter, Set.nonempty_iff_ne_empty, Ne.def, ← opens.coe_bot,
       subtype.coe_injective.eq_iff, ← opens.empty_eq]
@@ -67,7 +69,8 @@ noncomputable instance [IsIntegral X] : Field X.functionField := by
   rwa [TopCat.Presheaf.germ_res_apply] at this
 
 theorem germ_injective_of_is_integral [IsIntegral X] {U : Opens X.carrier} (x : U) :
-    Function.Injective (X.Presheaf.germ x) := by
+    Function.Injective (X.Presheaf.germ x) :=
+  by
   rw [injective_iff_map_eq_zero]
   intro y hy
   rw [← (X.presheaf.germ x).map_zero] at hy
@@ -86,7 +89,8 @@ theorem SchemeCat.germ_to_function_field_injective [IsIntegral X] (U : Opens X.c
 
 theorem generic_point_eq_of_is_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H : IsOpenImmersion f]
     [hX : IrreducibleSpace X.carrier] [IrreducibleSpace Y.carrier] :
-    f.1.base (genericPoint X.carrier : _) = (genericPoint Y.carrier : _) := by
+    f.1.base (genericPoint X.carrier : _) = (genericPoint Y.carrier : _) :=
+  by
   apply ((generic_point_spec _).Eq _).symm
   show T0Space Y.carrier; · infer_instance
   convert (generic_point_spec X.carrier).image (show Continuous f.1.base by continuity)
@@ -101,13 +105,15 @@ theorem generic_point_eq_of_is_open_immersion {X Y : SchemeCat} (f : X ⟶ Y) [H
   algebraic_geometry.generic_point_eq_of_is_open_immersion AlgebraicGeometry.generic_point_eq_of_is_open_immersion
 
 noncomputable instance stalkFunctionFieldAlgebra [IrreducibleSpace X.carrier] (x : X.carrier) :
-    Algebra (X.Presheaf.stalk x) X.functionField := by
+    Algebra (X.Presheaf.stalk x) X.functionField :=
+  by
   apply RingHom.toAlgebra
   exact X.presheaf.stalk_specializes ((generic_point_spec X.carrier).Specializes trivial)
 #align algebraic_geometry.stalk_function_field_algebra AlgebraicGeometry.stalkFunctionFieldAlgebra
 
 instance function_field_is_scalar_tower [IrreducibleSpace X.carrier] (U : Opens X.carrier) (x : U)
-    [Nonempty U] : IsScalarTower (X.Presheaf.obj <| op U) (X.Presheaf.stalk x) X.functionField := by
+    [Nonempty U] : IsScalarTower (X.Presheaf.obj <| op U) (X.Presheaf.stalk x) X.functionField :=
+  by
   apply IsScalarTower.of_algebra_map_eq'
   simp_rw [RingHom.algebra_map_to_algebra]
   change _ = X.presheaf.germ x ≫ _
@@ -118,21 +124,22 @@ instance function_field_is_scalar_tower [IrreducibleSpace X.carrier] (U : Opens 
 
 noncomputable instance (R : CommRingCat) [IsDomain R] :
     Algebra R (SchemeCat.spec.obj <| op R).functionField :=
-  RingHom.toAlgebra <| by 
+  RingHom.toAlgebra <| by
     change CommRingCat.of R ⟶ _
     apply structure_sheaf.to_stalk
 
 @[simp]
 theorem generic_point_eq_bot_of_affine (R : CommRingCat) [IsDomain R] :
-    genericPoint (SchemeCat.spec.obj <| op R).carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) :=
-  by 
+    genericPoint (SchemeCat.spec.obj <| op R).carrier = (⟨0, Ideal.botPrime⟩ : PrimeSpectrum R) :=
+  by
   apply (generic_point_spec (Scheme.Spec.obj <| op R).carrier).Eq
   simp [is_generic_point_def, ← PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
 #align
   algebraic_geometry.generic_point_eq_bot_of_affine AlgebraicGeometry.generic_point_eq_bot_of_affine
 
 instance function_field_is_fraction_ring_of_affine (R : CommRingCat.{u}) [IsDomain R] :
-    IsFractionRing R (SchemeCat.spec.obj <| op R).functionField := by
+    IsFractionRing R (SchemeCat.spec.obj <| op R).functionField :=
+  by
   convert structure_sheaf.is_localization.to_stalk R _
   delta IsFractionRing IsLocalization.AtPrime
   congr 1
@@ -153,9 +160,10 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : SchemeCat} [IsIntegral X]
         ⟨genericPoint X.carrier,
           ((generic_point_spec X.carrier).mem_open_set_iff U.Prop).mpr (by simpa using h)⟩ =
       genericPoint (SchemeCat.spec.obj <| op <| X.Presheaf.obj <| op U).carrier :=
-  by 
+  by
   haveI : is_affine _ := hU
-  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
+  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U :=
+    by
     ext1
     exact set.image_univ.trans Subtype.range_coe
   delta is_affine_open.prime_ideal_of
@@ -171,16 +179,18 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : SchemeCat} [IsIntegral X]
 
 theorem function_field_is_fraction_ring_of_is_affine_open [IsIntegral X] (U : Opens X.carrier)
     (hU : IsAffineOpen U) [hU' : Nonempty U] :
-    IsFractionRing (X.Presheaf.obj <| op U) X.functionField := by
+    IsFractionRing (X.Presheaf.obj <| op U) X.functionField :=
+  by
   haveI : is_affine _ := hU
   haveI : Nonempty (X.restrict U.open_embedding).carrier := hU'
   haveI : IsIntegral (X.restrict U.open_embedding) :=
     @is_integral_of_is_affine_is_domain _ _ _
-      (by 
+      (by
         dsimp
         rw [opens.open_embedding_obj_top]
         infer_instance)
-  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by
+  have e : U.open_embedding.is_open_map.functor.obj ⊤ = U :=
+    by
     ext1
     exact set.image_univ.trans Subtype.range_coe
   delta IsFractionRing Scheme.function_field

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,8 @@ open Set Filter
 namespace Complex
 
 /-- The complex sine function is everywhere strictly differentiable, with the derivative `cos x`. -/
-theorem hasStrictDerivAtSin (x : ℂ) : HasStrictDerivAt sin (cos x) x := by
+theorem hasStrictDerivAtSin (x : ℂ) : HasStrictDerivAt sin (cos x) x :=
+  by
   simp only [cos, div_eq_mul_inv]
   convert
     ((((hasStrictDerivAtId x).neg.mul_const I).cexp.sub
@@ -72,7 +73,8 @@ theorem deriv_sin : deriv sin = cos :=
 
 /-- The complex cosine function is everywhere strictly differentiable, with the derivative
 `-sin x`. -/
-theorem hasStrictDerivAtCos (x : ℂ) : HasStrictDerivAt cos (-sin x) x := by
+theorem hasStrictDerivAtCos (x : ℂ) : HasStrictDerivAt cos (-sin x) x :=
+  by
   simp only [sin, div_eq_mul_inv, neg_mul_eq_neg_mul]
   convert
     (((hasStrictDerivAtId x).mul_const I).cexp.add
@@ -109,7 +111,8 @@ theorem deriv_cos' : deriv cos = fun x => -sin x :=
 
 /-- The complex hyperbolic sine function is everywhere strictly differentiable, with the derivative
 `cosh x`. -/
-theorem hasStrictDerivAtSinh (x : ℂ) : HasStrictDerivAt sinh (cosh x) x := by
+theorem hasStrictDerivAtSinh (x : ℂ) : HasStrictDerivAt sinh (cosh x) x :=
+  by
   simp only [cosh, div_eq_mul_inv]
   convert ((has_strict_deriv_at_exp x).sub (hasStrictDerivAtId x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg, neg_neg]
@@ -139,7 +142,8 @@ theorem deriv_sinh : deriv sinh = cosh :=
 
 /-- The complex hyperbolic cosine function is everywhere strictly differentiable, with the
 derivative `sinh x`. -/
-theorem hasStrictDerivAtCosh (x : ℂ) : HasStrictDerivAt cosh (sinh x) x := by
+theorem hasStrictDerivAtCosh (x : ℂ) : HasStrictDerivAt cosh (sinh x) x :=
+  by
   simp only [sinh, div_eq_mul_inv]
   convert ((has_strict_deriv_at_exp x).add (hasStrictDerivAtId x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg]
@@ -682,7 +686,7 @@ theorem deriv_cosh : deriv cosh = sinh :=
 
 /-- `sinh` is strictly monotone. -/
 theorem sinh_strict_mono : StrictMono sinh :=
-  strict_mono_of_deriv_pos <| by 
+  strict_mono_of_deriv_pos <| by
     rw [Real.deriv_sinh]
     exact cosh_pos
 #align real.sinh_strict_mono Real.sinh_strict_mono
@@ -728,7 +732,8 @@ theorem abs_sinh (x : ℝ) : |sinh x| = sinh (|x|) := by
 #align real.abs_sinh Real.abs_sinh
 
 theorem cosh_strict_mono_on : StrictMonoOn cosh (Ici 0) :=
-  ((convex_Ici _).strict_mono_on_of_deriv_pos continuous_cosh.ContinuousOn) fun x hx => by
+  ((convex_Ici _).strict_mono_on_of_deriv_pos continuous_cosh.ContinuousOn) fun x hx =>
+    by
     rw [interior_Ici, mem_Ioi] at hx
     rwa [deriv_cosh, sinh_pos_iff]
 #align real.cosh_strict_mono_on Real.cosh_strict_mono_on
@@ -753,8 +758,9 @@ theorem one_lt_cosh : 1 < cosh x ↔ x ≠ 0 :=
   cosh_zero ▸ cosh_lt_cosh.trans (by simp only [_root_.abs_zero, abs_pos])
 #align real.one_lt_cosh Real.one_lt_cosh
 
-theorem sinh_sub_id_strict_mono : StrictMono fun x => sinh x - x := by
-  refine' strict_mono_of_odd_strict_mono_on_nonneg (fun x => by simp) _
+theorem sinh_sub_id_strict_mono : StrictMono fun x => sinh x - x :=
+  by
+  refine' strictMono_of_odd_strictMono_on_nonneg (fun x => by simp) _
   refine' (convex_Ici _).strict_mono_on_of_deriv_pos _ fun x hx => _
   · exact (continuous_sinh.sub continuous_id).ContinuousOn
   · rw [interior_Ici, mem_Ioi] at hx

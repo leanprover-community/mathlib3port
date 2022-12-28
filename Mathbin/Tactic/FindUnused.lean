@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.find_unused
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ in the current file.  Then, the `#list_unused_decls` command can be used to
 list the declaration present in the file that are not used by the main
 declarations of the file. -/
 @[user_attribute]
-unsafe def main_declaration_attr :
-    user_attribute where 
+unsafe def main_declaration_attr : user_attribute
+    where
   Name := `main_declaration
   descr := "tag essential declarations to help identify unused definitions"
 #align tactic.main_declaration_attr tactic.main_declaration_attr

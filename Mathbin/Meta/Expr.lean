@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek, Robert Y. Lewis, Floris van Doorn
 
 ! This file was ported from Lean 3 source module meta.expr
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -754,7 +754,7 @@ unsafe def get_simp_args (e : expr) : tactic (List expr) :=
 /-- Simplifies the expression `t` with the specified options.
   The result is `(new_e, pr)` with the new expression `new_e` and a proof
   `pr : e = new_e`. -/
-unsafe def simp (t : expr) (cfg : SimpConfig := {  }) (discharger : tactic Unit := failed)
+unsafe def simp (t : expr) (cfg : SimpConfig := { }) (discharger : tactic Unit := failed)
     (no_defaults := false) (attr_names : List Name := []) (hs : List simp_arg_type := []) :
     tactic (expr × expr × name_set) := do
   let (s, to_unfold) ← mk_simp_set no_defaults attr_names hs
@@ -763,7 +763,7 @@ unsafe def simp (t : expr) (cfg : SimpConfig := {  }) (discharger : tactic Unit 
 
 /-- Definitionally simplifies the expression `t` with the specified options.
   The result is the simplified expression. -/
-unsafe def dsimp (t : expr) (cfg : DsimpConfig := {  }) (no_defaults := false)
+unsafe def dsimp (t : expr) (cfg : DsimpConfig := { }) (no_defaults := false)
     (attr_names : List Name := []) (hs : List simp_arg_type := []) : tactic expr := do
   let (s, to_unfold) ← mk_simp_set no_defaults attr_names hs
   s to_unfold t cfg

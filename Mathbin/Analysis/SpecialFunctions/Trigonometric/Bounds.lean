@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.bounds
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,8 @@ namespace Real
 open Real
 
 /-- For 0 < x, we have sin x < x. -/
-theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
+theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x :=
+  by
   cases' lt_or_le 1 x with h' h'
   · exact (sin_le_one x).trans_lt h'
   have hx : |x| = x := abs_of_nonneg h.le
@@ -59,7 +60,8 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
 This is also true for x > 1, but it's nontrivial for x just above 1. This inequality is not
 tight; the tighter inequality is sin x > x - x ^ 3 / 6 for all x > 0, but this inequality has
 a simpler proof. -/
-theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < sin x := by
+theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < sin x :=
+  by
   have hx : |x| = x := abs_of_nonneg h.le
   have := neg_le_of_abs_le (sin_bound <| show |x| ≤ 1 by rwa [hx])
   rw [le_sub_iff_add_le, hx] at this
@@ -81,28 +83,33 @@ theorem deriv_tan_sub_id (x : ℝ) (h : cos x ≠ 0) :
 
 This is proved by checking that the function `tan x - x` vanishes
 at zero and has non-negative derivative. -/
-theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
+theorem lt_tan (x : ℝ) (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
+  by
   let U := Ico 0 (π / 2)
   have intU : interior U = Ioo 0 (π / 2) := interior_Ico
   have half_pi_pos : 0 < π / 2 := div_pos pi_pos two_pos
-  have cos_pos : ∀ {y : ℝ}, y ∈ U → 0 < cos y := by
+  have cos_pos : ∀ {y : ℝ}, y ∈ U → 0 < cos y :=
+    by
     intro y hy
     exact cos_pos_of_mem_Ioo (Ico_subset_Ioo_left (neg_lt_zero.mpr half_pi_pos) hy)
-  have sin_pos : ∀ {y : ℝ}, y ∈ interior U → 0 < sin y := by
+  have sin_pos : ∀ {y : ℝ}, y ∈ interior U → 0 < sin y :=
+    by
     intro y hy
     rw [intU] at hy
     exact sin_pos_of_mem_Ioo (Ioo_subset_Ioo_right (div_le_self pi_pos.le one_le_two) hy)
-  have tan_cts_U : ContinuousOn tan U := by
+  have tan_cts_U : ContinuousOn tan U :=
+    by
     apply ContinuousOn.mono continuous_on_tan
     intro z hz
     simp only [mem_set_of_eq]
     exact (cos_pos hz).ne'
   have tan_minus_id_cts : ContinuousOn (fun y : ℝ => tan y - y) U := tan_cts_U.sub continuous_on_id
-  have deriv_pos : ∀ y : ℝ, y ∈ interior U → 0 < deriv (fun y' : ℝ => tan y' - y') y := by
+  have deriv_pos : ∀ y : ℝ, y ∈ interior U → 0 < deriv (fun y' : ℝ => tan y' - y') y :=
+    by
     intro y hy
     have := cos_pos (interior_subset hy)
     simp only [deriv_tan_sub_id y this.ne', one_div, gt_iff_lt, sub_pos]
-    have bd2 : cos y ^ 2 < 1 := by 
+    have bd2 : cos y ^ 2 < 1 := by
       apply lt_of_le_of_ne y.cos_sq_le_one
       rw [cos_sq']
       simpa only [Ne.def, sub_eq_self, pow_eq_zero_iff, Nat.succ_pos'] using (sin_pos hy).ne'

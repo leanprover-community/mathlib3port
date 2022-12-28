@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 
 ! This file was ported from Lean 3 source module combinatorics.derangements.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,13 +93,15 @@ def atMostOneFixedPointEquivSumDerangements [DecidableEq α] (a : α) :
         · convert subtype_subtype_equiv_subtype_inter _ _
           ext f
           rfl
-    _ ≃ Sum { f : Perm α // fixedPoints f = {a} } { f : Perm α // fixedPoints f = ∅ } := by
+    _ ≃ Sum { f : Perm α // fixedPoints f = {a} } { f : Perm α // fixedPoints f = ∅ } :=
+      by
       refine' Equiv.sumCongr (subtype_equiv_right fun f => _) (subtype_equiv_right fun f => _)
       · rw [Set.eq_singleton_iff_unique_mem, and_comm']
         rfl
       · rw [Set.eq_empty_iff_forall_not_mem]
         refine' ⟨fun h x hx => h.2 (h.1 hx ▸ hx), fun h => ⟨fun x hx => (h _ hx).elim, h _⟩⟩
-    _ ≃ Sum (derangements ({a}ᶜ : Set α)) (derangements α) := by
+    _ ≃ Sum (derangements ({a}ᶜ : Set α)) (derangements α) :=
+      by
       refine'
         Equiv.sumCongr ((derangements.subtypeEquiv _).trans <| subtype_equiv_right fun x => _).symm
           (subtype_equiv_right fun f => mem_derangements_iff_fixed_points_eq_empty.symm)
@@ -125,7 +127,8 @@ theorem RemoveNone.mem_fiber (a : Option α) (f : Perm α) :
   by simp [remove_none.fiber, derangements]
 #align derangements.equiv.remove_none.mem_fiber derangements.Equiv.RemoveNone.mem_fiber
 
-theorem RemoveNone.fiber_none : RemoveNone.fiber (@none α) = ∅ := by
+theorem RemoveNone.fiber_none : RemoveNone.fiber (@none α) = ∅ :=
+  by
   rw [Set.eq_empty_iff_forall_not_mem]
   intro f hyp
   rw [remove_none.mem_fiber] at hyp
@@ -136,7 +139,8 @@ theorem RemoveNone.fiber_none : RemoveNone.fiber (@none α) = ∅ := by
 /-- For any `a : α`, the fiber over `some a` is the set of permutations
     where `a` is the only possible fixed point. -/
 theorem RemoveNone.fiber_some (a : α) :
-    RemoveNone.fiber (some a) = { f : Perm α | fixedPoints f ⊆ {a} } := by
+    RemoveNone.fiber (some a) = { f : Perm α | fixedPoints f ⊆ {a} } :=
+  by
   ext f
   constructor
   · rw [remove_none.mem_fiber]
@@ -177,8 +181,10 @@ variable [DecidableEq α]
 /-- The set of derangements on `option α` is equivalent to the union over `a : α`
     of "permutations with `a` the only possible fixed point". -/
 def derangementsOptionEquivSigmaAtMostOneFixedPoint :
-    derangements (Option α) ≃ Σa : α, { f : Perm α | fixedPoints f ⊆ {a} } := by
-  have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False := by
+    derangements (Option α) ≃ Σa : α, { f : Perm α | fixedPoints f ⊆ {a} } :=
+  by
+  have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False :=
+    by
     rw [equiv.remove_none.fiber_none]
     exact IsEmpty.false
   calc

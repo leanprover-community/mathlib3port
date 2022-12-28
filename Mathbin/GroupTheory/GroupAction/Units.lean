@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.units
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ instance [Monoid M] [HasSmul M α] : HasSmul Mˣ α where smul m a := (m : M) �
 
 /- warning: units.smul_def -> Units.smul_def is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : HasSmul.{u1, u2} M α] (m : Units.{u1} M _inst_1) (a : α), Eq.{succ u2} α (HasSmul.smul.{u1, u2} (Units.{u1} M _inst_1) α (Units.hasSmul.{u1, u2} M α _inst_1 _inst_2) m a) (HasSmul.smul.{u1, u2} M α _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.val.{u1} M _inst_1)))) m) a)
+  forall {M : Type.{u1}} {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_2 : HasSmul.{u1, u2} M α] (m : Units.{u1} M _inst_1) (a : α), Eq.{succ u2} α (HasSmul.smul.{u1, u2} (Units.{u1} M _inst_1) α (Units.hasSmul.{u1, u2} M α _inst_1 _inst_2) m a) (HasSmul.smul.{u1, u2} M α _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} M _inst_1) M (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} M _inst_1) M (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} M _inst_1) M (coeBase.{succ u1, succ u1} (Units.{u1} M _inst_1) M (Units.hasCoe.{u1} M _inst_1)))) m) a)
 but is expected to have type
   forall {M : Type.{u2}} {α : Type.{u1}} [_inst_1 : Monoid.{u2} M] [_inst_2 : SMul.{u2, u1} M α] (m : Units.{u2} M _inst_1) (a : α), Eq.{succ u1} α (HSMul.hSMul.{u2, u1, u1} (Units.{u2} M _inst_1) α α (instHSMul.{u2, u1} (Units.{u2} M _inst_1) α (Units.instSMulUnits.{u2, u1} M α _inst_1 _inst_2)) m a) (HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α _inst_2) (Units.val.{u2} M _inst_1 m) a)
 Case conversion may be inaccurate. Consider using '#align units.smul_def Units.smul_defₓ'. -/
@@ -72,28 +72,28 @@ theorem IsUnit.inv_smul [Monoid α] {a : α} (h : IsUnit a) : h.Unit⁻¹ • a 
 #align is_unit.inv_smul IsUnit.inv_smul
 
 @[to_additive]
-instance [Monoid M] [HasSmul M α] [FaithfulSMul M α] :
-    FaithfulSMul Mˣ α where eq_of_smul_eq_smul u₁ u₂ h := Units.ext <| eq_of_smul_eq_smul h
+instance [Monoid M] [HasSmul M α] [FaithfulSMul M α] : FaithfulSMul Mˣ α
+    where eq_of_smul_eq_smul u₁ u₂ h := Units.ext <| eq_of_smul_eq_smul h
 
 @[to_additive]
-instance [Monoid M] [MulAction M α] :
-    MulAction Mˣ α where 
+instance [Monoid M] [MulAction M α] : MulAction Mˣ α
+    where
   one_smul := (one_smul M : _)
   mul_smul m n := mul_smul (m : M) n
 
-instance [Monoid M] [Zero α] [SMulZeroClass M α] :
-    SMulZeroClass Mˣ α where 
+instance [Monoid M] [Zero α] [SMulZeroClass M α] : SMulZeroClass Mˣ α
+    where
   smul := (· • ·)
   smul_zero m := smul_zero m
 
-instance [Monoid M] [AddZeroClass α] [DistribSMul M α] :
-    DistribSMul Mˣ α where smul_add m := smul_add (m : M)
+instance [Monoid M] [AddZeroClass α] [DistribSMul M α] : DistribSMul Mˣ α
+    where smul_add m := smul_add (m : M)
 
 instance [Monoid M] [AddMonoid α] [DistribMulAction M α] : DistribMulAction Mˣ α :=
   { Units.distribSmul with }
 
-instance [Monoid M] [Monoid α] [MulDistribMulAction M α] :
-    MulDistribMulAction Mˣ α where 
+instance [Monoid M] [Monoid α] [MulDistribMulAction M α] : MulDistribMulAction Mˣ α
+    where
   smul_mul m := smul_mul' (m : M)
   smul_one m := smul_one m
 
@@ -134,9 +134,8 @@ action on `Mˣ`. Notably, this provides `mul_action Mˣ Nˣ` under suitable
 conditions.
 -/
 instance mulAction' [Group G] [Monoid M] [MulAction G M] [SMulCommClass G M M]
-    [IsScalarTower G M M] :
-    MulAction G
-      Mˣ where 
+    [IsScalarTower G M M] : MulAction G Mˣ
+    where
   smul g m :=
     ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by rw [smul_mul_smul, Units.mul_inv, mul_right_inv, one_smul], by
       rw [smul_mul_smul, Units.inv_mul, mul_left_inv, one_smul]⟩
@@ -146,7 +145,7 @@ instance mulAction' [Group G] [Monoid M] [MulAction G M] [SMulCommClass G M M]
 
 /- warning: units.coe_smul -> Units.val_smul is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} {M : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Monoid.{u2} M] [_inst_3 : MulAction.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))] [_inst_4 : SMulCommClass.{u1, u2, u2} G M M (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3) (Mul.toSMul.{u2} M (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2)))] [_inst_5 : IsScalarTower.{u1, u2, u2} G M M (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3) (Mul.toSMul.{u2} M (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2))) (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3)] (g : G) (m : Units.{u2} M _inst_2), Eq.{succ u2} M ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Units.{u2} M _inst_2) M (HasLiftT.mk.{succ u2, succ u2} (Units.{u2} M _inst_2) M (CoeTCₓ.coe.{succ u2, succ u2} (Units.{u2} M _inst_2) M (CoeTCₓ.mk.{succ u2, succ u2} (Units.{u2} M _inst_2) M (Units.val.{u2} M _inst_2)))) (HasSmul.smul.{u1, u2} G (Units.{u2} M _inst_2) (MulAction.toHasSmul.{u1, u2} G (Units.{u2} M _inst_2) (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Units.mulAction'.{u1, u2} G M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) g m)) (HasSmul.smul.{u1, u2} G M (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3) g ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Units.{u2} M _inst_2) M (HasLiftT.mk.{succ u2, succ u2} (Units.{u2} M _inst_2) M (CoeTCₓ.coe.{succ u2, succ u2} (Units.{u2} M _inst_2) M (CoeTCₓ.mk.{succ u2, succ u2} (Units.{u2} M _inst_2) M (Units.val.{u2} M _inst_2)))) m))
+  forall {G : Type.{u1}} {M : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Monoid.{u2} M] [_inst_3 : MulAction.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))] [_inst_4 : SMulCommClass.{u1, u2, u2} G M M (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3) (Mul.toSMul.{u2} M (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2)))] [_inst_5 : IsScalarTower.{u1, u2, u2} G M M (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3) (Mul.toSMul.{u2} M (MulOneClass.toHasMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_2))) (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3)] (g : G) (m : Units.{u2} M _inst_2), Eq.{succ u2} M ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Units.{u2} M _inst_2) M (HasLiftT.mk.{succ u2, succ u2} (Units.{u2} M _inst_2) M (CoeTCₓ.coe.{succ u2, succ u2} (Units.{u2} M _inst_2) M (coeBase.{succ u2, succ u2} (Units.{u2} M _inst_2) M (Units.hasCoe.{u2} M _inst_2)))) (HasSmul.smul.{u1, u2} G (Units.{u2} M _inst_2) (MulAction.toHasSmul.{u1, u2} G (Units.{u2} M _inst_2) (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) (Units.mulAction'.{u1, u2} G M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5)) g m)) (HasSmul.smul.{u1, u2} G M (MulAction.toHasSmul.{u1, u2} G M (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) _inst_3) g ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Units.{u2} M _inst_2) M (HasLiftT.mk.{succ u2, succ u2} (Units.{u2} M _inst_2) M (CoeTCₓ.coe.{succ u2, succ u2} (Units.{u2} M _inst_2) M (coeBase.{succ u2, succ u2} (Units.{u2} M _inst_2) M (Units.hasCoe.{u2} M _inst_2)))) m))
 but is expected to have type
   forall {G : Type.{u2}} {M : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Monoid.{u1} M] [_inst_3 : MulAction.{u2, u1} G M (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))] [_inst_4 : SMulCommClass.{u2, u1, u1} G M M (MulAction.toSMul.{u2, u1} G M (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)) _inst_3) (MulAction.toSMul.{u1, u1} M M _inst_2 (Monoid.toMulAction.{u1} M _inst_2))] [_inst_5 : IsScalarTower.{u2, u1, u1} G M M (MulAction.toSMul.{u2, u1} G M (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)) _inst_3) (MulAction.toSMul.{u1, u1} M M _inst_2 (Monoid.toMulAction.{u1} M _inst_2)) (MulAction.toSMul.{u2, u1} G M (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)) _inst_3)] (g : G) (m : Units.{u1} M _inst_2), Eq.{succ u1} M (Units.val.{u1} M _inst_2 (HSMul.hSMul.{u2, u1, u1} G (Units.{u1} M _inst_2) (Units.{u1} M _inst_2) (instHSMul.{u2, u1} G (Units.{u1} M _inst_2) (MulAction.toSMul.{u2, u1} G (Units.{u1} M _inst_2) (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)) (Units.mulAction'.{u2, u1} G M _inst_1 _inst_2 _inst_3 _inst_4 _inst_5))) g m)) (HSMul.hSMul.{u2, u1, u1} G M M (instHSMul.{u2, u1} G M (MulAction.toSMul.{u2, u1} G M (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1)) _inst_3)) g (Units.val.{u1} M _inst_2 m))
 Case conversion may be inaccurate. Consider using '#align units.coe_smul Units.val_smulₓ'. -/
@@ -178,8 +177,8 @@ Case conversion may be inaccurate. Consider using '#align units.smul_comm_class'
 /-- Transfer `smul_comm_class G H M` to `smul_comm_class G H Mˣ` -/
 instance smulCommClass' [Group G] [Group H] [Monoid M] [MulAction G M] [SMulCommClass G M M]
     [MulAction H M] [SMulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M]
-    [SMulCommClass G H M] :
-    SMulCommClass G H Mˣ where smul_comm g h m := Units.ext <| smul_comm g h (m : M)
+    [SMulCommClass G H M] : SMulCommClass G H Mˣ
+    where smul_comm g h m := Units.ext <| smul_comm g h (m : M)
 #align units.smul_comm_class' Units.smulCommClass'
 
 /- warning: units.is_scalar_tower' -> Units.isScalarTower' is a dubious translation:
@@ -191,8 +190,8 @@ Case conversion may be inaccurate. Consider using '#align units.is_scalar_tower'
 /-- Transfer `is_scalar_tower G H M` to `is_scalar_tower G H Mˣ` -/
 instance isScalarTower' [HasSmul G H] [Group G] [Group H] [Monoid M] [MulAction G M]
     [SMulCommClass G M M] [MulAction H M] [SMulCommClass H M M] [IsScalarTower G M M]
-    [IsScalarTower H M M] [IsScalarTower G H M] :
-    IsScalarTower G H Mˣ where smul_assoc g h m := Units.ext <| smul_assoc g h (m : M)
+    [IsScalarTower H M M] [IsScalarTower G H M] : IsScalarTower G H Mˣ
+    where smul_assoc g h m := Units.ext <| smul_assoc g h (m : M)
 #align units.is_scalar_tower' Units.isScalarTower'
 
 /- warning: units.is_scalar_tower'_left -> Units.isScalarTower'_left is a dubious translation:
@@ -203,8 +202,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.is_scalar_tower'_left Units.isScalarTower'_leftₓ'. -/
 /-- Transfer `is_scalar_tower G M α` to `is_scalar_tower G Mˣ α` -/
 instance isScalarTower'_left [Group G] [Monoid M] [MulAction G M] [HasSmul M α] [HasSmul G α]
-    [SMulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] :
-    IsScalarTower G Mˣ α where smul_assoc g m := (smul_assoc g (m : M) : _)
+    [SMulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] : IsScalarTower G Mˣ α
+    where smul_assoc g m := (smul_assoc g (m : M) : _)
 #align units.is_scalar_tower'_left Units.isScalarTower'_left
 
 -- Just to prove this transfers a particularly useful instance.
@@ -221,7 +220,7 @@ Case conversion may be inaccurate. Consider using '#align units.mul_distrib_mul_
 /-- A stronger form of `units.mul_action'`. -/
 instance mulDistribMulAction' [Group G] [Monoid M] [MulDistribMulAction G M] [SMulCommClass G M M]
     [IsScalarTower G M M] : MulDistribMulAction G Mˣ :=
-  { Units.mulAction' with 
+  { Units.mulAction' with
     smul := (· • ·)
     smul_one := fun m => Units.ext <| smul_one _
     smul_mul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }

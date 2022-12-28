@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp_vector_space
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,10 +45,12 @@ variable [Ring R] [AddCommGroup M] [Module R M]
 
 theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
     (hf : ∀ i, LinearIndependent R (f i)) :
-    LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) := by
+    LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) :=
+  by
   apply @linear_independent_Union_finite R _ _ _ _ ι φ fun i x => single i (f i x)
   · intro i
-    have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i)) := by
+    have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i)) :=
+      by
       rw [ker_lsingle]
       exact disjoint_bot_right
     apply (hf i).map h_disjoint
@@ -79,7 +81,8 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
     { toFun := fun g =>
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2
           support := g.support.Sigma fun i => ((b i).repr (g i)).support
-          mem_support_to_fun := fun ix => by
+          mem_support_to_fun := fun ix =>
+            by
             simp only [Finset.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
             intro b hg
             simpa [hg] using b }
@@ -87,23 +90,24 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
         { toFun := fun i =>
             (b i).repr.symm (g.comapDomain _ (Set.injOn_of_injective sigma_mk_injective _))
           support := g.support.image Sigma.fst
-          mem_support_to_fun := fun i => by
+          mem_support_to_fun := fun i =>
+            by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
             simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply,
               exists_and_right, mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image,
               not_forall] }
-      left_inv := fun g => by 
+      left_inv := fun g => by
         ext i
         rw [← (b i).repr.Injective.eq_iff]
         ext x
         simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
-      right_inv := fun g => by 
+      right_inv := fun g => by
         ext ⟨i, x⟩
         simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
-      map_add' := fun g h => by 
+      map_add' := fun g h => by
         ext ⟨i, x⟩
         simp only [coe_mk, add_apply, LinearEquiv.map_add]
-      map_smul' := fun c h => by 
+      map_smul' := fun c h => by
         ext ⟨i, x⟩
         simp only [coe_mk, smul_apply, LinearEquiv.map_smul, RingHom.id_apply] }
 #align finsupp.basis Finsupp.basis
@@ -118,7 +122,7 @@ theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι �
 theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
     ⇑(Finsupp.basis b) = fun ix : Σi, φ i => single ix.1 (b ix.1 ix.2) :=
   funext fun ⟨i, x⟩ =>
-    Basis.apply_eq_iff.mpr <| by 
+    Basis.apply_eq_iff.mpr <| by
       ext ⟨j, y⟩
       by_cases h : i = j
       · cases h
@@ -148,7 +152,8 @@ variable {K : Type u} {V : Type v} {ι : Type v}
 
 variable [Field K] [AddCommGroup V] [Module K V]
 
-theorem dim_eq : Module.rank K (ι →₀ V) = (#ι) * Module.rank K V := by
+theorem dim_eq : Module.rank K (ι →₀ V) = (#ι) * Module.rank K V :=
+  by
   let bs := Basis.ofVectorSpace K V
   rw [← bs.mk_eq_dim'', ← (Finsupp.basis fun a : ι => bs).mk_eq_dim'', Cardinal.mk_sigma,
     Cardinal.sum_const']
@@ -176,7 +181,7 @@ open Module
 
 theorem equiv_of_dim_eq_lift_dim
     (h : Cardinal.lift.{w} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
-    Nonempty (V ≃ₗ[K] V') := by 
+    Nonempty (V ≃ₗ[K] V') := by
   haveI := Classical.decEq V
   haveI := Classical.decEq V'
   let m := Basis.ofVectorSpace K V
@@ -193,7 +198,8 @@ def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[
 #align equiv_of_dim_eq_dim equivOfDimEqDim
 
 /-- An `n`-dimensional `K`-vector space is equivalent to `fin n → K`. -/
-def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fin n → K := by
+def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Fin n → K :=
+  by
   have : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u}) := by simp
   have hn := Cardinal.lift_inj.{v, u}.2 hn
   rw [this] at hn
@@ -212,7 +218,8 @@ variable [DecidableEq n] [Fintype n]
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 theorem Finset.sum_single_ite (a : R) (i : n) :
-    (Finset.univ.Sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a := by
+    (Finset.univ.Sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a :=
+  by
   rw [Finset.sum_congr_set {i} (fun x : n => Finsupp.single x (ite (i = x) a 0)) fun _ =>
       Finsupp.single i a]
   · simp
@@ -220,7 +227,7 @@ theorem Finset.sum_single_ite (a : R) (i : n) :
     rw [Set.mem_singleton_iff] at hx
     simp [hx]
   intro x hx
-  have hx' : ¬i = x := by 
+  have hx' : ¬i = x := by
     refine' ne_comm.mp _
     rwa [mem_singleton_iff] at hx
   simp [hx']
@@ -228,7 +235,8 @@ theorem Finset.sum_single_ite (a : R) (i : n) :
 
 @[simp]
 theorem equiv_fun_symm_std_basis (b : Basis n R M) (i : n) :
-    b.equivFun.symm (LinearMap.stdBasis R (fun _ => R) i 1) = b i := by
+    b.equivFun.symm (LinearMap.stdBasis R (fun _ => R) i 1) = b i :=
+  by
   have := EquivLike.injective b.repr
   apply_fun b.repr
   simp only [equiv_fun_symm_apply, std_basis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ,

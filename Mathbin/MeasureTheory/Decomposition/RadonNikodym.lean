@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.radon_nikodym
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,11 +49,14 @@ namespace Measure
 include m
 
 theorem with_density_rn_deriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) :
-    ν.withDensity (rnDeriv μ ν) = μ := by
+    ν.withDensity (rnDeriv μ ν) = μ :=
+  by
   obtain ⟨hf₁, ⟨E, hE₁, hE₂, hE₃⟩, hadd⟩ := have_lebesgue_decomposition_spec μ ν
-  have : singular_part μ ν = 0 := by
+  have : singular_part μ ν = 0 :=
+    by
     refine' le_antisymm (fun A hA => _) (measure.zero_le _)
-    suffices singular_part μ ν Set.univ = 0 by
+    suffices singular_part μ ν Set.univ = 0
+      by
       rw [measure.coe_zero, Pi.zero_apply, ← this]
       exact measure_mono (Set.subset_univ _)
     rw [← measure_add_measure_compl hE₁, hE₂, zero_add]
@@ -76,7 +79,8 @@ theorem absolutely_continuous_iff_with_density_rn_deriv_eq {μ ν : Measure α}
 
 theorem with_density_rn_deriv_to_real_eq {μ ν : Measure α} [IsFiniteMeasure μ]
     [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) :
-    (∫ x in i, (μ.rnDeriv ν x).toReal ∂ν) = (μ i).toReal := by
+    (∫ x in i, (μ.rnDeriv ν x).toReal ∂ν) = (μ i).toReal :=
+  by
   rw [integral_to_real, ← with_density_apply _ hi, with_density_rn_deriv_eq μ ν h]
   · measurability
   · refine'
@@ -95,7 +99,8 @@ include m
 open Measure VectorMeasure
 
 theorem with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [SigmaFinite μ]
-    (h : s ≪ᵥ μ.toEnnrealVectorMeasure) : μ.withDensityᵥ (s.rnDeriv μ) = s := by
+    (h : s ≪ᵥ μ.toEnnrealVectorMeasure) : μ.withDensityᵥ (s.rnDeriv μ) = s :=
+  by
   rw [absolutely_continuous_ennreal_iff, (_ : μ.to_ennreal_vector_measure.ennreal_to_measure = μ),
     total_variation_absolutely_continuous_iff] at h
   · ext1 i hi
@@ -104,7 +109,7 @@ theorem with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [Si
     · conv_rhs => rw [← s.to_signed_measure_to_jordan_decomposition]
       erw [vector_measure.sub_apply]
       rw [to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi]
-    all_goals 
+    all_goals
       rw [← integrable_on_univ]
       refine' integrable_on.restrict _ MeasurableSet.univ
       refine' ⟨_, has_finite_integral_to_real_of_lintegral_ne_top _⟩

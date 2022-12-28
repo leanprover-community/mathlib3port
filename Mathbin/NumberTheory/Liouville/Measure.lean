@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module number_theory.liouville.measure
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem set_of_liouville_with_subset_aux :
             { x : ℝ |
               ∃ᶠ b : ℕ in at_top,
                 ∃ a ∈ Finset.icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
-  by 
+  by
   rintro x ⟨p, hp, hxp⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hp) with ⟨n, hn⟩
   rw [lt_sub_iff_add_lt'] at hn
@@ -53,7 +53,7 @@ theorem set_of_liouville_with_subset_aux :
         y ∈ Ico (0 : ℝ) 1 →
           ∃ᶠ b : ℕ in at_top,
             ∃ a ∈ Finset.icc (0 : ℤ) b, |y - a / b| < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
-    by 
+    by
     simp only [mem_Union, mem_preimage]
     have hx : x + ↑(-⌊x⌋) ∈ Ico (0 : ℝ) 1 := by
       simp only [Int.floor_le, Int.lt_floor_add_one, add_neg_lt_iff_le_add', zero_add, and_self_iff,
@@ -93,7 +93,8 @@ theorem set_of_liouville_with_subset_aux :
 measure zero. -/
 @[simp]
 theorem volume_Union_set_of_liouville_with :
-    volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 := by
+    volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 :=
+  by
   simp only [← set_of_exists]
   refine' measure_mono_null set_of_liouville_with_subset_aux _
   rw [measure_Union_null_iff]
@@ -108,12 +109,14 @@ theorem volume_Union_set_of_liouville_with :
   refine' measure_set_of_frequently_eq_zero _
   simp only [set_of_exists, ← Real.dist_eq, ← mem_ball, set_of_mem_eq]
   set B : ℤ → ℕ → Set ℝ := fun a b => ball (a / b) (1 / b ^ r)
-  have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0) := by
+  have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0) :=
+    by
     intro a b
     rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ←
       Nnreal.coe_div, Ennreal.of_real_coe_nnreal]
   have :
-    ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) := by
+    ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) :=
+    by
     intro b
     calc
       volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=

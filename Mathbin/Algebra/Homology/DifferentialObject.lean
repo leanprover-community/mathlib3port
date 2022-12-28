@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.differential_object
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,10 +55,10 @@ theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : 
     X.xEqToHom h ≫ X.d y =
       X.d x ≫
         X.xEqToHom
-          (by 
+          (by
             cases h
             rfl) :=
-  by 
+  by
   cases h
   dsimp
   simp
@@ -66,14 +66,16 @@ theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : 
 
 @[simp, reassoc.1]
 theorem d_eq_to_hom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β} (h : y = z) :
-    X.d x y ≫ eqToHom (congr_arg X.x h) = X.d x z := by
+    X.d x y ≫ eqToHom (congr_arg X.x h) = X.d x z :=
+  by
   cases h
   simp
 #align homological_complex.d_eq_to_hom HomologicalComplex.d_eq_to_hom
 
 @[simp, reassoc.1]
 theorem eq_to_hom_f' {X Y : DifferentialObject (GradedObjectWithShift b V)} (f : X ⟶ Y) {x y : β}
-    (h : x = y) : X.xEqToHom h ≫ f.f y = f.f x ≫ Y.xEqToHom h := by
+    (h : x = y) : X.xEqToHom h ≫ f.f y = f.f x ≫ Y.xEqToHom h :=
+  by
   cases h
   simp
 #align homological_complex.eq_to_hom_f' HomologicalComplex.eq_to_hom_f'
@@ -86,25 +88,23 @@ attribute [local reducible] graded_object.has_shift
 -/
 @[simps]
 def dgoToHomologicalComplex :
-    DifferentialObject (GradedObjectWithShift b V) ⥤
-      HomologicalComplex V
-        (ComplexShape.up'
-          b) where 
+    DifferentialObject (GradedObjectWithShift b V) ⥤ HomologicalComplex V (ComplexShape.up' b)
+    where
   obj X :=
     { x := fun i => X.x i
       d := fun i j =>
         if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0
-      shape' := fun i j w => by 
+      shape' := fun i j w => by
         dsimp at w
         convert dif_neg w
-      d_comp_d' := fun i j k hij hjk => by 
+      d_comp_d' := fun i j k hij hjk => by
         dsimp at hij hjk; substs hij hjk
         have : X.d i ≫ X.d _ = _ := (congr_fun X.d_squared i : _)
         reassoc! this
         simp [this] }
   map X Y f :=
     { f := f.f
-      comm' := fun i j h => by 
+      comm' := fun i j h => by
         dsimp at h⊢
         subst h
         have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_fun f.comm i).symm
@@ -117,20 +117,18 @@ def dgoToHomologicalComplex :
 -/
 @[simps]
 def homologicalComplexToDgo :
-    HomologicalComplex V (ComplexShape.up' b) ⥤
-      DifferentialObject
-        (GradedObjectWithShift b
-          V) where 
+    HomologicalComplex V (ComplexShape.up' b) ⥤ DifferentialObject (GradedObjectWithShift b V)
+    where
   obj X :=
     { x := fun i => X.x i
       d := fun i => X.d i (i + 1 • b)
-      d_squared' := by 
+      d_squared' := by
         ext i
         dsimp
         simp }
   map X Y f :=
     { f := f.f
-      comm' := by 
+      comm' := by
         ext i
         dsimp
         simp }
@@ -160,13 +158,13 @@ def dgoEquivHomologicalComplexCounitIso :
     (fun X =>
       { Hom :=
           { f := fun i => 𝟙 (X.x i)
-            comm' := fun i j h => by 
+            comm' := fun i j h => by
               dsimp at h⊢; subst h
               delta homological_complex_to_dgo
               simp }
         inv :=
           { f := fun i => 𝟙 (X.x i)
-            comm' := fun i j h => by 
+            comm' := fun i j h => by
               dsimp at h⊢; subst h
               delta homological_complex_to_dgo
               simp } })
@@ -179,10 +177,8 @@ to the category of homological complexes in `V`.
 -/
 @[simps]
 def dgoEquivHomologicalComplex :
-    DifferentialObject (GradedObjectWithShift b V) ≌
-      HomologicalComplex V
-        (ComplexShape.up'
-          b) where 
+    DifferentialObject (GradedObjectWithShift b V) ≌ HomologicalComplex V (ComplexShape.up' b)
+    where
   Functor := dgoToHomologicalComplex b V
   inverse := homologicalComplexToDgo b V
   unitIso := dgoEquivHomologicalComplexUnitIso b V

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.star.prod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,21 +41,21 @@ theorem star_def [HasStar R] [HasStar S] (x : R × S) : star x = (star x.1, star
   rfl
 #align prod.star_def Prod.star_def
 
-instance [HasInvolutiveStar R] [HasInvolutiveStar S] :
-    HasInvolutiveStar (R × S) where star_involutive _ := Prod.ext (star_star _) (star_star _)
+instance [HasInvolutiveStar R] [HasInvolutiveStar S] : HasInvolutiveStar (R × S)
+    where star_involutive _ := Prod.ext (star_star _) (star_star _)
 
-instance [Semigroup R] [Semigroup S] [StarSemigroup R] [StarSemigroup S] :
-    StarSemigroup (R × S) where star_mul _ _ := Prod.ext (star_mul _ _) (star_mul _ _)
+instance [Semigroup R] [Semigroup S] [StarSemigroup R] [StarSemigroup S] : StarSemigroup (R × S)
+    where star_mul _ _ := Prod.ext (star_mul _ _) (star_mul _ _)
 
-instance [AddMonoid R] [AddMonoid S] [StarAddMonoid R] [StarAddMonoid S] :
-    StarAddMonoid (R × S) where star_add _ _ := Prod.ext (star_add _ _) (star_add _ _)
+instance [AddMonoid R] [AddMonoid S] [StarAddMonoid R] [StarAddMonoid S] : StarAddMonoid (R × S)
+    where star_add _ _ := Prod.ext (star_add _ _) (star_add _ _)
 
 instance [NonUnitalSemiring R] [NonUnitalSemiring S] [StarRing R] [StarRing S] : StarRing (R × S) :=
   { Prod.starAddMonoid, (Prod.starSemigroup : StarSemigroup (R × S)) with }
 
 instance {α : Type w} [HasSmul α R] [HasSmul α S] [HasStar α] [HasStar R] [HasStar S]
-    [StarModule α R] [StarModule α S] :
-    StarModule α (R × S) where star_smul r x := Prod.ext (star_smul _ _) (star_smul _ _)
+    [StarModule α R] [StarModule α S] : StarModule α (R × S)
+    where star_smul r x := Prod.ext (star_smul _ _) (star_smul _ _)
 
 end Prod
 

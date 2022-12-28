@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.cocompact_map
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,10 +68,10 @@ section Basics
 variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
   [TopologicalSpace δ]
 
-instance : CocompactMapClass (CocompactMap α β) α
-      β where 
+instance : CocompactMapClass (CocompactMap α β) α β
+    where
   coe f := f.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -95,13 +95,13 @@ theorem ext {f g : CocompactMap α β} (h : ∀ x, f x = g x) : f = g :=
 
 /-- Copy of a `cocompact_map` with a new `to_fun` equal to the old one. Useful
 to fix definitional equalities. -/
-protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) :
-    CocompactMap α β where 
+protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : CocompactMap α β
+    where
   toFun := f'
-  continuous_to_fun := by 
+  continuous_to_fun := by
     rw [h]
     exact f.continuous_to_fun
-  cocompact_tendsto' := by 
+  cocompact_tendsto' := by
     simp_rw [h]
     exact f.cocompact_tendsto'
 #align cocompact_map.copy CocompactMap.copy
@@ -181,7 +181,8 @@ theorem tendsto_of_forall_preimage {f : α → β} (h : ∀ s, IsCompact s → I
 /-- If the codomain is Hausdorff, preimages of compact sets are compact under a cocompact
 continuous map. -/
 theorem is_compact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β⦄ (hs : IsCompact s) :
-    IsCompact (f ⁻¹' s) := by
+    IsCompact (f ⁻¹' s) :=
+  by
   obtain ⟨t, ht, hts⟩ :=
     mem_cocompact'.mp
       (by
@@ -201,10 +202,11 @@ end CocompactMap
 /-- A homemomorphism is a cocompact map. -/
 @[simps]
 def Homeomorph.toCocompactMap {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
-    (f : α ≃ₜ β) : CocompactMap α β where 
+    (f : α ≃ₜ β) : CocompactMap α β where
   toFun := f
   continuous_to_fun := f.Continuous
-  cocompact_tendsto' := by
+  cocompact_tendsto' :=
+    by
     refine' CocompactMap.tendsto_of_forall_preimage fun K hK => _
     erw [K.preimage_equiv_eq_image_symm]
     exact hK.image f.symm.continuous

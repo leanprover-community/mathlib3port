@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.iterate
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ lemmas in this section formalize this fact for different inequalities made stric
 
 #print Monotone.seq_le_seq /-
 theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k < n, x (k + 1) ≤ f (x k))
-    (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n ≤ y n := by
+    (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n ≤ y n :=
+  by
   induction' n with n ihn
   · exact h₀
   · refine' (hx _ n.lt_succ_self).trans ((hf <| ihn _ _).trans (hy _ n.lt_succ_self))
@@ -60,7 +61,8 @@ theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k 
 
 #print Monotone.seq_pos_lt_seq_of_lt_of_le /-
 theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
-    (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
+    (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n :=
+  by
   induction' n with n ihn; · exact hn.false.elim
   suffices : x n ≤ y n
   exact (hx n n.lt_succ_self).trans_le ((hf this).trans <| hy n n.lt_succ_self)
@@ -79,7 +81,8 @@ theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h�
 
 #print Monotone.seq_lt_seq_of_lt_of_le /-
 theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
-    (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
+    (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n :=
+  by
   cases n
   exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
 #align monotone.seq_lt_seq_of_lt_of_le Monotone.seq_lt_seq_of_lt_of_le
@@ -175,7 +178,7 @@ theorem iterate_le_id_of_le_id (h : f ≤ id) (n : ℕ) : f^[n] ≤ id :=
 
 #print Function.monotone_iterate_of_id_le /-
 theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
-  monotone_nat_of_le_succ fun n x => by 
+  monotone_nat_of_le_succ fun n x => by
     rw [iterate_succ_apply']
     exact h _
 #align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_le
@@ -233,7 +236,8 @@ variable [LinearOrder α] {f g : α → α}
 
 #print Function.Commute.iterate_pos_lt_iff_map_lt /-
 theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n}
-    (hn : 0 < n) : (f^[n]) x < (g^[n]) x ↔ f x < g x := by
+    (hn : 0 < n) : (f^[n]) x < (g^[n]) x ↔ f x < g x :=
+  by
   rcases lt_trichotomy (f x) (g x) with (H | H | H)
   · simp only [*, iterate_pos_lt_of_map_lt]
   · simp only [*, h.iterate_eq_of_map_eq, lt_irrefl]
@@ -282,7 +286,7 @@ variable [Preorder α] {f : α → α} {x : α}
 /-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
 a monotone sequence. -/
 theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone fun n => (f^[n]) x :=
-  monotone_nat_of_le_succ fun n => by 
+  monotone_nat_of_le_succ fun n => by
     rw [iterate_succ_apply]
     exact hf.iterate n hx
 #align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_map
@@ -307,7 +311,7 @@ variable [Preorder α] {f : α → α} {x : α}
 form a strictly monotone sequence. -/
 theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
     StrictMono fun n => (f^[n]) x :=
-  strictMono_nat_of_lt_succ fun n => by 
+  strictMono_nat_of_lt_succ fun n => by
     rw [iterate_succ_apply]
     exact hf.iterate n hx
 #align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_map

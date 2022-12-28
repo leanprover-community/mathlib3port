@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.lym
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ variable [DecidableEq α] [Fintype α] {𝒜 : Finset (Finset α)} {r : ℕ}
 /-- The downward **local LYM inequality**, with cancelled denominators. `𝒜` takes up less of `α^(r)`
 (the finsets of card `r`) than `∂𝒜` takes up of `α^(r - 1)`. -/
 theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
-    𝒜.card * r ≤ ((∂ ) 𝒜).card * (Fintype.card α - r + 1) := by
+    𝒜.card * r ≤ ((∂ ) 𝒜).card * (Fintype.card α - r + 1) :=
+  by
   refine' card_mul_le_card_mul' (· ⊆ ·) (fun s hs => _) fun s hs => _
   · rw [← h𝒜 hs, ← card_image_of_inj_on s.erase_inj_on]
     refine' card_le_of_subset _
@@ -77,7 +78,7 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
   refine' card_le_of_subset fun t ht => _
   infer_instance
   rw [mem_bipartite_above] at ht
-  have : ∅ ∉ 𝒜 := by 
+  have : ∅ ∉ 𝒜 := by
     rw [← mem_coe, h𝒜.empty_mem_iff, coe_eq_singleton]
     rintro rfl
     rwa [shadow_singleton_empty] at hs
@@ -89,7 +90,8 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
 /-- The downward **local LYM inequality**. `𝒜` takes up less of `α^(r)` (the finsets of card `r`)
 than `∂𝒜` takes up of `α^(r - 1)`. -/
 theorem card_div_choose_le_card_shadow_div_choose (hr : r ≠ 0) (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
-    (𝒜.card : 𝕜) / (Fintype.card α).choose r ≤ ((∂ ) 𝒜).card / (Fintype.card α).choose (r - 1) := by
+    (𝒜.card : 𝕜) / (Fintype.card α).choose r ≤ ((∂ ) 𝒜).card / (Fintype.card α).choose (r - 1) :=
+  by
   obtain hr' | hr' := lt_or_le (Fintype.card α) r
   · rw [choose_eq_zero_of_lt hr', cast_zero, div_zero]
     exact div_nonneg (cast_nonneg _) (cast_nonneg _)
@@ -145,7 +147,8 @@ theorem falling_zero_subset : falling 0 𝒜 ⊆ {∅} :=
   subset_singleton_iff'.2 fun t ht => card_eq_zero.1 <| sized_falling _ _ ht
 #align finset.falling_zero_subset Finset.falling_zero_subset
 
-theorem slice_union_shadow_falling_succ : 𝒜 # k ∪ (∂ ) (falling (k + 1) 𝒜) = falling k 𝒜 := by
+theorem slice_union_shadow_falling_succ : 𝒜 # k ∪ (∂ ) (falling (k + 1) 𝒜) = falling k 𝒜 :=
+  by
   ext s
   simp_rw [mem_union, mem_slice, mem_shadow_iff, exists_prop, mem_falling]
   constructor
@@ -168,7 +171,8 @@ variable {𝒜 k}
 antichain property. -/
 theorem IsAntichain.disjoint_slice_shadow_falling {m n : ℕ}
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) : Disjoint (𝒜 # m) ((∂ ) (falling n 𝒜)) :=
-  disjoint_right.2 fun s h₁ h₂ => by
+  disjoint_right.2 fun s h₁ h₂ =>
+    by
     simp_rw [mem_shadow_iff, exists_prop, mem_falling] at h₁
     obtain ⟨s, ⟨⟨t, ht, hst⟩, hs⟩, a, ha, rfl⟩ := h₁
     refine' h𝒜 (slice_subset h₂) ht _ ((erase_subset _ _).trans hst)
@@ -182,7 +186,7 @@ theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
     (∑ r in range (k + 1),
         ((𝒜 # (Fintype.card α - r)).card : 𝕜) / (Fintype.card α).choose (Fintype.card α - r)) ≤
       (falling (Fintype.card α - k) 𝒜).card / (Fintype.card α).choose (Fintype.card α - k) :=
-  by 
+  by
   induction' k with k ih
   · simp only [tsub_zero, cast_one, cast_le, sum_singleton, div_one, choose_self, range_one]
     exact card_le_of_subset (slice_subset_falling _ _)
@@ -207,7 +211,7 @@ proportion of elements it takes from each layer is less than `1`. -/
 theorem sum_card_slice_div_choose_le_one [Fintype α]
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by
-  classical 
+  classical
     rw [← sum_flip]
     refine' (le_card_falling_div_choose le_rfl h𝒜).trans _
     rw [div_le_iff] <;> norm_cast
@@ -228,12 +232,12 @@ maximal layer in `finset α`. This precisely means that `finset α` is a Sperner
 theorem IsAntichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     𝒜.card ≤ (Fintype.card α).choose (Fintype.card α / 2) := by
-  classical 
+  classical
     suffices
       (∑ r in Iic (Fintype.card α),
           ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤
         1
-      by 
+      by
       rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this
       norm_cast
       exact choose_pos (Nat.div_le_self _ _)

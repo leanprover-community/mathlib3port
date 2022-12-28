@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Chambert-Loir
 
 ! This file was ported from Lean 3 source module group_theory.group_action.fixing_subgroup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,8 +50,8 @@ variable (M : Type _) {α : Type _} [Monoid M] [MulAction M α]
 
 /-- The submonoid fixing a set under a `mul_action`. -/
 @[to_additive " The additive submonoid fixing a set under an `add_action`. "]
-def fixingSubmonoid (s : Set α) :
-    Submonoid M where 
+def fixingSubmonoid (s : Set α) : Submonoid M
+    where
   carrier := { ϕ : M | ∀ x : s, ϕ • (x : α) = x }
   one_mem' _ := one_smul _ _
   mul_mem' x y hx hy z := by rw [mul_smul, hy z, hx z]

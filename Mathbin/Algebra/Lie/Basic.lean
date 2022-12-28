@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,27 +148,29 @@ instance lieRingSelfModule : LieRingModule L L :=
 #align lie_ring_self_module lieRingSelfModule
 
 @[simp]
-theorem lie_skew : -⁅y, x⁆ = ⁅x, y⁆ := by
+theorem lie_skew : -⁅y, x⁆ = ⁅x, y⁆ :=
+  by
   have h : ⁅x + y, x⁆ + ⁅x + y, y⁆ = 0 := by rw [← lie_add]; apply lie_self
   simpa [neg_eq_iff_add_eq_zero] using h
 #align lie_skew lie_skew
 
 /-- Every Lie algebra is a module over itself. -/
-instance lieAlgebraSelfModule :
-    LieModule R L
-      L where 
+instance lieAlgebraSelfModule : LieModule R L L
+    where
   smul_lie t x m := by rw [← lie_skew, ← lie_skew x m, LieAlgebra.lie_smul, smul_neg]
   lie_smul := by apply LieAlgebra.lie_smul
 #align lie_algebra_self_module lieAlgebraSelfModule
 
 @[simp]
-theorem neg_lie : ⁅-x, m⁆ = -⁅x, m⁆ := by
+theorem neg_lie : ⁅-x, m⁆ = -⁅x, m⁆ :=
+  by
   rw [← sub_eq_zero, sub_neg_eq_add, ← add_lie]
   simp
 #align neg_lie neg_lie
 
 @[simp]
-theorem lie_neg : ⁅x, -m⁆ = -⁅x, m⁆ := by
+theorem lie_neg : ⁅x, -m⁆ = -⁅x, m⁆ :=
+  by
   rw [← sub_eq_zero, sub_neg_eq_add, ← lie_add]
   simp
 #align lie_neg lie_neg
@@ -205,7 +207,8 @@ theorem lie_zsmul (a : ℤ) : ⁅x, a • m⁆ = a • ⁅x, m⁆ :=
 theorem lie_lie : ⁅⁅x, y⁆, m⁆ = ⁅x, ⁅y, m⁆⁆ - ⁅y, ⁅x, m⁆⁆ := by rw [leibniz_lie, add_sub_cancel]
 #align lie_lie lie_lie
 
-theorem lie_jacobi : ⁅x, ⁅y, z⁆⁆ + ⁅y, ⁅z, x⁆⁆ + ⁅z, ⁅x, y⁆⁆ = 0 := by
+theorem lie_jacobi : ⁅x, ⁅y, z⁆⁆ + ⁅y, ⁅z, x⁆⁆ + ⁅z, ⁅x, y⁆⁆ = 0 :=
+  by
   rw [← neg_neg ⁅x, y⁆, lie_neg z, lie_skew y x, ← lie_skew, lie_lie]
   abel
 #align lie_jacobi lie_jacobi
@@ -213,26 +216,24 @@ theorem lie_jacobi : ⁅x, ⁅y, z⁆⁆ + ⁅y, ⁅z, x⁆⁆ + ⁅z, ⁅x, y�
 instance LieRing.intLieAlgebra : LieAlgebra ℤ L where lie_smul n x y := lie_zsmul x y n
 #align lie_ring.int_lie_algebra LieRing.intLieAlgebra
 
-instance :
-    LieRingModule L
-      (M →ₗ[R]
-        N) where 
+instance : LieRingModule L (M →ₗ[R] N)
+    where
   bracket x f :=
     { toFun := fun m => ⁅x, f m⁆ - f ⁅x, m⁆
-      map_add' := fun m n => by 
+      map_add' := fun m n => by
         simp only [lie_add, LinearMap.map_add]
         abel
       map_smul' := fun t m => by
         simp only [smul_sub, LinearMap.map_smul, lie_smul, RingHom.id_apply] }
-  add_lie x y f := by 
+  add_lie x y f := by
     ext n
     simp only [add_lie, LinearMap.coe_mk, LinearMap.add_apply, LinearMap.map_add]
     abel
-  lie_add x f g := by 
+  lie_add x f g := by
     ext n
     simp only [LinearMap.coe_mk, lie_add, LinearMap.add_apply]
     abel
-  leibniz_lie x y f := by 
+  leibniz_lie x y f := by
     ext n
     simp only [lie_lie, LinearMap.coe_mk, LinearMap.map_sub, LinearMap.add_apply, lie_sub]
     abel
@@ -242,14 +243,12 @@ theorem LieHom.lie_apply (f : M →ₗ[R] N) (x : L) (m : M) : ⁅x, f⁆ m = �
   rfl
 #align lie_hom.lie_apply LieHom.lie_apply
 
-instance :
-    LieModule R L
-      (M →ₗ[R]
-        N) where 
-  smul_lie t x f := by 
+instance : LieModule R L (M →ₗ[R] N)
+    where
+  smul_lie t x f := by
     ext n
     simp only [smul_sub, smul_lie, LinearMap.smul_apply, LieHom.lie_apply, LinearMap.map_smul]
-  lie_smul t x f := by 
+  lie_smul t x f := by
     ext n
     simp only [smul_sub, LinearMap.smul_apply, LieHom.lie_apply, lie_smul]
 
@@ -386,7 +385,7 @@ theorem ext {f g : L₁ →ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
 #align lie_hom.ext LieHom.ext
 
 theorem ext_iff {f g : L₁ →ₗ⁅R⁆ L₂} : f = g ↔ ∀ x, f x = g x :=
-  ⟨by 
+  ⟨by
     rintro rfl x
     rfl, ext⟩
 #align lie_hom.ext_iff LieHom.ext_iff
@@ -396,7 +395,8 @@ theorem congr_fun {f g : L₁ →ₗ⁅R⁆ L₂} (h : f = g) (x : L₁) : f x =
 #align lie_hom.congr_fun LieHom.congr_fun
 
 @[simp]
-theorem mk_coe (f : L₁ →ₗ⁅R⁆ L₂) (h₁ h₂ h₃) : (⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) = f := by
+theorem mk_coe (f : L₁ →ₗ⁅R⁆ L₂) (h₁ h₂ h₃) : (⟨⟨f, h₁, h₂⟩, h₃⟩ : L₁ →ₗ⁅R⁆ L₂) = f :=
+  by
   ext
   rfl
 #align lie_hom.mk_coe LieHom.mk_coe
@@ -409,7 +409,7 @@ theorem coe_mk (f : L₁ → L₂) (h₁ h₂ h₃) : ((⟨⟨f, h₁, h₂⟩, 
 /-- The composition of morphisms is a morphism. -/
 def comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) : L₁ →ₗ⁅R⁆ L₃ :=
   { LinearMap.comp f.toLinearMap g.toLinearMap with
-    map_lie' := fun x y => by 
+    map_lie' := fun x y => by
       change f (g ⁅x, y⁆) = ⁅f (g x), f (g y)⁆
       rw [map_lie, map_lie] }
 #align lie_hom.comp LieHom.comp
@@ -430,13 +430,15 @@ theorem coe_linear_map_comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R�
 #align lie_hom.coe_linear_map_comp LieHom.coe_linear_map_comp
 
 @[simp]
-theorem comp_id (f : L₁ →ₗ⁅R⁆ L₂) : f.comp (id : L₁ →ₗ⁅R⁆ L₁) = f := by
+theorem comp_id (f : L₁ →ₗ⁅R⁆ L₂) : f.comp (id : L₁ →ₗ⁅R⁆ L₁) = f :=
+  by
   ext
   rfl
 #align lie_hom.comp_id LieHom.comp_id
 
 @[simp]
-theorem id_comp (f : L₁ →ₗ⁅R⁆ L₂) : (id : L₂ →ₗ⁅R⁆ L₂).comp f = f := by
+theorem id_comp (f : L₁ →ₗ⁅R⁆ L₂) : (id : L₂ →ₗ⁅R⁆ L₂).comp f = f :=
+  by
   ext
   rfl
 #align lie_hom.id_comp LieHom.id_comp
@@ -471,8 +473,8 @@ include f
 
 See note [reducible non-instances]. -/
 @[reducible]
-def LieRingModule.compLieHom :
-    LieRingModule L₁ M where 
+def LieRingModule.compLieHom : LieRingModule L₁ M
+    where
   bracket x m := ⁅f x, m⁆
   lie_add x := lie_add (f x)
   add_lie x y m := by simp only [LieHom.map_add, add_lie]
@@ -490,9 +492,8 @@ theorem LieRingModule.comp_lie_hom_apply (x : L₁) (m : M) :
 See note [reducible non-instances]. -/
 @[reducible]
 def LieModule.compLieHom [Module R M] [LieModule R L₂ M] :
-    @LieModule R L₁ M _ _ _ _ _
-      (LieRingModule.compLieHom M
-        f) where 
+    @LieModule R L₁ M _ _ _ _ _ (LieRingModule.compLieHom M f)
+    where
   smul_lie t x m := by simp only [smul_lie, LieHom.map_smul]
   lie_smul t x m := by simp only [lie_smul]
 #align lie_module.comp_lie_hom LieModule.compLieHom
@@ -552,14 +553,15 @@ theorem coe_to_linear_equiv (e : L₁ ≃ₗ⁅R⁆ L₂) : ((e : L₁ ≃ₗ[R]
 @[simp]
 theorem to_linear_equiv_mk (f : L₁ →ₗ⁅R⁆ L₂) (g h₁ h₂) :
     (mk f g h₁ h₂ : L₁ ≃ₗ[R] L₂) =
-      { f with 
+      { f with
         invFun := g
         left_inv := h₁
         right_inv := h₂ } :=
   rfl
 #align lie_equiv.to_linear_equiv_mk LieEquiv.to_linear_equiv_mk
 
-theorem coe_linear_equiv_injective : Injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) := by
+theorem coe_linear_equiv_injective : Injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) :=
+  by
   intro f₁ f₂ h; cases f₁; cases f₂; dsimp at h; simp only at h
   congr ; exacts[LieHom.coe_injective h.1, h.2]
 #align lie_equiv.coe_linear_equiv_injective LieEquiv.coe_linear_equiv_injective
@@ -602,7 +604,8 @@ def symm (e : L₁ ≃ₗ⁅R⁆ L₂) : L₂ ≃ₗ⁅R⁆ L₁ :=
 #align lie_equiv.symm LieEquiv.symm
 
 @[simp]
-theorem symm_symm (e : L₁ ≃ₗ⁅R⁆ L₂) : e.symm.symm = e := by
+theorem symm_symm (e : L₁ ≃ₗ⁅R⁆ L₂) : e.symm.symm = e :=
+  by
   ext
   rfl
 #align lie_equiv.symm_symm LieEquiv.symm_symm
@@ -665,7 +668,9 @@ protected theorem surjective (e : L₁ ≃ₗ⁅R⁆ L₂) :
 /-- A bijective morphism of Lie algebras yields an equivalence of Lie algebras. -/
 @[simps]
 noncomputable def ofBijective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Bijective f) : L₁ ≃ₗ⁅R⁆ L₂ :=
-  { LinearEquiv.ofBijective (f : L₁ →ₗ[R] L₂) h with
+  {
+    LinearEquiv.ofBijective (f : L₁ →ₗ[R] L₂)
+      h with
     toFun := f
     map_lie' := f.map_lie }
 #align lie_equiv.of_bijective LieEquiv.ofBijective
@@ -781,7 +786,8 @@ instance : One (M →ₗ⁅R,L⁆ M) :=
 instance : Inhabited (M →ₗ⁅R,L⁆ N) :=
   ⟨0⟩
 
-theorem coe_injective : @Function.Injective (M →ₗ⁅R,L⁆ N) (M → N) coeFn := by
+theorem coe_injective : @Function.Injective (M →ₗ⁅R,L⁆ N) (M → N) coeFn :=
+  by
   rintro ⟨⟨f, _⟩⟩ ⟨⟨g, _⟩⟩ ⟨h⟩
   congr
 #align lie_module_hom.coe_injective LieModuleHom.coe_injective
@@ -792,7 +798,7 @@ theorem ext {f g : M →ₗ⁅R,L⁆ N} (h : ∀ m, f m = g m) : f = g :=
 #align lie_module_hom.ext LieModuleHom.ext
 
 theorem ext_iff {f g : M →ₗ⁅R,L⁆ N} : f = g ↔ ∀ m, f m = g m :=
-  ⟨by 
+  ⟨by
     rintro rfl m
     rfl, ext⟩
 #align lie_module_hom.ext_iff LieModuleHom.ext_iff
@@ -802,19 +808,22 @@ theorem congr_fun {f g : M →ₗ⁅R,L⁆ N} (h : f = g) (x : M) : f x = g x :=
 #align lie_module_hom.congr_fun LieModuleHom.congr_fun
 
 @[simp]
-theorem mk_coe (f : M →ₗ⁅R,L⁆ N) (h) : (⟨f, h⟩ : M →ₗ⁅R,L⁆ N) = f := by
+theorem mk_coe (f : M →ₗ⁅R,L⁆ N) (h) : (⟨f, h⟩ : M →ₗ⁅R,L⁆ N) = f :=
+  by
   ext
   rfl
 #align lie_module_hom.mk_coe LieModuleHom.mk_coe
 
 @[simp]
-theorem coe_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M → N) = f := by
+theorem coe_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M → N) = f :=
+  by
   ext
   rfl
 #align lie_module_hom.coe_mk LieModuleHom.coe_mk
 
 @[norm_cast, simp]
-theorem coe_linear_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M →ₗ[R] N) = f := by
+theorem coe_linear_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆ N) : M →ₗ[R] N) = f :=
+  by
   ext
   rfl
 #align lie_module_hom.coe_linear_mk LieModuleHom.coe_linear_mk
@@ -822,7 +831,7 @@ theorem coe_linear_mk (f : M →ₗ[R] N) (h) : ((⟨f, h⟩ : M →ₗ⁅R,L⁆
 /-- The composition of Lie module morphisms is a morphism. -/
 def comp (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) : M →ₗ⁅R,L⁆ P :=
   { LinearMap.comp f.toLinearMap g.toLinearMap with
-    map_lie' := fun x m => by 
+    map_lie' := fun x m => by
       change f (g ⁅x, m⁆) = ⁅x, f (g m)⁆
       rw [map_lie, map_lie] }
 #align lie_module_hom.comp LieModuleHom.comp
@@ -854,13 +863,11 @@ def inverse (f : M →ₗ⁅R,L⁆ N) (g : N → M) (h₁ : Function.LeftInverse
          }
 #align lie_module_hom.inverse LieModuleHom.inverse
 
-instance :
-    Add
-      (M →ₗ⁅R,L⁆ N) where add f g := { (f : M →ₗ[R] N) + (g : M →ₗ[R] N) with map_lie' := by simp }
+instance : Add (M →ₗ⁅R,L⁆ N)
+    where add f g := { (f : M →ₗ[R] N) + (g : M →ₗ[R] N) with map_lie' := by simp }
 
-instance :
-    Sub
-      (M →ₗ⁅R,L⁆ N) where sub f g := { (f : M →ₗ[R] N) - (g : M →ₗ[R] N) with map_lie' := by simp }
+instance : Sub (M →ₗ⁅R,L⁆ N)
+    where sub f g := { (f : M →ₗ[R] N) - (g : M →ₗ[R] N) with map_lie' := by simp }
 
 instance : Neg (M →ₗ⁅R,L⁆ N) where neg f := { -(f : M →ₗ[R] N) with map_lie' := by simp }
 
@@ -891,9 +898,8 @@ theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
   rfl
 #align lie_module_hom.neg_apply LieModuleHom.neg_apply
 
-instance hasNsmul :
-    HasSmul ℕ
-      (M →ₗ⁅R,L⁆ N) where smul n f := { n • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
+instance hasNsmul : HasSmul ℕ (M →ₗ⁅R,L⁆ N)
+    where smul n f := { n • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
 #align lie_module_hom.has_nsmul LieModuleHom.hasNsmul
 
 @[norm_cast, simp]
@@ -905,9 +911,8 @@ theorem nsmul_apply (n : ℕ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (n • f) m = 
   rfl
 #align lie_module_hom.nsmul_apply LieModuleHom.nsmul_apply
 
-instance hasZsmul :
-    HasSmul ℤ
-      (M →ₗ⁅R,L⁆ N) where smul z f := { z • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
+instance hasZsmul : HasSmul ℤ (M →ₗ⁅R,L⁆ N)
+    where smul z f := { z • (f : M →ₗ[R] N) with map_lie' := fun x m => by simp }
 #align lie_module_hom.has_zsmul LieModuleHom.hasZsmul
 
 @[norm_cast, simp]
@@ -923,8 +928,8 @@ instance : AddCommGroup (M →ₗ⁅R,L⁆ N) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
     fun _ _ => coe_zsmul _ _
 
-instance :
-    HasSmul R (M →ₗ⁅R,L⁆ N) where smul t f := { t • (f : M →ₗ[R] N) with map_lie' := by simp }
+instance : HasSmul R (M →ₗ⁅R,L⁆ N)
+    where smul t f := { t • (f : M →ₗ[R] N) with map_lie' := by simp }
 
 @[norm_cast, simp]
 theorem coe_smul (t : R) (f : M →ₗ⁅R,L⁆ N) : ⇑(t • f) = t • f :=
@@ -1004,7 +1009,7 @@ theorem coe_to_linear_equiv (e : M ≃ₗ⁅R,L⁆ N) : ((e : M ≃ₗ[R] N) : M
 #align lie_module_equiv.coe_to_linear_equiv LieModuleEquiv.coe_to_linear_equiv
 
 theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N) → M ≃ N) := fun e₁ e₂ h =>
-  by 
+  by
   rcases e₁ with ⟨⟨⟩⟩; rcases e₂ with ⟨⟨⟩⟩
   have inj := Equiv.mk.inj h
   dsimp at inj
@@ -1061,7 +1066,8 @@ theorem symm_apply_apply (e : M ≃ₗ⁅R,L⁆ N) : ∀ x, e.symm (e x) = x :=
 #align lie_module_equiv.symm_apply_apply LieModuleEquiv.symm_apply_apply
 
 @[simp]
-theorem symm_symm (e : M ≃ₗ⁅R,L⁆ N) : e.symm.symm = e := by
+theorem symm_symm (e : M ≃ₗ⁅R,L⁆ N) : e.symm.symm = e :=
+  by
   ext
   apply_fun e.symm using e.symm.injective
   simp

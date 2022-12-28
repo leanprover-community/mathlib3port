@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [O
     OrderedCommMonoid β :=
   { PartialOrder.lift f hf, hf.CommMonoid f one mul npow with
     mul_le_mul_left := fun a b ab c =>
-      show f (c * a) ≤ f (c * b) by 
+      show f (c * a) ≤ f (c * b) by
         rw [mul, mul]
         apply mul_le_mul_left'
         exact ab }

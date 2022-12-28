@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.isomorphism_classes
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ def IsIsomorphic : C → C → Prop := fun X Y => Nonempty (X ≅ Y)
 variable (C)
 
 /-- `is_isomorphic` defines a setoid. -/
-def isIsomorphicSetoid : Setoid C where 
+def isIsomorphicSetoid : Setoid C where
   R := IsIsomorphic
   iseqv := ⟨fun X => ⟨Iso.refl X⟩, fun X Y ⟨α⟩ => ⟨α.symm⟩, fun X Y Z ⟨α⟩ ⟨β⟩ => ⟨α.trans β⟩⟩
 #align category_theory.is_isomorphic_setoid CategoryTheory.isIsomorphicSetoid
@@ -44,8 +44,8 @@ end Category
 
 /-- The functor that sends each category to the quotient space of its objects up to an isomorphism.
 -/
-def isomorphismClasses :
-    Cat.{v, u} ⥤ Type u where 
+def isomorphismClasses : Cat.{v, u} ⥤ Type u
+    where
   obj C := Quotient (isIsomorphicSetoid C.α)
   map C D F := (Quot.map F.obj) fun X Y ⟨f⟩ => ⟨F.mapIso f⟩
 #align category_theory.isomorphism_classes CategoryTheory.isomorphismClasses

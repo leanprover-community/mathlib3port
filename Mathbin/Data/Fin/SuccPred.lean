@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.fin.succ_pred
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,12 +27,12 @@ instance : ∀ {n : ℕ}, SuccOrder (Fin n)
   | 0 => by constructor <;> exact elim0
   | n + 1 =>
     SuccOrder.ofCore (fun i => if i < Fin.last n then i + 1 else i)
-      (by 
+      (by
         intro a ha b
         rw [isMax_iff_eq_top, eq_top_iff, not_le, top_eq_last] at ha
         rw [if_pos ha, lt_iff_coe_lt_coe, le_iff_coe_le_coe, coe_add_one_of_lt ha]
         exact Nat.lt_iff_add_one_le)
-      (by 
+      (by
         intro a ha
         rw [isMax_iff_eq_top, top_eq_last] at ha
         rw [if_neg ha.not_lt])
@@ -51,14 +51,14 @@ instance : ∀ {n : ℕ}, PredOrder (Fin n)
   | 0 => by constructor <;> exact elim0
   | n + 1 =>
     PredOrder.ofCore (fun x => if x = 0 then 0 else x - 1)
-      (by 
+      (by
         intro a ha b
         rw [isMin_iff_eq_bot, eq_bot_iff, not_le, bot_eq_zero] at ha
         rw [if_neg ha.ne', lt_iff_coe_lt_coe, le_iff_coe_le_coe, coe_sub_one, if_neg ha.ne',
           le_tsub_iff_right, Iff.comm]
         exact Nat.lt_iff_add_one_le
         exact ha)
-      (by 
+      (by
         intro a ha
         rw [isMin_iff_eq_bot, bot_eq_zero] at ha
         rwa [if_pos ha, eq_comm])

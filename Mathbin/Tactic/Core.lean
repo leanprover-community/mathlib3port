@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.core
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -889,7 +889,7 @@ unsafe def subst' (h : expr) : tactic Unit := do
 `simp_bottom_up post e` tries to rewrite `e` starting at the leaf nodes. Returns the resulting
 expression and a proof of equality. -/
 unsafe def simp_bottom_up' (post : expr → tactic (expr × expr)) (e : expr)
-    (cfg : SimpConfig := {  }) : tactic (expr × expr) :=
+    (cfg : SimpConfig := { }) : tactic (expr × expr) :=
   Prod.snd <$> simplify_bottom_up () (fun _ => (· <$> ·) (Prod.mk ()) ∘ post) e cfg
 #align tactic.simp_bottom_up' tactic.simp_bottom_up'
 
@@ -1232,7 +1232,7 @@ and evaluates these as thunks before trying to apply them.
 
 We need to do this to avoid metavariables getting stuck during subsequent rounds of `apply`.
 -/
-unsafe def apply_any_thunk (lemmas : List (tactic expr)) (opt : apply_any_opt := {  })
+unsafe def apply_any_thunk (lemmas : List (tactic expr)) (opt : apply_any_opt := { })
     (tac : tactic Unit := skip) (on_success : expr → tactic Unit := fun _ => skip)
     (on_failure : tactic Unit := skip) : tactic Unit := do
   let modes :=
@@ -1260,8 +1260,8 @@ unsafe def apply_any_thunk (lemmas : List (tactic expr)) (opt : apply_any_opt :=
 Defaults to `skip`. This is used, for example, by `solve_by_elim` to arrange
 recursive invocations of `apply_any`.
 -/
-unsafe def apply_any (lemmas : List expr) (opt : apply_any_opt := {  })
-    (tac : tactic Unit := skip) : tactic Unit :=
+unsafe def apply_any (lemmas : List expr) (opt : apply_any_opt := { }) (tac : tactic Unit := skip) :
+    tactic Unit :=
   apply_any_thunk (lemmas.map pure) opt tac
 #align tactic.apply_any tactic.apply_any
 
@@ -1731,7 +1731,8 @@ instance : monad id :=
 ```
 -/
 @[hole_command]
-unsafe def instance_stub : hole_command where 
+unsafe def instance_stub : hole_command
+    where
   Name := "Instance Stub"
   descr := "Generate a skeleton for the structure under construction."
   action _ := do
@@ -1838,7 +1839,8 @@ end
 ```
 -/
 @[hole_command]
-unsafe def match_stub : hole_command where 
+unsafe def match_stub : hole_command
+    where
   Name := "Match Stub"
   descr := "Generate a list of equations for a `match` expression."
   action es := do
@@ -1909,7 +1911,8 @@ meta def foo : expr → tactic unit := -- don't forget to erase `:=`!!
 
 -/
 @[hole_command]
-unsafe def eqn_stub : hole_command where 
+unsafe def eqn_stub : hole_command
+    where
   Name := "Equations Stub"
   descr := "Generate a list of equations for a recursive definition."
   action es := do
@@ -1969,8 +1972,8 @@ sum.inr : ℕ → ℤ ⊕ ℕ
 
 -/
 @[hole_command]
-unsafe def list_constructors_hole :
-    hole_command where 
+unsafe def list_constructors_hole : hole_command
+    where
   Name := "List Constructors"
   descr := "Show the list of constructors of the expected type."
   action es := do
@@ -2065,9 +2068,8 @@ open Lean.Parser Interactive.Types
 It derives an auxiliary lemma of the form `f ∘ g = h` for reasoning about higher-order functions.
 -/
 @[user_attribute]
-unsafe def higher_order_attr :
-    user_attribute Unit (Option
-        Name) where 
+unsafe def higher_order_attr : user_attribute Unit (Option Name)
+    where
   Name := `higher_order
   parser := optional ident
   descr :=
@@ -2120,8 +2122,8 @@ run_cmd add_interactive [``my_tactic]
 ```
 -/
 @[user_attribute]
-unsafe def interactive_attr :
-    user_attribute where 
+unsafe def interactive_attr : user_attribute
+    where
   Name := `interactive
   descr :=
     "Put a definition in the `tactic.interactive` namespace to make it usable\nin proof scripts."

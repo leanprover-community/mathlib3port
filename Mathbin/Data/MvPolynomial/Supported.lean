@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.supported
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,8 @@ noncomputable def supportedEquivMvPolynomial (s : Set σ) : supported R s ≃ₐ
 
 @[simp]
 theorem supported_equiv_mv_polynomial_symm_C (s : Set σ) (x : R) :
-    (supportedEquivMvPolynomial s).symm (c x) = algebraMap R (supported R s) x := by
+    (supportedEquivMvPolynomial s).symm (c x) = algebraMap R (supported R s) x :=
+  by
   ext1
   simp [supported_equiv_mv_polynomial, MvPolynomial.algebra_map_eq]
 #align
@@ -76,7 +77,8 @@ theorem supported_equiv_mv_polynomial_symm_X (s : Set σ) (i : s) :
 
 variable {s t : Set σ}
 
-theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
+theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s :=
+  by
   rw [supported_eq_range_rename, AlgHom.mem_range]
   constructor
   · rintro ⟨p, rfl⟩
@@ -122,7 +124,8 @@ theorem X_mem_supported [Nontrivial R] {i : σ} : x i ∈ supported R s ↔ i �
 #align mv_polynomial.X_mem_supported MvPolynomial.X_mem_supported
 
 @[simp]
-theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported R t ↔ s ⊆ t := by
+theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported R t ↔ s ⊆ t :=
+  by
   constructor
   · intro h i
     simpa using @h (X i)
@@ -136,7 +139,7 @@ theorem supported_strict_mono [Nontrivial R] :
 
 theorem exists_restrict_to_vars (R : Type _) [CommRing R] {F : MvPolynomial σ ℤ}
     (hF : ↑F.vars ⊆ s) : ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by
-  classical 
+  classical
     rw [← mem_supported, supported_eq_range_rename, AlgHom.mem_range] at hF
     cases' hF with F' hF'
     use fun z => aeval z F'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.is_poly
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,7 +185,8 @@ noncomputable section
 
 
 theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × ℕ) ℤ)
-    (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g := by
+    (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
+  by
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   rw [← Function.funext_iff] at h
@@ -197,7 +198,8 @@ theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × 
   witt_vector.poly_eq_of_witt_polynomial_bind_eq' WittVector.poly_eq_of_witt_polynomial_bind_eq'
 
 theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
-    (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g := by
+    (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
+  by
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   rw [← Function.funext_iff] at h
@@ -230,7 +232,7 @@ class IsPoly (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R) : Prop wh
 
 /-- The identity function on Witt vectors is a polynomial function. -/
 instance id_is_poly : IsPoly p fun _ _ => id :=
-  ⟨⟨x, by 
+  ⟨⟨x, by
       intros
       simp only [aeval_X, id]⟩⟩
 #align witt_vector.id_is_poly WittVector.id_is_poly
@@ -252,7 +254,8 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
     (h :
       ∀ (R : Type u) [_Rcr : CommRing R] (x : 𝕎 R) (n : ℕ),
         ghost_component n (f x) = ghost_component n (g x)) :
-    ∀ (R : Type u) [_Rcr : CommRing R] (x : 𝕎 R), f x = g x := by
+    ∀ (R : Type u) [_Rcr : CommRing R] (x : 𝕎 R), f x = g x :=
+  by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   intros
@@ -267,7 +270,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
   convert h using 1
-  all_goals 
+  all_goals
     funext i
     simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
     apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
@@ -280,7 +283,8 @@ omit hp
 
 /-- The composition of polynomial functions is polynomial. -/
 theorem comp {g f} (hg : IsPoly p g) (hf : IsPoly p f) :
-    IsPoly p fun R _Rcr => @g R _Rcr ∘ @f R _Rcr := by
+    IsPoly p fun R _Rcr => @g R _Rcr ∘ @f R _Rcr :=
+  by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   use fun n => bind₁ φ (ψ n)
@@ -311,7 +315,8 @@ variable {p}
 
 /-- The composition of polynomial functions is polynomial. -/
 theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPoly p g) :
-    IsPoly₂ p fun R _Rcr x y => h (f x) (g y) := by
+    IsPoly₂ p fun R _Rcr x y => h (f x) (g y) :=
+  by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   obtain ⟨χ, hh⟩ := hh
@@ -335,7 +340,8 @@ theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPo
 
 /-- The composition of a polynomial function with a binary polynomial function is polynomial. -/
 theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) :
-    IsPoly₂ p fun R _Rcr x y => g (f x y) := by
+    IsPoly₂ p fun R _Rcr x y => g (f x y) :=
+  by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   use fun n => bind₁ φ (ψ n)
@@ -344,7 +350,8 @@ theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) :
 #align witt_vector.is_poly.comp₂ WittVector.IsPoly.comp₂
 
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
-theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x := by
+theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x :=
+  by
   obtain ⟨φ, hf⟩ := hf
   refine' ⟨⟨fun n => bind₁ (uncurry ![X, X]) (φ n), _⟩⟩
   intros ; funext n
@@ -453,7 +460,8 @@ The user-written lemmas are not instances. Users should be able to assemble `is_
 "as normal" if the tactic fails.
 -/
 @[user_attribute]
-unsafe def is_poly_attr : user_attribute where 
+unsafe def is_poly_attr : user_attribute
+    where
   Name := `is_poly
   descr := "Lemmas with this attribute describe the polynomial structure of functions"
   after_set := some fun n _ _ => mk_comp_lemmas n
@@ -475,7 +483,7 @@ Users are expected to use the non-instance versions manually.
 /-- The additive negation is a polynomial function on Witt vectors. -/
 @[is_poly]
 theorem neg_is_poly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
-  ⟨⟨fun n => rename Prod.snd (wittNeg p n), by 
+  ⟨⟨fun n => rename Prod.snd (wittNeg p n), by
       intros ; funext n
       rw [neg_coeff, aeval_eq_eval₂_hom, eval₂_hom_rename]
       apply eval₂_hom_congr rfl _ rfl
@@ -488,7 +496,7 @@ section ZeroOne
 we model them as constant unary functions. -/
 /-- The function that is constantly zero on Witt vectors is a polynomial function. -/
 instance zero_is_poly : IsPoly p fun _ _ _ => 0 :=
-  ⟨⟨0, by 
+  ⟨⟨0, by
       intros
       funext n
       simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
@@ -510,7 +518,8 @@ def onePoly (n : ℕ) : MvPolynomial ℕ ℤ :=
 include hp
 
 @[simp]
-theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolynomial p ℤ n) = 1 := by
+theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolynomial p ℤ n) = 1 :=
+  by
   rw [witt_polynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum, Finset.sum_eq_single 0]
   ·
     simp only [one_poly, one_pow, one_mul, AlgHom.map_pow, C_1, pow_zero, bind₁_X_right, if_true,
@@ -524,7 +533,7 @@ theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolyno
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
 instance one_is_poly : IsPoly p fun _ _ _ => 1 :=
-  ⟨⟨onePoly, by 
+  ⟨⟨onePoly, by
       intros ; funext n; cases n
       · simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, AlgHom.map_one]
       ·
@@ -539,7 +548,7 @@ omit hp
 /-- Addition of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
-  ⟨⟨wittAdd p, by 
+  ⟨⟨wittAdd p, by
       intros
       dsimp only [WittVector.hasAdd]
       simp [eval]⟩⟩
@@ -548,7 +557,7 @@ theorem add_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
 theorem mul_is_poly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
-  ⟨⟨wittMul p, by 
+  ⟨⟨wittMul p, by
       intros
       dsimp only [WittVector.hasMul]
       simp [eval]⟩⟩
@@ -598,7 +607,8 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     (h :
       ∀ (R : Type u) [_Rcr : CommRing R] (x y : 𝕎 R) (n : ℕ),
         ghost_component n (f x y) = ghost_component n (g x y)) :
-    ∀ (R) [_Rcr : CommRing R] (x y : 𝕎 R), f x y = g x y := by
+    ∀ (R) [_Rcr : CommRing R] (x y : 𝕎 R), f x y = g x y :=
+  by
   obtain ⟨φ, hf⟩ := hf
   obtain ⟨ψ, hg⟩ := hg
   intros
@@ -614,7 +624,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
   convert h using 1
-  all_goals 
+  all_goals
     funext i
     simp only [hf, hg, MvPolynomial.eval, map_eval₂_hom]
     apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl

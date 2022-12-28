@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module computability.epsilon_NFA
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,8 @@ theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
 #align ε_NFA.eval_from_append_singleton εNFA.eval_from_append_singleton
 
 @[simp]
-theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
+theorem eval_from_empty (x : List α) : M.evalFrom ∅ x = ∅ :=
+  by
   induction' x using List.reverseRecOn with x a ih
   · rw [eval_from_nil, ε_closure_empty]
   · rw [eval_from_append_singleton, ih, step_set_empty]
@@ -141,7 +142,7 @@ def accepts : Language α :=
 
 
 /-- `M.to_NFA` is an `NFA` constructed from an `ε_NFA` `M`. -/
-def toNFA : NFA α σ where 
+def toNFA : NFA α σ where
   step S a := M.εClosure (M.step S a)
   start := M.εClosure M.start
   accept := M.accept
@@ -154,7 +155,8 @@ theorem to_NFA_eval_from_match (start : Set σ) :
 #align ε_NFA.to_NFA_eval_from_match εNFA.to_NFA_eval_from_match
 
 @[simp]
-theorem to_NFA_correct : M.toNFA.accepts = M.accepts := by
+theorem to_NFA_correct : M.toNFA.accepts = M.accepts :=
+  by
   ext x
   rw [accepts, NFA.accepts, eval, NFA.eval, ← to_NFA_eval_from_match]
   rfl
@@ -166,7 +168,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧
           b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
-  by 
+  by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
 #align ε_NFA.pumping_lemma εNFA.pumping_lemma
@@ -177,15 +179,16 @@ namespace NFA
 
 /-- `M.to_ε_NFA` is an `ε_NFA` constructed from an `NFA` `M` by using the same start and accept
   states and transition functions. -/
-def toεNFA (M : NFA α σ) :
-    εNFA α σ where 
+def toεNFA (M : NFA α σ) : εNFA α σ
+    where
   step s a := a.casesOn' ∅ fun a => M.step s a
   start := M.start
   accept := M.accept
 #align NFA.to_ε_NFA NFA.toεNFA
 
 @[simp]
-theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S = S := by
+theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S = S :=
+  by
   ext a
   refine' ⟨_, εNFA.εClosure.base _⟩
   rintro (⟨_, h⟩ | ⟨_, _, h, _⟩)
@@ -195,11 +198,12 @@ theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure 
 
 @[simp]
 theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) :
-    M.toεNFA.evalFrom start = M.evalFrom start := by
+    M.toεNFA.evalFrom start = M.evalFrom start :=
+  by
   rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
   congr
   ext (S s)
-  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_Union]
+  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_unionᵢ]
   apply exists_congr
   simp only [and_congr_right_iff]
   intro t ht
@@ -208,7 +212,8 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) :
 #align NFA.to_ε_NFA_eval_from_match NFA.to_ε_NFA_eval_from_match
 
 @[simp]
-theorem to_ε_NFA_correct (M : NFA α σ) : M.toεNFA.accepts = M.accepts := by
+theorem to_ε_NFA_correct (M : NFA α σ) : M.toεNFA.accepts = M.accepts :=
+  by
   rw [accepts, εNFA.accepts, eval, εNFA.eval, to_ε_NFA_eval_from_match]
   rfl
 #align NFA.to_ε_NFA_correct NFA.to_ε_NFA_correct

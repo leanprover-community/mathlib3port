@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.expand
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,13 +59,15 @@ theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f := by
 #align mv_polynomial.expand_one_apply MvPolynomial.expand_one_apply
 
 @[simp]
-theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) := by
+theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) :=
+  by
   ext1 f
   rw [expand_one_apply, AlgHom.id_apply]
 #align mv_polynomial.expand_one MvPolynomial.expand_one
 
 theorem expand_comp_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) :
-    (expand p).comp (bind₁ f) = bind₁ fun i => expand p (f i) := by
+    (expand p).comp (bind₁ f) = bind₁ fun i => expand p (f i) :=
+  by
   apply alg_hom_ext
   intro i
   simp only [AlgHom.comp_apply, bind₁_X_right]
@@ -90,7 +92,7 @@ theorem rename_expand (f : σ → τ) (p : ℕ) (φ : MvPolynomial σ R) :
 theorem rename_comp_expand (f : σ → τ) (p : ℕ) :
     (rename f).comp (expand p) =
       (expand p).comp (rename f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) :=
-  by 
+  by
   ext1 φ
   simp only [rename_expand, AlgHom.comp_apply]
 #align mv_polynomial.rename_comp_expand MvPolynomial.rename_comp_expand

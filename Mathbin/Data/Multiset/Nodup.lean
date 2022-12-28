@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.nodup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,8 @@ theorem count_eq_one_of_mem [DecidableEq α] {a : α} {s : Multiset α} (d : Nod
 #align multiset.count_eq_one_of_mem Multiset.count_eq_one_of_mem
 
 theorem count_eq_of_nodup [DecidableEq α] {a : α} {s : Multiset α} (d : Nodup s) :
-    count a s = if a ∈ s then 1 else 0 := by
+    count a s = if a ∈ s then 1 else 0 :=
+  by
   split_ifs with h
   · exact count_eq_one_of_mem d h
   · exact count_eq_zero_of_not_mem h
@@ -191,7 +192,8 @@ protected theorem Nodup.product {t : Multiset β} : Nodup s → Nodup t → Nodu
 
 protected theorem Nodup.sigma {σ : α → Type _} {t : ∀ a, Multiset (σ a)} :
     Nodup s → (∀ a, Nodup (t a)) → Nodup (s.Sigma t) :=
-  (Quot.induction_on s) fun l₁ => by
+  (Quot.induction_on s) fun l₁ =>
+    by
     choose f hf using fun a => Quotient.exists_rep (t a)
     rw [show t = fun a => f a from Eq.symm <| funext fun a => hf a]
     simpa using nodup.sigma

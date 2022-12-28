@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module algebra.category.Semigroup.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,8 +176,8 @@ variable [Mul X] [Mul Y]
 @[to_additive AddEquiv.toAddMagmaIso
       "Build an isomorphism in the category `AddMagma` from\nan `add_equiv` between `has_add`s.",
   simps]
-def MulEquiv.toMagmaIso (e : X ≃* Y) :
-    MagmaCat.of X ≅ MagmaCat.of Y where 
+def MulEquiv.toMagmaIso (e : X ≃* Y) : MagmaCat.of X ≅ MagmaCat.of Y
+    where
   Hom := e.toMulHom
   inv := e.symm.toMulHom
 #align mul_equiv.to_Magma_iso MulEquiv.toMagmaIso
@@ -192,9 +192,8 @@ variable [Semigroup X] [Semigroup Y]
 @[to_additive AddEquiv.toAddSemigroupIso
       "Build an isomorphism in the category\n`AddSemigroup` from an `add_equiv` between `add_semigroup`s.",
   simps]
-def MulEquiv.toSemigroupIso (e : X ≃* Y) :
-    SemigroupCat.of X ≅ SemigroupCat.of
-        Y where 
+def MulEquiv.toSemigroupIso (e : X ≃* Y) : SemigroupCat.of X ≅ SemigroupCat.of Y
+    where
   Hom := e.toMulHom
   inv := e.symm.toMulHom
 #align mul_equiv.to_Semigroup_iso MulEquiv.toSemigroupIso
@@ -206,8 +205,8 @@ namespace CategoryTheory.Iso
 /-- Build a `mul_equiv` from an isomorphism in the category `Magma`. -/
 @[to_additive AddMagma_iso_to_add_equiv
       "Build an `add_equiv` from an isomorphism in the category\n`AddMagma`."]
-def magmaIsoToMulEquiv {X Y : MagmaCat} (i : X ≅ Y) :
-    X ≃* Y where 
+def magmaIsoToMulEquiv {X Y : MagmaCat} (i : X ≅ Y) : X ≃* Y
+    where
   toFun := i.Hom
   invFun := i.inv
   left_inv x := by simp
@@ -217,8 +216,8 @@ def magmaIsoToMulEquiv {X Y : MagmaCat} (i : X ≅ Y) :
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Semigroup`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddSemigroup`."]
-def semigroupIsoToMulEquiv {X Y : SemigroupCat} (i : X ≅ Y) :
-    X ≃* Y where 
+def semigroupIsoToMulEquiv {X Y : SemigroupCat} (i : X ≅ Y) : X ≃* Y
+    where
   toFun := i.Hom
   invFun := i.inv
   left_inv x := by simp
@@ -232,9 +231,8 @@ end CategoryTheory.Iso
 in `Magma` -/
 @[to_additive addEquivIsoAddMagmaIso
       "additive equivalences between `has_add`s are the same\nas (isomorphic to) isomorphisms in `AddMagma`"]
-def mulEquivIsoMagmaIso {X Y : Type u} [Mul X] [Mul Y] :
-    X ≃* Y ≅ MagmaCat.of X ≅
-        MagmaCat.of Y where 
+def mulEquivIsoMagmaIso {X Y : Type u} [Mul X] [Mul Y] : X ≃* Y ≅ MagmaCat.of X ≅ MagmaCat.of Y
+    where
   Hom e := e.toMagmaIso
   inv i := i.magmaIsoToMulEquiv
 #align mul_equiv_iso_Magma_iso mulEquivIsoMagmaIso
@@ -244,16 +242,15 @@ in `Semigroup` -/
 @[to_additive addEquivIsoAddSemigroupIso
       "additive equivalences between `add_semigroup`s are\nthe same as (isomorphic to) isomorphisms in `AddSemigroup`"]
 def mulEquivIsoSemigroupIso {X Y : Type u} [Semigroup X] [Semigroup Y] :
-    X ≃* Y ≅ SemigroupCat.of X ≅
-        SemigroupCat.of Y where 
+    X ≃* Y ≅ SemigroupCat.of X ≅ SemigroupCat.of Y
+    where
   Hom e := e.toSemigroupIso
   inv i := i.semigroupIsoToMulEquiv
 #align mul_equiv_iso_Semigroup_iso mulEquivIsoSemigroupIso
 
 @[to_additive]
-instance MagmaCat.forget_reflects_isos :
-    ReflectsIsomorphisms
-      (forget MagmaCat.{u}) where reflects X Y f _ := by
+instance MagmaCat.forget_reflects_isos : ReflectsIsomorphisms (forget MagmaCat.{u})
+    where reflects X Y f _ := by
     skip
     let i := as_iso ((forget MagmaCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
@@ -261,10 +258,8 @@ instance MagmaCat.forget_reflects_isos :
 #align Magma.forget_reflects_isos MagmaCat.forget_reflects_isos
 
 @[to_additive]
-instance SemigroupCat.forget_reflects_isos :
-    ReflectsIsomorphisms
-      (forget
-        SemigroupCat.{u}) where reflects X Y f _ := by
+instance SemigroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget SemigroupCat.{u})
+    where reflects X Y f _ := by
     skip
     let i := as_iso ((forget SemigroupCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }

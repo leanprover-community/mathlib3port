@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.testable
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -383,7 +383,7 @@ instance orTestable (p q : Prop) [Testable p] [Testable q] : Testable (p ∨ q) 
 instance iffTestable (p q : Prop) [Testable (p ∧ q ∨ ¬p ∧ ¬q)] : Testable (p ↔ q) :=
   ⟨fun cfg min => do
     let xp ← Testable.run (p ∧ q ∨ ¬p ∧ ¬q) cfg min
-    return <| convert_counter_example' (by tauto!) xp⟩
+    return <| convert_counter_example' (by tauto) xp⟩
 #align slim_check.iff_testable SlimCheck.iffTestable
 
 open PrintableProp
@@ -454,7 +454,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
       return <|
         success <|
           PSum.inr
-            (by 
+            (by
               introv x h
               cases h)⟩
   | x::xs =>
@@ -465,7 +465,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
           | failure _ _ _ =>
             return <|
               add_var_to_counter_example var x
-                (by 
+                (by
                   intro h
                   apply h
                   left
@@ -475,14 +475,14 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
             let rs ← @testable.run _ (test_forall_in_list xs) cfg min
             return <|
                 convert_counter_example
-                  (by 
+                  (by
                     intro h i h'
                     apply h
                     right
                     apply h')
                   rs
                   (combine
-                    (PSum.inr <| by 
+                    (PSum.inr <| by
                       intro j h
                       simp only [ball_cons, named_binder]
                       constructor <;> assumption)
@@ -494,7 +494,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
               | failure Hce xs n =>
                 return <|
                   failure
-                    (by 
+                    (by
                       simp only [ball_cons, named_binder]
                       apply not_and_of_not_right _ Hce)
                     xs n
@@ -505,7 +505,8 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [Repr α] 
 testable instances. -/
 def combineTestable (p : Prop) (t : List <| Testable p) (h : 0 < t.length) : Testable p :=
   ⟨fun cfg min =>
-    have : 0 < length (map (fun t => @Testable.run _ t cfg min) t) := by
+    have : 0 < length (map (fun t => @Testable.run _ t cfg min) t) :=
+      by
       rw [length_map]
       apply h
     Gen.oneOf (List.map (fun t => @Testable.run _ t cfg min) t) this⟩
@@ -806,12 +807,12 @@ but is expected to have type
   forall (p : Prop) [_inst_1 : SlimCheck.Testable p], (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (Rand.{0} (SlimCheck.TestResult p))
 Case conversion may be inaccurate. Consider using '#align slim_check.testable.run_suite SlimCheck.Testable.runSuiteₓ'. -/
 /-- Try to find a counter-example of `p`. -/
-def Testable.runSuite (cfg : SlimCheckCfg := {  }) : Rand (TestResult p) :=
+def Testable.runSuite (cfg : SlimCheckCfg := { }) : Rand (TestResult p) :=
   Testable.runSuiteAux p cfg (success <| PSum.inl ()) cfg.numInst
 #align slim_check.testable.run_suite SlimCheck.Testable.runSuite
 
 /-- Run a test suite for `p` in `io`. -/
-def Testable.check' (cfg : SlimCheckCfg := {  }) : Io (TestResult p) :=
+def Testable.check' (cfg : SlimCheckCfg := { }) : Io (TestResult p) :=
   match cfg.randomSeed with
   | some seed => Io.runRandWith seed (Testable.runSuite p cfg)
   | none => Io.runRand (Testable.runSuite p cfg)
@@ -895,7 +896,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align slim_check.testable.check SlimCheck.Testable.checkₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.mk_decorations -/
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
-def Testable.check (p : Prop) (cfg : SlimCheckCfg := {  })
+def Testable.check (p : Prop) (cfg : SlimCheckCfg := { })
     (p' : Tactic.DecorationsOf p := by
       run_tac
         tactic.mk_decorations)

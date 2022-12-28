@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.char_p.two
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem add_self_eq_zero (x : R) : x + x = 0 := by rw [← two_smul R x, two_eq_
 #align char_two.add_self_eq_zero CharTwo.add_self_eq_zero
 
 @[simp]
-theorem bit0_eq_zero : (bit0 : R → R) = 0 := by 
+theorem bit0_eq_zero : (bit0 : R → R) = 0 := by
   funext
   exact add_self_eq_zero _
 #align char_two.bit0_eq_zero CharTwo.bit0_eq_zero
@@ -45,7 +45,7 @@ theorem bit0_apply_eq_zero (x : R) : (bit0 x : R) = 0 := by simp
 #align char_two.bit0_apply_eq_zero CharTwo.bit0_apply_eq_zero
 
 @[simp]
-theorem bit1_eq_one : (bit1 : R → R) = 1 := by 
+theorem bit1_eq_one : (bit1 : R → R) = 1 := by
   funext
   simp [bit1]
 #align char_two.bit1_eq_one CharTwo.bit1_eq_one
@@ -124,14 +124,16 @@ section ringChar
 
 variable [Ring R]
 
-theorem neg_one_eq_one_iff [Nontrivial R] : (-1 : R) = 1 ↔ ringChar R = 2 := by
+theorem neg_one_eq_one_iff [Nontrivial R] : (-1 : R) = 1 ↔ ringChar R = 2 :=
+  by
   refine' ⟨fun h => _, fun h => @CharTwo.neg_eq _ (ringChar.of_eq h) 1⟩
   rw [eq_comm, ← sub_eq_zero, sub_neg_eq_add, ← Nat.cast_one, ← Nat.cast_add] at h
   exact ((Nat.dvd_prime Nat.prime_two).mp (ringChar.dvd h)).resolve_left CharP.ring_char_ne_one
 #align neg_one_eq_one_iff neg_one_eq_one_iff
 
 @[simp]
-theorem order_of_neg_one [Nontrivial R] : orderOf (-1 : R) = if ringChar R = 2 then 1 else 2 := by
+theorem order_of_neg_one [Nontrivial R] : orderOf (-1 : R) = if ringChar R = 2 then 1 else 2 :=
+  by
   split_ifs
   · rw [neg_one_eq_one_iff.2 h, order_of_one]
   apply order_of_eq_prime

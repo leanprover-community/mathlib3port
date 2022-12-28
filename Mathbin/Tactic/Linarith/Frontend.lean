@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.frontend
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,7 +252,7 @@ expressions.
   comparisons in the local context.
 -/
 unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pexpr)
-    (cfg : linarith_config := {  }) : tactic Unit :=
+    (cfg : linarith_config := { }) : tactic Unit :=
   focus1 do
     let t ← target
     -- if the target is an equality, we run `linarith` twice, to prove ≤ and ≥.
@@ -308,7 +308,7 @@ Config options:
 * `linarith {split_hypotheses := ff}` will not destruct conjunctions in the context.
 -/
 unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
-    (hyps : parse pexpr_list ?) (cfg : linarith_config := {  }) : tactic Unit :=
+    (hyps : parse pexpr_list ?) (cfg : linarith_config := { }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse []) cfg
 #align tactic.interactive.linarith tactic.interactive.linarith
 
@@ -383,7 +383,7 @@ in `linarith`. The preprocessing is as follows:
   where `R ∈ {<, ≤, =}` is the appropriate comparison derived from `R1, R2`.
 -/
 unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
-    (hyps : parse pexpr_list ?) (cfg : linarith_config := {  }) : tactic Unit :=
+    (hyps : parse pexpr_list ?) (cfg : linarith_config := { }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
     { cfg with
       preprocessors :=

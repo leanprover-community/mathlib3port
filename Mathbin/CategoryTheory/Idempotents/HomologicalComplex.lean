@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.homological_complex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,9 +74,8 @@ namespace Functor
 /-- The functor `karoubi (homological_complex C c) ⥤ homological_complex (karoubi C) c`,
 on objects. -/
 @[simps]
-def obj (P : Karoubi (HomologicalComplex C c)) :
-    HomologicalComplex (Karoubi C)
-      c where 
+def obj (P : Karoubi (HomologicalComplex C c)) : HomologicalComplex (Karoubi C) c
+    where
   x n :=
     ⟨P.x.x n, P.p.f n, by
       simpa only [HomologicalComplex.comp_f] using HomologicalComplex.congr_hom P.idem n⟩
@@ -90,8 +89,8 @@ def obj (P : Karoubi (HomologicalComplex C c)) :
 /-- The functor `karoubi (homological_complex C c) ⥤ homological_complex (karoubi C) c`,
 on morphisms. -/
 @[simps]
-def map {P Q : Karoubi (HomologicalComplex C c)} (f : P ⟶ Q) :
-    obj P ⟶ obj Q where f n :=
+def map {P Q : Karoubi (HomologicalComplex C c)} (f : P ⟶ Q) : obj P ⟶ obj Q
+    where f n :=
     { f := f.f.f n
       comm := by simp }
 #align
@@ -101,10 +100,8 @@ end Functor
 
 /-- The functor `karoubi (homological_complex C c) ⥤ homological_complex (karoubi C) c`. -/
 @[simps]
-def functor :
-    Karoubi (HomologicalComplex C c) ⥤
-      HomologicalComplex (Karoubi C)
-        c where 
+def functor : Karoubi (HomologicalComplex C c) ⥤ HomologicalComplex (Karoubi C) c
+    where
   obj := Functor.obj
   map P Q f := Functor.map f
 #align
@@ -115,10 +112,8 @@ namespace Inverse
 /-- The functor `homological_complex (karoubi C) c ⥤ karoubi (homological_complex C c)`,
 on objects -/
 @[simps]
-def obj (K : HomologicalComplex (Karoubi C) c) :
-    Karoubi
-      (HomologicalComplex C
-        c) where 
+def obj (K : HomologicalComplex (Karoubi C) c) : Karoubi (HomologicalComplex C c)
+    where
   x :=
     { x := fun n => (K.x n).x
       d := fun i j => (K.d i j).f
@@ -135,9 +130,8 @@ def obj (K : HomologicalComplex (Karoubi C) c) :
 /-- The functor `homological_complex (karoubi C) c ⥤ karoubi (homological_complex C c)`,
 on morphisms -/
 @[simps]
-def map {K L : HomologicalComplex (Karoubi C) c} (f : K ⟶ L) :
-    obj K ⟶
-      obj L where 
+def map {K L : HomologicalComplex (Karoubi C) c} (f : K ⟶ L) : obj K ⟶ obj L
+    where
   f :=
     { f := fun n => (f.f n).f
       comm' := fun i j hij => by simpa only [comp_f] using hom_ext.mp (f.comm' i j hij) }
@@ -149,10 +143,8 @@ end Inverse
 
 /-- The functor `homological_complex (karoubi C) c ⥤ karoubi (homological_complex C c)`. -/
 @[simps]
-def inverse :
-    HomologicalComplex (Karoubi C) c ⥤
-      Karoubi (HomologicalComplex C
-          c) where 
+def inverse : HomologicalComplex (Karoubi C) c ⥤ Karoubi (HomologicalComplex C c)
+    where
   obj := Inverse.obj
   map K L f := Inverse.map f
 #align
@@ -169,23 +161,21 @@ def counitIso : inverse ⋙ Functor ≅ 𝟭 (HomologicalComplex (Karoubi C) c) 
 /-- The unit isomorphism of the equivalence
 `karoubi (homological_complex C c) ≌ homological_complex (karoubi C) c`. -/
 @[simps]
-def unitIso :
-    𝟭 (Karoubi (HomologicalComplex C c)) ≅
-      Functor ⋙
-        inverse where 
+def unitIso : 𝟭 (Karoubi (HomologicalComplex C c)) ≅ Functor ⋙ inverse
+    where
   Hom :=
     { app := fun P =>
         { f :=
             { f := fun n => P.p.f n
-              comm' := fun i j hij => by 
+              comm' := fun i j hij => by
                 dsimp
                 simp only [HomologicalComplex.Hom.comm, HomologicalComplex.Hom.comm_assoc,
                   homological_complex.p_idem] }
-          comm := by 
+          comm := by
             ext n
             dsimp
             simp only [homological_complex.p_idem] }
-      naturality' := fun P Q φ => by 
+      naturality' := fun P Q φ => by
         ext
         dsimp
         simp only [comp_f, HomologicalComplex.comp_f, homological_complex.comp_p_d, inverse.map_f_f,
@@ -194,23 +184,23 @@ def unitIso :
     { app := fun P =>
         { f :=
             { f := fun n => P.p.f n
-              comm' := fun i j hij => by 
+              comm' := fun i j hij => by
                 dsimp
                 simp only [HomologicalComplex.Hom.comm, assoc, homological_complex.p_idem] }
-          comm := by 
+          comm := by
             ext n
             dsimp
             simp only [homological_complex.p_idem] }
-      naturality' := fun P Q φ => by 
+      naturality' := fun P Q φ => by
         ext
         dsimp
         simp only [comp_f, HomologicalComplex.comp_f, inverse.map_f_f, functor.map_f_f,
           homological_complex.comp_p_d, homological_complex.p_comp_d] }
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     dsimp
     simp only [homological_complex.p_idem, comp_f, HomologicalComplex.comp_f, id_eq]
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     dsimp
     simp only [homological_complex.p_idem, comp_f, HomologicalComplex.comp_f, id_eq,
@@ -225,9 +215,8 @@ variable (C) (c)
 /-- The equivalence `karoubi (homological_complex C c) ≌ homological_complex (karoubi C) c`. -/
 @[simps]
 def karoubiHomologicalComplexEquivalence :
-    Karoubi (HomologicalComplex C c) ≌
-      HomologicalComplex (Karoubi C)
-        c where 
+    Karoubi (HomologicalComplex C c) ≌ HomologicalComplex (Karoubi C) c
+    where
   Functor := KaroubiHomologicalComplexEquivalence.functor
   inverse := KaroubiHomologicalComplexEquivalence.inverse
   unitIso := KaroubiHomologicalComplexEquivalence.unitIso

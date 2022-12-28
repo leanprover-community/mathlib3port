@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.complex.circle
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,8 +116,8 @@ def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
 #align circle.of_conj_div_self circle.ofConjDivSelf
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
-def expMapCircle :
-    C(ℝ, circle) where toFun t := ⟨exp (t * I), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
+def expMapCircle : C(ℝ, circle)
+    where toFun t := ⟨exp (t * I), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
 #align exp_map_circle expMapCircle
 
 @[simp]
@@ -139,8 +139,8 @@ theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x *
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/
 @[simps]
-def expMapCircleHom :
-    ℝ →+ Additive circle where 
+def expMapCircleHom : ℝ →+ Additive circle
+    where
   toFun := Additive.ofMul ∘ expMapCircle
   map_zero' := exp_map_circle_zero
   map_add' := exp_map_circle_add

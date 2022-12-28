@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.sigma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ protected def repr ⦃α⦄ : Sigma F α → (Sigma.p F).Obj α
     ⟨⟨a, x.1⟩, x.2⟩
 #align mvqpf.sigma.repr Mvqpf.Sigma.repr
 
-instance : Mvqpf (Sigma F) where 
+instance : Mvqpf (Sigma F) where
   p := Sigma.p F
   abs := Sigma.abs F
   repr := Sigma.repr F
@@ -103,7 +103,7 @@ protected def repr ⦃α⦄ : Pi F α → (Pi.p F).Obj α
   | f => ⟨fun a => (Mvqpf.repr (f a)).1, fun i a => (Mvqpf.repr (f _)).2 _ a.2⟩
 #align mvqpf.pi.repr Mvqpf.Pi.repr
 
-instance : Mvqpf (Pi F) where 
+instance : Mvqpf (Pi F) where
   p := Pi.p F
   abs := Pi.abs F
   repr := Pi.repr F

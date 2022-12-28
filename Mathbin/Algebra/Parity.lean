@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.parity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,11 +84,11 @@ theorem isSquare_one [MulOneClass α] : IsSquare (1 : α) :=
 lean 3 declaration is
   forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MulOneClass.{u2} α] [_inst_2 : MulOneClass.{u3} β] [_inst_3 : MonoidHomClass.{u1, u2, u3} F α β _inst_1 _inst_2] {m : α} (f : F), (IsSquare.{u2} α (MulOneClass.toHasMul.{u2} α _inst_1) m) -> (IsSquare.{u3} β (MulOneClass.toHasMul.{u3} β _inst_2) (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (MulOneClass.toHasMul.{u2} α _inst_1) (MulOneClass.toHasMul.{u3} β _inst_2) (MonoidHomClass.toMulHomClass.{u1, u2, u3} F α β _inst_1 _inst_2 _inst_3))) f m))
 but is expected to have type
-  forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u3} α] [_inst_2 : MulOneClass.{u2} β] [_inst_3 : MonoidHomClass.{u1, u3, u2} F α β _inst_1 _inst_2] {m : α} (f : F), (IsSquare.{u3} α (MulOneClass.toMul.{u3} α _inst_1) m) -> (IsSquare.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) m) (MulOneClass.toMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) m) _inst_2) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) _x) (MulHomClass.toFunLike.{u1, u3, u2} F α β (MulOneClass.toMul.{u3} α _inst_1) (MulOneClass.toMul.{u2} β _inst_2) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F α β _inst_1 _inst_2 _inst_3)) f m))
+  forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : MulOneClass.{u3} α] [_inst_2 : MulOneClass.{u2} β] [_inst_3 : MonoidHomClass.{u1, u3, u2} F α β _inst_1 _inst_2] {m : α} (f : F), (IsSquare.{u3} α (MulOneClass.toMul.{u3} α _inst_1) m) -> (IsSquare.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) m) (MulOneClass.toMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) m) _inst_2) (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) _x) (MulHomClass.toFunLike.{u1, u3, u2} F α β (MulOneClass.toMul.{u3} α _inst_1) (MulOneClass.toMul.{u2} β _inst_2) (MonoidHomClass.toMulHomClass.{u1, u3, u2} F α β _inst_1 _inst_2 _inst_3)) f m))
 Case conversion may be inaccurate. Consider using '#align is_square.map IsSquare.mapₓ'. -/
 @[to_additive]
 theorem IsSquare.map [MulOneClass α] [MulOneClass β] [MonoidHomClass F α β] {m : α} (f : F) :
-    IsSquare m → IsSquare (f m) := by 
+    IsSquare m → IsSquare (f m) := by
   rintro ⟨m, rfl⟩
   exact ⟨f m, by simp⟩
 #align is_square.map IsSquare.map
@@ -126,7 +126,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} (n : Nat), (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) a) -> (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) a n))
 Case conversion may be inaccurate. Consider using '#align is_square.pow IsSquare.powₓ'. -/
 @[to_additive Even.nsmul]
-theorem IsSquare.pow (n : ℕ) : IsSquare a → IsSquare (a ^ n) := by
+theorem IsSquare.pow (n : ℕ) : IsSquare a → IsSquare (a ^ n) :=
+  by
   rintro ⟨a, rfl⟩
   exact ⟨a ^ n, (Commute.refl _).mul_pow _⟩
 #align is_square.pow IsSquare.pow
@@ -138,7 +139,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {n : Nat}, (Even.{0} Nat instAddNat n) -> (forall (a : α), IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) a n))
 Case conversion may be inaccurate. Consider using '#align even.is_square_pow Even.isSquare_powₓ'. -/
 @[simp, to_additive Even.nsmul']
-theorem Even.isSquare_pow : Even n → ∀ a : α, IsSquare (a ^ n) := by
+theorem Even.isSquare_pow : Even n → ∀ a : α, IsSquare (a ^ n) :=
+  by
   rintro ⟨n, rfl⟩ a
   exact ⟨a ^ n, pow_add _ _ _⟩
 #align even.is_square_pow Even.isSquare_pow
@@ -162,7 +164,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {n : Nat} [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))], (Even.{0} Nat instAddNat n) -> (forall (a : α), Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) _inst_2)) a) n) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) a n))
 Case conversion may be inaccurate. Consider using '#align even.neg_pow Even.neg_powₓ'. -/
-theorem Even.neg_pow : Even n → ∀ a : α, (-a) ^ n = a ^ n := by
+theorem Even.neg_pow : Even n → ∀ a : α, (-a) ^ n = a ^ n :=
+  by
   rintro ⟨c, rfl⟩ a
   simp_rw [← two_mul, pow_mul, neg_sq]
 #align even.neg_pow Even.neg_pow
@@ -185,7 +188,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommSemigroup.{u1} α] {a : α} {b : α}, (IsSquare.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) a) -> (IsSquare.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) b) -> (IsSquare.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1))) a b))
 Case conversion may be inaccurate. Consider using '#align is_square.mul IsSquare.mulₓ'. -/
 @[to_additive]
-theorem IsSquare.mul [CommSemigroup α] {a b : α} : IsSquare a → IsSquare b → IsSquare (a * b) := by
+theorem IsSquare.mul [CommSemigroup α] {a b : α} : IsSquare a → IsSquare b → IsSquare (a * b) :=
+  by
   rintro ⟨a, rfl⟩ ⟨b, rfl⟩
   exact ⟨a * b, mul_mul_mul_comm _ _ _ _⟩
 #align is_square.mul IsSquare.mul
@@ -216,7 +220,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α}, Iff (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α _inst_1))) a)) (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) a)
 Case conversion may be inaccurate. Consider using '#align is_square_inv isSquare_invₓ'. -/
 @[simp, to_additive]
-theorem isSquare_inv : IsSquare a⁻¹ ↔ IsSquare a := by
+theorem isSquare_inv : IsSquare a⁻¹ ↔ IsSquare a :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · rw [← isSquare_op_iff, ← inv_inv a]
     exact h.map (MulEquiv.inv' α)
@@ -234,7 +239,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α} (n : Int), (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) a) -> (IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) a n))
 Case conversion may be inaccurate. Consider using '#align is_square.zpow IsSquare.zpowₓ'. -/
 @[to_additive Even.zsmul]
-theorem IsSquare.zpow (n : ℤ) : IsSquare a → IsSquare (a ^ n) := by
+theorem IsSquare.zpow (n : ℤ) : IsSquare a → IsSquare (a ^ n) :=
+  by
   rintro ⟨a, rfl⟩
   exact ⟨a ^ n, (Commute.refl _).mul_zpow _⟩
 #align is_square.zpow IsSquare.zpow
@@ -247,7 +253,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))))] {n : Int}, (Even.{0} Int Int.instAddInt n) -> (forall (a : α), Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)))) _inst_2)) a) n) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) a n))
 Case conversion may be inaccurate. Consider using '#align even.neg_zpow Even.neg_zpowₓ'. -/
-theorem Even.neg_zpow : Even n → ∀ a : α, (-a) ^ n = a ^ n := by
+theorem Even.neg_zpow : Even n → ∀ a : α, (-a) ^ n = a ^ n :=
+  by
   rintro ⟨c, rfl⟩ a
   exact zpow_bit0_neg _ _
 #align even.neg_zpow Even.neg_zpow
@@ -281,7 +288,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_square.div IsSquare.divₓ'. -/
 @[to_additive]
 theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : IsSquare b) :
-    IsSquare (a / b) := by 
+    IsSquare (a / b) := by
   rw [div_eq_mul_inv]
   exact ha.mul hb.inv
 #align is_square.div IsSquare.div
@@ -293,7 +300,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {n : Int}, (Even.{0} Int Int.instAddInt n) -> (forall (a : α), IsSquare.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (HPow.hPow.{u1, 0, u1} α Int α (instHPow.{u1, 0} α Int (DivInvMonoid.Pow.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))) a n))
 Case conversion may be inaccurate. Consider using '#align even.is_square_zpow Even.isSquare_zpowₓ'. -/
 @[simp, to_additive Even.zsmul']
-theorem Even.isSquare_zpow [Group α] {n : ℤ} : Even n → ∀ a : α, IsSquare (a ^ n) := by
+theorem Even.isSquare_zpow [Group α] {n : ℤ} : Even n → ∀ a : α, IsSquare (a ^ n) :=
+  by
   rintro ⟨n, rfl⟩ a
   exact ⟨a ^ n, zpow_add _ _ _⟩
 #align even.is_square_zpow Even.isSquare_zpow
@@ -302,12 +310,12 @@ theorem Even.isSquare_zpow [Group α] {n : ℤ} : Even n → ∀ a : α, IsSquar
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : CanonicallyLinearOrderedAddMonoid.{u1} α] [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) _inst_2] [_inst_4 : ContravariantClass.{u1, u1} α α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))))] {m : α} {n : α}, (Even.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) m) -> (Even.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) n) -> (Even.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) m n))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CanonicallyLinearOrderedAddMonoid.{u1} α] [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) _inst_2] [_inst_4 : ContravariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Parity._hyg.1165 : α) (x._@.Mathlib.Algebra.Parity._hyg.1167 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))))) x._@.Mathlib.Algebra.Parity._hyg.1165 x._@.Mathlib.Algebra.Parity._hyg.1167) (fun (x._@.Mathlib.Algebra.Parity._hyg.1180 : α) (x._@.Mathlib.Algebra.Parity._hyg.1182 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Parity._hyg.1180 x._@.Mathlib.Algebra.Parity._hyg.1182)] {m : α} {n : α}, (Even.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) m) -> (Even.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) n) -> (Even.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) m n))
+  forall {α : Type.{u1}} [_inst_1 : CanonicallyLinearOrderedAddMonoid.{u1} α] [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) _inst_2] [_inst_4 : ContravariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Parity._hyg.1167 : α) (x._@.Mathlib.Algebra.Parity._hyg.1169 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))))) x._@.Mathlib.Algebra.Parity._hyg.1167 x._@.Mathlib.Algebra.Parity._hyg.1169) (fun (x._@.Mathlib.Algebra.Parity._hyg.1182 : α) (x._@.Mathlib.Algebra.Parity._hyg.1184 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Parity._hyg.1182 x._@.Mathlib.Algebra.Parity._hyg.1184)] {m : α} {n : α}, (Even.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) m) -> (Even.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) n) -> (Even.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyLinearOrderedAddMonoid.toCanonicallyOrderedAddMonoid.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) m n))
 Case conversion may be inaccurate. Consider using '#align even.tsub Even.tsubₓ'. -/
 -- `odd.tsub` requires `canonically_linear_ordered_semiring`, which we don't have
 theorem Even.tsub [CanonicallyLinearOrderedAddMonoid α] [Sub α] [OrderedSub α]
     [ContravariantClass α α (· + ·) (· ≤ ·)] {m n : α} (hm : Even m) (hn : Even n) : Even (m - n) :=
-  by 
+  by
   obtain ⟨a, rfl⟩ := hm
   obtain ⟨b, rfl⟩ := hn
   refine' ⟨a - b, _⟩
@@ -355,7 +363,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align range_two_mul range_two_mulₓ'. -/
 @[simp]
 theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x) = { a | Even a } :=
-  by 
+  by
   ext x
   simp [eq_comm, two_mul, Even]
 #align range_two_mul range_two_mul
@@ -422,7 +430,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align even.pow_of_ne_zero Even.pow_of_ne_zeroₓ'. -/
 theorem Even.pow_of_ne_zero (hm : Even m) : ∀ {a : ℕ}, a ≠ 0 → Even (m ^ a)
   | 0, a0 => (a0 rfl).elim
-  | a + 1, _ => by 
+  | a + 1, _ => by
     rw [pow_succ]
     exact hm.mul_right _
 #align even.pow_of_ne_zero Even.pow_of_ne_zero
@@ -443,7 +451,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {a : α}, Iff (Odd.{u1} α _inst_1 a) (Exists.{succ u1} α (fun (b : α) => Eq.{succ u1} α a (bit1.{u1} α (Semiring.toOne.{u1} α _inst_1) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) b)))
 Case conversion may be inaccurate. Consider using '#align odd_iff_exists_bit1 odd_iff_exists_bit1ₓ'. -/
 theorem odd_iff_exists_bit1 {a : α} : Odd a ↔ ∃ b, a = bit1 b :=
-  exists_congr fun b => by 
+  exists_congr fun b => by
     rw [two_mul]
     rfl
 #align odd_iff_exists_bit1 odd_iff_exists_bit1
@@ -469,7 +477,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align range_two_mul_add_one range_two_mul_add_oneₓ'. -/
 @[simp]
 theorem range_two_mul_add_one (α : Type _) [Semiring α] :
-    (Set.range fun x : α => 2 * x + 1) = { a | Odd a } := by
+    (Set.range fun x : α => 2 * x + 1) = { a | Odd a } :=
+  by
   ext x
   simp [Odd, eq_comm]
 #align range_two_mul_add_one range_two_mul_add_one
@@ -480,7 +489,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {m : α} {n : α}, (Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) m) -> (Odd.{u1} α _inst_1 n) -> (Odd.{u1} α _inst_1 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) m n))
 Case conversion may be inaccurate. Consider using '#align even.add_odd Even.add_oddₓ'. -/
-theorem Even.add_odd : Even m → Odd n → Odd (m + n) := by
+theorem Even.add_odd : Even m → Odd n → Odd (m + n) :=
+  by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   exact ⟨m + n, by rw [mul_add, ← two_mul, add_assoc]⟩
 #align even.add_odd Even.add_odd
@@ -491,7 +501,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {m : α} {n : α}, (Odd.{u1} α _inst_1 m) -> (Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) n) -> (Odd.{u1} α _inst_1 (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) m n))
 Case conversion may be inaccurate. Consider using '#align odd.add_even Odd.add_evenₓ'. -/
-theorem Odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) := by
+theorem Odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) :=
+  by
   rw [add_comm]
   exact hn.add_odd hm
 #align odd.add_even Odd.add_even
@@ -502,7 +513,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {m : α} {n : α}, (Odd.{u1} α _inst_1 m) -> (Odd.{u1} α _inst_1 n) -> (Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1))))) m n))
 Case conversion may be inaccurate. Consider using '#align odd.add_odd Odd.add_oddₓ'. -/
-theorem Odd.add_odd : Odd m → Odd n → Even (m + n) := by
+theorem Odd.add_odd : Odd m → Odd n → Even (m + n) :=
+  by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   refine' ⟨n + m + 1, _⟩
   rw [← two_mul, ← add_assoc, add_comm _ (2 * n), ← add_assoc, ← mul_add, add_assoc,
@@ -532,9 +544,10 @@ theorem odd_two_mul_add_one (m : α) : Odd (2 * m + 1) :=
 lean 3 declaration is
   forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Semiring.{u2} α] [_inst_2 : Semiring.{u3} β] {m : α} [_inst_3 : RingHomClass.{u1, u2, u3} F α β (Semiring.toNonAssocSemiring.{u2} α _inst_1) (Semiring.toNonAssocSemiring.{u3} β _inst_2)] (f : F), (Odd.{u2} α _inst_1 m) -> (Odd.{u3} β _inst_2 (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (Distrib.toHasMul.{u2} α (NonUnitalNonAssocSemiring.toDistrib.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1)))) (Distrib.toHasMul.{u3} β (NonUnitalNonAssocSemiring.toDistrib.{u3} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} β (Semiring.toNonAssocSemiring.{u3} β _inst_2)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u2, u3} F α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} β (Semiring.toNonAssocSemiring.{u3} β _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{u1, u2, u3} F α β (Semiring.toNonAssocSemiring.{u2} α _inst_1) (Semiring.toNonAssocSemiring.{u3} β _inst_2) _inst_3)))) f m))
 but is expected to have type
-  forall {F : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Semiring.{u2} α] [_inst_2 : Semiring.{u1} β] {m : α} [_inst_3 : RingHomClass.{u3, u2, u1} F α β (Semiring.toNonAssocSemiring.{u2} α _inst_1) (Semiring.toNonAssocSemiring.{u1} β _inst_2)] (f : F), (Odd.{u2} α _inst_1 m) -> (Odd.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) m) _inst_2 (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{u3, u2, u1} F α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{u3, u2, u1} F α β (Semiring.toNonAssocSemiring.{u2} α _inst_1) (Semiring.toNonAssocSemiring.{u1} β _inst_2) _inst_3))) f m))
+  forall {F : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Semiring.{u2} α] [_inst_2 : Semiring.{u1} β] {m : α} [_inst_3 : RingHomClass.{u3, u2, u1} F α β (Semiring.toNonAssocSemiring.{u2} α _inst_1) (Semiring.toNonAssocSemiring.{u1} β _inst_2)] (f : F), (Odd.{u2} α _inst_1 m) -> (Odd.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) m) _inst_2 (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{u3, u2, u1} F α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{u3, u2, u1} F α β (Semiring.toNonAssocSemiring.{u2} α _inst_1) (Semiring.toNonAssocSemiring.{u1} β _inst_2) _inst_3))) f m))
 Case conversion may be inaccurate. Consider using '#align odd.map Odd.mapₓ'. -/
-theorem Odd.map [RingHomClass F α β] (f : F) : Odd m → Odd (f m) := by
+theorem Odd.map [RingHomClass F α β] (f : F) : Odd m → Odd (f m) :=
+  by
   rintro ⟨m, rfl⟩
   exact ⟨f m, by simp [two_mul]⟩
 #align odd.map Odd.map
@@ -546,7 +559,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {m : α} {n : α}, (Odd.{u1} α _inst_1 m) -> (Odd.{u1} α _inst_1 n) -> (Odd.{u1} α _inst_1 (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) m n))
 Case conversion may be inaccurate. Consider using '#align odd.mul Odd.mulₓ'. -/
 @[simp]
-theorem Odd.mul : Odd m → Odd n → Odd (m * n) := by
+theorem Odd.mul : Odd m → Odd n → Odd (m * n) :=
+  by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   refine' ⟨2 * m * n + n + m, _⟩
   rw [mul_add, add_mul, mul_one, ← add_assoc, one_mul, mul_assoc, ← mul_add, ← mul_add, ← mul_assoc,
@@ -555,10 +569,10 @@ theorem Odd.mul : Odd m → Odd n → Odd (m * n) := by
 
 #print Odd.pow /-
 theorem Odd.pow (hm : Odd m) : ∀ {a : ℕ}, Odd (m ^ a)
-  | 0 => by 
+  | 0 => by
     rw [pow_zero]
     exact odd_one
-  | a + 1 => by 
+  | a + 1 => by
     rw [pow_succ]
     exact hm.mul Odd.pow
 #align odd.pow Odd.pow
@@ -578,7 +592,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))] {n : Nat}, (Odd.{0} Nat Nat.semiring n) -> (forall (a : α), Eq.{succ u1} α (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) _inst_2)) a) n) (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) _inst_2)) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α _inst_1)) a n)))
 Case conversion may be inaccurate. Consider using '#align odd.neg_pow Odd.neg_powₓ'. -/
-theorem Odd.neg_pow : Odd n → ∀ a : α, (-a) ^ n = -a ^ n := by
+theorem Odd.neg_pow : Odd n → ∀ a : α, (-a) ^ n = -a ^ n :=
+  by
   rintro ⟨c, rfl⟩ a
   simp_rw [pow_add, pow_mul, neg_sq, pow_one, mul_neg]
 #align odd.neg_pow Odd.neg_pow
@@ -606,7 +621,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align odd.pos Odd.posₓ'. -/
 -- this holds more generally in a `canonically_ordered_add_monoid` if we refactor `odd` to use
 -- either `2 • t` or `t + t` instead of `2 * t`.
-theorem Odd.pos [Nontrivial α] {n : α} (hn : Odd n) : 0 < n := by
+theorem Odd.pos [Nontrivial α] {n : α} (hn : Odd n) : 0 < n :=
+  by
   obtain ⟨k, rfl⟩ := hn
   rw [pos_iff_ne_zero, Ne.def, add_eq_zero_iff, not_and']
   exact fun h => (one_ne_zero h).elim
@@ -634,7 +650,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α}, (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) a) -> (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) (Neg.neg.{u1} α (Ring.toNeg.{u1} α _inst_1) a))
 Case conversion may be inaccurate. Consider using '#align odd.neg Odd.negₓ'. -/
-theorem Odd.neg (hp : Odd a) : Odd (-a) := by
+theorem Odd.neg (hp : Odd a) : Odd (-a) :=
+  by
   obtain ⟨k, hk⟩ := hp
   use -(k + 1)
   rw [mul_neg, mul_add, neg_add, add_assoc, two_mul (1 : α), neg_add, neg_add_cancel_right, ←
@@ -668,7 +685,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α} {b : α}, (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) a) -> (Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))) b) -> (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align odd.sub_even Odd.sub_evenₓ'. -/
-theorem Odd.sub_even (ha : Odd a) (hb : Even b) : Odd (a - b) := by
+theorem Odd.sub_even (ha : Odd a) (hb : Even b) : Odd (a - b) :=
+  by
   rw [sub_eq_add_neg]
   exact ha.add_even hb.neg
 #align odd.sub_even Odd.sub_even
@@ -679,7 +697,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α} {b : α}, (Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))) a) -> (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) b) -> (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align even.sub_odd Even.sub_oddₓ'. -/
-theorem Even.sub_odd (ha : Even a) (hb : Odd b) : Odd (a - b) := by
+theorem Even.sub_odd (ha : Even a) (hb : Odd b) : Odd (a - b) :=
+  by
   rw [sub_eq_add_neg]
   exact ha.add_odd hb.neg
 #align even.sub_odd Even.sub_odd
@@ -690,7 +709,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Ring.{u1} α] {a : α} {b : α}, (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) a) -> (Odd.{u1} α (Ring.toSemiring.{u1} α _inst_1) b) -> (Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align odd.sub_odd Odd.sub_oddₓ'. -/
-theorem Odd.sub_odd (ha : Odd a) (hb : Odd b) : Even (a - b) := by
+theorem Odd.sub_odd (ha : Odd a) (hb : Odd b) : Even (a - b) :=
+  by
   rw [sub_eq_add_neg]
   exact ha.add_odd hb.neg
 #align odd.sub_odd Odd.sub_odd
@@ -798,7 +818,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] {a : R} {n : Nat}, (Even.{0} Nat instAddNat n) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (Iff (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) a n)) (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1)))))))))
 Case conversion may be inaccurate. Consider using '#align even.pow_pos_iff Even.pow_pos_iffₓ'. -/
 theorem Even.pow_pos_iff (hn : Even n) (h₀ : 0 < n) : 0 < a ^ n ↔ a ≠ 0 :=
-  ⟨fun h ha => by 
+  ⟨fun h ha => by
     rw [ha, zero_pow h₀] at h
     exact lt_irrefl 0 h, hn.pow_pos⟩
 #align even.pow_pos_iff Even.pow_pos_iff
@@ -809,7 +829,8 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] {p : Nat}, (Even.{0} Nat instAddNat p) -> (forall (a : R), Eq.{succ u1} R (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) (Abs.abs.{u1} R (Neg.toHasAbs.{u1} R (Ring.toNeg.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))) (SemilatticeSup.toHasSup.{u1} R (Lattice.toSemilatticeSup.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R (LinearOrderedRing.toLinearOrder.{u1} R _inst_1)))))) a) p) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) a p))
 Case conversion may be inaccurate. Consider using '#align even.pow_abs Even.pow_absₓ'. -/
-theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : |a| ^ p = a ^ p := by
+theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : |a| ^ p = a ^ p :=
+  by
   rw [← abs_pow, abs_eq_self]
   exact hp.pow_nonneg _
 #align even.pow_abs Even.pow_abs
@@ -825,15 +846,15 @@ theorem pow_bit0_abs (a : R) (p : ℕ) : |a| ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).pow_abs _
 #align pow_bit0_abs pow_bit0_abs
 
-/- warning: odd.strict_mono_pow -> Odd.strict_mono_pow is a dubious translation:
+/- warning: odd.strict_mono_pow -> Odd.strictMono_pow is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] {n : Nat}, (Odd.{0} Nat Nat.semiring n) -> (StrictMono.{u1, u1} R R (PartialOrder.toPreorder.{u1} R (OrderedAddCommGroup.toPartialOrder.{u1} R (StrictOrderedRing.toOrderedAddCommGroup.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (PartialOrder.toPreorder.{u1} R (OrderedAddCommGroup.toPartialOrder.{u1} R (StrictOrderedRing.toOrderedAddCommGroup.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1)))) (fun (a : R) => HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (Ring.toMonoid.{u1} R (StrictOrderedRing.toRing.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))))) a n))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} R] {n : Nat}, (Odd.{0} Nat Nat.semiring n) -> (StrictMono.{u1, u1} R R (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))) (PartialOrder.toPreorder.{u1} R (StrictOrderedRing.toPartialOrder.{u1} R (LinearOrderedRing.toStrictOrderedRing.{u1} R _inst_1))) (fun (a : R) => HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} R (LinearOrderedRing.toLinearOrderedSemiring.{u1} R _inst_1))))))) a n))
-Case conversion may be inaccurate. Consider using '#align odd.strict_mono_pow Odd.strict_mono_powₓ'. -/
-theorem Odd.strict_mono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using strict_mono_pow_bit1 _
-#align odd.strict_mono_pow Odd.strict_mono_pow
+Case conversion may be inaccurate. Consider using '#align odd.strict_mono_pow Odd.strictMono_powₓ'. -/
+theorem Odd.strictMono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
+  cases' hn with k hk <;> simpa only [hk, two_mul] using strictMono_pow_bit1 _
+#align odd.strict_mono_pow Odd.strictMono_pow
 
 end Powers
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.gamma_comp_n
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ variable {C : Type _} [Category C] [Preadditive C] [HasFiniteCoproducts C]
 @[simps]
 def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegComplex ≅ K :=
   HomologicalComplex.Hom.isoOfComponents (fun n => Iso.refl _)
-    (by 
+    (by
       rintro _ n (rfl : n + 1 = _)
       dsimp
       simp only [id_comp, comp_id, alternating_face_map_complex.obj_d_eq, preadditive.sum_comp,
@@ -61,7 +61,8 @@ def Γ₀NondegComplexIso (K : ChainComplex C ℕ) : (Γ₀.splitting K).nondegC
 
 /-- The natural isomorphism `(Γ₀.splitting K).nondeg_complex ≅ K` for `K : chain_complex C ℕ`. -/
 def Γ₀'CompNondegComplexFunctor : Γ₀' ⋙ split.nondeg_complex_functor ≅ 𝟭 (ChainComplex C ℕ) :=
-  NatIso.ofComponents Γ₀NondegComplexIso fun X Y f => by
+  NatIso.ofComponents Γ₀NondegComplexIso fun X Y f =>
+    by
     ext n
     dsimp
     simp only [comp_id, id_comp]
@@ -84,7 +85,7 @@ theorem N₁Γ₀_app (K : ChainComplex C ℕ) :
     n₁Γ₀.app K =
       (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.symm ≪≫
         (toKaroubi _).mapIso (Γ₀NondegComplexIso K) :=
-  by 
+  by
   ext1
   dsimp [N₁Γ₀]
   erw [id_comp, comp_id, comp_id]
@@ -95,7 +96,7 @@ theorem N₁Γ₀_hom_app (K : ChainComplex C ℕ) :
     n₁Γ₀.Hom.app K =
       (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.inv ≫
         (toKaroubi _).map (Γ₀NondegComplexIso K).Hom :=
-  by 
+  by
   change (N₁Γ₀.app K).Hom = _
   simpa only [N₁Γ₀_app]
 #align algebraic_topology.dold_kan.N₁Γ₀_hom_app AlgebraicTopology.DoldKan.N₁Γ₀_hom_app
@@ -104,26 +105,29 @@ theorem N₁Γ₀_inv_app (K : ChainComplex C ℕ) :
     n₁Γ₀.inv.app K =
       (toKaroubi _).map (Γ₀NondegComplexIso K).inv ≫
         (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.Hom :=
-  by 
+  by
   change (N₁Γ₀.app K).inv = _
   simpa only [N₁Γ₀_app]
 #align algebraic_topology.dold_kan.N₁Γ₀_inv_app AlgebraicTopology.DoldKan.N₁Γ₀_inv_app
 
 @[simp]
 theorem N₁Γ₀_hom_app_f_f (K : ChainComplex C ℕ) (n : ℕ) :
-    (n₁Γ₀.Hom.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.inv.f.f n := by
+    (n₁Γ₀.Hom.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.inv.f.f n :=
+  by
   rw [N₁Γ₀_hom_app]
   apply comp_id
 #align algebraic_topology.dold_kan.N₁Γ₀_hom_app_f_f AlgebraicTopology.DoldKan.N₁Γ₀_hom_app_f_f
 
 @[simp]
 theorem N₁Γ₀_inv_app_f_f (K : ChainComplex C ℕ) (n : ℕ) :
-    (n₁Γ₀.inv.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.Hom.f.f n := by
+    (n₁Γ₀.inv.app K).f.f n = (Γ₀.splitting K).toKaroubiNondegComplexIsoN₁.Hom.f.f n :=
+  by
   rw [N₁Γ₀_inv_app]
   apply id_comp
 #align algebraic_topology.dold_kan.N₁Γ₀_inv_app_f_f AlgebraicTopology.DoldKan.N₁Γ₀_inv_app_f_f
 
-theorem N₂Γ₂_to_karoubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ N₂ = Γ₀ ⋙ N₁ := by
+theorem N₂Γ₂_to_karoubi : toKaroubi (ChainComplex C ℕ) ⋙ Γ₂ ⋙ N₂ = Γ₀ ⋙ N₁ :=
+  by
   have h :=
     functor.congr_obj
       (functor_extension₂_comp_whiskering_left_to_karoubi (ChainComplex C ℕ) (simplicial_object C))
@@ -163,7 +167,7 @@ theorem N₂Γ₂_compatible_with_N₁Γ₀ (K : ChainComplex C ℕ) :
 theorem N₂Γ₂_inv_app_f_f (X : Karoubi (ChainComplex C ℕ)) (n : ℕ) :
     (n₂Γ₂.inv.app X).f.f n =
       X.p.f n ≫ (Γ₀.splitting X.x).ιSummand (Splitting.IndexSet.id (op [n])) :=
-  by 
+  by
   dsimp only [N₂Γ₂, functor.preimage_iso, iso.trans]
   simp only [whiskering_left_obj_preimage_app, N₂Γ₂_to_karoubi_iso_inv, functor.id_map,
     nat_trans.comp_app, eq_to_hom_app, functor.comp_map, assoc, karoubi.comp_f, karoubi.eq_to_hom_f,

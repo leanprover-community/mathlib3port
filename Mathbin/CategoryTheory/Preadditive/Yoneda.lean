@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.yoneda
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,9 +43,8 @@ variable {C : Type u} [Category.{v} C] [Preadditive C]
 object `X` to the `End Y`-module of morphisms `X ⟶ Y`.
 -/
 @[simps]
-def preadditiveYonedaObj (Y : C) :
-    Cᵒᵖ ⥤ ModuleCat.{v}
-        (EndCat Y) where 
+def preadditiveYonedaObj (Y : C) : Cᵒᵖ ⥤ ModuleCat.{v} (EndCat Y)
+    where
   obj X := ModuleCat.of _ (X.unop ⟶ Y)
   map X X' f :=
     { toFun := fun g => f.unop ≫ g
@@ -58,9 +57,8 @@ object `X` to the group of morphisms `X ⟶ Y`. At each point, we get an additio
 structure, see `preadditive_yoneda_obj`.
 -/
 @[simps]
-def preadditiveYoneda :
-    C ⥤ Cᵒᵖ ⥤
-        AddCommGroupCat.{v} where 
+def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v}
+    where
   obj Y := preadditiveYonedaObj Y ⋙ forget₂ _ _
   map Y Y' f :=
     { app := fun X =>
@@ -68,10 +66,10 @@ def preadditiveYoneda :
           map_zero' := Limits.zero_comp
           map_add' := fun g g' => add_comp _ _ _ _ _ _ }
       naturality' := fun X X' g => (AddCommGroupCat.ext _ _ _ _) fun x => Category.assoc _ _ _ }
-  map_id' X := by 
+  map_id' X := by
     ext
     simp
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     ext
     simp
 #align category_theory.preadditive_yoneda CategoryTheory.preadditiveYoneda
@@ -80,9 +78,8 @@ def preadditiveYoneda :
 object `Y` to the `End X`-module of morphisms `X ⟶ Y`.
 -/
 @[simps]
-def preadditiveCoyonedaObj (X : Cᵒᵖ) :
-    C ⥤ ModuleCat.{v}
-        (EndCat X) where 
+def preadditiveCoyonedaObj (X : Cᵒᵖ) : C ⥤ ModuleCat.{v} (EndCat X)
+    where
   obj Y := ModuleCat.of _ (unop X ⟶ Y)
   map Y Y' f :=
     { toFun := fun g => g ≫ f
@@ -95,9 +92,8 @@ object `Y` to the group of morphisms `X ⟶ Y`. At each point, we get an additio
 structure, see `preadditive_coyoneda_obj`.
 -/
 @[simps]
-def preadditiveCoyoneda :
-    Cᵒᵖ ⥤
-      C ⥤ AddCommGroupCat.{v} where 
+def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat.{v}
+    where
   obj X := preadditiveCoyonedaObj X ⋙ forget₂ _ _
   map X X' f :=
     { app := fun Y =>
@@ -106,10 +102,10 @@ def preadditiveCoyoneda :
           map_add' := fun g g' => comp_add _ _ _ _ _ _ }
       naturality' := fun Y Y' g =>
         (AddCommGroupCat.ext _ _ _ _) fun x => Eq.symm <| Category.assoc _ _ _ }
-  map_id' X := by 
+  map_id' X := by
     ext
     simp
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     ext
     simp
 #align category_theory.preadditive_coyoneda CategoryTheory.preadditiveCoyoneda

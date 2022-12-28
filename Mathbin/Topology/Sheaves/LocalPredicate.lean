@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.sheaves.local_predicate
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,9 +77,8 @@ variable (X)
 /-- Continuity is a "prelocal" predicate on functions to a fixed topological space `T`.
 -/
 @[simps]
-def continuousPrelocal (T : TopCat.{v}) :
-    PrelocalPredicate fun x : X =>
-      T where 
+def continuousPrelocal (T : TopCat.{v}) : PrelocalPredicate fun x : X => T
+    where
   pred U f := Continuous f
   res U V i f h := Continuous.comp h (Opens.open_embedding_of_le i.le).Continuous
 #align Top.continuous_prelocal TopCat.continuousPrelocal
@@ -114,7 +113,7 @@ variable (X)
 -/
 def continuousLocal (T : TopCat.{v}) : LocalPredicate fun x : X => T :=
   { continuousPrelocal X T with
-    locality := fun U f w => by 
+    locality := fun U f w => by
       apply continuous_iff_continuous_at.2
       intro x
       specialize w x
@@ -135,16 +134,15 @@ variable {X T}
 /-- Given a `P : prelocal_predicate`, we can always construct a `local_predicate`
 by asking that the condition from `P` holds locally near every point.
 -/
-def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) :
-    LocalPredicate
-      T where 
+def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : LocalPredicate T
+    where
   pred U f := ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.pred fun x : V => f (i x : U)
-  res V U i f w x := by 
+  res V U i f w x := by
     specialize w (i x)
     rcases w with ⟨V', m', i', p⟩
     refine' ⟨V ⊓ V', ⟨x.2, m'⟩, opens.inf_le_left _ _, _⟩
     convert P.res (opens.inf_le_right V V') _ p
-  locality U f w x := by 
+  locality U f w x := by
     specialize w x
     rcases w with ⟨V, m, i, p⟩
     specialize p ⟨x.1, m⟩
@@ -154,7 +152,7 @@ def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) :
 
 theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate T} {U : Opens X}
     {f : ∀ x : U, T x} (h : P.pred f) : P.sheafify.pred f := fun x =>
-  ⟨U, x.2, 𝟙 _, by 
+  ⟨U, x.2, 𝟙 _, by
     convert h
     ext ⟨y, w⟩
     rfl⟩
@@ -163,9 +161,8 @@ theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate 
 /-- The subpresheaf of dependent functions on `X` satisfying the "pre-local" predicate `P`.
 -/
 @[simps]
-def subpresheafToTypes (P : PrelocalPredicate T) :
-    Presheaf (Type v)
-      X where 
+def subpresheafToTypes (P : PrelocalPredicate T) : Presheaf (Type v) X
+    where
   obj U := { f : ∀ x : unop U, T x // P.pred f }
   map U V i f := ⟨fun x => f.1 (i.unop x), P.res i.unop f.1 f.2⟩
 #align Top.subpresheaf_to_Types TopCat.subpresheafToTypes
@@ -230,7 +227,8 @@ def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type v) X :=
 
 /-- There is a canonical map from the stalk to the original fiber, given by evaluating sections.
 -/
-def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.stalk x ⟶ T x := by
+def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.stalk x ⟶ T x :=
+  by
   refine'
     colimit.desc _
       { x := T x
@@ -243,7 +241,8 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.s
 
 @[simp]
 theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
-    stalkToFiber P x ((subsheafToTypes P).Presheaf.germ x f) = f.1 x := by
+    stalkToFiber P x ((subsheafToTypes P).Presheaf.germ x f) = f.1 x :=
+  by
   dsimp [presheaf.germ, stalk_to_fiber]
   cases x
   simp
@@ -255,7 +254,8 @@ every point in the fiber `T x` has an allowed section passing through it.
 -/
 theorem stalk_to_fiber_surjective (P : LocalPredicate T) (x : X)
     (w : ∀ t : T x, ∃ (U : OpenNhds x)(f : ∀ y : U.1, T y)(h : P.pred f), f ⟨x, U.2⟩ = t) :
-    Function.Surjective (stalkToFiber P x) := fun t => by
+    Function.Surjective (stalkToFiber P x) := fun t =>
+  by
   rcases w t with ⟨U, f, h, rfl⟩
   fconstructor
   · exact (subsheaf_to_Types P).Presheaf.germ ⟨x, U.2⟩ ⟨f, h⟩
@@ -302,16 +302,16 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
     subpresheafToTypes (continuousPrelocal X T) ≅ presheafToTop X T :=
   NatIso.ofComponents
     (fun X =>
-      { Hom := by 
+      { Hom := by
           rintro ⟨f, c⟩
           exact ⟨f, c⟩
-        inv := by 
+        inv := by
           rintro ⟨f, c⟩
           exact ⟨f, c⟩
-        hom_inv_id' := by 
+        hom_inv_id' := by
           ext (⟨f, p⟩x)
           rfl
-        inv_hom_id' := by 
+        inv_hom_id' := by
           ext (⟨f, p⟩x)
           rfl })
     (by tidy)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime_fin
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,7 +22,7 @@ namespace Nat
 
 /-- A version of `nat.exists_infinite_primes` using the `set.infinite` predicate. -/
 theorem infinite_set_of_prime : { p | Prime p }.Infinite :=
-  Set.infinite_of_not_bdd_above not_bdd_above_set_of_prime
+  Set.infinite_of_not_bdd_above not_bddAbove_setOf_prime
 #align nat.infinite_set_of_prime Nat.infinite_set_of_prime
 
 /-- If `a`, `b` are positive, the prime divisors of `a * b` are the union of those of `a` and `b` -/
@@ -33,7 +33,8 @@ theorem factors_mul_to_finset {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
 #align nat.factors_mul_to_finset Nat.factors_mul_to_finset
 
 theorem pow_succ_factors_to_finset (n k : ℕ) :
-    (n ^ (k + 1)).factors.toFinset = n.factors.toFinset := by
+    (n ^ (k + 1)).factors.toFinset = n.factors.toFinset :=
+  by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
   induction' k with k ih
@@ -42,7 +43,8 @@ theorem pow_succ_factors_to_finset (n k : ℕ) :
 #align nat.pow_succ_factors_to_finset Nat.pow_succ_factors_to_finset
 
 theorem pow_factors_to_finset (n : ℕ) {k : ℕ} (hk : k ≠ 0) :
-    (n ^ k).factors.toFinset = n.factors.toFinset := by
+    (n ^ k).factors.toFinset = n.factors.toFinset :=
+  by
   cases k
   · simpa using hk
   rw [pow_succ_factors_to_finset]

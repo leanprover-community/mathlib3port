@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,13 +39,15 @@ instance [HasSup R] : HasSup (Tropical R) where sup x y := trop (untrop x ⊔ un
 instance [HasInf R] : HasInf (Tropical R) where inf x y := trop (untrop x ⊓ untrop y)
 
 instance [SemilatticeInf R] : SemilatticeInf (Tropical R) :=
-  { Tropical.hasInf, Tropical.partialOrder with
+  { Tropical.hasInf,
+    Tropical.partialOrder with
     le_inf := fun _ _ _ => le_inf
     inf_le_left := fun _ _ => inf_le_left
     inf_le_right := fun _ _ => inf_le_right }
 
 instance [SemilatticeSup R] : SemilatticeSup (Tropical R) :=
-  { Tropical.hasSup, Tropical.partialOrder with
+  { Tropical.hasSup,
+    Tropical.partialOrder with
     sup_le := fun _ _ _ => sup_le
     le_sup_left := fun _ _ => le_sup_left
     le_sup_right := fun _ _ => le_sup_right }
@@ -58,7 +60,8 @@ instance [SupSet R] : SupSet (Tropical R) where sup s := trop (supₛ (untrop ''
 instance [InfSet R] : InfSet (Tropical R) where inf s := trop (infₛ (untrop '' s))
 
 instance [ConditionallyCompleteLattice R] : ConditionallyCompleteLattice (Tropical R) :=
-  { Tropical.hasSup, Tropical.hasInf, Tropical.lattice with
+  { Tropical.hasSup, Tropical.hasInf,
+    Tropical.lattice with
     le_cSup := fun s x hs hx =>
       le_cSup (untrop_monotone.map_bdd_above hs) (Set.mem_image_of_mem untrop hx)
     cSup_le := fun s x hs hx =>

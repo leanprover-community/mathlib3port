@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.decomposition
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ include M
 
 /-- `direct_sum.decomposition` instances, while carrying data, are always equal. -/
 instance : Subsingleton (Decomposition ℳ) :=
-  ⟨fun x y => by 
+  ⟨fun x y => by
     cases' x with x xl xr
     cases' y with y yl yr
     congr
@@ -76,7 +76,7 @@ protected theorem Decomposition.is_internal : DirectSum.IsInternal ℳ :=
 
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
 to a direct sum of components. This is the canonical spelling of the `decompose'` field. -/
-def decompose : M ≃ ⨁ i, ℳ i where 
+def decompose : M ≃ ⨁ i, ℳ i where
   toFun := Decomposition.decompose'
   invFun := DirectSum.coeAddMonoidHom ℳ
   left_inv := Decomposition.left_inv
@@ -85,7 +85,8 @@ def decompose : M ≃ ⨁ i, ℳ i where
 
 protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0)
     (h_homogeneous : ∀ {i} (m : ℳ i), p (m : M)) (h_add : ∀ m m' : M, p m → p m' → p (m + m')) :
-    ∀ m, p m := by
+    ∀ m, p m :=
+  by
   let ℳ' : ι → AddSubmonoid M := fun i =>
     (⟨ℳ i, fun _ _ => AddMemClass.add_mem, ZeroMemClass.zero_mem _⟩ : AddSubmonoid M)
   haveI t : DirectSum.Decomposition ℳ' :=
@@ -169,7 +170,8 @@ theorem decompose_symm_sum {ι'} (s : Finset ι') (f : ι' → ⨁ i, ℳ i) :
 #align direct_sum.decompose_symm_sum DirectSum.decompose_symm_sum
 
 theorem sum_support_decompose [∀ (i) (x : ℳ i), Decidable (x ≠ 0)] (r : M) :
-    (∑ i in (decompose ℳ r).support, (decompose ℳ r i : M)) = r := by
+    (∑ i in (decompose ℳ r).support, (decompose ℳ r i : M)) = r :=
+  by
   conv_rhs =>
     rw [← (decompose ℳ).symm_apply_apply r, ← sum_support_of (fun i => ℳ i) (decompose ℳ r)]
   rw [decompose_symm_sum]

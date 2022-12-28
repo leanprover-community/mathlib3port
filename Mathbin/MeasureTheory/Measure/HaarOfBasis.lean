@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ theorem mem_parallelepiped_iff (v : ι → E) (x : E) :
 #align mem_parallelepiped_iff mem_parallelepiped_iff
 
 theorem image_parallelepiped (f : E →ₗ[ℝ] F) (v : ι → E) :
-    f '' parallelepiped v = parallelepiped (f ∘ v) := by
+    f '' parallelepiped v = parallelepiped (f ∘ v) :=
+  by
   simp only [parallelepiped, ← image_comp]
   congr 1 with t
   simp only [Function.comp_apply, LinearMap.map_sum, LinearMap.map_smulₛₗ, RingHom.id_apply]
@@ -63,10 +64,12 @@ theorem image_parallelepiped (f : E →ₗ[ℝ] F) (v : ι → E) :
 /-- Reindexing a family of vectors does not change their parallelepiped. -/
 @[simp]
 theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
-    parallelepiped (v ∘ e) = parallelepiped v := by
+    parallelepiped (v ∘ e) = parallelepiped v :=
+  by
   simp only [parallelepiped]
   let K : (ι' → ℝ) ≃ (ι → ℝ) := Equiv.piCongrLeft' (fun a : ι' => ℝ) e
-  have : Icc (0 : ι → ℝ) 1 = K '' Icc (0 : ι' → ℝ) 1 := by
+  have : Icc (0 : ι → ℝ) 1 = K '' Icc (0 : ι' → ℝ) 1 :=
+    by
     rw [← Equiv.preimage_eq_iff_eq_image]
     ext x
     simp only [mem_preimage, mem_Icc, Pi.le_def, Pi.zero_apply, Equiv.Pi_congr_left'_apply,
@@ -85,17 +88,20 @@ theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
 
 -- The parallelepiped associated to an orthonormal basis of `ℝ` is either `[0, 1]` or `[-1, 0]`.
 theorem parallelepiped_orthonormal_basis_one_dim (b : OrthonormalBasis ι ℝ ℝ) :
-    parallelepiped b = Icc 0 1 ∨ parallelepiped b = Icc (-1) 0 := by
-  have e : ι ≃ Fin 1 := by 
+    parallelepiped b = Icc 0 1 ∨ parallelepiped b = Icc (-1) 0 :=
+  by
+  have e : ι ≃ Fin 1 := by
     apply Fintype.equivFinOfCardEq
     simp only [← finrank_eq_card_basis b.to_basis, finrank_self]
-  have B : parallelepiped (b.reindex e) = parallelepiped b := by
+  have B : parallelepiped (b.reindex e) = parallelepiped b :=
+    by
     convert parallelepiped_comp_equiv b e.symm
     ext i
     simp only [OrthonormalBasis.coe_reindex]
   rw [← B]
   let F : ℝ → Fin 1 → ℝ := fun t => fun i => t
-  have A : Icc (0 : Fin 1 → ℝ) 1 = F '' Icc (0 : ℝ) 1 := by
+  have A : Icc (0 : Fin 1 → ℝ) 1 = F '' Icc (0 : ℝ) 1 :=
+    by
     apply subset.antisymm
     · intro x hx
       refine' ⟨x 0, ⟨hx.1 0, hx.2 0⟩, _⟩
@@ -121,20 +127,22 @@ section NormedSpace
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The parallelepiped spanned by a basis, as a compact set with nonempty interior. -/
-def Basis.parallelepiped (b : Basis ι ℝ E) :
-    PositiveCompacts E where 
+def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
+    where
   carrier := parallelepiped b
   is_compact' :=
     is_compact_Icc.image
       (continuous_finset_sum Finset.univ fun (i : ι) (H : i ∈ Finset.univ) =>
         (continuous_apply i).smul continuous_const)
-  interior_nonempty' := by
+  interior_nonempty' :=
+    by
     suffices H : Set.Nonempty (interior (b.equiv_funL.symm.to_homeomorph '' Icc 0 1))
     · dsimp only [parallelepiped]
       convert H
       ext t
       exact (b.equiv_fun_symm_apply t).symm
-    have A : Set.Nonempty (interior (Icc (0 : ι → ℝ) 1)) := by
+    have A : Set.Nonempty (interior (Icc (0 : ι → ℝ) 1)) :=
+      by
       rw [← pi_univ_Icc, interior_pi_set (@finite_univ ι _)]
       simp only [univ_pi_nonempty_iff, Pi.zero_apply, Pi.one_apply, interior_Icc, nonempty_Ioo,
         zero_lt_one, imp_true_iff]
@@ -149,12 +157,14 @@ irreducible_def Basis.addHaar (b : Basis ι ℝ E) : Measure E :=
   Measure.addHaarMeasure b.parallelepiped
 #align basis.add_haar Basis.addHaar
 
-instance isAddHaarMeasureBasisAddHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.addHaar := by
+instance isAddHaarMeasureBasisAddHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.addHaar :=
+  by
   rw [Basis.addHaar]
   exact measure.is_add_haar_measure_add_haar_measure _
 #align is_add_haar_measure_basis_add_haar isAddHaarMeasureBasisAddHaar
 
-theorem Basis.add_haar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) = 1 := by
+theorem Basis.add_haar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) = 1 :=
+  by
   rw [Basis.addHaar]
   exact add_haar_measure_self
 #align basis.add_haar_self Basis.add_haar_self
@@ -166,8 +176,8 @@ volume `1` to the parallelepiped spanned by any orthonormal basis. We define the
 some arbitrary choice of orthonormal basis. The fact that it works with any orthonormal basis
 is proved in `orthonormal_basis.volume_parallelepiped`. -/
 instance (priority := 100) measureSpaceOfInnerProductSpace [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] :
-    MeasureSpace E where volume := (stdOrthonormalBasis ℝ E).toBasis.addHaar
+    [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] : MeasureSpace E
+    where volume := (stdOrthonormalBasis ℝ E).toBasis.addHaar
 #align measure_space_of_inner_product_space measureSpaceOfInnerProductSpace
 
 /- This instance should not be necessary, but Lean has difficulties to find it in product

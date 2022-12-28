@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ess_sup
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,8 @@ section ConditionallyCompleteLinearOrder
 variable [ConditionallyCompleteLinearOrder β]
 
 theorem ess_sup_eq_Inf {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essSup f μ = infₛ { a | μ { x | a < f x } = 0 } := by
+    essSup f μ = infₛ { a | μ { x | a < f x } = 0 } :=
+  by
   dsimp [essSup, limsup, Limsup]
   congr
   ext a
@@ -105,7 +106,8 @@ theorem ess_sup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = 
   limsup_const c
 #align ess_sup_const ess_sup_const
 
-theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c := by
+theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c :=
+  by
   refine' (ess_sup_mono_ae hf).trans _
   by_cases hμ : μ = 0
   · simp [hμ]
@@ -130,7 +132,8 @@ theorem ess_inf_const_top : essInf (fun x : α => (⊤ : β)) μ = (⊤ : β) :=
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem OrderIso.ess_sup_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ] (f : α → β)
-    (μ : Measure α) (g : β ≃o γ) : g (essSup f μ) = essSup (fun x => g (f x)) μ := by
+    (μ : Measure α) (g : β ≃o γ) : g (essSup f μ) = essSup (fun x => g (f x)) μ :=
+  by
   refine' OrderIso.limsup_apply g _ _ _ _
   all_goals
     run_tac
@@ -143,7 +146,8 @@ theorem OrderIso.ess_inf_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ
 #align order_iso.ess_inf_apply OrderIso.ess_inf_apply
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
-theorem ess_sup_mono_measure {f : α → β} (hμν : ν ≪ μ) : essSup f ν ≤ essSup f μ := by
+theorem ess_sup_mono_measure {f : α → β} (hμν : ν ≪ μ) : essSup f ν ≤ essSup f μ :=
+  by
   refine' limsup_le_limsup_of_le (measure.ae_le_iff_absolutely_continuous.mpr hμν) _ _
   all_goals
     run_tac
@@ -157,7 +161,8 @@ theorem ess_sup_mono_measure' {α : Type _} {β : Type _} {m : MeasurableSpace �
 #align ess_sup_mono_measure' ess_sup_mono_measure'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
-theorem ess_inf_antitone_measure {f : α → β} (hμν : μ ≪ ν) : essInf f ν ≤ essInf f μ := by
+theorem ess_inf_antitone_measure {f : α → β} (hμν : μ ≪ ν) : essInf f ν ≤ essInf f μ :=
+  by
   refine' liminf_le_liminf_of_le (measure.ae_le_iff_absolutely_continuous.mpr hμν) _ _
   all_goals
     run_tac
@@ -165,7 +170,7 @@ theorem ess_inf_antitone_measure {f : α → β} (hμν : μ ≪ ν) : essInf f 
 #align ess_inf_antitone_measure ess_inf_antitone_measure
 
 theorem ess_sup_smul_measure {f : α → β} {c : ℝ≥0∞} (hc : c ≠ 0) : essSup f (c • μ) = essSup f μ :=
-  by 
+  by
   simp_rw [essSup]
   suffices h_smul : (c • μ).ae = μ.ae; · rw [h_smul]
   ext1
@@ -182,7 +187,8 @@ include mγ
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem ess_sup_comp_le_ess_sup_map_measure (hf : AeMeasurable f μ) :
-    essSup (g ∘ f) μ ≤ essSup g (Measure.map f μ) := by
+    essSup (g ∘ f) μ ≤ essSup g (Measure.map f μ) :=
+  by
   refine'
     Limsup_le_Limsup_of_le (fun t => _)
       (by
@@ -192,7 +198,7 @@ theorem ess_sup_comp_le_ess_sup_map_measure (hf : AeMeasurable f μ) :
         run_tac
           is_bounded_default)
   simp_rw [Filter.mem_map]
-  have : g ∘ f ⁻¹' t = f ⁻¹' (g ⁻¹' t) := by 
+  have : g ∘ f ⁻¹' t = f ⁻¹' (g ⁻¹' t) := by
     ext1 x
     simp_rw [Set.mem_preimage]
   rw [this]
@@ -202,7 +208,8 @@ theorem ess_sup_comp_le_ess_sup_map_measure (hf : AeMeasurable f μ) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem MeasurableEmbedding.ess_sup_map_measure (hf : MeasurableEmbedding f) :
-    essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
+    essSup g (Measure.map f μ) = essSup (g ∘ f) μ :=
+  by
   refine' le_antisymm _ (ess_sup_comp_le_ess_sup_map_measure hf.measurable.ae_measurable)
   refine'
     Limsup_le_Limsup
@@ -223,7 +230,8 @@ variable [MeasurableSpace β] [TopologicalSpace β] [SecondCountableTopology β]
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem ess_sup_map_measure_of_measurable (hg : Measurable g) (hf : AeMeasurable f μ) :
-    essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
+    essSup g (Measure.map f μ) = essSup (g ∘ f) μ :=
+  by
   refine' le_antisymm _ (ess_sup_comp_le_ess_sup_map_measure hf)
   refine'
     Limsup_le_Limsup
@@ -235,12 +243,13 @@ theorem ess_sup_map_measure_of_measurable (hg : Measurable g) (hf : AeMeasurable
           is_bounded_default)
       fun c h_le => _
   rw [eventually_map] at h_le⊢
-  rw [ae_map_iff hf (measurableSetLe hg measurableConst)]
+  rw [ae_map_iff hf (measurable_set_le hg measurable_const)]
   exact h_le
 #align ess_sup_map_measure_of_measurable ess_sup_map_measure_of_measurable
 
 theorem ess_sup_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : AeMeasurable f μ) :
-    essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
+    essSup g (Measure.map f μ) = essSup (g ∘ f) μ :=
+  by
   rw [ess_sup_congr_ae hg.ae_eq_mk, ess_sup_map_measure_of_measurable hg.measurable_mk hf]
   refine' ess_sup_congr_ae _
   have h_eq := ae_of_ae_map hf hg.ae_eq_mk
@@ -272,7 +281,8 @@ theorem ae_lt_of_lt_ess_inf {f : α → β} {x : β} (hf : x < essInf f μ) : �
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α → β}
     (hf : 0 ≤ᵐ[μ.restrict s] f) (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) :
-    essSup (s.indicator f) μ = essSup f (μ.restrict s) := by
+    essSup (s.indicator f) μ = essSup f (μ.restrict s) :=
+  by
   refine'
     le_antisymm _
       (Limsup_le_Limsup_of_le (map_restrict_ae_le_map_indicator_ae hs)
@@ -293,13 +303,13 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
       fun c h_restrict_le => _
   rw [eventually_map] at h_restrict_le⊢
   rw [ae_restrict_iff' hs] at h_restrict_le
-  have hc : 0 ≤ c := by 
+  have hc : 0 ≤ c := by
     rsuffices ⟨x, hx⟩ : ∃ x, 0 ≤ f x ∧ f x ≤ c
     exact hx.1.trans hx.2
     refine' frequently.exists _
     · exact μ.ae
     rw [eventually_le, ae_restrict_iff' hs] at hf
-    have hs' : ∃ᵐ x ∂μ, x ∈ s := by 
+    have hs' : ∃ᵐ x ∂μ, x ∈ s := by
       contrapose! hs_not_null
       rw [not_frequently, ae_iff] at hs_not_null
       suffices { a : α | ¬a ∉ s } = s by rwa [← this]
@@ -343,7 +353,7 @@ theorem ess_sup_add_le (f g : α → ℝ≥0∞) : essSup (f + g) μ ≤ essSup 
 theorem ess_sup_liminf_le {ι} [Countable ι] [LinearOrder ι] (f : ι → α → ℝ≥0∞) :
     essSup (fun x => atTop.liminf fun n => f n x) μ ≤
       atTop.liminf fun n => essSup (fun x => f n x) μ :=
-  by 
+  by
   simp_rw [essSup]
   exact Ennreal.limsup_liminf_le_liminf_limsup fun a b => f b a
 #align ennreal.ess_sup_liminf_le Ennreal.ess_sup_liminf_le

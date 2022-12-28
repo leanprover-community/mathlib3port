@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury Kudryashov, Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.to_additive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,9 +49,8 @@ unsafe def hacky_name_reflect : has_reflect Name := fun n => q((id $(expr.const 
 /-- An auxiliary attribute used to store the names of the additive versions of declarations
 that have been processed by `to_additive`. -/
 @[user_attribute]
-unsafe def aux_attr :
-    user_attribute (name_map Name)
-      Name where 
+unsafe def aux_attr : user_attribute (name_map Name) Name
+    where
   Name := `to_additive_aux
   descr := "Auxiliary attribute for `to_additive`. DON'T USE IT"
   parser := failed
@@ -80,9 +79,8 @@ This helps the heuristic of `@[to_additive]` by also transforming definitions if
 fixed type occurs as one of these arguments.
 -/
 @[user_attribute]
-unsafe def ignore_args_attr :
-    user_attribute (name_map <| List ℕ)
-      (List ℕ) where 
+unsafe def ignore_args_attr : user_attribute (name_map <| List ℕ) (List ℕ)
+    where
   Name := `to_additive_ignore_args
   descr :=
     "Auxiliary attribute for `to_additive` stating that certain arguments are not additivized."
@@ -121,9 +119,8 @@ Warning: adding `@[to_additive_reorder]` with an equal or smaller number than th
 attribute is currently not supported.
 -/
 @[user_attribute]
-unsafe def relevant_arg_attr :
-    user_attribute (name_map ℕ)
-      ℕ where 
+unsafe def relevant_arg_attr : user_attribute (name_map ℕ) ℕ
+    where
   Name := `to_additive_relevant_arg
   descr :=
     "Auxiliary attribute for `to_additive` stating which arguments are the types with a " ++
@@ -152,9 +149,8 @@ Example: `@[to_additive_reorder 1 4]` swaps the first two arguments and the argu
 positions 4 and 5.
 -/
 @[user_attribute]
-unsafe def reorder_attr :
-    user_attribute (name_map <| List ℕ)
-      (List ℕ) where 
+unsafe def reorder_attr : user_attribute (name_map <| List ℕ) (List ℕ)
+    where
   Name := `to_additive_reorder
   descr := "Auxiliary attribute for `to_additive` that stores arguments that need to be reordered."
   cache_cfg :=
@@ -574,8 +570,8 @@ that the new name differs from the original one.
 
 -/
 @[user_attribute]
-protected unsafe def attr :
-    user_attribute Unit ValueType where 
+protected unsafe def attr : user_attribute Unit ValueType
+    where
   Name := `to_additive
   descr := "Transport multiplicative to additive"
   parser := parser
@@ -643,8 +639,8 @@ open Tactic Expr
 /-- A linter that checks that multiplicative and additive lemmas have both doc strings if one of
 them has one -/
 @[linter]
-unsafe def linter.to_additive_doc :
-    linter where 
+unsafe def linter.to_additive_doc : linter
+    where
   test d := do
     let mul_name := d.to_name
     let dict ← to_additive.aux_attr.get_cache

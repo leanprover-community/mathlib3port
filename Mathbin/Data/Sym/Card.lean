@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta, Huỳnh Trần Khanh, Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.sym.card
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,9 +69,8 @@ variable (α) (n : ℕ)
 /-- Over `fin n+1`, the multisets of size `k+1` containing `0` are equivalent to those of size `k`,
 as demonstrated by respectively erasing or appending `0`.
 -/
-protected def e1 {n k : ℕ} :
-    { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃
-      Sym (Fin n.succ) k where 
+protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃ Sym (Fin n.succ) k
+    where
   toFun s := s.1.erase 0 s.2
   invFun s := ⟨cons 0 s, mem_cons_self 0 s⟩
   left_inv s := by simp
@@ -82,27 +81,27 @@ protected def e1 {n k : ℕ} :
 are equivalent to those of size `k` over `fin n+1`,
 as demonstrated by respectively decrementing or incrementing every element of the multiset.
 -/
-protected def e2 {n k : ℕ} :
-    { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
-      Sym (Fin n.succ) k where 
+protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃ Sym (Fin n.succ) k
+    where
   toFun s := map (Fin.predAbove 0) s.1
   invFun s :=
     ⟨map (Fin.succAbove 0) s,
       (mt mem_map.1) (not_exists.2 fun t => not_and.2 fun _ => Fin.succ_above_ne _ t)⟩
-  left_inv s := by 
+  left_inv s := by
     obtain ⟨s, hs⟩ := s
     simp only [map_map, comp_app]
     nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     simp [Fin.pred_above_zero (ne_of_mem_of_not_mem hv hs)]
-  right_inv s := by 
+  right_inv s := by
     simp only [Fin.zero_succ_above, map_map, comp_app]
     nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     rw [← Fin.zero_succ_above v, ← Fin.cast_succ_zero, Fin.pred_above_succ_above 0 v]
 #align sym.E2 Sym.e2
 
-theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multichoose n k := by
+theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multichoose n k :=
+  by
   apply @pincer_recursion fun n k => card (Sym (Fin n) k) = multichoose n k
   · simp
   · intro b
@@ -123,7 +122,8 @@ theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multich
 
 /-- For any fintype `α` of cardinality `n`, `card (sym α k) = multichoose (card α) k` -/
 theorem card_sym_eq_multichoose (α : Type _) (k : ℕ) [Fintype α] [Fintype (Sym α k)] :
-    card (Sym α k) = multichoose (card α) k := by
+    card (Sym α k) = multichoose (card α) k :=
+  by
   rw [← card_sym_fin_eq_multichoose]
   exact card_congr (equiv_congr (equiv_fin α))
 #align sym.card_sym_eq_multichoose Sym.card_sym_eq_multichoose
@@ -144,7 +144,8 @@ namespace Sym2
 variable [DecidableEq α]
 
 /-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
-theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk'').card = s.card := by
+theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk'').card = s.card :=
+  by
   rw [card_image_of_inj_on, diag_card]
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Quotient.eq.1 h
@@ -154,7 +155,8 @@ theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk'').card = s.
 #align sym2.card_image_diag Sym2.card_image_diag
 
 theorem two_mul_card_image_off_diag (s : Finset α) :
-    2 * (s.offDiag.image Quotient.mk'').card = s.offDiag.card := by
+    2 * (s.offDiag.image Quotient.mk'').card = s.offDiag.card :=
+  by
   rw [card_eq_sum_card_fiberwise
       (fun x => mem_image_of_mem _ :
         ∀ x ∈ s.off_diag, Quotient.mk'' x ∈ s.off_diag.image Quotient.mk''),
@@ -165,7 +167,8 @@ theorem two_mul_card_image_off_diag (s : Finset α) :
   obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by
     cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
   have hxy' : y ≠ x := hxy.symm
-  have : (s.off_diag.filter fun z => ⟦z⟧ = ⟦(x, y)⟧) = ({(x, y), (y, x)} : Finset _) := by
+  have : (s.off_diag.filter fun z => ⟦z⟧ = ⟦(x, y)⟧) = ({(x, y), (y, x)} : Finset _) :=
+    by
     ext ⟨x₁, y₁⟩
     rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iff, Prod.mk.inj_iff,
       and_iff_right_iff_imp]
@@ -185,7 +188,8 @@ theorem card_image_off_diag (s : Finset α) :
     Nat.div_eq_of_eq_mul_right zero_lt_two (two_mul_card_image_off_diag s).symm]
 #align sym2.card_image_off_diag Sym2.card_image_off_diag
 
-theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card α := by
+theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card α :=
+  by
   convert card_image_diag (univ : Finset α)
   rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_is_diag]
   rintro x
@@ -195,7 +199,7 @@ theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card
 #align sym2.card_subtype_diag Sym2.card_subtype_diag
 
 theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } = (card α).choose 2 :=
-  by 
+  by
   convert card_image_off_diag (univ : Finset α)
   rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_not_is_diag]
   rintro x
@@ -205,7 +209,8 @@ theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } 
 #align sym2.card_subtype_not_diag Sym2.card_subtype_not_diag
 
 /-- Finset **stars and bars** for the case `n = 2`. -/
-theorem Finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) / 2 := by
+theorem Finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) / 2 :=
+  by
   rw [← image_diag_union_image_off_diag, card_union_eq, Sym2.card_image_diag,
     Sym2.card_image_off_diag, Nat.choose_two_right, add_comm, ← Nat.triangle_succ, Nat.succ_sub_one,
     mul_comm]

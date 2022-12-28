@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.finite_limits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ class HasFiniteLimits : Prop where
 #align category_theory.limits.has_finite_limits CategoryTheory.Limits.HasFiniteLimits
 
 instance (priority := 100) hasLimitsOfShapeOfHasFiniteLimits (J : Type w) [SmallCategory J]
-    [FinCategory J] [HasFiniteLimits C] : HasLimitsOfShape J C := by
+    [FinCategory J] [HasFiniteLimits C] : HasLimitsOfShape J C :=
+  by
   apply has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)
   apply has_finite_limits.out
 #align
@@ -68,13 +69,15 @@ instance (priority := 100) hasFiniteLimitsOfHasLimits [HasLimits C] : HasFiniteL
 arbitrary universe. -/
 theorem hasFiniteLimitsOfHasFiniteLimitsOfSize
     (h :
-      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥),
+        by
         skip
         exact has_limits_of_shape J C) :
     HasFiniteLimits C :=
-  ⟨fun J hJ hhJ => by 
+  ⟨fun J hJ hhJ => by
     skip
-    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
+    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) :=
+      by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
@@ -92,7 +95,8 @@ class HasFiniteColimits : Prop where
 #align category_theory.limits.has_finite_colimits CategoryTheory.Limits.HasFiniteColimits
 
 instance (priority := 100) hasColimitsOfShapeOfHasFiniteColimits (J : Type w) [SmallCategory J]
-    [FinCategory J] [HasFiniteColimits C] : HasColimitsOfShape J C := by
+    [FinCategory J] [HasFiniteColimits C] : HasColimitsOfShape J C :=
+  by
   apply has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)
   apply has_finite_colimits.out
 #align
@@ -110,13 +114,15 @@ instance (priority := 100) hasFiniteColimitsOfHasColimitsOfSize [HasColimitsOfSi
 arbitrary universe. -/
 theorem hasFiniteColimitsOfHasFiniteColimitsOfSize
     (h :
-      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥), by
+      ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥),
+        by
         skip
         exact has_colimits_of_shape J C) :
     HasFiniteColimits C :=
-  ⟨fun J hJ hhJ => by 
+  ⟨fun J hJ hhJ => by
     skip
-    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) := by
+    let this : Category.{w, w} (UliftHom.{w} (ULift.{w, 0} J)) :=
+      by
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
@@ -128,9 +134,8 @@ section
 
 open WalkingParallelPair WalkingParallelPairHom
 
-instance fintypeWalkingParallelPair :
-    Fintype
-      WalkingParallelPair where 
+instance fintypeWalkingParallelPair : Fintype WalkingParallelPair
+    where
   elems := [WalkingParallelPair.zero, WalkingParallelPair.one].toFinset
   complete x := by cases x <;> simp
 #align
@@ -138,10 +143,8 @@ instance fintypeWalkingParallelPair :
 
 attribute [local tidy] tactic.case_bash
 
-instance (j j' : WalkingParallelPair) :
-    Fintype
-      (WalkingParallelPairHom j
-        j') where 
+instance (j j' : WalkingParallelPair) : Fintype (WalkingParallelPairHom j j')
+    where
   elems :=
     WalkingParallelPair.recOn j
       (WalkingParallelPair.recOn j' [WalkingParallelPairHom.id zero].toFinset
@@ -166,16 +169,16 @@ attribute [local tidy] tactic.case_bash
 
 namespace WidePullbackShape
 
-instance fintypeObj [Fintype J] : Fintype (WidePullbackShape J) := by
+instance fintypeObj [Fintype J] : Fintype (WidePullbackShape J) :=
+  by
   rw [wide_pullback_shape]
   infer_instance
 #align
   category_theory.limits.wide_pullback_shape.fintype_obj CategoryTheory.Limits.WidePullbackShape.fintypeObj
 
-instance fintypeHom (j j' : WidePullbackShape J) :
-    Fintype
-      (j ⟶ j') where 
-  elems := by 
+instance fintypeHom (j j' : WidePullbackShape J) : Fintype (j ⟶ j')
+    where
+  elems := by
     cases j'
     · cases j
       · exact {hom.id none}
@@ -192,16 +195,16 @@ end WidePullbackShape
 
 namespace WidePushoutShape
 
-instance fintypeObj [Fintype J] : Fintype (WidePushoutShape J) := by
+instance fintypeObj [Fintype J] : Fintype (WidePushoutShape J) :=
+  by
   rw [wide_pushout_shape]
   infer_instance
 #align
   category_theory.limits.wide_pushout_shape.fintype_obj CategoryTheory.Limits.WidePushoutShape.fintypeObj
 
-instance fintypeHom (j j' : WidePushoutShape J) :
-    Fintype
-      (j ⟶ j') where 
-  elems := by 
+instance fintypeHom (j j' : WidePushoutShape J) : Fintype (j ⟶ j')
+    where
+  elems := by
     cases j
     · cases j'
       · exact {hom.id none}
@@ -216,13 +219,13 @@ instance fintypeHom (j j' : WidePushoutShape J) :
 
 end WidePushoutShape
 
-instance finCategoryWidePullback [Fintype J] :
-    FinCategory (WidePullbackShape J) where fintypeHom := WidePullbackShape.fintypeHom
+instance finCategoryWidePullback [Fintype J] : FinCategory (WidePullbackShape J)
+    where fintypeHom := WidePullbackShape.fintypeHom
 #align
   category_theory.limits.fin_category_wide_pullback CategoryTheory.Limits.finCategoryWidePullback
 
-instance finCategoryWidePushout [Fintype J] :
-    FinCategory (WidePushoutShape J) where fintypeHom := WidePushoutShape.fintypeHom
+instance finCategoryWidePushout [Fintype J] : FinCategory (WidePushoutShape J)
+    where fintypeHom := WidePushoutShape.fintypeHom
 #align category_theory.limits.fin_category_wide_pushout CategoryTheory.Limits.finCategoryWidePushout
 
 -- We can't just made this an `abbreviation`
@@ -235,7 +238,8 @@ class HasFiniteWidePullbacks : Prop where
 #align category_theory.limits.has_finite_wide_pullbacks CategoryTheory.Limits.HasFiniteWidePullbacks
 
 instance hasLimitsOfShapeWidePullbackShape (J : Type) [Finite J] [HasFiniteWidePullbacks C] :
-    HasLimitsOfShape (WidePullbackShape J) C := by
+    HasLimitsOfShape (WidePullbackShape J) C :=
+  by
   cases nonempty_fintype J
   haveI := @has_finite_wide_pullbacks.out C _ _ J
   infer_instance
@@ -250,7 +254,8 @@ class HasFiniteWidePushouts : Prop where
 #align category_theory.limits.has_finite_wide_pushouts CategoryTheory.Limits.HasFiniteWidePushouts
 
 instance hasColimitsOfShapeWidePushoutShape (J : Type) [Finite J] [HasFiniteWidePushouts C] :
-    HasColimitsOfShape (WidePushoutShape J) C := by
+    HasColimitsOfShape (WidePushoutShape J) C :=
+  by
   cases nonempty_fintype J
   haveI := @has_finite_wide_pushouts.out C _ _ J
   infer_instance
@@ -273,8 +278,8 @@ theorem hasFiniteWidePushoutsOfHasFiniteLimits [HasFiniteColimits C] : HasFinite
 #align
   category_theory.limits.has_finite_wide_pushouts_of_has_finite_limits CategoryTheory.Limits.hasFiniteWidePushoutsOfHasFiniteLimits
 
-instance fintypeWalkingPair :
-    Fintype WalkingPair where 
+instance fintypeWalkingPair : Fintype WalkingPair
+    where
   elems := {WalkingPair.left, WalkingPair.right}
   complete x := by cases x <;> simp
 #align category_theory.limits.fintype_walking_pair CategoryTheory.Limits.fintypeWalkingPair

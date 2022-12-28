@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.equiv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ instance (priority := 100) toAddEquivClass (F R S : Type _) [Mul R] [Add R] [Mul
 -- See note [lower instance priority]
 instance (priority := 100) toRingHomClass (F R S : Type _) [NonAssocSemiring R] [NonAssocSemiring S]
     [h : RingEquivClass F R S] : RingHomClass F R S :=
-  { h with 
+  { h with
     coe := coeFn
     coe_injective' := FunLike.coe_injective
     map_zero := map_zero
@@ -89,7 +89,7 @@ instance (priority := 100) toRingHomClass (F R S : Type _) [NonAssocSemiring R] 
 -- See note [lower instance priority]
 instance (priority := 100) toNonUnitalRingHomClass (F R S : Type _) [NonUnitalNonAssocSemiring R]
     [NonUnitalNonAssocSemiring S] [h : RingEquivClass F R S] : NonUnitalRingHomClass F R S :=
-  { h with 
+  { h with
     coe := coeFn
     coe_injective' := FunLike.coe_injective
     map_zero := map_zero }
@@ -112,10 +112,10 @@ section Basic
 
 variable [Mul R] [Add R] [Mul S] [Add S] [Mul S'] [Add S']
 
-instance : RingEquivClass (R ≃+* S) R S where 
+instance : RingEquivClass (R ≃+* S) R S where
   coe := toFun
   inv := invFun
-  coe_injective' e f h₁ h₂ := by 
+  coe_injective' e f h₁ h₂ := by
     cases e
     cases f
     congr
@@ -206,8 +206,8 @@ def ringEquivOfUnique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N
   { AddEquiv.addEquivOfUnique, MulEquiv.mulEquivOfUnique with }
 #align ring_equiv.ring_equiv_of_unique RingEquiv.ringEquivOfUnique
 
-instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] :
-    Unique (M ≃+* N) where 
+instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N)
+    where
   default := ringEquivOfUnique
   uniq _ := ext fun x => Subsingleton.elim _ _
 
@@ -280,7 +280,7 @@ theorem mk_coe' (e : R ≃+* S) (f h₁ h₂ h₃ h₄) :
 @[simp]
 theorem symm_mk (f : R → S) (g h₁ h₂ h₃ h₄) :
     (mk f g h₁ h₂ h₃ h₄).symm =
-      { (mk f g h₁ h₂ h₃ h₄).symm with 
+      { (mk f g h₁ h₂ h₃ h₄).symm with
         toFun := g
         invFun := f } :=
   rfl
@@ -357,16 +357,14 @@ open MulOpposite
 
 /-- A ring iso `α ≃+* β` can equivalently be viewed as a ring iso `αᵐᵒᵖ ≃+* βᵐᵒᵖ`. -/
 @[simps]
-protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] :
-    α ≃+* β ≃
-      (αᵐᵒᵖ ≃+*
-        βᵐᵒᵖ) where 
+protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] : α ≃+* β ≃ (αᵐᵒᵖ ≃+* βᵐᵒᵖ)
+    where
   toFun f := { f.toAddEquiv.mulOp, f.toMulEquiv.op with }
   invFun f := { AddEquiv.mulOp.symm f.toAddEquiv, MulEquiv.op.symm f.toMulEquiv with }
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     rfl
 #align ring_equiv.op RingEquiv.op
@@ -383,7 +381,7 @@ variable (R) [NonUnitalCommSemiring R]
 
 /-- A non-unital commutative ring is isomorphic to its opposite. -/
 def toOpposite : R ≃+* Rᵐᵒᵖ :=
-  { MulOpposite.opEquiv with 
+  { MulOpposite.opEquiv with
     map_add' := fun x y => rfl
     map_mul' := fun x y => mul_comm (op y) (op x) }
 #align ring_equiv.to_opposite RingEquiv.toOpposite
@@ -424,7 +422,7 @@ theorem map_ne_zero_iff : f x ≠ 0 ↔ x ≠ 0 :=
 /-- Produce a ring isomorphism from a bijective ring homomorphism. -/
 noncomputable def ofBijective [NonUnitalRingHomClass F R S] (f : F) (hf : Function.Bijective f) :
     R ≃+* S :=
-  { Equiv.ofBijective f hf with 
+  { Equiv.ofBijective f hf with
     map_mul' := map_mul f
     map_add' := map_add f }
 #align ring_equiv.of_bijective RingEquiv.ofBijective
@@ -450,7 +448,8 @@ This is the `ring_equiv` version of `equiv.Pi_congr_right`, and the dependent ve
 def piCongrRight {ι : Type _} {R S : ι → Type _} [∀ i, NonUnitalNonAssocSemiring (R i)]
     [∀ i, NonUnitalNonAssocSemiring (S i)] (e : ∀ i, R i ≃+* S i) : (∀ i, R i) ≃+* ∀ i, S i :=
   { @MulEquiv.piCongrRight ι R S _ _ fun i => (e i).toMulEquiv,
-    @AddEquiv.piCongrRight ι R S _ _ fun i => (e i).toAddEquiv with
+    @AddEquiv.piCongrRight ι R S _ _ fun i =>
+      (e i).toAddEquiv with
     toFun := fun x j => e j (x j)
     invFun := fun x j => (e j).symm (x j) }
 #align ring_equiv.Pi_congr_right RingEquiv.piCongrRight
@@ -636,7 +635,8 @@ theorem to_non_unital_ring_hom_trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') :
 
 @[simp]
 theorem to_non_unital_ring_hom_comp_symm_to_non_unital_ring_hom (e : R ≃+* S) :
-    e.toNonUnitalRingHom.comp e.symm.toNonUnitalRingHom = NonUnitalRingHom.id _ := by
+    e.toNonUnitalRingHom.comp e.symm.toNonUnitalRingHom = NonUnitalRingHom.id _ :=
+  by
   ext
   simp
 #align
@@ -644,7 +644,8 @@ theorem to_non_unital_ring_hom_comp_symm_to_non_unital_ring_hom (e : R ≃+* S) 
 
 @[simp]
 theorem symm_to_non_unital_ring_hom_comp_to_non_unital_ring_hom (e : R ≃+* S) :
-    e.symm.toNonUnitalRingHom.comp e.toNonUnitalRingHom = NonUnitalRingHom.id _ := by
+    e.symm.toNonUnitalRingHom.comp e.toNonUnitalRingHom = NonUnitalRingHom.id _ :=
+  by
   ext
   simp
 #align
@@ -754,14 +755,16 @@ theorem to_ring_hom_trans (e₁ : R ≃+* S) (e₂ : S ≃+* S') :
 
 @[simp]
 theorem to_ring_hom_comp_symm_to_ring_hom (e : R ≃+* S) :
-    e.toRingHom.comp e.symm.toRingHom = RingHom.id _ := by
+    e.toRingHom.comp e.symm.toRingHom = RingHom.id _ :=
+  by
   ext
   simp
 #align ring_equiv.to_ring_hom_comp_symm_to_ring_hom RingEquiv.to_ring_hom_comp_symm_to_ring_hom
 
 @[simp]
 theorem symm_to_ring_hom_comp_to_ring_hom (e : R ≃+* S) :
-    e.symm.toRingHom.comp e.toRingHom = RingHom.id _ := by
+    e.symm.toRingHom.comp e.toRingHom = RingHom.id _ :=
+  by
   ext
   simp
 #align ring_equiv.symm_to_ring_hom_comp_to_ring_hom RingEquiv.symm_to_ring_hom_comp_to_ring_hom
@@ -772,8 +775,8 @@ theorem symm_to_ring_hom_comp_to_ring_hom (e : R ≃+* S) :
 def ofHomInv' {R S F G : Type _} [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
     [NonUnitalRingHomClass F R S] [NonUnitalRingHomClass G S R] (hom : F) (inv : G)
     (hom_inv_id : (inv : S →ₙ+* R).comp (hom : R →ₙ+* S) = NonUnitalRingHom.id R)
-    (inv_hom_id : (hom : R →ₙ+* S).comp (inv : S →ₙ+* R) = NonUnitalRingHom.id S) :
-    R ≃+* S where 
+    (inv_hom_id : (hom : R →ₙ+* S).comp (inv : S →ₙ+* R) = NonUnitalRingHom.id S) : R ≃+* S
+    where
   toFun := hom
   invFun := inv
   left_inv := FunLike.congr_fun hom_inv_id
@@ -789,8 +792,8 @@ Construct an equivalence of rings from unital homomorphisms in both directions, 
 def ofHomInv {R S F G : Type _} [NonAssocSemiring R] [NonAssocSemiring S] [RingHomClass F R S]
     [RingHomClass G S R] (hom : F) (inv : G)
     (hom_inv_id : (inv : S →+* R).comp (hom : R →+* S) = RingHom.id R)
-    (inv_hom_id : (hom : R →+* S).comp (inv : S →+* R) = RingHom.id S) :
-    R ≃+* S where 
+    (inv_hom_id : (hom : R →+* S).comp (inv : S →+* R) = RingHom.id S) : R ≃+* S
+    where
   toFun := hom
   invFun := inv
   left_inv := FunLike.congr_fun hom_inv_id
@@ -851,14 +854,17 @@ theorem symm_trans_self (e : R ≃+* S) : e.symm.trans e = RingEquiv.refl S :=
 then so does the first. -/
 protected theorem no_zero_divisors {A : Type _} (B : Type _) [Ring A] [Ring B] [NoZeroDivisors B]
     (e : A ≃+* B) : NoZeroDivisors A :=
-  { eq_zero_or_eq_zero_of_mul_eq_zero := fun x y hxy => by
+  {
+    eq_zero_or_eq_zero_of_mul_eq_zero := fun x y hxy =>
+      by
       have : e x * e y = 0 := by rw [← e.map_mul, hxy, e.map_zero]
       simpa using eq_zero_or_eq_zero_of_mul_eq_zero this }
 #align ring_equiv.no_zero_divisors RingEquiv.no_zero_divisors
 
 /-- If two rings are isomorphic, and the second is a domain, then so is the first. -/
 protected theorem is_domain {A : Type _} (B : Type _) [Ring A] [Ring B] [IsDomain B] (e : A ≃+* B) :
-    IsDomain A := by
+    IsDomain A :=
+  by
   haveI : Nontrivial A := ⟨⟨e.symm 0, e.symm 1, e.symm.injective.ne zero_ne_one⟩⟩
   haveI := e.no_zero_divisors B
   exact NoZeroDivisors.toIsDomain _

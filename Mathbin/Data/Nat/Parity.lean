@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.nat.parity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,13 +72,15 @@ theorem even_or_odd' (n : ℕ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
   simpa only [← two_mul, exists_or, ← Odd, ← Even] using even_or_odd n
 #align nat.even_or_odd' Nat.even_or_odd'
 
-theorem even_xor_odd (n : ℕ) : Xor' (Even n) (Odd n) := by
+theorem even_xor_odd (n : ℕ) : Xor' (Even n) (Odd n) :=
+  by
   cases' even_or_odd n with h
   · exact Or.inl ⟨h, even_iff_not_odd.mp h⟩
   · exact Or.inr ⟨h, odd_iff_not_even.mp h⟩
 #align nat.even_xor_odd Nat.even_xor_odd
 
-theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
+theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
+  by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
   ·
     simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
@@ -150,8 +152,9 @@ theorem two_not_dvd_two_mul_sub_one : ∀ {n} (w : 0 < n), ¬2 ∣ 2 * n - 1
 #align nat.two_not_dvd_two_mul_sub_one Nat.two_not_dvd_two_mul_sub_one
 
 @[parity_simps]
-theorem even_sub (h : n ≤ m) : Even (m - n) ↔ (Even m ↔ Even n) := by
-  conv => 
+theorem even_sub (h : n ≤ m) : Even (m - n) ↔ (Even m ↔ Even n) :=
+  by
+  conv =>
     rhs
     rw [← tsub_add_cancel_of_le h, even_add]
   by_cases h : Even n <;> simp [h]
@@ -187,7 +190,8 @@ theorem Odd.of_mul_right (h : Odd (m * n)) : Odd n :=
 /-- If `m` and `n` are natural numbers, then the natural number `m^n` is even
 if and only if `m` is even and `n` is positive. -/
 @[parity_simps]
-theorem even_pow : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
+theorem even_pow : Even (m ^ n) ↔ Even m ∧ n ≠ 0 :=
+  by
   induction' n with n ih <;> simp [*, pow_succ', even_mul]
   tauto
 #align nat.even_pow Nat.even_pow
@@ -228,13 +232,15 @@ theorem Even.sub_odd (h : n ≤ m) (hm : Even m) (hn : Odd n) : Odd (m - n) :=
   (odd_sub' h).mpr <| iff_of_true hn hm
 #align nat.even.sub_odd Nat.Even.sub_odd
 
-theorem even_mul_succ_self (n : ℕ) : Even (n * (n + 1)) := by
+theorem even_mul_succ_self (n : ℕ) : Even (n * (n + 1)) :=
+  by
   rw [even_mul]
   convert n.even_or_odd
   simp [parity_simps]
 #align nat.even_mul_succ_self Nat.even_mul_succ_self
 
-theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) := by
+theorem even_mul_self_pred (n : ℕ) : Even (n * (n - 1)) :=
+  by
   cases n
   · exact even_zero
   · rw [mul_comm]
@@ -256,18 +262,21 @@ theorem div_two_mul_two_of_even : Even n → n / 2 * 2 = n :=
   Nat.div_mul_cancel (even_iff_two_dvd.mp h)
 #align nat.div_two_mul_two_of_even Nat.div_two_mul_two_of_even
 
-theorem two_mul_div_two_add_one_of_odd (h : Odd n) : 2 * (n / 2) + 1 = n := by
+theorem two_mul_div_two_add_one_of_odd (h : Odd n) : 2 * (n / 2) + 1 = n :=
+  by
   rw [mul_comm]
   convert Nat.div_add_mod' n 2
   rw [odd_iff.mp h]
 #align nat.two_mul_div_two_add_one_of_odd Nat.two_mul_div_two_add_one_of_odd
 
-theorem div_two_mul_two_add_one_of_odd (h : Odd n) : n / 2 * 2 + 1 = n := by
+theorem div_two_mul_two_add_one_of_odd (h : Odd n) : n / 2 * 2 + 1 = n :=
+  by
   convert Nat.div_add_mod' n 2
   rw [odd_iff.mp h]
 #align nat.div_two_mul_two_add_one_of_odd Nat.div_two_mul_two_add_one_of_odd
 
-theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n := by
+theorem one_add_div_two_mul_two_of_odd (h : Odd n) : 1 + n / 2 * 2 = n :=
+  by
   rw [add_comm]
   convert Nat.div_add_mod' n 2
   rw [odd_iff.mp h]
@@ -297,7 +306,8 @@ theorem bit0_mod_bit0 : bit0 n % bit0 m = bit0 (n % m) := by
 #align nat.bit0_mod_bit0 Nat.bit0_mod_bit0
 
 @[simp]
-theorem bit1_mod_bit0 : bit1 n % bit0 m = bit1 (n % m) := by
+theorem bit1_mod_bit0 : bit1 n % bit0 m = bit1 (n % m) :=
+  by
   have h₁ := congr_arg bit1 (Nat.div_add_mod n m)
   -- `∀ m n : ℕ, bit0 m * n = bit0 (m * n)` seems to be missing...
   rw [bit1_add, bit0_eq_two_mul, ← mul_assoc, ← bit0_eq_two_mul] at h₁
@@ -383,7 +393,8 @@ theorem Even.mod_even {n a : ℕ} (hn : Even n) (ha : Even a) : Even (n % a) :=
 #align even.mod_even Even.mod_even
 
 /-- `2` is not a prime factor of an odd natural number. -/
-theorem Odd.factors_ne_two {n p : ℕ} (hn : Odd n) (hp : p ∈ n.factors) : p ≠ 2 := by
+theorem Odd.factors_ne_two {n p : ℕ} (hn : Odd n) (hp : p ∈ n.factors) : p ≠ 2 :=
+  by
   rintro rfl
   exact two_dvd_ne_zero.mpr (odd_iff.mp hn) (dvd_of_mem_factors hp)
 #align odd.factors_ne_two Odd.factors_ne_two

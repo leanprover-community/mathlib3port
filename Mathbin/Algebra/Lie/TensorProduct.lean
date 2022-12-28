@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.tensor_product
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,19 +55,21 @@ def hasBracketAux (x : L) : Module.EndCat R (M ⊗[R] N) :=
 #align tensor_product.lie_module.has_bracket_aux TensorProduct.LieModule.hasBracketAux
 
 /-- The tensor product of two Lie modules is a Lie ring module. -/
-instance lieRingModule :
-    LieRingModule L (M ⊗[R] N) where 
+instance lieRingModule : LieRingModule L (M ⊗[R] N)
+    where
   bracket x := hasBracketAux x
-  add_lie x y t := by
+  add_lie x y t :=
+    by
     simp only [has_bracket_aux, LinearMap.ltensor_add, LinearMap.rtensor_add, LieHom.map_add,
       LinearMap.add_apply]
     abel
   lie_add x := LinearMap.map_add _
-  leibniz_lie x y t := by
+  leibniz_lie x y t :=
+    by
     suffices
       (has_bracket_aux x).comp (has_bracket_aux y) =
         has_bracket_aux ⁅x, y⁆ + (has_bracket_aux y).comp (has_bracket_aux x)
-      by 
+      by
       simp only [← LinearMap.add_apply]
       rw [← LinearMap.comp_apply, this]
       rfl
@@ -80,11 +82,9 @@ instance lieRingModule :
 #align tensor_product.lie_module.lie_ring_module TensorProduct.LieModule.lieRingModule
 
 /-- The tensor product of two Lie modules is a Lie module. -/
-instance lieModule :
-    LieModule R L
-      (M ⊗[R]
-        N) where 
-  smul_lie c x t := by 
+instance lieModule : LieModule R L (M ⊗[R] N)
+    where
+  smul_lie c x t := by
     change has_bracket_aux (c • x) _ = c • has_bracket_aux _ _
     simp only [has_bracket_aux, smul_add, LinearMap.rtensor_smul, LinearMap.smul_apply,
       LinearMap.ltensor_smul, LieHom.map_smul, LinearMap.add_apply]
@@ -104,7 +104,7 @@ variable (R L M N P Q)
 tensor-hom adjunction is equivariant with respect to the `L` action. -/
 def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
   { TensorProduct.lift.equiv R M N P with
-    map_lie' := fun x f => by 
+    map_lie' := fun x f => by
       ext (m n)
       simp only [mk_apply, LinearMap.compr₂_apply, lie_tmul_right, LinearMap.sub_apply,
         lift.equiv_apply, LinearEquiv.to_fun_eq_coe, LieHom.lie_apply, LinearMap.map_add]
@@ -127,7 +127,8 @@ def liftLie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,
 
 @[simp]
 theorem coe_lift_lie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) :
-    ⇑(liftLie R L M N P f) = lift R L M N P f := by
+    ⇑(liftLie R L M N P f) = lift R L M N P f :=
+  by
   suffices (lift_lie R L M N P f : M ⊗[R] N →ₗ[R] P) = lift R L M N P f by
     rw [← this, LieModuleHom.coe_to_linear_map]
   ext (m n)
@@ -148,7 +149,7 @@ variable {R L M N P Q}
 `M ⊗ N → P ⊗ Q`. -/
 def map (f : M →ₗ⁅R,L⁆ P) (g : N →ₗ⁅R,L⁆ Q) : M ⊗[R] N →ₗ⁅R,L⁆ P ⊗[R] Q :=
   { map (f : M →ₗ[R] P) (g : N →ₗ[R] Q) with
-    map_lie' := fun x t => by 
+    map_lie' := fun x t => by
       simp only [LinearMap.to_fun_eq_coe]
       apply t.induction_on
       · simp only [LinearMap.map_zero, lie_zero]
@@ -200,7 +201,7 @@ variable [AddCommGroup M] [Module R M] [LieRingModule L M] [LieModule R L M]
 def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
   TensorProduct.LieModule.liftLie R L L M M
     { (toEndomorphism R L M : L →ₗ[R] M →ₗ[R] M) with
-      map_lie' := fun x m => by 
+      map_lie' := fun x m => by
         ext n
         simp [LieRing.of_associative_ring_bracket] }
 #align lie_module.to_module_hom LieModule.toModuleHom
@@ -236,7 +237,8 @@ applying the action of `L` on `M`, we obtain morphism of Lie modules `f : I ⊗ 
 
 This lemma states that `⁅I, N⁆ = range f`. -/
 theorem lie_ideal_oper_eq_tensor_map_range :
-    ⁅I, N⁆ = ((toModuleHom R L M).comp (mapIncl I N : ↥I ⊗ ↥N →ₗ⁅R,L⁆ L ⊗ M)).range := by
+    ⁅I, N⁆ = ((toModuleHom R L M).comp (mapIncl I N : ↥I ⊗ ↥N →ₗ⁅R,L⁆ L ⊗ M)).range :=
+  by
   rw [← coe_to_submodule_eq_iff, lie_ideal_oper_eq_linear_span, LieModuleHom.coe_submodule_range,
     LieModuleHom.coe_linear_map_comp, LinearMap.range_comp, map_incl_def, coe_linear_map_map,
     TensorProduct.map_range_eq_span_tmul, Submodule.map_span]

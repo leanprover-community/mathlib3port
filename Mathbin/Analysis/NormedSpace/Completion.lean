@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.completion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul :
   uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_has_uniform_continuous_const_smul
 
 instance : NormedSpace 𝕜 (Completion E) :=
-  { Completion.module with 
+  { Completion.module with
     smul := (· • ·)
     norm_smul_le := fun c x =>
       (induction_on x
@@ -51,7 +51,7 @@ variable {𝕜 E}
 
 /-- Embedding of a normed space to its completion as a linear isometry. -/
 def toComplₗᵢ : E →ₗᵢ[𝕜] Completion E :=
-  { toCompl with 
+  { toCompl with
     toFun := coe
     map_smul' := coe_smul
     norm_map' := norm_coe }
@@ -83,8 +83,9 @@ section Algebra
 variable (𝕜) (A : Type _)
 
 instance [SemiNormedRing A] : NormedRing (Completion A) :=
-  { Completion.ring, Completion.metricSpace with
-    dist_eq := fun x y => by 
+  { Completion.ring,
+    Completion.metricSpace with
+    dist_eq := fun x y => by
       apply completion.induction_on₂ x y <;> clear x y
       · refine' is_closed_eq (completion.uniform_continuous_extension₂ _).Continuous _
         exact Continuous.comp completion.continuous_extension continuous_sub
@@ -104,7 +105,8 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
 instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [HasUniformContinuousConstSmul 𝕜 A] :
     NormedAlgebra 𝕜 (Completion A) :=
   { Completion.algebra A 𝕜 with
-    norm_smul_le := fun r x => by
+    norm_smul_le := fun r x =>
+      by
       apply completion.induction_on x <;> clear x
       ·
         exact

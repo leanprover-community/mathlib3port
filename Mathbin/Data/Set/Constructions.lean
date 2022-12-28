@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module data.set.constructions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ variable {S}
 
 theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) :
     ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
-  classical 
+  classical
     refine' Finset.induction_on F (fun _ => _) _
     · simp [cond.univ_mem]
     · intro a s h1 h2 h3
@@ -66,7 +66,8 @@ theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (P «expr ∈ » finite_inter_closure[has_finite_inter.finite_inter_closure] (insert[has_insert.insert] A S)) -/
 theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
-    (_ : P ∈ finiteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q := by
+    (_ : P ∈ finiteInterClosure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q :=
+  by
   induction' H with S h T1 T2 _ _ h1 h2
   · cases h
     · exact Or.inr ⟨Set.univ, cond.univ_mem, by simpa⟩
@@ -81,7 +82,7 @@ theorem finite_inter_closure_insert {A : Set α} (cond : HasFiniteInter S) (P)
     ·
       exact
         Or.inr
-          ⟨Q ∩ R, cond.inter_mem hQ hR, by 
+          ⟨Q ∩ R, cond.inter_mem hQ hR, by
             ext x
             constructor <;> simp (config := { contextual := true })⟩
 #align has_finite_inter.finite_inter_closure_insert HasFiniteInter.finite_inter_closure_insert

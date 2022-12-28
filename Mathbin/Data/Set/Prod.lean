@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.prod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,7 +204,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.prod_empty Set.prod_emptyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_empty : s ×ˢ (∅ : Set β) = ∅ := by 
+theorem prod_empty : s ×ˢ (∅ : Set β) = ∅ := by
   ext
   exact and_false_iff _
 #align set.prod_empty Set.prod_empty
@@ -217,7 +217,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.empty_prod Set.empty_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem empty_prod : (∅ : Set α) ×ˢ t = ∅ := by 
+theorem empty_prod : (∅ : Set α) ×ˢ t = ∅ := by
   ext
   exact false_and_iff _
 #align set.empty_prod Set.empty_prod
@@ -230,7 +230,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.univ_prod_univ Set.univ_prod_univₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem univ_prod_univ : @univ α ×ˢ @univ β = univ := by
+theorem univ_prod_univ : @univ α ×ˢ @univ β = univ :=
+  by
   ext
   exact true_and_iff _
 #align set.univ_prod_univ Set.univ_prod_univ
@@ -259,7 +260,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.singleton_prod Set.singleton_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem singleton_prod : ({a} : Set α) ×ˢ t = Prod.mk a '' t := by
+theorem singleton_prod : ({a} : Set α) ×ˢ t = Prod.mk a '' t :=
+  by
   ext ⟨x, y⟩
   simp [and_left_comm, eq_comm]
 #align set.singleton_prod Set.singleton_prod
@@ -272,7 +274,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.prod_singleton Set.prod_singletonₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_singleton : s ×ˢ ({b} : Set β) = (fun a => (a, b)) '' s := by
+theorem prod_singleton : s ×ˢ ({b} : Set β) = (fun a => (a, b)) '' s :=
+  by
   ext ⟨x, y⟩
   simp [and_left_comm, eq_comm]
 #align set.prod_singleton Set.prod_singleton
@@ -297,7 +300,8 @@ Case conversion may be inaccurate. Consider using '#align set.union_prod Set.uni
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem union_prod : (s₁ ∪ s₂) ×ˢ t = s₁ ×ˢ t ∪ s₂ ×ˢ t := by
+theorem union_prod : (s₁ ∪ s₂) ×ˢ t = s₁ ×ˢ t ∪ s₂ ×ˢ t :=
+  by
   ext ⟨x, y⟩
   simp [or_and_right]
 #align set.union_prod Set.union_prod
@@ -312,7 +316,8 @@ Case conversion may be inaccurate. Consider using '#align set.prod_union Set.pro
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_union : s ×ˢ (t₁ ∪ t₂) = s ×ˢ t₁ ∪ s ×ˢ t₂ := by
+theorem prod_union : s ×ˢ (t₁ ∪ t₂) = s ×ˢ t₁ ∪ s ×ˢ t₂ :=
+  by
   ext ⟨x, y⟩
   simp [and_or_left]
 #align set.prod_union Set.prod_union
@@ -326,7 +331,8 @@ Case conversion may be inaccurate. Consider using '#align set.inter_prod Set.int
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem inter_prod : (s₁ ∩ s₂) ×ˢ t = s₁ ×ˢ t ∩ s₂ ×ˢ t := by
+theorem inter_prod : (s₁ ∩ s₂) ×ˢ t = s₁ ×ˢ t ∩ s₂ ×ˢ t :=
+  by
   ext ⟨x, y⟩
   simp only [← and_and_right, mem_inter_iff, mem_prod]
 #align set.inter_prod Set.inter_prod
@@ -340,7 +346,8 @@ Case conversion may be inaccurate. Consider using '#align set.prod_inter Set.pro
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prod_inter : s ×ˢ (t₁ ∩ t₂) = s ×ˢ t₁ ∩ s ×ˢ t₂ := by
+theorem prod_inter : s ×ˢ (t₁ ∩ t₂) = s ×ˢ t₁ ∩ s ×ˢ t₂ :=
+  by
   ext ⟨x, y⟩
   simp only [← and_and_left, mem_inter_iff, mem_prod]
 #align set.prod_inter Set.prod_inter
@@ -354,7 +361,8 @@ Case conversion may be inaccurate. Consider using '#align set.prod_inter_prod Se
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×ˢ (t₁ ∩ t₂) := by
+theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×ˢ (t₁ ∩ t₂) :=
+  by
   ext ⟨x, y⟩
   simp [and_assoc', and_left_comm]
 #align set.prod_inter_prod Set.prod_inter_prod
@@ -380,7 +388,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.insert_prod Set.insert_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem insert_prod : insert a s ×ˢ t = Prod.mk a '' t ∪ s ×ˢ t := by
+theorem insert_prod : insert a s ×ˢ t = Prod.mk a '' t ∪ s ×ˢ t :=
+  by
   ext ⟨x, y⟩
   simp (config := { contextual := true }) [image, iff_def, or_imp, Imp.swap]
 #align set.insert_prod Set.insert_prod
@@ -393,7 +402,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.prod_insert Set.prod_insertₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prod_insert : s ×ˢ insert b t = (fun a => (a, b)) '' s ∪ s ×ˢ t := by
+theorem prod_insert : s ×ˢ insert b t = (fun a => (a, b)) '' s ∪ s ×ˢ t :=
+  by
   ext ⟨x, y⟩
   simp (config := { contextual := true }) [image, iff_def, or_imp, Imp.swap]
 #align set.prod_insert Set.prod_insert
@@ -465,7 +475,8 @@ theorem mk_preimage_prod (f : γ → α) (g : γ → β) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.mk_preimage_prod_left /-
 @[simp]
-theorem mk_preimage_prod_left (hb : b ∈ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = s := by
+theorem mk_preimage_prod_left (hb : b ∈ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = s :=
+  by
   ext a
   simp [hb]
 #align set.mk_preimage_prod_left Set.mk_preimage_prod_left
@@ -479,7 +490,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mk_preimage_prod_right Set.mk_preimage_prod_rightₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' s ×ˢ t = t := by
+theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' s ×ˢ t = t :=
+  by
   ext b
   simp [ha]
 #align set.mk_preimage_prod_right Set.mk_preimage_prod_right
@@ -487,7 +499,8 @@ theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' s ×ˢ t = t :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.mk_preimage_prod_left_eq_empty /-
 @[simp]
-theorem mk_preimage_prod_left_eq_empty (hb : b ∉ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = ∅ := by
+theorem mk_preimage_prod_left_eq_empty (hb : b ∉ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = ∅ :=
+  by
   ext a
   simp [hb]
 #align set.mk_preimage_prod_left_eq_empty Set.mk_preimage_prod_left_eq_empty
@@ -501,7 +514,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mk_preimage_prod_right_eq_empty Set.mk_preimage_prod_right_eq_emptyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem mk_preimage_prod_right_eq_empty (ha : a ∉ s) : Prod.mk a ⁻¹' s ×ˢ t = ∅ := by
+theorem mk_preimage_prod_right_eq_empty (ha : a ∉ s) : Prod.mk a ⁻¹' s ×ˢ t = ∅ :=
+  by
   ext b
   simp [ha]
 #align set.mk_preimage_prod_right_eq_empty Set.mk_preimage_prod_right_eq_empty
@@ -557,7 +571,8 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_swap_prod
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem preimage_swap_prod (s : Set α) (t : Set β) : Prod.swap ⁻¹' s ×ˢ t = t ×ˢ s := by
+theorem preimage_swap_prod (s : Set α) (t : Set β) : Prod.swap ⁻¹' s ×ˢ t = t ×ˢ s :=
+  by
   ext ⟨x, y⟩
   simp [and_comm']
 #align set.preimage_swap_prod Set.preimage_swap_prod
@@ -640,7 +655,8 @@ theorem prod_univ_range_eq {m₂ : β → δ} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.range_pair_subset /-
 theorem range_pair_subset (f : α → β) (g : α → γ) :
-    (range fun x => (f x, g x)) ⊆ range f ×ˢ range g := by
+    (range fun x => (f x, g x)) ⊆ range f ×ˢ range g :=
+  by
   have : (fun x => (f x, g x)) = Prod.map f g ∘ fun x => (x, x) := funext fun x => rfl
   rw [this, ← range_prod_map]
   apply range_comp_subset_range
@@ -719,14 +735,16 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_prod_mk_subset_prod Set.image_prod_mk_subset_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem image_prod_mk_subset_prod {f : α → β} {g : α → γ} {s : Set α} :
-    (fun x => (f x, g x)) '' s ⊆ (f '' s) ×ˢ (g '' s) := by
+    (fun x => (f x, g x)) '' s ⊆ (f '' s) ×ˢ (g '' s) :=
+  by
   rintro _ ⟨x, hx, rfl⟩
   exact mk_mem_prod (mem_image_of_mem f hx) (mem_image_of_mem g hx)
 #align set.image_prod_mk_subset_prod Set.image_prod_mk_subset_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.image_prod_mk_subset_prod_left /-
-theorem image_prod_mk_subset_prod_left (hb : b ∈ t) : (fun a => (a, b)) '' s ⊆ s ×ˢ t := by
+theorem image_prod_mk_subset_prod_left (hb : b ∈ t) : (fun a => (a, b)) '' s ⊆ s ×ˢ t :=
+  by
   rintro _ ⟨a, ha, rfl⟩
   exact ⟨ha, hb⟩
 #align set.image_prod_mk_subset_prod_left Set.image_prod_mk_subset_prod_left
@@ -739,7 +757,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {a : α}, (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (HasSubset.Subset.{max u1 u2} (Set.{max u1 u2} (Prod.{u2, u1} α β)) (Set.instHasSubsetSet_1.{max u2 u1} (Prod.{u2, u1} α β)) (Set.image.{u1, max u1 u2} β (Prod.{u2, u1} α β) (Prod.mk.{u2, u1} α β a) t) (Set.prod.{u2, u1} α β s t))
 Case conversion may be inaccurate. Consider using '#align set.image_prod_mk_subset_prod_right Set.image_prod_mk_subset_prod_rightₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem image_prod_mk_subset_prod_right (ha : a ∈ s) : Prod.mk a '' t ⊆ s ×ˢ t := by
+theorem image_prod_mk_subset_prod_right (ha : a ∈ s) : Prod.mk a '' t ⊆ s ×ˢ t :=
+  by
   rintro _ ⟨b, hb, rfl⟩
   exact ⟨ha, hb⟩
 #align set.image_prod_mk_subset_prod_right Set.image_prod_mk_subset_prod_right
@@ -820,7 +839,8 @@ Case conversion may be inaccurate. Consider using '#align set.prod_diff_prod Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ s₁) ×ˢ t := by
+theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ s₁) ×ˢ t :=
+  by
   ext x
   by_cases h₁ : x.1 ∈ s₁ <;> by_cases h₂ : x.2 ∈ t₁ <;> simp [*]
 #align set.prod_diff_prod Set.prod_diff_prod
@@ -831,7 +851,8 @@ theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ 
 #print Set.prod_subset_prod_iff /-
 /-- A product set is included in a product set if and only factors are included, or a factor of the
 first set is empty. -/
-theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
+theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ :=
+  by
   cases' (s ×ˢ t).eq_empty_or_nonempty with h h
   · simp [h, prod_eq_empty_iff.1 h]
   have st : s.nonempty ∧ t.nonempty := by rwa [prod_nonempty_iff] at h
@@ -857,7 +878,7 @@ Case conversion may be inaccurate. Consider using '#align set.prod_eq_prod_iff_o
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t).Nonempty) :
-    s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by 
+    s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by
   constructor
   · intro heq
     have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty := by rwa [← HEq]
@@ -878,7 +899,8 @@ Case conversion may be inaccurate. Consider using '#align set.prod_eq_prod_iff S
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_prod_iff :
-    s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ ∨ (s = ∅ ∨ t = ∅) ∧ (s₁ = ∅ ∨ t₁ = ∅) := by
+    s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ ∨ (s = ∅ ∨ t = ∅) ∧ (s₁ = ∅ ∨ t₁ = ∅) :=
+  by
   symm
   cases' eq_empty_or_nonempty (s ×ˢ t) with h h
   · simp_rw [h, @eq_comm _ ∅, prod_eq_empty_iff, prod_eq_empty_iff.mp h, true_and_iff,
@@ -894,7 +916,8 @@ theorem prod_eq_prod_iff :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.prod_eq_iff_eq /-
 @[simp]
-theorem prod_eq_iff_eq (ht : t.Nonempty) : s ×ˢ t = s₁ ×ˢ t ↔ s = s₁ := by
+theorem prod_eq_iff_eq (ht : t.Nonempty) : s ×ˢ t = s₁ ×ˢ t ↔ s = s₁ :=
+  by
   simp_rw [prod_eq_prod_iff, ht.ne_empty, eq_self_iff_true, and_true_iff, or_iff_left_iff_imp,
     or_false_iff]
   rintro ⟨rfl, rfl⟩
@@ -991,7 +1014,8 @@ instance decidableMemDiagonal [h : DecidableEq α] (x : α × α) : Decidable (x
 -/
 
 #print Set.preimage_coe_coe_diagonal /-
-theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' diagonal α = diagonal s := by
+theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' diagonal α = diagonal s :=
+  by
   ext ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
   simp [Set.diagonal]
 #align set.preimage_coe_coe_diagonal Set.preimage_coe_coe_diagonal
@@ -999,7 +1023,8 @@ theorem preimage_coe_coe_diagonal (s : Set α) : Prod.map coe coe ⁻¹' diagona
 
 #print Set.range_diag /-
 @[simp]
-theorem range_diag : (range fun x => (x, x)) = diagonal α := by
+theorem range_diag : (range fun x => (x, x)) = diagonal α :=
+  by
   ext ⟨x, y⟩
   simp [diagonal, eq_comm]
 #align set.range_diag Set.range_diag
@@ -1154,7 +1179,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.offDiag.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t)) (Inter.inter.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.instInterSet_1.{u1} (Prod.{u1, u1} α α)) (Set.offDiag.{u1} α s) (Set.offDiag.{u1} α t))
 Case conversion may be inaccurate. Consider using '#align set.off_diag_inter Set.offDiag_interₓ'. -/
 theorem offDiag_inter : (s ∩ t).offDiag = s.offDiag ∩ t.offDiag :=
-  ext fun x => by 
+  ext fun x => by
     simp only [mem_off_diag, mem_inter_iff]
     tauto
 #align set.off_diag_inter Set.offDiag_inter
@@ -1172,7 +1197,8 @@ Case conversion may be inaccurate. Consider using '#align set.off_diag_union Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem offDiag_union (h : Disjoint s t) :
-    (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s ×ˢ t ∪ t ×ˢ s := by
+    (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s ×ˢ t ∪ t ×ˢ s :=
+  by
   rw [off_diag_eq_sep_prod, union_prod, prod_union, prod_union, union_comm _ (t ×ˢ t), union_assoc,
     union_left_comm (s ×ˢ t), ← union_assoc, sep_union, sep_union, ← off_diag_eq_sep_prod, ←
     off_diag_eq_sep_prod, sep_eq_self_iff_mem_true.2, ← union_assoc]
@@ -1188,7 +1214,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.off_diag_insert Set.offDiag_insertₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem offDiag_insert (ha : a ∉ s) : (insert a s).offDiag = s.offDiag ∪ {a} ×ˢ s ∪ s ×ˢ {a} := by
+theorem offDiag_insert (ha : a ∉ s) : (insert a s).offDiag = s.offDiag ∪ {a} ×ˢ s ∪ s ×ˢ {a} :=
+  by
   rw [insert_eq, union_comm, off_diag_union, off_diag_singleton, union_empty, union_right_comm]
   rw [disjoint_left]
   rintro b hb (rfl : b = a)
@@ -1236,7 +1263,8 @@ theorem mem_univ_pi {f : ∀ i, α i} : f ∈ pi univ t ↔ ∀ i, f i ∈ t i :
 
 #print Set.empty_pi /-
 @[simp]
-theorem empty_pi (s : ∀ i, Set (α i)) : pi ∅ s = univ := by
+theorem empty_pi (s : ∀ i, Set (α i)) : pi ∅ s = univ :=
+  by
   ext
   simp [pi]
 #align set.empty_pi Set.empty_pi
@@ -1288,7 +1316,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s : Set.{u2} ι} {t : forall (i : ι), Set.{u1} (α i)} {i : ι}, (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Eq.{succ u1} (Set.{u1} (α i)) (t i) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (α i)) (Set.instEmptyCollectionSet.{u1} (α i)))) -> (Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) s t) (EmptyCollection.emptyCollection.{max u2 u1} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instEmptyCollectionSet.{max u2 u1} (forall (i : ι), α i))))
 Case conversion may be inaccurate. Consider using '#align set.pi_eq_empty Set.pi_eq_emptyₓ'. -/
-theorem pi_eq_empty (hs : i ∈ s) (ht : t i = ∅) : s.pi t = ∅ := by
+theorem pi_eq_empty (hs : i ∈ s) (ht : t i = ∅) : s.pi t = ∅ :=
+  by
   ext f
   simp only [mem_empty_iff_false, not_forall, iff_false_iff, mem_pi, not_imp]
   exact ⟨i, hs, by simp [ht]⟩
@@ -1326,7 +1355,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s : Set.{u2} ι} {t : forall (i : ι), Set.{u1} (α i)}, Iff (Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) s t) (EmptyCollection.emptyCollection.{max u2 u1} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instEmptyCollectionSet.{max u2 u1} (forall (i : ι), α i)))) (Exists.{succ u2} ι (fun (i : ι) => Or (IsEmpty.{succ u1} (α i)) (And (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (Eq.{succ u1} (Set.{u1} (α i)) (t i) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (α i)) (Set.instEmptyCollectionSet.{u1} (α i)))))))
 Case conversion may be inaccurate. Consider using '#align set.pi_eq_empty_iff Set.pi_eq_empty_iffₓ'. -/
-theorem pi_eq_empty_iff : s.pi t = ∅ ↔ ∃ i, IsEmpty (α i) ∨ i ∈ s ∧ t i = ∅ := by
+theorem pi_eq_empty_iff : s.pi t = ∅ ↔ ∃ i, IsEmpty (α i) ∨ i ∈ s ∧ t i = ∅ :=
+  by
   rw [← not_nonempty_iff_eq_empty, pi_nonempty_iff]
   push_neg
   refine' exists_congr fun i => _
@@ -1374,7 +1404,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.range_dcomp Set.range_dcompₓ'. -/
 @[simp]
 theorem range_dcomp (f : ∀ i, α i → β i) :
-    (range fun g : ∀ i, α i => fun i => f i (g i)) = pi univ fun i => range (f i) := by
+    (range fun g : ∀ i, α i => fun i => f i (g i)) = pi univ fun i => range (f i) :=
+  by
   apply subset.antisymm _ fun x hx => _
   · rintro _ ⟨x, rfl⟩ i -
     exact ⟨x i, rfl⟩
@@ -1390,14 +1421,16 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.insert_pi Set.insert_piₓ'. -/
 @[simp]
 theorem insert_pi (i : ι) (s : Set ι) (t : ∀ i, Set (α i)) :
-    pi (insert i s) t = eval i ⁻¹' t i ∩ pi s t := by
+    pi (insert i s) t = eval i ⁻¹' t i ∩ pi s t :=
+  by
   ext
   simp [pi, or_imp, forall_and]
 #align set.insert_pi Set.insert_pi
 
 #print Set.singleton_pi /-
 @[simp]
-theorem singleton_pi (i : ι) (t : ∀ i, Set (α i)) : pi {i} t = eval i ⁻¹' t i := by
+theorem singleton_pi (i : ι) (t : ∀ i, Set (α i)) : pi {i} t = eval i ⁻¹' t i :=
+  by
   ext
   simp [pi]
 #align set.singleton_pi Set.singleton_pi
@@ -1439,7 +1472,7 @@ Case conversion may be inaccurate. Consider using '#align set.pi_if Set.pi_ifₓ
 theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : ∀ i, Set (α i)) :
     (pi s fun i => if p i then t₁ i else t₂ i) =
       pi ({ i ∈ s | p i }) t₁ ∩ pi ({ i ∈ s | ¬p i }) t₂ :=
-  by 
+  by
   ext f
   refine' ⟨fun h => _, _⟩
   ·
@@ -1479,7 +1512,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.pi_update_of_not_mem Set.pi_update_of_not_memₓ'. -/
 theorem pi_update_of_not_mem [DecidableEq ι] (hi : i ∉ s) (f : ∀ j, α j) (a : α i)
     (t : ∀ j, α j → Set (β j)) : (s.pi fun j => t j (update f i a j)) = s.pi fun j => t j (f j) :=
-  (pi_congr rfl) fun j hj => by 
+  (pi_congr rfl) fun j hj => by
     rw [update_noteq]
     exact fun h => hi (h ▸ hj)
 #align set.pi_update_of_not_mem Set.pi_update_of_not_mem
@@ -1496,7 +1529,8 @@ theorem pi_update_of_mem [DecidableEq ι] (hi : i ∈ s) (f : ∀ j, α j) (a : 
   calc
     (s.pi fun j => t j (update f i a j)) = ({i} ∪ s \ {i}).pi fun j => t j (update f i a j) := by
       rw [union_diff_self, union_eq_self_of_subset_left (singleton_subset_iff.2 hi)]
-    _ = { x | x i ∈ t i a } ∩ (s \ {i}).pi fun j => t j (f j) := by
+    _ = { x | x i ∈ t i a } ∩ (s \ {i}).pi fun j => t j (f j) :=
+      by
       rw [union_pi, singleton_pi', update_same, pi_update_of_not_mem]
       simp
     
@@ -1548,7 +1582,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s : Set.{u2} ι} {t : forall (i : ι), Set.{u1} (α i)}, (Set.Nonempty.{max u2 u1} (forall (i : ι), α i) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) s t)) -> (forall (i : ι), HasSubset.Subset.{u1} (Set.{u1} (α i)) (Set.instHasSubsetSet_1.{u1} (α i)) (t i) (Set.image.{max u2 u1, u1} (forall (x : ι), α x) (α i) (Function.eval.{succ u2, succ u1} ι α i) (Set.pi.{u2, u1} ι (fun (x : ι) => α x) s t)))
 Case conversion may be inaccurate. Consider using '#align set.subset_eval_image_pi Set.subset_eval_image_piₓ'. -/
 theorem subset_eval_image_pi (ht : (s.pi t).Nonempty) (i : ι) : t i ⊆ eval i '' s.pi t := by
-  classical 
+  classical
     obtain ⟨f, hf⟩ := ht
     refine' fun y hy => ⟨update f i y, fun j hj => _, update_same _ _ _⟩
     obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
@@ -1577,7 +1611,8 @@ theorem eval_image_univ_pi (ht : (pi univ t).Nonempty) :
 #align set.eval_image_univ_pi Set.eval_image_univ_pi
 
 #print Set.pi_subset_pi_iff /-
-theorem pi_subset_pi_iff : pi s t₁ ⊆ pi s t₂ ↔ (∀ i ∈ s, t₁ i ⊆ t₂ i) ∨ pi s t₁ = ∅ := by
+theorem pi_subset_pi_iff : pi s t₁ ⊆ pi s t₂ ↔ (∀ i ∈ s, t₁ i ⊆ t₂ i) ∨ pi s t₁ = ∅ :=
+  by
   refine'
     ⟨fun h => or_iff_not_imp_right.2 _, fun h => h.elim pi_mono fun h' => h'.symm ▸ empty_subset _⟩
   rw [← Ne.def, ← nonempty_iff_ne_empty]
@@ -1600,7 +1635,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {i : ι} [_inst_1 : DecidableEq.{succ u2} ι] {s : Set.{u1} (α i)}, Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (x : ι), α x)) (Set.preimage.{max u2 u1, u1} (forall (x : ι), α x) (α i) (Function.eval.{succ u2, succ u1} ι α i) s) (Set.pi.{u2, u1} ι α (Set.univ.{u2} ι) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => Set.{u1} (α i)) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => Set.univ.{u1} (α i)) i s))
 Case conversion may be inaccurate. Consider using '#align set.eval_preimage Set.eval_preimageₓ'. -/
 theorem eval_preimage [DecidableEq ι] {s : Set (α i)} :
-    eval i ⁻¹' s = pi univ (update (fun i => univ) i s) := by
+    eval i ⁻¹' s = pi univ (update (fun i => univ) i s) :=
+  by
   ext x
   simp [@forall_update_iff _ (fun i => Set (α i)) _ _ _ _ fun i' y => x i' ∈ y]
 #align set.eval_preimage Set.eval_preimage
@@ -1612,7 +1648,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {i : ι} [_inst_1 : DecidableEq.{succ u2} ι] {s : Set.{u1} (α i)}, Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (x : ι), α x)) (Set.preimage.{max u2 u1, u1} (forall (x : ι), α x) (α i) (Function.eval.{succ u2, succ u1} ι α i) s) (Set.pi.{u2, u1} ι α (Singleton.singleton.{u2, u2} ι (Set.{u2} ι) (Set.instSingletonSet.{u2} ι) i) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => Set.{u1} (α i)) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => Set.univ.{u1} (α i)) i s))
 Case conversion may be inaccurate. Consider using '#align set.eval_preimage' Set.eval_preimage'ₓ'. -/
 theorem eval_preimage' [DecidableEq ι] {s : Set (α i)} :
-    eval i ⁻¹' s = pi {i} (update (fun i => univ) i s) := by
+    eval i ⁻¹' s = pi {i} (update (fun i => univ) i s) :=
+  by
   ext
   simp
 #align set.eval_preimage' Set.eval_preimage'
@@ -1624,7 +1661,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s : Set.{u2} ι} {t : forall (i : ι), Set.{u1} (α i)} {i : ι} [_inst_1 : DecidableEq.{succ u2} ι] {f : forall (i : ι), α i}, (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (forall (j : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) j s) -> (Ne.{succ u2} ι j i) -> (Membership.mem.{u1, u1} (α j) (Set.{u1} (α j)) (Set.instMembershipSet.{u1} (α j)) (f j) (t j))) -> (Eq.{succ u1} (Set.{u1} (α i)) (Set.preimage.{u1, max u2 u1} (α i) (forall (a : ι), α a) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) f i) (Set.pi.{u2, u1} ι (fun (a : ι) => α a) s t)) (t i))
 Case conversion may be inaccurate. Consider using '#align set.update_preimage_pi Set.update_preimage_piₓ'. -/
 theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s)
-    (hf : ∀ j ∈ s, j ≠ i → f j ∈ t j) : update f i ⁻¹' s.pi t = t i := by
+    (hf : ∀ j ∈ s, j ≠ i → f j ∈ t j) : update f i ⁻¹' s.pi t = t i :=
+  by
   ext x
   refine' ⟨fun h => _, fun hx j hj => _⟩
   · convert h i hi
@@ -1664,7 +1702,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} (s : Set.{u2} ι) [_inst_1 : DecidablePred.{succ u2} ι (fun (_x : ι) => Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) _x s)] (t : forall (i : ι), Set.{u1} (α i)), Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) (Set.univ.{u2} ι) (fun (i : ι) => ite.{succ u1} (Set.{u1} (α i)) (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (_inst_1 i) (t i) (Set.univ.{u1} (α i)))) (Set.pi.{u2, u1} ι (fun (i : ι) => α i) s t)
 Case conversion may be inaccurate. Consider using '#align set.univ_pi_ite Set.univ_pi_iteₓ'. -/
 theorem univ_pi_ite (s : Set ι) [DecidablePred (· ∈ s)] (t : ∀ i, Set (α i)) :
-    (pi univ fun i => if i ∈ s then t i else univ) = s.pi t := by
+    (pi univ fun i => if i ∈ s then t i else univ) = s.pi t :=
+  by
   ext
   simp_rw [mem_univ_pi]
   refine' forall_congr' fun i => _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.prod
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,8 @@ variable {s t : Set α}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem to_finset_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] [Fintype (s ×ˢ t)] :
-    (s ×ˢ t).toFinset = s.toFinset ×ˢ t.toFinset := by
+    (s ×ˢ t).toFinset = s.toFinset ×ˢ t.toFinset :=
+  by
   ext
   simp
 #align set.to_finset_prod Set.to_finset_prod
@@ -69,7 +70,8 @@ section
 open Classical
 
 @[simp]
-theorem infinite_prod : Infinite (α × β) ↔ Infinite α ∧ Nonempty β ∨ Nonempty α ∧ Infinite β := by
+theorem infinite_prod : Infinite (α × β) ↔ Infinite α ∧ Nonempty β ∨ Nonempty α ∧ Infinite β :=
+  by
   refine'
     ⟨fun H => _, fun H =>
       H.elim (and_imp.2 <| @Prod.infinite_of_left α β) (and_imp.2 <| @Prod.infinite_of_right α β)⟩
@@ -80,7 +82,8 @@ theorem infinite_prod : Infinite (α × β) ↔ Infinite α ∧ Nonempty β ∨ 
 #align infinite_prod infinite_prod
 
 instance Pi.infinite_of_left {ι : Sort _} {π : ι → Sort _} [∀ i, Nontrivial <| π i] [Infinite ι] :
-    Infinite (∀ i : ι, π i) := by
+    Infinite (∀ i : ι, π i) :=
+  by
   choose m n hm using fun i => exists_pair_ne (π i)
   refine' Infinite.of_injective (fun i => m.update i (n i)) fun x y h => not_not.1 fun hne => _
   simp_rw [update_eq_iff, update_noteq hne] at h

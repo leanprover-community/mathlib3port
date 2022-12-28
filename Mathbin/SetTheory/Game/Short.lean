@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.short
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ inductive Short : Pgame.{u} → Type (u + 1)
 
 instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
   | mk xl xr xL xR =>
-    ⟨fun a b => by 
+    ⟨fun a b => by
       cases a; cases b
       congr
       · funext
@@ -63,14 +63,15 @@ attribute [class] short
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
 def fintypeLeft {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] :
-    Fintype α := by 
+    Fintype α := by
   cases' S with _ _ _ _ _ _ F _
   exact F
 #align pgame.fintype_left Pgame.fintypeLeft
 
 attribute [local instance] fintype_left
 
-instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
+instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves :=
+  by
   cases x
   dsimp
   infer_instance
@@ -80,20 +81,22 @@ instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
 def fintypeRight {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] :
-    Fintype β := by 
+    Fintype β := by
   cases' S with _ _ _ _ _ _ _ F
   exact F
 #align pgame.fintype_right Pgame.fintypeRight
 
 attribute [local instance] fintype_right
 
-instance fintypeRightMoves (x : Pgame) [S : Short x] : Fintype x.RightMoves := by
+instance fintypeRightMoves (x : Pgame) [S : Short x] : Fintype x.RightMoves :=
+  by
   cases x
   dsimp
   infer_instance
 #align pgame.fintype_right_moves Pgame.fintypeRightMoves
 
-instance moveLeftShort (x : Pgame) [S : Short x] (i : x.LeftMoves) : Short (x.moveLeft i) := by
+instance moveLeftShort (x : Pgame) [S : Short x] (i : x.LeftMoves) : Short (x.moveLeft i) :=
+  by
   cases' S with _ _ _ _ L _ _ _
   apply L
 #align pgame.move_left_short Pgame.moveLeftShort
@@ -102,14 +105,16 @@ instance moveLeftShort (x : Pgame) [S : Short x] (i : x.LeftMoves) : Short (x.mo
 This would be a dangerous instance potentially introducing new metavariables
 in typeclass search, so we only make it an instance locally.
 -/
-def moveLeftShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (i : xl) : Short (xL i) := by
+def moveLeftShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (i : xl) : Short (xL i) :=
+  by
   cases' S with _ _ _ _ L _ _ _
   apply L
 #align pgame.move_left_short' Pgame.moveLeftShort'
 
 attribute [local instance] move_left_short'
 
-instance moveRightShort (x : Pgame) [S : Short x] (j : x.RightMoves) : Short (x.moveRight j) := by
+instance moveRightShort (x : Pgame) [S : Short x] (j : x.RightMoves) : Short (x.moveRight j) :=
+  by
   cases' S with _ _ _ _ _ R _ _
   apply R
 #align pgame.move_right_short Pgame.moveRightShort
@@ -118,7 +123,8 @@ instance moveRightShort (x : Pgame) [S : Short x] (j : x.RightMoves) : Short (x.
 This would be a dangerous instance potentially introducing new metavariables
 in typeclass search, so we only make it an instance locally.
 -/
-def moveRightShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (j : xr) : Short (xR j) := by
+def moveRightShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (j : xr) : Short (xR j) :=
+  by
   cases' S with _ _ _ _ _ R _ _
   apply R
 #align pgame.move_right_short' Pgame.moveRightShort'
@@ -126,12 +132,12 @@ def moveRightShort' {xl xr} (xL xR) [S : Short (mk xl xr xL xR)] (j : xr) : Shor
 attribute [local instance] move_right_short'
 
 theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.omega
-  | ⟨xl, xr, xL, xR⟩, hs => by 
+  | ⟨xl, xr, xL, xR⟩, hs => by
     haveI := hs
     rcases hs with ⟨sL, sR⟩
     rw [birthday, max_lt_iff]
     constructor;
-    all_goals 
+    all_goals
       rw [← Cardinal.ord_aleph_0]
       refine'
         Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0
@@ -177,7 +183,7 @@ instance listShortNthLe :
 #align pgame.list_short_nth_le Pgame.listShortNthLe
 
 instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
-  | L, R, _, _ => by 
+  | L, R, _, _ => by
     skip
     apply short.mk
     · intros
@@ -189,29 +195,29 @@ instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Shor
 -- where does the subtype.val come from?
 /-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
 def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short x), Short y
-  | x, y, ⟨L, R, rL, rR⟩, S => by 
+  | x, y, ⟨L, R, rL, rR⟩, S => by
     skip
     haveI := Fintype.ofEquiv _ L
     haveI := Fintype.ofEquiv _ R
     exact
       short.mk'
-        (fun i => by 
+        (fun i => by
           rw [← L.right_inv i]
           apply short_of_relabelling (rL (L.symm i)) inferInstance)
         fun j => by simpa using short_of_relabelling (rR (R.symm j)) inferInstance
 #align pgame.short_of_relabelling Pgame.shortOfRelabelling
 
 instance shortNeg : ∀ (x : Pgame.{u}) [Short x], Short (-x)
-  | mk xl xr xL xR, _ => by 
+  | mk xl xr xL xR, _ => by
     skip
     exact short.mk (fun i => short_neg _) fun i => short_neg _ decreasing_by pgame_wf_tac
 #align pgame.short_neg Pgame.shortNeg
 
 instance shortAdd : ∀ (x y : Pgame.{u}) [Short x] [Short y], Short (x + y)
-  | mk xl xr xL xR, mk yl yr yL yR, _, _ => by 
+  | mk xl xr xL xR, mk yl yr yL yR, _, _ => by
     skip
     apply short.mk;
-    all_goals 
+    all_goals
       rintro ⟨i⟩
       · apply short_add
       · change short (mk xl xr xL xR + _)
@@ -224,12 +230,14 @@ instance shortNat : ∀ n : ℕ, Short n
   | n + 1 => @Pgame.shortAdd _ _ (short_nat n) Pgame.short1
 #align pgame.short_nat Pgame.shortNat
 
-instance shortBit0 (x : Pgame.{u}) [Short x] : Short (bit0 x) := by
+instance shortBit0 (x : Pgame.{u}) [Short x] : Short (bit0 x) :=
+  by
   dsimp [bit0]
   infer_instance
 #align pgame.short_bit0 Pgame.shortBit0
 
-instance shortBit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) := by
+instance shortBit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) :=
+  by
   dsimp [bit1]
   infer_instance
 #align pgame.short_bit1 Pgame.shortBit1
@@ -239,7 +247,8 @@ We build `decidable (x ≤ y)` and `decidable (x ⧏ y)` in a simultaneous induc
 Instances for the two projections separately are provided below.
 -/
 def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ y) × Decidable (x ⧏ y)
-  | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty => by
+  | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty =>
+    by
     skip
     constructor
     · refine' @decidable_of_iff' _ _ mk_le_mk (id _)
@@ -257,8 +266,7 @@ def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ 
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
       · apply @Fintype.decidableExistsFintype xr _ _ (by infer_instance)
         intro i
-        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance decreasing_by
-  pgame_wf_tac
+        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance decreasing_by pgame_wf_tac
 #align pgame.le_lf_decidable Pgame.leLfDecidable
 
 instance leDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≤ y) :=

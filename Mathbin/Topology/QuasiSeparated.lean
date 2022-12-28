@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.quasi_separated
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ class QuasiSeparatedSpace (α : Type _) [TopologicalSpace α] : Prop where
 #align quasi_separated_space QuasiSeparatedSpace
 
 theorem is_quasi_separated_univ_iff {α : Type _} [TopologicalSpace α] :
-    IsQuasiSeparated (Set.univ : Set α) ↔ QuasiSeparatedSpace α := by
+    IsQuasiSeparated (Set.univ : Set α) ↔ QuasiSeparatedSpace α :=
+  by
   rw [quasi_separated_space_iff]
   simp [IsQuasiSeparated]
 #align is_quasi_separated_univ_iff is_quasi_separated_univ_iff
@@ -89,7 +90,8 @@ theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s
 #align is_quasi_separated.image_of_embedding IsQuasiSeparated.image_of_embedding
 
 theorem OpenEmbedding.is_quasi_separated_iff (h : OpenEmbedding f) {s : Set α} :
-    IsQuasiSeparated s ↔ IsQuasiSeparated (f '' s) := by
+    IsQuasiSeparated s ↔ IsQuasiSeparated (f '' s) :=
+  by
   refine' ⟨fun hs => hs.image_of_embedding h.to_embedding, _⟩
   intro H U V hU hU' hU'' hV hV' hV''
   rw [h.to_embedding.is_compact_iff_is_compact_image, Set.image_inter h.inj]
@@ -99,13 +101,14 @@ theorem OpenEmbedding.is_quasi_separated_iff (h : OpenEmbedding f) {s : Set α} 
 #align open_embedding.is_quasi_separated_iff OpenEmbedding.is_quasi_separated_iff
 
 theorem is_quasi_separated_iff_quasi_separated_space (s : Set α) (hs : IsOpen s) :
-    IsQuasiSeparated s ↔ QuasiSeparatedSpace s := by
+    IsQuasiSeparated s ↔ QuasiSeparatedSpace s :=
+  by
   rw [← is_quasi_separated_univ_iff]
   convert hs.open_embedding_subtype_coe.is_quasi_separated_iff.symm <;> simp
 #align is_quasi_separated_iff_quasi_separated_space is_quasi_separated_iff_quasi_separated_space
 
 theorem IsQuasiSeparated.of_subset {s t : Set α} (ht : IsQuasiSeparated t) (h : s ⊆ t) :
-    IsQuasiSeparated s := by 
+    IsQuasiSeparated s := by
   intro U V hU hU' hU'' hV hV' hV''
   exact ht U V (hU.trans h) hU' hU'' (hV.trans h) hV' hV''
 #align is_quasi_separated.of_subset IsQuasiSeparated.of_subset

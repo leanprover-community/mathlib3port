@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.units
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,10 +33,8 @@ and the units of the monoid of continuous maps. -/
 @[to_additive
       "Equivalence between continuous maps into the additive units of an additive monoid\nwith continuous addition and the additive units of the additive monoid of continuous maps.",
   simps]
-def unitsLift :
-    C(X, Mˣ) ≃
-      C(X,
-          M)ˣ where 
+def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ
+    where
   toFun f :=
     { val := ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩
       inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩
@@ -49,10 +47,10 @@ def unitsLift :
         continuous_induced_rng.2 <|
           Continuous.prod_mk (f : C(X, M)).Continuous <|
             MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
-  left_inv f := by 
+  left_inv f := by
     ext
     rfl
-  right_inv f := by 
+  right_inv f := by
     ext
     rfl
 #align continuous_map.units_lift ContinuousMap.unitsLift
@@ -64,7 +62,8 @@ section NormedRing
 variable [NormedRing R] [CompleteSpace R]
 
 theorem NormedRing.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
-    Continuous fun x => (h x).Unit := by
+    Continuous fun x => (h x).Unit :=
+  by
   refine'
     continuous_induced_rng.2
       (Continuous.prod_mk f.continuous
@@ -77,27 +76,24 @@ theorem NormedRing.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x
 /-- Construct a continuous map into the group of units of a normed ring from a function into the
 normed ring and a proof that every element of the range is a unit. -/
 @[simps]
-noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
-    C(X, Rˣ) where 
+noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : C(X, Rˣ)
+    where
   toFun x := (h x).Unit
   continuous_to_fun := NormedRing.is_unit_unit_continuous h
 #align continuous_map.units_of_forall_is_unit ContinuousMap.unitsOfForallIsUnit
 
 instance canLift :
     CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩)
-      fun f =>
-      ∀ x,
-        IsUnit
-          (f
-            x) where prf f h :=
-    ⟨unitsOfForallIsUnit h, by 
+      fun f => ∀ x, IsUnit (f x)
+    where prf f h :=
+    ⟨unitsOfForallIsUnit h, by
       ext
       rfl⟩
 #align continuous_map.can_lift ContinuousMap.canLift
 
 theorem is_unit_iff_forall_is_unit (f : C(X, R)) : IsUnit f ↔ ∀ x, IsUnit (f x) :=
   Iff.intro (fun h => fun x => ⟨unitsLift.symm h.Unit x, rfl⟩) fun h =>
-    ⟨(unitsOfForallIsUnit h).unitsLift, by 
+    ⟨(unitsOfForallIsUnit h).unitsLift, by
       ext
       rfl⟩
 #align continuous_map.is_unit_iff_forall_is_unit ContinuousMap.is_unit_iff_forall_is_unit
@@ -112,7 +108,8 @@ theorem is_unit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x �
   simp_rw [f.is_unit_iff_forall_is_unit, isUnit_iff_ne_zero]
 #align continuous_map.is_unit_iff_forall_ne_zero ContinuousMap.is_unit_iff_forall_ne_zero
 
-theorem spectrum_eq_range (f : C(X, 𝕜)) : spectrum 𝕜 f = Set.range f := by
+theorem spectrum_eq_range (f : C(X, 𝕜)) : spectrum 𝕜 f = Set.range f :=
+  by
   ext
   simp only [spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply,
     algebra_map_apply, Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Damiano Testa, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.inductions
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,8 @@ def divX (p : R[X]) : R[X] :=
 #align polynomial.div_X Polynomial.divX
 
 @[simp]
-theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) := by
+theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) :=
+  by
   simp only [div_X, coeff_monomial, true_and_iff, finset_sum_coeff, not_lt, mem_Ico, zero_le,
     Finset.sum_ite_eq', ite_eq_left_iff]
   intro h
@@ -70,11 +71,13 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
   haveI := nontrivial.of_polynomial_ne hp0 <;>
     calc
       (div_X p).degree < (div_X p * X + C (p.coeff 0)).degree :=
-        if h : degree p ≤ 0 then by
+        if h : degree p ≤ 0 then
+          by
           have h' : C (p.coeff 0) ≠ 0 := by rwa [← eq_C_of_degree_le_zero h]
           rw [eq_C_of_degree_le_zero h, div_X_C, degree_zero, zero_mul, zero_add]
           exact lt_of_le_of_ne bot_le (Ne.symm (mt degree_eq_bot.1 <| by simp [h']))
-        else by
+        else
+          by
           have hXp0 : div_X p ≠ 0 := by
             simpa [div_X_eq_zero_iff, -not_le, degree_le_zero_iff] using h
           have : leading_coeff (div_X p) * leading_coeff X ≠ 0 := by simpa
@@ -111,7 +114,7 @@ noncomputable def recOnHorner {M : R[X] → Sort _} :
         (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p + c a)) → (∀ p, p ≠ 0 → M p → M (p * X)) → M p
   | p => fun M0 MC MX =>
     if hp : p = 0 then Eq.recOn hp.symm M0
-    else by 
+    else by
       have wf : degree (divX p) < degree p := degree_div_X_lt hp
       rw [← div_X_mul_X_add p] at * <;>
         exact
@@ -165,7 +168,8 @@ See `degree_pos_induction_on` for a similar statement involving more explicit mu
 @[elab_as_elim]
 theorem nat_degree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.natDegree ≠ 0)
     (h_C_add : ∀ {a p}, M p → M (c a + p)) (h_add : ∀ {p q}, M p → M q → M (p + q))
-    (h_monomial : ∀ {n : ℕ} {a : R}, a ≠ 0 → n ≠ 0 → M (monomial n a)) : M f := by
+    (h_monomial : ∀ {n : ℕ} {a : R}, a ≠ 0 → n ≠ 0 → M (monomial n a)) : M f :=
+  by
   suffices f.natDegree = 0 ∨ M f from Or.dcases_on this (fun h => (f0 h).elim) id
   apply f.induction_on
   · exact fun a => Or.inl (nat_degree_C _)

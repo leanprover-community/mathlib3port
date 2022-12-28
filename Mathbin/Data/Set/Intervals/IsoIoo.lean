@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.iso_Ioo
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,8 @@ open Set
 /-- In a linear ordered field, the whole field is order isomorphic to the open interval `(-1, 1)`.
 We consider the actual implementation to be a "black box", so it is irreducible.
 -/
-irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃o Ioo (-1 : k) 1 := by
+irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃o Ioo (-1 : k) 1 :=
+  by
   refine' StrictMono.orderIsoOfRightInverse _ _ (fun x => x / (1 - |x|)) _
   · refine' cod_restrict (fun x => x / (1 + |x|)) _ fun x => abs_lt.1 _
     have H : 0 < 1 + |x| := (abs_nonneg x).trans_lt (lt_one_add _)
@@ -32,7 +33,7 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
       |x / (1 + |x|)| = |x| / (1 + |x|) := by rw [abs_div, abs_of_pos H]
       _ < 1 := (div_lt_one H).2 (lt_one_add _)
       
-  · refine' (strict_mono_of_odd_strict_mono_on_nonneg _ _).codRestrict _
+  · refine' (strictMono_of_odd_strictMono_on_nonneg _ _).codRestrict _
     · intro x
       simp only [abs_neg, neg_div]
     · rintro x (hx : 0 ≤ x) y (hy : 0 ≤ y) hxy

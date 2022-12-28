@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.group.unique_prods
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,8 @@ namespace UniqueMul
 variable {G H : Type _} [Mul G] [Mul H] {A B : Finset G} {a0 b0 : G}
 
 theorem mt {G} [Mul G] {A B : Finset G} {a0 b0 : G} (h : UniqueMul A B a0 b0) :
-    ∀ ⦃a b⦄, a ∈ A → b ∈ B → a ≠ a0 ∨ b ≠ b0 → a * b ≠ a0 * b0 := fun _ _ ha hb k => by
+    ∀ ⦃a b⦄, a ∈ A → b ∈ B → a ≠ a0 ∨ b ≠ b0 → a * b ≠ a0 * b0 := fun _ _ ha hb k =>
+  by
   contrapose! k
   exact h ha hb k
 #align unique_mul.mt UniqueMul.mt
@@ -65,7 +66,8 @@ theorem subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
 
 @[to_additive]
 theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
-    Set.Subsingleton { ab : G × G | ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } := by
+    Set.Subsingleton { ab : G × G | ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } :=
+  by
   rintro ⟨x1, y1⟩ (hx : x1 ∈ A ∧ y1 ∈ B ∧ x1 * y1 = a0 * b0) ⟨x2, y2⟩
     (hy : x2 ∈ A ∧ y2 ∈ B ∧ x2 * y2 = a0 * b0)
   rcases h hx.1 hx.2.1 hx.2.2 with ⟨rfl, rfl⟩
@@ -80,7 +82,7 @@ theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
     UniqueMul A B a0 b0 ↔ ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = a0 * b0 :=
   ⟨fun _ => ⟨(a0, b0), ⟨Finset.mem_product.mpr ⟨aA, bB⟩, rfl, by simp⟩, by simpa⟩, fun h =>
     h.elim2
-      (by 
+      (by
         rintro ⟨x1, x2⟩ _ _ J x y hx hy l
         rcases prod.mk.inj_iff.mp (J (a0, b0) (Finset.mk_mem_product aA bB) rfl) with ⟨rfl, rfl⟩
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
@@ -92,7 +94,8 @@ theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
 theorem exists_iff_exists_exists_unique :
     (∃ a0 b0 : G, a0 ∈ A ∧ b0 ∈ B ∧ UniqueMul A B a0 b0) ↔
       ∃ g : G, ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = g :=
-  ⟨fun ⟨a0, b0, hA, hB, h⟩ => ⟨_, (iff_exists_unique hA hB).mp h⟩, fun ⟨g, h⟩ => by
+  ⟨fun ⟨a0, b0, hA, hB, h⟩ => ⟨_, (iff_exists_unique hA hB).mp h⟩, fun ⟨g, h⟩ =>
+    by
     have h' := h
     rcases h' with ⟨⟨a, b⟩, ⟨hab, rfl, -⟩, -⟩
     cases' finset.mem_product.mp hab with ha hb
@@ -105,7 +108,7 @@ theorem mul_hom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : 
     (u : UniqueMul A B (f a0) (f b0)) :
     UniqueMul (A.Preimage f (Set.injOn_of_injective hf _))
       (B.Preimage f (Set.injOn_of_injective hf _)) a0 b0 :=
-  by 
+  by
   intro a b ha hb ab
   rw [← hf.eq_iff, ← hf.eq_iff]
   rw [← hf.eq_iff, map_mul, map_mul] at ab
@@ -118,7 +121,8 @@ See `unique_mul.mul_hom_map_iff` for a version with swapped bundling. -/
 @[to_additive
       "`unique_add` is preserved under additive maps that are injective.\n\nSee `unique_add.add_hom_map_iff` for a version with swapped bundling."]
 theorem mul_hom_image_iff [DecidableEq H] (f : G →ₙ* H) (hf : Function.Injective f) :
-    UniqueMul (A.image f) (B.image f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by
+    UniqueMul (A.image f) (B.image f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 :=
+  by
   refine' ⟨fun h => _, fun h => _⟩
   · intro a b ha hb ab
     rw [← hf.eq_iff, ← hf.eq_iff]
@@ -166,10 +170,9 @@ attribute [to_additive] UniqueProds
 
 namespace Multiplicative
 
-instance {M} [Add M] [UniqueSums M] :
-    UniqueProds
-      (Multiplicative
-        M) where unique_mul_of_nonempty A B hA hB := by
+instance {M} [Add M] [UniqueSums M] : UniqueProds (Multiplicative M)
+    where unique_mul_of_nonempty A B hA hB :=
+    by
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
     obtain ⟨a0, hA0, b0, hB0, J⟩ := UniqueSums.unique_add_of_nonempty hA' hB
@@ -179,10 +182,9 @@ end Multiplicative
 
 namespace Additive
 
-instance {M} [Mul M] [UniqueProds M] :
-    UniqueSums
-      (Additive
-        M) where unique_add_of_nonempty A B hA hB := by
+instance {M} [Mul M] [UniqueProds M] : UniqueSums (Additive M)
+    where unique_add_of_nonempty A B hA hB :=
+    by
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
     obtain ⟨a0, hA0, b0, hB0, J⟩ := UniqueProds.unique_mul_of_nonempty hA' hB
@@ -194,7 +196,8 @@ end Additive
 theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
     [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
     [ContravariantClass A A (· * ·) (· ≤ ·)] {a b a0 b0 : A} (ha : a0 ≤ a) (hb : b0 ≤ b)
-    (ab : a * b ≤ a0 * b0) : a = a0 ∧ b = b0 := by
+    (ab : a * b ≤ a0 * b0) : a = a0 ∧ b = b0 :=
+  by
   haveI := Mul.to_CovariantClass_right A
   have ha' : ¬a0 * b0 < a * b → ¬a0 < a := mt fun h => mul_lt_mul_of_lt_of_le h hb
   have hb' : ¬a0 * b0 < a * b → ¬b0 < b := mt fun h => mul_lt_mul_of_le_of_lt ha h
@@ -209,9 +212,8 @@ is 'very monotone', then `A` also has `unique_prods`. -/
       "This instance asserts that if `A` has an addition, a linear order, and addition\nis 'very monotone', then `A` also has `unique_sums`."]
 instance (priority := 100) Covariants.to_unique_prods {A} [Mul A] [LinearOrder A]
     [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
-    [ContravariantClass A A (· * ·) (· ≤ ·)] :
-    UniqueProds
-      A where unique_mul_of_nonempty A B hA hB :=
+    [ContravariantClass A A (· * ·) (· ≤ ·)] : UniqueProds A
+    where unique_mul_of_nonempty A B hA hB :=
     ⟨_, A.min'_mem ‹_›, _, B.min'_mem ‹_›, fun a b ha hb ab =>
       eq_and_eq_of_le_of_le_of_mul_le (Finset.min'_le _ _ ‹_›) (Finset.min'_le _ _ ‹_›) ab.le⟩
 #align covariants.to_unique_prods Covariants.to_unique_prods

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.polynomial.cancel_leads
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,8 @@ theorem neg_cancel_leads : -p.cancelLeads q = q.cancelLeads p :=
 theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
     (comm : p.leadingCoeff * q.leadingCoeff = q.leadingCoeff * p.leadingCoeff)
     (h : p.natDegree ≤ q.natDegree) (hq : 0 < q.natDegree) :
-    (p.cancelLeads q).natDegree < q.natDegree := by
+    (p.cancelLeads q).natDegree < q.natDegree :=
+  by
   by_cases hp : p = 0
   · convert hq
     simp [hp, cancel_leads]

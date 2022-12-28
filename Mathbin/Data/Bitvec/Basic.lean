@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.bitvec.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,8 @@ theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) :
     v.toNat = v.toList.reverse.foldr (flip addLsb) 0 := by rw [List.foldr_reverse, flip] <;> rfl
 #align bitvec.to_nat_eq_foldr_reverse Bitvec.to_nat_eq_foldr_reverse
 
-theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
+theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n :=
+  by
   suffices v.to_nat + 1 ≤ 2 ^ n by simpa
   rw [to_nat_eq_foldr_reverse]
   cases' v with xs h
@@ -77,7 +78,8 @@ theorem to_bool_add_lsb_mod_two {x b} : decide (addLsb x b % 2 = 1) = b := by
     norm_num
 #align bitvec.to_bool_add_lsb_mod_two Bitvec.to_bool_add_lsb_mod_two
 
-theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := by
+theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v :=
+  by
   cases' v with xs h
   ext1
   change Vector.toList _ = xs
@@ -107,7 +109,8 @@ theorem to_fin_le_to_fin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : 
 #align bitvec.to_fin_le_to_fin_of_le Bitvec.to_fin_le_to_fin_of_le
 
 theorem of_fin_le_of_fin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
-  show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat by
+  show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat
+    by
     simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]
     exact h
 #align bitvec.of_fin_le_of_fin_of_le Bitvec.of_fin_le_of_fin_of_le

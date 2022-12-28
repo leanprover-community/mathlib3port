@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_lemma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ namespace CU
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. -/
 @[simps c]
-def left (c : CU X) : CU X where 
+def left (c : CU X) : CU X where
   c := c.c
   U := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
   closed_C := c.closed_C
@@ -113,9 +113,8 @@ def left (c : CU X) : CU X where
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u, c.U)`. -/
 @[simps U]
-def right (c : CU X) :
-    CU
-      X where 
+def right (c : CU X) : CU X
+    where
   c := closure (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
   U := c.U
   closed_C := is_closed_closure
@@ -142,7 +141,8 @@ noncomputable def approx : ℕ → CU X → X → ℝ
   | n + 1, c, x => midpoint ℝ (approx n c.left x) (approx n c.right x)
 #align urysohns.CU.approx Urysohns.CU.approx
 
-theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 := by
+theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 :=
+  by
   induction' n with n ihn generalizing c
   · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
   · simp only [approx]
@@ -150,7 +150,8 @@ theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx
     exacts[c.subset_right_C hx, hx]
 #align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_C
 
-theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 := by
+theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 :=
+  by
   induction' n with n ihn generalizing c
   · exact indicator_of_mem hx _
   · simp only [approx]
@@ -158,14 +159,16 @@ theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.appro
     exacts[hx, fun hU => hx <| c.left_U_subset hU]
 #align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_U
 
-theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x := by
+theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x :=
+  by
   induction' n with n ihn generalizing c
   · exact indicator_nonneg (fun _ _ => zero_le_one) _
   · simp only [approx, midpoint_eq_smul_add, invOf_eq_inv]
     refine' mul_nonneg (inv_nonneg.2 zero_le_two) (add_nonneg _ _) <;> apply ihn
 #align urysohns.CU.approx_nonneg Urysohns.CU.approx_nonneg
 
-theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 := by
+theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 :=
+  by
   induction' n with n ihn generalizing c
   · exact indicator_apply_le' (fun _ => le_rfl) fun _ => zero_le_one
   · simp only [approx, midpoint_eq_smul_add, invOf_eq_inv, smul_eq_mul, ← div_eq_inv_mul]
@@ -177,7 +180,8 @@ theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.a
 #align urysohns.CU.bdd_above_range_approx Urysohns.CU.bdd_above_range_approx
 
 theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
-    c₂.approx n₂ x ≤ c₁.approx n₁ x := by
+    c₂.approx n₂ x ≤ c₁.approx n₁ x :=
+  by
   by_cases hx : x ∈ c₁.U
   ·
     calc
@@ -192,7 +196,8 @@ theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (
 #align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_U_sub_C
 
 theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
-    c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) := by
+    c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) :=
+  by
   induction' n with n ihn generalizing c
   ·
     exact
@@ -205,7 +210,8 @@ theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
     exacts[subset_closure, subset_closure]
 #align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
 
-theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n + 1) x := by
+theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n + 1) x :=
+  by
   induction' n with n ihn generalizing c
   · simp only [approx, right_U, right_le_midpoint]
     exact (approx_mem_Icc_right_left c 0 x).2
@@ -240,7 +246,7 @@ theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
 #align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_U
 
 theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
-  by 
+  by
   refine' tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_at_top_iff_nat 1).1 _)
   simp only [approx]
   exact (c.left.tendsto_approx_at_top x).midpoint (c.right.tendsto_approx_at_top x)
@@ -263,7 +269,8 @@ theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
 #align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_Icc
 
 /-- Continuity of `urysohns.CU.lim`. See module docstring for a sketch of the proofs. -/
-theorem continuous_lim (c : CU X) : Continuous c.lim := by
+theorem continuous_lim (c : CU X) : Continuous c.lim :=
+  by
   obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by norm_num
   refine'
     continuous_iff_continuous_at.2 fun x =>

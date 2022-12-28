@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,9 +87,8 @@ theorem orbit_smul_subset (a : α) (b : β) : orbit α (a • b) ⊆ orbit α b 
 #align mul_action.orbit_smul_subset MulAction.orbit_smul_subset
 
 @[to_additive]
-instance {b : β} :
-    MulAction α
-      (orbit α b) where 
+instance {b : β} : MulAction α (orbit α b)
+    where
   smul a := (maps_to_smul_orbit a b).restrict _ _ _
   one_smul a := Subtype.ext (one_smul α a)
   mul_smul a a' b' := Subtype.ext (mul_smul a a' b')
@@ -115,7 +114,8 @@ def fixedBy (g : α) : Set β :=
 
 @[to_additive]
 theorem fixed_eq_Inter_fixed_by : fixedPoints α β = ⋂ g : α, fixedBy α β g :=
-  Set.ext fun x => ⟨fun hx => Set.mem_Inter.2 fun g => hx g, fun hx g => (Set.mem_Inter.1 hx g : _)⟩
+  Set.ext fun x =>
+    ⟨fun hx => Set.mem_interᵢ.2 fun g => hx g, fun hx g => (Set.mem_interᵢ.1 hx g : _)⟩
 #align mul_action.fixed_eq_Inter_fixed_by MulAction.fixed_eq_Inter_fixed_by
 
 variable {α} (β)
@@ -142,8 +142,8 @@ variable (α) {β}
 
 /-- The stabilizer of a point `b` as a submonoid of `α`. -/
 @[to_additive "The stabilizer of a point `b` as an additive submonoid of `α`."]
-def Stabilizer.submonoid (b : β) :
-    Submonoid α where 
+def Stabilizer.submonoid (b : β) : Submonoid α
+    where
   carrier := { a | a • b = b }
   one_mem' := one_smul _ b
   mul_mem' a a' (ha : a • b = b) (hb : a' • b = b) :=
@@ -164,7 +164,8 @@ variable {α} {β}
 
 @[to_additive]
 theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
-    a ∈ fixedPoints α β ↔ Fintype.card (orbit α a) = 1 := by
+    a ∈ fixedPoints α β ↔ Fintype.card (orbit α a) = 1 :=
+  by
   rw [Fintype.card_eq_one_iff, mem_fixed_points]
   constructor
   · exact fun h => ⟨⟨a, mem_orbit_self _⟩, fun ⟨b, ⟨x, hx⟩⟩ => Subtype.eq <| by simp [h x, hx.symm]⟩
@@ -222,7 +223,7 @@ theorem orbit_smul (a : α) (b : β) : orbit α (a • b) = orbit α b :=
 /-- The action of a group on an orbit is transitive. -/
 @[to_additive "The action of an additive group on an orbit is transitive."]
 instance (x : β) : IsPretransitive α (orbit α x) :=
-  ⟨by 
+  ⟨by
     rintro ⟨_, a, rfl⟩ ⟨_, b, rfl⟩
     use b * a⁻¹
     ext1
@@ -249,7 +250,7 @@ variable (α) (β)
 
 /-- The relation 'in the same orbit'. -/
 @[to_additive "The relation 'in the same orbit'."]
-def orbitRel : Setoid β where 
+def orbitRel : Setoid β where
   R a b := a ∈ orbit α b
   iseqv :=
     ⟨mem_orbit_self, fun a b => by simp [orbit_eq_iff.symm, eq_comm], fun a b => by
@@ -265,16 +266,17 @@ of the orbit of `U` under `α`. -/
 @[to_additive
       "When you take a set `U` in `β`, push it down to the quotient, and pull back, you get\nthe union of the orbit of `U` under `α`."]
 theorem quotient_preimage_image_eq_union_mul (U : Set β) :
-    Quotient.mk'' ⁻¹' (Quotient.mk'' '' U) = ⋃ a : α, (· • ·) a '' U := by
+    Quotient.mk'' ⁻¹' (Quotient.mk'' '' U) = ⋃ a : α, (· • ·) a '' U :=
+  by
   set f : β → Quotient (MulAction.orbitRel α β) := Quotient.mk''
   ext
   constructor
   · rintro ⟨y, hy, hxy⟩
     obtain ⟨a, rfl⟩ := Quotient.exact hxy
-    rw [Set.mem_Union]
+    rw [Set.mem_unionᵢ]
     exact ⟨a⁻¹, a • x, hy, inv_smul_smul a x⟩
   · intro hx
-    rw [Set.mem_Union] at hx
+    rw [Set.mem_unionᵢ] at hx
     obtain ⟨a, u, hu₁, hu₂⟩ := hx
     rw [Set.mem_preimage, Set.mem_image_iff_bex]
     refine' ⟨a⁻¹ • x, _, by simp only [Quotient.eq] <;> use a⁻¹⟩
@@ -286,7 +288,8 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
 
 @[to_additive]
 theorem disjoint_image_image_iff {U V : Set β} :
-    Disjoint (Quotient.mk'' '' U) (Quotient.mk'' '' V) ↔ ∀ x ∈ U, ∀ a : α, a • x ∉ V := by
+    Disjoint (Quotient.mk'' '' U) (Quotient.mk'' '' V) ↔ ∀ x ∈ U, ∀ a : α, a • x ∉ V :=
+  by
   set f : β → Quotient (MulAction.orbitRel α β) := Quotient.mk''
   refine'
     ⟨fun h x x_in_U a a_in_V =>
@@ -330,7 +333,8 @@ theorem orbitRel.Quotient.orbit_mk (b : β) :
 
 @[to_additive]
 theorem orbitRel.Quotient.mem_orbit {b : β} {x : orbitRel.Quotient α β} :
-    b ∈ x.orbit ↔ Quotient.mk' b = x := by
+    b ∈ x.orbit ↔ Quotient.mk' b = x :=
+  by
   induction x using Quotient.inductionOn'
   rw [Quotient.eq']
   rfl
@@ -340,7 +344,8 @@ theorem orbitRel.Quotient.mem_orbit {b : β} {x : orbitRel.Quotient α β} :
 @[to_additive "Note that `hφ = quotient.out_eq'` is a useful choice here."]
 theorem orbitRel.Quotient.orbit_eq_orbit_out (x : orbitRel.Quotient α β)
     {φ : orbitRel.Quotient α β → β} (hφ : RightInverse φ Quotient.mk') :
-    orbitRel.Quotient.orbit x = orbit α (φ x) := by
+    orbitRel.Quotient.orbit x = orbit α (φ x) :=
+  by
   conv_lhs => rw [← hφ x]
   induction x using Quotient.inductionOn'
   rfl
@@ -380,7 +385,8 @@ variable {α β}
 
 /-- If the stabilizer of `x` is `S`, then the stabilizer of `g • x` is `gSg⁻¹`. -/
 theorem stabilizer_smul_eq_stabilizer_map_conj (g : α) (x : β) :
-    stabilizer α (g • x) = (stabilizer α x).map (MulAut.conj g).toMonoidHom := by
+    stabilizer α (g • x) = (stabilizer α x).map (MulAut.conj g).toMonoidHom :=
+  by
   ext h
   rw [mem_stabilizer_iff, ← smul_left_cancel_iff g⁻¹, smul_smul, smul_smul, smul_smul, mul_left_inv,
     one_smul, ← mem_stabilizer_iff, Subgroup.mem_map_equiv, MulAut.conj_symm_apply]
@@ -406,7 +412,8 @@ variable [AddGroup α] [AddAction α β]
 
 /-- If the stabilizer of `x` is `S`, then the stabilizer of `g +ᵥ x` is `g + S + (-g)`. -/
 theorem stabilizer_vadd_eq_stabilizer_map_conj (g : α) (x : β) :
-    stabilizer α (g +ᵥ x) = (stabilizer α x).map (AddAut.conj g).toAddMonoidHom := by
+    stabilizer α (g +ᵥ x) = (stabilizer α x).map (AddAut.conj g).toAddMonoidHom :=
+  by
   ext h
   rw [mem_stabilizer_iff, ← vadd_left_cancel_iff (-g), vadd_vadd, vadd_vadd, vadd_vadd,
     add_left_neg, zero_vadd, ← mem_stabilizer_iff, AddSubgroup.mem_map_equiv,
@@ -432,7 +439,7 @@ The general theory of such `k` is elaborated by `is_smul_regular`.
 The typeclass that restricts all terms of `M` to have this property is `no_zero_smul_divisors`. -/
 theorem smul_cancel_of_non_zero_divisor {M R : Type _} [Monoid M] [NonUnitalNonAssocRing R]
     [DistribMulAction M R] (k : M) (h : ∀ x : R, k • x = 0 → x = 0) {a b : R} (h' : k • a = k • b) :
-    a = b := by 
+    a = b := by
   rw [← sub_eq_zero]
   refine' h _ _
   rw [smul_sub, h', sub_self]

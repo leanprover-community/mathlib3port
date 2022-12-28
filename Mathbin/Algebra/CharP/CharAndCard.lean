@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module algebra.char_p.char_and_card
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,13 +24,14 @@ characterstic, cardinality, ring
 /-- A prime `p` is a unit in a commutative ring `R` of nonzero characterstic iff it does not divide
 the characteristic. -/
 theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRing R] (p : ℕ)
-    [Fact p.Prime] (hR : ringChar R ≠ 0) : IsUnit (p : R) ↔ ¬p ∣ ringChar R := by
+    [Fact p.Prime] (hR : ringChar R ≠ 0) : IsUnit (p : R) ↔ ¬p ∣ ringChar R :=
+  by
   have hch := CharP.cast_eq_zero R (ringChar R)
   have hp : p.prime := Fact.out p.prime
   constructor
   · rintro h₁ ⟨q, hq⟩
     rcases IsUnit.exists_left_inv h₁ with ⟨a, ha⟩
-    have h₃ : ¬ringChar R ∣ q := by 
+    have h₃ : ¬ringChar R ∣ q := by
       rintro ⟨r, hr⟩
       rw [hr, ← mul_assoc, mul_comm p, mul_assoc] at hq
       nth_rw 1 [← mul_one (ringChar R)] at hq
@@ -59,7 +60,8 @@ theorem is_unit_iff_not_dvd_char (R : Type _) [CommRing R] (p : ℕ) [Fact p.Pri
 /-- The prime divisors of the characteristic of a finite commutative ring are exactly
 the prime divisors of its cardinality. -/
 theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : ℕ) [Fact p.Prime] :
-    p ∣ ringChar R ↔ p ∣ Fintype.card R := by
+    p ∣ ringChar R ↔ p ∣ Fintype.card R :=
+  by
   refine'
     ⟨fun h =>
       h.trans <|

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.reduce
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,8 @@ variable [Primcodable α] [Primcodable β] [Primcodable σ]
 open Computable
 
 theorem computable_of_many_one_reducible {p : α → Prop} {q : β → Prop} (h₁ : p ≤₀ q)
-    (h₂ : ComputablePred q) : ComputablePred p := by
+    (h₂ : ComputablePred q) : ComputablePred p :=
+  by
   rcases h₁ with ⟨f, c, hf⟩
   rw [show p = fun a => q (f a) from Set.ext hf]
   rcases computable_iff.1 h₂ with ⟨g, hg, rfl⟩
@@ -399,7 +400,7 @@ protected theorem lift_on_eq {φ} (p : Set ℕ) (f : Set ℕ → φ)
 protected def liftOn₂ {φ} (d₁ d₂ : ManyOneDegree) (f : Set ℕ → Set ℕ → φ)
     (h : ∀ p₁ p₂ q₁ q₂, ManyOneEquiv p₁ p₂ → ManyOneEquiv q₁ q₂ → f p₁ q₁ = f p₂ q₂) : φ :=
   d₁.liftOn (fun p => d₂.liftOn (f p) fun q₁ q₂ hq => h _ _ _ _ (by rfl) hq)
-    (by 
+    (by
       intro p₁ p₂ hp
       induction d₂ using ManyOneDegree.ind_on
       apply h
@@ -439,21 +440,23 @@ private theorem le_refl (d : ManyOneDegree) : d ≤ d := by
   induction d using ManyOneDegree.ind_on <;> simp
 #align many_one_degree.le_refl many_one_degree.le_refl
 
-private theorem le_antisymm {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₁ → d₁ = d₂ := by
+private theorem le_antisymm {d₁ d₂ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₁ → d₁ = d₂ :=
+  by
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   intro hp hq
   simp_all only [ManyOneEquiv, of_le_of, of_eq_of, true_and_iff]
 #align many_one_degree.le_antisymm many_one_degree.le_antisymm
 
-private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₃ → d₁ ≤ d₃ := by
+private theorem le_trans {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ → d₂ ≤ d₃ → d₁ ≤ d₃ :=
+  by
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   induction d₃ using ManyOneDegree.ind_on
   apply ManyOneReducible.trans
 #align many_one_degree.le_trans many_one_degree.le_trans
 
-instance : PartialOrder ManyOneDegree where 
+instance : PartialOrder ManyOneDegree where
   le := (· ≤ ·)
   le_refl := le_refl
   le_trans _ _ _ := le_trans
@@ -463,7 +466,7 @@ instance : PartialOrder ManyOneDegree where
 instance : Add ManyOneDegree :=
   ⟨fun d₁ d₂ =>
     d₁.liftOn₂ d₂ (fun a b => of (a ⊕' b))
-      (by 
+      (by
         rintro a b c d ⟨hl₁, hr₁⟩ ⟨hl₂, hr₂⟩
         rw [of_eq_of]
         exact
@@ -484,7 +487,8 @@ theorem add_of (p : Set α) (q : Set β) : of (p ⊕' q) = of p + of q :=
 #align many_one_degree.add_of ManyOneDegree.add_of
 
 @[simp]
-protected theorem add_le {d₁ d₂ d₃ : ManyOneDegree} : d₁ + d₂ ≤ d₃ ↔ d₁ ≤ d₃ ∧ d₂ ≤ d₃ := by
+protected theorem add_le {d₁ d₂ d₃ : ManyOneDegree} : d₁ + d₂ ≤ d₃ ↔ d₁ ≤ d₃ ∧ d₂ ≤ d₃ :=
+  by
   induction d₁ using ManyOneDegree.ind_on
   induction d₂ using ManyOneDegree.ind_on
   induction d₃ using ManyOneDegree.ind_on
@@ -502,7 +506,7 @@ protected theorem le_add_right (d₁ d₂ : ManyOneDegree) : d₂ ≤ d₁ + d�
 #align many_one_degree.le_add_right ManyOneDegree.le_add_right
 
 instance : SemilatticeSup ManyOneDegree :=
-  { ManyOneDegree.partialOrder with 
+  { ManyOneDegree.partialOrder with
     sup := (· + ·)
     le_sup_left := ManyOneDegree.le_add_left
     le_sup_right := ManyOneDegree.le_add_right

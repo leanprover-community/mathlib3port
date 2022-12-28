@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.conj_act
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,17 +158,16 @@ section Monoid
 
 variable [Monoid M]
 
-instance hasUnitsScalar :
-    HasSmul (ConjAct Mˣ) M where smul g h := ofConjAct g * h * ↑(ofConjAct g)⁻¹
+instance hasUnitsScalar : HasSmul (ConjAct Mˣ) M
+    where smul g h := ofConjAct g * h * ↑(ofConjAct g)⁻¹
 #align conj_act.has_units_scalar ConjAct.hasUnitsScalar
 
 theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * ↑(ofConjAct g)⁻¹ :=
   rfl
 #align conj_act.units_smul_def ConjAct.units_smul_def
 
-instance unitsMulDistribMulAction :
-    MulDistribMulAction (ConjAct Mˣ)
-      M where 
+instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M
+    where
   smul := (· • ·)
   one_smul := by simp [units_smul_def]
   mul_smul := by simp [units_smul_def, mul_assoc, mul_inv_rev]
@@ -177,9 +176,8 @@ instance unitsMulDistribMulAction :
 #align conj_act.units_mul_distrib_mul_action ConjAct.unitsMulDistribMulAction
 
 instance units_smul_comm_class [HasSmul α M] [SMulCommClass α M M] [IsScalarTower α M M] :
-    SMulCommClass α (ConjAct Mˣ)
-      M where smul_comm a um m := by
-    rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
+    SMulCommClass α (ConjAct Mˣ) M
+    where smul_comm a um m := by rw [units_smul_def, units_smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.units_smul_comm_class ConjAct.units_smul_comm_class
 
 instance units_smul_comm_class' [HasSmul α M] [SMulCommClass M α M] [IsScalarTower α M M] :
@@ -195,7 +193,7 @@ section Semiring
 variable [Semiring R]
 
 instance unitsMulSemiringAction : MulSemiringAction (ConjAct Rˣ) R :=
-  { ConjAct.unitsMulDistribMulAction with 
+  { ConjAct.unitsMulDistribMulAction with
     smul := (· • ·)
     smul_zero := by simp [units_smul_def]
     smul_add := by simp [units_smul_def, mul_add, add_mul] }
@@ -219,16 +217,16 @@ theorem to_conj_act_zero : toConjAct (0 : G₀) = 0 :=
   rfl
 #align conj_act.to_conj_act_zero ConjAct.to_conj_act_zero
 
-instance mulAction₀ : MulAction (ConjAct G₀)
-      G₀ where 
+instance mulAction₀ : MulAction (ConjAct G₀) G₀
+    where
   smul := (· • ·)
   one_smul := by simp [smul_def]
   mul_smul := by simp [smul_def, mul_assoc, mul_inv_rev]
 #align conj_act.mul_action₀ ConjAct.mulAction₀
 
 instance smul_comm_class₀ [HasSmul α G₀] [SMulCommClass α G₀ G₀] [IsScalarTower α G₀ G₀] :
-    SMulCommClass α (ConjAct G₀)
-      G₀ where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+    SMulCommClass α (ConjAct G₀) G₀
+    where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.smul_comm_class₀ ConjAct.smul_comm_class₀
 
 instance smul_comm_class₀' [HasSmul α G₀] [SMulCommClass G₀ α G₀] [IsScalarTower α G₀ G₀] :
@@ -244,7 +242,7 @@ section DivisionRing
 variable [DivisionRing K]
 
 instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
-  { ConjAct.mulAction₀ with 
+  { ConjAct.mulAction₀ with
     smul := (· • ·)
     smul_zero := by simp [smul_def]
     smul_add := by simp [smul_def, mul_add, add_mul] }
@@ -254,8 +252,8 @@ end DivisionRing
 
 variable [Group G]
 
-instance : MulDistribMulAction (ConjAct G)
-      G where 
+instance : MulDistribMulAction (ConjAct G) G
+    where
   smul := (· • ·)
   smul_mul := by simp [smul_def, mul_assoc]
   smul_one := by simp [smul_def]
@@ -263,8 +261,8 @@ instance : MulDistribMulAction (ConjAct G)
   mul_smul := by simp [smul_def, mul_assoc]
 
 instance smul_comm_class [HasSmul α G] [SMulCommClass α G G] [IsScalarTower α G G] :
-    SMulCommClass α (ConjAct G)
-      G where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
+    SMulCommClass α (ConjAct G) G
+    where smul_comm a ug g := by rw [smul_def, smul_def, mul_smul_comm, smul_mul_assoc]
 #align conj_act.smul_comm_class ConjAct.smul_comm_class
 
 instance smul_comm_class' [HasSmul α G] [SMulCommClass G α G] [IsScalarTower α G G] :
@@ -278,7 +276,8 @@ theorem smul_eq_mul_aut_conj (g : ConjAct G) (h : G) : g • h = MulAut.conj (of
 #align conj_act.smul_eq_mul_aut_conj ConjAct.smul_eq_mul_aut_conj
 
 /-- The set of fixed points of the conjugation action of `G` on itself is the center of `G`. -/
-theorem fixed_points_eq_center : fixedPoints (ConjAct G) G = center G := by
+theorem fixed_points_eq_center : fixedPoints (ConjAct G) G = center G :=
+  by
   ext x
   simp [mem_center_iff, smul_def, mul_inv_eq_iff_eq_mul]
 #align conj_act.fixed_points_eq_center ConjAct.fixed_points_eq_center
@@ -317,7 +316,8 @@ theorem MulAut.conj_normal_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
 
 @[simp]
 theorem MulAut.conj_normal_symm_apply {H : Subgroup G} [H.Normal] (g : G) (h : H) :
-    ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g := by
+    ↑((MulAut.conjNormal g).symm h) = g⁻¹ * h * g :=
+  by
   change _ * _⁻¹⁻¹ = _
   rw [inv_inv]
   rfl
@@ -336,7 +336,7 @@ theorem MulAut.conj_normal_coe {H : Subgroup G} [H.Normal] {h : H} :
 
 instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.Normal] {K : Subgroup H}
     [h : K.Characteristic] : (K.map H.Subtype).Normal :=
-  ⟨fun a ha b => by 
+  ⟨fun a ha b => by
     obtain ⟨a, ha, rfl⟩ := ha
     exact
       K.apply_coe_mem_map H.subtype

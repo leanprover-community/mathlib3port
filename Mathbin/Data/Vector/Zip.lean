@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.vector.zip
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ theorem zip_with_to_list (x : Vector α n) (y : Vector β n) :
 
 @[simp]
 theorem zip_with_nth (x : Vector α n) (y : Vector β n) (i) :
-    (Vector.zipWith f x y).nth i = f (x.nth i) (y.nth i) := by
+    (Vector.zipWith f x y).nth i = f (x.nth i) (y.nth i) :=
+  by
   dsimp only [Vector.zipWith, Vector.nth]
   cases x; cases y
   simp only [List.nth_le_zip_with, Subtype.coe_mk]
@@ -43,7 +44,8 @@ theorem zip_with_nth (x : Vector α n) (y : Vector β n) (i) :
 
 @[simp]
 theorem zip_with_tail (x : Vector α n) (y : Vector β n) :
-    (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail := by
+    (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail :=
+  by
   ext
   simp [nth_tail]
 #align vector.zip_with_tail Vector.zip_with_tail

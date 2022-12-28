@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.abel
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -426,7 +426,7 @@ unsafe def normalize (red : Transparency) (mode := NormalizeMode.term) (e : expr
     | _ => []
   let lemmas ← lemmas.mfoldl simp_lemmas.add_simp simp_lemmas.mk
   let (_, e', pr) ←
-    ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed)
+    ext_simplify_core () { } simp_lemmas.mk (fun _ => failed)
         (fun _ _ _ _ e => do
           let c ← mk_context red e
           let (new_e, pr) ←

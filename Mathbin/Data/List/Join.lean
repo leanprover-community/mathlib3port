@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn, Mario Carneiro, Martin Dvorak
 
 ! This file was ported from Lean 3 source module data.list.join
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ theorem join_filter_ne_nil [DecidablePred fun l : List α => l ≠ []] {L : List
   simp [join_filter_empty_eq_ff, ← empty_iff_eq_nil]
 #align list.join_filter_ne_nil List.join_filter_ne_nil
 
-theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join := by
+theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join :=
+  by
   induction l
   simp
   simp [l_ih]
@@ -81,7 +82,8 @@ theorem bind_eq_nil {l : List α} {f : α → List β} : List.bind l f = [] ↔ 
 /-- In a join, taking the first elements up to an index which is the sum of the lengths of the
 first `i` sublists, is the same as taking the join of the first `i` sublists. -/
 theorem take_sum_join (L : List (List α)) (i : ℕ) :
-    L.join.take ((L.map length).take i).Sum = (L.take i).join := by
+    L.join.take ((L.map length).take i).Sum = (L.take i).join :=
+  by
   induction L generalizing i; · simp
   cases i; · simp
   simp [take_append, L_ih]
@@ -90,7 +92,8 @@ theorem take_sum_join (L : List (List α)) (i : ℕ) :
 /-- In a join, dropping all the elements up to an index which is the sum of the lengths of the
 first `i` sublists, is the same as taking the join after dropping the first `i` sublists. -/
 theorem drop_sum_join (L : List (List α)) (i : ℕ) :
-    L.join.drop ((L.map length).take i).Sum = (L.drop i).join := by
+    L.join.drop ((L.map length).take i).Sum = (L.drop i).join :=
+  by
   induction L generalizing i; · simp
   cases i; · simp
   simp [drop_append, L_ih]
@@ -99,13 +102,14 @@ theorem drop_sum_join (L : List (List α)) (i : ℕ) :
 /-- Taking only the first `i+1` elements in a list, and then dropping the first `i` ones, one is
 left with a list of length `1` made of the `i`-th element of the original list. -/
 theorem drop_take_succ_eq_cons_nth_le (L : List α) {i : ℕ} (hi : i < L.length) :
-    (L.take (i + 1)).drop i = [nthLe L i hi] := by
+    (L.take (i + 1)).drop i = [nthLe L i hi] :=
+  by
   induction L generalizing i
   · simp only [length] at hi
     exact (Nat.not_succ_le_zero i hi).elim
   cases i
   · simp
-  have : i < L_tl.length := by 
+  have : i < L_tl.length := by
     simp at hi
     exact Nat.lt_of_succ_lt_succ hi
   simp [L_ih this]
@@ -133,7 +137,8 @@ theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.len
 
 /-- Auxiliary lemma to control elements in a join. -/
 theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length)
-    (hj : j < (nthLe L i hi).length) : ((L.map length).take i).Sum + j < L.join.length := by
+    (hj : j < (nthLe L i hi).length) : ((L.map length).take i).Sum + j < L.join.length :=
+  by
   convert lt_of_lt_of_le (sum_take_map_length_lt1 L hi hj) (monotone_sum_take _ hi)
   have : L.length = (L.map length).length := by simp
   simp [this, -length_map]
@@ -154,7 +159,8 @@ theorem nth_le_join (L : List (List α)) {i j : ℕ} (hi : i < L.length)
 /-- Two lists of sublists are equal iff their joins coincide, as well as the lengths of the
 sublists. -/
 theorem eq_iff_join_eq (L L' : List (List α)) :
-    L = L' ↔ L.join = L'.join ∧ map length L = map length L' := by
+    L = L' ↔ L.join = L'.join ∧ map length L = map length L' :=
+  by
   refine' ⟨fun H => by simp [H], _⟩
   rintro ⟨join_eq, length_eq⟩
   apply ext_le
@@ -165,7 +171,8 @@ theorem eq_iff_join_eq (L L' : List (List α)) :
 #align list.eq_iff_join_eq List.eq_iff_join_eq
 
 theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) :
-    (L.drop (L.length - 1)).join = L.last h := by
+    (L.drop (L.length - 1)).join = L.last h :=
+  by
   induction L using List.reverseRecOn
   · cases h rfl
   · simp
@@ -174,7 +181,8 @@ theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) :
 /-- We can rebracket `x ++ (l₁ ++ x) ++ (l₂ ++ x) ++ ... ++ (lₙ ++ x)` to
 `(x ++ l₁) ++ (x ++ l₂) ++ ... ++ (x ++ lₙ) ++ x` where `L = [l₁, l₂, ..., lₙ]`. -/
 theorem append_join_map_append (L : List (List α)) (x : List α) :
-    x ++ (List.map (fun l => l ++ x) L).join = (List.map (fun l => x ++ l) L).join ++ x := by
+    x ++ (List.map (fun l => l ++ x) L).join = (List.map (fun l => x ++ l) L).join ++ x :=
+  by
   induction L
   · rw [map_nil, join, append_nil, map_nil, join, nil_append]
   · rw [map_cons, join, map_cons, join, append_assoc, L_ih, append_assoc, append_assoc]
@@ -182,7 +190,8 @@ theorem append_join_map_append (L : List (List α)) (x : List α) :
 
 /-- Reversing a join is the same as reversing the order of parts and reversing all parts. -/
 theorem reverse_join (L : List (List α)) :
-    L.join.reverse = (List.map List.reverse L).reverse.join := by
+    L.join.reverse = (List.map List.reverse L).reverse.join :=
+  by
   induction L
   · rfl
   · rw [join, reverse_append, L_ih, map_cons, reverse_cons', join_concat]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_fin
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,8 @@ theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a 
   h.trans <| Eq.symm <| Nat.mod_eq_of_lt h.lt
 #align tactic.norm_fin.normalize_fin_lt.of Tactic.NormFin.NormalizeFinLt.of
 
-theorem NormalizeFin.zero (n) : NormalizeFin (n + 1) 0 0 := by
+theorem NormalizeFin.zero (n) : NormalizeFin (n + 1) 0 0 :=
+  by
   rw [normalize_fin]
   norm_num
 #align tactic.norm_fin.normalize_fin.zero Tactic.NormFin.NormalizeFin.zero

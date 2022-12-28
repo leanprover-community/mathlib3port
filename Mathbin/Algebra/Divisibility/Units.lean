@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.divisibility.units
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ theorem coe_dvd : ↑u ∣ a :=
 
 /- warning: units.dvd_mul_right -> Units.dvd_mul_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α _inst_1}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.val.{u1} α _inst_1)))) u))) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b)
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α _inst_1}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) u))) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α _inst_1}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b (Units.val.{u1} α _inst_1 u))) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b)
 Case conversion may be inaccurate. Consider using '#align units.dvd_mul_right Units.dvd_mul_rightₓ'. -/
@@ -52,7 +52,7 @@ theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b :=
 
 /- warning: units.mul_right_dvd -> Units.mul_right_dvd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α _inst_1}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.val.{u1} α _inst_1)))) u)) b) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b)
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α _inst_1}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) u)) b) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α _inst_1}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) a (Units.val.{u1} α _inst_1 u)) b) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b)
 Case conversion may be inaccurate. Consider using '#align units.mul_right_dvd Units.mul_right_dvdₓ'. -/
@@ -70,26 +70,28 @@ variable [CommMonoid α] {a b : α} {u : αˣ}
 
 /- warning: units.dvd_mul_left -> Units.dvd_mul_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Units.val.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) u) b)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a b)
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (coeBase.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Units.hasCoe.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) u) b)) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a b)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Units.val.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) u) b)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a b)
 Case conversion may be inaccurate. Consider using '#align units.dvd_mul_left Units.dvd_mul_leftₓ'. -/
 /-- In a commutative monoid, an element `a` divides an element `b` iff `a` divides all left
     associates of `b`. -/
-theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b := by
+theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b :=
+  by
   rw [mul_comm]
   apply dvd_mul_right
 #align units.dvd_mul_left Units.dvd_mul_left
 
 /- warning: units.mul_left_dvd -> Units.mul_left_dvd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (CoeTCₓ.mk.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Units.val.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) u) a) b) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a b)
+  forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)}, Iff (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (coeBase.{succ u1, succ u1} (Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) α (Units.hasCoe.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) u) a) b) (Dvd.Dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a b)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {a : α} {b : α} {u : Units.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)}, Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) (Units.val.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) u) a) b) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a b)
 Case conversion may be inaccurate. Consider using '#align units.mul_left_dvd Units.mul_left_dvdₓ'. -/
 /-- In a commutative monoid, an element `a` divides an element `b` iff all
   left associates of `a` divide `b`.-/
-theorem mul_left_dvd : ↑u * a ∣ b ↔ a ∣ b := by
+theorem mul_left_dvd : ↑u * a ∣ b ↔ a ∣ b :=
+  by
   rw [mul_comm]
   apply mul_right_dvd
 #align units.mul_left_dvd Units.mul_left_dvd
@@ -109,7 +111,7 @@ include hu
 #print IsUnit.dvd /-
 /-- Units of a monoid divide any element of the monoid. -/
 @[simp]
-theorem dvd : u ∣ a := by 
+theorem dvd : u ∣ a := by
   rcases hu with ⟨u, rfl⟩
   apply Units.coe_dvd
 #align is_unit.dvd IsUnit.dvd
@@ -122,7 +124,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} {b : α} {u : α}, (IsUnit.{u1} α _inst_1 u) -> (Iff (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))) b u)) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (Monoid.toSemigroup.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align is_unit.dvd_mul_right IsUnit.dvd_mul_rightₓ'. -/
 @[simp]
-theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b := by
+theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b :=
+  by
   rcases hu with ⟨u, rfl⟩
   apply Units.dvd_mul_right
 #align is_unit.dvd_mul_right IsUnit.dvd_mul_right
@@ -135,7 +138,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit.mul_right_dvd IsUnit.mul_right_dvdₓ'. -/
 /-- In a monoid, an element a divides an element b iff all associates of `a` divide `b`.-/
 @[simp]
-theorem mul_right_dvd : a * u ∣ b ↔ a ∣ b := by
+theorem mul_right_dvd : a * u ∣ b ↔ a ∣ b :=
+  by
   rcases hu with ⟨u, rfl⟩
   apply Units.mul_right_dvd
 #align is_unit.mul_right_dvd IsUnit.mul_right_dvd
@@ -157,7 +161,8 @@ Case conversion may be inaccurate. Consider using '#align is_unit.dvd_mul_left I
 /-- In a commutative monoid, an element `a` divides an element `b` iff `a` divides all left
     associates of `b`. -/
 @[simp]
-theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b := by
+theorem dvd_mul_left : a ∣ u * b ↔ a ∣ b :=
+  by
   rcases hu with ⟨u, rfl⟩
   apply Units.dvd_mul_left
 #align is_unit.dvd_mul_left IsUnit.dvd_mul_left
@@ -171,7 +176,8 @@ Case conversion may be inaccurate. Consider using '#align is_unit.mul_left_dvd I
 /-- In a commutative monoid, an element `a` divides an element `b` iff all
   left associates of `a` divide `b`.-/
 @[simp]
-theorem mul_left_dvd : u * a ∣ b ↔ a ∣ b := by
+theorem mul_left_dvd : u * a ∣ b ↔ a ∣ b :=
+  by
   rcases hu with ⟨u, rfl⟩
   apply Units.mul_left_dvd
 #align is_unit.mul_left_dvd IsUnit.mul_left_dvd

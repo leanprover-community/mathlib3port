@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.complex.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ noncomputable instance : DecidableEq ℂ :=
 
 /-- The equivalence between the complex numbers and `ℝ × ℝ`. -/
 @[simps apply]
-def equivRealProd : ℂ ≃ ℝ × ℝ where 
+def equivRealProd : ℂ ≃ ℝ × ℝ where
   toFun z := ⟨z.re, z.im⟩
   invFun p := ⟨p.1, p.2⟩
   left_inv := fun ⟨x, y⟩ => rfl
@@ -348,16 +348,11 @@ instance : AddCommGroup ℂ := by
                   neg := Neg.neg
                   sub := Sub.sub
                   nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩
-                  zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;>
-              intros <;>
-            try rfl <;>
-          apply ext_iff.2 <;>
-        constructor <;>
-      simp <;>
-    · first |ring1|ring_nf
+                  zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;> intros <;>
+            try rfl <;> apply ext_iff.2 <;> constructor <;> simp <;> · first |ring1|ring_nf
 
 instance : AddGroupWithOne ℂ :=
-  { Complex.addCommGroup with 
+  { Complex.addCommGroup with
     natCast := fun n => ⟨n, 0⟩
     nat_cast_zero := by ext <;> simp [Nat.cast]
     nat_cast_succ := fun _ => by ext <;> simp [Nat.cast]
@@ -369,7 +364,7 @@ instance : AddGroupWithOne ℂ :=
 
 instance : CommRing ℂ := by
   refine_struct
-                { Complex.addGroupWithOne with 
+                { Complex.addGroupWithOne with
                   zero := (0 : ℂ)
                   add := (· + ·)
                   one := 1
@@ -392,7 +387,7 @@ instance : CommSemiring ℂ :=
   inferInstance
 
 /-- The "real part" map, considered as an additive group homomorphism. -/
-def reAddGroupHom : ℂ →+ ℝ where 
+def reAddGroupHom : ℂ →+ ℝ where
   toFun := re
   map_zero' := zero_re
   map_add' := add_re
@@ -404,7 +399,7 @@ theorem coe_re_add_group_hom : (reAddGroupHom : ℂ → ℝ) = re :=
 #align complex.coe_re_add_group_hom Complex.coe_re_add_group_hom
 
 /-- The "imaginary part" map, considered as an additive group homomorphism. -/
-def imAddGroupHom : ℂ →+ ℝ where 
+def imAddGroupHom : ℂ →+ ℝ where
   toFun := im
   map_zero' := zero_im
   map_add' := add_im
@@ -429,7 +424,7 @@ theorem I_pow_bit1 (n : ℕ) : I ^ bit1 n = (-1) ^ n * I := by rw [pow_bit1', I_
 /-- This defines the complex conjugate as the `star` operation of the `star_ring ℂ`. It
 is recommended to use the ring endomorphism version `star_ring_end`, available under the
 notation `conj` in the locale `complex_conjugate`. -/
-instance : StarRing ℂ where 
+instance : StarRing ℂ where
   star z := ⟨z.re, -z.im⟩
   star_involutive x := by simp only [eta, neg_neg]
   star_mul a b := by ext <;> simp [add_comm] <;> ring
@@ -493,11 +488,11 @@ theorem star_def : (HasStar.star : ℂ → ℂ) = conj :=
 
 /-- The norm squared function. -/
 @[pp_nodot]
-def normSq : ℂ →*₀ ℝ where 
+def normSq : ℂ →*₀ ℝ where
   toFun z := z.re * z.re + z.im * z.im
   map_zero' := by simp
   map_one' := by simp
-  map_mul' z w := by 
+  map_mul' z w := by
     dsimp
     ring
 #align complex.norm_sq Complex.normSq
@@ -629,7 +624,8 @@ theorem sub_conj (z : ℂ) : z - conj z = (2 * z.im : ℝ) * I :=
   ext_iff.2 <| by simp [two_mul, sub_eq_add_neg]
 #align complex.sub_conj Complex.sub_conj
 
-theorem norm_sq_sub (z w : ℂ) : normSq (z - w) = normSq z + normSq w - 2 * (z * conj w).re := by
+theorem norm_sq_sub (z w : ℂ) : normSq (z - w) = normSq z + normSq w - 2 * (z * conj w).re :=
+  by
   rw [sub_eq_add_neg, norm_sq_add]
   simp only [RingHom.map_neg, mul_neg, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
 #align complex.norm_sq_sub Complex.norm_sq_sub
@@ -806,7 +802,8 @@ private theorem abs_nonneg' (z : ℂ) : 0 ≤ abs z :=
 theorem abs_conj (z : ℂ) : (abs conj z) = abs z := by simp
 #align complex.abs_theory.abs_conj Complex.AbsTheory.abs_conj
 
-private theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z := by
+private theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
+  by
   rw [mul_self_le_mul_self_iff (abs_nonneg z.re) (abs_nonneg' _), abs_mul_abs_self, mul_self_abs]
   apply re_sq_le_norm_sq
 #align complex.abs_theory.abs_re_le_abs complex.abs_theory.abs_re_le_abs
@@ -829,8 +826,8 @@ private theorem abs_add (z w : ℂ) : (abs z + w) ≤ (abs z) + abs w :=
 #align complex.abs_theory.abs_add complex.abs_theory.abs_add
 
 /-- The complex absolute value function, defined as the square root of the norm squared. -/
-noncomputable def Complex.abs :
-    AbsoluteValue ℂ ℝ where 
+noncomputable def Complex.abs : AbsoluteValue ℂ ℝ
+    where
   toFun x := abs x
   map_mul' := abs_mul
   nonneg' := abs_nonneg'
@@ -921,13 +918,13 @@ theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
 #align complex.abs_zpow Complex.abs_zpow
 
 theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
-  Real.abs_le_sqrt <| by 
+  Real.abs_le_sqrt <| by
     rw [norm_sq_apply, ← sq]
     exact le_add_of_nonneg_right (mul_self_nonneg _)
 #align complex.abs_re_le_abs Complex.abs_re_le_abs
 
 theorem abs_im_le_abs (z : ℂ) : |z.im| ≤ abs z :=
-  Real.abs_le_sqrt <| by 
+  Real.abs_le_sqrt <| by
     rw [norm_sq_apply, ← sq, ← sq]
     exact le_add_of_nonneg_left (sq_nonneg _)
 #align complex.abs_im_le_abs Complex.abs_im_le_abs
@@ -959,7 +956,8 @@ theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ |z.re| + |z.im| := by
   simpa [re_add_im] using abs.add_le z.re (z.im * I)
 #align complex.abs_le_abs_re_add_abs_im Complex.abs_le_abs_re_add_abs_im
 
-theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|) (|z.im|) := by
+theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|) (|z.im|) :=
+  by
   cases' z with x y
   simp only [abs, norm_sq_mk, ← sq]
   wlog (discharger := tactic.skip) hle : |x| ≤ |y| := le_total (|x|) (|y|) using x y, y x
@@ -1001,11 +999,11 @@ theorem norm_sq_eq_abs (x : ℂ) : normSq x = abs x ^ 2 := by
 /-- We put a partial order on ℂ so that `z ≤ w` exactly if `w - z` is real and nonnegative.
 Complex numbers with different imaginary parts are incomparable.
 -/
-protected def partialOrder :
-    PartialOrder ℂ where 
+protected def partialOrder : PartialOrder ℂ
+    where
   le z w := z.re ≤ w.re ∧ z.im = w.im
   lt z w := z.re < w.re ∧ z.im = w.im
-  lt_iff_le_not_le z w := by 
+  lt_iff_le_not_le z w := by
     dsimp
     rw [lt_iff_le_not_le]
     tauto
@@ -1060,7 +1058,8 @@ theorem not_lt_zero_iff {z : ℂ} : ¬z < 0 ↔ 0 ≤ z.re ∨ z.im ≠ 0 :=
   not_lt_iff
 #align complex.not_lt_zero_iff Complex.not_lt_zero_iff
 
-theorem eq_re_of_real_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re := by
+theorem eq_re_of_real_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re :=
+  by
   ext
   rfl
   simp only [← (Complex.le_def.1 hz).2, Complex.zero_im, Complex.of_real_im]
@@ -1069,7 +1068,8 @@ theorem eq_re_of_real_le {r : ℝ} {z : ℂ} (hz : (r : ℂ) ≤ z) : z = z.re :
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is a strictly ordered ring.
 -/
 protected def strictOrderedCommRing : StrictOrderedCommRing ℂ :=
-  { Complex.partialOrder, Complex.commRing, Complex.nontrivial with
+  { Complex.partialOrder, Complex.commRing,
+    Complex.nontrivial with
     zero_le_one := ⟨zero_le_one, rfl⟩
     add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg₂ (· + ·) rfl h.2⟩
     mul_pos := fun z w hz hw => by
@@ -1083,12 +1083,13 @@ scoped[ComplexOrder] attribute [instance] Complex.strictOrderedCommRing
 -/
 protected def starOrderedRing : StarOrderedRing ℂ :=
   { Complex.strictOrderedCommRing with
-    nonneg_iff := fun r => by
+    nonneg_iff := fun r =>
+      by
       refine' ⟨fun hr => ⟨Real.sqrt r.re, _⟩, fun h => _⟩
-      · have h₁ : 0 ≤ r.re := by 
+      · have h₁ : 0 ≤ r.re := by
           rw [le_def] at hr
           exact hr.1
-        have h₂ : r.im = 0 := by 
+        have h₂ : r.im = 0 := by
           rw [le_def] at hr
           exact hr.2.symm
         ext
@@ -1145,7 +1146,7 @@ noncomputable def limAux (f : CauSeq ℂ abs) : ℂ :=
 theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) := fun ε ε0 =>
   (exists_forall_ge_and (CauSeq.equiv_lim ⟨_, is_cau_seq_re f⟩ _ (half_pos ε0))
         (CauSeq.equiv_lim ⟨_, is_cau_seq_im f⟩ _ (half_pos ε0))).imp
-    fun i H j ij => by 
+    fun i H j ij => by
     cases' H _ ij with H₁ H₂
     apply lt_of_le_of_lt (abs_le_abs_re_add_abs_im _)
     dsimp [lim_aux] at *

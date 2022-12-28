@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.fin_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,10 +75,8 @@ abbrev AsType : Type :=
 #align category_theory.fin_category.as_type CategoryTheory.FinCategory.AsType
 
 @[simps (config := lemmasOnly) hom id comp]
-noncomputable instance categoryAsType :
-    SmallCategory
-      (AsType
-        α) where 
+noncomputable instance categoryAsType : SmallCategory (AsType α)
+    where
   hom i j := Fin (Fintype.card (@Quiver.Hom (ObjAsType α) _ i j))
   id i := Fintype.equivFin _ (𝟙 i)
   comp i j k f g := Fintype.equivFin _ ((Fintype.equivFin _).symm f ≫ (Fintype.equivFin _).symm g)
@@ -88,8 +86,8 @@ attribute [local simp] category_as_type_hom category_as_type_id category_as_type
 
 /-- The "identity" functor from `as_type α` to `obj_as_type α`. -/
 @[simps]
-noncomputable def asTypeToObjAsType :
-    AsType α ⥤ ObjAsType α where 
+noncomputable def asTypeToObjAsType : AsType α ⥤ ObjAsType α
+    where
   obj := id
   map i j := (Fintype.equivFin _).symm
 #align
@@ -97,8 +95,8 @@ noncomputable def asTypeToObjAsType :
 
 /-- The "identity" functor from `obj_as_type α` to `as_type α`. -/
 @[simps]
-noncomputable def objAsTypeToAsType :
-    ObjAsType α ⥤ AsType α where 
+noncomputable def objAsTypeToAsType : ObjAsType α ⥤ AsType α
+    where
   obj := id
   map i j := Fintype.equivFin _
 #align
@@ -131,16 +129,16 @@ open Opposite
 
 /-- The opposite of a finite category is finite.
 -/
-instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] :
-    FinCategory Jᵒᵖ where 
+instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] : FinCategory Jᵒᵖ
+    where
   fintypeObj := Fintype.ofEquiv _ equivToOpposite
   fintypeHom j j' := Fintype.ofEquiv _ (opEquiv j j').symm
 #align category_theory.fin_category_opposite CategoryTheory.finCategoryOpposite
 
 /-- Applying `ulift` to morphisms and objects of a category preserves finiteness. -/
 instance finCategoryUlift {J : Type v} [SmallCategory J] [FinCategory J] :
-    FinCategory.{max w v}
-      (UliftHom.{w, max w v} (ULift.{w, v} J)) where fintypeObj := ULift.fintype J
+    FinCategory.{max w v} (UliftHom.{w, max w v} (ULift.{w, v} J))
+    where fintypeObj := ULift.fintype J
 #align category_theory.fin_category_ulift CategoryTheory.finCategoryUlift
 
 end CategoryTheory

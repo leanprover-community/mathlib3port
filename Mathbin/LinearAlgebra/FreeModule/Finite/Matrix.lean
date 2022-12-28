@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.matrix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
-instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) := by
+instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) :=
+  by
   cases subsingleton_or_nontrivial R
   · apply Module.Free.ofSubsingleton'
   classical exact
@@ -47,14 +48,15 @@ instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M �
 
 variable {R}
 
-instance Module.Finite.linear_map [Module.Finite R M] [Module.Finite R N] :
-    Module.Finite R (M →ₗ[R] N) := by
+instance Module.Finite.linearMap [Module.Finite R M] [Module.Finite R N] :
+    Module.Finite R (M →ₗ[R] N) :=
+  by
   cases subsingleton_or_nontrivial R
   · infer_instance
-  classical 
+  classical
     have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
-    exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
-#align module.finite.linear_map Module.Finite.linear_map
+    exact Module.Finite.ofSurjective f.to_linear_map (LinearEquiv.surjective f)
+#align module.finite.linear_map Module.Finite.linearMap
 
 end CommRing
 
@@ -64,9 +66,9 @@ variable [AddCommGroup M] [Module.Finite ℤ M] [Module.Free ℤ M]
 
 variable [AddCommGroup N] [Module.Finite ℤ N] [Module.Free ℤ N]
 
-instance Module.Finite.add_monoid_hom : Module.Finite ℤ (M →+ N) :=
+instance Module.Finite.addMonoidHom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
-#align module.finite.add_monoid_hom Module.Finite.add_monoid_hom
+#align module.finite.add_monoid_hom Module.Finite.addMonoidHom
 
 instance addMonoidHom : Module.Free ℤ (M →+ N) :=
   letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linearMap _ _ _
@@ -88,7 +90,7 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
-  classical 
+  classical
     letI := nontrivial_of_invariant_basis_number R
     have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
     let b := (Matrix.stdBasis _ _ _).map h.symm

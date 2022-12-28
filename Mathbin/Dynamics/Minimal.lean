@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.minimal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,13 +75,13 @@ theorem IsOpen.exists_smul_mem [IsMinimal M α] (x : α) {U : Set α} (hUo : IsO
 @[to_additive]
 theorem IsOpen.Union_preimage_smul [IsMinimal M α] {U : Set α} (hUo : IsOpen U) (hne : U.Nonempty) :
     (⋃ c : M, (· • ·) c ⁻¹' U) = univ :=
-  Union_eq_univ_iff.2 fun x => hUo.exists_smul_mem M x hne
+  unionᵢ_eq_univ_iff.2 fun x => hUo.exists_smul_mem M x hne
 #align is_open.Union_preimage_smul IsOpen.Union_preimage_smul
 
 @[to_additive]
 theorem IsOpen.Union_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : U.Nonempty) :
     (⋃ g : G, g • U) = univ :=
-  Union_eq_univ_iff.2 fun x =>
+  unionᵢ_eq_univ_iff.2 fun x =>
     let ⟨g, hg⟩ := hUo.exists_smul_mem G x hne
     ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
 #align is_open.Union_smul IsOpen.Union_smul
@@ -113,7 +113,8 @@ theorem eq_empty_or_univ_of_smul_invariant_closed [IsMinimal M α] {s : Set α} 
 
 @[to_additive]
 theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
-    IsMinimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ := by
+    IsMinimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ :=
+  by
   constructor;
   · intro h s
     exact eq_empty_or_univ_of_smul_invariant_closed M

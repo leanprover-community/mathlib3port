@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Group.filtered_colimits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,8 @@ def colimitInvAux (x : Σj, F.obj j) : G :=
 @[to_additive]
 theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget GroupCat) x y) :
-    colimit_inv_aux x = colimit_inv_aux y := by
+    colimit_inv_aux x = colimit_inv_aux y :=
+  by
   apply G.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
@@ -90,8 +91,8 @@ theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j)
 
 /-- Taking inverses in the colimit. See also `colimit_inv_aux`. -/
 @[to_additive "Negation in the colimit. See also `colimit_neg_aux`."]
-instance colimitHasInv :
-    Inv G where inv x := by 
+instance colimitHasInv : Inv G
+    where inv x := by
     refine' Quot.lift (colimit_inv_aux F) _ x
     intro x y h
     apply colimit_inv_aux_eq_of_rel
@@ -107,7 +108,7 @@ theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2�
 @[to_additive]
 instance colimitGroup : Group G :=
   { G.Monoid, colimit_has_inv with
-    mul_left_inv := fun x => by 
+    mul_left_inv := fun x => by
       apply Quot.induction_on x; clear x; intro x
       cases' x with j x
       erw [colimit_inv_mk_eq,
@@ -125,16 +126,15 @@ def colimit : GroupCat :=
 
 /-- The cocone over the proposed colimit group. -/
 @[to_additive "The cocone over the proposed colimit additive group."]
-def colimitCocone : cocone F where 
+def colimitCocone : cocone F where
   x := colimit
   ι := { (MonCat.FilteredColimits.colimitCocone (F ⋙ forget₂ GroupCat MonCat.{max v u})).ι with }
 #align Group.filtered_colimits.colimit_cocone GroupCat.FilteredColimits.colimitCocone
 
 /-- The proposed colimit cocone is a colimit in `Group`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddGroup`."]
-def colimitCoconeIsColimit :
-    IsColimit
-      colimit_cocone where 
+def colimitCoconeIsColimit : IsColimit colimit_cocone
+    where
   desc t :=
     MonCat.FilteredColimits.colimitDesc (F ⋙ forget₂ GroupCat MonCat.{max v u})
       ((forget₂ GroupCat MonCat).mapCocone t)
@@ -150,10 +150,10 @@ def colimitCoconeIsColimit :
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
 instance forget₂MonPreservesFilteredColimits :
-    PreservesFilteredColimits
-      (forget₂ GroupCat
-        MonCat.{u}) where PreservesFilteredColimits J _ _ :=
-    { PreservesColimit := fun F =>
+    PreservesFilteredColimits (forget₂ GroupCat MonCat.{u})
+    where PreservesFilteredColimits J _ _ :=
+    {
+      PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (MonCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ GroupCat MonCat.{u})) }
 #align
@@ -201,18 +201,18 @@ def colimit : CommGroupCat :=
 
 /-- The cocone over the proposed colimit commutative group. -/
 @[to_additive "The cocone over the proposed colimit additive commutative group."]
-def colimitCocone : cocone F where 
+def colimitCocone : cocone F where
   x := colimit
   ι :=
-    { (GroupCat.FilteredColimits.colimitCocone
+    {
+      (GroupCat.FilteredColimits.colimitCocone
           (F ⋙ forget₂ CommGroupCat GroupCat.{max v u})).ι with }
 #align CommGroup.filtered_colimits.colimit_cocone CommGroupCat.FilteredColimits.colimitCocone
 
 /-- The proposed colimit cocone is a colimit in `CommGroup`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddCommGroup`."]
-def colimitCoconeIsColimit :
-    IsColimit
-      colimit_cocone where 
+def colimitCoconeIsColimit : IsColimit colimit_cocone
+    where
   desc t :=
     (GroupCat.FilteredColimits.colimitCoconeIsColimit
           (F ⋙ forget₂ CommGroupCat GroupCat.{max v u})).desc
@@ -230,10 +230,10 @@ def colimitCoconeIsColimit :
 
 @[to_additive forget₂_AddGroup_preserves_filtered_colimits]
 instance forget₂GroupPreservesFilteredColimits :
-    PreservesFilteredColimits
-      (forget₂ CommGroupCat
-        GroupCat.{u}) where PreservesFilteredColimits J _ _ :=
-    { PreservesColimit := fun F =>
+    PreservesFilteredColimits (forget₂ CommGroupCat GroupCat.{u})
+    where PreservesFilteredColimits J _ _ :=
+    {
+      PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (GroupCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ CommGroupCat GroupCat.{u})) }

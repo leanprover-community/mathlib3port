@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.verschiebung
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,8 @@ theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) :
 
 @[ghost_simps]
 theorem ghost_component_verschiebung_fun (x : 𝕎 R) (n : ℕ) :
-    ghostComponent (n + 1) (verschiebungFun x) = p * ghostComponent n x := by
+    ghostComponent (n + 1) (verschiebungFun x) = p * ghostComponent n x :=
+  by
   simp only [ghost_component_apply, aeval_witt_polynomial]
   rw [Finset.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _),
     mul_zero, add_zero, Finset.mul_sum, Finset.sum_congr rfl]
@@ -95,7 +96,8 @@ theorem verschiebung_poly_zero : verschiebungPoly 0 = 0 :=
 #align witt_vector.verschiebung_poly_zero WittVector.verschiebung_poly_zero
 
 theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) :
-    aeval x.coeff (verschiebungPoly n) = (verschiebungFun x).coeff n := by
+    aeval x.coeff (verschiebungPoly n) = (verschiebungFun x).coeff n :=
+  by
   cases n
   · simp only [verschiebung_poly, verschiebung_fun_coeff_zero, if_pos rfl, AlgHom.map_zero]
   ·
@@ -108,7 +110,8 @@ variable (p)
 /-- `witt_vector.verschiebung` has polynomial structure given by `witt_vector.verschiebung_poly`.
 -/
 @[is_poly]
-theorem verschiebung_fun_is_poly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr := by
+theorem verschiebung_fun_is_poly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr :=
+  by
   use verschiebung_poly
   simp only [aeval_verschiebung_poly', eq_self_iff_true, forall₃_true_iff]
 #align witt_vector.verschiebung_fun_is_poly WittVector.verschiebung_fun_is_poly
@@ -123,13 +126,13 @@ include hp
 
 This is a additive monoid hom with underlying function `verschiebung_fun`.
 -/
-noncomputable def verschiebung :
-    𝕎 R →+ 𝕎 R where 
+noncomputable def verschiebung : 𝕎 R →+ 𝕎 R
+    where
   toFun := verschiebungFun
   map_zero' := by
     ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;>
       simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
-  map_add' := by 
+  map_add' := by
     ghost_calc _ _
     rintro ⟨⟩ <;> ghost_simp
 #align witt_vector.verschiebung WittVector.verschiebung
@@ -147,7 +150,8 @@ include hp
 /-- verschiebung is a natural transformation -/
 @[simp]
 theorem map_verschiebung (f : R →+* S) (x : 𝕎 R) :
-    map f (verschiebung x) = verschiebung (map f x) := by
+    map f (verschiebung x) = verschiebung (map f x) :=
+  by
   ext ⟨-, -⟩
   exact f.map_zero
   rfl
@@ -188,7 +192,7 @@ theorem aeval_verschiebung_poly (x : 𝕎 R) (n : ℕ) :
 theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
     bind₁ verschiebungPoly (wittPolynomial p ℤ n) =
       if n = 0 then 0 else p * wittPolynomial p ℤ (n - 1) :=
-  by 
+  by
   apply MvPolynomial.funext
   intro x
   split_ifs with hn

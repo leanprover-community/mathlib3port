@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module topology.sheaves.punit
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,8 @@ open CategoryTheory CategoryTheory.Limits TopCat Opposite
 variable {C : Type u} [Category.{v} C]
 
 theorem is_sheaf_of_is_terminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = ⊤) (F : Presheaf C X)
-    (it : is_terminal <| F.obj <| op ⊥) : F.IsSheaf := fun c U s hs => by
+    (it : is_terminal <| F.obj <| op ⊥) : F.IsSheaf := fun c U s hs =>
+  by
   obtain rfl | hne := eq_or_ne U ⊥
   · intro _ _
     rw [@exists_unique_iff_exists _ ⟨fun _ _ => _⟩]

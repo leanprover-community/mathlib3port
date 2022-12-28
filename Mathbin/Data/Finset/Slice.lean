@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.slice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,8 +62,9 @@ alias sized_union ↔ _ sized.union
 
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
-theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r := by
-  simp_rw [Set.Sized, Set.mem_Union, forall_exists_index]
+theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r :=
+  by
+  simp_rw [Set.Sized, Set.mem_unionᵢ, forall_exists_index]
   exact forall_swap
 #align set.sized_Union Set.sized_Union
 
@@ -112,7 +113,8 @@ theorem subset_powerset_len_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : S
 alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
 
 theorem Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
-    card 𝒜 ≤ (Fintype.card α).choose r := by
+    card 𝒜 ≤ (Fintype.card α).choose r :=
+  by
   rw [Fintype.card, ← card_powerset_len]
   exact card_le_of_subset h𝒜.subset_powerset_len_univ
 #align set.sized.card_le Set.Sized.card_le
@@ -170,7 +172,8 @@ theorem bUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).bUnion 𝒜.sli
 #align finset.bUnion_slice Finset.bUnion_slice
 
 @[simp]
-theorem sum_card_slice : (∑ r in iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card := by
+theorem sum_card_slice : (∑ r in iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
+  by
   letI := Classical.decEq α
   rw [← card_bUnion, bUnion_slice]
   exact finset.pairwise_disjoint_slice.subset (Set.subset_univ _)

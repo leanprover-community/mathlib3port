@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alex Kontorovich
 
 ! This file was ported from Lean 3 source module order.filter.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,14 +67,16 @@ theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹'
   mem_infi_of_mem i <| preimage_mem_comap hs
 #align filter.mem_pi_of_mem Filter.mem_pi_of_mem
 
-theorem pi_mem_pi {I : Set ι} (hI : I.Finite) (h : ∀ i ∈ I, s i ∈ f i) : I.pi s ∈ pi f := by
+theorem pi_mem_pi {I : Set ι} (hI : I.Finite) (h : ∀ i ∈ I, s i ∈ f i) : I.pi s ∈ pi f :=
+  by
   rw [pi_def, bInter_eq_Inter]
   refine' mem_infi_of_Inter hI (fun i => _) subset.rfl
   exact preimage_mem_comap (h i i.2)
 #align filter.pi_mem_pi Filter.pi_mem_pi
 
 theorem mem_pi {s : Set (∀ i, α i)} :
-    s ∈ pi f ↔ ∃ I : Set ι, I.Finite ∧ ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ I.pi t ⊆ s := by
+    s ∈ pi f ↔ ∃ I : Set ι, I.Finite ∧ ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ I.pi t ⊆ s :=
+  by
   constructor
   · simp only [pi, mem_infi', mem_comap, pi_def]
     rintro ⟨I, If, V, hVf, hVI, rfl, -⟩
@@ -90,12 +92,12 @@ theorem mem_pi' {s : Set (∀ i, α i)} :
 #align filter.mem_pi' Filter.mem_pi'
 
 theorem mem_of_pi_mem_pi [∀ i, NeBot (f i)] {I : Set ι} (h : I.pi s ∈ pi f) {i : ι} (hi : i ∈ I) :
-    s i ∈ f i := by 
+    s i ∈ f i := by
   rcases mem_pi.1 h with ⟨I', I'f, t, htf, hts⟩
   refine' mem_of_superset (htf i) fun x hx => _
   have : ∀ i, (t i).Nonempty := fun i => nonempty_of_mem (htf i)
   choose g hg
-  have : update g i x ∈ I'.pi t := by 
+  have : update g i x ∈ I'.pi t := by
     intro j hj
     rcases eq_or_ne j i with (rfl | hne) <;> simp [*]
   simpa using hts this i hi
@@ -120,7 +122,7 @@ theorem has_basis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : 
 
 @[simp]
 theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ ↔ ∃ i, f i ⊓ 𝓟 (s i) = ⊥ :=
-  by 
+  by
   constructor
   · simp only [inf_principal_eq_bot, mem_pi]
     contrapose!
@@ -135,7 +137,8 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ �
 
 @[simp]
 theorem pi_inf_principal_pi_eq_bot [∀ i, NeBot (f i)] {I : Set ι} :
-    pi f ⊓ 𝓟 (Set.pi I s) = ⊥ ↔ ∃ i ∈ I, f i ⊓ 𝓟 (s i) = ⊥ := by
+    pi f ⊓ 𝓟 (Set.pi I s) = ⊥ ↔ ∃ i ∈ I, f i ⊓ 𝓟 (s i) = ⊥ :=
+  by
   rw [← univ_pi_piecewise I, pi_inf_principal_univ_pi_eq_bot]
   refine' exists_congr fun i => _
   by_cases hi : i ∈ I <;> simp [hi, (‹∀ i, ne_bot (f i)› i).Ne]
@@ -171,7 +174,8 @@ instance [∀ i, NeBot (f i)] : NeBot (pi f) :=
 
 @[simp]
 theorem map_eval_pi (f : ∀ i, Filter (α i)) [∀ i, NeBot (f i)] (i : ι) :
-    map (eval i) (pi f) = f i := by
+    map (eval i) (pi f) = f i :=
+  by
   refine' le_antisymm (tendsto_eval_pi f i) fun s hs => _
   rcases mem_pi.1 (mem_map.1 hs) with ⟨I, hIf, t, htf, hI⟩
   rw [← image_subset_iff] at hI
@@ -185,7 +189,8 @@ theorem pi_le_pi [∀ i, NeBot (f₁ i)] : pi f₁ ≤ pi f₂ ↔ ∀ i, f₁ i
 #align filter.pi_le_pi Filter.pi_le_pi
 
 @[simp]
-theorem pi_inj [∀ i, NeBot (f₁ i)] : pi f₁ = pi f₂ ↔ f₁ = f₂ := by
+theorem pi_inj [∀ i, NeBot (f₁ i)] : pi f₁ = pi f₂ ↔ f₁ = f₂ :=
+  by
   refine' ⟨fun h => _, congr_arg pi⟩
   have hle : f₁ ≤ f₂ := pi_le_pi.1 h.le
   haveI : ∀ i, ne_bot (f₂ i) := fun i => ne_bot_of_le (hle i)
@@ -267,7 +272,7 @@ variable {β : ι → Type _} {m : ∀ i, α i → β i}
 theorem map_pi_map_Coprod_le :
     map (fun k : ∀ i, α i => fun i => m i (k i)) (Filter.coprod f) ≤
       Filter.coprod fun i => map (m i) (f i) :=
-  by 
+  by
   simp only [le_def, mem_map, mem_Coprod_iff]
   intro s h i
   obtain ⟨t, H, hH⟩ := h i

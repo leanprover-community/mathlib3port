@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,8 @@ variable [Ring R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
 /-- If a free module is finite, then any basis is finite. -/
 noncomputable instance [Nontrivial R] [Module.Finite R M] :
-    Fintype (Module.Free.ChooseBasisIndex R M) := by
+    Fintype (Module.Free.ChooseBasisIndex R M) :=
+  by
   obtain ⟨h⟩ := id ‹Module.Finite R M›
   choose s hs using h
   exact basisFintypeOfFiniteSpans (↑s) hs (choose_basis _ _)
@@ -54,19 +55,21 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 variable {R}
 
 /-- A free module with a basis indexed by a `fintype` is finite. -/
-theorem Module.Finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M]
-    [Finite ι] (b : Basis ι R M) : Module.Finite R M := by
+theorem Module.Finite.ofBasis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M] [Finite ι]
+    (b : Basis ι R M) : Module.Finite R M :=
+  by
   cases nonempty_fintype ι
-  classical 
+  classical
     refine' ⟨⟨finset.univ.image b, _⟩⟩
     simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
-#align module.finite.of_basis Module.Finite.of_basis
+#align module.finite.of_basis Module.Finite.ofBasis
 
 instance Module.Finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] :
-    Module.Finite R (Matrix ι₁ ι₂ R) := by
+    Module.Finite R (Matrix ι₁ ι₂ R) :=
+  by
   cases nonempty_fintype ι₁
   cases nonempty_fintype ι₂
-  exact Module.Finite.of_basis (Pi.basis fun i => Pi.basisFun R _)
+  exact Module.Finite.ofBasis (Pi.basis fun i => Pi.basisFun R _)
 #align module.finite.matrix Module.Finite.matrix
 
 end CommRing

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Noam Atar
 
 ! This file was ported from Lean 3 source module order.prime_ideal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.i :=
   IF.is_compl_I_F.eq_compl.symm
 #align order.ideal.prime_pair.compl_F_eq_I Order.Ideal.PrimePair.compl_F_eq_I
 
-theorem I_is_proper : IsProper IF.i := by 
+theorem I_is_proper : IsProper IF.i := by
   cases IF.F.nonempty
   apply is_proper_of_not_mem (_ : w ∉ IF.I)
   rwa [← IF.compl_I_eq_F] at h
@@ -106,7 +106,7 @@ def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
 
 theorem PrimePair.I_is_prime (IF : PrimePair P) : IsPrime IF.i :=
   { IF.I_is_proper with
-    compl_filter := by 
+    compl_filter := by
       rw [IF.compl_I_eq_F]
       exact IF.F.is_pfilter }
 #align order.ideal.prime_pair.I_is_prime Order.Ideal.PrimePair.I_is_prime
@@ -117,7 +117,8 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {I : Ideal P}
 
-theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ I ∨ y ∈ I := by
+theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ I ∨ y ∈ I :=
+  by
   contrapose!
   let F := hI.compl_filter.to_pfilter
   show x ∈ F ∧ y ∈ F → x ⊓ y ∈ F
@@ -125,7 +126,7 @@ theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ 
 #align order.ideal.is_prime.mem_or_mem Order.Ideal.IsPrime.mem_or_mem
 
 theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) :
-    IsPrime I := by 
+    IsPrime I := by
   rw [is_prime_iff]
   use ‹_›
   apply is_pfilter.of_def
@@ -133,7 +134,7 @@ theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I �
   · intro x _ y _
     refine' ⟨x ⊓ y, _, inf_le_left, inf_le_right⟩
     have := mt hI
-    tauto!
+    tauto
   · exact @mem_compl_of_ge _ _ _
 #align order.ideal.is_prime.of_mem_or_mem Order.Ideal.IsPrime.of_mem_or_mem
 
@@ -147,7 +148,8 @@ section DistribLattice
 
 variable [DistribLattice P] {I : Ideal P}
 
-instance (priority := 100) IsMaximal.is_prime [IsMaximal I] : IsPrime I := by
+instance (priority := 100) IsMaximal.is_prime [IsMaximal I] : IsPrime I :=
+  by
   rw [is_prime_iff_mem_or_mem]
   intro x y
   contrapose!
@@ -171,7 +173,8 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 
-theorem IsPrime.mem_or_compl_mem (hI : IsPrime I) : x ∈ I ∨ xᶜ ∈ I := by
+theorem IsPrime.mem_or_compl_mem (hI : IsPrime I) : x ∈ I ∨ xᶜ ∈ I :=
+  by
   apply hI.mem_or_mem
   rw [inf_compl_eq_bot]
   exact I.bot_mem
@@ -181,7 +184,8 @@ theorem IsPrime.mem_compl_of_not_mem (hI : IsPrime I) (hxnI : x ∉ I) : xᶜ �
   hI.mem_or_compl_mem.resolve_left hxnI
 #align order.ideal.is_prime.mem_compl_of_not_mem Order.Ideal.IsPrime.mem_compl_of_not_mem
 
-theorem is_prime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : IsPrime I := by
+theorem is_prime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : IsPrime I :=
+  by
   simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
@@ -193,7 +197,8 @@ theorem is_prime_iff_mem_or_compl_mem [IsProper I] : IsPrime I ↔ ∀ {x : P}, 
   ⟨fun h _ => h.mem_or_compl_mem, is_prime_of_mem_or_compl_mem⟩
 #align order.ideal.is_prime_iff_mem_or_compl_mem Order.Ideal.is_prime_iff_mem_or_compl_mem
 
-instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I := by
+instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I :=
+  by
   simp only [is_maximal_iff, Set.eq_univ_iff_forall, is_prime.to_is_proper, true_and_iff]
   intro J hIJ x
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
@@ -228,7 +233,8 @@ def IsPrime.toPrimePair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
 #align order.pfilter.is_prime.to_prime_pair Order.Pfilter.IsPrime.toPrimePair
 
 theorem Order.Ideal.PrimePair.F_is_prime (IF : Ideal.PrimePair P) : IsPrime IF.f :=
-  { compl_ideal := by 
+  {
+    compl_ideal := by
       rw [IF.compl_F_eq_I]
       exact IF.I.is_ideal }
 #align order.ideal.prime_pair.F_is_prime Order.Ideal.PrimePair.F_is_prime

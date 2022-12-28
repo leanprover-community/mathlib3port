@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.monotonicity.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,12 +107,12 @@ unsafe def mono_head_candidates : ℕ → List expr → expr → tactic MonoKey
   | 0, _, h => throwError "Cannot find relation in {← h}"
   | succ n, xs, h =>
     (do
-        let (rel, l, r) ←
+        let (Rel, l, r) ←
           if h.is_arrow then pure (none, h.binding_domain, h.binding_body)
             else
               guard h.get_app_fn.is_constant >>
                 Prod.mk (some h.get_app_fn.const_name) <$> lastTwo h.get_app_args
-        Prod.mk <$> monotonicity.check_rel l r <*> pure rel) <|>
+        Prod.mk <$> monotonicity.check_rel l r <*> pure Rel) <|>
       match xs with
       | [] => fail f! "oh? {h}"
       | x :: xs => mono_head_candidates n xs (h.pis [x])
@@ -158,8 +158,8 @@ open Function
 
 @[user_attribute]
 unsafe def monotonicity.attr :
-    user_attribute (native.rb_lmap MonoKey Name)
-      (Option MonoKey × mono_selection) where 
+    user_attribute (native.rb_lmap MonoKey Name) (Option MonoKey × mono_selection)
+    where
   Name := `mono
   descr := "monotonicity of function `f` wrt relations `R₀` and `R₁`: R₀ x y → R₁ (f x) (f y)"
   cache_cfg :=

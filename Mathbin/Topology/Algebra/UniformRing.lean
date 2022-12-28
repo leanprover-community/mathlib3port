@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,8 @@ theorem coe_mul (a b : α) : ((a * b : α) : Completion α) = a * b :=
 
 variable [UniformAddGroup α]
 
-theorem continuous_mul : Continuous fun p : Completion α × Completion α => p.1 * p.2 := by
+theorem continuous_mul : Continuous fun p : Completion α × Completion α => p.1 * p.2 :=
+  by
   let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ to_compl
   have : Continuous fun p : α × α => m p.1 p.2 := (continuous_coe α).comp continuous_mul
   have di : DenseInducing (to_compl : α → completion α) := dense_inducing_coe
@@ -88,7 +89,9 @@ theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → Complet
 #align uniform_space.completion.continuous.mul UniformSpace.Completion.Continuous.mul
 
 instance : Ring (Completion α) :=
-  { AddMonoidWithOne.unary, Completion.addCommGroup, Completion.hasMul α, Completion.hasOne α with
+  { AddMonoidWithOne.unary, Completion.addCommGroup, Completion.hasMul α,
+    Completion.hasOne
+      α with
     one_mul := fun a =>
       Completion.induction_on a
         (is_closed_eq (Continuous.mul continuous_const continuous_id) continuous_id) fun a => by
@@ -162,9 +165,8 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
         rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
 #align uniform_space.completion.extension_hom UniformSpace.Completion.extensionHom
 
-instance top_ring_compl :
-    TopologicalRing (Completion
-        α) where 
+instance top_ring_compl : TopologicalRing (Completion α)
+    where
   continuous_add := continuous_add
   continuous_mul := continuous_mul
 #align uniform_space.completion.top_ring_compl UniformSpace.Completion.top_ring_compl
@@ -181,7 +183,8 @@ variable (A : Type _) [Ring A] [UniformSpace A] [UniformAddGroup A] [Topological
 
 @[simp]
 theorem map_smul_eq_mul_coe (r : R) :
-    Completion.map ((· • ·) r) = (· * ·) (algebraMap R A r : Completion A) := by
+    Completion.map ((· • ·) r) = (· * ·) (algebraMap R A r : Completion A) :=
+  by
   ext x
   refine' completion.induction_on x _ fun a => _
   · exact is_closed_eq completion.continuous_map (continuous_mul_left _)
@@ -189,7 +192,10 @@ theorem map_smul_eq_mul_coe (r : R) :
 #align uniform_space.completion.map_smul_eq_mul_coe UniformSpace.Completion.map_smul_eq_mul_coe
 
 instance : Algebra R (Completion A) :=
-  { (UniformSpace.Completion.coeRingHom : A →+* Completion A).comp (algebraMap R A) with
+  {
+    (UniformSpace.Completion.coeRingHom : A →+* Completion A).comp
+      (algebraMap R
+        A) with
     commutes' := fun r x =>
       (Completion.induction_on x (is_closed_eq (continuous_mul_left _) (continuous_mul_right _)))
         fun a => by
@@ -252,7 +258,8 @@ instance commRing [CommRing α] [UniformSpace α] [UniformAddGroup α] [Topologi
 #align uniform_space.comm_ring UniformSpace.commRing
 
 instance topological_ring [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
-    TopologicalRing (Quotient (separationSetoid α)) := by
+    TopologicalRing (Quotient (separationSetoid α)) :=
+  by
   convert topological_ring_quotient (⊥ : Ideal α).closure <;> try apply ring_sep_rel
   simp [UniformSpace.commRing]
 #align uniform_space.topological_ring UniformSpace.topological_ring
@@ -271,16 +278,16 @@ variable [T2Space γ] [CompleteSpace γ]
 
 /-- The dense inducing extension as a ring homomorphism. -/
 noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ} (ue : UniformInducing i)
-    (dr : DenseRange i) (hf : UniformContinuous f) :
-    β →+* γ where 
+    (dr : DenseRange i) (hf : UniformContinuous f) : β →+* γ
+    where
   toFun := (ue.DenseInducing dr).extend f
-  map_one' := by 
+  map_one' := by
     convert DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous 1
     exacts[i.map_one.symm, f.map_one.symm]
   map_zero' := by
     convert DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous 0
     exacts[i.map_zero.symm, f.map_zero.symm]
-  map_add' := by 
+  map_add' := by
     have h := (uniform_continuous_uniformly_extend ue dr hf).Continuous
     refine' fun x y => DenseRange.induction_on₂ dr _ (fun a b => _) x y
     ·
@@ -290,7 +297,7 @@ noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ
     ·
       simp_rw [← i.map_add, DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous _, ←
         f.map_add]
-  map_mul' := by 
+  map_mul' := by
     have h := (uniform_continuous_uniformly_extend ue dr hf).Continuous
     refine' fun x y => DenseRange.induction_on₂ dr _ (fun a b => _) x y
     ·

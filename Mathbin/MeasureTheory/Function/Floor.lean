@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.function.floor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,43 +25,47 @@ section FloorRing
 variable {α R : Type _} [MeasurableSpace α] [LinearOrderedRing R] [FloorRing R] [TopologicalSpace R]
   [OrderTopology R] [MeasurableSpace R]
 
-theorem Int.measurableFloor [OpensMeasurableSpace R] : Measurable (Int.floor : R → ℤ) :=
-  measurableToCountable fun x => by simpa only [Int.preimage_floor_singleton] using measurableSetIco
-#align int.measurable_floor Int.measurableFloor
+theorem Int.measurable_floor [OpensMeasurableSpace R] : Measurable (Int.floor : R → ℤ) :=
+  measurable_to_countable fun x => by
+    simpa only [Int.preimage_floor_singleton] using measurable_set_Ico
+#align int.measurable_floor Int.measurable_floor
 
 @[measurability]
 theorem Measurable.floor [OpensMeasurableSpace R] {f : α → R} (hf : Measurable f) :
     Measurable fun x => ⌊f x⌋ :=
-  Int.measurableFloor.comp hf
+  Int.measurable_floor.comp hf
 #align measurable.floor Measurable.floor
 
-theorem Int.measurableCeil [OpensMeasurableSpace R] : Measurable (Int.ceil : R → ℤ) :=
-  measurableToCountable fun x => by simpa only [Int.preimage_ceil_singleton] using measurableSetIoc
-#align int.measurable_ceil Int.measurableCeil
+theorem Int.measurable_ceil [OpensMeasurableSpace R] : Measurable (Int.ceil : R → ℤ) :=
+  measurable_to_countable fun x => by
+    simpa only [Int.preimage_ceil_singleton] using measurable_set_Ioc
+#align int.measurable_ceil Int.measurable_ceil
 
 @[measurability]
 theorem Measurable.ceil [OpensMeasurableSpace R] {f : α → R} (hf : Measurable f) :
     Measurable fun x => ⌈f x⌉ :=
-  Int.measurableCeil.comp hf
+  Int.measurable_ceil.comp hf
 #align measurable.ceil Measurable.ceil
 
-theorem measurableFract [BorelSpace R] : Measurable (Int.fract : R → R) := by
+theorem measurable_fract [BorelSpace R] : Measurable (Int.fract : R → R) :=
+  by
   intro s hs
   rw [Int.preimage_fract]
-  exact MeasurableSet.union fun z => measurable_id.sub_const _ (hs.inter measurableSetIco)
-#align measurable_fract measurableFract
+  exact MeasurableSet.Union fun z => measurable_id.sub_const _ (hs.inter measurable_set_Ico)
+#align measurable_fract measurable_fract
 
 @[measurability]
 theorem Measurable.fract [BorelSpace R] {f : α → R} (hf : Measurable f) :
     Measurable fun x => Int.fract (f x) :=
-  measurableFract.comp hf
+  measurable_fract.comp hf
 #align measurable.fract Measurable.fract
 
-theorem MeasurableSet.imageFract [BorelSpace R] {s : Set R} (hs : MeasurableSet s) :
-    MeasurableSet (Int.fract '' s) := by
+theorem MeasurableSet.image_fract [BorelSpace R] {s : Set R} (hs : MeasurableSet s) :
+    MeasurableSet (Int.fract '' s) :=
+  by
   simp only [Int.image_fract, sub_eq_add_neg, image_add_right']
-  exact MeasurableSet.union fun m => (measurable_add_const _ hs).inter measurableSetIco
-#align measurable_set.image_fract MeasurableSet.imageFract
+  exact MeasurableSet.Union fun m => (measurable_add_const _ hs).inter measurable_set_Ico
+#align measurable_set.image_fract MeasurableSet.image_fract
 
 end FloorRing
 
@@ -70,24 +74,25 @@ section FloorSemiring
 variable {α R : Type _} [MeasurableSpace α] [LinearOrderedSemiring R] [FloorSemiring R]
   [TopologicalSpace R] [OrderTopology R] [MeasurableSpace R] [OpensMeasurableSpace R] {f : α → R}
 
-theorem Nat.measurableFloor : Measurable (Nat.floor : R → ℕ) :=
-  measurableToCountable fun n => by
+theorem Nat.measurable_floor : Measurable (Nat.floor : R → ℕ) :=
+  measurable_to_countable fun n => by
     cases eq_or_ne ⌊n⌋₊ 0 <;> simp [*, Nat.preimage_floor_of_ne_zero]
-#align nat.measurable_floor Nat.measurableFloor
+#align nat.measurable_floor Nat.measurable_floor
 
 @[measurability]
-theorem Measurable.natFloor (hf : Measurable f) : Measurable fun x => ⌊f x⌋₊ :=
-  Nat.measurableFloor.comp hf
-#align measurable.nat_floor Measurable.natFloor
+theorem Measurable.nat_floor (hf : Measurable f) : Measurable fun x => ⌊f x⌋₊ :=
+  Nat.measurable_floor.comp hf
+#align measurable.nat_floor Measurable.nat_floor
 
-theorem Nat.measurableCeil : Measurable (Nat.ceil : R → ℕ) :=
-  measurableToCountable fun n => by cases eq_or_ne ⌈n⌉₊ 0 <;> simp [*, Nat.preimage_ceil_of_ne_zero]
-#align nat.measurable_ceil Nat.measurableCeil
+theorem Nat.measurable_ceil : Measurable (Nat.ceil : R → ℕ) :=
+  measurable_to_countable fun n => by
+    cases eq_or_ne ⌈n⌉₊ 0 <;> simp [*, Nat.preimage_ceil_of_ne_zero]
+#align nat.measurable_ceil Nat.measurable_ceil
 
 @[measurability]
-theorem Measurable.natCeil (hf : Measurable f) : Measurable fun x => ⌈f x⌉₊ :=
-  Nat.measurableCeil.comp hf
-#align measurable.nat_ceil Measurable.natCeil
+theorem Measurable.nat_ceil (hf : Measurable f) : Measurable fun x => ⌈f x⌉₊ :=
+  Nat.measurable_ceil.comp hf
+#align measurable.nat_ceil Measurable.nat_ceil
 
 end FloorSemiring
 

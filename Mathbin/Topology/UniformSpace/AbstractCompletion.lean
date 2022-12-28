@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.abstract_completion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,14 +131,16 @@ theorem extend_def (hf : UniformContinuous f) : pkg.extend f = pkg.DenseInducing
   if_pos hf
 #align abstract_completion.extend_def AbstractCompletion.extend_def
 
-theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.extend f) (ι a) = f a := by
+theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.extend f) (ι a) = f a :=
+  by
   rw [pkg.extend_def hf]
   exact pkg.dense_inducing.extend_eq hf.continuous a
 #align abstract_completion.extend_coe AbstractCompletion.extend_coe
 
 variable [CompleteSpace β]
 
-theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) := by
+theorem uniform_continuous_extend : UniformContinuous (pkg.extend f) :=
+  by
   by_cases hf : UniformContinuous f
   · rw [pkg.extend_def hf]
     exact uniform_continuous_uniformly_extend pkg.uniform_inducing pkg.dense hf
@@ -154,7 +156,8 @@ theorem continuous_extend : Continuous (pkg.extend f) :=
 variable [SeparatedSpace β]
 
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
-    (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g := by
+    (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
+  by
   apply pkg.funext pkg.continuous_extend hg.continuous
   simpa only [pkg.extend_coe hf] using h
 #align abstract_completion.extend_unique AbstractCompletion.extend_unique
@@ -205,7 +208,8 @@ theorem map_coe (hf : UniformContinuous f) (a : α) : map f (ι a) = ι' (f a) :
 
 theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous g)
     (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
-  pkg.funext (pkg.continuous_map _ _) hg.Continuous <| by
+  pkg.funext (pkg.continuous_map _ _) hg.Continuous <|
+    by
     intro a
     change pkg.extend (ι' ∘ f) _ = _
     simp only [(· ∘ ·), h]
@@ -253,7 +257,8 @@ theorem compare_coe (a : α) : pkg.compare pkg' (pkg.coe a) = pkg'.coe a :=
   pkg.extend_coe pkg'.uniform_continuous_coe a
 #align abstract_completion.compare_coe AbstractCompletion.compare_coe
 
-theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
+theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id :=
+  by
   have uc := pkg.uniform_continuous_compare pkg'
   have uc' := pkg'.uniform_continuous_compare pkg
   apply pkg'.funext (uc.comp uc').Continuous continuous_id
@@ -263,8 +268,8 @@ theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
 #align abstract_completion.inverse_compare AbstractCompletion.inverse_compare
 
 /-- The uniform bijection between two completions of the same uniform space. -/
-def compareEquiv : pkg.Space ≃ᵤ
-      pkg'.Space where 
+def compareEquiv : pkg.Space ≃ᵤ pkg'.Space
+    where
   toFun := pkg.compare pkg'
   invFun := pkg'.compare pkg
   left_inv := congr_fun (pkg'.inverse_compare pkg)
@@ -296,8 +301,8 @@ local notation "hatβ" => pkg'.Space
 local notation "ι'" => pkg'.coe
 
 /-- Products of completions -/
-protected def prod : AbstractCompletion
-      (α × β) where 
+protected def prod : AbstractCompletion (α × β)
+    where
   Space := hatα × hatβ
   coe p := ⟨ι p.1, ι' p.2⟩
   uniformStruct := Prod.uniformSpace
@@ -344,7 +349,8 @@ variable {f : α → β → γ}
 
 variable [CompleteSpace γ] (f)
 
-theorem uniform_continuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pkg' f) := by
+theorem uniform_continuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pkg' f) :=
+  by
   rw [uniform_continuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
   apply uniform_continuous_extend
 #align

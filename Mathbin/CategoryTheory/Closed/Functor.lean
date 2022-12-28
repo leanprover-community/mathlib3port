@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.functor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,8 @@ Frobenius morphism is an isomorphism.
 -/
 instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : C)
     [PreservesLimitsOfShape (Discrete WalkingPair) L] [Full F] [Faithful F] :
-    IsIso (frobeniusMorphism F h A) := by
+    IsIso (frobeniusMorphism F h A) :=
+  by
   apply nat_iso.is_iso_of_is_iso_app _
   intro B
   dsimp [frobenius_morphism]
@@ -93,7 +94,7 @@ def expComparison (A : C) : exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
 theorem exp_comparison_ev (A B : C) :
     Limits.prod.map (𝟙 (F.obj A)) ((expComparison F A).app B) ≫ (exp.ev (F.obj A)).app (F.obj B) =
       inv (prodComparison F _ _) ≫ F.map ((exp.ev _).app _) :=
-  by 
+  by
   convert transfer_nat_trans_counit _ _ (prod_comparison_nat_iso F A).inv B
   ext
   simp
@@ -102,7 +103,7 @@ theorem exp_comparison_ev (A B : C) :
 theorem coev_exp_comparison (A B : C) :
     F.map ((exp.coev A).app B) ≫ (expComparison F A).app (A ⨯ B) =
       (exp.coev _).app (F.obj B) ≫ (exp (F.obj A)).map (inv (prodComparison F A B)) :=
-  by 
+  by
   convert unit_transfer_nat_trans _ _ (prod_comparison_nat_iso F A).inv B
   ext
   dsimp
@@ -119,7 +120,7 @@ theorem uncurry_exp_comparison (A B : C) :
 theorem exp_comparison_whisker_left {A A' : C} (f : A' ⟶ A) :
     expComparison F A ≫ whiskerLeft _ (pre (F.map f)) =
       whiskerRight (pre f) _ ≫ expComparison F A' :=
-  by 
+  by
   ext B
   dsimp
   apply uncurry_injective
@@ -142,7 +143,7 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
     transferNatTransSelf (h.comp (exp.adjunction A)) ((exp.adjunction (F.obj A)).comp h)
         (frobeniusMorphism F h A) =
       expComparison F A :=
-  by 
+  by
   rw [← Equiv.eq_symm_apply]
   ext B : 2
   dsimp [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp]
@@ -162,7 +163,8 @@ If the exponential comparison transformation (at `A`) is an isomorphism, then th
 at `A` is an isomorphism.
 -/
 theorem frobenius_morphism_iso_of_exp_comparison_iso (h : L ⊣ F) (A : C)
-    [i : IsIso (expComparison F A)] : IsIso (frobeniusMorphism F h A) := by
+    [i : IsIso (expComparison F A)] : IsIso (frobeniusMorphism F h A) :=
+  by
   rw [← frobenius_morphism_mate F h] at i
   exact @transfer_nat_trans_self_of_iso _ _ _ _ _ i
 #align
@@ -173,7 +175,8 @@ If the Frobenius morphism at `A` is an isomorphism, then the exponential compari
 (at `A`) is an isomorphism.
 -/
 theorem exp_comparison_iso_of_frobenius_morphism_iso (h : L ⊣ F) (A : C)
-    [i : IsIso (frobeniusMorphism F h A)] : IsIso (expComparison F A) := by
+    [i : IsIso (frobeniusMorphism F h A)] : IsIso (expComparison F A) :=
+  by
   rw [← frobenius_morphism_mate F h]
   infer_instance
 #align
@@ -186,9 +189,8 @@ TODO: Show the converse, that if `F` is cartesian closed and its left adjoint pr
 products, then it is full and faithful.
 -/
 def cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts (h : L ⊣ F) [Full F] [Faithful F]
-    [PreservesLimitsOfShape (Discrete WalkingPair) L] :
-    CartesianClosedFunctor
-      F where comparison_iso A := exp_comparison_iso_of_frobenius_morphism_iso F h _
+    [PreservesLimitsOfShape (Discrete WalkingPair) L] : CartesianClosedFunctor F
+    where comparison_iso A := exp_comparison_iso_of_frobenius_morphism_iso F h _
 #align
   category_theory.cartesian_closed_functor_of_left_adjoint_preserves_binary_products CategoryTheory.cartesianClosedFunctorOfLeftAdjointPreservesBinaryProducts
 

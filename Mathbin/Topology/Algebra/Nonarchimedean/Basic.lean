@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,8 +74,10 @@ variable {K : Type _} [Group K] [TopologicalSpace K] [NonarchimedeanGroup K]
 @[to_additive NonarchimedeanAddGroup.nonarchimedean_of_emb
       "If a topological group embeds into a\nnonarchimedean group, then it is nonarchimedean."]
 theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : NonarchimedeanGroup H :=
-  { is_nonarchimedean := fun U hU =>
-      have h₁ : f ⁻¹' U ∈ nhds (1 : G) := by
+  {
+    is_nonarchimedean := fun U hU =>
+      have h₁ : f ⁻¹' U ∈ nhds (1 : G) :=
+        by
         apply emb.continuous.tendsto
         rwa [f.map_one]
       let ⟨V, hV⟩ := is_nonarchimedean (f ⁻¹' U) h₁
@@ -88,7 +90,8 @@ contains the cartesian product of an open neighborhood in each group. -/
 @[to_additive NonarchimedeanAddGroup.prod_subset
       "An open neighborhood of the identity in the\ncartesian product of two nonarchimedean groups contains the cartesian product of an open\nneighborhood in each group."]
 theorem prod_subset {U} (hU : U ∈ nhds (1 : G × K)) :
-    ∃ (V : OpenSubgroup G)(W : OpenSubgroup K), (V : Set G) ×ˢ (W : Set K) ⊆ U := by
+    ∃ (V : OpenSubgroup G)(W : OpenSubgroup K), (V : Set G) ×ˢ (W : Set K) ⊆ U :=
+  by
   erw [nhds_prod_eq, Filter.mem_prod_iff] at hU
   rcases hU with ⟨U₁, hU₁, U₂, hU₂, h⟩
   cases' is_nonarchimedean _ hU₁ with V hV
@@ -112,8 +115,8 @@ theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) :
 
 /-- The cartesian product of two nonarchimedean groups is nonarchimedean. -/
 @[to_additive "The cartesian product of two nonarchimedean groups is nonarchimedean."]
-instance :
-    NonarchimedeanGroup (G × K) where is_nonarchimedean U hU :=
+instance : NonarchimedeanGroup (G × K)
+    where is_nonarchimedean U hU :=
     let ⟨V, W, h⟩ := prod_subset hU
     ⟨V.Prod W, ‹_›⟩
 
@@ -132,8 +135,8 @@ variable [Ring R] [TopologicalSpace R] [NonarchimedeanRing R]
 variable [Ring S] [TopologicalSpace S] [NonarchimedeanRing S]
 
 /-- The cartesian product of two nonarchimedean rings is nonarchimedean. -/
-instance :
-    NonarchimedeanRing (R × S) where is_nonarchimedean := NonarchimedeanAddGroup.is_nonarchimedean
+instance : NonarchimedeanRing (R × S)
+    where is_nonarchimedean := NonarchimedeanAddGroup.is_nonarchimedean
 
 /-- Given an open subgroup `U` and an element `r` of a nonarchimedean ring, there is an open
   subgroup `V` such that `r • V` is contained in `U`. -/
@@ -143,7 +146,8 @@ theorem left_mul_subset (U : OpenAddSubgroup R) (r : R) :
 #align nonarchimedean_ring.left_mul_subset NonarchimedeanRing.left_mul_subset
 
 /-- An open subgroup of a nonarchimedean ring contains the square of another one. -/
-theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set R) * V ⊆ U := by
+theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set R) * V ⊆ U :=
+  by
   let ⟨V, H⟩ :=
     prod_self_subset
       (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.IsOpen)

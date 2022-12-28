@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.bilinear
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,23 +65,24 @@ theorem map₂_le {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q : Submo
 variable (R)
 
 theorem map₂_span_span (f : M →ₗ[R] N →ₗ[R] P) (s : Set M) (t : Set N) :
-    map₂ f (span R s) (span R t) = span R (Set.image2 (fun m n => f m n) s t) := by
+    map₂ f (span R s) (span R t) = span R (Set.image2 (fun m n => f m n) s t) :=
+  by
   apply le_antisymm
   · rw [map₂_le]
     intro a ha b hb
     apply span_induction ha
-    on_goal 1 => 
+    on_goal 1 =>
       intros ; apply span_induction hb
       on_goal 1 => intros ; exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
-    all_goals 
+    all_goals
       intros
       simp only [LinearMap.map_zero, LinearMap.zero_apply, zero_mem, LinearMap.map_add,
         LinearMap.add_apply, LinearMap.map_smul, LinearMap.smul_apply]
     all_goals
       solve_by_elim (config :=
         { max_depth := 4
-          discharger := tactic.interactive.apply_instance }) [add_mem _ _,
-        zero_mem _, smul_mem _ _ _]
+          discharger := tactic.interactive.apply_instance }) [add_mem _ _, zero_mem _,
+        smul_mem _ _ _]
   · rw [span_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩
     exact apply_mem_map₂ _ (subset_span ha) (subset_span hb)
@@ -92,7 +93,7 @@ variable {R}
 @[simp]
 theorem map₂_bot_right (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) : map₂ f p ⊥ = ⊥ :=
   eq_bot_iff.2 <|
-    map₂_le.2 fun m hm n hn => by 
+    map₂_le.2 fun m hm n hn => by
       rw [Submodule.mem_bot] at hn⊢
       rw [hn, LinearMap.map_zero]
 #align submodule.map₂_bot_right Submodule.map₂_bot_right
@@ -100,7 +101,7 @@ theorem map₂_bot_right (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) : m
 @[simp]
 theorem map₂_bot_left (f : M →ₗ[R] N →ₗ[R] P) (q : Submodule R N) : map₂ f ⊥ q = ⊥ :=
   eq_bot_iff.2 <|
-    map₂_le.2 fun m hm n hn => by 
+    map₂_le.2 fun m hm n hn => by
       rw [Submodule.mem_bot] at hm⊢
       rw [hm, LinearMap.map_zero₂]
 #align submodule.map₂_bot_left Submodule.map₂_bot_left
@@ -142,7 +143,8 @@ theorem map₂_sup_left (f : M →ₗ[R] N →ₗ[R] P) (p₁ p₂ : Submodule R
 #align submodule.map₂_sup_left Submodule.map₂_sup_left
 
 theorem image2_subset_map₂ (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q : Submodule R N) :
-    Set.image2 (fun m n => f m n) (↑p : Set M) (↑q : Set N) ⊆ (↑(map₂ f p q) : Set P) := by
+    Set.image2 (fun m n => f m n) (↑p : Set M) (↑q : Set N) ⊆ (↑(map₂ f p q) : Set P) :=
+  by
   rintro _ ⟨i, j, hi, hj, rfl⟩
   exact apply_mem_map₂ _ hi hj
 #align submodule.image2_subset_map₂ Submodule.image2_subset_map₂
@@ -153,17 +155,19 @@ theorem map₂_eq_span_image2 (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M
 #align submodule.map₂_eq_span_image2 Submodule.map₂_eq_span_image2
 
 theorem map₂_supr_left (f : M →ₗ[R] N →ₗ[R] P) (s : ι → Submodule R M) (t : Submodule R N) :
-    map₂ f (⨆ i, s i) t = ⨆ i, map₂ f (s i) t := by
+    map₂ f (⨆ i, s i) t = ⨆ i, map₂ f (s i) t :=
+  by
   suffices map₂ f (⨆ i, span R (s i : Set M)) (span R t) = ⨆ i, map₂ f (span R (s i)) (span R t) by
     simpa only [span_eq] using this
-  simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_Union_left]
+  simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_unionᵢ_left]
 #align submodule.map₂_supr_left Submodule.map₂_supr_left
 
 theorem map₂_supr_right (f : M →ₗ[R] N →ₗ[R] P) (s : Submodule R M) (t : ι → Submodule R N) :
-    map₂ f s (⨆ i, t i) = ⨆ i, map₂ f s (t i) := by
+    map₂ f s (⨆ i, t i) = ⨆ i, map₂ f s (t i) :=
+  by
   suffices map₂ f (span R s) (⨆ i, span R (t i : Set N)) = ⨆ i, map₂ f (span R s) (span R (t i)) by
     simpa only [span_eq] using this
-  simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_Union_right]
+  simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_unionᵢ_right]
 #align submodule.map₂_supr_right Submodule.map₂_supr_right
 
 end Submodule

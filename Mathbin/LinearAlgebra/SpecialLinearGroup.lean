@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.special_linear_group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,9 +112,8 @@ instance hasOne : One (SpecialLinearGroup n R) :=
   ⟨⟨1, det_one⟩⟩
 #align matrix.special_linear_group.has_one Matrix.SpecialLinearGroup.hasOne
 
-instance :
-    Pow (SpecialLinearGroup n R)
-      ℕ where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
+instance : Pow (SpecialLinearGroup n R) ℕ
+    where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩
@@ -153,7 +152,8 @@ theorem coe_pow (m : ℕ) : ↑ₘ(A ^ m) = ↑ₘA ^ m :=
   rfl
 #align matrix.special_linear_group.coe_pow Matrix.SpecialLinearGroup.coe_pow
 
-theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg ≠ 0 := by
+theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg ≠ 0 :=
+  by
   rw [g.det_coe]
   norm_num
 #align matrix.special_linear_group.det_ne_zero Matrix.SpecialLinearGroup.det_ne_zero
@@ -169,16 +169,13 @@ instance : Monoid (SpecialLinearGroup n R) :=
 
 instance : Group (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
-    mul_left_inv := fun A => by 
+    mul_left_inv := fun A => by
       ext1
       simp [adjugate_mul] }
 
 /-- A version of `matrix.to_lin' A` that produces linear equivalences. -/
-def toLin' :
-    SpecialLinearGroup n R →*
-      (n → R) ≃ₗ[R]
-        n →
-          R where 
+def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R
+    where
   toFun A :=
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
       (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
@@ -229,12 +226,10 @@ variable {S : Type _} [CommRing S]
 /-- A ring homomorphism from `R` to `S` induces a group homomorphism from
 `special_linear_group n R` to `special_linear_group n S`. -/
 @[simps]
-def map (f : R →+* S) :
-    SpecialLinearGroup n R →*
-      SpecialLinearGroup n
-        S where 
+def map (f : R →+* S) : SpecialLinearGroup n R →* SpecialLinearGroup n S
+    where
   toFun g :=
-    ⟨f.mapMatrix ↑g, by 
+    ⟨f.mapMatrix ↑g, by
       rw [← f.map_det]
       simp [g.2]⟩
   map_one' := Subtype.ext <| f.mapMatrix.map_one
@@ -285,7 +280,7 @@ end Neg
 section SpecialCases
 
 theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]] = 1 :=
-  by 
+  by
   rw [Matrix.det_fin_two, mul_comm]
   simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, mul_neg, neg_mul, neg_neg]
   have := A.2
@@ -294,7 +289,8 @@ theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0
 #align matrix.special_linear_group.SL2_inv_expl_det Matrix.SpecialLinearGroup.SL2_inv_expl_det
 
 theorem SL2_inv_expl (A : SL(2, R)) :
-    A⁻¹ = ⟨![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]], SL2_inv_expl_det A⟩ := by
+    A⁻¹ = ⟨![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]], SL2_inv_expl_det A⟩ :=
+  by
   ext
   have := Matrix.adjugate_fin_two A.1
   simp only [Subtype.val_eq_coe] at this

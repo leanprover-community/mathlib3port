@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ def TerminatedAt (g : GeneralizedContinuedFraction α) (n : ℕ) : Prop :=
 
 /-- It is decidable whether a gcf terminated at a given position. -/
 instance terminatedAtDecidable (g : GeneralizedContinuedFraction α) (n : ℕ) :
-    Decidable (g.TerminatedAt n) := by 
+    Decidable (g.TerminatedAt n) := by
   unfold terminated_at
   infer_instance
 #align
@@ -252,7 +252,8 @@ instance : Inhabited (SimpleContinuedFraction α) :=
 
 /-- Lift a scf to a gcf using the inclusion map. -/
 instance hasCoeToGeneralizedContinuedFraction :
-    Coe (SimpleContinuedFraction α) (GeneralizedContinuedFraction α) := by
+    Coe (SimpleContinuedFraction α) (GeneralizedContinuedFraction α) :=
+  by
   unfold SimpleContinuedFraction
   infer_instance
 #align
@@ -305,7 +306,7 @@ instance : Inhabited (ContinuedFraction α) :=
 
 /-- Lift a cf to a scf using the inclusion map. -/
 instance hasCoeToSimpleContinuedFraction : Coe (ContinuedFraction α) (SimpleContinuedFraction α) :=
-  by 
+  by
   unfold ContinuedFraction
   infer_instance
 #align
@@ -437,7 +438,7 @@ namespace GeneralizedContinuedFraction
 
 /-- Two gcfs `g` and `g'` are equal if and only if their components are equal. -/
 protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} :
-    g = g' ↔ g.h = g'.h ∧ g.s = g'.s := by 
+    g = g' ↔ g.h = g'.h ∧ g.s = g'.s := by
   cases g
   cases g'
   simp

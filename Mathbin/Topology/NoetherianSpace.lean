@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.noetherian_space
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,8 @@ class NoetherianSpace : Prop where
   WellFounded : WellFounded ((· > ·) : Opens α → Opens α → Prop)
 #align topological_space.noetherian_space TopologicalSpace.NoetherianSpace
 
-theorem noetherian_space_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, IsCompact (s : Set α) := by
+theorem noetherian_space_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, IsCompact (s : Set α) :=
+  by
   rw [noetherian_space_iff, CompleteLattice.well_founded_iff_is_Sup_finite_compact,
     CompleteLattice.is_Sup_finite_compact_iff_all_elements_compact]
   exact forall_congr' opens.is_compact_element_iff
@@ -64,7 +65,8 @@ instance (priority := 100) NoetherianSpace.compact_space [h : NoetherianSpace α
 
 variable {α}
 
-instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianSpace s := by
+instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianSpace s :=
+  by
   rw [noetherian_space_iff]
   apply WellFounded.wellFounded_iff_has_max'.2
   intro p hp
@@ -134,8 +136,8 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.refine'
               "refine'"
               (Term.app
@@ -159,14 +161,14 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.exact "exact" (Term.app `noetherian_space_iff_opens [`α]))])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.intro "intro" [`H `s])
              []
              (Tactic.rwSeq
@@ -181,8 +183,8 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
            []
-           (tactic___
-            (cdotTk (patternIgnore (token.«·» "·")))
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
             [(Tactic.exact
               "exact"
               (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))])
@@ -200,8 +202,8 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.refine'
              "refine'"
              (Term.app
@@ -225,14 +227,14 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.exact "exact" (Term.app `noetherian_space_iff_opens [`α]))])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H `s])
             []
             (Tactic.rwSeq
@@ -247,8 +249,8 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.exact
              "exact"
              (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))])
@@ -259,8 +261,8 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))
@@ -341,7 +343,8 @@ theorem
 
 variable {α β}
 
-instance {α} : NoetherianSpace (CofiniteTopology α) := by
+instance {α} : NoetherianSpace (CofiniteTopology α) :=
+  by
   simp only [noetherian_space_iff_opens, is_compact_iff_ultrafilter_le_nhds,
     CofiniteTopology.nhds_eq, Ultrafilter.le_sup_iff]
   intro s f hs
@@ -356,7 +359,8 @@ theorem NoetherianSpace.is_compact [h : NoetherianSpace α] (s : Set α) : IsCom
 #align topological_space.noetherian_space.is_compact TopologicalSpace.NoetherianSpace.is_compact
 
 theorem noetherian_space_of_surjective [NoetherianSpace α] (f : α → β) (hf : Continuous f)
-    (hf' : Function.Surjective f) : NoetherianSpace β := by
+    (hf' : Function.Surjective f) : NoetherianSpace β :=
+  by
   rw [noetherian_space_iff_opens]
   intro s
   obtain ⟨t, e⟩ := set.image_surjective.mpr hf' s
@@ -378,7 +382,7 @@ theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continu
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t :=
-  by 
+  by
   rw [(noetherian_space_tfae s).out 0 2]
   constructor
   · intro H t ht
@@ -395,11 +399,12 @@ theorem noetherian_univ_iff : NoetherianSpace (Set.univ : Set α) ↔ Noetherian
 #align topological_space.noetherian_univ_iff TopologicalSpace.noetherian_univ_iff
 
 theorem NoetherianSpace.Union {ι : Type _} (f : ι → Set α) [Finite ι]
-    [hf : ∀ i, NoetherianSpace (f i)] : NoetherianSpace (⋃ i, f i) := by
+    [hf : ∀ i, NoetherianSpace (f i)] : NoetherianSpace (⋃ i, f i) :=
+  by
   cases nonempty_fintype ι
   simp_rw [noetherian_space_set_iff] at hf⊢
   intro t ht
-  rw [← set.inter_eq_left_iff_subset.mpr ht, Set.inter_Union]
+  rw [← set.inter_eq_left_iff_subset.mpr ht, Set.inter_unionᵢ]
   exact is_compact_Union fun i => hf i _ (Set.inter_subset_right _ _)
 #align topological_space.noetherian_space.Union TopologicalSpace.NoetherianSpace.Union
 
@@ -411,7 +416,8 @@ theorem NoetherianSpace.discrete [NoetherianSpace α] [T2Space α] : DiscreteTop
 attribute [local instance] noetherian_space.discrete
 
 /-- Spaces that are both Noetherian and Hausdorff is finite. -/
-theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α := by
+theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α :=
+  by
   letI : Fintype α :=
     Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.univ).finite_of_discrete
   infer_instance
@@ -423,7 +429,7 @@ instance (priority := 100) Finite.to_noetherian_space [Finite α] : NoetherianSp
 
 theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Closeds α) :
     ∃ S : Finset (Closeds α), (∀ k : S, IsIrreducible (k : Set α)) ∧ s = S.sup id := by
-  classical 
+  classical
     have := ((noetherian_space_tfae α).out 0 1).mp inferInstance
     apply WellFounded.induction this s
     clear s
@@ -454,12 +460,13 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
 
 theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
     (irreducibleComponents α).Finite := by
-  classical 
+  classical
     obtain ⟨S, hS₁, hS₂⟩ := noetherian_space.exists_finset_irreducible (⊤ : closeds α)
     suffices irreducibleComponents α ⊆ coe '' (S : Set <| closeds α) by
       exact Set.Finite.subset ((Set.Finite.intro inferInstance).image _) this
     intro K hK
-    obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α)(H : z ∈ Finset.image coe S), K ⊆ z := by
+    obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α)(H : z ∈ Finset.image coe S), K ⊆ z :=
+      by
       convert is_irreducible_iff_sUnion_closed.mp hK.1 (S.image coe) _ _
       · simp only [Finset.mem_image, exists_prop, forall_exists_index, and_imp]
         rintro _ z hz rfl

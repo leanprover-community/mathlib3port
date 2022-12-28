@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.continuum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,8 @@ theorem continuum_ne_zero : 𝔠 ≠ 0 :=
   continuum_pos.ne'
 #align cardinal.continuum_ne_zero Cardinal.continuum_ne_zero
 
-theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 := by
+theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 :=
+  by
   rw [← succ_aleph_0]
   exact Order.succ_le_of_lt aleph_0_lt_continuum
 #align cardinal.aleph_one_le_continuum Cardinal.aleph_one_le_continuum

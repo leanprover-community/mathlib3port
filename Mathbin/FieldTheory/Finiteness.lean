@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.finiteness
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V] [Module K V
 /-- A module over a division ring is noetherian if and only if
 its dimension (as a cardinal) is strictly less than the first infinite cardinal `ℵ₀`.
 -/
-theorem iff_dim_lt_aleph_0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ := by
+theorem iff_dim_lt_aleph_0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
+  by
   let b := Basis.ofVectorSpace K V
   rw [← b.mk_eq_dim'', lt_aleph_0_iff_set_finite]
   constructor
@@ -38,9 +39,8 @@ theorem iff_dim_lt_aleph_0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ := by
     exact finite_of_linear_independent (Basis.ofVectorSpaceIndex.linear_independent K V)
   · intro hbfinite
     refine'
-      @is_noetherian_of_linear_equiv K (⊤ : Submodule K V) V _ _ _ _ _ (LinearEquiv.ofTop _ rfl)
-        (id _)
-    refine' is_noetherian_of_fg_of_noetherian _ ⟨Set.Finite.toFinset hbfinite, _⟩
+      @isNoetherianOfLinearEquiv K (⊤ : Submodule K V) V _ _ _ _ _ (LinearEquiv.ofTop _ rfl) (id _)
+    refine' isNoetherianOfFgOfNoetherian _ ⟨Set.Finite.toFinset hbfinite, _⟩
     rw [Set.Finite.coe_to_finset, ← b.span_eq, Basis.coe_of_vector_space, Subtype.range_coe]
 #align is_noetherian.iff_dim_lt_aleph_0 IsNoetherian.iff_dim_lt_aleph_0
 
@@ -109,11 +109,12 @@ theorem range_finset_basis [IsNoetherian K V] :
 variable {K V}
 
 /-- A module over a division ring is noetherian if and only if it is finitely generated. -/
-theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V := by
+theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V :=
+  by
   constructor
   · intro h
     exact
-      ⟨⟨finset_basis_index K V, by 
+      ⟨⟨finset_basis_index K V, by
           convert (finset_basis K V).span_eq
           simp⟩⟩
   · rintro ⟨s, hs⟩

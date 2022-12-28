@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.ADE_inequality
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,8 @@ theorem admissible_E8 : Admissible e8 :=
   admissible_E'5
 #align ADE_inequality.admissible_E8 ADEInequality.admissible_E8
 
-theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr := by
+theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr :=
+  by
   rw [admissible]
   rintro (⟨p', q', H⟩ | ⟨n, H⟩ | H | H | H)
   · rw [← H, A', sum_inv_pqr, add_assoc]
@@ -171,7 +172,8 @@ theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 <
   all_goals rw [← H, E', sum_inv_pqr]; norm_num
 #align ADE_inequality.admissible.one_lt_sum_inv ADEInequality.Admissible.one_lt_sum_inv
 
-theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 := by
+theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 :=
+  by
   have h3 : (0 : ℚ) < 3 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
@@ -184,7 +186,8 @@ theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv 
   all_goals rw [inv_le_inv _ h3] <;> [assumption_mod_cast, norm_num]
 #align ADE_inequality.lt_three ADEInequality.lt_three
 
-theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 := by
+theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 :=
+  by
   have h4 : (0 : ℚ) < 4 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
@@ -197,7 +200,8 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
   all_goals rw [inv_le_inv _ h4] <;> [assumption_mod_cast, norm_num]
 #align ADE_inequality.lt_four ADEInequality.lt_four
 
-theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
+theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 :=
+  by
   have h6 : (0 : ℚ) < 6 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
@@ -211,7 +215,8 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
 #align ADE_inequality.lt_six ADEInequality.lt_six
 
 theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r)
-    (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} := by
+    (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} :=
+  by
   have hp3 : p < 3 := lt_three hpq hqr H
   interval_cases p
   · exact admissible_A' q r
@@ -229,7 +234,8 @@ theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : 
 theorem admissible_of_one_lt_sum_inv_aux :
     ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr),
       Admissible pqr
-  | [p, q, r], hs, hl, H => by
+  | [p, q, r], hs, hl, H =>
+    by
     obtain ⟨⟨hpq, -⟩, hqr⟩ : (p ≤ q ∧ p ≤ r) ∧ q ≤ r
     simpa using hs
     exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
@@ -237,7 +243,7 @@ theorem admissible_of_one_lt_sum_inv_aux :
   ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sum_inv_aux
 
 theorem admissible_of_one_lt_sum_inv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
-    Admissible {p, q, r} := by 
+    Admissible {p, q, r} := by
   simp only [admissible]
   let S := sort ((· ≤ ·) : ℕ+ → ℕ+ → Prop) {p, q, r}
   have hS : S.sorted (· ≤ ·) := sort_sorted _ _

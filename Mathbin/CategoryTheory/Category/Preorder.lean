@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.category.preorder
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,8 +46,8 @@ See `category_theory.hom_of_le` and `category_theory.le_of_hom`.
 
 See <https://stacks.math.columbia.edu/tag/00D3>.
 -/
-instance (priority := 100) smallCategory (α : Type u) [Preorder α] :
-    SmallCategory α where 
+instance (priority := 100) smallCategory (α : Type u) [Preorder α] : SmallCategory α
+    where
   Hom U V := ULift (PLift (U ≤ V))
   id X := ⟨⟨le_refl X⟩⟩
   comp X Y Z f g := ⟨⟨le_trans _ _ _ f.down.down g.down.down⟩⟩
@@ -93,7 +93,8 @@ theorem le_of_hom_hom_of_le {x y : X} (h : x ≤ y) : h.Hom.le = h :=
 #align category_theory.le_of_hom_hom_of_le CategoryTheory.le_of_hom_hom_of_le
 
 @[simp]
-theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.Hom = h := by
+theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.Hom = h :=
+  by
   cases h
   cases h
   rfl
@@ -122,8 +123,8 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 
 /-- A monotone function between preorders induces a functor between the associated categories.
 -/
-def Monotone.functor {f : X → Y} (h : Monotone f) :
-    X ⥤ Y where 
+def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y
+    where
   obj := f
   map x₁ x₂ g := (h g.le).Hom
 #align monotone.functor Monotone.functor
@@ -159,8 +160,8 @@ theorem Iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
 
 /-- A categorical equivalence between partial orders is just an order isomorphism.
 -/
-def Equivalence.toOrderIso (e : X ≌ Y) :
-    X ≃o Y where 
+def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y
+    where
   toFun := e.Functor.obj
   invFun := e.inverse.obj
   left_inv a := (e.unitIso.app a).to_eq.symm

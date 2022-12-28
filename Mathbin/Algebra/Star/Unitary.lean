@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.unitary
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,11 +29,12 @@ unitary
 /-- In a *-monoid, `unitary R` is the submonoid consisting of all the elements `U` of
 `R` such that `star U * U = 1` and `U * star U = 1`.
 -/
-def unitary (R : Type _) [Monoid R] [StarSemigroup R] :
-    Submonoid R where 
+def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R
+    where
   carrier := { U | star U * U = 1 ∧ U * star U = 1 }
   one_mem' := by simp only [mul_one, and_self_iff, Set.mem_setOf_eq, star_one]
-  mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ => by
+  mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ =>
+    by
     refine' ⟨_, _⟩
     ·
       calc
@@ -107,17 +108,17 @@ theorem mul_star_self (U : unitary R) : U * star U = 1 :=
 #align unitary.mul_star_self unitary.mul_star_self
 
 instance : Group (unitary R) :=
-  { Submonoid.toMonoid _ with 
+  { Submonoid.toMonoid _ with
     inv := star
     mul_left_inv := star_mul_self }
 
 instance : HasInvolutiveStar (unitary R) :=
-  ⟨fun _ => by 
+  ⟨fun _ => by
     ext
     simp only [coe_star, star_star]⟩
 
 instance : StarSemigroup (unitary R) :=
-  ⟨fun _ _ => by 
+  ⟨fun _ _ => by
     ext
     simp only [coe_star, Submonoid.coe_mul, star_mul]⟩
 
@@ -134,9 +135,8 @@ theorem star_eq_inv' : (star : unitary R → unitary R) = Inv.inv :=
 
 /-- The unitary elements embed into the units. -/
 @[simps]
-def toUnits :
-    unitary R →*
-      Rˣ where 
+def toUnits : unitary R →* Rˣ
+    where
   toFun x := ⟨x, ↑x⁻¹, coe_mul_star_self x, coe_star_mul_self x⟩
   map_one' := Units.ext rfl
   map_mul' x y := Units.ext rfl
@@ -180,7 +180,8 @@ theorem coe_div (U₁ U₂ : unitary R) : ↑(U₁ / U₂) = (U₁ / U₂ : R) :
 #align unitary.coe_div unitary.coe_div
 
 @[norm_cast]
-theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
+theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) :=
+  by
   induction z
   · simp [SubmonoidClass.coe_pow]
   · simp [coe_inv]
@@ -192,11 +193,9 @@ section Ring
 
 variable [Ring R] [StarRing R]
 
-instance :
-    Neg
-      (unitary
-        R) where neg U :=
-    ⟨-U, by 
+instance : Neg (unitary R)
+    where neg U :=
+    ⟨-U, by
       simp_rw [mem_iff, star_neg, neg_mul_neg]
       exact U.prop⟩
 

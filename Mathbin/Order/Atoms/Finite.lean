@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.atoms.finite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,8 @@ namespace IsSimpleOrder
 
 variable [PartialOrder α] [BoundedOrder α] [IsSimpleOrder α] [DecidableEq α]
 
-theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} := by
+theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} :=
+  by
   change Finset.map _ (Finset.univ : Finset Bool) = _
   rw [Fintype.univ_bool]
   simp only [Finset.map_insert, Function.Embedding.coeFn_mk, Finset.map_singleton]
@@ -63,7 +64,8 @@ end Fintype
 namespace Bool
 
 instance : IsSimpleOrder Bool :=
-  ⟨fun a => by
+  ⟨fun a =>
+    by
     rw [← Finset.mem_singleton, or_comm, ← Finset.mem_insert, top_eq_true, bot_eq_false, ←
       Fintype.univ_bool]
     apply Finset.mem_univ⟩
@@ -76,7 +78,8 @@ open Finset
 
 -- see Note [lower instance priority]
 instance (priority := 100) Finite.to_is_coatomic [PartialOrder α] [OrderTop α] [Finite α] :
-    IsCoatomic α := by
+    IsCoatomic α :=
+  by
   refine' IsCoatomic.mk fun b => or_iff_not_imp_left.2 fun ht => _
   obtain ⟨c, hc, hmax⟩ :=
     Set.Finite.exists_maximal_wrt id { x : α | b ≤ x ∧ x ≠ ⊤ } (Set.to_finite _) ⟨b, le_rfl, ht⟩

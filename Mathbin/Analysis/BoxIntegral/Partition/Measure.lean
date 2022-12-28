@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.measure
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,24 +57,26 @@ section Countable
 
 variable [Countable ι]
 
-theorem measurableSetCoe : MeasurableSet (I : Set (ι → ℝ)) := by
+theorem measurable_set_coe : MeasurableSet (I : Set (ι → ℝ)) :=
+  by
   rw [coe_eq_pi]
-  exact MeasurableSet.univPi fun i => measurableSetIoc
-#align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSetCoe
+  exact MeasurableSet.univ_pi fun i => measurable_set_Ioc
+#align box_integral.box.measurable_set_coe BoxIntegral.Box.measurable_set_coe
 
-theorem measurableSetIcc : MeasurableSet I.IccCat :=
-  measurableSetIcc
-#align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSetIcc
+theorem measurable_set_Icc : MeasurableSet I.IccCat :=
+  measurable_set_Icc
+#align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurable_set_Icc
 
-theorem measurableSetIoo : MeasurableSet I.IooCat :=
-  MeasurableSet.univPi fun i => measurableSetIoo
-#align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurableSetIoo
+theorem measurable_set_Ioo : MeasurableSet I.IooCat :=
+  MeasurableSet.univ_pi fun i => measurable_set_Ioo
+#align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurable_set_Ioo
 
 end Countable
 
 variable [Fintype ι]
 
-theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.IccCat := by
+theorem coe_ae_eq_Icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.IccCat :=
+  by
   rw [coe_eq_pi]
   exact measure.univ_pi_Ioc_ae_eq_Icc
 #align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_Icc
@@ -87,9 +89,10 @@ end Box
 
 theorem Prepartition.measure_Union_to_real [Finite ι] {I : Box ι} (π : Prepartition I)
     (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
-    (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal := by
+    (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal :=
+  by
   erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
-  exacts[fun J hJ => J.measurableSetCoe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
+  exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
 #align
   box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_Union_to_real
 
@@ -106,8 +109,8 @@ namespace Measure
 /-- If `μ` is a locally finite measure on `ℝⁿ`, then `λ J, (μ J).to_real` is a box-additive
 function. -/
 @[simps]
-def toBoxAdditive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
-    ι →ᵇᵃ[⊤] ℝ where 
+def toBoxAdditive (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : ι →ᵇᵃ[⊤] ℝ
+    where
   toFun J := (μ J).toReal
   sum_partition_boxes' J hJ π hπ := by rw [← π.measure_Union_to_real, hπ.Union_eq]
 #align measure_theory.measure.to_box_additive MeasureTheory.Measure.toBoxAdditive

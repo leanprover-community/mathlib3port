@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.universally_closed
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem universally_closed_stable_under_base_change : StableUnderBaseChange @Uni
   algebraic_geometry.universally_closed_stable_under_base_change AlgebraicGeometry.universally_closed_stable_under_base_change
 
 theorem universally_closed_stable_under_composition : StableUnderComposition @UniversallyClosed :=
-  by 
+  by
   rw [universally_closed_eq]
   exact stable_under_composition.universally fun X Y Z f g hf hg => IsClosedMap.comp hg hf
 #align
@@ -87,7 +87,8 @@ theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carr
   funext fun x => Subtype.ext <| morphism_restrict_base_coe f U x
 #align algebraic_geometry.morphism_restrict_base AlgebraicGeometry.morphism_restrict_base
 
-theorem universally_closed_is_local_at_target : PropertyIsLocalAtTarget @UniversallyClosed := by
+theorem universally_closed_is_local_at_target : PropertyIsLocalAtTarget @UniversallyClosed :=
+  by
   rw [universally_closed_eq]
   apply universally_is_local_at_target_of_morphism_restrict
   ·

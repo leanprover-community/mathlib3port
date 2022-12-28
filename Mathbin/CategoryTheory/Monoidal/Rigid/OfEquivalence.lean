@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.rigid.of_equivalence
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,8 +31,8 @@ the equations holds automatically. -/
 def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 𝟙_ C)
     (coeval : 𝟙_ C ⟶ X ⊗ Y) [ExactPairing (F.obj X) (F.obj Y)]
     (map_eval : F.map eval = inv (F.μ _ _) ≫ ε_ _ _ ≫ F.ε)
-    (map_coeval : F.map coeval = inv F.ε ≫ η_ _ _ ≫ F.μ _ _) :
-    ExactPairing X Y where 
+    (map_coeval : F.map coeval = inv F.ε ≫ η_ _ _ ≫ F.μ _ _) : ExactPairing X Y
+    where
   evaluation := eval
   coevaluation := coeval
   evaluation_coevaluation' :=
@@ -53,9 +53,9 @@ def exactPairingOfFullyFaithful [Full F.toFunctor] [Faithful F.toFunctor] (X Y :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Pull back a left dual along an equivalence. -/
 def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F.obj X)] :
-    HasLeftDual X where 
+    HasLeftDual X where
   leftDual := F.toFunctor.inv.obj (ᘁF.obj X)
-  exact := by 
+  exact := by
     apply exact_pairing_of_fully_faithful F _ _
     apply exact_pairing_congr_left (F.to_functor.as_equivalence.counit_iso.app _)
     dsimp
@@ -65,9 +65,9 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Pull back a right dual along an equivalence. -/
 def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual (F.obj X)] :
-    HasRightDual X where 
+    HasRightDual X where
   rightDual := F.toFunctor.inv.obj (F.obj Xᘁ)
-  exact := by 
+  exact := by
     apply exact_pairing_of_fully_faithful F _ _
     apply exact_pairing_congr_right (F.to_functor.as_equivalence.counit_iso.app _)
     dsimp
@@ -87,8 +87,8 @@ def rightRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RightRigidCateg
   category_theory.right_rigid_category_of_equivalence CategoryTheory.rightRigidCategoryOfEquivalence
 
 /-- Pull back a rigid structure along an equivalence. -/
-def rigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RigidCategory D] :
-    RigidCategory C where 
+def rigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RigidCategory D] : RigidCategory C
+    where
   leftDual X := hasLeftDualOfEquivalence F X
   rightDual X := hasRightDualOfEquivalence F X
 #align category_theory.rigid_category_of_equivalence CategoryTheory.rigidCategoryOfEquivalence

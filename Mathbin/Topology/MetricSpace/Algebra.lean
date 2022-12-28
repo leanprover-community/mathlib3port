@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.metric_space.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,8 @@ variable [HasLipschitzMul β]
 
 @[to_additive]
 theorem lipschitz_with_lipschitz_const_mul :
-    ∀ p q : β × β, dist (p.1 * p.2) (q.1 * q.2) ≤ HasLipschitzMul.c β * dist p q := by
+    ∀ p q : β × β, dist (p.1 * p.2) (q.1 * q.2) ≤ HasLipschitzMul.c β * dist p q :=
+  by
   rw [← lipschitz_with_iff_dist_le_mul]
   exact lipschitzWithLipschitzConstMulEdist
 #align lipschitz_with_lipschitz_const_mul lipschitz_with_lipschitz_const_mul
@@ -81,18 +82,16 @@ instance (priority := 100) HasLipschitzMul.has_continuous_mul : HasContinuousMul
 #align has_lipschitz_mul.has_continuous_mul HasLipschitzMul.has_continuous_mul
 
 @[to_additive]
-instance Submonoid.hasLipschitzMul (s : Submonoid β) :
-    HasLipschitzMul
-      s where lipschitz_mul :=
-    ⟨HasLipschitzMul.c β, by 
+instance Submonoid.hasLipschitzMul (s : Submonoid β) : HasLipschitzMul s
+    where lipschitz_mul :=
+    ⟨HasLipschitzMul.c β, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitzWithLipschitzConstMulEdist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 #align submonoid.has_lipschitz_mul Submonoid.hasLipschitzMul
 
 @[to_additive]
-instance MulOpposite.hasLipschitzMul :
-    HasLipschitzMul
-      βᵐᵒᵖ where lipschitz_mul :=
+instance MulOpposite.hasLipschitzMul : HasLipschitzMul βᵐᵒᵖ
+    where lipschitz_mul :=
     ⟨HasLipschitzMul.c β, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
       (lipschitzWithLipschitzConstMulEdist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
         (congr_arg _ <| max_comm _ _)⟩
@@ -100,10 +99,9 @@ instance MulOpposite.hasLipschitzMul :
 
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy
-instance Real.hasLipschitzAdd :
-    HasLipschitzAdd
-      ℝ where lipschitz_add :=
-    ⟨2, by 
+instance Real.hasLipschitzAdd : HasLipschitzAdd ℝ
+    where lipschitz_add :=
+    ⟨2, by
       rw [lipschitz_with_iff_dist_le_mul]
       intro p q
       simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one,
@@ -117,10 +115,9 @@ instance Real.hasLipschitzAdd :
 
 -- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
 -- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
-instance Nnreal.hasLipschitzAdd :
-    HasLipschitzAdd
-      ℝ≥0 where lipschitz_add :=
-    ⟨HasLipschitzAdd.c ℝ, by 
+instance Nnreal.hasLipschitzAdd : HasLipschitzAdd ℝ≥0
+    where lipschitz_add :=
+    ⟨HasLipschitzAdd.c ℝ, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitzWithLipschitzConstAddEdist ⟨(x₁ : ℝ), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 #align nnreal.has_lipschitz_add Nnreal.hasLipschitzAdd
@@ -153,15 +150,15 @@ theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y
 -- see Note [lower instance priority]
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
 action. -/
-instance (priority := 100) HasBoundedSmul.has_continuous_smul :
-    HasContinuousSmul α
-      β where continuous_smul := by 
+instance (priority := 100) HasBoundedSmul.has_continuous_smul : HasContinuousSmul α β
+    where continuous_smul := by
     rw [Metric.continuous_iff]
     rintro ⟨a, b⟩ ε hε
     have : 0 ≤ dist a 0 := dist_nonneg
     have : 0 ≤ dist b 0 := dist_nonneg
     let δ : ℝ := min 1 ((dist a 0 + dist b 0 + 2)⁻¹ * ε)
-    have hδ_pos : 0 < δ := by
+    have hδ_pos : 0 < δ :=
+      by
       refine' lt_min_iff.mpr ⟨by norm_num, mul_pos _ hε⟩
       rw [inv_pos]
       linarith
@@ -190,24 +187,21 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
 
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
-instance Real.hasBoundedSmul :
-    HasBoundedSmul ℝ
-      ℝ where 
+instance Real.hasBoundedSmul : HasBoundedSmul ℝ ℝ
+    where
   dist_smul_pair' x y₁ y₂ := by simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
   dist_pair_smul' x₁ x₂ y := by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 #align real.has_bounded_smul Real.hasBoundedSmul
 
-instance Nnreal.hasBoundedSmul :
-    HasBoundedSmul ℝ≥0
-      ℝ≥0 where 
+instance Nnreal.hasBoundedSmul : HasBoundedSmul ℝ≥0 ℝ≥0
+    where
   dist_smul_pair' x y₁ y₂ := by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
   dist_pair_smul' x₁ x₂ y := by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
 #align nnreal.has_bounded_smul Nnreal.hasBoundedSmul
 
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
-instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] :
-    HasBoundedSmul αᵐᵒᵖ
-      β where 
+instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β
+    where
   dist_smul_pair' :=
     MulOpposite.rec' fun x y₁ y₂ => by simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
   dist_pair_smul' :=

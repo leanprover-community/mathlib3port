@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.abs_convex
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 variable [TopologicalSpace E] [LocallyConvexSpace ℝ E] [HasContinuousSmul 𝕜 E]
 
 theorem nhds_basis_abs_convex :
-    (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ Balanced 𝕜 s ∧ Convex ℝ s) id := by
+    (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
+  by
   refine'
     (LocallyConvexSpace.convex_basis_zero ℝ E).to_has_basis (fun s hs => _) fun s hs =>
       ⟨s, ⟨hs.1, hs.2.2⟩, rfl.subset⟩
@@ -70,7 +71,7 @@ variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
 
 theorem nhds_basis_abs_convex_open :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
-  by 
+  by
   refine' (nhds_basis_abs_convex 𝕜 E).to_has_basis _ _
   · rintro s ⟨hs_nhds, hs_balanced, hs_convex⟩
     refine' ⟨interior s, _, interior_subset⟩
@@ -126,7 +127,8 @@ theorem coe_convex (s : AbsConvexOpenSets 𝕜 E) : Convex ℝ (s : Set E) :=
 
 end AbsConvexOpenSets
 
-instance : Nonempty (AbsConvexOpenSets 𝕜 E) := by
+instance : Nonempty (AbsConvexOpenSets 𝕜 E) :=
+  by
   rw [← exists_true_iff_nonempty]
   dsimp only [AbsConvexOpenSets]
   rw [Subtype.exists]
@@ -152,7 +154,8 @@ noncomputable def gaugeSeminormFamily : SeminormFamily 𝕜 E (AbsConvexOpenSets
 variable {𝕜 E}
 
 theorem gauge_seminorm_family_ball (s : AbsConvexOpenSets 𝕜 E) :
-    (gaugeSeminormFamily 𝕜 E s).ball 0 1 = (s : Set E) := by
+    (gaugeSeminormFamily 𝕜 E s).ball 0 1 = (s : Set E) :=
+  by
   dsimp only [gaugeSeminormFamily]
   rw [Seminorm.ball_zero_eq]
   simp_rw [gauge_seminorm_to_fun]
@@ -164,7 +167,8 @@ variable [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E]
 variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 
 /-- The topology of a locally convex space is induced by the gauge seminorm family. -/
-theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) := by
+theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
+  by
   refine' SeminormFamily.withSeminormsOfHasBasis _ _
   refine'
     Filter.HasBasis.to_has_basis (nhds_basis_abs_convex_open 𝕜 E) (fun s hs => _) fun s hs => _

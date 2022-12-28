@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.complete_field
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ class ConditionallyCompleteLinearOrderedField (α : Type _) extends
 instance (priority := 100) ConditionallyCompleteLinearOrderedField.toArchimedean
     [ConditionallyCompleteLinearOrderedField α] : Archimedean α :=
   archimedean_iff_nat_lt.2
-    (by 
+    (by
       by_contra' h
       obtain ⟨x, h⟩ := h
       have :=
@@ -126,7 +126,8 @@ theorem coe_mem_cut_map_iff [CharZero β] : (q : β) ∈ cutMap β a ↔ (q : α
   Rat.cast_injective.mem_set_image
 #align linear_ordered_field.coe_mem_cut_map_iff LinearOrderedField.coe_mem_cut_map_iff
 
-theorem cut_map_self (a : α) : cutMap α a = Iio a ∩ range (coe : ℚ → α) := by
+theorem cut_map_self (a : α) : cutMap α a = Iio a ∩ range (coe : ℚ → α) :=
+  by
   ext
   constructor
   · rintro ⟨q, h, rfl⟩
@@ -149,12 +150,14 @@ theorem cut_map_nonempty (a : α) : (cutMap β a).Nonempty :=
   Nonempty.image _ <| exists_rat_lt a
 #align linear_ordered_field.cut_map_nonempty LinearOrderedField.cut_map_nonempty
 
-theorem cut_map_bdd_above (a : α) : BddAbove (cutMap β a) := by
+theorem cut_map_bdd_above (a : α) : BddAbove (cutMap β a) :=
+  by
   obtain ⟨q, hq⟩ := exists_rat_gt a
   exact ⟨q, ball_image_iff.2 fun r hr => by exact_mod_cast (hq.trans' hr).le⟩
 #align linear_ordered_field.cut_map_bdd_above LinearOrderedField.cut_map_bdd_above
 
-theorem cut_map_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b := by
+theorem cut_map_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b :=
+  by
   refine' (image_subset_iff.2 fun q hq => _).antisymm _
   · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
@@ -194,7 +197,8 @@ theorem induced_map_mono : Monotone (inducedMap α β) := fun a b h =>
   cSup_le_cSup (cut_map_bdd_above β _) (cut_map_nonempty β _) (cut_map_mono β h)
 #align linear_ordered_field.induced_map_mono LinearOrderedField.induced_map_mono
 
-theorem induced_map_rat (q : ℚ) : inducedMap α β (q : α) = q := by
+theorem induced_map_rat (q : ℚ) : inducedMap α β (q : α) = q :=
+  by
   refine'
     cSup_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β q) (fun x h => _) fun w h => _
   · rw [cut_map_coe] at h
@@ -219,7 +223,8 @@ theorem induced_map_nonneg (ha : 0 ≤ a) : 0 ≤ inducedMap α β a :=
   (induced_map_zero α _).ge.trans <| induced_map_mono _ _ ha
 #align linear_ordered_field.induced_map_nonneg LinearOrderedField.induced_map_nonneg
 
-theorem coe_lt_induced_map_iff : (q : β) < inducedMap α β a ↔ (q : α) < a := by
+theorem coe_lt_induced_map_iff : (q : β) < inducedMap α β a ↔ (q : α) < a :=
+  by
   refine' ⟨fun h => _, fun hq => _⟩
   · rw [← induced_map_rat α] at h
     exact (induced_map_mono α β).reflect_lt h
@@ -252,7 +257,7 @@ theorem induced_map_inv_self (b : β) : inducedMap γ β (inducedMap β γ b) = 
 #align linear_ordered_field.induced_map_inv_self LinearOrderedField.induced_map_inv_self
 
 theorem induced_map_add (x y : α) : inducedMap α β (x + y) = inducedMap α β x + inducedMap α β y :=
-  by 
+  by
   rw [induced_map, cut_map_add]
   exact
     cSup_add (cut_map_nonempty β x) (cut_map_bdd_above β x) (cut_map_nonempty β y)
@@ -263,7 +268,8 @@ variable {α β}
 
 /-- Preparatory lemma for `induced_ring_hom`. -/
 theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈ cutMap β (a * a)) :
-    b ≤ inducedMap α β a * inducedMap α β a := by
+    b ≤ inducedMap α β a * inducedMap α β a :=
+  by
   obtain ⟨q, hb, rfl⟩ := hb
   obtain ⟨q', hq', hqq', hqa⟩ := exists_rat_pow_btwn two_ne_zero hb (mul_self_pos.2 ha.ne')
   trans (q' : β) ^ 2
@@ -278,7 +284,8 @@ theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈
 
 /-- Preparatory lemma for `induced_ring_hom`. -/
 theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b : β)
-    (hba : b < inducedMap α β a * inducedMap α β a) : ∃ c ∈ cutMap β (a * a), b < c := by
+    (hba : b < inducedMap α β a * inducedMap α β a) : ∃ c ∈ cutMap β (a * a), b < c :=
+  by
   obtain hb | hb := lt_or_le b 0
   · refine' ⟨0, _, hb⟩
     rw [← Rat.cast_zero, coe_mem_cut_map_iff, Rat.cast_zero]
@@ -304,12 +311,14 @@ def inducedAddHom : α →+ β :=
 /-- `induced_map` as an `order_ring_hom`. -/
 @[simps]
 def inducedOrderRingHom : α →+*o β :=
-  { (inducedAddHom α β).mkRingHomOfMulSelfOfTwoNeZero
+  {
+    (inducedAddHom α β).mkRingHomOfMulSelfOfTwoNeZero
       (-- reduce to the case of x = y
-      by-- reduce to the case of 0 < x
+      by
+        -- reduce to the case of 0 < x
         suffices
           ∀ x, 0 < x → induced_add_hom α β (x * x) = induced_add_hom α β x * induced_add_hom α β x
-          by 
+          by
           rintro x
           obtain h | rfl | h := lt_trichotomy x 0
           · convert this (-x) (neg_pos.2 h) using 1
@@ -328,11 +337,12 @@ def inducedOrderRingHom : α →+*o β :=
 
 /-- The isomorphism of ordered rings between two conditionally complete linearly ordered fields. -/
 def inducedOrderRingIso : β ≃+*o γ :=
-  { inducedOrderRingHom β γ with 
+  { inducedOrderRingHom β γ with
     invFun := inducedMap γ β
     left_inv := induced_map_inv_self _ _
     right_inv := induced_map_inv_self _ _
-    map_le_map_iff' := fun x y => by
+    map_le_map_iff' := fun x y =>
+      by
       refine' ⟨fun h => _, fun h => induced_map_mono _ _ h⟩
       simpa [induced_order_ring_hom, AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero,
         induced_add_hom] using induced_map_mono γ β h }
@@ -376,15 +386,16 @@ section Real
 variable {R S : Type _} [OrderedRing R] [LinearOrderedRing S]
 
 theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f : R →+* S) : Monotone f :=
-  (monotone_iff_map_nonneg f).2 fun r h => by
+  (monotone_iff_map_nonneg f).2 fun r h =>
+    by
     obtain ⟨s, rfl⟩ := hR r h
     rw [map_pow]
     apply sq_nonneg
 #align ring_hom_monotone ring_hom_monotone
 
 /-- There exists no nontrivial ring homomorphism `ℝ →+* ℝ`. -/
-instance Real.RingHom.unique :
-    Unique (ℝ →+* ℝ) where 
+instance Real.RingHom.unique : Unique (ℝ →+* ℝ)
+    where
   default := RingHom.id ℝ
   uniq f :=
     congr_arg OrderRingHom.toRingHom

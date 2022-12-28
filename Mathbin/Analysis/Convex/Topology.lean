@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,8 @@ section stdSimplex
 variable [Fintype ι]
 
 /-- Every vector in `std_simplex 𝕜 ι` has `max`-norm at most `1`. -/
-theorem std_simplex_subset_closed_ball : stdSimplex ℝ ι ⊆ Metric.closedBall 0 1 := by
+theorem std_simplex_subset_closed_ball : stdSimplex ℝ ι ⊆ Metric.closedBall 0 1 :=
+  by
   intro f hf
   rw [Metric.mem_closed_ball, dist_zero_right]
   refine' Nnreal.coe_one ▸ Nnreal.coe_le_coe.2 <| Finset.sup_le fun x hx => _
@@ -124,7 +125,8 @@ theorem Convex.combo_interior_self_subset_interior {s : Set E} (hs : Convex 𝕜
 /-- If `s` is a convex set, then `a • closure s + b • interior s ⊆ interior s` for all `0 ≤ a`,
 `0 < b`, `a + b = 1`. See also `convex.combo_self_interior_subset_interior` for a weaker version. -/
 theorem Convex.combo_closure_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
-    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • closure s + b • interior s ⊆ interior s := by
+    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • closure s + b • interior s ⊆ interior s :=
+  by
   rw [add_comm]
   exact hs.combo_interior_closure_subset_interior hb ha (add_comm a b ▸ hab)
 #align convex.combo_closure_interior_subset_interior Convex.combo_closure_interior_subset_interior
@@ -132,7 +134,8 @@ theorem Convex.combo_closure_interior_subset_interior {s : Set E} (hs : Convex �
 /-- If `s` is a convex set, then `a • s + b • interior s ⊆ interior s` for all `0 ≤ a`, `0 < b`,
 `a + b = 1`. See also `convex.combo_closure_interior_subset_interior` for a stronger version. -/
 theorem Convex.combo_self_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {a b : 𝕜}
-    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • s + b • interior s ⊆ interior s := by
+    (ha : 0 ≤ a) (hb : 0 < b) (hab : a + b = 1) : a • s + b • interior s ⊆ interior s :=
+  by
   rw [add_comm]
   exact hs.combo_interior_self_subset_interior hb ha (add_comm a b ▸ hab)
 #align convex.combo_self_interior_subset_interior Convex.combo_self_interior_subset_interior
@@ -164,7 +167,8 @@ theorem Convex.combo_self_interior_mem_interior {s : Set E} (hs : Convex 𝕜 s)
 #align convex.combo_self_interior_mem_interior Convex.combo_self_interior_mem_interior
 
 theorem Convex.open_segment_interior_closure_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
-    (hx : x ∈ interior s) (hy : y ∈ closure s) : openSegment 𝕜 x y ⊆ interior s := by
+    (hx : x ∈ interior s) (hy : y ∈ closure s) : openSegment 𝕜 x y ⊆ interior s :=
+  by
   rintro _ ⟨a, b, ha, hb, hab, rfl⟩
   exact hs.combo_interior_closure_mem_interior hx hy ha hb.le hab
 #align
@@ -177,7 +181,8 @@ theorem Convex.open_segment_interior_self_subset_interior {s : Set E} (hs : Conv
   convex.open_segment_interior_self_subset_interior Convex.open_segment_interior_self_subset_interior
 
 theorem Convex.open_segment_closure_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
-    (hx : x ∈ closure s) (hy : y ∈ interior s) : openSegment 𝕜 x y ⊆ interior s := by
+    (hx : x ∈ closure s) (hy : y ∈ interior s) : openSegment 𝕜 x y ⊆ interior s :=
+  by
   rintro _ ⟨a, b, ha, hb, hab, rfl⟩
   exact hs.combo_closure_interior_mem_interior hx hy ha.le hb hab
 #align
@@ -239,7 +244,7 @@ open AffineMap
 `interior s`. -/
 protected theorem Convex.strict_convex' {s : Set E} (hs : Convex 𝕜 s)
     (h : (s \ interior s).Pairwise fun x y => ∃ c : 𝕜, lineMap x y c ∈ interior s) :
-    StrictConvex 𝕜 s := by 
+    StrictConvex 𝕜 s := by
   refine' strict_convex_iff_open_segment_subset.2 _
   intro x hx y hy hne
   by_cases hx' : x ∈ interior s; · exact hs.open_segment_interior_self_subset_interior hx' hy
@@ -255,7 +260,8 @@ protected theorem Convex.strict_convex' {s : Set E} (hs : Convex 𝕜 s)
 `interior s`. -/
 protected theorem Convex.strict_convex {s : Set E} (hs : Convex 𝕜 s)
     (h : (s \ interior s).Pairwise fun x y => ([x -[𝕜] y] \ frontier s).Nonempty) :
-    StrictConvex 𝕜 s := by
+    StrictConvex 𝕜 s :=
+  by
   refine' hs.strict_convex' <| h.imp_on fun x hx y hy hne => _
   simp only [segment_eq_image_line_map, ← self_diff_frontier]
   rintro ⟨_, ⟨⟨c, hc, rfl⟩, hcs⟩⟩
@@ -272,7 +278,7 @@ variable [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGro
 
 /-- Convex hull of a finite set is compact. -/
 theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (convexHull ℝ s) :=
-  by 
+  by
   rw [hs.convex_hull_eq_image]
   apply (is_compact_std_simplex _).image
   haveI := hs.fintype
@@ -293,7 +299,7 @@ the result includes the closure of the original set.
 TODO Generalise this from convex sets to sets that are balanced / star-shaped about `x`. -/
 theorem Convex.closure_subset_image_homothety_interior_of_one_lt {s : Set E} (hs : Convex ℝ s)
     {x : E} (hx : x ∈ interior s) (t : ℝ) (ht : 1 < t) : closure s ⊆ homothety x t '' interior s :=
-  by 
+  by
   intro y hy
   have hne : t ≠ 0 := (one_pos.trans ht).ne'
   refine'
@@ -329,7 +335,7 @@ theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Conve
 
 /-- A nonempty convex set is path connected. -/
 protected theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.Nonempty) :
-    IsPathConnected s := by 
+    IsPathConnected s := by
   refine' is_path_connected_iff.mpr ⟨hne, _⟩
   intro x x_in y y_in
   have H := hconv.segment_subset x_in y_in
@@ -402,12 +408,14 @@ theorem convex_closed_ball (a : E) (r : ℝ) : Convex ℝ (Metric.closedBall a r
   simpa only [Metric.closedBall, sep_univ] using (convex_on_univ_dist a).convex_le r
 #align convex_closed_ball convex_closed_ball
 
-theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (thickening δ s) := by
+theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (thickening δ s) :=
+  by
   rw [← add_ball_zero]
   exact hs.add (convex_ball 0 _)
 #align convex.thickening Convex.thickening
 
-theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (cthickening δ s) := by
+theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (cthickening δ s) :=
+  by
   obtain hδ | hδ := le_total 0 δ
   · rw [cthickening_eq_Inter_thickening hδ]
     exact convex_Inter₂ fun _ _ => hs.thickening _
@@ -425,7 +433,8 @@ theorem convex_hull_exists_dist_ge {s : Set E} {x : E} (hx : x ∈ convexHull �
 /-- Given a point `x` in the convex hull of `s` and a point `y` in the convex hull of `t`,
 there exist points `x' ∈ s` and `y' ∈ t` at distance at least `dist x y`. -/
 theorem convex_hull_exists_dist_ge2 {s t : Set E} {x y : E} (hx : x ∈ convexHull ℝ s)
-    (hy : y ∈ convexHull ℝ t) : ∃ x' ∈ s, ∃ y' ∈ t, dist x y ≤ dist x' y' := by
+    (hy : y ∈ convexHull ℝ t) : ∃ x' ∈ s, ∃ y' ∈ t, dist x y ≤ dist x' y' :=
+  by
   rcases convex_hull_exists_dist_ge hx y with ⟨x', hx', Hx'⟩
   rcases convex_hull_exists_dist_ge hy x' with ⟨y', hy', Hy'⟩
   use x', hx', y', hy'
@@ -434,7 +443,8 @@ theorem convex_hull_exists_dist_ge2 {s t : Set E} {x y : E} (hx : x ∈ convexHu
 
 /-- Emetric diameter of the convex hull of a set `s` equals the emetric diameter of `s. -/
 @[simp]
-theorem convex_hull_ediam (s : Set E) : Emetric.diam (convexHull ℝ s) = Emetric.diam s := by
+theorem convex_hull_ediam (s : Set E) : Emetric.diam (convexHull ℝ s) = Emetric.diam s :=
+  by
   refine'
     (Emetric.diam_le fun x hx y hy => _).antisymm (Emetric.diam_mono <| subset_convex_hull ℝ s)
   rcases convex_hull_exists_dist_ge2 hx hy with ⟨x', hx', y', hy', H⟩
@@ -466,13 +476,15 @@ instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpac
 #align normed_space.loc_path_connected NormedSpace.loc_path_connected
 
 theorem dist_add_dist_of_mem_segment {x y z : E} (h : y ∈ [x -[ℝ] z]) :
-    dist x y + dist y z = dist x z := by
+    dist x y + dist y z = dist x z :=
+  by
   simp only [dist_eq_norm, mem_segment_iff_same_ray] at *
   simpa only [sub_add_sub_cancel', norm_sub_rev] using h.norm_add.symm
 #align dist_add_dist_of_mem_segment dist_add_dist_of_mem_segment
 
 /-- The set of vectors in the same ray as `x` is connected. -/
-theorem is_connected_set_of_same_ray (x : E) : IsConnected { y | SameRay ℝ x y } := by
+theorem is_connected_set_of_same_ray (x : E) : IsConnected { y | SameRay ℝ x y } :=
+  by
   by_cases hx : x = 0; · simpa [hx] using is_connected_univ
   simp_rw [← exists_nonneg_left_iff_same_ray hx]
   exact is_connected_Ici.image _ (continuous_id.smul continuous_const).ContinuousOn
@@ -480,7 +492,8 @@ theorem is_connected_set_of_same_ray (x : E) : IsConnected { y | SameRay ℝ x y
 
 /-- The set of nonzero vectors in the same ray as the nonzero vector `x` is connected. -/
 theorem is_connected_set_of_same_ray_and_ne_zero {x : E} (hx : x ≠ 0) :
-    IsConnected { y | SameRay ℝ x y ∧ y ≠ 0 } := by
+    IsConnected { y | SameRay ℝ x y ∧ y ≠ 0 } :=
+  by
   simp_rw [← exists_pos_left_iff_same_ray_and_ne_zero hx]
   exact is_connected_Ioi.image _ (continuous_id.smul continuous_const).ContinuousOn
 #align is_connected_set_of_same_ray_and_ne_zero is_connected_set_of_same_ray_and_ne_zero

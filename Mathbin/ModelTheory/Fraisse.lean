@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.fraisse
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ theorem age.joint_embedding : JointEmbedding (L.age M) := fun N hN P hP =>
 /-- The age of a countable structure is essentially countable (has countably many isomorphism
 classes). -/
 theorem age.countable_quotient [h : Countable M] : (Quotient.mk'' '' L.age M).Countable := by
-  classical 
+  classical
     refine'
       (congr_arg _ (Set.ext <| forall_quotient_iff.2 fun N => _)).mp
         (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
@@ -194,7 +194,7 @@ theorem age.countable_quotient [h : Countable M] : (Quotient.mk'' '' L.age M).Co
 theorem age_direct_limit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
     (G : ι → Type max w w') [∀ i, L.StructureCat (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
     [DirectedSystem G fun i j h => f i j h] : L.age (DirectLimit G f) = ⋃ i : ι, L.age (G i) := by
-  classical 
+  classical
     ext M
     simp only [mem_Union]
     constructor
@@ -221,11 +221,12 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     (hc : (Quotient.mk'' '' K).Countable)
     (fg : ∀ M : Bundled.{w} L.StructureCat, M ∈ K → StructureCat.Fg L M) (hp : Hereditary K)
     (jep : JointEmbedding K) :
-    ∃ M : Bundled.{w} L.StructureCat, StructureCat.Cg L M ∧ L.age M = K := by
+    ∃ M : Bundled.{w} L.StructureCat, StructureCat.Cg L M ∧ L.age M = K :=
+  by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
   simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq] at hF
   simp_rw [Quotient.eq_mk_iff_out] at hF
-  have hF' : ∀ n : ℕ, (F n).out ∈ K := by 
+  have hF' : ∀ n : ℕ, (F n).out ∈ K := by
     intro n
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩
     exact (h _ _ hP2).1 hP1
@@ -250,7 +251,7 @@ theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
           (Quotient.mk'' '' K).Countable ∧
             (∀ M : Bundled.{w} L.StructureCat, M ∈ K → StructureCat.Fg L M) ∧
               Hereditary K ∧ JointEmbedding K :=
-  by 
+  by
   constructor
   · rintro ⟨M, h1, h2, rfl⟩
     skip
@@ -285,7 +286,7 @@ structure IsFraisseLimit [Countable (Σl, L.Functions l)] [Countable M] : Prop w
 variable {L} {M}
 
 theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalgamation (L.age M) :=
-  by 
+  by
   rintro N P Q NP NQ ⟨Nfg, ⟨NM⟩⟩ ⟨Pfg, ⟨PM⟩⟩ ⟨Qfg, ⟨QM⟩⟩
   obtain ⟨g, hg⟩ :=
     h (PM.comp NP).toHom.range (Nfg.range _)

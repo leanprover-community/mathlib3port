@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module tactic.protected
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,8 @@ A declaration may be protected even if it does not have the `@[protected]` attri
 This provides a convenient way to protect many declarations at once.
 -/
 @[user_attribute]
-unsafe def protected_attr : user_attribute where 
+unsafe def protected_attr : user_attribute
+    where
   Name := "protected"
   descr :=
     "Attribute to protect a declaration\n    If a declaration `foo.bar` is marked protected, then it must be referred to\n    by its full name `foo.bar`, even when the `foo` namespace is open."
@@ -86,8 +87,8 @@ their full name `foo.bar`, even when the `foo` namespace is open.
 ```
 -/
 @[user_attribute]
-unsafe def protect_proj_attr :
-    user_attribute Unit (List Name) where 
+unsafe def protect_proj_attr : user_attribute Unit (List Name)
+    where
   Name := "protect_proj"
   descr :=
     "Attribute to protect the projections of a structure.\n    If a structure `foo` is marked with the `protect_proj` user attribute, then\n    all of the projections become protected, meaning they must always be referred to by\n    their full name `foo.bar`, even when the `foo` namespace is open.\n\n    `protect_proj without bar baz` will protect all projections except for bar and baz"

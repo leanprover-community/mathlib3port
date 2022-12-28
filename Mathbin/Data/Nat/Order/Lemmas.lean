@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.order.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,9 +36,8 @@ namespace Nat
 
 
 #print Nat.Subtype.orderBot /-
-instance Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] :
-    OrderBot
-      s where 
+instance Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s
+    where
   bot := ⟨Nat.find (nonempty_subtype.1 h), Nat.find_spec (nonempty_subtype.1 h)⟩
   bot_le x := Nat.find_min' _ x.2
 #align nat.subtype.order_bot Nat.Subtype.orderBot
@@ -52,7 +51,7 @@ instance Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
 
 /- warning: nat.subtype.coe_bot -> Nat.Subtype.coe_bot is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Nat} [_inst_1 : DecidablePred.{1} Nat (fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s)] [h : Nonempty.{1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s)], Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (HasLiftT.mk.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (CoeTCₓ.coe.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (CoeTCₓ.mk.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (Subtype.val.{1} Nat (fun (x : Nat) => (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s) x))))) (Bot.bot.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (OrderBot.toHasBot.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (Subtype.hasLe.{0} Nat Nat.hasLe (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s)) (Nat.Subtype.orderBot s (fun (a : Nat) => _inst_1 a) h)))) (Nat.find (fun (n : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) n s) (fun (a : Nat) => _inst_1 a) (Iff.mp (Nonempty.{1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s))) (Exists.{1} Nat (fun (a : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) a s)) (nonempty_subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s)) h))
+  forall {s : Set.{0} Nat} [_inst_1 : DecidablePred.{1} Nat (fun (_x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) _x s)] [h : Nonempty.{1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s)], Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (HasLiftT.mk.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (CoeTCₓ.coe.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (coeBase.{1, 1} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s))))) (Bot.bot.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (OrderBot.toHasBot.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) s) (Subtype.hasLe.{0} Nat Nat.hasLe (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s)) (Nat.Subtype.orderBot s (fun (a : Nat) => _inst_1 a) h)))) (Nat.find (fun (n : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) n s) (fun (a : Nat) => _inst_1 a) (Iff.mp (Nonempty.{1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s))) (Exists.{1} Nat (fun (a : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) a s)) (nonempty_subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Set.{0} Nat) (Set.hasMem.{0} Nat) x s)) h))
 but is expected to have type
   forall {s : Set.{0} Nat} [_inst_1 : DecidablePred.{1} Nat (fun (_x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) _x s)] [h : Nonempty.{1} (Set.Elem.{0} Nat s)], Eq.{1} Nat (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s) (Bot.bot.{0} (Set.Elem.{0} Nat s) (OrderBot.toBot.{0} (Set.Elem.{0} Nat s) (Subtype.le.{0} Nat instLENat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s)) (Nat.Subtype.orderBot s (fun (a : Nat) => _inst_1 a) h)))) (Nat.find (fun (n : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) n s) (fun (a : Nat) => _inst_1 a) (Iff.mp (Nonempty.{1} (Subtype.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s))) (Exists.{1} Nat (fun (a : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) a s)) (nonempty_subtype.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Set.{0} Nat) (Set.instMembershipSet.{0} Nat) x s)) h))
 Case conversion may be inaccurate. Consider using '#align nat.subtype.coe_bot Nat.Subtype.coe_botₓ'. -/
@@ -71,7 +70,8 @@ theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k 
 
 
 #print Nat.lt_div_iff_mul_lt /-
-protected theorem lt_div_iff_mul_lt {n d : ℕ} (hnd : d ∣ n) (a : ℕ) : a < n / d ↔ d * a < n := by
+protected theorem lt_div_iff_mul_lt {n d : ℕ} (hnd : d ∣ n) (a : ℕ) : a < n / d ↔ d * a < n :=
+  by
   rcases d.eq_zero_or_pos with (rfl | hd0); · simp [zero_dvd_iff.mp hnd]
   rw [← mul_lt_mul_left hd0, ← Nat.eq_mul_of_div_eq_right hnd rfl]
 #align nat.lt_div_iff_mul_lt Nat.lt_div_iff_mul_lt
@@ -79,7 +79,7 @@ protected theorem lt_div_iff_mul_lt {n d : ℕ} (hnd : d ∣ n) (a : ℕ) : a < 
 
 #print Nat.div_eq_iff_eq_of_dvd_dvd /-
 theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy : y ∣ n) :
-    n / x = n / y ↔ x = y := by 
+    n / x = n / y ↔ x = y := by
   constructor
   · intro h
     rw [← mul_right_inj' hn]
@@ -117,7 +117,8 @@ protected theorem dvd_one {n : ℕ} : n ∣ 1 ↔ n = 1 :=
 
 #print Nat.not_two_dvd_bit1 /-
 @[simp]
-protected theorem not_two_dvd_bit1 (n : ℕ) : ¬2 ∣ bit1 n := by
+protected theorem not_two_dvd_bit1 (n : ℕ) : ¬2 ∣ bit1 n :=
+  by
   rw [bit1, Nat.dvd_add_right two_dvd_bit0, Nat.dvd_one]
   cc
 #align nat.not_two_dvd_bit1 Nat.not_two_dvd_bit1
@@ -141,7 +142,8 @@ protected theorem dvd_add_self_right {m n : ℕ} : m ∣ n + m ↔ m ∣ n :=
 
 #print Nat.dvd_sub' /-
 -- TODO: update `nat.dvd_sub` in core
-theorem dvd_sub' {k m n : ℕ} (h₁ : k ∣ m) (h₂ : k ∣ n) : k ∣ m - n := by
+theorem dvd_sub' {k m n : ℕ} (h₁ : k ∣ m) (h₂ : k ∣ n) : k ∣ m - n :=
+  by
   cases' le_total n m with H H
   · exact dvd_sub H h₁ h₂
   · rw [tsub_eq_zero_iff_le.mpr H]
@@ -158,10 +160,10 @@ Case conversion may be inaccurate. Consider using '#align nat.succ_div Nat.succ_
 theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else 0
   | a, 0 => by simp
   | 0, 1 => by simp
-  | 0, b + 2 => by 
+  | 0, b + 2 => by
     have hb2 : b + 2 > 1 := by decide
     simp [ne_of_gt hb2, div_eq_of_lt hb2]
-  | a + 1, b + 1 => by 
+  | a + 1, b + 1 => by
     rw [Nat.div_eq]; conv_rhs => rw [Nat.div_eq]
     by_cases hb_eq_a : b = a + 1
     · simp [hb_eq_a, le_refl]
@@ -241,7 +243,7 @@ theorem div_div_div_eq_div : ∀ {a b c : ℕ} (dvd : b ∣ a) (dvd2 : a ∣ c),
   | a + 1, c + 1 =>
     have a_split : a + 1 ≠ 0 := succ_ne_zero a
     have c_split : c + 1 ≠ 0 := succ_ne_zero c
-    fun b dvd dvd2 => by 
+    fun b dvd dvd2 => by
     rcases dvd2 with ⟨k, rfl⟩
     rcases dvd with ⟨k2, pr⟩
     have k2_nonzero : k2 ≠ 0 := fun k2_zero => by simpa [k2_zero] using pr
@@ -263,7 +265,8 @@ theorem eq_zero_of_dvd_of_lt {a b : ℕ} (w : a ∣ b) (h : b < a) : b = 0 :=
 
 #print Nat.mod_div_self /-
 @[simp]
-theorem mod_div_self (m n : ℕ) : m % n / n = 0 := by
+theorem mod_div_self (m n : ℕ) : m % n / n = 0 :=
+  by
   cases n
   · exact (m % 0).div_zero
   · exact Nat.div_eq_zero (m.mod_lt n.succ_pos)
@@ -273,7 +276,8 @@ theorem mod_div_self (m n : ℕ) : m % n / n = 0 := by
 #print Nat.not_dvd_iff_between_consec_multiples /-
 /-- `n` is not divisible by `a` iff it is between `a * k` and `a * (k + 1)` for some `k`. -/
 theorem not_dvd_iff_between_consec_multiples (n : ℕ) {a : ℕ} (ha : 0 < a) :
-    (∃ k : ℕ, a * k < n ∧ n < a * (k + 1)) ↔ ¬a ∣ n := by
+    (∃ k : ℕ, a * k < n ∧ n < a * (k + 1)) ↔ ¬a ∣ n :=
+  by
   refine'
     ⟨fun ⟨k, hk1, hk2⟩ => not_dvd_of_between_consec_multiples hk1 hk2, fun han =>
       ⟨n / a, ⟨lt_of_le_of_ne (mul_div_le n a) _, lt_mul_div_succ _ ha⟩⟩⟩
@@ -303,7 +307,8 @@ theorem dvd_left_injective : Function.Injective ((· ∣ ·) : ℕ → ℕ → P
 -/
 
 #print Nat.div_lt_div_of_lt_of_dvd /-
-theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d := by
+theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d :=
+  by
   rw [Nat.lt_div_iff_mul_lt hdb]
   exact lt_of_le_of_lt (mul_div_le a d) h
 #align nat.div_lt_div_of_lt_of_dvd Nat.div_lt_div_of_lt_of_dvd

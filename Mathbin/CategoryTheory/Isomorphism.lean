@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.isomorphism
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem ext ⦃α β : X ≅ Y⦄ (w : α.Hom = β.Hom) : α = β :=
 #print CategoryTheory.Iso.symm /-
 /-- Inverse isomorphism. -/
 @[symm]
-def symm (I : X ≅ Y) : Y ≅ X where 
+def symm (I : X ≅ Y) : Y ≅ X where
   Hom := I.inv
   inv := I.Hom
   hom_inv_id' := I.inv_hom_id'
@@ -156,7 +156,7 @@ theorem nonempty_iso_symm (X Y : C) : Nonempty (X ≅ Y) ↔ Nonempty (Y ≅ X) 
 #print CategoryTheory.Iso.refl /-
 /-- Identity isomorphism. -/
 @[refl, simps]
-def refl (X : C) : X ≅ X where 
+def refl (X : C) : X ≅ X where
   Hom := 𝟙 X
   inv := 𝟙 X
 #align category_theory.iso.refl CategoryTheory.Iso.refl
@@ -175,8 +175,8 @@ theorem refl_symm (X : C) : (Iso.refl X).symm = Iso.refl X :=
 #print CategoryTheory.Iso.trans /-
 /-- Composition of two isomorphisms -/
 @[trans, simps]
-def trans (α : X ≅ Y) (β : Y ≅ Z) :
-    X ≅ Z where 
+def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z
+    where
   Hom := α.Hom ≫ β.Hom
   inv := β.inv ≫ α.inv
 #align category_theory.iso.trans CategoryTheory.Iso.trans
@@ -317,7 +317,8 @@ theorem comp_inv_eq_id (α : X ≅ Y) {f : X ⟶ Y} : f ≫ α.inv = 𝟙 X ↔ 
 -/
 
 #print CategoryTheory.Iso.hom_eq_inv /-
-theorem hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.Hom = β.inv ↔ β.Hom = α.inv := by
+theorem hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.Hom = β.inv ↔ β.Hom = α.inv :=
+  by
   erw [inv_eq_inv α.symm β, eq_comm]
   rfl
 #align category_theory.iso.hom_eq_inv CategoryTheory.Iso.hom_eq_inv
@@ -385,9 +386,8 @@ namespace IsIso
 
 #print CategoryTheory.IsIso.epi_of_iso /-
 -- see Note [lower instance priority]
-instance (priority := 100) epi_of_iso (f : X ⟶ Y) [IsIso f] :
-    Epi
-      f where left_cancellation Z g h
+instance (priority := 100) epi_of_iso (f : X ⟶ Y) [IsIso f] : Epi f
+    where left_cancellation Z g h
     w :=-- This is an interesting test case for better rewrite automation.
   by rw [← is_iso.inv_hom_id_assoc f g, w, is_iso.inv_hom_id_assoc f h]
 #align category_theory.is_iso.epi_of_iso CategoryTheory.IsIso.epi_of_iso
@@ -395,9 +395,8 @@ instance (priority := 100) epi_of_iso (f : X ⟶ Y) [IsIso f] :
 
 #print CategoryTheory.IsIso.mono_of_iso /-
 -- see Note [lower instance priority]
-instance (priority := 100) mono_of_iso (f : X ⟶ Y) [IsIso f] :
-    Mono
-      f where right_cancellation Z g h w := by
+instance (priority := 100) mono_of_iso (f : X ⟶ Y) [IsIso f] : Mono f
+    where right_cancellation Z g h w := by
     rw [← category.comp_id g, ← category.comp_id h, ← is_iso.hom_inv_id f, ← category.assoc, w, ←
       category.assoc]
 #align category_theory.is_iso.mono_of_iso CategoryTheory.IsIso.mono_of_iso
@@ -406,7 +405,7 @@ instance (priority := 100) mono_of_iso (f : X ⟶ Y) [IsIso f] :
 #print CategoryTheory.IsIso.inv_eq_of_hom_inv_id /-
 @[ext]
 theorem inv_eq_of_hom_inv_id {f : X ⟶ Y} [IsIso f] {g : Y ⟶ X} (hom_inv_id : f ≫ g = 𝟙 X) :
-    inv f = g := by 
+    inv f = g := by
   apply (cancel_epi f).mp
   simp [hom_inv_id]
 #align category_theory.is_iso.inv_eq_of_hom_inv_id CategoryTheory.IsIso.inv_eq_of_hom_inv_id
@@ -414,7 +413,7 @@ theorem inv_eq_of_hom_inv_id {f : X ⟶ Y} [IsIso f] {g : Y ⟶ X} (hom_inv_id :
 
 #print CategoryTheory.IsIso.inv_eq_of_inv_hom_id /-
 theorem inv_eq_of_inv_hom_id {f : X ⟶ Y} [IsIso f] {g : Y ⟶ X} (inv_hom_id : g ≫ f = 𝟙 Y) :
-    inv f = g := by 
+    inv f = g := by
   apply (cancel_mono f).mp
   simp [inv_hom_id]
 #align category_theory.is_iso.inv_eq_of_inv_hom_id CategoryTheory.IsIso.inv_eq_of_inv_hom_id
@@ -473,7 +472,7 @@ instance (priority := 900) comp_isIso [IsIso f] [IsIso h] : IsIso (f ≫ h) :=
 
 #print CategoryTheory.IsIso.inv_id /-
 @[simp]
-theorem inv_id : inv (𝟙 X) = 𝟙 X := by 
+theorem inv_id : inv (𝟙 X) = 𝟙 X := by
   ext
   simp
 #align category_theory.is_iso.inv_id CategoryTheory.IsIso.inv_id
@@ -481,7 +480,8 @@ theorem inv_id : inv (𝟙 X) = 𝟙 X := by
 
 #print CategoryTheory.IsIso.inv_comp /-
 @[simp]
-theorem inv_comp [IsIso f] [IsIso h] : inv (f ≫ h) = inv h ≫ inv f := by
+theorem inv_comp [IsIso f] [IsIso h] : inv (f ≫ h) = inv h ≫ inv f :=
+  by
   ext
   simp
 #align category_theory.is_iso.inv_comp CategoryTheory.IsIso.inv_comp
@@ -489,7 +489,7 @@ theorem inv_comp [IsIso f] [IsIso h] : inv (f ≫ h) = inv h ≫ inv f := by
 
 #print CategoryTheory.IsIso.inv_inv /-
 @[simp]
-theorem inv_inv [IsIso f] : inv (inv f) = f := by 
+theorem inv_inv [IsIso f] : inv (inv f) = f := by
   ext
   simp
 #align category_theory.is_iso.inv_inv CategoryTheory.IsIso.inv_inv
@@ -497,7 +497,8 @@ theorem inv_inv [IsIso f] : inv (inv f) = f := by
 
 #print CategoryTheory.IsIso.Iso.inv_inv /-
 @[simp]
-theorem Iso.inv_inv (f : X ≅ Y) : inv f.inv = f.Hom := by
+theorem Iso.inv_inv (f : X ≅ Y) : inv f.inv = f.Hom :=
+  by
   ext
   simp
 #align category_theory.is_iso.iso.inv_inv CategoryTheory.IsIso.Iso.inv_inv
@@ -505,7 +506,8 @@ theorem Iso.inv_inv (f : X ≅ Y) : inv f.inv = f.Hom := by
 
 #print CategoryTheory.IsIso.Iso.inv_hom /-
 @[simp]
-theorem Iso.inv_hom (f : X ≅ Y) : inv f.Hom = f.inv := by
+theorem Iso.inv_hom (f : X ≅ Y) : inv f.Hom = f.inv :=
+  by
   ext
   simp
 #align category_theory.is_iso.iso.inv_hom CategoryTheory.IsIso.Iso.inv_hom
@@ -541,7 +543,7 @@ theorem eq_comp_inv (α : X ⟶ Y) [IsIso α] {f : Z ⟶ Y} {g : Z ⟶ X} : g = 
 
 #print CategoryTheory.IsIso.of_isIso_comp_left /-
 theorem of_isIso_comp_left {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [IsIso (f ≫ g)] :
-    IsIso g := by 
+    IsIso g := by
   rw [← id_comp g, ← inv_hom_id f, assoc]
   infer_instance
 #align category_theory.is_iso.of_is_iso_comp_left CategoryTheory.IsIso.of_isIso_comp_left
@@ -549,7 +551,7 @@ theorem of_isIso_comp_left {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [Is
 
 #print CategoryTheory.IsIso.of_isIso_comp_right /-
 theorem of_isIso_comp_right {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] [IsIso (f ≫ g)] :
-    IsIso f := by 
+    IsIso f := by
   rw [← comp_id f, ← hom_inv_id g, ← assoc]
   infer_instance
 #align category_theory.is_iso.of_is_iso_comp_right CategoryTheory.IsIso.of_isIso_comp_right
@@ -557,7 +559,7 @@ theorem of_isIso_comp_right {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] [I
 
 #print CategoryTheory.IsIso.of_isIso_fac_left /-
 theorem of_isIso_fac_left {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [IsIso f] [hh : IsIso h]
-    (w : f ≫ g = h) : IsIso g := by 
+    (w : f ≫ g = h) : IsIso g := by
   rw [← w] at hh
   haveI := hh
   exact of_is_iso_comp_left f g
@@ -566,7 +568,7 @@ theorem of_isIso_fac_left {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} 
 
 #print CategoryTheory.IsIso.of_isIso_fac_right /-
 theorem of_isIso_fac_right {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [IsIso g] [hh : IsIso h]
-    (w : f ≫ g = h) : IsIso f := by 
+    (w : f ≫ g = h) : IsIso f := by
   rw [← w] at hh
   haveI := hh
   exact of_is_iso_comp_right f g
@@ -578,7 +580,8 @@ end IsIso
 open IsIso
 
 #print CategoryTheory.eq_of_inv_eq_inv /-
-theorem eq_of_inv_eq_inv {f g : X ⟶ Y} [IsIso f] [IsIso g] (p : inv f = inv g) : f = g := by
+theorem eq_of_inv_eq_inv {f g : X ⟶ Y} [IsIso f] [IsIso g] (p : inv f = inv g) : f = g :=
+  by
   apply (cancel_epi (inv f)).1
   erw [inv_hom_id, p, inv_hom_id]
 #align category_theory.eq_of_inv_eq_inv CategoryTheory.eq_of_inv_eq_inv
@@ -615,14 +618,16 @@ theorem comp_inv_eq_id (g : X ⟶ Y) [IsIso g] {f : X ⟶ Y} : f ≫ inv g = �
 -/
 
 #print CategoryTheory.isIso_of_hom_comp_eq_id /-
-theorem isIso_of_hom_comp_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : g ≫ f = 𝟙 X) : IsIso f := by
+theorem isIso_of_hom_comp_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : g ≫ f = 𝟙 X) : IsIso f :=
+  by
   rw [(hom_comp_eq_id _).mp h]
   infer_instance
 #align category_theory.is_iso_of_hom_comp_eq_id CategoryTheory.isIso_of_hom_comp_eq_id
 -/
 
 #print CategoryTheory.isIso_of_comp_hom_eq_id /-
-theorem isIso_of_comp_hom_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : f ≫ g = 𝟙 Y) : IsIso f := by
+theorem isIso_of_comp_hom_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : f ≫ g = 𝟙 Y) : IsIso f :=
+  by
   rw [(comp_hom_eq_id _).mp h]
   infer_instance
 #align category_theory.is_iso_of_comp_hom_eq_id CategoryTheory.isIso_of_comp_hom_eq_id
@@ -727,8 +732,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_iso CategoryTheory.Functor.mapIsoₓ'. -/
 /-- A functor `F : C ⥤ D` sends isomorphisms `i : X ≅ Y` to isomorphisms `F.obj X ≅ F.obj Y` -/
 @[simps]
-def mapIso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) :
-    F.obj X ≅ F.obj Y where 
+def mapIso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.obj X ≅ F.obj Y
+    where
   Hom := F.map i.Hom
   inv := F.map i.inv
   hom_inv_id' := by rw [← map_comp, iso.hom_inv_id, ← map_id]
@@ -785,7 +790,8 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2) {X : C} {Y : C} (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_3 : CategoryTheory.IsIso.{u1, u2} C _inst_1 X Y f], Eq.{succ u4} (Quiver.Hom.{succ u4, u3} D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) Y) (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X)) (Prefunctor.map.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) Y X (CategoryTheory.inv.{u1, u2} C _inst_1 X Y f _inst_3)) (CategoryTheory.inv.{u4, u3} D _inst_2 (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) Y) (Prefunctor.map.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X Y f) (CategoryTheory.Functor.map_isIso.{u1, u2, u3, u4} C _inst_1 X Y D _inst_2 F f _inst_3))
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_inv CategoryTheory.Functor.map_invₓ'. -/
 @[simp]
-theorem map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) = inv (F.map f) := by
+theorem map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) = inv (F.map f) :=
+  by
   ext
   simp [← F.map_comp]
 #align category_theory.functor.map_inv CategoryTheory.Functor.map_inv

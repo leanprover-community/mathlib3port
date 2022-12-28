@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.add_torsor
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,8 +61,8 @@ attribute [nolint dangerous_instance] AddTorsor.toHasVsub
 
 /-- An `add_group G` is a torsor for itself. -/
 @[nolint instance_priority]
-instance addGroupIsAddTorsor (G : Type _) [AddGroup G] :
-    AddTorsor G G where 
+instance addGroupIsAddTorsor (G : Type _) [AddGroup G] : AddTorsor G G
+    where
   vsub := Sub.sub
   vsub_vadd' := sub_add_cancel
   vadd_vsub' := add_sub_cancel
@@ -115,7 +115,8 @@ theorem vadd_right_injective (p : P) : Function.Injective ((· +ᵥ p) : G → P
 /-- Adding a group element to a point, then subtracting another point,
 produces the same result as subtracting the points then adding the
 group element. -/
-theorem vadd_vsub_assoc (g : G) (p1 p2 : P) : g +ᵥ p1 -ᵥ p2 = g + (p1 -ᵥ p2) := by
+theorem vadd_vsub_assoc (g : G) (p1 p2 : P) : g +ᵥ p1 -ᵥ p2 = g + (p1 -ᵥ p2) :=
+  by
   apply vadd_right_cancel p2
   rw [vsub_vadd, add_vadd, vsub_vadd]
 #align vadd_vsub_assoc vadd_vsub_assoc
@@ -144,7 +145,8 @@ theorem vsub_ne_zero {p q : P} : p -ᵥ q ≠ (0 : G) ↔ p ≠ q :=
 
 /-- Cancellation adding the results of two subtractions. -/
 @[simp]
-theorem vsub_add_vsub_cancel (p1 p2 p3 : P) : p1 -ᵥ p2 + (p2 -ᵥ p3) = p1 -ᵥ p3 := by
+theorem vsub_add_vsub_cancel (p1 p2 p3 : P) : p1 -ᵥ p2 + (p2 -ᵥ p3) = p1 -ᵥ p3 :=
+  by
   apply vadd_right_cancel p3
   rw [add_vadd, vsub_vadd, vsub_vadd, vsub_vadd]
 #align vsub_add_vsub_cancel vsub_add_vsub_cancel
@@ -152,7 +154,8 @@ theorem vsub_add_vsub_cancel (p1 p2 p3 : P) : p1 -ᵥ p2 + (p2 -ᵥ p3) = p1 -�
 /-- Subtracting two points in the reverse order produces the negation
 of subtracting them. -/
 @[simp]
-theorem neg_vsub_eq_vsub_rev (p1 p2 : P) : -(p1 -ᵥ p2) = p2 -ᵥ p1 := by
+theorem neg_vsub_eq_vsub_rev (p1 p2 : P) : -(p1 -ᵥ p2) = p2 -ᵥ p1 :=
+  by
   refine' neg_eq_of_add_eq_zero_right (vadd_right_cancel p1 _)
   rw [vsub_add_vsub_cancel, vsub_self]
 #align neg_vsub_eq_vsub_rev neg_vsub_eq_vsub_rev
@@ -222,7 +225,8 @@ theorem vsub_left_injective (p : P) : Function.Injective ((· -ᵥ p) : P → G)
 
 /-- If subtracting two points from the same point produces equal
 results, those points are equal. -/
-theorem vsub_right_cancel {p1 p2 p : P} (h : p -ᵥ p1 = p -ᵥ p2) : p1 = p2 := by
+theorem vsub_right_cancel {p1 p2 p : P} (h : p -ᵥ p1 = p -ᵥ p2) : p1 = p2 :=
+  by
   refine' vadd_left_cancel (p -ᵥ p2) _
   rw [vsub_vadd, ← h, vsub_vadd]
 #align vsub_right_cancel vsub_right_cancel
@@ -259,7 +263,8 @@ theorem vadd_vsub_vadd_cancel_left (v : G) (p1 p2 : P) : v +ᵥ p1 -ᵥ (v +ᵥ 
   rw [vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_sub_cancel']
 #align vadd_vsub_vadd_cancel_left vadd_vsub_vadd_cancel_left
 
-theorem vsub_vadd_comm (p1 p2 p3 : P) : (p1 -ᵥ p2 : G) +ᵥ p3 = p3 -ᵥ p2 +ᵥ p1 := by
+theorem vsub_vadd_comm (p1 p2 p3 : P) : (p1 -ᵥ p2 : G) +ᵥ p3 = p3 -ᵥ p2 +ᵥ p1 :=
+  by
   rw [← @vsub_eq_zero_iff_eq G, vadd_vsub_assoc, vsub_vadd_eq_vsub_sub]
   simp
 #align vsub_vadd_comm vsub_vadd_comm
@@ -280,8 +285,8 @@ namespace Prod
 variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroup G] [AddGroup G']
   [AddTorsor G P] [AddTorsor G' P']
 
-instance : AddTorsor (G × G')
-      (P × P') where 
+instance : AddTorsor (G × G') (P × P')
+    where
   vadd v p := (v.1 +ᵥ p.1, v.2 +ᵥ p.2)
   zero_vadd p := by simp
   add_vadd := by simp [add_vadd]
@@ -332,9 +337,8 @@ variable {I : Type u} {fg : I → Type v} [∀ i, AddGroup (fg i)] {fp : I → T
 open AddAction AddTorsor
 
 /-- A product of `add_torsor`s is an `add_torsor`. -/
-instance [T : ∀ i, AddTorsor (fg i) (fp i)] :
-    AddTorsor (∀ i, fg i) (∀ i,
-        fp i) where 
+instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, fp i)
+    where
   vadd g p i := g i +ᵥ p i
   zero_vadd p := funext fun i => zero_vadd (fg i) (p i)
   add_vadd g₁ g₂ p := funext fun i => add_vadd (g₁ i) (g₂ i) (p i)
@@ -352,7 +356,7 @@ variable {G : Type _} {P : Type _} [AddGroup G] [AddTorsor G P]
 include G
 
 /-- `v ↦ v +ᵥ p` as an equivalence. -/
-def vaddConst (p : P) : G ≃ P where 
+def vaddConst (p : P) : G ≃ P where
   toFun v := v +ᵥ p
   invFun p' := p' -ᵥ p
   left_inv v := vadd_vsub _ _
@@ -370,7 +374,7 @@ theorem coe_vadd_const_symm (p : P) : ⇑(vaddConst p).symm = fun p' => p' -ᵥ 
 #align equiv.coe_vadd_const_symm Equiv.coe_vadd_const_symm
 
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
-def constVsub (p : P) : P ≃ G where 
+def constVsub (p : P) : P ≃ G where
   toFun := (· -ᵥ ·) p
   invFun v := -v +ᵥ p
   left_inv p' := by simp
@@ -390,8 +394,7 @@ theorem coe_const_vsub_symm (p : P) : ⇑(constVsub p).symm = fun v => -v +ᵥ p
 variable (P)
 
 /-- The permutation given by `p ↦ v +ᵥ p`. -/
-def constVadd (v : G) : Equiv.Perm
-      P where 
+def constVadd (v : G) : Equiv.Perm P where
   toFun := (· +ᵥ ·) v
   invFun := (· +ᵥ ·) (-v)
   left_inv p := by simp [vadd_vadd]
@@ -418,9 +421,8 @@ theorem const_vadd_add (v₁ v₂ : G) : constVadd P (v₁ + v₂) = constVadd P
 #align equiv.const_vadd_add Equiv.const_vadd_add
 
 /-- `equiv.const_vadd` as a homomorphism from `multiplicative G` to `equiv.perm P` -/
-def constVaddHom :
-    Multiplicative G →*
-      Equiv.Perm P where 
+def constVaddHom : Multiplicative G →* Equiv.Perm P
+    where
   toFun v := constVadd P v.toAdd
   map_one' := const_vadd_zero G P
   map_mul' := const_vadd_add P
@@ -477,7 +479,7 @@ theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCom
 end Equiv
 
 theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroup G] [AddTorsor G P] :
-    Subsingleton G ↔ Subsingleton P := by 
+    Subsingleton G ↔ Subsingleton P := by
   inhabit P
   exact (Equiv.vaddConst default).subsingleton_congr
 #align add_torsor.subsingleton_iff AddTorsor.subsingleton_iff

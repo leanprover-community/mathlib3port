@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.positive
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,8 @@ theorem IsPositive.inner_nonneg_right {T : E →L[𝕜] E} (hT : IsPositive T) (
 #align
   continuous_linear_map.is_positive.inner_nonneg_right ContinuousLinearMap.IsPositive.inner_nonneg_right
 
-theorem isPositiveZero : IsPositive (0 : E →L[𝕜] E) := by
+theorem isPositiveZero : IsPositive (0 : E →L[𝕜] E) :=
+  by
   refine' ⟨is_self_adjoint_zero _, fun x => _⟩
   change 0 ≤ re ⟪_, _⟫
   rw [zero_apply, inner_zero_left, ZeroHomClass.map_zero]
@@ -84,21 +85,23 @@ theorem isPositiveOne : IsPositive (1 : E →L[𝕜] E) :=
 #align continuous_linear_map.is_positive_one ContinuousLinearMap.isPositiveOne
 
 theorem IsPositive.add {T S : E →L[𝕜] E} (hT : T.IsPositive) (hS : S.IsPositive) :
-    (T + S).IsPositive := by
+    (T + S).IsPositive :=
+  by
   refine' ⟨hT.is_self_adjoint.add hS.is_self_adjoint, fun x => _⟩
   rw [re_apply_inner_self, add_apply, inner_add_left, map_add]
   exact add_nonneg (hT.inner_nonneg_left x) (hS.inner_nonneg_left x)
 #align continuous_linear_map.is_positive.add ContinuousLinearMap.IsPositive.add
 
 theorem IsPositive.conjAdjoint {T : E →L[𝕜] E} (hT : T.IsPositive) (S : E →L[𝕜] F) :
-    (S ∘L T ∘L S†).IsPositive := by
+    (S ∘L T ∘L S†).IsPositive :=
+  by
   refine' ⟨hT.is_self_adjoint.conj_adjoint S, fun x => _⟩
   rw [re_apply_inner_self, comp_apply, ← adjoint_inner_right]
   exact hT.inner_nonneg_left _
 #align continuous_linear_map.is_positive.conj_adjoint ContinuousLinearMap.IsPositive.conjAdjoint
 
 theorem IsPositive.adjointConj {T : E →L[𝕜] E} (hT : T.IsPositive) (S : F →L[𝕜] E) :
-    (S† ∘L T ∘L S).IsPositive := by 
+    (S† ∘L T ∘L S).IsPositive := by
   convert hT.conj_adjoint (S†)
   rw [adjoint_adjoint]
 #align continuous_linear_map.is_positive.adjoint_conj ContinuousLinearMap.IsPositive.adjointConj
@@ -107,14 +110,15 @@ theorem IsPositive.conjOrthogonalProjection (U : Submodule 𝕜 E) {T : E →L[�
     [CompleteSpace U] :
     (U.subtypeL ∘L
         orthogonalProjection U ∘L T ∘L U.subtypeL ∘L orthogonalProjection U).IsPositive :=
-  by 
+  by
   have := hT.conj_adjoint (U.subtypeL ∘L orthogonalProjection U)
   rwa [(orthogonal_projection_is_self_adjoint U).adjoint_eq] at this
 #align
   continuous_linear_map.is_positive.conj_orthogonal_projection ContinuousLinearMap.IsPositive.conjOrthogonalProjection
 
 theorem IsPositive.orthogonalProjectionComp {T : E →L[𝕜] E} (hT : T.IsPositive) (U : Submodule 𝕜 E)
-    [CompleteSpace U] : (orthogonalProjection U ∘L T ∘L U.subtypeL).IsPositive := by
+    [CompleteSpace U] : (orthogonalProjection U ∘L T ∘L U.subtypeL).IsPositive :=
+  by
   have := hT.conj_adjoint (orthogonalProjection U : E →L[𝕜] U)
   rwa [U.adjoint_orthogonal_projection] at this
 #align
@@ -125,7 +129,8 @@ section Complex
 variable {E' : Type _} [InnerProductSpace ℂ E'] [CompleteSpace E']
 
 theorem is_positive_iff_complex (T : E' →L[ℂ] E') :
-    IsPositive T ↔ ∀ x, (re ⟪T x, x⟫_ℂ : ℂ) = ⟪T x, x⟫_ℂ ∧ 0 ≤ re ⟪T x, x⟫_ℂ := by
+    IsPositive T ↔ ∀ x, (re ⟪T x, x⟫_ℂ : ℂ) = ⟪T x, x⟫_ℂ ∧ 0 ≤ re ⟪T x, x⟫_ℂ :=
+  by
   simp_rw [is_positive, forall_and, is_self_adjoint_iff_is_symmetric,
     LinearMap.is_symmetric_iff_inner_map_self_real, eq_conj_iff_re]
   rfl

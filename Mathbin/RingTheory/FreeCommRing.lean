@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.free_comm_ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,15 +96,14 @@ variable {R : Type v} [CommRing R] (f : α → R)
 
 /-- A helper to implement `lift`. This is essentially `free_comm_monoid.lift`, but this does not
 currently exist. -/
-private def lift_to_multiset :
-    (α → R) ≃
-      (Multiplicative (Multiset α) →*
-        R) where 
+private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →* R)
+    where
   toFun f :=
     { toFun := fun s => (s.toAdd.map f).Prod
       map_mul' := fun x y =>
         calc
-          _ = Multiset.prod (Multiset.map f x + Multiset.map f y) := by
+          _ = Multiset.prod (Multiset.map f x + Multiset.map f y) :=
+            by
             congr 1
             exact Multiset.map_add _ _ _
           _ = _ := Multiset.prod_add _ _
@@ -116,7 +115,8 @@ private def lift_to_multiset :
     MonoidHom.ext fun x =>
       let F' := F.toAdditive''
       let x' := x.toAdd
-      show (Multiset.map (fun a => F' {a}) x').Sum = F' x' by
+      show (Multiset.map (fun a => F' {a}) x').Sum = F' x'
+        by
         rw [← Multiset.map_map, ← AddMonoidHom.map_multiset_sum]
         exact F.congr_arg (Multiset.sum_map_singleton x')
 #align free_comm_ring.lift_to_multiset free_comm_ring.lift_to_multiset
@@ -223,13 +223,14 @@ end Restriction
 
 theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   suffices IsSupported (of p) s → p ∈ s from ⟨this, fun hps => Subring.subset_closure ⟨p, hps, rfl⟩⟩
-  fun hps : IsSupported (of p) s => by
+  fun hps : IsSupported (of p) s =>
+  by
   haveI := Classical.decPred s
   have :
     ∀ x,
       is_supported x s →
         ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.x) x = n :=
-    by 
+    by
     intro x hx
     refine' Subring.InClosure.rec_on hx _ _ _ _
     · use 1
@@ -258,7 +259,8 @@ theorem is_supported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
 #align free_comm_ring.is_supported_of FreeCommRing.is_supported_of
 
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]
-    (hxs : IsSupported x s) : map (Subtype.val : s → α) (restriction s x) = x := by
+    (hxs : IsSupported x s) : map (Subtype.val : s → α) (restriction s x) = x :=
+  by
   refine' Subring.InClosure.rec_on hxs _ _ _ _
   · rw [RingHom.map_one]
     rfl
@@ -349,7 +351,8 @@ protected theorem coe_mul (x y : FreeRing α) : ↑(x * y) = (x : FreeCommRing �
 
 variable (α)
 
-protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRing α) := fun x => by
+protected theorem coe_surjective : Surjective (coe : FreeRing α → FreeCommRing α) := fun x =>
+  by
   apply FreeCommRing.induction_on x
   · use -1
     rfl
@@ -368,10 +371,12 @@ theorem coe_eq :
     (coe : FreeRing α → FreeCommRing α) =
       @Functor.map FreeAbelianGroup _ _ _ fun l : List α => (l : Multiset α) :=
   funext fun x =>
-    (FreeAbelianGroup.lift.unique _ _) fun L => by
+    (FreeAbelianGroup.lift.unique _ _) fun L =>
+      by
       simp_rw [FreeAbelianGroup.lift.of, (· ∘ ·)]
       exact
-        FreeMonoid.recOn L rfl fun hd tl ih => by
+        FreeMonoid.recOn L rfl fun hd tl ih =>
+          by
           rw [(FreeMonoid.lift _).map_mul, FreeMonoid.lift_eval_of, ih]
           rfl
 #align free_ring.coe_eq FreeRing.coe_eq
@@ -404,7 +409,7 @@ end FreeRing
 def freeCommRingEquivMvPolynomialInt : FreeCommRing α ≃+* MvPolynomial α ℤ :=
   RingEquiv.ofHomInv (FreeCommRing.lift <| (fun a => MvPolynomial.x a : α → MvPolynomial α ℤ))
     (MvPolynomial.eval₂Hom (Int.castRingHom (FreeCommRing α)) FreeCommRing.of)
-    (by 
+    (by
       ext
       simp)
     (by ext <;> simp)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.arctan
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,9 +60,12 @@ theorem tan_int_mul_pi_div_two (n : ℤ) : tan (n * π / 2) = 0 :=
   tan_eq_zero_iff.mpr (by use n)
 #align real.tan_int_mul_pi_div_two Real.tan_int_mul_pi_div_two
 
-theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } := by
-  suffices ContinuousOn (fun x => sin x / cos x) { x | cos x ≠ 0 } by
-    have h_eq : (fun x => sin x / cos x) = tan := by
+theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
+  by
+  suffices ContinuousOn (fun x => sin x / cos x) { x | cos x ≠ 0 }
+    by
+    have h_eq : (fun x => sin x / cos x) = tan :=
+      by
       ext1 x
       rw [tan_eq_sin_div_cos]
     rwa [h_eq] at this
@@ -74,7 +77,8 @@ theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
   continuous_on_iff_continuous_restrict.1 continuous_on_tan
 #align real.continuous_tan Real.continuous_tan
 
-theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := by
+theorem continuous_on_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) :=
+  by
   refine' ContinuousOn.mono continuous_on_tan fun x => _
   simp only [and_imp, mem_Ioo, mem_set_of_eq, Ne.def]
   rw [cos_eq_zero_iff]
@@ -194,7 +198,8 @@ theorem arctan_one : arctan 1 = π / 4 :=
 theorem arctan_neg (x : ℝ) : arctan (-x) = -arctan x := by simp [arctan_eq_arcsin, neg_div]
 #align real.arctan_neg Real.arctan_neg
 
-theorem arctan_eq_arccos {x : ℝ} (h : 0 ≤ x) : arctan x = arccos (sqrt (1 + x ^ 2))⁻¹ := by
+theorem arctan_eq_arccos {x : ℝ} (h : 0 ≤ x) : arctan x = arccos (sqrt (1 + x ^ 2))⁻¹ :=
+  by
   rw [arctan_eq_arcsin, arccos_eq_arcsin]; swap; · exact inv_nonneg.2 (sqrt_nonneg _)
   congr 1
   rw [← sqrt_inv, sq_sqrt, ← one_div, one_sub_div, add_sub_cancel', sqrt_div, sqrt_sq h]
@@ -202,7 +207,8 @@ theorem arctan_eq_arccos {x : ℝ} (h : 0 ≤ x) : arctan x = arccos (sqrt (1 + 
 #align real.arctan_eq_arccos Real.arctan_eq_arccos
 
 -- The junk values for `arccos` and `sqrt` make this true even for `1 < x`.
-theorem arccos_eq_arctan {x : ℝ} (h : 0 < x) : arccos x = arctan (sqrt (1 - x ^ 2) / x) := by
+theorem arccos_eq_arctan {x : ℝ} (h : 0 < x) : arccos x = arctan (sqrt (1 - x ^ 2) / x) :=
+  by
   rw [arccos, eq_comm]
   refine' arctan_eq_of_tan_eq _ ⟨_, _⟩
   · rw [tan_pi_div_two_sub, tan_arcsin, inv_div]
@@ -220,8 +226,8 @@ theorem continuous_at_arctan {x : ℝ} : ContinuousAt arctan x :=
 #align real.continuous_at_arctan Real.continuous_at_arctan
 
 /-- `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the whole line. -/
-def tanLocalHomeomorph : LocalHomeomorph ℝ
-      ℝ where 
+def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ
+    where
   toFun := tan
   invFun := arctan
   source := Ioo (-(π / 2)) (π / 2)

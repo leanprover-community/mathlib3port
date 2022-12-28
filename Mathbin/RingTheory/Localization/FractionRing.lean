@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.fraction_ring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,22 +48,21 @@ abbrev IsFractionRing [CommRing K] [Algebra R K] :=
 #align is_fraction_ring IsFractionRing
 
 /-- The cast from `int` to `rat` as a `fraction_ring`. -/
-instance Rat.is_fraction_ring :
-    IsFractionRing ℤ
-      ℚ where 
-  map_units := by 
+instance Rat.is_fraction_ring : IsFractionRing ℤ ℚ
+    where
+  map_units := by
     rintro ⟨x, hx⟩
     rw [mem_non_zero_divisors_iff_ne_zero] at hx
     simpa only [eq_int_cast, isUnit_iff_ne_zero, Int.cast_eq_zero, Ne.def, Subtype.coe_mk] using hx
-  surj := by 
+  surj := by
     rintro ⟨n, d, hd, h⟩
     refine' ⟨⟨n, ⟨d, _⟩⟩, Rat.mul_denom_eq_num⟩
     rwa [mem_non_zero_divisors_iff_ne_zero, Int.coe_nat_ne_zero_iff_pos]
-  eq_iff_exists := by 
+  eq_iff_exists := by
     intro x y
     rw [eq_int_cast, eq_int_cast, Int.cast_inj]
     refine'
-      ⟨by 
+      ⟨by
         rintro rfl
         use 1, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
@@ -132,7 +131,8 @@ protected noncomputable irreducible_def inv (z : K) : K :=
 attribute [local semireducible] IsFractionRing.inv
 
 protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv A x = 1 :=
-  show x * dite _ _ _ = 1 by
+  show x * dite _ _ _ = 1
+    by
     rw [dif_neg hx, ←
       IsUnit.mul_left_inj
         (map_units K
@@ -148,7 +148,8 @@ protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def toField : Field K :=
-  { IsFractionRing.is_domain A, show CommRing K by infer_instance with
+  { IsFractionRing.is_domain A,
+    show CommRing K by infer_instance with
     inv := IsFractionRing.inv A
     mul_inv_cancel := IsFractionRing.mul_inv_cancel A
     inv_zero := dif_pos rfl }
@@ -185,13 +186,15 @@ theorem is_unit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisor
 
 @[simp]
 theorem mk'_eq_zero_iff_eq_zero [Algebra R K] [IsFractionRing R K] {x : R} {y : nonZeroDivisors R} :
-    mk' K x y = 0 ↔ x = 0 := by
+    mk' K x y = 0 ↔ x = 0 :=
+  by
   refine' ⟨fun hxy => _, fun h => by rw [h, mk'_zero]⟩
   · simp_rw [mk'_eq_zero_iff, mul_right_coe_non_zero_divisors_eq_zero_iff] at hxy
     exact (exists_const _).mp hxy
 #align is_fraction_ring.mk'_eq_zero_iff_eq_zero IsFractionRing.mk'_eq_zero_iff_eq_zero
 
-theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x = y := by
+theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x = y :=
+  by
   refine' ⟨_, fun hxy => by rw [hxy, mk'_self']⟩
   · intro hxy
     have hy : (algebraMap A K) ↑y ≠ (0 : K) :=
@@ -245,7 +248,7 @@ fields of fractions `K ≃+* L`. -/
 noncomputable def fieldEquivOfRingEquiv [Algebra B L] [IsFractionRing B L] (h : A ≃+* B) :
     K ≃+* L :=
   ringEquivOfRingEquiv K L h
-    (by 
+    (by
       ext b
       show b ∈ h.to_equiv '' _ ↔ _
       erw [h.to_equiv.image_eq_preimage, Set.preimage, Set.mem_setOf_eq,
@@ -258,7 +261,7 @@ variable (S)
 theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
     IsFractionRing R S ↔
       @IsFractionRing P _ S _ ((algebraMap R S).comp h.symm.toRingHom).toAlgebra :=
-  by 
+  by
   delta IsFractionRing
   convert is_localization_iff_of_base_ring_equiv _ _ h
   ext x
@@ -277,7 +280,8 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
   is_fraction_ring.is_fraction_ring_iff_of_base_ring_equiv IsFractionRing.is_fraction_ring_iff_of_base_ring_equiv
 
 protected theorem nontrivial (R S : Type _) [CommRing R] [Nontrivial R] [CommRing S] [Algebra R S]
-    [IsFractionRing R S] : Nontrivial S := by
+    [IsFractionRing R S] : Nontrivial S :=
+  by
   apply nontrivial_of_ne
   intro h
   apply @zero_ne_one R
@@ -313,7 +317,8 @@ instance [Nontrivial R] : Nontrivial (FractionRing R) :=
 variable {A}
 
 noncomputable instance : Field (FractionRing A) :=
-  { Localization.commRing, IsFractionRing.toField A with
+  { Localization.commRing,
+    IsFractionRing.toField A with
     add := (· + ·)
     mul := (· * ·)
     neg := Neg.neg
@@ -351,7 +356,7 @@ noncomputable def algEquiv (K : Type _) [Field K] [Algebra A K] [IsFractionRing 
 
 instance [Algebra R A] [NoZeroSmulDivisors R A] : NoZeroSmulDivisors R (FractionRing A) :=
   NoZeroSmulDivisors.of_algebra_map_injective
-    (by 
+    (by
       rw [IsScalarTower.algebra_map_eq R A]
       exact
         Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)

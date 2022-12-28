@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.non_zero_divisors
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,8 +28,8 @@ to access this notation in your own code.
 section nonZeroDivisors
 
 /-- The submonoid of non-zero-divisors of a `monoid_with_zero` `R`. -/
-def nonZeroDivisors (R : Type _) [MonoidWithZero R] :
-    Submonoid R where 
+def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R
+    where
   carrier := { x | ∀ z, z * x = 0 → z = 0 }
   one_mem' z hz := by rwa [mul_one] at hz
   mul_mem' x₁ x₂ hx₁ hx₂ z hz :=
@@ -66,7 +66,7 @@ theorem mul_left_coe_non_zero_divisors_eq_zero_iff {c : M₁⁰} {x : M₁} : (c
 #align mul_left_coe_non_zero_divisors_eq_zero_iff mul_left_coe_non_zero_divisors_eq_zero_iff
 
 theorem mul_cancel_right_mem_non_zero_divisor {x y r : R} (hr : r ∈ R⁰) : x * r = y * r ↔ x = y :=
-  by 
+  by
   refine' ⟨fun h => _, congr_arg _⟩
   rw [← sub_eq_zero, ← mul_right_mem_non_zero_divisors_eq_zero_iff hr, sub_mul, h, sub_self]
 #align mul_cancel_right_mem_non_zero_divisor mul_cancel_right_mem_non_zero_divisor
@@ -92,7 +92,8 @@ theorem nonZeroDivisors.coe_ne_zero [Nontrivial M] (x : M⁰) : (x : M) ≠ 0 :=
   nonZeroDivisors.ne_zero x.2
 #align non_zero_divisors.coe_ne_zero nonZeroDivisors.coe_ne_zero
 
-theorem mul_mem_non_zero_divisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M₁⁰ ∧ b ∈ M₁⁰ := by
+theorem mul_mem_non_zero_divisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M₁⁰ ∧ b ∈ M₁⁰ :=
+  by
   constructor
   · intro h
     constructor <;> intro x h' <;> apply h
@@ -153,7 +154,8 @@ theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : 
   powers_le_non_zero_divisors_of_no_zero_divisors powers_le_non_zero_divisors_of_no_zero_divisors
 
 theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M']
-    (f : F) (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
+    (f : F) (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ :=
+  by
   cases subsingleton_or_nontrivial M
   · simp [Subsingleton.elim S ⊥]
   ·
@@ -170,7 +172,8 @@ theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisor
   non_zero_divisors_le_comap_non_zero_divisors_of_injective non_zero_divisors_le_comap_non_zero_divisors_of_injective
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
-    s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 := by
+    s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 :=
+  by
   constructor; swap
   · rintro ⟨r, hrs, rfl⟩
     exact Multiset.prod_eq_zero hrs

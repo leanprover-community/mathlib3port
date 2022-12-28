@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.inverse
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,8 @@ theorem arcsin_mem_Icc (x : ℝ) : arcsin x ∈ Icc (-(π / 2)) (π / 2) :=
 #align real.arcsin_mem_Icc Real.arcsin_mem_Icc
 
 @[simp]
-theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) := by
+theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) :=
+  by
   rw [arcsin, range_comp coe]
   simp [Icc]
 #align real.range_arcsin Real.range_arcsin
@@ -105,7 +106,7 @@ theorem continuous_at_arcsin {x : ℝ} : ContinuousAt arcsin x :=
 #align real.continuous_at_arcsin Real.continuous_at_arcsin
 
 theorem arcsin_eq_of_sin_eq {x y : ℝ} (h₁ : sin x = y) (h₂ : x ∈ Icc (-(π / 2)) (π / 2)) :
-    arcsin y = x := by 
+    arcsin y = x := by
   subst y
   exact inj_on_sin (arcsin_mem_Icc _) h₂ (sin_arcsin' (sin_mem_Icc x))
 #align real.arcsin_eq_of_sin_eq Real.arcsin_eq_of_sin_eq
@@ -134,7 +135,8 @@ theorem arcsin_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arcsin x = -(π / 2) :=
 #align real.arcsin_of_le_neg_one Real.arcsin_of_le_neg_one
 
 @[simp]
-theorem arcsin_neg (x : ℝ) : arcsin (-x) = -arcsin x := by
+theorem arcsin_neg (x : ℝ) : arcsin (-x) = -arcsin x :=
+  by
   cases' le_total x (-1) with hx₁ hx₁
   · rw [arcsin_of_le_neg_one hx₁, neg_neg, arcsin_of_one_le (le_neg.2 hx₁)]
   cases' le_total 1 x with hx₂ hx₂
@@ -270,7 +272,8 @@ theorem arcsin_le_neg_pi_div_two {x} : arcsin x ≤ -(π / 2) ↔ x ≤ -1 :=
 #align real.arcsin_le_neg_pi_div_two Real.arcsin_le_neg_pi_div_two
 
 @[simp]
-theorem pi_div_four_le_arcsin {x} : π / 4 ≤ arcsin x ↔ sqrt 2 / 2 ≤ x := by
+theorem pi_div_four_le_arcsin {x} : π / 4 ≤ arcsin x ↔ sqrt 2 / 2 ≤ x :=
+  by
   rw [← sin_pi_div_four, le_arcsin_iff_sin_le']
   have := pi_pos
   constructor <;> linarith
@@ -282,8 +285,8 @@ theorem maps_to_sin_Ioo : MapsTo sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := 
 
 /-- `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
 @[simp]
-def sinLocalHomeomorph : LocalHomeomorph ℝ
-      ℝ where 
+def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ
+    where
   toFun := sin
   invFun := arcsin
   source := Ioo (-(π / 2)) (π / 2)
@@ -303,7 +306,8 @@ theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=
 #align real.cos_arcsin_nonneg Real.cos_arcsin_nonneg
 
 -- The junk values for `arcsin` and `sqrt` make this true even outside `[-1, 1]`.
-theorem cos_arcsin (x : ℝ) : cos (arcsin x) = sqrt (1 - x ^ 2) := by
+theorem cos_arcsin (x : ℝ) : cos (arcsin x) = sqrt (1 - x ^ 2) :=
+  by
   by_cases hx₁ : -1 ≤ x; swap
   · rw [not_le] at hx₁
     rw [arcsin_of_le_neg_one hx₁.le, cos_neg, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
@@ -319,7 +323,8 @@ theorem cos_arcsin (x : ℝ) : cos (arcsin x) = sqrt (1 - x ^ 2) := by
 #align real.cos_arcsin Real.cos_arcsin
 
 -- The junk values for `arcsin` and `sqrt` make this true even outside `[-1, 1]`.
-theorem tan_arcsin (x : ℝ) : tan (arcsin x) = x / sqrt (1 - x ^ 2) := by
+theorem tan_arcsin (x : ℝ) : tan (arcsin x) = x / sqrt (1 - x ^ 2) :=
+  by
   rw [tan_eq_sin_div_cos, cos_arcsin]
   by_cases hx₁ : -1 ≤ x; swap
   · have h : sqrt (1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
@@ -417,7 +422,8 @@ theorem arccos_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arccos x = π := by
 #align real.arccos_of_le_neg_one Real.arccos_of_le_neg_one
 
 -- The junk values for `arccos` and `sqrt` make this true even outside `[-1, 1]`.
-theorem sin_arccos (x : ℝ) : sin (arccos x) = sqrt (1 - x ^ 2) := by
+theorem sin_arccos (x : ℝ) : sin (arccos x) = sqrt (1 - x ^ 2) :=
+  by
   by_cases hx₁ : -1 ≤ x; swap
   · rw [not_le] at hx₁
     rw [arccos_of_le_neg_one hx₁.le, sin_pi, sqrt_eq_zero_of_nonpos]
@@ -438,7 +444,8 @@ theorem arccos_lt_pi_div_two {x : ℝ} : arccos x < π / 2 ↔ 0 < x := by simp 
 #align real.arccos_lt_pi_div_two Real.arccos_lt_pi_div_two
 
 @[simp]
-theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x := by
+theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ sqrt 2 / 2 ≤ x :=
+  by
   rw [arccos, ← pi_div_four_le_arcsin]
   constructor <;>
     · intro
@@ -463,7 +470,8 @@ theorem arccos_eq_arcsin {x : ℝ} (h : 0 ≤ x) : arccos x = arcsin (sqrt (1 - 
 #align real.arccos_eq_arcsin Real.arccos_eq_arcsin
 
 -- The junk values for `arcsin` and `sqrt` make this true even for `1 < x`.
-theorem arcsin_eq_arccos {x : ℝ} (h : 0 ≤ x) : arcsin x = arccos (sqrt (1 - x ^ 2)) := by
+theorem arcsin_eq_arccos {x : ℝ} (h : 0 ≤ x) : arcsin x = arccos (sqrt (1 - x ^ 2)) :=
+  by
   rw [eq_comm, ← cos_arcsin]
   exact
     arccos_cos (arcsin_nonneg.2 h)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.matrix.pequiv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ def toMatrix [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n α
 #align pequiv.to_matrix PEquiv.toMatrix
 
 theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiring α] (f : l ≃. m) (M : Matrix m n α)
-    (i j) : (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
+    (i j) : (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j :=
+  by
   dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f i with fi
   · simp [h]
@@ -82,7 +83,8 @@ theorem to_matrix_refl [DecidableEq n] [Zero α] [One α] :
 #align pequiv.to_matrix_refl PEquiv.to_matrix_refl
 
 theorem matrix_mul_apply [Fintype m] [Semiring α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n)
-    (i j) : (M ⬝ f.toMatrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
+    (i j) : (M ⬝ f.toMatrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj :=
+  by
   dsimp [to_matrix, Matrix.mul_apply]
   cases' h : f.symm j with fj
   · simp [h, ← f.eq_some_iff]
@@ -94,7 +96,8 @@ theorem matrix_mul_apply [Fintype m] [Semiring α] [DecidableEq n] (M : Matrix l
 #align pequiv.matrix_mul_apply PEquiv.matrix_mul_apply
 
 theorem to_pequiv_mul_matrix [Fintype m] [DecidableEq m] [Semiring α] (f : m ≃ m)
-    (M : Matrix m n α) : f.toPequiv.toMatrix ⬝ M = fun i => M (f i) := by
+    (M : Matrix m n α) : f.toPequiv.toMatrix ⬝ M = fun i => M (f i) :=
+  by
   ext (i j)
   rw [mul_matrix_apply, Equiv.toPEquiv_apply]
 #align pequiv.to_pequiv_mul_matrix PEquiv.to_pequiv_mul_matrix
@@ -107,7 +110,8 @@ theorem mul_to_pequiv_to_matrix {m n α : Type _} [Fintype n] [DecidableEq n] [S
 #align pequiv.mul_to_pequiv_to_matrix PEquiv.mul_to_pequiv_to_matrix
 
 theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiring α] (f : l ≃. m)
-    (g : m ≃. n) : ((f.trans g).toMatrix : Matrix l n α) = f.toMatrix ⬝ g.toMatrix := by
+    (g : m ≃. n) : ((f.trans g).toMatrix : Matrix l n α) = f.toMatrix ⬝ g.toMatrix :=
+  by
   ext (i j)
   rw [mul_matrix_apply]
   dsimp [to_matrix, PEquiv.trans]
@@ -122,7 +126,7 @@ theorem to_matrix_bot [DecidableEq n] [Zero α] [One α] :
 
 theorem to_matrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
     Function.Injective (@toMatrix m n α _ _ _) := by
-  classical 
+  classical
     intro f g
     refine' not_imp_not.1 _
     simp only [matrix.ext_iff.symm, to_matrix, PEquiv.ext_iff, not_forall, exists_imp]
@@ -141,12 +145,12 @@ theorem to_matrix_swap [DecidableEq n] [Ring α] (i j : n) :
     (Equiv.swap i j).toPequiv.toMatrix =
       (1 : Matrix n n α) - (single i i).toMatrix - (single j j).toMatrix + (single i j).toMatrix +
         (single j i).toMatrix :=
-  by 
+  by
   ext
   dsimp [to_matrix, single, Equiv.swap_apply_def, Equiv.toPEquiv, one_apply]
   split_ifs <;>
     first
-      |· simp_all|· 
+      |· simp_all|·
         exfalso
         assumption
 #align pequiv.to_matrix_swap PEquiv.to_matrix_swap

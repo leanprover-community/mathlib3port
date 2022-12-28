@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.power
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,13 +25,15 @@ variable {G₀ : Type _} [GroupWithZero G₀] {a : G₀} {m n : ℕ}
 
 section NatPow
 
-theorem pow_sub₀ (a : G₀) {m n : ℕ} (ha : a ≠ 0) (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
+theorem pow_sub₀ (a : G₀) {m n : ℕ} (ha : a ≠ 0) (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
+  by
   have h1 : m - n + n = m := tsub_add_cancel_of_le h
   have h2 : a ^ (m - n) * a ^ n = a ^ m := by rw [← pow_add, h1]
   simpa only [div_eq_mul_inv] using eq_div_of_mul_eq (pow_ne_zero _ ha) h2
 #align pow_sub₀ pow_sub₀
 
-theorem pow_sub_of_lt (a : G₀) {m n : ℕ} (h : n < m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
+theorem pow_sub_of_lt (a : G₀) {m n : ℕ} (h : n < m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
+  by
   obtain rfl | ha := eq_or_ne a 0
   · rw [zero_pow (tsub_pos_of_lt h), zero_pow (n.zero_le.trans_lt h), zero_mul]
   · exact pow_sub₀ _ ha h.le
@@ -62,13 +64,14 @@ variable {G₀ : Type _} [GroupWithZero G₀]
 attribute [local ematch] le_of_lt
 
 theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
-  | (n : ℕ), h => by 
+  | (n : ℕ), h => by
     rw [zpow_ofNat, zero_pow']
     simpa using h
   | -[n+1], h => by simp
 #align zero_zpow zero_zpow
 
-theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
+theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 :=
+  by
   split_ifs with h
   · rw [h, zpow_zero]
   · rw [zero_zpow _ h]
@@ -90,7 +93,8 @@ theorem zpow_sub_one₀ {a : G₀} (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ 
     
 #align zpow_sub_one₀ zpow_sub_one₀
 
-theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m * a ^ n := by
+theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m * a ^ n :=
+  by
   induction' n using Int.induction_on with n ihn n ihn
   case hz => simp
   · simp only [← add_assoc, zpow_add_one₀ ha, ihn, mul_assoc]
@@ -98,7 +102,7 @@ theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m 
 #align zpow_add₀ zpow_add₀
 
 theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) :
-    a ^ (m + n) = a ^ m * a ^ n := by 
+    a ^ (m + n) = a ^ m * a ^ n := by
   by_cases hm : m = 0; · simp [hm]
   by_cases hn : n = 0; · simp [hn]
   by_cases ha : a = 0
@@ -143,17 +147,18 @@ theorem Commute.zpow_zpow_self₀ (a : G₀) (m n : ℤ) : Commute (a ^ m) (a ^ 
   (Commute.refl a).zpow_zpow₀ m n
 #align commute.zpow_zpow_self₀ Commute.zpow_zpow_self₀
 
-theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a := by
+theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a :=
+  by
   rw [← zpow_bit0, bit1, zpow_add', zpow_one]
   right; left
   apply bit1_ne_zero
 #align zpow_bit1₀ zpow_bit1₀
 
 theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
-  | (n : ℕ) => by 
+  | (n : ℕ) => by
     rw [zpow_ofNat]
     exact pow_ne_zero _ ha
-  | -[n+1] => by 
+  | -[n+1] => by
     rw [zpow_negSucc]
     exact inv_ne_zero (pow_ne_zero _ ha)
 #align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
@@ -178,7 +183,8 @@ theorem zpow_ne_zero {x : G₀} (n : ℤ) : x ≠ 0 → x ^ n ≠ 0 :=
   mt zpow_eq_zero
 #align zpow_ne_zero zpow_ne_zero
 
-theorem zpow_neg_mul_zpow_self (n : ℤ) {x : G₀} (h : x ≠ 0) : x ^ (-n) * x ^ n = 1 := by
+theorem zpow_neg_mul_zpow_self (n : ℤ) {x : G₀} (h : x ≠ 0) : x ^ (-n) * x ^ n = 1 :=
+  by
   rw [zpow_neg]
   exact inv_mul_cancel (zpow_ne_zero n h)
 #align zpow_neg_mul_zpow_self zpow_neg_mul_zpow_self
@@ -189,7 +195,8 @@ section
 
 variable {G₀ : Type _} [CommGroupWithZero G₀]
 
-theorem div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b := by
+theorem div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b :=
+  by
   by_cases ha : a = 0
   · simp [ha]
   rw [sq, mul_assoc, mul_div_cancel_left _ ha]

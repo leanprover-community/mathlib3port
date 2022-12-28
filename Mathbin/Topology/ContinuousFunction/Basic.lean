@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,8 +83,8 @@ namespace ContinuousMap
 variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
   [TopologicalSpace δ]
 
-instance : ContinuousMapClass C(α, β) α
-      β where 
+instance : ContinuousMapClass C(α, β) α β
+    where
   coe := ContinuousMap.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
   map_continuous := ContinuousMap.continuous_to_fun
@@ -114,8 +114,8 @@ theorem ext {f g : C(α, β)} (h : ∀ a, f a = g a) : f = g :=
 
 /-- Copy of a `continuous_map` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy (f : C(α, β)) (f' : α → β) (h : f' = f) :
-    C(α, β) where 
+protected def copy (f : C(α, β)) (f' : α → β) (h : f' = f) : C(α, β)
+    where
   toFun := f'
   continuous_to_fun := h.symm ▸ f.continuous_to_fun
 #align continuous_map.copy ContinuousMap.copy
@@ -178,9 +178,10 @@ The continuous functions from `α` to `β` are the same as the plain functions w
 -/
 @[simps]
 def equivFnOfDiscrete [DiscreteTopology α] : C(α, β) ≃ (α → β) :=
-  ⟨fun f => f, fun f => ⟨f, continuous_of_discrete_topology⟩, fun f => by
+  ⟨fun f => f, fun f => ⟨f, continuous_of_discrete_topology⟩, fun f =>
+    by
     ext
-    rfl, fun f => by 
+    rfl, fun f => by
     ext
     rfl⟩
 #align continuous_map.equiv_fn_of_discrete ContinuousMap.equivFnOfDiscrete
@@ -285,16 +286,16 @@ variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [Topologica
   [TopologicalSpace β₂]
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
-def prodMk (f : C(α, β₁)) (g : C(α, β₂)) :
-    C(α, β₁ × β₂) where 
+def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂)
+    where
   toFun x := (f x, g x)
   continuous_to_fun := Continuous.prod_mk f.Continuous g.Continuous
 #align continuous_map.prod_mk ContinuousMap.prodMk
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
 @[simps]
-def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) :
-    C(α₁ × β₁, α₂ × β₂) where 
+def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂)
+    where
   toFun := Prod.map f g
   continuous_to_fun := Continuous.prod_map f.Continuous g.Continuous
 #align continuous_map.prod_map ContinuousMap.prodMap
@@ -355,11 +356,12 @@ include hφ hS
 /-- A family `φ i` of continuous maps `C(S i, β)`, where the domains `S i` contain a neighbourhood
 of each point in `α` and the functions `φ i` agree pairwise on intersections, can be glued to
 construct a continuous map in `C(α, β)`. -/
-noncomputable def liftCover : C(α, β) := by
-  have H : (⋃ i, S i) = Set.univ := by 
+noncomputable def liftCover : C(α, β) :=
+  by
+  have H : (⋃ i, S i) = Set.univ := by
     rw [Set.eq_univ_iff_forall]
     intro x
-    rw [Set.mem_Union]
+    rw [Set.mem_unionᵢ]
     obtain ⟨i, hi⟩ := hS x
     exact ⟨i, mem_of_mem_nhds hi⟩
   refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_subtype_nhds_cover hS _⟩
@@ -394,7 +396,8 @@ include hF hA
 /-- A family `F s` of continuous maps `C(s, β)`, where (1) the domains `s` are taken from a set `A`
 of sets in `α` which contain a neighbourhood of each point in `α` and (2) the functions `F s` agree
 pairwise on intersections, can be glued to construct a continuous map in `C(α, β)`. -/
-noncomputable def liftCover' : C(α, β) := by
+noncomputable def liftCover' : C(α, β) :=
+  by
   let S : A → Set α := coe
   let F : ∀ i : A, C(i, β) := fun i => F i i.Prop
   refine' lift_cover S F (fun i j => hF i i.Prop j j.Prop) _

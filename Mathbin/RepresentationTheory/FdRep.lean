@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.fdRep
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,15 +59,18 @@ instance : Linear k (FdRep k G) := by infer_instance
 instance : CoeSort (FdRep k G) (Type u) :=
   ConcreteCategory.hasCoeToSort _
 
-instance (V : FdRep k G) : AddCommGroup V := by
+instance (V : FdRep k G) : AddCommGroup V :=
+  by
   change AddCommGroup ((forget₂ (FdRep k G) (FgModule k)).obj V).obj
   infer_instance
 
-instance (V : FdRep k G) : Module k V := by
+instance (V : FdRep k G) : Module k V :=
+  by
   change Module k ((forget₂ (FdRep k G) (FgModule k)).obj V).obj
   infer_instance
 
-instance (V : FdRep k G) : FiniteDimensional k V := by
+instance (V : FdRep k G) : FiniteDimensional k V :=
+  by
   change FiniteDimensional k ((forget₂ (FdRep k G) (FgModule k)).obj V).obj
   infer_instance
 
@@ -87,7 +90,8 @@ def isoToLinearEquiv {V W : FdRep k G} (i : V ≅ W) : V ≃ₗ[k] W :=
 #align fdRep.iso_to_linear_equiv FdRep.isoToLinearEquiv
 
 theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) :
-    W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) := by
+    W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) :=
+  by
   rw [FdRep.isoToLinearEquiv, ← FgModule.Iso.conj_eq_conj, iso.conj_apply]
   rw [iso.eq_inv_comp ((ActionCat.forget (FgModule k) (MonCat.of G)).mapIso i)]
   exact (i.hom.comm g).symm
@@ -100,11 +104,11 @@ def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V]
   ⟨FgModule.of k V, ρ⟩
 #align fdRep.of FdRep.of
 
-instance :
-    HasForget₂ (FdRep k G)
-      (RepCat k G) where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
+instance : HasForget₂ (FdRep k G) (RepCat k G)
+    where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
 
-theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (RepCat k G)).obj V).ρ = V.ρ := by
+theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (RepCat k G)).obj V).ρ = V.ρ :=
+  by
   ext (g v)
   rfl
 #align fdRep.forget₂_ρ FdRep.forget₂_ρ
@@ -133,15 +137,16 @@ theorem finrank_hom_simple_simple [IsAlgClosed k] (V W : FdRep k G) [Simple V] [
 /-- The forgetful functor to `Rep k G` preserves hom-sets and their vector space structure -/
 def forget₂HomLinearEquiv (X Y : FdRep k G) :
     ((forget₂ (FdRep k G) (RepCat k G)).obj X ⟶ (forget₂ (FdRep k G) (RepCat k G)).obj Y) ≃ₗ[k]
-      X ⟶ Y where 
+      X ⟶ Y
+    where
   toFun f := ⟨f.hom, f.comm⟩
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   invFun f := ⟨(forget₂ (FgModule k) (ModuleCat k)).map f.hom, f.comm⟩
-  left_inv _ := by 
+  left_inv _ := by
     ext
     rfl
-  right_inv _ := by 
+  right_inv _ := by
     ext
     rfl
 #align fdRep.forget₂_hom_linear_equiv FdRep.forget₂HomLinearEquiv
@@ -153,7 +158,8 @@ namespace FdRep
 variable {k G : Type u} [Field k] [Group G]
 
 -- Verify that the right rigid structure is available when the monoid is a group.
-noncomputable instance : RightRigidCategory (FdRep k G) := by
+noncomputable instance : RightRigidCategory (FdRep k G) :=
+  by
   change right_rigid_category (ActionCat (FgModule k) (GroupCat.of G))
   infer_instance
 
@@ -186,7 +192,8 @@ noncomputable def dualTensorIsoLinHomAux :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- When `V` and `W` are finite dimensional representations of a group `G`, the isomorphism
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/
-noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ W ≅ FdRep.of (linHom ρV W.ρ) := by
+noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ W ≅ FdRep.of (linHom ρV W.ρ) :=
+  by
   apply ActionCat.mkIso (dual_tensor_iso_lin_hom_aux ρV W)
   convert dual_tensor_hom_comm ρV W.ρ
 #align fdRep.dual_tensor_iso_lin_hom FdRep.dualTensorIsoLinHom

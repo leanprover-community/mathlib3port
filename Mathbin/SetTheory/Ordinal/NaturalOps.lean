@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.natural_ops
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,12 +206,14 @@ theorem nadd_def (a b : Ordinal) :
   rw [nadd]
 #align ordinal.nadd_def Ordinal.nadd_def
 
-theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' := by
+theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' :=
+  by
   rw [nadd_def]
   simp [lt_blsub_iff]
 #align ordinal.lt_nadd_iff Ordinal.lt_nadd_iff
 
-theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < c, b ♯ c' < a := by
+theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < c, b ♯ c' < a :=
+  by
   rw [nadd_def]
   simp [blsub_le_iff]
 #align ordinal.nadd_le_iff Ordinal.nadd_le_iff
@@ -224,13 +226,15 @@ theorem nadd_lt_nadd_right (h : b < c) (a) : b ♯ a < c ♯ a :=
   lt_nadd_iff.2 (Or.inl ⟨b, h, le_rfl⟩)
 #align ordinal.nadd_lt_nadd_right Ordinal.nadd_lt_nadd_right
 
-theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c := by
+theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c :=
+  by
   rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_left h a).le
   · exact le_rfl
 #align ordinal.nadd_le_nadd_left Ordinal.nadd_le_nadd_left
 
-theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a := by
+theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a :=
+  by
   rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_right h a).le
   · exact le_rfl
@@ -239,7 +243,7 @@ theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a := by
 variable (a b)
 
 theorem nadd_comm : ∀ a b, a ♯ b = b ♯ a
-  | a, b => by 
+  | a, b => by
     rw [nadd_def, nadd_def, max_comm]
     congr <;> ext (c hc) <;> apply nadd_comm decreasing_by
   solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
@@ -250,19 +254,20 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}}
     blsub _ f =
       max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) <| nadd_lt_nadd_right ha' b)
         (blsub.{u, v} b fun b' hb' => f (a ♯ b') <| nadd_lt_nadd_left hb' a) :=
-  by 
+  by
   apply (blsub_le_iff.2 fun i h => _).antisymm (max_le _ _)
   · rcases lt_nadd_iff.1 h with (⟨a', ha', hi⟩ | ⟨b', hb', hi⟩)
     · exact lt_max_of_lt_left ((hf h (nadd_lt_nadd_right ha' b) hi).trans_lt (lt_blsub _ _ _))
     · exact lt_max_of_lt_right ((hf h (nadd_lt_nadd_left hb' a) hi).trans_lt (lt_blsub _ _ _))
-  all_goals 
+  all_goals
     apply blsub_le_of_brange_subset.{u, u, v}
     rintro c ⟨d, hd, rfl⟩
     apply mem_brange_self
 #align ordinal.blsub_nadd_of_mono Ordinal.blsub_nadd_of_mono
 
 theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
-  | a, b, c => by
+  | a, b, c =>
+    by
     rw [nadd_def a (b ♯ c), nadd_def, blsub_nadd_of_mono, blsub_nadd_of_mono, max_assoc]
     · congr <;> ext (d hd) <;> apply nadd_assoc
     · exact fun i j _ _ h => nadd_le_nadd_left h a
@@ -271,7 +276,8 @@ theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
 #align ordinal.nadd_assoc Ordinal.nadd_assoc
 
 @[simp]
-theorem nadd_zero : a ♯ 0 = a := by
+theorem nadd_zero : a ♯ 0 = a :=
+  by
   induction' a using Ordinal.induction with a IH
   rw [nadd_def, blsub_zero, max_zero_right]
   convert blsub_id a
@@ -284,7 +290,8 @@ theorem zero_nadd : 0 ♯ a = a := by rw [nadd_comm, nadd_zero]
 #align ordinal.zero_nadd Ordinal.zero_nadd
 
 @[simp]
-theorem nadd_one : a ♯ 1 = succ a := by
+theorem nadd_one : a ♯ 1 = succ a :=
+  by
   induction' a using Ordinal.induction with a IH
   rw [nadd_def, blsub_one, nadd_zero, max_eq_right_iff, blsub_le_iff]
   intro i hi
@@ -302,7 +309,8 @@ theorem succ_nadd : succ a ♯ b = succ (a ♯ b) := by rw [← one_nadd (a ♯ 
 #align ordinal.succ_nadd Ordinal.succ_nadd
 
 @[simp]
-theorem nadd_nat (n : ℕ) : a ♯ n = a + n := by
+theorem nadd_nat (n : ℕ) : a ♯ n = a + n :=
+  by
   induction' n with n hn
   · simp
   · rw [Nat.cast_succ, add_one_eq_succ, nadd_succ, add_succ, hn]
@@ -341,13 +349,13 @@ instance add_covariant_class_le : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (
 
 instance add_contravariant_class_le :
     ContravariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
-  ⟨fun a b c h => by 
+  ⟨fun a b c h => by
     by_contra' h'
     exact h.not_lt (add_lt_add_left h' a)⟩
 #align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariant_class_le
 
 instance : OrderedCancelAddCommMonoid NatOrdinal :=
-  { NatOrdinal.linearOrder with 
+  { NatOrdinal.linearOrder with
     add := (· + ·)
     add_assoc := nadd_assoc
     add_le_add_left := fun a b => add_le_add_left
@@ -366,7 +374,8 @@ theorem add_one_eq_succ : ∀ a : NatOrdinal, a + 1 = succ a :=
 #align nat_ordinal.add_one_eq_succ NatOrdinal.add_one_eq_succ
 
 @[simp]
-theorem to_ordinal_cast_nat (n : ℕ) : toOrdinal n = n := by
+theorem to_ordinal_cast_nat (n : ℕ) : toOrdinal n = n :=
+  by
   induction' n with n hn
   · rfl
   · change nadd (to_ordinal n) 1 = n + 1
@@ -383,7 +392,8 @@ open NaturalOps
 namespace Ordinal
 
 @[simp]
-theorem to_nat_ordinal_cast_nat (n : ℕ) : toNatOrdinal n = n := by
+theorem to_nat_ordinal_cast_nat (n : ℕ) : toNatOrdinal n = n :=
+  by
   rw [← to_ordinal_cast_nat n]
   rfl
 #align ordinal.to_nat_ordinal_cast_nat Ordinal.to_nat_ordinal_cast_nat

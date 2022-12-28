@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.zmod.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,10 +29,11 @@ variable {n : ℕ} (m : ℕ) [CharP R m]
 
 /-- The `zmod n`-algebra structure on rings whose characteristic `m` divides `n` -/
 def algebra' (h : m ∣ n) : Algebra (Zmod n) R :=
-  { Zmod.castHom h R with 
+  { Zmod.castHom h R with
     smul := fun a r => a * r
     commutes' := fun a r =>
-      show (a * r : R) = r * a by
+      show (a * r : R) = r * a
+        by
         rcases Zmod.int_cast_surjective a with ⟨k, rfl⟩
         show Zmod.castHom h R k * r = r * Zmod.castHom h R k
         rw [map_int_cast]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.term
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,33 +58,38 @@ def div (i : Int) : Term → Term
   | (b, as) => (b / i, as.map fun x => x / i)
 #align omega.term.div Omega.Term.div
 
-theorem val_neg {v : Nat → Int} {t : Term} : (neg t).val v = -t.val v := by
+theorem val_neg {v : Nat → Int} {t : Term} : (neg t).val v = -t.val v :=
+  by
   cases' t with b as
   simp only [val, neg_add, neg, val, coeffs.val_neg]
 #align omega.term.val_neg Omega.Term.val_neg
 
 @[simp]
-theorem val_sub {v : Nat → Int} {t1 t2 : Term} : (sub t1 t2).val v = t1.val v - t2.val v := by
+theorem val_sub {v : Nat → Int} {t1 t2 : Term} : (sub t1 t2).val v = t1.val v - t2.val v :=
+  by
   cases t1; cases t2
   simp only [add_assoc, coeffs.val_sub, neg_add_rev, val, sub, add_comm, add_left_comm,
     sub_eq_add_neg]
 #align omega.term.val_sub Omega.Term.val_sub
 
 @[simp]
-theorem val_add {v : Nat → Int} {t1 t2 : Term} : (add t1 t2).val v = t1.val v + t2.val v := by
+theorem val_add {v : Nat → Int} {t1 t2 : Term} : (add t1 t2).val v = t1.val v + t2.val v :=
+  by
   cases t1; cases t2
   simp only [coeffs.val_add, add, val, add_comm, add_left_comm]
 #align omega.term.val_add Omega.Term.val_add
 
 @[simp]
-theorem val_mul {v : Nat → Int} {i : Int} {t : Term} : val v (mul i t) = i * val v t := by
+theorem val_mul {v : Nat → Int} {i : Int} {t : Term} : val v (mul i t) = i * val v t :=
+  by
   cases t
   simp only [mul, mul_add, add_mul, List.length_map, coeffs.val, coeffs.val_between_map_mul, val,
     List.map]
 #align omega.term.val_mul Omega.Term.val_mul
 
 theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
-    i ∣ b → (∀ x ∈ as, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i := by
+    i ∣ b → (∀ x ∈ as, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i :=
+  by
   intro h1 h2; simp only [val, div, List.map]
   rw [Int.add_ediv_of_dvd_left h1]
   apply fun_mono_2 rfl

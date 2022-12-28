@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.symmetric
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,9 +82,8 @@ def IsSymmetric [CommSemiring R] (φ : MvPolynomial σ R) : Prop :=
 variable (σ R)
 
 /-- The subalgebra of symmetric `mv_polynomial`s. -/
-def symmetricSubalgebra [CommSemiring R] :
-    Subalgebra R (MvPolynomial σ
-        R) where 
+def symmetricSubalgebra [CommSemiring R] : Subalgebra R (MvPolynomial σ R)
+    where
   carrier := setOf IsSymmetric
   algebra_map_mem' r e := rename_C e r
   mul_mem' a b ha hb e := by rw [AlgHom.map_mul, ha, hb]
@@ -185,7 +184,8 @@ theorem esymm_eq_sum_subtype (n : ℕ) :
 
 /-- We can define `esymm σ R n` as a sum over explicit monomials -/
 theorem esymm_eq_sum_monomial (n : ℕ) :
-    esymm σ R n = ∑ t in powersetLen n univ, monomial (∑ i in t, Finsupp.single i 1) 1 := by
+    esymm σ R n = ∑ t in powersetLen n univ, monomial (∑ i in t, Finsupp.single i 1) 1 :=
+  by
   simp_rw [monomial_sum_one]
   rfl
 #align mv_polynomial.esymm_eq_sum_monomial MvPolynomial.esymm_eq_sum_monomial
@@ -209,7 +209,8 @@ theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm
     
 #align mv_polynomial.rename_esymm MvPolynomial.rename_esymm
 
-theorem esymm_is_symmetric (n : ℕ) : IsSymmetric (esymm σ R n) := by
+theorem esymm_is_symmetric (n : ℕ) : IsSymmetric (esymm σ R n) :=
+  by
   intro
   rw [rename_esymm]
 #align mv_polynomial.esymm_is_symmetric MvPolynomial.esymm_is_symmetric
@@ -218,7 +219,7 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
       (powersetLen n (univ : Finset σ)).bUnion fun t =>
         (Finsupp.single (∑ i : σ in t, Finsupp.single i 1) (1 : R)).support :=
-  by 
+  by
   rw [esymm_eq_sum_monomial]
   simp only [← single_eq_monomial]
   convert Finsupp.support_sum_eq_bUnion (powerset_len n (univ : Finset σ)) _
@@ -236,7 +237,7 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
       (powersetLen n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} :=
-  by 
+  by
   rw [support_esymm'']
   congr
   funext
@@ -246,16 +247,17 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
       (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
-  by 
+  by
   rw [support_esymm']
   exact bUnion_singleton
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm
 
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
     (esymm σ R n).degrees = (univ : Finset σ).val := by
-  classical 
+  classical
     have :
-      (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val := by
+      (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val :=
+      by
       funext
       simp [Finsupp.to_multiset_sum_single]
     rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]

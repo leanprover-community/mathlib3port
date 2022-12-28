@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.complex.roots_of_unity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,8 @@ open Polynomial Real
 open Nat Real
 
 theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Coprime n) :
-    IsPrimitiveRoot (exp (2 * π * I * (i / n))) n := by
+    IsPrimitiveRoot (exp (2 * π * I * (i / n))) n :=
+  by
   rw [IsPrimitiveRoot.iff_def]
   simp only [← exp_nat_mul, exp_eq_one_iff]
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast h0
@@ -44,7 +45,7 @@ theorem is_primitive_root_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Copr
       mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp, field_simps]
     norm_cast
     rintro l k hk
-    have : n ∣ i * l := by 
+    have : n ∣ i * l := by
       rw [← Int.coe_nat_dvd, hk]
       apply dvd_mul_left
     exact hi.symm.dvd_of_dvd_mul_left this
@@ -56,7 +57,8 @@ theorem is_primitive_root_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2
 #align complex.is_primitive_root_exp Complex.is_primitive_root_exp
 
 theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
-    IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.Coprime n, exp (2 * π * I * (i / n)) = ζ := by
+    IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.Coprime n, exp (2 * π * I * (i / n)) = ζ :=
+  by
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn
   constructor; swap
   · rintro ⟨i, -, hi, rfl⟩
@@ -73,7 +75,8 @@ theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
 /-- The complex `n`-th roots of unity are exactly the
 complex numbers of the form `e ^ (2 * real.pi * complex.I * (i / n))` for some `i < n`. -/
 theorem mem_roots_of_unity (n : ℕ+) (x : Units ℂ) :
-    x ∈ rootsOfUnity n ℂ ↔ ∃ i < (n : ℕ), exp (2 * π * I * (i / n)) = x := by
+    x ∈ rootsOfUnity n ℂ ↔ ∃ i < (n : ℕ), exp (2 * π * I * (i / n)) = x :=
+  by
   rw [mem_roots_of_unity, Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one]
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast n.ne_zero
   constructor
@@ -94,7 +97,8 @@ theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :
   (is_primitive_root_exp n n.NeZero).card_roots_of_unity
 #align complex.card_roots_of_unity Complex.card_roots_of_unity
 
-theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k := by
+theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k :=
+  by
   by_cases h : k = 0
   · simp [h]
   exact (is_primitive_root_exp k h).card_primitive_roots
@@ -132,21 +136,22 @@ theorem IsPrimitiveRoot.arg_eq_pi_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoo
 #align is_primitive_root.arg_eq_pi_iff IsPrimitiveRoot.arg_eq_pi_iff
 
 theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
-    ∃ i : ℤ, ζ.arg = i / n * (2 * Real.pi) ∧ IsCoprime i n ∧ i.natAbs < n := by
+    ∃ i : ℤ, ζ.arg = i / n * (2 * Real.pi) ∧ IsCoprime i n ∧ i.natAbs < n :=
+  by
   rw [Complex.is_primitive_root_iff _ _ hn] at h
   obtain ⟨i, h, hin, rfl⟩ := h
   rw [mul_comm, ← mul_assoc, Complex.exp_mul_I]
   refine' ⟨if i * 2 ≤ n then i else i - n, _, _, _⟩
-  on_goal 2 => 
+  on_goal 2 =>
     replace hin := nat.is_coprime_iff_coprime.mpr hin
     split_ifs with _
     · exact hin
     · convert hin.add_mul_left_left (-1)
       rw [mul_neg_one, sub_eq_add_neg]
-  on_goal 2 => 
+  on_goal 2 =>
     split_ifs with h₂
     · exact_mod_cast h
-    suffices (i - n : ℤ).natAbs = n - i by 
+    suffices (i - n : ℤ).natAbs = n - i by
       rw [this]
       apply tsub_lt_self hn.bot_lt
       contrapose! h₂
@@ -177,7 +182,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     exact_mod_cast hn
   field_simp [hn]
   refine' ⟨_, le_trans _ real.pi_pos.le⟩
-  on_goal 2 => 
+  on_goal 2 =>
     rw [mul_div_assoc]
     exact
       mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr <| by exact_mod_cast h.le)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.traversable.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ but is expected to have type
   forall {F : Type.{u1} -> Type.{u2}} [_inst_1 : Applicative.{u1, u2} F] {_inst_2 : Type.{u1} -> Type.{u3}} [G : Applicative.{u1, u3} _inst_2] {{_inst_3 : ApplicativeTransformation.{u1, u2, u3} F _inst_1 _inst_2 G}} {{_inst_4 : ApplicativeTransformation.{u1, u2, u3} F _inst_1 _inst_2 G}}, (Eq.{max (max (succ (succ u1)) (succ u2)) (succ u3)} (forall {α._@.Mathlib.Control.Traversable.Basic._hyg.245 : Type.{u1}}, (F α._@.Mathlib.Control.Traversable.Basic._hyg.245) -> (_inst_2 α._@.Mathlib.Control.Traversable.Basic._hyg.245)) (fun {α._@.Mathlib.Control.Traversable.Basic._hyg.245 : Type.{u1}} => ApplicativeTransformation.app.{u1, u2, u3} F _inst_1 _inst_2 G _inst_3 α._@.Mathlib.Control.Traversable.Basic._hyg.245) (fun {α._@.Mathlib.Control.Traversable.Basic._hyg.245 : Type.{u1}} => ApplicativeTransformation.app.{u1, u2, u3} F _inst_1 _inst_2 G _inst_4 α._@.Mathlib.Control.Traversable.Basic._hyg.245)) -> (Eq.{max (max (succ (succ u1)) (succ u2)) (succ u3)} (ApplicativeTransformation.{u1, u2, u3} F _inst_1 _inst_2 G) _inst_3 _inst_4)
 Case conversion may be inaccurate. Consider using '#align applicative_transformation.coe_inj ApplicativeTransformation.coe_injₓ'. -/
 theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' :=
-  by 
+  by
   cases η
   cases η'
   congr
@@ -169,7 +169,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align applicative_transformation.ext ApplicativeTransformation.extₓ'. -/
 @[ext]
 theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ (α : Type u) (x : F α), η x = η' x) :
-    η = η' := by 
+    η = η' := by
   apply coe_inj
   ext1 α
   exact funext (h α)
@@ -220,7 +220,8 @@ theorem preserves_map {α β} (x : α → β) (y : F α) : η (x <$> y) = x <$> 
 -/
 
 #print ApplicativeTransformation.preserves_map' /-
-theorem preserves_map' {α β} (x : α → β) : @η _ ∘ Functor.map x = Functor.map x ∘ @η _ := by
+theorem preserves_map' {α β} (x : α → β) : @η _ ∘ Functor.map x = Functor.map x ∘ @η _ :=
+  by
   ext y
   exact preserves_map η x y
 #align applicative_transformation.preserves_map' ApplicativeTransformation.preserves_map'
@@ -230,8 +231,8 @@ end Preserves
 
 #print ApplicativeTransformation.idTransformation /-
 /-- The identity applicative transformation from an applicative functor to itself. -/
-def idTransformation : ApplicativeTransformation F
-      F where 
+def idTransformation : ApplicativeTransformation F F
+    where
   app α := id
   preserves_pure' := by simp
   preserves_seq' α β x y := by simp
@@ -253,7 +254,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align applicative_transformation.comp ApplicativeTransformation.compₓ'. -/
 /-- The composition of applicative transformations. -/
 def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) :
-    ApplicativeTransformation F H where 
+    ApplicativeTransformation F H where
   app α x := η' (η x)
   preserves_pure' α x := by simp [functor_norm]
   preserves_seq' α β x y := by simp [functor_norm]
@@ -350,7 +351,7 @@ send the composition of applicative functors to the composition of the
 `traverse` of each, send each function `f` to `λ x, f <$> x`, and
 satisfy a naturality condition with respect to applicative
 transformations. -/
-class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends IsLawfulFunctor t :
+class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends LawfulFunctor t :
   Type (u + 1) where
   id_traverse : ∀ {α} (x : t α), traverse id.mk x = x
   comp_traverse :

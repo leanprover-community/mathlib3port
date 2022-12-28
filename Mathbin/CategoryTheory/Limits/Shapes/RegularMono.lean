@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.regular_mono
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,20 +58,21 @@ instance (priority := 100) RegularMono.mono (f : X ⟶ Y) [RegularMono f] : Mono
 #align category_theory.regular_mono.mono CategoryTheory.RegularMono.mono
 
 instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] :
-    RegularMono (equalizer.ι g h) where 
+    RegularMono (equalizer.ι g h) where
   z := Y
   left := g
   right := h
   w := equalizer.condition g h
   IsLimit :=
-    Fork.IsLimit.mk _ (fun s => limit.lift _ s) (by simp) fun s m w => by
+    Fork.IsLimit.mk _ (fun s => limit.lift _ s) (by simp) fun s m w =>
+      by
       ext1
       simp [← w]
 #align category_theory.equalizer_regular CategoryTheory.equalizerRegular
 
 /-- Every split monomorphism is a regular monomorphism. -/
-instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono f] :
-    RegularMono f where 
+instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono f] : RegularMono f
+    where
   z := Y
   left := 𝟙 Y
   right := retraction f ≫ f
@@ -94,12 +95,12 @@ See also `pullback.snd_of_mono` for the basic monomorphism version, and
 -/
 def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
     [hr : RegularMono h] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
-    RegularMono g where 
+    RegularMono g where
   z := hr.z
   left := k ≫ hr.left
   right := k ≫ hr.right
   w := by rw [← reassoc_of comm, ← reassoc_of comm, hr.w]
-  IsLimit := by 
+  IsLimit := by
     apply fork.is_limit.mk' _ _
     intro s
     have l₁ : (fork.ι s ≫ k) ≫ regular_mono.left = (fork.ι s ≫ k) ≫ regular_mono.right
@@ -130,9 +131,10 @@ def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
 
 instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMono f] : StrongMono f :=
   StrongMono.mk'
-    (by 
+    (by
       intro A B z hz u v sq
-      have : v ≫ (regular_mono.left : Y ⟶ regular_mono.Z f) = v ≫ regular_mono.right := by
+      have : v ≫ (regular_mono.left : Y ⟶ regular_mono.Z f) = v ≫ regular_mono.right :=
+        by
         apply (cancel_epi z).1
         simp only [regular_mono.w, ← reassoc_of sq.w]
       obtain ⟨t, ht⟩ := regular_mono.lift' _ _ this
@@ -163,16 +165,18 @@ def regularMonoOfMono [RegularMonoCategory C] (f : X ⟶ Y) [Mono f] : RegularMo
 #align category_theory.regular_mono_of_mono CategoryTheory.regularMonoOfMono
 
 instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCategory C] :
-    RegularMonoCategory
-      C where regularMonoOfMono _ _ f _ := by
+    RegularMonoCategory C
+    where regularMonoOfMono _ _ f _ :=
+    by
     haveI := is_split_mono_of_mono f
     infer_instance
 #align
   category_theory.regular_mono_category_of_split_mono_category CategoryTheory.regularMonoCategoryOfSplitMonoCategory
 
 instance (priority := 100) strong_mono_category_of_regular_mono_category [RegularMonoCategory C] :
-    StrongMonoCategory
-      C where strong_mono_of_mono _ _ f _ := by
+    StrongMonoCategory C
+    where strong_mono_of_mono _ _ f _ :=
+    by
     haveI := regular_mono_of_mono f
     infer_instance
 #align
@@ -194,20 +198,21 @@ instance (priority := 100) RegularEpi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :
 #align category_theory.regular_epi.epi CategoryTheory.RegularEpi.epi
 
 instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] :
-    RegularEpi (coequalizer.π g h) where 
+    RegularEpi (coequalizer.π g h) where
   w := X
   left := g
   right := h
   w := coequalizer.condition g h
   IsColimit :=
-    Cofork.IsColimit.mk _ (fun s => colimit.desc _ s) (by simp) fun s m w => by
+    Cofork.IsColimit.mk _ (fun s => colimit.desc _ s) (by simp) fun s m w =>
+      by
       ext1
       simp [← w]
 #align category_theory.coequalizer_regular CategoryTheory.coequalizerRegular
 
 /-- Every split epimorphism is a regular epimorphism. -/
-instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] :
-    RegularEpi f where 
+instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : RegularEpi f
+    where
   w := X
   left := 𝟙 X
   right := f ≫ section_ f
@@ -230,12 +235,12 @@ See also `pushout.snd_of_epi` for the basic epimorphism version, and
 -/
 def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
     [gr : RegularEpi g] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
-    RegularEpi h where 
+    RegularEpi h where
   w := gr.w
   left := gr.left ≫ f
   right := gr.right ≫ f
   w := by rw [category.assoc, category.assoc, comm, reassoc_of gr.w]
-  IsColimit := by 
+  IsColimit := by
     apply cofork.is_colimit.mk' _ _
     intro s
     have l₁ : gr.left ≫ f ≫ s.π = gr.right ≫ f ≫ s.π
@@ -267,9 +272,10 @@ def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
 
 instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f :=
   StrongEpi.mk'
-    (by 
+    (by
       intro A B z hz u v sq
-      have : (regular_epi.left : regular_epi.W f ⟶ X) ≫ u = regular_epi.right ≫ u := by
+      have : (regular_epi.left : regular_epi.W f ⟶ X) ≫ u = regular_epi.right ≫ u :=
+        by
         apply (cancel_mono z).1
         simp only [category.assoc, sq.w, regular_epi.w_assoc]
       obtain ⟨t, ht⟩ := regular_epi.desc' f u this
@@ -303,16 +309,18 @@ def regularEpiOfEpi [RegularEpiCategory C] (f : X ⟶ Y) [Epi f] : RegularEpi f 
 #align category_theory.regular_epi_of_epi CategoryTheory.regularEpiOfEpi
 
 instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategory C] :
-    RegularEpiCategory
-      C where regularEpiOfEpi _ _ f _ := by
+    RegularEpiCategory C
+    where regularEpiOfEpi _ _ f _ :=
+    by
     haveI := is_split_epi_of_epi f
     infer_instance
 #align
   category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
 
 instance (priority := 100) strong_epi_category_of_regular_epi_category [RegularEpiCategory C] :
-    StrongEpiCategory
-      C where strong_epi_of_epi _ _ f _ := by
+    StrongEpiCategory C
+    where strong_epi_of_epi _ _ f _ :=
+    by
     haveI := regular_epi_of_epi f
     infer_instance
 #align

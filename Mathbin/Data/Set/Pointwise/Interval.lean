@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.pointwise.interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -438,7 +438,8 @@ theorem preimage_sub_const_interval : (fun x => x - a) ⁻¹' [b, c] = [b + a, c
 #align set.preimage_sub_const_interval Set.preimage_sub_const_interval
 
 @[simp]
-theorem preimage_const_sub_interval : (fun x => a - x) ⁻¹' [b, c] = [a - b, a - c] := by
+theorem preimage_const_sub_interval : (fun x => a - x) ⁻¹' [b, c] = [a - b, a - c] :=
+  by
   simp_rw [← Icc_min_max, preimage_const_sub_Icc]
   simp only [sub_eq_add_neg, min_add_add_left, max_add_add_left, min_neg_neg, max_neg_neg]
 #align set.preimage_const_sub_interval Set.preimage_const_sub_interval
@@ -468,7 +469,8 @@ variable {a b c d}
 
 /-- If `[c, d]` is a subinterval of `[a, b]`, then the distance between `c` and `d` is less than or
 equal to that of `a` and `b` -/
-theorem abs_sub_le_of_subinterval (h : [c, d] ⊆ [a, b]) : |d - c| ≤ |b - a| := by
+theorem abs_sub_le_of_subinterval (h : [c, d] ⊆ [a, b]) : |d - c| ≤ |b - a| :=
+  by
   rw [← max_sub_min_eq_abs, ← max_sub_min_eq_abs]
   rw [interval_subset_interval_iff_le] at h
   exact sub_le_sub h.2 h.1
@@ -724,7 +726,8 @@ theorem image_mul_right_Icc' (a b : α) {c : α} (h : 0 < c) :
 #align set.image_mul_right_Icc' Set.image_mul_right_Icc'
 
 theorem image_mul_right_Icc {a b c : α} (hab : a ≤ b) (hc : 0 ≤ c) :
-    (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) := by
+    (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) :=
+  by
   cases eq_or_lt_of_le hc
   · subst c
     simp [(nonempty_Icc.2 hab).image_const]
@@ -752,7 +755,8 @@ theorem image_mul_left_Ioo {a : α} (h : 0 < a) (b c : α) :
 #align set.image_mul_left_Ioo Set.image_mul_left_Ioo
 
 /-- The (pre)image under `inv` of `Ioo 0 a` is `Ioi a⁻¹`. -/
-theorem inv_Ioo_0_left {a : α} (ha : 0 < a) : (Ioo 0 a)⁻¹ = Ioi a⁻¹ := by
+theorem inv_Ioo_0_left {a : α} (ha : 0 < a) : (Ioo 0 a)⁻¹ = Ioi a⁻¹ :=
+  by
   ext x
   exact
     ⟨fun h => inv_inv x ▸ (inv_lt_inv ha h.1).2 h.2, fun h =>
@@ -777,7 +781,8 @@ theorem image_const_mul_Ioi_zero {k : Type _} [LinearOrderedField k] {x : k} (hx
 
 @[simp]
 theorem image_affine_Icc' {a : α} (h : 0 < a) (b c d : α) :
-    (fun x => a * x + b) '' Icc c d = Icc (a * c + b) (a * d + b) := by
+    (fun x => a * x + b) '' Icc c d = Icc (a * c + b) (a * d + b) :=
+  by
   suffices (fun x => x + b) '' ((fun x => a * x) '' Icc c d) = Icc (a * c + b) (a * d + b) by
     rwa [Set.image_image] at this
   rw [image_mul_left_Icc' h, image_add_const_Icc]

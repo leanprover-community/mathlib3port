@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.gal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ variable [CommRing L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L]
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 /-- `is_primitive_root.aut_to_pow` is injective in the case that it's considered over a cyclotomic
 field extension. -/
-theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K := by
+theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K :=
+  by
   intro f g hfg
   apply_fun Units.val  at hfg
   simp only [IsPrimitiveRoot.coe_aut_to_pow_apply, [anonymous]] at hfg
@@ -64,7 +65,8 @@ theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K := by
   have hf := hf'.some_spec
   have hg := hg'.some_spec
   generalize_proofs hζ  at hf hg
-  suffices f hμ.to_roots_of_unity = g hμ.to_roots_of_unity by
+  suffices f hμ.to_roots_of_unity = g hμ.to_roots_of_unity
+    by
     apply AlgEquiv.coe_alg_hom_injective
     apply (hμ.power_basis K).alg_hom_ext
     exact this
@@ -103,24 +105,26 @@ include h
 noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (Zmod n)ˣ :=
   let hζ := zeta_spec n K L
   let hμ t := hζ.pow_of_coprime _ (Zmod.val_coe_unit_coprime t)
-  { (zeta_spec n K L).autToPow K with
+  {
+    (zeta_spec n K L).autToPow
+      K with
     invFun := fun t =>
       (hζ.PowerBasis K).equivOfMinpoly ((hμ t).PowerBasis K)
-        (by 
+        (by
           haveI := IsCyclotomicExtension.ne_zero' n K L
           simp only [IsPrimitiveRoot.power_basis_gen]
           have hr :=
             IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible
               ((zeta_spec n K L).pow_of_coprime _ (Zmod.val_coe_unit_coprime t)) h
           exact ((zeta_spec n K L).minpoly_eq_cyclotomic_of_irreducible h).symm.trans hr)
-    left_inv := fun f => by 
+    left_inv := fun f => by
       simp only [MonoidHom.to_fun_eq_coe]
       apply AlgEquiv.coe_alg_hom_injective
       apply (hζ.power_basis K).alg_hom_ext
       simp only [AlgEquiv.coe_alg_hom, AlgEquiv.map_pow]
       rw [PowerBasis.equiv_of_minpoly_gen]
       simp only [IsPrimitiveRoot.power_basis_gen, IsPrimitiveRoot.aut_to_pow_spec]
-    right_inv := fun x => by 
+    right_inv := fun x => by
       simp only [MonoidHom.to_fun_eq_coe]
       generalize_proofs _ _ h
       have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).PowerBasis K) h)
@@ -149,7 +153,8 @@ noncomputable def fromZetaAut : L ≃ₐ[K] L :=
 #align is_cyclotomic_extension.from_zeta_aut IsCyclotomicExtension.fromZetaAut
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) } -/
-theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ := by
+theorem from_zeta_aut_spec : fromZetaAut hμ h (zeta n K L) = μ :=
+  by
   simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
   generalize_proofs _ hζ h _ hμ _
   rw [← hζ.power_basis_gen K]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module order.filter.zero_and_bounded_at_filter
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,15 +50,15 @@ theorem ZeroAtFilter.neg [TopologicalSpace β] [AddGroup β] [HasContinuousNeg �
 #align filter.zero_at_filter.neg Filter.ZeroAtFilter.neg
 
 theorem ZeroAtFilter.smul {𝕜 : Type _} [TopologicalSpace 𝕜] [TopologicalSpace β] [Zero 𝕜] [Zero β]
-    [SmulWithZero 𝕜 β] [HasContinuousSmul 𝕜 β] {l : Filter α} {f : α → β} (c : 𝕜)
+    [SMulWithZero 𝕜 β] [HasContinuousSmul 𝕜 β] {l : Filter α} {f : α → β} (c : 𝕜)
     (hf : ZeroAtFilter l f) : ZeroAtFilter l (c • f) := by simpa using hf.const_smul c
 #align filter.zero_at_filter.smul Filter.ZeroAtFilter.smul
 
 /-- `zero_at_filter_submodule l` is the submodule of `f : α → β` which
 tend to zero along `l`. -/
 def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd β]
-    [HasContinuousMul β] (l : Filter α) :
-    Submodule β (α → β) where 
+    [HasContinuousMul β] (l : Filter α) : Submodule β (α → β)
+    where
   carrier := ZeroAtFilter l
   zero_mem' := zero_zero_at_filter l
   add_mem' a b ha hb := ha.add hb
@@ -68,8 +68,8 @@ def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd 
 /-- `zero_at_filter_add_submonoid l` is the additive submonoid of `f : α → β`
 which tend to zero along `l`. -/
 def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [HasContinuousAdd β]
-    (l : Filter α) : AddSubmonoid
-      (α → β) where 
+    (l : Filter α) : AddSubmonoid (α → β)
+    where
   carrier := ZeroAtFilter l
   add_mem' a b ha hb := ha.add hb
   zero_mem' := zero_zero_at_filter l
@@ -82,7 +82,8 @@ def BoundedAtFilter [HasNorm β] (l : Filter α) (f : α → β) : Prop :=
 #align filter.bounded_at_filter Filter.BoundedAtFilter
 
 theorem ZeroAtFilter.bounded_at_filter [NormedAddCommGroup β] {l : Filter α} {f : α → β}
-    (hf : ZeroAtFilter l f) : BoundedAtFilter l f := by
+    (hf : ZeroAtFilter l f) : BoundedAtFilter l f :=
+  by
   rw [zero_at_filter, ← Asymptotics.is_o_const_iff (one_ne_zero' ℝ)] at hf
   exact hf.is_O
 #align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.bounded_at_filter
@@ -108,7 +109,8 @@ theorem BoundedAtFilter.smul {𝕜 : Type _} [NormedField 𝕜] [NormedAddCommGr
 #align filter.bounded_at_filter.smul Filter.BoundedAtFilter.smul
 
 theorem BoundedAtFilter.mul [NormedField β] {l : Filter α} {f g : α → β} (hf : BoundedAtFilter l f)
-    (hg : BoundedAtFilter l g) : BoundedAtFilter l (f * g) := by
+    (hg : BoundedAtFilter l g) : BoundedAtFilter l (f * g) :=
+  by
   refine' (hf.mul hg).trans _
   convert Asymptotics.is_O_refl _ l
   ext x
@@ -116,8 +118,8 @@ theorem BoundedAtFilter.mul [NormedField β] {l : Filter α} {f g : α → β} (
 #align filter.bounded_at_filter.mul Filter.BoundedAtFilter.mul
 
 /-- The submodule of functions that are bounded along a filter `l`. -/
-def boundedFilterSubmodule [NormedField β] (l : Filter α) :
-    Submodule β (α → β) where 
+def boundedFilterSubmodule [NormedField β] (l : Filter α) : Submodule β (α → β)
+    where
   carrier := BoundedAtFilter l
   zero_mem' := const_bounded_at_filter l 0
   add_mem' f g hf hg := hf.add hg
@@ -125,7 +127,8 @@ def boundedFilterSubmodule [NormedField β] (l : Filter α) :
 #align filter.bounded_filter_submodule Filter.boundedFilterSubmodule
 
 /-- The subalgebra of functions that are bounded along a filter `l`. -/
-def boundedFilterSubalgebra [NormedField β] (l : Filter α) : Subalgebra β (α → β) := by
+def boundedFilterSubalgebra [NormedField β] (l : Filter α) : Subalgebra β (α → β) :=
+  by
   refine' Submodule.toSubalgebra (bounded_filter_submodule l) _ fun f g hf hg => _
   · exact const_bounded_at_filter l (1 : β)
   · simpa only [Pi.one_apply, mul_one, norm_mul] using hf.mul hg

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.weak_dual
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,8 @@ theorem to_seminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} :
 #align linear_map.to_seminorm_ball_zero LinearMap.to_seminorm_ball_zero
 
 theorem to_seminorm_comp (f : F →ₗ[𝕜] 𝕜) (g : E →ₗ[𝕜] F) :
-    f.toSeminorm.comp g = (f.comp g).toSeminorm := by
+    f.toSeminorm.comp g = (f.comp g).toSeminorm :=
+  by
   ext
   simp only [Seminorm.comp_apply, to_seminorm_apply, coe_comp]
 #align linear_map.to_seminorm_comp LinearMap.to_seminorm_comp
@@ -103,7 +104,8 @@ variable [Nonempty ι]
 variable {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜}
 
 theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
-    (𝓝 (0 : WeakBilin B)).HasBasis B.toSeminormFamily.basis_sets id := by
+    (𝓝 (0 : WeakBilin B)).HasBasis B.toSeminormFamily.basis_sets id :=
+  by
   let p := B.to_seminorm_family
   rw [nhds_induced, nhds_pi]
   simp only [map_zero, LinearMap.zero_apply]
@@ -158,7 +160,7 @@ variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [M
 variable [Nonempty ι] [NormedSpace ℝ 𝕜] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
 
 instance {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} : LocallyConvexSpace ℝ (WeakBilin B) :=
-  B.weakBilinWithSeminorms.to_locally_convex_space
+  B.weakBilinWithSeminorms.toLocallyConvexSpace
 
 end LocallyConvex
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.functor_category
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,11 +59,13 @@ work to convert to this version: namely, the natural isomorphism
 -/
 def FunctorCategory.prodPreservesColimits [HasBinaryProducts D] [HasColimits D]
     [∀ X : D, PreservesColimits (prod.functor.obj X)] (F : C ⥤ D) :
-    PreservesColimits
-      (prod.functor.obj
-        F) where PreservesColimitsOfShape J 𝒥 :=
-    { PreservesColimit := fun K =>
-        { preserves := fun c t => by
+    PreservesColimits (prod.functor.obj F)
+    where PreservesColimitsOfShape J 𝒥 :=
+    {
+      PreservesColimit := fun K =>
+        {
+          preserves := fun c t =>
+            by
             apply evaluation_jointly_reflects_colimits _ fun k => _
             change is_colimit ((prod.functor.obj F ⋙ (evaluation _ _).obj k).mapCocone c)
             let this :=
@@ -81,7 +83,7 @@ instance whiskeringLeftPreservesLimits [HasLimits D] (F : C ⥤ E) :
     PreservesLimits ((whiskeringLeft C E D).obj F) :=
   ⟨fun J hJ =>
     ⟨fun K =>
-      ⟨fun c hc => by 
+      ⟨fun c hc => by
         apply evaluation_jointly_reflects_limits
         intro Y
         change is_limit (((evaluation E D).obj (F.obj Y)).mapCone c)
@@ -93,7 +95,7 @@ instance whiskeringRightPreservesLimitsOfShape {C : Type u} [Category C] {D : Ty
     [HasLimitsOfShape J D] (F : D ⥤ E) [PreservesLimitsOfShape J F] :
     PreservesLimitsOfShape J ((whiskeringRight C D E).obj F) :=
   ⟨fun K =>
-    ⟨fun c hc => by 
+    ⟨fun c hc => by
       apply evaluation_jointly_reflects_limits
       intro k
       change is_limit (((evaluation _ _).obj k ⋙ F).mapCone c)
@@ -111,7 +113,8 @@ instance whiskeringRightPreservesLimits {C : Type u} [Category C] {D : Type _} [
 /-- If `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves limits of shape `J`, so will `F`. -/
 noncomputable def preservesLimitOfLanPresesrvesLimit {C D : Type u} [SmallCategory C]
     [SmallCategory D] (F : C ⥤ D) (J : Type u) [SmallCategory J]
-    [PreservesLimitsOfShape J (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u)] : PreservesLimitsOfShape J F := by
+    [PreservesLimitsOfShape J (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u)] : PreservesLimitsOfShape J F :=
+  by
   apply preserves_limits_of_shape_of_reflects_of_preserves F yoneda
   exact preserves_limits_of_shape_of_nat_iso (comp_yoneda_iso_yoneda_comp_Lan F).symm
   infer_instance

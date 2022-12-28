@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.structure_polynomial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,7 +142,7 @@ theorem witt_structure_rat_prop (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     bind₁ (wittStructureRat p Φ) (W_ ℚ n) =
         bind₁ (fun k => bind₁ (fun i => (rename (Prod.mk i)) (W_ ℚ k)) Φ)
           (bind₁ (xInTermsOfW p ℚ) (W_ ℚ n)) :=
-      by 
+      by
       rw [bind₁_bind₁]
       exact eval₂_hom_congr (RingHom.ext_rat _ _) rfl rfl
     _ = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ := by
@@ -153,7 +153,7 @@ theorem witt_structure_rat_prop (Φ : MvPolynomial idx ℚ) (n : ℕ) :
 theorem witt_structure_rat_exists_unique (Φ : MvPolynomial idx ℚ) :
     ∃! φ : ℕ → MvPolynomial (idx × ℕ) ℚ,
       ∀ n : ℕ, bind₁ φ (W_ ℚ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ :=
-  by 
+  by
   refine' ⟨wittStructureRat p Φ, _, _⟩
   · intro n
     apply witt_structure_rat_prop
@@ -169,7 +169,7 @@ theorem witt_structure_rat_rec_aux (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     wittStructureRat p Φ n * c (p ^ n : ℚ) =
       bind₁ (fun b => rename (fun i => (b, i)) (W_ ℚ n)) Φ -
         ∑ i in range n, c (p ^ i : ℚ) * wittStructureRat p Φ i ^ p ^ (n - i) :=
-  by 
+  by
   have := X_in_terms_of_W_aux p ℚ n
   replace := congr_arg (bind₁ fun k : ℕ => bind₁ (fun i => rename (Prod.mk i) (W_ ℚ k)) Φ) this
   rw [AlgHom.map_mul, bind₁_C_right] at this
@@ -221,7 +221,7 @@ theorem bind₁_rename_expand_witt_polynomial (Φ : MvPolynomial idx ℤ) (n : �
             wittStructureRat p (map (Int.castRingHom ℚ) Φ) m) :
     bind₁ (fun b => rename (fun i => (b, i)) (expand p (W_ ℤ n))) Φ =
       bind₁ (fun i => expand p (wittStructureInt p Φ i)) (W_ ℤ n) :=
-  by 
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [map_bind₁, map_rename, map_expand, rename_expand, map_witt_polynomial]
   have key := (witt_structure_rat_prop p (map (Int.castRingHom ℚ) Φ) n).symm
@@ -243,7 +243,7 @@ theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial id
     c ↑(p ^ n) ∣
       bind₁ (fun b : idx => rename (fun i => (b, i)) (wittPolynomial p ℤ n)) Φ -
         ∑ i in range n, c (↑p ^ i) * wittStructureInt p Φ i ^ p ^ (n - i) :=
-  by 
+  by
   cases n
   · simp only [isUnit_one, Int.ofNat_zero, Int.ofNat_succ, zero_add, pow_zero, C_1, IsUnit.dvd]
   -- prepare a useful equation for rewriting
@@ -278,7 +278,7 @@ variable (p)
 theorem map_witt_structure_int (Φ : MvPolynomial idx ℤ) (n : ℕ) :
     map (Int.castRingHom ℚ) (wittStructureInt p Φ n) =
       wittStructureRat p (map (Int.castRingHom ℚ) Φ) n :=
-  by 
+  by
   apply Nat.strong_induction_on n
   clear n
   intro n IH
@@ -289,7 +289,7 @@ theorem map_witt_structure_int (Φ : MvPolynomial idx ℤ) (n : ℕ) :
     map (Int.castRingHom ℚ) (∑ i in range n, C (p ^ i : ℤ) * wittStructureInt p Φ i ^ p ^ (n - i)) =
       ∑ i in range n,
         C (p ^ i : ℚ) * wittStructureRat p (map (Int.castRingHom ℚ) Φ) i ^ p ^ (n - i) :=
-    by 
+    by
     rw [RingHom.map_sum]
     apply Finset.sum_congr rfl
     intro i hi
@@ -312,7 +312,7 @@ variable (p)
 theorem witt_structure_int_prop (Φ : MvPolynomial idx ℤ) (n) :
     bind₁ (wittStructureInt p Φ) (wittPolynomial p ℤ n) =
       bind₁ (fun i => rename (Prod.mk i) (W_ ℤ n)) Φ :=
-  by 
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   have := witt_structure_rat_prop p (map (Int.castRingHom ℚ) Φ) n
   simpa only [map_bind₁, ← eval₂_hom_map_hom, eval₂_hom_C_left, map_rename, map_witt_polynomial,
@@ -321,7 +321,7 @@ theorem witt_structure_int_prop (Φ : MvPolynomial idx ℤ) (n) :
 
 theorem eq_witt_structure_int (Φ : MvPolynomial idx ℤ) (φ : ℕ → MvPolynomial (idx × ℕ) ℤ)
     (h : ∀ n, bind₁ φ (wittPolynomial p ℤ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℤ n)) Φ) :
-    φ = wittStructureInt p Φ := by 
+    φ = wittStructureInt p Φ := by
   funext k
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   rw [map_witt_structure_int]
@@ -355,7 +355,8 @@ theorem witt_structure_prop (Φ : MvPolynomial idx ℤ) (n) :
 #align witt_structure_prop witt_structure_prop
 
 theorem witt_structure_int_rename {σ : Type _} (Φ : MvPolynomial idx ℤ) (f : idx → σ) (n : ℕ) :
-    wittStructureInt p (rename f Φ) n = rename (Prod.map f id) (wittStructureInt p Φ n) := by
+    wittStructureInt p (rename f Φ) n = rename (Prod.map f id) (wittStructureInt p Φ n) :=
+  by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   simp only [map_rename, map_witt_structure_int, wittStructureRat, rename_bind₁, rename_rename,
     bind₁_rename]
@@ -379,8 +380,10 @@ theorem constant_coeff_witt_structure_rat (Φ : MvPolynomial idx ℚ) (h : const
 
 @[simp]
 theorem constant_coeff_witt_structure_int_zero (Φ : MvPolynomial idx ℤ) :
-    constantCoeff (wittStructureInt p Φ 0) = constantCoeff Φ := by
-  have inj : Function.Injective (Int.castRingHom ℚ) := by
+    constantCoeff (wittStructureInt p Φ 0) = constantCoeff Φ :=
+  by
+  have inj : Function.Injective (Int.castRingHom ℚ) :=
+    by
     intro m n
     exact int.cast_inj.mp
   apply inj
@@ -389,8 +392,10 @@ theorem constant_coeff_witt_structure_int_zero (Φ : MvPolynomial idx ℤ) :
 #align constant_coeff_witt_structure_int_zero constant_coeff_witt_structure_int_zero
 
 theorem constant_coeff_witt_structure_int (Φ : MvPolynomial idx ℤ) (h : constantCoeff Φ = 0)
-    (n : ℕ) : constantCoeff (wittStructureInt p Φ n) = 0 := by
-  have inj : Function.Injective (Int.castRingHom ℚ) := by
+    (n : ℕ) : constantCoeff (wittStructureInt p Φ n) = 0 :=
+  by
+  have inj : Function.Injective (Int.castRingHom ℚ) :=
+    by
     intro m n
     exact int.cast_inj.mp
   apply inj
@@ -405,7 +410,8 @@ variable (R)
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.
 -- for our applications `idx` is always finite.
 theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : ℕ) :
-    (wittStructureRat p Φ n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) := by
+    (wittStructureRat p Φ n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
+  by
   rw [wittStructureRat]
   intro x hx
   simp only [Finset.mem_product, true_and_iff, Finset.mem_univ, Finset.mem_range]
@@ -422,7 +428,8 @@ theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : �
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.
 -- for our applications `idx` is always finite.
 theorem witt_structure_int_vars [Fintype idx] (Φ : MvPolynomial idx ℤ) (n : ℕ) :
-    (wittStructureInt p Φ n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) := by
+    (wittStructureInt p Φ n).vars ⊆ Finset.univ ×ˢ Finset.range (n + 1) :=
+  by
   have : Function.Injective (Int.castRingHom ℚ) := Int.cast_injective
   rw [← vars_map_of_injective _ this, map_witt_structure_int]
   apply witt_structure_rat_vars

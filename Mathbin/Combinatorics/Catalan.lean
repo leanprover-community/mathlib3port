@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module combinatorics.catalan
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ private def gosper_catalan (n j : ℕ) : ℚ :=
 private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
     gosperCatalan (n + 1) (i + 1) - gosperCatalan (n + 1) i =
       Nat.centralBinom i / (i + 1) * Nat.centralBinom (n - i) / (n - i + 1) :=
-  by 
+  by
   have : (n : ℚ) + 1 ≠ 0 := by exact_mod_cast n.succ_ne_zero
   have : (n : ℚ) + 1 + 1 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
   have : (i : ℚ) + 1 ≠ 0 := by exact_mod_cast i.succ_ne_zero
@@ -102,7 +102,7 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
 
 private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
     gosperCatalan (n + 1) (n + 1) - gosperCatalan (n + 1) 0 = Nat.centralBinom (n + 1) / (n + 2) :=
-  by 
+  by
   have : (n : ℚ) + 1 ≠ 0 := by exact_mod_cast n.succ_ne_zero
   have : (n : ℚ) + 1 + 1 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
   have h : (n : ℚ) + 2 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
@@ -111,8 +111,10 @@ private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
   ring
 #align gosper_catalan_sub_eq_central_binom_div gosper_catalan_sub_eq_central_binom_div
 
-theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n + 1) := by
-  suffices (catalan n : ℚ) = Nat.centralBinom n / (n + 1) by
+theorem catalan_eq_central_binom_div (n : ℕ) : catalan n = n.centralBinom / (n + 1) :=
+  by
+  suffices (catalan n : ℚ) = Nat.centralBinom n / (n + 1)
+    by
     have h := Nat.succ_dvd_central_binom n
     exact_mod_cast this
   induction' n using Nat.case_strong_induction_on with d hd

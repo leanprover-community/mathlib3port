@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.dedekind_domain
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
     ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
       DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
   by
-  classical 
+  classical
     let P := factors I
     have prime_of_mem := fun p (hp : p ∈ P.to_finset) =>
       prime_of_factor p (multiset.mem_to_finset.mp hp)
@@ -75,7 +75,7 @@ theorem is_internal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI
 theorem is_internal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsion R M) :
     ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
       DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
-  by 
+  by
   obtain ⟨I, hI, hM'⟩ := is_torsion_by_ideal_of_finite_of_is_torsion hM
   refine' is_internal_prime_power_torsion_of_is_torsion_by_ideal _ hM'
   rw [← Set.nonempty_iff_ne_empty] at hI; rw [Submodule.ne_bot_iff]

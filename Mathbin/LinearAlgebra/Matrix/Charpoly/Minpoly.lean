@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.minpoly
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,8 @@ and a bit of rewriting, this will allow us to conclude the
 field norm resp. trace of `x` is the product resp. sum of `x`'s conjugates.
 -/
 theorem charpoly_left_mul_matrix {K S : Type _} [Field K] [CommRing S] [Algebra K S]
-    (h : PowerBasis K S) : (leftMulMatrix h.Basis h.gen).charpoly = minpoly K h.gen := by
+    (h : PowerBasis K S) : (leftMulMatrix h.Basis h.gen).charpoly = minpoly K h.gen :=
+  by
   apply minpoly.unique
   · apply Matrix.charpoly_monic
   · apply (injective_iff_map_eq_zero (left_mul_matrix _)).mp (left_mul_matrix_injective h.basis)

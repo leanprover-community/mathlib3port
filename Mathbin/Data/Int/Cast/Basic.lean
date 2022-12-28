@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module data.int.cast.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,8 @@ theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
 #align int.cast_neg Int.cast_negₓ
 
 @[simp]
-theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
+theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n :=
+  by
   unfold sub_nat_nat; cases e : n - m
   · simp only [sub_nat_nat, cast_of_nat]
     simp [e, Nat.le_of_sub_eq_zero e]

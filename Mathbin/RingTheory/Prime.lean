@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.prime
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
     (hp : ∀ i ∈ s, Prime (p i)) (hx : x * y = a * ∏ i in s, p i) :
     ∃ (t u : Finset α)(b c : R),
       t ∪ u = s ∧ Disjoint t u ∧ a = b * c ∧ (x = b * ∏ i in t, p i) ∧ y = c * ∏ i in u, p i :=
-  by 
+  by
   induction' s using Finset.induction with i s his ih generalizing x y a
   · exact ⟨∅, ∅, x, y, by simp [hx]⟩
   · rw [prod_insert his, ← mul_assoc] at hx
@@ -56,7 +56,8 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
 /-- If ` x * y = a * p ^ n` where `p` is prime, then `x` and `y` can both be written
   as the product of a power of `p` and a divisor of `a`. -/
 theorem mul_eq_mul_prime_pow {x y a p : R} {n : ℕ} (hp : Prime p) (hx : x * y = a * p ^ n) :
-    ∃ (i j : ℕ)(b c : R), i + j = n ∧ a = b * c ∧ x = b * p ^ i ∧ y = c * p ^ j := by
+    ∃ (i j : ℕ)(b c : R), i + j = n ∧ a = b * c ∧ x = b * p ^ i ∧ y = c * p ^ j :=
+  by
   rcases mul_eq_mul_prime_prod (fun _ _ => hp)
       (show x * y = a * (range n).Prod fun _ => p by simpa) with
     ⟨t, u, b, c, htus, htu, rfl, rfl, rfl⟩
@@ -69,12 +70,14 @@ section CommRing
 
 variable {α : Type _} [CommRing α]
 
-theorem Prime.neg {p : α} (hp : Prime p) : Prime (-p) := by
+theorem Prime.neg {p : α} (hp : Prime p) : Prime (-p) :=
+  by
   obtain ⟨h1, h2, h3⟩ := hp
   exact ⟨neg_ne_zero.mpr h1, by rwa [IsUnit.neg_iff], by simpa [neg_dvd] using h3⟩
 #align prime.neg Prime.neg
 
-theorem Prime.abs [LinearOrder α] {p : α} (hp : Prime p) : Prime (abs p) := by
+theorem Prime.abs [LinearOrder α] {p : α} (hp : Prime p) : Prime (abs p) :=
+  by
   obtain h | h := abs_choice p <;> rw [h]
   · exact hp
   · exact hp.neg

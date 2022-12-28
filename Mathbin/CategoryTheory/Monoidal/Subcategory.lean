@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.subcategory
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,12 +64,10 @@ variable [MonoidalPredicate P]
 When `P` is a monoidal predicate, the full subcategory for `P` inherits the monoidal structure of
   `C`.
 -/
-instance fullMonoidalSubcategory :
-    MonoidalCategory
-      (FullSubcategory
-        P) where 
+instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P)
+    where
   tensorObj X Y := ⟨X.1 ⊗ Y.1, prop_tensor X.2 Y.2⟩
-  tensorHom X₁ Y₁ X₂ Y₂ f g := by 
+  tensorHom X₁ Y₁ X₂ Y₂ f g := by
     change X₁.1 ⊗ X₂.1 ⟶ Y₁.1 ⊗ Y₂.1
     change X₁.1 ⟶ Y₁.1 at f
     change X₂.1 ⟶ Y₂.1 at g
@@ -94,9 +92,8 @@ instance fullMonoidalSubcategory :
 ("forgetting" the condition).
 -/
 @[simps]
-def fullMonoidalSubcategoryInclusion :
-    MonoidalFunctor (FullSubcategory P)
-      C where 
+def fullMonoidalSubcategoryInclusion : MonoidalFunctor (FullSubcategory P) C
+    where
   toFunctor := fullSubcategoryInclusion P
   ε := 𝟙 _
   μ X Y := 𝟙 _
@@ -129,11 +126,11 @@ instance [MonoidalPreadditive C] : MonoidalPreadditive (FullSubcategory P) :=
 
 variable (R : Type _) [Ring R] [Linear R C]
 
-instance full_monoidal_subcategory_inclusion_linear :
+instance fullMonoidalSubcategoryInclusionLinear :
     (fullMonoidalSubcategoryInclusion P).toFunctor.Linear R :=
-  Functor.full_subcategory_inclusion_linear R _
+  Functor.fullSubcategoryInclusionLinear R _
 #align
-  category_theory.monoidal_category.full_monoidal_subcategory_inclusion_linear CategoryTheory.MonoidalCategory.full_monoidal_subcategory_inclusion_linear
+  category_theory.monoidal_category.full_monoidal_subcategory_inclusion_linear CategoryTheory.MonoidalCategory.fullMonoidalSubcategoryInclusionLinear
 
 instance [MonoidalPreadditive C] [MonoidalLinear R C] : MonoidalLinear R (FullSubcategory P) :=
   monoidalLinearOfFaithful R (fullMonoidalSubcategoryInclusion P)
@@ -146,8 +143,8 @@ variable {P} {P' : C → Prop} [MonoidalPredicate P']
 subcategories. -/
 @[simps]
 def fullMonoidalSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
-    MonoidalFunctor (FullSubcategory P)
-      (FullSubcategory P') where 
+    MonoidalFunctor (FullSubcategory P) (FullSubcategory P')
+    where
   toFunctor := FullSubcategory.map h
   ε := 𝟙 _
   μ X Y := 𝟙 _
@@ -182,11 +179,10 @@ instance fullBraidedSubcategory : BraidedCategory (FullSubcategory P) :=
 ("forgetting" the condition).
 -/
 @[simps]
-def fullBraidedSubcategoryInclusion :
-    BraidedFunctor (FullSubcategory P)
-      C where 
+def fullBraidedSubcategoryInclusion : BraidedFunctor (FullSubcategory P) C
+    where
   toMonoidalFunctor := fullMonoidalSubcategoryInclusion P
-  braided' X Y := by 
+  braided' X Y := by
     rw [is_iso.eq_inv_comp]
     tidy
 #align
@@ -208,11 +204,10 @@ variable {P}
 subcategories. -/
 @[simps]
 def fullBraidedSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
-    BraidedFunctor (FullSubcategory P)
-      (FullSubcategory
-        P') where 
+    BraidedFunctor (FullSubcategory P) (FullSubcategory P')
+    where
   toMonoidalFunctor := fullMonoidalSubcategory.map h
-  braided' X Y := by 
+  braided' X Y := by
     rw [is_iso.eq_inv_comp]
     tidy
 #align
@@ -260,11 +255,10 @@ open ClosedPredicate
 
 variable [ClosedPredicate P]
 
-instance fullMonoidalClosedSubcategory :
-    MonoidalClosed
-      (FullSubcategory
-        P) where closed' X :=
-    { isAdj :=
+instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
+    where closed' X :=
+    {
+      isAdj :=
         { right :=
             FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y => propIhom X.2 Y.2
           adj :=
@@ -275,11 +269,11 @@ instance fullMonoidalClosedSubcategory :
                 counit :=
                   { app := fun Y => (ihom.ev X.1).app Y.1
                     naturality' := fun Y Z f => ihom.ev_naturality X.1 f }
-                left_triangle' := by 
+                left_triangle' := by
                   ext Y
                   simp
                   exact ihom.ev_coev X.1 Y.1
-                right_triangle' := by 
+                right_triangle' := by
                   ext Y
                   simp
                   exact ihom.coev_ev X.1 Y.1 } } }

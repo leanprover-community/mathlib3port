@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.monad.equiv_mon
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,15 +47,15 @@ def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
   { x := (M : C ⥤ C)
     one := M.η
     mul := M.μ
-    one_mul' := by 
+    one_mul' := by
       ext
       simp
     -- `obviously` provides this, but slowly
-    mul_one' := by 
+    mul_one' := by
       ext
       simp
     -- `obviously` provides this, but slowly
-    mul_assoc' := by 
+    mul_assoc' := by
       ext
       dsimp
       simp [M.assoc] }
@@ -65,14 +65,14 @@ variable (C)
 
 /-- Passing from `Monad C` to `Mon_ (C ⥤ C)` is functorial. -/
 @[simps]
-def monadToMon : Monad C ⥤ Mon_ (C ⥤ C) where 
+def monadToMon : Monad C ⥤ Mon_ (C ⥤ C) where
   obj := toMon
   map _ _ f := { Hom := f.toNatTrans }
-  map_id' := by 
+  map_id' := by
     intro X
     rfl
   -- `obviously` provides this, but slowly
-  map_comp' := by 
+  map_comp' := by
     intro X Y Z f g
     rfl
 #align category_theory.Monad.Monad_to_Mon CategoryTheory.MonadCat.monadToMon
@@ -85,13 +85,15 @@ def ofMon : Mon_ (C ⥤ C) → Monad C := fun M =>
   { toFunctor := M.x
     η' := M.one
     μ' := M.mul
-    left_unit' := fun X => by
+    left_unit' := fun X =>
+      by
       rw [← M.one.id_hcomp_app, ← nat_trans.comp_app, M.mul_one]
       rfl
-    right_unit' := fun X => by
+    right_unit' := fun X =>
+      by
       rw [← M.one.hcomp_id_app, ← nat_trans.comp_app, M.one_mul]
       rfl
-    assoc' := fun X => by 
+    assoc' := fun X => by
       rw [← nat_trans.hcomp_id_app, ← nat_trans.comp_app]
       simp }
 #align category_theory.Monad.of_Mon CategoryTheory.MonadCat.ofMon
@@ -100,16 +102,16 @@ variable (C)
 
 /-- Passing from `Mon_ (C ⥤ C)` to `Monad C` is functorial. -/
 @[simps]
-def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where 
+def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
   obj := ofMon
   map _ _ f :=
-    { -- `finish` closes this goal
+    {-- `finish` closes this goal
         f.Hom with
-      app_η' := by 
+      app_η' := by
         intro X
         erw [← nat_trans.comp_app, f.one_hom]
         rfl
-      app_μ' := by 
+      app_μ' := by
         intro X
         erw [← nat_trans.comp_app, f.mul_hom]
         simpa only [nat_trans.naturality, nat_trans.hcomp_app, assoc, nat_trans.comp_app,
@@ -122,16 +124,15 @@ variable {C}
 
 /-- Isomorphism of functors used in `Monad_Mon_equiv` -/
 @[simps (config := { rhsMd := semireducible })]
-def counitIso :
-    monToMonad C ⋙ monadToMon C ≅
-      𝟭 _ where 
+def counitIso : monToMonad C ⋙ monadToMon C ≅ 𝟭 _
+    where
   Hom := { app := fun _ => { Hom := 𝟙 _ } }
   inv := { app := fun _ => { Hom := 𝟙 _ } }
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     simp
   -- `obviously` provides these, but slowly
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     simp
 #align
@@ -151,15 +152,15 @@ def unitIsoInv : monadToMon C ⋙ monToMonad C ⟶ 𝟭 _ where app _ := { app :
 
 /-- Isomorphism of functors used in `Monad_Mon_equiv` -/
 @[simps]
-def unitIso : 𝟭 _ ≅ monadToMon C ⋙
-        monToMonad C where 
+def unitIso : 𝟭 _ ≅ monadToMon C ⋙ monToMonad C
+    where
   Hom := unitIsoHom
   inv := unitIsoInv
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     simp
   -- `obviously` provides these, but slowly
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     simp
 #align category_theory.Monad.Monad_Mon_equiv.unit_iso CategoryTheory.MonadCat.MonadMonEquiv.unitIso
@@ -170,13 +171,13 @@ open MonadMonEquiv
 
 /-- Oh, monads are just monoids in the category of endofunctors (equivalence of categories). -/
 @[simps]
-def monadMonEquiv : Monad C ≌
-      Mon_ (C ⥤ C) where 
+def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C)
+    where
   Functor := monadToMon _
   inverse := monToMonad _
   unitIso := unitIso
   counitIso := counitIso
-  functor_unit_iso_comp' := by 
+  functor_unit_iso_comp' := by
     intro X
     ext
     dsimp

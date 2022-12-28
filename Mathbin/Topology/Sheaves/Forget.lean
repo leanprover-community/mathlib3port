@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.forget
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,8 @@ attribute [local reducible] diagram left_res right_res
 /-- When `G` preserves limits, the sheaf condition diagram for `F` composed with `G` is
 naturally isomorphic to the sheaf condition diagram for `F ⋙ G`.
 -/
-def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U := by
+def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :=
+  by
   fapply nat_iso.of_components
   rintro ⟨j⟩
   exact preserves_product.iso _ _
@@ -102,7 +103,7 @@ postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves
 def mapConeFork :
     G.mapCone (fork.{v} F U) ≅
       (Cones.postcompose (diagramCompPreservesLimits G F U).inv).obj (fork (F ⋙ G) U) :=
-  Cones.ext (Iso.refl _) fun j => by 
+  Cones.ext (Iso.refl _) fun j => by
     dsimp; simp [diagram_comp_preserves_limits]; cases j <;> dsimp
     · rw [iso.eq_comp_inv]
       ext
@@ -148,7 +149,8 @@ Another useful example is the forgetful functor `TopCommRing ⥤ Top`.
 See <https://stacks.math.columbia.edu/tag/0073>.
 In fact we prove a stronger version with arbitrary complete target category.
 -/
-theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F ⋙ G) := by
+theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F ⋙ G) :=
+  by
   rw [presheaf.is_sheaf_iff_is_sheaf_equalizer_products,
     presheaf.is_sheaf_iff_is_sheaf_equalizer_products]
   constructor
@@ -172,7 +174,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
     -- Our goal is to show that this is an isomorphism.
     let f := equalizer.lift _ (w F U)
     -- If we can do that,
-    suffices is_iso (G.map f) by 
+    suffices is_iso (G.map f) by
       skip
       -- we have that `f` itself is an isomorphism, since `G` reflects isomorphisms
       haveI : is_iso f := is_iso_of_reflects_iso f G
@@ -205,7 +207,7 @@ theorem is_sheaf_iff_is_sheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F 
       -- Now everything works: we verify that `f` really is a morphism between these cones:
       let f' : c ⟶ d' :=
         fork.mk_hom (G.map f)
-          (by 
+          (by
             dsimp only [c, d, d', f, diagram_comp_preserves_limits, res]
             dsimp only [fork.ι]
             ext1 j

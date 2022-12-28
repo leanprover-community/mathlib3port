@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.energy
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem energy_le_one : P.energy G ≤ 1 :=
         (sum_le_card_nsmul _ _ 1) fun uv _ =>
           (sq_le_one_iff <| G.edge_density_nonneg _ _).2 <| G.edge_density_le_one _ _
       _ = P.parts.offDiag.card := Nat.smul_one_eq_coe _
-      _ ≤ _ := by 
+      _ ≤ _ := by
         rw [off_diag_card, one_mul, ← Nat.cast_pow, Nat.cast_le, sq]
         exact tsub_le_self
       

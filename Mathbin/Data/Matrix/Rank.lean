@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ theorem rank_zero : rank (0 : Matrix n n K) = 0 := by
   rw [rank, LinearEquiv.map_zero, LinearMap.range_zero, finrank_bot]
 #align matrix.rank_zero Matrix.rank_zero
 
-theorem rank_le_card_width : A.rank ≤ Fintype.card n := by
+theorem rank_le_card_width : A.rank ≤ Fintype.card n :=
+  by
   convert le_of_add_le_left A.to_lin'.finrank_range_add_finrank_ker.le
   exact (Module.Free.finrank_pi K).symm
 #align matrix.rank_le_card_width Matrix.rank_le_card_width
@@ -65,19 +66,22 @@ theorem rank_le_width {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ n 
   A.rank_le_card_width.trans <| (Fintype.card_fin n).le
 #align matrix.rank_le_width Matrix.rank_le_width
 
-theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank := by
+theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank :=
+  by
   refine' LinearMap.finrank_le_finrank_of_injective (Submodule.of_le_injective _)
   rw [to_lin'_mul]
   exact LinearMap.range_comp_le_range _ _
 #align matrix.rank_mul_le Matrix.rank_mul_le
 
-theorem rank_unit (A : (Matrix n n K)ˣ) : (A : Matrix n n K).rank = Fintype.card n := by
+theorem rank_unit (A : (Matrix n n K)ˣ) : (A : Matrix n n K).rank = Fintype.card n :=
+  by
   refine' le_antisymm (rank_le_card_width A) _
   have := rank_mul_le (A : Matrix n n K) (↑A⁻¹ : Matrix n n K)
   rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this
 #align matrix.rank_unit Matrix.rank_unit
 
-theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.card n := by
+theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.card n :=
+  by
   obtain ⟨A, rfl⟩ := h
   exact rank_unit A
 #align matrix.rank_of_is_unit Matrix.rank_of_is_unit
@@ -86,10 +90,12 @@ include m_fin
 
 theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroup M₁] [AddCommGroup M₂]
     [Module K M₁] [Module K M₂] (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) :
-    A.rank = finrank K (toLin v₂ v₁ A).range := by
+    A.rank = finrank K (toLin v₂ v₁ A).range :=
+  by
   let e₁ := (Pi.basisFun K m).Equiv v₁ (Equiv.refl _)
   let e₂ := (Pi.basisFun K n).Equiv v₂ (Equiv.refl _)
-  have range_e₂ : (e₂ : (n → K) →ₗ[K] M₂).range = ⊤ := by
+  have range_e₂ : (e₂ : (n → K) →ₗ[K] M₂).range = ⊤ :=
+    by
     rw [LinearMap.range_eq_top]
     exact e₂.surjective
   refine' LinearEquiv.finrank_eq (e₁.of_submodules _ _ _)

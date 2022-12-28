@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.noetherian
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,8 @@ open Subobject
 variable [HasZeroMorphisms C] [HasZeroObject C]
 
 theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) :
-    ∃ Y : Subobject X, Simple (Y : C) := by
+    ∃ Y : Subobject X, Simple (Y : C) :=
+  by
   haveI : Nontrivial (subobject X) := nontrivial_of_not_is_zero h
   haveI := is_atomic_of_order_bot_well_founded_lt (artinian_object.subobject_lt_well_founded X)
   have := IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)

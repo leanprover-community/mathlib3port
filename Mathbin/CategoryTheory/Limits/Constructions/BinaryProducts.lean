@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.binary_products
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,15 +37,16 @@ def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : 
       IsLimit
         (PullbackCone.mk (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩ : _) <|
           hX.hom_ext (_ ≫ f) (_ ≫ g))) :
-    IsLimit
-      c where 
+    IsLimit c
+    where
   lift s :=
     hc.lift
       (PullbackCone.mk (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
   fac' s j :=
     Discrete.casesOn j fun j =>
       WalkingPair.casesOn j (hc.fac _ WalkingCospan.left) (hc.fac _ WalkingCospan.right)
-  uniq' s m J := by
+  uniq' s m J :=
+    by
     let c' :=
       pullback_cone.mk (m ≫ c.π.app ⟨walking_pair.left⟩) (m ≫ c.π.app ⟨walking_pair.right⟩ : _)
         (hX.hom_ext (_ ≫ f) (_ ≫ g))
@@ -60,7 +61,8 @@ def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : 
 def isProductOfIsTerminalIsPullback {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y)
     (H₁ : IsTerminal Z)
     (H₂ : IsLimit (PullbackCone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _))) :
-    IsLimit (BinaryFan.mk h k) := by
+    IsLimit (BinaryFan.mk h k) :=
+  by
   apply isBinaryProductOfIsTerminalIsPullback _ _ H₁
   exact H₂
 #align is_product_of_is_terminal_is_pullback isProductOfIsTerminalIsPullback
@@ -68,7 +70,8 @@ def isProductOfIsTerminalIsPullback {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
 /-- The product is the pullback over the terminal object. -/
 def isPullbackOfIsTerminalIsProduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y)
     (H₁ : IsTerminal Z) (H₂ : IsLimit (BinaryFan.mk h k)) :
-    IsLimit (PullbackCone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _)) := by
+    IsLimit (PullbackCone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _)) :=
+  by
   apply pullback_cone.is_limit_aux'
   intro s
   use H₂.lift (binary_fan.mk s.fst s.snd)
@@ -83,9 +86,8 @@ def isPullbackOfIsTerminalIsProduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
 
 /-- Any category with pullbacks and a terminal object has a limit cone for each walking pair. -/
 noncomputable def limitConeOfTerminalAndPullbacks [HasTerminal C] [HasPullbacks C]
-    (F : Discrete WalkingPair ⥤ C) :
-    LimitCone
-      F where 
+    (F : Discrete WalkingPair ⥤ C) : LimitCone F
+    where
   Cone :=
     { x :=
         pullback (terminal.from (F.obj ⟨WalkingPair.left⟩))
@@ -136,15 +138,16 @@ def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : 
       IsColimit
         (PushoutCocone.mk (c.ι.app ⟨WalkingPair.left⟩) (c.ι.app ⟨WalkingPair.right⟩ : _) <|
           hX.hom_ext (f ≫ _) (g ≫ _))) :
-    IsColimit
-      c where 
+    IsColimit c
+    where
   desc s :=
     hc.desc
       (PushoutCocone.mk (s.ι.app ⟨WalkingPair.left⟩) (s.ι.app ⟨WalkingPair.right⟩) (hX.hom_ext _ _))
   fac' s j :=
     Discrete.casesOn j fun j =>
       WalkingPair.casesOn j (hc.fac _ WalkingSpan.left) (hc.fac _ WalkingSpan.right)
-  uniq' s m J := by
+  uniq' s m J :=
+    by
     let c' :=
       pushout_cocone.mk (c.ι.app ⟨walking_pair.left⟩ ≫ m) (c.ι.app ⟨walking_pair.right⟩ ≫ m)
         (hX.hom_ext (f ≫ _) (g ≫ _))
@@ -161,7 +164,8 @@ def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : 
 def isCoproductOfIsInitialIsPushout {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y)
     (H₁ : IsInitial W)
     (H₂ : IsColimit (PushoutCocone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _))) :
-    IsColimit (BinaryCofan.mk f g) := by
+    IsColimit (BinaryCofan.mk f g) :=
+  by
   apply isBinaryCoproductOfIsInitialIsPushout _ _ H₁
   exact H₂
 #align is_coproduct_of_is_initial_is_pushout isCoproductOfIsInitialIsPushout
@@ -169,7 +173,8 @@ def isCoproductOfIsInitialIsPushout {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
 /-- The coproduct is the pushout under the initial object. -/
 def isPushoutOfIsInitialIsCoproduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ X) (k : W ⟶ Y)
     (H₁ : IsInitial W) (H₂ : IsColimit (BinaryCofan.mk f g)) :
-    IsColimit (PushoutCocone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _)) := by
+    IsColimit (PushoutCocone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _)) :=
+  by
   apply pushout_cocone.is_colimit_aux'
   intro s
   use H₂.desc (binary_cofan.mk s.inl s.inr)
@@ -184,9 +189,8 @@ def isPushoutOfIsInitialIsCoproduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
 
 /-- Any category with pushouts and an initial object has a colimit cocone for each walking pair. -/
 noncomputable def colimitCoconeOfInitialAndPushouts [HasInitial C] [HasPushouts C]
-    (F : Discrete WalkingPair ⥤ C) :
-    ColimitCocone
-      F where 
+    (F : Discrete WalkingPair ⥤ C) : ColimitCocone F
+    where
   Cocone :=
     { x := pushout (initial.to (F.obj ⟨WalkingPair.left⟩)) (initial.to (F.obj ⟨WalkingPair.right⟩))
       ι :=

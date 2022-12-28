@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.open_immersion
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ variable {X Y Z : SchemeCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
 
 theorem is_open_immersion_iff_stalk {f : X ⟶ Y} :
     IsOpenImmersion f ↔ OpenEmbedding f.1.base ∧ ∀ x, IsIso (PresheafedSpaceCat.stalkMap f.1 x) :=
-  by 
+  by
   constructor
   · intro h
     exact ⟨h.1, inferInstance⟩
@@ -50,13 +50,15 @@ theorem is_open_immersion_stable_under_composition :
 #align
   algebraic_geometry.is_open_immersion_stable_under_composition AlgebraicGeometry.is_open_immersion_stable_under_composition
 
-theorem is_open_immersion_respects_iso : MorphismProperty.RespectsIso @IsOpenImmersion := by
+theorem is_open_immersion_respects_iso : MorphismProperty.RespectsIso @IsOpenImmersion :=
+  by
   apply is_open_immersion_stable_under_composition.respects_iso
   intro _ _ _; infer_instance
 #align
   algebraic_geometry.is_open_immersion_respects_iso AlgebraicGeometry.is_open_immersion_respects_iso
 
-theorem is_open_immersion_is_local_at_target : PropertyIsLocalAtTarget @IsOpenImmersion := by
+theorem is_open_immersion_is_local_at_target : PropertyIsLocalAtTarget @IsOpenImmersion :=
+  by
   constructor
   · exact is_open_immersion_respects_iso
   · intros
@@ -110,7 +112,8 @@ theorem IsOpenImmersion.open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.O
 
 theorem is_open_immersion_stable_under_base_change :
     MorphismProperty.StableUnderBaseChange @IsOpenImmersion :=
-  MorphismProperty.StableUnderBaseChange.mk is_open_immersion_respects_iso <| by
+  MorphismProperty.StableUnderBaseChange.mk is_open_immersion_respects_iso <|
+    by
     intro X Y Z f g H
     infer_instance
 #align

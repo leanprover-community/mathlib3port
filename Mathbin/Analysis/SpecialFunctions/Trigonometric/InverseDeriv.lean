@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.inverse_deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,8 @@ namespace Real
 section Arcsin
 
 theorem deriv_arcsin_aux {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) :
-    HasStrictDerivAt arcsin (1 / sqrt (1 - x ^ 2)) x ∧ ContDiffAt ℝ ⊤ arcsin x := by
+    HasStrictDerivAt arcsin (1 / sqrt (1 - x ^ 2)) x ∧ ContDiffAt ℝ ⊤ arcsin x :=
+  by
   cases' h₁.lt_or_lt with h₁ h₁
   · have : 1 - x ^ 2 < 0 := by nlinarith [h₁]
     rw [sqrt_eq_zero'.2 this.le, div_zero]
@@ -70,7 +71,8 @@ theorem contDiffAtArcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : ℕ�
 #align real.cont_diff_at_arcsin Real.contDiffAtArcsin
 
 theorem hasDerivWithinAtArcsinIci {x : ℝ} (h : x ≠ -1) :
-    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Ici x) x := by
+    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Ici x) x :=
+  by
   rcases em (x = 1) with (rfl | h')
   ·
     convert (hasDerivWithinAtConst _ _ (π / 2)).congr _ _ <;>
@@ -79,7 +81,8 @@ theorem hasDerivWithinAtArcsinIci {x : ℝ} (h : x ≠ -1) :
 #align real.has_deriv_within_at_arcsin_Ici Real.hasDerivWithinAtArcsinIci
 
 theorem hasDerivWithinAtArcsinIic {x : ℝ} (h : x ≠ 1) :
-    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Iic x) x := by
+    HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Iic x) x :=
+  by
   rcases em (x = -1) with (rfl | h')
   ·
     convert (hasDerivWithinAtConst _ _ (-(π / 2))).congr _ _ <;>
@@ -88,7 +91,8 @@ theorem hasDerivWithinAtArcsinIic {x : ℝ} (h : x ≠ 1) :
 #align real.has_deriv_within_at_arcsin_Iic Real.hasDerivWithinAtArcsinIic
 
 theorem differentiable_within_at_arcsin_Ici {x : ℝ} :
-    DifferentiableWithinAt ℝ arcsin (Ici x) x ↔ x ≠ -1 := by
+    DifferentiableWithinAt ℝ arcsin (Ici x) x ↔ x ≠ -1 :=
+  by
   refine' ⟨_, fun h => (has_deriv_within_at_arcsin_Ici h).DifferentiableWithinAt⟩
   rintro h rfl
   have : sin ∘ arcsin =ᶠ[𝓝[≥] (-1 : ℝ)] id := by
@@ -99,7 +103,8 @@ theorem differentiable_within_at_arcsin_Ici {x : ℝ} :
 #align real.differentiable_within_at_arcsin_Ici Real.differentiable_within_at_arcsin_Ici
 
 theorem differentiable_within_at_arcsin_Iic {x : ℝ} :
-    DifferentiableWithinAt ℝ arcsin (Iic x) x ↔ x ≠ 1 := by
+    DifferentiableWithinAt ℝ arcsin (Iic x) x ↔ x ≠ 1 :=
+  by
   refine' ⟨fun h => _, fun h => (has_deriv_within_at_arcsin_Iic h).DifferentiableWithinAt⟩
   rw [← neg_neg x, ← image_neg_Ici] at h
   have := (h.comp (-x) differentiable_within_at_id.neg (maps_to_image _ _)).neg
@@ -114,7 +119,8 @@ theorem differentiable_at_arcsin {x : ℝ} : DifferentiableAt ℝ arcsin x ↔ x
 #align real.differentiable_at_arcsin Real.differentiable_at_arcsin
 
 @[simp]
-theorem deriv_arcsin : deriv arcsin = fun x => 1 / sqrt (1 - x ^ 2) := by
+theorem deriv_arcsin : deriv arcsin = fun x => 1 / sqrt (1 - x ^ 2) :=
+  by
   funext x
   by_cases h : x ≠ -1 ∧ x ≠ 1
   · exact (has_deriv_at_arcsin h.1 h.2).deriv

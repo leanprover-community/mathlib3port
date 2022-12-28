@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) :
   | ⟨a, h⟩ => rfl
 #align mvpfunctor.comp_map Mvpfunctor.comp_map
 
-instance : IsLawfulMvfunctor P.Obj where 
+instance : IsLawfulMvfunctor P.Obj where
   id_map := @id_map _ P
   comp_map := @comp_map _ P
 
@@ -99,7 +99,8 @@ def const.get (x : (const n A).Obj α) : A :=
 #align mvpfunctor.const.get Mvpfunctor.const.get
 
 @[simp]
-theorem const.get_map (f : α ⟹ β) (x : (const n A).Obj α) : const.get (f <$$> x) = const.get x := by
+theorem const.get_map (f : α ⟹ β) (x : (const n A).Obj α) : const.get (f <$$> x) = const.get x :=
+  by
   cases x
   rfl
 #align mvpfunctor.const.get_map Mvpfunctor.const.get_map
@@ -109,7 +110,8 @@ theorem const.get_mk (x : A) : const.get (const.mk n x : (const n A).Obj α) = x
 #align mvpfunctor.const.get_mk Mvpfunctor.const.get_mk
 
 @[simp]
-theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x := by
+theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x :=
+  by
   cases x
   dsimp [const.get, const.mk]
   congr with (_⟨⟩)
@@ -118,8 +120,8 @@ theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x := 
 end Const
 
 /-- Functor composition on polynomial functors -/
-def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) :
-    Mvpfunctor m where 
+def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m
+    where
   A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1
   B a i := Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i
 #align mvpfunctor.comp Mvpfunctor.comp
@@ -137,19 +139,22 @@ def comp.get (x : (comp P Q).Obj α) : P.Obj fun i => (Q i).Obj α :=
 #align mvpfunctor.comp.get Mvpfunctor.comp.get
 
 theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
-    comp.get (f <$$> x) = (fun i (x : (Q i).Obj α) => f <$$> x) <$$> comp.get x := by
+    comp.get (f <$$> x) = (fun i (x : (Q i).Obj α) => f <$$> x) <$$> comp.get x :=
+  by
   cases x
   rfl
 #align mvpfunctor.comp.get_map Mvpfunctor.comp.get_map
 
 @[simp]
-theorem comp.get_mk (x : P.Obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x := by
+theorem comp.get_mk (x : P.Obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x :=
+  by
   cases x
   simp! [comp.get, comp.mk]
 #align mvpfunctor.comp.get_mk Mvpfunctor.comp.get_mk
 
 @[simp]
-theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
+theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x :=
+  by
   cases x
   dsimp [comp.get, comp.mk]
   ext : 2 <;> intros ; rfl; rfl
@@ -161,7 +166,8 @@ theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
 lifting predicates and relations
 -/
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj α) :
-    Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
+    Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i j, p (f i j) :=
+  by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : y with a f
@@ -174,7 +180,8 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
 #align mvpfunctor.liftp_iff Mvpfunctor.liftp_iff
 
 theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
-    @Liftp.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) := by
+    @Liftp.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
+  by
   simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm*Exists _, _ ∧ _
     subst_vars
@@ -183,7 +190,8 @@ theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (
 #align mvpfunctor.liftp_iff' Mvpfunctor.liftp_iff'
 
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.Obj α) :
-    Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
+    Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=
+  by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : u with a f
@@ -207,7 +215,8 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
 open Set Mvfunctor
 
 theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) (i) :
-    @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ := by
+    @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ :=
+  by
   ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h
   · apply @h fun i x => ∃ y : P.B a i, f i y = x
@@ -233,14 +242,14 @@ variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
 /-- Split polynomial functor, get a n-ary functor
 from a `n+1`-ary functor -/
-def drop : Mvpfunctor n where 
+def drop : Mvpfunctor n where
   A := P.A
   B a := (P.B a).drop
 #align mvpfunctor.drop Mvpfunctor.drop
 
 /-- Split polynomial functor, get a univariate functor
 from a `n+1`-ary functor -/
-def last : Pfunctor where 
+def last : Pfunctor where
   A := P.A
   B a := (P.B a).last
 #align mvpfunctor.last Mvpfunctor.last

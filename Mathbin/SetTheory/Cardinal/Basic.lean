@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,8 +95,8 @@ variable {α β : Type u}
 /-- The equivalence relation on types given by equivalence (bijective correspondence) of types.
   Quotienting by this equivalence relation gives the cardinal numbers.
 -/
-instance Cardinal.isEquivalent :
-    Setoid (Type u) where 
+instance Cardinal.isEquivalent : Setoid (Type u)
+    where
   R α β := Nonempty (α ≃ β)
   iseqv := ⟨fun α => ⟨Equiv.refl α⟩, fun α β ⟨e⟩ => ⟨e.symm⟩, fun α β γ ⟨e₁⟩ ⟨e₂⟩ => ⟨e₁.trans e₂⟩⟩
 #align cardinal.is_equivalent Cardinal.isEquivalent
@@ -236,11 +236,11 @@ instance : LE Cardinal.{u} :=
     (Quotient.liftOn₂ q₁ q₂ fun α β => Nonempty <| α ↪ β) fun α β γ δ ⟨e₁⟩ ⟨e₂⟩ =>
       propext ⟨fun ⟨e⟩ => ⟨e.congr e₁ e₂⟩, fun ⟨e⟩ => ⟨e.congr e₁.symm e₂.symm⟩⟩⟩
 
-instance : PartialOrder Cardinal.{u} where 
+instance : PartialOrder Cardinal.{u} where
   le := (· ≤ ·)
   le_refl := by rintro ⟨α⟩ <;> exact ⟨embedding.refl _⟩
   le_trans := by rintro ⟨α⟩ ⟨β⟩ ⟨γ⟩ ⟨e₁⟩ ⟨e₂⟩ <;> exact ⟨e₁.trans e₂⟩
-  le_antisymm := by 
+  le_antisymm := by
     rintro ⟨α⟩ ⟨β⟩ ⟨e₁⟩ ⟨e₂⟩
     exact Quotient.sound (e₁.antisymm e₂)
 
@@ -273,7 +273,8 @@ theorem mk_set_le (s : Set α) : (#s) ≤ (#α) :=
   mk_subtype_le s
 #align cardinal.mk_set_le Cardinal.mk_set_le
 
-theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.out) := by
+theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.out) :=
+  by
   trans _
   rw [← Quotient.out_eq c, ← Quotient.out_eq c']
   rfl
@@ -310,7 +311,7 @@ theorem lift_mk_eq' {α : Type u} {β : Type v} : lift.{v} (#α) = lift.{u} (#β
 
 @[simp]
 theorem lift_le {a b : Cardinal} : lift a ≤ lift b ↔ a ≤ b :=
-  (induction_on₂ a b) fun α β => by 
+  (induction_on₂ a b) fun α β => by
     rw [← lift_umax]
     exact lift_mk_le
 #align cardinal.lift_le Cardinal.lift_le
@@ -426,7 +427,8 @@ theorem mk_psum (α : Type u) (β : Type v) : (#PSum α β) = lift.{v} (#α) + l
 #align cardinal.mk_psum Cardinal.mk_psum
 
 @[simp]
-theorem mk_fintype (α : Type u) [Fintype α] : (#α) = Fintype.card α := by
+theorem mk_fintype (α : Type u) [Fintype α] : (#α) = Fintype.card α :=
+  by
   refine' Fintype.induction_empty_option _ _ _ α
   · intro α β h e hα
     letI := Fintype.ofEquiv β e.symm
@@ -491,7 +493,7 @@ theorem power_add {a b c : Cardinal} : (a^b + c) = (a^b) * (a^c) :=
   (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.sumArrowEquivProdArrow β γ α
 #align cardinal.power_add Cardinal.power_add
 
-instance : CommSemiring Cardinal.{u} where 
+instance : CommSemiring Cardinal.{u} where
   zero := 0
   one := 1
   add := (· + ·)
@@ -552,7 +554,8 @@ theorem mul_power {a b c : Cardinal} : (a * b^c) = (a^c) * (b^c) :=
   (induction_on₃ a b c) fun α β γ => mk_congr <| Equiv.arrowProdEquivProdArrow α β γ
 #align cardinal.mul_power Cardinal.mul_power
 
-theorem power_mul {a b c : Cardinal} : (a^b * c) = ((a^b)^c) := by
+theorem power_mul {a b c : Cardinal} : (a^b * c) = ((a^b)^c) :=
+  by
   rw [mul_comm b c]
   exact induction_on₃ a b c fun α β γ => mk_congr <| Equiv.curry γ β α
 #align cardinal.power_mul Cardinal.power_mul
@@ -624,7 +627,8 @@ instance add_swap_covariant_class : CovariantClass Cardinal Cardinal (swap (· +
 #align cardinal.add_swap_covariant_class Cardinal.add_swap_covariant_class
 
 instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
-  { Cardinal.commSemiring, Cardinal.partialOrder with
+  { Cardinal.commSemiring,
+    Cardinal.partialOrder with
     bot := 0
     bot_le := Cardinal.zero_le
     add_le_add_left := fun a b => add_le_add_left
@@ -639,7 +643,8 @@ instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
       (induction_on₂ a b) fun α β => by
         simpa only [mul_def, mk_eq_zero_iff, isEmpty_prod] using id }
 
-theorem zero_power_le (c : Cardinal.{u}) : ((0 : Cardinal.{u})^c) ≤ 1 := by
+theorem zero_power_le (c : Cardinal.{u}) : ((0 : Cardinal.{u})^c) ≤ 1 :=
+  by
   by_cases h : c = 0
   rw [h, power_zero]
   rw [zero_power h]
@@ -653,7 +658,8 @@ theorem power_le_power_left : ∀ {a b c : Cardinal}, a ≠ 0 → b ≤ c → (a
       ⟨@embedding.arrow_congr_left _ _ _ ⟨a⟩ e⟩
 #align cardinal.power_le_power_left Cardinal.power_le_power_left
 
-theorem self_le_power (a : Cardinal) {b : Cardinal} (hb : 1 ≤ b) : a ≤ (a^b) := by
+theorem self_le_power (a : Cardinal) {b : Cardinal} (hb : 1 ≤ b) : a ≤ (a^b) :=
+  by
   rcases eq_or_ne a 0 with (rfl | ha)
   · exact zero_le _
   · convert power_le_power_left ha hb
@@ -661,7 +667,8 @@ theorem self_le_power (a : Cardinal) {b : Cardinal} (hb : 1 ≤ b) : a ≤ (a^b)
 #align cardinal.self_le_power Cardinal.self_le_power
 
 /-- **Cantor's theorem** -/
-theorem cantor (a : Cardinal.{u}) : a < (2^a) := by
+theorem cantor (a : Cardinal.{u}) : a < (2^a) :=
+  by
   induction' a using Cardinal.induction_on with α
   rw [← mk_set]
   refine' ⟨⟨⟨singleton, fun a b => singleton_eq_singleton_iff.1⟩⟩, _⟩
@@ -673,8 +680,9 @@ instance : NoMaxOrder Cardinal.{u} :=
   { Cardinal.partialOrder with exists_gt := fun a => ⟨_, cantor a⟩ }
 
 instance : CanonicallyLinearOrderedAddMonoid Cardinal.{u} :=
-  { (inferInstance : CanonicallyOrderedAddMonoid Cardinal), Cardinal.partialOrder with
-    le_total := by 
+  { (inferInstance : CanonicallyOrderedAddMonoid Cardinal),
+    Cardinal.partialOrder with
+    le_total := by
       rintro ⟨α⟩ ⟨β⟩
       apply embedding.total
     decidableLe := Classical.decRel _ }
@@ -686,7 +694,8 @@ theorem one_lt_iff_nontrivial {α : Type u} : 1 < (#α) ↔ Nontrivial α := by
   rw [← not_le, le_one_iff_subsingleton, ← not_nontrivial_iff_subsingleton, not_not]
 #align cardinal.one_lt_iff_nontrivial Cardinal.one_lt_iff_nontrivial
 
-theorem power_le_max_power_one {a b c : Cardinal} (h : b ≤ c) : (a^b) ≤ max (a^c) 1 := by
+theorem power_le_max_power_one {a b c : Cardinal} (h : b ≤ c) : (a^b) ≤ max (a^c) 1 :=
+  by
   by_cases ha : a = 0
   simp [ha, zero_power_le]
   exact (power_le_power_left ha h).trans (le_max_left _ _)
@@ -741,7 +750,8 @@ theorem succ_def (c : Cardinal) : succ c = infₛ { c' | c < c' } :=
   rfl
 #align cardinal.succ_def Cardinal.succ_def
 
-theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c := by
+theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c :=
+  by
   refine' (le_cInf_iff'' (exists_gt c)).2 fun b hlt => _
   rcases b, c with ⟨⟨β⟩, ⟨γ⟩⟩
   cases' le_of_lt hlt with f
@@ -831,7 +841,7 @@ theorem lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le {α : Type u} {β : Type v
       (mk_congr <|
             (Equiv.ulift.image _).trans
               (Equiv.trans
-                (by 
+                (by
                   rw [Equiv.image_eq_preimage]
                   simp [Set.preimage])
                 Equiv.ulift.symm)).trans_le
@@ -842,12 +852,13 @@ theorem lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le {α : Type u} {β : Type v
 /-- The range of an indexed cardinal function, whose outputs live in a higher universe than the
     inputs, is always bounded above. -/
 theorem bdd_above_range {ι : Type u} (f : ι → Cardinal.{max u v}) : BddAbove (Set.range f) :=
-  ⟨_, by 
+  ⟨_, by
     rintro a ⟨i, rfl⟩
     exact le_sum f i⟩
 #align cardinal.bdd_above_range Cardinal.bdd_above_range
 
-instance (a : Cardinal.{u}) : Small.{u} (Set.Iic a) := by
+instance (a : Cardinal.{u}) : Small.{u} (Set.Iic a) :=
+  by
   rw [← mk_out a]
   apply @small_of_surjective (Set a.out) (Iic (#a.out)) _ fun x => ⟨#x, mk_set_le x⟩
   rintro ⟨x, hx⟩
@@ -858,9 +869,11 @@ instance (a : Cardinal.{u}) : Small.{u} (Set.Iio a) :=
 
 /-- A set of cardinals is bounded above iff it's small, i.e. it corresponds to an usual ZFC set. -/
 theorem bdd_above_iff_small {s : Set Cardinal.{u}} : BddAbove s ↔ Small.{u} s :=
-  ⟨fun ⟨a, ha⟩ => @small_subset _ (Iic a) s (fun x h => ha h) _, by
+  ⟨fun ⟨a, ha⟩ => @small_subset _ (Iic a) s (fun x h => ha h) _,
+    by
     rintro ⟨ι, ⟨e⟩⟩
-    suffices (range fun x : ι => (e.symm x).1) = s by
+    suffices (range fun x : ι => (e.symm x).1) = s
+      by
       rw [← this]
       apply bdd_above_range.{u, u}
     ext x
@@ -876,13 +889,15 @@ theorem bdd_above_of_small (s : Set Cardinal.{u}) [h : Small.{u} s] : BddAbove s
 #align cardinal.bdd_above_of_small Cardinal.bdd_above_of_small
 
 theorem bdd_above_image (f : Cardinal.{u} → Cardinal.{max u v}) {s : Set Cardinal.{u}}
-    (hs : BddAbove s) : BddAbove (f '' s) := by
+    (hs : BddAbove s) : BddAbove (f '' s) :=
+  by
   rw [bdd_above_iff_small] at hs⊢
   exact small_lift _
 #align cardinal.bdd_above_image Cardinal.bdd_above_image
 
 theorem bdd_above_range_comp {ι : Type u} {f : ι → Cardinal.{v}} (hf : BddAbove (range f))
-    (g : Cardinal.{v} → Cardinal.{max v w}) : BddAbove (range (g ∘ f)) := by
+    (g : Cardinal.{v} → Cardinal.{max v w}) : BddAbove (range (g ∘ f)) :=
+  by
   rw [range_comp]
   exact bdd_above_image g hf
 #align cardinal.bdd_above_range_comp Cardinal.bdd_above_range_comp
@@ -892,18 +907,20 @@ theorem supr_le_sum {ι} (f : ι → Cardinal) : supᵢ f ≤ sum f :=
 #align cardinal.supr_le_sum Cardinal.supr_le_sum
 
 theorem sum_le_supr_lift {ι : Type u} (f : ι → Cardinal.{max u v}) : sum f ≤ (#ι).lift * supᵢ f :=
-  by 
+  by
   rw [← (supᵢ f).lift_id, ← lift_umax, lift_umax.{max u v, u}, ← sum_const]
   exact sum_le_sum _ _ (le_csupr <| bdd_above_range.{u, v} f)
 #align cardinal.sum_le_supr_lift Cardinal.sum_le_supr_lift
 
-theorem sum_le_supr {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ (#ι) * supᵢ f := by
+theorem sum_le_supr {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ (#ι) * supᵢ f :=
+  by
   rw [← lift_id (#ι)]
   exact sum_le_supr_lift f
 #align cardinal.sum_le_supr Cardinal.sum_le_supr
 
 theorem sum_nat_eq_add_sum_succ (f : ℕ → Cardinal.{u}) :
-    Cardinal.sum f = f 0 + Cardinal.sum fun i => f (i + 1) := by
+    Cardinal.sum f = f 0 + Cardinal.sum fun i => f (i + 1) :=
+  by
   refine' (Equiv.sigmaNatSucc fun i => Quotient.out (f i)).cardinal_eq.trans _
   simp only [mk_sum, mk_out, lift_id, mk_sigma]
 #align cardinal.sum_nat_eq_add_sum_succ Cardinal.sum_nat_eq_add_sum_succ
@@ -960,7 +977,8 @@ theorem prod_le_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : pro
 #align cardinal.prod_le_prod Cardinal.prod_le_prod
 
 @[simp]
-theorem prod_eq_zero {ι} (f : ι → Cardinal.{u}) : prod f = 0 ↔ ∃ i, f i = 0 := by
+theorem prod_eq_zero {ι} (f : ι → Cardinal.{u}) : prod f = 0 ↔ ∃ i, f i = 0 :=
+  by
   lift f to ι → Type u using fun _ => trivial
   simp only [mk_eq_zero_iff, ← mk_pi, isEmpty_pi]
 #align cardinal.prod_eq_zero Cardinal.prod_eq_zero
@@ -970,7 +988,8 @@ theorem prod_ne_zero {ι} (f : ι → Cardinal) : prod f ≠ 0 ↔ ∀ i, f i �
 
 @[simp]
 theorem lift_prod {ι : Type u} (c : ι → Cardinal.{v}) :
-    lift.{w} (prod c) = prod fun i => lift.{w} (c i) := by
+    lift.{w} (prod c) = prod fun i => lift.{w} (c i) :=
+  by
   lift c to ι → Type v using fun _ => trivial
   simp only [← mk_pi, ← mk_ulift]
   exact mk_congr (equiv.ulift.trans <| Equiv.piCongrRight fun i => equiv.ulift.symm)
@@ -993,15 +1012,17 @@ theorem prod_eq_of_fintype {α : Type u} [Fintype α] (f : α → Cardinal.{v}) 
 #align cardinal.prod_eq_of_fintype Cardinal.prod_eq_of_fintype
 
 @[simp]
-theorem lift_Inf (s : Set Cardinal) : lift (infₛ s) = infₛ (lift '' s) := by
+theorem lift_Inf (s : Set Cardinal) : lift (infₛ s) = infₛ (lift '' s) :=
+  by
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · simp
   · exact lift_monotone.map_Inf hs
 #align cardinal.lift_Inf Cardinal.lift_Inf
 
 @[simp]
-theorem lift_infi {ι} (f : ι → Cardinal) : lift (infi f) = ⨅ i, lift (f i) := by
-  unfold infi
+theorem lift_infi {ι} (f : ι → Cardinal) : lift (infᵢ f) = ⨅ i, lift (f i) :=
+  by
+  unfold infᵢ
   convert lift_Inf (range f)
   rw [range_comp]
 #align cardinal.lift_infi Cardinal.lift_infi
@@ -1036,7 +1057,7 @@ theorem lt_lift_iff {a : Cardinal.{u}} {b : Cardinal.{max u v}} :
 @[simp]
 theorem lift_succ (a) : lift (succ a) = succ (lift a) :=
   le_antisymm
-    (le_of_not_gt fun h => by 
+    (le_of_not_gt fun h => by
       rcases lt_lift_iff.1 h with ⟨b, e, h⟩
       rw [lt_succ_iff, ← lift_le, e] at h
       exact h.not_lt (lt_succ _))
@@ -1061,7 +1082,7 @@ theorem lift_max {a b : Cardinal} : lift (max a b) = max (lift a) (lift b) :=
 
 /-- The lift of a supremum is the supremum of the lifts. -/
 theorem lift_Sup {s : Set Cardinal} (hs : BddAbove s) : lift.{u} (supₛ s) = supₛ (lift.{u} '' s) :=
-  by 
+  by
   apply ((le_cSup_iff' (bdd_above_image _ hs)).2 fun c hc => _).antisymm (cSup_le' _)
   · by_contra h
     obtain ⟨d, rfl⟩ := Cardinal.lift_down (not_le.1 h).le
@@ -1080,14 +1101,16 @@ theorem lift_supr {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (range 
 /-- To prove that the lift of a supremum is bounded by some cardinal `t`,
 it suffices to show that the lift of each cardinal is bounded by `t`. -/
 theorem lift_supr_le {ι : Type v} {f : ι → Cardinal.{w}} {t : Cardinal} (hf : BddAbove (range f))
-    (w : ∀ i, lift.{u} (f i) ≤ t) : lift.{u} (supᵢ f) ≤ t := by
+    (w : ∀ i, lift.{u} (f i) ≤ t) : lift.{u} (supᵢ f) ≤ t :=
+  by
   rw [lift_supr hf]
   exact csupr_le' w
 #align cardinal.lift_supr_le Cardinal.lift_supr_le
 
 @[simp]
 theorem lift_supr_le_iff {ι : Type v} {f : ι → Cardinal.{w}} (hf : BddAbove (range f))
-    {t : Cardinal} : lift.{u} (supᵢ f) ≤ t ↔ ∀ i, lift.{u} (f i) ≤ t := by
+    {t : Cardinal} : lift.{u} (supᵢ f) ≤ t ↔ ∀ i, lift.{u} (f i) ≤ t :=
+  by
   rw [lift_supr hf]
   exact csupr_le_iff' (bdd_above_range_comp hf _)
 #align cardinal.lift_supr_le_iff Cardinal.lift_supr_le_iff
@@ -1100,7 +1123,8 @@ if bounded by the lift of some cardinal from the larger supremum.
 -/
 theorem lift_supr_le_lift_supr {ι : Type v} {ι' : Type v'} {f : ι → Cardinal.{w}}
     {f' : ι' → Cardinal.{w'}} (hf : BddAbove (range f)) (hf' : BddAbove (range f')) {g : ι → ι'}
-    (h : ∀ i, lift.{w'} (f i) ≤ lift.{w} (f' (g i))) : lift.{w'} (supᵢ f) ≤ lift.{w} (supᵢ f') := by
+    (h : ∀ i, lift.{w'} (f i) ≤ lift.{w} (f' (g i))) : lift.{w'} (supᵢ f) ≤ lift.{w} (supᵢ f') :=
+  by
   rw [lift_supr hf, lift_supr hf']
   exact csupr_mono' (bdd_above_range_comp hf' _) fun i => ⟨_, h i⟩
 #align cardinal.lift_supr_le_lift_supr Cardinal.lift_supr_le_lift_supr
@@ -1227,7 +1251,8 @@ theorem nat_succ (n : ℕ) : (n.succ : Cardinal) = succ n :=
 theorem succ_zero : succ (0 : Cardinal) = 1 := by norm_cast
 #align cardinal.succ_zero Cardinal.succ_zero
 
-theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n) : (#α) ≤ n := by
+theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n) : (#α) ≤ n :=
+  by
   refine' le_of_lt_succ (lt_of_not_ge fun hn => _)
   rw [← Cardinal.nat_succ, ← lift_mk_fin n.succ] at hn
   cases' hn with f
@@ -1236,7 +1261,8 @@ theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n)
   exact n.lt_succ_self
 #align cardinal.card_le_of Cardinal.card_le_of
 
-theorem cantor' (a) {b : Cardinal} (hb : 1 < b) : a < (b^a) := by
+theorem cantor' (a) {b : Cardinal} (hb : 1 < b) : a < (b^a) :=
+  by
   rw [← succ_le_iff, (by norm_cast : succ (1 : Cardinal) = 2)] at hb
   exact (cantor a).trans_le (power_le_power_right hb)
 #align cardinal.cantor' Cardinal.cantor'
@@ -1249,7 +1275,7 @@ theorem one_le_iff_ne_zero {c : Cardinal} : 1 ≤ c ↔ c ≠ 0 := by rw [one_le
 
 theorem nat_lt_aleph_0 (n : ℕ) : (n : Cardinal.{u}) < ℵ₀ :=
   succ_le_iff.1
-    (by 
+    (by
       rw [← nat_succ, ← lift_mk_fin, aleph_0, lift_mk_le.{0, 0, u}]
       exact ⟨⟨coe, fun a b => Fin.ext⟩⟩)
 #align cardinal.nat_lt_aleph_0 Cardinal.nat_lt_aleph_0
@@ -1263,10 +1289,10 @@ theorem one_le_aleph_0 : 1 ≤ ℵ₀ :=
 #align cardinal.one_le_aleph_0 Cardinal.one_le_aleph_0
 
 theorem lt_aleph_0 {c : Cardinal} : c < ℵ₀ ↔ ∃ n : ℕ, c = n :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rcases lt_lift_iff.1 h with ⟨c, rfl, h'⟩
     rcases le_mk_iff_exists_set.1 h'.1 with ⟨S, rfl⟩
-    suffices S.finite by 
+    suffices S.finite by
       lift S to Finset ℕ using this
       simp
     contrapose! h'
@@ -1276,7 +1302,7 @@ theorem lt_aleph_0 {c : Cardinal} : c < ℵ₀ ↔ ∃ n : ℕ, c = n :=
 
 theorem aleph_0_le {c : Cardinal} : ℵ₀ ≤ c ↔ ∀ n : ℕ, ↑n ≤ c :=
   ⟨fun h n => (nat_lt_aleph_0 _).le.trans h, fun h =>
-    le_of_not_lt fun hn => by 
+    le_of_not_lt fun hn => by
       rcases lt_aleph_0.1 hn with ⟨n, rfl⟩
       exact (Nat.lt_succ_self _).not_le (nat_cast_le.1 (h (n + 1)))⟩
 #align cardinal.aleph_0_le Cardinal.aleph_0_le
@@ -1357,7 +1383,8 @@ theorem aleph_0_le_add_iff {a b : Cardinal} : ℵ₀ ≤ a + b ↔ ℵ₀ ≤ a 
 #align cardinal.aleph_0_le_add_iff Cardinal.aleph_0_le_add_iff
 
 /-- See also `cardinal.nsmul_lt_aleph_0_iff_of_ne_zero` if you already have `n ≠ 0`. -/
-theorem nsmul_lt_aleph_0_iff {n : ℕ} {a : Cardinal} : n • a < ℵ₀ ↔ n = 0 ∨ a < ℵ₀ := by
+theorem nsmul_lt_aleph_0_iff {n : ℕ} {a : Cardinal} : n • a < ℵ₀ ↔ n = 0 ∨ a < ℵ₀ :=
+  by
   cases n
   · simpa using nat_lt_aleph_0 0
   simp only [Nat.succ_ne_zero, false_or_iff]
@@ -1376,7 +1403,8 @@ theorem mul_lt_aleph_0 {a b : Cardinal} (ha : a < ℵ₀) (hb : b < ℵ₀) : a 
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by rw [← Nat.cast_mul] <;> apply nat_lt_aleph_0
 #align cardinal.mul_lt_aleph_0 Cardinal.mul_lt_aleph_0
 
-theorem mul_lt_aleph_0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0 ∨ a < ℵ₀ ∧ b < ℵ₀ := by
+theorem mul_lt_aleph_0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0 ∨ a < ℵ₀ ∧ b < ℵ₀ :=
+  by
   refine' ⟨fun h => _, _⟩
   · by_cases ha : a = 0
     · exact Or.inl ha
@@ -1394,14 +1422,15 @@ theorem mul_lt_aleph_0_iff {a b : Cardinal} : a * b < ℵ₀ ↔ a = 0 ∨ b = 0
 #align cardinal.mul_lt_aleph_0_iff Cardinal.mul_lt_aleph_0_iff
 
 /-- See also `cardinal.aleph_0_le_mul_iff`. -/
-theorem aleph_0_le_mul_iff {a b : Cardinal} : ℵ₀ ≤ a * b ↔ a ≠ 0 ∧ b ≠ 0 ∧ (ℵ₀ ≤ a ∨ ℵ₀ ≤ b) := by
+theorem aleph_0_le_mul_iff {a b : Cardinal} : ℵ₀ ≤ a * b ↔ a ≠ 0 ∧ b ≠ 0 ∧ (ℵ₀ ≤ a ∨ ℵ₀ ≤ b) :=
+  by
   let h := (@mul_lt_aleph_0_iff a b).Not
   rwa [not_lt, not_or, not_or, not_and_or, not_lt, not_lt] at h
 #align cardinal.aleph_0_le_mul_iff Cardinal.aleph_0_le_mul_iff
 
 /-- See also `cardinal.aleph_0_le_mul_iff'`. -/
 theorem aleph_0_le_mul_iff' {a b : Cardinal.{u}} : ℵ₀ ≤ a * b ↔ a ≠ 0 ∧ ℵ₀ ≤ b ∨ ℵ₀ ≤ a ∧ b ≠ 0 :=
-  by 
+  by
   have : ∀ {a : Cardinal.{u}}, ℵ₀ ≤ a → a ≠ 0 := fun a => ne_bot_of_le_ne_bot aleph_0_ne_zero
   simp only [aleph_0_le_mul_iff, and_or_left, and_iff_right_of_imp this, @and_left_comm (a ≠ 0)]
   simp only [and_comm, or_comm]
@@ -1439,7 +1468,8 @@ theorem mk_eq_aleph_0 (α : Type _) [Countable α] [Infinite α] : (#α) = ℵ�
 #align cardinal.mk_eq_aleph_0 Cardinal.mk_eq_aleph_0
 
 theorem denumerable_iff {α : Type u} : Nonempty (Denumerable α) ↔ (#α) = ℵ₀ :=
-  ⟨fun ⟨h⟩ => mk_congr ((@Denumerable.eqv α h).trans Equiv.ulift.symm), fun h => by
+  ⟨fun ⟨h⟩ => mk_congr ((@Denumerable.eqv α h).trans Equiv.ulift.symm), fun h =>
+    by
     cases' Quotient.exact h with f
     exact ⟨Denumerable.mk' <| f.trans Equiv.ulift⟩⟩
 #align cardinal.denumerable_iff Cardinal.denumerable_iff
@@ -1487,7 +1517,8 @@ theorem nat_add_aleph_0 (n : ℕ) : ↑n + ℵ₀ = ℵ₀ := by rw [add_comm, a
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to 0. -/
 def toNat : ZeroHom Cardinal ℕ :=
-  ⟨fun c => if h : c < aleph_0.{v} then Classical.choose (lt_aleph_0.1 h) else 0, by
+  ⟨fun c => if h : c < aleph_0.{v} then Classical.choose (lt_aleph_0.1 h) else 0,
+    by
     have h : 0 < ℵ₀ := nat_lt_aleph_0 0
     rw [dif_pos h, ← Cardinal.nat_cast_inj, ← Classical.choose_spec (lt_aleph_0.1 h),
       Nat.cast_zero]⟩
@@ -1531,7 +1562,8 @@ theorem to_nat_lt_of_lt_of_lt_aleph_0 {c d : Cardinal} (hd : d < ℵ₀) (hcd : 
 #align cardinal.to_nat_lt_of_lt_of_lt_aleph_0 Cardinal.to_nat_lt_of_lt_of_lt_aleph_0
 
 @[simp]
-theorem to_nat_cast (n : ℕ) : Cardinal.toNat n = n := by
+theorem to_nat_cast (n : ℕ) : Cardinal.toNat n = n :=
+  by
   rw [to_nat_apply_of_lt_aleph_0 (nat_lt_aleph_0 n), ← nat_cast_inj]
   exact (Classical.choose_spec (lt_aleph_0.1 (nat_lt_aleph_0 n))).symm
 #align cardinal.to_nat_cast Cardinal.to_nat_cast
@@ -1589,7 +1621,8 @@ theorem to_nat_eq_one_iff_unique {α : Type _} : (#α).toNat = 1 ↔ Subsingleto
 #align cardinal.to_nat_eq_one_iff_unique Cardinal.to_nat_eq_one_iff_unique
 
 @[simp]
-theorem to_nat_lift (c : Cardinal.{v}) : (lift.{u, v} c).toNat = c.toNat := by
+theorem to_nat_lift (c : Cardinal.{v}) : (lift.{u, v} c).toNat = c.toNat :=
+  by
   apply nat_cast_injective
   cases' lt_or_ge c ℵ₀ with hc hc
   · rw [cast_to_nat_of_lt_aleph_0, ← lift_nat_cast, cast_to_nat_of_lt_aleph_0 hc]
@@ -1603,7 +1636,8 @@ theorem to_nat_congr {β : Type v} (e : α ≃ β) : (#α).toNat = (#β).toNat :
 #align cardinal.to_nat_congr Cardinal.to_nat_congr
 
 @[simp]
-theorem to_nat_mul (x y : Cardinal) : (x * y).toNat = x.toNat * y.toNat := by
+theorem to_nat_mul (x y : Cardinal) : (x * y).toNat = x.toNat * y.toNat :=
+  by
   rcases eq_or_ne x 0 with (rfl | hx1)
   · rw [zero_mul, zero_to_nat, zero_mul]
   rcases eq_or_ne y 0 with (rfl | hy1)
@@ -1621,7 +1655,7 @@ theorem to_nat_mul (x y : Cardinal) : (x * y).toNat = x.toNat * y.toNat := by
 
 /-- `cardinal.to_nat` as a `monoid_with_zero_hom`. -/
 @[simps]
-def toNatHom : Cardinal →*₀ ℕ where 
+def toNatHom : Cardinal →*₀ ℕ where
   toFun := toNat
   map_zero' := zero_to_nat
   map_one' := one_to_nat
@@ -1635,12 +1669,13 @@ theorem to_nat_finset_prod (s : Finset α) (f : α → Cardinal) :
 
 @[simp]
 theorem to_nat_add_of_lt_aleph_0 {a : Cardinal.{u}} {b : Cardinal.{v}} (ha : a < ℵ₀) (hb : b < ℵ₀) :
-    (lift.{v, u} a + lift.{u, v} b).toNat = a.toNat + b.toNat := by
+    (lift.{v, u} a + lift.{u, v} b).toNat = a.toNat + b.toNat :=
+  by
   apply Cardinal.nat_cast_injective
-  replace ha : lift.{v, u} a < ℵ₀ := by 
+  replace ha : lift.{v, u} a < ℵ₀ := by
     rw [← lift_aleph_0]
     exact lift_lt.2 ha
-  replace hb : lift.{u, v} b < ℵ₀ := by 
+  replace hb : lift.{u, v} b < ℵ₀ := by
     rw [← lift_aleph_0]
     exact lift_lt.2 hb
   rw [Nat.cast_add, ← to_nat_lift.{v, u} a, ← to_nat_lift.{u, v} b, cast_to_nat_of_lt_aleph_0 ha,
@@ -1649,11 +1684,11 @@ theorem to_nat_add_of_lt_aleph_0 {a : Cardinal.{u}} {b : Cardinal.{v}} (ha : a <
 
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to `⊤`. -/
-def toPartEnat :
-    Cardinal →+ PartEnat where 
+def toPartEnat : Cardinal →+ PartEnat
+    where
   toFun c := if c < ℵ₀ then c.toNat else ⊤
   map_zero' := by simp [if_pos (zero_lt_one.trans one_lt_aleph_0)]
-  map_add' x y := by 
+  map_add' x y := by
     by_cases hx : x < ℵ₀
     · obtain ⟨x0, rfl⟩ := lt_aleph_0.1 hx
       by_cases hy : y < ℵ₀
@@ -1709,15 +1744,17 @@ theorem mk_pnat : (#ℕ+) = ℵ₀ :=
 
 /-- **König's theorem** -/
 theorem sum_lt_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i < g i) : sum f < prod g :=
-  lt_of_not_ge fun ⟨F⟩ => by
-    have : Inhabited (∀ i : ι, (g i).out) := by
+  lt_of_not_ge fun ⟨F⟩ =>
+    by
+    have : Inhabited (∀ i : ι, (g i).out) :=
+      by
       refine' ⟨fun i => Classical.choice <| mk_ne_zero_iff.1 _⟩
       rw [mk_out]
       exact (H i).ne_bot
     let G := inv_fun F
     have sG : surjective G := inv_fun_surjective F.2
     choose C hc using
-      show ∀ i, ∃ b, ∀ a, G ⟨i, a⟩ i ≠ b by 
+      show ∀ i, ∃ b, ∀ a, G ⟨i, a⟩ i ≠ b by
         intro i
         simp only [-not_exists, not_exists.symm, not_forall.symm]
         refine' fun h => (H i).not_le _
@@ -1792,7 +1829,8 @@ theorem mk_emptyc (α : Type u) : (#(∅ : Set α)) = 0 :=
   mk_eq_zero _
 #align cardinal.mk_emptyc Cardinal.mk_emptyc
 
-theorem mk_emptyc_iff {α : Type u} {s : Set α} : (#s) = 0 ↔ s = ∅ := by
+theorem mk_emptyc_iff {α : Type u} {s : Set α} : (#s) = 0 ↔ s = ∅ :=
+  by
   constructor
   · intro h
     rw [mk_eq_zero_iff] at h
@@ -1844,7 +1882,7 @@ theorem mk_image_eq {α β : Type u} {f : α → β} {s : Set α} (hf : Injectiv
 
 theorem mk_Union_le_sum_mk {α ι : Type u} {f : ι → Set α} : (#⋃ i, f i) ≤ sum fun i => #f i :=
   calc
-    (#⋃ i, f i) ≤ (#Σi, f i) := mk_le_of_surjective (Set.sigma_to_Union_surjective f)
+    (#⋃ i, f i) ≤ (#Σi, f i) := mk_le_of_surjective (Set.sigmaToUnionᵢ_surjective f)
     _ = sum fun i => #f i := mk_sigma _
     
 #align cardinal.mk_Union_le_sum_mk Cardinal.mk_Union_le_sum_mk
@@ -1861,13 +1899,15 @@ theorem mk_Union_le {α ι : Type u} (f : ι → Set α) : (#⋃ i, f i) ≤ (#�
   mk_Union_le_sum_mk.trans (sum_le_supr _)
 #align cardinal.mk_Union_le Cardinal.mk_Union_le
 
-theorem mk_sUnion_le {α : Type u} (A : Set (Set α)) : (#⋃₀A) ≤ (#A) * ⨆ s : A, #s := by
+theorem mk_sUnion_le {α : Type u} (A : Set (Set α)) : (#⋃₀A) ≤ (#A) * ⨆ s : A, #s :=
+  by
   rw [sUnion_eq_Union]
   apply mk_Union_le
 #align cardinal.mk_sUnion_le Cardinal.mk_sUnion_le
 
 theorem mk_bUnion_le {ι α : Type u} (A : ι → Set α) (s : Set ι) :
-    (#⋃ x ∈ s, A x) ≤ (#s) * ⨆ x : s, #A x.1 := by
+    (#⋃ x ∈ s, A x) ≤ (#s) * ⨆ x : s, #A x.1 :=
+  by
   rw [bUnion_eq_Union]
   apply mk_Union_le
 #align cardinal.mk_bUnion_le Cardinal.mk_bUnion_le
@@ -1877,7 +1917,8 @@ theorem finset_card_lt_aleph_0 (s : Finset α) : (#(↑s : Set α)) < ℵ₀ :=
 #align cardinal.finset_card_lt_aleph_0 Cardinal.finset_card_lt_aleph_0
 
 theorem mk_set_eq_nat_iff_finset {α} {s : Set α} {n : ℕ} :
-    (#s) = n ↔ ∃ t : Finset α, (t : Set α) = s ∧ t.card = n := by
+    (#s) = n ↔ ∃ t : Finset α, (t : Set α) = s ∧ t.card = n :=
+  by
   constructor
   · intro h
     lift s to Finset α using lt_aleph_0_iff_set_finite.1 (h.symm ▸ nat_lt_aleph_0 n)
@@ -1890,7 +1931,8 @@ theorem mk_eq_nat_iff_finset {n : ℕ} : (#α) = n ↔ ∃ t : Finset α, (t : S
   by rw [← mk_univ, mk_set_eq_nat_iff_finset]
 #align cardinal.mk_eq_nat_iff_finset Cardinal.mk_eq_nat_iff_finset
 
-theorem mk_eq_nat_iff_fintype {n : ℕ} : (#α) = n ↔ ∃ h : Fintype α, @Fintype.card α h = n := by
+theorem mk_eq_nat_iff_fintype {n : ℕ} : (#α) = n ↔ ∃ h : Fintype α, @Fintype.card α h = n :=
+  by
   rw [mk_eq_nat_iff_finset]
   constructor
   · rintro ⟨t, ht, hn⟩
@@ -1916,7 +1958,8 @@ theorem mk_union_of_disjoint {α : Type u} {S T : Set α} (H : Disjoint S T) :
 #align cardinal.mk_union_of_disjoint Cardinal.mk_union_of_disjoint
 
 theorem mk_insert {α : Type u} {s : Set α} {a : α} (h : a ∉ s) :
-    (#(insert a s : Set α)) = (#s) + 1 := by
+    (#(insert a s : Set α)) = (#s) + 1 :=
+  by
   rw [← union_singleton, mk_union_of_disjoint, mk_singleton]
   simpa
 #align cardinal.mk_insert Cardinal.mk_insert
@@ -1970,13 +2013,15 @@ theorem mk_sep (s : Set α) (t : α → Prop) : (#({ x ∈ s | t x } : Set α)) 
 #align cardinal.mk_sep Cardinal.mk_sep
 
 theorem mk_preimage_of_injective_lift {α : Type u} {β : Type v} (f : α → β) (s : Set β)
-    (h : Injective f) : lift.{v} (#f ⁻¹' s) ≤ lift.{u} (#s) := by
+    (h : Injective f) : lift.{v} (#f ⁻¹' s) ≤ lift.{u} (#s) :=
+  by
   rw [lift_mk_le.{u, v, 0}]; use Subtype.coind (fun x => f x.1) fun x => x.2
   apply Subtype.coind_injective; exact h.comp Subtype.val_injective
 #align cardinal.mk_preimage_of_injective_lift Cardinal.mk_preimage_of_injective_lift
 
 theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α → β) (s : Set β)
-    (h : s ⊆ range f) : lift.{u} (#s) ≤ lift.{v} (#f ⁻¹' s) := by
+    (h : s ⊆ range f) : lift.{u} (#s) ≤ lift.{v} (#f ⁻¹' s) :=
+  by
   rw [lift_mk_le.{v, u, 0}]
   refine' ⟨⟨_, _⟩⟩
   · rintro ⟨y, hy⟩
@@ -2009,7 +2054,8 @@ theorem mk_preimage_of_injective_of_subset_range (f : α → β) (s : Set β) (h
   cardinal.mk_preimage_of_injective_of_subset_range Cardinal.mk_preimage_of_injective_of_subset_range
 
 theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α → β) {s : Set α}
-    {t : Set β} (h : t ⊆ f '' s) : lift.{u} (#t) ≤ lift.{v} (#({ x ∈ s | f x ∈ t } : Set α)) := by
+    {t : Set β} (h : t ⊆ f '' s) : lift.{u} (#t) ≤ lift.{v} (#({ x ∈ s | f x ∈ t } : Set α)) :=
+  by
   rw [image_eq_range] at h
   convert mk_preimage_of_subset_range_lift _ _ h using 1
   rw [mk_sep]
@@ -2017,7 +2063,8 @@ theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α �
 #align cardinal.mk_subset_ge_of_subset_image_lift Cardinal.mk_subset_ge_of_subset_image_lift
 
 theorem mk_subset_ge_of_subset_image (f : α → β) {s : Set α} {t : Set β} (h : t ⊆ f '' s) :
-    (#t) ≤ (#({ x ∈ s | f x ∈ t } : Set α)) := by
+    (#t) ≤ (#({ x ∈ s | f x ∈ t } : Set α)) :=
+  by
   rw [image_eq_range] at h
   convert mk_preimage_of_subset_range _ _ h using 1
   rw [mk_sep]
@@ -2025,7 +2072,8 @@ theorem mk_subset_ge_of_subset_image (f : α → β) {s : Set α} {t : Set β} (
 #align cardinal.mk_subset_ge_of_subset_image Cardinal.mk_subset_ge_of_subset_image
 
 theorem le_mk_iff_exists_subset {c : Cardinal} {α : Type u} {s : Set α} :
-    c ≤ (#s) ↔ ∃ p : Set α, p ⊆ s ∧ (#p) = c := by
+    c ≤ (#s) ↔ ∃ p : Set α, p ⊆ s ∧ (#p) = c :=
+  by
   rw [le_mk_iff_exists_set, ← Subtype.exists_set_subtype]
   apply exists_congr; intro t; rw [mk_image_eq]; apply Subtype.val_injective
 #align cardinal.le_mk_iff_exists_subset Cardinal.le_mk_iff_exists_subset
@@ -2038,7 +2086,8 @@ theorem two_le_iff' (x : α) : (2 : Cardinal) ≤ (#α) ↔ ∃ y : α, y ≠ x 
   rw [two_le_iff, ← nontrivial_iff, nontrivial_iff_exists_ne x]
 #align cardinal.two_le_iff' Cardinal.two_le_iff'
 
-theorem mk_eq_two_iff : (#α) = 2 ↔ ∃ x y : α, x ≠ y ∧ ({x, y} : Set α) = univ := by
+theorem mk_eq_two_iff : (#α) = 2 ↔ ∃ x y : α, x ≠ y ∧ ({x, y} : Set α) = univ :=
+  by
   simp only [← @Nat.cast_two Cardinal, mk_eq_nat_iff_finset, Finset.card_eq_two]
   constructor
   · rintro ⟨t, ht, x, y, hne, rfl⟩
@@ -2047,7 +2096,8 @@ theorem mk_eq_two_iff : (#α) = 2 ↔ ∃ x y : α, x ≠ y ∧ ({x, y} : Set α
     exact ⟨{x, y}, by simpa using h, x, y, hne, rfl⟩
 #align cardinal.mk_eq_two_iff Cardinal.mk_eq_two_iff
 
-theorem mk_eq_two_iff' (x : α) : (#α) = 2 ↔ ∃! y, y ≠ x := by
+theorem mk_eq_two_iff' (x : α) : (#α) = 2 ↔ ∃! y, y ≠ x :=
+  by
   rw [mk_eq_two_iff]; constructor
   · rintro ⟨a, b, hne, h⟩
     simp only [eq_univ_iff_forall, mem_insert_iff, mem_singleton_iff] at h
@@ -2058,7 +2108,7 @@ theorem mk_eq_two_iff' (x : α) : (#α) = 2 ↔ ∃! y, y ≠ x := by
 #align cardinal.mk_eq_two_iff' Cardinal.mk_eq_two_iff'
 
 theorem exists_not_mem_of_length_lt {α : Type _} (l : List α) (h : ↑l.length < (#α)) :
-    ∃ z : α, z ∉ l := by 
+    ∃ z : α, z ∉ l := by
   contrapose! h
   calc
     (#α) = (#(Set.univ : Set α)) := mk_univ.symm
@@ -2068,7 +2118,8 @@ theorem exists_not_mem_of_length_lt {α : Type _} (l : List α) (h : ↑l.length
     
 #align cardinal.exists_not_mem_of_length_lt Cardinal.exists_not_mem_of_length_lt
 
-theorem three_le {α : Type _} (h : 3 ≤ (#α)) (x : α) (y : α) : ∃ z : α, z ≠ x ∧ z ≠ y := by
+theorem three_le {α : Type _} (h : 3 ≤ (#α)) (x : α) (y : α) : ∃ z : α, z ≠ x ∧ z ≠ y :=
+  by
   have : ↑(3 : ℕ) ≤ (#α); simpa using h
   have : ↑(2 : ℕ) < (#α); rwa [← succ_le_iff, ← Cardinal.nat_succ]
   have := exists_not_mem_of_length_lt [x, y] this
@@ -2083,13 +2134,15 @@ def powerlt (a b : Cardinal.{u}) : Cardinal.{u} :=
 -- mathport name: «expr ^< »
 infixl:80 " ^< " => powerlt
 
-theorem le_powerlt {b c : Cardinal.{u}} (a) (h : c < b) : (a^c) ≤ a ^< b := by
+theorem le_powerlt {b c : Cardinal.{u}} (a) (h : c < b) : (a^c) ≤ a ^< b :=
+  by
   apply @le_csupr _ _ _ (fun y : Iio b => a^y) _ ⟨c, h⟩
   rw [← image_eq_range]
   exact bdd_above_image.{u, u} _ bddAbove_Iio
 #align cardinal.le_powerlt Cardinal.le_powerlt
 
-theorem powerlt_le {a b c : Cardinal.{u}} : a ^< b ≤ c ↔ ∀ x < b, (a^x) ≤ c := by
+theorem powerlt_le {a b c : Cardinal.{u}} : a ^< b ≤ c ↔ ∀ x < b, (a^x) ≤ c :=
+  by
   rw [powerlt, csupr_le_iff']
   · simp
   · rw [← image_eq_range]
@@ -2116,14 +2169,16 @@ theorem powerlt_max {a b c : Cardinal} : a ^< max b c = max (a ^< b) (a ^< c) :=
   (powerlt_mono_left a).map_max
 #align cardinal.powerlt_max Cardinal.powerlt_max
 
-theorem zero_powerlt {a : Cardinal} (h : a ≠ 0) : 0 ^< a = 1 := by
+theorem zero_powerlt {a : Cardinal} (h : a ≠ 0) : 0 ^< a = 1 :=
+  by
   apply (powerlt_le.2 fun c hc => zero_power_le _).antisymm
   rw [← power_zero]
   exact le_powerlt 0 (pos_iff_ne_zero.2 h)
 #align cardinal.zero_powerlt Cardinal.zero_powerlt
 
 @[simp]
-theorem powerlt_zero {a : Cardinal} : a ^< 0 = 0 := by
+theorem powerlt_zero {a : Cardinal} : a ^< 0 = 0 :=
+  by
   convert Cardinal.supr_of_empty _
   exact Subtype.isEmpty_of_false fun x => (Cardinal.zero_le _).not_lt
 #align cardinal.powerlt_zero Cardinal.powerlt_zero

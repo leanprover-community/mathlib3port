@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.connected
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,8 +40,8 @@ namespace CreatesConnected
 /-- (Impl) Given a diagram in the over category, produce a natural transformation from the
 diagram legs to the specific object.
 -/
-def natTransInOver {B : C} (F : J ⥤ Over B) :
-    F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B where app j := (F.obj j).Hom
+def natTransInOver {B : C} (F : J ⥤ Over B) : F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B
+    where app j := (F.obj j).Hom
 #align
   category_theory.over.creates_connected.nat_trans_in_over CategoryTheory.Over.CreatesConnected.natTransInOver
 
@@ -51,12 +51,12 @@ attribute [local tidy] tactic.case_bash
 where the connected assumption is used.
 -/
 @[simps]
-def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) :
-    Cone
-      F where 
+def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) : Cone F
+    where
   x := Over.mk (c.π.app (Classical.arbitrary J) ≫ (F.obj (Classical.arbitrary J)).Hom)
   π :=
-    { app := fun j =>
+    {
+      app := fun j =>
         Over.homMk (c.π.app j) (nat_trans_from_is_connected (c.π ≫ natTransInOver F) j _) }
 #align
   category_theory.over.creates_connected.raise_cone CategoryTheory.Over.CreatesConnected.raiseCone
@@ -68,16 +68,14 @@ theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B
 
 /-- (Impl) Show that the raised cone is a limit. -/
 def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F ⋙ forget B)}
-    (t : IsLimit c) :
-    IsLimit
-      (raiseCone
-        c) where 
+    (t : IsLimit c) : IsLimit (raiseCone c)
+    where
   lift s :=
     Over.homMk (t.lift ((forget B).mapCone s))
-      (by 
+      (by
         dsimp
         simp)
-  uniq' s m K := by 
+  uniq' s m K := by
     ext1
     apply t.hom_ext
     intro j
@@ -88,10 +86,8 @@ def raisedConeIsLimit [IsConnected J] {B : C} {F : J ⥤ Over B} {c : Cone (F �
 end CreatesConnected
 
 /-- The forgetful functor from the over category creates any connected limit. -/
-instance forgetCreatesConnectedLimits [IsConnected J] {B : C} :
-    CreatesLimitsOfShape J
-      (forget
-        B) where CreatesLimit K :=
+instance forgetCreatesConnectedLimits [IsConnected J] {B : C} : CreatesLimitsOfShape J (forget B)
+    where CreatesLimit K :=
     createsLimitOfReflectsIso fun c t =>
       { liftedCone := CreatesConnected.raiseCone c
         validLift := eqToIso (CreatesConnected.raised_cone_lowers_to_original c t)

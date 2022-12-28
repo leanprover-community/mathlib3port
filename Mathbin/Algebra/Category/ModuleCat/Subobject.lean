@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Module.subobject
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
       toFun := fun N => Subobject.mk (↾N.Subtype)
       right_inv := fun S =>
         Eq.symm
-          (by 
+          (by
             fapply eq_mk_of_comm
             · apply LinearEquiv.toModuleIso'Left
               apply LinearEquiv.ofBijective (LinearMap.codRestrict S.arrow.range S.arrow _)
@@ -59,21 +59,23 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
             · apply LinearMap.ext
               intro x
               rfl)
-      left_inv := fun N => by
+      left_inv := fun N =>
+        by
         convert congr_arg LinearMap.range (underlying_iso_arrow (↾N.subtype)) using 1
         · have :
             (underlying_iso (↾N.subtype)).inv = (underlying_iso (↾N.subtype)).symm.toLinearEquiv :=
-            by 
+            by
             apply LinearMap.ext
             intro x
             rfl
           rw [this, comp_def, LinearEquiv.range_comp]
         · exact (Submodule.range_subtype _).symm
-      map_rel_iff' := fun S T => by
+      map_rel_iff' := fun S T =>
+        by
         refine'
           ⟨fun h => _, fun h =>
             mk_le_mk_of_comm (↟(Submodule.ofLe h))
-              (by 
+              (by
                 ext
                 rfl)⟩
         convert LinearMap.range_comp_le_range (of_mk_le_mk _ _ h) (↾T.subtype)
@@ -107,7 +109,8 @@ two elements in homology are equal if they differ by a boundary.
 @[ext]
 theorem cokernel_π_image_subobject_ext {L M N : ModuleCat.{v} R} (f : L ⟶ M) [HasImage f]
     (g : (imageSubobject f : ModuleCat.{v} R) ⟶ N) [HasCokernel g] {x y : N} (l : L)
-    (w : x = y + g (factorThruImageSubobject f l)) : cokernel.π g x = cokernel.π g y := by
+    (w : x = y + g (factorThruImageSubobject f l)) : cokernel.π g x = cokernel.π g y :=
+  by
   subst w
   simp
 #align Module.cokernel_π_image_subobject_ext ModuleCat.cokernel_π_image_subobject_ext

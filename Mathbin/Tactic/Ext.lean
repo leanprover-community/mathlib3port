@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Jesse Michael Han
 
 ! This file was ported from Lean 3 source module tactic.ext
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -212,9 +212,8 @@ private unsafe def hacky_name_reflect : has_reflect Name := fun n =>
 #align hacky_name_reflect hacky_name_reflect
 
 @[user_attribute]
-private unsafe def ext_attr_core :
-    user_attribute (name_map Name)
-      Name where 
+private unsafe def ext_attr_core : user_attribute (name_map Name) Name
+    where
   Name := `_ext_core
   descr := "(internal attribute used by ext)"
   cache_cfg :=
@@ -232,8 +231,8 @@ end PerformanceHack
 
 /-- Private attribute used to tag extensionality lemmas. -/
 @[user_attribute]
-private unsafe def ext_lemma_attr_core :
-    user_attribute where 
+private unsafe def ext_lemma_attr_core : user_attribute
+    where
   Name := `_ext_lemma_core
   descr := "(internal attribute used by ext)"
   parser := failure
@@ -326,8 +325,8 @@ x = y ↔ x.x = y.x ∧ x.y = y.y ∧ x.z == y.z ∧ x.k = y.k
 
 -/
 @[user_attribute]
-unsafe def extensional_attribute :
-    user_attribute Unit (Option Name) where 
+unsafe def extensional_attribute : user_attribute Unit (Option Name)
+    where
   Name := `ext
   descr := "lemmas usable by `ext` tactic"
   parser := optional ident
@@ -394,7 +393,7 @@ attribute [ext] Zero
 
 #print Unit.ext /-
 @[ext]
-theorem Unit.ext {x y : Unit} : x = y := by 
+theorem Unit.ext {x y : Unit} : x = y := by
   cases x
   cases y
   rfl
@@ -403,7 +402,7 @@ theorem Unit.ext {x y : Unit} : x = y := by
 
 #print PUnit.ext /-
 @[ext]
-theorem PUnit.ext {x y : PUnit} : x = y := by 
+theorem PUnit.ext {x y : PUnit} : x = y := by
   cases x
   cases y
   rfl
@@ -450,7 +449,7 @@ unsafe def try_intros (patts : List rcases_patt) : tactic (List rcases_patt) :=
 
 /-- Apply one extensionality lemma, and destruct the arguments using the patterns
   in the ext_state. -/
-unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := do
+unsafe def ext1_core (cfg : ApplyCfg := { }) : StateT ext_state tactic Unit := do
   let ⟨patts, trace_msg, _⟩ ← get
   let new_msgs ←
     StateT.lift <|
@@ -489,7 +488,7 @@ unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := 
 #align tactic.ext1_core tactic.ext1_core
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns. -/
-unsafe def ext_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := do
+unsafe def ext_core (cfg : ApplyCfg := { }) : StateT ext_state tactic Unit := do
   let acc@⟨_, _, fuel⟩ ← get
   match fuel with
     | some 0 => pure ()
@@ -501,7 +500,7 @@ unsafe def ext_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := d
 
 /-- Apply one extensionality lemma, and destruct the arguments using the given patterns.
   Returns the unused patterns. -/
-unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool := false) :
+unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := { }) (trace : Bool := false) :
     tactic (List rcases_patt) := do
   let ⟨_, σ⟩ ← StateT.run (ext1_core cfg) { patts := xs }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
@@ -510,7 +509,7 @@ unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool :
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns.
   `ext ps (some n)` applies at most `n` extensionality lemmas. Returns the unused patterns. -/
-unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := {  })
+unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := { })
     (trace : Bool := false) : tactic (List rcases_patt) := do
   let ⟨_, σ⟩ ←
     StateT.run (ext_core cfg)
@@ -535,7 +534,7 @@ applications that can replace the call to `ext1`.
 -/
 unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse rcases_patt_parse_hi*) :
     tactic Unit :=
-  ext1 xs {  } trace.isSome $> ()
+  ext1 xs { } trace.isSome $> ()
 #align tactic.interactive.ext1 tactic.interactive.ext1
 
 /-- - `ext` applies as many extensionality lemmas as possible;
@@ -599,9 +598,9 @@ A maximum depth can be provided with `ext x y z : 3`.
 -/
 unsafe def interactive.ext :
     (parse <| (tk "?")?) → parse rintro_patt_parse_hi* → parse (tk ":" *> small_nat)? → tactic Unit
-  | trace, [], some n => iterate_range 1 n (ext1 [] {  } trace.isSome $> ())
-  | trace, [], none => repeat1 (ext1 [] {  } trace.isSome $> ())
-  | trace, xs, n => ext xs.join n {  } trace.isSome $> ()
+  | trace, [], some n => iterate_range 1 n (ext1 [] { } trace.isSome $> ())
+  | trace, [], none => repeat1 (ext1 [] { } trace.isSome $> ())
+  | trace, xs, n => ext xs.join n { } trace.isSome $> ()
 #align tactic.interactive.ext tactic.interactive.ext
 
 /-- * `ext1 id` selects and apply one extensionality lemma (with

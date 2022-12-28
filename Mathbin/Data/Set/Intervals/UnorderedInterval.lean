@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module data.set.intervals.unordered_interval
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,7 +218,8 @@ theorem eq_of_mem_interval_of_mem_interval' : b ∈ [a, c] → c ∈ [a, b] → 
 -/
 
 #print Set.interval_injective_right /-
-theorem interval_injective_right (a : α) : Injective fun b => interval b a := fun b c h => by
+theorem interval_injective_right (a : α) : Injective fun b => interval b a := fun b c h =>
+  by
   rw [ext_iff] at h
   exact eq_of_mem_interval_of_mem_interval ((h _).1 left_mem_interval) ((h _).2 left_mem_interval)
 #align set.interval_injective_right Set.interval_injective_right
@@ -313,7 +314,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : LinearOrder.{u1} β] {f : α -> β}, Iff (Or (Monotone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) f) (Antitone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) f)) (forall (a : α) (b : α) (c : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) c (Set.interval.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1)) a b)) -> (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f c) (Set.interval.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2)) (f a) (f b))))
 Case conversion may be inaccurate. Consider using '#align set.monotone_or_antitone_iff_interval Set.monotone_or_antitone_iff_intervalₓ'. -/
 theorem monotone_or_antitone_iff_interval :
-    Monotone f ∨ Antitone f ↔ ∀ a b c, c ∈ [a, b] → f c ∈ [f a, f b] := by
+    Monotone f ∨ Antitone f ↔ ∀ a b c, c ∈ [a, b] → f c ∈ [f a, f b] :=
+  by
   constructor
   · rintro (hf | hf) a b c <;> simp_rw [← Icc_min_max, ← hf.map_min, ← hf.map_max]
     exacts[fun hc => ⟨hf hc.1, hf hc.2⟩, fun hc => ⟨hf hc.2, hf hc.1⟩]
@@ -378,7 +380,8 @@ theorem mem_intervalOC : a ∈ Ι b c ↔ b < a ∧ a ≤ c ∨ c < a ∧ a ≤ 
 -/
 
 #print Set.not_mem_intervalOC /-
-theorem not_mem_intervalOC : a ∉ Ι b c ↔ a ≤ b ∧ a ≤ c ∨ c < a ∧ b < a := by
+theorem not_mem_intervalOC : a ∉ Ι b c ↔ a ≤ b ∧ a ≤ c ∨ c < a ∧ b < a :=
+  by
   simp only [interval_oc_eq_union, mem_union, mem_Ioc, not_lt, ← not_le]
   tauto
 #align set.not_mem_interval_oc Set.not_mem_intervalOC
@@ -453,7 +456,8 @@ theorem eq_of_not_mem_intervalOC_of_not_mem_intervalOC (ha : a ≤ c) (hb : b �
 -/
 
 #print Set.intervalOC_injective_right /-
-theorem intervalOC_injective_right (a : α) : Injective fun b => Ι b a := by
+theorem intervalOC_injective_right (a : α) : Injective fun b => Ι b a :=
+  by
   rintro b c h
   rw [ext_iff] at h
   obtain ha | ha := le_or_lt b a

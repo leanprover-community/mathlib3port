@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.pretopology
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,15 +89,13 @@ theorem le_def {K₁ K₂ : Pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C
 variable (C)
 
 instance : PartialOrder (Pretopology C) :=
-  { Pretopology.hasLe with 
+  { Pretopology.hasLe with
     le_refl := fun K => le_def.mpr le_rfl
     le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_trans h₁₂ h₂₃)
     le_antisymm := fun K₁ K₂ h₁₂ h₂₁ => Pretopology.ext _ _ (le_antisymm h₁₂ h₂₁) }
 
-instance :
-    OrderTop
-      (Pretopology
-        C) where 
+instance : OrderTop (Pretopology C)
+    where
   top :=
     { coverings := fun _ => Set.univ
       has_isos := fun _ _ _ _ => Set.mem_univ _
@@ -113,18 +111,17 @@ instance : Inhabited (Pretopology C) :=
 
 See <https://stacks.math.columbia.edu/tag/00ZC>, or [MM92] Chapter III, Section 2, Equation (2).
 -/
-def toGrothendieck (K : Pretopology C) :
-    GrothendieckTopology
-      C where 
+def toGrothendieck (K : Pretopology C) : GrothendieckTopology C
+    where
   sieves X S := ∃ R ∈ K X, R ≤ (S : Presieve _)
   top_mem' X := ⟨Presieve.singleton (𝟙 _), K.has_isos _, fun _ _ _ => ⟨⟩⟩
-  pullback_stable' X Y S g := by 
+  pullback_stable' X Y S g := by
     rintro ⟨R, hR, RS⟩
     refine' ⟨_, K.pullbacks g _ hR, _⟩
     rw [← sieve.sets_iff_generate, sieve.pullback_arrows_comm]
     apply sieve.pullback_monotone
     rwa [sieve.gi_generate.gc]
-  transitive' := by 
+  transitive' := by
     rintro X S ⟨R', hR', RS⟩ R t
     choose t₁ t₂ t₃ using t
     refine' ⟨_, K.transitive _ _ hR' fun _ f hf => t₂ (RS _ hf), _⟩
@@ -142,14 +139,14 @@ theorem mem_to_grothendieck (K : Pretopology C) (X S) :
 
 See [MM92] Chapter III, Section 2, Equations (3,4).
 -/
-def ofGrothendieck (J : GrothendieckTopology C) :
-    Pretopology C where 
+def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C
+    where
   coverings X R := Sieve.generate R ∈ J X
   has_isos X Y f i := J.covering_of_eq_top (by simp)
-  pullbacks X Y f R hR := by 
+  pullbacks X Y f R hR := by
     rw [Set.mem_def, sieve.pullback_arrows_comm]
     apply J.pullback_stable f hR
-  Transitive X S Ti hS hTi := by 
+  Transitive X S Ti hS hTi := by
     apply J.transitive hS
     intro Y f
     rintro ⟨Z, g, f, hf, rfl⟩
@@ -161,11 +158,9 @@ def ofGrothendieck (J : GrothendieckTopology C) :
 #align category_theory.pretopology.of_grothendieck CategoryTheory.Pretopology.ofGrothendieck
 
 /-- We have a galois insertion from pretopologies to Grothendieck topologies. -/
-def gi :
-    GaloisInsertion (toGrothendieck C)
-      (ofGrothendieck
-        C) where 
-  gc K J := by 
+def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C)
+    where
+  gc K J := by
     constructor
     · intro h X R hR
       exact h _ ⟨_, hR, sieve.le_generate R⟩
@@ -183,12 +178,11 @@ also known as the indiscrete, coarse, or chaotic topology.
 
 See <https://stacks.math.columbia.edu/tag/07GE>
 -/
-def trivial :
-    Pretopology
-      C where 
+def trivial : Pretopology C
+    where
   coverings X S := ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.singleton f
   has_isos X Y f i := ⟨_, _, i, rfl⟩
-  pullbacks X Y f S := by 
+  pullbacks X Y f S := by
     rintro ⟨Z, g, i, rfl⟩
     refine' ⟨pullback g f, pullback.snd, _, _⟩
     · skip
@@ -198,7 +192,7 @@ def trivial :
         simp
       · simp
     · apply pullback_singleton
-  Transitive := by 
+  Transitive := by
     rintro X S Ti ⟨Z, g, i, rfl⟩ hS
     rcases hS g (singleton_self g) with ⟨Y, f, i, hTi⟩
     refine' ⟨_, f ≫ g, _, _⟩
@@ -216,9 +210,9 @@ def trivial :
       apply presieve.singleton.mk
 #align category_theory.pretopology.trivial CategoryTheory.Pretopology.trivial
 
-instance : OrderBot (Pretopology C) where 
+instance : OrderBot (Pretopology C) where
   bot := trivial C
-  bot_le K X R := by 
+  bot_le K X R := by
     rintro ⟨Y, f, hf, rfl⟩
     exact K.has_isos f
 

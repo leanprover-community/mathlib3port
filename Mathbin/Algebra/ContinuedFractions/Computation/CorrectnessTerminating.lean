@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.correctness_terminating
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,8 @@ variable [FloorRing K]
 /-- Just a computational lemma we need for the next main proof. -/
 protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)
     (fract_a_ne_zero : Int.fract a ≠ 0) :
-    ((⌊a⌋ : K) * b + c) / Int.fract a + b = (b * a + c) / Int.fract a := by
+    ((⌊a⌋ : K) * b + c) / Int.fract a + b = (b * a + c) / Int.fract a :=
+  by
   field_simp [fract_a_ne_zero]
   rw [Int.fract]
   ring
@@ -109,12 +110,13 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     ∀ {ifp_n : IntFractPair K},
       IntFractPair.stream v n = some ifp_n →
         v = compExactValue ((of v).continuantsAux n) ((of v).continuantsAux <| n + 1) ifp_n.fr :=
-  by 
+  by
   let g := of v
   induction' n with n IH
   · intro ifp_zero stream_zero_eq
     -- nat.zero
-    have : int_fract_pair.of v = ifp_zero := by
+    have : int_fract_pair.of v = ifp_zero :=
+      by
       have : int_fract_pair.stream v 0 = some (int_fract_pair.of v) := rfl
       simpa only [this] using stream_zero_eq
     cases this
@@ -159,7 +161,8 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
     -- ifp_succ_n.fr ≠ 0
     · -- use the IH to show that the following equality suffices
       suffices
-        comp_exact_value ppconts pconts ifp_n.fr = comp_exact_value pconts conts ifp_succ_n.fr by
+        comp_exact_value ppconts pconts ifp_n.fr = comp_exact_value pconts conts ifp_succ_n.fr
+        by
         have : v = comp_exact_value ppconts pconts ifp_n.fr := IH nth_stream_eq
         conv_lhs => rw [this]
         assumption
@@ -212,7 +215,7 @@ theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : IntFractPair.
   induction' n with n IH
   case zero => contradiction
   -- int_fract_pair.stream v 0 ≠ none
-  case succ => 
+  case succ =>
     rename' nth_stream_eq_none => succ_nth_stream_eq_none
     let g := of v
     change v = g.convergents n
@@ -263,7 +266,8 @@ open Filter
 be `v`.
 -/
 theorem of_correctness_at_top_of_terminates (terminates : (of v).Terminates) :
-    ∀ᶠ n in at_top, v = (of v).convergents n := by
+    ∀ᶠ n in at_top, v = (of v).convergents n :=
+  by
   rw [eventually_at_top]
   obtain ⟨n, terminated_at_n⟩ : ∃ n, (of v).TerminatedAt n
   exact terminates

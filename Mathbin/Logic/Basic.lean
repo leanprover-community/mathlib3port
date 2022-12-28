@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ instance : Subsingleton Empty :=
 
 instance Subsingleton.prod {α β : Type _} [Subsingleton α] [Subsingleton β] :
     Subsingleton (α × β) :=
-  ⟨by 
+  ⟨by
     intro a b
     cases a
     cases b
@@ -119,7 +119,7 @@ theorem subsingleton_iff_forall_eq {α : Sort _} (x : α) : Subsingleton α ↔ 
 
 instance Subtype.subsingleton (α : Sort _) [Subsingleton α] (p : α → Prop) :
     Subsingleton (Subtype p) :=
-  ⟨fun ⟨x, _⟩ ⟨y, _⟩ => by 
+  ⟨fun ⟨x, _⟩ ⟨y, _⟩ => by
     have : x = y := Subsingleton.elim _ _
     cases this
     rfl⟩
@@ -228,7 +228,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> γ} {g : β -> γ} {x : α} {y : β}, (HEq.{imax u2 u1} (α -> γ) f (β -> γ) g) -> (HEq.{u2} α x β y) -> (Eq.{u1} γ (f x) (g y))
 Case conversion may be inaccurate. Consider using '#align congr_heq congr_heqₓ'. -/
 theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g)
-    (h₂ : HEq x y) : f x = g y := by 
+    (h₂ : HEq x y) : f x = g y := by
   cases h₂
   cases h₁
   rfl
@@ -443,7 +443,7 @@ theorem Iff.imp (h₁ : a ↔ b) (h₂ : c ↔ d) : a → c ↔ b → d :=
 
 #print eq_true_eq_id /-
 @[simp]
-theorem eq_true_eq_id : Eq True = id := by 
+theorem eq_true_eq_id : Eq True = id := by
   funext
   simp only [true_iff_iff, id.def, iff_self_iff, eq_iff_iff]
 #align eq_true_eq_id eq_true_eq_id
@@ -744,7 +744,8 @@ theorem imp_not_self : a → ¬a ↔ ¬a :=
 -/
 
 #print Decidable.not_imp_self /-
-theorem Decidable.not_imp_self [Decidable a] : ¬a → a ↔ a := by
+theorem Decidable.not_imp_self [Decidable a] : ¬a → a ↔ a :=
+  by
   have := @imp_not_self ¬a
   rwa [Decidable.not_not] at this
 #align decidable.not_imp_self Decidable.not_imp_self
@@ -1225,7 +1226,8 @@ but is expected to have type
   forall {a : Prop} {b : Prop} {c : Prop} [_inst_1 : Decidable a], ((Not a) -> (Iff b c)) -> (Iff (Or b a) (Or c a))
 Case conversion may be inaccurate. Consider using '#align decidable.or_congr_left Decidable.or_congr_left'ₓ'. -/
 -- See Note [decidable namespace]
-protected theorem Decidable.or_congr_left' [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c := by
+protected theorem Decidable.or_congr_left' [Decidable c] (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
+  by
   rw [Decidable.or_iff_not_imp_right, Decidable.or_iff_not_imp_right]
   exact imp_congr_right h
 #align decidable.or_congr_left Decidable.or_congr_left'
@@ -1242,7 +1244,8 @@ theorem or_congr_left' (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
 
 #print Decidable.or_congr_right' /-
 -- See Note [decidable namespace]
-protected theorem Decidable.or_congr_right' [Decidable a] (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c := by
+protected theorem Decidable.or_congr_right' [Decidable a] (h : ¬a → (b ↔ c)) : a ∨ b ↔ a ∨ c :=
+  by
   rw [Decidable.or_iff_not_imp_left, Decidable.or_iff_not_imp_left]
   exact imp_congr_right h
 #align decidable.or_congr_right Decidable.or_congr_right'
@@ -1510,7 +1513,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align decidable.iff_iff_and_or_not_and_not Decidable.iff_iff_and_or_not_and_notₓ'. -/
 -- See Note [decidable namespace]
 protected theorem Decidable.iff_iff_and_or_not_and_not [Decidable b] : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b :=
-  by 
+  by
   constructor <;> intro h
   · rw [h] <;> by_cases b <;> [left, right] <;> constructor <;> assumption
   · cases' h with h h <;> cases h <;> constructor <;> intro <;> · first |contradiction|assumption
@@ -1524,7 +1527,8 @@ theorem iff_iff_and_or_not_and_not : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b :=
 
 #print Decidable.iff_iff_not_or_and_or_not /-
 theorem Decidable.iff_iff_not_or_and_or_not [Decidable a] [Decidable b] :
-    (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) := by
+    (a ↔ b) ↔ (¬a ∨ b) ∧ (a ∨ ¬b) :=
+  by
   rw [iff_iff_implies_and_implies a b]
   simp only [Decidable.imp_iff_not_or, or_comm]
 #align decidable.iff_iff_not_or_and_or_not Decidable.iff_iff_not_or_and_or_not
@@ -1744,7 +1748,8 @@ theorem heq_iff_eq : HEq a b ↔ a = b :=
 -/
 
 #print proof_irrel_heq /-
-theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq := by
+theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq :=
+  by
   have : p = q := propext ⟨fun _ => hq, fun _ => hp⟩
   subst q <;> rfl
 #align proof_irrel_heq proof_irrel_heq
@@ -1795,7 +1800,7 @@ Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec
 /-- Transport through trivial families is the identity. -/
 @[simp]
 theorem eq_rec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
-    @Eq.ndrec α a (fun a => β) y a' h = y := by 
+    @Eq.ndrec α a (fun a => β) y a' h = y := by
   cases h
   rfl
 #align eq_rec_constant eq_rec_constant
@@ -1915,7 +1920,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u1}} {x₁ : α} {x₂ : α} {y₁ : α} {y₂ : α}, (Eq.{u1} α x₁ x₂) -> (Eq.{u1} α y₁ y₂) -> (Iff (Eq.{u1} α x₁ y₁) (Eq.{u1} α x₂ y₂))
 Case conversion may be inaccurate. Consider using '#align eq.congr Eq.congrₓ'. -/
-protected theorem Eq.congr {x₁ x₂ y₁ y₂ : α} (h₁ : x₁ = y₁) (h₂ : x₂ = y₂) : x₁ = x₂ ↔ y₁ = y₂ := by
+protected theorem Eq.congr {x₁ x₂ y₁ y₂ : α} (h₁ : x₁ = y₁) (h₂ : x₂ = y₂) : x₁ = x₂ ↔ y₁ = y₂ :=
+  by
   subst h₁
   subst h₂
 #align eq.congr Eq.congr
@@ -1937,7 +1943,7 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} (f : α -> β -> γ) {x : α} {x' : α} {y : β} {y' : β}, (Eq.{u3} α x x') -> (Eq.{u2} β y y') -> (Eq.{u1} γ (f x y) (f x' y'))
 Case conversion may be inaccurate. Consider using '#align congr_arg2 congr_arg₂ₓ'. -/
 theorem congr_arg₂ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y y' : β} (hx : x = x')
-    (hy : y = y') : f x y = f x' y' := by 
+    (hy : y = y') : f x y = f x' y' := by
   subst hx
   subst hy
 #align congr_arg2 congr_arg₂
@@ -2566,7 +2572,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align forall_apply_eq_imp_iff' forall_apply_eq_imp_iff'ₓ'. -/
 @[simp]
 theorem forall_apply_eq_imp_iff' {f : α → β} {p : β → Prop} :
-    (∀ b, ∀ a, f a = b → p b) ↔ ∀ a, p (f a) := by
+    (∀ b, ∀ a, f a = b → p b) ↔ ∀ a, p (f a) :=
+  by
   rw [forall_swap]
   simp
 #align forall_apply_eq_imp_iff' forall_apply_eq_imp_iff'
@@ -2590,7 +2597,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align forall_eq_apply_imp_iff' forall_eq_apply_imp_iff'ₓ'. -/
 @[simp]
 theorem forall_eq_apply_imp_iff' {f : α → β} {p : β → Prop} :
-    (∀ b, ∀ a, b = f a → p b) ↔ ∀ a, p (f a) := by
+    (∀ b, ∀ a, b = f a → p b) ↔ ∀ a, p (f a) :=
+  by
   rw [forall_swap]
   simp
 #align forall_eq_apply_imp_iff' forall_eq_apply_imp_iff'
@@ -2818,7 +2826,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_unique.elim2 ExistsUnique.elim₂ₓ'. -/
 theorem ExistsUnique.elim₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)]
     {q : ∀ (x) (h : p x), Prop} {b : Prop} (h₂ : ∃! (x : _)(h : p x), q x h)
-    (h₁ : ∀ (x) (h : p x), q x h → (∀ (y) (hy : p y), q y hy → y = x) → b) : b := by
+    (h₁ : ∀ (x) (h : p x), q x h → (∀ (y) (hy : p y), q y hy → y = x) → b) : b :=
+  by
   simp only [exists_unique_iff_exists] at h₂
   apply h₂.elim
   exact fun x ⟨hxp, hxq⟩ H => h₁ x hxp hxq fun y hyp hyq => H y ⟨hyp, hyq⟩
@@ -2832,7 +2841,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_unique.intro2 ExistsUnique.intro₂ₓ'. -/
 theorem ExistsUnique.intro₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)]
     {q : ∀ (x : α) (h : p x), Prop} (w : α) (hp : p w) (hq : q w hp)
-    (H : ∀ (y) (hy : p y), q y hy → y = w) : ∃! (x : _)(hx : p x), q x hx := by
+    (H : ∀ (y) (hy : p y), q y hy → y = w) : ∃! (x : _)(hx : p x), q x hx :=
+  by
   simp only [exists_unique_iff_exists]
   exact ExistsUnique.intro w ⟨hp, hq⟩ fun y ⟨hyp, hyq⟩ => H y hyp hyq
 #align exists_unique.intro2 ExistsUnique.intro₂
@@ -2856,7 +2866,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_unique.unique2 ExistsUnique.unique₂ₓ'. -/
 theorem ExistsUnique.unique₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)]
     {q : ∀ (x : α) (hx : p x), Prop} (h : ∃! (x : _)(hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁)
-    (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) : y₁ = y₂ := by
+    (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) : y₁ = y₂ :=
+  by
   simp only [exists_unique_iff_exists] at h
   exact h.unique ⟨hpy₁, hqy₁⟩ ⟨hpy₂, hqy₂⟩
 #align exists_unique.unique2 ExistsUnique.unique₂
@@ -3189,7 +3200,8 @@ theorem ite_eq_right_iff : ite P a b = b ↔ P → a = b :=
 -/
 
 #print dite_ne_left_iff /-
-theorem dite_ne_left_iff : dite P (fun _ => a) B ≠ a ↔ ∃ h, a ≠ B h := by
+theorem dite_ne_left_iff : dite P (fun _ => a) B ≠ a ↔ ∃ h, a ≠ B h :=
+  by
   rw [Ne.def, dite_eq_left_iff, not_forall]
   exact exists_congr fun h => by rw [ne_comm]
 #align dite_ne_left_iff dite_ne_left_iff
@@ -3375,7 +3387,8 @@ theorem dite_dite_comm {B : Q → α} {C : ¬P → ¬Q → α} (h : P → ¬Q) :
     (if p : P then A p else if q : Q then B q else C p q) =
       if q : Q then B q else if p : P then A p else C p q :=
   dite_eq_iff'.2
-    ⟨fun p => by rw [dif_neg (h p), dif_pos p], fun np => by
+    ⟨fun p => by rw [dif_neg (h p), dif_pos p], fun np =>
+      by
       congr
       funext
       rw [dif_neg np]⟩

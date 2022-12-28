@@ -6,7 +6,7 @@ Authors: Leonardo de Moura
 Converter monad for building simplifiers.
 
 ! This file was ported from Lean 3 source module tactic.converter.old_conv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,13 +89,13 @@ protected unsafe def bind {α β : Type} (c₁ : old_conv α) (c₂ : α → old
   pr           ← join_proofs r pr₁ pr₂,
   return ⟨b, e₂, pr⟩
   -/
-unsafe instance : Monad old_conv where 
+unsafe instance : Monad old_conv where
   map := @old_conv.map
   pure := @old_conv.pure
   bind := @old_conv.bind
 
 unsafe instance : Alternative old_conv :=
-  { old_conv.monad with 
+  { old_conv.monad with
     failure := @old_conv.failed
     orelse := @old_conv.orelse }
 
@@ -253,7 +253,7 @@ unsafe def congr (c : old_conv Unit) : old_conv Unit :=
 unsafe def bottom_up (c : old_conv Unit) : old_conv Unit := fun r e => do
   let s ← simp_lemmas.mk_default
   let (a, new_e, pr) ←
-    ext_simplify_core () {  } s (fun u => return u) (fun a s r p e => failed)
+    ext_simplify_core () { } s (fun u => return u) (fun a s r p e => failed)
         (fun a s r p e => do
           let ⟨u, new_e, pr⟩ ← c r e
           return ((), new_e, pr, tt))
@@ -264,7 +264,7 @@ unsafe def bottom_up (c : old_conv Unit) : old_conv Unit := fun r e => do
 unsafe def top_down (c : old_conv Unit) : old_conv Unit := fun r e => do
   let s ← simp_lemmas.mk_default
   let (a, new_e, pr) ←
-    ext_simplify_core () {  } s (fun u => return u)
+    ext_simplify_core () { } s (fun u => return u)
         (fun a s r p e => do
           let ⟨u, new_e, pr⟩ ← c r e
           return ((), new_e, pr, tt))
@@ -275,7 +275,7 @@ unsafe def top_down (c : old_conv Unit) : old_conv Unit := fun r e => do
 unsafe def find (c : old_conv Unit) : old_conv Unit := fun r e => do
   let s ← simp_lemmas.mk_default
   let (a, new_e, pr) ←
-    ext_simplify_core () {  } s (fun u => return u)
+    ext_simplify_core () { } s (fun u => return u)
         (fun a s r p e =>
           (do
               let ⟨u, new_e, pr⟩ ← c r e
@@ -288,7 +288,7 @@ unsafe def find (c : old_conv Unit) : old_conv Unit := fun r e => do
 unsafe def find_pattern (pat : pattern) (c : old_conv Unit) : old_conv Unit := fun r e => do
   let s ← simp_lemmas.mk_default
   let (a, new_e, pr) ←
-    ext_simplify_core () {  } s (fun u => return u)
+    ext_simplify_core () { } s (fun u => return u)
         (fun a s r p e => do
           let matched ← tactic.match_pattern pat e >> return true <|> return false
           if matched then do

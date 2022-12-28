@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.range
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ theorem map_add_range' (a) : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = ran
 theorem map_sub_range' (a) :
     ∀ (s n : ℕ) (h : a ≤ s), map (fun x => x - a) (range' s n) = range' (s - a) n
   | s, 0, _ => rfl
-  | s, n + 1, h => by
+  | s, n + 1, h =>
+    by
     convert congr_arg (cons (s - a)) (map_sub_range' (s + 1) n (Nat.le_succ_of_le h))
     rw [Nat.succ_sub h]
     rfl
@@ -212,7 +213,8 @@ theorem range_zero : range 0 = [] :=
 #align list.range_zero List.range_zero
 
 theorem chain'_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) :
-    Chain' r (range n.succ) ↔ ∀ m < n, r m m.succ := by
+    Chain' r (range n.succ) ↔ ∀ m < n, r m m.succ :=
+  by
   rw [range_succ]
   induction' n with n hn
   · simp
@@ -223,7 +225,8 @@ theorem chain'_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) :
 #align list.chain'_range_succ List.chain'_range_succ
 
 theorem chain_range_succ (r : ℕ → ℕ → Prop) (n a : ℕ) :
-    Chain r a (range n.succ) ↔ r a 0 ∧ ∀ m < n, r m m.succ := by
+    Chain r a (range n.succ) ↔ r a 0 ∧ ∀ m < n, r m m.succ :=
+  by
   rw [range_succ_eq_map, chain_cons, and_congr_right_iff, ← chain'_range_succ, range_succ_eq_map]
   exact fun _ => Iff.rfl
 #align list.chain_range_succ List.chain_range_succ
@@ -284,7 +287,7 @@ theorem fin_range_zero : finRange 0 = [] :=
 @[simp]
 theorem mem_fin_range {n : ℕ} (a : Fin n) : a ∈ finRange n :=
   mem_pmap.2
-    ⟨a.1, mem_range.2 a.2, by 
+    ⟨a.1, mem_range.2 a.2, by
       cases a
       rfl⟩
 #align list.mem_fin_range List.mem_fin_range

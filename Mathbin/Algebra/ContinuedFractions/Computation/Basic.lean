@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,8 @@ protected def stream (v : K) : Stream' <| Option (IntFractPair K)
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
 -/
-theorem stream_is_seq (v : K) : (IntFractPair.stream v).IsSeq := by
+theorem stream_is_seq (v : K) : (IntFractPair.stream v).IsSeq :=
+  by
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
 #align

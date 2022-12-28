@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sean Leather, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.alist
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,8 +54,8 @@ structure Alist (β : α → Type v) : Type max u v where
 
 /-- Given `l : list (sigma β)`, create a term of type `alist β` by removing
 entries with duplicate keys. -/
-def List.toAlist [DecidableEq α] {β : α → Type v} (l : List (Sigma β)) :
-    Alist β where 
+def List.toAlist [DecidableEq α] {β : α → Type v} (l : List (Sigma β)) : Alist β
+    where
   entries := _
   Nodupkeys := nodupkeys_dedupkeys l
 #align list.to_alist List.toAlist
@@ -441,7 +441,7 @@ variable [DecidableEq α]
 theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) :
     (s₁ ∪ s₂).entries ~ (s₂ ∪ s₁).entries :=
   lookup_ext (Alist.nodupkeys _) (Alist.nodupkeys _)
-    (by 
+    (by
       intros ; simp
       constructor <;> intro h'
       cases h'

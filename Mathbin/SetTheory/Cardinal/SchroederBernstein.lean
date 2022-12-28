@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.schroeder_bernstein
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,8 @@ variable {α : Type u} {β : Type v}
 /-- **The Schröder-Bernstein Theorem**:
 Given injections `α → β` and `β → α`, we can get a bijection `α → β`. -/
 theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f)
-    (hg : Function.Injective g) : ∃ h : α → β, Bijective h := by
+    (hg : Function.Injective g) : ∃ h : α → β, Bijective h :=
+  by
   cases' isEmpty_or_nonempty β with hβ hβ
   · have : IsEmpty α := Function.isEmpty f
     exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).Bijective⟩
@@ -63,7 +64,8 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   have hg'ns : g' '' sᶜ = (f '' s)ᶜ := by rw [← hns, g'g.image_image]
   set h : α → β := s.piecewise f g'
   have : surjective h := by rw [← range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
-  have : injective h := by
+  have : injective h :=
+    by
     refine' (injective_piecewise_iff _).2 ⟨hf.inj_on _, _, _⟩
     · intro x hx y hy hxy
       obtain ⟨x', hx', rfl⟩ : x ∈ g '' (f '' s)ᶜ := by rwa [hns]
@@ -106,7 +108,7 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
         ⟨⋃₀c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
           (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h =>
             hc hpc x hxp y (h hyq) i hi,
-          fun _ => subset_sUnion_of_mem⟩
+          fun _ => subset_unionₛ_of_mem⟩
   let ⟨i, e⟩ :=
     show ∃ i, ∀ y, ∃ x ∈ s, (x : ∀ i, β i) i = y from
       by_contradiction fun h =>
@@ -114,7 +116,8 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
           simpa only [not_exists, not_forall] using h
         let ⟨f, hf⟩ := Classical.axiom_of_choice h
         have : f ∈ s :=
-          have : insert f s ∈ sets := fun x hx y hy => by
+          have : insert f s ∈ sets := fun x hx y hy =>
+            by
             cases hx <;> cases hy; · simp [hx, hy]
             · subst x
               exact fun i e => (hf i y hy e.symm).elim
@@ -127,7 +130,7 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
   let ⟨f, hf⟩ := Classical.axiom_of_choice e
   ⟨i,
     ⟨fun j =>
-      ⟨fun a => f a j, fun a b e' => by 
+      ⟨fun a => f a j, fun a b e' => by
         let ⟨sa, ea⟩ := hf a
         let ⟨sb, eb⟩ := hf b
         rw [← ea, ← eb, hs _ sa _ sb _ e']⟩⟩⟩

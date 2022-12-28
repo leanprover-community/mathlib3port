@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,7 +173,8 @@ instance as a special case of a more general `seminormed_group` instance. -/
 def NormedGroup.ofSeparation [SeminormedGroup E] (h : ∀ x : E, ‖x‖ = 0 → x = 1) : NormedGroup E :=
   { ‹SeminormedGroup E› with
     toMetricSpace :=
-      { eq_of_dist_eq_zero := fun x y hxy =>
+      {
+        eq_of_dist_eq_zero := fun x y hxy =>
           div_eq_one.1 <| h _ <| by rwa [← ‹SeminormedGroup E›.dist_eq] } }
 #align normed_group.of_separation NormedGroup.ofSeparation
 
@@ -194,8 +195,8 @@ def NormedCommGroup.ofSeparation [SeminormedCommGroup E] (h : ∀ x : E, ‖x‖
 @[to_additive "Construct a seminormed group from a translation-invariant distance."]
 def SeminormedGroup.ofMulDist [HasNorm E] [Group E] [PseudoMetricSpace E]
     (h₁ : ∀ x : E, ‖x‖ = dist x 1) (h₂ : ∀ x y z : E, dist x y ≤ dist (x * z) (y * z)) :
-    SeminormedGroup
-      E where dist_eq x y := by 
+    SeminormedGroup E
+    where dist_eq x y := by
     rw [h₁]; apply le_antisymm
     · simpa only [div_eq_mul_inv, ← mul_right_inv y] using h₂ _ _ _
     · simpa only [div_mul_cancel', one_mul] using h₂ (x / y) 1 y
@@ -205,8 +206,8 @@ def SeminormedGroup.ofMulDist [HasNorm E] [Group E] [PseudoMetricSpace E]
 @[to_additive "Construct a seminormed group from a translation-invariant pseudodistance."]
 def SeminormedGroup.ofMulDist' [HasNorm E] [Group E] [PseudoMetricSpace E]
     (h₁ : ∀ x : E, ‖x‖ = dist x 1) (h₂ : ∀ x y z : E, dist (x * z) (y * z) ≤ dist x y) :
-    SeminormedGroup
-      E where dist_eq x y := by 
+    SeminormedGroup E
+    where dist_eq x y := by
     rw [h₁]; apply le_antisymm
     · simpa only [div_mul_cancel', one_mul] using h₂ (x / y) 1 y
     · simpa only [div_eq_mul_inv, ← mul_right_inv y] using h₂ _ _ _
@@ -264,8 +265,8 @@ creates bad definitional equalities (e.g., it does not take into account a possi
 `uniform_space` instance on `E`). -/
 @[to_additive
       "Construct a seminormed group from a seminorm, i.e., registering the pseudodistance*\nand the pseudometric space structure from the seminorm properties. Note that in most cases this\ninstance creates bad definitional equalities (e.g., it does not take into account a possibly\nexisting `uniform_space` instance on `E`)."]
-def GroupSeminorm.toSeminormedGroup [Group E] (f : GroupSeminorm E) :
-    SeminormedGroup E where 
+def GroupSeminorm.toSeminormedGroup [Group E] (f : GroupSeminorm E) : SeminormedGroup E
+    where
   dist x y := f (x / y)
   norm := f
   dist_eq x y := rfl
@@ -306,8 +307,8 @@ def GroupNorm.toNormedCommGroup [CommGroup E] (f : GroupNorm E) : NormedCommGrou
   { f.toNormedGroup with }
 #align group_norm.to_normed_comm_group GroupNorm.toNormedCommGroup
 
-instance : NormedAddCommGroup
-      PUnit where 
+instance : NormedAddCommGroup PUnit
+    where
   norm := Function.const _ 0
   dist_eq _ _ := rfl
 
@@ -418,7 +419,8 @@ theorem norm_mul₃_le (a b c : E) : ‖a * b * c‖ ≤ ‖a‖ + ‖b‖ + ‖
 #align norm_mul₃_le norm_mul₃_le
 
 @[simp, to_additive norm_nonneg]
-theorem norm_nonneg' (a : E) : 0 ≤ ‖a‖ := by
+theorem norm_nonneg' (a : E) : 0 ≤ ‖a‖ :=
+  by
   rw [← dist_one_right]
   exact dist_nonneg
 #align norm_nonneg' norm_nonneg'
@@ -443,7 +445,7 @@ theorem norm_one' : ‖(1 : E)‖ = 0 := by rw [← dist_one_right, dist_self]
 
 @[to_additive]
 theorem ne_one_of_norm_ne_zero : ‖a‖ ≠ 0 → a ≠ 1 :=
-  mt <| by 
+  mt <| by
     rintro rfl
     exact norm_one'
 #align ne_one_of_norm_ne_zero ne_one_of_norm_ne_zero
@@ -470,7 +472,8 @@ theorem norm_div_le_of_le {r₁ r₂ : ℝ} (H₁ : ‖a₁‖ ≤ r₁) (H₂ :
 #align norm_div_le_of_le norm_div_le_of_le
 
 @[to_additive]
-theorem dist_le_norm_mul_norm (a b : E) : dist a b ≤ ‖a‖ + ‖b‖ := by
+theorem dist_le_norm_mul_norm (a b : E) : dist a b ≤ ‖a‖ + ‖b‖ :=
+  by
   rw [dist_eq_norm_div]
   apply norm_div_le
 #align dist_le_norm_mul_norm dist_le_norm_mul_norm
@@ -491,14 +494,16 @@ theorem dist_norm_norm_le' (a b : E) : dist ‖a‖ ‖b‖ ≤ ‖a / b‖ :=
 #align dist_norm_norm_le' dist_norm_norm_le'
 
 @[to_additive]
-theorem norm_le_norm_add_norm_div' (u v : E) : ‖u‖ ≤ ‖v‖ + ‖u / v‖ := by
+theorem norm_le_norm_add_norm_div' (u v : E) : ‖u‖ ≤ ‖v‖ + ‖u / v‖ :=
+  by
   rw [add_comm]
   refine' (norm_mul_le' _ _).trans_eq' _
   rw [div_mul_cancel']
 #align norm_le_norm_add_norm_div' norm_le_norm_add_norm_div'
 
 @[to_additive]
-theorem norm_le_norm_add_norm_div (u v : E) : ‖v‖ ≤ ‖u‖ + ‖u / v‖ := by
+theorem norm_le_norm_add_norm_div (u v : E) : ‖v‖ ≤ ‖u‖ + ‖u / v‖ :=
+  by
   rw [norm_div_rev]
   exact norm_le_norm_add_norm_div' v u
 #align norm_le_norm_add_norm_div norm_le_norm_add_norm_div
@@ -679,21 +684,24 @@ theorem NormedCommGroup.cauchy_seq_iff [Nonempty α] [SemilatticeSup α] {u : α
 
 @[to_additive]
 theorem NormedCommGroup.nhds_basis_norm_lt (x : E) :
-    (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y / x‖ < ε } := by
+    (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y / x‖ < ε } :=
+  by
   simp_rw [← ball_eq']
   exact Metric.nhds_basis_ball
 #align normed_comm_group.nhds_basis_norm_lt NormedCommGroup.nhds_basis_norm_lt
 
 @[to_additive]
 theorem NormedCommGroup.nhds_one_basis_norm_lt :
-    (𝓝 (1 : E)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y‖ < ε } := by
+    (𝓝 (1 : E)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y‖ < ε } :=
+  by
   convert NormedCommGroup.nhds_basis_norm_lt (1 : E)
   simp
 #align normed_comm_group.nhds_one_basis_norm_lt NormedCommGroup.nhds_one_basis_norm_lt
 
 @[to_additive]
 theorem NormedCommGroup.uniformity_basis_dist :
-    (𝓤 E).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : E × E | ‖p.fst / p.snd‖ < ε } := by
+    (𝓤 E).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : E × E | ‖p.fst / p.snd‖ < ε } :=
+  by
   convert Metric.uniformity_basis_dist
   simp [dist_eq_norm_div]
 #align normed_comm_group.uniformity_basis_dist NormedCommGroup.uniformity_basis_dist
@@ -766,7 +774,8 @@ theorem IsCompact.exists_bound_of_continuous_on' [TopologicalSpace α] {s : Set 
 
 @[to_additive]
 theorem MonoidHomClass.isometry_iff_norm [MonoidHomClass 𝓕 E F] (f : 𝓕) :
-    Isometry f ↔ ∀ x, ‖f x‖ = ‖x‖ := by
+    Isometry f ↔ ∀ x, ‖f x‖ = ‖x‖ :=
+  by
   simp only [isometry_iff_dist_eq, dist_eq_norm_div, ← map_div]
   refine' ⟨fun h x => _, fun h x y => h _⟩
   simpa using h x 1
@@ -813,7 +822,7 @@ theorem nnnorm_one' : ‖(1 : E)‖₊ = 0 :=
 
 @[to_additive]
 theorem ne_one_of_nnnorm_ne_zero {a : E} : ‖a‖₊ ≠ 0 → a ≠ 1 :=
-  mt <| by 
+  mt <| by
     rintro rfl
     exact nnnorm_one'
 #align ne_one_of_nnnorm_ne_zero ne_one_of_nnnorm_ne_zero
@@ -909,14 +918,16 @@ end Nnnorm
 
 @[to_additive]
 theorem tendsto_iff_norm_tendsto_one {f : α → E} {a : Filter α} {b : E} :
-    Tendsto f a (𝓝 b) ↔ Tendsto (fun e => ‖f e / b‖) a (𝓝 0) := by
+    Tendsto f a (𝓝 b) ↔ Tendsto (fun e => ‖f e / b‖) a (𝓝 0) :=
+  by
   convert tendsto_iff_dist_tendsto_zero
   simp [dist_eq_norm_div]
 #align tendsto_iff_norm_tendsto_one tendsto_iff_norm_tendsto_one
 
 @[to_additive]
 theorem tendsto_one_iff_norm_tendsto_one {f : α → E} {a : Filter α} :
-    Tendsto f a (𝓝 1) ↔ Tendsto (fun e => ‖f e‖) a (𝓝 0) := by
+    Tendsto f a (𝓝 1) ↔ Tendsto (fun e => ‖f e‖) a (𝓝 0) :=
+  by
   rw [tendsto_iff_norm_tendsto_one]
   simp only [div_one]
 #align tendsto_one_iff_norm_tendsto_one tendsto_one_iff_norm_tendsto_one
@@ -1012,7 +1023,8 @@ multiplication so that it can be applied to `(*)`, `flip (*)`, `(•)`, and `fli
       "A helper lemma used to prove that the (scalar or usual) product of a function that\ntends to zero and a bounded function tends to zero. This lemma is formulated for any binary\noperation `op : E → F → G` with an estimate `‖op x y‖ ≤ A * ‖x‖ * ‖y‖` for some constant A instead\nof multiplication so that it can be applied to `(*)`, `flip (*)`, `(•)`, and `flip (•)`."]
 theorem Filter.Tendsto.op_one_is_bounded_under_le' {f : α → E} {g : α → F} {l : Filter α}
     (hf : Tendsto f l (𝓝 1)) (hg : IsBoundedUnder (· ≤ ·) l (norm ∘ g)) (op : E → F → G)
-    (h_op : ∃ A, ∀ x y, ‖op x y‖ ≤ A * ‖x‖ * ‖y‖) : Tendsto (fun x => op (f x) (g x)) l (𝓝 1) := by
+    (h_op : ∃ A, ∀ x y, ‖op x y‖ ≤ A * ‖x‖ * ‖y‖) : Tendsto (fun x => op (f x) (g x)) l (𝓝 1) :=
+  by
   cases' h_op with A h_op
   rcases hg with ⟨C, hC⟩; rw [eventually_map] at hC
   rw [NormedCommGroup.tendsto_nhds_one] at hf⊢
@@ -1124,7 +1136,8 @@ theorem SeminormedCommGroup.mem_closure_iff : a ∈ closure s ↔ ∀ ε, 0 < ε
 #align seminormed_comm_group.mem_closure_iff SeminormedCommGroup.mem_closure_iff
 
 @[to_additive norm_le_zero_iff']
-theorem norm_le_zero_iff''' [T0Space E] {a : E} : ‖a‖ ≤ 0 ↔ a = 1 := by
+theorem norm_le_zero_iff''' [T0Space E] {a : E} : ‖a‖ ≤ 0 ↔ a = 1 :=
+  by
   letI : NormedGroup E :=
     { ‹SeminormedGroup E› with toMetricSpace := Metric.ofT0PseudoMetricSpace E }
   rw [← dist_one_right, dist_le_zero]
@@ -1151,7 +1164,7 @@ theorem SeminormedGroup.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_fi
     {f : ι → κ → G} {l : Filter ι} {l' : Filter κ} :
     UniformCauchySeqOnFilter f l l' ↔
       TendstoUniformlyOnFilter (fun n : ι × ι => fun z => f n.fst z / f n.snd z) 1 (l ×ᶠ l) l' :=
-  by 
+  by
   refine' ⟨fun hf u hu => _, fun hf u hu => _⟩
   · obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
     refine'
@@ -1192,7 +1205,7 @@ structure on the domain. -/
       "A group homomorphism from an `add_group` to a `seminormed_add_group` induces a\n`seminormed_add_group` structure on the domain."]
 def SeminormedGroup.induced [Group E] [SeminormedGroup F] [MonoidHomClass 𝓕 E F] (f : 𝓕) :
     SeminormedGroup E :=
-  { PseudoMetricSpace.induced f _ with 
+  { PseudoMetricSpace.induced f _ with
     norm := fun x => ‖f x‖
     dist_eq := fun x y => by simpa only [map_div, ← dist_eq_norm_div] }
 #align seminormed_group.induced SeminormedGroup.induced
@@ -1310,7 +1323,8 @@ theorem norm_multiset_sum_le {E} [SeminormedAddCommGroup E] (m : Multiset E) :
 #align norm_multiset_sum_le norm_multiset_sum_le
 
 @[to_additive]
-theorem norm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖ ≤ (m.map fun x => ‖x‖).Sum := by
+theorem norm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖ ≤ (m.map fun x => ‖x‖).Sum :=
+  by
   rw [← Multiplicative.ofAdd_le, of_add_multiset_prod, Multiset.map_map]
   refine' Multiset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _
   · simp only [comp_app, norm_one', ofAdd_zero]
@@ -1323,7 +1337,8 @@ theorem norm_sum_le {E} [SeminormedAddCommGroup E] (s : Finset ι) (f : ι → E
 #align norm_sum_le norm_sum_le
 
 @[to_additive]
-theorem norm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ i in s, f i‖ ≤ ∑ i in s, ‖f i‖ := by
+theorem norm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ i in s, f i‖ ≤ ∑ i in s, ‖f i‖ :=
+  by
   rw [← Multiplicative.ofAdd_le, of_add_sum]
   refine' Finset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _ _
   · simp only [comp_app, norm_one', ofAdd_zero]
@@ -1339,7 +1354,7 @@ theorem norm_prod_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ} (h : 
 @[to_additive]
 theorem dist_prod_prod_le_of_le (s : Finset ι) {f a : ι → E} {d : ι → ℝ}
     (h : ∀ b ∈ s, dist (f b) (a b) ≤ d b) : dist (∏ b in s, f b) (∏ b in s, a b) ≤ ∑ b in s, d b :=
-  by 
+  by
   simp only [dist_eq_norm_div, ← Finset.prod_div_distrib] at *
   exact norm_prod_le_of_le s h
 #align dist_prod_prod_le_of_le dist_prod_prod_le_of_le
@@ -1361,26 +1376,30 @@ theorem mul_mem_closed_ball_iff_norm : a * b ∈ closedBall a r ↔ ‖b‖ ≤ 
 #align mul_mem_closed_ball_iff_norm mul_mem_closed_ball_iff_norm
 
 @[simp, to_additive]
-theorem preimage_mul_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' ball a r = ball (a / b) r := by
+theorem preimage_mul_ball (a b : E) (r : ℝ) : (· * ·) b ⁻¹' ball a r = ball (a / b) r :=
+  by
   ext c
   simp only [dist_eq_norm_div, Set.mem_preimage, mem_ball, div_div_eq_mul_div, mul_comm]
 #align preimage_mul_ball preimage_mul_ball
 
 @[simp, to_additive]
 theorem preimage_mul_closed_ball (a b : E) (r : ℝ) :
-    (· * ·) b ⁻¹' closedBall a r = closedBall (a / b) r := by
+    (· * ·) b ⁻¹' closedBall a r = closedBall (a / b) r :=
+  by
   ext c
   simp only [dist_eq_norm_div, Set.mem_preimage, mem_closed_ball, div_div_eq_mul_div, mul_comm]
 #align preimage_mul_closed_ball preimage_mul_closed_ball
 
 @[simp, to_additive]
-theorem preimage_mul_sphere (a b : E) (r : ℝ) : (· * ·) b ⁻¹' sphere a r = sphere (a / b) r := by
+theorem preimage_mul_sphere (a b : E) (r : ℝ) : (· * ·) b ⁻¹' sphere a r = sphere (a / b) r :=
+  by
   ext c
   simp only [Set.mem_preimage, mem_sphere_iff_norm', div_div_eq_mul_div, mul_comm]
 #align preimage_mul_sphere preimage_mul_sphere
 
 @[to_additive norm_nsmul_le]
-theorem norm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖ ≤ n * ‖a‖ := by
+theorem norm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖ ≤ n * ‖a‖ :=
+  by
   induction' n with n ih; · simp
   simpa only [pow_succ', Nat.cast_succ, add_mul, one_mul] using norm_mul_le_of_le ih le_rfl
 #align norm_pow_le_mul_norm norm_pow_le_mul_norm
@@ -1393,14 +1412,15 @@ theorem nnnorm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖₊ ≤ n * ‖a�
 
 @[to_additive]
 theorem pow_mem_closed_ball {n : ℕ} (h : a ∈ closedBall b r) : a ^ n ∈ closedBall (b ^ n) (n • r) :=
-  by 
+  by
   simp only [mem_closed_ball, dist_eq_norm_div, ← div_pow] at h⊢
   refine' (norm_pow_le_mul_norm n (a / b)).trans _
   simpa only [nsmul_eq_mul] using mul_le_mul_of_nonneg_left h n.cast_nonneg
 #align pow_mem_closed_ball pow_mem_closed_ball
 
 @[to_additive]
-theorem pow_mem_ball {n : ℕ} (hn : 0 < n) (h : a ∈ ball b r) : a ^ n ∈ ball (b ^ n) (n • r) := by
+theorem pow_mem_ball {n : ℕ} (hn : 0 < n) (h : a ∈ ball b r) : a ^ n ∈ ball (b ^ n) (n • r) :=
+  by
   simp only [mem_ball, dist_eq_norm_div, ← div_pow] at h⊢
   refine' lt_of_le_of_lt (norm_pow_le_mul_norm n (a / b)) _
   replace hn : 0 < (n : ℝ);
@@ -1424,8 +1444,8 @@ namespace Isometric
 
 /-- Multiplication `y ↦ x * y` as an `isometry`. -/
 @[to_additive "Addition `y ↦ x + y` as an `isometry`"]
-protected def mulLeft (x : E) :
-    E ≃ᵢ E where 
+protected def mulLeft (x : E) : E ≃ᵢ E
+    where
   isometryToFun := Isometry.ofDistEq fun y z => dist_mul_left _ _ _
   toEquiv := Equiv.mulLeft x
 #align isometric.mul_left Isometric.mulLeft
@@ -1449,8 +1469,8 @@ variable (E)
 
 /-- Inversion `x ↦ x⁻¹` as an `isometry`. -/
 @[to_additive "Negation `x ↦ -x` as an `isometry`."]
-protected def inv :
-    E ≃ᵢ E where 
+protected def inv : E ≃ᵢ E
+    where
   isometryToFun := Isometry.ofDistEq fun x y => dist_inv_inv _ _
   toEquiv := Equiv.inv E
 #align isometric.inv Isometric.inv
@@ -1486,7 +1506,8 @@ theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ closure (s :
   obtain ⟨u : ℕ → E, u_in : ∀ n, u n ∈ s, lim_u : tendsto u at_top (𝓝 a)⟩ :=
     mem_closure_iff_seq_limit.mp hg
   obtain ⟨n₀, hn₀⟩ : ∃ n₀, ∀ n ≥ n₀, ‖u n / a‖ < b 0 :=
-    haveI : { x | ‖x / a‖ < b 0 } ∈ 𝓝 a := by
+    haveI : { x | ‖x / a‖ < b 0 } ∈ 𝓝 a :=
+      by
       simp_rw [← dist_eq_norm_div]
       exact Metric.ball_mem_nhds _ (b_pos _)
     filter.tendsto_at_top'.mp lim_u _ this
@@ -1516,7 +1537,7 @@ theorem controlled_prod_of_mem_closure_range {j : E →* F} {b : F}
     ∃ a : ℕ → E,
       Tendsto (fun n => ∏ i in range (n + 1), j (a i)) atTop (𝓝 b) ∧
         ‖j (a 0) / b‖ < f 0 ∧ ∀ n, 0 < n → ‖j (a n)‖ < f n :=
-  by 
+  by
   obtain ⟨v, sum_v, v_in, hv₀, hv_pos⟩ := controlled_prod_of_mem_closure hb b_pos
   choose g hg using v_in
   refine'
@@ -1532,7 +1553,8 @@ theorem nndist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
 
 @[to_additive]
 theorem edist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
-    edist (a₁ * a₂) (b₁ * b₂) ≤ edist a₁ b₁ + edist a₂ b₂ := by
+    edist (a₁ * a₂) (b₁ * b₂) ≤ edist a₁ b₁ + edist a₂ b₂ :=
+  by
   simp only [edist_nndist]
   norm_cast
   apply nndist_mul_mul_le
@@ -1557,7 +1579,7 @@ theorem edist_div_left (a b₁ b₂ : E) : edist (a / b₁) (a / b₂) = edist b
 
 @[to_additive]
 theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fun x => ‖x‖₊).Sum :=
-  Nnreal.coe_le_coe.1 <| by 
+  Nnreal.coe_le_coe.1 <| by
     push_cast
     rw [Multiset.map_map]
     exact norm_multiset_prod_le _
@@ -1565,7 +1587,7 @@ theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fu
 
 @[to_additive]
 theorem nnnorm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ a in s, f a‖₊ ≤ ∑ a in s, ‖f a‖₊ :=
-  Nnreal.coe_le_coe.1 <| by 
+  Nnreal.coe_le_coe.1 <| by
     push_cast
     exact norm_prod_le _ _
 #align nnnorm_prod_le nnnorm_prod_le
@@ -1636,13 +1658,15 @@ theorem ennnorm_eq_of_real_abs (r : ℝ) : (‖r‖₊ : ℝ≥0∞) = Ennreal.o
   rw [← Real.nnnorm_abs r, Real.ennnorm_eq_of_real (abs_nonneg _)]
 #align real.ennnorm_eq_of_real_abs Real.ennnorm_eq_of_real_abs
 
-theorem to_nnreal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNnreal = ‖r‖₊ := by
+theorem to_nnreal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNnreal = ‖r‖₊ :=
+  by
   rw [Real.to_nnreal_of_nonneg hr]
   congr
   rw [Real.norm_eq_abs, abs_of_nonneg hr]
 #align real.to_nnreal_eq_nnnorm_of_nonneg Real.to_nnreal_eq_nnnorm_of_nonneg
 
-theorem of_real_le_ennnorm (r : ℝ) : Ennreal.ofReal r ≤ ‖r‖₊ := by
+theorem of_real_le_ennnorm (r : ℝ) : Ennreal.ofReal r ≤ ‖r‖₊ :=
+  by
   obtain hr | hr := le_total 0 r
   · exact (Real.ennnorm_eq_of_real hr).ge
   · rw [Ennreal.of_real_eq_zero.2 hr]
@@ -1685,7 +1709,8 @@ variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
 
 @[to_additive]
 theorem mulLipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g) (hK : Kg < Kf⁻¹) :
-    AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ fun x => f x * g x := by
+    AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ fun x => f x * g x :=
+  by
   letI : PseudoMetricSpace α := PseudoEmetricSpace.toPseudoMetricSpace hf.edist_ne_top
   refine' AntilipschitzWith.ofLeMulDist fun x y => _
   rw [Nnreal.coe_inv, ← div_eq_inv_mul]
@@ -1736,9 +1761,11 @@ instance (priority := 100) SeminormedCommGroup.to_topological_group : Topologica
 @[to_additive]
 theorem cauchy_seq_prod_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀ n ≥ N, u n = v n)
     (hv : CauchySeq fun n => ∏ k in range (n + 1), v k) :
-    CauchySeq fun n => ∏ k in range (n + 1), u k := by
+    CauchySeq fun n => ∏ k in range (n + 1), u k :=
+  by
   let d : ℕ → E := fun n => ∏ k in range (n + 1), u k / v k
-  rw [show (fun n => ∏ k in range (n + 1), u k) = d * fun n => ∏ k in range (n + 1), v k by
+  rw [show (fun n => ∏ k in range (n + 1), u k) = d * fun n => ∏ k in range (n + 1), v k
+      by
       ext n
       simp [d]]
   suffices ∀ n ≥ N, d n = d N by exact (tendsto_at_top_of_eventually_const this).CauchySeq.mul hv
@@ -1780,7 +1807,8 @@ theorem norm_div_eq_zero_iff : ‖a / b‖ = 0 ↔ a = b := by rw [norm_eq_zero'
 #align norm_div_eq_zero_iff norm_div_eq_zero_iff
 
 @[to_additive]
-theorem norm_div_pos_iff : 0 < ‖a / b‖ ↔ a ≠ b := by
+theorem norm_div_pos_iff : 0 < ‖a / b‖ ↔ a ≠ b :=
+  by
   rw [(norm_nonneg' _).lt_iff_ne, ne_comm]
   exact norm_div_eq_zero_iff.not
 #align norm_div_pos_iff norm_div_pos_iff
@@ -1997,8 +2025,8 @@ end HasNnnorm
 
 instance [SeminormedGroup E] : SeminormedAddGroup (Additive E) where dist_eq := dist_eq_norm_div
 
-instance [SeminormedAddGroup E] :
-    SeminormedGroup (Multiplicative E) where dist_eq := dist_eq_norm_sub
+instance [SeminormedAddGroup E] : SeminormedGroup (Multiplicative E)
+    where dist_eq := dist_eq_norm_sub
 
 instance [SeminormedCommGroup E] : SeminormedAddCommGroup (Additive E) :=
   { Additive.seminormedAddGroup with }
@@ -2160,9 +2188,8 @@ variable [∀ i, SeminormedGroup (π i)] [SeminormedGroup E] (f : ∀ i, π i) {
 
 /-- Finite product of seminormed groups, using the sup norm. -/
 @[to_additive "Finite product of seminormed groups, using the sup norm."]
-instance :
-    SeminormedGroup
-      (∀ i, π i) where 
+instance : SeminormedGroup (∀ i, π i)
+    where
   norm f := ↑(Finset.univ.sup fun b => ‖f b‖₊)
   dist_eq x y :=
     congr_arg (coe : ℝ≥0 → ℝ) <|
@@ -2193,7 +2220,8 @@ theorem pi_nnnorm_le_iff' {r : ℝ≥0} : ‖x‖₊ ≤ r ↔ ∀ i, ‖x i‖�
 #align pi_nnnorm_le_iff' pi_nnnorm_le_iff'
 
 @[to_additive pi_norm_le_iff_of_nonempty]
-theorem pi_norm_le_iff_of_nonempty' [Nonempty ι] : ‖f‖ ≤ r ↔ ∀ b, ‖f b‖ ≤ r := by
+theorem pi_norm_le_iff_of_nonempty' [Nonempty ι] : ‖f‖ ≤ r ↔ ∀ b, ‖f b‖ ≤ r :=
+  by
   by_cases hr : 0 ≤ r
   · exact pi_norm_le_iff_of_nonneg' hr
   ·

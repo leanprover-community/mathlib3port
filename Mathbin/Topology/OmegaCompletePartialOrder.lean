@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module topology.omega_complete_partial_order
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,8 @@ def IsOpen (s : Set α) : Prop :=
 #align Scott.is_open ScottCat.IsOpen
 
 theorem is_open_univ : IsOpen α univ :=
-  ⟨fun x y h hx => mem_univ _, by
+  ⟨fun x y h hx => mem_univ _,
+    by
     convert @CompleteLattice.top_continuous α Prop _ _
     exact rfl⟩
 #align Scott.is_open_univ ScottCat.is_open_univ
@@ -59,7 +60,8 @@ theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α 
   CompleteLattice.inf_continuous'
 #align Scott.is_open.inter ScottCat.IsOpen.inter
 
-theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀s) := by
+theorem is_open_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀s) :=
+  by
   simp only [IsOpen] at hs⊢
   convert CompleteLattice.Sup_continuous' (setOf ⁻¹' s) _
   · ext1 x
@@ -81,8 +83,8 @@ def ScottCat (α : Type u) :=
 #align Scott ScottCat
 
 instance ScottCat.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] :
-    TopologicalSpace (ScottCat
-        α) where 
+    TopologicalSpace (ScottCat α)
+    where
   IsOpen := ScottCat.IsOpen α
   is_open_univ := ScottCat.is_open_univ α
   is_open_inter := ScottCat.IsOpen.inter α
@@ -99,8 +101,9 @@ def notBelow :=
   { x | ¬x ≤ y }
 #align not_below notBelow
 
-theorem not_below_is_open : IsOpen (notBelow y) := by
-  have h : Monotone (notBelow y) := by 
+theorem not_below_is_open : IsOpen (notBelow y) :=
+  by
+  have h : Monotone (notBelow y) := by
     intro x y' h
     simp only [notBelow, setOf, le_Prop_eq]
     intro h₀ h₁
@@ -120,7 +123,8 @@ open ScottCat hiding IsOpen
 
 open OmegaCompletePartialOrder
 
-theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) := by
+theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) :=
+  by
   constructor
   · apply le_ωSup
   · apply ωSup_le
@@ -129,9 +133,10 @@ theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : Isω
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:565:11: unsupported: specialize non-hyp -/
 theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : ScottCat α → ScottCat β) (hf : Continuous f) :
-    OmegaCompletePartialOrder.Continuous' f := by
+    OmegaCompletePartialOrder.Continuous' f :=
+  by
   simp only [continuous_def, (· ⁻¹' ·)] at hf
-  have h : Monotone f := by 
+  have h : Monotone f := by
     intro x y h
     cases' hf { x | ¬x ≤ f y } (not_below_is_open _) with hf hf'
     clear hf'
@@ -157,7 +162,8 @@ theorem Scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
 
 theorem continuous_of_Scott_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : ScottCat α → ScottCat β)
-    (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f := by
+    (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f :=
+  by
   rw [continuous_def]
   intro s hs
   change continuous' (s ∘ f)

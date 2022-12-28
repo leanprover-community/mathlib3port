@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,8 @@ theorem sup_union [DecidableEq β] : (s₁ ∪ s₂).sup f = s₁.sup f ⊔ s₂
     rw [insert_union, sup_insert, sup_insert, ih, sup_assoc]
 #align finset.sup_union Finset.sup_union
 
-theorem sup_sup : s.sup (f ⊔ g) = s.sup f ⊔ s.sup g := by
+theorem sup_sup : s.sup (f ⊔ g) = s.sup f ⊔ s.sup g :=
+  by
   refine' Finset.cons_induction_on s _ fun b t _ h => _
   · rw [sup_empty, sup_empty, sup_empty, bot_sup_eq]
   · rw [sup_cons, sup_cons, sup_cons, h]
@@ -91,7 +92,8 @@ theorem sup_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f 
 #align finset.sup_congr Finset.sup_congr
 
 @[simp]
-protected theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀ b ∈ s, f b ≤ a := by
+protected theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀ b ∈ s, f b ≤ a :=
+  by
   apply Iff.trans Multiset.sup_le
   simp only [Multiset.mem_map, and_imp, exists_imp]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
@@ -116,7 +118,8 @@ theorem sup_const {s : Finset β} (h : s.Nonempty) (c : α) : (s.sup fun _ => c)
 #align finset.sup_const Finset.sup_const
 
 @[simp]
-theorem sup_bot (s : Finset β) : (s.sup fun _ => ⊥) = (⊥ : α) := by
+theorem sup_bot (s : Finset β) : (s.sup fun _ => ⊥) = (⊥ : α) :=
+  by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · exact sup_empty
   · exact sup_const hs _
@@ -136,7 +139,8 @@ theorem sup_mono (h : s₁ ⊆ s₂) : s₁.sup f ≤ s₂.sup f :=
 #align finset.sup_mono Finset.sup_mono
 
 protected theorem sup_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
-    (s.sup fun b => t.sup (f b)) = t.sup fun c => s.sup fun b => f b c := by
+    (s.sup fun b => t.sup (f b)) = t.sup fun c => s.sup fun b => f b c :=
+  by
   refine' eq_of_forall_ge_iff fun a => _
   simp_rw [Finset.sup_le_iff]
   exact ⟨fun h c hc b hb => h b hb c hc, fun h b hb c hc => h c hc b hb⟩
@@ -150,7 +154,8 @@ theorem sup_attach (s : Finset β) (f : β → α) : (s.attach.sup fun x => f x)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- See also `finset.product_bUnion`. -/
 theorem sup_product_left (s : Finset β) (t : Finset γ) (f : β × γ → α) :
-    (s ×ˢ t).sup f = s.sup fun i => t.sup fun i' => f ⟨i, i'⟩ := by
+    (s ×ˢ t).sup f = s.sup fun i => t.sup fun i' => f ⟨i, i'⟩ :=
+  by
   simp only [le_antisymm_iff, Finset.sup_le_iff, mem_product, and_imp, Prod.forall]
   exact
     ⟨fun b c hb hc => (le_sup hb).trans' <| le_sup hc, fun b hb c hc =>
@@ -164,7 +169,8 @@ theorem sup_product_right (s : Finset β) (t : Finset γ) (f : β × γ → α) 
 #align finset.sup_product_right Finset.sup_product_right
 
 @[simp]
-theorem sup_erase_bot [DecidableEq α] (s : Finset α) : (s.erase ⊥).sup id = s.sup id := by
+theorem sup_erase_bot [DecidableEq α] (s : Finset α) : (s.erase ⊥).sup id = s.sup id :=
+  by
   refine' (sup_mono (s.erase_subset _)).antisymm (Finset.sup_le_iff.2 fun a ha => _)
   obtain rfl | ha' := eq_or_ne a ⊥
   · exact bot_le
@@ -172,7 +178,8 @@ theorem sup_erase_bot [DecidableEq α] (s : Finset α) : (s.erase ⊥).sup id = 
 #align finset.sup_erase_bot Finset.sup_erase_bot
 
 theorem sup_sdiff_right {α β : Type _} [GeneralizedBooleanAlgebra α] (s : Finset β) (f : β → α)
-    (a : α) : (s.sup fun b => f b \ a) = s.sup f \ a := by
+    (a : α) : (s.sup fun b => f b \ a) = s.sup f \ a :=
+  by
   refine' Finset.cons_induction_on s _ fun b t _ h => _
   · rw [sup_empty, sup_empty, bot_sdiff]
   · rw [sup_cons, sup_cons, h, sup_sdiff]
@@ -197,7 +204,8 @@ theorem sup_to_finset {α β} [DecidableEq β] (s : Finset α) (f : α → Multi
 #align finset.sup_to_finset Finset.sup_to_finset
 
 theorem List.foldr_sup_eq_sup_to_finset [DecidableEq α] (l : List α) :
-    l.foldr (· ⊔ ·) ⊥ = l.toFinset.sup id := by
+    l.foldr (· ⊔ ·) ⊥ = l.toFinset.sup id :=
+  by
   rw [← coe_fold_r, ← Multiset.fold_dedup_idem, sup_def, ← List.to_finset_coe, to_finset_val,
     Multiset.map_id]
   rfl
@@ -212,7 +220,8 @@ theorem exists_nat_subset_range (s : Finset ℕ) : ∃ n : ℕ, s ⊆ range n :=
 #align finset.exists_nat_subset_range Finset.exists_nat_subset_range
 
 theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁ ⊔ a₂))
-    (hs : ∀ b ∈ s, p (f b)) : p (s.sup f) := by
+    (hs : ∀ b ∈ s, p (f b)) : p (s.sup f) :=
+  by
   induction' s using Finset.cons_induction with c s hc ih
   · exact hb
   · rw [sup_cons]
@@ -224,13 +233,13 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → 
 theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s : Set α)
     (hs : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
     (∀ x ∈ t, ∃ y ∈ s, x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x := by
-  classical 
+  classical
     apply Finset.induction_on t
     ·
       simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
         sup_empty, forall_true_iff, not_mem_empty]
     · intro a r har ih h
-      have incs : ↑r ⊆ ↑(insert a r) := by 
+      have incs : ↑r ⊆ ↑(insert a r) := by
         rw [Finset.coe_subset]
         apply Finset.subset_insert
       -- x ∈ s is above the sup of r
@@ -404,21 +413,24 @@ theorem inf_erase_top [DecidableEq α] (s : Finset α) : (s.erase ⊤).inf id = 
 #align finset.inf_erase_top Finset.inf_erase_top
 
 theorem sup_sdiff_left {α β : Type _} [BooleanAlgebra α] (s : Finset β) (f : β → α) (a : α) :
-    (s.sup fun b => a \ f b) = a \ s.inf f := by
+    (s.sup fun b => a \ f b) = a \ s.inf f :=
+  by
   refine' Finset.cons_induction_on s _ fun b t _ h => _
   · rw [sup_empty, inf_empty, sdiff_top]
   · rw [sup_cons, inf_cons, h, sdiff_inf]
 #align finset.sup_sdiff_left Finset.sup_sdiff_left
 
 theorem inf_sdiff_left {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs : s.Nonempty)
-    (f : β → α) (a : α) : (s.inf fun b => a \ f b) = a \ s.sup f := by
+    (f : β → α) (a : α) : (s.inf fun b => a \ f b) = a \ s.sup f :=
+  by
   induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
   · rw [sup_singleton, inf_singleton]
   · rw [sup_cons, inf_cons, h, sdiff_sup]
 #align finset.inf_sdiff_left Finset.inf_sdiff_left
 
 theorem inf_sdiff_right {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs : s.Nonempty)
-    (f : β → α) (a : α) : (s.inf fun b => f b \ a) = s.inf f \ a := by
+    (f : β → α) (a : α) : (s.inf fun b => f b \ a) = s.inf f \ a :=
+  by
   induction' hs using Finset.Nonempty.cons_induction with b b t _ _ h
   · rw [inf_singleton, inf_singleton]
   · rw [inf_cons, inf_cons, h, inf_sdiff]
@@ -437,7 +449,8 @@ theorem inf_coe {P : α → Prop} {Ptop : P ⊤} {Pinf : ∀ ⦃x y⦄, P x → 
 #align finset.inf_coe Finset.inf_coe
 
 theorem List.foldr_inf_eq_inf_to_finset [DecidableEq α] (l : List α) :
-    l.foldr (· ⊓ ·) ⊤ = l.toFinset.inf id := by
+    l.foldr (· ⊓ ·) ⊤ = l.toFinset.inf id :=
+  by
   rw [← coe_fold_r, ← Multiset.fold_dedup_idem, inf_def, ← List.to_finset_coe, to_finset_val,
     Multiset.map_id]
   rfl
@@ -494,14 +507,16 @@ section OrderBot
 variable [OrderBot α] {s : Finset β} {f : β → α} {a : α}
 
 theorem sup_inf_distrib_left (s : Finset ι) (f : ι → α) (a : α) :
-    a ⊓ s.sup f = s.sup fun i => a ⊓ f i := by
+    a ⊓ s.sup f = s.sup fun i => a ⊓ f i :=
+  by
   induction' s using Finset.cons_induction with i s hi h
   · simp_rw [Finset.sup_empty, inf_bot_eq]
   · rw [sup_cons, sup_cons, inf_sup_left, h]
 #align finset.sup_inf_distrib_left Finset.sup_inf_distrib_left
 
 theorem sup_inf_distrib_right (s : Finset ι) (f : ι → α) (a : α) :
-    s.sup f ⊓ a = s.sup fun i => f i ⊓ a := by
+    s.sup f ⊓ a = s.sup fun i => f i ⊓ a :=
+  by
   rw [_root_.inf_comm, s.sup_inf_distrib_left]
   simp_rw [_root_.inf_comm]
 #align finset.sup_inf_distrib_right Finset.sup_inf_distrib_right
@@ -650,14 +665,16 @@ theorem coe_sup' : ((s.sup' H f : α) : WithBot α) = s.sup (coe ∘ f) := by
 
 @[simp]
 theorem sup'_cons {b : β} {hb : b ∉ s} {h : (cons b s hb).Nonempty} :
-    (cons b s hb).sup' h f = f b ⊔ s.sup' H f := by
+    (cons b s hb).sup' h f = f b ⊔ s.sup' H f :=
+  by
   rw [← WithBot.coe_eq_coe]
   simp only [coe_sup', sup_cons, WithBot.coe_sup]
 #align finset.sup'_cons Finset.sup'_cons
 
 @[simp]
 theorem sup'_insert [DecidableEq β] {b : β} {h : (insert b s).Nonempty} :
-    (insert b s).sup' h f = f b ⊔ s.sup' H f := by
+    (insert b s).sup' h f = f b ⊔ s.sup' H f :=
+  by
   rw [← WithBot.coe_eq_coe]
   simp only [coe_sup', sup_insert, WithBot.coe_sup]
 #align finset.sup'_insert Finset.sup'_insert
@@ -667,18 +684,21 @@ theorem sup'_singleton {b : β} {h : ({b} : Finset β).Nonempty} : ({b} : Finset
   rfl
 #align finset.sup'_singleton Finset.sup'_singleton
 
-theorem sup'_le {a : α} (hs : ∀ b ∈ s, f b ≤ a) : s.sup' H f ≤ a := by
+theorem sup'_le {a : α} (hs : ∀ b ∈ s, f b ≤ a) : s.sup' H f ≤ a :=
+  by
   rw [← WithBot.coe_le_coe, coe_sup']
   exact Finset.sup_le fun b h => WithBot.coe_le_coe.2 <| hs b h
 #align finset.sup'_le Finset.sup'_le
 
-theorem le_sup' {b : β} (h : b ∈ s) : f b ≤ s.sup' ⟨b, h⟩ f := by
+theorem le_sup' {b : β} (h : b ∈ s) : f b ≤ s.sup' ⟨b, h⟩ f :=
+  by
   rw [← WithBot.coe_le_coe, coe_sup']
   exact le_sup h
 #align finset.le_sup' Finset.le_sup'
 
 @[simp]
-theorem sup'_const (a : α) : (s.sup' H fun b => a) = a := by
+theorem sup'_const (a : α) : (s.sup' H fun b => a) = a :=
+  by
   apply le_antisymm
   · apply sup'_le
     intros
@@ -698,7 +718,8 @@ theorem sup'_bUnion [DecidableEq β] {s : Finset γ} (Hs : s.Nonempty) {t : γ �
 #align finset.sup'_bUnion Finset.sup'_bUnion
 
 theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.Nonempty) {f : β → α}
-    (g : α → γ) (g_sup : ∀ x y, g (x ⊔ y) = g x ⊔ g y) : g (s.sup' H f) = s.sup' H (g ∘ f) := by
+    (g : α → γ) (g_sup : ∀ x y, g (x ⊔ y) = g x ⊔ g y) : g (s.sup' H f) = s.sup' H (g ∘ f) :=
+  by
   rw [← WithBot.coe_eq_coe, coe_sup']
   let g' := WithBot.map g
   show g' ↑(s.sup' H f) = s.sup fun a => g' ↑(f a)
@@ -714,7 +735,8 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.Nonemp
 #align finset.comp_sup'_eq_sup'_comp Finset.comp_sup'_eq_sup'_comp
 
 theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁ ⊔ a₂))
-    (hs : ∀ b ∈ s, p (f b)) : p (s.sup' H f) := by
+    (hs : ∀ b ∈ s, p (f b)) : p (s.sup' H f) :=
+  by
   show @WithBot.recBotCoe α (fun _ => Prop) True p ↑(s.sup' H f)
   rw [coe_sup']
   refine' sup_induction trivial _ hs
@@ -733,7 +755,7 @@ theorem sup'_mem (s : Set α) (w : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x �
 
 @[congr]
 theorem sup'_congr {t : Finset β} {f g : β → α} (h₁ : s = t) (h₂ : ∀ x ∈ s, f x = g x) :
-    s.sup' H f = t.sup' (h₁ ▸ H) g := by 
+    s.sup' H f = t.sup' (h₁ ▸ H) g := by
   subst s
   refine' eq_of_forall_ge_iff fun c => _
   simp (config := { contextual := true }) only [sup'_le_iff, h₂]
@@ -959,19 +981,22 @@ section LinearOrder
 variable [LinearOrder α] {s : Finset ι} (H : s.Nonempty) {f : ι → α} {a : α}
 
 @[simp]
-theorem le_sup'_iff : a ≤ s.sup' H f ↔ ∃ b ∈ s, a ≤ f b := by
+theorem le_sup'_iff : a ≤ s.sup' H f ↔ ∃ b ∈ s, a ≤ f b :=
+  by
   rw [← WithBot.coe_le_coe, coe_sup', Finset.le_sup_iff (WithBot.bot_lt_coe a)]
   exact bex_congr fun b hb => WithBot.coe_le_coe
 #align finset.le_sup'_iff Finset.le_sup'_iff
 
 @[simp]
-theorem lt_sup'_iff : a < s.sup' H f ↔ ∃ b ∈ s, a < f b := by
+theorem lt_sup'_iff : a < s.sup' H f ↔ ∃ b ∈ s, a < f b :=
+  by
   rw [← WithBot.coe_lt_coe, coe_sup', Finset.lt_sup_iff]
   exact bex_congr fun b hb => WithBot.coe_lt_coe
 #align finset.lt_sup'_iff Finset.lt_sup'_iff
 
 @[simp]
-theorem sup'_lt_iff : s.sup' H f < a ↔ ∀ i ∈ s, f i < a := by
+theorem sup'_lt_iff : s.sup' H f < a ↔ ∀ i ∈ s, f i < a :=
+  by
   rw [← WithBot.coe_lt_coe, coe_sup', Finset.sup_lt_iff (WithBot.bot_lt_coe a)]
   exact ball_congr fun b hb => WithBot.coe_lt_coe
 #align finset.sup'_lt_iff Finset.sup'_lt_iff
@@ -991,7 +1016,8 @@ theorem lt_inf'_iff : a < s.inf' H f ↔ ∀ i ∈ s, a < f i :=
   @sup'_lt_iff αᵒᵈ _ _ _ H f _
 #align finset.lt_inf'_iff Finset.lt_inf'_iff
 
-theorem exists_mem_eq_sup' (f : ι → α) : ∃ i, i ∈ s ∧ s.sup' H f = f i := by
+theorem exists_mem_eq_sup' (f : ι → α) : ∃ i, i ∈ s ∧ s.sup' H f = f i :=
+  by
   refine' H.cons_induction (fun c => _) fun c s hc hs ih => _
   · exact ⟨c, mem_singleton_self c, rfl⟩
   · rcases ih with ⟨b, hb, h'⟩
@@ -1050,7 +1076,8 @@ theorem max_insert {a : α} {s : Finset α} : (insert a s).max = max a s.max :=
 #align finset.max_insert Finset.max_insert
 
 @[simp]
-theorem max_singleton {a : α} : Finset.max {a} = (a : WithBot α) := by
+theorem max_singleton {a : α} : Finset.max {a} = (a : WithBot α) :=
+  by
   rw [← insert_emptyc_eq]
   exact max_insert
 #align finset.max_singleton Finset.max_singleton
@@ -1066,7 +1093,8 @@ theorem max_of_nonempty {s : Finset α} (h : s.Nonempty) : ∃ a : α, s.max = a
 
 theorem max_eq_bot {s : Finset α} : s.max = ⊥ ↔ s = ∅ :=
   ⟨fun h =>
-    s.eq_empty_or_nonempty.elim id fun H => by
+    s.eq_empty_or_nonempty.elim id fun H =>
+      by
       let ⟨a, ha⟩ := max_of_nonempty H
       rw [h] at ha <;> cases ha,
     fun h => h.symm ▸ max_empty⟩
@@ -1074,7 +1102,8 @@ theorem max_eq_bot {s : Finset α} : s.max = ⊥ ↔ s = ∅ :=
 
 theorem mem_of_max {s : Finset α} : ∀ {a : α}, s.max = a → a ∈ s :=
   Finset.induction_on s (fun _ H => by cases H)
-    fun b s _ (ih : ∀ {a : α}, s.max = a → a ∈ s) a (h : (insert b s).max = a) => by
+    fun b s _ (ih : ∀ {a : α}, s.max = a → a ∈ s) a (h : (insert b s).max = a) =>
+    by
     by_cases p : b = a
     · induction p
       exact mem_insert_self b s
@@ -1131,7 +1160,8 @@ theorem min_insert {a : α} {s : Finset α} : (insert a s).min = min (↑a) s.mi
 #align finset.min_insert Finset.min_insert
 
 @[simp]
-theorem min_singleton {a : α} : Finset.min {a} = (a : WithTop α) := by
+theorem min_singleton {a : α} : Finset.min {a} = (a : WithTop α) :=
+  by
   rw [← insert_emptyc_eq]
   exact min_insert
 #align finset.min_singleton Finset.min_singleton
@@ -1147,7 +1177,8 @@ theorem min_of_nonempty {s : Finset α} (h : s.Nonempty) : ∃ a : α, s.min = a
 
 theorem min_eq_top {s : Finset α} : s.min = ⊤ ↔ s = ∅ :=
   ⟨fun h =>
-    s.eq_empty_or_nonempty.elim id fun H => by
+    s.eq_empty_or_nonempty.elim id fun H =>
+      by
       let ⟨a, ha⟩ := min_of_nonempty H
       rw [h] at ha <;> cases ha,
     fun h => h.symm ▸ min_empty⟩
@@ -1278,51 +1309,59 @@ theorem min'_lt_max' {i j} (H1 : i ∈ s) (H2 : j ∈ s) (H3 : i ≠ j) :
 theorem min'_lt_max'_of_card (h₂ : 1 < card s) :
     s.min' (Finset.card_pos.mp <| lt_trans zero_lt_one h₂) <
       s.max' (Finset.card_pos.mp <| lt_trans zero_lt_one h₂) :=
-  by 
+  by
   rcases one_lt_card.1 h₂ with ⟨a, ha, b, hb, hab⟩
   exact s.min'_lt_max' ha hb hab
 #align finset.min'_lt_max'_of_card Finset.min'_lt_max'_of_card
 
-theorem map_of_dual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.image ofDual).max := by
+theorem map_of_dual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.image ofDual).max :=
+  by
   rw [max_eq_sup_with_bot, sup_image]
   exact congr_fun Option.map_id _
 #align finset.map_of_dual_min Finset.map_of_dual_min
 
-theorem map_of_dual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDual).min := by
+theorem map_of_dual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDual).min :=
+  by
   rw [min_eq_inf_with_top, inf_image]
   exact congr_fun Option.map_id _
 #align finset.map_of_dual_max Finset.map_of_dual_max
 
-theorem map_to_dual_min (s : Finset α) : s.min.map toDual = (s.image toDual).max := by
+theorem map_to_dual_min (s : Finset α) : s.min.map toDual = (s.image toDual).max :=
+  by
   rw [max_eq_sup_with_bot, sup_image]
   exact congr_fun Option.map_id _
 #align finset.map_to_dual_min Finset.map_to_dual_min
 
-theorem map_to_dual_max (s : Finset α) : s.max.map toDual = (s.image toDual).min := by
+theorem map_to_dual_max (s : Finset α) : s.max.map toDual = (s.image toDual).min :=
+  by
   rw [min_eq_inf_with_top, inf_image]
   exact congr_fun Option.map_id _
 #align finset.map_to_dual_max Finset.map_to_dual_max
 
 theorem of_dual_min' {s : Finset αᵒᵈ} (hs : s.Nonempty) :
-    ofDual (min' s hs) = max' (s.image ofDual) (hs.image _) := by
+    ofDual (min' s hs) = max' (s.image ofDual) (hs.image _) :=
+  by
   convert rfl
   exact image_id
 #align finset.of_dual_min' Finset.of_dual_min'
 
 theorem of_dual_max' {s : Finset αᵒᵈ} (hs : s.Nonempty) :
-    ofDual (max' s hs) = min' (s.image ofDual) (hs.image _) := by
+    ofDual (max' s hs) = min' (s.image ofDual) (hs.image _) :=
+  by
   convert rfl
   exact image_id
 #align finset.of_dual_max' Finset.of_dual_max'
 
 theorem to_dual_min' {s : Finset α} (hs : s.Nonempty) :
-    toDual (min' s hs) = max' (s.image toDual) (hs.image _) := by
+    toDual (min' s hs) = max' (s.image toDual) (hs.image _) :=
+  by
   convert rfl
   exact image_id
 #align finset.to_dual_min' Finset.to_dual_min'
 
 theorem to_dual_max' {s : Finset α} (hs : s.Nonempty) :
-    toDual (max' s hs) = min' (s.image toDual) (hs.image _) := by
+    toDual (max' s hs) = min' (s.image toDual) (hs.image _) :=
+  by
   convert rfl
   exact image_id
 #align finset.to_dual_max' Finset.to_dual_max'
@@ -1339,14 +1378,14 @@ theorem min'_subset {s t : Finset α} (H : s.Nonempty) (hst : s ⊆ t) :
 
 theorem max'_insert (a : α) (s : Finset α) (H : s.Nonempty) :
     (insert a s).max' (s.insert_nonempty a) = max (s.max' H) a :=
-  (is_greatest_max' _ _).unique <| by 
+  (is_greatest_max' _ _).unique <| by
     rw [coe_insert, max_comm]
     exact (is_greatest_max' _ _).insert _
 #align finset.max'_insert Finset.max'_insert
 
 theorem min'_insert (a : α) (s : Finset α) (H : s.Nonempty) :
     (insert a s).min' (s.insert_nonempty a) = min (s.min' H) a :=
-  (is_least_min' _ _).unique <| by 
+  (is_least_min' _ _).unique <| by
     rw [coe_insert, min_comm]
     exact (is_least_min' _ _).insert _
 #align finset.min'_insert Finset.min'_insert
@@ -1363,7 +1402,8 @@ theorem min'_lt_of_mem_erase_min' [DecidableEq α] {a : α} (ha : a ∈ s.erase 
 
 @[simp]
 theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
-    (h : (s.image f).Nonempty) : (s.image f).max' h = f (s.max' ((Nonempty.image_iff f).mp h)) := by
+    (h : (s.image f).Nonempty) : (s.image f).max' h = f (s.max' ((Nonempty.image_iff f).mp h)) :=
+  by
   refine'
     le_antisymm (max'_le _ _ _ fun y hy => _) (le_max' _ _ (mem_image.mpr ⟨_, max'_mem _ _, rfl⟩))
   obtain ⟨x, hx, rfl⟩ := mem_image.mp hy
@@ -1372,7 +1412,8 @@ theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finse
 
 @[simp]
 theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
-    (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) := by
+    (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) :=
+  by
   convert @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;>
     convert h
   rw [nonempty.image_iff]
@@ -1414,7 +1455,8 @@ theorem min'_erase_ne_self {s : Finset α} (s0 : (s.erase x).Nonempty) : (s.eras
   ne_of_mem_erase (min'_mem _ s0)
 #align finset.min'_erase_ne_self Finset.min'_erase_ne_self
 
-theorem max_erase_ne_self {s : Finset α} : (s.erase x).max ≠ x := by
+theorem max_erase_ne_self {s : Finset α} : (s.erase x).max ≠ x :=
+  by
   by_cases s0 : (s.erase x).Nonempty
   · refine' ne_of_eq_of_ne (coe_max' s0).symm _
     exact with_bot.coe_eq_coe.not.mpr (max'_erase_ne_self _)
@@ -1445,14 +1487,15 @@ theorem card_le_of_interleaved {s t : Finset α}
     (h :
       ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s),
         x < y → (∀ z ∈ s, z ∉ Set.Ioo x y) → ∃ z ∈ t, x < z ∧ z < y) :
-    s.card ≤ t.card + 1 := by
+    s.card ≤ t.card + 1 :=
+  by
   replace h : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x < y → ∃ z ∈ t, x < z ∧ z < y
   · intro x hx y hy hxy
     rcases exists_next_right ⟨y, hy, hxy⟩ with ⟨a, has, hxa, ha⟩
     rcases h x hx a has hxa fun z hzs hz => hz.2.not_le <| ha _ hzs hz.1 with ⟨b, hbt, hxb, hba⟩
     exact ⟨b, hbt, hxb, hba.trans_le <| ha _ hy hxy⟩
   set f : α → WithTop α := fun x => (t.filter fun y => x < y).min
-  have f_mono : StrictMonoOn f s := by 
+  have f_mono : StrictMonoOn f s := by
     intro x hx y hy hxy
     rcases h x hx y hy hxy with ⟨a, hat, hxa, hay⟩
     calc
@@ -1492,7 +1535,8 @@ theorem card_le_diff_of_interleaved {s t : Finset α}
   implies `p (insert a s)`. -/
 @[elab_as_elim]
 theorem induction_on_max [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h0 : p ∅)
-    (step : ∀ a s, (∀ x ∈ s, x < a) → p s → p (insert a s)) : p s := by
+    (step : ∀ a s, (∀ x ∈ s, x < a) → p s → p (insert a s)) : p s :=
+  by
   induction' s using Finset.strongInductionOn with s ihs
   rcases s.eq_empty_or_nonempty with (rfl | hne)
   · exact h0
@@ -1527,7 +1571,8 @@ ordered type : a predicate is true on all `s : finset α` provided that:
   `f x ≤ f a`, `p s` implies `p (insert a s)`. -/
 @[elab_as_elim]
 theorem induction_on_max_value [DecidableEq ι] (f : ι → α) {p : Finset ι → Prop} (s : Finset ι)
-    (h0 : p ∅) (step : ∀ a s, a ∉ s → (∀ x ∈ s, f x ≤ f a) → p s → p (insert a s)) : p s := by
+    (h0 : p ∅) (step : ∀ a s, a ∉ s → (∀ x ∈ s, f x ≤ f a) → p s → p (insert a s)) : p s :=
+  by
   induction' s using Finset.strongInductionOn with s ihs
   rcases(s.image f).eq_empty_or_nonempty with (hne | hne)
   · simp only [image_eq_empty] at hne
@@ -1560,7 +1605,8 @@ section ExistsMaxMin
 variable [LinearOrder α]
 
 theorem exists_max_image (s : Finset β) (f : β → α) (h : s.Nonempty) :
-    ∃ x ∈ s, ∀ x' ∈ s, f x' ≤ f x := by
+    ∃ x ∈ s, ∀ x' ∈ s, f x' ≤ f x :=
+  by
   cases' max_of_nonempty (h.image f) with y hy
   rcases mem_image.mp (mem_of_max hy) with ⟨x, hx, rfl⟩
   exact ⟨x, hx, fun x' hx' => le_max_of_eq (mem_image_of_mem f hx') hy⟩
@@ -1574,9 +1620,10 @@ theorem exists_min_image (s : Finset β) (f : β → α) (h : s.Nonempty) :
 end ExistsMaxMin
 
 theorem is_glb_iff_is_least [LinearOrder α] (i : α) (s : Finset α) (hs : s.Nonempty) :
-    IsGLB (s : Set α) i ↔ IsLeast (↑s) i := by
+    IsGLB (s : Set α) i ↔ IsLeast (↑s) i :=
+  by
   refine' ⟨fun his => _, IsLeast.isGLB⟩
-  suffices i = min' s hs by 
+  suffices i = min' s hs by
     rw [this]
     exact is_least_min' s hs
   rw [IsGLB, IsGreatest, mem_lowerBounds, mem_upperBounds] at his
@@ -1589,7 +1636,7 @@ theorem is_lub_iff_is_greatest [LinearOrder α] (i : α) (s : Finset α) (hs : s
 #align finset.is_lub_iff_is_greatest Finset.is_lub_iff_is_greatest
 
 theorem is_glb_mem [LinearOrder α] {i : α} (s : Finset α) (his : IsGLB (s : Set α) i)
-    (hs : s.Nonempty) : i ∈ s := by 
+    (hs : s.Nonempty) : i ∈ s := by
   rw [← mem_coe]
   exact ((is_glb_iff_is_least i s hs).mp his).1
 #align finset.is_glb_mem Finset.is_glb_mem
@@ -1609,7 +1656,8 @@ theorem map_finset_sup [DecidableEq α] [DecidableEq β] (s : Finset γ) (f : γ
 #align multiset.map_finset_sup Multiset.map_finset_sup
 
 theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset β) (b : β) :
-    count b (s.sup f) = s.sup fun a => count b (f a) := by
+    count b (s.sup f) = s.sup fun a => count b (f a) :=
+  by
   letI := Classical.decEq α
   refine' s.induction _ _
   · exact count_zero _
@@ -1620,7 +1668,7 @@ theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset �
 
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} :
     x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by
-  classical 
+  classical
     apply s.induction_on
     · simp
     · intro a s has hxs
@@ -1645,21 +1693,22 @@ end Multiset
 namespace Finset
 
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Finset β} {x : β} :
-    x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by
+    x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v :=
+  by
   change _ ↔ ∃ v ∈ s, x ∈ (f v).val
   rw [← Multiset.mem_sup, ← Multiset.mem_to_finset, sup_to_finset]
   simp_rw [val_to_finset]
 #align finset.mem_sup Finset.mem_sup
 
 theorem sup_eq_bUnion {α β} [DecidableEq β] (s : Finset α) (t : α → Finset β) :
-    s.sup t = s.bUnion t := by 
+    s.sup t = s.bUnion t := by
   ext
   rw [mem_sup, mem_bUnion]
 #align finset.sup_eq_bUnion Finset.sup_eq_bUnion
 
 @[simp]
 theorem sup_singleton'' [DecidableEq α] (s : Finset β) (f : β → α) :
-    (s.sup fun b => {f b}) = s.image f := by 
+    (s.sup fun b => {f b}) = s.image f := by
   ext a
   rw [mem_sup, mem_image]
   simp only [mem_singleton, eq_comm]
@@ -1822,7 +1871,8 @@ theorem infi_union {f : α → β} {s t : Finset α} :
 #align finset.infi_union Finset.infi_union
 
 theorem supr_insert (a : α) (s : Finset α) (t : α → β) :
-    (⨆ x ∈ insert a s, t x) = t a ⊔ ⨆ x ∈ s, t x := by
+    (⨆ x ∈ insert a s, t x) = t a ⊔ ⨆ x ∈ s, t x :=
+  by
   rw [insert_eq]
   simp only [supᵢ_union, Finset.supr_singleton]
 #align finset.supr_insert Finset.supr_insert
@@ -1846,7 +1896,8 @@ theorem infi_finset_image {f : γ → α} {g : α → β} {s : Finset γ} :
 #align finset.infi_finset_image Finset.infi_finset_image
 
 theorem supr_insert_update {x : α} {t : Finset α} (f : α → β) {s : β} (hx : x ∉ t) :
-    (⨆ i ∈ insert x t, Function.update f x s i) = s ⊔ ⨆ i ∈ t, f i := by
+    (⨆ i ∈ insert x t, Function.update f x s i) = s ⊔ ⨆ i ∈ t, f i :=
+  by
   simp only [Finset.supr_insert, update_same]
   rcongr (i hi); apply update_noteq; rintro rfl; exact hx hi
 #align finset.supr_insert_update Finset.supr_insert_update
@@ -1885,7 +1936,7 @@ theorem set_bInter_singleton (a : α) (s : α → Set β) : (⋂ x ∈ ({a} : Fi
 
 @[simp]
 theorem set_bUnion_preimage_singleton (f : α → β) (s : Finset β) : (⋃ y ∈ s, f ⁻¹' {y}) = f ⁻¹' s :=
-  Set.bUnion_preimage_singleton f s
+  Set.bunionᵢ_preimage_singleton f s
 #align finset.set_bUnion_preimage_singleton Finset.set_bUnion_preimage_singleton
 
 theorem set_bUnion_option_to_finset (o : Option α) (f : α → Set β) :

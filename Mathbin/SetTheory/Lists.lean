@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.lists
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,9 +109,9 @@ theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
       let l' : Lists' α true := by rw [h] <;> exact l
       ofList (toList l') = l'
     from this _ rfl
-  fun b h l => by 
+  fun b h l => by
   induction l; · cases h; · exact rfl
-  case cons' b a l IH₁ IH₂ => 
+  case cons' b a l IH₁ IH₂ =>
     intro ; change l' with cons' a l
     simpa [cons] using IH₂ rfl
 #align lists'.of_to_list Lists'.of_to_list
@@ -162,7 +162,8 @@ theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by
   simp [mem_def, or_and_right, exists_or]
 #align lists'.mem_cons Lists'.mem_cons
 
-theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ := by
+theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ :=
+  by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
   generalize h' : Lists'.cons a l₁ = l₁' at h
   cases' h with l a' a'' l l' e m s;
@@ -183,20 +184,23 @@ theorem Subset.refl {l : Lists' α true} : l ⊆ l := by
   rw [← Lists'.of_to_list l] <;> exact of_list_subset (List.Subset.refl _)
 #align lists'.subset.refl Lists'.Subset.refl
 
-theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil := by
+theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil :=
+  by
   rw [← of_to_list l]
   induction to_list l <;> intro h; · rfl
   rcases cons_subset.1 h with ⟨⟨_, ⟨⟩, _⟩, _⟩
 #align lists'.subset_nil Lists'.subset_nil
 
-theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h : a ∈ l₁.toList) : a ∈ l₂ := by
+theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h : a ∈ l₁.toList) : a ∈ l₂ :=
+  by
   induction' s with _ a a' l l' e m s IH; · cases h
   simp at h; rcases h with (rfl | h)
   exacts[⟨_, m, e⟩, IH h]
 #align lists'.mem_of_subset' Lists'.mem_of_subset'
 
 theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l₁.toList, a ∈ l₂ :=
-  ⟨fun H a => mem_of_subset' H, fun H => by
+  ⟨fun H a => mem_of_subset' H, fun H =>
+    by
     rw [← of_to_list l₁]
     revert H; induction to_list l₁ <;> intro
     · exact subset.nil
@@ -257,7 +261,8 @@ instance [SizeOf α] : SizeOf (Lists α) := by unfold Lists <;> infer_instance
 /-- A recursion principle for pairs of ZFA lists and proper ZFA prelists. -/
 def inductionMut (C : Lists α → Sort _) (D : Lists' α true → Sort _) (C0 : ∀ a, C (atom a))
     (C1 : ∀ l, D l → C (of' l)) (D0 : D Lists'.nil) (D1 : ∀ a l, C a → D l → D (Lists'.cons a l)) :
-    PProd (∀ l, C l) (∀ l, D l) := by
+    PProd (∀ l, C l) (∀ l, D l) :=
+  by
   suffices
     ∀ {b} (l : Lists' α b),
       PProd (C ⟨_, l⟩)
@@ -289,7 +294,8 @@ theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
   | ⟨_, Lists'.cons' _ _⟩, _ => rfl
 #align lists.is_list_of_mem Lists.is_list_of_mem
 
-theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ ↔ l₁ ⊆ l₂ ∧ l₂ ⊆ l₁ := by
+theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ ↔ l₁ ⊆ l₂ ∧ l₂ ⊆ l₁ :=
+  by
   refine' ⟨fun h => _, fun ⟨h₁, h₂⟩ => equiv.antisymm h₁ h₂⟩
   cases' h with _ _ _ h₁ h₂
   · simp [Lists'.Subset.refl]; · exact ⟨h₁, h₂⟩
@@ -305,7 +311,8 @@ theorem Equiv.symm {l₁ l₂ : Lists α} (h : l₁ ~ l₂) : l₂ ~ l₁ := by
   cases' h with _ _ _ h₁ h₂ <;> [rfl, exact equiv.antisymm h₂ h₁]
 #align lists.equiv.symm Lists.Equiv.symm
 
-theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃ := by
+theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃ :=
+  by
   let trans := fun l₁ : Lists α => ∀ ⦃l₂ l₃⦄, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃
   suffices PProd (∀ l₁, trans l₁) (∀ (l : Lists' α tt), ∀ l' ∈ l.toList, trans l') by exact this.1
   apply induction_mut
@@ -357,7 +364,8 @@ theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
 theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
-    SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) := by
+    SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) :=
+  by
   run_tac
     unfold_sizeof
   apply sizeof_pos
@@ -374,7 +382,8 @@ mutual
       decidable_of_iff' (l₁ = l₂) <| by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
     | ⟨ff, l₁⟩, ⟨tt, l₂⟩ => is_false <| by rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨ff, l₂⟩ => is_false <| by rintro ⟨⟩
-    | ⟨tt, l₁⟩, ⟨tt, l₂⟩ => by
+    | ⟨tt, l₁⟩, ⟨tt, l₂⟩ =>
+      by
       haveI :=
         have :
           SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂ <
@@ -395,7 +404,8 @@ mutual
   @[instance]
   def Subset.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists' α true, Decidable (l₁ ⊆ l₂)
     | Lists'.nil, l₂ => isTrue Subset.nil
-    | @Lists'.cons' _ b a l₁, l₂ => by
+    | @Lists'.cons' _ b a l₁, l₂ =>
+      by
       haveI :=
         have :
           SizeOf.sizeOf (⟨b, a⟩ : Lists α) + SizeOf.sizeOf l₂ <
@@ -414,7 +424,8 @@ mutual
   @[instance]
   def Mem.decidable [DecidableEq α] : ∀ (a : Lists α) (l : Lists' α true), Decidable (a ∈ l)
     | a, Lists'.nil => is_false <| by rintro ⟨_, ⟨⟩, _⟩
-    | a, Lists'.cons' b l₂ => by
+    | a, Lists'.cons' b l₂ =>
+      by
       haveI :=
         have :
           SizeOf.sizeOf a + SizeOf.sizeOf (⟨_, b⟩ : Lists α) <

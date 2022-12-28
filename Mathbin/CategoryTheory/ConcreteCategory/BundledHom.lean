@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.bundled_hom
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,9 +64,7 @@ instance category : Category (Bundled c) := by
             comp := fun X Y Z f g => @bundled_hom.comp c hom 𝒞 X Y Z X.str Y.str Z.str g f
             comp_id' := _
             id_comp' := _
-            assoc' := _ } <;>
-        intros <;>
-      apply 𝒞.hom_ext <;>
+            assoc' := _ } <;> intros <;> apply 𝒞.hom_ext <;>
     simp only [𝒞.id_to_fun, 𝒞.comp_to_fun, Function.left_id, Function.right_id]
 #align category_theory.bundled_hom.category CategoryTheory.BundledHom.category
 
@@ -75,10 +73,8 @@ instance category : Category (Bundled c) := by
 This instance generates the type-class problem `bundled_hom ?m` (which is why this is marked as
 `[nolint]`). Currently that is not a problem, as there are almost no instances of `bundled_hom`. -/
 @[nolint dangerous_instance]
-instance concreteCategory :
-    ConcreteCategory.{u}
-      (Bundled
-        c) where 
+instance concreteCategory : ConcreteCategory.{u} (Bundled c)
+    where
   forget :=
     { obj := fun X => X
       map := fun X Y f => 𝒞.toFun X.str Y.str f
@@ -123,9 +119,8 @@ end
 /-- Construct the `bundled_hom` induced by a map between type classes.
 This is useful for building categories such as `CommMon` from `Mon`.
 -/
-def map (F : ∀ {α}, d α → c α) :
-    BundledHom (MapHom hom
-        @F) where 
+def map (F : ∀ {α}, d α → c α) : BundledHom (MapHom hom @F)
+    where
   toFun α β iα iβ f := 𝒞.toFun (F iα) (F iβ) f
   id α iα := 𝒞.id (F iα)
   comp α β γ iα iβ iγ f g := 𝒞.comp (F iα) (F iβ) (F iγ) f g
@@ -156,9 +151,8 @@ instance bundledHomOfParentProjection (F : ∀ {α}, d α → c α) [ParentProje
 #align
   category_theory.bundled_hom.bundled_hom_of_parent_projection CategoryTheory.BundledHom.bundledHomOfParentProjection
 
-instance forget₂ (F : ∀ {α}, d α → c α) [ParentProjection @F] :
-    HasForget₂ (Bundled d)
-      (Bundled c) where forget₂ :=
+instance forget₂ (F : ∀ {α}, d α → c α) [ParentProjection @F] : HasForget₂ (Bundled d) (Bundled c)
+    where forget₂ :=
     { obj := fun X => ⟨X, F X.2⟩
       map := fun X Y f => f }
 #align category_theory.bundled_hom.forget₂ CategoryTheory.BundledHom.forget₂

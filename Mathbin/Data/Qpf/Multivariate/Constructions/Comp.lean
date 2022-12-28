@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.comp
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,17 +90,17 @@ theorem get_map (x : Comp F G α) :
 
 include q q'
 
-instance : Mvqpf (Comp F
-        G) where 
+instance : Mvqpf (Comp F G)
+    where
   p := Mvpfunctor.comp (p F) fun i => P <| G i
   abs α := comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
   repr α :=
     Mvpfunctor.comp.mk ∘
       repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
-  abs_repr := by 
+  abs_repr := by
     intros
     simp [(· ∘ ·), Mvfunctor.map_map, (· ⊚ ·), abs_repr]
-  abs_map := by 
+  abs_map := by
     intros
     simp [(· ∘ ·)]
     rw [← abs_map]

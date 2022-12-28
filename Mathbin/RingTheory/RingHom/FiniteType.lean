@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.finite_type
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,15 +24,17 @@ namespace RingHom
 
 open Pointwise
 
-theorem finite_type_stable_under_composition : StableUnderComposition @FiniteType := by
+theorem finite_type_stable_under_composition : StableUnderComposition @FiniteType :=
+  by
   introv R hf hg
   exact hg.comp hf
 #align ring_hom.finite_type_stable_under_composition RingHom.finite_type_stable_under_composition
 
-theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @FiniteType := by
+theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @FiniteType :=
+  by
   introv R _
   skip
-  suffices Algebra.FiniteType R S by 
+  suffices Algebra.FiniteType R S by
     change Algebra.FiniteType _ _
     convert this
     ext
@@ -48,7 +50,7 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
   rw [of_localization_span_target_iff_finite]
   introv R hs H
   skip
-  classical 
+  classical
     letI := f.to_algebra
     replace H : ∀ r : s, Algebra.FiniteType R (Localization.Away (r : S))
     · intro r
@@ -64,7 +66,7 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
     choose t ht using H
     obtain ⟨l, hl⟩ :=
       (Finsupp.mem_span_iff_total S (s : Set S) 1).mp
-        (show (1 : S) ∈ Ideal.span (s : Set S) by 
+        (show (1 : S) ∈ Ideal.span (s : Set S) by
           rw [hs]
           trivial)
     let sf := fun x : s => IsLocalization.finsetIntegerMultiple (Submonoid.powers (x : S)) (t x)

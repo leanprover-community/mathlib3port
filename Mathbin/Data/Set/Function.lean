@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ def restrict (s : Set α) (f : ∀ a : α, π a) : ∀ a : s, π a := fun x => f
 
 /- warning: set.restrict_eq -> Set.restrict_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x)))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> β) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) (Function.comp.{succ u2, succ u2, succ u1} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) α β f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)))
 Case conversion may be inaccurate. Consider using '#align set.restrict_eq Set.restrict_eqₓ'. -/
@@ -67,7 +67,7 @@ theorem restrict_eq (f : α → β) (s : Set α) : s.restrict f = f ∘ coe :=
 
 /- warning: set.restrict_apply -> Set.restrict_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α) (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f x) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) x))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α) (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f x) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α) (x : Set.Elem.{u2} α s), Eq.{succ u1} β (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f x) (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x))
 Case conversion may be inaccurate. Consider using '#align set.restrict_apply Set.restrict_applyₓ'. -/
@@ -78,7 +78,7 @@ theorem restrict_apply (f : α → β) (s : Set α) (x : s) : s.restrict f x = f
 
 /- warning: set.restrict_eq_iff -> Set.restrict_eq_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {π : α -> Type.{u2}} {f : forall (a : α), π a} {s : Set.{u1} α} {g : forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) a)}, Iff (Eq.{max (succ u1) (succ u2)} (forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) a)) (Set.restrict.{u1, u2} α (fun (a : α) => π a) s f) g) (forall (a : α) (ha : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s), Eq.{succ u2} (π a) (f a) (g (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a ha)))
+  forall {α : Type.{u1}} {π : α -> Type.{u2}} {f : forall (a : α), π a} {s : Set.{u1} α} {g : forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) a)}, Iff (Eq.{max (succ u1) (succ u2)} (forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) a)) (Set.restrict.{u1, u2} α (fun (a : α) => π a) s f) g) (forall (a : α) (ha : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s), Eq.{succ u2} (π a) (f a) (g (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a ha)))
 but is expected to have type
   forall {α : Type.{u2}} {π : α -> Type.{u1}} {f : forall (a : α), π a} {s : Set.{u2} α} {g : forall (a : Set.Elem.{u2} α s), π (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a)}, Iff (Eq.{max (succ u2) (succ u1)} (forall (a : Set.Elem.{u2} α s), π (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a)) (Set.restrict.{u2, u1} α (fun (a : α) => π a) s f) g) (forall (a : α) (ha : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s), Eq.{succ u1} (π a) (f a) (g (Subtype.mk.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a ha)))
 Case conversion may be inaccurate. Consider using '#align set.restrict_eq_iff Set.restrict_eq_iffₓ'. -/
@@ -89,7 +89,7 @@ theorem restrict_eq_iff {f : ∀ a, π a} {s : Set α} {g : ∀ a : s, π a} :
 
 /- warning: set.eq_restrict_iff -> Set.eq_restrict_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {π : α -> Type.{u2}} {s : Set.{u1} α} {f : forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) a)} {g : forall (a : α), π a}, Iff (Eq.{max (succ u1) (succ u2)} (forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) a)) f (Set.restrict.{u1, u2} α π s g)) (forall (a : α) (ha : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s), Eq.{succ u2} (π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a ha))) (f (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a ha)) (g a))
+  forall {α : Type.{u1}} {π : α -> Type.{u2}} {s : Set.{u1} α} {f : forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) a)} {g : forall (a : α), π a}, Iff (Eq.{max (succ u1) (succ u2)} (forall (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) a)) f (Set.restrict.{u1, u2} α π s g)) (forall (a : α) (ha : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s), Eq.{succ u2} (π ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a ha))) (f (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a ha)) (g a))
 but is expected to have type
   forall {α : Type.{u2}} {π : α -> Type.{u1}} {s : Set.{u2} α} {f : forall (a : Set.Elem.{u2} α s), π (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a)} {g : forall (a : α), π a}, Iff (Eq.{max (succ u2) (succ u1)} (forall (a : Set.Elem.{u2} α s), π (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a)) f (Set.restrict.{u2, u1} α (fun (a : α) => π a) s g)) (forall (a : α) (ha : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s), Eq.{succ u1} (π (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) (Subtype.mk.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a ha))) (f (Subtype.mk.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a ha)) (g a))
 Case conversion may be inaccurate. Consider using '#align set.eq_restrict_iff Set.eq_restrict_iffₓ'. -/
@@ -111,7 +111,7 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.range (s.restrict f) =
 
 /- warning: set.image_restrict -> Set.image_restrict is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) (Set.preimage.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x)))))) t)) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t s))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) (Set.preimage.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))) t)) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t s))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α) (t : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} (Set.Elem.{u2} α s) β (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) (Set.preimage.{u2, u2} (Set.Elem.{u2} α s) α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) t)) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t s))
 Case conversion may be inaccurate. Consider using '#align set.image_restrict Set.image_restrictₓ'. -/
@@ -121,7 +121,7 @@ theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻
 
 /- warning: set.restrict_dite -> Set.restrict_dite is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : forall (x : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)] (f : forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> β) (g : forall (a : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) -> β), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Set.restrict.{u1, u2} α (fun (a : α) => β) s (fun (a : α) => dite.{succ u2} β (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (_inst_1 a) (fun (h : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => f a h) (fun (h : Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) => g a h))) (fun (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) a) (Subtype.property.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : forall (x : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)] (f : forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> β) (g : forall (a : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) -> β), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Set.restrict.{u1, u2} α (fun (a : α) => β) s (fun (a : α) => dite.{succ u2} β (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (_inst_1 a) (fun (h : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => f a h) (fun (h : Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) => g a h))) (fun (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) => f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) a) (Subtype.property.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) a))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : forall (x : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)] (f : forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> β) (g : forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> β), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> β) (Set.restrict.{u2, u1} α (fun (a : α) => β) s (fun (a : α) => dite.{succ u1} β (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (_inst_1 a) (fun (h : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) => f a h) (fun (h : Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) => g a h))) (fun (a : Set.Elem.{u2} α s) => f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a) (Subtype.property.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) a))
 Case conversion may be inaccurate. Consider using '#align set.restrict_dite Set.restrict_diteₓ'. -/
@@ -135,7 +135,7 @@ theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a ∈ s
 
 /- warning: set.restrict_dite_compl -> Set.restrict_dite_compl is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : forall (x : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)] (f : forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> β) (g : forall (a : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) -> β), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) -> β) (Set.restrict.{u1, u2} α (fun (a : α) => β) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (fun (a : α) => dite.{succ u2} β (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (_inst_1 a) (fun (h : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => f a h) (fun (h : Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) => g a h))) (fun (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) => g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) x))))) a) (Subtype.property.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) a))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : forall (x : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)] (f : forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> β) (g : forall (a : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) -> β), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) -> β) (Set.restrict.{u1, u2} α (fun (a : α) => β) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (fun (a : α) => dite.{succ u2} β (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (_inst_1 a) (fun (h : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => f a h) (fun (h : Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s)) => g a h))) (fun (a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) => g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)))))) a) (Subtype.property.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) a))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : forall (x : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)] (f : forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> β) (g : forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> β), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) -> β) (Set.restrict.{u2, u1} α (fun (a : α) => β) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s) (fun (a : α) => dite.{succ u1} β (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (_inst_1 a) (fun (h : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) => f a h) (fun (h : Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) => g a h))) (fun (a : Set.Elem.{u2} α (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) => g (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) a) (Subtype.property.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) a))
 Case conversion may be inaccurate. Consider using '#align set.restrict_dite_compl Set.restrict_dite_complₓ'. -/
@@ -197,7 +197,7 @@ theorem restrict_piecewise_compl (f g : α → β) (s : Set α) [∀ x, Decidabl
 
 /- warning: set.restrict_extend_range -> Set.restrict_extend_range is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (g : α -> γ) (g' : β -> γ), Eq.{max (succ u2) (succ u3)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α f)) -> γ) (Set.restrict.{u2, u3} β (fun (ᾰ : β) => γ) (Set.range.{u2, succ u1} β α f) (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (fun (x : coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α f)) => g (Exists.choose.{succ u1} α (fun (y : α) => Eq.{succ u2} β (f y) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (CoeTCₓ.mk.{succ u2, succ u2} (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (Subtype.val.{succ u2} β (fun (x : β) => (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f)) x))))) x)) (Subtype.coe_prop.{u2} β (Set.range.{u2, succ u1} β α f) x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (g : α -> γ) (g' : β -> γ), Eq.{max (succ u2) (succ u3)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α f)) -> γ) (Set.restrict.{u2, u3} β (fun (ᾰ : β) => γ) (Set.range.{u2, succ u1} β α f) (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (fun (x : coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (Set.range.{u2, succ u1} β α f)) => g (Exists.choose.{succ u1} α (fun (y : α) => Eq.{succ u2} β (f y) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (coeBase.{succ u2, succ u2} (Subtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f))) β (coeSubtype.{succ u2} β (fun (a : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a (Set.range.{u2, succ u1} β α f)))))) x)) (Subtype.coe_prop.{u2} β (Set.range.{u2, succ u1} β α f) x)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} (f : α -> β) (g : α -> γ) (g' : β -> γ), Eq.{max (succ u3) (succ u2)} ((Set.Elem.{u3} β (Set.range.{u3, succ u1} β α f)) -> γ) (Set.restrict.{u3, u2} β (fun (ᾰ : β) => γ) (Set.range.{u3, succ u1} β α f) (Function.extend.{succ u1, succ u3, succ u2} α β γ f g g')) (fun (x : Set.Elem.{u3} β (Set.range.{u3, succ u1} β α f)) => g (Exists.choose.{succ u1} α (fun (y : α) => Eq.{succ u3} β (f y) (Subtype.val.{succ u3} β (fun (a : β) => Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) a (Set.range.{u3, succ u1} β α f)) x)) (Subtype.coe_prop.{u3} β (Set.range.{u3, succ u1} β α f) x)))
 Case conversion may be inaccurate. Consider using '#align set.restrict_extend_range Set.restrict_extend_rangeₓ'. -/
@@ -207,7 +207,7 @@ theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
 
 /- warning: set.restrict_extend_compl_range -> Set.restrict_extend_compl_range is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (g : α -> γ) (g' : β -> γ), Eq.{max (succ u2) (succ u3)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) -> γ) (Set.restrict.{u2, u3} β (fun (ᾰ : β) => γ) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f)) (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (Function.comp.{succ u2, succ u2, succ u3} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β γ g' ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (CoeTCₓ.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (Subtype.val.{succ u2} β (fun (x : β) => (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) x)))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (f : α -> β) (g : α -> γ) (g' : β -> γ), Eq.{max (succ u2) (succ u3)} ((coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) -> γ) (Set.restrict.{u2, u3} β (fun (ᾰ : β) => γ) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f)) (Function.extend.{succ u1, succ u2, succ u3} α β γ f g g')) (Function.comp.{succ u2, succ u2, succ u3} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β γ g' ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f))) β (coeSubtype.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) (Set.range.{u2, succ u1} β α f)))))))))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} (f : α -> β) (g : α -> γ) (g' : β -> γ), Eq.{max (succ u3) (succ u2)} ((Set.Elem.{u3} β (HasCompl.compl.{u3} (Set.{u3} β) (BooleanAlgebra.toHasCompl.{u3} (Set.{u3} β) (Set.instBooleanAlgebraSet.{u3} β)) (Set.range.{u3, succ u1} β α f))) -> γ) (Set.restrict.{u3, u2} β (fun (ᾰ : β) => γ) (HasCompl.compl.{u3} (Set.{u3} β) (BooleanAlgebra.toHasCompl.{u3} (Set.{u3} β) (Set.instBooleanAlgebraSet.{u3} β)) (Set.range.{u3, succ u1} β α f)) (Function.extend.{succ u1, succ u3, succ u2} α β γ f g g')) (Function.comp.{succ u3, succ u3, succ u2} (Subtype.{succ u3} β (fun (x : β) => Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x (HasCompl.compl.{u3} (Set.{u3} β) (BooleanAlgebra.toHasCompl.{u3} (Set.{u3} β) (Set.instBooleanAlgebraSet.{u3} β)) (Set.range.{u3, succ u1} β α f)))) β γ g' (Subtype.val.{succ u3} β (fun (x : β) => Membership.mem.{u3, u3} β (Set.{u3} β) (Set.instMembershipSet.{u3} β) x (HasCompl.compl.{u3} (Set.{u3} β) (BooleanAlgebra.toHasCompl.{u3} (Set.{u3} β) (Set.instBooleanAlgebraSet.{u3} β)) (Set.range.{u3, succ u1} β α f)))))
 Case conversion may be inaccurate. Consider using '#align set.restrict_extend_compl_range Set.restrict_extend_compl_rangeₓ'. -/
@@ -224,7 +224,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.range_extend_subset Set.range_extend_subsetₓ'. -/
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
     range (extend f g g') ⊆ range g ∪ g' '' range fᶜ := by
-  classical 
+  classical
     rintro _ ⟨y, rfl⟩
     rw [extend_def]
     split_ifs
@@ -238,7 +238,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β}, (Function.Injective.{succ u3, succ u2} α β f) -> (forall (g : α -> γ) (g' : β -> γ), Eq.{succ u1} (Set.{u1} γ) (Set.range.{u1, succ u2} γ β (Function.extend.{succ u3, succ u2, succ u1} α β γ f g g')) (Union.union.{u1} (Set.{u1} γ) (Set.instUnionSet_1.{u1} γ) (Set.range.{u1, succ u3} γ α g) (Set.image.{u2, u1} β γ g' (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.instBooleanAlgebraSet.{u2} β)) (Set.range.{u2, succ u3} β α f)))))
 Case conversion may be inaccurate. Consider using '#align set.range_extend Set.range_extendₓ'. -/
 theorem range_extend {f : α → β} (hf : Injective f) (g : α → γ) (g' : β → γ) :
-    range (extend f g g') = range g ∪ g' '' range fᶜ := by
+    range (extend f g g') = range g ∪ g' '' range fᶜ :=
+  by
   refine' (range_extend_subset _ _ _).antisymm _
   rintro z (⟨x, rfl⟩ | ⟨y, hy, rfl⟩)
   exacts[⟨f x, hf.extend_apply _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
@@ -257,7 +258,7 @@ def codRestrict (f : ι → α) (s : Set α) (h : ∀ x, f x ∈ s) : ι → s :
 
 /- warning: set.coe_cod_restrict_apply -> Set.val_codRestrict_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> α) (s : Set.{u1} α) (h : forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) s) (x : ι), Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) (Set.codRestrict.{u1, u2} α ι f s h x)) (f x)
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> α) (s : Set.{u1} α) (h : forall (x : ι), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f x) s) (x : ι), Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) (Set.codRestrict.{u1, u2} α ι f s h x)) (f x)
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} (f : ι -> α) (s : Set.{u2} α) (h : forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s) (x : ι), Eq.{succ u2} α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) (Set.codRestrict.{u2, u1} α ι f s h x)) (f x)
 Case conversion may be inaccurate. Consider using '#align set.coe_cod_restrict_apply Set.val_codRestrict_applyₓ'. -/
@@ -456,7 +457,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f₁ s) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s) -> (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f₂ s)
 Case conversion may be inaccurate. Consider using '#align monotone_on.congr MonotoneOn.congrₓ'. -/
-theorem MonotoneOn.congr (h₁ : MonotoneOn f₁ s) (h : s.EqOn f₁ f₂) : MonotoneOn f₂ s := by
+theorem MonotoneOn.congr (h₁ : MonotoneOn f₁ s) (h : s.EqOn f₁ f₂) : MonotoneOn f₂ s :=
+  by
   intro a ha b hb hab
   rw [← h ha, ← h hb]
   exact h₁ ha hb hab
@@ -478,7 +480,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f₁ : α -> β} {f₂ : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f₁ s) -> (Set.EqOn.{u2, u1} α β f₁ f₂ s) -> (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f₂ s)
 Case conversion may be inaccurate. Consider using '#align strict_mono_on.congr StrictMonoOn.congrₓ'. -/
-theorem StrictMonoOn.congr (h₁ : StrictMonoOn f₁ s) (h : s.EqOn f₁ f₂) : StrictMonoOn f₂ s := by
+theorem StrictMonoOn.congr (h₁ : StrictMonoOn f₁ s) (h : s.EqOn f₁ f₂) : StrictMonoOn f₂ s :=
+  by
   intro a ha b hb hab
   rw [← h ha, ← h hb]
   exact h₁ ha hb hab
@@ -585,7 +588,7 @@ theorem StrictAntiOn.mono (h : StrictAntiOn f s) (h' : s₂ ⊆ s) : StrictAntiO
 
 /- warning: monotone_on.monotone -> MonotoneOn.monotone is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (Monotone.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (MonotoneOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (Monotone.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (Monotone.{u2, u1} (Set.Elem.{u2} α s) β (Subtype.preorder.{u2} α _inst_1 (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) _inst_2 (Function.comp.{succ u2, succ u2, succ u1} (Set.Elem.{u2} α s) α β f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s))))
 Case conversion may be inaccurate. Consider using '#align monotone_on.monotone MonotoneOn.monotoneₓ'. -/
@@ -595,7 +598,7 @@ protected theorem MonotoneOn.monotone (h : MonotoneOn f s) : Monotone (f ∘ coe
 
 /- warning: antitone_on.monotone -> AntitoneOn.monotone is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (Antitone.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (AntitoneOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (Antitone.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (Antitone.{u2, u1} (Set.Elem.{u2} α s) β (Subtype.preorder.{u2} α _inst_1 (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) _inst_2 (Function.comp.{succ u2, succ u2, succ u1} (Set.Elem.{u2} α s) α β f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s))))
 Case conversion may be inaccurate. Consider using '#align antitone_on.monotone AntitoneOn.monotoneₓ'. -/
@@ -605,7 +608,7 @@ protected theorem AntitoneOn.monotone (h : AntitoneOn f s) : Antitone (f ∘ coe
 
 /- warning: strict_mono_on.strict_mono -> StrictMonoOn.strictMono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (StrictMonoOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (StrictMono.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (StrictMonoOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (StrictMono.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (StrictMonoOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (StrictMono.{u2, u1} (Set.Elem.{u2} α s) β (Subtype.preorder.{u2} α _inst_1 (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) _inst_2 (Function.comp.{succ u2, succ u2, succ u1} (Set.Elem.{u2} α s) α β f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s))))
 Case conversion may be inaccurate. Consider using '#align strict_mono_on.strict_mono StrictMonoOn.strictMonoₓ'. -/
@@ -615,7 +618,7 @@ protected theorem StrictMonoOn.strictMono (h : StrictMonoOn f s) : StrictMono (f
 
 /- warning: strict_anti_on.strict_anti -> StrictAntiOn.strictAnti is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (StrictAntiOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (StrictAnti.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {f : α -> β} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β], (StrictAntiOn.{u1, u2} α β _inst_1 _inst_2 f s) -> (StrictAnti.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β (Subtype.preorder.{u1} α _inst_1 (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) _inst_2 (Function.comp.{succ u1, succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {f : α -> β} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], (StrictAntiOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (StrictAnti.{u2, u1} (Set.Elem.{u2} α s) β (Subtype.preorder.{u2} α _inst_1 (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) _inst_2 (Function.comp.{succ u2, succ u2, succ u1} (Set.Elem.{u2} α s) α β f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s))))
 Case conversion may be inaccurate. Consider using '#align strict_anti_on.strict_anti StrictAntiOn.strictAntiₓ'. -/
@@ -645,7 +648,7 @@ def MapsTo.restrict (f : α → β) (s : Set α) (t : Set β) (h : MapsTo f s t)
 
 /- warning: set.maps_to.coe_restrict_apply -> Set.MapsTo.val_restrict_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : Set.MapsTo.{u1, u2} α β f s t) (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (Subtype.val.{succ u2} β (fun (x : β) => (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t) x))))) (Set.MapsTo.restrict.{u1, u2} α β f s t h x)) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) x))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : Set.MapsTo.{u1, u2} α β f s t) (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeSubtype.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t))))) (Set.MapsTo.restrict.{u1, u2} α β f s t h x)) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} (h : Set.MapsTo.{u2, u1} α β f s t) (x : Set.Elem.{u2} α s), Eq.{succ u1} β (Subtype.val.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t) (Set.MapsTo.restrict.{u2, u1} α β f s t h x)) (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.coe_restrict_apply Set.MapsTo.val_restrict_applyₓ'. -/
@@ -656,7 +659,7 @@ theorem MapsTo.val_restrict_apply (h : MapsTo f s t) (x : s) : (h.restrict f s t
 
 /- warning: set.cod_restrict_restrict -> Set.codRestrict_restrict is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) x)) t), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (Set.codRestrict.{u2, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) t h) (Set.MapsTo.restrict.{u1, u2} α β f s t (fun (x : α) (hx : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => h (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x hx)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x)) t), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (Set.codRestrict.{u2, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f) t h) (Set.MapsTo.restrict.{u1, u2} α β f s t (fun (x : α) (hx : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => h (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x hx)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} (h : forall (x : Set.Elem.{u2} α s), Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) t), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t)) (Set.codRestrict.{u1, u2} β (Set.Elem.{u2} α s) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f) t h) (Set.MapsTo.restrict.{u2, u1} α β f s t (fun (x : α) (hx : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) => h (Subtype.mk.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x hx)))
 Case conversion may be inaccurate. Consider using '#align set.cod_restrict_restrict Set.codRestrict_restrictₓ'. -/
@@ -681,7 +684,7 @@ theorem MapsTo.restrict_eq_codRestrict (h : MapsTo f s t) :
 
 /- warning: set.maps_to.coe_restrict -> Set.MapsTo.coe_restrict is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : Set.MapsTo.{u1, u2} α β f s t), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Function.comp.{succ u1, succ u2, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (Subtype.val.{succ u2} β (fun (x : β) => (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t) x)))))) (Set.MapsTo.restrict.{u1, u2} α β f s t h)) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} (h : Set.MapsTo.{u1, u2} α β f s t), Eq.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Function.comp.{succ u1, succ u2, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeSubtype.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t)))))) (Set.MapsTo.restrict.{u1, u2} α β f s t h)) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s f)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} (h : Set.MapsTo.{u2, u1} α β f s t), Eq.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> β) (Function.comp.{succ u2, succ u1, succ u1} (Set.Elem.{u2} α s) (Subtype.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t)) β (Subtype.val.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t)) (Set.MapsTo.restrict.{u2, u1} α β f s t h)) (Set.restrict.{u2, u1} α (fun (ᾰ : α) => β) s f)
 Case conversion may be inaccurate. Consider using '#align set.maps_to.coe_restrict Set.MapsTo.coe_restrictₓ'. -/
@@ -691,7 +694,7 @@ theorem MapsTo.coe_restrict (h : Set.MapsTo f s t) : coe ∘ h.restrict f s t = 
 
 /- warning: set.maps_to.range_restrict -> Set.MapsTo.range_restrict is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α) (t : Set.{u2} β) (h : Set.MapsTo.{u1, u2} α β f s t), Eq.{succ u2} (Set.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (Set.range.{u2, succ u1} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.MapsTo.restrict.{u1, u2} α β f s t h)) (Set.preimage.{u2, u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (Subtype.val.{succ u2} β (fun (x : β) => (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t) x)))))) (Set.image.{u1, u2} α β f s))
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α) (t : Set.{u2} β) (h : Set.MapsTo.{u1, u2} α β f s t), Eq.{succ u2} (Set.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (Set.range.{u2, succ u1} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Set.MapsTo.restrict.{u1, u2} α β f s t h)) (Set.preimage.{u2, u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeSubtype.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t)))))) (Set.image.{u1, u2} α β f s))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α) (t : Set.{u1} β) (h : Set.MapsTo.{u2, u1} α β f s t), Eq.{succ u1} (Set.{u1} (Set.Elem.{u1} β t)) (Set.range.{u1, succ u2} (Set.Elem.{u1} β t) (Set.Elem.{u2} α s) (Set.MapsTo.restrict.{u2, u1} α β f s t h)) (Set.preimage.{u1, u1} (Subtype.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t)) β (Subtype.val.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t)) (Set.image.{u2, u1} α β f s))
 Case conversion may be inaccurate. Consider using '#align set.maps_to.range_restrict Set.MapsTo.range_restrictₓ'. -/
@@ -702,12 +705,13 @@ theorem MapsTo.range_restrict (f : α → β) (s : Set α) (t : Set β) (h : Map
 
 /- warning: set.maps_to_iff_exists_map_subtype -> Set.mapsTo_iff_exists_map_subtype is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.MapsTo.{u1, u2} α β f s t) (Exists.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (fun (g : (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) => forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) x)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (Subtype.val.{succ u2} β (fun (x : β) => (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t) x))))) (g x))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.MapsTo.{u1, u2} α β f s t) (Exists.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) (fun (g : (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t)) => forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) β (coeSubtype.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t))))) (g x))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.MapsTo.{u2, u1} α β f s t) (Exists.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t)) (fun (g : (Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t)) => forall (x : Set.Elem.{u2} α s), Eq.{succ u1} β (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) (Subtype.val.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t) (g x))))
 Case conversion may be inaccurate. Consider using '#align set.maps_to_iff_exists_map_subtype Set.mapsTo_iff_exists_map_subtypeₓ'. -/
 theorem mapsTo_iff_exists_map_subtype : MapsTo f s t ↔ ∃ g : s → t, ∀ x : s, f x = g x :=
-  ⟨fun h => ⟨h.restrict f s t, fun _ => rfl⟩, fun ⟨g, hg⟩ x hx => by
+  ⟨fun h => ⟨h.restrict f s t, fun _ => rfl⟩, fun ⟨g, hg⟩ x hx =>
+    by
     erw [hg ⟨x, hx⟩]
     apply Subtype.coe_prop⟩
 #align set.maps_to_iff_exists_map_subtype Set.mapsTo_iff_exists_map_subtype
@@ -814,7 +818,8 @@ theorem MapsTo.iterate {f : α → α} {s : Set α} (h : MapsTo f s s) : ∀ n, 
 
 #print Set.MapsTo.iterate_restrict /-
 theorem MapsTo.iterate_restrict {f : α → α} {s : Set α} (h : MapsTo f s s) (n : ℕ) :
-    h.restrict f s s^[n] = (h.iterate n).restrict _ _ _ := by
+    h.restrict f s s^[n] = (h.iterate n).restrict _ _ _ :=
+  by
   funext x
   rw [Subtype.ext_iff, maps_to.coe_restrict_apply]
   induction' n with n ihn generalizing x
@@ -1019,7 +1024,8 @@ def restrictPreimage : f ⁻¹' t → t :=
 -/
 
 #print Set.range_restrictPreimage /-
-theorem range_restrictPreimage : range (t.restrictPreimage f) = coe ⁻¹' range f := by
+theorem range_restrictPreimage : range (t.restrictPreimage f) = coe ⁻¹' range f :=
+  by
   delta Set.restrictPreimage
   rw [maps_to.range_restrict, Set.image_preimage_eq_inter_range, Set.preimage_inter,
     Subtype.coe_preimage_self, Set.univ_inter]
@@ -1028,24 +1034,42 @@ theorem range_restrictPreimage : range (t.restrictPreimage f) = coe ⁻¹' range
 
 variable {f} {U : ι → Set β}
 
-theorem restrict_preimage_injective (hf : Injective f) : Injective (t.restrictPreimage f) :=
+/- warning: set.restrict_preimage_injective -> Set.restrictPreimage_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (t : Set.{u2} β) {f : α -> β}, (Function.Injective.{succ u1, succ u2} α β f) -> (Function.Injective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β f t)) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (Set.restrictPreimage.{u1, u2} α β t f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (t : Set.{u1} β) {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (Function.Injective.{succ u2, succ u1} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f t)) (Set.Elem.{u1} β t) (Set.restrictPreimage.{u2, u1} α β t f))
+Case conversion may be inaccurate. Consider using '#align set.restrict_preimage_injective Set.restrictPreimage_injectiveₓ'. -/
+theorem restrictPreimage_injective (hf : Injective f) : Injective (t.restrictPreimage f) :=
   fun x y e => Subtype.mk.injArrow e fun e => Subtype.coe_injective (hf e)
-#align set.restrict_preimage_injective Set.restrict_preimage_injective
+#align set.restrict_preimage_injective Set.restrictPreimage_injective
 
-theorem restrict_preimage_surjective (hf : Surjective f) : Surjective (t.restrictPreimage f) :=
+/- warning: set.restrict_preimage_surjective -> Set.restrictPreimage_surjective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (t : Set.{u2} β) {f : α -> β}, (Function.Surjective.{succ u1, succ u2} α β f) -> (Function.Surjective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β f t)) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (Set.restrictPreimage.{u1, u2} α β t f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (t : Set.{u1} β) {f : α -> β}, (Function.Surjective.{succ u2, succ u1} α β f) -> (Function.Surjective.{succ u2, succ u1} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f t)) (Set.Elem.{u1} β t) (Set.restrictPreimage.{u2, u1} α β t f))
+Case conversion may be inaccurate. Consider using '#align set.restrict_preimage_surjective Set.restrictPreimage_surjectiveₓ'. -/
+theorem restrictPreimage_surjective (hf : Surjective f) : Surjective (t.restrictPreimage f) :=
   fun x =>
   ⟨⟨_, show f (hf x).some ∈ t from (hf x).some_spec.symm ▸ x.2⟩, Subtype.ext (hf x).some_spec⟩
-#align set.restrict_preimage_surjective Set.restrict_preimage_surjective
+#align set.restrict_preimage_surjective Set.restrictPreimage_surjective
 
-theorem restrict_preimage_bijective (hf : Bijective f) : Bijective (t.restrictPreimage f) :=
+/- warning: set.restrict_preimage_bijective -> Set.restrictPreimage_bijective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (t : Set.{u2} β) {f : α -> β}, (Function.Bijective.{succ u1, succ u2} α β f) -> (Function.Bijective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β f t)) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t) (Set.restrictPreimage.{u1, u2} α β t f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (t : Set.{u1} β) {f : α -> β}, (Function.Bijective.{succ u2, succ u1} α β f) -> (Function.Bijective.{succ u2, succ u1} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f t)) (Set.Elem.{u1} β t) (Set.restrictPreimage.{u2, u1} α β t f))
+Case conversion may be inaccurate. Consider using '#align set.restrict_preimage_bijective Set.restrictPreimage_bijectiveₓ'. -/
+theorem restrictPreimage_bijective (hf : Bijective f) : Bijective (t.restrictPreimage f) :=
   ⟨t.restrict_preimage_injective hf.1, t.restrict_preimage_surjective hf.2⟩
-#align set.restrict_preimage_bijective Set.restrict_preimage_bijective
+#align set.restrict_preimage_bijective Set.restrictPreimage_bijective
 
-alias Set.restrict_preimage_injective ← _root_.function.injective.restrict_preimage
+alias Set.restrictPreimage_injective ← _root_.function.injective.restrict_preimage
 
-alias Set.restrict_preimage_surjective ← _root_.function.surjective.restrict_preimage
+alias Set.restrictPreimage_surjective ← _root_.function.surjective.restrict_preimage
 
-alias Set.restrict_preimage_bijective ← _root_.function.bijective.restrict_preimage
+alias Set.restrictPreimage_bijective ← _root_.function.bijective.restrict_preimage
 
 end
 
@@ -1150,7 +1174,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {f : α -> β}, (Disjoint.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) s₁ s₂) -> (Iff (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) (And (Set.InjOn.{u2, u1} α β f s₁) (And (Set.InjOn.{u2, u1} α β f s₂) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s₁) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s₂) -> (Ne.{succ u1} β (f x) (f y)))))))
 Case conversion may be inaccurate. Consider using '#align set.inj_on_union Set.injOn_unionₓ'. -/
 theorem injOn_union (h : Disjoint s₁ s₂) :
-    InjOn f (s₁ ∪ s₂) ↔ InjOn f s₁ ∧ InjOn f s₂ ∧ ∀ x ∈ s₁, ∀ y ∈ s₂, f x ≠ f y := by
+    InjOn f (s₁ ∪ s₂) ↔ InjOn f s₁ ∧ InjOn f s₂ ∧ ∀ x ∈ s₁, ∀ y ∈ s₂, f x ≠ f y :=
+  by
   refine' ⟨fun H => ⟨H.mono <| subset_union_left _ _, H.mono <| subset_union_right _ _, _⟩, _⟩
   · intro x hx y hy hxy
     obtain rfl : x = y
@@ -1168,7 +1193,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {a : α}, (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> (Iff (Set.InjOn.{u2, u1} α β f (Insert.insert.{u2, u2} α (Set.{u2} α) (Set.instInsertSet.{u2} α) a s)) (And (Set.InjOn.{u2, u1} α β f s) (Not (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f a) (Set.image.{u2, u1} α β f s)))))
 Case conversion may be inaccurate. Consider using '#align set.inj_on_insert Set.injOn_insertₓ'. -/
 theorem injOn_insert {f : α → β} {s : Set α} {a : α} (has : a ∉ s) :
-    Set.InjOn f (insert a s) ↔ Set.InjOn f s ∧ f a ∉ f '' s := by
+    Set.InjOn f (insert a s) ↔ Set.InjOn f s ∧ f a ∉ f '' s :=
+  by
   have : Disjoint s {a} := disjoint_iff_inf_le.mpr fun x ⟨hxs, (hxa : x = a)⟩ => has (hxa ▸ hxs)
   rw [← union_singleton, inj_on_union this]
   simp
@@ -1211,7 +1237,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {f : α -> β} {g : β -> γ}, (Function.Injective.{succ u3, succ u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g f)) -> (Set.InjOn.{u1, u2} β γ g (Set.range.{u1, succ u3} β α f))
 Case conversion may be inaccurate. Consider using '#align function.injective.inj_on_range Function.Injective.injOn_rangeₓ'. -/
-theorem Function.Injective.injOn_range (h : Injective (g ∘ f)) : InjOn g (range f) := by
+theorem Function.Injective.injOn_range (h : Injective (g ∘ f)) : InjOn g (range f) :=
+  by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ H
   exact congr_arg f (h H)
 #align function.injective.inj_on_range Function.Injective.injOn_range
@@ -1242,7 +1269,8 @@ theorem MapsTo.restrict_inj (h : MapsTo f s t) : Injective (h.restrict f s t) �
 #print Set.exists_injOn_iff_injective /-
 theorem exists_injOn_iff_injective [Nonempty β] :
     (∃ f : α → β, InjOn f s) ↔ ∃ f : s → β, Injective f :=
-  ⟨fun ⟨f, hf⟩ => ⟨_, hf.Injective⟩, fun ⟨f, hf⟩ => by
+  ⟨fun ⟨f, hf⟩ => ⟨_, hf.Injective⟩, fun ⟨f, hf⟩ =>
+    by
     lift f to α → β using trivial
     exact ⟨f, inj_on_iff_injective.2 hf⟩⟩
 #align set.exists_inj_on_iff_injective Set.exists_injOn_iff_injective
@@ -1308,19 +1336,33 @@ theorem InjOn.cancel_left (hg : t.InjOn g) (hf₁ : s.MapsTo f₁ t) (hf₂ : s.
   ⟨fun h => h.cancel_left hg hf₁ hf₂, EqOn.comp_left⟩
 #align set.inj_on.cancel_left Set.InjOn.cancel_left
 
+/- warning: set.inj_on.image_inter -> Set.InjOn.image_inter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (Set.InjOn.{u1, u2} α β f u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t u) -> (Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {s : Set.{u2} α} {t : Set.{u2} α} {u : Set.{u2} α}, (Set.InjOn.{u2, u1} α β f u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) t u) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s t)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t)))
+Case conversion may be inaccurate. Consider using '#align set.inj_on.image_inter Set.InjOn.image_interₓ'. -/
 theorem InjOn.image_inter {s t u : Set α} (hf : u.InjOn f) (hs : s ⊆ u) (ht : t ⊆ u) :
-    f '' (s ∩ t) = f '' s ∩ f '' t := by
+    f '' (s ∩ t) = f '' s ∩ f '' t :=
+  by
   apply subset.antisymm (image_inter_subset _ _ _)
   rintro x ⟨⟨y, ys, hy⟩, ⟨z, zt, hz⟩⟩
-  have : y = z := by 
+  have : y = z := by
     apply hf (hs ys) (ht zt)
     rwa [← hz] at hy
   rw [← this] at zt
   exact ⟨y, ⟨ys, zt⟩, hy⟩
 #align set.inj_on.image_inter Set.InjOn.image_inter
 
+/- warning: disjoint.image -> Disjoint.image is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α} {f : α -> β}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) -> (Set.InjOn.{u1, u2} α β f u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t u) -> (Disjoint.{u2} (Set.{u2} β) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (Lattice.toSemilatticeInf.{u2} (Set.{u2} β) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} β) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β))) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β f t))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u2} α} {u : Set.{u2} α} {f : α -> β}, (Disjoint.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) s t) -> (Set.InjOn.{u2, u1} α β f u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s u) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) t u) -> (Disjoint.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} β) (Preorder.toLE.{u1} (Set.{u1} β) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))) (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t))
+Case conversion may be inaccurate. Consider using '#align disjoint.image Disjoint.imageₓ'. -/
 theorem Disjoint.image {s t u : Set α} {f : α → β} (h : Disjoint s t) (hf : InjOn f u) (hs : s ⊆ u)
-    (ht : t ⊆ u) : Disjoint (f '' s) (f '' t) := by
+    (ht : t ⊆ u) : Disjoint (f '' s) (f '' t) :=
+  by
   rw [disjoint_iff_inter_eq_empty] at h⊢
   rw [← hf.image_inter hs ht, h, image_empty]
 #align disjoint.image Disjoint.image
@@ -1347,7 +1389,7 @@ theorem SurjOn.subset_range (h : SurjOn f s t) : t ⊆ range f :=
 
 /- warning: set.surj_on_iff_exists_map_subtype -> Set.surjOn_iff_exists_map_subtype is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.SurjOn.{u1, u2} α β f s t) (Exists.{succ u2} (Set.{u2} β) (fun (t' : Set.{u2} β) => Exists.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t')) (fun (g : (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t')) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t t') (And (Function.Surjective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') g) (forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (Subtype.val.{succ u1} α (fun (x : α) => (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) x))))) x)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (CoeTCₓ.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (Subtype.val.{succ u2} β (fun (x : β) => (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t') x))))) (g x)))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, Iff (Set.SurjOn.{u1, u2} α β f s t) (Exists.{succ u2} (Set.{u2} β) (fun (t' : Set.{u2} β) => Exists.{max (succ u1) (succ u2)} ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t')) (fun (g : (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t')) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) t t') (And (Function.Surjective.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') g) (forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x)) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) t') β (coeSubtype.{succ u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x t'))))) (g x)))))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.SurjOn.{u2, u1} α β f s t) (Exists.{succ u1} (Set.{u1} β) (fun (t' : Set.{u1} β) => Exists.{max (succ u2) (succ u1)} ((Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t')) (fun (g : (Set.Elem.{u2} α s) -> (Set.Elem.{u1} β t')) => And (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet_1.{u1} β) t t') (And (Function.Surjective.{succ u2, succ u1} (Set.Elem.{u2} α s) (Set.Elem.{u1} β t') g) (forall (x : Set.Elem.{u2} α s), Eq.{succ u1} β (f (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) (Subtype.val.{succ u1} β (fun (x : β) => Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x t') (g x)))))))
 Case conversion may be inaccurate. Consider using '#align set.surj_on_iff_exists_map_subtype Set.surjOn_iff_exists_map_subtypeₓ'. -/
@@ -1449,7 +1491,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s₁ : Set.{u2} α} {s₂ : Set.{u2} α} {t₁ : Set.{u1} β} {t₂ : Set.{u1} β} {f : α -> β}, (Set.SurjOn.{u2, u1} α β f s₁ t₁) -> (Set.SurjOn.{u2, u1} α β f s₂ t₂) -> (Set.InjOn.{u2, u1} α β f (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet_1.{u2} α) s₁ s₂)) -> (Set.SurjOn.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s₂) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) t₁ t₂))
 Case conversion may be inaccurate. Consider using '#align set.surj_on.inter_inter Set.SurjOn.inter_interₓ'. -/
 theorem SurjOn.inter_inter (h₁ : SurjOn f s₁ t₁) (h₂ : SurjOn f s₂ t₂) (h : InjOn f (s₁ ∪ s₂)) :
-    SurjOn f (s₁ ∩ s₂) (t₁ ∩ t₂) := by 
+    SurjOn f (s₁ ∩ s₂) (t₁ ∩ t₂) := by
   intro y hy
   rcases h₁ hy.1 with ⟨x₁, hx₁, rfl⟩
   rcases h₂ hy.2 with ⟨x₂, hx₂, heq⟩
@@ -1514,7 +1556,8 @@ theorem SurjOn.image_eq_of_mapsTo (h₁ : SurjOn f s t) (h₂ : MapsTo f s t) : 
 #align set.surj_on.image_eq_of_maps_to Set.SurjOn.image_eq_of_mapsTo
 
 #print Set.image_eq_iff_surjOn_mapsTo /-
-theorem image_eq_iff_surjOn_mapsTo : f '' s = t ↔ s.SurjOn f t ∧ s.MapsTo f t := by
+theorem image_eq_iff_surjOn_mapsTo : f '' s = t ↔ s.SurjOn f t ∧ s.MapsTo f t :=
+  by
   refine' ⟨_, fun h => h.1.image_eq_of_maps_to h.2⟩
   rintro rfl
   exact ⟨s.surj_on_image f, s.maps_to_image f⟩
@@ -1549,7 +1592,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {s : Set.{u3} α} {t : Set.{u1} β} {f : α -> β} {g₁ : β -> γ} {g₂ : β -> γ}, (Set.EqOn.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g₁ f) (Function.comp.{succ u3, succ u1, succ u2} α β γ g₂ f) s) -> (Set.SurjOn.{u3, u1} α β f s t) -> (Set.EqOn.{u1, u2} β γ g₁ g₂ t)
 Case conversion may be inaccurate. Consider using '#align set.eq_on.cancel_right Set.EqOn.cancel_rightₓ'. -/
-theorem EqOn.cancel_right (hf : s.EqOn (g₁ ∘ f) (g₂ ∘ f)) (hf' : s.SurjOn f t) : t.EqOn g₁ g₂ := by
+theorem EqOn.cancel_right (hf : s.EqOn (g₁ ∘ f) (g₂ ∘ f)) (hf' : s.SurjOn f t) : t.EqOn g₁ g₂ :=
+  by
   intro b hb
   obtain ⟨a, ha, rfl⟩ := hf' hb
   exact hf ha
@@ -1862,7 +1906,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (Set.SurjOn.{u2, u1} α β f s t) -> (Set.MapsTo.{u1, u2} β α f' t s)
 Case conversion may be inaccurate. Consider using '#align set.left_inv_on.maps_to Set.LeftInvOn.mapsToₓ'. -/
 theorem LeftInvOn.mapsTo (h : LeftInvOn f' f s) (hf : SurjOn f s t) : MapsTo f' t s := fun y hy =>
-  by 
+  by
   let ⟨x, hs, hx⟩ := hf hy
   rwa [← hx, h hs]
 #align set.left_inv_on.maps_to Set.LeftInvOn.mapsTo
@@ -1897,7 +1941,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.preimage.{u1, u2} β α f' s₁) (Set.image.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align set.left_inv_on.image_inter' Set.LeftInvOn.image_inter'ₓ'. -/
-theorem LeftInvOn.image_inter' (hf : LeftInvOn f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' s₁ ∩ f '' s := by
+theorem LeftInvOn.image_inter' (hf : LeftInvOn f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' s₁ ∩ f '' s :=
+  by
   apply subset.antisymm
   · rintro _ ⟨x, ⟨h₁, h⟩, rfl⟩
     exact ⟨by rwa [mem_preimage, hf h], mem_image_of_mem _ h⟩
@@ -1912,7 +1957,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {s₁ : Set.{u2} α} {f : α -> β} {f' : β -> α}, (Set.LeftInvOn.{u2, u1} α β f' f s) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (Set.preimage.{u1, u2} β α f' (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) s₁ s)) (Set.image.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align set.left_inv_on.image_inter Set.LeftInvOn.image_interₓ'. -/
 theorem LeftInvOn.image_inter (hf : LeftInvOn f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' (s₁ ∩ s) ∩ f '' s :=
-  by 
+  by
   rw [hf.image_inter']
   refine' subset.antisymm _ (inter_subset_inter_left _ (preimage_mono <| inter_subset_left _ _))
   rintro _ ⟨h₁, x, hx, rfl⟩; exact ⟨⟨h₁, by rwa [hf hx]⟩, mem_image_of_mem _ hx⟩
@@ -2073,7 +2118,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} {f' : β -> α}, (Set.SurjOn.{u2, u1} α β f s t) -> (Set.RightInvOn.{u1, u2} β α f f' s) -> (Set.LeftInvOn.{u1, u2} β α f f' t)
 Case conversion may be inaccurate. Consider using '#align set.surj_on.left_inv_on_of_right_inv_on Set.SurjOn.leftInvOn_of_rightInvOnₓ'. -/
 theorem SurjOn.leftInvOn_of_rightInvOn (hf : SurjOn f s t) (hf' : RightInvOn f f' s) :
-    LeftInvOn f f' t := fun y hy => by 
+    LeftInvOn f f' t := fun y hy => by
   let ⟨x, hx, HEq⟩ := hf hy
   rw [← HEq, hf' hx]
 #align set.surj_on.left_inv_on_of_right_inv_on Set.SurjOn.leftInvOn_of_rightInvOn
@@ -2257,7 +2302,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} [_inst_1 : Nonempty.{succ u2} α], (Set.SurjOn.{u2, u1} α β f s t) -> (Set.InvOn.{u2, u1} α β (Function.invFunOn.{u2, u1} α β _inst_1 f s) f (Set.image.{u1, u2} β α (Function.invFunOn.{u2, u1} α β _inst_1 f s) t) t)
 Case conversion may be inaccurate. Consider using '#align set.surj_on.inv_on_inv_fun_on Set.SurjOn.invOn_invFunOnₓ'. -/
 theorem SurjOn.invOn_invFunOn [Nonempty α] (h : SurjOn f s t) :
-    InvOn (invFunOn f s) f (invFunOn f s '' t) t := by
+    InvOn (invFunOn f s) f (invFunOn f s '' t) t :=
+  by
   refine' ⟨_, h.right_inv_on_inv_fun_on⟩
   rintro _ ⟨y, hy, rfl⟩
   rw [h.right_inv_on_inv_fun_on hy]
@@ -2279,7 +2325,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} [_inst_1 : Nonempty.{succ u2} α], (Set.SurjOn.{u2, u1} α β f s t) -> (Set.BijOn.{u2, u1} α β f (Set.image.{u1, u2} β α (Function.invFunOn.{u2, u1} α β _inst_1 f s) t) t)
 Case conversion may be inaccurate. Consider using '#align set.surj_on.bij_on_subset Set.SurjOn.bijOn_subsetₓ'. -/
-theorem SurjOn.bijOn_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunOn f s '' t) t := by
+theorem SurjOn.bijOn_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunOn f s '' t) t :=
+  by
   refine' h.inv_on_inv_fun_on.bij_on _ (maps_to_image _ _)
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
@@ -2292,7 +2339,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, Iff (Set.SurjOn.{u2, u1} α β f s t) (Exists.{succ u2} (Set.{u2} α) (fun (s' : Set.{u2} α) => Exists.{0} (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s' s) (fun (H : HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet_1.{u2} α) s' s) => Set.BijOn.{u2, u1} α β f s' t)))
 Case conversion may be inaccurate. Consider using '#align set.surj_on_iff_exists_bij_on_subset Set.surjOn_iff_exists_bijOn_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (s' «expr ⊆ » s) -/
-theorem surjOn_iff_exists_bijOn_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t := by
+theorem surjOn_iff_exists_bijOn_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t :=
+  by
   constructor
   · rcases eq_empty_or_nonempty t with (rfl | ht)
     · exact fun _ => ⟨∅, empty_subset _, bij_on_empty f⟩
@@ -2310,7 +2358,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [n : Nonempty.{succ u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall {s : Set.{u2} α}, (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Classical.choice.{succ u2} α n) s) -> (Eq.{succ u1} (Set.{u1} β) (Set.preimage.{u1, u2} β α (Function.invFun.{succ u2, succ u1} α β n f) s) (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet_1.{u1} β) (Set.image.{u2, u1} α β f s) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) (Set.range.{u1, succ u2} β α f)))))
 Case conversion may be inaccurate. Consider using '#align set.preimage_inv_fun_of_mem Set.preimage_invFun_of_memₓ'. -/
 theorem preimage_invFun_of_mem [n : Nonempty α] {f : α → β} (hf : Injective f) {s : Set α}
-    (h : Classical.choice n ∈ s) : invFun f ⁻¹' s = f '' s ∪ range fᶜ := by
+    (h : Classical.choice n ∈ s) : invFun f ⁻¹' s = f '' s ∪ range fᶜ :=
+  by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
   · simp [left_inverse_inv_fun hf _, hf.mem_set_image]
@@ -2324,7 +2373,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [n : Nonempty.{succ u2} α] {f : α -> β}, (Function.Injective.{succ u2, succ u1} α β f) -> (forall {s : Set.{u2} α}, (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Classical.choice.{succ u2} α n) s)) -> (Eq.{succ u1} (Set.{u1} β) (Set.preimage.{u1, u2} β α (Function.invFun.{succ u2, succ u1} α β n f) s) (Set.image.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align set.preimage_inv_fun_of_not_mem Set.preimage_invFun_of_not_memₓ'. -/
 theorem preimage_invFun_of_not_mem [n : Nonempty α] {f : α → β} (hf : Injective f) {s : Set α}
-    (h : Classical.choice n ∉ s) : invFun f ⁻¹' s = f '' s := by
+    (h : Classical.choice n ∉ s) : invFun f ⁻¹' s = f '' s :=
+  by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
   · rw [mem_preimage, left_inverse_inv_fun hf, hf.mem_set_image]
@@ -2383,7 +2433,8 @@ variable {δ : α → Sort y} (s : Set α) (f g : ∀ i, δ i)
 
 #print Set.piecewise_empty /-
 @[simp]
-theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewise ∅ f g = g := by
+theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewise ∅ f g = g :=
+  by
   ext i
   simp [piecewise]
 #align set.piecewise_empty Set.piecewise_empty
@@ -2392,7 +2443,7 @@ theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewi
 #print Set.piecewise_univ /-
 @[simp]
 theorem piecewise_univ [∀ i : α, Decidable (i ∈ (Set.univ : Set α))] : piecewise Set.univ f g = f :=
-  by 
+  by
   ext i
   simp [piecewise]
 #align set.piecewise_univ Set.piecewise_univ
@@ -2419,7 +2470,8 @@ instance Compl.decidableMem (j : α) : Decidable (j ∈ sᶜ) :=
 
 #print Set.piecewise_insert /-
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
-    (insert j s).piecewise f g = Function.update (s.piecewise f g) j (f j) := by
+    (insert j s).piecewise f g = Function.update (s.piecewise f g) j (f j) :=
+  by
   simp [piecewise]
   ext i
   by_cases h : i = j
@@ -2450,7 +2502,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (x : α) [_inst_2 : forall (y : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) x))] [_inst_3 : DecidableEq.{succ u2} α] (f : α -> β) (g : α -> β), Eq.{max (succ u2) (succ u1)} (α -> β) (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) x) f g (fun (j : α) => _inst_2 j)) (Function.update.{succ u2, succ u1} α (fun (i : α) => β) (fun (a : α) (b : α) => _inst_3 a b) g x (f x))
 Case conversion may be inaccurate. Consider using '#align set.piecewise_singleton Set.piecewise_singletonₓ'. -/
 theorem piecewise_singleton (x : α) [∀ y, Decidable (y ∈ ({x} : Set α))] [DecidableEq α]
-    (f g : α → β) : piecewise {x} f g = Function.update g x (f x) := by
+    (f g : α → β) : piecewise {x} f g = Function.update g x (f x) :=
+  by
   ext y
   by_cases hy : y = x
   · subst y
@@ -2543,7 +2596,7 @@ Case conversion may be inaccurate. Consider using '#align set.maps_to.piecewise_
 theorem MapsTo.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁ f₂ : α → β}
     [∀ i, Decidable (i ∈ s)] (h₁ : MapsTo f₁ (s₁ ∩ s) (t₁ ∩ t))
     (h₂ : MapsTo f₂ (s₂ ∩ sᶜ) (t₂ ∩ tᶜ)) : MapsTo (s.piecewise f₁ f₂) (s.ite s₁ s₂) (t.ite t₁ t₂) :=
-  by 
+  by
   refine' (h₁.congr _).union_union (h₂.congr _)
   exacts[(piecewise_eq_on s f₁ f₂).symm.mono (inter_subset_right _ _),
     (piecewise_eq_on_compl s f₁ f₂).symm.mono (inter_subset_right _ _)]
@@ -2556,7 +2609,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (s : Set.{u2} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) j s)] {f : α -> β} {f' : α -> β} {g : α -> β} {t : Set.{u2} α}, Iff (Set.EqOn.{u2, u1} α β (Set.piecewise.{u2, succ u1} α (fun (ᾰ : α) => β) s f f' (fun (j : α) => _inst_1 j)) g t) (And (Set.EqOn.{u2, u1} α β f g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t s)) (Set.EqOn.{u2, u1} α β f' g (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) t (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s))))
 Case conversion may be inaccurate. Consider using '#align set.eq_on_piecewise Set.eqOn_piecewiseₓ'. -/
 theorem eqOn_piecewise {f f' g : α → β} {t} :
-    EqOn (s.piecewise f f') g t ↔ EqOn f g (t ∩ s) ∧ EqOn f' g (t ∩ sᶜ) := by
+    EqOn (s.piecewise f f') g t ↔ EqOn f g (t ∩ s) ∧ EqOn f' g (t ∩ sᶜ) :=
+  by
   simp only [eq_on, ← forall_and]
   refine' forall_congr' fun a => _; by_cases a ∈ s <;> simp [*]
 #align set.eq_on_piecewise Set.eqOn_piecewise
@@ -2638,7 +2692,8 @@ theorem piecewise_op₂ {δ' δ'' : α → Sort _} (f' g' : ∀ i, δ' i) (h : �
 
 #print Set.piecewise_same /-
 @[simp]
-theorem piecewise_same : s.piecewise f f = f := by
+theorem piecewise_same : s.piecewise f f = f :=
+  by
   ext x
   by_cases hx : x ∈ s <;> simp [hx]
 #align set.piecewise_same Set.piecewise_same
@@ -2650,7 +2705,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (s : Set.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] (f : α -> β) (g : α -> β), Eq.{succ u2} (Set.{u2} β) (Set.range.{u2, succ u1} β α (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j))) (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet_1.{u2} β) (Set.image.{u1, u2} α β f s) (Set.image.{u1, u2} α β g (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)))
 Case conversion may be inaccurate. Consider using '#align set.range_piecewise Set.range_piecewiseₓ'. -/
-theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' sᶜ := by
+theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' sᶜ :=
+  by
   ext y; constructor
   · rintro ⟨x, rfl⟩
     by_cases h : x ∈ s <;> [left, right] <;> use x <;> simp [h]
@@ -2676,7 +2732,8 @@ theorem injective_piecewise_iff {f g : α → β} :
 
 #print Set.piecewise_mem_pi /-
 theorem piecewise_mem_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ pi t t')
-    (hg : g ∈ pi t t') : s.piecewise f g ∈ pi t t' := by
+    (hg : g ∈ pi t t') : s.piecewise f g ∈ pi t t' :=
+  by
   intro i ht
   by_cases hs : i ∈ s <;> simp [hf i ht, hg i ht, hs]
 #align set.piecewise_mem_pi Set.piecewise_mem_pi
@@ -2690,7 +2747,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.pi_piecewise Set.pi_piecewiseₓ'. -/
 @[simp]
 theorem pi_piecewise {ι : Type _} {α : ι → Type _} (s s' : Set ι) (t t' : ∀ i, Set (α i))
-    [∀ x, Decidable (x ∈ s')] : pi s (s'.piecewise t t') = pi (s ∩ s') t ∩ pi (s \ s') t' := by
+    [∀ x, Decidable (x ∈ s')] : pi s (s'.piecewise t t') = pi (s ∩ s') t ∩ pi (s \ s') t' :=
+  by
   ext x
   simp only [mem_pi, mem_inter_iff, ← forall_and]
   refine' forall_congr' fun i => _
@@ -2867,7 +2925,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {f : α -> β} {s : Set.{u2} α} {t : Set.{u2} α}, (Function.Semiconj.{u2, u1} α β f fa fb) -> (Set.SurjOn.{u2, u2} α α fa s t) -> (Set.SurjOn.{u1, u1} β β fb (Set.image.{u2, u1} α β f s) (Set.image.{u2, u1} α β f t))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.surj_on_image Function.Semiconj.surjOn_imageₓ'. -/
-theorem surjOn_image (h : Semiconj f fa fb) (ha : SurjOn fa s t) : SurjOn fb (f '' s) (f '' t) := by
+theorem surjOn_image (h : Semiconj f fa fb) (ha : SurjOn fa s t) : SurjOn fb (f '' s) (f '' t) :=
+  by
   rintro y ⟨x, hxt, rfl⟩
   rcases ha hxt with ⟨x, hxs, rfl⟩
   rw [h x]
@@ -2881,7 +2940,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {f : α -> β}, (Function.Semiconj.{u2, u1} α β f fa fb) -> (Function.Surjective.{succ u2, succ u2} α α fa) -> (Set.SurjOn.{u1, u1} β β fb (Set.range.{u1, succ u2} β α f) (Set.range.{u1, succ u2} β α f))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.surj_on_range Function.Semiconj.surjOn_rangeₓ'. -/
 theorem surjOn_range (h : Semiconj f fa fb) (ha : Surjective fa) : SurjOn fb (range f) (range f) :=
-  by 
+  by
   rw [← image_univ]
   exact h.surj_on_image (ha.surj_on univ)
 #align function.semiconj.surj_on_range Function.Semiconj.surjOn_range
@@ -2893,7 +2952,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {f : α -> β} {s : Set.{u2} α}, (Function.Semiconj.{u2, u1} α β f fa fb) -> (Set.InjOn.{u2, u2} α α fa s) -> (Set.InjOn.{u2, u1} α β f (Set.image.{u2, u2} α α fa s)) -> (Set.InjOn.{u1, u1} β β fb (Set.image.{u2, u1} α β f s))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.inj_on_image Function.Semiconj.injOn_imageₓ'. -/
 theorem injOn_image (h : Semiconj f fa fb) (ha : InjOn fa s) (hf : InjOn f (fa '' s)) :
-    InjOn fb (f '' s) := by 
+    InjOn fb (f '' s) := by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ H
   simp only [← h.eq] at H
   exact congr_arg f (ha hx hy <| hf (mem_image_of_mem fa hx) (mem_image_of_mem fa hy) H)
@@ -2906,7 +2965,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {f : α -> β}, (Function.Semiconj.{u2, u1} α β f fa fb) -> (Function.Injective.{succ u2, succ u2} α α fa) -> (Set.InjOn.{u2, u1} α β f (Set.range.{u2, succ u2} α α fa)) -> (Set.InjOn.{u1, u1} β β fb (Set.range.{u1, succ u2} β α f))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.inj_on_range Function.Semiconj.injOn_rangeₓ'. -/
 theorem injOn_range (h : Semiconj f fa fb) (ha : Injective fa) (hf : InjOn f (range fa)) :
-    InjOn fb (range f) := by 
+    InjOn fb (range f) := by
   rw [← image_univ] at *
   exact h.inj_on_image (ha.inj_on univ) hf
 #align function.semiconj.inj_on_range Function.Semiconj.injOn_range
@@ -2930,7 +2989,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {f : α -> β}, (Function.Semiconj.{u2, u1} α β f fa fb) -> (Function.Bijective.{succ u2, succ u2} α α fa) -> (Function.Injective.{succ u2, succ u1} α β f) -> (Set.BijOn.{u1, u1} β β fb (Set.range.{u1, succ u2} β α f) (Set.range.{u1, succ u2} β α f))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.bij_on_range Function.Semiconj.bijOn_rangeₓ'. -/
 theorem bijOn_range (h : Semiconj f fa fb) (ha : Bijective fa) (hf : Injective f) :
-    BijOn fb (range f) (range f) := by 
+    BijOn fb (range f) (range f) := by
   rw [← image_univ]
   exact h.bij_on_image (bijective_iff_bij_on_univ.1 ha) (hf.inj_on univ)
 #align function.semiconj.bij_on_range Function.Semiconj.bijOn_range
@@ -2952,7 +3011,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {fa : α -> α} {fb : β -> β} {f : α -> β}, (Function.Semiconj.{u2, u1} α β f fa fb) -> (forall {s : Set.{u1} β}, (Set.InjOn.{u1, u1} β β fb s) -> (Set.InjOn.{u2, u1} α β f (Set.preimage.{u2, u1} α β f s)) -> (Set.InjOn.{u2, u2} α α fa (Set.preimage.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.inj_on_preimage Function.Semiconj.injOn_preimageₓ'. -/
 theorem injOn_preimage (h : Semiconj f fa fb) {s : Set β} (hb : InjOn fb s)
-    (hf : InjOn f (f ⁻¹' s)) : InjOn fa (f ⁻¹' s) := by
+    (hf : InjOn f (f ⁻¹' s)) : InjOn fa (f ⁻¹' s) :=
+  by
   intro x hx y hy H
   have := congr_arg f H
   rw [h.eq, h.eq] at this
@@ -2993,6 +3053,25 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.insert_inj_on Function.insert_injOnₓ'. -/
 theorem insert_injOn (s : Set α) : sᶜ.InjOn fun a => insert a s := fun a ha b _ => (insert_inj ha).1
 #align function.insert_inj_on Function.insert_injOn
+
+theorem monotone_on_of_right_inv_on_of_maps_to [PartialOrder α] [LinearOrder β] {φ : β → α}
+    {ψ : α → β} {t : Set β} {s : Set α} (hφ : MonotoneOn φ t) (φψs : Set.RightInvOn ψ φ s)
+    (ψts : Set.MapsTo ψ s t) : MonotoneOn ψ s :=
+  by
+  rintro x xs y ys l
+  rcases le_total (ψ x) (ψ y) with (ψxy | ψyx)
+  · exact ψxy
+  · cases le_antisymm l (φψs.eq ys ▸ φψs.eq xs ▸ hφ (ψts ys) (ψts xs) ψyx)
+    rfl
+#align
+  function.monotone_on_of_right_inv_on_of_maps_to Function.monotone_on_of_right_inv_on_of_maps_to
+
+theorem antitone_on_of_right_inv_on_of_maps_to [PartialOrder α] [LinearOrder β] {φ : β → α}
+    {ψ : α → β} {t : Set β} {s : Set α} (hφ : AntitoneOn φ t) (φψs : Set.RightInvOn ψ φ s)
+    (ψts : Set.MapsTo ψ s t) : AntitoneOn ψ s :=
+  (monotone_on_of_right_inv_on_of_maps_to hφ.dual_left φψs ψts).dual_right
+#align
+  function.antitone_on_of_right_inv_on_of_maps_to Function.antitone_on_of_right_inv_on_of_maps_to
 
 end Function
 

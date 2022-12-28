@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.units
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,8 +33,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α], MulEquiv.{u1, u1} (Units.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) α (MulOneClass.toMul.{u1} (Units.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (Units.instMulOneClassUnits.{u1} (WithZero.{u1} α) (MonoidWithZero.toMonoid.{u1} (WithZero.{u1} α) (WithZero.monoidWithZero.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))))) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align with_zero.units_with_zero_equiv WithZero.unitsWithZeroEquivₓ'. -/
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
-def unitsWithZeroEquiv {α : Type _} [Group α] :
-    (WithZero α)ˣ ≃* α where 
+def unitsWithZeroEquiv {α : Type _} [Group α] : (WithZero α)ˣ ≃* α
+    where
   toFun a := unzero a.NeZero
   invFun a := Units.mk0 a coe_ne_zero
   left_inv _ := Units.ext <| by simpa only [coe_unzero]

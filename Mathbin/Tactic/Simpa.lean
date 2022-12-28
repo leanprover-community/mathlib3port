@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.simpa
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ local postfix:1024 "?" => optional
   the `assumption` tactic. -/
 unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (tk "?")?)
     (no_dflt : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
-    (tgt : parse (tk "using" *> texpr)?) (cfg : simp_config_ext := {  }) : tactic Unit :=
+    (tgt : parse (tk "using" *> texpr)?) (cfg : simp_config_ext := { }) : tactic Unit :=
   let simp_at (lc) (close_tac : tactic Unit) :=
     focus1 <|
       simp use_iota_eqn trace_lemmas no_dflt hs attr_names (Loc.ns lc)

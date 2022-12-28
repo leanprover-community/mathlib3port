@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.main
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,8 @@ unsafe def desugar :=
 #align omega.nat.desugar omega.nat.desugar
 
 theorem univ_close_of_unsat_neg_elim_not (m) (p : Preform) :
-    (negElim (¬* p)).Unsat → UnivClose p (fun _ => 0) m := by
+    (negElim (¬* p)).Unsat → UnivClose p (fun _ => 0) m :=
+  by
   intro h1; apply univ_close_of_valid
   apply valid_of_unsat_not; intro h2; apply h1
   apply preform.sat_of_implies_of_sat implies_neg_elim h2

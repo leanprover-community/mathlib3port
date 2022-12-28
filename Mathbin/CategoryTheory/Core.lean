@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.core
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,8 +40,8 @@ def Core (C : Type u₁) :=
 
 variable {C : Type u₁} [Category.{v₁} C]
 
-instance coreCategory :
-    Groupoid.{v₁} (Core C) where 
+instance coreCategory : Groupoid.{v₁} (Core C)
+    where
   Hom := fun X Y : C => X ≅ Y
   inv X Y f := Iso.symm f
   id X := Iso.refl X
@@ -63,7 +63,7 @@ theorem comp_hom {X Y Z : Core C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).Hom = 
 variable (C)
 
 /-- The core of a category is naturally included in the category. -/
-def inclusion : Core C ⥤ C where 
+def inclusion : Core C ⥤ C where
   obj := id
   map X Y f := f.Hom
 #align category_theory.core.inclusion CategoryTheory.Core.inclusion
@@ -75,8 +75,8 @@ variable {C} {G : Type u₂} [Groupoid.{v₂} G]
 -- Note that this function is not functorial
 -- (consider the two functors from [0] to [1], and the natural transformation between them).
 /-- A functor from a groupoid to a category C factors through the core of C. -/
-noncomputable def functorToCore (F : G ⥤ C) :
-    G ⥤ Core C where 
+noncomputable def functorToCore (F : G ⥤ C) : G ⥤ Core C
+    where
   obj X := F.obj X
   map X Y f := ⟨F.map f, F.map (inv f)⟩
 #align category_theory.core.functor_to_core CategoryTheory.Core.functorToCore
@@ -93,13 +93,13 @@ end Core
 /-- `of_equiv_functor m` lifts a type-level `equiv_functor`
 to a categorical functor `core (Type u₁) ⥤ core (Type u₂)`.
 -/
-def ofEquivFunctor (m : Type u₁ → Type u₂) [EquivFunctor m] :
-    Core (Type u₁) ⥤ Core (Type u₂) where 
+def ofEquivFunctor (m : Type u₁ → Type u₂) [EquivFunctor m] : Core (Type u₁) ⥤ Core (Type u₂)
+    where
   obj := m
   map α β f := (EquivFunctor.mapEquiv m f.toEquiv).toIso
   -- These are not very pretty.
   map_id' α := by ext; exact congr_fun (EquivFunctor.map_refl _) x
-  map_comp' α β γ f g := by 
+  map_comp' α β γ f g := by
     ext
     simp only [EquivFunctor.mapEquiv_apply, Equiv.to_iso_hom, Function.comp_apply, core.comp_hom,
       types_comp]

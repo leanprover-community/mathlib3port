@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Scott Morrison
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.path
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,8 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u2}} [_inst_1 : Quiver.{u1, u2} V] {a : V} {b : V} (p : Quiver.Path.{u1, u2} V _inst_1 a b), (Eq.{1} Nat (Quiver.Path.length.{u2, u1} V _inst_1 a b p) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{succ u2} V a b)
 Case conversion may be inaccurate. Consider using '#align quiver.path.eq_of_length_zero Quiver.Path.eq_of_length_zeroₓ'. -/
-theorem eq_of_length_zero (p : Path a b) (hzero : p.length = 0) : a = b := by
+theorem eq_of_length_zero (p : Path a b) (hzero : p.length = 0) : a = b :=
+  by
   cases p
   · rfl
   · cases Nat.succ_ne_zero _ hzero
@@ -218,9 +219,10 @@ but is expected to have type
   forall {V : Type.{u2}} [_inst_1 : Quiver.{u1, u2} V] {a : V} {b : V} {c : V} {p₁ : Quiver.Path.{u1, u2} V _inst_1 a b} {p₂ : Quiver.Path.{u1, u2} V _inst_1 a b} {q₁ : Quiver.Path.{u1, u2} V _inst_1 b c} {q₂ : Quiver.Path.{u1, u2} V _inst_1 b c}, (Eq.{1} Nat (Quiver.Path.length.{u2, u1} V _inst_1 b c q₁) (Quiver.Path.length.{u2, u1} V _inst_1 b c q₂)) -> (Iff (Eq.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 a c) (Quiver.Path.comp.{u2, u1} V _inst_1 a b c p₁ q₁) (Quiver.Path.comp.{u2, u1} V _inst_1 a b c p₂ q₂)) (And (Eq.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 a b) p₁ p₂) (Eq.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 b c) q₁ q₂)))
 Case conversion may be inaccurate. Consider using '#align quiver.path.comp_inj Quiver.Path.comp_injₓ'. -/
 theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length = q₂.length) :
-    p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ := by
+    p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
+  by
   refine'
-    ⟨fun h => _, by 
+    ⟨fun h => _, by
       rintro ⟨rfl, rfl⟩
       rfl⟩
   induction' q₁ with d₁ e₁ q₁ f₁ ih generalizing q₂ <;> obtain _ | ⟨q₂, f₂⟩ := q₂
@@ -243,7 +245,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.path.comp_inj' 
 theorem comp_inj' {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (h : p₁.length = p₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
   ⟨fun h_eq => (comp_inj <| Nat.add_left_cancel <| by simpa [h] using congr_arg length h_eq).1 h_eq,
-    by 
+    by
     rintro ⟨rfl, rfl⟩
     rfl⟩
 #align quiver.path.comp_inj' Quiver.Path.comp_inj'
@@ -336,7 +338,8 @@ theorem toList_injective (a : V) : ∀ b, Injective (toList : Path a b → List 
   | b, nil, nil, h => rfl
   | b, nil, @cons _ _ _ c _ p f, h => by cases h
   | b, @cons _ _ _ c _ p f, nil, h => by cases h
-  | b, @cons _ _ _ c _ p f, @cons _ _ s t u C D, h => by
+  | b, @cons _ _ _ c _ p f, @cons _ _ s t u C D, h =>
+    by
     simp only [to_list] at h
     obtain ⟨rfl, hAC⟩ := h
     simp [to_list_injective _ hAC]

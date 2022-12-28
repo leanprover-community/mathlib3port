@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.limits.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,8 +38,8 @@ variable {J : Type v} [SmallCategory J]
 /-- (internal implementation) the limit cone of a functor,
 implemented as flat sections of a pi type
 -/
-def limitCone (F : J ⥤ Type max v u) :
-    Cone F where 
+def limitCone (F : J ⥤ Type max v u) : Cone F
+    where
   x := F.sections
   π := { app := fun j u => u.val j }
 #align category_theory.limits.types.limit_cone CategoryTheory.Limits.Types.limitCone
@@ -47,12 +47,10 @@ def limitCone (F : J ⥤ Type max v u) :
 attribute [local elab_without_expected_type] congr_fun
 
 /-- (internal implementation) the fact that the proposed limit cone is the limit -/
-def limitConeIsLimit (F : J ⥤ Type max v u) :
-    IsLimit
-      (limitCone
-        F) where 
+def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F)
+    where
   lift s v := ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
-  uniq' := by 
+  uniq' := by
     intros
     ext (x j)
     exact congr_fun (w j) x
@@ -62,12 +60,10 @@ def limitConeIsLimit (F : J ⥤ Type max v u) :
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance hasLimitsOfSize :
-    HasLimitsOfSize.{v}
-      (Type
-        max v
-          u) where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F =>
+instance hasLimitsOfSize : HasLimitsOfSize.{v} (Type max v u)
+    where HasLimitsOfShape J 𝒥 :=
+    {
+      HasLimit := fun F =>
         has_limit.mk
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
@@ -94,7 +90,7 @@ theorem is_limit_equiv_sections_apply {F : J ⥤ Type max v u} {c : Cone F} (t :
 @[simp]
 theorem is_limit_equiv_sections_symm_apply {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c)
     (x : F.sections) (j : J) : c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j :=
-  by 
+  by
   equiv_rw(is_limit_equiv_sections t).symm  at x
   simp
 #align
@@ -141,7 +137,8 @@ noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j)
 
 @[simp]
 theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j)
-    (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) : limit.π F j (Limit.mk F x h) = x j := by
+    (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) : limit.π F j (Limit.mk F x h) = x j :=
+  by
   dsimp [limit.mk]
   simp
 #align category_theory.limits.types.limit.π_mk CategoryTheory.Limits.Types.Limit.π_mk
@@ -149,7 +146,8 @@ theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j)
 @[simp]
 theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j)
     (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) :
-    limit.π F j (Limit.mk.{v, v} F x h) = x j := by
+    limit.π F j (Limit.mk.{v, v} F x h) = x j :=
+  by
   dsimp [limit.mk]
   simp
 #align category_theory.limits.types.limit.π_mk' CategoryTheory.Limits.Types.Limit.π_mk'
@@ -157,7 +155,7 @@ theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j)
 -- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
 @[ext]
 theorem limit_ext (F : J ⥤ Type max v u) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) :
-    x = y := by 
+    x = y := by
   apply (limit_equiv_sections F).Injective
   ext j
   simp [w j]
@@ -165,7 +163,7 @@ theorem limit_ext (F : J ⥤ Type max v u) (x y : limit F) (w : ∀ j, limit.π 
 
 @[ext]
 theorem limit_ext' (F : J ⥤ Type v) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) :
-    x = y := by 
+    x = y := by
   apply (limitEquivSections.{v, v} F).Injective
   ext j
   simp [w j]
@@ -243,8 +241,8 @@ def Quot (F : J ⥤ Type max v u) : Type max v u :=
 /-- (internal implementation) the colimit cocone of a functor,
 implemented as a quotient of a sigma type
 -/
-def colimitCocone (F : J ⥤ Type max v u) :
-    Cocone F where 
+def colimitCocone (F : J ⥤ Type max v u) : Cocone F
+    where
   x := Quot F
   ι :=
     { app := fun j x => Quot.mk _ ⟨j, x⟩
@@ -254,10 +252,8 @@ def colimitCocone (F : J ⥤ Type max v u) :
 attribute [local elab_with_expected_type] Quot.lift
 
 /-- (internal implementation) the fact that the proposed colimit cocone is the colimit -/
-def colimitCoconeIsColimit (F : J ⥤ Type max v u) :
-    IsColimit
-      (colimitCocone
-        F) where desc s :=
+def colimitCoconeIsColimit (F : J ⥤ Type max v u) : IsColimit (colimitCocone F)
+    where desc s :=
     Quot.lift (fun p : Σj, F.obj j => s.ι.app p.1 p.2) fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ => by
       rw [hf] <;> exact (congr_fun (cocone.w s f) x).symm
 #align
@@ -267,12 +263,10 @@ def colimitCoconeIsColimit (F : J ⥤ Type max v u) :
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance hasColimitsOfSize :
-    HasColimitsOfSize.{v}
-      (Type
-        max v
-          u) where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F =>
+instance hasColimitsOfSize : HasColimitsOfSize.{v} (Type max v u)
+    where HasColimitsOfShape J 𝒥 :=
+    {
+      HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
@@ -298,7 +292,8 @@ theorem colimit_equiv_quot_symm_apply (F : J ⥤ Type max v u) (j : J) (x : F.ob
 
 @[simp]
 theorem colimit_equiv_quot_apply (F : J ⥤ Type max v u) (j : J) (x : F.obj j) :
-    (colimitEquivQuot F) (colimit.ι F j x) = Quot.mk _ ⟨j, x⟩ := by
+    (colimitEquivQuot F) (colimit.ι F j x) = Quot.mk _ ⟨j, x⟩ :=
+  by
   apply (colimit_equiv_quot F).symm.Injective
   simp
 #align
@@ -345,27 +340,32 @@ theorem Colimit.ι_map_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) (x) :
   category_theory.limits.types.colimit.ι_map_apply' CategoryTheory.Limits.Types.Colimit.ι_map_apply'
 
 theorem colimit_sound {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (f : j ⟶ j')
-    (w : F.map f x = x') : colimit.ι F j x = colimit.ι F j' x' := by
+    (w : F.map f x = x') : colimit.ι F j x = colimit.ι F j' x' :=
+  by
   rw [← w]
   simp
 #align category_theory.limits.types.colimit_sound CategoryTheory.Limits.Types.colimit_sound
 
 theorem colimit_sound' {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'} {j'' : J}
     (f : j ⟶ j'') (f' : j' ⟶ j'') (w : F.map f x = F.map f' x') :
-    colimit.ι F j x = colimit.ι F j' x' := by
+    colimit.ι F j x = colimit.ι F j' x' :=
+  by
   rw [← colimit.w _ f, ← colimit.w _ f']
   rw [types_comp_apply, types_comp_apply, w]
 #align category_theory.limits.types.colimit_sound' CategoryTheory.Limits.Types.colimit_sound'
 
 theorem colimit_eq {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'}
-    (w : colimit.ι F j x = colimit.ι F j' x') : EqvGen (Quot.Rel F) ⟨j, x⟩ ⟨j', x'⟩ := by
+    (w : colimit.ι F j x = colimit.ι F j' x') : EqvGen (Quot.Rel F) ⟨j, x⟩ ⟨j', x'⟩ :=
+  by
   apply Quot.eq.1
   simpa using congr_arg (colimit_equiv_quot F) w
 #align category_theory.limits.types.colimit_eq CategoryTheory.Limits.Types.colimit_eq
 
 theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimit t) (x : t.x) :
-    ∃ j y, t.ι.app j y = x := by
-  suffices (fun x : t.X => ULift.up (∃ j y, t.ι.app j y = x)) = fun _ => ULift.up True by
+    ∃ j y, t.ι.app j y = x :=
+  by
+  suffices (fun x : t.X => ULift.up (∃ j y, t.ι.app j y = x)) = fun _ => ULift.up True
+    by
     have := congr_fun this x
     have H := congr_arg ULift.down this
     dsimp at H
@@ -471,7 +471,8 @@ protected theorem rel_equiv : Equivalence (FilteredColimit.Rel F) :=
 #align
   category_theory.limits.types.filtered_colimit.rel_equiv CategoryTheory.Limits.Types.FilteredColimit.rel_equiv
 
-protected theorem rel_eq_eqv_gen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.Rel F) := by
+protected theorem rel_eq_eqv_gen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.Rel F) :=
+  by
   ext (⟨j, x⟩⟨j', y⟩)
   constructor
   · apply eqv_gen_quot_rel_of_rel
@@ -483,7 +484,7 @@ protected theorem rel_eq_eqv_gen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot
 theorem colimit_eq_iff_aux {i j : J} {xi : F.obj i} {xj : F.obj j} :
     (colimitCocone F).ι.app i xi = (colimitCocone F).ι.app j xj ↔
       FilteredColimit.Rel F ⟨i, xi⟩ ⟨j, xj⟩ :=
-  by 
+  by
   change Quot.mk _ _ = Quot.mk _ _ ↔ _
   rw [Quot.eq, filtered_colimit.rel_eq_eqv_gen_quot_rel]
 #align
@@ -491,7 +492,8 @@ theorem colimit_eq_iff_aux {i j : J} {xi : F.obj i} {xj : F.obj j} :
 
 theorem is_colimit_eq_iff {t : Cocone F} (ht : IsColimit t) {i j : J} {xi : F.obj i}
     {xj : F.obj j} :
-    t.ι.app i xi = t.ι.app j xj ↔ ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f xi = F.map g xj := by
+    t.ι.app i xi = t.ι.app j xj ↔ ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f xi = F.map g xj :=
+  by
   let t' := colimitCocone F
   let e : t' ≅ t := IsColimit.uniqueUpToIso (colimitCoconeIsColimit F) ht
   let e' : t'.x ≅ t.x := (Cocones.forget _).mapIso e
@@ -536,7 +538,8 @@ noncomputable def Image.lift (F' : MonoFactorisation f) : Image f ⟶ F'.i :=
   (fun x => F'.e (Classical.indefiniteDescription _ x.2).1 : Image f → F'.i)
 #align category_theory.limits.types.image.lift CategoryTheory.Limits.Types.Image.lift
 
-theorem Image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Image.ι f := by
+theorem Image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Image.ι f :=
+  by
   ext x
   change (F'.e ≫ F'.m) _ = _
   rw [F'.fac, (Classical.indefiniteDescription _ x.2).2]
@@ -546,16 +549,16 @@ theorem Image.lift_fac (F' : MonoFactorisation f) : Image.lift F' ≫ F'.m = Ima
 end
 
 /-- the factorisation of any morphism in Type through a mono. -/
-def monoFactorisation : MonoFactorisation
-      f where 
+def monoFactorisation : MonoFactorisation f
+    where
   i := Image f
   m := Image.ι f
   e := Set.rangeFactorization f
 #align category_theory.limits.types.mono_factorisation CategoryTheory.Limits.Types.monoFactorisation
 
 /-- the facorisation through a mono has the universal property of the image. -/
-noncomputable def isImage :
-    IsImage (monoFactorisation f) where 
+noncomputable def isImage : IsImage (monoFactorisation f)
+    where
   lift := Image.lift
   lift_fac' := Image.lift_fac
 #align category_theory.limits.types.is_image CategoryTheory.Limits.Types.isImage
@@ -565,14 +568,12 @@ instance : HasImage f :=
 
 instance : HasImages (Type u) where HasImage := by infer_instance
 
-instance :
-    HasImageMaps
-      (Type
-        u) where HasImageMap f g st :=
+instance : HasImageMaps (Type u)
+    where HasImageMap f g st :=
     HasImageMap.transport st (monoFactorisation f.Hom) (isImage g.Hom)
       (fun x =>
         ⟨st.right x.1,
-          ⟨st.left (Classical.choose x.2), by 
+          ⟨st.left (Classical.choose x.2), by
             have p := st.w
             replace p := congr_fun p (Classical.choose x.2)
             simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p

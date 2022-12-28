@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.graph
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,8 @@ theorem TheoryCat.simple_graph_model_iff [Language.graph.StructureCat V] :
   first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simple_graph_model_iff
 
 instance simple_graph_model (G : SimpleGraph V) :
-    @TheoryCat.Model _ V G.StructureCat TheoryCat.simpleGraph := by
+    @TheoryCat.Model _ V G.StructureCat TheoryCat.simpleGraph :=
+  by
   simp only [Theory.simple_graph_model_iff, rel_map_apply₂]
   exact ⟨G.loopless, G.symm⟩
 #align first_order.language.simple_graph_model FirstOrder.Language.simple_graph_model
@@ -92,8 +93,8 @@ variable (V)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Any model of the theory of simple graphs represents a simple graph. -/
 @[simps]
-def simpleGraphOfStructure [Language.graph.StructureCat V] [V ⊨ Theory.simple_graph] :
-    SimpleGraph V where 
+def simpleGraphOfStructure [Language.graph.StructureCat V] [V ⊨ Theory.simple_graph] : SimpleGraph V
+    where
   Adj x y := RelMap adj ![x, y]
   symm :=
     Relations.realize_symmetric.1
@@ -108,7 +109,8 @@ variable {V}
 
 @[simp]
 theorem SimpleGraph.simple_graph_of_structure (G : SimpleGraph V) :
-    @simpleGraphOfStructure V G.StructureCat _ = G := by
+    @simpleGraphOfStructure V G.StructureCat _ = G :=
+  by
   ext
   rfl
 #align simple_graph.simple_graph_of_structure SimpleGraph.simple_graph_of_structure
@@ -116,7 +118,8 @@ theorem SimpleGraph.simple_graph_of_structure (G : SimpleGraph V) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V]
-    [V ⊨ Theory.simple_graph] : (simpleGraphOfStructure V).StructureCat = S := by
+    [V ⊨ Theory.simple_graph] : (simpleGraphOfStructure V).StructureCat = S :=
+  by
   ext (n f xs)
   · exact (is_relational.empty_functions n).elim f
   · ext (n r xs)

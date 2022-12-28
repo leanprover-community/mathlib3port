@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Module.change_of_rings
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ variable (M : ModuleCat.{v} S)
 
 /-- Any `S`-module M is also an `R`-module via a ring homomorphism `f : R ⟶ S` by defining
     `r • m := f r • m` (`module.comp_hom`). This is called restriction of scalars. -/
-def obj' : ModuleCat R where 
+def obj' : ModuleCat R where
   carrier := M
   isModule := Module.compHom M f
 #align category_theory.Module.restrict_scalars.obj' CategoryTheory.ModuleCat.RestrictScalars.obj'
@@ -63,8 +63,8 @@ end RestrictScalars
 * an `S`-linear map is also `R`-linear
 -/
 def restrictScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) :
-    ModuleCat.{v} S ⥤ ModuleCat.{v}
-        R where 
+    ModuleCat.{v} S ⥤ ModuleCat.{v} R
+    where
   obj := RestrictScalars.obj' f
   map _ _ := RestrictScalars.map' f
   map_id' _ := LinearMap.ext fun m => rfl
@@ -93,8 +93,8 @@ theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ring R] [Ring
 
 instance (priority := 100) smul_comm_class_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S]
     (f : R →+* S) (M : Type v) [AddCommGroup M] [Module S M] :
-    @SMulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul
-      _ where smul_comm r s m := (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
+    @SMulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul _
+    where smul_comm r s m := (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
 #align category_theory.Module.smul_comm_class_mk CategoryTheory.ModuleCat.smul_comm_class_mk
 
 namespace ExtendScalars
@@ -134,7 +134,8 @@ def map' {M1 M2 : ModuleCat.{v} R} (l : M1 ⟶ M2) : obj' f M1 ⟶ obj' f M2 :=
 #align category_theory.Module.extend_scalars.map' CategoryTheory.ModuleCat.ExtendScalars.map'
 
 theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
-  LinearMap.ext fun x : obj' f M => by
+  LinearMap.ext fun x : obj' f M =>
+    by
     dsimp only [map', ModuleCat.id_apply]
     induction' x using TensorProduct.induction_on with _ _ m s ihx ihy
     · simp only [map_zero]
@@ -144,7 +145,7 @@ theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
 
 theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (l₂₃ : M₂ ⟶ M₃) :
     map' f (l₁₂ ≫ l₂₃) = map' f l₁₂ ≫ map' f l₂₃ :=
-  LinearMap.ext fun x : obj' f M₁ => by 
+  LinearMap.ext fun x : obj' f M₁ => by
     dsimp only [map']
     induction' x using TensorProduct.induction_on with _ _ x y ihx ihy
     · rfl
@@ -159,8 +160,8 @@ end ExtendScalars
 `l : M1 ⟶ M2` is sent to `s ⊗ m ↦ s ⊗ l m`
 -/
 def extendScalars {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
-    ModuleCat.{v} R ⥤
-      ModuleCat.{max v u₂} S where 
+    ModuleCat.{v} R ⥤ ModuleCat.{max v u₂} S
+    where
   obj M := ExtendScalars.obj' f M
   map M1 M2 l := ExtendScalars.map' f l
   map_id' _ := ExtendScalars.map'_id f

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.rel_iso.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {F : Type.{u3}} [_inst_1 : RelHomClass.{u3, u2, u1} F α β r s] (f : F) (a : α), (Acc.{succ u1} β s (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.931 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} F α β r s _inst_1) f a)) -> (Acc.{succ u2} α r a)
 Case conversion may be inaccurate. Consider using '#align rel_hom_class.acc RelHomClass.accₓ'. -/
-protected theorem acc [RelHomClass F r s] (f : F) (a : α) : Acc s (f a) → Acc r a := by
+protected theorem acc [RelHomClass F r s] (f : F) (a : α) : Acc s (f a) → Acc r a :=
+  by
   generalize h : f a = b; intro ac
   induction' ac with _ H IH generalizing a; subst h
   exact ⟨_, fun a' h => IH (f a') (map_rel f h) _ rfl⟩
@@ -133,9 +134,9 @@ end RelHomClass
 
 namespace RelHom
 
-instance : RelHomClass (r →r s) r s where 
+instance : RelHomClass (r →r s) r s where
   coe o := o.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     cases f
     cases g
     congr
@@ -245,7 +246,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align injective_of_increasing injective_of_increasingₓ'. -/
 /-- An increasing function is injective -/
 theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop) [IsTrichotomous α r]
-    [IsIrrefl β s] (f : α → β) (hf : ∀ {x y}, r x y → s (f x) (f y)) : Injective f := by
+    [IsIrrefl β s] (f : α → β) (hf : ∀ {x y}, r x y → s (f x) (f y)) : Injective f :=
+  by
   intro x y hxy
   rcases trichotomous_of r x y with (h | h | h)
   have := hf h; rw [hxy] at this; exfalso; exact irrefl_of s (f y) this
@@ -275,7 +277,7 @@ Case conversion may be inaccurate. Consider using '#align surjective.well_founde
 theorem Surjective.wellFounded_iff {f : α → β} (hf : Surjective f)
     (o : ∀ {a b}, r a b ↔ s (f a) (f b)) : WellFounded r ↔ WellFounded s :=
   Iff.intro
-    (by 
+    (by
       refine' RelHomClass.wellFounded (RelHom.mk _ _ : s →r r)
       · exact Classical.choose hf.has_right_inverse
       intro a b h; apply o.2; convert h
@@ -317,8 +319,8 @@ namespace RelEmbedding
 
 #print RelEmbedding.toRelHom /-
 /-- A relation embedding is also a relation homomorphism -/
-def toRelHom (f : r ↪r s) :
-    r →r s where 
+def toRelHom (f : r ↪r s) : r →r s
+    where
   toFun := f.toEmbedding.toFun
   map_rel' x y := (map_rel_iff' f).mpr
 #align rel_embedding.to_rel_hom RelEmbedding.toRelHom
@@ -332,9 +334,9 @@ instance : CoeFun (r ↪r s) fun _ => α → β :=
   ⟨fun o => o.toEmbedding⟩
 
 -- TODO: define and instantiate a `rel_embedding_class` when `embedding_like` is defined
-instance : RelHomClass (r ↪r s) r s where 
+instance : RelHomClass (r ↪r s) r s where
   coe := coeFn
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     rcases f with ⟨⟨⟩⟩
     rcases g with ⟨⟨⟩⟩
     congr
@@ -494,7 +496,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelEmbedding.{u2, u1} α β r s), Eq.{succ u2} (α -> α -> Prop) r (Order.Preimage.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r s f)) s)
 Case conversion may be inaccurate. Consider using '#align rel_embedding.eq_preimage RelEmbedding.eq_preimageₓ'. -/
-theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s := by
+theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s :=
+  by
   ext (a b)
   exact f.map_rel_iff.symm
 #align rel_embedding.eq_preimage RelEmbedding.eq_preimage
@@ -636,7 +639,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : RelEmbedding.{u2, u1} α β r s) (a : α), (Acc.{succ u1} β s (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r s f) a)) -> (Acc.{succ u2} α r a)
 Case conversion may be inaccurate. Consider using '#align rel_embedding.acc RelEmbedding.accₓ'. -/
-protected theorem acc (f : r ↪r s) (a : α) : Acc s (f a) → Acc r a := by
+protected theorem acc (f : r ↪r s) (a : α) : Acc s (f a) → Acc r a :=
+  by
   generalize h : f a = b; intro ac
   induction' ac with _ H IH generalizing a; subst h
   exact ⟨_, fun a' h => IH (f a') (f.map_rel_iff.2 h) _ rfl⟩
@@ -667,7 +671,8 @@ protected theorem isWellOrder : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrd
 @[simps]
 noncomputable def Quotient.outRelEmbedding [s : Setoid α] {r : α → α → Prop} (H) :
     Quotient.lift₂ r H ↪r r :=
-  ⟨Embedding.quotientOut α, by
+  ⟨Embedding.quotientOut α,
+    by
     refine' fun x y => Quotient.induction_on₂ x y fun a b => _
     apply iff_iff_eq.2 (H _ _ _ _ _ _) <;> apply Quotient.mk_out⟩
 #align quotient.out_rel_embedding Quotient.outRelEmbedding
@@ -678,12 +683,12 @@ noncomputable def Quotient.outRelEmbedding [s : Setoid α] {r : α → α → Pr
 @[simp]
 theorem wellFounded_lift₂_iff [s : Setoid α] {r : α → α → Prop} {H} :
     WellFounded (Quotient.lift₂ r H) ↔ WellFounded r :=
-  ⟨fun hr => by
+  ⟨fun hr =>
+    by
     suffices ∀ {x : Quotient s} {a : α}, ⟦a⟧ = x → Acc r a by exact ⟨fun a => this rfl⟩
     · refine' fun x => hr.induction x _
       rintro x IH a rfl
-      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩,
-    (Quotient.outRelEmbedding H).WellFounded⟩
+      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩, (Quotient.outRelEmbedding H).WellFounded⟩
 #align well_founded_lift₂_iff wellFounded_lift₂_iff
 -/
 
@@ -696,7 +701,7 @@ To define an relation embedding from an antisymmetric relation `r` to a reflexiv
 suffices to give a function together with a proof that it satisfies `s (f a) (f b) ↔ r a b`.
 -/
 def ofMapRelIff (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf : ∀ a b, s (f a) (f b) ↔ r a b) :
-    r ↪r s where 
+    r ↪r s where
   toFun := f
   inj' x y h := antisymm ((hf _ _).1 (h ▸ refl _)) ((hf _ _).1 (h ▸ refl _))
   map_rel_iff' := hf
@@ -719,7 +724,7 @@ theorem ofMapRelIff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s]
 /-- It suffices to prove `f` is monotone between strict relations
   to show it is a relation embedding. -/
 def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b, r a b → s (f a) (f b)) :
-    r ↪r s := by 
+    r ↪r s := by
   haveI := @IsAsymm.is_irrefl β s _
   refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
   ·
@@ -754,8 +759,8 @@ def ofIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] : r
 #print RelEmbedding.sumLiftRelInl /-
 /-- `sum.inl` as a relation embedding into `sum.lift_rel r s`. -/
 @[simps]
-def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) :
-    r ↪r Sum.LiftRel r s where 
+def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.LiftRel r s
+    where
   toFun := Sum.inl
   inj' := Sum.inl_injective
   map_rel_iff' a b := Sum.liftRel_inl_inl
@@ -765,8 +770,8 @@ def sumLiftRelInl (r : α → α → Prop) (s : β → β → Prop) :
 #print RelEmbedding.sumLiftRelInr /-
 /-- `sum.inr` as a relation embedding into `sum.lift_rel r s`. -/
 @[simps]
-def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) :
-    s ↪r Sum.LiftRel r s where 
+def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.LiftRel r s
+    where
   toFun := Sum.inr
   inj' := Sum.inr_injective
   map_rel_iff' a b := Sum.liftRel_inr_inr
@@ -776,9 +781,8 @@ def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) :
 #print RelEmbedding.sumLiftRelMap /-
 /-- `sum.map` as a relation embedding between `sum.lift_rel` relations. -/
 @[simps]
-def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) :
-    Sum.LiftRel r t ↪r Sum.LiftRel s
-        u where 
+def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) : Sum.LiftRel r t ↪r Sum.LiftRel s u
+    where
   toFun := Sum.map f g
   inj' := f.Injective.sum_map g.Injective
   map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
@@ -788,8 +792,8 @@ def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) :
 #print RelEmbedding.sumLexInl /-
 /-- `sum.inl` as a relation embedding into `sum.lex r s`. -/
 @[simps]
-def sumLexInl (r : α → α → Prop) (s : β → β → Prop) :
-    r ↪r Sum.Lex r s where 
+def sumLexInl (r : α → α → Prop) (s : β → β → Prop) : r ↪r Sum.Lex r s
+    where
   toFun := Sum.inl
   inj' := Sum.inl_injective
   map_rel_iff' a b := Sum.lex_inl_inl
@@ -799,8 +803,8 @@ def sumLexInl (r : α → α → Prop) (s : β → β → Prop) :
 #print RelEmbedding.sumLexInr /-
 /-- `sum.inr` as a relation embedding into `sum.lex r s`. -/
 @[simps]
-def sumLexInr (r : α → α → Prop) (s : β → β → Prop) :
-    s ↪r Sum.Lex r s where 
+def sumLexInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.Lex r s
+    where
   toFun := Sum.inr
   inj' := Sum.inr_injective
   map_rel_iff' a b := Sum.lex_inr_inr
@@ -810,8 +814,8 @@ def sumLexInr (r : α → α → Prop) (s : β → β → Prop) :
 #print RelEmbedding.sumLexMap /-
 /-- `sum.map` as a relation embedding between `sum.lex` relations. -/
 @[simps]
-def sumLexMap (f : r ↪r s) (g : t ↪r u) :
-    Sum.Lex r t ↪r Sum.Lex s u where 
+def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u
+    where
   toFun := Sum.map f g
   inj' := f.Injective.sum_map g.Injective
   map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
@@ -821,8 +825,8 @@ def sumLexMap (f : r ↪r s) (g : t ↪r u) :
 #print RelEmbedding.prodLexMkLeft /-
 /-- `λ b, prod.mk a b` as a relation embedding. -/
 @[simps]
-def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) :
-    s ↪r Prod.Lex r s where 
+def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) : s ↪r Prod.Lex r s
+    where
   toFun := Prod.mk a
   inj' := Prod.mk.inj_left a
   map_rel_iff' b₁ b₂ := by simp [Prod.lex_def, h]
@@ -832,8 +836,8 @@ def prodLexMkLeft (s : β → β → Prop) {a : α} (h : ¬r a a) :
 #print RelEmbedding.prodLexMkRight /-
 /-- `λ a, prod.mk a b` as a relation embedding. -/
 @[simps]
-def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) :
-    r ↪r Prod.Lex r s where 
+def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod.Lex r s
+    where
   toFun a := (a, b)
   inj' := Prod.mk.inj_right b
   map_rel_iff' a₁ a₂ := by simp [Prod.lex_def, h]
@@ -843,8 +847,8 @@ def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) :
 #print RelEmbedding.prodLexMap /-
 /-- `prod.map` as a relation embedding. -/
 @[simps]
-def prodLexMap (f : r ↪r s) (g : t ↪r u) :
-    Prod.Lex r t ↪r Prod.Lex s u where 
+def prodLexMap (f : r ↪r s) (g : t ↪r u) : Prod.Lex r t ↪r Prod.Lex s u
+    where
   toFun := Prod.map f g
   inj' := f.Injective.prod_map g.Injective
   map_rel_iff' a b := by simp [Prod.lex_def, f.map_rel_iff, g.map_rel_iff]
@@ -881,7 +885,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (RelIso.{u2, u1} α β r s) (Equiv.{succ u2, succ u1} α β) (RelIso.toEquiv.{u2, u1} α β r s)
 Case conversion may be inaccurate. Consider using '#align rel_iso.to_equiv_injective RelIso.toEquiv_injectiveₓ'. -/
 theorem toEquiv_injective : Injective (toEquiv : r ≃r s → α ≃ β)
-  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by 
+  | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by
     congr
     exact h
 #align rel_iso.to_equiv_injective RelIso.toEquiv_injective
@@ -894,7 +898,7 @@ instance : CoeFun (r ≃r s) fun _ => α → β :=
   ⟨fun f => f⟩
 
 -- TODO: define and instantiate a `rel_iso_class` when `equiv_like` is defined
-instance : RelHomClass (r ≃r s) r s where 
+instance : RelHomClass (r ≃r s) r s where
   coe := coeFn
   coe_injective' := Equiv.coe_fn_injective.comp toEquiv_injective
   map_rel f a b := Iff.mpr (map_rel_iff' f)
@@ -1031,7 +1035,7 @@ theorem default_def (r : α → α → Prop) : default = RelIso.refl r :=
 @[simps toEquiv apply]
 protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β)
     (h₂ : HEq r s) : r ≃r s :=
-  ⟨Equiv.cast h₁, fun a b => by 
+  ⟨Equiv.cast h₁, fun a b => by
     subst h₁
     rw [eq_of_heq h₂]
     rfl⟩
@@ -1059,7 +1063,7 @@ protected theorem cast_refl {α : Type u} {r : α → α → Prop} (h₁ : α = 
 protected theorem cast_trans {α β γ : Type u} {r : α → α → Prop} {s : β → β → Prop}
     {t : γ → γ → Prop} (h₁ : α = β) (h₁' : β = γ) (h₂ : HEq r s) (h₂' : HEq s t) :
     (RelIso.cast h₁ h₂).trans (RelIso.cast h₁' h₂') = RelIso.cast (h₁.trans h₁') (h₂.trans h₂') :=
-  ext fun x => by 
+  ext fun x => by
     subst h₁
     rfl
 #align rel_iso.cast_trans RelIso.cast_trans

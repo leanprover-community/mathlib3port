@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.bezout
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,27 +32,26 @@ variable (R : Type u) [CommRing R]
 
 /-- A Bézout ring is a ring whose finitely generated ideals are principal. -/
 class IsBezout : Prop where
-  is_principal_of_fg : ∀ I : Ideal R, I.Fg → I.IsPrincipal
+  isPrincipalOfFg : ∀ I : Ideal R, I.Fg → I.IsPrincipal
 #align is_bezout IsBezout
 
 namespace IsBezout
 
 variable {R}
 
-instance span_pair_is_principal [IsBezout R] (x y : R) :
-    (Ideal.span {x, y} : Ideal R).IsPrincipal := by
-  classical exact is_principal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
-#align is_bezout.span_pair_is_principal IsBezout.span_pair_is_principal
+instance spanPairIsPrincipal [IsBezout R] (x y : R) : (Ideal.span {x, y} : Ideal R).IsPrincipal :=
+  by classical exact is_principal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
+#align is_bezout.span_pair_is_principal IsBezout.spanPairIsPrincipal
 
 theorem iff_span_pair_is_principal :
     IsBezout R ↔ ∀ x y : R, (Ideal.span {x, y} : Ideal R).IsPrincipal := by
-  classical 
+  classical
     constructor
     · intro H x y
       infer_instance
     · intro H
       constructor
-      apply Submodule.fg_induction
+      apply Submodule.fgInduction
       · exact fun _ => ⟨⟨_, rfl⟩⟩
       · rintro _ _ ⟨⟨x, rfl⟩⟩ ⟨⟨y, rfl⟩⟩
         rw [← Submodule.span_insert]
@@ -80,7 +79,8 @@ theorem gcd_dvd_right (x y : R) : gcd x y ∣ y :=
   (Submodule.IsPrincipal.mem_iff_generator_dvd _).mp (Ideal.subset_span (by simp))
 #align is_bezout.gcd_dvd_right IsBezout.gcd_dvd_right
 
-theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y := by
+theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y :=
+  by
   rw [← Ideal.span_singleton_le_span_singleton] at hx hy⊢
   rw [span_gcd, Ideal.span_insert, sup_le_iff]
   exact ⟨hx, hy⟩
@@ -88,7 +88,7 @@ theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y := by
 
 theorem gcd_eq_sum (x y : R) : ∃ a b : R, a * x + b * y = gcd x y :=
   Ideal.mem_span_pair.mp
-    (by 
+    (by
       rw [← span_gcd]
       apply Ideal.subset_span
       simp)
@@ -111,8 +111,9 @@ attribute [local instance] to_gcd_domain
 instance (priority := 100) [IsDomain R] [IsBezout R] : IsIntegrallyClosed R :=
   inferInstance
 
-theorem Function.Surjective.is_bezout {S : Type v} [CommRing S] (f : R →+* S)
-    (hf : Function.Surjective f) [IsBezout R] : IsBezout S := by
+theorem Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →+* S)
+    (hf : Function.Surjective f) [IsBezout R] : IsBezout S :=
+  by
   rw [iff_span_pair_is_principal]
   intro x y
   obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := hf x, hf y
@@ -121,11 +122,11 @@ theorem Function.Surjective.is_bezout {S : Type v} [CommRing S] (f : R →+* S)
   · rw [span_gcd, Ideal.map_span, Set.image_insert_eq, Set.image_singleton]
   · rw [Ideal.map_span, Set.image_singleton]
     rfl
-#align function.surjective.is_bezout Function.Surjective.is_bezout
+#align function.surjective.is_bezout Function.Surjective.isBezout
 
-instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] : IsBezout R :=
+instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsBezout R :=
   ⟨fun I _ => IsPrincipalIdealRing.principal I⟩
-#align is_bezout.of_is_principal_ideal_ring IsBezout.of_is_principal_ideal_ring
+#align is_bezout.of_is_principal_ideal_ring IsBezout.ofIsPrincipalIdealRing
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -162,8 +163,8 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
              (Tactic.tacticSeq1Indented
               [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" [`H])
                  []
                  (Tactic.exact
@@ -183,20 +184,20 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                []
                (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
                []
                (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
                []
-               (tactic___
-                (cdotTk (patternIgnore (token.«·» "·")))
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
                 [(Std.Tactic.rintro
                   "rintro"
                   [(Std.Tactic.RCases.rintroPat.one
@@ -258,7 +259,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                       []
                       "=>"
                       (Term.proj
-                       (Term.app `IsBezout.is_principal_of_fg [`I `hI])
+                       (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
                        "."
                        (fieldIdx "1")))))))
                  []
@@ -355,8 +356,8 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
             (Tactic.tacticSeq1Indented
              [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" [`H])
                 []
                 (Tactic.exact
@@ -376,20 +377,20 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
               []
               (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
               []
               (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
               []
-              (tactic___
-               (cdotTk (patternIgnore (token.«·» "·")))
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
                [(Std.Tactic.rintro
                  "rintro"
                  [(Std.Tactic.RCases.rintroPat.one
@@ -451,7 +452,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                      []
                      "=>"
                      (Term.proj
-                      (Term.app `IsBezout.is_principal_of_fg [`I `hI])
+                      (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
                       "."
                       (fieldIdx "1")))))))
                 []
@@ -540,8 +541,8 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "2"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" [`H])
             []
             (Tactic.exact
@@ -561,20 +562,20 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "4"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Tactic.intro "intro" []) [] (Tactic.tacticInfer_instance "infer_instance")])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "1"))
           []
-          (tactic___
-           (cdotTk (patternIgnore (token.«·» "·")))
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
            [(Std.Tactic.rintro
              "rintro"
              [(Std.Tactic.RCases.rintroPat.one
@@ -635,10 +636,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
                  [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
                  []
                  "=>"
-                 (Term.proj
-                  (Term.app `IsBezout.is_principal_of_fg [`I `hI])
-                  "."
-                  (fieldIdx "1")))))))
+                 (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1")))))))
             []
             (Mathlib.Tactic.Choose.choose
              "choose"
@@ -722,8 +720,8 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
       (Tactic.tfaeFinish "tfae_finish")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tactic___
-       (cdotTk (patternIgnore (token.«·» "·")))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
        [(Std.Tactic.rintro
          "rintro"
          [(Std.Tactic.RCases.rintroPat.one
@@ -784,7 +782,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
              [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
              []
              "=>"
-             (Term.proj (Term.app `IsBezout.is_principal_of_fg [`I `hI]) "." (fieldIdx "1")))))))
+             (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1")))))))
         []
         (Mathlib.Tactic.Choose.choose "choose" [] [(Lean.binderIdent `f) (Lean.binderIdent `hf)] [])
         []
@@ -1213,7 +1211,7 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
            [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
            []
            "=>"
-           (Term.proj (Term.app `IsBezout.is_principal_of_fg [`I `hI]) "." (fieldIdx "1")))))))
+           (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1")))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -1221,11 +1219,11 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
         [(Term.anonymousCtor "⟨" [`I "," `hI] "⟩")]
         []
         "=>"
-        (Term.proj (Term.app `IsBezout.is_principal_of_fg [`I `hI]) "." (fieldIdx "1"))))
+        (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj (Term.app `IsBezout.is_principal_of_fg [`I `hI]) "." (fieldIdx "1"))
+      (Term.proj (Term.app `IsBezout.isPrincipalOfFg [`I `hI]) "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app `IsBezout.is_principal_of_fg [`I `hI])
+      (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1239,13 +1237,13 @@ instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] :
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
      [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `IsBezout.is_principal_of_fg
+      `IsBezout.isPrincipalOfFg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
      [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Term.app `IsBezout.is_principal_of_fg [`I `hI])
+     (Term.app `IsBezout.isPrincipalOfFg [`I `hI])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
@@ -1460,7 +1458,7 @@ theorem
               have
                 : ∀ I : { J : Ideal R // J . Fg } , ∃ x : R , ( I : Ideal R ) = Ideal.span { x }
                   :=
-                  fun ⟨ I , hI ⟩ => IsBezout.is_principal_of_fg I hI . 1
+                  fun ⟨ I , hI ⟩ => IsBezout.isPrincipalOfFg I hI . 1
               choose f hf
               exact
                 {

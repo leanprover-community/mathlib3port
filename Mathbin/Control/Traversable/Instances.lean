@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.traversable.instances
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem Option.naturality {α β} (f : α → F β) (x : Option α) :
 end Option
 
 instance : IsLawfulTraversable Option :=
-  { Option.is_lawful_monad with 
+  { Option.is_lawful_monad with
     id_traverse := @Option.id_traverse
     comp_traverse := @Option.comp_traverse
     traverse_eq_map_id := @Option.traverse_eq_map_id
@@ -98,7 +98,7 @@ protected theorem naturality {α β} (f : α → F β) (x : List α) :
 open Nat
 
 instance : IsLawfulTraversable.{u} List :=
-  { List.is_lawful_monad with 
+  { List.is_lawful_monad with
     id_traverse := @List.id_traverse
     comp_traverse := @List.comp_traverse
     traverse_eq_map_id := @List.traverse_eq_map_id
@@ -126,7 +126,7 @@ variable [LawfulApplicative F]
 @[simp]
 theorem traverse_append :
     ∀ as bs : List α', traverse f (as ++ bs) = (· ++ ·) <$> traverse f as <*> traverse f bs
-  | [], bs => by 
+  | [], bs => by
     have : Append.append ([] : List β') = id := by funext <;> rfl
     simp [this, functor_norm]
   | a :: as, bs => by simp [traverse_append as bs, functor_norm] <;> congr
@@ -194,7 +194,7 @@ protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) :
 end Traverse
 
 instance {σ : Type u} : IsLawfulTraversable.{u} (Sum σ) :=
-  { Sum.is_lawful_monad with 
+  { Sum.is_lawful_monad with
     id_traverse := @Sum.id_traverse σ
     comp_traverse := @Sum.comp_traverse σ
     traverse_eq_map_id := @Sum.traverse_eq_map_id σ

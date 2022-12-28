@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.category.Top.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ instance : Inhabited TopCat :=
   ⟨TopCat.of Empty⟩
 
 /-- The discrete topology on any type. -/
-def discrete : Type u ⥤ TopCat.{u} where 
+def discrete : Type u ⥤ TopCat.{u} where
   obj X := ⟨X, ⊥⟩
   map X Y f :=
     { toFun := f
@@ -84,7 +84,7 @@ def discrete : Type u ⥤ TopCat.{u} where
 #align Top.discrete TopCat.discrete
 
 /-- The trivial topology on any type. -/
-def trivial : Type u ⥤ TopCat.{u} where 
+def trivial : Type u ⥤ TopCat.{u} where
   obj X := ⟨X, ⊤⟩
   map X Y f :=
     { toFun := f
@@ -93,16 +93,16 @@ def trivial : Type u ⥤ TopCat.{u} where
 
 /-- Any homeomorphisms induces an isomorphism in `Top`. -/
 @[simps]
-def isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) :
-    X ≅ Y where 
+def isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : X ≅ Y
+    where
   Hom := ⟨f⟩
   inv := ⟨f.symm⟩
 #align Top.iso_of_homeo TopCat.isoOfHomeo
 
 /-- Any isomorphism in `Top` induces a homeomorphism. -/
 @[simps]
-def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) :
-    X ≃ₜ Y where 
+def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : X ≃ₜ Y
+    where
   toFun := f.Hom
   invFun := f.inv
   left_inv x := by simp
@@ -112,13 +112,15 @@ def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) :
 #align Top.homeo_of_iso TopCat.homeoOfIso
 
 @[simp]
-theorem of_iso_of_homeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : homeoOfIso (isoOfHomeo f) = f := by
+theorem of_iso_of_homeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : homeoOfIso (isoOfHomeo f) = f :=
+  by
   ext
   rfl
 #align Top.of_iso_of_homeo TopCat.of_iso_of_homeo
 
 @[simp]
-theorem of_homeo_of_iso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f) = f := by
+theorem of_homeo_of_iso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso f) = f :=
+  by
   ext
   rfl
 #align Top.of_homeo_of_iso TopCat.of_homeo_of_iso
@@ -131,7 +133,8 @@ theorem open_embedding_iff_comp_is_iso {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶
 
 @[simp]
 theorem open_embedding_iff_is_iso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :
-    OpenEmbedding (f ≫ g) ↔ OpenEmbedding g := by
+    OpenEmbedding (f ≫ g) ↔ OpenEmbedding g :=
+  by
   constructor
   · intro h
     convert h.comp (TopCat.homeoOfIso (as_iso f).symm).OpenEmbedding

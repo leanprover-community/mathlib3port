@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.continuous_map_dense
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,8 @@ variable [NormedSpace ℝ E]
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
-    (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
+    (boundedContinuousFunction E p μ).topologicalClosure = ⊤ :=
+  by
   have hp₀ : 0 < p := lt_of_lt_of_le Ennreal.zero_lt_one _i.elim
   have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one Ennreal.to_real_nonneg
   have hp₀'' : 0 < p.to_real := by
@@ -77,7 +78,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ⊤),
       (Lp.simple_func.indicator_const p hs hμs.Ne c : Lp E p μ) ∈
         (BoundedContinuousFunction E p μ).topologicalClosure
-    by 
+    by
     rw [AddSubgroup.eq_top_iff']
     refine' Lp.induction hp _ _ _ _
     · exact this
@@ -92,7 +93,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   -- our purposes
   obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ) ≤ ε :=
     by
-    have : Filter.Tendsto (fun x : ℝ≥0 => ‖bit0 ‖c‖‖₊ * (2 * x) ^ (1 / p.to_real)) (𝓝 0) (𝓝 0) := by
+    have : Filter.Tendsto (fun x : ℝ≥0 => ‖bit0 ‖c‖‖₊ * (2 * x) ^ (1 / p.to_real)) (𝓝 0) (𝓝 0) :=
+      by
       have : Filter.Tendsto (fun x : ℝ≥0 => 2 * x) (𝓝 0) (𝓝 (2 * 0)) :=
         filter.tendsto_id.const_mul 2
       convert ((Nnreal.continuous_at_rpow_const (Or.inr hp₀')).Tendsto.comp this).const_mul _
@@ -107,13 +109,15 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   have hη_pos' : (0 : ℝ≥0∞) < η := Ennreal.coe_pos.2 hη_pos
   -- Use the regularity of the measure to `η`-approximate `s` by an open superset and a closed
   -- subset
-  obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η := by
+  obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η :=
+    by
     refine' s.exists_is_open_lt_of_lt _ _
     simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
   obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
     hs.exists_is_closed_lt_add hsμ.ne hη_pos'.ne'
   have : Disjoint (uᶜ) F := (Fs.trans su).disjoint_compl_left
-  have h_μ_sdiff : μ (u \ F) ≤ 2 * η := by
+  have h_μ_sdiff : μ (u \ F) ≤ 2 * η :=
+    by
     have hFμ : μ F < ⊤ := (measure_mono Fs).trans_lt hsμ
     refine' Ennreal.le_of_add_le_add_left hFμ.ne _
     have : μ u < μ F + ↑η + ↑η := μu.trans (Ennreal.add_lt_add_right Ennreal.coe_ne_top μF)
@@ -131,7 +135,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   -- that this is pointwise bounded by the indicator of the set `u \ F`
   have g_norm : ∀ x, ‖g x‖ = g x := fun x => by rw [Real.norm_eq_abs, abs_of_nonneg (hg_range x).1]
   have gc_bd :
-    ∀ x, ‖g x • c - s.indicator (fun x => c) x‖ ≤ ‖(u \ F).indicator (fun x => bit0 ‖c‖) x‖ := by
+    ∀ x, ‖g x • c - s.indicator (fun x => c) x‖ ≤ ‖(u \ F).indicator (fun x => bit0 ‖c‖) x‖ :=
+    by
     intro x
     by_cases hu : x ∈ u
     · rw [← Set.diff_union_of_subset (Fs.trans su)] at hu
@@ -149,13 +154,14 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   have gc_snorm :
     snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤
       (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) :=
-    by 
+    by
     refine' (snorm_mono_ae (Filter.eventually_of_forall gc_bd)).trans _
     rw [snorm_indicator_const (u_open.sdiff F_closed).MeasurableSet hp₀.ne' hp]
     push_cast [← Ennreal.coe_rpow_of_nonneg _ hp₀']
     exact Ennreal.mul_left_mono (Ennreal.monotone_rpow_of_nonneg hp₀' h_μ_sdiff)
   have gc_cont : Continuous fun x => g x • c := g.continuous.smul continuous_const
-  have gc_mem_ℒp : mem_ℒp (fun x => g x • c) p μ := by
+  have gc_mem_ℒp : mem_ℒp (fun x => g x • c) p μ :=
+    by
     have : mem_ℒp ((fun x => g x • c) - s.indicator fun x => c) p μ :=
       ⟨gc_cont.ae_strongly_measurable.sub
           (strongly_measurable_const.indicator hs).AeStronglyMeasurable,
@@ -183,7 +189,8 @@ namespace BoundedContinuousFunction
 open LinearMap (range)
 
 theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] :
-    DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ) := by
+    DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ) :=
+  by
   haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by
@@ -198,7 +205,8 @@ namespace ContinuousMap
 open LinearMap (range)
 
 theorem to_Lp_dense_range [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ] :
-    DenseRange ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ) := by
+    DenseRange ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ) :=
+  by
   haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by

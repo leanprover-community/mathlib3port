@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.dnf
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
     ∀ m bs, ∀ t ∈ nonnegConstsCore m bs, 0 ≤ Term.val v t
   | _, [] => fun _ h2 => by cases h2
   | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
-  | k, tt :: bs => by 
+  | k, tt :: bs => by
     simp only [nonneg_consts_core]
     rw [List.forall_mem_cons]
     constructor
@@ -139,11 +139,12 @@ theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
 #align omega.nat.holds_nonneg_consts Omega.Nat.holds_nonneg_consts
 
 theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
-    p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnf p, Clause.Holds (fun x => ↑(v x)) c := by
+    p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnf p, Clause.Holds (fun x => ↑(v x)) c :=
+  by
   intro h1 h2 h3
   rcases exists_clause_holds_core h1 h2 h3 with ⟨c, h4, h5⟩
   exists nonnegate c
-  have h6 : nonnegate c ∈ dnf p := by 
+  have h6 : nonnegate c ∈ dnf p := by
     simp only [dnf]
     rw [List.mem_map]
     refine' ⟨c, h4, rfl⟩
@@ -159,14 +160,16 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
 #align omega.nat.exists_clause_holds Omega.Nat.exists_clause_holds
 
 theorem exists_clause_sat {p : Preform} :
-    p.NegFree → p.SubFree → p.Sat → ∃ c ∈ dnf p, Clause.Sat c := by
+    p.NegFree → p.SubFree → p.Sat → ∃ c ∈ dnf p, Clause.Sat c :=
+  by
   intro h1 h2 h3; cases' h3 with v h3
   rcases exists_clause_holds h1 h2 h3 with ⟨c, h4, h5⟩
   refine' ⟨c, h4, _, h5⟩
 #align omega.nat.exists_clause_sat Omega.Nat.exists_clause_sat
 
 theorem unsat_of_unsat_dnf (p : Preform) :
-    p.NegFree → p.SubFree → Clauses.Unsat (dnf p) → p.Unsat := by
+    p.NegFree → p.SubFree → Clauses.Unsat (dnf p) → p.Unsat :=
+  by
   intro hnf hsf h1 h2; apply h1
   apply exists_clause_sat hnf hsf h2
 #align omega.nat.unsat_of_unsat_dnf Omega.Nat.unsat_of_unsat_dnf

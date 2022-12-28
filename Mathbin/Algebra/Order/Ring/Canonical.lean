@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.canonical
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α] {a : α} {b : α} {c : α} {d : α} [_inst_2 : ExistsAddOfLE.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1)))], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) c d) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) a d) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) b c)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) b d)))
 Case conversion may be inaccurate. Consider using '#align mul_add_mul_le_mul_add_mul mul_add_mul_le_mul_add_mulₓ'. -/
 /-- Binary **rearrangement inequality**. -/
-theorem mul_add_mul_le_mul_add_mul (hab : a ≤ b) (hcd : c ≤ d) : a * d + b * c ≤ a * c + b * d := by
+theorem mul_add_mul_le_mul_add_mul (hab : a ≤ b) (hcd : c ≤ d) : a * d + b * c ≤ a * c + b * d :=
+  by
   obtain ⟨b, rfl⟩ := exists_add_of_le hab
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd
   rw [mul_add, add_right_comm, mul_add, ← add_assoc]
@@ -78,7 +79,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_add_mul_le_mul_add_mul' mul_add_mul_le_mul_add_mul'ₓ'. -/
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_le_mul_add_mul' (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d :=
-  by 
+  by
   rw [add_comm (a • d), add_comm (a • c)]
   exact mul_add_mul_le_mul_add_mul hba hdc
 #align mul_add_mul_le_mul_add_mul' mul_add_mul_le_mul_add_mul'
@@ -90,7 +91,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α] {a : α} {b : α} {c : α} {d : α} [_inst_2 : ExistsAddOfLE.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1)))], (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) c d) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) a d) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) b c)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) b d)))
 Case conversion may be inaccurate. Consider using '#align mul_add_mul_lt_mul_add_mul mul_add_mul_lt_mul_add_mulₓ'. -/
 /-- Binary strict **rearrangement inequality**. -/
-theorem mul_add_mul_lt_mul_add_mul (hab : a < b) (hcd : c < d) : a * d + b * c < a * c + b * d := by
+theorem mul_add_mul_lt_mul_add_mul (hab : a < b) (hcd : c < d) : a * d + b * c < a * c + b * d :=
+  by
   obtain ⟨b, rfl⟩ := exists_add_of_le hab.le
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le
   rw [mul_add, add_right_comm, mul_add, ← add_assoc]
@@ -105,7 +107,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_add_mul_lt_mul_add_mul' mul_add_mul_lt_mul_add_mul'ₓ'. -/
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_lt_mul_add_mul' (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d :=
-  by 
+  by
   rw [add_comm (a • d), add_comm (a • c)]
   exact mul_add_mul_lt_mul_add_mul hba hdc
 #align mul_add_mul_lt_mul_add_mul' mul_add_mul_lt_mul_add_mul'
@@ -137,7 +139,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α], CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.619 : α) (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.621 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.619 x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.621) (fun (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.634 : α) (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.636 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α (CanonicallyOrderedCommSemiring.toCanonicallyOrderedAddMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.634 x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.636)
 Case conversion may be inaccurate. Consider using '#align canonically_ordered_comm_semiring.to_covariant_mul_le CanonicallyOrderedCommSemiring.to_covariant_mul_leₓ'. -/
 -- see Note [lower instance priority]
-instance (priority := 100) to_covariant_mul_le : CovariantClass α α (· * ·) (· ≤ ·) := by
+instance (priority := 100) to_covariant_mul_le : CovariantClass α α (· * ·) (· ≤ ·) :=
+  by
   refine' ⟨fun a b c h => _⟩
   rcases exists_add_of_le h with ⟨c, rfl⟩
   rw [mul_add]
@@ -148,7 +151,9 @@ instance (priority := 100) to_covariant_mul_le : CovariantClass α α (· * ·) 
 #print CanonicallyOrderedCommSemiring.toOrderedCommSemiring /-
 -- see Note [lower instance priority]
 instance (priority := 100) toOrderedCommSemiring : OrderedCommSemiring α :=
-  { ‹CanonicallyOrderedCommSemiring α› with
+  {
+    ‹CanonicallyOrderedCommSemiring
+        α› with
     zero_le_one := zero_le _
     mul_le_mul_of_nonneg_left := fun a b c h _ => mul_le_mul_left' h _
     mul_le_mul_of_nonneg_right := fun a b c h _ => mul_le_mul_right' h _ }
@@ -185,7 +190,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α] {a : α} {b : α} {c : α} [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) _inst_2] [_inst_4 : IsTotal.{u1} α (fun (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.894 : α) (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.896 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.894 x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.896)], (AddLECancellable.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) a c)) -> (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) a (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) b c)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) a c)))
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.mul_tsub AddLECancellable.mul_tsubₓ'. -/
-protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b - a * c := by
+protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b - a * c :=
+  by
   cases' total_of (· ≤ ·) b c with hbc hcb
   · rw [tsub_eq_zero_iff_le.2 hbc, mul_zero, tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
   · apply h.eq_tsub_of_add_eq
@@ -198,7 +204,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α] {a : α} {b : α} {c : α} [_inst_2 : Sub.{u1} α] [_inst_3 : OrderedSub.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) _inst_2] [_inst_4 : IsTotal.{u1} α (fun (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1045 : α) (x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1047 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1045 x._@.Mathlib.Algebra.Order.Ring.Canonical._hyg.1047)], (AddLECancellable.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) b c)) -> (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) a b) c) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α _inst_2) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1)) b c)))
 Case conversion may be inaccurate. Consider using '#align add_le_cancellable.tsub_mul AddLECancellable.tsub_mulₓ'. -/
-protected theorem tsub_mul (h : AddLECancellable (b * c)) : (a - b) * c = a * c - b * c := by
+protected theorem tsub_mul (h : AddLECancellable (b * c)) : (a - b) * c = a * c - b * c :=
+  by
   simp only [mul_comm _ c] at *
   exact h.mul_tsub
 #align add_le_cancellable.tsub_mul AddLECancellable.tsub_mul

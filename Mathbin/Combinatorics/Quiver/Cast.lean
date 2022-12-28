@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle, Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.cast
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,8 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {u' : U} {v' : U} (hu : Eq.{succ u1} U u u') (hv : Eq.{succ u1} U v v') (e : Quiver.Hom.{succ u2, u1} U _inst_1 u v), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') (Quiver.Hom.cast.{u2, u1} U _inst_1 u v u' v' hu hv e) (cast.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') (Eq.mpr.{0} (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (id.{0} (Eq.{1} Prop (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v'))) (Eq.ndrec.{0, succ u1} U u (fun (_a : U) => Eq.{1} Prop (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 _a v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v'))) (Eq.refl.{1} Prop (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v'))) u' hu)) (Eq.mpr.{0} (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (id.{0} (Eq.{1} Prop (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') (Quiver.Hom.{succ u2, u1} U _inst_1 u' v'))) (Eq.ndrec.{0, succ u1} U v (fun (_a : U) => Eq.{1} Prop (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')) (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' _a) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v'))) (Eq.refl.{1} Prop (Eq.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v) (Quiver.Hom.{succ u2, u1} U _inst_1 u' v'))) v' hv)) (Eq.refl.{succ (succ u2)} Type.{u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v')))) e)
 Case conversion may be inaccurate. Consider using '#align quiver.hom.cast_eq_cast Quiver.Hom.cast_eq_castₓ'. -/
 theorem Hom.cast_eq_cast {u v u' v' : U} (hu : u = u') (hv : v = v') (e : u ⟶ v) :
-    e.cast hu hv = cast (by rw [hu, hv]) e := by
+    e.cast hu hv = cast (by rw [hu, hv]) e :=
+  by
   subst_vars
   rfl
 #align quiver.hom.cast_eq_cast Quiver.Hom.cast_eq_cast
@@ -75,7 +76,8 @@ Case conversion may be inaccurate. Consider using '#align quiver.hom.cast_cast Q
 @[simp]
 theorem Hom.cast_cast {u v u' v' u'' v'' : U} (e : u ⟶ v) (hu : u = u') (hv : v = v')
     (hu' : u' = u'') (hv' : v' = v'') :
-    (e.cast hu hv).cast hu' hv' = e.cast (hu.trans hu') (hv.trans hv') := by
+    (e.cast hu hv).cast hu' hv' = e.cast (hu.trans hu') (hv.trans hv') :=
+  by
   subst_vars
   rfl
 #align quiver.hom.cast_cast Quiver.Hom.cast_cast
@@ -87,7 +89,7 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {u' : U} {v' : U} (hu : Eq.{succ u1} U u u') (hv : Eq.{succ u1} U v v') (e : Quiver.Hom.{succ u2, u1} U _inst_1 u v), HEq.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') (Quiver.Hom.cast.{u2, u1} U _inst_1 u v u' v' hu hv e) (Quiver.Hom.{succ u2, u1} U _inst_1 u v) e
 Case conversion may be inaccurate. Consider using '#align quiver.hom.cast_heq Quiver.Hom.cast_heqₓ'. -/
 theorem Hom.cast_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (e : u ⟶ v) :
-    HEq (e.cast hu hv) e := by 
+    HEq (e.cast hu hv) e := by
   subst_vars
   rfl
 #align quiver.hom.cast_heq Quiver.Hom.cast_heq
@@ -99,7 +101,7 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {u' : U} {v' : U} (hu : Eq.{succ u1} U u u') (hv : Eq.{succ u1} U v v') (e : Quiver.Hom.{succ u2, u1} U _inst_1 u v) (e' : Quiver.Hom.{succ u2, u1} U _inst_1 u' v'), Iff (Eq.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') (Quiver.Hom.cast.{u2, u1} U _inst_1 u v u' v' hu hv e) e') (HEq.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u v) e (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') e')
 Case conversion may be inaccurate. Consider using '#align quiver.hom.cast_eq_iff_heq Quiver.Hom.cast_eq_iff_heqₓ'. -/
 theorem Hom.cast_eq_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (e : u ⟶ v) (e' : u' ⟶ v') :
-    e.cast hu hv = e' ↔ HEq e e' := by 
+    e.cast hu hv = e' ↔ HEq e e' := by
   rw [hom.cast_eq_cast]
   exact cast_eq_iff_heq
 #align quiver.hom.cast_eq_iff_heq Quiver.Hom.cast_eq_iff_heq
@@ -111,7 +113,8 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {u' : U} {v' : U} (hu : Eq.{succ u1} U u u') (hv : Eq.{succ u1} U v v') (e : Quiver.Hom.{succ u2, u1} U _inst_1 u v) (e' : Quiver.Hom.{succ u2, u1} U _inst_1 u' v'), Iff (Eq.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') e' (Quiver.Hom.cast.{u2, u1} U _inst_1 u v u' v' hu hv e)) (HEq.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 u' v') e' (Quiver.Hom.{succ u2, u1} U _inst_1 u v) e)
 Case conversion may be inaccurate. Consider using '#align quiver.hom.eq_cast_iff_heq Quiver.Hom.eq_cast_iff_heqₓ'. -/
 theorem Hom.eq_cast_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (e : u ⟶ v) (e' : u' ⟶ v') :
-    e' = e.cast hu hv ↔ HEq e' e := by
+    e' = e.cast hu hv ↔ HEq e' e :=
+  by
   rw [eq_comm, hom.cast_eq_iff_heq]
   exact ⟨HEq.symm, HEq.symm⟩
 #align quiver.hom.eq_cast_iff_heq Quiver.Hom.eq_cast_iff_heq
@@ -161,7 +164,8 @@ Case conversion may be inaccurate. Consider using '#align quiver.path.cast_cast 
 @[simp]
 theorem Path.cast_cast {u v u' v' u'' v'' : U} (p : Path u v) (hu : u = u') (hv : v = v')
     (hu' : u' = u'') (hv' : v' = v'') :
-    (p.cast hu hv).cast hu' hv' = p.cast (hu.trans hu') (hv.trans hv') := by
+    (p.cast hu hv).cast hu' hv' = p.cast (hu.trans hu') (hv.trans hv') :=
+  by
   subst_vars
   rfl
 #align quiver.path.cast_cast Quiver.Path.cast_cast
@@ -173,7 +177,8 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {u' : U} (hu : Eq.{succ u1} U u u'), Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u' u') (Quiver.Path.cast.{u2, u1} U _inst_1 u u u' u' hu hu (Quiver.Path.nil.{succ u2, u1} U _inst_1 u)) (Quiver.Path.nil.{succ u2, u1} U _inst_1 u')
 Case conversion may be inaccurate. Consider using '#align quiver.path.cast_nil Quiver.Path.cast_nilₓ'. -/
 @[simp]
-theorem Path.cast_nil {u u' : U} (hu : u = u') : (Path.nil : Path u u).cast hu hu = path.nil := by
+theorem Path.cast_nil {u u' : U} (hu : u = u') : (Path.nil : Path u u).cast hu hu = path.nil :=
+  by
   subst_vars
   rfl
 #align quiver.path.cast_nil Quiver.Path.cast_nil
@@ -185,7 +190,7 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {u' : U} {v' : U} (hu : Eq.{succ u1} U u u') (hv : Eq.{succ u1} U v v') (p : Quiver.Path.{succ u2, u1} U _inst_1 u v), HEq.{max (succ u1) (succ u2)} (Quiver.Path.{succ u2, u1} U _inst_1 u' v') (Quiver.Path.cast.{u2, u1} U _inst_1 u v u' v' hu hv p) (Quiver.Path.{succ u2, u1} U _inst_1 u v) p
 Case conversion may be inaccurate. Consider using '#align quiver.path.cast_heq Quiver.Path.cast_heqₓ'. -/
 theorem Path.cast_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (p : Path u v) :
-    HEq (p.cast hu hv) p := by 
+    HEq (p.cast hu hv) p := by
   rw [path.cast_eq_cast]
   exact cast_heq _ _
 #align quiver.path.cast_heq Quiver.Path.cast_heq
@@ -197,7 +202,8 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {u' : U} {v' : U} (hu : Eq.{succ u1} U u u') (hv : Eq.{succ u1} U v v') (p : Quiver.Path.{succ u2, u1} U _inst_1 u v) (p' : Quiver.Path.{succ u2, u1} U _inst_1 u' v'), Iff (Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u' v') (Quiver.Path.cast.{u2, u1} U _inst_1 u v u' v' hu hv p) p') (HEq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u v) p (Quiver.Path.{succ u2, u1} U _inst_1 u' v') p')
 Case conversion may be inaccurate. Consider using '#align quiver.path.cast_eq_iff_heq Quiver.Path.cast_eq_iff_heqₓ'. -/
 theorem Path.cast_eq_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (p : Path u v)
-    (p' : Path u' v') : p.cast hu hv = p' ↔ HEq p p' := by
+    (p' : Path u' v') : p.cast hu hv = p' ↔ HEq p p' :=
+  by
   rw [path.cast_eq_cast]
   exact cast_eq_iff_heq
 #align quiver.path.cast_eq_iff_heq Quiver.Path.cast_eq_iff_heq
@@ -221,7 +227,8 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {w : U} {u' : U} {w' : U} (p : Quiver.Path.{succ u2, u1} U _inst_1 u v) (e : Quiver.Hom.{succ u2, u1} U _inst_1 v w) (hu : Eq.{succ u1} U u u') (hw : Eq.{succ u1} U w w'), Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u' w') (Quiver.Path.cast.{u2, u1} U _inst_1 u w u' w' hu hw (Quiver.Path.cons.{succ u2, u1} U _inst_1 u v w p e)) (Quiver.Path.cons.{succ u2, u1} U _inst_1 u' v w' (Quiver.Path.cast.{u2, u1} U _inst_1 u v u' v hu (rfl.{succ u1} U v) p) (Quiver.Hom.cast.{u2, u1} U _inst_1 v w v w' (rfl.{succ u1} U v) hw e))
 Case conversion may be inaccurate. Consider using '#align quiver.path.cast_cons Quiver.Path.cast_consₓ'. -/
 theorem Path.cast_cons {u v w u' w' : U} (p : Path u v) (e : v ⟶ w) (hu : u = u') (hw : w = w') :
-    (p.cons e).cast hu hw = (p.cast hu rfl).cons (e.cast rfl hw) := by
+    (p.cons e).cast hu hw = (p.cast hu rfl).cons (e.cast rfl hw) :=
+  by
   subst_vars
   rfl
 #align quiver.path.cast_cons Quiver.Path.cast_cons
@@ -233,7 +240,8 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {v' : U} {w : U} {p : Quiver.Path.{succ u2, u1} U _inst_1 u v} {p' : Quiver.Path.{succ u2, u1} U _inst_1 u v'} {e : Quiver.Hom.{succ u2, u1} U _inst_1 v w} {e' : Quiver.Hom.{succ u2, u1} U _inst_1 v' w} (h : Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u w) (Quiver.Path.cons.{succ u2, u1} U _inst_1 u v w p e) (Quiver.Path.cons.{succ u2, u1} U _inst_1 u v' w p' e')), Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u v') (Quiver.Path.cast.{u2, u1} U _inst_1 u v u v' (rfl.{succ u1} U u) (Quiver.Path.obj_eq_of_cons_eq_cons.{succ u2, u1} U _inst_1 u v v' w p p' e e' h) p) p'
 Case conversion may be inaccurate. Consider using '#align quiver.cast_eq_of_cons_eq_cons Quiver.cast_eq_of_cons_eq_consₓ'. -/
 theorem cast_eq_of_cons_eq_cons {u v v' w : U} {p : Path u v} {p' : Path u v'} {e : v ⟶ w}
-    {e' : v' ⟶ w} (h : p.cons e = p'.cons e') : p.cast rfl (obj_eq_of_cons_eq_cons h) = p' := by
+    {e' : v' ⟶ w} (h : p.cons e = p'.cons e') : p.cast rfl (obj_eq_of_cons_eq_cons h) = p' :=
+  by
   rw [path.cast_eq_iff_heq]
   exact heq_of_cons_eq_cons h
 #align quiver.cast_eq_of_cons_eq_cons Quiver.cast_eq_of_cons_eq_cons
@@ -245,7 +253,8 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} {v' : U} {w : U} {p : Quiver.Path.{succ u2, u1} U _inst_1 u v} {p' : Quiver.Path.{succ u2, u1} U _inst_1 u v'} {e : Quiver.Hom.{succ u2, u1} U _inst_1 v w} {e' : Quiver.Hom.{succ u2, u1} U _inst_1 v' w} (h : Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u w) (Quiver.Path.cons.{succ u2, u1} U _inst_1 u v w p e) (Quiver.Path.cons.{succ u2, u1} U _inst_1 u v' w p' e')), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} U _inst_1 v' w) (Quiver.Hom.cast.{u2, u1} U _inst_1 v w v' w (Quiver.Path.obj_eq_of_cons_eq_cons.{succ u2, u1} U _inst_1 u v v' w p p' e e' h) (rfl.{succ u1} U w) e) e'
 Case conversion may be inaccurate. Consider using '#align quiver.hom_cast_eq_of_cons_eq_cons Quiver.hom_cast_eq_of_cons_eq_consₓ'. -/
 theorem hom_cast_eq_of_cons_eq_cons {u v v' w : U} {p : Path u v} {p' : Path u v'} {e : v ⟶ w}
-    {e' : v' ⟶ w} (h : p.cons e = p'.cons e') : e.cast (obj_eq_of_cons_eq_cons h) rfl = e' := by
+    {e' : v' ⟶ w} (h : p.cons e = p'.cons e') : e.cast (obj_eq_of_cons_eq_cons h) rfl = e' :=
+  by
   rw [hom.cast_eq_iff_heq]
   exact hom_heq_of_cons_eq_cons h
 #align quiver.hom_cast_eq_of_cons_eq_cons Quiver.hom_cast_eq_of_cons_eq_cons

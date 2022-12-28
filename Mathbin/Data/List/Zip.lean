@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.list.zip
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,19 +95,21 @@ theorem all₂_zip_with {f : α → β → γ} {p : γ → Prop} :
     ∀ {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂),
       All₂ p (zipWith f l₁ l₂) ↔ Forall₂ (fun x y => p (f x y)) l₁ l₂
   | [], [], _ => by simp
-  | a :: l₁, b :: l₂, h => by 
+  | a :: l₁, b :: l₂, h => by
     simp only [length_cons, add_left_inj] at h
     simp [all₂_zip_with h]
 #align list.all₂_zip_with List.all₂_zip_with
 
 theorem lt_length_left_of_zip_with {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
-    (h : i < (zipWith f l l').length) : i < l.length := by
+    (h : i < (zipWith f l l').length) : i < l.length :=
+  by
   rw [length_zip_with, lt_min_iff] at h
   exact h.left
 #align list.lt_length_left_of_zip_with List.lt_length_left_of_zip_with
 
 theorem lt_length_right_of_zip_with {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
-    (h : i < (zipWith f l l').length) : i < l'.length := by
+    (h : i < (zipWith f l l').length) : i < l'.length :=
+  by
   rw [length_zip_with, lt_min_iff] at h
   exact h.right
 #align list.lt_length_right_of_zip_with List.lt_length_right_of_zip_with
@@ -149,20 +151,23 @@ theorem zip_map_right (f : β → γ) (l₁ : List α) (l₂ : List β) :
 
 @[simp]
 theorem zip_with_map {μ} (f : γ → δ → μ) (g : α → γ) (h : β → δ) (as : List α) (bs : List β) :
-    zipWith f (as.map g) (bs.map h) = zipWith (fun a b => f (g a) (h b)) as bs := by
+    zipWith f (as.map g) (bs.map h) = zipWith (fun a b => f (g a) (h b)) as bs :=
+  by
   induction as generalizing bs
   · simp
   · cases bs <;> simp [*]
 #align list.zip_with_map List.zip_with_map
 
 theorem zip_with_map_left (f : α → β → γ) (g : δ → α) (l : List δ) (l' : List β) :
-    zipWith f (l.map g) l' = zipWith (f ∘ g) l l' := by
+    zipWith f (l.map g) l' = zipWith (f ∘ g) l l' :=
+  by
   convert zip_with_map f g id l l'
   exact Eq.symm (List.map_id _)
 #align list.zip_with_map_left List.zip_with_map_left
 
 theorem zip_with_map_right (f : α → β → γ) (l : List α) (g : δ → β) (l' : List δ) :
-    zipWith f l (l'.map g) = zipWith (fun x => f x ∘ g) l l' := by
+    zipWith f l (l'.map g) = zipWith (fun x => f x ∘ g) l l' :=
+  by
   convert List.zip_with_map f id g l l'
   exact Eq.symm (List.map_id _)
 #align list.zip_with_map_right List.zip_with_map_right
@@ -174,7 +179,8 @@ theorem zip_map' (f : α → β) (g : α → γ) :
 #align list.zip_map' List.zip_map'
 
 theorem map_zip_with {δ : Type _} (f : α → β) (g : γ → δ → α) (l : List γ) (l' : List δ) :
-    map f (zipWith g l l') = zipWith (fun x y => f (g x y)) l l' := by
+    map f (zipWith g l l') = zipWith (fun x y => f (g x y)) l l' :=
+  by
   induction' l with hd tl hl generalizing l'
   · simp
   · cases l'
@@ -191,23 +197,23 @@ theorem mem_zip {a b} : ∀ {l₁ : List α} {l₂ : List β}, (a, b) ∈ zip l�
 theorem map_fst_zip :
     ∀ (l₁ : List α) (l₂ : List β), l₁.length ≤ l₂.length → map Prod.fst (zip l₁ l₂) = l₁
   | [], bs, _ => rfl
-  | a :: as, b :: bs, h => by 
+  | a :: as, b :: bs, h => by
     simp at h
     simp! [*]
-  | a :: as, [], h => by 
+  | a :: as, [], h => by
     simp at h
     contradiction
 #align list.map_fst_zip List.map_fst_zip
 
 theorem map_snd_zip :
     ∀ (l₁ : List α) (l₂ : List β), l₂.length ≤ l₁.length → map Prod.snd (zip l₁ l₂) = l₂
-  | _, [], _ => by 
+  | _, [], _ => by
     rw [zip_nil_right]
     rfl
-  | [], b :: bs, h => by 
+  | [], b :: bs, h => by
     simp at h
     contradiction
-  | a :: as, b :: bs, h => by 
+  | a :: as, b :: bs, h => by
     simp at h
     simp! [*]
 #align list.map_snd_zip List.map_snd_zip
@@ -268,14 +274,16 @@ theorem zip_of_prod {l : List α} {l' : List β} {lp : List (α × β)} (hl : lp
 #align list.zip_of_prod List.zip_of_prod
 
 theorem map_prod_left_eq_zip {l : List α} (f : α → β) :
-    (l.map fun x => (x, f x)) = l.zip (l.map f) := by
+    (l.map fun x => (x, f x)) = l.zip (l.map f) :=
+  by
   rw [← zip_map']
   congr
   exact map_id _
 #align list.map_prod_left_eq_zip List.map_prod_left_eq_zip
 
 theorem map_prod_right_eq_zip {l : List α} (f : α → β) :
-    (l.map fun x => (f x, x)) = (l.map f).zip l := by
+    (l.map fun x => (f x, x)) = (l.map f).zip l :=
+  by
   rw [← zip_map']
   congr
   exact map_id _
@@ -290,14 +298,15 @@ theorem zip_with_comm (f : α → β → γ) :
 
 @[congr]
 theorem zip_with_congr (f g : α → β → γ) (la : List α) (lb : List β)
-    (h : List.Forall₂ (fun a b => f a b = g a b) la lb) : zipWith f la lb = zipWith g la lb := by
+    (h : List.Forall₂ (fun a b => f a b = g a b) la lb) : zipWith f la lb = zipWith g la lb :=
+  by
   induction' h with a b as bs hfg habs ih
   · rfl
   · exact congr_arg₂ _ hfg ih
 #align list.zip_with_congr List.zip_with_congr
 
 theorem zip_with_comm_of_comm (f : α → α → β) (comm : ∀ x y : α, f x y = f y x) (l l' : List α) :
-    zipWith f l l' = zipWith f l' l := by 
+    zipWith f l l' = zipWith f l' l := by
   rw [zip_with_comm]
   simp only [comm]
 #align list.zip_with_comm_of_comm List.zip_with_comm_of_comm
@@ -381,7 +390,8 @@ theorem revzip_swap (l : List α) : (revzip l).map Prod.swap = revzip l.reverse 
 #align list.revzip_swap List.revzip_swap
 
 theorem nth_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i : ℕ) :
-    (zipWith f l₁ l₂).nth i = ((l₁.nth i).map f).bind fun g => (l₂.nth i).map g := by
+    (zipWith f l₁ l₂).nth i = ((l₁.nth i).map f).bind fun g => (l₂.nth i).map g :=
+  by
   induction l₁ generalizing l₂ i
   · simp [zip_with, (· <*> ·)]
   · cases l₂ <;> simp only [zip_with, Seq.seq, Functor.map, nth, Option.map_none']
@@ -391,7 +401,7 @@ theorem nth_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i
 
 theorem nth_zip_with_eq_some {α β γ} (f : α → β → γ) (l₁ : List α) (l₂ : List β) (z : γ) (i : ℕ) :
     (zipWith f l₁ l₂).nth i = some z ↔ ∃ x y, l₁.nth i = some x ∧ l₂.nth i = some y ∧ f x y = z :=
-  by 
+  by
   induction l₁ generalizing l₂ i
   · simp [zip_with]
   · cases l₂ <;> simp only [zip_with, nth, exists_false, and_false_iff, false_and_iff]
@@ -399,7 +409,8 @@ theorem nth_zip_with_eq_some {α β γ} (f : α → β → γ) (l₁ : List α) 
 #align list.nth_zip_with_eq_some List.nth_zip_with_eq_some
 
 theorem nth_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : ℕ) :
-    (zip l₁ l₂).nth i = some z ↔ l₁.nth i = some z.1 ∧ l₂.nth i = some z.2 := by
+    (zip l₁ l₂).nth i = some z ↔ l₁.nth i = some z.1 ∧ l₂.nth i = some z.2 :=
+  by
   cases z
   rw [zip, nth_zip_with_eq_some]; constructor
   · rintro ⟨x, y, h₀, h₁, h₂⟩
@@ -413,7 +424,7 @@ theorem nth_le_zip_with {f : α → β → γ} {l : List α} {l' : List β} {i :
     {h : i < (zipWith f l l').length} :
     (zipWith f l l').nthLe i h =
       f (l.nthLe i (lt_length_left_of_zip_with h)) (l'.nthLe i (lt_length_right_of_zip_with h)) :=
-  by 
+  by
   rw [← Option.some_inj, ← nth_le_nth, nth_zip_with_eq_some]
   refine'
     ⟨l.nth_le i (lt_length_left_of_zip_with h), l'.nth_le i (lt_length_right_of_zip_with h),
@@ -429,7 +440,8 @@ theorem nth_le_zip {l : List α} {l' : List β} {i : ℕ} {h : i < (zip l l').le
 #align list.nth_le_zip List.nth_le_zip
 
 theorem mem_zip_inits_tails {l : List α} {init tail : List α} :
-    (init, tail) ∈ zip l.inits l.tails ↔ init ++ tail = l := by
+    (init, tail) ∈ zip l.inits l.tails ↔ init ++ tail = l :=
+  by
   induction l generalizing init tail <;> simp_rw [tails, inits, zip_cons_cons]
   · simp
   · constructor <;> rw [mem_cons_iff, zip_map_left, mem_map, Prod.exists]
@@ -445,7 +457,8 @@ theorem mem_zip_inits_tails {l : List α} {init tail : List α} :
 #align list.mem_zip_inits_tails List.mem_zip_inits_tails
 
 theorem map_uncurry_zip_eq_zip_with (f : α → β → γ) (l : List α) (l' : List β) :
-    map (Function.uncurry f) (l.zip l') = zipWith f l l' := by
+    map (Function.uncurry f) (l.zip l') = zipWith f l l' :=
+  by
   induction' l with hd tl hl generalizing l'
   · simp
   · cases' l' with hd' tl'
@@ -455,7 +468,8 @@ theorem map_uncurry_zip_eq_zip_with (f : α → β → γ) (l : List α) (l' : L
 
 @[simp]
 theorem sum_zip_with_distrib_left {γ : Type _} [Semiring γ] (f : α → β → γ) (n : γ) (l : List α)
-    (l' : List β) : (l.zipWith (fun x y => n * f x y) l').Sum = n * (l.zipWith f l').Sum := by
+    (l' : List β) : (l.zipWith (fun x y => n * f x y) l').Sum = n * (l.zipWith f l').Sum :=
+  by
   induction' l with hd tl hl generalizing f n l'
   · simp
   · cases' l' with hd' tl'
@@ -470,7 +484,8 @@ section Distrib
 
 variable (f : α → β → γ) (l : List α) (l' : List β) (n : ℕ)
 
-theorem zip_with_distrib_take : (zipWith f l l').take n = zipWith f (l.take n) (l'.take n) := by
+theorem zip_with_distrib_take : (zipWith f l l').take n = zipWith f (l.take n) (l'.take n) :=
+  by
   induction' l with hd tl hl generalizing l' n
   · simp
   · cases l'
@@ -480,7 +495,8 @@ theorem zip_with_distrib_take : (zipWith f l l').take n = zipWith f (l.take n) (
       · simp [hl]
 #align list.zip_with_distrib_take List.zip_with_distrib_take
 
-theorem zip_with_distrib_drop : (zipWith f l l').drop n = zipWith f (l.drop n) (l'.drop n) := by
+theorem zip_with_distrib_drop : (zipWith f l l').drop n = zipWith f (l.drop n) (l'.drop n) :=
+  by
   induction' l with hd tl hl generalizing l' n
   · simp
   · cases l'
@@ -496,7 +512,8 @@ theorem zip_with_distrib_tail : (zipWith f l l').tail = zipWith f l.tail l'.tail
 
 theorem zip_with_append (f : α → β → γ) (l la : List α) (l' lb : List β)
     (h : l.length = l'.length) :
-    zipWith f (l ++ la) (l' ++ lb) = zipWith f l l' ++ zipWith f la lb := by
+    zipWith f (l ++ la) (l' ++ lb) = zipWith f l l' ++ zipWith f la lb :=
+  by
   induction' l with hd tl hl generalizing l'
   · have : l' = [] := eq_nil_of_length_eq_zero (by simpa using h.symm)
     simp [this]
@@ -507,7 +524,8 @@ theorem zip_with_append (f : α → β → γ) (l la : List α) (l' lb : List β
 #align list.zip_with_append List.zip_with_append
 
 theorem zip_with_distrib_reverse (h : l.length = l'.length) :
-    (zipWith f l l').reverse = zipWith f l.reverse l'.reverse := by
+    (zipWith f l l').reverse = zipWith f l.reverse l'.reverse :=
+  by
   induction' l with hd tl hl generalizing l'
   · simp
   · cases' l' with hd' tl'
@@ -530,7 +548,8 @@ theorem prod_mul_prod_eq_prod_zip_with_mul_prod_drop :
         (zipWith (· * ·) L L').Prod * (L.drop L'.length).Prod * (L'.drop L.length).Prod
   | [], ys => by simp [Nat.zero_le]
   | xs, [] => by simp [Nat.zero_le]
-  | x :: xs, y :: ys => by
+  | x :: xs, y :: ys =>
+    by
     simp only [drop, length, zip_with_cons_cons, prod_cons]
     rw [mul_assoc x, mul_comm xs.prod, mul_assoc y, mul_comm ys.prod,
       prod_mul_prod_eq_prod_zip_with_mul_prod_drop xs ys, mul_assoc, mul_assoc, mul_assoc,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module data.set.intervals.surj_on
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β _inst_2) f) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (forall (a : α) (b : α), Set.SurjOn.{u2, u1} α β f (Set.Ioo.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) a b) (Set.Ioo.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) (f a) (f b)))
 Case conversion may be inaccurate. Consider using '#align surj_on_Ioo_of_monotone_surjective surjOn_Ioo_of_monotone_surjectiveₓ'. -/
 theorem surjOn_Ioo_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
-    (a b : α) : SurjOn f (Ioo a b) (Ioo (f a) (f b)) := by
+    (a b : α) : SurjOn f (Ioo a b) (Ioo (f a) (f b)) :=
+  by
   intro p hp
   rcases h_surj p with ⟨x, rfl⟩
   refine' ⟨x, mem_Ioo.2 _, rfl⟩
@@ -48,7 +49,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β _inst_2) f) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (forall (a : α) (b : α), Set.SurjOn.{u2, u1} α β f (Set.Ico.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) a b) (Set.Ico.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) (f a) (f b)))
 Case conversion may be inaccurate. Consider using '#align surj_on_Ico_of_monotone_surjective surjOn_Ico_of_monotone_surjectiveₓ'. -/
 theorem surjOn_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
-    (a b : α) : SurjOn f (Ico a b) (Ico (f a) (f b)) := by
+    (a b : α) : SurjOn f (Ico a b) (Ico (f a) (f b)) :=
+  by
   obtain hab | hab := lt_or_le a b
   · intro p hp
     rcases eq_left_or_mem_Ioo_of_mem_Ico hp with (rfl | hp')
@@ -78,7 +80,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align surj_on_Icc_of_monotone_surjective surjOn_Icc_of_monotone_surjectiveₓ'. -/
 -- to see that the hypothesis `a ≤ b` is necessary, consider a constant function
 theorem surjOn_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
-    {a b : α} (hab : a ≤ b) : SurjOn f (Icc a b) (Icc (f a) (f b)) := by
+    {a b : α} (hab : a ≤ b) : SurjOn f (Icc a b) (Icc (f a) (f b)) :=
+  by
   intro p hp
   rcases eq_endpoints_or_mem_Ioo_of_mem_Icc hp with (rfl | rfl | hp')
   · exact ⟨a, left_mem_Icc.mpr hab, rfl⟩
@@ -94,7 +97,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β _inst_2) f) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (forall (a : α), Set.SurjOn.{u2, u1} α β f (Set.Ioi.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) a) (Set.Ioi.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) (f a)))
 Case conversion may be inaccurate. Consider using '#align surj_on_Ioi_of_monotone_surjective surjOn_Ioi_of_monotone_surjectiveₓ'. -/
 theorem surjOn_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
-    (a : α) : SurjOn f (Ioi a) (Ioi (f a)) := by
+    (a : α) : SurjOn f (Ioi a) (Ioi (f a)) :=
+  by
   rw [← compl_Iic, ← compl_compl (Ioi (f a))]
   refine' maps_to.surj_on_compl _ h_surj
   exact fun x hx => (h_mono hx).not_lt
@@ -118,7 +122,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {f : α -> β}, (Monotone.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β _inst_2) f) -> (Function.Surjective.{succ u2, succ u1} α β f) -> (forall (a : α), Set.SurjOn.{u2, u1} α β f (Set.Ici.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) a) (Set.Ici.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) (f a)))
 Case conversion may be inaccurate. Consider using '#align surj_on_Ici_of_monotone_surjective surjOn_Ici_of_monotone_surjectiveₓ'. -/
 theorem surjOn_Ici_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
-    (a : α) : SurjOn f (Ici a) (Ici (f a)) := by
+    (a : α) : SurjOn f (Ici a) (Ici (f a)) :=
+  by
   rw [← Ioi_union_left, ← Ioi_union_left]
   exact
     (surjOn_Ioi_of_monotone_surjective h_mono h_surj a).union_union

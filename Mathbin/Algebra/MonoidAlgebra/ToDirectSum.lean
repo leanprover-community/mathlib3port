@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.to_direct_sum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,8 @@ theorem to_direct_sum_add [Semiring M] (f g : AddMonoidAlgebra M ι) :
 
 @[simp]
 theorem to_direct_sum_mul [DecidableEq ι] [AddMonoid ι] [Semiring M] (f g : AddMonoidAlgebra M ι) :
-    (f * g).toDirectSum = f.toDirectSum * g.toDirectSum := by
+    (f * g).toDirectSum = f.toDirectSum * g.toDirectSum :=
+  by
   let to_hom : AddMonoidAlgebra M ι →+ ⨁ i : ι, M :=
     ⟨to_direct_sum, to_direct_sum_zero, to_direct_sum_add⟩
   show to_hom (f * g) = to_hom f * to_hom g
@@ -168,7 +169,7 @@ theorem to_add_monoid_algebra_add [Semiring M] [∀ m : M, Decidable (m ≠ 0)] 
 @[simp]
 theorem to_add_monoid_algebra_mul [AddMonoid ι] [Semiring M] [∀ m : M, Decidable (m ≠ 0)]
     (f g : ⨁ i : ι, M) : (f * g).toAddMonoidAlgebra = toAddMonoidAlgebra f * toAddMonoidAlgebra g :=
-  by 
+  by
   apply_fun AddMonoidAlgebra.toDirectSum
   · simp
   · apply Function.LeftInverse.injective
@@ -189,7 +190,7 @@ equiv. -/
 @[simps (config := { fullyApplied := false })]
 def addMonoidAlgebraEquivDirectSum [DecidableEq ι] [Semiring M] [∀ m : M, Decidable (m ≠ 0)] :
     AddMonoidAlgebra M ι ≃ ⨁ i : ι, M :=
-  { finsuppEquivDfinsupp with 
+  { finsuppEquivDfinsupp with
     toFun := AddMonoidAlgebra.toDirectSum
     invFun := DirectSum.toAddMonoidAlgebra }
 #align add_monoid_algebra_equiv_direct_sum addMonoidAlgebraEquivDirectSum
@@ -199,7 +200,8 @@ def addMonoidAlgebraEquivDirectSum [DecidableEq ι] [Semiring M] [∀ m : M, Dec
 @[simps (config := { fullyApplied := false })]
 def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiring M] [∀ m : M, Decidable (m ≠ 0)] :
     AddMonoidAlgebra M ι ≃+ ⨁ i : ι, M :=
-  { addMonoidAlgebraEquivDirectSum with
+  {
+    addMonoidAlgebraEquivDirectSum with
     toFun := AddMonoidAlgebra.toDirectSum
     invFun := DirectSum.toAddMonoidAlgebra
     map_add' := AddMonoidAlgebra.to_direct_sum_add }
@@ -210,7 +212,10 @@ def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiring M] [∀ m : M, 
 @[simps (config := { fullyApplied := false })]
 def addMonoidAlgebraRingEquivDirectSum [DecidableEq ι] [AddMonoid ι] [Semiring M]
     [∀ m : M, Decidable (m ≠ 0)] : AddMonoidAlgebra M ι ≃+* ⨁ i : ι, M :=
-  { (addMonoidAlgebraAddEquivDirectSum : AddMonoidAlgebra M ι ≃+ ⨁ i : ι, M) with
+  {
+    (addMonoidAlgebraAddEquivDirectSum :
+      AddMonoidAlgebra M ι ≃+
+        ⨁ i : ι, M) with
     toFun := AddMonoidAlgebra.toDirectSum
     invFun := DirectSum.toAddMonoidAlgebra
     map_mul' := AddMonoidAlgebra.to_direct_sum_mul }
@@ -221,7 +226,10 @@ def addMonoidAlgebraRingEquivDirectSum [DecidableEq ι] [AddMonoid ι] [Semiring
 @[simps (config := { fullyApplied := false })]
 def addMonoidAlgebraAlgEquivDirectSum [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A]
     [Algebra R A] [∀ m : A, Decidable (m ≠ 0)] : AddMonoidAlgebra A ι ≃ₐ[R] ⨁ i : ι, A :=
-  { (addMonoidAlgebraRingEquivDirectSum : AddMonoidAlgebra A ι ≃+* ⨁ i : ι, A) with
+  {
+    (addMonoidAlgebraRingEquivDirectSum :
+      AddMonoidAlgebra A ι ≃+*
+        ⨁ i : ι, A) with
     toFun := AddMonoidAlgebra.toDirectSum
     invFun := DirectSum.toAddMonoidAlgebra
     commutes' := fun r => AddMonoidAlgebra.to_direct_sum_single _ _ }

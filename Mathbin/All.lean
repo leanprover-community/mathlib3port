@@ -544,6 +544,7 @@ import Mathbin.Analysis.Complex.Circle
 import Mathbin.Analysis.Complex.Conformal
 import Mathbin.Analysis.Complex.Isometry
 import Mathbin.Analysis.Complex.Liouville
+import Mathbin.Analysis.Complex.LocallyUniformLimit
 import Mathbin.Analysis.Complex.OpenMapping
 import Mathbin.Analysis.Complex.PhragmenLindelof
 import Mathbin.Analysis.Complex.Polynomial
@@ -1375,6 +1376,7 @@ import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Lemmas
 import Mathbin.Data.List.Lex
 import Mathbin.Data.List.MinMax
+import Mathbin.Data.List.Modeq
 import Mathbin.Data.List.NatAntidiagonal
 import Mathbin.Data.List.Nodup
 import Mathbin.Data.List.NodupEquivFin
@@ -2426,6 +2428,7 @@ import Mathbin.RingTheory.Artinian
 import Mathbin.RingTheory.Bezout
 import Mathbin.RingTheory.ChainOfDivisors
 import Mathbin.RingTheory.ClassGroup
+import Mathbin.RingTheory.Congruence
 import Mathbin.RingTheory.Coprime.Basic
 import Mathbin.RingTheory.Coprime.Ideal
 import Mathbin.RingTheory.Coprime.Lemmas

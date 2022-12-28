@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.cofix
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ def mrepr {α : Typevec n} : q.p.M α → q.p.M α :=
 /-- the map function for the functor `cofix F` -/
 def Cofix.map {α β : Typevec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
   Quot.lift (fun x : q.p.M α => Quot.mk McongrCat (g <$$> x))
-    (by 
+    (by
       rintro aa₁ aa₂ ⟨r, pr, ra₁a₂⟩; apply Quot.sound
       let r' b₁ b₂ := ∃ a₁ a₂ : q.P.M α, r a₁ a₂ ∧ b₁ = g <$$> a₁ ∧ b₂ = g <$$> a₂
       use r'; constructor
@@ -114,11 +114,12 @@ def Cofix.map {α β : Typevec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
         rintro b₁ b₂ ⟨a₁, a₂, ra₁a₂, b₁eq, b₂eq⟩
         let u : Quot r → Quot r' :=
           Quot.lift (fun x : q.P.M α => Quot.mk r' (g <$$> x))
-            (by 
+            (by
               intro a₁ a₂ ra₁a₂
               apply Quot.sound
               exact ⟨a₁, a₂, ra₁a₂, rfl, rfl⟩)
-        have hu : (Quot.mk r' ∘ fun x : q.P.M α => g <$$> x) = u ∘ Quot.mk r := by
+        have hu : (Quot.mk r' ∘ fun x : q.P.M α => g <$$> x) = u ∘ Quot.mk r :=
+          by
           ext x
           rfl
         rw [b₁eq, b₂eq, M.dest_map, M.dest_map, ← q.P.comp_map, ← q.P.comp_map]
@@ -138,15 +139,15 @@ def Cofix.corec {α : Typevec n} {β : Type u} (g : β → F (α.append1 β)) : 
 /-- Destructor for `cofix F` -/
 def Cofix.dest {α : Typevec n} : Cofix F α → F (α.append1 (Cofix F α)) :=
   Quot.lift (fun x => appendFun id (Quot.mk McongrCat) <$$> abs (M.dest q.p x))
-    (by 
+    (by
       rintro x y ⟨r, pr, rxy⟩
       dsimp
-      have : ∀ x y, r x y → Mcongr x y := by 
+      have : ∀ x y, r x y → Mcongr x y := by
         intro x y h
         exact ⟨r, pr, h⟩
       rw [← Quot.factor_mk_eq _ _ this]
       dsimp
-      conv => 
+      conv =>
         lhs
         rw [append_fun_comp_id, comp_map, ← abs_map, pr rxy, abs_map, ← comp_map, ←
           append_fun_comp_id])
@@ -188,8 +189,9 @@ def Cofix.corec₁ {α : Typevec n} {β : Type u}
 #align mvqpf.cofix.corec₁ Mvqpf.Cofix.corec₁
 
 theorem Cofix.dest_corec {α : Typevec n} {β : Type u} (g : β → F (α.append1 β)) (x : β) :
-    Cofix.dest (Cofix.corec g x) = appendFun id (Cofix.corec g) <$$> g x := by
-  conv => 
+    Cofix.dest (Cofix.corec g x) = appendFun id (Cofix.corec g) <$$> g x :=
+  by
+  conv =>
     lhs
     rw [cofix.dest, cofix.corec];
   dsimp
@@ -222,7 +224,7 @@ private theorem cofix.bisim_aux {α : Typevec n} (r : Cofix F α → Cofix F α 
       ∀ x y,
         r x y →
           appendFun id (Quot.mk r) <$$> Cofix.dest x = appendFun id (Quot.mk r) <$$> Cofix.dest y) :
-    ∀ x y, r x y → x = y := by 
+    ∀ x y, r x y → x = y := by
   intro x
   apply Quot.induction_on x
   clear x
@@ -232,13 +234,14 @@ private theorem cofix.bisim_aux {α : Typevec n} (r : Cofix F α → Cofix F α 
   intro y rxy
   apply Quot.sound
   let r' x y := r (Quot.mk _ x) (Quot.mk _ y)
-  have : is_precongr r' := by 
+  have : is_precongr r' := by
     intro a b r'ab
     have h₀ :
       append_fun id (Quot.mk r ∘ Quot.mk Mcongr) <$$> abs (M.dest q.P a) =
         append_fun id (Quot.mk r ∘ Quot.mk Mcongr) <$$> abs (M.dest q.P b) :=
       by rw [append_fun_comp_id, comp_map, comp_map] <;> exact h _ _ r'ab
-    have h₁ : ∀ u v : q.P.M α, Mcongr u v → Quot.mk r' u = Quot.mk r' v := by
+    have h₁ : ∀ u v : q.P.M α, Mcongr u v → Quot.mk r' u = Quot.mk r' v :=
+      by
       intro u v cuv
       apply Quot.sound
       dsimp [r']
@@ -246,7 +249,7 @@ private theorem cofix.bisim_aux {α : Typevec n} (r : Cofix F α → Cofix F α 
       apply h'
     let f : Quot r → Quot r' :=
       Quot.lift (Quot.lift (Quot.mk r') h₁)
-        (by 
+        (by
           intro c; apply Quot.induction_on c; clear c
           intro c d; apply Quot.induction_on d; clear d
           intro d rcd; apply Quot.sound; apply rcd)
@@ -262,7 +265,7 @@ theorem Cofix.bisim_rel {α : Typevec n} (r : Cofix F α → Cofix F α → Prop
       ∀ x y,
         r x y →
           appendFun id (Quot.mk r) <$$> Cofix.dest x = appendFun id (Quot.mk r) <$$> Cofix.dest y) :
-    ∀ x y, r x y → x = y := by 
+    ∀ x y, r x y → x = y := by
   let r' (x y) := x = y ∨ r x y
   intro x y rxy
   apply cofix.bisim_aux r'
@@ -285,7 +288,7 @@ theorem Cofix.bisim_rel {α : Typevec n} (r : Cofix F α → Cofix F α → Prop
 /-- Bisimulation principle using `liftr` to match and relate children of two trees. -/
 theorem Cofix.bisim {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
     (h : ∀ x y, r x y → Liftr (RelLast α r) (Cofix.dest x) (Cofix.dest y)) : ∀ x y, r x y → x = y :=
-  by 
+  by
   apply cofix.bisim_rel
   intro x y rxy
   rcases(liftr_iff (rel_last α r) _ _).mp (h x y rxy) with ⟨a, f₀, f₁, dxeq, dyeq, h'⟩
@@ -323,7 +326,8 @@ theorem Cofix.bisim' {α : Typevec n} {β : Type _} (Q : β → Prop) (u v : β 
     ∀ x, Q x → u x = v x := fun x Qx =>
   let R := fun w z : Cofix F α => ∃ x', Q x' ∧ w = u x' ∧ z = v x'
   Cofix.bisim R
-    (fun x y ⟨x', Qx', xeq, yeq⟩ => by
+    (fun x y ⟨x', Qx', xeq, yeq⟩ =>
+      by
       rcases h x' Qx' with ⟨a, f', f₀, f₁, ux'eq, vx'eq, h'⟩
       rw [liftr_iff]
       refine'
@@ -336,10 +340,11 @@ theorem Cofix.bisim' {α : Typevec n} {β : Type _} (Q : β → Prop) (u v : β 
     _ _ ⟨x, Qx, rfl, rfl⟩
 #align mvqpf.cofix.bisim' Mvqpf.Cofix.bisim'
 
-theorem Cofix.mk_dest {α : Typevec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x) = x := by
+theorem Cofix.mk_dest {α : Typevec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x) = x :=
+  by
   apply cofix.bisim_rel (fun x y : cofix F α => x = cofix.mk (cofix.dest y)) _ _ _ rfl; dsimp
   intro x y h; rw [h]
-  conv => 
+  conv =>
     lhs
     congr
     skip
@@ -351,7 +356,8 @@ theorem Cofix.mk_dest {α : Typevec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x
 #align mvqpf.cofix.mk_dest Mvqpf.Cofix.mk_dest
 
 theorem Cofix.dest_mk {α : Typevec n} (x : F (α.append1 <| Cofix F α)) :
-    Cofix.dest (Cofix.mk x) = x := by
+    Cofix.dest (Cofix.mk x) = x :=
+  by
   have : cofix.mk ∘ cofix.dest = @_root_.id (cofix F α) := funext cofix.mk_dest
   rw [cofix.mk, cofix.dest_corec, ← comp_map, ← cofix.mk, ← append_fun_comp, this, id_comp,
     append_fun_id_id, Mvfunctor.id_map]
@@ -378,7 +384,8 @@ omit q
 
 theorem liftr_map {α β : Typevec n} {F' : Typevec n → Type u} [Mvfunctor F'] [IsLawfulMvfunctor F']
     (R : β ⊗ β ⟹ repeat n Prop) (x : F' α) (f g : α ⟹ β) (h : α ⟹ subtype_ R)
-    (hh : subtypeVal _ ⊚ h = (f ⊗' g) ⊚ prod.diag) : Liftr' R (f <$$> x) (g <$$> x) := by
+    (hh : subtypeVal _ ⊚ h = (f ⊗' g) ⊚ prod.diag) : Liftr' R (f <$$> x) (g <$$> x) :=
+  by
   rw [liftr_def]
   exists h <$$> x
   rw [Mvfunctor.map_map, comp_assoc, hh, ← comp_assoc, fst_prod_mk, comp_assoc, fst_diag]
@@ -410,7 +417,7 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' 
   have hh :
     subtypeVal _ ⊚ toSubtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b =
       ((id ::: f) ⊗' (id ::: g)) ⊚ prod.diag :=
-    by 
+    by
     dsimp [c, b]
     apply eq_of_drop_last_eq
     · dsimp
@@ -434,7 +441,8 @@ theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem liftr_map_last' [IsLawfulMvfunctor F] {α : Typevec n} {ι} (R : ι → ι → Prop)
     (x : F (α ::: ι)) (f : ι → ι) (hh : ∀ x : ι, R (f x) x) :
-    Liftr' (relLast' _ R) ((id ::: f) <$$> x) x := by
+    Liftr' (relLast' _ R) ((id ::: f) <$$> x) x :=
+  by
   have := liftr_map_last R x f id hh
   rwa [append_fun_id_id, Mvfunctor.id_map] at this
 #align mvqpf.liftr_map_last' Mvqpf.liftr_map_last'
@@ -442,14 +450,15 @@ theorem liftr_map_last' [IsLawfulMvfunctor F] {α : Typevec n} {ι} (R : ι → 
 end LiftrMap
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x := by
+theorem Cofix.abs_repr {α} (x : Cofix F α) : Quot.mk _ (Cofix.repr x) = x :=
+  by
   let R := fun x y : cofix F α => cofix.abs (cofix.repr y) = x
   refine' cofix.bisim₂ R _ _ _ rfl
   clear x; rintro x y h; dsimp [R] at h; subst h
   dsimp [cofix.dest, cofix.abs]
   induction y using Quot.ind
   simp only [cofix.repr, M.dest_corec, abs_map, abs_repr]
-  conv => 
+  conv =>
     congr
     skip
     rw [cofix.dest]
@@ -514,7 +523,8 @@ end Tactic
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem corec_roll {α : Typevec n} {X Y} {x₀ : X} (f : X → Y) (g : Y → F (α ::: X)) :
-    Cofix.corec (g ∘ f) x₀ = Cofix.corec (Mvfunctor.map (id ::: f) ∘ g) (f x₀) := by
+    Cofix.corec (g ∘ f) x₀ = Cofix.corec (Mvfunctor.map (id ::: f) ∘ g) (f x₀) :=
+  by
   mv_bisim x₀
   rw [Ha, Hb, cofix.dest_corec, cofix.dest_corec]
   rw [Mvfunctor.map_map, ← append_fun_comp_id]
@@ -524,7 +534,8 @@ theorem corec_roll {α : Typevec n} {X Y} {x₀ : X} (f : X → Y) (g : Y → F 
 
 theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.append1 (Sum (Cofix F α) β)))
     (x : β) :
-    Cofix.dest (Cofix.corec' g x) = appendFun id (Sum.elim id (Cofix.corec' g)) <$$> g x := by
+    Cofix.dest (Cofix.corec' g x) = appendFun id (Sum.elim id (Cofix.corec' g)) <$$> g x :=
+  by
   rw [cofix.corec', cofix.dest_corec]; dsimp
   congr with (i | i) <;> rw [corec_roll] <;> dsimp [cofix.corec']
   · mv_bisim i
@@ -550,7 +561,7 @@ theorem Cofix.dest_corec₁ {α : Typevec n} {β : Type u}
   rw [cofix.corec₁, cofix.dest_corec', ← h] <;> rfl
 #align mvqpf.cofix.dest_corec₁ Mvqpf.Cofix.dest_corec₁
 
-instance mvqpfCofix : Mvqpf (Cofix F) where 
+instance mvqpfCofix : Mvqpf (Cofix F) where
   p := q.p.mp
   abs α := Quot.mk McongrCat
   repr α := Cofix.repr

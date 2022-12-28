@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module logic.small.list
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,8 @@ instance small_vector {α : Type v} {n : ℕ} [Small.{u} α] : Small.{u} (Vector
   small_of_injective (Equiv.vectorEquivFin α n).Injective
 #align small_vector small_vector
 
-instance small_list {α : Type v} [Small.{u} α] : Small.{u} (List α) := by
+instance small_list {α : Type v} [Small.{u} α] : Small.{u} (List α) :=
+  by
   let e : (Σn, Vector α n) ≃ List α := Equiv.sigmaFiberEquiv List.length
   exact small_of_surjective e.surjective
 #align small_list small_list

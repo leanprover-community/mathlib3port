@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.complex.real_deriv
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,8 @@ variable {e : ℂ → ℂ} {e' : ℂ} {z : ℝ}
 /-- If a complex function is differentiable at a real point, then the induced real function is also
 differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
 theorem HasStrictDerivAt.realOfComplex (h : HasStrictDerivAt e e' z) :
-    HasStrictDerivAt (fun x : ℝ => (e x).re) e'.re z := by
+    HasStrictDerivAt (fun x : ℝ => (e x).re) e'.re z :=
+  by
   have A : HasStrictFderivAt (coe : ℝ → ℂ) of_real_clm z := of_real_clm.has_strict_fderiv_at
   have B :
     HasStrictFderivAt e ((ContinuousLinearMap.smulRight 1 e' : ℂ →L[ℂ] ℂ).restrictScalars ℝ)
@@ -60,10 +61,12 @@ theorem HasStrictDerivAt.realOfComplex (h : HasStrictDerivAt e e' z) :
   simpa using (C.comp z (B.comp z A)).HasStrictDerivAt
 #align has_strict_deriv_at.real_of_complex HasStrictDerivAt.realOfComplex
 
-/-- If a complex function is differentiable at a real point, then the induced real function is also
-differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
+/-- If a complex function `e` is differentiable at a real point, then the function `ℝ → ℝ` given by
+the real part of `e` is also differentiable at this point, with a derivative equal to the real part
+of the complex derivative. -/
 theorem HasDerivAt.realOfComplex (h : HasDerivAt e e' z) :
-    HasDerivAt (fun x : ℝ => (e x).re) e'.re z := by
+    HasDerivAt (fun x : ℝ => (e x).re) e'.re z :=
+  by
   have A : HasFderivAt (coe : ℝ → ℂ) of_real_clm z := of_real_clm.has_fderiv_at
   have B :
     HasFderivAt e ((ContinuousLinearMap.smulRight 1 e' : ℂ →L[ℂ] ℂ).restrictScalars ℝ)
@@ -74,7 +77,8 @@ theorem HasDerivAt.realOfComplex (h : HasDerivAt e e' z) :
 #align has_deriv_at.real_of_complex HasDerivAt.realOfComplex
 
 theorem ContDiffAt.realOfComplex {n : ℕ∞} (h : ContDiffAt ℂ n e z) :
-    ContDiffAt ℝ n (fun x : ℝ => (e x).re) z := by
+    ContDiffAt ℝ n (fun x : ℝ => (e x).re) z :=
+  by
   have A : ContDiffAt ℝ n (coe : ℝ → ℂ) z := of_real_clm.cont_diff.cont_diff_at
   have B : ContDiffAt ℝ n e z := h.restrict_scalars ℝ
   have C : ContDiffAt ℝ n re (e z) := re_clm.cont_diff.cont_diff_at
@@ -123,6 +127,20 @@ theorem HasDerivWithinAt.complexToRealFderiv {f : ℂ → ℂ} {s : Set ℂ} {f'
     h.has_fderiv_within_at.restrict_scalars ℝ
 #align has_deriv_within_at.complex_to_real_fderiv HasDerivWithinAt.complexToRealFderiv
 
+/-- If a complex function `e` is differentiable at a real point, then its restriction to `ℝ` is
+differentiable there as a function `ℝ → ℂ`, with the same derivative. -/
+theorem HasDerivAt.compOfReal (hf : HasDerivAt e e' ↑z) : HasDerivAt (fun y : ℝ => e ↑y) e' z := by
+  simpa only [of_real_clm_apply, of_real_one, mul_one] using hf.comp z of_real_clm.has_deriv_at
+#align has_deriv_at.comp_of_real HasDerivAt.compOfReal
+
+/-- If a function `f : ℝ → ℝ` is differentiable at a (real) point `x`, then it is also
+differentiable as a function `ℝ → ℂ`. -/
+theorem HasDerivAt.ofRealComp {f : ℝ → ℝ} {u : ℝ} (hf : HasDerivAt f u z) :
+    HasDerivAt (fun y : ℝ => ↑(f y) : ℝ → ℂ) u z := by
+  simpa only [of_real_clm_apply, of_real_one, real_smul, mul_one] using
+    of_real_clm.has_deriv_at.scomp z hf
+#align has_deriv_at.of_real_comp HasDerivAt.ofRealComp
+
 end RealDerivOfComplex
 
 section Conformality
@@ -140,7 +158,8 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {z : ℂ} {f : 
     conformal at a point `z` if it is holomorphic at that point with a nonvanishing differential.
     This is a version of the Cauchy-Riemann equations. -/
 theorem DifferentiableAt.conformalAt (h : DifferentiableAt ℂ f z) (hf' : deriv f z ≠ 0) :
-    ConformalAt f z := by
+    ConformalAt f z :=
+  by
   rw [conformal_at_iff_is_conformal_map_fderiv, (h.has_fderiv_at.restrict_scalars ℝ).fderiv]
   apply isConformalMapComplexLinear
   simpa only [Ne.def, ext_ring_iff]
@@ -151,7 +170,7 @@ theorem DifferentiableAt.conformalAt (h : DifferentiableAt ℂ f z) (hf' : deriv
 theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : ℂ → ℂ} {z : ℂ} :
     ConformalAt f z ↔
       (DifferentiableAt ℂ f z ∨ DifferentiableAt ℂ (f ∘ conj) (conj z)) ∧ fderiv ℝ f z ≠ 0 :=
-  by 
+  by
   rw [conformal_at_iff_is_conformal_map_fderiv]
   rw [is_conformal_map_iff_is_complex_or_conj_linear]
   apply and_congr_left

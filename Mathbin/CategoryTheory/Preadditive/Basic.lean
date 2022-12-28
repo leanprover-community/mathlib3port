@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,10 +101,8 @@ universe u'
 
 variable {C} {D : Type u'} (F : D → C)
 
-instance inducedCategory :
-    Preadditive.{v}
-      (InducedCategory C
-        F) where 
+instance inducedCategory : Preadditive.{v} (InducedCategory C F)
+    where
   homGroup P Q := @Preadditive.homGroup C _ _ (F P) (F Q)
   add_comp' P Q R f f' g := add_comp' _ _ _ _ _ _
   comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
@@ -112,21 +110,24 @@ instance inducedCategory :
 
 end InducedCategory
 
-instance fullSubcategory (Z : C → Prop) :
-    Preadditive.{v}
-      (FullSubcategory
-        Z) where 
+instance fullSubcategory (Z : C → Prop) : Preadditive.{v} (FullSubcategory Z)
+    where
   homGroup P Q := @Preadditive.homGroup C _ _ P.obj Q.obj
   add_comp' P Q R f f' g := add_comp' _ _ _ _ _ _
   comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
 #align category_theory.preadditive.full_subcategory CategoryTheory.Preadditive.fullSubcategory
 
-instance (X : C) : AddCommGroup (EndCat X) := by
+instance (X : C) : AddCommGroup (EndCat X) :=
+  by
   dsimp [End]
   infer_instance
 
 instance (X : C) : Ring (EndCat X) :=
-  { (inferInstance : AddCommGroup (EndCat X)), (inferInstance : Monoid (EndCat X)) with
+  { (inferInstance : AddCommGroup (EndCat X)),
+    (inferInstance :
+      Monoid
+        (EndCat
+          X)) with
     left_distrib := fun f g h => Preadditive.add_comp X X X g h f
     right_distrib := fun f g h => Preadditive.comp_add X X X h f g }
 
@@ -208,17 +209,16 @@ instance {P Q : C} {f : P ⟶ Q} [Epi f] : Epi (-f) :=
 instance {P Q : C} {f : P ⟶ Q} [Mono f] : Mono (-f) :=
   ⟨fun R g g' H => by rwa [comp_neg, comp_neg, ← neg_comp, ← neg_comp, cancel_mono, neg_inj] at H⟩
 
-instance (priority := 100) preadditiveHasZeroMorphisms :
-    HasZeroMorphisms C where 
+instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C
+    where
   HasZero := inferInstance
   comp_zero' P Q f R := show leftComp R f 0 = 0 from map_zero _
   zero_comp' P Q R f := show rightComp P f 0 = 0 from map_zero _
 #align
   category_theory.preadditive.preadditive_has_zero_morphisms CategoryTheory.Preadditive.preadditiveHasZeroMorphisms
 
-instance moduleEndRight {X Y : C} :
-    Module (EndCat Y) (X ⟶
-        Y) where 
+instance moduleEndRight {X Y : C} : Module (EndCat Y) (X ⟶ Y)
+    where
   smul_add r f g := add_comp _ _ _ _ _ _
   smul_zero r := zero_comp
   add_smul r s f := comp_add _ _ _ _ _ _

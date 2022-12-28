@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.fin_enum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,16 +39,16 @@ namespace FinEnum
 variable {α : Type u} {β : α → Type v}
 
 /-- transport a `fin_enum` instance across an equivalence -/
-def ofEquiv (α) {β} [FinEnum α] (h : β ≃ α) :
-    FinEnum β where 
+def ofEquiv (α) {β} [FinEnum α] (h : β ≃ α) : FinEnum β
+    where
   card := card α
   Equiv := h.trans (equiv α)
   decEq := (h.trans (equiv _)).DecidableEq
 #align fin_enum.of_equiv FinEnum.ofEquiv
 
 /-- create a `fin_enum` instance from an exhaustive list without duplicates -/
-def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' : List.Nodup xs) :
-    FinEnum α where 
+def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' : List.Nodup xs) : FinEnum α
+    where
   card := xs.length
   Equiv :=
     ⟨fun x => ⟨xs.indexOf x, by rw [List.index_of_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
@@ -87,7 +87,7 @@ def ofSurjective {β} (f : β → α) [DecidableEq α] [FinEnum β] (h : Surject
 noncomputable def ofInjective {α β} (f : α → β) [DecidableEq α] [FinEnum β] (h : Injective f) :
     FinEnum α :=
   ofList ((toList β).filterMap (partialInv f))
-    (by 
+    (by
       intro x
       simp only [mem_to_list, true_and_iff, List.mem_filter_map]
       use f x
@@ -134,7 +134,8 @@ def Finset.enum [DecidableEq α] : List α → List (Finset α)
 
 @[simp]
 theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
-    s ∈ Finset.enum xs ↔ ∀ x ∈ s, x ∈ xs := by
+    s ∈ Finset.enum xs ↔ ∀ x ∈ s, x ∈ xs :=
+  by
   induction xs generalizing s <;> simp [*, finset.enum]
   · simp [Finset.eq_empty_iff_forall_not_mem, (· ∉ ·)]
     rfl
@@ -203,8 +204,8 @@ instance Psigma.finEnumPropProp {α : Prop} {β : α → Prop} [Decidable α] [�
   else ofList [] fun a => (h ⟨a.fst, a.snd⟩).elim
 #align fin_enum.psigma.fin_enum_prop_prop FinEnum.Psigma.finEnumPropProp
 
-instance (priority := 100) [FinEnum α] :
-    Fintype α where 
+instance (priority := 100) [FinEnum α] : Fintype α
+    where
   elems := univ.map (equiv α).symm.toEmbedding
   complete := by intros <;> simp <;> exists Equiv α x <;> simp
 
@@ -229,7 +230,8 @@ def pi {β : α → Type max u v} [DecidableEq α] :
 #align fin_enum.pi FinEnum.pi
 
 theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (xs : List α)
-    (f : ∀ a, a ∈ xs → β a) : f ∈ pi xs fun x => toList (β x) := by
+    (f : ∀ a, a ∈ xs → β a) : f ∈ pi xs fun x => toList (β x) :=
+  by
   induction xs <;> simp [pi, -List.map_eq_map, monad_norm, functor_norm]
   · ext (a⟨⟩)
   · exists pi.cons xs_hd xs_tl (f _ (List.mem_cons_self _ _))

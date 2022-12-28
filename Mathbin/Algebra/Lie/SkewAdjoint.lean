@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.skew_adjoint
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,12 +47,15 @@ variable (B : BilinForm R M)
 
 theorem BilinForm.is_skew_adjoint_bracket (f g : Module.EndCat R M)
     (hf : f ∈ B.skewAdjointSubmodule) (hg : g ∈ B.skewAdjointSubmodule) :
-    ⁅f, g⁆ ∈ B.skewAdjointSubmodule := by
+    ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
+  by
   rw [mem_skew_adjoint_submodule] at *
-  have hfg : is_adjoint_pair B B (f * g) (g * f) := by
+  have hfg : is_adjoint_pair B B (f * g) (g * f) :=
+    by
     rw [← neg_mul_neg g f]
     exact hf.mul hg
-  have hgf : is_adjoint_pair B B (g * f) (f * g) := by
+  have hgf : is_adjoint_pair B B (g * f) (f * g) :=
+    by
     rw [← neg_mul_neg f g]
     exact hg.mul hf
   change BilinForm.IsAdjointPair B B (f * g - g * f) (-(f * g - g * f))
@@ -71,7 +74,8 @@ variable {N : Type w} [AddCommGroup N] [Module R N] (e : N ≃ₗ[R] M)
 /-- An equivalence of modules with bilinear forms gives equivalence of Lie algebras of skew-adjoint
 endomorphisms. -/
 def skewAdjointLieSubalgebraEquiv :
-    skewAdjointLieSubalgebra (B.comp (↑e : N →ₗ[R] M) ↑e) ≃ₗ⁅R⁆ skewAdjointLieSubalgebra B := by
+    skewAdjointLieSubalgebra (B.comp (↑e : N →ₗ[R] M) ↑e) ≃ₗ⁅R⁆ skewAdjointLieSubalgebra B :=
+  by
   apply LieEquiv.ofSubalgebras _ _ e.lie_conj
   ext f
   simp only [LieSubalgebra.mem_coe, Submodule.mem_map_equiv, LieSubalgebra.mem_map_submodule,
@@ -106,7 +110,8 @@ theorem Matrix.lie_transpose (A B : Matrix n n R) : ⁅A, B⁆ᵀ = ⁅Bᵀ, A�
 
 theorem Matrix.is_skew_adjoint_bracket (A B : Matrix n n R)
     (hA : A ∈ skewAdjointMatricesSubmodule J) (hB : B ∈ skewAdjointMatricesSubmodule J) :
-    ⁅A, B⁆ ∈ skewAdjointMatricesSubmodule J := by
+    ⁅A, B⁆ ∈ skewAdjointMatricesSubmodule J :=
+  by
   simp only [mem_skew_adjoint_matrices_submodule] at *
   change ⁅A, B⁆ᵀ ⬝ J = J ⬝ (-⁅A, B⁆); change Aᵀ ⬝ J = J ⬝ (-A) at hA; change Bᵀ ⬝ J = J ⬝ (-B) at hB
   simp only [← Matrix.mul_eq_mul] at *
@@ -132,7 +137,7 @@ skew-adjoint with respect to a square matrix `J` and those with respect to `Pᵀ
 def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) :
     skewAdjointMatricesLieSubalgebra J ≃ₗ⁅R⁆ skewAdjointMatricesLieSubalgebra (Pᵀ ⬝ J ⬝ P) :=
   LieEquiv.ofSubalgebras _ _ (P.lieConj h).symm
-    (by 
+    (by
       ext A
       suffices
         P.lie_conj h A ∈ skewAdjointMatricesSubmodule J ↔
@@ -157,7 +162,7 @@ def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] 
     (e : Matrix n n R ≃ₐ[R] Matrix m m R) (h : ∀ A, (e A)ᵀ = e Aᵀ) :
     skewAdjointMatricesLieSubalgebra J ≃ₗ⁅R⁆ skewAdjointMatricesLieSubalgebra (e J) :=
   LieEquiv.ofSubalgebras _ _ e.toLieEquiv
-    (by 
+    (by
       ext A
       suffices J.is_skew_adjoint (e.symm A) ↔ (e J).IsSkewAdjoint A by simpa [this]
       simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, ← Matrix.mul_eq_mul, ← h, ←
@@ -175,7 +180,8 @@ theorem skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply {m : Type w} 
   skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply
 
 theorem mem_skew_adjoint_matrices_lie_subalgebra_unit_smul (u : Rˣ) (J A : Matrix n n R) :
-    A ∈ skewAdjointMatricesLieSubalgebra (u • J) ↔ A ∈ skewAdjointMatricesLieSubalgebra J := by
+    A ∈ skewAdjointMatricesLieSubalgebra (u • J) ↔ A ∈ skewAdjointMatricesLieSubalgebra J :=
+  by
   change A ∈ skewAdjointMatricesSubmodule (u • J) ↔ A ∈ skewAdjointMatricesSubmodule J
   simp only [mem_skew_adjoint_matrices_submodule, Matrix.IsSkewAdjoint, Matrix.IsAdjointPair]
   constructor <;> intro h

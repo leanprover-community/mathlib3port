@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -409,7 +409,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_sub_div div_sub_divₓ'. -/
 @[field_simps]
 theorem div_sub_div (a : K) {b : K} (c : K) {d : K} (hb : b ≠ 0) (hd : d ≠ 0) :
-    a / b - c / d = (a * d - b * c) / (b * d) := by
+    a / b - c / d = (a * d - b * c) / (b * d) :=
+  by
   simp [sub_eq_add_neg]
   rw [neg_eq_neg_one_mul, ← mul_div_assoc, div_add_div _ _ hb hd, ← mul_assoc, mul_comm b,
     mul_assoc, ← neg_eq_neg_one_mul]
@@ -462,7 +463,7 @@ namespace RingHom
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DivisionRing.{u1} α] [_inst_2 : Semiring.{u2} β] [_inst_3 : Nontrivial.{u2} β] (f : RingHom.{u1, u2} α β (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Semiring.toNonAssocSemiring.{u2} β _inst_2)), Function.Injective.{succ u1, succ u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} α β (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Semiring.toNonAssocSemiring.{u2} β _inst_2)) (fun (_x : RingHom.{u1, u2} α β (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Semiring.toNonAssocSemiring.{u2} β _inst_2)) => α -> β) (RingHom.hasCoeToFun.{u1, u2} α β (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Semiring.toNonAssocSemiring.{u2} β _inst_2)) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DivisionRing.{u2} α] [_inst_2 : Semiring.{u1} β] [_inst_3 : Nontrivial.{u1} β] (f : RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)), Function.Injective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2501 : α) => β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α β (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2) (RingHom.instRingHomClassRingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2))))) f)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DivisionRing.{u2} α] [_inst_2 : Semiring.{u1} β] [_inst_3 : Nontrivial.{u1} β] (f : RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)), Function.Injective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α β (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))))) (NonUnitalNonAssocSemiring.toMul.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2)) α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2) (RingHom.instRingHomClassRingHom.{u2, u1} α β (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α (DivisionRing.toRing.{u2} α _inst_1))) (Semiring.toNonAssocSemiring.{u1} β _inst_2))))) f)
 Case conversion may be inaccurate. Consider using '#align ring_hom.injective RingHom.injectiveₓ'. -/
 protected theorem injective [DivisionRing α] [Semiring β] [Nontrivial β] (f : α →+* β) :
     Injective f :=
@@ -544,7 +545,8 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (rat_cast : ∀ n : ℚ, f n = n) :
     DivisionRing K' :=
   { hf.GroupWithZero f zero one mul inv div npow zpow,
-    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
+    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast
+      int_cast with
     ratCast := coe
     rat_cast_mk := fun a b h1 h2 =>
       hf
@@ -594,7 +596,8 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (rat_cast : ∀ n : ℚ, f n = n) :
     Field K' :=
   { hf.CommGroupWithZero f zero one mul inv div npow zpow,
-    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with
+    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast
+      int_cast with
     ratCast := coe
     rat_cast_mk := fun a b h1 h2 =>
       hf

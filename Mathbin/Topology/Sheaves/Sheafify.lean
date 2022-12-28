@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheafify
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,9 +52,8 @@ namespace Sheafify
 /--
 The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
-def isGerm :
-    PrelocalPredicate fun x =>
-      F.stalk x where 
+def isGerm : PrelocalPredicate fun x => F.stalk x
+    where
   pred U f := ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
   res := fun V U i f ⟨g, p⟩ =>
     ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
@@ -80,11 +79,10 @@ def sheafify : Sheaf (Type v) X :=
 sending each section to its germs.
 (This forms the unit of the adjunction.)
 -/
-def toSheafify :
-    F ⟶
-      F.sheafify.1 where 
+def toSheafify : F ⟶ F.sheafify.1
+    where
   app U f := ⟨fun x => F.germ x f, PrelocalPredicate.sheafify_of ⟨f, fun x => rfl⟩⟩
-  naturality' U U' f := by 
+  naturality' U U' f := by
     ext (x⟨u, m⟩)
     exact germ_res_apply F f.unop ⟨u, m⟩ x
 #align Top.presheaf.to_sheafify TopCat.Presheaf.toSheafify
@@ -96,7 +94,8 @@ def stalkToFiber (x : X) : F.sheafify.Presheaf.stalk x ⟶ F.stalk x :=
   stalkToFiber (Sheafify.isLocallyGerm F) x
 #align Top.presheaf.stalk_to_fiber TopCat.Presheaf.stalkToFiber
 
-theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) := by
+theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) :=
+  by
   apply stalk_to_fiber_surjective
   intro t
   obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t
@@ -106,7 +105,8 @@ theorem stalk_to_fiber_surjective (x : X) : Function.Surjective (F.stalkToFiber 
     · exact ⟨prelocal_predicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
 #align Top.presheaf.stalk_to_fiber_surjective TopCat.Presheaf.stalk_to_fiber_surjective
 
-theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x) := by
+theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :=
+  by
   apply stalk_to_fiber_injective
   intros
   rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩

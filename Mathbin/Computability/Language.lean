@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.language
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ theorem nil_mem_star (l : Language α) : [] ∈ l.star :=
   ⟨[], rfl, fun _ => False.elim⟩
 #align language.nil_mem_star Language.nil_mem_star
 
-instance : Semiring (Language α) where 
+instance : Semiring (Language α) where
   add := (· + ·)
   add_assoc := union_assoc
   zero := 0
@@ -157,8 +157,8 @@ theorem add_self (l : Language α) : l + l = l :=
 #align language.add_self Language.add_self
 
 /-- Maps the alphabet of a language. -/
-def map (f : α → β) :
-    Language α →+* Language β where 
+def map (f : α → β) : Language α →+* Language β
+    where
   toFun := image (List.map f)
   map_zero' := image_empty _
   map_one' := image_singleton
@@ -176,7 +176,8 @@ theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f
 #align language.map_map Language.map_map
 
 theorem star_def_nonempty (l : Language α) :
-    l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } := by
+    l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } :=
+  by
   ext x
   constructor
   · rintro ⟨S, rfl, h⟩
@@ -191,7 +192,8 @@ theorem le_iff (l m : Language α) : l ≤ m ↔ l + m = m :=
   sup_eq_right.symm
 #align language.le_iff Language.le_iff
 
-theorem le_mul_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ * l₂ ≤ m₁ * m₂ := by
+theorem le_mul_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ * l₂ ≤ m₁ * m₂ :=
+  by
   intro h₁ h₂ x hx
   simp only [mul_def, exists_and_left, mem_image2, image_prod] at hx⊢
   tauto
@@ -207,12 +209,12 @@ theorem mem_supr {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ �
 
 theorem supr_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) * m = ⨆ i, l i * m :=
-  image2_Union_left _ _ _
+  image2_unionᵢ_left _ _ _
 #align language.supr_mul Language.supr_mul
 
 theorem mul_supr {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (m * ⨆ i, l i) = ⨆ i, m * l i :=
-  image2_Union_right _ _ _
+  image2_unionᵢ_right _ _ _
 #align language.mul_supr Language.mul_supr
 
 theorem supr_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
@@ -226,7 +228,8 @@ theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Langu
 #align language.add_supr Language.add_supr
 
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
-    x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y ∈ S, y ∈ l := by
+    x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y ∈ S, y ∈ l :=
+  by
   induction' n with n ihn generalizing x
   · simp only [mem_one, pow_zero, length_eq_zero]
     constructor
@@ -243,7 +246,8 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 #align language.mem_pow Language.mem_pow
 
-theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i := by
+theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i :=
+  by
   ext x
   simp only [mem_star, mem_supr, mem_pow]
   constructor
@@ -254,7 +258,8 @@ theorem star_eq_supr_pow (l : Language α) : l.star = ⨆ i : ℕ, l ^ i := by
 #align language.star_eq_supr_pow Language.star_eq_supr_pow
 
 @[simp]
-theorem map_star (f : α → β) (l : Language α) : map f (star l) = star (map f l) := by
+theorem map_star (f : α → β) (l : Language α) : map f (star l) = star (map f l) :=
+  by
   rw [star_eq_supr_pow, star_eq_supr_pow]
   simp_rw [← map_pow]
   exact image_Union
@@ -265,7 +270,8 @@ theorem mul_self_star_comm (l : Language α) : l.star * l = l * l.star := by
 #align language.mul_self_star_comm Language.mul_self_star_comm
 
 @[simp]
-theorem one_add_self_mul_star_eq_star (l : Language α) : 1 + l * l.star = l.star := by
+theorem one_add_self_mul_star_eq_star (l : Language α) : 1 + l * l.star = l.star :=
+  by
   simp only [star_eq_supr_pow, mul_supr, ← pow_succ, ← pow_zero l]
   exact sup_supᵢ_nat_succ _
 #align language.one_add_self_mul_star_eq_star Language.one_add_self_mul_star_eq_star
@@ -275,7 +281,8 @@ theorem one_add_star_mul_self_eq_star (l : Language α) : 1 + l.star * l = l.sta
   rw [mul_self_star_comm, one_add_self_mul_star_eq_star]
 #align language.one_add_star_mul_self_eq_star Language.one_add_star_mul_self_eq_star
 
-theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → l.star * m ≤ m := by
+theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → l.star * m ≤ m :=
+  by
   intro h
   rw [star_eq_supr_pow, supr_mul]
   refine' supᵢ_le _
@@ -286,7 +293,8 @@ theorem star_mul_le_right_of_mul_le_right (l m : Language α) : l * m ≤ m → 
   exact le_trans (le_mul_congr le_rfl h) ih
 #align language.star_mul_le_right_of_mul_le_right Language.star_mul_le_right_of_mul_le_right
 
-theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m * l.star ≤ m := by
+theorem star_mul_le_left_of_mul_le_left (l m : Language α) : m * l ≤ m → m * l.star ≤ m :=
+  by
   intro h
   rw [star_eq_supr_pow, mul_supr]
   refine' supᵢ_le _

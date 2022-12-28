@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.finsupp.well_founded
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,9 +40,9 @@ include hbot hs
 /-- Transferred from `dfinsupp.lex.acc`. See the top of that file for an explanation for the
   appearance of the relation `rᶜ ⊓ (≠)`. -/
 theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) a) :
-    Acc (Finsupp.Lex r s) x := by 
+    Acc (Finsupp.Lex r s) x := by
   rw [lex_eq_inv_image_dfinsupp_lex]
-  classical 
+  classical
     refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
     simpa only [to_dfinsupp_support] using h
 #align finsupp.lex.acc Finsupp.Lex.acc

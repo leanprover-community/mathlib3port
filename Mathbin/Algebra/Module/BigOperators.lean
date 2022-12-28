@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.module.big_operators
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,8 @@ theorem Multiset.sum_smul {l : Multiset R} {x : M} : l.Sum • x = (l.map fun r 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Multiset.sum_smul_sum {s : Multiset R} {t : Multiset M} :
-    s.Sum • t.Sum = ((s ×ˢ t).map fun p : R × M => p.fst • p.snd).Sum := by
+    s.Sum • t.Sum = ((s ×ˢ t).map fun p : R × M => p.fst • p.snd).Sum :=
+  by
   induction' s using Multiset.induction with a s ih
   · simp
   · simp [add_smul, ih, ← Multiset.smul_sum]
@@ -47,7 +48,8 @@ theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Finset.sum_smul_sum {f : α → R} {g : β → M} {s : Finset α} {t : Finset β} :
-    ((∑ i in s, f i) • ∑ i in t, g i) = ∑ p in s ×ˢ t, f p.fst • g p.snd := by
+    ((∑ i in s, f i) • ∑ i in t, g i) = ∑ p in s ×ˢ t, f p.fst • g p.snd :=
+  by
   rw [Finset.sum_product, Finset.sum_smul, Finset.sum_congr rfl]
   intros
   rw [Finset.smul_sum]

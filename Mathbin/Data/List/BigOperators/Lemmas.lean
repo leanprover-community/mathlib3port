@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 
 ! This file was ported from Lean 3 source module data.list.big_operators.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ variable {ι α M N P M₀ G R : Type _}
 namespace Commute
 
 theorem list_sum_right [NonUnitalNonAssocSemiring R] (a : R) (l : List R)
-    (h : ∀ b ∈ l, Commute a b) : Commute a l.Sum := by
+    (h : ∀ b ∈ l, Commute a b) : Commute a l.Sum :=
+  by
   induction' l with x xs ih
   · exact Commute.zero_right _
   · rw [List.sum_cons]
@@ -61,7 +62,8 @@ theorem prod_eq_one_iff [CanonicallyOrderedMonoid M] (l : List M) :
 #align list.prod_eq_one_iff List.prod_eq_one_iff
 
 /-- If a product of integers is `-1`, then at least one factor must be `-1`. -/
-theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.Prod = -1) : (-1 : ℤ) ∈ l := by
+theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.Prod = -1) : (-1 : ℤ) ∈ l :=
+  by
   obtain ⟨x, h₁, h₂⟩ := exists_mem_ne_one_of_prod_ne_one (ne_of_eq_of_ne h (by decide))
   exact
     Or.resolve_left
@@ -73,19 +75,22 @@ theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.Prod = -1) : (-1 : 
 
 /-- If all elements in a list are bounded below by `1`, then the length of the list is bounded
 by the sum of the elements. -/
-theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀ i ∈ L, 1 ≤ i) : L.length ≤ L.Sum := by
+theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀ i ∈ L, 1 ≤ i) : L.length ≤ L.Sum :=
+  by
   induction' L with j L IH h; · simp
   rw [sum_cons, length, add_comm]
   exact add_le_add (h _ (Set.mem_insert _ _)) (IH fun i hi => h i (Set.mem_union_right _ hi))
 #align list.length_le_sum_of_one_le List.length_le_sum_of_one_le
 
-theorem dvd_prod [CommMonoid M] {a} {l : List M} (ha : a ∈ l) : a ∣ l.Prod := by
+theorem dvd_prod [CommMonoid M] {a} {l : List M} (ha : a ∈ l) : a ∣ l.Prod :=
+  by
   let ⟨s, t, h⟩ := mem_split ha
   rw [h, prod_append, prod_cons, mul_left_comm]
   exact dvd_mul_right _ _
 #align list.dvd_prod List.dvd_prod
 
-theorem dvd_sum [Semiring R] {a} {l : List R} (h : ∀ x ∈ l, a ∣ x) : a ∣ l.Sum := by
+theorem dvd_sum [Semiring R] {a} {l : List R} (h : ∀ x ∈ l, a ∣ x) : a ∣ l.Sum :=
+  by
   induction' l with x l ih
   · exact dvd_zero _
   · rw [List.sum_cons]
@@ -110,7 +115,8 @@ theorem alternating_prod_append :
 theorem alternating_prod_reverse :
     ∀ l : List α, alternatingProd (reverse l) = alternatingProd l ^ (-1 : ℤ) ^ (length l + 1)
   | [] => by simp only [alternating_prod_nil, one_zpow, reverse_nil]
-  | a :: l => by
+  | a :: l =>
+    by
     simp_rw [reverse_cons, alternating_prod_append, alternating_prod_reverse,
       alternating_prod_singleton, alternating_prod_cons, length_reverse, length, pow_succ, neg_mul,
       one_mul, zpow_neg, inv_inv]

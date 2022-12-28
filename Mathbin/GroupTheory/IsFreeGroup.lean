@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Eric Wieser, Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.is_free_group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,8 +44,8 @@ class IsFreeGroup (G : Type u) [Group G] where
   MulEquiv : FreeGroup generators ≃* G
 #align is_free_group IsFreeGroup
 
-instance (X : Type _) : IsFreeGroup
-      (FreeGroup X) where 
+instance (X : Type _) : IsFreeGroup (FreeGroup X)
+    where
   Generators := X
   MulEquiv := MulEquiv.refl _
 
@@ -79,10 +79,10 @@ def lift : (Generators G → H) ≃ (G →* H) :=
   FreeGroup.lift.trans
     { toFun := fun f => f.comp (mulEquiv G).symm.toMonoidHom
       invFun := fun f => f.comp (mulEquiv G).toMonoidHom
-      left_inv := fun f => by 
+      left_inv := fun f => by
         ext
         simp
-      right_inv := fun f => by 
+      right_inv := fun f => by
         ext
         simp }
 #align is_free_group.lift IsFreeGroup.lift
@@ -120,12 +120,12 @@ theorem unique_lift (f : Generators G → H) : ∃! F : G →* H, ∀ a, F (of a
 the universal property is expressed as in `is_free_group.lift` and its properties. -/
 def ofLift {G : Type u} [Group G] (X : Type u) (of : X → G)
     (lift : ∀ {H : Type u} [Group H], (X → H) ≃ (G →* H))
-    (lift_of : ∀ {H : Type u} [Group H], ∀ (f : X → H) (a), lift f (of a) = f a) :
-    IsFreeGroup G where 
+    (lift_of : ∀ {H : Type u} [Group H], ∀ (f : X → H) (a), lift f (of a) = f a) : IsFreeGroup G
+    where
   Generators := X
   MulEquiv :=
     MonoidHom.toMulEquiv (FreeGroup.lift of) (lift FreeGroup.of)
-      (by 
+      (by
         apply FreeGroup.ext_hom; intro x
         simp only [MonoidHom.coe_comp, Function.comp_apply, MonoidHom.id_apply, FreeGroup.lift.of,
           lift_of])
@@ -153,8 +153,8 @@ noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G
 #align is_free_group.of_unique_lift IsFreeGroup.ofUniqueLift
 
 /-- Being a free group transports across group isomorphisms. -/
-def ofMulEquiv {H : Type _} [Group H] (h : G ≃* H) :
-    IsFreeGroup H where 
+def ofMulEquiv {H : Type _} [Group H] (h : G ≃* H) : IsFreeGroup H
+    where
   Generators := Generators G
   MulEquiv := (mulEquiv G).trans h
 #align is_free_group.of_mul_equiv IsFreeGroup.ofMulEquiv

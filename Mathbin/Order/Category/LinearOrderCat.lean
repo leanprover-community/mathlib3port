@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.LinearOrder
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,30 +52,30 @@ instance : Inhabited LinearOrderCat :=
 instance (α : LinearOrderCat) : LinearOrder α :=
   α.str
 
-instance hasForgetToLattice :
-    HasForget₂ LinearOrderCat
-      LatticeCat where forget₂ :=
+instance hasForgetToLattice : HasForget₂ LinearOrderCat LatticeCat
+    where forget₂ :=
     { obj := fun X => LatticeCat.of X
       map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 #align LinearOrder.has_forget_to_Lattice LinearOrderCat.hasForgetToLattice
 
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : LinearOrderCat.{u}} (e : α ≃o β) :
-    α ≅ β where 
+def Iso.mk {α β : LinearOrderCat.{u}} (e : α ≃o β) : α ≅ β
+    where
   Hom := e
   inv := e.symm
-  hom_inv_id' := by 
+  hom_inv_id' := by
     ext
     exact e.symm_apply_apply x
-  inv_hom_id' := by 
+  inv_hom_id' := by
     ext
     exact e.apply_symm_apply x
 #align LinearOrder.iso.mk LinearOrderCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : LinearOrderCat ⥤ LinearOrderCat where 
+def dual : LinearOrderCat ⥤ LinearOrderCat
+    where
   obj X := of Xᵒᵈ
   map X Y := OrderHom.dual
 #align LinearOrder.dual LinearOrderCat.dual

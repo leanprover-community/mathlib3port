@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.defs
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -439,8 +439,8 @@ Case conversion may be inaccurate. Consider using '#align left_cancel_semigroup.
 /-- Any `left_cancel_semigroup` satisfies `is_left_cancel_mul`. -/
 @[to_additive "Any `add_left_cancel_semigroup` satisfies `is_left_cancel_add`."]
 instance (priority := 100) LeftCancelSemigroup.toIsLeftCancelMul (G : Type u)
-    [LeftCancelSemigroup G] :
-    IsLeftCancelMul G where mul_left_cancel := LeftCancelSemigroup.mul_left_cancel
+    [LeftCancelSemigroup G] : IsLeftCancelMul G
+    where mul_left_cancel := LeftCancelSemigroup.mul_left_cancel
 #align left_cancel_semigroup.to_is_left_cancel_mul LeftCancelSemigroup.toIsLeftCancelMul
 
 #print RightCancelSemigroup /-
@@ -471,8 +471,8 @@ Case conversion may be inaccurate. Consider using '#align right_cancel_semigroup
 /-- Any `right_cancel_semigroup` satisfies `is_right_cancel_mul`. -/
 @[to_additive "Any `add_right_cancel_semigroup` satisfies `is_right_cancel_add`."]
 instance (priority := 100) RightCancelSemigroup.toIsRightCancelMul (G : Type u)
-    [RightCancelSemigroup G] :
-    IsRightCancelMul G where mul_right_cancel := RightCancelSemigroup.mul_right_cancel
+    [RightCancelSemigroup G] : IsRightCancelMul G
+    where mul_right_cancel := RightCancelSemigroup.mul_right_cancel
 #align right_cancel_semigroup.to_is_right_cancel_mul RightCancelSemigroup.toIsRightCancelMul
 
 #print MulOneClass /-
@@ -502,7 +502,8 @@ but is expected to have type
   forall {M : Type.{u1}} {{m₁ : MulOneClass.{u1} M}} {{m₂ : MulOneClass.{u1} M}}, (Eq.{succ u1} (M -> M -> M) (Mul.mul.{u1} M (MulOneClass.toMul.{u1} M m₁)) (Mul.mul.{u1} M (MulOneClass.toMul.{u1} M m₂))) -> (Eq.{succ u1} (MulOneClass.{u1} M) m₁ m₂)
 Case conversion may be inaccurate. Consider using '#align mul_one_class.ext MulOneClass.extₓ'. -/
 @[ext, to_additive]
-theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ := by
+theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ :=
+  by
   rintro ⟨one₁, mul₁, one_mul₁, mul_one₁⟩ ⟨one₂, mul₂, one_mul₂, mul_one₂⟩ (rfl : mul₁ = mul₂)
   congr
   exact (one_mul₂ one₁).symm.trans (mul_one₁ one₂)
@@ -672,10 +673,12 @@ to `0 : ℕ`).
 /-- An `add_monoid` is an `add_semigroup` with an element `0` such that `0 + a = a + 0 = a`. -/
 class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
   nsmul : ℕ → M → M := nsmulRec
-  nsmul_zero' : ∀ x, nsmul 0 x = 0 := by 
+  nsmul_zero' : ∀ x, nsmul 0 x = 0 := by
     intros
     rfl
-  nsmul_succ' : ∀ (n : ℕ) (x), nsmul n.succ x = x + nsmul n x := by
+  nsmul_succ' :
+    ∀ (n : ℕ) (x), nsmul n.succ x = x +
+          nsmul n x := by
     intros
     rfl
 #align add_monoid AddMonoid
@@ -686,10 +689,12 @@ class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
 @[to_additive]
 class Monoid (M : Type u) extends Semigroup M, MulOneClass M where
   npow : ℕ → M → M := npowRec
-  npow_zero' : ∀ x, npow 0 x = 1 := by 
+  npow_zero' : ∀ x, npow 0 x = 1 := by
     intros
     rfl
-  npow_succ' : ∀ (n : ℕ) (x), npow n.succ x = x * npow n x := by
+  npow_succ' :
+    ∀ (n : ℕ) (x), npow n.succ x = x * npow n
+            x := by
     intros
     rfl
 #align monoid Monoid
@@ -869,8 +874,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cancel_monoid.to_is_cancel_mul CancelMonoid.toIsCancelMulₓ'. -/
 /-- Any `cancel_monoid M` satisfies `is_cancel_mul M`. -/
 @[to_additive "Any `add_cancel_monoid M` satisfies `is_cancel_add M`."]
-instance (priority := 100) CancelMonoid.toIsCancelMul (M : Type u) [CancelMonoid M] :
-    IsCancelMul M where 
+instance (priority := 100) CancelMonoid.toIsCancelMul (M : Type u) [CancelMonoid M] : IsCancelMul M
+    where
   mul_left_cancel := CancelMonoid.mul_left_cancel
   mul_right_cancel := CancelMonoid.mul_right_cancel
 #align cancel_monoid.to_is_cancel_mul CancelMonoid.toIsCancelMul
@@ -988,17 +993,23 @@ explanations on this.
 @[protect_proj]
 class DivInvMonoid (G : Type u) extends Monoid G, Inv G, Div G where
   div := fun a b => a * b⁻¹
-  div_eq_mul_inv : ∀ a b : G, a / b = a * b⁻¹ := by
+  div_eq_mul_inv :
+    ∀ a b : G, a / b = a * b⁻¹ := by
     intros
     rfl
   zpow : ℤ → G → G := zpowRec
-  zpow_zero' : ∀ a : G, zpow 0 a = 1 := by 
+  zpow_zero' : ∀ a : G, zpow 0 a = 1 := by
     intros
     rfl
-  zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a * zpow (Int.ofNat n) a := by
+  zpow_succ' :
+    ∀ (n : ℕ) (a : G),
+      zpow (Int.ofNat n.succ) a =
+        a * zpow (Int.ofNat n) a := by
     intros
     rfl
-  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[n+1] a = (zpow n.succ a)⁻¹ := by
+  zpow_neg' :
+    ∀ (n : ℕ) (a : G), zpow -[n+1] a =
+        (zpow n.succ a)⁻¹ := by
     intros
     rfl
 #align div_inv_monoid DivInvMonoid
@@ -1025,17 +1036,23 @@ explanations on this.
 @[protect_proj]
 class SubNegMonoid (G : Type u) extends AddMonoid G, Neg G, Sub G where
   sub := fun a b => a + -b
-  sub_eq_add_neg : ∀ a b : G, a - b = a + -b := by
+  sub_eq_add_neg :
+    ∀ a b : G, a - b = a + -b := by
     intros
     rfl
   zsmul : ℤ → G → G := zsmulRec
-  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by 
+  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 := by
     intros
     rfl
-  zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat n.succ) a = a + zsmul (Int.ofNat n) a := by
+  zsmul_succ' :
+    ∀ (n : ℕ) (a : G),
+      zsmul (Int.ofNat n.succ) a =
+        a + zsmul (Int.ofNat n) a := by
     intros
     rfl
-  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[n+1] a = -zsmul n.succ a := by
+  zsmul_neg' :
+    ∀ (n : ℕ) (a : G), zsmul -[n+1] a =
+        -zsmul n.succ a := by
     intros
     rfl
 #align sub_neg_monoid SubNegMonoid
@@ -1106,7 +1123,8 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G] (a : G) (n : Nat), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G _inst_1)) a (Int.negSucc n)) (Inv.inv.{u1} G (DivInvMonoid.toInv.{u1} G _inst_1) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
 Case conversion may be inaccurate. Consider using '#align zpow_neg_succ_of_nat zpow_negSuccₓ'. -/
 @[simp, to_additive]
-theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ := by
+theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ :=
+  by
   rw [← zpow_ofNat]
   exact DivInvMonoid.zpow_neg' n a
 #align zpow_neg_succ_of_nat zpow_negSucc
@@ -1394,7 +1412,7 @@ theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by rw [mul_assoc,
 #print Group.toDivisionMonoid /-
 @[to_additive AddGroup.toSubtractionMonoid]
 instance (priority := 100) Group.toDivisionMonoid : DivisionMonoid G :=
-  { ‹Group G› with 
+  { ‹Group G› with
     inv_inv := fun a => inv_eq_of_mul (mul_left_inv a)
     mul_inv_rev := fun a b => inv_eq_of_mul <| by rw [mul_assoc, mul_inv_cancel_left, mul_right_inv]
     inv_eq_of_mul := fun _ _ => inv_eq_of_mul }
@@ -1405,7 +1423,9 @@ instance (priority := 100) Group.toDivisionMonoid : DivisionMonoid G :=
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) Group.toCancelMonoid : CancelMonoid G :=
-  { ‹Group G› with
+  {
+    ‹Group
+        G› with
     mul_right_cancel := fun a b c h => by rw [← mul_inv_cancel_right a b, h, mul_inv_cancel_right]
     mul_left_cancel := fun a b c h => by rw [← inv_mul_cancel_left a b, h, inv_mul_cancel_left] }
 #align group.to_cancel_monoid Group.toCancelMonoid
@@ -1416,7 +1436,8 @@ end Group
 #print Group.toDivInvMonoid_injective /-
 @[to_additive]
 theorem Group.toDivInvMonoid_injective {G : Type _} :
-    Function.Injective (@Group.toDivInvMonoid G) := by
+    Function.Injective (@Group.toDivInvMonoid G) :=
+  by
   rintro ⟨⟩ ⟨⟩ ⟨⟩
   rfl
 #align group.to_div_inv_monoid_injective Group.toDivInvMonoid_injective
@@ -1442,7 +1463,8 @@ attribute [instance] AddCommGroup.toAddCommMonoid
 
 #print CommGroup.toGroup_injective /-
 @[to_additive]
-theorem CommGroup.toGroup_injective {G : Type u} : Function.Injective (@CommGroup.toGroup G) := by
+theorem CommGroup.toGroup_injective {G : Type u} : Function.Injective (@CommGroup.toGroup G) :=
+  by
   rintro ⟨⟩ ⟨⟩ ⟨⟩
   rfl
 #align comm_group.to_group_injective CommGroup.toGroup_injective

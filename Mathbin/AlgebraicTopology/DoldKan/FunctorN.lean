@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.functor_n
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,25 +55,22 @@ variable {C : Type _} [Category C] [Preadditive C]
 /-- The functor `simplicial_object C ⥤ karoubi (chain_complex C ℕ)` which maps
 `X` to the formal direct factor of `K[X]` defined by `P_infty`. -/
 @[simps]
-def n₁ :
-    SimplicialObject C ⥤
-      Karoubi
-        (ChainComplex C
-          ℕ) where 
+def n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)
+    where
   obj X :=
     { x := AlternatingFaceMapComplex.obj X
       p := pInfty
       idem := P_infty_idem }
   map X Y f :=
     { f := P_infty ≫ AlternatingFaceMapComplex.map f
-      comm := by 
+      comm := by
         ext
         simp }
-  map_id' X := by 
+  map_id' X := by
     ext
     dsimp
     simp
-  map_comp' X Y Z f g := by 
+  map_comp' X Y Z f g := by
     ext
     simp
 #align algebraic_topology.dold_kan.N₁ AlgebraicTopology.DoldKan.n₁

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ variable (C : Type u₁) [Category.{v₁} C]
 #print CategoryTheory.Functor.id /-
 -- We don't use `@[simps]` here because we want `C` implicit for the simp lemmas.
 /-- `𝟭 C` is the identity functor on a category `C`. -/
-protected def id : C ⥤ C where 
+protected def id : C ⥤ C where
   obj X := X
   map _ _ f := f
 #align category_theory.functor.id CategoryTheory.Functor.id
@@ -127,8 +127,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 /-- `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/
 @[simps obj]
-def comp (F : C ⥤ D) (G : D ⥤ E) :
-    C ⥤ E where 
+def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E
+    where
   obj X := G.obj (F.obj X)
   map _ _ f := G.map (F.map f)
 #align category_theory.functor.comp CategoryTheory.Functor.comp

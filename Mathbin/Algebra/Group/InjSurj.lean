@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.inj_surj
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `+` is an additive left cancel semigroup,\nif it admits an injective map that preserves `+` to an additive left cancel semigroup."]
 protected def leftCancelSemigroup [LeftCancelSemigroup M₂] (f : M₁ → M₂) (hf : Injective f)
     (mul : ∀ x y, f (x * y) = f x * f y) : LeftCancelSemigroup M₁ :=
-  { hf.Semigroup f mul with 
+  { hf.Semigroup f mul with
     mul := (· * ·)
     mul_left_cancel := fun x y z H =>
       hf <| (mul_right_inj (f x)).1 <| by erw [← mul, ← mul, H] <;> rfl }
@@ -113,7 +113,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `+` is an additive right cancel semigroup,\nif it admits an injective map that preserves `+` to an additive right cancel semigroup."]
 protected def rightCancelSemigroup [RightCancelSemigroup M₂] (f : M₁ → M₂) (hf : Injective f)
     (mul : ∀ x y, f (x * y) = f x * f y) : RightCancelSemigroup M₁ :=
-  { hf.Semigroup f mul with 
+  { hf.Semigroup f mul with
     mul := (· * ·)
     mul_right_cancel := fun x y z H =>
       hf <| (mul_left_inj (f y)).1 <| by erw [← mul, ← mul, H] <;> rfl }
@@ -135,7 +135,8 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an add_zero_class,\nif it admits an injective map that preserves `0` and `+` to an add_zero_class."]
 protected def mulOneClass [MulOneClass M₂] (f : M₁ → M₂) (hf : Injective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) : MulOneClass M₁ :=
-  { ‹One M₁›, ‹Mul M₁› with
+  { ‹One M₁›,
+    ‹Mul M₁› with
     one_mul := fun x => hf <| by erw [mul, one, one_mul]
     mul_one := fun x => hf <| by erw [mul, one, mul_one] }
 #align function.injective.mul_one_class Function.Injective.mulOneClass
@@ -156,7 +157,8 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an additive monoid,\nif it admits an injective map that preserves `0` and `+` to an additive monoid.\nThis version takes a custom `nsmul` as a `[has_smul ℕ M₁]` argument."]
 protected def monoid [Monoid M₂] (f : M₁ → M₂) (hf : Injective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : Monoid M₁ :=
-  { hf.Semigroup f mul, hf.MulOneClass f one mul with
+  { hf.Semigroup f mul,
+    hf.MulOneClass f one mul with
     npow := fun n x => x ^ n
     npow_zero' := fun x => hf <| by erw [npow, one, pow_zero]
     npow_succ' := fun n x => hf <| by erw [npow, pow_succ, mul, npow] }
@@ -176,7 +178,7 @@ protected def addMonoidWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [HasSmul
     [AddMonoidWithOne M₂] (f : M₁ → M₂) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₁ :=
-  { hf.AddMonoid f zero add nsmul with 
+  { hf.AddMonoid f zero add nsmul with
     natCast := coe
     nat_cast_zero := hf (by erw [nat_cast, Nat.cast_zero, zero])
     nat_cast_succ := fun n => hf (by erw [nat_cast, Nat.cast_succ, add, one, nat_cast])
@@ -286,8 +288,8 @@ which has an involutive inversion. -/
   to_additive
       "A type has an involutive negation if it admits a surjective map that\npreserves `⁻¹` to a type which has an involutive inversion."]
 protected def involutiveInv {M₁ : Type _} [Inv M₁] [InvolutiveInv M₂] (f : M₁ → M₂)
-    (hf : Injective f) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) :
-    InvolutiveInv M₁ where 
+    (hf : Injective f) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) : InvolutiveInv M₁
+    where
   inv := Inv.inv
   inv_inv x := hf <| by rw [inv, inv, inv_inv]
 #align function.injective.has_involutive_inv Function.Injective.involutiveInv
@@ -310,7 +312,8 @@ protected def divInvMonoid [DivInvMonoid M₂] (f : M₁ → M₂) (hf : Injecti
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivInvMonoid M₁ :=
-  { hf.Monoid f one mul npow, ‹Inv M₁›, ‹Div M₁› with
+  { hf.Monoid f one mul npow, ‹Inv M₁›,
+    ‹Div M₁› with
     zpow := fun n x => x ^ n
     zpow_zero' := fun x => hf <| by erw [zpow, zpow_zero, one]
     zpow_succ' := fun n x => hf <| by erw [zpow, mul, zpow_ofNat, pow_succ, zpow, zpow_ofNat]
@@ -334,7 +337,9 @@ protected def divisionMonoid [DivisionMonoid M₂] (f : M₁ → M₂) (hf : Inj
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivisionMonoid M₁ :=
-  { hf.DivInvMonoid f one mul inv div npow zpow, hf.HasInvolutiveInv f inv with
+  { hf.DivInvMonoid f one mul inv div npow zpow,
+    hf.HasInvolutiveInv f
+      inv with
     mul_inv_rev := fun x y => hf <| by erw [inv, mul, mul_inv_rev, mul, inv, inv]
     inv_eq_of_mul := fun x y h =>
       hf <| by erw [inv, inv_eq_of_mul_eq_one_right (by erw [← mul, h, one])] }
@@ -397,7 +402,8 @@ protected def addGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [HasSmul 
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n)
     (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₁ :=
   { hf.AddGroup f zero add neg sub nsmul zsmul,
-    hf.AddMonoidWithOne f zero one add nsmul nat_cast with
+    hf.AddMonoidWithOne f zero one add nsmul
+      nat_cast with
     intCast := coe
     int_cast_of_nat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_ofNat])
     int_cast_neg_succ_of_nat := fun n =>
@@ -484,7 +490,8 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an add_zero_class,\nif it admits a surjective map that preserves `0` and `+` to an add_zero_class."]
 protected def mulOneClass [MulOneClass M₁] (f : M₁ → M₂) (hf : Surjective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) : MulOneClass M₂ :=
-  { ‹One M₂›, ‹Mul M₂› with
+  { ‹One M₂›,
+    ‹Mul M₂› with
     one_mul := hf.forall.2 fun x => by erw [← one, ← mul, one_mul]
     mul_one := hf.forall.2 fun x => by erw [← one, ← mul, mul_one] }
 #align function.surjective.mul_one_class Function.Surjective.mulOneClass
@@ -505,7 +512,8 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an additive monoid,\nif it admits a surjective map that preserves `0` and `+` to an additive monoid.\nThis version takes a custom `nsmul` as a `[has_smul ℕ M₂]` argument."]
 protected def monoid [Monoid M₁] (f : M₁ → M₂) (hf : Surjective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : Monoid M₂ :=
-  { hf.Semigroup f mul, hf.MulOneClass f one mul with
+  { hf.Semigroup f mul,
+    hf.MulOneClass f one mul with
     npow := fun n x => x ^ n
     npow_zero' := hf.forall.2 fun x => by erw [← npow, pow_zero, ← one]
     npow_succ' := fun n => hf.forall.2 fun x => by erw [← npow, pow_succ, ← npow, ← mul] }
@@ -525,12 +533,13 @@ protected def addMonoidWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [HasSmul
     [AddMonoidWithOne M₁] (f : M₁ → M₂) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₂ :=
-  { hf.AddMonoid f zero add nsmul with 
+  { hf.AddMonoid f zero add nsmul with
     natCast := coe
-    nat_cast_zero := by 
+    nat_cast_zero := by
       rw [← nat_cast, Nat.cast_zero, zero]
       rfl
-    nat_cast_succ := fun n => by
+    nat_cast_succ := fun n =>
+      by
       rw [← nat_cast, Nat.cast_succ, add, one, nat_cast]
       rfl
     one := 1 }
@@ -567,8 +576,8 @@ which has an involutive inversion. -/
   to_additive
       "A type has an involutive negation if it admits a surjective map that\npreserves `⁻¹` to a type which has an involutive inversion."]
 protected def involutiveInv {M₂ : Type _} [Inv M₂] [InvolutiveInv M₁] (f : M₁ → M₂)
-    (hf : Surjective f) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) :
-    InvolutiveInv M₂ where 
+    (hf : Surjective f) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) : InvolutiveInv M₂
+    where
   inv := Inv.inv
   inv_inv := hf.forall.2 fun x => by erw [← inv, ← inv, inv_inv]
 #align function.surjective.has_involutive_inv Function.Surjective.involutiveInv
@@ -591,7 +600,8 @@ protected def divInvMonoid [DivInvMonoid M₁] (f : M₁ → M₂) (hf : Surject
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivInvMonoid M₂ :=
-  { hf.Monoid f one mul npow, ‹Div M₂›, ‹Inv M₂› with
+  { hf.Monoid f one mul npow, ‹Div M₂›,
+    ‹Inv M₂› with
     zpow := fun n x => x ^ n
     zpow_zero' := hf.forall.2 fun x => by erw [← zpow, zpow_zero, ← one]
     zpow_succ' := fun n =>
@@ -637,10 +647,12 @@ protected def addGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg M₂
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n)
     (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₂ :=
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast,
-    hf.AddGroup f zero add neg sub nsmul zsmul with
+    hf.AddGroup f zero add neg sub nsmul
+      zsmul with
     intCast := coe
     int_cast_of_nat := fun n => by rw [← int_cast, Int.cast_ofNat, nat_cast]
-    int_cast_neg_succ_of_nat := fun n => by
+    int_cast_neg_succ_of_nat := fun n =>
+      by
       rw [← int_cast, Int.cast_neg, Int.cast_ofNat, neg, nat_cast]
       rfl }
 #align function.surjective.add_group_with_one Function.Surjective.addGroupWithOne

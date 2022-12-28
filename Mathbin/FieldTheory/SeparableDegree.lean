@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 
 ! This file was ported from Lean 3 source module field_theory.separable_degree
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,8 @@ def HasSeparableContraction.degree : ℕ :=
 
 /-- The separable degree divides the degree, in function of the exponential characteristic of F. -/
 theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f g) :
-    ∃ m : ℕ, g.natDegree * q ^ m = f.natDegree := by
+    ∃ m : ℕ, g.natDegree * q ^ m = f.natDegree :=
+  by
   obtain ⟨m, rfl⟩ := hf.2
   use m
   rw [nat_degree_expand]
@@ -95,7 +96,7 @@ theorem HasSeparableContraction.dvd_degree : hf.degree ∣ f.natDegree :=
 
 /-- In exponential characteristic one, the separable degree equals the degree. -/
 theorem HasSeparableContraction.eq_degree {f : F[X]} (hf : HasSeparableContraction 1 f) :
-    hf.degree = f.natDegree := by 
+    hf.degree = f.natDegree := by
   let ⟨a, ha⟩ := hf.dvd_degree'
   rw [← ha, one_pow a, mul_one]
 #align polynomial.has_separable_contraction.eq_degree Polynomial.HasSeparableContraction.eq_degree
@@ -111,7 +112,8 @@ variable (q : ℕ) {f : F[X]} (hf : HasSeparableContraction q f)
 /-- Every irreducible polynomial can be contracted to a separable polynomial.
 https://stacks.math.columbia.edu/tag/09H0 -/
 theorem Irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : F[X])
-    (irred : Irreducible f) : HasSeparableContraction q f := by
+    (irred : Irreducible f) : HasSeparableContraction q f :=
+  by
   cases hF
   · exact ⟨f, irred.separable, ⟨0, by rw [pow_zero, expand_one]⟩⟩
   · rcases exists_separable_of_irreducible q irred ‹q.prime›.NeZero with ⟨n, g, hgs, hge⟩
@@ -122,7 +124,8 @@ theorem Irreducible.has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : 
 agree, then they have the same degree. -/
 theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X]) (m m' : ℕ)
     (h_expand : expand F (q ^ m) g = expand F (q ^ m') g') (hg : g.Separable) (hg' : g'.Separable) :
-    g.natDegree = g'.natDegree := by
+    g.natDegree = g'.natDegree :=
+  by
   wlog hm : m ≤ m' := le_total m m' using m m' g g', m' m g' g
   obtain ⟨s, rfl⟩ := exists_add_of_le hm
   rw [pow_add, expand_mul, expand_inj (pow_pos (NeZero.pos q) m)] at h_expand
@@ -134,7 +137,8 @@ theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X])
 
 /-- The separable degree equals the degree of any separable contraction, i.e., it is unique. -/
 theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X])
-    (hg : IsSeparableContraction q f g) : g.natDegree = hf.degree := by
+    (hg : IsSeparableContraction q f g) : g.natDegree = hf.degree :=
+  by
   cases hF
   · rcases hg with ⟨g, m, hm⟩
     rw [one_pow, expand_one] at hm

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module deprecated.subring
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,8 +44,8 @@ structure IsSubring (S : Set R) extends IsAddSubgroup S, IsSubmonoid S : Prop
 #align is_subring IsSubring
 
 /-- Construct a `subring` from a set satisfying `is_subring`. -/
-def IsSubring.subring {S : Set R} (hs : IsSubring S) :
-    Subring R where 
+def IsSubring.subring {S : Set R} (hs : IsSubring S) : Subring R
+    where
   carrier := S
   one_mem' := hs.one_mem
   mul_mem' _ _ := hs.mul_mem
@@ -85,7 +85,7 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
 #align is_subring.inter IsSubring.inter
 
 theorem IsSubring.Inter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) :
-    IsSubring (Set.inter S) :=
+    IsSubring (Set.interᵢ S) :=
   { IsAddSubgroup.Inter fun i => (h i).to_is_add_subgroup,
     IsSubmonoid.Inter fun i => (h i).to_is_submonoid with }
 #align is_subring.Inter IsSubring.Inter
@@ -140,14 +140,14 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
 @[elab_as_elim]
 protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1)
     (hneg1 : C (-1)) (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) :
-    C x := by 
+    C x := by
   have h0 : C 0 := add_neg_self (1 : R) ▸ ha h1 hneg1
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
   clear hx
   induction' L with hd tl ih
   · exact h0
   rw [List.forall_mem_cons] at HL
-  suffices C (List.prod hd) by 
+  suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
     exact ha this (ih HL.2)
   replace HL := HL.1
@@ -185,7 +185,9 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure 
 #align ring.in_closure.rec_on Ring.InClosure.rec_on
 
 theorem closure.is_subring : IsSubring (closure s) :=
-  { AddGroup.closure.is_add_subgroup _ with
+  {
+    AddGroup.closure.is_add_subgroup
+      _ with
     one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.is_submonoid _
     mul_mem := fun a b ha hb =>
       AddGroup.InClosure.rec_on hb
@@ -226,7 +228,7 @@ theorem closure_mono {s t : Set R} (H : s ⊆ t) : closure s ⊆ closure t :=
 theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) :
     f '' closure s = closure (f '' s) :=
   le_antisymm
-    (by 
+    (by
       rintro _ ⟨x, hx, rfl⟩
       apply in_closure.rec_on hx <;> intros
       · rw [f.map_one]

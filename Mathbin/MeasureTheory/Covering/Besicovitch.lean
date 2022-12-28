@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,10 +152,10 @@ instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] :
       R := fun i => 1
       rpos := fun i => zero_lt_one
       h := fun i j hij => (hij (Subsingleton.elim i j)).elim
-      hlast := fun i hi => by 
+      hlast := fun i hi => by
         rw [Subsingleton.elim i (last 0)] at hi
         exact (lt_irrefl _ hi).elim
-      inter := fun i hi => by 
+      inter := fun i hi => by
         rw [Subsingleton.elim i (last 0)] at hi
         exact (lt_irrefl _ hi).elim }⟩
 
@@ -165,7 +165,8 @@ namespace SatelliteConfig
 
 variable {α : Type _} [MetricSpace α] {N : ℕ} {τ : ℝ} (a : SatelliteConfig α N τ)
 
-theorem inter' (i : Fin N.succ) : dist (a.c i) (a.c (last N)) ≤ a.R i + a.R (last N) := by
+theorem inter' (i : Fin N.succ) : dist (a.c i) (a.c (last N)) ≤ a.R i + a.R (last N) :=
+  by
   rcases lt_or_le i (last N) with (H | H)
   · exact a.inter i H
   · have I : i = last N := top_le_iff.1 H
@@ -173,7 +174,8 @@ theorem inter' (i : Fin N.succ) : dist (a.c i) (a.c (last N)) ≤ a.R i + a.R (l
     simp only [I, add_nonneg this this, dist_self]
 #align besicovitch.satellite_config.inter' Besicovitch.SatelliteConfig.inter'
 
-theorem hlast' (i : Fin N.succ) (h : 1 ≤ τ) : a.R (last N) ≤ τ * a.R i := by
+theorem hlast' (i : Fin N.succ) (h : 1 ≤ τ) : a.R (last N) ≤ τ * a.R i :=
+  by
   rcases lt_or_le i (last N) with (H | H)
   · exact (a.hlast i H).2
   · have : i = last N := top_le_iff.1 H
@@ -196,8 +198,8 @@ structure BallPackage (β : Type _) (α : Type _) where
 #align besicovitch.ball_package Besicovitch.BallPackage
 
 /-- The ball package made of unit balls. -/
-def unitBallPackage (α : Type _) :
-    BallPackage α α where 
+def unitBallPackage (α : Type _) : BallPackage α α
+    where
   c := id
   R _ := 1
   rpos _ := zero_lt_one
@@ -218,7 +220,7 @@ structure TauPackage (β : Type _) (α : Type _) extends BallPackage β α where
 #align besicovitch.tau_package Besicovitch.TauPackage
 
 instance (α : Type _) : Inhabited (TauPackage α α) :=
-  ⟨{ unitBallPackage α with 
+  ⟨{ unitBallPackage α with
       τ := 2
       one_lt_tau := one_lt_two }⟩
 
@@ -252,7 +254,8 @@ def unionUpTo (i : Ordinal.{u}) : Set α :=
   ⋃ j : { j // j < i }, ball (p.c (p.index j)) (p.R (p.index j))
 #align besicovitch.tau_package.Union_up_to Besicovitch.TauPackage.unionUpTo
 
-theorem monotone_Union_up_to : Monotone p.unionUpTo := by
+theorem monotone_Union_up_to : Monotone p.unionUpTo :=
+  by
   intro i j hij
   simp only [Union_up_to]
   exact Union_mono' fun r => ⟨⟨r, r.2.trans_le hij⟩, subset.rfl⟩
@@ -283,7 +286,8 @@ def lastStep : Ordinal.{u} :=
 #align besicovitch.tau_package.last_step Besicovitch.TauPackage.lastStep
 
 theorem last_step_nonempty :
-    { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }.Nonempty := by
+    { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }.Nonempty :=
+  by
   by_contra
   suffices H : Function.Injective p.index
   exact not_injective_of_ordinal p.index H
@@ -294,9 +298,11 @@ theorem last_step_nonempty :
   simp only [nonempty_def, not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq,
     not_forall] at h
   specialize h y
-  have A : p.c (p.index y) ∉ p.Union_up_to y := by
+  have A : p.c (p.index y) ∉ p.Union_up_to y :=
+    by
     have :
-      p.index y = Classical.epsilon fun b : β => p.c b ∉ p.Union_up_to y ∧ p.R y ≤ p.τ * p.r b := by
+      p.index y = Classical.epsilon fun b : β => p.c b ∉ p.Union_up_to y ∧ p.R y ≤ p.τ * p.r b :=
+      by
       rw [tau_package.index]
       rfl
     rw [this]
@@ -309,8 +315,10 @@ theorem last_step_nonempty :
 #align besicovitch.tau_package.last_step_nonempty Besicovitch.TauPackage.last_step_nonempty
 
 /-- Every point is covered by chosen balls, before `p.last_step`. -/
-theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.unionUpTo p.lastStep := by
-  have A : ∀ z : β, p.c z ∈ p.Union_up_to p.last_step ∨ p.τ * p.r z < p.R p.last_step := by
+theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
+  by
+  have A : ∀ z : β, p.c z ∈ p.Union_up_to p.last_step ∨ p.τ * p.r z < p.R p.last_step :=
+    by
     have : p.last_step ∈ { i | ¬∃ b : β, p.c b ∉ p.Union_up_to i ∧ p.R i ≤ p.τ * p.r b } :=
       Inf_mem p.last_step_nonempty
     simpa only [not_exists, mem_set_of_eq, not_and_or, not_le, not_not_mem]
@@ -319,11 +327,13 @@ theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
   · exact h H
   have Rpos : 0 < p.R p.last_step := by
     apply lt_trans (mul_pos (_root_.zero_lt_one.trans p.one_lt_tau) (p.rpos _)) H
-  have B : p.τ⁻¹ * p.R p.last_step < p.R p.last_step := by
+  have B : p.τ⁻¹ * p.R p.last_step < p.R p.last_step :=
+    by
     conv_rhs => rw [← one_mul (p.R p.last_step)]
     exact mul_lt_mul (inv_lt_one p.one_lt_tau) le_rfl Rpos zero_le_one
   obtain ⟨y, hy1, hy2⟩ :
-    ∃ y : β, p.c y ∉ p.Union_up_to p.last_step ∧ p.τ⁻¹ * p.R p.last_step < p.r y := by
+    ∃ y : β, p.c y ∉ p.Union_up_to p.last_step ∧ p.τ⁻¹ * p.R p.last_step < p.r y :=
+    by
     simpa only [exists_prop, mem_range, exists_exists_and_eq_and, Subtype.exists,
       Subtype.coe_mk] using exists_lt_of_lt_cSup _ B
     rw [← image_univ, nonempty_image_iff]
@@ -354,12 +364,14 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
       {p.color j}
   have color_i : p.color i = Inf (univ \ A) := by rw [color]
   rw [color_i]
-  have N_mem : N ∈ univ \ A := by
+  have N_mem : N ∈ univ \ A :=
+    by
     simp only [not_exists, true_and_iff, exists_prop, mem_Union, mem_singleton_iff, mem_closed_ball,
       not_and, mem_univ, mem_diff, Subtype.exists, Subtype.coe_mk]
     intro j ji hj
     exact (IH j ji (ji.trans hi)).ne'
-  suffices Inf (univ \ A) ≠ N by
+  suffices Inf (univ \ A) ≠ N
+    by
     rcases(cInf_le (OrderBot.bddBelow (univ \ A)) N_mem).lt_or_eq with (H | H)
     · exact H
     · exact (this H).elim
@@ -372,7 +384,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
             (closed_ball (p.c (p.index j)) (p.r (p.index j)) ∩
                   closed_ball (p.c (p.index i)) (p.r (p.index i))).Nonempty ∧
               k = p.color j :=
-    by 
+    by
     intro k hk
     rw [← Inf_eq_N] at hk
     have : k ∈ A := by
@@ -384,14 +396,16 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
   -- Choose for each `k < N` an ordinal `G k < i`  giving a ball of color `k` intersecting
   -- the last ball.
   let G : ℕ → Ordinal := fun n => if n = N then i else g n
-  have color_G : ∀ n, n ≤ N → p.color (G n) = n := by
+  have color_G : ∀ n, n ≤ N → p.color (G n) = n :=
+    by
     intro n hn
     rcases hn.eq_or_lt with (rfl | H)
     · simp only [G]
       simp only [color_i, Inf_eq_N, if_true, eq_self_iff_true]
     · simp only [G]
       simp only [H.ne, (hg n H).right.right.symm, if_false]
-  have G_lt_last : ∀ n, n ≤ N → G n < p.last_step := by
+  have G_lt_last : ∀ n, n ≤ N → G n < p.last_step :=
+    by
     intro n hn
     rcases hn.eq_or_lt with (rfl | H)
     · simp only [G]
@@ -401,12 +415,12 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
   have fGn :
     ∀ n,
       n ≤ N → p.c (p.index (G n)) ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r (p.index (G n)) :=
-    by 
+    by
     intro n hn
     have :
       p.index (G n) =
         Classical.epsilon fun t => p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t :=
-      by 
+      by
       rw [index]
       rfl
     rw [this]
@@ -420,7 +434,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
       G a < G b →
         p.r (p.index (G a)) ≤ dist (p.c (p.index (G a))) (p.c (p.index (G b))) ∧
           p.r (p.index (G b)) ≤ p.τ * p.r (p.index (G a)) :=
-    by 
+    by
     intro a b G_lt
     have ha : (a : ℕ) ≤ N := Nat.lt_succ_iff.1 a.2
     have hb : (b : ℕ) ≤ N := Nat.lt_succ_iff.1 b.2
@@ -430,7 +444,8 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
         Subtype.exists, Subtype.coe_mk] at this
       simpa only [dist_comm, mem_ball, not_lt] using this (G a) G_lt
     · apply le_trans _ (fGn a ha).2
-      have B : p.c (p.index (G b)) ∉ p.Union_up_to (G a) := by
+      have B : p.c (p.index (G b)) ∉ p.Union_up_to (G a) :=
+        by
         intro H
         exact (fGn b hb).1 (p.monotone_Union_up_to G_lt.le H)
       let b' : { t // p.c t ∉ p.Union_up_to (G a) } := ⟨p.index (G b), B⟩
@@ -445,10 +460,10 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     { c := fun k => p.c (p.index (G k))
       R := fun k => p.r (p.index (G k))
       rpos := fun k => p.rpos (p.index (G k))
-      h := by 
+      h := by
         intro a b a_ne_b
         wlog (discharger := tactic.skip) G_le : G a ≤ G b := le_total (G a) (G b) using a b, b a
-        · have G_lt : G a < G b := by 
+        · have G_lt : G a < G b := by
             rcases G_le.lt_or_eq with (H | H)
             · exact H
             have A : (a : ℕ) ≠ b := fin.coe_injective.ne a_ne_b
@@ -458,20 +473,20 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
         · intro a_ne_b
           rw [or_comm']
           exact this a_ne_b.symm
-      hlast := by 
+      hlast := by
         intro a ha
         have I : (a : ℕ) < N := ha
-        have : G a < G (Fin.last N) := by 
+        have : G a < G (Fin.last N) := by
           dsimp [G]
           simp [I.ne, (hg a I).1]
         exact Gab _ _ this
-      inter := by 
+      inter := by
         intro a ha
         have I : (a : ℕ) < N := ha
-        have J : G (Fin.last N) = i := by 
+        have J : G (Fin.last N) = i := by
           dsimp [G]
           simp only [if_true, eq_self_iff_true]
-        have K : G a = g a := by 
+        have K : G a = g a := by
           dsimp [G]
           simp [I.ne, (hg a I).1]
         convert dist_le_add_of_nonempty_closed_ball_inter_closed_ball (hg _ I).2.1 }
@@ -500,7 +515,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
     simp
   -- Now, assume `β` is nonempty.
   let p : tau_package β α :=
-    { q with 
+    { q with
       τ
       one_lt_tau := hτ }
   -- we use for `s i` the balls of color `i`.
@@ -530,7 +545,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
             closed_ball (p.c (p.index jy)) (p.r (p.index jy))).Nonempty),
         {p.color j}
     have color_j : p.color jy = Inf (univ \ A) := by rw [tau_package.color]
-    have : p.color jy ∈ univ \ A := by 
+    have : p.color jy ∈ univ \ A := by
       rw [color_j]
       apply Inf_mem
       refine' ⟨N, _⟩
@@ -584,7 +599,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
   cases isEmpty_or_nonempty α
   · simp only [eq_empty_of_is_empty s, measure_empty] at hμs
     exact (lt_irrefl _ hμs).elim
-  have Npos : N ≠ 0 := by 
+  have Npos : N ≠ 0 := by
     rintro rfl
     inhabit α
     exact (not_isEmpty_of_nonempty _) hN
@@ -601,18 +616,20 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
       rBound := 1
       r_le := fun x => rle x x.2 }
   rcases exist_disjoint_covering_families hτ hN a with ⟨u, hu, hu'⟩
-  have u_count : ∀ i, (u i).Countable := by 
+  have u_count : ∀ i, (u i).Countable := by
     intro i
     refine' (hu i).countable_of_nonempty_interior fun j hj => _
     have : (ball (j : α) (r j)).Nonempty := nonempty_ball.2 (a.rpos _)
     exact this.mono ball_subset_interior_closed_ball
   let v : Fin N → Set α := fun i => ⋃ (x : s) (hx : x ∈ u i), closed_ball x (r x)
   have : ∀ i, MeasurableSet (v i) := fun i =>
-    MeasurableSet.bUnion (u_count i) fun b hb => measurableSetClosedBall
-  have A : s = ⋃ i : Fin N, s ∩ v i := by
+    MeasurableSet.bUnion (u_count i) fun b hb => measurable_set_closed_ball
+  have A : s = ⋃ i : Fin N, s ∩ v i :=
+    by
     refine' subset.antisymm _ (Union_subset fun i => inter_subset_left _ _)
     intro x hx
-    obtain ⟨i, y, hxy, h'⟩ : ∃ (i : Fin N)(i_1 : ↥s)(i : i_1 ∈ u i), x ∈ ball (↑i_1) (r ↑i_1) := by
+    obtain ⟨i, y, hxy, h'⟩ : ∃ (i : Fin N)(i_1 : ↥s)(i : i_1 ∈ u i), x ∈ ball (↑i_1) (r ↑i_1) :=
+      by
       have : x ∈ range a.c := by simpa only [Subtype.range_coe_subtype, set_of_mem_eq]
       simpa only [mem_Union] using hu' this
     refine' mem_Union.2 ⟨i, ⟨hx, _⟩⟩
@@ -620,17 +637,19 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     exact ⟨y, ⟨y.2, by simpa only [Subtype.coe_eta] ⟩, ball_subset_closed_ball h'⟩
   have S : (∑ i : Fin N, μ s / N) ≤ ∑ i, μ (s ∩ v i) :=
     calc
-      (∑ i : Fin N, μ s / N) = μ s := by
+      (∑ i : Fin N, μ s / N) = μ s :=
+        by
         simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul]
         rw [Ennreal.mul_div_cancel']
         · simp only [Npos, Ne.def, Nat.cast_eq_zero, not_false_iff]
         · exact Ennreal.nat_ne_top _
-      _ ≤ ∑ i, μ (s ∩ v i) := by 
+      _ ≤ ∑ i, μ (s ∩ v i) := by
         conv_lhs => rw [A]
         apply measure_Union_fintype_le
       
   -- choose an index `i` of a subfamily covering at least a proportion `1/N` of `s`.
-  obtain ⟨i, -, hi⟩ : ∃ (i : Fin N)(hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) := by
+  obtain ⟨i, -, hi⟩ : ∃ (i : Fin N)(hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) :=
+    by
     apply Ennreal.exists_le_of_sum_le _ S
     exact ⟨⟨0, bot_lt_iff_ne_bot.2 Npos⟩, Finset.mem_univ _⟩
   replace hi : μ s / (N + 1) < μ (s ∩ v i)
@@ -639,18 +658,20 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     rw [Ennreal.inv_lt_inv]
     conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
     exact Ennreal.add_lt_add_left (Ennreal.nat_ne_top N) Ennreal.zero_lt_one
-  have B : μ (o ∩ v i) = ∑' x : u i, μ (o ∩ closed_ball x (r x)) := by
+  have B : μ (o ∩ v i) = ∑' x : u i, μ (o ∩ closed_ball x (r x)) :=
+    by
     have : o ∩ v i = ⋃ (x : s) (hx : x ∈ u i), o ∩ closed_ball x (r x) := by simp only [inter_Union]
     rw [this, measure_bUnion (u_count i)]
     · rfl
     · exact (hu i).mono fun k => inter_subset_right _ _
-    · exact fun b hb => omeas.inter measurableSetClosedBall
+    · exact fun b hb => omeas.inter measurable_set_closed_ball
   -- A large enough finite subfamily of `u i` will also cover a proportion `> 1/(N+1)` of `s`.
   -- Since `s` might not be measurable, we express this in terms of the measurable superset `o`.
   obtain ⟨w, hw⟩ :
     ∃ w : Finset (u i), μ s / (N + 1) < ∑ x : u i in w, μ (o ∩ closed_ball (x : α) (r (x : α))) :=
     by
-    have C : HasSum (fun x : u i => μ (o ∩ closed_ball x (r x))) (μ (o ∩ v i)) := by
+    have C : HasSum (fun x : u i => μ (o ∩ closed_ball x (r x))) (μ (o ∩ v i)) :=
+      by
       rw [B]
       exact ennreal.summable.has_sum
     have : μ s / (N + 1) < μ (o ∩ v i) := hi.trans_le (measure_mono (inter_subset_inter_left _ so))
@@ -672,23 +693,24 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     swap
     · apply MeasurableSet.inter _ omeas
       haveI : Encodable (u i) := (u_count i).toEncodable
-      exact MeasurableSet.union fun b => MeasurableSet.union fun hb => measurableSetClosedBall
+      exact MeasurableSet.Union fun b => MeasurableSet.Union fun hb => measurable_set_closed_ball
     calc
       μ o = 1 / (N + 1) * μ s + N / (N + 1) * μ s := by
         rw [μo, ← add_mul, Ennreal.div_add_div_same, add_comm, Ennreal.div_self, one_mul] <;> simp
-      _ ≤ μ ((⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ∩ o) + N / (N + 1) * μ s := by
+      _ ≤ μ ((⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ∩ o) + N / (N + 1) * μ s :=
+        by
         refine' add_le_add _ le_rfl
         rw [div_eq_mul_inv, one_mul, mul_comm, ← div_eq_mul_inv]
         apply hw.le.trans (le_of_eq _)
         rw [← Finset.set_bUnion_coe, inter_comm _ o, inter_Union₂, Finset.set_bUnion_coe,
           measure_bUnion_finset]
         · have : (w : Set (u i)).PairwiseDisjoint fun b : u i => closed_ball (b : α) (r (b : α)) :=
-            by 
+            by
             intro k hk l hl hkl
             exact hu i k.2 l.2 (subtype.coe_injective.ne hkl)
           exact this.mono fun k => inter_subset_right _ _
         · intro b hb
-          apply omeas.inter measurableSetClosedBall
+          apply omeas.inter measurable_set_closed_ball
       
   -- show that the balls are disjoint
   · intro k hk l hl hkl
@@ -696,7 +718,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
       simpa only [mem_image, Finset.mem_coe, coe_coe, Finset.coe_image] using hk
     obtain ⟨l', l'w, rfl⟩ : ∃ l' : u i, l' ∈ w ∧ ↑↑l' = l := by
       simpa only [mem_image, Finset.mem_coe, coe_coe, Finset.coe_image] using hl
-    have k'nel' : (k' : s) ≠ l' := by 
+    have k'nel' : (k' : s) ≠ l' := by
       intro h
       rw [h] at hkl
       exact hkl rfl
@@ -726,7 +748,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
           (∀ p : α × ℝ, p ∈ t → p.2 ∈ f p.1) ∧
             μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ t), closedBall p.1 p.2) = 0 ∧
               t.PairwiseDisjoint fun p => closedBall p.1 p.2 :=
-  by 
+  by
   rcases HasBesicovitchCovering.no_satellite_config α with ⟨N, τ, hτ, hN⟩
   /- Introduce a property `P` on finsets saying that we have a nice disjoint covering of a
       subset of `s` by admissible balls. -/
@@ -745,13 +767,14 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
             P u ∧
               μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u), closed_ball p.1 p.2) ≤
                 N / (N + 1) * μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ t), closed_ball p.1 p.2) :=
-    by 
+    by
     intro t ht
     set B := ⋃ (p : α × ℝ) (hp : p ∈ t), closed_ball p.1 p.2 with hB
     have B_closed : IsClosed B :=
       is_closed_bUnion (Finset.finite_to_set _) fun i hi => is_closed_ball
     set s' := s \ B with hs'
-    have : ∀ x ∈ s', ∃ r ∈ f x ∩ Ioo 0 1, Disjoint B (closed_ball x r) := by
+    have : ∀ x ∈ s', ∃ r ∈ f x ∩ Ioo 0 1, Disjoint B (closed_ball x r) :=
+      by
       intro x hx
       have xs : x ∈ s := ((mem_diff x).1 hx).1
       rcases eq_empty_or_nonempty B with (hB | hB)
@@ -807,7 +830,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
   let u n := (F^[n]) ∅
   have u_succ : ∀ n : ℕ, u n.succ = F (u n) := fun n => by
     simp only [u, Function.comp_apply, Function.iterate_succ']
-  have Pu : ∀ n, P (u n) := by 
+  have Pu : ∀ n, P (u n) := by
     intro n
     induction' n with n IH
     · simp only [u, P, Prod.forall, id.def, Function.iterate_zero]
@@ -826,7 +849,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
       ∀ n,
         μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ ⋃ n : ℕ, (u n : Set (α × ℝ))), closed_ball p.fst p.snd) ≤
           μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n), closed_ball p.fst p.snd) :=
-      by 
+      by
       intro n
       apply measure_mono
       apply diff_subset_diff (subset.refl _)
@@ -834,21 +857,23 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
     have B :
       ∀ n,
         μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n), closed_ball p.fst p.snd) ≤ (N / (N + 1)) ^ n * μ s :=
-      by 
+      by
       intro n
       induction' n with n IH
       · simp only [le_refl, diff_empty, one_mul, Union_false, Union_empty, pow_zero]
       calc
         μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n.succ), closed_ball p.fst p.snd) ≤
             N / (N + 1) * μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n), closed_ball p.fst p.snd) :=
-          by 
+          by
           rw [u_succ]
           exact (hF (u n) (Pu n)).2.2
-        _ ≤ (N / (N + 1)) ^ n.succ * μ s := by
+        _ ≤ (N / (N + 1)) ^ n.succ * μ s :=
+          by
           rw [pow_succ, mul_assoc]
           exact Ennreal.mul_le_mul le_rfl IH
         
-    have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) := by
+    have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) :=
+      by
       apply Ennreal.Tendsto.mul_const _ (Or.inr (measure_lt_top μ s).Ne)
       apply Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1
       rw [Ennreal.div_lt_iff, one_mul]
@@ -911,9 +936,10 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite �
           (∀ x ∈ t, r x ∈ f x ∩ Ioo 0 (R x)) ∧
             μ (s \ ⋃ x ∈ t, closedBall x (r x)) = 0 ∧
               t.PairwiseDisjoint fun x => closedBall x (r x) :=
-  by 
+  by
   let g x := f x ∩ Ioo 0 (R x)
-  have hg : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty := by
+  have hg : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty :=
+    by
     intro x hx δ δpos
     rcases hf x hx (min δ (R x)) (lt_min δpos (hR x hx)) with ⟨r, hr⟩
     exact
@@ -922,12 +948,13 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite �
           ⟨hr.2.1, hr.2.2.trans_le (min_le_left _ _)⟩⟩⟩
   rcases exists_disjoint_closed_ball_covering_ae_aux μ g s hg with ⟨v, v_count, vs, vg, μv, v_disj⟩
   let t := Prod.fst '' v
-  have : ∀ x ∈ t, ∃ r : ℝ, (x, r) ∈ v := by 
+  have : ∀ x ∈ t, ∃ r : ℝ, (x, r) ∈ v := by
     intro x hx
     rcases(mem_image _ _ _).1 hx with ⟨⟨p, q⟩, hp, rfl⟩
     exact ⟨q, hp⟩
   choose! r hr using this
-  have im_t : (fun x => (x, r x)) '' t = v := by
+  have im_t : (fun x => (x, r x)) '' t = v :=
+    by
     have I : ∀ p : α × ℝ, p ∈ v → 0 ≤ p.2 := fun p hp => (vg p hp).2.1.le
     apply subset.antisymm
     · simp only [image_subset_iff]
@@ -936,7 +963,7 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite �
       exact hr _ (mem_image_of_mem _ hxp)
     · rintro ⟨x, p⟩ hxp
       have hxrx : (x, r x) ∈ v := hr _ (mem_image_of_mem _ hxp)
-      have : p = r x := by 
+      have : p = r x := by
         by_contra
         have A : (x, p) ≠ (x, r x) := by
           simpa only [true_and_iff, Prod.mk.inj_iff, eq_self_iff_true, Ne.def] using h
@@ -1015,7 +1042,8 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
         simp only [hε, Ennreal.nat_ne_top, WithTop.mul_eq_top_iff, Ne.def, Ennreal.div_zero_iff,
           Ennreal.one_ne_top, not_false_iff, and_false_iff, false_and_iff, or_self_iff,
           Ennreal.bit0_eq_top_iff])
-  have : ∀ x ∈ s', ∃ r1 ∈ f x ∩ Ioo (0 : ℝ) 1, closed_ball x r1 ⊆ v := by
+  have : ∀ x ∈ s', ∃ r1 ∈ f x ∩ Ioo (0 : ℝ) 1, closed_ball x r1 ⊆ v :=
+    by
     intro x hx
     rcases Metric.mem_nhds_iff.1 (v_open.mem_nhds (s'v hx)) with ⟨r, rpos, hr⟩
     rcases hf x (s's hx) (min r 1) (lt_min rpos zero_lt_one) with ⟨R', hR'⟩
@@ -1036,15 +1064,16 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
       (∀ i : Fin N, (S i).PairwiseDisjoint fun j => closed_ball (q.c j) (q.r j)) ∧
         range q.c ⊆ ⋃ i : Fin N, ⋃ j ∈ S i, ball (q.c j) (q.r j) :=
     exist_disjoint_covering_families hτ H q
-  have S_count : ∀ i, (S i).Countable := by 
+  have S_count : ∀ i, (S i).Countable := by
     intro i
     apply (S_disj i).countable_of_nonempty_interior fun j hj => _
     have : (ball (j : α) (r1 j)).Nonempty := nonempty_ball.2 (q.rpos _)
     exact this.mono ball_subset_interior_closed_ball
   let r x := if x ∈ s' then r1 x else r0 x
-  have r_t0 : ∀ x ∈ t0, r x = r0 x := by 
+  have r_t0 : ∀ x ∈ t0, r x = r0 x := by
     intro x hx
-    have : ¬x ∈ s' := by
+    have : ¬x ∈ s' :=
+      by
       simp only [not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_lt, not_le,
         mem_diff, not_forall]
       intro h'x
@@ -1064,14 +1093,15 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
     cases hx
     · rw [r_t0 x hx]
       exact (hr0 _ hx).1
-    · have h'x : x ∈ s' := by 
+    · have h'x : x ∈ s' := by
         simp only [mem_Union, mem_image] at hx
         rcases hx with ⟨i, y, ySi, rfl⟩
         exact y.2
       simp only [r, if_pos h'x, (hr1 x h'x).1.1]
   · intro x hx
     by_cases h'x : x ∈ s'
-    · obtain ⟨i, y, ySi, xy⟩ : ∃ (i : Fin N)(y : ↥s')(ySi : y ∈ S i), x ∈ ball (y : α) (r1 y) := by
+    · obtain ⟨i, y, ySi, xy⟩ : ∃ (i : Fin N)(y : ↥s')(ySi : y ∈ S i), x ∈ ball (y : α) (r1 y) :=
+        by
         have A : x ∈ range q.c := by
           simpa only [not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_le,
             mem_set_of_eq, Subtype.range_coe_subtype, mem_diff] using h'x
@@ -1090,16 +1120,18 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
   · -- the sets in the first step have measure at most `μ s + ε / 2`
     have A : (∑' x : t0, μ (closed_ball x (r x))) ≤ μ s + ε / 2 :=
       calc
-        (∑' x : t0, μ (closed_ball x (r x))) = ∑' x : t0, μ (closed_ball x (r0 x)) := by
+        (∑' x : t0, μ (closed_ball x (r x))) = ∑' x : t0, μ (closed_ball x (r0 x)) :=
+          by
           congr 1
           ext x
           rw [r_t0 x x.2]
-        _ = μ (⋃ x : t0, closed_ball x (r0 x)) := by
+        _ = μ (⋃ x : t0, closed_ball x (r0 x)) :=
+          by
           haveI : Encodable t0 := t0_count.to_encodable
           rw [measure_Union]
           · exact (pairwise_subtype_iff_pairwise_set _ _).2 t0_disj
-          · exact fun i => measurableSetClosedBall
-        _ ≤ μ u := by 
+          · exact fun i => measurable_set_closed_ball
+        _ ≤ μ u := by
           apply measure_mono
           simp only [SetCoe.forall, Subtype.coe_mk, Union_subset_iff]
           intro x hx
@@ -1112,26 +1144,28 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
       calc
         (∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x))) =
             ∑' x : S i, μ (closed_ball x (r x)) :=
-          by 
+          by
           have : inj_on (coe : s' → α) (S i) := subtype.coe_injective.inj_on _
           let F : S i ≃ (coe : s' → α) '' S i := this.bij_on_image.equiv _
           exact (F.tsum_eq fun x => μ (closed_ball x (r x))).symm
-        _ = ∑' x : S i, μ (closed_ball x (r1 x)) := by
+        _ = ∑' x : S i, μ (closed_ball x (r1 x)) :=
+          by
           congr 1
           ext x
           have : (x : α) ∈ s' := x.1.2
           simp only [r, if_pos this]
-        _ = μ (⋃ x : S i, closed_ball x (r1 x)) := by
+        _ = μ (⋃ x : S i, closed_ball x (r1 x)) :=
+          by
           haveI : Encodable (S i) := (S_count i).toEncodable
           rw [measure_Union]
           · exact (pairwise_subtype_iff_pairwise_set _ _).2 (S_disj i)
-          · exact fun i => measurableSetClosedBall
-        _ ≤ μ v := by 
+          · exact fun i => measurable_set_closed_ball
+        _ ≤ μ v := by
           apply measure_mono
           simp only [SetCoe.forall, Subtype.coe_mk, Union_subset_iff]
           intro x xs' xSi
           exact (hr1 x xs').2
-        _ ≤ ε / 2 / N := by 
+        _ ≤ ε / 2 / N := by
           have : μ s' = 0 := μt0
           rwa [this, zero_add] at μv
         
@@ -1145,12 +1179,13 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
           (∑' x : t0, μ (closed_ball x (r x))) +
             ∑ i : Fin N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
         add_le_add le_rfl (Ennreal.tsum_Union_le (fun x => μ (closed_ball x (r x))) _)
-      _ ≤ μ s + ε / 2 + ∑ i : Fin N, ε / 2 / N := by
+      _ ≤ μ s + ε / 2 + ∑ i : Fin N, ε / 2 / N :=
+        by
         refine' add_le_add A _
         refine' Finset.sum_le_sum _
         intro i hi
         exact B i
-      _ ≤ μ s + ε / 2 + ε / 2 := by 
+      _ ≤ μ s + ε / 2 + ε / 2 := by
         refine' add_le_add le_rfl _
         simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul, Ennreal.mul_div_le]
       _ = μ s + ε := by rw [add_assoc, Ennreal.add_halves]
@@ -1163,25 +1198,25 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
 
 /-- In a space with the Besicovitch covering property, the set of closed balls with positive radius
 forms a Vitali family. This is essentially a restatement of the measurable Besicovitch theorem. -/
-protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] :
-    VitaliFamily
-      μ where 
+protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ
+    where
   setsAt x := (fun r : ℝ => closedBall x r) '' Ioi (0 : ℝ)
-  MeasurableSet' := by 
+  MeasurableSet' := by
     intro x y hy
     obtain ⟨r, rpos, rfl⟩ : ∃ r : ℝ, 0 < r ∧ closed_ball x r = y := by
       simpa only [mem_image, mem_Ioi] using hy
     exact is_closed_ball.measurable_set
-  nonempty_interior := by 
+  nonempty_interior := by
     intro x y hy
     obtain ⟨r, rpos, rfl⟩ : ∃ r : ℝ, 0 < r ∧ closed_ball x r = y := by
       simpa only [mem_image, mem_Ioi] using hy
     simp only [nonempty.mono ball_subset_interior_closed_ball, rpos, nonempty_ball]
   Nontrivial x ε εpos := ⟨closedBall x ε, mem_image_of_mem _ εpos, Subset.refl _⟩
-  covering := by 
+  covering := by
     intro s f fsubset ffine
     let g : α → Set ℝ := fun x => { r | 0 < r ∧ closed_ball x r ∈ f x }
-    have A : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty := by
+    have A : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty :=
+      by
       intro x xs δ δpos
       obtain ⟨t, tf, ht⟩ : ∃ (t : Set α)(H : t ∈ f x), t ⊆ closed_ball x (δ / 2) :=
         ffine x xs (δ / 2) (half_pos δpos)
@@ -1216,7 +1251,8 @@ to convergence along closed balls. We record one of the two implications here, w
 to deduce specific statements on differentiation of measures in this context from the general
 versions. -/
 theorem tendsto_filter_at (μ : Measure α) [SigmaFinite μ] (x : α) :
-    Tendsto (fun r => closedBall x r) (𝓝[>] 0) ((Besicovitch.vitaliFamily μ).filterAt x) := by
+    Tendsto (fun r => closedBall x r) (𝓝[>] 0) ((Besicovitch.vitaliFamily μ).filterAt x) :=
+  by
   intro s hs
   simp only [mem_map]
   obtain ⟨ε, εpos, hε⟩ :
@@ -1239,7 +1275,7 @@ theorem ae_tendsto_rn_deriv (ρ μ : Measure β) [IsLocallyFiniteMeasure μ]
     [IsLocallyFiniteMeasure ρ] :
     ∀ᵐ x ∂μ,
       Tendsto (fun r => ρ (closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 (ρ.rnDeriv μ x)) :=
-  by 
+  by
   filter_upwards [VitaliFamily.ae_tendsto_rn_deriv (Besicovitch.vitaliFamily μ) ρ] with x hx
   exact hx.comp (tendsto_filter_at μ x)
 #align besicovitch.ae_tendsto_rn_deriv Besicovitch.ae_tendsto_rn_deriv

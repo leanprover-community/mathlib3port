@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.paracompact
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,8 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
 indexed by the same type. -/
 theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s) (u : ι → Set X)
     (uo : ∀ i, IsOpen (u i)) (us : s ⊆ ⋃ i, u i) :
-    ∃ v : ι → Set X, (∀ i, IsOpen (v i)) ∧ (s ⊆ ⋃ i, v i) ∧ LocallyFinite v ∧ ∀ i, v i ⊆ u i := by
+    ∃ v : ι → Set X, (∀ i, IsOpen (v i)) ∧ (s ⊆ ⋃ i, v i) ∧ LocallyFinite v ∧ ∀ i, v i ⊆ u i :=
+  by
   rcases precise_refinement (Option.elim' (sᶜ) u) (Option.forall.2 ⟨is_open_compl_iff.2 hs, uo⟩)
       _ with
     ⟨v, vo, vc, vf, vu⟩
@@ -114,7 +115,7 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
 
 -- See note [lower instance priority]
 /-- A compact space is paracompact. -/
-instance (priority := 100) paracompactOfCompact [CompactSpace X] : ParacompactSpace X :=
+instance (priority := 100) paracompact_of_compact [CompactSpace X] : ParacompactSpace X :=
   by
   -- the proof is trivial: we choose a finite subcover using compactness, and use it
   refine' ⟨fun ι s ho hu => _⟩
@@ -125,7 +126,7 @@ instance (priority := 100) paracompactOfCompact [CompactSpace X] : ParacompactSp
     ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locally_finite_of_finite _, fun t =>
       ⟨t, subset.rfl⟩⟩
   simpa only [Union_coe_set, ← univ_subset_iff]
-#align paracompact_of_compact paracompactOfCompact
+#align paracompact_of_compact paracompact_of_compact
 
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space, let `s` be a closed set
 in `X`. Suppose that for each `x ∈ s` the sets `B x : ι x → set X` with the predicate
@@ -160,7 +161,8 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
     set K : CompactExhaustion X := K'.shiftr.shiftr
     set Kdiff := fun n => K (n + 1) \ interior (K n)
     -- Now we restate some properties of `compact_exhaustion` for `K`/`Kdiff`
-    have hKcov : ∀ x, x ∈ Kdiff (K'.find x + 1) := by
+    have hKcov : ∀ x, x ∈ Kdiff (K'.find x + 1) :=
+      by
       intro x
       simpa only [K'.find_shiftr] using
         diff_subset_diff_right interior_subset (K'.shiftr.mem_diff_shiftr_find x)
@@ -234,8 +236,9 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompac
 -- See note [lower instance priority]
 /-- A locally compact sigma compact Hausdorff space is paracompact. See also
 `refinement_of_locally_compact_sigma_compact_of_nhds_basis` for a more precise statement. -/
-instance (priority := 100) paracompactOfLocallyCompactSigmaCompact [LocallyCompactSpace X]
-    [SigmaCompactSpace X] [T2Space X] : ParacompactSpace X := by
+instance (priority := 100) paracompact_of_locally_compact_sigma_compact [LocallyCompactSpace X]
+    [SigmaCompactSpace X] [T2Space X] : ParacompactSpace X :=
+  by
   refine' ⟨fun α s ho hc => _⟩
   choose i hi using Union_eq_univ_iff.1 hc
   have : ∀ x : X, (𝓝 x).HasBasis (fun t : Set X => (x ∈ t ∧ IsOpen t) ∧ t ⊆ s (i x)) id :=
@@ -243,7 +246,7 @@ instance (priority := 100) paracompactOfLocallyCompactSigmaCompact [LocallyCompa
   rcases refinement_of_locally_compact_sigma_compact_of_nhds_basis this with
     ⟨β, c, t, hto, htc, htf⟩
   exact ⟨β, t, fun x => (hto x).1.2, htc, htf, fun b => ⟨i <| c b, (hto b).2⟩⟩
-#align paracompact_of_locally_compact_sigma_compact paracompactOfLocallyCompactSigmaCompact
+#align paracompact_of_locally_compact_sigma_compact paracompact_of_locally_compact_sigma_compact
 
 /- Dieudonné‘s theorem: a paracompact Hausdorff space is normal. Formalization is based on the proof
 at [ncatlab](https://ncatlab.org/nlab/show/paracompact+Hausdorff+spaces+are+normal). -/

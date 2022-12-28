@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_monoid_hom
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,11 +98,10 @@ namespace ContinuousMonoidHom
 variable {A B C D E}
 
 @[to_additive]
-instance :
-    ContinuousMonoidHomClass (ContinuousMonoidHom A B) A
-      B where 
+instance : ContinuousMonoidHomClass (ContinuousMonoidHom A B) A B
+    where
   coe f := f.toFun
-  coe_injective' f g h := by 
+  coe_injective' f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -237,9 +236,8 @@ def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) :
 #align continuous_monoid_hom.coprod ContinuousMonoidHom.coprod
 
 @[to_additive]
-instance :
-    CommGroup (ContinuousMonoidHom A
-        E) where 
+instance : CommGroup (ContinuousMonoidHom A E)
+    where
   mul f g := (mul E).comp (f.Prod g)
   mul_comm f g := ext fun x => mul_comm (f x) (g x)
   mul_assoc f g h := ext fun x => mul_assoc (f x) (g x) (h x)
@@ -282,14 +280,14 @@ theorem closed_embedding_to_continuous_map [HasContinuousMul B] [T2Space B] :
               ⋃ (x) (y) (U) (V) (W) (hU : IsOpen U) (hV : IsOpen V) (hW : IsOpen W) (h :
                 Disjoint (U * V) W),
                 { f | f '' {x} ⊆ U } ∩ { f | f '' {y} ⊆ V } ∩ { f | f '' {x * y} ⊆ W })ᶜ
-        by 
+        by
         rw [this, compl_compl]
         refine' (ContinuousMap.is_open_gen is_compact_singleton is_open_compl_singleton).union _
         repeat' apply is_open_Union; intro
         repeat' apply IsOpen.inter
         all_goals apply ContinuousMap.is_open_gen is_compact_singleton; assumption
-      simp_rw [Set.compl_union, Set.compl_Union, Set.image_singleton, Set.singleton_subset_iff,
-        Set.ext_iff, Set.mem_inter_iff, Set.mem_Inter, Set.mem_compl_iff]
+      simp_rw [Set.compl_union, Set.compl_unionᵢ, Set.image_singleton, Set.singleton_subset_iff,
+        Set.ext_iff, Set.mem_inter_iff, Set.mem_interᵢ, Set.mem_compl_iff]
       refine' fun f => ⟨_, _⟩
       · rintro ⟨f, rfl⟩
         exact
@@ -298,7 +296,7 @@ theorem closed_embedding_to_continuous_map [HasContinuousMul B] [T2Space B] :
       · rintro ⟨hf1, hf2⟩
         suffices ∀ x y, f (x * y) = f x * f y by
           refine'
-            ⟨({ f with 
+            ⟨({ f with
                   map_one' := of_not_not hf1
                   map_mul' := this } :
                 ContinuousMonoidHom A B),
@@ -364,8 +362,8 @@ variable (E)
 /-- `continuous_monoid_hom _ f` is a functor. -/
 @[to_additive "`continuous_add_monoid_hom _ f` is a functor."]
 def compLeft (f : ContinuousMonoidHom A B) :
-    ContinuousMonoidHom (ContinuousMonoidHom B E)
-      (ContinuousMonoidHom A E) where 
+    ContinuousMonoidHom (ContinuousMonoidHom B E) (ContinuousMonoidHom A E)
+    where
   toFun g := g.comp f
   map_one' := rfl
   map_mul' g h := rfl
@@ -378,8 +376,8 @@ variable (A) {E}
 @[to_additive "`continuous_add_monoid_hom f _` is a functor."]
 def compRight {B : Type _} [CommGroup B] [TopologicalSpace B] [TopologicalGroup B]
     (f : ContinuousMonoidHom B E) :
-    ContinuousMonoidHom (ContinuousMonoidHom A B)
-      (ContinuousMonoidHom A E) where 
+    ContinuousMonoidHom (ContinuousMonoidHom A B) (ContinuousMonoidHom A E)
+    where
   toFun g := f.comp g
   map_one' := ext fun a => map_one f
   map_mul' g h := ext fun a => map_mul f (g a) (h a)
@@ -436,8 +434,8 @@ variable (A B C D E)
 /-- `continuous_monoid_hom.dual` as a `continuous_monoid_hom`. -/
 noncomputable def mapHom [LocallyCompactSpace E] :
     ContinuousMonoidHom (ContinuousMonoidHom A E)
-      (ContinuousMonoidHom (PontryaginDual E)
-        (PontryaginDual A)) where 
+      (ContinuousMonoidHom (PontryaginDual E) (PontryaginDual A))
+    where
   toFun := map
   map_one' := map_one
   map_mul' := map_mul

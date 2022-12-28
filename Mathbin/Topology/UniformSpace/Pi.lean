@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,10 +55,11 @@ theorem PiCat.uniform_continuous_proj (i : ι) : UniformContinuous fun a : ∀ i
 #align Pi.uniform_continuous_proj PiCat.uniform_continuous_proj
 
 instance PiCat.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i) :=
-  ⟨by 
+  ⟨by
     intro f hf
     haveI := hf.1
-    have : ∀ i, ∃ x : α i, Filter.map (fun a : ∀ i, α i => a i) f ≤ 𝓝 x := by
+    have : ∀ i, ∃ x : α i, Filter.map (fun a : ∀ i, α i => a i) f ≤ 𝓝 x :=
+      by
       intro i
       have key : Cauchy (map (fun a : ∀ i : ι, α i => a i) f) :=
         hf.map (PiCat.uniform_continuous_proj α i)
@@ -69,7 +70,7 @@ instance PiCat.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α
 #align Pi.complete PiCat.complete
 
 instance PiCat.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=
-  separated_def.2 fun x y H => by 
+  separated_def.2 fun x y H => by
     ext i
     apply eq_of_separated_of_uniform_continuous (PiCat.uniform_continuous_proj α i)
     apply H

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.partition_of_unity
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,7 +252,8 @@ theorem smoothToPartitionOfUnity {E : Type uE} [NormedAddCommGroup E] [NormedSpa
     [TopologicalSpace M] [ChartedSpace H M] {s : Set M} (f : BumpCovering ι M s)
     (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.toPartitionOfUnity i) :=
   (hf i).mul <|
-    (smoothFinprodCond fun j _ => smoothConst.sub (hf j)) <| by
+    (smoothFinprodCond fun j _ => smoothConst.sub (hf j)) <|
+      by
       simp only [mul_support_one_sub]
       exact f.locally_finite
 #align bump_covering.smooth_to_partition_of_unity BumpCovering.smoothToPartitionOfUnity
@@ -374,7 +375,8 @@ theorem mem_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) :
   smooth_bump_covering.mem_chart_at_source_of_eq_one SmoothBumpCovering.mem_chart_at_source_of_eq_one
 
 theorem mem_ext_chart_at_source_of_eq_one {i : ι} {x : M} (h : fs i x = 1) :
-    x ∈ (extChartAt I (fs.c i)).source := by
+    x ∈ (extChartAt I (fs.c i)).source :=
+  by
   rw [ext_chart_at_source]
   exact fs.mem_chart_at_source_of_eq_one h
 #align
@@ -417,8 +419,8 @@ variable [T2Space M]
 
 /-- Reinterpret a `smooth_bump_covering` as a continuous `bump_covering`. Note that not every
 `f : bump_covering ι M s` with smooth functions `f i` is a `smooth_bump_covering`. -/
-def toBumpCovering :
-    BumpCovering ι M s where 
+def toBumpCovering : BumpCovering ι M s
+    where
   toFun i := ⟨fs i, (fs i).Continuous⟩
   locally_finite' := fs.LocallyFinite
   nonneg' i x := (fs i).Nonneg
@@ -495,7 +497,8 @@ exists an infinitely smooth function that is equal to `0` on one of them and is 
 other. -/
 theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t : Set M}
     (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
-    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 := by
+    ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
+  by
   have : ∀ x ∈ t, sᶜ ∈ 𝓝 x := fun x hx => hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)
   rcases SmoothBumpCovering.exists_is_subordinate I ht this with ⟨ι, f, hf⟩
   set g := f.to_smooth_partition_of_unity
@@ -512,7 +515,8 @@ namespace SmoothPartitionOfUnity
 /-- A `smooth_partition_of_unity` that consists of a single function, uniformly equal to one,
 defined as an example for `inhabited` instance. -/
 def single (i : ι) (s : Set M) : SmoothPartitionOfUnity ι I M s :=
-  (BumpCovering.single i s).toSmoothPartitionOfUnity fun j => by
+  (BumpCovering.single i s).toSmoothPartitionOfUnity fun j =>
+    by
     rcases eq_or_ne j i with (rfl | h)
     · simp only [smoothOne, ContinuousMap.coe_one, BumpCovering.coe_single, Pi.single_eq_same]
     · simp only [smoothZero, BumpCovering.coe_single, Pi.single_eq_of_ne h, ContinuousMap.coe_zero]
@@ -526,7 +530,8 @@ variable [T2Space M] [SigmaCompactSpace M]
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set
 `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. -/
 theorem exists_is_subordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (ho : ∀ i, IsOpen (U i))
-    (hU : s ⊆ ⋃ i, U i) : ∃ f : SmoothPartitionOfUnity ι I M s, f.IsSubordinate U := by
+    (hU : s ⊆ ⋃ i, U i) : ∃ f : SmoothPartitionOfUnity ι I M s, f.IsSubordinate U :=
+  by
   haveI : LocallyCompactSpace H := I.locally_compact
   haveI : LocallyCompactSpace M := ChartedSpace.locally_compact H M
   haveI : NormalSpace M := normalOfParacompactT2
@@ -549,7 +554,8 @@ for all `x`. See also `exists_smooth_forall_mem_convex_of_local` and
 `exists_smooth_forall_mem_convex_of_local_const`. -/
 theorem exists_cont_mdiff_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
     (Hloc : ∀ x : M, ∃ U ∈ 𝓝 x, ∃ g : M → F, ContMdiffOn I 𝓘(ℝ, F) n g U ∧ ∀ y ∈ U, g y ∈ t y) :
-    ∃ g : C^n⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x := by
+    ∃ g : C^n⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x :=
+  by
   choose U hU g hgs hgt using Hloc
   obtain ⟨f, hf⟩ :=
     SmoothPartitionOfUnity.exists_is_subordinate I is_closed_univ (fun x => interior (U x))
@@ -613,7 +619,7 @@ theorem Metric.exists_smooth_forall_closed_ball_subset {M} [MetricSpace M] [Char
     (hfin : LocallyFinite K) :
     ∃ δ : C^∞⟮I, M; 𝓘(ℝ, ℝ), ℝ⟯,
       (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, Metric.closedBall x (δ x) ⊆ U i :=
-  by 
+  by
   rcases Emetric.exists_smooth_forall_closed_ball_subset I hK hU hKU hfin with ⟨δ, hδ0, hδ⟩
   refine' ⟨δ, hδ0, fun i x hx => _⟩
   rw [← Metric.emetric_closed_ball (hδ0 _).le]

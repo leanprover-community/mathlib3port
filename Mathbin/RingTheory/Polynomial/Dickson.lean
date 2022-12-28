@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.dickson
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,8 @@ theorem dickson_add_two (n : ℕ) :
 #align polynomial.dickson_add_two Polynomial.dickson_add_two
 
 theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) :
-    dickson k a n = X * dickson k a (n - 1) - c a * dickson k a (n - 2) := by
+    dickson k a n = X * dickson k a (n - 1) - c a * dickson k a (n - 2) :=
+  by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm]
   exact dickson_add_two k a n
@@ -99,7 +100,8 @@ theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dicks
     simp only [dickson_zero, Polynomial.map_sub, Polynomial.map_nat_cast, bit1, bit0,
       Polynomial.map_add, Polynomial.map_one]
   | 1 => by simp only [dickson_one, map_X]
-  | n + 2 => by
+  | n + 2 =>
+    by
     simp only [dickson_add_two, Polynomial.map_sub, Polynomial.map_mul, map_X, map_C]
     rw [map_dickson, map_dickson]
 #align polynomial.map_dickson Polynomial.map_dickson
@@ -108,11 +110,11 @@ variable {R}
 
 @[simp]
 theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
-  | 0 => by 
+  | 0 => by
     simp only [dickson_zero, pow_zero]
     norm_num
   | 1 => by simp only [dickson_one, pow_one]
-  | n + 2 => by 
+  | n + 2 => by
     simp only [dickson_add_two, C_0, zero_mul, sub_zero]
     rw [dickson_two_zero, pow_add X (n + 1) 1, mul_comm, pow_one]
 #align polynomial.dickson_two_zero Polynomial.dickson_two_zero
@@ -135,11 +137,12 @@ variable {R}
 
 theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
     ∀ n, (dickson 1 (1 : R) n).eval (x + y) = x ^ n + y ^ n
-  | 0 => by 
+  | 0 => by
     simp only [bit0, eval_one, eval_add, pow_zero, dickson_zero]
     norm_num
   | 1 => by simp only [eval_X, dickson_one, pow_one]
-  | n + 2 => by
+  | n + 2 =>
+    by
     simp only [eval_sub, eval_mul, dickson_one_one_eval_add_inv, eval_X, dickson_add_two, C_1,
       eval_one]
     conv_lhs => simp only [pow_succ, add_mul, mul_add, h, ← mul_assoc, mul_comm y x, one_mul]
@@ -150,13 +153,14 @@ variable (R)
 
 theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (c (⅟ 2) * X)
-  | 0 => by 
+  | 0 => by
     simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
     norm_num
   | 1 => by
     rw [dickson_one, chebyshev.T_one, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, mul_invOf_self,
       C_1, one_mul]
-  | n + 2 => by
+  | n + 2 =>
+    by
     simp only [dickson_add_two, chebyshev.T_add_two, dickson_one_one_eq_chebyshev_T (n + 1),
       dickson_one_one_eq_chebyshev_T n, sub_comp, mul_comp, add_comp, X_comp, bit0_comp, one_comp]
     simp only [← C_1, ← C_bit0, ← mul_assoc, ← C_mul, mul_invOf_self]
@@ -165,7 +169,8 @@ theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
 #align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_T
 
 theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
-    Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) := by
+    Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) :=
+  by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
   rw [invOf_mul_self, C_1, one_mul, one_mul, comp_X]
@@ -174,7 +179,8 @@ theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
 `n`-th. -/
 theorem dickson_one_one_mul (m n : ℕ) :
-    dickson 1 (1 : R) (m * n) = (dickson 1 1 m).comp (dickson 1 1 n) := by
+    dickson 1 (1 : R) (m * n) = (dickson 1 1 m).comp (dickson 1 1 n) :=
+  by
   have h : (1 : R) = Int.castRingHom R 1
   simp only [eq_int_cast, Int.cast_one]
   rw [h]
@@ -202,10 +208,11 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   -- Since `X ^ p` also satisfies this property in characteristic `p`,
   -- we can use a variant on `polynomial.funext` to conclude that these polynomials are equal.
   -- For this argument, we need an arbitrary infinite field of characteristic `p`.
-  obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K := by
+  obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K :=
+    by
     let K := FractionRing (Polynomial (Zmod p))
     let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C
-    have : CharP K p := by 
+    have : CharP K p := by
       rw [← f.char_p_iff_char_p]
       infer_instance
     haveI : Infinite K :=
@@ -234,18 +241,18 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     suffices
       (Set.univ : Set K) =
         { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 } >>= fun x => { y | x = y + y⁻¹ ∨ y = 0 }
-      by 
+      by
       rw [this]
       clear this
       refine' h.bUnion fun x hx => _
       -- The following quadratic polynomial has as solutions the `y` for which `x = y + y⁻¹`.
       let φ : K[X] := X ^ 2 - C x * X + 1
-      have hφ : φ ≠ 0 := by 
+      have hφ : φ ≠ 0 := by
         intro H
         have : φ.eval 0 = 0 := by rw [H, eval_zero]
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq,
           zero_add, one_ne_zero]
-      classical 
+      classical
         convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
         ext1 y
         simp only [Multiset.mem_to_finset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
@@ -260,7 +267,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x
-      simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_setOf_eq]
+      simp only [exists_prop, Set.mem_unionᵢ, Set.bind_def, Ne.def, Set.mem_setOf_eq]
       by_cases hx : x = 0
       · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
         exact ⟨_, 1, rfl, one_ne_zero⟩
@@ -269,7 +276,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
 #align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zmod_p
 
 theorem dickson_one_one_char_p (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p :=
-  by 
+  by
   have h : (1 : R) = Zmod.castHom (dvd_refl p) R 1
   simp only [Zmod.cast_hom_apply, Zmod.cast_one']
   rw [h, ← map_dickson (Zmod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow,

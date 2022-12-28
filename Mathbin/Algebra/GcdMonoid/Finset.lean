@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.finset
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ theorem lcm_empty : (∅ : Finset β).lcm f = 1 :=
 #align finset.lcm_empty Finset.lcm_empty
 
 @[simp]
-theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀ b ∈ s, f b ∣ a := by
+theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀ b ∈ s, f b ∣ a :=
+  by
   apply Iff.trans Multiset.lcm_dvd
   simp only [Multiset.mem_map, and_imp, exists_imp]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
@@ -78,7 +79,8 @@ theorem dvd_lcm {b : β} (hb : b ∈ s) : f b ∣ s.lcm f :=
 
 @[simp]
 theorem lcm_insert [DecidableEq β] {b : β} :
-    (insert b s : Finset β).lcm f = GcdMonoid.lcm (f b) (s.lcm f) := by
+    (insert b s : Finset β).lcm f = GcdMonoid.lcm (f b) (s.lcm f) :=
+  by
   by_cases h : b ∈ s
   ·
     rw [insert_eq_of_mem h,
@@ -101,7 +103,7 @@ theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GcdMonoid.lcm (s₁
 #align finset.lcm_union Finset.lcm_union
 
 theorem lcm_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f a = g a) : s₁.lcm f = s₂.lcm g :=
-  by 
+  by
   subst hs
   exact Finset.fold_congr hfg
 #align finset.lcm_congr Finset.lcm_congr
@@ -150,7 +152,8 @@ theorem gcd_empty : (∅ : Finset β).gcd f = 0 :=
   fold_empty
 #align finset.gcd_empty Finset.gcd_empty
 
-theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b ∈ s, a ∣ f b := by
+theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b ∈ s, a ∣ f b :=
+  by
   apply Iff.trans Multiset.dvd_gcd
   simp only [Multiset.mem_map, and_imp, exists_imp]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
@@ -166,7 +169,8 @@ theorem dvd_gcd {a : α} : (∀ b ∈ s, a ∣ f b) → a ∣ s.gcd f :=
 
 @[simp]
 theorem gcd_insert [DecidableEq β] {b : β} :
-    (insert b s : Finset β).gcd f = GcdMonoid.gcd (f b) (s.gcd f) := by
+    (insert b s : Finset β).gcd f = GcdMonoid.gcd (f b) (s.gcd f) :=
+  by
   by_cases h : b ∈ s
   ·
     rw [insert_eq_of_mem h,
@@ -189,7 +193,7 @@ theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GcdMonoid.gcd (s₁
 #align finset.gcd_union Finset.gcd_union
 
 theorem gcd_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a ∈ s₂, f a = g a) : s₁.gcd f = s₂.gcd g :=
-  by 
+  by
   subst hs
   exact Finset.fold_congr hfg
 #align finset.gcd_congr Finset.gcd_congr
@@ -210,7 +214,8 @@ theorem gcd_eq_gcd_image [DecidableEq α] : s.gcd f = (s.image f).gcd id :=
   Eq.symm <| gcd_image _
 #align finset.gcd_eq_gcd_image Finset.gcd_eq_gcd_image
 
-theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
+theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 :=
+  by
   rw [gcd_def, Multiset.gcd_eq_zero_iff]
   constructor <;> intro h
   · intro b bs
@@ -226,7 +231,7 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
 
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] :
     s.gcd f = (s.filter fun x => f x ≠ 0).gcd f := by
-  classical 
+  classical
     trans ((s.filter fun x => f x = 0) ∪ s.filter fun x => f x ≠ 0).gcd f
     · rw [filter_union_filter_neg_eq]
     rw [gcd_union]
@@ -241,7 +246,7 @@ theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] :
 #align finset.gcd_eq_gcd_filter_ne_zero Finset.gcd_eq_gcd_filter_ne_zero
 
 theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f := by
-  classical 
+  classical
     apply s.induction_on
     · simp
     intro b t hbt h
@@ -250,7 +255,7 @@ theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f
 #align finset.gcd_mul_left Finset.gcd_mul_left
 
 theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize a := by
-  classical 
+  classical
     apply s.induction_on
     · simp
     intro b t hbt h
@@ -262,14 +267,14 @@ theorem extract_gcd' (f g : β → α) (hs : ∃ x, x ∈ s ∧ f x ≠ 0) (hg :
     s.gcd g = 1 :=
   ((@mul_right_eq_self₀ _ _ (s.gcd f) _).1 <| by
         conv_lhs => rw [← normalize_gcd, ← gcd_mul_left, ← gcd_congr rfl hg]).resolve_right <|
-    by 
+    by
     contrapose! hs
     exact gcd_eq_zero_iff.1 hs
 #align finset.extract_gcd' Finset.extract_gcd'
 
 theorem extract_gcd (f : β → α) (hs : s.Nonempty) :
     ∃ g : β → α, (∀ b ∈ s, f b = s.gcd f * g b) ∧ s.gcd g = 1 := by
-  classical 
+  classical
     by_cases h : ∀ x ∈ s, f x = (0 : α)
     · refine' ⟨fun b => 1, fun b hb => by rw [h b hb, gcd_eq_zero_iff.2 h, mul_one], _⟩
       rw [gcd_eq_gcd_image, image_const hs, gcd_singleton, id, normalize_one]
@@ -293,7 +298,7 @@ variable [CommRing α] [IsDomain α] [NormalizedGcdMonoid α]
 theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α}
     (h : ∀ x : β, x ∈ s → a ∣ f x - g x) : GcdMonoid.gcd a (s.gcd f) = GcdMonoid.gcd a (s.gcd g) :=
   by
-  classical 
+  classical
     revert h
     apply s.induction_on
     · simp

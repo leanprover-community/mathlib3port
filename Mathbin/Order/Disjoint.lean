@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.disjoint
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -686,7 +686,8 @@ section DistribLattice
 variable [DistribLattice α] [BoundedOrder α] {a b c : α}
 
 #print Disjoint.le_of_codisjoint /-
-theorem Disjoint.le_of_codisjoint (hab : Disjoint a b) (hbc : Codisjoint b c) : a ≤ c := by
+theorem Disjoint.le_of_codisjoint (hab : Disjoint a b) (hbc : Codisjoint b c) : a ≤ c :=
+  by
   rw [← @inf_top_eq _ _ _ a, ← @bot_sup_eq _ _ _ c, ← hab.eq_bot, ← hbc.eq_top, sup_inf_right]
   exact inf_le_inf_right _ le_sup_left
 #align disjoint.le_of_codisjoint Disjoint.le_of_codisjoint
@@ -825,7 +826,8 @@ theorem inf_right_eq_bot_iff (h : IsCompl y z) : x ⊓ z = ⊥ ↔ x ≤ y :=
 #align is_compl.inf_right_eq_bot_iff IsCompl.inf_right_eq_bot_iff
 
 #print IsCompl.disjoint_left_iff /-
-theorem disjoint_left_iff (h : IsCompl y z) : Disjoint x y ↔ x ≤ z := by
+theorem disjoint_left_iff (h : IsCompl y z) : Disjoint x y ↔ x ≤ z :=
+  by
   rw [disjoint_iff]
   exact h.inf_left_eq_bot_iff
 #align is_compl.disjoint_left_iff IsCompl.disjoint_left_iff
@@ -910,7 +912,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Disjoint.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPartialOrderProd.{u2, u1} α β _inst_1 _inst_2) (Prod.orderBot.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_3 _inst_4) x y) (And (Disjoint.{u2} α _inst_1 _inst_3 (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y)) (Disjoint.{u1} β _inst_2 _inst_4 (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y)))
 Case conversion may be inaccurate. Consider using '#align prod.disjoint_iff Prod.disjoint_iffₓ'. -/
 protected theorem disjoint_iff [OrderBot α] [OrderBot β] {x y : α × β} :
-    Disjoint x y ↔ Disjoint x.1 y.1 ∧ Disjoint x.2 y.2 := by
+    Disjoint x y ↔ Disjoint x.1 y.1 ∧ Disjoint x.2 y.2 :=
+  by
   constructor
   · intro h
     refine'

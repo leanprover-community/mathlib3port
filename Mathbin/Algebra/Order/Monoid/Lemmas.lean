@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl, Dami
 Yuyang Zhao
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -330,7 +330,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : LinearOrder.{u1} α] {a : α} {b : α} {c : α} {d : α} [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2831 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2833 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2831 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2833) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2846 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2848 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2846 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2848)] [_inst_4 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2868 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2870 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2868 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2870)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2883 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2885 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2883 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.2885)], (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) c d)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_2) a b) (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_2) c d))
 Case conversion may be inaccurate. Consider using '#align min_le_max_of_mul_le_mul min_le_max_of_mul_le_mulₓ'. -/
 @[to_additive]
-theorem min_le_max_of_mul_le_mul (h : a * b ≤ c * d) : min a b ≤ max c d := by
+theorem min_le_max_of_mul_le_mul (h : a * b ≤ c * d) : min a b ≤ max c d :=
+  by
   simp_rw [min_le_iff, le_max_iff]
   contrapose! h
   exact mul_lt_mul_of_lt_of_lt h.1.1 h.2.2
@@ -1464,9 +1465,10 @@ Case conversion may be inaccurate. Consider using '#align mul_le_mul_iff_of_ge m
 theorem mul_le_mul_iff_of_ge [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· < ·)] {a₁ a₂ b₁ b₂ : α} (ha : a₁ ≤ a₂) (hb : b₁ ≤ b₂) :
-    a₂ * b₂ ≤ a₁ * b₁ ↔ a₁ = a₂ ∧ b₁ = b₂ := by
+    a₂ * b₂ ≤ a₁ * b₁ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
+  by
   refine'
-    ⟨fun h => _, by 
+    ⟨fun h => _, by
       rintro ⟨rfl, rfl⟩
       rfl⟩
   simp only [eq_iff_le_not_lt, ha, hb, true_and_iff]
@@ -1543,7 +1545,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10022 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10024 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10022 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10024) (fun (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10037 : α) (x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10039 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10037 x._@.Mathlib.Algebra.Order.Monoid.Lemmas._hyg.10039)] (a : α), Exists.{succ u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α _inst_1)) b b) a)
 Case conversion may be inaccurate. Consider using '#align exists_square_le exists_square_leₓ'. -/
-theorem exists_square_le [CovariantClass α α (· * ·) (· < ·)] (a : α) : ∃ b : α, b * b ≤ a := by
+theorem exists_square_le [CovariantClass α α (· * ·) (· < ·)] (a : α) : ∃ b : α, b * b ≤ a :=
+  by
   by_cases h : a < 1
   · use a
     have : a * a < a * 1 := mul_lt_mul_left' h a
@@ -1610,7 +1613,8 @@ Case conversion may be inaccurate. Consider using '#align left.mul_eq_mul_iff_eq
 theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] [ContravariantClass α α (· * ·) (· ≤ ·)]
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α} (hac : a ≤ c) (hbd : b ≤ d) :
-    a * b = c * d ↔ a = c ∧ b = d := by
+    a * b = c * d ↔ a = c ∧ b = d :=
+  by
   refine' ⟨fun h => _, fun h => congr_arg₂ (· * ·) h.1 h.2⟩
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, mul_left_cancel'' h⟩
@@ -1629,7 +1633,8 @@ Case conversion may be inaccurate. Consider using '#align right.mul_eq_mul_iff_e
 theorem Right.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ ·)]
     [ContravariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· < ·)]
     [ContravariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α} (hac : a ≤ c) (hbd : b ≤ d) :
-    a * b = c * d ↔ a = c ∧ b = d := by
+    a * b = c * d ↔ a = c ∧ b = d :=
+  by
   refine' ⟨fun h => _, fun h => congr_arg₂ (· * ·) h.1 h.2⟩
   rcases hac.eq_or_lt with (rfl | hac)
   · exact ⟨rfl, mul_left_cancel'' h⟩

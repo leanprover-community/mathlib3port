@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.sort
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,8 @@ theorem sort_singleton (a : α) : sort r {a} = [a] :=
   Multiset.sort_singleton r a
 #align finset.sort_singleton Finset.sort_singleton
 
-theorem sort_perm_to_list (s : Finset α) : sort r s ~ s.toList := by
+theorem sort_perm_to_list (s : Finset α) : sort r s ~ s.toList :=
+  by
   rw [← Multiset.coe_eq_coe]
   simp only [coe_to_list, sort_eq]
 #align finset.sort_perm_to_list Finset.sort_perm_to_list
@@ -93,7 +94,8 @@ theorem sort_sorted_lt (s : Finset α) : List.Sorted (· < ·) (sort (· ≤ ·)
 #align finset.sort_sorted_lt Finset.sort_sorted_lt
 
 theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).length) (H : s.Nonempty) :
-    (s.sort (· ≤ ·)).nthLe 0 h = s.min' H := by
+    (s.sort (· ≤ ·)).nthLe 0 h = s.min' H :=
+  by
   let l := s.sort (· ≤ ·)
   apply le_antisymm
   · have : s.min' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.min'_mem H)
@@ -113,7 +115,7 @@ theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length
 theorem min'_eq_sorted_zero {s : Finset α} {h : s.Nonempty} :
     s.min' h =
       (s.sort (· ≤ ·)).nthLe 0
-        (by 
+        (by
           rw [length_sort]
           exact card_pos.2 h) :=
   (sorted_zero_eq_min'_aux _ _ _).symm
@@ -121,7 +123,8 @@ theorem min'_eq_sorted_zero {s : Finset α} {h : s.Nonempty} :
 
 theorem sorted_last_eq_max'_aux (s : Finset α)
     (h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length) (H : s.Nonempty) :
-    (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h = s.max' H := by
+    (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h = s.max' H :=
+  by
   let l := s.sort (· ≤ ·)
   apply le_antisymm
   · have : l.nth_le ((s.sort (· ≤ ·)).length - 1) h ∈ s :=
@@ -139,7 +142,7 @@ theorem sorted_last_eq_max' {s : Finset α}
     {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).nthLe ((s.sort (· ≤ ·)).length - 1) h =
       s.max'
-        (by 
+        (by
           rw [length_sort] at h
           exact card_pos.1 (lt_of_le_of_lt bot_le h)) :=
   sorted_last_eq_max'_aux _ _ _
@@ -183,7 +186,7 @@ theorem order_iso_of_fin_symm_apply (s : Finset α) {k : ℕ} (h : s.card = k) (
 theorem order_emb_of_fin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin k) :
     s.orderEmbOfFin h i =
       (s.sort (· ≤ ·)).nthLe i
-        (by 
+        (by
           rw [length_sort, h]
           exact i.2) :=
   rfl
@@ -226,7 +229,8 @@ theorem order_emb_of_fin_singleton (a : α) (i : Fin 1) :
 /-- Any increasing map `f` from `fin k` to a finset of cardinality `k` has to coincide with
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem order_emb_of_fin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin k → α}
-    (hfs : ∀ x, f x ∈ s) (hmono : StrictMono f) : f = s.orderEmbOfFin h := by
+    (hfs : ∀ x, f x ∈ s) (hmono : StrictMono f) : f = s.orderEmbOfFin h :=
+  by
   apply Fin.strict_mono_unique hmono (s.order_emb_of_fin h).StrictMono
   rw [range_order_emb_of_fin, ← Set.image_univ, ← coe_univ, ← coe_image, coe_inj]
   refine' eq_of_subset_of_card_le (fun x hx => _) _
@@ -248,7 +252,8 @@ and only if `i = j`. Since they can be defined on a priori not defeq types `fin 
 @[simp]
 theorem order_emb_of_fin_eq_order_emb_of_fin_iff {k l : ℕ} {s : Finset α} {i : Fin k} {j : Fin l}
     {h : s.card = k} {h' : s.card = l} :
-    s.orderEmbOfFin h i = s.orderEmbOfFin h' j ↔ (i : ℕ) = (j : ℕ) := by
+    s.orderEmbOfFin h i = s.orderEmbOfFin h' j ↔ (i : ℕ) = (j : ℕ) :=
+  by
   substs k l
   exact (s.order_emb_of_fin rfl).eq_iff_eq.trans Fin.ext_iff
 #align

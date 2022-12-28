@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.category.Groupoid
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,9 +64,8 @@ theorem coe_of (C : Type u) [Groupoid C] : (of C : Type u) = C :=
 #align category_theory.Groupoid.coe_of CategoryTheory.GroupoidCat.coe_of
 
 /-- Category structure on `Groupoid` -/
-instance category :
-    LargeCategory.{max v u}
-      GroupoidCat.{v, u} where 
+instance category : LargeCategory.{max v u} GroupoidCat.{v, u}
+    where
   Hom C D := C ⥤ D
   id C := 𝟭 C
   comp C D E F G := F ⋙ G
@@ -77,15 +76,15 @@ instance category :
 
 /-- Functor that gets the set of objects of a groupoid. It is not
 called `forget`, because it is not a faithful functor. -/
-def objects : Groupoid.{v, u} ⥤ Type
-        u where 
+def objects : Groupoid.{v, u} ⥤ Type u
+    where
   obj := Bundled.α
   map C D F := F.obj
 #align category_theory.Groupoid.objects CategoryTheory.GroupoidCat.objects
 
 /-- Forgetting functor to `Cat` -/
-def forgetToCat : Groupoid.{v, u} ⥤
-      Cat.{v, u} where 
+def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u}
+    where
   obj C := CatCat.of C
   map C D := id
 #align category_theory.Groupoid.forget_to_Cat CategoryTheory.GroupoidCat.forgetToCat
@@ -120,11 +119,11 @@ def piLimitFan ⦃J : Type u⦄ (F : J → GroupoidCat.{u, u}) : Limits.Fan F :=
 /-- The product fan over an indexed family of groupoids, is a limit cone. -/
 def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → GroupoidCat.{u, u}) : Limits.IsLimit (piLimitFan F) :=
   Limits.mkFanLimit (piLimitFan F) (fun s => Functor.pi' fun j => s.proj j)
-    (by 
+    (by
       intros
       dsimp only [pi_limit_fan]
       simp [hom_to_functor])
-    (by 
+    (by
       intro s m w
       apply functor.pi_ext
       intro j; specialize w j
@@ -144,7 +143,8 @@ noncomputable def piIsoPi (J : Type u) (f : J → GroupoidCat.{u, u}) : @of (∀
 
 @[simp]
 theorem pi_iso_pi_hom_π (J : Type u) (f : J → GroupoidCat.{u, u}) (j : J) :
-    (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.pi.eval _ j := by
+    (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.pi.eval _ j :=
+  by
   simp [pi_iso_pi]
   rfl
 #align category_theory.Groupoid.pi_iso_pi_hom_π CategoryTheory.GroupoidCat.pi_iso_pi_hom_π

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.limits
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,8 @@ def SchemeCat.emptyTo (X : SchemeCat.{u}) : ∅ ⟶ X :=
 #align algebraic_geometry.Scheme.empty_to AlgebraicGeometry.SchemeCat.emptyTo
 
 @[ext]
-theorem SchemeCat.empty_ext {X : SchemeCat.{u}} (f g : ∅ ⟶ X) : f = g := by
+theorem SchemeCat.empty_ext {X : SchemeCat.{u}} (f g : ∅ ⟶ X) : f = g :=
+  by
   ext a
   exact PEmpty.elim a
 #align algebraic_geometry.Scheme.empty_ext AlgebraicGeometry.SchemeCat.empty_ext
@@ -89,7 +90,8 @@ instance Spec_punit_is_empty : IsEmpty (SchemeCat.spec.obj (op <| CommRingCat.of
 #align algebraic_geometry.Spec_punit_is_empty AlgebraicGeometry.Spec_punit_is_empty
 
 instance (priority := 100) is_open_immersion_of_is_empty {X Y : SchemeCat} (f : X ⟶ Y)
-    [IsEmpty X.carrier] : IsOpenImmersion f := by
+    [IsEmpty X.carrier] : IsOpenImmersion f :=
+  by
   apply (config := { instances := false }) is_open_immersion.of_stalk_iso
   · apply open_embedding_of_continuous_injective_open
     · continuity
@@ -106,9 +108,10 @@ instance (priority := 100) is_open_immersion_of_is_empty {X Y : SchemeCat} (f : 
   algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.is_open_immersion_of_is_empty
 
 instance (priority := 100) is_iso_of_is_empty {X Y : SchemeCat} (f : X ⟶ Y) [IsEmpty Y.carrier] :
-    IsIso f := by
+    IsIso f :=
+  by
   haveI : IsEmpty X.carrier := ⟨fun x => isEmptyElim (show Y.carrier from f.1.base x)⟩
-  have : epi f.1.base := by 
+  have : epi f.1.base := by
     rw [TopCat.epi_iff_surjective]
     rintro (x : Y.carrier)
     exact isEmptyElim x
@@ -139,7 +142,8 @@ instance initial_is_empty : IsEmpty (⊥_ Scheme).carrier :=
   ⟨fun x => ((initial.to SchemeCat.empty : _).1.base x).elim⟩
 #align algebraic_geometry.initial_is_empty AlgebraicGeometry.initial_is_empty
 
-theorem bot_is_affine_open (X : SchemeCat) : IsAffineOpen (⊥ : Opens X.carrier) := by
+theorem bot_is_affine_open (X : SchemeCat) : IsAffineOpen (⊥ : Opens X.carrier) :=
+  by
   convert range_is_affine_open_of_open_immersion (initial.to X)
   ext
   exact (false_iff_iff _).mpr fun x => isEmptyElim (show (⊥_ Scheme).carrier from x.some)

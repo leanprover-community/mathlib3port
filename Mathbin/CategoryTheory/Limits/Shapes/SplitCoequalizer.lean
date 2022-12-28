@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.split_coequalizer
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,8 +85,8 @@ variable {f g}
 /-- Split coequalizers are absolute: they are preserved by any functor. -/
 @[simps]
 def IsSplitCoequalizer.map {Z : C} {π : Y ⟶ Z} (q : IsSplitCoequalizer f g π) (F : C ⥤ D) :
-    IsSplitCoequalizer (F.map f) (F.map g)
-      (F.map π) where 
+    IsSplitCoequalizer (F.map f) (F.map g) (F.map π)
+    where
   rightSection := F.map q.rightSection
   leftSection := F.map q.leftSection
   condition := by rw [← F.map_comp, q.condition, F.map_comp]
@@ -119,7 +119,7 @@ is more convenient to show a given cofork is a coequalizer by showing it is spli
 def IsSplitCoequalizer.isCoequalizer {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) :
     IsColimit t.asCofork :=
   (Cofork.IsColimit.mk' _) fun s =>
-    ⟨t.rightSection ≫ s.π, by 
+    ⟨t.rightSection ≫ s.π, by
       dsimp
       rw [← t.left_section_top_assoc, s.condition, t.left_section_bottom_assoc], fun m hm => by
       simp [← hm]⟩
@@ -168,10 +168,8 @@ noncomputable def HasSplitCoequalizer.isSplitCoequalizer [HasSplitCoequalizer f 
   category_theory.has_split_coequalizer.is_split_coequalizer CategoryTheory.HasSplitCoequalizer.isSplitCoequalizer
 
 /-- If `f, g` is split, then `G f, G g` is split. -/
-instance map_is_split_pair [HasSplitCoequalizer f g] :
-    HasSplitCoequalizer (G.map f)
-      (G.map
-        g) where splittable :=
+instance map_is_split_pair [HasSplitCoequalizer f g] : HasSplitCoequalizer (G.map f) (G.map g)
+    where splittable :=
     ⟨_, _, ⟨IsSplitCoequalizer.map (HasSplitCoequalizer.isSplitCoequalizer f g) _⟩⟩
 #align category_theory.map_is_split_pair CategoryTheory.map_is_split_pair
 

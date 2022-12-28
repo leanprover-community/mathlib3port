@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.fg
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,8 +40,9 @@ namespace Algebra
 variable {R : Type u} {A : Type v} {B : Type w} [CommSemiring R] [CommSemiring A] [Algebra R A]
   {s t : Set A}
 
-theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t).toSubmodule.Fg) :
-    (adjoin R (s ∪ t)).toSubmodule.Fg := by
+theorem fgTrans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t).toSubmodule.Fg) :
+    (adjoin R (s ∪ t)).toSubmodule.Fg :=
+  by
   rcases fg_def.1 h1 with ⟨p, hp, hp'⟩
   rcases fg_def.1 h2 with ⟨q, hq, hq'⟩
   refine' fg_def.2 ⟨p * q, hp.mul hq, le_antisymm _ _⟩
@@ -49,11 +50,12 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t
     rintro _ ⟨x, y, hx, hy, rfl⟩
     change x * y ∈ _
     refine' Subalgebra.mul_mem _ _ _
-    · have : x ∈ (adjoin R s).toSubmodule := by 
+    · have : x ∈ (adjoin R s).toSubmodule := by
         rw [← hp']
         exact subset_span hx
       exact adjoin_mono (Set.subset_union_left _ _) this
-    have : y ∈ (adjoin (adjoin R s) t).toSubmodule := by
+    have : y ∈ (adjoin (adjoin R s) t).toSubmodule :=
+      by
       rw [← hq']
       exact subset_span hy
     change y ∈ adjoin R (s ∪ t)
@@ -81,7 +83,7 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t
     rw [smul_mul_assoc]
     refine' smul_mem _ _ _
     exact subset_span ⟨t, z, hlp ht, hlq hz, rfl⟩
-#align algebra.fg_trans Algebra.fg_trans
+#align algebra.fg_trans Algebra.fgTrans
 
 end Algebra
 
@@ -114,7 +116,7 @@ theorem fg_of_fg_to_submodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg :
     le_antisymm (Algebra.adjoin_le fun x hx => show x ∈ S.toSubmodule from ht ▸ subset_span hx) <|
       show S.toSubmodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
         span_le.mpr (fun x hx => Algebra.subset_adjoin hx)
-          (show x ∈ span R ↑t by 
+          (show x ∈ span R ↑t by
             rw [ht]
             exact hx)⟩
 #align subalgebra.fg_of_fg_to_submodule Subalgebra.fg_of_fg_to_submodule
@@ -126,13 +128,14 @@ theorem fg_of_noetherian [IsNoetherian R A] (S : Subalgebra R A) : S.Fg :=
 theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := h
   ⟨s,
-    toSubmodule.Injective <| by
+    toSubmodule.Injective <|
+      by
       rw [Algebra.top_to_submodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
 #align subalgebra.fg_of_submodule_fg Subalgebra.fg_of_submodule_fg
 
 theorem Fg.prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg :=
-  by 
+  by
   obtain ⟨s, hs⟩ := fg_def.1 hS
   obtain ⟨t, ht⟩ := fg_def.1 hT
   rw [← hs.2, ← ht.2]
@@ -159,32 +162,34 @@ theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Inj
     (hs : (S.map f).Fg) : S.Fg :=
   let ⟨s, hs⟩ := hs
   ⟨(s.Preimage f) fun _ _ _ _ h => hf h,
-    map_injective hf <| by
+    map_injective hf <|
+      by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
       exact map_mono le_top⟩
 #align subalgebra.fg_of_fg_map Subalgebra.fg_of_fg_map
 
 theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rw [← S.range_val, ← Algebra.map_top]
     exact fg.map _ h, fun h =>
-    fg_of_fg_map _ S.val Subtype.val_injective <| by
+    fg_of_fg_map _ S.val Subtype.val_injective <|
+      by
       rw [Algebra.map_top, range_val]
       exact h⟩
 #align subalgebra.fg_top Subalgebra.fg_top
 
-theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
+theorem inductionOnAdjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
     (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S)))
     (S : Subalgebra R A) : P S := by
-  classical 
+  classical
     obtain ⟨t, rfl⟩ := S.fg_of_noetherian
     refine' Finset.induction_on t _ _
     · simpa using base
     intro x t hxt h
     rw [Finset.coe_insert]
     simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
-#align subalgebra.induction_on_adjoin Subalgebra.induction_on_adjoin
+#align subalgebra.induction_on_adjoin Subalgebra.inductionOnAdjoin
 
 end Subalgebra
 

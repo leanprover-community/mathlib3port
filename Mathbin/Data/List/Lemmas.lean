@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.lemmas
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,7 +23,8 @@ variable {α β : Type _}
 
 namespace List
 
-theorem range_map (f : α → β) : Set.range (map f) = { l | ∀ x ∈ l, x ∈ Set.range f } := by
+theorem range_map (f : α → β) : Set.range (map f) = { l | ∀ x ∈ l, x ∈ Set.range f } :=
+  by
   refine'
     Set.Subset.antisymm
       (Set.range_subset_iff.2 fun l => forall_mem_map_iff.2 fun y _ => Set.mem_range_self _)
@@ -41,15 +42,15 @@ theorem range_map_coe (s : Set α) : Set.range (map (coe : s → α)) = { l | �
 /-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
 type. -/
 instance canLift (c) (p) [CanLift α β c p] :
-    CanLift (List α) (List β) (List.map c) fun l =>
-      ∀ x ∈ l,
-        p x where prf l H := by 
+    CanLift (List α) (List β) (List.map c) fun l => ∀ x ∈ l, p x
+    where prf l H := by
     rw [← Set.mem_range, range_map]
     exact fun a ha => CanLift.prf a (H a ha)
 #align list.can_lift List.canLift
 
 theorem inj_on_insert_nth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
-    Set.InjOn (fun k => insertNth k x l) { n | n ≤ l.length } := by
+    Set.InjOn (fun k => insertNth k x l) { n | n ≤ l.length } :=
+  by
   induction' l with hd tl IH
   · intro n hn m hm h
     simp only [Set.mem_singleton_iff, Set.setOf_eq_eq_singleton, length, nonpos_iff_eq_zero] at

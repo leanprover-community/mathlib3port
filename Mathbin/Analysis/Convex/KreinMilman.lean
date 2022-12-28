@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.krein_milman
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,8 @@ variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [T2Sp
 
 /-- **Krein-Milman lemma**: In a LCTVS, any nonempty compact set has an extreme point. -/
 theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty) :
-    (s.extremePoints ℝ).Nonempty := by
+    (s.extremePoints ℝ).Nonempty :=
+  by
   let S : Set (Set E) := { t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t }
   rsuffices ⟨t, ⟨⟨x, hxt⟩, htclos, hst⟩, hBmin⟩ : ∃ t ∈ S, ∀ u ∈ S, u ⊆ t → u = t
   · refine' ⟨x, mem_extreme_points_iff_extreme_singleton.2 _⟩
@@ -102,7 +103,8 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
 /-- **Krein-Milman theorem**: In a LCTVS, any compact convex set is the closure of the convex hull
     of its extreme points. -/
 theorem closure_convex_hull_extreme_points (hscomp : IsCompact s) (hAconv : Convex ℝ s) :
-    closure (convexHull ℝ <| s.extremePoints ℝ) = s := by
+    closure (convexHull ℝ <| s.extremePoints ℝ) = s :=
+  by
   apply (closure_minimal (convex_hull_min extreme_points_subset hAconv) hscomp.is_closed).antisymm
   by_contra hs
   obtain ⟨x, hxA, hxt⟩ := not_subset.1 hs

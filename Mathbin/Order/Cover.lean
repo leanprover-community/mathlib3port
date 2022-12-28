@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.cover
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,8 @@ theorem Wcovby.of_image (f : α ↪o β) (h : f a ⩿ f b) : a ⩿ b :=
   ⟨f.le_iff_le.mp h.le, fun c hac hcb => h.2 (f.lt_iff_lt.mpr hac) (f.lt_iff_lt.mpr hcb)⟩
 #align wcovby.of_image Wcovby.of_image
 
-theorem Wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).OrdConnected) : f a ⩿ f b := by
+theorem Wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).OrdConnected) : f a ⩿ f b :=
+  by
   refine' ⟨f.monotone hab.le, fun c ha hb => _⟩
   obtain ⟨c, rfl⟩ := h.out (mem_range_self _) (mem_range_self _) ⟨ha.le, hb.le⟩
   rw [f.lt_iff_lt] at ha hb
@@ -154,7 +155,8 @@ section PartialOrder
 
 variable [PartialOrder α] {a b c : α}
 
-theorem Wcovby.eq_or_eq (h : a ⩿ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b := by
+theorem Wcovby.eq_or_eq (h : a ⩿ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=
+  by
   rcases h2.eq_or_lt with (h2 | h2); · exact Or.inl h2.symm
   rcases h3.eq_or_lt with (h3 | h3); · exact Or.inr h3
   exact (h.2 h2 h3).elim
@@ -170,7 +172,8 @@ theorem Wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c
   exacts[⟨le_rfl, h.le⟩, ⟨h.le, le_rfl⟩]
 #align wcovby.le_and_le_iff Wcovby.le_and_le_iff
 
-theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} := by
+theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} :=
+  by
   ext c
   exact h.le_and_le_iff
 #align wcovby.Icc_eq Wcovby.Icc_eq
@@ -454,7 +457,8 @@ end LinearOrder
 
 namespace Set
 
-theorem wcovby_insert (x : α) (s : Set α) : s ⩿ insert x s := by
+theorem wcovby_insert (x : α) (s : Set α) : s ⩿ insert x s :=
+  by
   refine' wcovby_of_eq_or_eq (subset_insert x s) fun t hst h2t => _
   by_cases h : x ∈ t
   · exact Or.inr (subset_antisymm h2t <| insert_subset.mpr ⟨h, hst⟩)
@@ -482,7 +486,8 @@ theorem swap_covby_swap : x.swap ⋖ y.swap ↔ x ⋖ y :=
   apply_covby_apply_iff (OrderIso.prodComm : α × β ≃o β × α)
 #align prod.swap_covby_swap Prod.swap_covby_swap
 
-theorem fst_eq_or_snd_eq_of_wcovby : x ⩿ y → x.1 = y.1 ∨ x.2 = y.2 := by
+theorem fst_eq_or_snd_eq_of_wcovby : x ⩿ y → x.1 = y.1 ∨ x.2 = y.2 :=
+  by
   refine' fun h => of_not_not fun hab => _
   push_neg  at hab
   exact
@@ -498,7 +503,8 @@ theorem Wcovby.snd (h : x ⩿ y) : x.2 ⩿ y.2 :=
   ⟨h.1.2, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_right.2 h₁) ⟨⟨h.1.1, h₂.le⟩, fun hc => h₂.not_le hc.2⟩⟩
 #align wcovby.snd Wcovby.snd
 
-theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ := by
+theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ :=
+  by
   refine' ⟨Wcovby.fst, (And.imp mk_le_mk_iff_left.2) fun h c h₁ h₂ => _⟩
   have : c.2 = b := h₂.le.2.antisymm h₁.le.2
   rw [← @Prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
@@ -517,7 +523,8 @@ theorem mk_covby_mk_iff_right : (a, b₁) ⋖ (a, b₂) ↔ b₁ ⋖ b₂ := by
   simp_rw [covby_iff_wcovby_and_lt, mk_wcovby_mk_iff_right, mk_lt_mk_iff_right]
 #align prod.mk_covby_mk_iff_right Prod.mk_covby_mk_iff_right
 
-theorem mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b₁ = b₂ ∨ b₁ ⩿ b₂ ∧ a₁ = a₂ := by
+theorem mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b₁ = b₂ ∨ b₁ ⩿ b₂ ∧ a₁ = a₂ :=
+  by
   refine' ⟨fun h => _, _⟩
   · obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h
     · exact Or.inr ⟨mk_wcovby_mk_iff_right.1 h, rfl⟩
@@ -527,7 +534,8 @@ theorem mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b
     · exact mk_wcovby_mk_iff_right.2 h
 #align prod.mk_wcovby_mk_iff Prod.mk_wcovby_mk_iff
 
-theorem mk_covby_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b₁ = b₂ ∨ b₁ ⋖ b₂ ∧ a₁ = a₂ := by
+theorem mk_covby_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b₁ = b₂ ∨ b₁ ⋖ b₂ ∧ a₁ = a₂ :=
+  by
   refine' ⟨fun h => _, _⟩
   · obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h.wcovby
     · exact Or.inr ⟨mk_covby_mk_iff_right.1 h, rfl⟩
@@ -537,13 +545,15 @@ theorem mk_covby_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b�
     · exact mk_covby_mk_iff_right.2 h
 #align prod.mk_covby_mk_iff Prod.mk_covby_mk_iff
 
-theorem wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 := by
+theorem wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 :=
+  by
   cases x
   cases y
   exact mk_wcovby_mk_iff
 #align prod.wcovby_iff Prod.wcovby_iff
 
-theorem covby_iff : x ⋖ y ↔ x.1 ⋖ y.1 ∧ x.2 = y.2 ∨ x.2 ⋖ y.2 ∧ x.1 = y.1 := by
+theorem covby_iff : x ⋖ y ↔ x.1 ⋖ y.1 ∧ x.2 = y.2 ∨ x.2 ⋖ y.2 ∧ x.1 = y.1 :=
+  by
   cases x
   cases y
   exact mk_covby_mk_iff

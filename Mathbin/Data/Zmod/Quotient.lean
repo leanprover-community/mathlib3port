@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.zmod.quotient
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,10 +80,10 @@ noncomputable def zmultiplesQuotientStabilizerEquiv :
   (ofBijective
           (map _ (stabilizer (zmultiples a) b) (zmultiplesHom (zmultiples a) ⟨a, mem_zmultiples a⟩)
             (by
-              rw [zmultiples_le, mem_comap, mem_stabilizer_iff, zmultiples_hom_apply, coe_nat_zsmul,
+              rw [zmultiples_le, mem_comap, mem_stabilizer_iff, zmultiplesHom_apply, coe_nat_zsmul,
                 ← vadd_iterate]
               exact is_periodic_pt_minimal_period ((· +ᵥ ·) a) b))
-          ⟨by 
+          ⟨by
             rw [← ker_eq_bot_iff, eq_bot_iff]
             refine' fun q => induction_on' q fun n hn => _
             rw [mem_bot, eq_zero_iff, Int.mem_zmultiples_iff, ←
@@ -146,7 +146,7 @@ theorem orbit_zpowers_equiv_symm_apply (k : Zmod (minimalPeriod ((· • ·) a) 
 
 theorem orbit_zpowers_equiv_symm_apply' (k : ℤ) :
     (orbitZpowersEquiv a b).symm k = (⟨a, mem_zpowers a⟩ : zpowers a) ^ k • ⟨b, mem_orbit_self b⟩ :=
-  by 
+  by
   rw [orbit_zpowers_equiv_symm_apply, Zmod.coe_int_cast]
   exact Subtype.ext (zpow_smul_mod_minimal_period _ _ k)
 #align mul_action.orbit_zpowers_equiv_symm_apply' MulAction.orbit_zpowers_equiv_symm_apply'
@@ -155,7 +155,7 @@ theorem AddAction.orbit_zmultiples_equiv_symm_apply' {α β : Type _} [AddGroup 
     [AddAction α β] (b : β) (k : ℤ) :
     (AddAction.orbitZmultiplesEquiv a b).symm k =
       k • (⟨a, mem_zmultiples a⟩ : zmultiples a) +ᵥ ⟨b, AddAction.mem_orbit_self b⟩ :=
-  by 
+  by
   rw [AddAction.orbit_zmultiples_equiv_symm_apply, Zmod.coe_int_cast]
   exact Subtype.ext (zsmul_vadd_mod_minimal_period _ _ k)
 #align add_action.orbit_zmultiples_equiv_symm_apply' AddAction.orbit_zmultiples_equiv_symm_apply'
@@ -171,7 +171,7 @@ theorem minimal_period_eq_card [Fintype (orbit (zpowers a) b)] :
 @[to_additive]
 instance minimal_period_pos [Finite <| orbit (zpowers a) b] :
     NeZero <| minimalPeriod ((· • ·) a) b :=
-  ⟨by 
+  ⟨by
     cases nonempty_fintype (orbit (zpowers a) b)
     haveI : Nonempty (orbit (zpowers a) b) := (orbit_nonempty b).to_subtype
     rw [minimal_period_eq_card]
@@ -188,7 +188,8 @@ variable {α : Type _} [Group α] (a : α)
 
 /-- See also `order_eq_card_zpowers`. -/
 @[to_additive add_order_eq_card_zmultiples' "See also `add_order_eq_card_zmultiples`."]
-theorem order_eq_card_zpowers' : orderOf a = Nat.card (zpowers a) := by
+theorem order_eq_card_zpowers' : orderOf a = Nat.card (zpowers a) :=
+  by
   have := Nat.card_congr (MulAction.orbitZpowersEquiv a (1 : α))
   rwa [Nat.card_zmod, orbit_subgroup_one_eq_self, eq_comm] at this
 #align order_eq_card_zpowers' order_eq_card_zpowers'
@@ -196,7 +197,8 @@ theorem order_eq_card_zpowers' : orderOf a = Nat.card (zpowers a) := by
 variable {a}
 
 @[to_additive IsOfFinAddOrder.finite_zmultiples]
-theorem IsOfFinOrder.finite_zpowers (h : IsOfFinOrder a) : Finite <| zpowers a := by
+theorem IsOfFinOrder.finite_zpowers (h : IsOfFinOrder a) : Finite <| zpowers a :=
+  by
   rw [← order_of_pos_iff, order_eq_card_zpowers'] at h
   exact Nat.finite_of_card_ne_zero h.ne.symm
 #align is_of_fin_order.finite_zpowers IsOfFinOrder.finite_zpowers

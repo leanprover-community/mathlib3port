@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,9 +85,8 @@ instance hasForgetToMon : HasForget₂ SemiRingCat MonCat :=
     (fun R₁ R₂ => RingHom.toMonoidHom) fun _ _ _ => rfl
 #align SemiRing.has_forget_to_Mon SemiRingCat.hasForgetToMon
 
-instance hasForgetToAddCommMon :
-    HasForget₂ SemiRingCat
-      AddCommMonCat where-- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
+instance hasForgetToAddCommMon : HasForget₂ SemiRingCat AddCommMonCat
+    where-- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
   forget₂ :=
     { obj := fun R => AddCommMonCat.of R
       map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
@@ -141,9 +140,8 @@ instance hasForgetToSemiRing : HasForget₂ RingCat SemiRingCat :=
   BundledHom.forget₂ _ _
 #align Ring.has_forget_to_SemiRing RingCat.hasForgetToSemiRing
 
-instance hasForgetToAddCommGroup :
-    HasForget₂ RingCat
-      AddCommGroupCat where-- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
+instance hasForgetToAddCommGroup : HasForget₂ RingCat AddCommGroupCat
+    where-- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
   forget₂ :=
     { obj := fun R => AddCommGroupCat.of R
       map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
@@ -273,17 +271,16 @@ variable {X Y : Type u}
 
 /-- Build an isomorphism in the category `Ring` from a `ring_equiv` between `ring`s. -/
 @[simps]
-def toRingIso [Ring X] [Ring Y] (e : X ≃+* Y) :
-    RingCat.of X ≅ RingCat.of Y where 
+def toRingIso [Ring X] [Ring Y] (e : X ≃+* Y) : RingCat.of X ≅ RingCat.of Y
+    where
   Hom := e.toRingHom
   inv := e.symm.toRingHom
 #align ring_equiv.to_Ring_iso RingEquiv.toRingIso
 
 /-- Build an isomorphism in the category `CommRing` from a `ring_equiv` between `comm_ring`s. -/
 @[simps]
-def toCommRingIso [CommRing X] [CommRing Y] (e : X ≃+* Y) :
-    CommRingCat.of X ≅ CommRingCat.of
-        Y where 
+def toCommRingIso [CommRing X] [CommRing Y] (e : X ≃+* Y) : CommRingCat.of X ≅ CommRingCat.of Y
+    where
   Hom := e.toRingHom
   inv := e.symm.toRingHom
 #align ring_equiv.to_CommRing_iso RingEquiv.toCommRingIso
@@ -293,8 +290,8 @@ end RingEquiv
 namespace CategoryTheory.Iso
 
 /-- Build a `ring_equiv` from an isomorphism in the category `Ring`. -/
-def ringIsoToRingEquiv {X Y : RingCat} (i : X ≅ Y) :
-    X ≃+* Y where 
+def ringIsoToRingEquiv {X Y : RingCat} (i : X ≅ Y) : X ≃+* Y
+    where
   toFun := i.Hom
   invFun := i.inv
   left_inv := by tidy
@@ -304,8 +301,8 @@ def ringIsoToRingEquiv {X Y : RingCat} (i : X ≅ Y) :
 #align category_theory.iso.Ring_iso_to_ring_equiv CategoryTheory.Iso.ringIsoToRingEquiv
 
 /-- Build a `ring_equiv` from an isomorphism in the category `CommRing`. -/
-def commRingIsoToRingEquiv {X Y : CommRingCat} (i : X ≅ Y) :
-    X ≃+* Y where 
+def commRingIsoToRingEquiv {X Y : CommRingCat} (i : X ≅ Y) : X ≃+* Y
+    where
   toFun := i.Hom
   invFun := i.inv
   left_inv := by tidy
@@ -316,7 +313,8 @@ def commRingIsoToRingEquiv {X Y : CommRingCat} (i : X ≅ Y) :
 
 @[simp]
 theorem CommRing_iso_to_ring_equiv_to_ring_hom {X Y : CommRingCat} (i : X ≅ Y) :
-    i.commRingIsoToRingEquiv.toRingHom = i.Hom := by
+    i.commRingIsoToRingEquiv.toRingHom = i.Hom :=
+  by
   ext
   rfl
 #align
@@ -324,7 +322,8 @@ theorem CommRing_iso_to_ring_equiv_to_ring_hom {X Y : CommRingCat} (i : X ≅ Y)
 
 @[simp]
 theorem CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRingCat} (i : X ≅ Y) :
-    i.commRingIsoToRingEquiv.symm.toRingHom = i.inv := by
+    i.commRingIsoToRingEquiv.symm.toRingHom = i.inv :=
+  by
   ext
   rfl
 #align
@@ -333,9 +332,8 @@ theorem CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRingCat} (i : X �
 end CategoryTheory.Iso
 
 /-- Ring equivalences between `ring`s are the same as (isomorphic to) isomorphisms in `Ring`. -/
-def ringEquivIsoRingIso {X Y : Type u} [Ring X] [Ring Y] :
-    X ≃+* Y ≅ RingCat.of X ≅
-        RingCat.of Y where 
+def ringEquivIsoRingIso {X Y : Type u} [Ring X] [Ring Y] : X ≃+* Y ≅ RingCat.of X ≅ RingCat.of Y
+    where
   Hom e := e.toRingIso
   inv i := i.ringIsoToRingEquiv
 #align ring_equiv_iso_Ring_iso ringEquivIsoRingIso
@@ -343,25 +341,22 @@ def ringEquivIsoRingIso {X Y : Type u} [Ring X] [Ring Y] :
 /-- Ring equivalences between `comm_ring`s are the same as (isomorphic to) isomorphisms
 in `CommRing`. -/
 def ringEquivIsoCommRingIso {X Y : Type u} [CommRing X] [CommRing Y] :
-    X ≃+* Y ≅ CommRingCat.of X ≅
-        CommRingCat.of Y where 
+    X ≃+* Y ≅ CommRingCat.of X ≅ CommRingCat.of Y
+    where
   Hom e := e.toCommRingIso
   inv i := i.commRingIsoToRingEquiv
 #align ring_equiv_iso_CommRing_iso ringEquivIsoCommRingIso
 
-instance RingCat.forget_reflects_isos :
-    ReflectsIsomorphisms
-      (forget RingCat.{u}) where reflects X Y f _ := by
+instance RingCat.forget_reflects_isos : ReflectsIsomorphisms (forget RingCat.{u})
+    where reflects X Y f _ := by
     skip
     let i := as_iso ((forget RingCat).map f)
     let e : X ≃+* Y := { f, i.to_equiv with }
     exact ⟨(is_iso.of_iso e.to_Ring_iso).1⟩
 #align Ring.forget_reflects_isos RingCat.forget_reflects_isos
 
-instance CommRingCat.forget_reflects_isos :
-    ReflectsIsomorphisms
-      (forget
-        CommRingCat.{u}) where reflects X Y f _ := by
+instance CommRingCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommRingCat.{u})
+    where reflects X Y f _ := by
     skip
     let i := as_iso ((forget CommRingCat).map f)
     let e : X ≃+* Y := { f, i.to_equiv with }

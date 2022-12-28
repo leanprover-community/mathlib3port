@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.domineering
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
 #align pgame.domineering.move_right Pgame.Domineering.moveRight
 
 theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    (m.1 - 1, m.2) ∈ b.erase m := by 
+    (m.1 - 1, m.2) ∈ b.erase m := by
   rw [mem_right] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
@@ -87,14 +87,15 @@ theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ 
   pgame.domineering.fst_pred_mem_erase_of_mem_right Pgame.Domineering.fst_pred_mem_erase_of_mem_right
 
 theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    (m.1, m.2 - 1) ∈ b.erase m := by 
+    (m.1, m.2 - 1) ∈ b.erase m := by
   rw [mem_left] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
 #align
   pgame.domineering.snd_pred_mem_erase_of_mem_left Pgame.Domineering.snd_pred_mem_erase_of_mem_left
 
-theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finset.card b := by
+theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finset.card b :=
+  by
   have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
   have w₂ : (m.1, m.2 - 1) ∈ b.erase m := snd_pred_mem_erase_of_mem_left h
   have i₁ := Finset.card_erase_lt_of_mem w₁
@@ -102,7 +103,8 @@ theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤
   exact Nat.lt_of_le_of_lt i₂ i₁
 #align pgame.domineering.card_of_mem_left Pgame.Domineering.card_of_mem_left
 
-theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ Finset.card b := by
+theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ Finset.card b :=
+  by
   have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
   have w₂ := fst_pred_mem_erase_of_mem_right h
   have i₁ := Finset.card_erase_lt_of_mem w₁
@@ -111,7 +113,8 @@ theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 �
 #align pgame.domineering.card_of_mem_right Pgame.Domineering.card_of_mem_right
 
 theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    Finset.card (moveLeft b m) + 2 = Finset.card b := by
+    Finset.card (moveLeft b m) + 2 = Finset.card b :=
+  by
   dsimp [move_left]
   rw [Finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
@@ -119,7 +122,8 @@ theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
 #align pgame.domineering.move_left_card Pgame.Domineering.move_left_card
 
 theorem move_right_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    Finset.card (moveRight b m) + 2 = Finset.card b := by
+    Finset.card (moveRight b m) + 2 = Finset.card b :=
+  by
   dsimp [move_right]
   rw [Finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
@@ -135,15 +139,15 @@ theorem move_right_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
 #align pgame.domineering.move_right_smaller Pgame.Domineering.move_right_smaller
 
 /-- The instance describing allowed moves on a Domineering board. -/
-instance state : State Board where 
+instance state : State Board where
   turnBound s := s.card / 2
   l s := (left s).image (moveLeft s)
   r s := (right s).image (moveRight s)
-  left_bound s t m := by 
+  left_bound s t m := by
     simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_left_smaller h
-  right_bound s t m := by 
+  right_bound s t m := by
     simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h
@@ -157,7 +161,8 @@ def domineering (b : Domineering.Board) : Pgame :=
 #align pgame.domineering Pgame.domineering
 
 /-- All games of Domineering are short, because each move removes two squares. -/
-instance shortDomineering (b : Domineering.Board) : Short (domineering b) := by
+instance shortDomineering (b : Domineering.Board) : Short (domineering b) :=
+  by
   dsimp [domineering]
   infer_instance
 #align pgame.short_domineering Pgame.shortDomineering
@@ -172,12 +177,14 @@ def domineering.l :=
   domineering [(0, 2), (0, 1), (0, 0), (1, 0)].toFinset
 #align pgame.domineering.L Pgame.domineering.l
 
-instance shortOne : Short domineering.one := by
+instance shortOne : Short domineering.one :=
+  by
   dsimp [domineering.one]
   infer_instance
 #align pgame.short_one Pgame.shortOne
 
-instance shortL : Short domineering.l := by
+instance shortL : Short domineering.l :=
+  by
   dsimp [domineering.L]
   infer_instance
 #align pgame.short_L Pgame.shortL

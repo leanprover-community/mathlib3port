@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.fixed_points.basic
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,8 @@ protected theorem apply {x : α} (hx : IsFixedPt f x) : IsFixedPt f (f x) := by 
 
 #print Function.IsFixedPt.preimage_iterate /-
 theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : ℕ) :
-    IsFixedPt (Set.preimage (f^[n])) s := by
+    IsFixedPt (Set.preimage (f^[n])) s :=
+  by
   rw [Set.preimage_iterate_eq]
   exact h.iterate n
 #align function.is_fixed_pt.preimage_iterate Function.IsFixedPt.preimage_iterate
@@ -138,7 +139,8 @@ protected theorem perm_inv (h : IsFixedPt e x) : IsFixedPt (⇑e⁻¹) x :=
 -/
 
 #print Function.IsFixedPt.perm_pow /-
-protected theorem perm_pow (h : IsFixedPt e x) (n : ℕ) : IsFixedPt (⇑(e ^ n)) x := by
+protected theorem perm_pow (h : IsFixedPt e x) (n : ℕ) : IsFixedPt (⇑(e ^ n)) x :=
+  by
   rw [← Equiv.Perm.iterate_eq_pow]
   exact h.iterate _
 #align function.is_fixed_pt.perm_pow Function.IsFixedPt.perm_pow
@@ -199,12 +201,12 @@ theorem fixedPoints_subset_range : fixedPoints f ⊆ Set.range f := fun x hx => 
 #align function.fixed_points_subset_range Function.fixedPoints_subset_range
 -/
 
-#print Function.Semiconj.maps_to_fixedPoints /-
+#print Function.Semiconj.mapsTo_fixedPoints /-
 /-- If `g` semiconjugates `fa` to `fb`, then it sends fixed points of `fa` to fixed points
 of `fb`. -/
-theorem Semiconj.maps_to_fixedPoints {g : α → β} (h : Semiconj g fa fb) :
+theorem Semiconj.mapsTo_fixedPoints {g : α → β} (h : Semiconj g fa fb) :
     Set.MapsTo g (fixedPoints fa) (fixedPoints fb) := fun x hx => hx.map h
-#align function.semiconj.maps_to_fixed_pts Function.Semiconj.maps_to_fixedPoints
+#align function.semiconj.maps_to_fixed_pts Function.Semiconj.mapsTo_fixedPoints
 -/
 
 #print Function.invOn_fixedPoints_comp /-
@@ -216,11 +218,11 @@ theorem invOn_fixedPoints_comp (f : α → β) (g : β → α) :
 #align function.inv_on_fixed_pts_comp Function.invOn_fixedPoints_comp
 -/
 
-#print Function.maps_to_fixedPoints_comp /-
+#print Function.mapsTo_fixedPoints_comp /-
 /-- Any map `f` sends fixed points of `g ∘ f` to fixed points of `f ∘ g`. -/
-theorem maps_to_fixedPoints_comp (f : α → β) (g : β → α) :
+theorem mapsTo_fixedPoints_comp (f : α → β) (g : β → α) :
     Set.MapsTo f (fixed_points <| g ∘ f) (fixed_points <| f ∘ g) := fun x hx => hx.map fun x => rfl
-#align function.maps_to_fixed_pts_comp Function.maps_to_fixedPoints_comp
+#align function.maps_to_fixed_pts_comp Function.mapsTo_fixedPoints_comp
 -/
 
 #print Function.bijOn_fixedPoints_comp /-
@@ -228,7 +230,7 @@ theorem maps_to_fixedPoints_comp (f : α → β) (g : β → α) :
 of `f ∘ g` and the fixed points of `g ∘ f`. The inverse map is `f`, see `inv_on_fixed_pts_comp`. -/
 theorem bijOn_fixedPoints_comp (f : α → β) (g : β → α) :
     Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
-  (invOn_fixedPoints_comp f g).BijOn (maps_to_fixedPoints_comp g f) (maps_to_fixedPoints_comp f g)
+  (invOn_fixedPoints_comp f g).BijOn (mapsTo_fixedPoints_comp g f) (mapsTo_fixedPoints_comp f g)
 #align function.bij_on_fixed_pts_comp Function.bijOn_fixedPoints_comp
 -/
 

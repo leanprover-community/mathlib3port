@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Patrick Stevens
 
 ! This file was ported from Lean 3 source module data.nat.choose.sum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,17 +40,21 @@ variable [Semiring R] {x y : R} (h : Commute x y) (n : ℕ)
 include h
 
 /-- A version of the **binomial theorem** for noncommutative semirings. -/
-theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * choose n m := by
+theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * choose n m :=
+  by
   let t : ℕ → ℕ → R := fun n m => x ^ m * y ^ (n - m) * choose n m
   change (x + y) ^ n = ∑ m in range (n + 1), t n m
-  have h_first : ∀ n, t n 0 = y ^ n := fun n => by
+  have h_first : ∀ n, t n 0 = y ^ n := fun n =>
+    by
     dsimp [t]
     rw [choose_zero_right, pow_zero, Nat.cast_one, mul_one, one_mul]
-  have h_last : ∀ n, t n n.succ = 0 := fun n => by
+  have h_last : ∀ n, t n n.succ = 0 := fun n =>
+    by
     dsimp [t]
     rw [choose_succ_self, Nat.cast_zero, mul_zero]
   have h_middle :
-    ∀ n i : ℕ, i ∈ range n.succ → (t n.succ ∘ Nat.succ) i = x * t n i + y * t n i.succ := by
+    ∀ n i : ℕ, i ∈ range n.succ → (t n.succ ∘ Nat.succ) i = x * t n i + y * t n i.succ :=
+    by
     intro n i h_mem
     have h_le : i ≤ n := Nat.le_of_lt_succ (mem_range.mp h_mem)
     dsimp [t]
@@ -110,7 +114,7 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
       _ =
           (∑ i in range (m + 1), choose (2 * m + 1) i) +
             ∑ i in ico (m + 1) (2 * m + 2), choose (2 * m + 1) i :=
-        by 
+        by
         rw [range_eq_Ico, sum_Ico_reflect]
         · congr
           have A : m + 1 ≤ 2 * m + 1 := by linarith
@@ -121,13 +125,14 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
         · linarith
       _ = ∑ i in range (2 * m + 2), choose (2 * m + 1) i := sum_range_add_sum_Ico _ (by linarith)
       _ = 2 ^ (2 * m + 1) := sum_range_choose (2 * m + 1)
-      _ = 2 * 4 ^ m := by 
+      _ = 2 * 4 ^ m := by
         rw [pow_succ, pow_mul]
         rfl
       
 #align nat.sum_range_choose_halfway Nat.sum_range_choose_halfway
 
-theorem choose_middle_le_pow (n : ℕ) : choose (2 * n + 1) n ≤ 4 ^ n := by
+theorem choose_middle_le_pow (n : ℕ) : choose (2 * n + 1) n ≤ 4 ^ n :=
+  by
   have t : choose (2 * n + 1) n ≤ ∑ i in range (n + 1), choose (2 * n + 1) i :=
     single_le_sum (fun x _ => by linarith) (self_mem_range_succ n)
   simpa [sum_range_choose_halfway n] using t
@@ -148,7 +153,8 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) :
 end Nat
 
 theorem Int.alternating_sum_range_choose {n : ℕ} :
-    (∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ)) = if n = 0 then 1 else 0 := by
+    (∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ)) = if n = 0 then 1 else 0 :=
+  by
   cases n; · simp
   have h := add_pow (-1 : ℤ) 1 n.succ
   simp only [one_pow, mul_one, add_left_neg] at h
@@ -163,7 +169,8 @@ theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
 namespace Finset
 
 theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
-    (∑ m in x.powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m := by
+    (∑ m in x.powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m :=
+  by
   trans ∑ m in range (x.card + 1), ∑ j in x.powerset.filter fun z => z.card = m, f j.card
   · refine' (sum_fiberwise_of_maps_to _ _).symm
     intro y hy
@@ -177,14 +184,15 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
 #align finset.sum_powerset_apply_card Finset.sum_powerset_apply_card
 
 theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
-    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 := by
+    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 :=
+  by
   rw [sum_powerset_apply_card]
   simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
 #align finset.sum_powerset_neg_one_pow_card Finset.sum_powerset_neg_one_pow_card
 
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
     (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = 0 := by
-  classical 
+  classical
     rw [sum_powerset_neg_one_pow_card, if_neg]
     rw [← Ne.def, ← nonempty_iff_ne_empty]
     apply h0

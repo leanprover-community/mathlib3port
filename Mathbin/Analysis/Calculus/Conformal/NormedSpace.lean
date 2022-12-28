@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.calculus.conformal.normed_space
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,8 @@ theorem Subsingleton.conformalAt [Subsingleton X] (f : X → Y) (x : X) : Confor
 
 /-- A function is a conformal map if and only if its differential is a conformal linear map-/
 theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
-    ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) := by
+    ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) :=
+  by
   constructor
   · rintro ⟨f', hf, hf'⟩
     rwa [hf.fderiv]
@@ -100,7 +101,7 @@ theorem congr {f g : X → Y} {x : X} {u : Set X} (hx : x ∈ u) (hu : IsOpen u)
 #align conformal_at.congr ConformalAt.congr
 
 theorem comp {f : X → Y} {g : Y → Z} (x : X) (hg : ConformalAt g (f x)) (hf : ConformalAt f x) :
-    ConformalAt (g ∘ f) x := by 
+    ConformalAt (g ∘ f) x := by
   rcases hf with ⟨f', hf₁, cf⟩
   rcases hg with ⟨g', hg₁, cg⟩
   exact ⟨g'.comp f', hg₁.comp x hf₁, cg.comp cf⟩

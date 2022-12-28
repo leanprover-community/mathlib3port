@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.star.pi
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,21 +40,21 @@ theorem star_def [∀ i, HasStar (f i)] (x : ∀ i, f i) : star x = fun i => sta
   rfl
 #align pi.star_def Pi.star_def
 
-instance [∀ i, HasInvolutiveStar (f i)] :
-    HasInvolutiveStar (∀ i, f i) where star_involutive _ := funext fun _ => star_star _
+instance [∀ i, HasInvolutiveStar (f i)] : HasInvolutiveStar (∀ i, f i)
+    where star_involutive _ := funext fun _ => star_star _
 
-instance [∀ i, Semigroup (f i)] [∀ i, StarSemigroup (f i)] :
-    StarSemigroup (∀ i, f i) where star_mul _ _ := funext fun _ => star_mul _ _
+instance [∀ i, Semigroup (f i)] [∀ i, StarSemigroup (f i)] : StarSemigroup (∀ i, f i)
+    where star_mul _ _ := funext fun _ => star_mul _ _
 
-instance [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] :
-    StarAddMonoid (∀ i, f i) where star_add _ _ := funext fun _ => star_add _ _
+instance [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] : StarAddMonoid (∀ i, f i)
+    where star_add _ _ := funext fun _ => star_add _ _
 
 instance [∀ i, NonUnitalSemiring (f i)] [∀ i, StarRing (f i)] : StarRing (∀ i, f i) :=
   { Pi.starAddMonoid, (Pi.starSemigroup : StarSemigroup (∀ i, f i)) with }
 
 instance {R : Type w} [∀ i, HasSmul R (f i)] [HasStar R] [∀ i, HasStar (f i)]
-    [∀ i, StarModule R (f i)] :
-    StarModule R (∀ i, f i) where star_smul r x := funext fun i => star_smul r (x i)
+    [∀ i, StarModule R (f i)] : StarModule R (∀ i, f i)
+    where star_smul r x := funext fun i => star_smul r (x i)
 
 theorem single_star [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] [DecidableEq I] (i : I)
     (a : f i) : Pi.single i (star a) = star (Pi.single i a) :=
@@ -71,7 +71,8 @@ theorem update_star [∀ i, HasStar (f i)] [DecidableEq I] (h : ∀ i : I, f i) 
 #align function.update_star Function.update_star
 
 theorem star_sum_elim {I J α : Type _} (x : I → α) (y : J → α) [HasStar α] :
-    star (Sum.elim x y) = Sum.elim (star x) (star y) := by
+    star (Sum.elim x y) = Sum.elim (star x) (star y) :=
+  by
   ext x
   cases x <;> simp
 #align function.star_sum_elim Function.star_sum_elim

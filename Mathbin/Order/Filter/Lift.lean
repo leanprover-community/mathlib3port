@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.filter.lift
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,8 @@ This lemma states the corresponding `mem_iff` statement without using a sigma ty
 theorem HasBasis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α}
     (hf : f.HasBasis p s) {β : ι → Type _} {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ}
     {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i)) (gm : Monotone g)
-    {s : Set γ} : s ∈ f.lift g ↔ ∃ (i : ι)(hi : p i)(x : β i)(hx : pg i x), sg i x ⊆ s := by
+    {s : Set γ} : s ∈ f.lift g ↔ ∃ (i : ι)(hi : p i)(x : β i)(hx : pg i x), sg i x ⊆ s :=
+  by
   refine' (mem_binfi_of_directed _ ⟨univ, univ_sets _⟩).trans _
   · intro t₁ ht₁ t₂ ht₂
     exact ⟨t₁ ∩ t₂, inter_mem ht₁ ht₂, gm <| inter_subset_left _ _, gm <| inter_subset_right _ _⟩
@@ -67,7 +68,8 @@ for the corresponding `mem_iff` statement formulated without using a sigma type.
 theorem HasBasis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α} (hf : f.HasBasis p s)
     {β : ι → Type _} {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ} {g : Set α → Filter γ}
     (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i)) (gm : Monotone g) :
-    (f.lift g).HasBasis (fun i : Σi, β i => p i.1 ∧ pg i.1 i.2) fun i : Σi, β i => sg i.1 i.2 := by
+    (f.lift g).HasBasis (fun i : Σi, β i => p i.1 ∧ pg i.1 i.2) fun i : Σi, β i => sg i.1 i.2 :=
+  by
   refine' ⟨fun t => (hf.mem_lift_iff hg gm).trans _⟩
   simp [Sigma.exists, and_assoc', exists_and_left]
 #align filter.has_basis.lift Filter.HasBasis.lift
@@ -207,14 +209,16 @@ theorem lift_principal2 {f : Filter α} : f.lift 𝓟 = f :=
 #align filter.lift_principal2 Filter.lift_principal2
 
 theorem lift_infi_le {f : ι → Filter α} {g : Set α → Filter β} :
-    (infi f).lift g ≤ ⨅ i, (f i).lift g :=
+    (infᵢ f).lift g ≤ ⨅ i, (f i).lift g :=
   le_infᵢ fun i => lift_mono (infᵢ_le _ _) le_rfl
 #align filter.lift_infi_le Filter.lift_infi_le
 
 theorem lift_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β}
-    (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) : (infi f).lift g = ⨅ i, (f i).lift g := by
+    (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) : (infᵢ f).lift g = ⨅ i, (f i).lift g :=
+  by
   refine' lift_infi_le.antisymm fun s => _
-  have H : ∀ t ∈ infi f, (⨅ i, (f i).lift g) ≤ g t := by
+  have H : ∀ t ∈ infᵢ f, (⨅ i, (f i).lift g) ≤ g t :=
+    by
     intro t ht
     refine' infi_sets_induct ht _ fun i s t hs ht => _
     · inhabit ι
@@ -226,15 +230,16 @@ theorem lift_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β
 #align filter.lift_infi Filter.lift_infi
 
 theorem lift_infi_of_directed [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β}
-    (hf : Directed (· ≥ ·) f) (hg : Monotone g) : (infi f).lift g = ⨅ i, (f i).lift g :=
-  lift_infi_le.antisymm fun s => by
+    (hf : Directed (· ≥ ·) f) (hg : Monotone g) : (infᵢ f).lift g = ⨅ i, (f i).lift g :=
+  lift_infi_le.antisymm fun s =>
+    by
     simp only [mem_lift_sets hg, exists_imp, mem_infi_of_directed hf]
     exact fun t i ht hs => mem_infi_of_mem i <| mem_lift ht hs
 #align filter.lift_infi_of_directed Filter.lift_infi_of_directed
 
 theorem lift_infi_of_map_univ {f : ι → Filter α} {g : Set α → Filter β}
-    (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) (hg' : g univ = ⊤) : (infi f).lift g = ⨅ i, (f i).lift g :=
-  by 
+    (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) (hg' : g univ = ⊤) : (infᵢ f).lift g = ⨅ i, (f i).lift g :=
+  by
   cases isEmpty_or_nonempty ι
   · simp [infᵢ_of_empty, hg']
   · exact lift_infi hg
@@ -267,7 +272,8 @@ theorem tendsto_lift' {m : γ → β} {l : Filter γ} :
 #align filter.tendsto_lift' Filter.tendsto_lift'
 
 theorem HasBasis.lift' {ι} {p : ι → Prop} {s} (hf : f.HasBasis p s) (hh : Monotone h) :
-    (f.lift' h).HasBasis p (h ∘ s) := by
+    (f.lift' h).HasBasis p (h ∘ s) :=
+  by
   refine' ⟨fun t => (hf.mem_lift_iff _ (monotone_principal.comp hh)).trans _⟩
   show ∀ i, (𝓟 (h (s i))).HasBasis (fun j : Unit => True) fun j : Unit => h (s i)
   exact fun i => has_basis_principal _
@@ -404,19 +410,20 @@ theorem lift'_id {f : Filter α} : f.lift' id = f :=
 #align filter.lift'_id Filter.lift'_id
 
 theorem lift'_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Set β}
-    (hg : ∀ s t, g (s ∩ t) = g s ∩ g t) : (infi f).lift' g = ⨅ i, (f i).lift' g :=
+    (hg : ∀ s t, g (s ∩ t) = g s ∩ g t) : (infᵢ f).lift' g = ⨅ i, (f i).lift' g :=
   lift_infi fun s t => by rw [inf_principal, (· ∘ ·), ← hg]
 #align filter.lift'_infi Filter.lift'_infi
 
 theorem lift'_infi_of_map_univ {f : ι → Filter α} {g : Set α → Set β}
     (hg : ∀ {s t}, g (s ∩ t) = g s ∩ g t) (hg' : g univ = univ) :
-    (infi f).lift' g = ⨅ i, (f i).lift' g :=
+    (infᵢ f).lift' g = ⨅ i, (f i).lift' g :=
   lift_infi_of_map_univ (fun s t => by rw [inf_principal, (· ∘ ·), ← hg])
     (by rw [Function.comp_apply, hg', principal_univ])
 #align filter.lift'_infi_of_map_univ Filter.lift'_infi_of_map_univ
 
 theorem lift'_inf (f g : Filter α) {s : Set α → Set β} (hs : ∀ t₁ t₂, s (t₁ ∩ t₂) = s t₁ ∩ s t₂) :
-    (f ⊓ g).lift' s = f.lift' s ⊓ g.lift' s := by
+    (f ⊓ g).lift' s = f.lift' s ⊓ g.lift' s :=
+  by
   have : (⨅ b : Bool, cond b f g).lift' s = ⨅ b : Bool, (cond b f g).lift' s := lift'_infi @hs
   simpa only [infᵢ_bool_eq]
 #align filter.lift'_inf Filter.lift'_inf
@@ -455,7 +462,8 @@ theorem prod_same_eq : f ×ᶠ f = f.lift' fun t : Set α => t ×ˢ t :=
 #align filter.prod_same_eq Filter.prod_same_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f, t ×ˢ t ⊆ s := by
+theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ t ∈ f, t ×ˢ t ⊆ s :=
+  by
   rw [prod_same_eq, mem_lift'_sets]
   exact monotone_id.set_prod monotone_id
 #align filter.mem_prod_same_iff Filter.mem_prod_same_iff
@@ -469,7 +477,8 @@ variable {α₁ : Type _} {α₂ : Type _} {β₁ : Type _} {β₂ : Type _}
 
 theorem prod_lift_lift {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set α₁ → Filter β₁}
     {g₂ : Set α₂ → Filter β₂} (hg₁ : Monotone g₁) (hg₂ : Monotone g₂) :
-    f₁.lift g₁ ×ᶠ f₂.lift g₂ = f₁.lift fun s => f₂.lift fun t => g₁ s ×ᶠ g₂ t := by
+    f₁.lift g₁ ×ᶠ f₂.lift g₂ = f₁.lift fun s => f₂.lift fun t => g₁ s ×ᶠ g₂ t :=
+  by
   simp only [prod_def, lift_assoc hg₁]
   apply congr_arg; funext x
   rw [lift_comm]

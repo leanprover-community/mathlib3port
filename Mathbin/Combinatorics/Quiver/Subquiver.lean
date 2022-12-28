@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.subquiver
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,8 +46,8 @@ def WideSubquiver.toType (V) [Quiver V] (H : WideSubquiver V) : Type u :=
 -/
 
 #print wideSubquiverHasCoeToSort /-
-instance wideSubquiverHasCoeToSort {V} [Quiver V] :
-    CoeSort (WideSubquiver V) (Type u) where coe H := WideSubquiver.toType V H
+instance wideSubquiverHasCoeToSort {V} [Quiver V] : CoeSort (WideSubquiver V) (Type u)
+    where coe H := WideSubquiver.toType V H
 #align wide_subquiver_has_coe_to_sort wideSubquiverHasCoeToSort
 -/
 
@@ -82,13 +82,12 @@ structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
 
 #print Quiver.wideSubquiverEquivSetTotal /-
 /-- A wide subquiver of `G` can equivalently be viewed as a total set of arrows. -/
-def wideSubquiverEquivSetTotal {V} [Quiver V] :
-    WideSubquiver V ≃
-      Set (Total V) where 
+def wideSubquiverEquivSetTotal {V} [Quiver V] : WideSubquiver V ≃ Set (Total V)
+    where
   toFun H := { e | e.Hom ∈ H e.left e.right }
   invFun S a b := { e | Total.mk a b e ∈ S }
   left_inv H := rfl
-  right_inv := by 
+  right_inv := by
     intro S
     ext
     cases x

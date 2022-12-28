@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem IsFraction.eq_mk' {U : Opens (PrimeSpectrum.top R)} {f : ∀ x : U, Loca
           f x =
             IsLocalization.mk' (Localization.AtPrime _) r
               (⟨s, hs⟩ : (x : PrimeSpectrum.top R).asIdeal.primeCompl) :=
-  by 
+  by
   rcases hf with ⟨r, s, h⟩
   refine' ⟨r, s, fun x => ⟨(h x).1, (is_localization.mk'_eq_iff_eq_mul.mpr _).symm⟩⟩
   exact (h x).2.symm
@@ -120,11 +120,10 @@ variable (R)
 /-- The predicate `is_fraction` is "prelocal",
 in the sense that if it holds on `U` it holds on any open subset `V` of `U`.
 -/
-def isFractionPrelocal :
-    PrelocalPredicate (Localizations
-        R) where 
+def isFractionPrelocal : PrelocalPredicate (Localizations R)
+    where
   pred U f := IsFraction f
-  res := by 
+  res := by
     rintro V U i f ⟨r, s, w⟩
     exact ⟨r, s, fun x => w (i x)⟩
 #align
@@ -168,22 +167,20 @@ theorem is_locally_fraction_pred {U : Opens (PrimeSpectrum.top R)}
 /-- The functions satisfying `is_locally_fraction` form a subring.
 -/
 def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) :
-    Subring
-      (∀ x : unop U,
-        Localizations R
-          x) where 
+    Subring (∀ x : unop U, Localizations R x)
+    where
   carrier := { f | (isLocallyFraction R).pred f }
-  zero_mem' := by 
+  zero_mem' := by
     refine' fun x => ⟨unop U, x.2, 𝟙 _, 0, 1, fun y => ⟨_, _⟩⟩
     · rw [← Ideal.ne_top_iff_one]
       exact y.1.IsPrime.1
     · simp
-  one_mem' := by 
+  one_mem' := by
     refine' fun x => ⟨unop U, x.2, 𝟙 _, 1, 1, fun y => ⟨_, _⟩⟩
     · rw [← Ideal.ne_top_iff_one]
       exact y.1.IsPrime.1
     · simp
-  add_mem' := by 
+  add_mem' := by
     intro a b ha hb x
     rcases ha x with ⟨Va, ma, ia, ra, sa, wa⟩
     rcases hb x with ⟨Vb, mb, ib, rb, sb, wb⟩
@@ -200,7 +197,7 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) :
       congr 2
       rw [mul_comm]
       rfl
-  neg_mem' := by 
+  neg_mem' := by
     intro a ha x
     rcases ha x with ⟨V, m, i, r, s, w⟩
     refine' ⟨V, m, i, -r, s, _⟩
@@ -211,7 +208,7 @@ def sectionsSubring (U : (Opens (PrimeSpectrum.top R))ᵒᵖ) :
     · simp only [RingHom.map_neg, Pi.neg_apply]
       erw [← w]
       simp only [neg_mul]
-  mul_mem' := by 
+  mul_mem' := by
     intro a b ha hb x
     rcases ha x with ⟨Va, ma, ia, ra, sa, wa⟩
     rcases hb x with ⟨Vb, mb, ib, rb, sb, wb⟩
@@ -252,10 +249,8 @@ open _Root_.PrimeSpectrum
 structure presheaf.
 -/
 @[simps]
-def structurePresheafInCommRing :
-    Presheaf CommRingCat
-      (PrimeSpectrum.top
-        R) where 
+def structurePresheafInCommRing : Presheaf CommRingCat (PrimeSpectrum.top R)
+    where
   obj U := CommRingCat.of ((structureSheafInType R).1.obj U)
   map U V i :=
     { toFun := (structureSheafInType R).1.map i
@@ -415,7 +410,8 @@ theorem const_mul_rev (f g : R) (U hu₁ hu₂) : const R f g U hu₁ * const R 
   algebraic_geometry.structure_sheaf.const_mul_rev AlgebraicGeometry.StructureSheaf.const_mul_rev
 
 theorem const_mul_cancel (f g₁ g₂ : R) (U hu₁ hu₂) :
-    const R f g₁ U hu₁ * const R g₁ g₂ U hu₂ = const R f g₂ U hu₂ := by
+    const R f g₁ U hu₁ * const R g₁ g₂ U hu₂ = const R f g₂ U hu₂ :=
+  by
   rw [const_mul, const_ext]
   rw [mul_assoc]
 #align
@@ -429,15 +425,13 @@ theorem const_mul_cancel' (f g₁ g₂ : R) (U hu₁ hu₂) :
 
 /-- The canonical ring homomorphism interpreting an element of `R` as
 a section of the structure sheaf. -/
-def toOpen (U : Opens (PrimeSpectrum.top R)) :
-    CommRingCat.of R ⟶
-      (structureSheaf R).1.obj
-        (op
-          U) where 
+def toOpen (U : Opens (PrimeSpectrum.top R)) : CommRingCat.of R ⟶ (structureSheaf R).1.obj (op U)
+    where
   toFun f :=
     ⟨fun x => algebraMap R _ f, fun x =>
       ⟨U, x.2, 𝟙 _, f, 1, fun y =>
-        ⟨(Ideal.ne_top_iff_one _).1 y.1.2.1, by
+        ⟨(Ideal.ne_top_iff_one _).1 y.1.2.1,
+          by
           rw [RingHom.map_one, mul_one]
           rfl⟩⟩⟩
   map_one' := Subtype.eq <| funext fun x => RingHom.map_one _
@@ -473,14 +467,16 @@ def toStalk (x : PrimeSpectrum.top R) : CommRingCat.of R ⟶ (structureSheaf R).
 
 @[simp]
 theorem to_open_germ (U : Opens (PrimeSpectrum.top R)) (x : U) :
-    toOpen R U ≫ (structureSheaf R).Presheaf.germ x = toStalk R x := by
+    toOpen R U ≫ (structureSheaf R).Presheaf.germ x = toStalk R x :=
+  by
   rw [← to_open_res R ⊤ U (hom_of_le le_top : U ⟶ ⊤), category.assoc, presheaf.germ_res]
   rfl
 #align algebraic_geometry.structure_sheaf.to_open_germ AlgebraicGeometry.StructureSheaf.to_open_germ
 
 @[simp]
 theorem germ_to_open (U : Opens (PrimeSpectrum.top R)) (x : U) (f : R) :
-    (structureSheaf R).Presheaf.germ x (toOpen R U f) = toStalk R x f := by
+    (structureSheaf R).Presheaf.germ x (toOpen R U f) = toStalk R x f :=
+  by
   rw [← to_open_germ]
   rfl
 #align algebraic_geometry.structure_sheaf.germ_to_open AlgebraicGeometry.StructureSheaf.germ_to_open
@@ -499,7 +495,8 @@ theorem is_unit_to_basic_open_self (f : R) : IsUnit (toOpen R (basicOpen f) f) :
   algebraic_geometry.structure_sheaf.is_unit_to_basic_open_self AlgebraicGeometry.StructureSheaf.is_unit_to_basic_open_self
 
 theorem is_unit_to_stalk (x : PrimeSpectrum.top R) (f : x.asIdeal.primeCompl) :
-    IsUnit (toStalk R x (f : R)) := by
+    IsUnit (toStalk R x (f : R)) :=
+  by
   erw [← germ_to_open R (basic_open (f : R)) ⟨x, f.2⟩ (f : R)]
   exact RingHom.isUnit_map _ (is_unit_to_basic_open_self R f)
 #align
@@ -535,10 +532,8 @@ theorem localization_to_stalk_mk' (x : PrimeSpectrum.top R) (f : R) (s : (asIdea
 implemented as a subtype of dependent functions to localizations at prime ideals, and evaluates
 the section on the point corresponding to a given prime ideal. -/
 def openToLocalization (U : Opens (PrimeSpectrum.top R)) (x : PrimeSpectrum.top R) (hx : x ∈ U) :
-    (structureSheaf R).1.obj (op U) ⟶
-      CommRingCat.of
-        (Localization.AtPrime
-          x.asIdeal) where 
+    (structureSheaf R).1.obj (op U) ⟶ CommRingCat.of (Localization.AtPrime x.asIdeal)
+    where
   toFun s := (s.1 ⟨x, hx⟩ : _)
   map_one' := rfl
   map_mul' _ _ := rfl
@@ -572,7 +567,8 @@ def stalkToFiberRingHom (x : PrimeSpectrum.top R) :
   Limits.colimit.desc ((OpenNhds.inclusion x).op ⋙ (structureSheaf R).1)
     { x := _
       ι :=
-        { app := fun U =>
+        {
+          app := fun U =>
             openToLocalization R ((OpenNhds.inclusion _).obj (unop U)) x (unop U).2 } }
 #align
   algebraic_geometry.structure_sheaf.stalk_to_fiber_ring_hom AlgebraicGeometry.StructureSheaf.stalkToFiberRingHom
@@ -595,7 +591,8 @@ theorem stalk_to_fiber_ring_hom_germ' (U : Opens (PrimeSpectrum.top R)) (x : Pri
 @[simp]
 theorem stalk_to_fiber_ring_hom_germ (U : Opens (PrimeSpectrum.top R)) (x : U)
     (s : (structureSheaf R).1.obj (op U)) :
-    stalkToFiberRingHom R x ((structureSheaf R).Presheaf.germ x s) = s.1 x := by
+    stalkToFiberRingHom R x ((structureSheaf R).Presheaf.germ x s) = s.1 x :=
+  by
   cases x
   exact stalk_to_fiber_ring_hom_germ' R U _ _ _
 #align
@@ -603,7 +600,8 @@ theorem stalk_to_fiber_ring_hom_germ (U : Opens (PrimeSpectrum.top R)) (x : U)
 
 @[simp]
 theorem to_stalk_comp_stalk_to_fiber_ring_hom (x : PrimeSpectrum.top R) :
-    toStalk R x ≫ stalkToFiberRingHom R x = (algebraMap _ _ : R →+* Localization _) := by
+    toStalk R x ≫ stalkToFiberRingHom R x = (algebraMap _ _ : R →+* Localization _) :=
+  by
   erw [to_stalk, category.assoc, germ_comp_stalk_to_fiber_ring_hom]
   rfl
 #align
@@ -620,14 +618,13 @@ theorem stalk_to_fiber_ring_hom_to_stalk (x : PrimeSpectrum.top R) (f : R) :
 corresponding to a prime ideal in `R` and the localization of `R` at `p`. -/
 @[simps]
 def stalkIso (x : PrimeSpectrum.top R) :
-    (structureSheaf R).Presheaf.stalk x ≅
-      CommRingCat.of
-        (Localization.AtPrime
-          x.asIdeal) where 
+    (structureSheaf R).Presheaf.stalk x ≅ CommRingCat.of (Localization.AtPrime x.asIdeal)
+    where
   hom := stalkToFiberRingHom R x
   inv := localizationToStalk R x
   hom_inv_id' :=
-    (structureSheaf R).Presheaf.stalk_hom_ext fun U hxU => by
+    (structureSheaf R).Presheaf.stalk_hom_ext fun U hxU =>
+      by
       ext s; simp only [comp_apply]; rw [id_apply, stalk_to_fiber_ring_hom_germ']
       obtain ⟨V, hxV, iVU, f, g, hg, hs⟩ := exists_const _ _ s x hxU
       erw [← res_apply R U V iVU s ⟨x, hxV⟩, ← hs, const_apply, localization_to_stalk_mk']
@@ -638,7 +635,7 @@ def stalkIso (x : PrimeSpectrum.top R) :
         (Localization.AtPrime x.asIdeal) _ _
         (RingHom.comp (stalkToFiberRingHom R x) (localizationToStalk R x))
         (RingHom.id (Localization.AtPrime _)) <|
-      by 
+      by
       ext f
       simp only [RingHom.comp_apply, RingHom.id_apply, localization_to_stalk_of,
         stalk_to_fiber_ring_hom_to_stalk]
@@ -696,7 +693,8 @@ theorem to_basic_open_to_map (s f : R) :
   algebraic_geometry.structure_sheaf.to_basic_open_to_map AlgebraicGeometry.StructureSheaf.to_basic_open_to_map
 
 -- The proof here follows the argument in Hartshorne's Algebraic Geometry, Proposition II.2.2.
-theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) := by
+theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :=
+  by
   intro s t h_eq
   obtain ⟨a, ⟨b, hb⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) s
   obtain ⟨c, ⟨d, hd⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers f) t
@@ -709,14 +707,14 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   let I : Ideal R :=
     { carrier := { r : R | a * d * r = c * b * r }
       zero_mem' := by simp only [Set.mem_setOf_eq, mul_zero]
-      add_mem' := fun r₁ r₂ hr₁ hr₂ => by 
+      add_mem' := fun r₁ r₂ hr₁ hr₂ => by
         dsimp at hr₁ hr₂⊢
         simp only [mul_add, hr₁, hr₂]
-      smul_mem' := fun r₁ r₂ hr₂ => by 
+      smul_mem' := fun r₁ r₂ hr₂ => by
         dsimp at hr₂⊢
         simp only [mul_comm r₁ r₂, ← mul_assoc, hr₂] }
   -- Our claim now reduces to showing that `f` is contained in the radical of `I`
-  suffices f ∈ I.radical by 
+  suffices f ∈ I.radical by
     cases' this with n hn
     exact ⟨⟨f ^ n, n, rfl⟩, hn⟩
   rw [← vanishing_ideal_zero_locus_eq_radical, mem_vanishing_ideal]
@@ -799,7 +797,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     ∀ i j : ι,
       IsLocalization.mk' (Localization.Away _) (a i * h j) ⟨h i * h j, Submonoid.mem_powers _⟩ =
         IsLocalization.mk' _ (h i * a j) ⟨h i * h j, Submonoid.mem_powers _⟩ :=
-    by 
+    by
     intro i j
     let D := basic_open (h i * h j)
     let iDi : D ⟶ basic_open (h i) := hom_of_le (basic_open_mul_le_left _ _)
@@ -820,7 +818,8 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
   -- From the equality in the localization, we obtain for each `(i,j)` some power `(h i * h j) ^ n`
   -- which equalizes `a i * h j` and `h i * a j`
   have exists_power :
-    ∀ i j : ι, ∃ n : ℕ, a i * h j * (h i * h j) ^ n = h i * a j * (h i * h j) ^ n := by
+    ∀ i j : ι, ∃ n : ℕ, a i * h j * (h i * h j) ^ n = h i * a j * (h i * h j) ^ n :=
+    by
     intro i j
     obtain ⟨⟨c, n, rfl⟩, hc⟩ := is_localization.eq.mp (fractions_eq i j)
     use n + 1
@@ -868,7 +867,8 @@ open Classical
 open BigOperators
 
 -- The proof here follows the argument in Hartshorne's Algebraic Geometry, Proposition II.2.2.
-theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f) := by
+theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f) :=
+  by
   intro s
   -- In this proof, `basic_open f` will play two distinct roles: Firstly, it is an open set in the
   -- prime spectrum. Secondly, it is used as an indexing type for various families of objects
@@ -883,20 +883,21 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
       (fun i => is_open_basic_open) fun x hx => _
   swap
   · -- Here, we need to show that our basic opens actually form a cover of `basic_open f`
-    rw [Set.mem_Union]
+    rw [Set.mem_unionᵢ]
     exact ⟨⟨x, hx⟩, hxDh' ⟨x, hx⟩⟩
   -- We use the normalization lemma from above to obtain the relation `a i * h j = h i * a j`
   obtain ⟨a, h, iDh, ht_cover, ah_ha, s_eq⟩ :=
     normalize_finite_fraction_representation R (basic_open f) s t a' h' iDh' ht_cover' s_eq'
   clear s_eq' iDh' hxDh' ht_cover' a' h'
   -- Next we show that some power of `f` is a linear combination of the `h i`
-  obtain ⟨n, hn⟩ : f ∈ (Ideal.span (h '' ↑t)).radical := by
+  obtain ⟨n, hn⟩ : f ∈ (Ideal.span (h '' ↑t)).radical :=
+    by
     rw [← vanishing_ideal_zero_locus_eq_radical, zero_locus_span]
     simp_rw [Subtype.val_eq_coe, basic_open_eq_zero_locus_compl] at ht_cover
     rw [Set.compl_subset_comm] at ht_cover
     -- Why doesn't `simp_rw` do this?
-    simp_rw [Set.compl_Union, compl_compl, ← zero_locus_Union, ← Finset.set_bUnion_coe, ←
-      Set.image_eq_Union] at ht_cover
+    simp_rw [Set.compl_unionᵢ, compl_compl, ← zero_locus_Union, ← Finset.set_bUnion_coe, ←
+      Set.image_eq_unionᵢ] at ht_cover
     apply vanishing_ideal_anti_mono ht_cover
     exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
   replace hn := Ideal.mul_mem_left _ f hn
@@ -923,7 +924,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
     intro x hx
     erw [TopologicalSpace.Opens.mem_supr]
     have := ht_cover hx
-    rw [← Finset.set_bUnion_coe, Set.mem_Union₂] at this
+    rw [← Finset.set_bUnion_coe, Set.mem_unionᵢ₂] at this
     rcases this with ⟨i, i_mem, x_mem⟩
     use i, i_mem
   rintro ⟨i, hi⟩
@@ -974,8 +975,9 @@ theorem stalk_algebra_map (p : PrimeSpectrum R) (r : R) :
   algebraic_geometry.structure_sheaf.stalk_algebra_map AlgebraicGeometry.StructureSheaf.stalk_algebra_map
 
 /-- Stalk of the structure sheaf at a prime p as localization of R -/
-instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
-    IsLocalization.AtPrime ((structureSheaf R).Presheaf.stalk p) p.asIdeal := by
+instance IsLocalization.toStalk (p : PrimeSpectrum R) :
+    IsLocalization.AtPrime ((structureSheaf R).Presheaf.stalk p) p.asIdeal :=
+  by
   convert
     (IsLocalization.is_localization_iff_of_ring_equiv _
           (stalk_iso R p).symm.commRingIsoToRingEquiv).mp
@@ -987,7 +989,7 @@ instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
   erw [iso.eq_comp_inv]
   exact to_stalk_comp_stalk_to_fiber_ring_hom R p
 #align
-  algebraic_geometry.structure_sheaf.is_localization.to_stalk AlgebraicGeometry.StructureSheaf.IsLocalization.to_stalk
+  algebraic_geometry.structure_sheaf.is_localization.to_stalk AlgebraicGeometry.StructureSheaf.IsLocalization.toStalk
 
 instance openAlgebra (U : (Opens (PrimeSpectrum R))ᵒᵖ) : Algebra R ((structureSheaf R).val.obj U) :=
   (toOpen R (unop U)).toAlgebra
@@ -1002,7 +1004,8 @@ theorem open_algebra_map (U : (Opens (PrimeSpectrum R))ᵒᵖ) (r : R) :
 
 /-- Sections of the structure sheaf of Spec R on a basic open as localization of R -/
 instance IsLocalization.to_basic_open (r : R) :
-    IsLocalization.Away r ((structureSheaf R).val.obj (op <| basicOpen r)) := by
+    IsLocalization.Away r ((structureSheaf R).val.obj (op <| basicOpen r)) :=
+  by
   convert
     (IsLocalization.is_localization_iff_of_ring_equiv _
           (basic_open_iso R r).symm.commRingIsoToRingEquiv).mp
@@ -1015,7 +1018,7 @@ instance IsLocalization.to_basic_open (r : R) :
   algebraic_geometry.structure_sheaf.is_localization.to_basic_open AlgebraicGeometry.StructureSheaf.IsLocalization.to_basic_open
 
 instance to_basic_open_epi (r : R) : Epi (toOpen R (basicOpen r)) :=
-  ⟨fun S f g h => by 
+  ⟨fun S f g h => by
     refine' IsLocalization.ring_hom_ext _ _
     pick_goal 5
     exact is_localization.to_basic_open R r
@@ -1028,7 +1031,7 @@ theorem to_global_factors :
     toOpen R ⊤ =
       CommRingCat.ofHom (algebraMap R (Localization.Away (1 : R))) ≫
         toBasicOpen R (1 : R) ≫ (structureSheaf R).1.map (eqToHom basic_open_one.symm).op :=
-  by 
+  by
   rw [← category.assoc]
   change to_open R ⊤ = (to_basic_open R 1).comp _ ≫ _
   unfold CommRingCat.ofHom
@@ -1036,7 +1039,8 @@ theorem to_global_factors :
 #align
   algebraic_geometry.structure_sheaf.to_global_factors AlgebraicGeometry.StructureSheaf.to_global_factors
 
-instance is_iso_to_global : IsIso (toOpen R ⊤) := by
+instance is_iso_to_global : IsIso (toOpen R ⊤) :=
+  by
   let hom := CommRingCat.ofHom (algebraMap R (Localization.Away (1 : R)))
   haveI : is_iso hom :=
     is_iso.of_iso (IsLocalization.atOne R (Localization.Away (1 : R))).toRingEquiv.toCommRingIso
@@ -1060,7 +1064,8 @@ theorem global_sections_iso_hom (R : CommRingCat) : (globalSectionsIso R).hom = 
 
 @[simp, reassoc.1, elementwise]
 theorem to_stalk_stalk_specializes {R : Type _} [CommRing R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
-    toStalk R y ≫ (structureSheaf R).Presheaf.stalkSpecializes h = toStalk R x := by
+    toStalk R y ≫ (structureSheaf R).Presheaf.stalkSpecializes h = toStalk R x :=
+  by
   dsimp [to_stalk]
   simpa [-to_open_germ]
 #align
@@ -1072,7 +1077,7 @@ theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRing R] {x y :
     StructureSheaf.localizationToStalk R y ≫ (structureSheaf R).Presheaf.stalkSpecializes h =
       CommRingCat.ofHom (PrimeSpectrum.localizationMapOfSpecializes h) ≫
         StructureSheaf.localizationToStalk R x :=
-  by 
+  by
   apply IsLocalization.ring_hom_ext y.as_ideal.prime_compl
   any_goals dsimp; infer_instance
   erw [RingHom.comp_assoc]
@@ -1088,7 +1093,7 @@ theorem stalk_specializes_stalk_to_fiber {R : Type _} [CommRing R] {x y : PrimeS
     (h : x ⤳ y) :
     (structureSheaf R).Presheaf.stalkSpecializes h ≫ StructureSheaf.stalkToFiberRingHom R x =
       StructureSheaf.stalkToFiberRingHom R y ≫ PrimeSpectrum.localizationMapOfSpecializes h :=
-  by 
+  by
   change _ ≫ (structure_sheaf.stalk_iso R x).hom = (structure_sheaf.stalk_iso R y).hom ≫ _
   rw [← iso.eq_comp_inv, category.assoc, ← iso.inv_comp_eq]
   exact localization_to_stalk_stalk_specializes h
@@ -1120,7 +1125,8 @@ def comapFun (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) (V : Opens (Prime
 theorem comap_fun_is_locally_fraction (f : R →+* S) (U : Opens (PrimeSpectrum.top R))
     (V : Opens (PrimeSpectrum.top S)) (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1)
     (s : ∀ x : U, Localizations R x) (hs : (isLocallyFraction R).toPrelocalPredicate.pred s) :
-    (isLocallyFraction S).toPrelocalPredicate.pred (comapFun f U V hUV s) := by
+    (isLocallyFraction S).toPrelocalPredicate.pred (comapFun f U V hUV s) :=
+  by
   rintro ⟨p, hpV⟩
   -- Since `s` is locally fraction, we can find a neighborhood `W` of `prime_spectrum.comap f p`
   -- in `U`, such that `s = a / b` on `W`, for some ring elements `a, b : R`.
@@ -1147,32 +1153,34 @@ to the fraction `a / b`, its image on `V` evaluates on `p` to the fraction `f(a)
 -/
 def comap (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) (V : Opens (PrimeSpectrum.top S))
     (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1) :
-    (structureSheaf R).1.obj (op U) →+*
-      (structureSheaf S).1.obj
-        (op
-          V) where 
+    (structureSheaf R).1.obj (op U) →+* (structureSheaf S).1.obj (op V)
+    where
   toFun s := ⟨comapFun f U V hUV s.1, comap_fun_is_locally_fraction f U V hUV s.1 s.2⟩
   map_one' :=
     Subtype.ext <|
-      funext fun p => by
+      funext fun p =>
+        by
         rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).coe_one,
           Pi.one_apply, RingHom.map_one]
         rfl
   map_zero' :=
     Subtype.ext <|
-      funext fun p => by
+      funext fun p =>
+        by
         rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).coe_zero,
           Pi.zero_apply, RingHom.map_zero]
         rfl
   map_add' s t :=
     Subtype.ext <|
-      funext fun p => by
+      funext fun p =>
+        by
         rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).coe_add,
           Pi.add_apply, RingHom.map_add]
         rfl
   map_mul' s t :=
     Subtype.ext <|
-      funext fun p => by
+      funext fun p =>
+        by
         rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).coe_mul,
           Pi.mul_apply, RingHom.map_mul]
         rfl
@@ -1194,7 +1202,7 @@ theorem comap_const (f : R →+* S) (U : Opens (PrimeSpectrum.top R))
     comap f U V hUV (const R a b U hb) =
       const S (f a) (f b) V fun p hpV => hb (PrimeSpectrum.comap f p) (hUV hpV) :=
   Subtype.eq <|
-    funext fun p => by 
+    funext fun p => by
       rw [comap_apply, const_apply, const_apply]
       erw [Localization.local_ring_hom_mk']
       rfl
@@ -1211,7 +1219,7 @@ theorem comap_id_eq_map (U V : Opens (PrimeSpectrum.top R)) (iVU : V ⟶ U) :
       (structureSheaf R).1.map iVU.op :=
   RingHom.ext fun s =>
     Subtype.eq <|
-      funext fun p => by 
+      funext fun p => by
         rw [comap_apply]
         -- Unfortunately, we cannot use `localization.local_ring_hom_id` here, because
         -- `prime_spectrum.comap (ring_hom.id R) p` is not *definitionally* equal to `p`. Instead, we use
@@ -1241,7 +1249,8 @@ theorem comap_id (U V : Opens (PrimeSpectrum.top R)) (hUV : U = V) :
 
 @[simp]
 theorem comap_id' (U : Opens (PrimeSpectrum.top R)) :
-    (comap (RingHom.id R) U U fun p hpU => by rwa [PrimeSpectrum.comap_id]) = RingHom.id _ := by
+    (comap (RingHom.id R) U U fun p hpU => by rwa [PrimeSpectrum.comap_id]) = RingHom.id _ :=
+  by
   rw [comap_id U U rfl]
   rfl
 #align algebraic_geometry.structure_sheaf.comap_id' AlgebraicGeometry.StructureSheaf.comap_id'
@@ -1253,7 +1262,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : Opens (PrimeSpectrum.top
       (comap g V W hVW).comp (comap f U V hUV) :=
   RingHom.ext fun s =>
     Subtype.eq <|
-      funext fun p => by 
+      funext fun p => by
         rw [comap_apply]
         erw [Localization.local_ring_hom_comp _ (PrimeSpectrum.comap g p.1).asIdeal]
         -- refl works here, because `prime_spectrum.comap (g.comp f) p` is defeq to
@@ -1267,7 +1276,7 @@ theorem to_open_comp_comap (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) :
       CommRingCat.ofHom f ≫ toOpen S _ :=
   RingHom.ext fun s =>
     Subtype.eq <|
-      funext fun p => by 
+      funext fun p => by
         simp_rw [comp_apply, comap_apply, Subtype.val_eq_coe]
         erw [Localization.local_ring_hom_to_map]
         rfl

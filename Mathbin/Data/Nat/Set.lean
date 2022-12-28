@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.nat.set
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,8 @@ lean 3 declaration is
 but is expected to have type
   Eq.{1} (Set.{0} Nat) (Union.union.{0} (Set.{0} Nat) (Set.instUnionSet_1.{0} Nat) (Singleton.singleton.{0, 0} Nat (Set.{0} Nat) (Set.instSingletonSet.{0} Nat) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Set.range.{0, 1} Nat Nat Nat.succ)) (Set.univ.{0} Nat)
 Case conversion may be inaccurate. Consider using '#align nat.zero_union_range_succ Nat.zero_union_range_succₓ'. -/
-theorem zero_union_range_succ : {0} ∪ range succ = univ := by
+theorem zero_union_range_succ : {0} ∪ range succ = univ :=
+  by
   ext n
   cases n <;> simp
 #align nat.zero_union_range_succ Nat.zero_union_range_succ
@@ -64,7 +65,7 @@ Case conversion may be inaccurate. Consider using '#align nat.range_rec Nat.rang
 theorem range_rec {α : Type _} (x : α) (f : ℕ → α → α) :
     (Set.range fun n => Nat.rec x f n : Set α) =
       {x} ∪ Set.range fun n => Nat.rec (f 0 x) (f ∘ succ) n :=
-  by 
+  by
   convert (range_of_succ _).symm
   ext n
   induction' n with n ihn

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.support
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,8 @@ open Finset Finsupp
 variable {k : Type u₁} {G : Type u₂} [Semiring k]
 
 theorem support_single_mul_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G) (r : k) (a : G) :
-    (single a r * f : MonoidAlgebra k G).support ⊆ Finset.image ((· * ·) a) f.support := by
+    (single a r * f : MonoidAlgebra k G).support ⊆ Finset.image ((· * ·) a) f.support :=
+  by
   intro x hx
   contrapose hx
   have : ∀ y, a * y = x → f y = 0 := by
@@ -38,7 +39,8 @@ theorem support_single_mul_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G
 #align monoid_algebra.support_single_mul_subset MonoidAlgebra.support_single_mul_subset
 
 theorem support_mul_single_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G) (r : k) (a : G) :
-    (f * single a r).support ⊆ Finset.image (· * a) f.support := by
+    (f * single a r).support ⊆ Finset.image (· * a) f.support :=
+  by
   intro x hx
   contrapose hx
   have : ∀ y, y * a = x → f y = 0 := by
@@ -53,7 +55,8 @@ theorem support_mul_single_subset [DecidableEq G] [Mul G] (f : MonoidAlgebra k G
 
 theorem support_single_mul_eq_image [DecidableEq G] [Mul G] (f : MonoidAlgebra k G) {r : k}
     (hr : ∀ y, r * y = 0 ↔ y = 0) {x : G} (lx : IsLeftRegular x) :
-    (single x r * f : MonoidAlgebra k G).support = Finset.image ((· * ·) x) f.support := by
+    (single x r * f : MonoidAlgebra k G).support = Finset.image ((· * ·) x) f.support :=
+  by
   refine' subset_antisymm (support_single_mul_subset f _ _) fun y hy => _
   obtain ⟨y, yf, rfl⟩ : ∃ a : G, a ∈ f.support ∧ x * a = y := by
     simpa only [Finset.mem_image, exists_prop] using hy
@@ -63,7 +66,8 @@ theorem support_single_mul_eq_image [DecidableEq G] [Mul G] (f : MonoidAlgebra k
 
 theorem support_mul_single_eq_image [DecidableEq G] [Mul G] (f : MonoidAlgebra k G) {r : k}
     (hr : ∀ y, y * r = 0 ↔ y = 0) {x : G} (rx : IsRightRegular x) :
-    (f * single x r).support = Finset.image (· * x) f.support := by
+    (f * single x r).support = Finset.image (· * x) f.support :=
+  by
   refine' subset_antisymm (support_mul_single_subset f _ _) fun y hy => _
   obtain ⟨y, yf, rfl⟩ : ∃ a : G, a ∈ f.support ∧ a * x = y := by
     simpa only [Finset.mem_image, exists_prop] using hy
@@ -81,7 +85,7 @@ theorem support_mul [Mul G] [DecidableEq G] (a b : MonoidAlgebra k G) :
 theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r : k)
     (hr : ∀ y, y * r = 0 ↔ y = 0) (x : G) :
     (f * single x r).support = f.support.map (mulRightEmbedding x) := by
-  classical 
+  classical
     ext
     simp only [support_mul_single_eq_image f hr (isRightRegular_of_rightCancelSemigroup x),
       mem_image, mem_map, mul_right_embedding_apply]
@@ -90,7 +94,7 @@ theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r :
 theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : k)
     (hr : ∀ y, r * y = 0 ↔ y = 0) (x : G) :
     (single x r * f : MonoidAlgebra k G).support = f.support.map (mulLeftEmbedding x) := by
-  classical 
+  classical
     ext
     simp only [support_single_mul_eq_image f hr (isLeftRegular_of_leftCancelSemigroup x), mem_image,
       mem_map, mul_left_embedding_apply]

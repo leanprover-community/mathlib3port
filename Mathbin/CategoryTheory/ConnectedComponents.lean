@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.connected_components
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,8 @@ def Component.ι (j) : Component j ⥤ J :=
 #align category_theory.component.ι CategoryTheory.Component.ι
 
 /-- Each connected component of the category is nonempty. -/
-instance (j : ConnectedComponents J) : Nonempty (Component j) := by
+instance (j : ConnectedComponents J) : Nonempty (Component j) :=
+  by
   apply Quotient.inductionOn' j
   intro k
   refine' ⟨⟨k, rfl⟩⟩
@@ -81,7 +82,7 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) :=
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
   let f : ∀ x, zigzag x j₂ → component (Quotient.mk' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
-  have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by 
+  have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by
     intro i hi
     apply List.Chain.induction (fun t => zigzag t j₂) _ hl₁ hl₂ _ _ _ (Or.inr hi)
     · intro j k
@@ -123,11 +124,9 @@ theorem inclusion_comp_decomposed_to (j : ConnectedComponents J) :
   rfl
 #align category_theory.inclusion_comp_decomposed_to CategoryTheory.inclusion_comp_decomposed_to
 
-instance :
-    Full
-      (decomposedTo
-        J) where 
-  Preimage := by 
+instance : Full (decomposedTo J)
+    where
+  Preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
     dsimp at f
     have : j' = k'
@@ -135,18 +134,16 @@ instance :
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this
     refine' sigma.sigma_hom.mk f
-  witness' := by 
+  witness' := by
     rintro ⟨j', X, hX⟩ ⟨_, Y, rfl⟩ f
-    have : Quotient.mk' Y = j' := by 
+    have : Quotient.mk' Y = j' := by
       rw [← hX, Quotient.eq']
       exact Relation.ReflTransGen.single (Or.inr ⟨f⟩)
     subst this
     rfl
 
-instance :
-    Faithful
-      (decomposedTo
-        J) where map_injective' := by
+instance : Faithful (decomposedTo J)
+    where map_injective' := by
     rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨f⟩ ⟨g⟩ e
     change f = g at e
     subst e

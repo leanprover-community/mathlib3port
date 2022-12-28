@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.biproducts
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,10 +43,8 @@ instance : HasFiniteBiproducts (ModuleCat.{v} R) :=
 /-- Construct limit data for a binary product in `Module R`, using `Module.of R (M × N)`.
 -/
 @[simps cone_X is_limit_lift]
-def binaryProductLimitCone (M N : ModuleCat.{v} R) :
-    Limits.LimitCone
-      (pair M
-        N) where 
+def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
+    where
   Cone :=
     { x := ModuleCat.of R (M × N)
       π :=
@@ -109,14 +107,13 @@ variable {J : Type w} (f : J → ModuleCat.{max w v} R)
 to the cartesian product of those groups.
 -/
 @[simps]
-def lift (s : Fan f) :
-    s.x ⟶ ModuleCat.of R (∀ j,
-          f j) where 
+def lift (s : Fan f) : s.x ⟶ ModuleCat.of R (∀ j, f j)
+    where
   toFun x j := s.π.app ⟨j⟩ x
-  map_add' x y := by 
+  map_add' x y := by
     ext
     simp
-  map_smul' r x := by 
+  map_smul' r x := by
     ext
     simp
 #align Module.has_limit.lift ModuleCat.HasLimit.lift
@@ -124,20 +121,18 @@ def lift (s : Fan f) :
 /-- Construct limit data for a product in `Module R`, using `Module.of R (Π j, F.obj j)`.
 -/
 @[simps]
-def productLimitCone :
-    Limits.LimitCone
-      (Discrete.functor
-        f) where 
+def productLimitCone : Limits.LimitCone (Discrete.functor f)
+    where
   Cone :=
     { x := ModuleCat.of R (∀ j, f j)
       π := Discrete.natTrans fun j => (LinearMap.proj j.as : (∀ j, f j) →ₗ[R] f j.as) }
   IsLimit :=
     { lift := lift f
-      fac' := fun s j => by 
+      fac' := fun s j => by
         cases j
         ext
         simp
-      uniq' := fun s m w => by 
+      uniq' := fun s m w => by
         ext (x j)
         dsimp only [has_limit.lift]
         simp only [LinearMap.coe_mk]

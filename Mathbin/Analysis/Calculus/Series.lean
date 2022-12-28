@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.series
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem tendsto_uniformly_on_tsum {f : α → β → F} (hu : Summable u) {s : S
     (hfu : ∀ n x, x ∈ s → ‖f n x‖ ≤ u n) :
     TendstoUniformlyOn (fun t : Finset α => fun x => ∑ n in t, f n x) (fun x => ∑' n, f n x) atTop
       s :=
-  by 
+  by
   refine' tendsto_uniformly_on_iff.2 fun ε εpos => _
   filter_upwards [(tendsto_order.1 (tendsto_tsum_compl_at_top_zero u)).2 _ εpos] with t ht x hx
   have A : Summable fun n => ‖f n x‖ :=
@@ -67,7 +67,7 @@ theorem tendsto_uniformly_on_tsum_nat {f : ℕ → β → F} {u : ℕ → ℝ} (
 Version with general index set. -/
 theorem tendsto_uniformly_tsum {f : α → β → F} (hu : Summable u) (hfu : ∀ n x, ‖f n x‖ ≤ u n) :
     TendstoUniformly (fun t : Finset α => fun x => ∑ n in t, f n x) (fun x => ∑' n, f n x) atTop :=
-  by 
+  by
   rw [← tendsto_uniformly_on_univ]
   exact tendsto_uniformly_on_tsum hu fun n x hx => hfu n x
 #align tendsto_uniformly_tsum tendsto_uniformly_tsum
@@ -86,7 +86,7 @@ function is. -/
 theorem continuous_on_tsum [TopologicalSpace β] {f : α → β → F} {s : Set β}
     (hf : ∀ i, ContinuousOn (f i) s) (hu : Summable u) (hfu : ∀ n x, x ∈ s → ‖f n x‖ ≤ u n) :
     ContinuousOn (fun x => ∑' n, f n x) s := by
-  classical 
+  classical
     refine' (tendsto_uniformly_on_tsum hu hfu).ContinuousOn (eventually_of_forall _)
     intro t
     exact continuous_on_finset_sum _ fun i hi => hf i
@@ -95,7 +95,8 @@ theorem continuous_on_tsum [TopologicalSpace β] {f : α → β → F} {s : Set 
 /-- An infinite sum of functions with summable sup norm is continuous if each individual
 function is. -/
 theorem continuous_tsum [TopologicalSpace β] {f : α → β → F} (hf : ∀ i, Continuous (f i))
-    (hu : Summable u) (hfu : ∀ n x, ‖f n x‖ ≤ u n) : Continuous fun x => ∑' n, f n x := by
+    (hu : Summable u) (hfu : ∀ n x, ‖f n x‖ ≤ u n) : Continuous fun x => ∑' n, f n x :=
+  by
   simp_rw [continuous_iff_continuous_on_univ] at hf⊢
   exact continuous_on_tsum hf hu fun n x hx => hfu n x
 #align continuous_tsum continuous_tsum
@@ -113,7 +114,8 @@ derivatives, then the series converges everywhere on the set. -/
 theorem summable_of_summable_has_fderiv_at_of_is_preconnected (hu : Summable u) (hs : IsOpen s)
     (h's : IsPreconnected s) (hf : ∀ n x, x ∈ s → HasFderivAt (f n) (f' n x) x)
     (hf' : ∀ n x, x ∈ s → ‖f' n x‖ ≤ u n) (hx₀ : x₀ ∈ s) (hf0 : Summable fun n => f n x₀) {x : E}
-    (hx : x ∈ s) : Summable fun n => f n x := by
+    (hx : x ∈ s) : Summable fun n => f n x :=
+  by
   rw [summable_iff_cauchy_seq_finset] at hf0⊢
   have A : UniformCauchySeqOn (fun t : Finset α => fun x => ∑ i in t, f' i x) at_top s :=
     (tendsto_uniformly_on_tsum hu hf').UniformCauchySeqOn
@@ -130,9 +132,10 @@ theorem hasFderivAtTsumOfIsPreconnected (hu : Summable u) (hs : IsOpen s) (h's :
     (hf : ∀ n x, x ∈ s → HasFderivAt (f n) (f' n x) x) (hf' : ∀ n x, x ∈ s → ‖f' n x‖ ≤ u n)
     (hx₀ : x₀ ∈ s) (hf0 : Summable fun n => f n x₀) (hx : x ∈ s) :
     HasFderivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x := by
-  classical 
+  classical
     have A :
-      ∀ x : E, x ∈ s → tendsto (fun t : Finset α => ∑ n in t, f n x) at_top (𝓝 (∑' n, f n x)) := by
+      ∀ x : E, x ∈ s → tendsto (fun t : Finset α => ∑ n in t, f n x) at_top (𝓝 (∑' n, f n x)) :=
+      by
       intro y hy
       apply Summable.has_sum
       exact summable_of_summable_has_fderiv_at_of_is_preconnected hu hs h's hf hf' hx₀ hf0 hy
@@ -146,7 +149,8 @@ point, and all functions in the series are differentiable with a summable bound 
 then the series converges everywhere. -/
 theorem summable_of_summable_has_fderiv_at (hu : Summable u)
     (hf : ∀ n x, HasFderivAt (f n) (f' n x) x) (hf' : ∀ n x, ‖f' n x‖ ≤ u n)
-    (hf0 : Summable fun n => f n x₀) (x : E) : Summable fun n => f n x := by
+    (hf0 : Summable fun n => f n x₀) (x : E) : Summable fun n => f n x :=
+  by
   let : NormedSpace ℝ E; exact NormedSpace.restrictScalars ℝ 𝕜 _
   apply
     summable_of_summable_has_fderiv_at_of_is_preconnected hu is_open_univ
@@ -159,7 +163,8 @@ point, and all functions in the series are differentiable with a summable bound 
 then the series is differentiable and its derivative is the sum of the derivatives. -/
 theorem hasFderivAtTsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f' n x) x)
     (hf' : ∀ n x, ‖f' n x‖ ≤ u n) (hf0 : Summable fun n => f n x₀) (x : E) :
-    HasFderivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x := by
+    HasFderivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x :=
+  by
   let : NormedSpace ℝ E; exact NormedSpace.restrictScalars ℝ 𝕜 _
   exact
     hasFderivAtTsumOfIsPreconnected hu is_open_univ is_connected_univ.is_preconnected
@@ -171,13 +176,14 @@ with a summable bound on the derivatives, then the series is differentiable.
 Note that our assumptions do not ensure the pointwise convergence, but if there is no pointwise
 convergence then the series is zero everywhere so the result still holds. -/
 theorem differentiableTsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f' n x) x)
-    (hf' : ∀ n x, ‖f' n x‖ ≤ u n) : Differentiable 𝕜 fun y => ∑' n, f n y := by
+    (hf' : ∀ n x, ‖f' n x‖ ≤ u n) : Differentiable 𝕜 fun y => ∑' n, f n y :=
+  by
   by_cases h : ∃ x₀, Summable fun n => f n x₀
   · rcases h with ⟨x₀, hf0⟩
     intro x
     exact (hasFderivAtTsum hu hf hf' hf0 x).DifferentiableAt
   · push_neg  at h
-    have : (fun x => ∑' n, f n x) = 0 := by 
+    have : (fun x => ∑' n, f n x) = 0 := by
       ext1 x
       exact tsum_eq_zero_of_not_summable (h x)
     rw [this]
@@ -192,7 +198,8 @@ theorem fderiv_tsum_apply (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f 
 
 theorem fderiv_tsum (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
     (hf' : ∀ n x, ‖fderiv 𝕜 (f n) x‖ ≤ u n) {x₀ : E} (hf0 : Summable fun n => f n x₀) :
-    (fderiv 𝕜 fun y => ∑' n, f n y) = fun x => ∑' n, fderiv 𝕜 (f n) x := by
+    (fderiv 𝕜 fun y => ∑' n, f n y) = fun x => ∑' n, fderiv 𝕜 (f n) x :=
+  by
   ext1 x
   exact fderiv_tsum_apply hu hf hf' hf0 x
 #align fderiv_tsum fderiv_tsum
@@ -206,7 +213,8 @@ theorem iterated_fderiv_tsum (hf : ∀ i, ContDiff 𝕜 N (f i))
     (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
     (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) {k : ℕ}
     (hk : (k : ℕ∞) ≤ N) :
-    (iteratedFderiv 𝕜 k fun y => ∑' n, f n y) = fun x => ∑' n, iteratedFderiv 𝕜 k (f n) x := by
+    (iteratedFderiv 𝕜 k fun y => ∑' n, f n y) = fun x => ∑' n, iteratedFderiv 𝕜 k (f n) x :=
+  by
   induction' k with k IH
   · ext1 x
     simp_rw [iterated_fderiv_zero_eq_comp]
@@ -240,7 +248,8 @@ class `C^N`, and moreover there is a uniform summable upper bound on the `k`-th 
 for each `k ≤ N`. Then the series is also `C^N`. -/
 theorem contDiffTsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
     (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) :
-    ContDiff 𝕜 N fun x => ∑' i, f i x := by
+    ContDiff 𝕜 N fun x => ∑' i, f i x :=
+  by
   rw [cont_diff_iff_continuous_differentiable]
   constructor
   · intro m hm
@@ -272,7 +281,7 @@ theorem contDiffTsumOfEventually (hf : ∀ i, ContDiff 𝕜 N (f i))
         (k : ℕ∞) ≤ N →
           ∀ᶠ i in (Filter.cofinite : Filter α), ∀ x : E, ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) :
     ContDiff 𝕜 N fun x => ∑' i, f i x := by
-  classical 
+  classical
     apply cont_diff_iff_forall_nat_le.2 fun m hm => _
     let t : Set α :=
       { i : α | ¬∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x, ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i }
@@ -280,7 +289,7 @@ theorem contDiffTsumOfEventually (hf : ∀ i, ContDiff 𝕜 N (f i))
       haveI A :
         ∀ᶠ i in (Filter.cofinite : Filter α),
           ∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x : E, ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i :=
-        by 
+        by
         rw [eventually_all_finset]
         intro i hi
         apply h'f
@@ -290,7 +299,7 @@ theorem contDiffTsumOfEventually (hf : ∀ i, ContDiff 𝕜 N (f i))
     let T : Finset α := ht.to_finset
     have :
       (fun x => ∑' i, f i x) = (fun x => ∑ i in T, f i x) + fun x => ∑' i : { i // i ∉ T }, f i x :=
-      by 
+      by
       ext1 x
       refine' (sum_add_tsum_subtype_compl _ T).symm
       refine' summable_of_norm_bounded_eventually _ (hv 0 (zero_le _)) _

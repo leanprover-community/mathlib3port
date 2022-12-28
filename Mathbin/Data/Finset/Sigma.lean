@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.finset.sigma
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,8 @@ theorem sigma_mono (hs : s₁ ⊆ s₂) (ht : ∀ i, t₁ i ⊆ t₂ i) : s₁.S
 #align finset.sigma_mono Finset.sigma_mono
 
 theorem pairwise_disjoint_map_sigma_mk :
-    (s : Set ι).PairwiseDisjoint fun i => (t i).map (Embedding.sigmaMk i) := by
+    (s : Set ι).PairwiseDisjoint fun i => (t i).map (Embedding.sigmaMk i) :=
+  by
   intro i hi j hj hij
   rw [Function.onFun, disjoint_left]
   simp_rw [mem_map, Function.Embedding.sigma_mk_apply]
@@ -92,7 +93,8 @@ theorem disj_Union_map_sigma_mk :
 #align finset.disj_Union_map_sigma_mk Finset.disj_Union_map_sigma_mk
 
 theorem sigma_eq_bUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
-    s.Sigma t = s.bUnion fun i => (t i).map <| Embedding.sigmaMk i := by
+    s.Sigma t = s.bUnion fun i => (t i).map <| Embedding.sigmaMk i :=
+  by
   ext ⟨x, y⟩
   simp [and_left_comm]
 #align finset.sigma_eq_bUnion Finset.sigma_eq_bUnion
@@ -100,7 +102,8 @@ theorem sigma_eq_bUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Fi
 variable (s t) (f : (Σi, α i) → β)
 
 theorem sup_sigma [SemilatticeSup β] [OrderBot β] :
-    (s.Sigma t).sup f = s.sup fun i => (t i).sup fun b => f ⟨i, b⟩ := by
+    (s.Sigma t).sup f = s.sup fun i => (t i).sup fun b => f ⟨i, b⟩ :=
+  by
   simp only [le_antisymm_iff, Finset.sup_le_iff, mem_sigma, and_imp, Sigma.forall]
   exact
     ⟨fun i a hi ha => (le_sup hi).trans' <| le_sup ha, fun i hi a ha =>
@@ -127,7 +130,7 @@ def sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) 
 theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α) (b : Sigma β)
     (x : Sigma γ) :
     x ∈ sigmaLift f a b ↔ ∃ (ha : a.1 = x.1)(hb : b.1 = x.1), x.2 ∈ f (ha.rec a.2) (hb.rec b.2) :=
-  by 
+  by
   obtain ⟨⟨i, a⟩, j, b⟩ := a, b
   obtain rfl | h := Decidable.eq_or_ne i j
   · constructor
@@ -144,7 +147,8 @@ theorem mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : S
 #align finset.mem_sigma_lift Finset.mem_sigma_lift
 
 theorem mk_mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (i : ι) (a : α i) (b : β i)
-    (x : γ i) : (⟨i, x⟩ : Sigma γ) ∈ sigmaLift f ⟨i, a⟩ ⟨i, b⟩ ↔ x ∈ f a b := by
+    (x : γ i) : (⟨i, x⟩ : Sigma γ) ∈ sigmaLift f ⟨i, a⟩ ⟨i, b⟩ ↔ x ∈ f a b :=
+  by
   rw [sigma_lift, dif_pos rfl, mem_map]
   refine' ⟨_, fun hx => ⟨_, hx, rfl⟩⟩
   rintro ⟨x, hx, _, rfl⟩
@@ -152,13 +156,15 @@ theorem mk_mem_sigma_lift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (i 
 #align finset.mk_mem_sigma_lift Finset.mk_mem_sigma_lift
 
 theorem not_mem_sigma_lift_of_ne_left (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Sigma α)
-    (b : Sigma β) (x : Sigma γ) (h : a.1 ≠ x.1) : x ∉ sigmaLift f a b := by
+    (b : Sigma β) (x : Sigma γ) (h : a.1 ≠ x.1) : x ∉ sigmaLift f a b :=
+  by
   rw [mem_sigma_lift]
   exact fun H => h H.fst
 #align finset.not_mem_sigma_lift_of_ne_left Finset.not_mem_sigma_lift_of_ne_left
 
 theorem not_mem_sigma_lift_of_ne_right (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) {a : Sigma α}
-    (b : Sigma β) {x : Sigma γ} (h : b.1 ≠ x.1) : x ∉ sigmaLift f a b := by
+    (b : Sigma β) {x : Sigma γ} (h : b.1 ≠ x.1) : x ∉ sigmaLift f a b :=
+  by
   rw [mem_sigma_lift]
   exact fun H => h H.snd.fst
 #align finset.not_mem_sigma_lift_of_ne_right Finset.not_mem_sigma_lift_of_ne_right
@@ -166,7 +172,8 @@ theorem not_mem_sigma_lift_of_ne_right (f : ∀ ⦃i⦄, α i → β i → Finse
 variable {f g : ∀ ⦃i⦄, α i → β i → Finset (γ i)} {a : Σi, α i} {b : Σi, β i}
 
 theorem sigma_lift_nonempty :
-    (sigmaLift f a b).Nonempty ↔ ∃ h : a.1 = b.1, (f (h.rec a.2) b.2).Nonempty := by
+    (sigmaLift f a b).Nonempty ↔ ∃ h : a.1 = b.1, (f (h.rec a.2) b.2).Nonempty :=
+  by
   simp_rw [nonempty_iff_ne_empty]
   convert dite_ne_right_iff
   ext h
@@ -174,13 +181,14 @@ theorem sigma_lift_nonempty :
   exact map_nonempty.symm
 #align finset.sigma_lift_nonempty Finset.sigma_lift_nonempty
 
-theorem sigma_lift_eq_empty : sigmaLift f a b = ∅ ↔ ∀ h : a.1 = b.1, f (h.rec a.2) b.2 = ∅ := by
+theorem sigma_lift_eq_empty : sigmaLift f a b = ∅ ↔ ∀ h : a.1 = b.1, f (h.rec a.2) b.2 = ∅ :=
+  by
   convert dite_eq_right_iff
   exact forall_congr fun h => propext map_eq_empty.symm
 #align finset.sigma_lift_eq_empty Finset.sigma_lift_eq_empty
 
 theorem sigma_lift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b ⊆ g a b) (a : Σi, α i) (b : Σi, β i) :
-    sigmaLift f a b ⊆ sigmaLift g a b := by 
+    sigmaLift f a b ⊆ sigmaLift g a b := by
   rintro x hx
   rw [mem_sigma_lift] at hx⊢
   obtain ⟨ha, hb, hx⟩ := hx
@@ -190,7 +198,8 @@ theorem sigma_lift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b �
 variable (f a b)
 
 theorem card_sigma_lift :
-    (sigmaLift f a b).card = dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).card) fun _ => 0 := by
+    (sigmaLift f a b).card = dite (a.1 = b.1) (fun h => (f (h.rec a.2) b.2).card) fun _ => 0 :=
+  by
   convert apply_dite _ _ _ _
   ext h
   exact (card_map _).symm

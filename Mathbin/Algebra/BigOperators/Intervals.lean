@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.intervals
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,14 +34,16 @@ variable [CommMonoid β]
 
 @[to_additive]
 theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
-    (f : α → β) (a b c : α) : (∏ x in ico a b, f (x + c)) = ∏ x in ico (a + c) (b + c), f x := by
+    (f : α → β) (a b c : α) : (∏ x in ico a b, f (x + c)) = ∏ x in ico (a + c) (b + c), f x :=
+  by
   rw [← map_add_right_Ico, Prod_map]
   rfl
 #align finset.prod_Ico_add' Finset.prod_Ico_add'
 
 @[to_additive]
 theorem prod_Ico_add [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
-    (f : α → β) (a b c : α) : (∏ x in ico a b, f (c + x)) = ∏ x in ico (a + c) (b + c), f x := by
+    (f : α → β) (a b c : α) : (∏ x in ico a b, f (c + x)) = ∏ x in ico (a + c) (b + c), f x :=
+  by
   convert prod_Ico_add' f a b c
   simp_rw [add_comm]
 #align finset.prod_Ico_add Finset.prod_Ico_add
@@ -58,7 +60,8 @@ theorem prod_Ico_succ_top {a b : ℕ} (hab : a ≤ b) (f : ℕ → β) :
 #align finset.prod_Ico_succ_top Finset.prod_Ico_succ_top
 
 theorem sum_eq_sum_Ico_succ_bot {δ : Type _} [AddCommMonoid δ] {a b : ℕ} (hab : a < b) (f : ℕ → δ) :
-    (∑ k in ico a b, f k) = f a + ∑ k in ico (a + 1) b, f k := by
+    (∑ k in ico a b, f k) = f a + ∑ k in ico (a + 1) b, f k :=
+  by
   have ha : a ∉ ico (a + 1) b := by simp
   rw [← sum_insert ha, Nat.Ico_insert_succ_left hab]
 #align finset.sum_eq_sum_Ico_succ_bot Finset.sum_eq_sum_Ico_succ_bot
@@ -77,7 +80,8 @@ theorem prod_Ico_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk
 
 @[to_additive]
 theorem prod_Ioc_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk : n ≤ k) :
-    ((∏ i in ioc m n, f i) * ∏ i in ioc n k, f i) = ∏ i in ioc m k, f i := by
+    ((∏ i in ioc m n, f i) * ∏ i in ioc n k, f i) = ∏ i in ioc m k, f i :=
+  by
   rw [← Ioc_union_Ioc_eq_Ioc hmn hnk, prod_union]
   apply disjoint_left.2 fun x hx h'x => _
   exact lt_irrefl _ ((mem_Ioc.1 h'x).1.trans_le (mem_Ioc.1 hx).2)
@@ -110,7 +114,7 @@ theorem prod_Ico_eq_div {δ : Type _} [CommGroup δ] (f : ℕ → δ) {m n : ℕ
 @[to_additive]
 theorem prod_range_sub_prod_range {α : Type _} [CommGroup α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
     ((∏ k in range m, f k) / ∏ k in range n, f k) = ∏ k in (range m).filter fun k => n ≤ k, f k :=
-  by 
+  by
   rw [← prod_Ico_eq_div f hnm]
   congr
   apply Finset.ext
@@ -122,7 +126,7 @@ theorem prod_range_sub_prod_range {α : Type _} [CommGroup α] {f : ℕ → α} 
 theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoid M] (a b : ℕ) (f : ℕ → ℕ → M) :
     (∑ i in Finset.ico a b, ∑ j in Finset.ico i b, f i j) =
       ∑ j in Finset.ico a b, ∑ i in Finset.ico a (j + 1), f i j :=
-  by 
+  by
   rw [Finset.sum_sigma', Finset.sum_sigma']
   refine'
             Finset.sum_bij' (fun (x : Σi : ℕ, ℕ) _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (fun _ _ => rfl)
@@ -136,7 +140,8 @@ theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoid M] (a b : ℕ) (f : ℕ →
 
 @[to_additive]
 theorem prod_Ico_eq_prod_range (f : ℕ → β) (m n : ℕ) :
-    (∏ k in ico m n, f k) = ∏ k in range (n - m), f (m + k) := by
+    (∏ k in ico m n, f k) = ∏ k in range (n - m), f (m + k) :=
+  by
   by_cases h : m ≤ n
   · rw [← Nat.Ico_zero_eq_range, prod_Ico_add, zero_add, tsub_add_cancel_of_le h]
   · replace h : n ≤ m := le_of_not_ge h
@@ -144,8 +149,9 @@ theorem prod_Ico_eq_prod_range (f : ℕ → β) (m n : ℕ) :
 #align finset.prod_Ico_eq_prod_range Finset.prod_Ico_eq_prod_range
 
 theorem prod_Ico_reflect (f : ℕ → β) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1) :
-    (∏ j in ico k m, f (n - j)) = ∏ j in ico (n + 1 - m) (n + 1 - k), f j := by
-  have : ∀ i < m, i ≤ n := by 
+    (∏ j in ico k m, f (n - j)) = ∏ j in ico (n + 1 - m) (n + 1 - k), f j :=
+  by
+  have : ∀ i < m, i ≤ n := by
     intro i hi
     exact (add_le_add_iff_right 1).1 (le_trans (Nat.lt_iff_add_one_le.1 hi) h)
   cases' lt_or_le k m with hkm hkm
@@ -163,7 +169,8 @@ theorem sum_Ico_reflect {δ : Type _} [AddCommMonoid δ] (f : ℕ → δ) (k : �
 #align finset.sum_Ico_reflect Finset.sum_Ico_reflect
 
 theorem prod_range_reflect (f : ℕ → β) (n : ℕ) :
-    (∏ j in range n, f (n - 1 - j)) = ∏ j in range n, f j := by
+    (∏ j in range n, f (n - 1 - j)) = ∏ j in range n, f j :=
+  by
   cases n
   · simp
   · simp only [← Nat.Ico_zero_eq_range, Nat.succ_sub_succ_eq_sub, tsub_zero]
@@ -263,7 +270,8 @@ theorem sum_Ico_by_parts (hmn : m < n) :
     (∑ i in ico m n, f i • g i) =
       f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G (i + 1) :=
   by
-  have h₁ : (∑ i in Ico (m + 1) n, f i • G i) = ∑ i in Ico m (n - 1), f (i + 1) • G (i + 1) := by
+  have h₁ : (∑ i in Ico (m + 1) n, f i • G i) = ∑ i in Ico m (n - 1), f (i + 1) • G (i + 1) :=
+    by
     conv in n => rw [← Nat.sub_add_cancel (Nat.one_le_of_lt hmn)]
     rw [← sum_Ico_add']
   have h₂ :
@@ -273,13 +281,14 @@ theorem sum_Ico_by_parts (hmn : m < n) :
     rw [← sum_Ico_sub_bot _ hmn, ← sum_Ico_succ_sub_top _ (Nat.le_pred_of_lt hmn),
       Nat.sub_add_cancel (pos_of_gt hmn), sub_add_cancel]
   rw [sum_eq_sum_Ico_succ_bot hmn]
-  conv => pattern (occs := 2)f _ • g _ <;> (rw [← sum_range_succ_sub_sum g])
+  conv => pattern (occs := 2) f _ • g _ <;> (rw [← sum_range_succ_sub_sum g])
   simp_rw [smul_sub, sum_sub_distrib, h₂, h₁]
-  conv_lhs => 
+  conv_lhs =>
     congr
     skip
     rw [← add_sub, add_comm, ← add_sub, ← sum_sub_distrib]
-  have : ∀ i, f i • G (i + 1) - f (i + 1) • G (i + 1) = -((f (i + 1) - f i) • G (i + 1)) := by
+  have : ∀ i, f i • G (i + 1) - f (i + 1) • G (i + 1) = -((f (i + 1) - f i) • G (i + 1)) :=
+    by
     intro i
     rw [sub_smul]
     abel
@@ -293,7 +302,7 @@ variable (n)
 theorem sum_range_by_parts :
     (∑ i in range n, f i • g i) =
       f (n - 1) • G n - ∑ i in range (n - 1), (f (i + 1) - f i) • G (i + 1) :=
-  by 
+  by
   by_cases hn : n = 0
   · simp [hn]
   ·

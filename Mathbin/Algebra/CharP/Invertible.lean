@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.char_p.invertible
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,8 @@ def invertibleOfRingCharNotDvd {t : ℕ} (not_dvd : ¬ringChar K ∣ t) : Invert
   invertibleOfNonzero fun h => not_dvd ((ringChar.spec K t).mp h)
 #align invertible_of_ring_char_not_dvd invertibleOfRingCharNotDvd
 
-theorem not_ring_char_dvd_of_invertible {t : ℕ} [Invertible (t : K)] : ¬ringChar K ∣ t := by
+theorem not_ring_char_dvd_of_invertible {t : ℕ} [Invertible (t : K)] : ¬ringChar K ∣ t :=
+  by
   rw [← ringChar.spec, ← Ne.def]
   exact nonzero_of_invertible (t : K)
 #align not_ring_char_dvd_of_invertible not_ring_char_dvd_of_invertible

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.char_p.algebra
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,8 @@ Instances constructed from this result:
 /-- If the algebra map `R →+* A` is injective then `A` has the same characteristic as `R`. -/
 theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
     (h : Function.Injective (algebraMap R A)) (p : ℕ) [CharP R p] : CharP A p :=
-  { cast_eq_zero_iff := fun x => by 
+  {
+    cast_eq_zero_iff := fun x => by
       rw [← CharP.cast_eq_zero_iff R p x]
       change algebraMap ℕ A x = 0 ↔ algebraMap ℕ R x = 0
       rw [IsScalarTower.algebra_map_apply ℕ R A x]
@@ -52,7 +53,9 @@ theorem char_p_of_injective_algebra_map' (R A : Type _) [Field R] [Semiring A] [
 /-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
 theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A]
     [Algebra R A] (h : Function.Injective (algebraMap R A)) [CharZero R] : CharZero A :=
-  { cast_injective := fun x y hxy => by
+  {
+    cast_injective := fun x y hxy =>
+      by
       change algebraMap ℕ A x = algebraMap ℕ A y at hxy
       rw [IsScalarTower.algebra_map_apply ℕ R A x] at hxy
       rw [IsScalarTower.algebra_map_apply ℕ R A y] at hxy
@@ -105,7 +108,8 @@ theorem Algebra.char_p_iff (p : ℕ) : CharP K p ↔ CharP L p :=
   (algebraMap K L).char_p_iff_char_p p
 #align algebra.char_p_iff Algebra.char_p_iff
 
-theorem Algebra.ring_char_eq : ringChar K = ringChar L := by
+theorem Algebra.ring_char_eq : ringChar K = ringChar L :=
+  by
   rw [ringChar.eq_iff, Algebra.char_p_iff K L]
   apply ringChar.char_p
 #align algebra.ring_char_eq Algebra.ring_char_eq

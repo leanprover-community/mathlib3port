@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.DFA
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,8 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
 #align DFA.eval_from_split DFA.eval_from_split
 
 theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s)
-    (hy : y ∈ @Language.star α {x}) : M.evalFrom s y = s := by
+    (hy : y ∈ @Language.star α {x}) : M.evalFrom s y = s :=
+  by
   rw [Language.mem_star] at hy
   rcases hy with ⟨S, rfl, hS⟩
   induction' S with a S ih
@@ -151,7 +152,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     ∃ a b c,
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
-  by 
+  by
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil
   intro y hy

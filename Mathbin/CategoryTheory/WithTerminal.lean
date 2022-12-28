@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.with_terminal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,14 +107,14 @@ def comp : ∀ {X Y Z : WithTerminal C}, Hom X Y → Hom Y Z → Hom X Z
   | star, star, star => fun _ _ => PUnit.unit
 #align category_theory.with_terminal.comp CategoryTheory.WithTerminal.comp
 
-instance : Category.{v} (WithTerminal
-        C) where 
+instance : Category.{v} (WithTerminal C)
+    where
   Hom X Y := Hom X Y
   id X := id _
   comp X Y Z f g := comp f g
 
 /-- The inclusion from `C` into `with_terminal C`. -/
-def incl : C ⥤ WithTerminal C where 
+def incl : C ⥤ WithTerminal C where
   obj := of
   map X Y f := f
 #align category_theory.with_terminal.incl CategoryTheory.WithTerminal.incl
@@ -124,9 +124,8 @@ instance : Full (incl : C ⥤ _) where preimage X Y f := f
 instance : Faithful (incl : C ⥤ _) where
 
 /-- Map `with_terminal` with respect to a functor `F : C ⥤ D`. -/
-def map {D : Type _} [Category D] (F : C ⥤ D) :
-    WithTerminal C ⥤ WithTerminal
-        D where 
+def map {D : Type _} [Category D] (F : C ⥤ D) : WithTerminal C ⥤ WithTerminal D
+    where
   obj X :=
     match X with
     | of x => of <| F.obj x
@@ -138,8 +137,8 @@ def map {D : Type _} [Category D] (F : C ⥤ D) :
     | star, star, PUnit.unit => PUnit.unit
 #align category_theory.with_terminal.map CategoryTheory.WithTerminal.map
 
-instance {X : WithTerminal C} :
-    Unique (X ⟶ star) where 
+instance {X : WithTerminal C} : Unique (X ⟶ star)
+    where
   default :=
     match X with
     | of x => PUnit.unit
@@ -154,8 +153,8 @@ def starTerminal : Limits.IsTerminal (star : WithTerminal C) :=
 /-- Lift a functor `F : C ⥤ D` to `with_term C ⥤ D`. -/
 @[simps]
 def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) :
-    WithTerminal C ⥤ D where 
+    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : WithTerminal C ⥤ D
+    where
   obj X :=
     match X with
     | of x => F.obj x
@@ -170,8 +169,8 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
 def inclLift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) :
-    incl ⋙ lift F M hM ≅ F where 
+    (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : incl ⋙ lift F M hM ≅ F
+    where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.with_terminal.incl_lift CategoryTheory.WithTerminal.inclLift
@@ -187,7 +186,7 @@ theorem lift_map_lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
     (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (x : C) :
     (lift F M hM).map (starTerminal.from (incl.obj x)) ≫ (liftStar F M hM).Hom =
       (inclLift F M hM).Hom.app x ≫ M x :=
-  by 
+  by
   erw [category.id_comp, category.comp_id]
   rfl
 #align
@@ -205,7 +204,7 @@ def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F
       match X with
       | of x => h.app x
       | star => hG)
-    (by 
+    (by
       rintro (X | X) (Y | Y) f
       · apply h.hom.naturality
       · cases f
@@ -300,14 +299,14 @@ def comp : ∀ {X Y Z : WithInitial C}, Hom X Y → Hom Y Z → Hom X Z
   | star, star, star => fun _ _ => PUnit.unit
 #align category_theory.with_initial.comp CategoryTheory.WithInitial.comp
 
-instance : Category.{v} (WithInitial
-        C) where 
+instance : Category.{v} (WithInitial C)
+    where
   Hom X Y := Hom X Y
   id X := id _
   comp X Y Z f g := comp f g
 
 /-- The inclusion of `C` into `with_initial C`. -/
-def incl : C ⥤ WithInitial C where 
+def incl : C ⥤ WithInitial C where
   obj := of
   map X Y f := f
 #align category_theory.with_initial.incl CategoryTheory.WithInitial.incl
@@ -317,8 +316,8 @@ instance : Full (incl : C ⥤ _) where preimage X Y f := f
 instance : Faithful (incl : C ⥤ _) where
 
 /-- Map `with_initial` with respect to a functor `F : C ⥤ D`. -/
-def map {D : Type _} [Category D] (F : C ⥤ D) :
-    WithInitial C ⥤ WithInitial D where 
+def map {D : Type _} [Category D] (F : C ⥤ D) : WithInitial C ⥤ WithInitial D
+    where
   obj X :=
     match X with
     | of x => of <| F.obj x
@@ -330,8 +329,8 @@ def map {D : Type _} [Category D] (F : C ⥤ D) :
     | star, star, PUnit.unit => PUnit.unit
 #align category_theory.with_initial.map CategoryTheory.WithInitial.map
 
-instance {X : WithInitial C} :
-    Unique (star ⟶ X) where 
+instance {X : WithInitial C} : Unique (star ⟶ X)
+    where
   default :=
     match X with
     | of x => PUnit.unit
@@ -346,8 +345,8 @@ def starInitial : Limits.IsInitial (star : WithInitial C) :=
 /-- Lift a functor `F : C ⥤ D` to `with_initial C ⥤ D`. -/
 @[simps]
 def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) :
-    WithInitial C ⥤ D where 
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : WithInitial C ⥤ D
+    where
   obj X :=
     match X with
     | of x => F.obj x
@@ -362,8 +361,8 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
 def inclLift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) :
-    incl ⋙ lift F M hM ≅ F where 
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : incl ⋙ lift F M hM ≅ F
+    where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.with_initial.incl_lift CategoryTheory.WithInitial.inclLift
@@ -379,7 +378,7 @@ theorem lift_star_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
     (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (x : C) :
     (liftStar F M hM).Hom ≫ (lift F M hM).map (starInitial.to (incl.obj x)) =
       M x ≫ (inclLift F M hM).Hom.app x :=
-  by 
+  by
   erw [category.id_comp, category.comp_id]
   rfl
 #align category_theory.with_initial.lift_star_lift_map CategoryTheory.WithInitial.lift_star_lift_map
@@ -396,7 +395,7 @@ def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z
       match X with
       | of x => h.app x
       | star => hG)
-    (by 
+    (by
       rintro (X | X) (Y | Y) f
       · apply h.hom.naturality
       · cases f

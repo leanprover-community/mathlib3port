@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.center
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ S
 #align set.subset_center_units Set.subset_center_units
 
 theorem center_units_subset [GroupWithZero M] : Set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M :=
-  fun a ha b => by 
+  fun a ha b => by
   obtain rfl | hb := eq_or_ne b 0
   · rw [zero_mul, mul_zero]
   · exact units.ext_iff.mp (ha (Units.mk0 _ hb))
@@ -95,7 +95,8 @@ theorem center_units_eq [GroupWithZero M] : Set.center Mˣ = (coe : Mˣ → M) �
 #align set.center_units_eq Set.center_units_eq
 
 @[simp]
-theorem inv_mem_center₀ [GroupWithZero M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ Set.center M := by
+theorem inv_mem_center₀ [GroupWithZero M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ Set.center M :=
+  by
   obtain rfl | ha0 := eq_or_ne a 0
   · rw [inv_zero]
     exact zero_mem_center M
@@ -106,14 +107,15 @@ theorem inv_mem_center₀ [GroupWithZero M] {a : M} (ha : a ∈ Set.center M) : 
 
 @[simp, to_additive sub_mem_add_center]
 theorem div_mem_center [Group M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
-    a / b ∈ Set.center M := by 
+    a / b ∈ Set.center M := by
   rw [div_eq_mul_inv]
   exact mul_mem_center ha (inv_mem_center hb)
 #align set.div_mem_center Set.div_mem_center
 
 @[simp]
 theorem div_mem_center₀ [GroupWithZero M] {a b : M} (ha : a ∈ Set.center M)
-    (hb : b ∈ Set.center M) : a / b ∈ Set.center M := by
+    (hb : b ∈ Set.center M) : a / b ∈ Set.center M :=
+  by
   rw [div_eq_mul_inv]
   exact mul_mem_center ha (inv_mem_center₀ hb)
 #align set.div_mem_center₀ Set.div_mem_center₀
@@ -136,7 +138,7 @@ variable (M) [Semigroup M]
 /-- The center of a semigroup `M` is the set of elements that commute with everything in `M` -/
 @[to_additive
       "The center of a semigroup `M` is the set of elements that commute with everything in\n`M`"]
-def center : Subsemigroup M where 
+def center : Subsemigroup M where
   carrier := Set.center M
   mul_mem' a b := Set.mul_mem_center
 #align subsemigroup.center Subsemigroup.center

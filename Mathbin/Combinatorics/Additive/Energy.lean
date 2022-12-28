@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Ella Yu
 
 ! This file was ported from Lean 3 source module combinatorics.additive.energy
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,8 @@ theorem multiplicative_energy_mono_right (ht : t₁ ⊆ t₂) :
 #align finset.multiplicative_energy_mono_right Finset.multiplicative_energy_mono_right
 
 @[to_additive le_additive_energy]
-theorem le_multiplicative_energy : s.card * t.card ≤ multiplicativeEnergy s t := by
+theorem le_multiplicative_energy : s.card * t.card ≤ multiplicativeEnergy s t :=
+  by
   rw [← card_product]
   refine'
     card_le_card_of_inj_on (fun x => ((x.1, x.1), x.2, x.2)) (by simp [← and_imp]) fun a _ b _ => _
@@ -102,7 +103,7 @@ variable {s t}
 @[simp, to_additive additive_energy_pos_iff]
 theorem multiplicative_energy_pos_iff : 0 < multiplicativeEnergy s t ↔ s.Nonempty ∧ t.Nonempty :=
   ⟨fun h =>
-    of_not_not fun H => by 
+    of_not_not fun H => by
       simp_rw [not_and_or, not_nonempty_iff_eq_empty] at H
       obtain rfl | rfl := H <;> simpa [Nat.not_lt_zero] using h,
     fun h => multiplicative_energy_pos h.1 h.2⟩
@@ -121,7 +122,8 @@ variable [CommMonoid α]
 
 @[to_additive additive_energy_comm]
 theorem multiplicative_energy_comm (s t : Finset α) :
-    multiplicativeEnergy s t = multiplicativeEnergy t s := by
+    multiplicativeEnergy s t = multiplicativeEnergy t s :=
+  by
   rw [multiplicative_energy, ← Finset.card_map (Equiv.prodComm _ _).toEmbedding, map_filter]
   simp [-Finset.card_map, eq_comm, multiplicative_energy, mul_comm, map_eq_image, Function.comp]
 #align finset.multiplicative_energy_comm Finset.multiplicative_energy_comm
@@ -136,10 +138,12 @@ variable [CommGroup α] [Fintype α] (s t : Finset α)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, to_additive additive_energy_univ_left]
 theorem multiplicative_energy_univ_left :
-    multiplicativeEnergy univ t = Fintype.card α * t.card ^ 2 := by
+    multiplicativeEnergy univ t = Fintype.card α * t.card ^ 2 :=
+  by
   simp only [multiplicative_energy, univ_product_univ, Fintype.card, sq, ← card_product]
   set f : α × α × α → (α × α) × α × α := fun x => ((x.1 * x.2.2, x.1 * x.2.1), x.2) with hf
-  have : (↑((univ : Finset α) ×ˢ t ×ˢ t) : Set (α × α × α)).InjOn f := by
+  have : (↑((univ : Finset α) ×ˢ t ×ˢ t) : Set (α × α × α)).InjOn f :=
+    by
     rintro ⟨a₁, b₁, c₁⟩ h₁ ⟨a₂, b₂, c₂⟩ h₂ h
     simp_rw [Prod.ext_iff] at h
     obtain ⟨h, rfl, rfl⟩ := h

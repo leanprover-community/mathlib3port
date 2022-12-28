@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.CommMon_
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,13 +108,11 @@ variable {C} {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D] [Br
 That is, a lax braided functor `F : C ⥤ D` induces a functor `CommMon_ C ⥤ CommMon_ D`.
 -/
 @[simps]
-def mapCommMon (F : LaxBraidedFunctor C D) :
-    CommMon_ C ⥤
-      CommMon_
-        D where 
+def mapCommMon (F : LaxBraidedFunctor C D) : CommMon_ C ⥤ CommMon_ D
+    where
   obj A :=
     { F.toLaxMonoidalFunctor.mapMon.obj A.toMon_ with
-      mul_comm' := by 
+      mul_comm' := by
         dsimp
         have := F.braided
         slice_lhs 1 2 => rw [← this]
@@ -125,9 +123,8 @@ def mapCommMon (F : LaxBraidedFunctor C D) :
 variable (C) (D)
 
 /-- `map_CommMon` is functorial in the lax braided functor. -/
-def mapCommMonFunctor :
-    LaxBraidedFunctor C D ⥤
-      CommMon_ C ⥤ CommMon_ D where 
+def mapCommMonFunctor : LaxBraidedFunctor C D ⥤ CommMon_ C ⥤ CommMon_ D
+    where
   obj := mapCommMon
   map F G α := { app := fun A => { Hom := α.app A.x } }
 #align
@@ -143,10 +140,8 @@ namespace EquivLaxBraidedFunctorPunit
 
 /-- Implementation of `CommMon_.equiv_lax_braided_functor_punit`. -/
 @[simps]
-def laxBraidedToCommMon :
-    LaxBraidedFunctor (Discrete PUnit.{u + 1}) C ⥤
-      CommMon_
-        C where 
+def laxBraidedToCommMon : LaxBraidedFunctor (Discrete PUnit.{u + 1}) C ⥤ CommMon_ C
+    where
   obj F := (F.mapCommMon : CommMon_ _ ⥤ CommMon_ C).obj (trivial (Discrete PUnit))
   map F G α := ((mapCommMonFunctor (Discrete PUnit) C).map α).app _
 #align
@@ -154,10 +149,8 @@ def laxBraidedToCommMon :
 
 /-- Implementation of `CommMon_.equiv_lax_braided_functor_punit`. -/
 @[simps]
-def commMonToLaxBraided :
-    CommMon_ C ⥤
-      LaxBraidedFunctor (Discrete PUnit.{u + 1})
-        C where 
+def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 1}) C
+    where
   obj A :=
     { obj := fun _ => A.x
       map := fun _ _ _ => 𝟙 _
@@ -167,7 +160,7 @@ def commMonToLaxBraided :
       map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
   map A B f :=
     { app := fun _ => f.Hom
-      naturality' := fun _ _ _ => by 
+      naturality' := fun _ _ _ => by
         dsimp
         rw [category.id_comp, category.comp_id]
       unit' := f.OneHom
@@ -215,9 +208,8 @@ attribute [local simp] eq_to_iso_map
 braided monoidal category to `C`.
 -/
 @[simps]
-def equivLaxBraidedFunctorPunit :
-    LaxBraidedFunctor (Discrete PUnit.{u + 1}) C ≌
-      CommMon_ C where 
+def equivLaxBraidedFunctorPunit : LaxBraidedFunctor (Discrete PUnit.{u + 1}) C ≌ CommMon_ C
+    where
   Functor := laxBraidedToCommMon C
   inverse := commMonToLaxBraided C
   unitIso := unitIso C

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.hermitian
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,14 +49,15 @@ theorem IsHermitian.eq {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ = A :=
 #align matrix.is_hermitian.eq Matrix.IsHermitian.eq
 
 @[ext]
-theorem IsHermitian.ext {A : Matrix n n α} : (∀ i j, star (A j i) = A i j) → A.IsHermitian := by
+theorem IsHermitian.ext {A : Matrix n n α} : (∀ i j, star (A j i) = A i j) → A.IsHermitian :=
+  by
   intro h
   ext (i j)
   exact h i j
 #align matrix.is_hermitian.ext Matrix.IsHermitian.ext
 
 theorem IsHermitian.apply {A : Matrix n n α} (h : A.IsHermitian) (i j : n) : star (A j i) = A i j :=
-  by 
+  by
   unfold is_hermitian at h
   rw [← h, conj_transpose_apply, star_star, h]
 #align matrix.is_hermitian.apply Matrix.IsHermitian.apply
@@ -104,7 +105,8 @@ theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β)
   (conj_transpose_map f hf).symm.trans <| h.Eq.symm ▸ rfl
 #align matrix.is_hermitian.map Matrix.IsHermitian.map
 
-theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian := by
+theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian :=
+  by
   rw [is_hermitian, conj_transpose, transpose_map]
   congr
   exact h
@@ -112,7 +114,7 @@ theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsH
 
 @[simp]
 theorem is_hermitian_transpose_iff (A : Matrix n n α) : Aᵀ.IsHermitian ↔ A.IsHermitian :=
-  ⟨by 
+  ⟨by
     intro h
     rw [← transpose_transpose A]
     exact is_hermitian.transpose h, IsHermitian.transpose⟩
@@ -124,7 +126,7 @@ theorem IsHermitian.conj_transpose {A : Matrix n n α} (h : A.IsHermitian) : A�
 
 @[simp]
 theorem is_hermitian_conj_transpose_iff (A : Matrix n n α) : Aᴴ.IsHermitian ↔ A.IsHermitian :=
-  ⟨by 
+  ⟨by
     intro h
     rw [← conj_transpose_conj_transpose A]
     exact is_hermitian.conj_transpose h, IsHermitian.conj_transpose⟩
@@ -158,8 +160,9 @@ theorem is_hermitian_diagonal [DecidableEq n] (v : n → ℝ) : (diagonal v).IsH
     if `A` and `D` are hermitian and `Bᴴ = C`. -/
 theorem IsHermitian.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
     {D : Matrix n n α} (hA : A.IsHermitian) (hBC : Bᴴ = C) (hD : D.IsHermitian) :
-    (A.fromBlocks B C D).IsHermitian := by
-  have hCB : Cᴴ = B := by 
+    (A.fromBlocks B C D).IsHermitian :=
+  by
+  have hCB : Cᴴ = B := by
     rw [← hBC]
     simp
   unfold Matrix.IsHermitian
@@ -218,7 +221,7 @@ theorem IsHermitian.inv [Fintype m] [DecidableEq m] {A : Matrix m m α} (hA : A.
 @[simp]
 theorem is_hermitian_inv [Fintype m] [DecidableEq m] (A : Matrix m m α) [Invertible A] :
     A⁻¹.IsHermitian ↔ A.IsHermitian :=
-  ⟨fun h => by 
+  ⟨fun h => by
     rw [← inv_inv_of_invertible A]
     exact is_hermitian.inv h, IsHermitian.inv⟩
 #align matrix.is_hermitian_inv Matrix.is_hermitian_inv
@@ -251,7 +254,7 @@ theorem is_hermitian_iff_is_symmetric [Fintype n] [DecidableEq n] {A : Matrix n 
     IsHermitian A ↔
       LinearMap.IsSymmetric
         ((PiLp.linearEquiv 2 α fun _ : n => α).symm.conj A.toLin' : Module.EndCat α (PiLp 2 _)) :=
-  by 
+  by
   rw [LinearMap.IsSymmetric, (PiLp.equiv 2 fun _ : n => α).symm.Surjective.Forall₂]
   simp only [LinearEquiv.conj_apply, LinearMap.comp_apply, LinearEquiv.coe_coe,
     PiLp.linear_equiv_apply, PiLp.linear_equiv_symm_apply, LinearEquiv.symm_symm]

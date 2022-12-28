@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.monotone.union
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,15 +33,18 @@ Case conversion may be inaccurate. Consider using '#align strict_mono_on.union S
 /-- If `f` is strictly monotone both on `s` and `t`, with `s` to the left of `t` and the center
 point belonging to both `s` and `t`, then `f` is strictly monotone on `s ∪ t` -/
 protected theorem StrictMonoOn.union {s t : Set α} {c : α} (h₁ : StrictMonoOn f s)
-    (h₂ : StrictMonoOn f t) (hs : IsGreatest s c) (ht : IsLeast t c) : StrictMonoOn f (s ∪ t) := by
-  have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s := by
+    (h₂ : StrictMonoOn f t) (hs : IsGreatest s c) (ht : IsLeast t c) : StrictMonoOn f (s ∪ t) :=
+  by
+  have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s :=
+    by
     intro x hx hxc
     cases hx
     · exact hx
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
     · exact hs.1
     exact (lt_irrefl _ (h'x.trans_le (ht.2 hx))).elim
-  have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t := by
+  have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t :=
+    by
     intro x hx hxc
     cases hx
     swap
@@ -69,7 +72,8 @@ Case conversion may be inaccurate. Consider using '#align strict_mono_on.Iic_uni
 /-- If `f` is strictly monotone both on `(-∞, a]` and `[a, ∞)`, then it is strictly monotone on the
 whole line. -/
 protected theorem StrictMonoOn.Iic_union_Ici (h₁ : StrictMonoOn f (Iic a))
-    (h₂ : StrictMonoOn f (Ici a)) : StrictMono f := by
+    (h₂ : StrictMonoOn f (Ici a)) : StrictMono f :=
+  by
   rw [← strictMonoOn_univ, ← @Iic_union_Ici _ _ a]
   exact StrictMonoOn.union h₁ h₂ isGreatest_Iic isLeast_Ici
 #align strict_mono_on.Iic_union_Ici StrictMonoOn.Iic_union_Ici
@@ -109,15 +113,18 @@ Case conversion may be inaccurate. Consider using '#align monotone_on.union_righ
 /-- If `f` is monotone both on `s` and `t`, with `s` to the left of `t` and the center
 point belonging to both `s` and `t`, then `f` is monotone on `s ∪ t` -/
 protected theorem MonotoneOn.union_right {s t : Set α} {c : α} (h₁ : MonotoneOn f s)
-    (h₂ : MonotoneOn f t) (hs : IsGreatest s c) (ht : IsLeast t c) : MonotoneOn f (s ∪ t) := by
-  have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s := by
+    (h₂ : MonotoneOn f t) (hs : IsGreatest s c) (ht : IsLeast t c) : MonotoneOn f (s ∪ t) :=
+  by
+  have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s :=
+    by
     intro x hx hxc
     cases hx
     · exact hx
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
     · exact hs.1
     exact (lt_irrefl _ (h'x.trans_le (ht.2 hx))).elim
-  have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t := by
+  have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t :=
+    by
     intro x hx hxc
     cases hx
     swap
@@ -144,7 +151,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.Iic_union_Ici MonotoneOn.Iic_union_Iciₓ'. -/
 /-- If `f` is monotone both on `(-∞, a]` and `[a, ∞)`, then it is monotone on the whole line. -/
 protected theorem MonotoneOn.Iic_union_Ici (h₁ : MonotoneOn f (Iic a)) (h₂ : MonotoneOn f (Ici a)) :
-    Monotone f := by 
+    Monotone f := by
   rw [← monotoneOn_univ, ← @Iic_union_Ici _ _ a]
   exact MonotoneOn.union_right h₁ h₂ isGreatest_Iic isLeast_Ici
 #align monotone_on.Iic_union_Ici MonotoneOn.Iic_union_Ici

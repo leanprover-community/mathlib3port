@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 
 ! This file was ported from Lean 3 source module analysis.sum_integral_comparisons
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,10 @@ open BigOperators
 variable {x₀ : ℝ} {a b : ℕ} {f : ℝ → ℝ}
 
 theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
-    (∫ x in x₀..x₀ + a, f x) ≤ ∑ i in Finset.range a, f (x₀ + i) := by
-  have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) := by
+    (∫ x in x₀..x₀ + a, f x) ≤ ∑ i in Finset.range a, f (x₀ + i) :=
+  by
+  have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) :=
+    by
     intro k hk
     refine' (hf.mono _).IntervalIntegrable
     rw [interval_of_le]
@@ -61,10 +63,12 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
       · simp only [add_le_add_iff_left, Nat.cast_le, Nat.succ_le_of_lt hk]
     · simp only [add_le_add_iff_left, Nat.cast_le, Nat.le_succ]
   calc
-    (∫ x in x₀..x₀ + a, f x) = ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x := by
+    (∫ x in x₀..x₀ + a, f x) = ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x :=
+      by
       convert (intervalIntegral.sum_integral_adjacent_intervals hint).symm
       simp only [Nat.cast_zero, add_zero]
-    _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + i) := by
+    _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + i) :=
+      by
       apply Finset.sum_le_sum fun i hi => _
       have ia : i < a := Finset.mem_range.1 hi
       refine' intervalIntegral.integral_mono_on (by simp) (hint _ ia) (by simp) fun x hx => _
@@ -79,9 +83,10 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
 #align antitone_on.integral_le_sum AntitoneOn.integral_le_sum
 
 theorem AntitoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :
-    (∫ x in a..b, f x) ≤ ∑ x in Finset.ico a b, f x := by
+    (∫ x in a..b, f x) ≤ ∑ x in Finset.ico a b, f x :=
+  by
   rw [(Nat.sub_add_cancel hab).symm, Nat.cast_add]
-  conv => 
+  conv =>
     congr
     congr
     skip
@@ -93,7 +98,7 @@ theorem AntitoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
     congr
     rw [← zero_add a]
   rw [← Finset.sum_Ico_add, Nat.Ico_zero_eq_range]
-  conv => 
+  conv =>
     rhs
     congr
     skip
@@ -104,8 +109,10 @@ theorem AntitoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
 #align antitone_on.integral_le_sum_Ico AntitoneOn.integral_le_sum_Ico
 
 theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
-    (∑ i in Finset.range a, f (x₀ + (i + 1 : ℕ))) ≤ ∫ x in x₀..x₀ + a, f x := by
-  have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) := by
+    (∑ i in Finset.range a, f (x₀ + (i + 1 : ℕ))) ≤ ∫ x in x₀..x₀ + a, f x :=
+  by
+  have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) :=
+    by
     intro k hk
     refine' (hf.mono _).IntervalIntegrable
     rw [interval_of_le]
@@ -117,7 +124,8 @@ theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
     (∑ i in Finset.range a, f (x₀ + (i + 1 : ℕ))) =
         ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + (i + 1 : ℕ)) :=
       by simp
-    _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x := by
+    _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x :=
+      by
       apply Finset.sum_le_sum fun i hi => _
       have ia : i + 1 ≤ a := Finset.mem_range.1 hi
       refine' intervalIntegral.integral_mono_on (by simp) (by simp) (hint _ ia) fun x hx => _
@@ -128,16 +136,18 @@ theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
         simp only [Nat.cast_le, add_le_add_iff_left, ia]
       · refine' mem_Icc.2 ⟨(le_add_iff_nonneg_right _).2 (Nat.cast_nonneg _), _⟩
         simp only [add_le_add_iff_left, Nat.cast_le, ia]
-    _ = ∫ x in x₀..x₀ + a, f x := by
+    _ = ∫ x in x₀..x₀ + a, f x :=
+      by
       convert intervalIntegral.sum_integral_adjacent_intervals hint
       simp only [Nat.cast_zero, add_zero]
     
 #align antitone_on.sum_le_integral AntitoneOn.sum_le_integral
 
 theorem AntitoneOn.sum_le_integral_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :
-    (∑ i in Finset.ico a b, f (i + 1 : ℕ)) ≤ ∫ x in a..b, f x := by
+    (∑ i in Finset.ico a b, f (i + 1 : ℕ)) ≤ ∫ x in a..b, f x :=
+  by
   rw [(Nat.sub_add_cancel hab).symm, Nat.cast_add]
-  conv => 
+  conv =>
     congr
     congr
     congr
@@ -147,7 +157,7 @@ theorem AntitoneOn.sum_le_integral_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
     skip
     rw [add_comm]
   rw [← Finset.sum_Ico_add, Nat.Ico_zero_eq_range]
-  conv => 
+  conv =>
     lhs
     congr
     congr
@@ -159,25 +169,29 @@ theorem AntitoneOn.sum_le_integral_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.I
 #align antitone_on.sum_le_integral_Ico AntitoneOn.sum_le_integral_Ico
 
 theorem MonotoneOn.sum_le_integral (hf : MonotoneOn f (Icc x₀ (x₀ + a))) :
-    (∑ i in Finset.range a, f (x₀ + i)) ≤ ∫ x in x₀..x₀ + a, f x := by
+    (∑ i in Finset.range a, f (x₀ + i)) ≤ ∫ x in x₀..x₀ + a, f x :=
+  by
   rw [← neg_le_neg_iff, ← Finset.sum_neg_distrib, ← intervalIntegral.integral_neg]
   exact hf.neg.integral_le_sum
 #align monotone_on.sum_le_integral MonotoneOn.sum_le_integral
 
 theorem MonotoneOn.sum_le_integral_Ico (hab : a ≤ b) (hf : MonotoneOn f (Set.Icc a b)) :
-    (∑ x in Finset.ico a b, f x) ≤ ∫ x in a..b, f x := by
+    (∑ x in Finset.ico a b, f x) ≤ ∫ x in a..b, f x :=
+  by
   rw [← neg_le_neg_iff, ← Finset.sum_neg_distrib, ← intervalIntegral.integral_neg]
   exact hf.neg.integral_le_sum_Ico hab
 #align monotone_on.sum_le_integral_Ico MonotoneOn.sum_le_integral_Ico
 
 theorem MonotoneOn.integral_le_sum (hf : MonotoneOn f (Icc x₀ (x₀ + a))) :
-    (∫ x in x₀..x₀ + a, f x) ≤ ∑ i in Finset.range a, f (x₀ + (i + 1 : ℕ)) := by
+    (∫ x in x₀..x₀ + a, f x) ≤ ∑ i in Finset.range a, f (x₀ + (i + 1 : ℕ)) :=
+  by
   rw [← neg_le_neg_iff, ← Finset.sum_neg_distrib, ← intervalIntegral.integral_neg]
   exact hf.neg.sum_le_integral
 #align monotone_on.integral_le_sum MonotoneOn.integral_le_sum
 
 theorem MonotoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : MonotoneOn f (Set.Icc a b)) :
-    (∫ x in a..b, f x) ≤ ∑ i in Finset.ico a b, f (i + 1 : ℕ) := by
+    (∫ x in a..b, f x) ≤ ∑ i in Finset.ico a b, f (i + 1 : ℕ) :=
+  by
   rw [← neg_le_neg_iff, ← Finset.sum_neg_distrib, ← intervalIntegral.integral_neg]
   exact hf.neg.sum_le_integral_Ico hab
 #align monotone_on.integral_le_sum_Ico MonotoneOn.integral_le_sum_Ico

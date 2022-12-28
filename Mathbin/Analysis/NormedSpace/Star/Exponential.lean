@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.exponential
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [StarRing A] [HasCont
 open Complex
 
 theorem IsSelfAdjoint.exp_i_smul_unitary {a : A} (ha : IsSelfAdjoint a) :
-    exp ℂ (I • a) ∈ unitary A := by 
+    exp ℂ (I • a) ∈ unitary A := by
   rw [unitary.mem_iff, star_exp]
   simp only [star_smul, IsROrC.star_def, self_adjoint.mem_iff.mp ha, conj_I, neg_smul]
   rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_left]
@@ -50,7 +50,8 @@ noncomputable def selfAdjoint.expUnitary (a : selfAdjoint A) : unitary A :=
 open selfAdjoint
 
 theorem Commute.exp_unitary_add {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) :
-    expUnitary (a + b) = expUnitary a * expUnitary b := by
+    expUnitary (a + b) = expUnitary a * expUnitary b :=
+  by
   ext
   have hcomm : Commute (I • (a : A)) (I • (b : A))
   calc

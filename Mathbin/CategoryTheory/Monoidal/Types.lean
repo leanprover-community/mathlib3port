@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.types
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,11 +115,11 @@ open MonoidalCategory
 /-- `(𝟙_ C ⟶ -)` is a lax monoidal functor to `Type`. -/
 def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] :
     LaxMonoidalFunctor C (Type v) :=
-  { coyoneda.obj (op (𝟙_ C)) with 
+  { coyoneda.obj (op (𝟙_ C)) with
     ε := fun p => 𝟙 _
     μ := fun X Y p => (λ_ (𝟙_ C)).inv ≫ (p.1 ⊗ p.2)
     μ_natural' := by tidy
-    associativity' := fun X Y Z => by 
+    associativity' := fun X Y Z => by
       ext ⟨⟨f, g⟩, h⟩; dsimp at f g h
       dsimp; simp only [iso.cancel_iso_inv_left, category.assoc]
       conv_lhs =>
@@ -127,7 +127,7 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] :
           category.assoc, unitors_inv_equal, triangle_assoc_comp_right_inv]
       conv_rhs => rw [← category.id_comp f, tensor_comp]
     left_unitality' := by tidy
-    right_unitality' := fun X => by 
+    right_unitality' := fun X => by
       ext ⟨f, ⟨⟩⟩; dsimp at f
       dsimp; simp only [category.assoc]
       rw [right_unitor_naturality, unitors_inv_equal, iso.inv_hom_id_assoc] }

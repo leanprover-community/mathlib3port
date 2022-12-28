@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.localization_localization
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ variable {M N}
 theorem mem_localization_localization_submodule {x : R} :
     x ∈ localizationLocalizationSubmodule M N ↔
       ∃ (y : N)(z : M), algebraMap R S x = y * algebraMap R S z :=
-  by 
+  by
   rw [localization_localization_submodule, Submonoid.mem_comap, Submonoid.mem_sup]
   constructor
   · rintro ⟨y, hy, _, ⟨z, hz, rfl⟩, e⟩
@@ -74,7 +74,8 @@ theorem mem_localization_localization_submodule {x : R} :
 variable (M N) [IsLocalization M S]
 
 theorem localization_localization_map_units [IsLocalization N T]
-    (y : localizationLocalizationSubmodule M N) : IsUnit (algebraMap R T y) := by
+    (y : localizationLocalizationSubmodule M N) : IsUnit (algebraMap R T y) :=
+  by
   obtain ⟨y', z, eq⟩ := mem_localization_localization_submodule.mp y.prop
   rw [IsScalarTower.algebra_map_apply R S T, Eq, RingHom.map_mul, IsUnit.mul_iff]
   exact ⟨IsLocalization.map_units T y', (IsLocalization.map_units _ z).map (algebraMap S T)⟩
@@ -83,7 +84,7 @@ theorem localization_localization_map_units [IsLocalization N T]
 
 theorem localization_localization_surj [IsLocalization N T] (x : T) :
     ∃ y : R × localizationLocalizationSubmodule M N, x * algebraMap R T y.2 = algebraMap R T y.1 :=
-  by 
+  by
   rcases IsLocalization.surj N x with ⟨⟨y, s⟩, eq₁⟩
   -- x = y / s
   rcases IsLocalization.surj M y with ⟨⟨z, t⟩, eq₂⟩
@@ -146,7 +147,8 @@ include M
 localization is a localization.
 -/
 theorem localization_localization_is_localization_of_has_all_units [IsLocalization N T]
-    (H : ∀ x : S, IsUnit x → x ∈ N) : IsLocalization (N.comap (algebraMap R S)) T := by
+    (H : ∀ x : S, IsUnit x → x ∈ N) : IsLocalization (N.comap (algebraMap R S)) T :=
+  by
   convert localization_localization_is_localization M N T
   symm
   rw [sup_eq_left]
@@ -159,13 +161,14 @@ theorem localization_localization_is_localization_of_has_all_units [IsLocalizati
 Given a submodule `M ⊆ R` and a prime ideal `p` of `S = M⁻¹R`, with `f : R →+* S` the localization
 map, then `T = Sₚ` is the localization of `R` at `f⁻¹(p)`.
 -/
-theorem is_localization_is_localization_at_prime_is_localization (p : Ideal S) [Hp : p.IsPrime]
-    [IsLocalization.AtPrime T p] : IsLocalization.AtPrime T (p.comap (algebraMap R S)) := by
+theorem isLocalizationIsLocalizationAtPrimeIsLocalization (p : Ideal S) [Hp : p.IsPrime]
+    [IsLocalization.AtPrime T p] : IsLocalization.AtPrime T (p.comap (algebraMap R S)) :=
+  by
   apply localization_localization_is_localization_of_has_all_units M p.prime_compl T
   intro x hx hx'
   exact (Hp.1 : ¬_) (p.eq_top_of_is_unit_mem hx' hx)
 #align
-  is_localization.is_localization_is_localization_at_prime_is_localization IsLocalization.is_localization_is_localization_at_prime_is_localization
+  is_localization.is_localization_is_localization_at_prime_is_localization IsLocalization.isLocalizationIsLocalizationAtPrimeIsLocalization
 
 instance (p : Ideal (Localization M)) [p.IsPrime] : Algebra R (Localization.AtPrime p) :=
   Localization.algebra
@@ -174,11 +177,11 @@ instance (p : Ideal (Localization M)) [p.IsPrime] :
     IsScalarTower R (Localization M) (Localization.AtPrime p) :=
   IsScalarTower.of_algebra_map_eq' rfl
 
-instance localization_localization_at_prime_is_localization (p : Ideal (Localization M))
-    [p.IsPrime] : IsLocalization.AtPrime (Localization.AtPrime p) (p.comap (algebraMap R _)) :=
-  is_localization_is_localization_at_prime_is_localization M _ _
+instance localizationLocalizationAtPrimeIsLocalization (p : Ideal (Localization M)) [p.IsPrime] :
+    IsLocalization.AtPrime (Localization.AtPrime p) (p.comap (algebraMap R _)) :=
+  isLocalizationIsLocalizationAtPrimeIsLocalization M _ _
 #align
-  is_localization.localization_localization_at_prime_is_localization IsLocalization.localization_localization_at_prime_is_localization
+  is_localization.localization_localization_at_prime_is_localization IsLocalization.localizationLocalizationAtPrimeIsLocalization
 
 /-- Given a submodule `M ⊆ R` and a prime ideal `p` of `M⁻¹R`, with `f : R →+* S` the localization
 map, then `(M⁻¹R)ₚ` is isomorphic (as an `R`-algebra) to the localization of `R` at `f⁻¹(p)`.
@@ -215,7 +218,7 @@ theorem localization_is_scalar_tower_of_submonoid_le (M N : Submonoid R) (h : M 
 noncomputable instance (x : Ideal R) [H : x.IsPrime] [IsDomain R] :
     Algebra (Localization.AtPrime x) (Localization (nonZeroDivisors R)) :=
   localizationAlgebraOfSubmonoidLe _ _ x.primeCompl (nonZeroDivisors R)
-    (by 
+    (by
       intro a ha
       rw [mem_non_zero_divisors_iff_ne_zero]
       exact fun h => ha (h.symm ▸ x.zero_mem))
@@ -224,15 +227,16 @@ noncomputable instance (x : Ideal R) [H : x.IsPrime] [IsDomain R] :
 theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLocalization M S]
     [IsLocalization N T] [Algebra S T] [IsScalarTower R S T] :
     IsLocalization (N.map (algebraMap R S)) T :=
-  { map_units := by 
+  { map_units := by
       rintro ⟨_, ⟨y, hy, rfl⟩⟩
       convert IsLocalization.map_units T ⟨y, hy⟩
       exact (IsScalarTower.algebra_map_apply _ _ _ _).symm
-    surj := fun y => by 
+    surj := fun y => by
       obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj N y
       refine' ⟨⟨algebraMap _ _ x, _, _, s.prop, rfl⟩, _⟩
       simpa [← IsScalarTower.algebra_map_apply] using e
-    eq_iff_exists := fun x₁ x₂ => by
+    eq_iff_exists := fun x₁ x₂ =>
+      by
       obtain ⟨⟨y₁, s₁⟩, e₁⟩ := IsLocalization.surj M x₁
       obtain ⟨⟨y₂, s₂⟩, e₂⟩ := IsLocalization.surj M x₂
       refine' Iff.trans _ (Set.exists_image_iff (algebraMap R S) N fun c => x₁ * c = x₂ * c).symm
@@ -240,7 +244,7 @@ theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoc
       suffices
         algebraMap R T (y₁ * s₂) = algebraMap R T (y₂ * s₁) ↔
           ∃ a : N, algebraMap R S (a * (y₁ * s₂)) = algebraMap R S (a * (y₂ * s₁))
-        by 
+        by
         have h₁ := (IsLocalization.map_units T ⟨_, h s₁.prop⟩).mul_left_inj
         have h₂ := (IsLocalization.map_units T ⟨_, h s₂.prop⟩).mul_left_inj
         simp only [IsScalarTower.algebra_map_apply R S T, Subtype.coe_mk] at h₁ h₂
@@ -264,12 +268,12 @@ theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoc
 localization at `N` is equal to the localizaton of `M`. -/
 theorem is_localization_of_is_exists_mul_mem (M N : Submonoid R) [IsLocalization M S] (h : M ≤ N)
     (h' : ∀ x : N, ∃ m : R, m * x ∈ M) : IsLocalization N S :=
-  { map_units := fun y => by 
+  { map_units := fun y => by
       obtain ⟨m, hm⟩ := h' y
       have := IsLocalization.map_units S ⟨_, hm⟩
       erw [map_mul] at this
       exact (is_unit.mul_iff.mp this).2
-    surj := fun z => by 
+    surj := fun z => by
       obtain ⟨⟨y, s⟩, e⟩ := IsLocalization.surj M z
       exact ⟨⟨y, _, h s.prop⟩, e⟩
     eq_iff_exists := fun x₁ x₂ => by
@@ -294,7 +298,8 @@ variable (M)
 
 theorem is_fraction_ring_of_is_localization (S T : Type _) [CommRing S] [CommRing T] [Algebra R S]
     [Algebra R T] [Algebra S T] [IsScalarTower R S T] [IsLocalization M S] [IsFractionRing R T]
-    (hM : M ≤ nonZeroDivisors R) : IsFractionRing S T := by
+    (hM : M ≤ nonZeroDivisors R) : IsFractionRing S T :=
+  by
   have := is_localization_of_submonoid_le S T M (nonZeroDivisors R) _
   refine' @is_localization_of_is_exists_mul_mem _ _ _ _ _ _ this _ _
   · exact map_non_zero_divisors_le M S
@@ -314,7 +319,8 @@ theorem is_fraction_ring_of_is_localization (S T : Type _) [CommRing S] [CommRin
 
 theorem is_fraction_ring_of_is_domain_of_is_localization [IsDomain R] (S T : Type _) [CommRing S]
     [CommRing T] [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
-    [IsLocalization M S] [IsFractionRing R T] : IsFractionRing S T := by
+    [IsLocalization M S] [IsFractionRing R T] : IsFractionRing S T :=
+  by
   haveI := IsFractionRing.nontrivial R T
   haveI := (algebraMap S T).domain_nontrivial
   apply is_fraction_ring_of_is_localization M S T

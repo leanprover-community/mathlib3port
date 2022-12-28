@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.partial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,8 +58,8 @@ open Filter
 
 /-- The forward map of a filter under a relation. Generalization of `filter.map` to relations. Note
 that `rel.core` generalizes `set.preimage`. -/
-def rmap (r : Rel α β) (l : Filter α) :
-    Filter β where 
+def rmap (r : Rel α β) (l : Filter α) : Filter β
+    where
   sets := { s | r.core s ∈ l }
   univ_sets := by simp
   sets_of_superset s t hs st := mem_of_superset hs <| Rel.core_mono _ st
@@ -100,8 +100,8 @@ theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
 
 /-- One way of taking the inverse map of a filter under a relation. One generalization of
 `filter.comap` to relations. Note that `rel.core` generalizes `set.preimage`. -/
-def rcomap (r : Rel α β) (f : Filter β) :
-    Filter α where 
+def rcomap (r : Rel α β) (f : Filter β) : Filter α
+    where
   sets := Rel.image (fun s t => r.core s ⊆ t) f.sets
   univ_sets := ⟨Set.univ, univ_mem, Set.subset_univ _⟩
   sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
@@ -116,7 +116,7 @@ theorem rcomap_sets (r : Rel α β) (f : Filter β) :
 
 theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) :
     rcomap r (rcomap s l) = rcomap (r.comp s) l :=
-  filter_eq <| by 
+  filter_eq <| by
     ext t; simp [rcomap_sets, Rel.image, Rel.core_comp]; constructor
     · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
       exact ⟨v, vsets, Set.Subset.trans (Rel.core_mono _ hv) h⟩
@@ -130,7 +130,8 @@ theorem rcomap_compose (r : Rel α β) (s : Rel β γ) : rcomap r ∘ rcomap s =
 #align filter.rcomap_compose Filter.rcomap_compose
 
 theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
-    Rtendsto r l₁ l₂ ↔ l₁ ≤ l₂.rcomap r := by
+    Rtendsto r l₁ l₂ ↔ l₁ ≤ l₂.rcomap r :=
+  by
   rw [rtendsto_def]
   change (∀ s : Set β, s ∈ l₂.sets → r.core s ∈ l₁) ↔ l₁ ≤ rcomap r l₂
   simp [Filter.le_def, rcomap, Rel.mem_image]; constructor
@@ -143,8 +144,8 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
 -- and only if `s ∈ f'`. But the intersection of two sets satisfying the lhs may be empty.
 /-- One way of taking the inverse map of a filter under a relation. Generalization of `filter.comap`
 to relations. -/
-def rcomap' (r : Rel α β) (f : Filter β) :
-    Filter α where 
+def rcomap' (r : Rel α β) (f : Filter β) : Filter α
+    where
   sets := Rel.image (fun s t => r.Preimage s ⊆ t) f.sets
   univ_sets := ⟨Set.univ, univ_mem, Set.subset_univ _⟩
   sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
@@ -167,7 +168,7 @@ theorem rcomap'_sets (r : Rel α β) (f : Filter β) :
 @[simp]
 theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) :
     rcomap' r (rcomap' s l) = rcomap' (r.comp s) l :=
-  Filter.ext fun t => by 
+  Filter.ext fun t => by
     simp [rcomap'_sets, Rel.image, Rel.preimage_comp]; constructor
     · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
       exact ⟨v, vsets, (Rel.preimage_mono _ hv).trans h⟩
@@ -188,7 +189,8 @@ def Rtendsto' (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
 #align filter.rtendsto' Filter.Rtendsto'
 
 theorem rtendsto'_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
-    Rtendsto' r l₁ l₂ ↔ ∀ s ∈ l₂, r.Preimage s ∈ l₁ := by
+    Rtendsto' r l₁ l₂ ↔ ∀ s ∈ l₂, r.Preimage s ∈ l₁ :=
+  by
   unfold rtendsto' rcomap'; simp [le_def, Rel.mem_image]; constructor
   · exact fun h s hs => h _ _ hs Set.Subset.rfl
   · exact fun h s t ht => mem_of_superset (h t ht)
@@ -236,7 +238,7 @@ theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →.
 #align filter.ptendsto_iff_rtendsto Filter.ptendsto_iff_rtendsto
 
 theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (Pfun.res f s) l = map f (l ⊓ 𝓟 s) :=
-  by 
+  by
   ext t
   simp only [Pfun.core_res, mem_pmap, mem_map, mem_inf_principal, imp_iff_not_or]
   rfl
@@ -248,7 +250,8 @@ theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) 
 #align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendsto
 
 theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :
-    Tendsto f l₁ l₂ ↔ Ptendsto (Pfun.res f Set.univ) l₁ l₂ := by
+    Tendsto f l₁ l₂ ↔ Ptendsto (Pfun.res f Set.univ) l₁ l₂ :=
+  by
   rw [← tendsto_iff_ptendsto]
   simp [principal_univ]
 #align filter.tendsto_iff_ptendsto_univ Filter.tendsto_iff_ptendsto_univ
@@ -272,13 +275,15 @@ theorem ptendsto'_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :
 #align filter.ptendsto'_def Filter.ptendsto'_def
 
 theorem ptendsto_of_ptendsto' {f : α →. β} {l₁ : Filter α} {l₂ : Filter β} :
-    Ptendsto' f l₁ l₂ → Ptendsto f l₁ l₂ := by
+    Ptendsto' f l₁ l₂ → Ptendsto f l₁ l₂ :=
+  by
   rw [ptendsto_def, ptendsto'_def]
   exact fun h s sl₂ => mem_of_superset (h s sl₂) (Pfun.preimage_subset_core _ _)
 #align filter.ptendsto_of_ptendsto' Filter.ptendsto_of_ptendsto'
 
 theorem ptendsto'_of_ptendsto {f : α →. β} {l₁ : Filter α} {l₂ : Filter β} (h : f.Dom ∈ l₁) :
-    Ptendsto f l₁ l₂ → Ptendsto' f l₁ l₂ := by
+    Ptendsto f l₁ l₂ → Ptendsto' f l₁ l₂ :=
+  by
   rw [ptendsto_def, ptendsto'_def]
   intro h' s sl₂
   rw [Pfun.preimage_eq]

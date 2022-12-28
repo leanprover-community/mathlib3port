@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.selmer_group
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,8 @@ def valuationOfNeZeroToFun (x : Kˣ) : Multiplicative ℤ :=
 
 @[simp]
 theorem valuation_of_ne_zero_to_fun_eq (x : Kˣ) :
-    (v.valuationOfNeZeroToFun x : ℤₘ₀) = v.Valuation (x : K) := by
+    (v.valuationOfNeZeroToFun x : ℤₘ₀) = v.Valuation (x : K) :=
+  by
   change _ = _ * _
   rw [Units.val_inv_eq_inv_val]
   change _ = ite _ _ _ * (ite (coe _ = _) _ _)⁻¹
@@ -109,13 +110,13 @@ theorem valuation_of_ne_zero_to_fun_eq (x : Kˣ) :
   is_dedekind_domain.height_one_spectrum.valuation_of_ne_zero_to_fun_eq IsDedekindDomain.HeightOneSpectrum.valuation_of_ne_zero_to_fun_eq
 
 /-- The multiplicative `v`-adic valuation on `Kˣ`. -/
-def valuationOfNeZero :
-    Kˣ →* Multiplicative ℤ where 
+def valuationOfNeZero : Kˣ →* Multiplicative ℤ
+    where
   toFun := v.valuationOfNeZeroToFun
-  map_one' := by 
+  map_one' := by
     rw [← WithZero.coe_inj, valuation_of_ne_zero_to_fun_eq]
     exact map_one _
-  map_mul' _ _ := by 
+  map_mul' _ _ := by
     rw [← WithZero.coe_inj, WithZero.coe_mul]
     simp only [valuation_of_ne_zero_to_fun_eq]
     exact map_mul _ _ _
@@ -130,7 +131,8 @@ theorem valuation_of_ne_zero_eq (x : Kˣ) : (v.valuationOfNeZero x : ℤₘ₀) 
 
 @[simp]
 theorem valuation_of_unit_eq (x : Rˣ) :
-    v.valuationOfNeZero (Units.map (algebraMap R K : R →* K) x) = 1 := by
+    v.valuationOfNeZero (Units.map (algebraMap R K : R →* K) x) = 1 :=
+  by
   rw [← WithZero.coe_inj, valuation_of_ne_zero_eq, Units.coe_map, eq_iff_le_not_lt]
   constructor
   · exact v.valuation_le_one x
@@ -151,7 +153,7 @@ def valuationOfNeZeroMod (n : ℕ) : (K/n) →* Multiplicative (Zmod n) :=
   (Int.quotientZmultiplesNatEquivZmod n).toMultiplicative.toMonoidHom.comp <|
     QuotientGroup.map (powMonoidHom n : Kˣ →* Kˣ).range (AddSubgroup.zmultiples (n : ℤ)).toSubgroup
       v.valuationOfNeZero
-      (by 
+      (by
         rintro _ ⟨x, rfl⟩
         exact
           ⟨v.valuation_of_ne_zero x, by
@@ -176,9 +178,8 @@ variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /-- The Selmer group `K⟮S, n⟯`. -/
-def selmerGroup :
-    Subgroup <|
-      K/n where 
+def selmerGroup : Subgroup <| K/n
+    where
   carrier := { x : K/n | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).valuationOfNeZeroMod n x = 1 }
   one_mem' _ _ := by rw [map_one]
   mul_mem' _ _ hx hy v hv := by rw [map_mul, hx v hv, hy v hv, one_mul]
@@ -194,19 +195,16 @@ theorem monotone (hS : S ≤ S') : K⟮S,n⟯ ≤ K⟮S',n⟯ := fun _ hx v => h
 #align is_dedekind_domain.selmer_group.monotone IsDedekindDomain.selmerGroup.monotone
 
 /-- The multiplicative `v`-adic valuations on `K⟮S, n⟯` for all `v ∈ S`. -/
-def valuation :
-    K⟮S,n⟯ →*
-      S →
-        Multiplicative
-          (Zmod
-            n) where 
+def valuation : K⟮S,n⟯ →* S → Multiplicative (Zmod n)
+    where
   toFun x v := (v : HeightOneSpectrum R).valuationOfNeZeroMod n (x : K/n)
   map_one' := funext fun v => map_one _
   map_mul' x y := funext fun v => map_mul _ x y
 #align is_dedekind_domain.selmer_group.valuation IsDedekindDomain.selmerGroup.valuation
 
 theorem valuation_ker_eq :
-    valuation.ker = K⟮(∅ : Set <| HeightOneSpectrum R),n⟯.subgroupOf (K⟮S,n⟯) := by
+    valuation.ker = K⟮(∅ : Set <| HeightOneSpectrum R),n⟯.subgroupOf (K⟮S,n⟯) :=
+  by
   ext ⟨_, hx⟩
   constructor
   · intro hx' v _
@@ -218,12 +216,8 @@ theorem valuation_ker_eq :
   is_dedekind_domain.selmer_group.valuation_ker_eq IsDedekindDomain.selmerGroup.valuation_ker_eq
 
 /-- The natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/
-def fromUnit {n : ℕ} :
-    Rˣ →*
-      K⟮(∅ :
-          Set <|
-            HeightOneSpectrum
-              R),n⟯ where 
+def fromUnit {n : ℕ} : Rˣ →* K⟮(∅ : Set <| HeightOneSpectrum R),n⟯
+    where
   toFun x :=
     ⟨QuotientGroup.mk <| Units.map (algebraMap R K).toMonoidHom x, fun v _ =>
       v.valuation_of_unit_mod_eq n x⟩
@@ -232,7 +226,8 @@ def fromUnit {n : ℕ} :
 #align is_dedekind_domain.selmer_group.from_unit IsDedekindDomain.selmerGroup.fromUnit
 
 theorem from_unit_ker [hn : Fact <| 0 < n] :
-    (@fromUnit R _ _ _ K _ _ _ n).ker = (powMonoidHom n : Rˣ →* Rˣ).range := by
+    (@fromUnit R _ _ _ K _ _ _ n).ker = (powMonoidHom n : Rˣ →* Rˣ).range :=
+  by
   ext ⟨_, _, _, _⟩
   constructor
   · intro hx

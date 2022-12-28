@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 
 ! This file was ported from Lean 3 source module combinatorics.derangements.finite
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,8 @@ theorem card_derangements_fin_add_two (n : ℕ) :
       (n + 1) * card (derangements (Fin n)) + (n + 1) * card (derangements (Fin (n + 1))) :=
   by
   -- get some basic results about the size of fin (n+1) plus or minus an element
-  have h1 : ∀ a : Fin (n + 1), card ({a}ᶜ : Set (Fin (n + 1))) = card (Fin n) := by
+  have h1 : ∀ a : Fin (n + 1), card ({a}ᶜ : Set (Fin (n + 1))) = card (Fin n) :=
+    by
     intro a
     simp only [Fintype.card_fin, Finset.card_fin, Fintype.card_of_finset, Finset.filter_ne' _ a,
       Set.mem_compl_singleton_iff, Finset.card_erase_of_mem (Finset.mem_univ a),
@@ -90,7 +91,8 @@ theorem num_derangements_add_two (n : ℕ) :
 #align num_derangements_add_two num_derangements_add_two
 
 theorem num_derangements_succ (n : ℕ) :
-    (numDerangements (n + 1) : ℤ) = (n + 1) * (numDerangements n : ℤ) - (-1) ^ n := by
+    (numDerangements (n + 1) : ℤ) = (n + 1) * (numDerangements n : ℤ) - (-1) ^ n :=
+  by
   induction' n with n hn
   · rfl
   · simp only [num_derangements_add_two, hn, pow_succ, Int.ofNat_mul, Int.ofNat_add, Int.ofNat_succ]
@@ -98,7 +100,8 @@ theorem num_derangements_succ (n : ℕ) :
 #align num_derangements_succ num_derangements_succ
 
 theorem card_derangements_fin_eq_num_derangements {n : ℕ} :
-    card (derangements (Fin n)) = numDerangements n := by
+    card (derangements (Fin n)) = numDerangements n :=
+  by
   induction' n using Nat.strong_induction_on with n hyp
   obtain _ | _ | n := n; · rfl; · rfl
   -- knock out cases 0 and 1
@@ -109,7 +112,8 @@ theorem card_derangements_fin_eq_num_derangements {n : ℕ} :
 #align card_derangements_fin_eq_num_derangements card_derangements_fin_eq_num_derangements
 
 theorem card_derangements_eq_num_derangements (α : Type _) [Fintype α] [DecidableEq α] :
-    card (derangements α) = numDerangements (card α) := by
+    card (derangements α) = numDerangements (card α) :=
+  by
   rw [← card_derangements_invariant (card_fin _)]
   exact card_derangements_fin_eq_num_derangements
 #align card_derangements_eq_num_derangements card_derangements_eq_num_derangements
@@ -117,7 +121,7 @@ theorem card_derangements_eq_num_derangements (α : Type _) [Fintype α] [Decida
 theorem num_derangements_sum (n : ℕ) :
     (numDerangements n : ℤ) =
       ∑ k in Finset.range (n + 1), (-1 : ℤ) ^ k * Nat.ascFactorial k (n - k) :=
-  by 
+  by
   induction' n with n hn; · rfl
   rw [Finset.sum_range_succ, num_derangements_succ, hn, Finset.mul_sum, tsub_self,
     Nat.asc_factorial_zero, Int.ofNat_one, mul_one, pow_succ, neg_one_mul, sub_eq_add_neg,

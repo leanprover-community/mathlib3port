@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Compactum
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,8 @@ def incl (X : CompactumCat) : X → Ultrafilter X :=
 #align Compactum.incl CompactumCat.incl
 
 @[simp]
-theorem str_incl (X : CompactumCat) (x : X) : X.str (X.incl x) = x := by
+theorem str_incl (X : CompactumCat) (x : X) : X.str (X.incl x) = x :=
+  by
   change (β.η.app _ ≫ X.a) _ = _
   rw [monad.algebra.unit]
   rfl
@@ -142,7 +143,8 @@ theorem str_incl (X : CompactumCat) (x : X) : X.str (X.incl x) = x := by
 
 @[simp]
 theorem str_hom_commute (X Y : CompactumCat) (f : X ⟶ Y) (xs : Ultrafilter X) :
-    f (X.str xs) = Y.str (map f xs) := by
+    f (X.str xs) = Y.str (map f xs) :=
+  by
   change (X.a ≫ f.f) _ = _
   rw [← f.h]
   rfl
@@ -150,23 +152,24 @@ theorem str_hom_commute (X Y : CompactumCat) (f : X ⟶ Y) (xs : Ultrafilter X) 
 
 @[simp]
 theorem join_distrib (X : CompactumCat) (uux : Ultrafilter (Ultrafilter X)) :
-    X.str (X.join uux) = X.str (map X.str uux) := by
+    X.str (X.join uux) = X.str (map X.str uux) :=
+  by
   change (β.μ.app _ ≫ X.a) _ = _
   rw [monad.algebra.assoc]
   rfl
 #align Compactum.join_distrib CompactumCat.join_distrib
 
-instance {X : CompactumCat} :
-    TopologicalSpace
-      X where 
+instance {X : CompactumCat} : TopologicalSpace X
+    where
   IsOpen U := ∀ F : Ultrafilter X, X.str F ∈ U → U ∈ F
   is_open_univ _ _ := Filter.univ_sets _
   is_open_inter S T h3 h4 h5 h6 := Filter.inter_sets _ (h3 _ h6.1) (h4 _ h6.2)
   is_open_sUnion := fun S h1 F ⟨T, hT, h2⟩ =>
-    mem_of_superset (h1 T hT _ h2) (Set.subset_sUnion_of_mem hT)
+    mem_of_superset (h1 T hT _ h2) (Set.subset_unionₛ_of_mem hT)
 
 theorem is_closed_iff {X : CompactumCat} (S : Set X) :
-    IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S := by
+    IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S :=
+  by
   rw [← is_open_compl_iff]
   constructor
   · intro cond F h
@@ -180,7 +183,8 @@ theorem is_closed_iff {X : CompactumCat} (S : Set X) :
     exacts[absurd (h1 h) h2, h]
 #align Compactum.is_closed_iff CompactumCat.is_closed_iff
 
-instance {X : CompactumCat} : CompactSpace X := by
+instance {X : CompactumCat} : CompactSpace X :=
+  by
   constructor
   rw [is_compact_iff_ultrafilter_le_nhds]
   intro F h
@@ -200,7 +204,7 @@ private def cl {X : CompactumCat} (A : Set X) : Set X :=
 #align Compactum.cl Compactum.cl
 
 private theorem basic_inter {X : CompactumCat} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B :=
-  by 
+  by
   ext G
   constructor
   · intro hG
@@ -215,7 +219,8 @@ private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a h
 #align Compactum.subset_cl Compactum.subset_cl
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
-private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
+private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A :=
+  by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
@@ -226,19 +231,22 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
   let C1 := insert AA C0
   let C2 := finite_inter_closure C1
   -- C0 is closed under intersections.
-  have claim1 : ∀ (B) (_ : B ∈ C0) (C) (_ : C ∈ C0), B ∩ C ∈ C0 := by
+  have claim1 : ∀ (B) (_ : B ∈ C0) (C) (_ : C ∈ C0), B ∩ C ∈ C0 :=
+    by
     rintro B ⟨Q, hQ, rfl⟩ C ⟨R, hR, rfl⟩
     use Q ∩ R
     simp only [and_true_iff, eq_self_iff_true, Set.preimage_inter, Subtype.val_eq_coe]
     exact inter_sets _ hQ hR
   -- All sets in C0 are nonempty.
-  have claim2 : ∀ B ∈ C0, Set.Nonempty B := by
+  have claim2 : ∀ B ∈ C0, Set.Nonempty B :=
+    by
     rintro B ⟨Q, hQ, rfl⟩
     obtain ⟨q⟩ := Filter.nonempty_of_mem hQ
     use X.incl q
     simpa
   -- The intersection of AA with every set in C0 is nonempty.
-  have claim3 : ∀ B ∈ C0, (AA ∩ B).Nonempty := by
+  have claim3 : ∀ B ∈ C0, (AA ∩ B).Nonempty :=
+    by
     rintro B ⟨Q, hQ, rfl⟩
     have : (Q ∩ cl A).Nonempty := Filter.nonempty_of_mem (inter_mem hQ hF)
     rcases this with ⟨q, hq1, P, hq2, hq3⟩
@@ -246,7 +254,8 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
     rw [← hq3] at hq1
     simpa
   -- Suffices to show that the intersection of any finite subcollection of C1 is nonempty.
-  suffices ∀ T : fsu, ι T ⊆ C1 → (⋂₀ ι T).Nonempty by
+  suffices ∀ T : fsu, ι T ⊆ C1 → (⋂₀ ι T).Nonempty
+    by
     obtain ⟨G, h1⟩ := exists_ultrafilter_of_finite_inter_nonempty _ this
     use X.join G
     have : G.map X.str = F := Ultrafilter.coe_le_coe.1 fun S hS => h1 (Or.inr ⟨S, hS, rfl⟩)
@@ -257,8 +266,10 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
   -- C0 is closed under finite intersections by claim1.
   have claim5 : HasFiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
   -- Every element of C2 is nonempty.
-  have claim6 : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty := by
-    suffices ∀ P ∈ C2, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
+  have claim6 : ∀ P ∈ C2, (P : Set (Ultrafilter X)).Nonempty :=
+    by
+    suffices ∀ P ∈ C2, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q
+      by
       intro P hP
       cases this P hP
       · exact claim2 _ h
@@ -275,7 +286,8 @@ private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
   exact finite_inter_closure.basic (@hT t ht)
 #align Compactum.cl_cl Compactum.cl_cl
 
-theorem is_closed_cl {X : CompactumCat} (A : Set X) : IsClosed (cl A) := by
+theorem is_closed_cl {X : CompactumCat} (A : Set X) : IsClosed (cl A) :=
+  by
   rw [is_closed_iff]
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
@@ -294,7 +306,8 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
   let T2 := finite_inter_closure T1
   intro cond
   -- If F contains a closed set A, then x is contained in A.
-  have claim1 : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A := by
+  have claim1 : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A :=
+    by
     intro A hA h
     by_contra H
     rw [le_nhds_iff] at cond
@@ -302,25 +315,31 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
     rw [Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem] at cond
     contradiction
   -- If A ∈ F, then x ∈ cl A.
-  have claim2 : ∀ A : Set X, A ∈ F → x ∈ cl A := by
+  have claim2 : ∀ A : Set X, A ∈ F → x ∈ cl A :=
+    by
     intro A hA
     exact claim1 (cl A) (is_closed_cl A) (mem_of_superset hA (subset_cl A))
   -- T0 is closed under intersections.
-  have claim3 : ∀ (S1) (_ : S1 ∈ T0) (S2) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0 := by
+  have claim3 : ∀ (S1) (_ : S1 ∈ T0) (S2) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0 :=
+    by
     rintro S1 ⟨S1, hS1, rfl⟩ S2 ⟨S2, hS2, rfl⟩
     exact ⟨S1 ∩ S2, inter_mem hS1 hS2, by simp [basic_inter]⟩
   -- For every S ∈ T0, the intersection AA ∩ S is nonempty.
-  have claim4 : ∀ S ∈ T0, (AA ∩ S).Nonempty := by
+  have claim4 : ∀ S ∈ T0, (AA ∩ S).Nonempty :=
+    by
     rintro S ⟨S, hS, rfl⟩
     rcases claim2 _ hS with ⟨G, hG, hG2⟩
     exact ⟨G, hG2, hG⟩
   -- Every element of T0 is nonempty.
-  have claim5 : ∀ S ∈ T0, Set.Nonempty S := by
+  have claim5 : ∀ S ∈ T0, Set.Nonempty S :=
+    by
     rintro S ⟨S, hS, rfl⟩
     exact ⟨F, hS⟩
   -- Every element of T2 is nonempty.
-  have claim6 : ∀ S ∈ T2, Set.Nonempty S := by
-    suffices ∀ S ∈ T2, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
+  have claim6 : ∀ S ∈ T2, Set.Nonempty S :=
+    by
+    suffices ∀ S ∈ T2, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q
+      by
       intro S hS
       cases' this _ hS with h h
       · exact claim5 S h
@@ -338,10 +357,12 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
       · exact claim3
     · exact hS
   -- It suffices to show that the intersection of any finite subset of T1 is nonempty.
-  suffices ∀ F : fsu, ↑F ⊆ T1 → (⋂₀ ι F).Nonempty by
+  suffices ∀ F : fsu, ↑F ⊆ T1 → (⋂₀ ι F).Nonempty
+    by
     obtain ⟨G, h1⟩ := Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this
     have c1 : X.join G = F := Ultrafilter.coe_le_coe.1 fun P hP => h1 (Or.inr ⟨P, hP, rfl⟩)
-    have c2 : G.map X.str = X.incl x := by
+    have c2 : G.map X.str = X.incl x :=
+      by
       refine' Ultrafilter.coe_le_coe.1 fun P hP => _
       apply mem_of_superset (h1 (Or.inl rfl))
       rintro x ⟨rfl⟩
@@ -359,18 +380,21 @@ theorem le_nhds_of_str_eq {X : CompactumCat} (F : Ultrafilter X) (x : X) : X.str
 #align Compactum.le_nhds_of_str_eq CompactumCat.le_nhds_of_str_eq
 
 -- All the hard work above boils down to this t2_space instance.
-instance {X : CompactumCat} : T2Space X := by
+instance {X : CompactumCat} : T2Space X :=
+  by
   rw [t2_iff_ultrafilter]
   intro _ _ F hx hy
   rw [← str_eq_of_le_nhds _ _ hx, ← str_eq_of_le_nhds _ _ hy]
 
 /-- The structure map of a compactum actually computes limits. -/
-theorem Lim_eq_str {X : CompactumCat} (F : Ultrafilter X) : F.lim = X.str F := by
+theorem Lim_eq_str {X : CompactumCat} (F : Ultrafilter X) : F.lim = X.str F :=
+  by
   rw [Ultrafilter.Lim_eq_iff_le_nhds, le_nhds_iff]
   tauto
 #align Compactum.Lim_eq_str CompactumCat.Lim_eq_str
 
-theorem cl_eq_closure {X : CompactumCat} (A : Set X) : cl A = closure A := by
+theorem cl_eq_closure {X : CompactumCat} (A : Set X) : cl A = closure A :=
+  by
   ext
   rw [mem_closure_iff_ultrafilter]
   constructor
@@ -381,7 +405,8 @@ theorem cl_eq_closure {X : CompactumCat} (A : Set X) : cl A = closure A := by
 #align Compactum.cl_eq_closure CompactumCat.cl_eq_closure
 
 /-- Any morphism of compacta is continuous. -/
-theorem continuous_of_hom {X Y : CompactumCat} (f : X ⟶ Y) : Continuous f := by
+theorem continuous_of_hom {X Y : CompactumCat} (f : X ⟶ Y) : Continuous f :=
+  by
   rw [continuous_iff_ultrafilter]
   intro x _ h
   rw [tendsto, ← coe_map]
@@ -391,26 +416,30 @@ theorem continuous_of_hom {X Y : CompactumCat} (f : X ⟶ Y) : Continuous f := b
 
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
 noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X]
-    [T2Space X] : CompactumCat where 
+    [T2Space X] : CompactumCat where
   a := X
   a := Ultrafilter.lim
-  unit' := by 
+  unit' := by
     ext x
     exact Lim_eq (pure_le_nhds _)
-  assoc' := by 
+  assoc' := by
     ext FF
     change Ultrafilter (Ultrafilter X) at FF
     set x := (Ultrafilter.map Ultrafilter.lim FF).lim with c1
-    have c2 : ∀ (U : Set X) (F : Ultrafilter X), F.lim ∈ U → IsOpen U → U ∈ F := by
+    have c2 : ∀ (U : Set X) (F : Ultrafilter X), F.lim ∈ U → IsOpen U → U ∈ F :=
+      by
       intro U F h1 hU
       exact c1 ▸ is_open_iff_ultrafilter.mp hU _ h1 _ (Ultrafilter.le_nhds_Lim _)
-    have c3 : ↑(Ultrafilter.map Ultrafilter.lim FF) ≤ 𝓝 x := by
+    have c3 : ↑(Ultrafilter.map Ultrafilter.lim FF) ≤ 𝓝 x :=
+      by
       rw [le_nhds_iff]
       intro U hx hU
       exact mem_coe.2 (c2 _ _ (by rwa [← c1]) hU)
-    have c4 : ∀ U : Set X, x ∈ U → IsOpen U → { G : Ultrafilter X | U ∈ G } ∈ FF := by
+    have c4 : ∀ U : Set X, x ∈ U → IsOpen U → { G : Ultrafilter X | U ∈ G } ∈ FF :=
+      by
       intro U hx hU
-      suffices Ultrafilter.lim ⁻¹' U ∈ FF by
+      suffices Ultrafilter.lim ⁻¹' U ∈ FF
+        by
         apply mem_of_superset this
         intro P hP
         exact c2 U P hP hU
@@ -423,7 +452,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
 /-- Any continuous map between Compacta is a morphism of compacta. -/
 def homOfContinuous {X Y : CompactumCat} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
   { f
-    h' := by 
+    h' := by
       rw [continuous_iff_ultrafilter] at cont
       ext (F : Ultrafilter X)
       specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
@@ -434,8 +463,8 @@ def homOfContinuous {X Y : CompactumCat} (f : X → Y) (cont : Continuous f) : X
 end CompactumCat
 
 /-- The functor functor from Compactum to CompHaus. -/
-def compactumToCompHaus :
-    CompactumCat ⥤ CompHausCat where 
+def compactumToCompHaus : CompactumCat ⥤ CompHausCat
+    where
   obj X := { toTop := { α := X } }
   map X Y f :=
     { toFun := f
@@ -450,13 +479,13 @@ def full : Full compactumToCompHaus.{u} where preimage X Y f := CompactumCat.hom
 
 /-- The functor Compactum_to_CompHaus is faithful. -/
 theorem faithful : Faithful compactumToCompHaus :=
-  {  }
+  { }
 #align Compactum_to_CompHaus.faithful compactumToCompHaus.faithful
 
 /-- This definition is used to prove essential surjectivity of Compactum_to_CompHaus. -/
 def isoOfTopologicalSpace {D : CompHausCat} :
-    compactumToCompHaus.obj (CompactumCat.ofTopologicalSpace D) ≅
-      D where 
+    compactumToCompHaus.obj (CompactumCat.ofTopologicalSpace D) ≅ D
+    where
   Hom :=
     { toFun := id
       continuous_to_fun :=
@@ -466,7 +495,7 @@ def isoOfTopologicalSpace {D : CompHausCat} :
   inv :=
     { toFun := id
       continuous_to_fun :=
-        continuous_def.2 fun _ h1 => by 
+        continuous_def.2 fun _ h1 => by
           rw [is_open_iff_ultrafilter']
           intro _ h2
           exact h1 _ h2 }
@@ -478,7 +507,8 @@ theorem ess_surj : EssSurj compactumToCompHaus :=
 #align Compactum_to_CompHaus.ess_surj compactumToCompHaus.ess_surj
 
 /-- The functor Compactum_to_CompHaus is an equivalence of categories. -/
-noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus := by
+noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus :=
+  by
   apply equivalence.of_fully_faithfully_ess_surj _
   exact compactumToCompHaus.full
   exact compactumToCompHaus.faithful
@@ -491,7 +521,8 @@ end compactumToCompHaus
 `Compactum_to_CompHaus`. -/
 def compactumToCompHausCompForget :
     compactumToCompHaus ⋙ CategoryTheory.forget CompHausCat ≅ CompactumCat.forget :=
-  (NatIso.ofComponents fun X => eqToIso rfl) <| by
+  (NatIso.ofComponents fun X => eqToIso rfl) <|
+    by
     intro X Y f
     dsimp
     simpa
@@ -504,7 +535,8 @@ Once we have the API to transfer monadicity of functors along such isomorphisms,
 the instance `creates_limits (forget CompHaus)` can be deduced from this
 monadicity.
 -/
-noncomputable instance CompHausCat.forgetCreatesLimits : CreatesLimits (forget CompHausCat) := by
+noncomputable instance CompHausCat.forgetCreatesLimits : CreatesLimits (forget CompHausCat) :=
+  by
   let e : forget CompHausCat ≅ Compactum_to_CompHaus.inv ⋙ CompactumCat.forget :=
     _ ≪≫ iso_whisker_left _ compactumToCompHausCompForget
   swap
@@ -515,7 +547,8 @@ noncomputable instance CompHausCat.forgetCreatesLimits : CreatesLimits (forget C
   exact creates_limits_of_nat_iso e.symm
 #align CompHaus.forget_creates_limits CompHausCat.forgetCreatesLimits
 
-noncomputable instance ProfiniteCat.forgetCreatesLimits : CreatesLimits (forget ProfiniteCat) := by
+noncomputable instance ProfiniteCat.forgetCreatesLimits : CreatesLimits (forget ProfiniteCat) :=
+  by
   change creates_limits (profiniteToCompHaus ⋙ forget _)
   infer_instance
 #align Profinite.forget_creates_limits ProfiniteCat.forgetCreatesLimits

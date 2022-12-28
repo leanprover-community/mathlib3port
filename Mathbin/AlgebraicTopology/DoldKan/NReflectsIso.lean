@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.n_reflects_iso
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,10 +44,11 @@ variable {C : Type _} [Category C] [Preadditive C]
 open MorphComponents
 
 instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)) :=
-  ⟨fun X Y f => by 
+  ⟨fun X Y f => by
     intro
     -- restating the result in a way that allows induction on the degree n
-    suffices ∀ n : ℕ, is_iso (f.app (op [n])) by
+    suffices ∀ n : ℕ, is_iso (f.app (op [n]))
+      by
       haveI : ∀ Δ : SimplexCategoryᵒᵖ, is_iso (f.app Δ) := fun Δ => this Δ.unop.len
       apply nat_iso.is_iso_of_is_iso_app
     -- restating the assumption in a more practical form
@@ -69,8 +70,8 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
       tauto
     -- induction step
     · haveI := hn
-      use
-        φ { a := P_infty.f (n + 1) ≫ (inv (N₁.map f)).f.f (n + 1)
+      use φ {
+            a := P_infty.f (n + 1) ≫ (inv (N₁.map f)).f.f (n + 1)
             b := fun i => inv (f.app (op [n])) ≫ X.σ i }
       simp only [morph_components.id, ← id_φ, ← pre_comp_φ, pre_comp, ← post_comp_φ, post_comp,
         P_infty_f_naturality_assoc, is_iso.hom_inv_id_assoc, assoc, is_iso.inv_hom_id_assoc,
@@ -83,7 +84,7 @@ theorem compatibility_N₂_N₁_karoubi :
         N₁ ⋙
           (karoubiChainComplexEquivalence (Karoubi C) ℕ).Functor ⋙
             Functor.mapHomologicalComplex (KaroubiKaroubi.equivalence C).inverse _ :=
-  by 
+  by
   refine' CategoryTheory.Functor.ext (fun P => _) fun P Q f => _
   · refine' HomologicalComplex.ext _ _
     · ext n
@@ -112,7 +113,7 @@ theorem compatibility_N₂_N₁_karoubi :
 reflects isomorphisms from the fact that
 `N₁ : simplicial_object (karoubi C) ⥤ karoubi (chain_complex (karoubi C) ℕ)` does. -/
 instance : ReflectsIsomorphisms (n₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ)) :=
-  ⟨fun X Y f => by 
+  ⟨fun X Y f => by
     intro
     -- The following functor `F` reflects isomorphism because it is
     -- a composition of four functors which reflects isomorphisms.
@@ -123,7 +124,7 @@ instance : ReflectsIsomorphisms (n₂ : Karoubi (SimplicialObject C) ⥤ Karoubi
           (karoubi_chain_complex_equivalence (karoubi C) ℕ).Functor ⋙
             functor.map_homological_complex (karoubi_karoubi.equivalence C).inverse
               (ComplexShape.down ℕ)
-    have : is_iso (F.map f) := by 
+    have : is_iso (F.map f) := by
       dsimp only [F]
       rw [← compatibility_N₂_N₁_karoubi, functor.comp_map]
       apply functor.map_is_iso

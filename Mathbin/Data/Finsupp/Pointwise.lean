@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.pointwise
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,8 @@ theorem mul_apply {g₁ g₂ : α →₀ β} {a : α} : (g₁ * g₂) a = g₁ a
 #align finsupp.mul_apply Finsupp.mul_apply
 
 theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} :
-    (g₁ * g₂).support ⊆ g₁.support ∩ g₂.support := by
+    (g₁ * g₂).support ⊆ g₁.support ∩ g₂.support :=
+  by
   intro a h
   simp only [mul_apply, mem_support_iff] at h
   simp only [mem_support_iff, mem_inter, Ne.def]
@@ -97,12 +98,10 @@ instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
 -- TODO can this be generalized in the direction of `pi.has_smul'`
 -- (i.e. dependent functions and finsupps)
 -- TODO in theory this could be generalised, we only really need `smul_zero` for the definition
-instance pointwiseScalar [Semiring β] :
-    HasSmul (α → β)
-      (α →₀
-        β) where smul f g :=
+instance pointwiseScalar [Semiring β] : HasSmul (α → β) (α →₀ β)
+    where smul f g :=
     Finsupp.ofSupportFinite (fun a => f a • g a)
-      (by 
+      (by
         apply Set.Finite.subset g.finite_support
         simp only [Function.support_subset_iff, Finsupp.mem_support_iff, Ne.def,
           Finsupp.fun_support_eq, Finset.mem_coe]

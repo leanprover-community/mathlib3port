@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed.group.ball_sphere
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,10 +24,8 @@ variable {E : Type _} [SeminormedAddCommGroup E] {r : ℝ}
 
 /-- We equip the sphere, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance :
-    InvolutiveNeg
-      (sphere (0 : E)
-        r) where 
+instance : InvolutiveNeg (sphere (0 : E) r)
+    where
   neg := (Subtype.map Neg.neg) fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
@@ -41,9 +39,8 @@ instance : HasContinuousNeg (sphere (0 : E) r) :=
 
 /-- We equip the ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance {r : ℝ} :
-    InvolutiveNeg
-      (ball (0 : E) r) where 
+instance {r : ℝ} : InvolutiveNeg (ball (0 : E) r)
+    where
   neg := (Subtype.map Neg.neg) fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 
@@ -57,10 +54,8 @@ instance : HasContinuousNeg (ball (0 : E) r) :=
 
 /-- We equip the closed ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance {r : ℝ} :
-    InvolutiveNeg
-      (closedBall (0 : E)
-        r) where 
+instance {r : ℝ} : InvolutiveNeg (closedBall (0 : E) r)
+    where
   neg := (Subtype.map Neg.neg) fun w => by simp
   neg_neg x := Subtype.ext <| neg_neg x
 

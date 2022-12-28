@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.rel_classes
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ theorem antisymm' [IsAntisymm α r] {a b : α} : r a b → r b a → b = a := fu
 
 #print antisymm_iff /-
 theorem antisymm_iff [IsRefl α r] [IsAntisymm α r] {a b : α} : r a b ∧ r b a ↔ a = b :=
-  ⟨fun h => antisymm h.1 h.2, by 
+  ⟨fun h => antisymm h.1 h.2, by
     rintro rfl
     exact ⟨refl _, refl _⟩⟩
 #align antisymm_iff antisymm_iff
@@ -218,7 +218,7 @@ instance : IsIrrefl α EmptyRelation :=
 
 #print trans_trichotomous_left /-
 theorem trans_trichotomous_left [IsTrans α r] [IsTrichotomous α r] {a b c : α} :
-    ¬r b a → r b c → r a c := by 
+    ¬r b a → r b c → r a c := by
   intro h₁ h₂; rcases trichotomous_of r a b with (h₃ | h₃ | h₃)
   exact trans h₃ h₂; rw [h₃]; exact h₂; exfalso; exact h₁ h₃
 #align trans_trichotomous_left trans_trichotomous_left
@@ -226,7 +226,7 @@ theorem trans_trichotomous_left [IsTrans α r] [IsTrichotomous α r] {a b c : α
 
 #print trans_trichotomous_right /-
 theorem trans_trichotomous_right [IsTrans α r] [IsTrichotomous α r] {a b c : α} :
-    r a b → ¬r c b → r a c := by 
+    r a b → ¬r c b → r a c := by
   intro h₁ h₂; rcases trichotomous_of r b c with (h₃ | h₃ | h₃)
   exact trans h₁ h₃; rw [← h₃]; exact h₁; exfalso; exact h₂ h₃
 #align trans_trichotomous_right trans_trichotomous_right
@@ -251,8 +251,8 @@ theorem extensional_of_trichotomous_of_irrefl (r : α → α → Prop) [IsTricho
 
 See note [reducible non-instances]. -/
 @[reducible]
-def partialOrderOfSO (r) [IsStrictOrder α r] :
-    PartialOrder α where 
+def partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrder α
+    where
   le x y := x = y ∨ r x y
   lt := r
   le_refl x := Or.inl rfl
@@ -278,7 +278,9 @@ def partialOrderOfSO (r) [IsStrictOrder α r] :
 See note [reducible non-instances]. -/
 @[reducible]
 def linearOrderOfSTO (r) [IsStrictTotalOrder α r] [∀ x y, Decidable ¬r x y] : LinearOrder α :=
-  { partialOrderOfSO r with
+  {
+    partialOrderOfSO
+      r with
     le_total := fun x y =>
       match y, trichotomous_of r x y with
       | y, Or.inl h => Or.inl (Or.inr h)
@@ -320,7 +322,9 @@ theorem IsOrderConnected.neg_trans {r : α → α → Prop} [IsOrderConnected α
 #print isStrictWeakOrder_of_isOrderConnected /-
 theorem isStrictWeakOrder_of_isOrderConnected [IsAsymm α r] [IsOrderConnected α r] :
     IsStrictWeakOrder α r :=
-  { @IsAsymm.is_irrefl α r _ with
+  {
+    @IsAsymm.is_irrefl α r
+      _ with
     trans := fun a b c h₁ h₂ => (IsOrderConnected.conn _ c _ h₁).resolve_right (asymm h₂)
     incomp_trans := fun a b c ⟨h₁, h₂⟩ ⟨h₃, h₄⟩ =>
       ⟨IsOrderConnected.neg_trans h₁ h₃, IsOrderConnected.neg_trans h₄ h₂⟩ }
@@ -586,8 +590,8 @@ noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder 
 
 #print IsWellOrder.toHasWellFounded /-
 /-- Derive a `has_well_founded` instance from a `is_well_order` instance. -/
-def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] :
-    WellFoundedRelation α where 
+def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] : WellFoundedRelation α
+    where
   R := (· < ·)
   wf := hwo.wf
 #align is_well_order.to_has_well_founded IsWellOrder.toHasWellFounded
@@ -596,7 +600,7 @@ def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] :
 -- This isn't made into an instance as it loops with `is_irrefl α r`.
 theorem Subsingleton.is_well_order [Subsingleton α] (r : α → α → Prop) [hr : IsIrrefl α r] :
     IsWellOrder α r :=
-  { hr with 
+  { hr with
     trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elim a b
     trans := fun a b c h => (not_rel_of_subsingleton r a b h).elim
     wf := ⟨fun a => ⟨_, fun y h => (not_rel_of_subsingleton r y a h).elim⟩⟩ }
@@ -606,8 +610,8 @@ instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRel
   Subsingleton.is_well_order _
 #align empty_relation.is_well_order EmptyRelation.is_well_order
 
-instance (priority := 100) IsEmpty.is_well_order [IsEmpty α] (r : α → α → Prop) :
-    IsWellOrder α r where 
+instance (priority := 100) IsEmpty.is_well_order [IsEmpty α] (r : α → α → Prop) : IsWellOrder α r
+    where
   trichotomous := isEmptyElim
   trans := isEmptyElim
   wf := wellFounded_of_isEmpty r
@@ -619,9 +623,8 @@ instance Prod.Lex.is_well_founded [IsWellFounded α r] [IsWellFounded β s] :
 #align prod.lex.is_well_founded Prod.Lex.is_well_founded
 
 instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] :
-    IsWellOrder (α × β)
-      (Prod.Lex r
-        s) where 
+    IsWellOrder (α × β) (Prod.Lex r s)
+    where
   trichotomous := fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ =>
     match @trichotomous _ r _ a₁ b₁ with
     | Or.inl h₁ => Or.inl <| Prod.Lex.left _ _ h₁
@@ -632,7 +635,8 @@ instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] :
         | Or.inl h => Or.inl <| Prod.Lex.right _ h
         | Or.inr (Or.inr h) => Or.inr <| Or.inr <| Prod.Lex.right _ h
         | Or.inr (Or.inl e) => e ▸ Or.inr <| Or.inl rfl
-  trans a b c h₁ h₂ := by
+  trans a b c h₁ h₂ :=
+    by
     cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
     · exact Prod.Lex.left _ _ (trans ab bc)
     · exact Prod.Lex.left _ _ ab

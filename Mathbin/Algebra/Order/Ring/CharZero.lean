@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.char_zero
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ variable {α : Type _}
 instance (priority := 100) StrictOrderedSemiring.to_char_zero [StrictOrderedSemiring α] :
     CharZero α :=
   ⟨StrictMono.injective <|
-      strictMono_nat_of_lt_succ fun n => by 
+      strictMono_nat_of_lt_succ fun n => by
         rw [Nat.cast_succ]
         apply lt_add_one⟩
 #align strict_ordered_semiring.to_char_zero StrictOrderedSemiring.to_char_zero

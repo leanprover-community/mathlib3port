@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.monomial
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,8 @@ variable {R : Type u} {a b : R} {m n : ℕ}
 variable [Semiring R] {p q r : R[X]}
 
 theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} :
-    (monomial i 1 : R[X]) = monomial j 1 ↔ i = j := by
+    (monomial i 1 : R[X]) = monomial j 1 ↔ i = j :=
+  by
   simp_rw [← of_finsupp_single]
   exact add_monoid_algebra.of_injective.eq_iff
 #align polynomial.monomial_one_eq_iff Polynomial.monomial_one_eq_iff
@@ -39,7 +40,8 @@ instance [Nontrivial R] : Infinite R[X] :=
   (Infinite.of_injective fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h
 
 theorem card_support_le_one_iff_monomial {f : R[X]} :
-    Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a := by
+    Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a :=
+  by
   constructor
   · intro H
     rw [Finset.card_le_one_iff_subset_singleton] at H
@@ -48,7 +50,7 @@ theorem card_support_le_one_iff_monomial {f : R[X]} :
     ext i
     by_cases hi : i = n
     · simp [hi, coeff_monomial]
-    · have : f.coeff i = 0 := by 
+    · have : f.coeff i = 0 := by
         rw [← not_mem_support_iff]
         exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
       simp [this, Ne.symm hi, coeff_monomial]
@@ -59,19 +61,22 @@ theorem card_support_le_one_iff_monomial {f : R[X]} :
 #align polynomial.card_support_le_one_iff_monomial Polynomial.card_support_le_one_iff_monomial
 
 theorem ring_hom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a) = g (c a))
-    (h₂ : f x = g x) : f = g := by
+    (h₂ : f x = g x) : f = g :=
+  by
   set f' := f.comp (to_finsupp_iso R).symm.toRingHom with hf'
   set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
-  have A : f' = g' := by 
+  have A : f' = g' := by
     ext
     · simp [h₁, RingEquiv.to_ring_hom_eq_coe]
     · simpa [RingEquiv.to_ring_hom_eq_coe] using h₂
-  have B : f = f'.comp (to_finsupp_iso R) := by
+  have B : f = f'.comp (to_finsupp_iso R) :=
+    by
     rw [hf', RingHom.comp_assoc]
     ext x
     simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
       RingHom.coe_comp, RingEquiv.coe_to_ring_hom]
-  have C : g = g'.comp (to_finsupp_iso R) := by
+  have C : g = g'.comp (to_finsupp_iso R) :=
+    by
     rw [hg', RingHom.comp_assoc]
     ext x
     simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.density_theorem
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
       ∃ᶠ r in 𝓝[>] (0 : ℝ),
         μ (closed_ball x (3 * r)) ≤
           scaling_constant_of μ (max (4 * K + 3) 3) * μ (closed_ball x r) :=
-    by 
+    by
     intro x
     apply frequently_iff.2 fun U hU => _
     obtain ⟨ε, εpos, hε⟩ := mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 hU
@@ -75,11 +75,12 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
 /-- In the Vitali family `is_doubling_measure.vitali_family K`, the sets based at `x` contain all
 balls `closed_ball y r` when `dist x y ≤ K * r`. -/
 theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ}
-    (h : dist x y ≤ K * r) (rpos : 0 < r) : closedBall y r ∈ (vitaliFamily μ K).setsAt x := by
+    (h : dist x y ≤ K * r) (rpos : 0 < r) : closedBall y r ∈ (vitaliFamily μ K).setsAt x :=
+  by
   let R := scaling_scale_of μ (max (4 * K + 3) 3)
   simp only [VitaliFamily, VitaliFamily.enlarge, Vitali.vitaliFamily, mem_union, mem_set_of_eq,
     is_closed_ball, true_and_iff, (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball,
-    measurableSetClosedBall]
+    measurable_set_closed_ball]
   /- The measure is doubling on scales smaller than `R`. Therefore, we treat differently small
     and large balls. For large balls, this follows directly from the enlargement we used in the
     definition. -/
@@ -95,10 +96,12 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
     · apply closed_ball_subset_closed_ball'
       rw [dist_comm]
       linarith
-    · have I1 : closed_ball x (3 * ((K + 1) * r)) ⊆ closed_ball y ((4 * K + 3) * r) := by
+    · have I1 : closed_ball x (3 * ((K + 1) * r)) ⊆ closed_ball y ((4 * K + 3) * r) :=
+        by
         apply closed_ball_subset_closed_ball'
         linarith
-      have I2 : closed_ball y ((4 * K + 3) * r) ⊆ closed_ball y (max (4 * K + 3) 3 * r) := by
+      have I2 : closed_ball y ((4 * K + 3) * r) ⊆ closed_ball y (max (4 * K + 3) 3 * r) :=
+        by
         apply closed_ball_subset_closed_ball
         exact mul_le_mul_of_nonneg_right (le_max_left _ _) rpos.le
       apply (measure_mono (I1.trans I2)).trans
@@ -106,7 +109,8 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
         measure_mul_le_scaling_constant_of_mul _ ⟨zero_lt_three.trans_le (le_max_right _ _), le_rfl⟩
           hr
   · refine' ⟨R / 4, H, _⟩
-    have : closed_ball x (3 * (R / 4)) ⊆ closed_ball y r := by
+    have : closed_ball x (3 * (R / 4)) ⊆ closed_ball y r :=
+      by
       apply closed_ball_subset_closed_ball'
       have A : y ∈ closed_ball y r := mem_closed_ball_self rpos.le
       have B := mem_closed_ball'.1 (H A)
@@ -119,14 +123,15 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
 
 theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α)
     (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
-    Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) := by
+    Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) :=
+  by
   refine' (VitaliFamily μ K).tendsto_filter_at_iff.mpr ⟨_, fun ε hε => _⟩
   · filter_upwards [xmem, δlim self_mem_nhds_within] with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
   · by_cases l.ne_bot
     swap
     · simp [not_ne_bot.1 h]
-    have hK : 0 ≤ K := by 
+    have hK : 0 ≤ K := by
       skip
       rcases(xmem.and (δlim self_mem_nhds_within)).exists with ⟨j, hj, h'j⟩
       have : 0 ≤ K * δ j := nonempty_closed_ball.1 ⟨x, hj⟩

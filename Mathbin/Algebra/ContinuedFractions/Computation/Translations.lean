@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.translations
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,8 @@ variable {n : ℕ}
 
 theorem stream_eq_none_of_fr_eq_zero {ifp_n : IntFractPair K}
     (stream_nth_eq : IntFractPair.stream v n = some ifp_n) (nth_fr_eq_zero : ifp_n.fr = 0) :
-    IntFractPair.stream v (n + 1) = none := by
+    IntFractPair.stream v (n + 1) = none :=
+  by
   cases' ifp_n with _ fr
   change fr = 0 at nth_fr_eq_zero
   simp [int_fract_pair.stream, stream_nth_eq, nth_fr_eq_zero]
@@ -77,10 +78,10 @@ parts of a value in case of termination.
 theorem succ_nth_stream_eq_none_iff :
     IntFractPair.stream v (n + 1) = none ↔
       IntFractPair.stream v n = none ∨ ∃ ifp, IntFractPair.stream v n = some ifp ∧ ifp.fr = 0 :=
-  by 
+  by
   cases' stream_nth_eq : int_fract_pair.stream v n with ifp
   case none => simp [stream_nth_eq, int_fract_pair.stream]
-  case some => 
+  case some =>
     cases' ifp with _ fr
     by_cases h : fr = 0
     -- `finish [int_fract_pair.stream]` closes both goals
@@ -99,7 +100,7 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
       ∃ ifp_n : IntFractPair K,
         IntFractPair.stream v n = some ifp_n ∧
           ifp_n.fr ≠ 0 ∧ IntFractPair.of ifp_n.fr⁻¹ = ifp_succ_n :=
-  by 
+  by
   constructor
   · intro stream_succ_nth_eq
     have : int_fract_pair.stream v (n + 1) ≠ none := by simp [stream_succ_nth_eq]
@@ -170,7 +171,8 @@ theorem IntFractPair.seq1_fst_eq_of : (IntFractPair.seq1 v).fst = IntFractPair.o
 #align
   generalized_continued_fraction.int_fract_pair.seq1_fst_eq_of GeneralizedContinuedFraction.IntFractPair.seq1_fst_eq_of
 
-theorem of_h_eq_int_fract_pair_seq1_fst_b : (of v).h = (IntFractPair.seq1 v).fst.b := by
+theorem of_h_eq_int_fract_pair_seq1_fst_b : (of v).h = (IntFractPair.seq1 v).fst.b :=
+  by
   cases aux_seq_eq : int_fract_pair.seq1 v
   simp [of, aux_seq_eq]
 #align
@@ -214,7 +216,8 @@ Let's first show how the termination of one sequence implies the termination of 
 
 
 theorem of_terminated_at_iff_int_fract_pair_seq1_terminated_at :
-    (of v).TerminatedAt n ↔ (IntFractPair.seq1 v).snd.TerminatedAt n := by
+    (of v).TerminatedAt n ↔ (IntFractPair.seq1 v).snd.TerminatedAt n :=
+  by
   rw [terminated_at_iff_s_none, of]
   rcases int_fract_pair.seq1 v with ⟨head, ⟨st⟩⟩
   cases st_n_eq : st n <;>
@@ -490,7 +493,8 @@ integer parts of the stream of integer and fractional parts.
 -/
 theorem nth_of_eq_some_of_succ_nth_int_fract_pair_stream {ifp_succ_n : IntFractPair K}
     (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) :
-    (of v).s.nth n = some ⟨1, ifp_succ_n.b⟩ := by
+    (of v).s.nth n = some ⟨1, ifp_succ_n.b⟩ :=
+  by
   unfold of int_fract_pair.seq1
   rw [Seq.map_tail, Seq.nth_tail, Seq.map_nth]
   simp [Seq.nth, stream_succ_nth_eq]
@@ -503,7 +507,8 @@ fractional parts of the stream of integer and fractional parts.
 theorem nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero {ifp_n : IntFractPair K}
     (stream_nth_eq : IntFractPair.stream v n = some ifp_n) (nth_fr_ne_zero : ifp_n.fr ≠ 0) :
     (of v).s.nth n = some ⟨1, (IntFractPair.of ifp_n.fr⁻¹).b⟩ :=
-  have : IntFractPair.stream v (n + 1) = some (IntFractPair.of ifp_n.fr⁻¹) := by
+  have : IntFractPair.stream v (n + 1) = some (IntFractPair.of ifp_n.fr⁻¹) :=
+    by
     cases ifp_n
     simp [int_fract_pair.stream, stream_nth_eq, nth_fr_ne_zero]
     rfl

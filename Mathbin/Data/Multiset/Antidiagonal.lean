@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.antidiagonal
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem antidiagonal_coe' (l : List α) : @antidiagonal α l = revzip (powersetA
 @[simp]
 theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} :
     x ∈ antidiagonal s ↔ x.1 + x.2 = s :=
-  (Quotient.induction_on s) fun l => by 
+  (Quotient.induction_on s) fun l => by
     simp [antidiagonal_coe]; refine' ⟨fun h => revzip_powerset_aux h, fun h => _⟩
     haveI := Classical.decEq α
     simp [revzip_powerset_aux_lemma l revzip_powerset_aux, h.symm]
@@ -73,7 +73,8 @@ theorem antidiagonal_zero : @antidiagonal α 0 = {(0, 0)} :=
 theorem antidiagonal_cons (a : α) (s) :
     antidiagonal (a ::ₘ s) =
       map (Prod.map id (cons a)) (antidiagonal s) + map (Prod.map (cons a) id) (antidiagonal s) :=
-  (Quotient.induction_on s) fun l => by
+  (Quotient.induction_on s) fun l =>
+    by
     simp only [revzip, reverse_append, quot_mk_to_coe, coe_eq_coe, powerset_aux'_cons, cons_coe,
       coe_map, antidiagonal_coe', coe_add]
     rw [← zip_map, ← zip_map, zip_append, (_ : _ ++ _ = _)]
@@ -81,7 +82,8 @@ theorem antidiagonal_cons (a : α) (s) :
 #align multiset.antidiagonal_cons Multiset.antidiagonal_cons
 
 theorem antidiagonal_eq_map_powerset [DecidableEq α] (s : Multiset α) :
-    s.antidiagonal = s.powerset.map fun t => (s - t, t) := by
+    s.antidiagonal = s.powerset.map fun t => (s - t, t) :=
+  by
   induction' s using Multiset.induction_on with a s hs
   · simp only [antidiagonal_zero, powerset_zero, zero_tsub, map_singleton]
   · simp_rw [antidiagonal_cons, powerset_cons, map_add, hs, map_map, Function.comp, Prod.map_mk,
@@ -100,7 +102,7 @@ theorem card_antidiagonal (s : Multiset α) : card (antidiagonal s) = 2 ^ card s
 theorem prod_map_add [CommSemiring β] {s : Multiset α} {f g : α → β} :
     prod (s.map fun a => f a + g a) =
       sum ((antidiagonal s).map fun p => (p.1.map f).Prod * (p.2.map g).Prod) :=
-  by 
+  by
   refine' s.induction_on _ _
   · simp
   · intro a s ih

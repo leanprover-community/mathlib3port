@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.int
-! leanprover-community/mathlib commit 207cfac9fcd06138865b5d04f7091e46d9320432
+! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,8 @@ theorem dist_cast_real (x y : ℤ) : dist (x : ℝ) y = dist x y :=
   rfl
 #align int.dist_cast_real Int.dist_cast_real
 
-theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n := by
+theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n :=
+  by
   intro m n hne
   rw [dist_eq]; norm_cast; rwa [← zero_add (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
 #align int.pairwise_one_le_dist Int.pairwise_one_le_dist
@@ -70,7 +71,7 @@ theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : closedBall x r = Icc ⌈↑x - 
 #align int.closed_ball_eq_Icc Int.closed_ball_eq_Icc
 
 instance : ProperSpace ℤ :=
-  ⟨by 
+  ⟨by
     intro x r
     rw [closed_ball_eq_Icc]
     exact (Set.finite_Icc _ _).IsCompact⟩
