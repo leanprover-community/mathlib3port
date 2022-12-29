@@ -6,7 +6,7 @@ Authors: Simon Hudon
 Automation to construct `traversable` instances
 
 ! This file was ported from Lean 3 source module control.traversable.derive
-! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
+! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

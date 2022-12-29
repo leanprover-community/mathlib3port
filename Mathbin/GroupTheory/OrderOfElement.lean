@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.order_of_element
-! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
+! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Data.Set.Intervals.Infinite
 import Mathbin.Dynamics.PeriodicPts
 import Mathbin.GroupTheory.Index
 
@@ -82,6 +83,19 @@ theorem is_of_fin_order_iff_pow_eq_one (x : G) : IsOfFinOrder x ↔ ∃ n, 0 < n
   convert Iff.rfl
   simp [is_periodic_pt_mul_iff_pow_eq_one]
 #align is_of_fin_order_iff_pow_eq_one is_of_fin_order_iff_pow_eq_one
+
+/-- See also `injective_pow_iff_not_is_of_fin_order`. -/
+@[to_additive not_is_of_fin_add_order_of_injective_nsmul
+      "See also\n`injective_nsmul_iff_not_is_of_fin_add_order`."]
+theorem not_is_of_fin_order_of_injective_pow {x : G} (h : Injective fun n : ℕ => x ^ n) :
+    ¬IsOfFinOrder x :=
+  by
+  simp_rw [is_of_fin_order_iff_pow_eq_one, not_exists, not_and]
+  intro n hn_pos hnx
+  rw [← pow_zero x] at hnx
+  rw [h hnx] at hn_pos
+  exact irrefl 0 hn_pos
+#align not_is_of_fin_order_of_injective_pow not_is_of_fin_order_of_injective_pow
 
 /-- Elements of finite order are of finite order in submonoids.-/
 @[to_additive is_of_fin_add_order_iff_coe
@@ -427,10 +441,12 @@ theorem mem_powers_iff_mem_range_order_of' [DecidableEq G] (hx : 0 < orderOf x) 
   Finset.mem_range_iff_mem_finset_range_of_mod_eq' hx fun i => pow_eq_mod_order_of.symm
 #align mem_powers_iff_mem_range_order_of' mem_powers_iff_mem_range_order_of'
 
+@[to_additive]
 theorem pow_eq_one_iff_modeq : x ^ n = 1 ↔ n ≡ 0 [MOD orderOf x] := by
   rw [modeq_zero_iff_dvd, order_of_dvd_iff_pow_eq_one]
 #align pow_eq_one_iff_modeq pow_eq_one_iff_modeq
 
+@[to_additive]
 theorem pow_eq_pow_iff_modeq : x ^ n = x ^ m ↔ n ≡ m [MOD orderOf x] :=
   by
   wlog hmn : m ≤ n
@@ -438,6 +454,36 @@ theorem pow_eq_pow_iff_modeq : x ^ n = x ^ m ↔ n ≡ m [MOD orderOf x] :=
   rw [← mul_one (x ^ m), pow_add, mul_left_cancel_iff, pow_eq_one_iff_modeq]
   exact ⟨fun h => Nat.Modeq.add_left _ h, fun h => Nat.Modeq.add_left_cancel' _ h⟩
 #align pow_eq_pow_iff_modeq pow_eq_pow_iff_modeq
+
+@[simp, to_additive injective_nsmul_iff_not_is_of_fin_add_order]
+theorem injective_pow_iff_not_is_of_fin_order {x : G} :
+    (Injective fun n : ℕ => x ^ n) ↔ ¬IsOfFinOrder x :=
+  by
+  refine' ⟨fun h => not_is_of_fin_order_of_injective_pow h, fun h n m hnm => _⟩
+  rwa [pow_eq_pow_iff_modeq, order_of_eq_zero_iff.mpr h, modeq_zero_iff] at hnm
+#align injective_pow_iff_not_is_of_fin_order injective_pow_iff_not_is_of_fin_order
+
+@[to_additive infinite_not_is_of_fin_add_order]
+theorem infinite_not_is_of_fin_order {x : G} (h : ¬IsOfFinOrder x) :
+    { y : G | ¬IsOfFinOrder y }.Infinite :=
+  by
+  let s := { n | 0 < n }.image fun n : ℕ => x ^ n
+  have hs : s ⊆ { y : G | ¬IsOfFinOrder y } :=
+    by
+    rintro - ⟨n, hn : 0 < n, rfl⟩ (contra : IsOfFinOrder (x ^ n))
+    apply h
+    rw [is_of_fin_order_iff_pow_eq_one] at contra⊢
+    obtain ⟨m, hm, hm'⟩ := contra
+    exact ⟨n * m, mul_pos hn hm, by rwa [pow_mul]⟩
+  suffices s.infinite by exact this.mono hs
+  contrapose! h
+  have : ¬injective fun n : ℕ => x ^ n :=
+    by
+    have := Set.not_inj_on_infinite_finite_image (Set.Ioi_infinite 0) (set.not_infinite.mp h)
+    contrapose! this
+    exact Set.injOn_of_injective this _
+  rwa [injective_pow_iff_not_is_of_fin_order, not_not] at this
+#align infinite_not_is_of_fin_order infinite_not_is_of_fin_order
 
 end CancelMonoid
 
@@ -611,13 +657,9 @@ variable [LeftCancelMonoid G] [AddLeftCancelMonoid A]
 @[to_additive]
 theorem exists_pow_eq_one [Finite G] (x : G) : IsOfFinOrder x :=
   by
-  refine' (is_of_fin_order_iff_pow_eq_one _).mpr _
-  obtain ⟨i, j, a_eq, ne⟩ : ∃ i j : ℕ, x ^ i = x ^ j ∧ i ≠ j := by
-    simpa only [not_forall, exists_prop, injective] using
-      not_injective_infinite_finite fun i : ℕ => x ^ i
-  wlog h'' : j ≤ i
-  refine' ⟨i - j, tsub_pos_of_lt (lt_of_le_of_ne h'' Ne.symm), mul_right_injective (x ^ j) _⟩
-  rw [mul_one, ← pow_add, ← a_eq, add_tsub_cancel_of_le h'']
+  have : (Set.univ : Set G).Finite := set.univ.to_finite
+  contrapose! this
+  exact Set.Infinite.mono (Set.subset_univ _) (infinite_not_is_of_fin_order this)
 #align exists_pow_eq_one exists_pow_eq_one
 
 @[to_additive add_order_of_le_card_univ]

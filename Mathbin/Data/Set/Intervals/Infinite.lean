@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module data.set.intervals.infinite
-! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
+! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,8 +91,8 @@ theorem Iic_infinite [NoMinOrder α] (a : α) : (Iic a).Infinite :=
 instance [NoMaxOrder α] {a : α} : Infinite (Ioi a) :=
   NoMaxOrder.infinite
 
-theorem Ioi_infinite [NoMinOrder α] (a : α) : (Iio a).Infinite :=
-  infinite_coe_iff.1 Iio.infinite
+theorem Ioi_infinite [NoMaxOrder α] (a : α) : (Ioi a).Infinite :=
+  infinite_coe_iff.1 Ioi.infinite
 #align set.Ioi_infinite Set.Ioi_infinite
 
 instance [NoMaxOrder α] {a : α} : Infinite (Ici a) :=

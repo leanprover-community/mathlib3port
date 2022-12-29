@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
+! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.Nat.Totient
 import Mathbin.Algebra.Ring.AddAut
 import Mathbin.GroupTheory.Divisible
 import Mathbin.GroupTheory.OrderOfElement
@@ -79,6 +80,14 @@ theorem coe_nsmul {n : ℕ} {x : 𝕜} : (↑(n • x) : AddCircle p) = n • (x
 theorem coe_zsmul {n : ℤ} {x : 𝕜} : (↑(n • x) : AddCircle p) = n • (x : AddCircle p) :=
   rfl
 #align add_circle.coe_zsmul AddCircle.coe_zsmul
+
+theorem coe_add (x y : 𝕜) : (↑(x + y) : AddCircle p) = (x : AddCircle p) + (y : AddCircle p) :=
+  rfl
+#align add_circle.coe_add AddCircle.coe_add
+
+theorem coe_sub (x y : 𝕜) : (↑(x - y) : AddCircle p) = (x : AddCircle p) - (y : AddCircle p) :=
+  rfl
+#align add_circle.coe_sub AddCircle.coe_sub
 
 theorem coe_neg {x : 𝕜} : (↑(-x) : AddCircle p) = -(x : AddCircle p) :=
   rfl
@@ -338,6 +347,79 @@ theorem exists_gcd_eq_one_of_is_of_fin_add_order {u : AddCircle p} (h : IsOfFinA
     simpa [zero_add] using (equiv_Ico p 0 u).2.2
 #align
   add_circle.exists_gcd_eq_one_of_is_of_fin_add_order AddCircle.exists_gcd_eq_one_of_is_of_fin_add_order
+
+theorem add_order_of_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
+    addOrderOf u = n ↔ ∃ m < n, gcd m n = 1 ∧ ↑(↑m / ↑n * p) = u :=
+  by
+  refine' ⟨fun hu => _, _⟩
+  · rw [← hu] at h
+    obtain ⟨m, h₀, h₁, h₂⟩ := exists_gcd_eq_one_of_is_of_fin_add_order (add_order_of_pos_iff.mp h)
+    refine' ⟨m, _, _, _⟩ <;> rwa [← hu]
+  · rintro ⟨m, h₀, h₁, rfl⟩
+    exact add_order_of_div_of_gcd_eq_one h h₁
+#align add_circle.add_order_of_eq_pos_iff AddCircle.add_order_of_eq_pos_iff
+
+variable (p)
+
+/-- The natural bijection between points of order `n` and natural numbers less than and coprime to
+`n`. The inverse of the map sends `m ↦ (m/n * p : add_circle p)` where `m` is coprime to `n` and
+satisfies `0 ≤ m < n`. -/
+def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
+    { u : AddCircle p | addOrderOf u = n } ≃ { m | m < n ∧ gcd m n = 1 }
+    where
+  toFun u := by
+    let h := (add_order_of_eq_pos_iff hn).mp u.property
+    exact
+      ⟨Classical.choose h, Classical.choose (Classical.choose_spec h),
+        (Classical.choose_spec (Classical.choose_spec h)).1⟩
+  invFun m := ⟨↑((m : 𝕜) / n * p), add_order_of_div_of_gcd_eq_one hn m.property.2⟩
+  left_inv u :=
+    Subtype.ext
+      (Classical.choose_spec (Classical.choose_spec <| (add_order_of_eq_pos_iff hn).mp u.2)).2
+  right_inv := by
+    rintro ⟨m, hm₁, hm₂⟩
+    let u : { u : AddCircle p | addOrderOf u = n } :=
+      ⟨↑((m : 𝕜) / n * p), add_order_of_div_of_gcd_eq_one hn hm₂⟩
+    let h := (add_order_of_eq_pos_iff hn).mp u.property
+    ext
+    let m' := Classical.choose h
+    change m' = m
+    obtain
+      ⟨h₁ : m' < n, h₂ : gcd m' n = 1, h₃ :
+        QuotientAddGroup.mk ((m' : 𝕜) / n * p) = QuotientAddGroup.mk ((m : 𝕜) / n * p)⟩ :=
+      Classical.choose_spec h
+    replace h₃ := congr_arg (coe : Ico 0 (0 + p) → 𝕜) (congr_arg (equiv_Ico p 0) h₃)
+    simpa only [coe_equiv_Ico_mk_apply, mul_left_inj' hp.out.ne', mul_div_cancel _ hp.out.ne',
+      Int.fract_div_nat_cast_eq_div_nat_cast_mod,
+      div_left_inj' (nat.cast_ne_zero.mpr hn.ne' : (n : 𝕜) ≠ 0), Nat.cast_inj,
+      (Nat.mod_eq_iff_lt hn.ne').mpr hm₁, (Nat.mod_eq_iff_lt hn.ne').mpr h₁] using h₃
+#align add_circle.set_add_order_of_equiv AddCircle.setAddOrderOfEquiv
+
+@[simp]
+theorem card_add_order_of_eq_totient {n : ℕ} :
+    Nat.card { u : AddCircle p // addOrderOf u = n } = n.totient :=
+  by
+  rcases n.eq_zero_or_pos with (rfl | hn)
+  · simp only [Nat.totient_zero, add_order_of_eq_zero_iff]
+    rcases em (∃ u : AddCircle p, ¬IsOfFinAddOrder u) with (⟨u, hu⟩ | h)
+    · have : Infinite { u : AddCircle p // ¬IsOfFinAddOrder u } :=
+        by
+        erw [infinite_coe_iff]
+        exact infinite_not_is_of_fin_add_order hu
+      exact Nat.card_eq_zero_of_infinite
+    · have : IsEmpty { u : AddCircle p // ¬IsOfFinAddOrder u } := by simpa using h
+      exact Nat.card_of_is_empty
+  · rw [← coe_set_of, Nat.card_congr (set_add_order_of_equiv p hn),
+      n.totient_eq_card_lt_and_coprime]
+    simpa only [@Nat.coprime_comm _ n]
+#align add_circle.card_add_order_of_eq_totient AddCircle.card_add_order_of_eq_totient
+
+theorem finite_set_of_add_order_eq {n : ℕ} (hn : 0 < n) :
+    { u : AddCircle p | addOrderOf u = n }.Finite :=
+  finite_coe_iff.mp <|
+    Nat.finite_of_card_ne_zero <| by
+      simpa only [coe_set_of, card_add_order_of_eq_totient p] using (Nat.totient_pos hn).ne'
+#align add_circle.finite_set_of_add_order_eq AddCircle.finite_set_of_add_order_eq
 
 end FiniteOrderPoints
 

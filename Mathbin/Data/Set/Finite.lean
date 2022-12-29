@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 46a64b5b4268c594af770c44d9e502afc6a515cb
+! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1264,6 +1264,18 @@ theorem Infinite.exists_not_mem_finset {s : Set α} (hs : s.Infinite) (f : Finse
   let ⟨a, has, haf⟩ := (hs.diff (to_finite f)).Nonempty
   ⟨a, has, fun h => haf <| Finset.mem_coe.1 h⟩
 #align set.infinite.exists_not_mem_finset Set.Infinite.exists_not_mem_finset
+
+theorem not_inj_on_infinite_finite_image {f : α → β} {s : Set α} (h_inf : s.Infinite)
+    (h_fin : (f '' s).Finite) : ¬InjOn f s :=
+  by
+  haveI : Finite (f '' s) := finite_coe_iff.mpr h_fin
+  haveI : Infinite s := infinite_coe_iff.mpr h_inf
+  have :=
+    not_injective_infinite_finite
+      (((f '' s).codRestrict (s.restrict f)) fun x => ⟨x, x.property, rfl⟩)
+  contrapose! this
+  rwa [injective_cod_restrict, ← inj_on_iff_injective]
+#align set.not_inj_on_infinite_finite_image Set.not_inj_on_infinite_finite_image
 
 /-! ### Order properties -/
 
