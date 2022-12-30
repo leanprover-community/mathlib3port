@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.hom.freiman
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ notation:25 A " →*[" n:25 "] " β:0 => FreimanHom A β n
 /-- `add_freiman_hom_class F s β n` states that `F` is a type of `n`-ary sums-preserving morphisms.
 You should extend this class when you extend `add_freiman_hom`. -/
 class AddFreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _)
-  [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) [FunLike F α fun _ => β] where
+  [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
   map_sum_eq_map_sum' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
     (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Sum = t.Sum) :
     (s.map f).Sum = (t.map f).Sum
@@ -94,7 +94,7 @@ You should extend this class when you extend `freiman_hom`. -/
 @[to_additive AddFreimanHomClass
       "`add_freiman_hom_class F A β n` states that `F` is a type of `n`-ary sums-preserving morphisms.\nYou should extend this class when you extend `add_freiman_hom`."]
 class FreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [CommMonoid α]
-  [CommMonoid β] (n : ℕ) [FunLike F α fun _ => β] where
+  [CommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
   map_prod_eq_map_prod' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
     (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Prod = t.Prod) :
     (s.map f).Prod = (t.map f).Prod
@@ -132,9 +132,9 @@ instance funLike : FunLike (A →*[n] β) α fun _ => β
 #align freiman_hom.fun_like FreimanHom.funLike
 
 @[to_additive]
-instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n
+instance freiman_hom_class : FreimanHomClass (A →*[n] β) A β n
     where map_prod_eq_map_prod' := map_prod_eq_map_prod'
-#align freiman_hom.freiman_hom_class FreimanHom.freimanHomClass
+#align freiman_hom.freiman_hom_class FreimanHom.freiman_hom_class
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -412,10 +412,10 @@ We can't leave the domain `A : set α` of the `freiman_hom` a free variable, sin
 inferrable. -/
 @[to_additive
       " An additive monoid homomorphism is naturally an `add_freiman_hom` on its entire\ndomain.\n\nWe can't leave the domain `A : set α` of the `freiman_hom` a free variable, since it wouldn't be\ninferrable."]
-instance MonoidHom.freimanHomClass : FreimanHomClass (α →* β) Set.univ β n
+instance MonoidHom.freiman_hom_class : FreimanHomClass (α →* β) Set.univ β n
     where map_prod_eq_map_prod' f s t _ _ _ _ h := by
     rw [← f.map_multiset_prod, h, f.map_multiset_prod]
-#align monoid_hom.freiman_hom_class MonoidHom.freimanHomClass
+#align monoid_hom.freiman_hom_class MonoidHom.freiman_hom_class
 
 /-- A `monoid_hom` is naturally a `freiman_hom`. -/
 @[to_additive AddMonoidHom.toAddFreimanHom "An `add_monoid_hom` is naturally an\n`add_freiman_hom`"]
@@ -483,12 +483,14 @@ def FreimanHom.toFreimanHom (h : m ≤ n) (f : A →*[n] β) : A →*[m] β
 #align freiman_hom.to_freiman_hom FreimanHom.toFreimanHom
 
 /-- A `n`-Freiman homomorphism is also a `m`-Freiman homomorphism for any `m ≤ n`. -/
-@[to_additive AddFreimanHom.addFreimanHomClassOfLe
+@[to_additive AddFreimanHom.add_freiman_hom_class_of_le
       "An additive `n`-Freiman homomorphism is\nalso an additive `m`-Freiman homomorphism for any `m ≤ n`."]
-def FreimanHom.freimanHomClassOfLe [FreimanHomClass F A β n] (h : m ≤ n) : FreimanHomClass F A β m
-    where map_prod_eq_map_prod' f s t hsA htA hs ht hst :=
-    map_prod_eq_map_prod_of_le f hsA htA hs ht hst h
-#align freiman_hom.freiman_hom_class_of_le FreimanHom.freimanHomClassOfLe
+theorem FreimanHom.freiman_hom_class_of_le [FreimanHomClass F A β n] (h : m ≤ n) :
+    FreimanHomClass F A β m :=
+  {
+    map_prod_eq_map_prod' := fun f s t hsA htA hs ht hst =>
+      map_prod_eq_map_prod_of_le f hsA htA hs ht hst h }
+#align freiman_hom.freiman_hom_class_of_le FreimanHom.freiman_hom_class_of_le
 
 @[simp, to_additive AddFreimanHom.to_add_freiman_hom_coe]
 theorem FreimanHom.to_freiman_hom_coe (h : m ≤ n) (f : A →*[n] β) :

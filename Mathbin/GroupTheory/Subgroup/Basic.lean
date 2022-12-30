@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,44 +102,35 @@ variable {A : Type _} [AddGroup A]
 section SubgroupClass
 
 /-- `inv_mem_class S G` states `S` is a type of subsets `s ⊆ G` closed under inverses. -/
-class InvMemClass (S G : Type _) [Inv G] [SetLike S G] where
+class InvMemClass (S G : Type _) [Inv G] [SetLike S G] : Prop where
   inv_mem : ∀ {s : S} {x}, x ∈ s → x⁻¹ ∈ s
 #align inv_mem_class InvMemClass
 
 export InvMemClass (inv_mem)
 
 /-- `neg_mem_class S G` states `S` is a type of subsets `s ⊆ G` closed under negation. -/
-class NegMemClass (S G : Type _) [Neg G] [SetLike S G] where
+class NegMemClass (S G : Type _) [Neg G] [SetLike S G] : Prop where
   neg_mem : ∀ {s : S} {x}, x ∈ s → -x ∈ s
 #align neg_mem_class NegMemClass
 
 export NegMemClass (neg_mem)
 
 /-- `subgroup_class S G` states `S` is a type of subsets `s ⊆ G` that are subgroups of `G`. -/
-class SubgroupClass (S G : Type _) [DivInvMonoid G] [SetLike S G] extends SubmonoidClass S G where
-  inv_mem : ∀ {s : S} {x}, x ∈ s → x⁻¹ ∈ s
+class SubgroupClass (S G : Type _) [DivInvMonoid G] [SetLike S G] extends SubmonoidClass S G,
+  InvMemClass S G : Prop
 #align subgroup_class SubgroupClass
 
 /-- `add_subgroup_class S G` states `S` is a type of subsets `s ⊆ G` that are
 additive subgroups of `G`. -/
-class AddSubgroupClass (S G : Type _) [SubNegMonoid G] [SetLike S G] extends
-  AddSubmonoidClass S G where
-  neg_mem : ∀ {s : S} {x}, x ∈ s → -x ∈ s
+class AddSubgroupClass (S G : Type _) [SubNegMonoid G] [SetLike S G] extends AddSubmonoidClass S G,
+  NegMemClass S G : Prop
 #align add_subgroup_class AddSubgroupClass
 
 attribute [to_additive] InvMemClass SubgroupClass
 
-variable (M S : Type _) [DivInvMonoid M] [SetLike S M] [hSM : SubgroupClass S M]
+variable {M S : Type _} [DivInvMonoid M] [SetLike S M] [hSM : SubgroupClass S M] {H K : S}
 
 include hSM
-
--- See note [lower instance priority]
-@[to_additive]
-instance (priority := 100) SubgroupClass.toInvMemClass : InvMemClass S M :=
-  { hSM with }
-#align subgroup_class.to_inv_mem_class SubgroupClass.toInvMemClass
-
-variable {S M} {H K : S}
 
 /-- A subgroup is closed under division. -/
 @[to_additive "An additive subgroup is closed under subtraction."]

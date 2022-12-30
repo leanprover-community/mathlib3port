@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.basic
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,14 +71,14 @@ variable [MulOneClass M] {s : Set M}
 variable [AddZeroClass A] {t : Set A}
 
 /-- `one_mem_class S M` says `S` is a type of subsets `s ≤ M`, such that `1 ∈ s` for all `s`. -/
-class OneMemClass (S : Type _) (M : outParam <| Type _) [One M] [SetLike S M] where
+class OneMemClass (S : Type _) (M : outParam <| Type _) [One M] [SetLike S M] : Prop where
   one_mem : ∀ s : S, (1 : M) ∈ s
 #align one_mem_class OneMemClass
 
 export OneMemClass (one_mem)
 
 /-- `zero_mem_class S M` says `S` is a type of subsets `s ≤ M`, such that `0 ∈ s` for all `s`. -/
-class ZeroMemClass (S : Type _) (M : outParam <| Type _) [Zero M] [SetLike S M] where
+class ZeroMemClass (S : Type _) (M : outParam <| Type _) [Zero M] [SetLike S M] : Prop where
   zero_mem : ∀ s : S, (0 : M) ∈ s
 #align zero_mem_class ZeroMemClass
 
@@ -101,8 +101,7 @@ add_decl_doc Submonoid.toSubsemigroup
 /-- `submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `1`
 and are closed under `(*)` -/
 class SubmonoidClass (S : Type _) (M : outParam <| Type _) [MulOneClass M] [SetLike S M] extends
-  MulMemClass S M where
-  one_mem : ∀ s : S, (1 : M) ∈ s
+  MulMemClass S M, OneMemClass S M : Prop
 #align submonoid_class SubmonoidClass
 
 section
@@ -122,18 +121,10 @@ add_decl_doc AddSubmonoid.toAddSubsemigroup
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
 class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClass M] [SetLike S M] extends
-  AddMemClass S M where
-  zero_mem : ∀ s : S, (0 : M) ∈ s
+  AddMemClass S M, ZeroMemClass S M : Prop
 #align add_submonoid_class AddSubmonoidClass
 
 attribute [to_additive] Submonoid SubmonoidClass
-
--- See note [lower instance priority]
-@[to_additive]
-instance (priority := 100) SubmonoidClass.toOneMemClass (S : Type _) (M : outParam <| Type _)
-    [MulOneClass M] [SetLike S M] [h : SubmonoidClass S M] : OneMemClass S M :=
-  { h with }
-#align submonoid_class.to_one_mem_class SubmonoidClass.toOneMemClass
 
 @[to_additive]
 theorem pow_mem {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} {x : M}

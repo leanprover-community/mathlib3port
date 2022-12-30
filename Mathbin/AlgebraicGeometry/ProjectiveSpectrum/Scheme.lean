@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.scheme
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -233,8 +233,8 @@ theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ :=
     refine'
       ⟨f ^ N * f ^ M, eq1.symm ▸ mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _),
         ⟨N + M, by rw [pow_add]⟩⟩
-    generalize_proofs h
-    exact (Classical.choose_spec h).1
+    generalize_proofs h₁ h₂
+    exact (Classical.choose_spec h₂).1
 #align
   algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.carrier_ne_top AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.carrier_ne_top
 
@@ -279,8 +279,8 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
       · exact False.elim (x.2 (x.1.IsPrime.mem_of_pow_mem M rid2))
       · rw [mul_comm _ (f ^ N), eq1]
         refine' mul_mem_right _ _ (mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
-        generalize_proofs h
-        exact (Classical.choose_spec h).1⟩
+        generalize_proofs h₁ h₂
+        exact (Classical.choose_spec h₂).1⟩
 #align
   algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.to_fun AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.toFun
 
@@ -333,8 +333,8 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
       · exact y.2 (y.1.IsPrime.mem_of_pow_mem M H3)
       · rw [mul_comm _ (f ^ N), eq1]
         refine' mul_mem_right _ _ (mul_mem_right _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
-        generalize_proofs h
-        exact (Classical.choose_spec h).1
+        generalize_proofs h₁ h₂
+        exact (Classical.choose_spec h₂).1
 #align
   algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.preimage_eq AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.preimage_eq
 

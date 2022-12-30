@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -456,7 +456,7 @@ variable (p p' : Submodule R M)
 variable {r : R} {x y : M}
 
 instance [Module R M] : AddSubgroupClass (Submodule R M) M :=
-  { Submodule.addSubmonoidClass with neg_mem := fun p x => p.toSubMulAction.neg_mem }
+  { Submodule.add_submonoid_class with neg_mem := fun p x => p.toSubMulAction.neg_mem }
 
 protected theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
   neg_mem hx

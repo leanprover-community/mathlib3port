@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module ring_theory.subring.basic
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,15 +78,14 @@ section SubringClass
 /-- `subring_class S R` states that `S` is a type of subsets `s ⊆ R` that
 are both a multiplicative submonoid and an additive subgroup. -/
 class SubringClass (S : Type _) (R : outParam <| Type u) [Ring R] [SetLike S R] extends
-  SubsemiringClass S R where
-  neg_mem : ∀ {s : S} {a : R}, a ∈ s → -a ∈ s
+  SubsemiringClass S R, NegMemClass S R : Prop
 #align subring_class SubringClass
 
 -- See note [lower instance priority]
-instance (priority := 100) SubringClass.addSubgroupClass (S : Type _) (R : outParam <| Type u)
+instance (priority := 100) SubringClass.add_subgroup_class (S : Type _) (R : outParam <| Type u)
     [SetLike S R] [Ring R] [h : SubringClass S R] : AddSubgroupClass S R :=
   { h with }
-#align subring_class.add_subgroup_class SubringClass.addSubgroupClass
+#align subring_class.add_subgroup_class SubringClass.add_subgroup_class
 
 variable [SetLike S R] [hSR : SubringClass S R] (s : S)
 

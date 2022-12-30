@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module ring_theory.non_unital_subsemiring.basic
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,11 +38,11 @@ class NonUnitalSubsemiringClass (S : Type _) (R : outParam <| Type u) [NonUnital
 #align non_unital_subsemiring_class NonUnitalSubsemiringClass
 
 -- See note [lower instance priority]
-instance (priority := 100) NonUnitalSubsemiringClass.mulMemClass (S : Type _)
+instance (priority := 100) NonUnitalSubsemiringClass.mul_mem_class (S : Type _)
     (R : outParam <| Type u) [NonUnitalNonAssocSemiring R] [SetLike S R]
     [h : NonUnitalSubsemiringClass S R] : MulMemClass S R :=
   { h with }
-#align non_unital_subsemiring_class.mul_mem_class NonUnitalSubsemiringClass.mulMemClass
+#align non_unital_subsemiring_class.mul_mem_class NonUnitalSubsemiringClass.mul_mem_class
 
 namespace NonUnitalSubsemiringClass
 

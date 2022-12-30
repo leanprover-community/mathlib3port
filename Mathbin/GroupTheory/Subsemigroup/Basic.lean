@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.basic
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,14 +65,14 @@ variable [Mul M] {s : Set M}
 variable [Add A] {t : Set A}
 
 /-- `mul_mem_class S M` says `S` is a type of subsets `s ≤ M` that are closed under `(*)` -/
-class MulMemClass (S : Type _) (M : outParam <| Type _) [Mul M] [SetLike S M] where
+class MulMemClass (S : Type _) (M : outParam <| Type _) [Mul M] [SetLike S M] : Prop where
   mul_mem : ∀ {s : S} {a b : M}, a ∈ s → b ∈ s → a * b ∈ s
 #align mul_mem_class MulMemClass
 
 export MulMemClass (mul_mem)
 
 /-- `add_mem_class S M` says `S` is a type of subsets `s ≤ M` that are closed under `(+)` -/
-class AddMemClass (S : Type _) (M : outParam <| Type _) [Add M] [SetLike S M] where
+class AddMemClass (S : Type _) (M : outParam <| Type _) [Add M] [SetLike S M] : Prop where
   add_mem : ∀ {s : S} {a b : M}, a ∈ s → b ∈ s → a + b ∈ s
 #align add_mem_class AddMemClass
 

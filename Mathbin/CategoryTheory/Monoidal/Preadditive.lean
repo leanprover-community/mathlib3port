@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.preadditive
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ variable (C : Type _) [Category C] [Preadditive C] [MonoidalCategory C]
 Note we don't `extend preadditive C` here, as `abelian C` already extends it,
 and we'll need to have both typeclasses sometimes.
 -/
-class MonoidalPreadditive where
+class MonoidalPreadditive : Prop where
   tensor_zero' : ∀ {W X Y Z : C} (f : W ⟶ X), f ⊗ (0 : Y ⟶ Z) = 0 := by obviously
   zero_tensor' : ∀ {W X Y Z : C} (f : Y ⟶ Z), (0 : W ⟶ X) ⊗ f = 0 := by obviously
   tensor_add' : ∀ {W X Y Z : C} (f : W ⟶ X) (g h : Y ⟶ Z), f ⊗ (g + h) = f ⊗ g + f ⊗ h := by
@@ -81,28 +81,29 @@ instance tensoring_right_additive (X : C) : ((tensoringRight C).obj X).Additive 
 
 /-- A faithful additive monoidal functor to a monoidal preadditive category
 ensures that the domain is monoidal preadditive. -/
-def monoidalPreadditiveOfFaithful {D : Type _} [Category D] [Preadditive D] [MonoidalCategory D]
-    (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] : MonoidalPreadditive D
-    where
-  tensor_zero' := by
-    intros
-    apply F.to_functor.map_injective
-    simp [F.map_tensor]
-  zero_tensor' := by
-    intros
-    apply F.to_functor.map_injective
-    simp [F.map_tensor]
-  tensor_add' := by
-    intros
-    apply F.to_functor.map_injective
-    simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
-      monoidal_preadditive.tensor_add]
-  add_tensor' := by
-    intros
-    apply F.to_functor.map_injective
-    simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
-      monoidal_preadditive.add_tensor]
-#align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidalPreadditiveOfFaithful
+theorem monoidal_preadditive_of_faithful {D} [Category D] [Preadditive D] [MonoidalCategory D]
+    (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive] :
+    MonoidalPreadditive D :=
+  { tensor_zero' := by
+      intros
+      apply F.to_functor.map_injective
+      simp [F.map_tensor]
+    zero_tensor' := by
+      intros
+      apply F.to_functor.map_injective
+      simp [F.map_tensor]
+    tensor_add' := by
+      intros
+      apply F.to_functor.map_injective
+      simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
+        monoidal_preadditive.tensor_add]
+    add_tensor' := by
+      intros
+      apply F.to_functor.map_injective
+      simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
+        monoidal_preadditive.add_tensor] }
+#align
+  category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidal_preadditive_of_faithful
 
 open BigOperators
 

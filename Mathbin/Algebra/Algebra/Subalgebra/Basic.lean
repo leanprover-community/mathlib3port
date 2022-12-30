@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.basic
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,7 +185,7 @@ protected theorem prod_mem {R : Type u} {A : Type v} [CommSemiring R] [CommSemir
 #align subalgebra.prod_mem Subalgebra.prod_mem
 
 instance {R A : Type _} [CommRing R] [Ring A] [Algebra R A] : SubringClass (Subalgebra R A) A :=
-  { Subalgebra.subsemiringClass with neg_mem := fun S x hx => neg_one_smul R x ▸ S.smul_mem hx _ }
+  { Subalgebra.subsemiring_class with neg_mem := fun S x hx => neg_one_smul R x ▸ S.smul_mem hx _ }
 
 protected theorem neg_mem {R : Type u} {A : Type v} [CommRing R] [Ring A] [Algebra R A]
     (S : Subalgebra R A) {x : A} (hx : x ∈ S) : -x ∈ S :=

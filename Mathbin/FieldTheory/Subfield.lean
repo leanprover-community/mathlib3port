@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.subfield
-! leanprover-community/mathlib commit 422e70f7ce183d2900c586a8cda8381e788a0c62
+! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Field M]
 
 /-- `subfield_class S K` states `S` is a type of subsets `s ⊆ K` closed under field operations. -/
 class SubfieldClass (S : Type _) (K : outParam <| Type _) [Field K] [SetLike S K] extends
-  SubringClass S K, InvMemClass S K
+  SubringClass S K, InvMemClass S K : Prop
 #align subfield_class SubfieldClass
 
 namespace SubfieldClass
@@ -87,9 +87,9 @@ include h
 Be assured that we're not actually proving that subfields are subgroups:
 `subgroup_class` is really an abbreviation of `subgroup_with_or_without_zero_class`.
  -/
-instance (priority := 100) SubfieldClass.toSubgroupClass : SubgroupClass S K :=
+instance (priority := 100) SubfieldClass.to_subgroup_class : SubgroupClass S K :=
   { h with }
-#align subfield_class.subfield_class.to_subgroup_class SubfieldClass.SubfieldClass.toSubgroupClass
+#align subfield_class.subfield_class.to_subgroup_class SubfieldClass.SubfieldClass.to_subgroup_class
 
 variable {S}
 
