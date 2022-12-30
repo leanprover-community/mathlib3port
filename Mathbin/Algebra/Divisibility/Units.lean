@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.divisibility.units
-! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
+! leanprover-community/mathlib commit 09597669f02422ed388036273d8848119699c22f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

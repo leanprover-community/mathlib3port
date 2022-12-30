@@ -6,7 +6,7 @@ Authors: Kevin Buzzard, Patrick Massot
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 
 ! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit 986c4d5761f938b2e1c43c01f001b6d9d88c2055
+! leanprover-community/mathlib commit 09597669f02422ed388036273d8848119699c22f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,6 +43,8 @@ proves Noether's first and second isomorphism theorems.
 isomorphism theorems, quotient groups
 -/
 
+
+open Function
 
 universe u v
 
@@ -87,7 +89,7 @@ theorem mk'_apply (x : G) : mk' N x = x :=
 #align quotient_group.mk'_apply QuotientGroup.mk'_apply
 
 @[to_additive]
-theorem mk'_surjective : Function.Surjective <| mk' N :=
+theorem mk'_surjective : surjective <| mk' N :=
   @mk_surjective _ _ N
 #align quotient_group.mk'_surjective QuotientGroup.mk'_surjective
 
@@ -216,21 +218,19 @@ def map (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f) : G ⧸
 @[simp, to_additive]
 theorem map_coe (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) :
     map N M f h ↑x = ↑(f x) :=
-  lift_mk' _ _ x
+  rfl
 #align quotient_group.map_coe QuotientGroup.map_coe
 
 @[to_additive]
 theorem map_mk' (M : Subgroup H) [M.Normal] (f : G →* H) (h : N ≤ M.comap f) (x : G) :
     map N M f h (mk' _ x) = ↑(f x) :=
-  QuotientGroup.lift_mk' _ _ x
+  rfl
 #align quotient_group.map_mk' QuotientGroup.map_mk'
 
 @[to_additive]
 theorem map_id_apply (h : N ≤ Subgroup.comap (MonoidHom.id _) N := (Subgroup.comap_id N).le) (x) :
     map N N (MonoidHom.id _) h x = x :=
-  by
-  refine' induction_on' x fun x => _
-  simp only [map_coe, MonoidHom.id_apply]
+  (induction_on' x) fun x => rfl
 #align quotient_group.map_id_apply QuotientGroup.map_id_apply
 
 @[simp, to_additive]
@@ -290,24 +290,26 @@ def congr (e : G ≃* H) (he : G'.map ↑e = H') : G ⧸ G' ≃* H ⧸ H' :=
 
 @[simp]
 theorem congr_mk (e : G ≃* H) (he : G'.map ↑e = H') (x) : congr G' H' e he (mk x) = e x :=
-  map_mk' G' _ _ (he ▸ G'.le_comap_map e) _
+  rfl
 #align quotient_group.congr_mk QuotientGroup.congr_mk
 
 theorem congr_mk' (e : G ≃* H) (he : G'.map ↑e = H') (x) :
     congr G' H' e he (mk' G' x) = mk' H' (e x) :=
-  map_mk' G' _ _ (he ▸ G'.le_comap_map e) _
+  rfl
 #align quotient_group.congr_mk' QuotientGroup.congr_mk'
 
 @[simp]
 theorem congr_apply (e : G ≃* H) (he : G'.map ↑e = H') (x : G) :
     congr G' H' e he x = mk' H' (e x) :=
-  map_mk' G' _ _ (he ▸ G'.le_comap_map e) _
+  rfl
 #align quotient_group.congr_apply QuotientGroup.congr_apply
 
 @[simp]
 theorem congr_refl (he : G'.map (MulEquiv.refl G : G →* G) = G' := Subgroup.map_id G') :
-    congr G' G' (MulEquiv.refl G) he = MulEquiv.refl (G ⧸ G') := by
-  ext x <;> refine' induction_on' x fun x' => _ <;> simp
+    congr G' G' (MulEquiv.refl G) he = MulEquiv.refl (G ⧸ G') :=
+  by
+  ext ⟨x⟩
+  rfl
 #align quotient_group.congr_refl QuotientGroup.congr_refl
 
 @[simp]
@@ -320,7 +322,7 @@ end congr
 
 variable (φ : G →* H)
 
-open Function MonoidHom
+open MonoidHom
 
 /-- The induced map from the quotient by the kernel to the codomain. -/
 @[to_additive "The induced map from the quotient by the kernel to the codomain."]
@@ -381,11 +383,11 @@ with a right inverse `ψ : H → G`. -/
 @[to_additive
       "The canonical isomorphism `G/(ker φ) ≃+ H` induced by a homomorphism `φ : G →+ H`\nwith a right inverse `ψ : H → G`.",
   simps]
-def quotientKerEquivOfRightInverse (ψ : H → G) (hφ : Function.RightInverse ψ φ) : G ⧸ ker φ ≃* H :=
+def quotientKerEquivOfRightInverse (ψ : H → G) (hφ : RightInverse ψ φ) : G ⧸ ker φ ≃* H :=
   { kerLift φ with
     toFun := kerLift φ
     invFun := mk ∘ ψ
-    left_inv := fun x => ker_lift_injective φ (by rw [Function.comp_apply, ker_lift_mk', hφ])
+    left_inv := fun x => ker_lift_injective φ (by rw [comp_app, ker_lift_mk', hφ])
     right_inv := hφ }
 #align
   quotient_group.quotient_ker_equiv_of_right_inverse QuotientGroup.quotientKerEquivOfRightInverse
@@ -402,7 +404,7 @@ For a `computable` version, see `quotient_group.quotient_ker_equiv_of_right_inve
 -/
 @[to_additive
       "The canonical isomorphism `G/(ker φ) ≃+ H` induced by a surjection `φ : G →+ H`.\n\nFor a `computable` version, see `quotient_add_group.quotient_ker_equiv_of_right_inverse`."]
-noncomputable def quotientKerEquivOfSurjective (hφ : Function.Surjective φ) : G ⧸ ker φ ≃* H :=
+noncomputable def quotientKerEquivOfSurjective (hφ : Surjective φ) : G ⧸ ker φ ≃* H :=
   quotientKerEquivOfRightInverse φ _ hφ.HasRightInverse.some_spec
 #align quotient_group.quotient_ker_equiv_of_surjective QuotientGroup.quotientKerEquivOfSurjective
 
@@ -548,7 +550,7 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
       H →*
       _ ⧸ N.subgroupOf (H ⊔ N) :=
     (mk' <| N.subgroupOf (H ⊔ N)).comp (inclusion le_sup_left)
-  have φ_surjective : Function.Surjective φ := fun x =>
+  have φ_surjective : Surjective φ := fun x =>
     x.inductionOn' <| by
       rintro ⟨y, hy : y ∈ ↑(H ⊔ N)⟩; rw [mul_normal H N] at hy
       rcases hy with ⟨h, n, hh, hn, rfl⟩
