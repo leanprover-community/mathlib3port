@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.order_of_element
-! leanprover-community/mathlib commit 09597669f02422ed388036273d8848119699c22f
+! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -178,6 +178,20 @@ theorem order_of_eq_zero_iff : orderOf x = 0 ↔ ¬IsOfFinOrder x :=
 theorem order_of_eq_zero_iff' : orderOf x = 0 ↔ ∀ n : ℕ, 0 < n → x ^ n ≠ 1 := by
   simp_rw [order_of_eq_zero_iff, is_of_fin_order_iff_pow_eq_one, not_exists, not_and]
 #align order_of_eq_zero_iff' order_of_eq_zero_iff'
+
+@[to_additive add_order_of_eq_iff]
+theorem order_of_eq_iff {n} (h : 0 < n) :
+    orderOf x = n ↔ x ^ n = 1 ∧ ∀ m, m < n → 0 < m → x ^ m ≠ 1 :=
+  by
+  simp_rw [Ne, ← is_periodic_pt_mul_iff_pow_eq_one, orderOf, minimal_period]
+  split_ifs with h1
+  · rw [find_eq_iff, exists_prop_of_true h]
+    push_neg
+    rfl
+  · rw [iff_false_left h.ne]
+    rintro ⟨h', -⟩
+    exact h1 ⟨n, h, h'⟩
+#align order_of_eq_iff order_of_eq_iff
 
 /-- A group element has finite order iff its order is positive. -/
 @[to_additive add_order_of_pos_iff

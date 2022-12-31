@@ -6,7 +6,7 @@ Authors: Gabriel Ebner
 Tactic to split if-then-else-expressions.
 
 ! This file was ported from Lean 3 source module tactic.split_ifs
-! leanprover-community/mathlib commit 09597669f02422ed388036273d8848119699c22f
+! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
