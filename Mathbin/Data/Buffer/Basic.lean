@@ -6,7 +6,7 @@ Authors: Simon Hudon
 General utility functions for buffers.
 
 ! This file was ported from Lean 3 source module data.buffer.basic
-! leanprover-community/mathlib commit ffc3730d545623aedf5d5bd46a3153cbf41f6c2c
+! leanprover-community/mathlib commit 9aba7801eeecebb61f58a5763c2b6dd1b47dc6ef
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
