@@ -2243,6 +2243,7 @@ import Mathbin.NumberTheory.RamificationInertia
 import Mathbin.NumberTheory.SumFourSquares
 import Mathbin.NumberTheory.SumTwoSquares
 import Mathbin.NumberTheory.VonMangoldt
+import Mathbin.NumberTheory.WellApproximable
 import Mathbin.NumberTheory.Wilson
 import Mathbin.NumberTheory.Zsqrtd.Basic
 import Mathbin.NumberTheory.Zsqrtd.GaussianInt

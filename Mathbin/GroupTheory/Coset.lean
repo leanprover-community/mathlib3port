@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mitchell Rowett, Scott Morrison
 
 ! This file was ported from Lean 3 source module group_theory.coset
-! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
+! leanprover-community/mathlib commit ffc3730d545623aedf5d5bd46a3153cbf41f6c2c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,10 +38,6 @@ This file develops the basic theory of left and right cosets.
 * `s +r a`: for `right_add_coset s a`.
 
 * `G ⧸ H` is the quotient of the (additive) group `G` by the (additive) subgroup `H`
-
-## TODO
-
-Add `to_additive` to `preimage_mk_equiv_subgroup_times_set`.
 -/
 
 
@@ -489,7 +485,7 @@ theorem eq' {a b : α} : (mk a : α ⧸ s) = mk b ↔ a⁻¹ * b ∈ s :=
   QuotientGroup.eq
 #align quotient_group.eq' QuotientGroup.eq'
 
-@[to_additive QuotientAddGroup.out_eq']
+@[simp, to_additive QuotientAddGroup.out_eq']
 theorem out_eq' (a : α ⧸ s) : mk a.out' = a :=
   Quotient.out_eq' a
 #align quotient_group.out_eq' QuotientGroup.out_eq'
@@ -504,10 +500,10 @@ theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : α ⧸ s).out' = g * h :=
   ⟨⟨g⁻¹ * (mk g).out', eq'.mp (mk g).out_eq'.symm⟩, by rw [[anonymous], mul_inv_cancel_left]⟩
 #align quotient_group.mk_out'_eq_mul QuotientGroup.mk_out'_eq_mul
 
-variable {s}
+variable {s} {a b : α}
 
-@[to_additive QuotientAddGroup.mk_mul_of_mem]
-theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁ * g₂) : α ⧸ s) = mk g₁ := by
+@[simp, to_additive QuotientAddGroup.mk_add_of_mem]
+theorem mk_mul_of_mem (a : α) (hb : b ∈ s) : (mk (a * b) : α ⧸ s) = mk a := by
   rwa [eq', mul_inv_rev, inv_mul_cancel_right, s.inv_mem_iff]
 #align quotient_group.mk_mul_of_mem QuotientGroup.mk_mul_of_mem
 
@@ -617,7 +613,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
     refine' Quotient.ind' fun a => _
     refine' Quotient.ind' fun b => _
     have key : Quotient.mk' (f (Quotient.mk' a) * b) = Quotient.mk' a :=
-      (QuotientGroup.mk_mul_of_mem (f a) (↑b) b.2).trans (hf a)
+      (QuotientGroup.mk_mul_of_mem (f a) b.2).trans (hf a)
     simp_rw [Quotient.map'_mk', id.def, key, inv_mul_cancel_left, Subtype.coe_eta]
 #align subgroup.quotient_equiv_prod_of_le' Subgroup.quotientEquivProdOfLe'
 
@@ -739,8 +735,8 @@ theorem card_subgroup_dvd_card [Fintype α] (s : Subgroup α) [Fintype s] :
 #align subgroup.card_subgroup_dvd_card Subgroup.card_subgroup_dvd_card
 
 @[to_additive]
-theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred fun a => a ∈ s]
-    [Fintype s] : Fintype.card (α ⧸ s) ∣ Fintype.card α := by
+theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred (· ∈ s)] :
+    Fintype.card (α ⧸ s) ∣ Fintype.card α := by
   simp [card_eq_card_quotient_mul_card_subgroup s, @dvd_mul_right ℕ]
 #align subgroup.card_quotient_dvd_card Subgroup.card_quotient_dvd_card
 
@@ -780,28 +776,24 @@ namespace QuotientGroup
 
 variable [Group α]
 
--- FIXME -- why is there no `to_additive`?
-/-- If `s` is a subgroup of the group `α`, and `t` is a subset of `α/s`, then
-there is a (typically non-canonical) bijection between the preimage of `t` in
-`α` and the product `s × t`. -/
+/-- If `s` is a subgroup of the group `α`, and `t` is a subset of `α ⧸ s`, then there is a
+(typically non-canonical) bijection between the preimage of `t` in `α` and the product `s × t`. -/
+@[to_additive
+      "If `s` is a subgroup of the additive group `α`, and `t` is a subset of `α ⧸ s`, then\nthere is a (typically non-canonical) bijection between the preimage of `t` in `α` and the product\n`s × t`."]
 noncomputable def preimageMkEquivSubgroupTimesSet (s : Subgroup α) (t : Set (α ⧸ s)) :
-    QuotientGroup.mk ⁻¹' t ≃ s × t :=
-  have h :
-    ∀ {x : α ⧸ s} {a : α},
-      x ∈ t →
-        a ∈ s → (Quotient.mk' (Quotient.out' x * a) : α ⧸ s) = Quotient.mk' (Quotient.out' x) :=
-    fun x a hx ha =>
-    Quotient.sound' <| by
-      rwa [left_rel_apply, ← s.inv_mem_iff, mul_inv_rev, inv_inv, ← mul_assoc, inv_mul_self,
-        one_mul]
-  { toFun := fun ⟨a, ha⟩ =>
-      ⟨⟨(Quotient.out' (Quotient.mk' a))⁻¹ * a,
-          left_rel_apply.mp (@Quotient.exact' _ (leftRel s) _ _ <| Quotient.out_eq' _)⟩,
-        ⟨Quotient.mk' a, ha⟩⟩
-    invFun := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ =>
-      ⟨Quotient.out' x * a, show Quotient.mk' _ ∈ t by simp [h hx ha, hx]⟩
-    left_inv := fun ⟨a, ha⟩ => Subtype.eq <| show _ * _ = a by simp
-    right_inv := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ => show (_, _) = _ by simp [h hx ha] }
+    QuotientGroup.mk ⁻¹' t ≃ s × t
+    where
+  toFun a :=
+    ⟨⟨(Quotient.out' (QuotientGroup.mk a))⁻¹ * a,
+        left_rel_apply.mp (@Quotient.exact' _ (leftRel s) _ _ <| Quotient.out_eq' _)⟩,
+      ⟨QuotientGroup.mk a, a.2⟩⟩
+  invFun a :=
+    ⟨Quotient.out' a.2.1 * a.1.1,
+      show QuotientGroup.mk _ ∈ t by
+        rw [mk_mul_of_mem _ a.1.2, out_eq']
+        exact a.2.2⟩
+  left_inv := fun ⟨a, ha⟩ => Subtype.eq <| show _ * _ = a by simp
+  right_inv := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ => by ext <;> simp [ha]
 #align
   quotient_group.preimage_mk_equiv_subgroup_times_set QuotientGroup.preimageMkEquivSubgroupTimesSet
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.functor.flat
-! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
+! leanprover-community/mathlib commit ffc3730d545623aedf5d5bd46a3153cbf41f6c2c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,8 +191,8 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₁} D]
 attribute [local instance] has_finite_limits_of_has_finite_limits_of_size
 
 theorem cofiltered_of_has_finite_limits [HasFiniteLimits C] : IsCofiltered C :=
-  { cocone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩
-    cocone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
+  { cone_objs := fun A B => ⟨Limits.prod A B, Limits.prod.fst, Limits.prod.snd, trivial⟩
+    cone_maps := fun A B f g => ⟨equalizer f g, equalizer.ι f g, equalizer.condition f g⟩
     Nonempty := ⟨⊤_ C⟩ }
 #align
   category_theory.cofiltered_of_has_finite_limits CategoryTheory.cofiltered_of_has_finite_limits

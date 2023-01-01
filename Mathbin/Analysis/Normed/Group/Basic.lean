@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
+! leanprover-community/mathlib commit ffc3730d545623aedf5d5bd46a3153cbf41f6c2c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1439,6 +1439,22 @@ theorem mul_mem_closed_ball_mul_iff {c : E} : a * c ∈ closedBall (b * c) r ↔
 theorem mul_mem_ball_mul_iff {c : E} : a * c ∈ ball (b * c) r ↔ a ∈ ball b r := by
   simp only [mem_ball, dist_eq_norm_div, mul_div_mul_right_eq_div]
 #align mul_mem_ball_mul_iff mul_mem_ball_mul_iff
+
+@[to_additive]
+theorem smul_closed_ball'' : a • closedBall b r = closedBall (a • b) r :=
+  by
+  ext
+  simp [mem_closed_ball, Set.mem_smul_set, dist_eq_norm_div, div_eq_inv_mul, ←
+    eq_inv_mul_iff_mul_eq, mul_assoc]
+#align smul_closed_ball'' smul_closed_ball''
+
+@[to_additive]
+theorem smul_ball'' : a • ball b r = ball (a • b) r :=
+  by
+  ext
+  simp [mem_ball, Set.mem_smul_set, dist_eq_norm_div, div_eq_inv_mul, ← eq_inv_mul_iff_mul_eq,
+    mul_assoc]
+#align smul_ball'' smul_ball''
 
 namespace Isometric
 

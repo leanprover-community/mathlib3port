@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
+! leanprover-community/mathlib commit ffc3730d545623aedf5d5bd46a3153cbf41f6c2c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1087,6 +1087,11 @@ theorem thickening_singleton (δ : ℝ) (x : X) : thickening δ ({x} : Set X) = 
   ext
   simp [mem_thickening_iff]
 #align metric.thickening_singleton Metric.thickening_singleton
+
+theorem ball_subset_thickening {x : X} {E : Set X} (hx : x ∈ E) (δ : ℝ) :
+    ball x δ ⊆ thickening δ E :=
+  Subset.trans (by simp) (thickening_subset_of_subset δ <| singleton_subset_iff.mpr hx)
+#align metric.ball_subset_thickening Metric.ball_subset_thickening
 
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/

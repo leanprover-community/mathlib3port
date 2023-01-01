@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.liminf_limsup
-! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
+! leanprover-community/mathlib commit ffc3730d545623aedf5d5bd46a3153cbf41f6c2c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,6 +23,8 @@ carrying a doubling measure.
    distances is multiplied by a positive scale factor. This is a generalisation of a result of
    Cassels, appearing as Lemma 9 on page 217 of
    [J.W.S. Cassels, *Some metrical theorems in Diophantine approximation. I*](cassels1950).
+ * `blimsup_thickening_mul_ae_eq`: a variant of `blimsup_cthickening_mul_ae_eq` for thickenings
+   rather than closed thickenings.
 
 -/
 
@@ -202,6 +204,8 @@ scaled by a positive constant.
 This lemma is a generalisation of Lemma 9 appearing on page 217 of
 [J.W.S. Cassels, *Some metrical theorems in Diophantine approximation. I*](cassels1950).
 
+See also `blimsup_thickening_mul_ae_eq`.
+
 NB: The `set : α` type ascription is present because of issue #16932 on GitHub. -/
 theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M : ℝ} (hM : 0 < M)
     (r : ℕ → ℝ) (hr : Tendsto r atTop (𝓝 0)) :
@@ -260,4 +264,75 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     blimsup_congr (eventually_of_forall h₂)]
   exact ae_eq_set_union (this (fun i => p i ∧ 0 < r i) hr') (ae_eq_refl _)
 #align blimsup_cthickening_mul_ae_eq blimsup_cthickening_mul_ae_eq
+
+theorem blimsup_cthickening_ae_eq_blimsup_thickening {p : ℕ → Prop} {s : ℕ → Set α} {r : ℕ → ℝ}
+    (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in at_top, p i → 0 < r i) :
+    (blimsup (fun i => cthickening (r i) (s i)) atTop p : Set α) =ᵐ[μ]
+      (blimsup (fun i => thickening (r i) (s i)) atTop p : Set α) :=
+  by
+  refine' eventually_le_antisymm_iff.mpr ⟨_, HasSubset.Subset.eventually_le (_ : _ ≤ _)⟩
+  · rw [eventually_le_congr (blimsup_cthickening_mul_ae_eq μ p s (@one_half_pos ℝ _) r hr).symm
+        eventually_eq.rfl]
+    apply HasSubset.Subset.eventually_le
+    change _ ≤ _
+    refine' mono_blimsup' (hr'.mono fun i hi pi => cthickening_subset_thickening' (hi pi) _ (s i))
+    nlinarith [hi pi]
+  · exact mono_blimsup fun i pi => thickening_subset_cthickening _ _
+#align blimsup_cthickening_ae_eq_blimsup_thickening blimsup_cthickening_ae_eq_blimsup_thickening
+
+/-- An auxiliary result en route to `blimsup_thickening_mul_ae_eq`. -/
+theorem blimsup_thickening_mul_ae_eq_aux (p : ℕ → Prop) (s : ℕ → Set α) {M : ℝ} (hM : 0 < M)
+    (r : ℕ → ℝ) (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in at_top, p i → 0 < r i) :
+    (blimsup (fun i => thickening (M * r i) (s i)) atTop p : Set α) =ᵐ[μ]
+      (blimsup (fun i => thickening (r i) (s i)) atTop p : Set α) :=
+  by
+  have h₁ := blimsup_cthickening_ae_eq_blimsup_thickening μ hr hr'
+  have h₂ := blimsup_cthickening_mul_ae_eq μ p s hM r hr
+  replace hr : tendsto (fun i => M * r i) at_top (𝓝 0);
+  · convert hr.const_mul M
+    simp
+  replace hr' : ∀ᶠ i in at_top, p i → 0 < M * r i := hr'.mono fun i hi hip => mul_pos hM (hi hip)
+  have h₃ := blimsup_cthickening_ae_eq_blimsup_thickening μ hr hr'
+  exact h₃.symm.trans (h₂.trans h₁)
+#align blimsup_thickening_mul_ae_eq_aux blimsup_thickening_mul_ae_eq_aux
+
+/-- Given a sequence of subsets `sᵢ` of a metric space, together with a sequence of radii `rᵢ`
+such that `rᵢ → 0`, the set of points which belong to infinitely many of the
+`rᵢ`-thickenings of `sᵢ` is unchanged almost everywhere for a doubling measure if the `rᵢ` are all
+scaled by a positive constant.
+
+This lemma is a generalisation of Lemma 9 appearing on page 217 of
+[J.W.S. Cassels, *Some metrical theorems in Diophantine approximation. I*](cassels1950).
+
+See also `blimsup_cthickening_mul_ae_eq`.
+
+NB: The `set : α` type ascription is present because of issue #16932 on GitHub. -/
+theorem blimsup_thickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M : ℝ} (hM : 0 < M) (r : ℕ → ℝ)
+    (hr : Tendsto r atTop (𝓝 0)) :
+    (blimsup (fun i => thickening (M * r i) (s i)) atTop p : Set α) =ᵐ[μ]
+      (blimsup (fun i => thickening (r i) (s i)) atTop p : Set α) :=
+  by
+  let q : ℕ → Prop := fun i => p i ∧ 0 < r i
+  have h₁ :
+    blimsup (fun i => thickening (r i) (s i)) at_top p =
+      blimsup (fun i => thickening (r i) (s i)) at_top q :=
+    by
+    refine' blimsup_congr' (eventually_of_forall fun i h => _)
+    replace hi : 0 < r i
+    · contrapose! h
+      apply thickening_of_nonpos h
+    simp only [hi, iff_self_and, imp_true_iff]
+  have h₂ :
+    blimsup (fun i => thickening (M * r i) (s i)) at_top p =
+      blimsup (fun i => thickening (M * r i) (s i)) at_top q :=
+    by
+    refine' blimsup_congr' (eventually_of_forall fun i h => _)
+    replace h : 0 < r i
+    · rw [← zero_lt_mul_left hM]
+      contrapose! h
+      apply thickening_of_nonpos h
+    simp only [h, iff_self_and, imp_true_iff]
+  rw [h₁, h₂]
+  exact blimsup_thickening_mul_ae_eq_aux μ q s hM r hr (eventually_of_forall fun i hi => hi.2)
+#align blimsup_thickening_mul_ae_eq blimsup_thickening_mul_ae_eq
 

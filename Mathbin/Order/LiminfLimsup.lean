@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.liminf_limsup
-! leanprover-community/mathlib commit a437a2499163d85d670479f69f625f461cc5fef9
+! leanprover-community/mathlib commit ffc3730d545623aedf5d5bd46a3153cbf41f6c2c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -790,6 +790,22 @@ theorem HasBasis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : 
     (h : f.HasBasis p s) : limsup u f = ⨅ (i) (hi : p i), ⨆ a ∈ s i, u a :=
   (h.map u).Limsup_eq_infi_Sup.trans <| by simp only [supₛ_image, id]
 #align filter.has_basis.limsup_eq_infi_supr Filter.HasBasis.limsup_eq_infi_supr
+
+theorem blimsup_congr' {f : Filter β} {p q : β → Prop} {u : β → α}
+    (h : ∀ᶠ x in f, u x ≠ ⊥ → (p x ↔ q x)) : blimsup u f p = blimsup u f q :=
+  by
+  simp only [blimsup_eq]
+  congr
+  ext a
+  refine' eventually_congr (h.mono fun b hb => _)
+  cases' eq_or_ne (u b) ⊥ with hu hu; · simp [hu]
+  rw [hb hu]
+#align filter.blimsup_congr' Filter.blimsup_congr'
+
+theorem bliminf_congr' {f : Filter β} {p q : β → Prop} {u : β → α}
+    (h : ∀ᶠ x in f, u x ≠ ⊤ → (p x ↔ q x)) : bliminf u f p = bliminf u f q :=
+  @blimsup_congr' αᵒᵈ β _ _ _ _ _ h
+#align filter.bliminf_congr' Filter.bliminf_congr'
 
 theorem blimsup_eq_infi_bsupr {f : Filter β} {p : β → Prop} {u : β → α} :
     blimsup u f p = ⨅ s ∈ f, ⨆ (b) (hb : p b ∧ b ∈ s), u b :=
