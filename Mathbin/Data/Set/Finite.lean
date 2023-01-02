@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 9aba7801eeecebb61f58a5763c2b6dd1b47dc6ef
+! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -447,6 +447,7 @@ namespace Finset
 
 /-- Gives a `set.finite` for the `finset` coerced to a `set`.
 This is a wrapper around `set.to_finite`. -/
+@[simp]
 theorem finite_to_set (s : Finset α) : (s : Set α).Finite :=
   Set.to_finite _
 #align finset.finite_to_set Finset.finite_to_set
@@ -462,6 +463,7 @@ end Finset
 
 namespace Multiset
 
+@[simp]
 theorem finite_to_set (s : Multiset α) : { x | x ∈ s }.Finite := by
   classical simpa only [← Multiset.mem_to_finset] using s.to_finset.finite_to_set
 #align multiset.finite_to_set Multiset.finite_to_set
@@ -475,6 +477,7 @@ theorem finite_to_set_to_finset [DecidableEq α] (s : Multiset α) :
 
 end Multiset
 
+@[simp]
 theorem List.finite_to_set (l : List α) : { x | x ∈ l }.Finite :=
   (show Multiset α from ⟦l⟧).finite_to_set
 #align list.finite_to_set List.finite_to_set

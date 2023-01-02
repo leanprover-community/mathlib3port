@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.closure
-! leanprover-community/mathlib commit 9aba7801eeecebb61f58a5763c2b6dd1b47dc6ef
+! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -512,8 +512,8 @@ theorem closure_union_closure_subset (x y : α) : (l x : Set β) ∪ l y ⊆ l (
 #align lower_adjoint.closure_union_closure_subset LowerAdjoint.closure_union_closure_subset
 
 @[simp]
-theorem closure_union_closure_left (x y : α) : (l (l x ∪ y) : Set β) = l (x ∪ y) :=
-  l.closure_sup_closure_left x y
+theorem closure_union_closure_left (x y : α) : l (l x ∪ y) = l (x ∪ y) :=
+  SetLike.coe_injective (l.closure_sup_closure_left x y)
 #align lower_adjoint.closure_union_closure_left LowerAdjoint.closure_union_closure_left
 
 @[simp]
@@ -521,7 +521,6 @@ theorem closure_union_closure_right (x y : α) : l (x ∪ l y) = l (x ∪ y) :=
   SetLike.coe_injective (l.closure_sup_closure_right x y)
 #align lower_adjoint.closure_union_closure_right LowerAdjoint.closure_union_closure_right
 
-@[simp]
 theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
   SetLike.coe_injective (l.ClosureOperator.closure_sup_closure x y)
 #align lower_adjoint.closure_union_closure LowerAdjoint.closure_union_closure

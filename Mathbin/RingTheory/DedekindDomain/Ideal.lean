@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 9aba7801eeecebb61f58a5763c2b6dd1b47dc6ef
+! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,6 +161,20 @@ theorem span_singleton_inv (x : K) :
     (FractionalIdeal.spanSingleton R₁⁰ x)⁻¹ = FractionalIdeal.spanSingleton _ x⁻¹ :=
   FractionalIdeal.one_div_span_singleton x
 #align fractional_ideal.span_singleton_inv FractionalIdeal.span_singleton_inv
+
+theorem coe_ideal_span_singleton_mul_inv {x : R₁} (hx : x ≠ 0) :
+    ((Ideal.span {x} : Ideal R₁) : FractionalIdeal R₁⁰ K) * (Ideal.span {x} : Ideal R₁)⁻¹ = 1 := by
+  rw [coe_ideal_span_singleton, span_singleton_inv, span_singleton_mul_span_singleton,
+    mul_inv_cancel <| (map_ne_zero_iff _ <| NoZeroSmulDivisors.algebra_map_injective R₁ K).mpr hx,
+    span_singleton_one]
+#align
+  fractional_ideal.coe_ideal_span_singleton_mul_inv FractionalIdeal.coe_ideal_span_singleton_mul_inv
+
+theorem coe_ideal_span_singleton_inv_mul {x : R₁} (hx : x ≠ 0) :
+    ((Ideal.span {x} : Ideal R₁) : FractionalIdeal R₁⁰ K)⁻¹ * (Ideal.span {x} : Ideal R₁) = 1 := by
+  rw [mul_comm, coe_ideal_span_singleton_mul_inv K hx]
+#align
+  fractional_ideal.coe_ideal_span_singleton_inv_mul FractionalIdeal.coe_ideal_span_singleton_inv_mul
 
 theorem mul_generator_self_inv {R₁ : Type _} [CommRing R₁] [Algebra R₁ K] [IsLocalization R₁⁰ K]
     (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal (I : Submodule R₁ K)] (h : I ≠ 0) :

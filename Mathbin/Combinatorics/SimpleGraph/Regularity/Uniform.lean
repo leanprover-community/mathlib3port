@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.uniform
-! leanprover-community/mathlib commit 9aba7801eeecebb61f58a5763c2b6dd1b47dc6ef
+! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
