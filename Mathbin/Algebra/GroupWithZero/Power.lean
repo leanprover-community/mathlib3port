@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.power
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Int.Bitwise
 
 /-!
 # Powers of elements of groups with an adjoined zero element
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define integer power functions for groups with an adjoined zero element.
 This generalises the integer power function on a division ring.

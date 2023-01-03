@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,7 +231,8 @@ theorem prod_empty : (∏ x in ∅, f x) = 1 :=
 #align finset.prod_empty Finset.prod_empty
 
 @[to_additive]
-theorem prod_of_empty [IsEmpty α] : (∏ i, f i) = 1 := by rw [univ_eq_empty, prod_empty]
+theorem prod_of_empty [IsEmpty α] (s : Finset α) : (∏ i in s, f i) = 1 := by
+  rw [eq_empty_of_is_empty s, prod_empty]
 #align finset.prod_of_empty Finset.prod_of_empty
 
 @[simp, to_additive]
@@ -1814,13 +1815,14 @@ theorem prod_equiv {α β M : Type _} [Fintype α] [Fintype β] [CommMonoid M] (
 variable {f s}
 
 @[to_additive]
-theorem prod_unique {α β : Type _} [CommMonoid β] [Unique α] (f : α → β) :
+theorem prod_unique {α β : Type _} [CommMonoid β] [Unique α] [Fintype α] (f : α → β) :
     (∏ x : α, f x) = f default := by rw [univ_unique, prod_singleton]
 #align fintype.prod_unique Fintype.prod_unique
 
 @[to_additive]
-theorem prod_empty {α β : Type _} [CommMonoid β] [IsEmpty α] (f : α → β) : (∏ x : α, f x) = 1 := by
-  rw [eq_empty_of_is_empty (univ : Finset α), Finset.prod_empty]
+theorem prod_empty {α β : Type _} [CommMonoid β] [IsEmpty α] [Fintype α] (f : α → β) :
+    (∏ x : α, f x) = 1 :=
+  Finset.prod_of_empty _
 #align fintype.prod_empty Fintype.prod_empty
 
 @[to_additive]

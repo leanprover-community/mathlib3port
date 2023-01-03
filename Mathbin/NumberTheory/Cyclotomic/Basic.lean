@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -563,28 +563,18 @@ instance [CharZero K] : CharZero (CyclotomicField n K) :=
   char_zero_of_injective_algebra_map (algebraMap K _).Injective
 
 instance is_cyclotomic_extension [NeZero ((n : ℕ) : K)] :
-    IsCyclotomicExtension {n} K (CyclotomicField n K)
-    where
-  exists_prim_root a han := by
-    rw [mem_singleton_iff] at han
-    subst a
-    obtain ⟨r, hr⟩ :=
-      exists_root_of_splits (algebraMap K (CyclotomicField n K)) (splitting_field.splits _)
-        (degree_cyclotomic_pos n K n.pos).ne'
-    refine' ⟨r, _⟩
-    haveI := NeZero.of_no_zero_smul_divisors K (CyclotomicField n K) n
-    rwa [← eval_map, ← is_root.def, map_cyclotomic, is_root_cyclotomic_iff] at hr
-  adjoin_roots :=
-    by
-    rw [← Algebra.eq_top_iff, ← splitting_field.adjoin_roots, eq_comm]
-    letI := Classical.decEq (CyclotomicField n K)
-    obtain ⟨ζ, hζ⟩ :=
-      exists_root_of_splits _ (splitting_field.splits (cyclotomic n K))
-        (degree_cyclotomic_pos n _ n.pos).ne'
-    haveI : NeZero ((n : ℕ) : CyclotomicField n K) :=
-      NeZero.nat_of_injective (algebraMap K _).Injective
-    rw [eval₂_eq_eval_map, map_cyclotomic, ← is_root.def, is_root_cyclotomic_iff] at hζ
-    exact IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ
+    IsCyclotomicExtension {n} K (CyclotomicField n K) :=
+  by
+  haveI : NeZero ((n : ℕ) : CyclotomicField n K) :=
+    NeZero.nat_of_injective (algebraMap K _).Injective
+  letI := Classical.decEq (CyclotomicField n K)
+  obtain ⟨ζ, hζ⟩ :=
+    exists_root_of_splits (algebraMap K (CyclotomicField n K)) (splitting_field.splits _)
+      (degree_cyclotomic_pos n K n.pos).ne'
+  rw [← eval_map, ← is_root.def, map_cyclotomic, is_root_cyclotomic_iff] at hζ
+  refine' ⟨forall_eq.2 ⟨ζ, hζ⟩, _⟩
+  rw [← Algebra.eq_top_iff, ← splitting_field.adjoin_roots, eq_comm]
+  exact IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ
 #align cyclotomic_field.is_cyclotomic_extension CyclotomicField.is_cyclotomic_extension
 
 end CyclotomicField

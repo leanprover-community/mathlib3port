@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.bitwise
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Nat.Size
 
 /-!
 # Bitwise operations on integers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 
 ## Recursors
@@ -179,25 +182,25 @@ private unsafe def bitwise_tac : tactic Unit :=
   sorry
 #align int.bitwise_tac int.bitwise_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 theorem bitwise_or : bitwise or = lor := by
   run_tac
     bitwise_tac
 #align int.bitwise_or Int.bitwise_or
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 theorem bitwise_and : bitwise and = land := by
   run_tac
     bitwise_tac
 #align int.bitwise_and Int.bitwise_and
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
   run_tac
     bitwise_tac
 #align int.bitwise_diff Int.bitwise_diff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.840466407.bitwise_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 theorem bitwise_xor : bitwise xor = lxor := by
   run_tac
     bitwise_tac

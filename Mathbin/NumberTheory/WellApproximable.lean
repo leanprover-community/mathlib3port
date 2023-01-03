@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module number_theory.well_approximable
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,18 +234,17 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
     `E` is almost equal to `C p` for every prime. Combining this with 3 we find that `E` is almost
     invariant under the map `y ↦ y + 1/p` for every prime `p`. The required result then follows from
     `add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self`. -/
+  letI : SemilatticeSup Nat.Primes := Nat.Subtype.semilatticeSup _
   set μ : Measure 𝕊 := volume
-  set primes : Set ℕ := { p | p.Prime }
-  haveI : Nonempty primes := ⟨⟨2, Nat.prime_two⟩⟩
-  set u : primes → 𝕊 := fun p => ↑((↑(1 : ℕ) : ℝ) / p * T)
-  have hu₀ : ∀ p : primes, addOrderOf (u p) = (p : ℕ) :=
+  set u : Nat.Primes → 𝕊 := fun p => ↑((↑(1 : ℕ) : ℝ) / p * T)
+  have hu₀ : ∀ p : Nat.Primes, addOrderOf (u p) = (p : ℕ) :=
     by
     rintro ⟨p, hp⟩
     exact add_order_of_div_of_gcd_eq_one hp.pos (gcd_one_left p)
   have hu : tendsto (addOrderOf ∘ u) at_top at_top :=
     by
     rw [(funext hu₀ : addOrderOf ∘ u = coe)]
-    have h_mono : Monotone (coe : primes → ℕ) := fun p q hpq => hpq
+    have h_mono : Monotone (coe : Nat.Primes → ℕ) := fun p q hpq => hpq
     refine' h_mono.tendsto_at_top_at_top fun n => _
     obtain ⟨p, hp, hp'⟩ := n.exists_infinite_primes
     exact ⟨⟨p, hp'⟩, hp⟩
@@ -271,12 +270,12 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
     -- `tauto` can finish from here but unfortunately it's very slow.
     simp only [(em (p ∣ n)).symm, (em (p * p ∣ n)).symm, or_and_left, or_true_iff, true_and_iff,
       or_assoc']
-  have hE₂ : ∀ p : primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∧ B p =ᵐ[μ] (∅ : Set 𝕊) → E =ᵐ[μ] C p :=
+  have hE₂ : ∀ p : Nat.Primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∧ B p =ᵐ[μ] (∅ : Set 𝕊) → E =ᵐ[μ] C p :=
     by
     rintro p ⟨hA, hB⟩
     rw [hE₁ p]
     exact union_ae_eq_right_of_ae_eq_empty ((union_ae_eq_right_of_ae_eq_empty hA).trans hB)
-  have hA : ∀ p : primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∨ A p =ᵐ[μ] univ :=
+  have hA : ∀ p : Nat.Primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∨ A p =ᵐ[μ] univ :=
     by
     rintro ⟨p, hp⟩
     let f : 𝕊 → 𝕊 := fun y => (p : ℕ) • y
@@ -291,7 +290,7 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
     refine' (SupHom.setImage f).apply_blimsup_le.trans (mono_blimsup fun n hn => _)
     replace hn := nat.coprime_comm.mp (hp.coprime_iff_not_dvd.2 hn.2)
     exact approxAddOrderOf.image_nsmul_subset_of_coprime (δ n) hp.pos hn
-  have hB : ∀ p : primes, B p =ᵐ[μ] (∅ : Set 𝕊) ∨ B p =ᵐ[μ] univ :=
+  have hB : ∀ p : Nat.Primes, B p =ᵐ[μ] (∅ : Set 𝕊) ∨ B p =ᵐ[μ] univ :=
     by
     rintro ⟨p, hp⟩
     let x := u ⟨p, hp⟩
@@ -326,7 +325,8 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
     simp only [hu₀, Subtype.coe_mk, h_div, mul_comm p]
   change (∀ᵐ x, x ∉ E) ∨ E ∈ volume.ae
   rw [← eventually_eq_empty, ← eventually_eq_univ]
-  have hC : ∀ p : primes, u p +ᵥ C p = C p := by
+  have hC : ∀ p : Nat.Primes, u p +ᵥ C p = C p :=
+    by
     intro p
     let e := (AddAction.toPerm (u p) : Equiv.Perm 𝕊).toOrderIsoSet
     change e (C p) = C p
@@ -334,8 +334,8 @@ theorem add_well_approximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto
     exact
       blimsup_congr
         (eventually_of_forall fun n hn => approxAddOrderOf.vadd_eq_of_mul_dvd (δ n) hn.1 hn.2)
-  by_cases h : ∀ p : primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∧ B p =ᵐ[μ] (∅ : Set 𝕊)
-  · replace h : ∀ p : primes, (u p +ᵥ E : Set _) =ᵐ[μ] E
+  by_cases h : ∀ p : Nat.Primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∧ B p =ᵐ[μ] (∅ : Set 𝕊)
+  · replace h : ∀ p : Nat.Primes, (u p +ᵥ E : Set _) =ᵐ[μ] E
     · intro p
       replace hE₂ : E =ᵐ[μ] C p := hE₂ p (h p)
       have h_qmp : MeasureTheory.Measure.QuasiMeasurePreserving ((· +ᵥ ·) (-u p)) μ μ :=

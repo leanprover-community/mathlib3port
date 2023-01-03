@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.prime_counting
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,8 +66,8 @@ theorem monotone_prime_counting' : Monotone primeCounting' :=
   count_monotone Prime
 #align nat.monotone_prime_counting' Nat.monotone_prime_counting'
 
-theorem monotone_prime_counting : Monotone primeCounting := fun a b a_le_b =>
-  monotone_prime_counting' (add_le_add_right a_le_b 1)
+theorem monotone_prime_counting : Monotone primeCounting :=
+  monotone_prime_counting'.comp (monotone_id.AddConst _)
 #align nat.monotone_prime_counting Nat.monotone_prime_counting
 
 @[simp]

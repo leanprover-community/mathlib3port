@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.directed
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,6 +64,10 @@ theorem directedOn_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s
 -/
 
 alias directedOn_iff_directed ↔ DirectedOn.directed_coe _
+
+theorem directed_on_range {f : β → α} : Directed r f ↔ DirectedOn r (Set.range f) := by
+  simp_rw [Directed, DirectedOn, Set.forall_range_iff, Set.exists_range_iff]
+#align directed_on_range directed_on_range
 
 #print directedOn_image /-
 theorem directedOn_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by
@@ -298,6 +302,17 @@ protected theorem IsMax.isTop [IsDirected α (· ≤ ·)] (h : IsMax a) : IsTop 
   h.toDual.IsBot
 #align is_max.is_top IsMax.isTop
 -/
+
+theorem DirectedOn.is_bot_of_is_min {s : Set α} (hd : DirectedOn (· ≥ ·) s) {m} (hm : m ∈ s)
+    (hmin : ∀ a ∈ s, a ≤ m → m ≤ a) : ∀ a ∈ s, m ≤ a := fun a as =>
+  let ⟨x, xs, xm, xa⟩ := hd m hm a as
+  (hmin x xs xm).trans xa
+#align directed_on.is_bot_of_is_min DirectedOn.is_bot_of_is_min
+
+theorem DirectedOn.is_top_of_is_max {s : Set α} (hd : DirectedOn (· ≤ ·) s) {m} (hm : m ∈ s)
+    (hmax : ∀ a ∈ s, m ≤ a → a ≤ m) : ∀ a ∈ s, a ≤ m :=
+  @DirectedOn.is_bot_of_is_min αᵒᵈ _ s hd m hm hmax
+#align directed_on.is_top_of_is_max DirectedOn.is_top_of_is_max
 
 #print isTop_or_exists_gt /-
 theorem isTop_or_exists_gt [IsDirected α (· ≤ ·)] (a : α) : IsTop a ∨ ∃ b, a < b :=

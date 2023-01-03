@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1108,10 +1108,10 @@ end OrthonormalSets
 section Norm
 
 theorem norm_eq_sqrt_inner (x : E) : ‖x‖ = sqrt (re ⟪x, x⟫) :=
-  by
-  have h₁ : ‖x‖ ^ 2 = re ⟪x, x⟫ := norm_sq_eq_inner x
-  have h₂ := congr_arg sqrt h₁
-  simpa only [sqrt_sq, norm_nonneg] using h₂
+  calc
+    ‖x‖ = sqrt (‖x‖ ^ 2) := (sqrt_sq (norm_nonneg _)).symm
+    _ = sqrt (re ⟪x, x⟫) := congr_arg _ (norm_sq_eq_inner _)
+    
 #align norm_eq_sqrt_inner norm_eq_sqrt_inner
 
 theorem norm_eq_sqrt_real_inner (x : F) : ‖x‖ = sqrt ⟪x, x⟫_ℝ :=
@@ -1835,13 +1835,8 @@ theorem abs_inner_eq_norm_iff (x y : E) (hx0 : x ≠ 0) (hy0 : y ≠ 0) :
   have hxy0 : ‖x‖ * ‖y‖ ≠ 0 := mul_ne_zero (norm_eq_zero.not.2 hx0) (norm_eq_zero.not.2 hy0)
   have h₁ : abs ⟪x, y⟫ = ‖x‖ * ‖y‖ ↔ abs (⟪x, y⟫ / (‖x‖ * ‖y‖)) = 1 :=
     by
-    constructor <;> intro h
-    · norm_cast
-      rw [IsROrC.abs_div, h, abs_of_real, _root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm]
-      exact div_self hxy0
-    · norm_cast  at h
-      rwa [IsROrC.abs_div, abs_of_real, _root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm,
-        div_eq_one_iff_eq hxy0] at h
+    rw [← algebraMap.coe_mul, IsROrC.abs_div, IsROrC.abs_of_nonneg, div_eq_one_iff_eq hxy0]
+    positivity
   rw [h₁, abs_inner_div_norm_mul_norm_eq_one_iff x y]
   exact and_iff_right hx0
 #align abs_inner_eq_norm_iff abs_inner_eq_norm_iff

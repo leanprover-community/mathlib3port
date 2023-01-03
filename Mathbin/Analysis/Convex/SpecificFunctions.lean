@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.convex.specific_functions
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,21 +100,19 @@ theorem strict_convex_on_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (Ici 
 theorem Real.pow_sum_div_card_le_sum_pow {α : Type _} {s : Finset α} {f : α → ℝ} (n : ℕ)
     (hf : ∀ a ∈ s, 0 ≤ f a) : (∑ x in s, f x) ^ (n + 1) / s.card ^ n ≤ ∑ x in s, f x ^ (n + 1) :=
   by
-  by_cases hs0 : s = ∅
-  · simp_rw [hs0, Finset.sum_empty, zero_pow' _ (Nat.succ_ne_zero n), zero_div]
-  · have hs : s.card ≠ 0 := hs0 ∘ Finset.card_eq_zero.1
-    have hs' : (s.card : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hs
-    have hs'' : 0 < (s.card : ℝ) := Nat.cast_pos.2 (Nat.pos_of_ne_zero hs)
+  rcases s.eq_empty_or_nonempty with (rfl | hs)
+  · simp_rw [Finset.sum_empty, zero_pow' _ (Nat.succ_ne_zero n), zero_div]
+  · have hs0 : 0 < (s.card : ℝ) := Nat.cast_pos.2 hs.card_pos
     suffices (∑ x in s, f x / s.card) ^ (n + 1) ≤ ∑ x in s, f x ^ (n + 1) / s.card by
       rwa [← Finset.sum_div, ← Finset.sum_div, div_pow, pow_succ' (s.card : ℝ), ← div_div,
-        div_le_iff hs'', div_mul, div_self hs', div_one] at this
+        div_le_iff hs0, div_mul, div_self hs0.ne', div_one] at this
     have :=
       @ConvexOn.map_sum_le ℝ ℝ ℝ α _ _ _ _ _ _ (Set.Ici 0) (fun x => x ^ (n + 1)) s
         (fun _ => 1 / s.card) (coe ∘ f) (convex_on_pow (n + 1)) _ _ fun i hi =>
         Set.mem_Ici.2 (hf i hi)
     · simpa only [inv_mul_eq_div, one_div, Algebra.id.smul_eq_mul] using this
     · simp only [one_div, inv_nonneg, Nat.cast_nonneg, imp_true_iff]
-    · simpa only [one_div, Finset.sum_const, nsmul_eq_mul] using mul_inv_cancel hs'
+    · simpa only [one_div, Finset.sum_const, nsmul_eq_mul] using mul_inv_cancel hs0.ne'
 #align real.pow_sum_div_card_le_sum_pow Real.pow_sum_div_card_le_sum_pow
 
 theorem Nnreal.pow_sum_div_card_le_sum_pow {α : Type _} (s : Finset α) (f : α → ℝ≥0) (n : ℕ) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.iterate
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.GroupTheory.GroupAction.Opposite
 
 /-!
 # Iterates of monoid and ring homomorphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Iterate of a monoid/ring homomorphism is a monoid/ring homomorphism but it has a wrong type, so Lean
 can't apply lemmas like `monoid_hom.map_one` to `f^[n] 1`. Though it is possible to define

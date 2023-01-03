@@ -960,6 +960,7 @@ import Mathbin.CategoryTheory.Linear.Yoneda
 import Mathbin.CategoryTheory.Localization.Construction
 import Mathbin.CategoryTheory.Localization.Opposite
 import Mathbin.CategoryTheory.Localization.Predicate
+import Mathbin.CategoryTheory.MittagLeffler
 import Mathbin.CategoryTheory.Monad.Adjunction
 import Mathbin.CategoryTheory.Monad.Algebra
 import Mathbin.CategoryTheory.Monad.Basic

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed.field.basic
-! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -589,19 +589,16 @@ instance (priority := 100) NormedDivisionRing.to_has_continuous_inv₀ : HasCont
   simp
 #align normed_division_ring.to_has_continuous_inv₀ NormedDivisionRing.to_has_continuous_inv₀
 
-theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖x‖ = 1 :=
+theorem norm_map_one_of_pow_eq_one [Monoid β] (φ : β →* α) {x : β} {k : ℕ+} (h : x ^ (k : ℕ) = 1) :
+    ‖φ x‖ = 1 :=
   by
-  rw [(_ : ‖x‖ = 1 ↔ ‖x‖₊ = 1)]
-  apply (@pow_left_inj Nnreal _ _ _ (↑k) zero_le' zero_le' (PNat.pos k)).mp
-  · rw [← nnnorm_pow, one_pow, h, nnnorm_one]
-  · exact subtype.mk_eq_mk.symm
-#align norm_one_of_pow_eq_one norm_one_of_pow_eq_one
-
-theorem norm_map_one_of_pow_eq_one [CommMonoid β] (φ : β →* α) {x : β} {k : ℕ+}
-    (h : x ^ (k : ℕ) = 1) : ‖φ x‖ = 1 :=
-  haveI : φ x ^ (k : ℕ) = 1 := by rw [← MonoidHom.map_pow, h, MonoidHom.map_one]
-  norm_one_of_pow_eq_one this
+  rw [← pow_left_inj, ← norm_pow, ← map_pow, h, map_one, norm_one, one_pow]
+  exacts[norm_nonneg _, zero_le_one, k.pos]
 #align norm_map_one_of_pow_eq_one norm_map_one_of_pow_eq_one
+
+theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖x‖ = 1 :=
+  norm_map_one_of_pow_eq_one (MonoidHom.id α) h
+#align norm_one_of_pow_eq_one norm_one_of_pow_eq_one
 
 end NormedDivisionRing
 
