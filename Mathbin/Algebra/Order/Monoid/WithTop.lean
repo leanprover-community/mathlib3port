@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_top
-! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
+! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,10 +13,9 @@ import Mathbin.Algebra.Order.Monoid.OrderDual
 import Mathbin.Algebra.Order.Monoid.WithZero.Basic
 import Mathbin.Data.Nat.Cast.Defs
 
-/-! # Adjoining top/bottom elements to ordered monoids. 
+/-! # Adjoining top/bottom elements to ordered monoids.
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> https://github.com/leanprover-community/mathlib4/pull/902
 > Any changes to this file require a corresponding PR to mathlib4.-/
 
 

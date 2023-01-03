@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.fractional_ideal
-! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
+! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -611,8 +611,8 @@ theorem mul_self_le_self {I : FractionalIdeal S P} (hI : I ≤ 1) : I * I ≤ I 
 #align fractional_ideal.mul_self_le_self FractionalIdeal.mul_self_le_self
 
 theorem coe_ideal_le_one {I : Ideal R} : (I : FractionalIdeal S P) ≤ 1 := fun x hx =>
-  let ⟨y, _, hy⟩ := (FractionalIdeal.mem_coe_ideal S).mp hx
-  (FractionalIdeal.mem_one_iff S).mpr ⟨y, hy⟩
+  let ⟨y, _, hy⟩ := (mem_coe_ideal S).mp hx
+  (mem_one_iff S).mpr ⟨y, hy⟩
 #align fractional_ideal.coe_ideal_le_one FractionalIdeal.coe_ideal_le_one
 
 theorem le_one_iff_exists_coe_ideal {J : FractionalIdeal S P} :
@@ -634,7 +634,7 @@ theorem le_one_iff_exists_coe_ideal {J : FractionalIdeal S P} :
       · rintro ⟨y, hy, eq_y⟩
         rwa [← eq_y]
       · intro hx
-        obtain ⟨y, eq_x⟩ := (FractionalIdeal.mem_one_iff S).mp (hJ hx)
+        obtain ⟨y, eq_x⟩ := (mem_one_iff S).mp (hJ hx)
         rw [← eq_x] at *
         exact ⟨y, hx, rfl⟩
   · rintro ⟨I, hI⟩
@@ -656,7 +656,7 @@ def coeIdealHom : Ideal R →+* FractionalIdeal S P
 #align fractional_ideal.coe_ideal_hom FractionalIdeal.coeIdealHom
 
 theorem coe_ideal_pow (I : Ideal R) (n : ℕ) : (↑(I ^ n) : FractionalIdeal S P) = I ^ n :=
-  (FractionalIdeal.coeIdealHom S P).map_pow _ n
+  (coeIdealHom S P).map_pow _ n
 #align fractional_ideal.coe_ideal_pow FractionalIdeal.coe_ideal_pow
 
 open BigOperators
@@ -664,8 +664,8 @@ open BigOperators
 theorem coe_ideal_finprod [IsLocalization S P] {α : Sort _} {f : α → Ideal R}
     (hS : S ≤ nonZeroDivisors R) :
     ((∏ᶠ a : α, f a : Ideal R) : FractionalIdeal S P) = ∏ᶠ a : α, (f a : FractionalIdeal S P) :=
-  MonoidHom.map_finprod_of_injective (FractionalIdeal.coeIdealHom S P).toMonoidHom
-    (FractionalIdeal.coe_to_fractional_ideal_injective hS) f
+  MonoidHom.map_finprod_of_injective (coeIdealHom S P).toMonoidHom
+    (coe_to_fractional_ideal_injective hS) f
 #align fractional_ideal.coe_ideal_finprod FractionalIdeal.coe_ideal_finprod
 
 end Order
@@ -764,8 +764,7 @@ theorem map_mem_map {f : P →ₐ[R] P'} (h : Function.Injective f) {x : P} {I :
 
 theorem map_injective (f : P →ₐ[R] P') (h : Function.Injective f) :
     Function.Injective (map f : FractionalIdeal S P → FractionalIdeal S P') := fun I J hIJ =>
-  FractionalIdeal.ext fun x =>
-    (FractionalIdeal.map_mem_map h).symm.trans (hIJ.symm ▸ FractionalIdeal.map_mem_map h)
+  ext fun x => (map_mem_map h).symm.trans (hIJ.symm ▸ map_mem_map h)
 #align fractional_ideal.map_injective FractionalIdeal.map_injective
 
 /-- If `g` is an equivalence, `map g` is an isomorphism -/
@@ -853,9 +852,7 @@ theorem fgUnit (I : (FractionalIdeal S P)ˣ) : Fg (I : Submodule R P) :=
   obtain ⟨T, T', hT, hT', one_mem⟩ := mem_span_mul_finite_of_mem_mul this
   refine' ⟨T, Submodule.span_eq_of_le _ hT _⟩
   rw [← one_mul ↑I, ← mul_one (span R ↑T)]
-  conv_rhs =>
-    rw [← FractionalIdeal.coe_one, ← Units.mul_inv I, FractionalIdeal.coe_mul, mul_comm ↑↑I, ←
-      mul_assoc]
+  conv_rhs => rw [← coe_one, ← Units.mul_inv I, coe_mul, mul_comm ↑↑I, ← mul_assoc]
   refine'
     Submodule.mul_le_mul_left (le_trans _ (Submodule.mul_le_mul_right (submodule.span_le.mpr hT')))
   rwa [Submodule.one_le, Submodule.span_mul_span]
@@ -1219,7 +1216,7 @@ theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 :=
   by
   rw [or_iff_not_imp_left]
   intro hI
-  simp_rw [@SetLike.ext_iff _ _ _ I 1, FractionalIdeal.mem_one_iff]
+  simp_rw [@SetLike.ext_iff _ _ _ I 1, mem_one_iff]
   intro x
   constructor
   · intro x_mem
@@ -1227,7 +1224,7 @@ theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 :=
     refine' ⟨n / d, _⟩
     rw [map_div₀, IsFractionRing.mk'_eq_div]
   · rintro ⟨x, rfl⟩
-    obtain ⟨y, y_ne, y_mem⟩ := FractionalIdeal.exists_ne_zero_mem_is_integer hI
+    obtain ⟨y, y_ne, y_mem⟩ := exists_ne_zero_mem_is_integer hI
     rw [← div_mul_cancel x y_ne, RingHom.map_mul, ← Algebra.smul_def]
     exact Submodule.smul_mem I _ y_mem
 #align fractional_ideal.eq_zero_or_one FractionalIdeal.eq_zero_or_one
@@ -1443,8 +1440,7 @@ theorem mk'_mul_coe_ideal_eq_coe_ideal {I J : Ideal R₁} {x y : R₁} (hy : y �
     spanSingleton R₁⁰ (IsLocalization.mk' K x ⟨y, hy⟩) * I = (J : FractionalIdeal R₁⁰ K) ↔
       Ideal.span {x} * I = Ideal.span {y} * J :=
   by
-  have inj : Function.Injective (coe : Ideal R₁ → FractionalIdeal R₁⁰ K) :=
-    FractionalIdeal.coe_ideal_injective
+  have inj : Function.Injective (coe : Ideal R₁ → FractionalIdeal R₁⁰ K) := coe_ideal_injective
   have :
     span_singleton R₁⁰ (IsLocalization.mk' _ (1 : R₁) ⟨y, hy⟩) *
         span_singleton R₁⁰ (algebraMap R₁ K y) =
@@ -1541,14 +1537,13 @@ include loc
 theorem le_span_singleton_mul_iff {x : P} {I J : FractionalIdeal S P} :
     I ≤ spanSingleton S x * J ↔ ∀ zI ∈ I, ∃ zJ ∈ J, x * zJ = zI :=
   show (∀ {zI} (hzI : zI ∈ I), zI ∈ spanSingleton _ x * J) ↔ ∀ zI ∈ I, ∃ zJ ∈ J, x * zJ = zI by
-    simp only [FractionalIdeal.mem_singleton_mul, eq_comm]
+    simp only [mem_singleton_mul, eq_comm]
 #align fractional_ideal.le_span_singleton_mul_iff FractionalIdeal.le_span_singleton_mul_iff
 
 theorem span_singleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
     spanSingleton _ x * I ≤ J ↔ ∀ z ∈ I, x * z ∈ J :=
   by
-  simp only [FractionalIdeal.mul_le, FractionalIdeal.mem_singleton_mul,
-    FractionalIdeal.mem_span_singleton]
+  simp only [mul_le, mem_singleton_mul, mem_span_singleton]
   constructor
   · intro h zI hzI
     exact h x ⟨1, one_smul _ _⟩ zI hzI
@@ -1559,8 +1554,7 @@ theorem span_singleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
 
 theorem eq_span_singleton_mul {x : P} {I J : FractionalIdeal S P} :
     I = spanSingleton _ x * J ↔ (∀ zI ∈ I, ∃ zJ ∈ J, x * zJ = zI) ∧ ∀ z ∈ J, x * z ∈ I := by
-  simp only [le_antisymm_iff, FractionalIdeal.le_span_singleton_mul_iff,
-    FractionalIdeal.span_singleton_mul_le_iff]
+  simp only [le_antisymm_iff, le_span_singleton_mul_iff, span_singleton_mul_le_iff]
 #align fractional_ideal.eq_span_singleton_mul FractionalIdeal.eq_span_singleton_mul
 
 end PrincipalIdealRing

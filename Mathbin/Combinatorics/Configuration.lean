@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module combinatorics.configuration
-! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
+! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,9 +42,7 @@ open BigOperators
 
 namespace Configuration
 
-universe u
-
-variable (P L : Type u) [Membership P L]
+variable (P L : Type _) [Membership P L]
 
 /-- A type synonym. -/
 def Dual :=
@@ -76,13 +74,13 @@ class Nondegenerate : Prop where
 #align configuration.nondegenerate Configuration.Nondegenerate
 
 /-- A nondegenerate configuration in which every pair of lines has an intersection point. -/
-class HasPoints extends Nondegenerate P L : Type u where
+class HasPoints extends Nondegenerate P L where
   mkPoint : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), P
   mk_point_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
 #align configuration.has_points Configuration.HasPoints
 
 /-- A nondegenerate configuration in which every pair of points has a line through them. -/
-class HasLines extends Nondegenerate P L : Type u where
+class HasLines extends Nondegenerate P L where
   mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L
   mk_line_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
 #align configuration.has_lines Configuration.HasLines
@@ -374,7 +372,7 @@ variable (P L)
 /-- A projective plane is a nondegenerate configuration in which every pair of lines has
   an intersection point, every pair of points has a line through them,
   and which has three points in general position. -/
-class ProjectivePlane extends Nondegenerate P L : Type u where
+class ProjectivePlane extends Nondegenerate P L where
   mkPoint : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), P
   mk_point_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
   mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L

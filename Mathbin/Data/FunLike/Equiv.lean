@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fun_like.equiv
-! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
+! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,7 +14,6 @@ import Mathbin.Data.FunLike.Embedding
 # Typeclass for a type `F` with an injective map to `A ≃ B`
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> https://github.com/leanprover-community/mathlib4/pull/541
 > Any changes to this file require a corresponding PR to mathlib4.
 
 This typeclass is primarily for use by isomorphisms like `monoid_equiv` and `linear_equiv`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.psub
-! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
+! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,7 +15,6 @@ import Mathbin.Data.Nat.Basic
 # Partial predecessor and partial subtraction on the natural numbers
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> https://github.com/leanprover-community/mathlib4/pull/806
 > Any changes to this file require a corresponding PR to mathlib4.
 
 The usual definition of natural number subtraction (`nat.sub`) returns 0 as a "garbage value" for

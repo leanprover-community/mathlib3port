@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.symm_diff
-! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
+! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,7 +15,6 @@ import Mathbin.Logic.Equiv.Basic
 # Symmetric difference and bi-implication
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> https://github.com/leanprover-community/mathlib4/pull/842
 > Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the symmetric difference and bi-implication operators in (co-)Heyting algebras.

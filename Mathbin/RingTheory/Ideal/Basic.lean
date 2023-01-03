@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 1e05171a5e8cf18d98d9cf7b207540acb044acae
+! leanprover-community/mathlib commit 9830a300340708eaa85d477c3fb96dd25f9468a5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -352,9 +352,36 @@ theorem maximal_of_no_maximal {R : Type u} [Semiring R] {P : Ideal R}
   exact hmax M (lt_of_lt_of_le hPJ hM2) hM1
 #align ideal.maximal_of_no_maximal Ideal.maximal_of_no_maximal
 
+theorem span_pair_comm {x y : α} : (span {x, y} : Ideal α) = span {y, x} := by
+  simp only [span_insert, sup_comm]
+#align ideal.span_pair_comm Ideal.span_pair_comm
+
 theorem mem_span_pair {x y z : α} : z ∈ span ({x, y} : Set α) ↔ ∃ a b, a * x + b * y = z := by
   simp [mem_span_insert, mem_span_singleton', @eq_comm _ _ z]
 #align ideal.mem_span_pair Ideal.mem_span_pair
+
+@[simp]
+theorem span_pair_add_mul_left {R : Type u} [CommRing R] {x y : R} (z : R) :
+    (span {x + y * z, y} : Ideal R) = span {x, y} :=
+  by
+  ext
+  rw [mem_span_pair, mem_span_pair]
+  exact
+    ⟨fun ⟨a, b, h⟩ =>
+      ⟨a, b + a * z, by
+        rw [← h]
+        ring1⟩,
+      fun ⟨a, b, h⟩ =>
+      ⟨a, b - a * z, by
+        rw [← h]
+        ring1⟩⟩
+#align ideal.span_pair_add_mul_left Ideal.span_pair_add_mul_left
+
+@[simp]
+theorem span_pair_add_mul_right {R : Type u} [CommRing R] {x y : R} (z : R) :
+    (span {x, y + x * z} : Ideal R) = span {x, y} := by
+  rw [span_pair_comm, span_pair_add_mul_left, span_pair_comm]
+#align ideal.span_pair_add_mul_right Ideal.span_pair_add_mul_right
 
 theorem IsMaximal.exists_inv {I : Ideal α} (hI : I.IsMaximal) {x} (hx : x ∉ I) :
     ∃ y, ∃ i ∈ I, y * x + i = 1 :=
