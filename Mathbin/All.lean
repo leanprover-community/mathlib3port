@@ -1744,7 +1744,10 @@ import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.FieldTheory.IsAlgClosed.Classification
 import Mathbin.FieldTheory.KrullTopology
 import Mathbin.FieldTheory.Laurent
-import Mathbin.FieldTheory.Minpoly
+import Mathbin.FieldTheory.Minpoly.Basic
+import Mathbin.FieldTheory.Minpoly.Default
+import Mathbin.FieldTheory.Minpoly.Field
+import Mathbin.FieldTheory.Minpoly.GcdMonoid
 import Mathbin.FieldTheory.MvPolynomial
 import Mathbin.FieldTheory.Normal
 import Mathbin.FieldTheory.PerfectClosure

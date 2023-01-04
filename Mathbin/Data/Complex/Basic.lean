@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.complex.basic
-! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
+! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -750,7 +750,7 @@ theorem int_cast_im (n : ℤ) : (n : ℂ).im = 0 := by rw [← of_real_int_cast,
 
 @[simp, norm_cast]
 theorem of_real_rat_cast (n : ℚ) : ((n : ℝ) : ℂ) = n :=
-  map_rat_cast ofReal n
+  map_ratCast ofReal n
 #align complex.of_real_rat_cast Complex.of_real_rat_cast
 
 @[simp, norm_cast]

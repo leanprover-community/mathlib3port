@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Binder elimination
 
 ! This file was ported from Lean 3 source module tactic.converter.binders
-! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
+! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

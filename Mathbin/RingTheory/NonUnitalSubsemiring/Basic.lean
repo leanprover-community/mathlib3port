@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module ring_theory.non_unital_subsemiring.basic
-! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
+! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -850,7 +850,7 @@ theorem mem_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → NonUnitalSubse
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   let U : NonUnitalSubsemiring R :=
     NonUnitalSubsemiring.mk' (⋃ i, (S i : Set R)) (⨆ i, (S i).toSubsemigroup)
-      (Subsemigroup.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id)
+      (Subsemigroup.coe_supᵢ_of_directed <| hS.mono_comp _ fun _ _ => id)
       (⨆ i, (S i).toAddSubmonoid)
       (AddSubmonoid.coe_supr_of_directed <| hS.mono_comp _ fun _ _ => id)
   suffices (⨆ i, S i) ≤ U by simpa using @this x

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic
-! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
+! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ theorem is_algebraic_int [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) :=
 theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Algebra R A]
     (n : ℚ) : IsAlgebraic R (n : A) :=
   by
-  rw [← map_rat_cast (algebraMap R A)]
+  rw [← map_ratCast (algebraMap R A)]
   exact is_algebraic_algebra_map n
 #align is_algebraic_rat is_algebraic_rat
 
