@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.group
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,18 +77,18 @@ def MulAction.toPerm (a : α) : Equiv.Perm β :=
 /-- Given an action of an additive group `α` on `β`, each `g : α` defines a permutation of `β`. -/
 add_decl_doc AddAction.toPerm
 
-/- warning: mul_action.to_perm_injective -> MulAction.to_perm_injective is a dubious translation:
+/- warning: mul_action.to_perm_injective -> MulAction.toPerm_injective is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] [_inst_3 : FaithfulSMul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)], Function.Injective.{succ u1, succ u2} α (Equiv.Perm.{succ u2} β) (MulAction.toPerm.{u1, u2} α β _inst_1 _inst_2)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] [_inst_3 : FaithfulSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)], Function.Injective.{succ u1, succ u2} α (Equiv.Perm.{succ u2} β) (MulAction.toPerm.{u1, u2} α β _inst_1 _inst_2)
-Case conversion may be inaccurate. Consider using '#align mul_action.to_perm_injective MulAction.to_perm_injectiveₓ'. -/
+Case conversion may be inaccurate. Consider using '#align mul_action.to_perm_injective MulAction.toPerm_injectiveₓ'. -/
 /-- `mul_action.to_perm` is injective on faithful actions. -/
 @[to_additive "`add_action.to_perm` is injective on faithful actions."]
-theorem MulAction.to_perm_injective [FaithfulSMul α β] :
+theorem MulAction.toPerm_injective [FaithfulSMul α β] :
     Function.Injective (MulAction.toPerm : α → Equiv.Perm β) :=
   (show Function.Injective (Equiv.toFun ∘ MulAction.toPerm) from smul_left_injective').of_comp
-#align mul_action.to_perm_injective MulAction.to_perm_injective
+#align mul_action.to_perm_injective MulAction.toPerm_injective
 
 variable (α) (β)
 
@@ -138,16 +138,16 @@ protected theorem Equiv.Perm.smul_def {α : Type _} (f : Equiv.Perm α) (a : α)
   rfl
 #align equiv.perm.smul_def Equiv.Perm.smul_def
 
-/- warning: equiv.perm.apply_has_faithful_smul -> Equiv.Perm.apply_faithfulSMul is a dubious translation:
+/- warning: equiv.perm.apply_has_faithful_smul -> Equiv.Perm.applyFaithfulSMul is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}), FaithfulSMul.{u1, u1} (Equiv.Perm.{succ u1} α) α (MulAction.toHasSmul.{u1, u1} (Equiv.Perm.{succ u1} α) α (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.applyMulAction.{u1} α))
 but is expected to have type
   forall (α : Type.{u1}), FaithfulSMul.{u1, u1} (Equiv.Perm.{succ u1} α) α (MulAction.toSMul.{u1, u1} (Equiv.Perm.{succ u1} α) α (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.applyMulAction.{u1} α))
-Case conversion may be inaccurate. Consider using '#align equiv.perm.apply_has_faithful_smul Equiv.Perm.apply_faithfulSMulₓ'. -/
+Case conversion may be inaccurate. Consider using '#align equiv.perm.apply_has_faithful_smul Equiv.Perm.applyFaithfulSMulₓ'. -/
 /-- `equiv.perm.apply_mul_action` is faithful. -/
-instance Equiv.Perm.apply_faithfulSMul (α : Type _) : FaithfulSMul (Equiv.Perm α) α :=
+instance Equiv.Perm.applyFaithfulSMul (α : Type _) : FaithfulSMul (Equiv.Perm α) α :=
   ⟨fun x y => Equiv.ext⟩
-#align equiv.perm.apply_has_faithful_smul Equiv.Perm.apply_faithfulSMul
+#align equiv.perm.apply_has_faithful_smul Equiv.Perm.applyFaithfulSMul
 
 variable {α} {β}
 
@@ -222,7 +222,7 @@ theorem Commute.smul_left_iff [Mul β] [SMulCommClass α β β] [IsScalarTower �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Bijective.{succ u2, succ u2} β β (HasSmul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2) g)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Bijective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.954 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.956 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.954 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.956) g)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Bijective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.936 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.938 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.936 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.938) g)
 Case conversion may be inaccurate. Consider using '#align mul_action.bijective MulAction.bijectiveₓ'. -/
 @[to_additive]
 protected theorem MulAction.bijective (g : α) : Bijective ((· • ·) g : β → β) :=
@@ -233,7 +233,7 @@ protected theorem MulAction.bijective (g : α) : Bijective ((· • ·) g : β �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Injective.{succ u2, succ u2} β β (HasSmul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2) g)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Injective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.999 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1001 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.999 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1001) g)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Injective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.981 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.983 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.981 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.983) g)
 Case conversion may be inaccurate. Consider using '#align mul_action.injective MulAction.injectiveₓ'. -/
 @[to_additive]
 protected theorem MulAction.injective (g : α) : Injective ((· • ·) g : β → β) :=
@@ -244,7 +244,7 @@ protected theorem MulAction.injective (g : α) : Injective ((· • ·) g : β �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Surjective.{succ u2, succ u2} β β (HasSmul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2) g)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Surjective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1044 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1046 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1044 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1046) g)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] (g : α), Function.Surjective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1026 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1028 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1026 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1028) g)
 Case conversion may be inaccurate. Consider using '#align mul_action.surjective MulAction.surjectiveₓ'. -/
 @[to_additive]
 protected theorem MulAction.surjective (g : α) : Surjective ((· • ·) g : β → β) :=
@@ -372,7 +372,7 @@ theorem Commute.smul_left_iff₀ [Mul β] [SMulCommClass α β β] [IsScalarTowe
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) -> (Function.Bijective.{succ u2, succ u2} β β (HasSmul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2) a))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Bijective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1648 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1650 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1648 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1650) a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Bijective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1630 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1632 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1630 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1632) a))
 Case conversion may be inaccurate. Consider using '#align mul_action.bijective₀ MulAction.bijective₀ₓ'. -/
 protected theorem MulAction.bijective₀ (ha : a ≠ 0) : Bijective ((· • ·) a : β → β) :=
   MulAction.bijective <| Units.mk0 a ha
@@ -382,7 +382,7 @@ protected theorem MulAction.bijective₀ (ha : a ≠ 0) : Bijective ((· • ·)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) -> (Function.Injective.{succ u2, succ u2} β β (HasSmul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2) a))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Injective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1699 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1701 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1699 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1701) a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Injective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1681 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1683 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1681 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1683) a))
 Case conversion may be inaccurate. Consider using '#align mul_action.injective₀ MulAction.injective₀ₓ'. -/
 protected theorem MulAction.injective₀ (ha : a ≠ 0) : Injective ((· • ·) a : β → β) :=
   (MulAction.bijective₀ ha).Injective
@@ -392,7 +392,7 @@ protected theorem MulAction.injective₀ (ha : a ≠ 0) : Injective ((· • ·)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))) -> (Function.Surjective.{succ u2, succ u2} β β (HasSmul.smul.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2) a))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Surjective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1749 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1751 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1749 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1751) a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Surjective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1731 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1733 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1731 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1733) a))
 Case conversion may be inaccurate. Consider using '#align mul_action.surjective₀ MulAction.surjective₀ₓ'. -/
 protected theorem MulAction.surjective₀ (ha : a ≠ 0) : Surjective ((· • ·) a : β → β) :=
   (MulAction.bijective₀ ha).Surjective

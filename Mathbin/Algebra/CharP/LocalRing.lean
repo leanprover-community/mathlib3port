@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.char_p.local_ring
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ theorem char_p_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : 
     exact ⟨r, ⟨n, ⟨r_prime.prime, ⟨pos_iff_ne_zero.mpr n_pos, q_eq_rn.symm⟩⟩⟩⟩
   · haveI K_char_p_0 := ringChar.of_eq r_zero
     haveI K_char_zero : CharZero K := CharP.char_p_to_char_zero K
-    haveI R_char_zero := RingHom.char_zero (LocalRing.residue R)
+    haveI R_char_zero := RingHom.charZero (LocalRing.residue R)
     -- Finally, `r = 0` would lead to a contradiction:
     have q_zero := CharP.eq R char_R_q (CharP.of_char_zero R)
     exact absurd q_zero q_pos

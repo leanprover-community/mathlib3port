@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -658,7 +658,7 @@ theorem Union_filter_not (π : Prepartition I) (p : Box ι → Prop) :
     (π.filter fun J => ¬p J).union = π.union \ (π.filter p).union :=
   by
   simp only [prepartition.Union]
-  convert (@Set.bUnion_diff_bUnion_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
+  convert (@Set.bunionᵢ_diff_bunionᵢ_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
   · ext (J x)
     simp (config := { contextual := true })
   · convert π.pairwise_disjoint

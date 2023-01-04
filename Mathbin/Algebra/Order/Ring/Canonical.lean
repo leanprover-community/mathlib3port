@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.canonical
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,17 +119,17 @@ namespace CanonicallyOrderedCommSemiring
 
 variable [CanonicallyOrderedCommSemiring α] {a b : α}
 
-/- warning: canonically_ordered_comm_semiring.to_no_zero_divisors -> CanonicallyOrderedCommSemiring.to_no_zero_divisors is a dubious translation:
+/- warning: canonically_ordered_comm_semiring.to_no_zero_divisors -> CanonicallyOrderedCommSemiring.to_noZeroDivisors is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α], NoZeroDivisors.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CanonicallyOrderedCommSemiring.toCommSemiring.{u1} α _inst_1)))))) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CanonicallyOrderedCommSemiring.toCommSemiring.{u1} α _inst_1))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α], NoZeroDivisors.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1) (CommMonoidWithZero.toZero.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CanonicallyOrderedCommSemiring.toCommSemiring.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.to_no_zero_divisorsₓ'. -/
+Case conversion may be inaccurate. Consider using '#align canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.to_noZeroDivisorsₓ'. -/
 -- see Note [lower instance priority]
-instance (priority := 100) to_no_zero_divisors : NoZeroDivisors α :=
+instance (priority := 100) to_noZeroDivisors : NoZeroDivisors α :=
   ⟨CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_mul_eq_zero⟩
 #align
-  canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.to_no_zero_divisors
+  canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.to_noZeroDivisors
 
 /- warning: canonically_ordered_comm_semiring.to_covariant_mul_le -> CanonicallyOrderedCommSemiring.to_covariant_mul_le is a dubious translation:
 lean 3 declaration is

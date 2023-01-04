@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.hasse
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hass
   fun a b => by
   rw [reachable_iff_refl_trans_gen]
   exact
-    refl_trans_gen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max)
+    reflTransGen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max)
       fun c hc => Or.inr <| covby_succ_of_not_is_max hc.2.not_is_max
 #align simple_graph.hasse_preconnected_of_succ SimpleGraph.hasse_preconnected_of_succ
 
@@ -96,7 +96,7 @@ theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hass
   fun a b => by
   rw [reachable_iff_refl_trans_gen, ← refl_trans_gen_swap]
   exact
-    refl_trans_gen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min)
+    reflTransGen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min)
       fun c hc => Or.inr <| pred_covby_of_not_is_min hc.1.not_is_min
 #align simple_graph.hasse_preconnected_of_pred SimpleGraph.hasse_preconnected_of_pred
 

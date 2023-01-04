@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.matrix
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -471,10 +471,10 @@ theorem frobenius_norm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A
   congr_arg coe <| frobenius_nnnorm_conj_transpose A
 #align matrix.frobenius_norm_conj_transpose Matrix.frobenius_norm_conj_transpose
 
-instance frobeniusNormedStarGroup [StarAddMonoid α] [NormedStarGroup α] :
+instance frobenius_normed_star_group [StarAddMonoid α] [NormedStarGroup α] :
     NormedStarGroup (Matrix m m α) :=
   ⟨frobenius_norm_conj_transpose⟩
-#align matrix.frobenius_normed_star_group Matrix.frobeniusNormedStarGroup
+#align matrix.frobenius_normed_star_group Matrix.frobenius_normed_star_group
 
 @[simp]
 theorem frobenius_norm_row (v : m → α) : ‖row v‖ = ‖(PiLp.equiv 2 _).symm v‖ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor_bases
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,9 +52,9 @@ theorem continuous_barycentric_coord (i : ι) : Continuous (b.Coord i) :=
   (b.Coord i).continuous_of_finite_dimensional
 #align continuous_barycentric_coord continuous_barycentric_coord
 
-theorem smoothBarycentricCoord (b : AffineBasis ι 𝕜 E) (i : ι) : ContDiff 𝕜 ⊤ (b.Coord i) :=
+theorem smooth_barycentric_coord (b : AffineBasis ι 𝕜 E) (i : ι) : ContDiff 𝕜 ⊤ (b.Coord i) :=
   (⟨b.Coord i, continuous_barycentric_coord b i⟩ : E →A[𝕜] 𝕜).ContDiff
-#align smooth_barycentric_coord smoothBarycentricCoord
+#align smooth_barycentric_coord smooth_barycentric_coord
 
 end Barycentric
 

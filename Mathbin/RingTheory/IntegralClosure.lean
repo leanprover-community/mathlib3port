@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.integral_closure
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -361,7 +361,7 @@ theorem Module.EndCat.is_integral {M : Type _} [AddCommGroup M] [Module R M] [Mo
 /-- Suppose `A` is an `R`-algebra, `M` is an `A`-module such that `a • m ≠ 0` for all non-zero `a`
 and `m`. If `x : A` fixes a nontrivial f.g. `R`-submodule `N` of `M`, then `x` is `R`-integral. -/
 theorem is_integral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module R M] [Module A M]
-    [IsScalarTower R A M] [NoZeroSmulDivisors A M] (N : Submodule R M) (hN : N ≠ ⊥) (hN' : N.Fg)
+    [IsScalarTower R A M] [NoZeroSMulDivisors A M] (N : Submodule R M) (hN : N ≠ ⊥) (hN' : N.Fg)
     (x : A) (hx : ∀ n ∈ N, x • n ∈ N) : IsIntegral R x :=
   by
   let A' : Subalgebra R A :=

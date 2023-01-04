@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.circle_integral
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,21 +168,21 @@ theorem circle_map_ne_center {c : ℂ} {R : ℝ} (hR : R ≠ 0) {θ : ℝ} : cir
   mt circle_map_eq_center_iff.1 hR
 #align circle_map_ne_center circle_map_ne_center
 
-theorem hasDerivAtCircleMap (c : ℂ) (R : ℝ) (θ : ℝ) :
+theorem has_deriv_at_circle_map (c : ℂ) (R : ℝ) (θ : ℝ) :
     HasDerivAt (circleMap c R) (circleMap 0 R θ * I) θ := by
   simpa only [mul_assoc, one_mul, of_real_clm_apply, circleMap, of_real_one, zero_add] using
     ((of_real_clm.has_deriv_at.mul_const I).cexp.const_mul (R : ℂ)).const_add c
-#align has_deriv_at_circle_map hasDerivAtCircleMap
+#align has_deriv_at_circle_map has_deriv_at_circle_map
 
 /- TODO: prove `cont_diff ℝ (circle_map c R)`. This needs a version of `cont_diff.mul`
 for multiplication in a normed algebra over the base field. -/
-theorem differentiableCircleMap (c : ℂ) (R : ℝ) : Differentiable ℝ (circleMap c R) := fun θ =>
-  (hasDerivAtCircleMap c R θ).DifferentiableAt
-#align differentiable_circle_map differentiableCircleMap
+theorem differentiable_circle_map (c : ℂ) (R : ℝ) : Differentiable ℝ (circleMap c R) := fun θ =>
+  (has_deriv_at_circle_map c R θ).DifferentiableAt
+#align differentiable_circle_map differentiable_circle_map
 
 @[continuity]
 theorem continuous_circle_map (c : ℂ) (R : ℝ) : Continuous (circleMap c R) :=
-  (differentiableCircleMap c R).Continuous
+  (differentiable_circle_map c R).Continuous
 #align continuous_circle_map continuous_circle_map
 
 @[measurability]
@@ -192,7 +192,7 @@ theorem measurable_circle_map (c : ℂ) (R : ℝ) : Measurable (circleMap c R) :
 
 @[simp]
 theorem deriv_circle_map (c : ℂ) (R : ℝ) (θ : ℝ) : deriv (circleMap c R) θ = circleMap 0 R θ * I :=
-  (hasDerivAtCircleMap _ _ _).deriv
+  (has_deriv_at_circle_map _ _ _).deriv
 #align deriv_circle_map deriv_circle_map
 
 theorem deriv_circle_map_eq_zero_iff {c : ℂ} {R : ℝ} {θ : ℝ} :
@@ -204,10 +204,10 @@ theorem deriv_circle_map_ne_zero {c : ℂ} {R : ℝ} {θ : ℝ} (hR : R ≠ 0) :
   mt deriv_circle_map_eq_zero_iff.1 hR
 #align deriv_circle_map_ne_zero deriv_circle_map_ne_zero
 
-theorem lipschitzWithCircleMap (c : ℂ) (R : ℝ) : LipschitzWith R.nnabs (circleMap c R) :=
-  (lipschitzWithOfNnnormDerivLe (differentiableCircleMap _ _)) fun θ =>
+theorem lipschitz_with_circle_map (c : ℂ) (R : ℝ) : LipschitzWith R.nnabs (circleMap c R) :=
+  (lipschitz_with_of_nnnorm_deriv_le (differentiable_circle_map _ _)) fun θ =>
     Nnreal.coe_le_coe.1 <| by simp
-#align lipschitz_with_circle_map lipschitzWithCircleMap
+#align lipschitz_with_circle_map lipschitz_with_circle_map
 
 theorem continuous_circle_map_inv {R : ℝ} {z w : ℂ} (hw : w ∈ ball z R) :
     Continuous fun θ => (circleMap z R θ - w)⁻¹ :=
@@ -235,9 +235,9 @@ def CircleIntegrable (f : ℂ → E) (c : ℂ) (R : ℝ) : Prop :=
 #align circle_integrable CircleIntegrable
 
 @[simp]
-theorem circleIntegrableConst (a : E) (c : ℂ) (R : ℝ) : CircleIntegrable (fun _ => a) c R :=
+theorem circle_integrable_const (a : E) (c : ℂ) (R : ℝ) : CircleIntegrable (fun _ => a) c R :=
   intervalIntegrableConst
-#align circle_integrable_const circleIntegrableConst
+#align circle_integrable_const circle_integrable_const
 
 namespace CircleIntegrable
 
@@ -269,9 +269,9 @@ theorem out [NormedSpace ℂ E] (hf : CircleIntegrable f c R) :
 end CircleIntegrable
 
 @[simp]
-theorem circleIntegrableZeroRadius {f : ℂ → E} {c : ℂ} : CircleIntegrable f c 0 := by
+theorem circle_integrable_zero_radius {f : ℂ → E} {c : ℂ} : CircleIntegrable f c 0 := by
   simp [CircleIntegrable]
-#align circle_integrable_zero_radius circleIntegrableZeroRadius
+#align circle_integrable_zero_radius circle_integrable_zero_radius
 
 theorem circle_integrable_iff [NormedSpace ℂ E] {f : ℂ → E} {c : ℂ} (R : ℝ) :
     CircleIntegrable f c R ↔
@@ -291,16 +291,16 @@ theorem circle_integrable_iff [NormedSpace ℂ E] {f : ℂ → E} {c : ℂ} (R :
   · simp [norm_smul, h₀]
 #align circle_integrable_iff circle_integrable_iff
 
-theorem ContinuousOn.circleIntegrable' {f : ℂ → E} {c : ℂ} {R : ℝ}
+theorem ContinuousOn.circle_integrable' {f : ℂ → E} {c : ℂ} {R : ℝ}
     (hf : ContinuousOn f (sphere c (|R|))) : CircleIntegrable f c R :=
   (hf.comp_continuous (continuous_circle_map _ _) (circle_map_mem_sphere' _ _)).IntervalIntegrable _
     _
-#align continuous_on.circle_integrable' ContinuousOn.circleIntegrable'
+#align continuous_on.circle_integrable' ContinuousOn.circle_integrable'
 
-theorem ContinuousOn.circleIntegrable {f : ℂ → E} {c : ℂ} {R : ℝ} (hR : 0 ≤ R)
+theorem ContinuousOn.circle_integrable {f : ℂ → E} {c : ℂ} {R : ℝ} (hR : 0 ≤ R)
     (hf : ContinuousOn f (sphere c R)) : CircleIntegrable f c R :=
-  ContinuousOn.circleIntegrable' <| (abs_of_nonneg hR).symm ▸ hf
-#align continuous_on.circle_integrable ContinuousOn.circleIntegrable
+  ContinuousOn.circle_integrable' <| (abs_of_nonneg hR).symm ▸ hf
+#align continuous_on.circle_integrable ContinuousOn.circle_integrable
 
 /-- The function `λ z, (z - w) ^ n`, `n : ℤ`, is circle integrable on the circle with center `c` and
 radius `|R|` if and only if `R = 0` or `0 ≤ n`, or `w` does not belong to this circle. -/
@@ -323,7 +323,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
       by
       suffices : ∀ᶠ z in 𝓝[≠] circleMap c R θ, z - circleMap c R θ ∈ ball (0 : ℂ) 1 \ {0}
       exact
-        ((differentiableCircleMap c R θ).HasDerivAt.tendsto_punctured_nhds
+        ((differentiable_circle_map c R θ).HasDerivAt.tendsto_punctured_nhds
               (deriv_circle_map_ne_zero hR)).Eventually
           this
       filter_upwards [self_mem_nhds_within,
@@ -332,7 +332,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
         mem_singleton_iff, mem_ball, mem_diff, mem_ball_zero_iff, norm_eq_abs, not_false_iff,
         and_self_iff, imp_true_iff]
     refine'
-      (((hasDerivAtCircleMap c R θ).is_O_sub.mono inf_le_left).inv_rev
+      (((has_deriv_at_circle_map c R θ).is_O_sub.mono inf_le_left).inv_rev
             (this.mono fun θ' h₁ h₂ => absurd h₂ h₁.2)).trans
         _
     refine' is_O.of_bound (|R|)⁻¹ (this.mono fun θ' hθ' => _)
@@ -343,12 +343,12 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
         not_false_iff] using this
     have : x ∈ Ioo (0 : ℝ) 1 := by simpa [and_comm, x] using hθ'
     rw [← zpow_neg_one]
-    refine' (zpow_strict_anti this.1 this.2).le_iff_le.2 (Int.lt_add_one_iff.1 _)
+    refine' (zpow_strictAnti this.1 this.2).le_iff_le.2 (Int.lt_add_one_iff.1 _)
     exact hn
   · rintro (rfl | H)
-    exacts[circleIntegrableZeroRadius,
+    exacts[circle_integrable_zero_radius,
       (((continuous_on_id.sub continuous_on_const).zpow₀ _) fun z hz =>
-          H.symm.imp_left fun hw => sub_ne_zero.2 <| ne_of_mem_of_not_mem hz hw).circleIntegrable']
+          H.symm.imp_left fun hw => sub_ne_zero.2 <| ne_of_mem_of_not_mem hz hw).circle_integrable']
 #align circle_integrable_sub_zpow_iff circle_integrable_sub_zpow_iff
 
 @[simp]
@@ -513,8 +513,8 @@ theorem integral_eq_zero_of_has_deriv_within_at' {f f' : ℂ → E} {c : ℂ} {R
   · rw [← sub_eq_zero.2 ((periodic_circle_map c R).comp f).Eq]
     refine' intervalIntegral.integral_eq_sub_of_has_deriv_at (fun θ hθ => _) hi.out
     exact
-      (h _ (circle_map_mem_sphere' _ _ _)).scompHasDerivAt θ
-        (differentiableCircleMap _ _ _).HasDerivAt (circle_map_mem_sphere' _ _)
+      (h _ (circle_map_mem_sphere' _ _ _)).scomp_has_deriv_at θ
+        (differentiable_circle_map _ _ _).HasDerivAt (circle_map_mem_sphere' _ _)
   · exact integral_undef hi
 #align
   circle_integral.integral_eq_zero_of_has_deriv_within_at' circleIntegral.integral_eq_zero_of_has_deriv_within_at'
@@ -550,7 +550,8 @@ theorem integral_sub_zpow_of_ne {n : ℤ} (hn : n ≠ -1) (c w : ℂ) (R : ℝ) 
     by
     intro z hne
     convert
-      ((hasDerivAtZpow (n + 1) _ (hne.imp _ _)).comp z ((hasDerivAtId z).sub_const w)).div_const
+      ((has_deriv_at_zpow (n + 1) _ (hne.imp _ _)).comp z
+            ((has_deriv_at_id z).sub_const w)).div_const
         _ using
       1
     · have hn' : (n + 1 : ℂ) ≠ 0 := by

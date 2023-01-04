@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.stopping
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -733,13 +733,13 @@ theorem measurable_set_min_iff (hτ : IsStoppingTime f τ) (hπ : IsStoppingTime
   measure_theory.is_stopping_time.measurable_set_min_iff MeasureTheory.IsStoppingTime.measurable_set_min_iff
 
 theorem measurable_space_min_const (hτ : IsStoppingTime f τ) {i : ι} :
-    (hτ.minConst i).MeasurableSpace = hτ.MeasurableSpace ⊓ f i := by
+    (hτ.min_const i).MeasurableSpace = hτ.MeasurableSpace ⊓ f i := by
   rw [hτ.measurable_space_min (is_stopping_time_const _ i), measurable_space_const]
 #align
   measure_theory.is_stopping_time.measurable_space_min_const MeasureTheory.IsStoppingTime.measurable_space_min_const
 
 theorem measurable_set_min_const_iff (hτ : IsStoppingTime f τ) (s : Set Ω) {i : ι} :
-    measurable_set[(hτ.minConst i).MeasurableSpace] s ↔
+    measurable_set[(hτ.min_const i).MeasurableSpace] s ↔
       measurable_set[hτ.MeasurableSpace] s ∧ measurable_set[f i] s :=
   by rw [measurable_space_min_const, MeasurableSpace.measurable_set_inf]
 #align
@@ -777,7 +777,7 @@ theorem measurable_set_inter_le [TopologicalSpace ι] [SecondCountableTopology �
   refine' ((hs i).inter ((hτ.min hπ) i)).inter _
   apply measurable_set_le
   · exact (hτ.min_const i).measurable_of_le fun _ => min_le_right _ _
-  · exact ((hτ.min hπ).minConst i).measurable_of_le fun _ => min_le_right _ _
+  · exact ((hτ.min hπ).min_const i).measurable_of_le fun _ => min_le_right _ _
 #align
   measure_theory.is_stopping_time.measurable_set_inter_le MeasureTheory.IsStoppingTime.measurable_set_inter_le
 
@@ -799,7 +799,7 @@ theorem measurable_set_inter_le_iff [TopologicalSpace ι] [SecondCountableTopolo
 
 theorem measurable_set_inter_le_const_iff (hτ : IsStoppingTime f τ) (s : Set Ω) (i : ι) :
     measurable_set[hτ.MeasurableSpace] (s ∩ { ω | τ ω ≤ i }) ↔
-      measurable_set[(hτ.minConst i).MeasurableSpace] (s ∩ { ω | τ ω ≤ i }) :=
+      measurable_set[(hτ.min_const i).MeasurableSpace] (s ∩ { ω | τ ω ≤ i }) :=
   by
   rw [is_stopping_time.measurable_set_min_iff hτ (is_stopping_time_const _ i),
     is_stopping_time.measurable_space_const, is_stopping_time.measurable_set]

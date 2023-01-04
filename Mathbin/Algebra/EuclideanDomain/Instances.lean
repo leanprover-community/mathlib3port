@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.instances
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,6 +26,7 @@ import Mathbin.Data.Int.Order.Basic
 -/
 
 
+#print Int.euclideanDomain /-
 instance Int.euclideanDomain : EuclideanDomain ℤ :=
   { Int.commRing, Int.nontrivial with
     add := (· + ·)
@@ -49,7 +50,9 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
         rw [← mul_one a.nat_abs, Int.natAbs_mul]
         exact mul_le_mul_of_nonneg_left (Int.natAbs_pos_of_ne_zero b0) (Nat.zero_le _) }
 #align int.euclidean_domain Int.euclideanDomain
+-/
 
+#print Field.toEuclideanDomain /-
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : EuclideanDomain K :=
   { ‹Field K› with
@@ -70,4 +73,5 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : Eucl
     remainder_lt := fun a b hnb => by simp [hnb]
     mul_left_not_lt := fun a b hnb ⟨hab, hna⟩ => Or.cases_on (mul_eq_zero.1 hab) hna hnb }
 #align field.to_euclidean_domain Field.toEuclideanDomain
+-/
 

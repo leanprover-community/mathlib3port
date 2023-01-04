@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.upcrossing
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -351,7 +351,7 @@ theorem upper_crossing_time_bound_eq (f : ℕ → Ω → ℝ) (N : ℕ) (ω : Ω
       StrictMonoOn (fun n => upper_crossing_time a b f N n ω)
         (Set.Iic (Nat.find (exists_upper_crossing_time_eq f N ω hab)).pred) :=
       by
-      refine' strict_mono_on_Iic_of_lt_succ fun m hm => upper_crossing_time_lt_succ hab _
+      refine' strictMonoOn_Iic_of_lt_succ fun m hm => upper_crossing_time_lt_succ hab _
       rw [Nat.lt_pred_iff] at hm
       convert Nat.find_min _ hm
     convert StrictMonoOn.Iic_id_le hmono N (Nat.le_pred_of_lt hN')
@@ -550,7 +550,7 @@ theorem upper_crossing_time_eq_of_upcrossings_before_lt (hab : a < b)
     (hn : upcrossingsBefore a b f N ω < n) : upperCrossingTime a b f N n ω = N :=
   by
   refine' le_antisymm upper_crossing_time_le (not_lt.1 _)
-  convert not_mem_of_cSup_lt hn (upper_crossing_time_lt_bdd_above hab)
+  convert not_mem_of_csupₛ_lt hn (upper_crossing_time_lt_bdd_above hab)
 #align
   measure_theory.upper_crossing_time_eq_of_upcrossings_before_lt MeasureTheory.upper_crossing_time_eq_of_upcrossings_before_lt
 
@@ -559,7 +559,7 @@ theorem upcrossings_before_le (f : ℕ → Ω → ℝ) (ω : Ω) (hab : a < b) :
   by_cases hN : N = 0
   · subst hN
     rw [upcrossings_before_zero]
-  · refine' cSup_le ⟨0, zero_lt_iff.2 hN⟩ fun n (hn : _ < _) => _
+  · refine' csupₛ_le ⟨0, zero_lt_iff.2 hN⟩ fun n (hn : _ < _) => _
     by_contra hnN
     exact hn.ne (upper_crossing_time_eq_of_bound_le hab (not_le.1 hnN).le)
 #align measure_theory.upcrossings_before_le MeasureTheory.upcrossings_before_le
@@ -630,18 +630,18 @@ theorem upcrossings_before_mono (hab : a < b) : Monotone fun N ω => upcrossings
   intro N M hNM ω
   simp only [upcrossings_before]
   by_cases hemp : { n : ℕ | upper_crossing_time a b f N n ω < N }.Nonempty
-  · refine' cSup_le_cSup (upper_crossing_time_lt_bdd_above hab) hemp fun n hn => _
+  · refine' csupₛ_le_csupₛ (upper_crossing_time_lt_bdd_above hab) hemp fun n hn => _
     rw [Set.mem_setOf_eq, upper_crossing_time_eq_upper_crossing_time_of_lt hNM hn]
     exact lt_of_lt_of_le hn hNM
   · rw [Set.not_nonempty_iff_eq_empty] at hemp
-    simp [hemp, cSup_empty, bot_eq_zero', zero_le']
+    simp [hemp, csupₛ_empty, bot_eq_zero', zero_le']
 #align measure_theory.upcrossings_before_mono MeasureTheory.upcrossings_before_mono
 
 theorem upcrossings_before_lt_of_exists_upcrossing (hab : a < b) {N₁ N₂ : ℕ} (hN₁ : N ≤ N₁)
     (hN₁' : f N₁ ω < a) (hN₂ : N₁ ≤ N₂) (hN₂' : b < f N₂ ω) :
     upcrossingsBefore a b f N ω < upcrossingsBefore a b f (N₂ + 1) ω :=
   by
-  refine' lt_of_lt_of_le (Nat.lt_succ_self _) (le_cSup (upper_crossing_time_lt_bdd_above hab) _)
+  refine' lt_of_lt_of_le (Nat.lt_succ_self _) (le_csupₛ (upper_crossing_time_lt_bdd_above hab) _)
   rw [Set.mem_setOf_eq, upper_crossing_time_succ_eq, hitting_lt_iff _ le_rfl]
   swap
   · infer_instance
@@ -688,7 +688,7 @@ theorem sub_eq_zero_of_upcrossings_before_lt (hab : a < b) (hn : upcrossingsBefo
     by
     rw [upcrossings_before] at hn
     rw [← not_lt]
-    exact fun h => not_le.2 hn (le_cSup (upper_crossing_time_lt_bdd_above hab) h)
+    exact fun h => not_le.2 hn (le_csupₛ (upper_crossing_time_lt_bdd_above hab) h)
   simp [stopped_value, upper_crossing_time_stabilize' (Nat.le_succ n) this,
     lower_crossing_time_stabilize' le_rfl
       (le_trans this upper_crossing_time_le_lower_crossing_time)]

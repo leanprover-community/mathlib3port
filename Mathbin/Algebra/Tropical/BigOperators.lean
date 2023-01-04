@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.big_operators
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ theorem trop_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset S) (f : 
     trop (infₛ (f '' s)) = ∑ i in s, trop (f i) :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | h)
-  · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.cInf_empty, trop_top]
+  · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.infₛ_empty, trop_top]
   rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, s.trop_inf]
 #align trop_Inf_image trop_Inf_image
 
@@ -140,7 +140,7 @@ theorem untrop_sum_eq_Inf_image [ConditionallyCompleteLinearOrder R] (s : Finset
     (f : S → Tropical (WithTop R)) : untrop (∑ i in s, f i) = infₛ (untrop ∘ f '' s) :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | h)
-  · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.cInf_empty, untrop_zero]
+  · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.infₛ_empty, untrop_zero]
   rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, Finset.untrop_sum']
 #align untrop_sum_eq_Inf_image untrop_sum_eq_Inf_image
 

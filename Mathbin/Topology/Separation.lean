@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3663,7 +3663,7 @@ theorem compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace α ↔ Totall
     rintro ⟨w : Set α, hw : IsClopen w, hy : y ∈ w⟩
     by_contra hx
     exact
-      hyp (wᶜ) w hw.2.is_open_compl hw.1 hx hy (@is_compl_compl _ w _).symm.Codisjoint.top_le
+      hyp (wᶜ) w hw.2.is_open_compl hw.1 hx hy (@isCompl_compl _ w _).symm.Codisjoint.top_le
         disjoint_compl_left
   apply TotallySeparatedSpace.totally_disconnected_space
 #align compact_t2_tot_disc_iff_tot_sep compact_t2_tot_disc_iff_tot_sep

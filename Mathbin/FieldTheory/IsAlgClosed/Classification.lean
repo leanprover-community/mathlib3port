@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.classification
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ namespace Algebra.IsAlgebraic
 
 variable (R L : Type u) [CommRing R] [CommRing L] [IsDomain L] [Algebra R L]
 
-variable [NoZeroSmulDivisors R L] (halg : Algebra.IsAlgebraic R L)
+variable [NoZeroSMulDivisors R L] (halg : Algebra.IsAlgebraic R L)
 
 theorem cardinal_mk_le_sigma_polynomial :
     (#L) ≤ (#Σp : R[X], { x : L // x ∈ (p.map (algebraMap R L)).roots }) :=
@@ -52,7 +52,7 @@ theorem cardinal_mk_le_sigma_polynomial :
         have h : p.1.map (algebraMap R L) ≠ 0 :=
           by
           rw [Ne.def, ← Polynomial.degree_eq_bot,
-            Polynomial.degree_map_eq_of_injective (NoZeroSmulDivisors.algebra_map_injective R L),
+            Polynomial.degree_map_eq_of_injective (NoZeroSMulDivisors.algebra_map_injective R L),
             Polynomial.degree_eq_bot]
           exact p.2.1
         erw [Polynomial.mem_roots h, Polynomial.IsRoot, Polynomial.eval_map, ← Polynomial.aeval_def,
@@ -108,7 +108,7 @@ variable (hv : AlgebraicIndependent R v)
 theorem isAlgClosureOfTranscendenceBasis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
     IsAlgClosure (Algebra.adjoin R (Set.range v)) K :=
   letI := RingHom.domain_nontrivial (algebraMap R K)
-  { algClosed := by infer_instance
+  { alg_closed := by infer_instance
     algebraic := hv.is_algebraic }
 #align
   is_alg_closed.is_alg_closure_of_transcendence_basis IsAlgClosed.isAlgClosureOfTranscendenceBasis

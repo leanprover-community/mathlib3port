@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.int.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ instance : UniqueFactorizationMonoid ℕ :=
 end Nat
 
 /-- `ℕ` is a gcd_monoid. -/
-instance : GcdMonoid ℕ where
+instance : GCDMonoid ℕ where
   gcd := Nat.gcd
   lcm := Nat.lcm
   gcd_dvd_left := Nat.gcd_dvd_left
@@ -70,8 +70,8 @@ instance : GcdMonoid ℕ where
   lcm_zero_left := Nat.lcm_zero_left
   lcm_zero_right := Nat.lcm_zero_right
 
-instance : NormalizedGcdMonoid ℕ :=
-  { (inferInstance : GcdMonoid ℕ),
+instance : NormalizedGCDMonoid ℕ :=
+  { (inferInstance : GCDMonoid ℕ),
     (inferInstance :
       NormalizationMonoid
         ℕ) with
@@ -140,9 +140,9 @@ theorem eq_of_associated_of_nonneg {a b : ℤ} (h : Associated a b) (ha : 0 ≤ 
 
 end NormalizationMonoid
 
-section GcdMonoid
+section GCDMonoid
 
-instance : GcdMonoid ℤ where
+instance : GCDMonoid ℤ where
   gcd a b := Int.gcd a b
   lcm a b := Int.lcm a b
   gcd_dvd_left a b := Int.gcd_dvd_left _ _
@@ -154,30 +154,30 @@ instance : GcdMonoid ℤ where
   lcm_zero_left a := coe_nat_eq_zero.2 <| Nat.lcm_zero_left _
   lcm_zero_right a := coe_nat_eq_zero.2 <| Nat.lcm_zero_right _
 
-instance : NormalizedGcdMonoid ℤ :=
+instance : NormalizedGCDMonoid ℤ :=
   { Int.normalizationMonoid,
     (inferInstance :
-      GcdMonoid ℤ) with
+      GCDMonoid ℤ) with
     normalize_gcd := fun a b => normalize_coe_nat _
     normalize_lcm := fun a b => normalize_coe_nat _ }
 
-theorem coe_gcd (i j : ℤ) : ↑(Int.gcd i j) = GcdMonoid.gcd i j :=
+theorem coe_gcd (i j : ℤ) : ↑(Int.gcd i j) = GCDMonoid.gcd i j :=
   rfl
 #align int.coe_gcd Int.coe_gcd
 
-theorem coe_lcm (i j : ℤ) : ↑(Int.lcm i j) = GcdMonoid.lcm i j :=
+theorem coe_lcm (i j : ℤ) : ↑(Int.lcm i j) = GCDMonoid.lcm i j :=
   rfl
 #align int.coe_lcm Int.coe_lcm
 
-theorem nat_abs_gcd (i j : ℤ) : natAbs (GcdMonoid.gcd i j) = Int.gcd i j :=
+theorem nat_abs_gcd (i j : ℤ) : natAbs (GCDMonoid.gcd i j) = Int.gcd i j :=
   rfl
 #align int.nat_abs_gcd Int.nat_abs_gcd
 
-theorem nat_abs_lcm (i j : ℤ) : natAbs (GcdMonoid.lcm i j) = Int.lcm i j :=
+theorem nat_abs_lcm (i j : ℤ) : natAbs (GCDMonoid.lcm i j) = Int.lcm i j :=
   rfl
 #align int.nat_abs_lcm Int.nat_abs_lcm
 
-end GcdMonoid
+end GCDMonoid
 
 theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs a : ℤ) = u * a :=
   by
@@ -235,7 +235,7 @@ theorem gcd_eq_one_of_gcd_mul_right_eq_one_right {a : ℤ} {m n : ℕ} (h : a.gc
 theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcd a b = 1) (heq : a * b = c ^ 2) :
     ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -a0 ^ 2 :=
   by
-  have h' : IsUnit (GcdMonoid.gcd a b) :=
+  have h' : IsUnit (GCDMonoid.gcd a b) :=
     by
     rw [← coe_gcd, h, Int.ofNat_one]
     exact isUnit_one

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Gabriel Ebner, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.nat.lattice
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,7 +159,7 @@ theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ infₛ { m | p m }) :
     suffices hp : p (Inf { m | p m } - n + n)
     · exact (h.subset hp).elim
     rw [tsub_add_cancel_of_le hn]
-    exact Inf_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
+    exact cinfₛ_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
   · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
     rw [Nat.Inf_def ⟨m, hm⟩, Nat.Inf_def hp]
     rw [Nat.Inf_def hp] at hn
@@ -173,7 +173,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < infₛ { m | p m }) :
   · simp_rw [add_tsub_cancel_right]
   obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
   refine'
-    le_cInf ⟨m + n, _⟩ fun b hb =>
+    le_cinfₛ ⟨m + n, _⟩ fun b hb =>
       le_of_not_lt fun hbn =>
         ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
   · dsimp

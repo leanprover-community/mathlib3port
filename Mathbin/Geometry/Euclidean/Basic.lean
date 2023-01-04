@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -887,25 +887,25 @@ theorem Cospherical.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (hc : Co
 include V
 
 /-- The empty set is cospherical. -/
-theorem cosphericalEmpty : Cospherical (∅ : Set P) :=
+theorem cospherical_empty : Cospherical (∅ : Set P) :=
   by
   use add_torsor.nonempty.some
   simp
-#align euclidean_geometry.cospherical_empty EuclideanGeometry.cosphericalEmpty
+#align euclidean_geometry.cospherical_empty EuclideanGeometry.cospherical_empty
 
 omit V
 
 /-- A single point is cospherical. -/
-theorem cosphericalSingleton (p : P) : Cospherical ({p} : Set P) :=
+theorem cospherical_singleton (p : P) : Cospherical ({p} : Set P) :=
   by
   use p
   simp
-#align euclidean_geometry.cospherical_singleton EuclideanGeometry.cosphericalSingleton
+#align euclidean_geometry.cospherical_singleton EuclideanGeometry.cospherical_singleton
 
 include V
 
 /-- Two points are cospherical. -/
-theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
+theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
   by
   use (2⁻¹ : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁, (2⁻¹ : ℝ) * dist p₂ p₁
   intro p
@@ -921,7 +921,7 @@ theorem cosphericalPair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
       rw [← one_smul ℝ (p₂ -ᵥ p₁ : V)]
     rw [← sub_smul, norm_smul]
     norm_num
-#align euclidean_geometry.cospherical_pair EuclideanGeometry.cosphericalPair
+#align euclidean_geometry.cospherical_pair EuclideanGeometry.cospherical_pair
 
 /-- Any three points in a cospherical set are affinely independent. -/
 theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin 3 → P}
@@ -1277,17 +1277,17 @@ theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concy
 
 /-- The empty set is concyclic. -/
 theorem concyclicEmpty : Concyclic (∅ : Set P) :=
-  ⟨cosphericalEmpty, coplanar_empty ℝ P⟩
+  ⟨cospherical_empty, coplanar_empty ℝ P⟩
 #align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclicEmpty
 
 /-- A single point is concyclic. -/
 theorem concyclicSingleton (p : P) : Concyclic ({p} : Set P) :=
-  ⟨cosphericalSingleton p, coplanar_singleton ℝ p⟩
+  ⟨cospherical_singleton p, coplanar_singleton ℝ p⟩
 #align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclicSingleton
 
 /-- Two points are concyclic. -/
 theorem concyclicPair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
-  ⟨cosphericalPair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
+  ⟨cospherical_pair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
 #align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclicPair
 
 end EuclideanGeometry

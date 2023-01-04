@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.spectrum
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,12 +141,12 @@ theorem subset_closed_ball_norm [NormOneClass A] (a : A) : σ a ⊆ Metric.close
   fun k hk => by simp [norm_le_norm_of_mem hk]
 #align spectrum.subset_closed_ball_norm spectrum.subset_closed_ball_norm
 
-theorem isBounded (a : A) : Metric.Bounded (σ a) :=
+theorem is_bounded (a : A) : Metric.Bounded (σ a) :=
   (Metric.bounded_iff_subset_ball 0).mpr ⟨‖a‖ * ‖(1 : A)‖, subset_closed_ball_norm_mul a⟩
-#align spectrum.is_bounded spectrum.isBounded
+#align spectrum.is_bounded spectrum.is_bounded
 
 protected theorem is_compact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
-  Metric.is_compact_of_is_closed_bounded (spectrum.is_closed a) (isBounded a)
+  Metric.is_compact_of_is_closed_bounded (spectrum.is_closed a) (is_bounded a)
 #align spectrum.is_compact spectrum.is_compact
 
 theorem spectral_radius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ‖a‖₊ :=
@@ -233,14 +233,14 @@ local notation "ρ" => resolventSet 𝕜
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
-theorem hasDerivAtResolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) :
+theorem has_deriv_at_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) :
     HasDerivAt (resolvent a) (-resolvent a k ^ 2) k :=
   by
   have H₁ : HasFderivAt Ring.inverse _ (↑ₐ k - a) := hasFderivAtRingInverse hk.unit
   have H₂ : HasDerivAt (fun k => ↑ₐ k - a) 1 k := by
     simpa using (Algebra.linearMap 𝕜 A).HasDerivAt.sub_const a
   simpa [resolvent, sq, hk.unit_spec, ← Ring.inverse_unit hk.unit] using H₁.comp_has_deriv_at k H₂
-#align spectrum.has_deriv_at_resolvent spectrum.hasDerivAtResolvent
+#align spectrum.has_deriv_at_resolvent spectrum.has_deriv_at_resolvent
 
 /- TODO: Once there is sufficient API for bornology, we should get a nice filter / asymptotics
 version of this, for example: `tendsto (resolvent a) (cobounded 𝕜) (𝓝 0)` or more specifically
@@ -351,20 +351,21 @@ theorem is_unit_one_sub_smul_of_lt_inv_radius {a : A} {z : 𝕜} (h : ↑‖z‖
 
 /-- In a Banach algebra `A` over `𝕜`, for `a : A` the function `λ z, (1 - z • a)⁻¹` is
 differentiable on any closed ball centered at zero of radius `r < (spectral_radius 𝕜 a)⁻¹`. -/
-theorem differentiableOnInverseOneSubSmul [CompleteSpace A] {a : A} {r : ℝ≥0}
+theorem differentiable_on_inverse_one_sub_smul [CompleteSpace A] {a : A} {r : ℝ≥0}
     (hr : (r : ℝ≥0∞) < (spectralRadius 𝕜 a)⁻¹) :
     DifferentiableOn 𝕜 (fun z : 𝕜 => Ring.inverse (1 - z • a)) (Metric.closedBall 0 r) :=
   by
   intro z z_mem
-  apply DifferentiableAt.differentiableWithinAt
+  apply DifferentiableAt.differentiable_within_at
   have hu : IsUnit (1 - z • a) :=
     by
     refine' is_unit_one_sub_smul_of_lt_inv_radius (lt_of_le_of_lt (coe_mono _) hr)
     simpa only [norm_to_nnreal, Real.to_nnreal_coe] using
       Real.to_nnreal_mono (mem_closed_ball_zero_iff.mp z_mem)
   have H₁ : Differentiable 𝕜 fun w : 𝕜 => 1 - w • a := (differentiable_id.smul_const a).const_sub 1
-  exact DifferentiableAt.comp z (differentiableAtInverse hu.unit) H₁.differentiable_at
-#align spectrum.differentiable_on_inverse_one_sub_smul spectrum.differentiableOnInverseOneSubSmul
+  exact DifferentiableAt.comp z (differentiable_at_inverse hu.unit) H₁.differentiable_at
+#align
+  spectrum.differentiable_on_inverse_one_sub_smul spectrum.differentiable_on_inverse_one_sub_smul
 
 end OneSubSmul
 

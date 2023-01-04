@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.W.cardinal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,13 +71,13 @@ theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : (#WType β
         _ ≤ m * ⨆ a, m ^ (#β a) := mul_le_mul' (le_max_left _ _) le_rfl
         _ = m :=
           mul_eq_left.{u} (le_max_right _ _)
-              (csupr_le' fun i => pow_le (le_max_right _ _) (lt_aleph_0_of_finite _)) <|
+              (csupᵢ_le' fun i => pow_le (le_max_right _ _) (lt_aleph_0_of_finite _)) <|
             pos_iff_ne_zero.1 <|
               Order.succ_le_iff.1
                 (by
                   rw [succ_zero]
                   obtain ⟨a⟩ : Nonempty α; exact hn
-                  refine' le_trans _ (le_csupr (bdd_above_range.{u, u} _) a)
+                  refine' le_trans _ (le_csupᵢ (bdd_above_range.{u, u} _) a)
                   rw [← power_zero]
                   exact
                     power_le_power_left

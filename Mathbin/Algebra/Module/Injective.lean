@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.module.injective
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,7 +175,7 @@ def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
     (hnonempty : c.Nonempty) : ExtensionOf i f :=
   {
     LinearPmap.sup _
-      (IsChain.directed_on <|
+      (IsChain.directedOn <|
         chain_linear_pmap_of_chain_extension_of
           hchain) with
     le :=
@@ -188,14 +188,14 @@ def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
       symm
       generalize_proofs _ h0 h1
       exact
-        LinearPmap.Sup_apply (IsChain.directed_on <| chain_linear_pmap_of_chain_extension_of hchain)
+        LinearPmap.Sup_apply (IsChain.directedOn <| chain_linear_pmap_of_chain_extension_of hchain)
           ((Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩) ⟨i m, h1⟩ }
 #align module.Baer.extension_of.max Module.BaerCat.ExtensionOf.max
 
 theorem ExtensionOf.le_max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
     (hnonempty : c.Nonempty) (a : ExtensionOf i f) (ha : a ∈ c) :
     a ≤ ExtensionOf.max hchain hnonempty :=
-  LinearPmap.le_Sup (IsChain.directed_on <| chain_linear_pmap_of_chain_extension_of hchain) <|
+  LinearPmap.le_Sup (IsChain.directedOn <| chain_linear_pmap_of_chain_extension_of hchain) <|
     (Set.mem_image _ _ _).mpr ⟨a, ha, rfl⟩
 #align module.Baer.extension_of.le_max Module.BaerCat.ExtensionOf.le_max
 
@@ -227,13 +227,13 @@ instance ExtensionOf.inhabited : Inhabited (ExtensionOf i f)
 /-- Since every nonempty chain has a maximal element, by Zorn's lemma, there is a maximal
 `extension_of i f`. -/
 def extensionOfMax : ExtensionOf i f :=
-  (@zorn_nonempty_partial_order (ExtensionOf i f) _ ⟨Inhabited.default⟩ fun c hchain hnonempty =>
+  (@zorn_nonempty_partialOrder (ExtensionOf i f) _ ⟨Inhabited.default⟩ fun c hchain hnonempty =>
       ⟨ExtensionOf.max hchain hnonempty, ExtensionOf.le_max hchain hnonempty⟩).some
 #align module.Baer.extension_of_max Module.BaerCat.extensionOfMax
 
 theorem extension_of_max_is_max :
     ∀ a : ExtensionOf i f, extensionOfMax i f ≤ a → a = extensionOfMax i f :=
-  (@zorn_nonempty_partial_order (ExtensionOf i f) _ ⟨Inhabited.default⟩ fun c hchain hnonempty =>
+  (@zorn_nonempty_partialOrder (ExtensionOf i f) _ ⟨Inhabited.default⟩ fun c hchain hnonempty =>
       ⟨ExtensionOf.max hchain hnonempty, ExtensionOf.le_max hchain hnonempty⟩).some_spec
 #align module.Baer.extension_of_max_is_max Module.BaerCat.extension_of_max_is_max
 

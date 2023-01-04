@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.opposites
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ def opRingEquiv (R : Type _) [Semiring R] : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
 theorem op_ring_equiv_op_monomial (n : ℕ) (r : R) :
     opRingEquiv R (op (monomial n r : R[X])) = monomial n (op r) := by
   simp only [op_ring_equiv, RingEquiv.trans_apply, RingEquiv.op_apply_apply,
-    RingEquiv.to_add_equiv_eq_coe, AddEquiv.mul_op_apply, [anonymous], AddEquiv.coe_trans,
-    op_add_equiv_apply, RingEquiv.coe_to_add_equiv, op_add_equiv_symm_apply, Function.comp_apply,
+    RingEquiv.toAddEquiv_eq_coe, AddEquiv.mul_op_apply, [anonymous], AddEquiv.coe_trans,
+    op_add_equiv_apply, RingEquiv.coe_toAddEquiv, op_add_equiv_symm_apply, Function.comp_apply,
     unop_op, to_finsupp_iso_apply, to_finsupp_monomial, AddMonoidAlgebra.op_ring_equiv_single,
     to_finsupp_iso_symm_apply, of_finsupp_single]
 #align polynomial.op_ring_equiv_op_monomial Polynomial.op_ring_equiv_op_monomial

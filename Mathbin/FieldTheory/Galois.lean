@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.galois
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 a separable extension of fields is by definition algebraic. -/
 class IsGalois : Prop where
   [to_is_separable : IsSeparable F E]
-  [toNormal : Normal F E]
+  [to_normal : Normal F E]
 #align is_galois IsGalois
 
 variable {F E}
@@ -58,10 +58,10 @@ variable {F E}
 theorem is_galois_iff : IsGalois F E ↔ IsSeparable F E ∧ Normal F E :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h =>
     { to_is_separable := h.1
-      toNormal := h.2 }⟩
+      to_normal := h.2 }⟩
 #align is_galois_iff is_galois_iff
 
-attribute [instance] IsGalois.to_is_separable IsGalois.toNormal
+attribute [instance] IsGalois.to_is_separable IsGalois.to_normal
 
 -- see Note [lower instance priority]
 variable (F E)
@@ -75,7 +75,7 @@ instance self : IsGalois F F :=
 variable (F) {E}
 
 theorem integral [IsGalois F E] (x : E) : IsIntegral F x :=
-  toNormal.IsIntegral x
+  to_normal.IsIntegral x
 #align is_galois.integral IsGalois.integral
 
 theorem separable [IsGalois F E] (x : E) : (minpoly F x).Separable :=
@@ -88,10 +88,10 @@ theorem splits [IsGalois F E] (x : E) : (minpoly F x).Splits (algebraMap F E) :=
 
 variable (F E)
 
-instance ofFixedField (G : Type _) [Group G] [Finite G] [MulSemiringAction G E] :
+instance of_fixed_field (G : Type _) [Group G] [Finite G] [MulSemiringAction G E] :
     IsGalois (FixedPoints.subfield G E) E :=
   ⟨⟩
-#align is_galois.of_fixed_field IsGalois.ofFixedField
+#align is_galois.of_fixed_field IsGalois.of_fixed_field
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -164,44 +164,44 @@ variable (F K E : Type _) [Field F] [Field K] [Field E] {E' : Type _} [Field E']
 
 variable [Algebra F K] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
-theorem IsGalois.towerTopOfIsGalois [IsGalois F E] : IsGalois K E :=
+theorem IsGalois.tower_top_of_is_galois [IsGalois F E] : IsGalois K E :=
   { to_is_separable := is_separable_tower_top_of_is_separable F K E
-    toNormal := Normal.towerTopOfNormal F K E }
-#align is_galois.tower_top_of_is_galois IsGalois.towerTopOfIsGalois
+    to_normal := Normal.tower_top_of_normal F K E }
+#align is_galois.tower_top_of_is_galois IsGalois.tower_top_of_is_galois
 
 variable {F E}
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsGalois.towerTopIntermediateField (K : IntermediateField F E)
+instance (priority := 100) IsGalois.tower_top_intermediate_field (K : IntermediateField F E)
     [h : IsGalois F E] : IsGalois K E :=
-  IsGalois.towerTopOfIsGalois F K E
-#align is_galois.tower_top_intermediate_field IsGalois.towerTopIntermediateField
+  IsGalois.tower_top_of_is_galois F K E
+#align is_galois.tower_top_intermediate_field IsGalois.tower_top_intermediate_field
 
 theorem is_galois_iff_is_galois_bot : IsGalois (⊥ : IntermediateField F E) E ↔ IsGalois F E :=
   by
   constructor
   · intro h
-    exact IsGalois.towerTopOfIsGalois (⊥ : IntermediateField F E) F E
+    exact IsGalois.tower_top_of_is_galois (⊥ : IntermediateField F E) F E
   · intro h
     infer_instance
 #align is_galois_iff_is_galois_bot is_galois_iff_is_galois_bot
 
-theorem IsGalois.ofAlgEquiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
+theorem IsGalois.of_alg_equiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
   { to_is_separable := IsSeparable.of_alg_hom F E f.symm
-    toNormal := Normal.ofAlgEquiv f }
-#align is_galois.of_alg_equiv IsGalois.ofAlgEquiv
+    to_normal := Normal.of_alg_equiv f }
+#align is_galois.of_alg_equiv IsGalois.of_alg_equiv
 
 theorem AlgEquiv.transfer_galois (f : E ≃ₐ[F] E') : IsGalois F E ↔ IsGalois F E' :=
-  ⟨fun h => IsGalois.ofAlgEquiv f, fun h => IsGalois.ofAlgEquiv f.symm⟩
+  ⟨fun h => IsGalois.of_alg_equiv f, fun h => IsGalois.of_alg_equiv f.symm⟩
 #align alg_equiv.transfer_galois AlgEquiv.transfer_galois
 
 theorem is_galois_iff_is_galois_top : IsGalois F (⊤ : IntermediateField F E) ↔ IsGalois F E :=
   (IntermediateField.topEquiv : (⊤ : IntermediateField F E) ≃ₐ[F] E).transfer_galois
 #align is_galois_iff_is_galois_top is_galois_iff_is_galois_top
 
-instance isGaloisBot : IsGalois F (⊥ : IntermediateField F E) :=
+instance is_galois_bot : IsGalois F (⊥ : IntermediateField F E) :=
   (IntermediateField.botEquiv F E).transfer_galois.mpr (IsGalois.self F)
-#align is_galois_bot isGaloisBot
+#align is_galois_bot is_galois_bot
 
 end IsGaloisTower
 
@@ -386,15 +386,16 @@ theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
   · exact Polynomial.map_ne_zero (minpoly.ne_zero (integral F α))
 #align is_galois.is_separable_splitting_field IsGalois.is_separable_splitting_field
 
-theorem ofFixedFieldEqBot [FiniteDimensional F E]
+theorem of_fixed_field_eq_bot [FiniteDimensional F E]
     (h : IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E)) = ⊥) : IsGalois F E :=
   by
   rw [← is_galois_iff_is_galois_bot, ← h]
-  classical exact IsGalois.ofFixedField E (⊤ : Subgroup (E ≃ₐ[F] E))
-#align is_galois.of_fixed_field_eq_bot IsGalois.ofFixedFieldEqBot
+  classical exact IsGalois.of_fixed_field E (⊤ : Subgroup (E ≃ₐ[F] E))
+#align is_galois.of_fixed_field_eq_bot IsGalois.of_fixed_field_eq_bot
 
-theorem ofCardAutEqFinrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) :
-    IsGalois F E := by
+theorem of_card_aut_eq_finrank [FiniteDimensional F E]
+    (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) : IsGalois F E :=
+  by
   apply of_fixed_field_eq_bot
   have p : 0 < finrank (IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E))) E := finrank_pos
   classical
@@ -408,7 +409,7 @@ theorem ofCardAutEqFinrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F
         right_inv := fun _ => by
           ext
           rfl }
-#align is_galois.of_card_aut_eq_finrank IsGalois.ofCardAutEqFinrank
+#align is_galois.of_card_aut_eq_finrank IsGalois.of_card_aut_eq_finrank
 
 variable {F} {E} {p : F[X]}
 
@@ -458,7 +459,8 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     exact sp.splits
 #align is_galois.of_separable_splitting_field_aux IsGalois.of_separable_splitting_field_aux
 
-theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separable) : IsGalois F E :=
+theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separable) :
+    IsGalois F E :=
   by
   haveI hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
   letI := Classical.decEq E
@@ -494,7 +496,7 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
   symm
   refine' LinearEquiv.finrank_eq _
   rfl
-#align is_galois.of_separable_splitting_field IsGalois.ofSeparableSplittingField
+#align is_galois.of_separable_splitting_field IsGalois.of_separable_splitting_field
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration

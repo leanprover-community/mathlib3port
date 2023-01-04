@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.zmod.parity
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ theorem eq_zero_iff_even {n : ℕ} : (n : Zmod 2) = 0 ↔ Even n :=
 
 theorem eq_one_iff_odd {n : ℕ} : (n : Zmod 2) = 1 ↔ Odd n :=
   by
-  rw [← @Nat.cast_one (Zmod 2), Zmod.eq_iff_modeq_nat, Nat.odd_iff, Nat.Modeq]
+  rw [← @Nat.cast_one (Zmod 2), Zmod.eq_iff_modeq_nat, Nat.odd_iff, Nat.ModEq]
   norm_num
 #align zmod.eq_one_iff_odd Zmod.eq_one_iff_odd
 

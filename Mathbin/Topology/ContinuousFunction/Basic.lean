@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,14 +368,14 @@ noncomputable def liftCover : C(α, β) :=
   intro i
   convert (φ i).Continuous
   ext x
-  exact Set.lift_cover_coe x
+  exact Set.liftCover_coe x
 #align continuous_map.lift_cover ContinuousMap.liftCover
 
 variable {S φ hφ hS}
 
 @[simp]
 theorem lift_cover_coe {i : ι} (x : S i) : liftCover S φ hφ hS x = φ i x :=
-  Set.lift_cover_coe _
+  Set.liftCover_coe _
 #align continuous_map.lift_cover_coe ContinuousMap.lift_cover_coe
 
 @[simp]

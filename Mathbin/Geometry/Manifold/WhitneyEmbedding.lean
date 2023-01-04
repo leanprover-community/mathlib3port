@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.whitney_embedding
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,8 +61,9 @@ include hi
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯
     where
   toFun x i := (f i x • extChartAt I (f.c i) x, f i x)
-  contMdiffToFun :=
-    cont_mdiff_pi_space.2 fun i => ((f i).smoothSmul contMdiffOnExtChartAt).prodMkSpace (f i).Smooth
+  cont_mdiff_to_fun :=
+    cont_mdiff_pi_space.2 fun i =>
+      ((f i).smooth_smul cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth
 #align smooth_bump_covering.embedding_pi_tangent SmoothBumpCovering.embeddingPiTangent
 
 @[local simp]
@@ -114,7 +115,8 @@ theorem embedding_pi_tangent_ker_mfderiv (x : M) (hx : x ∈ s) :
   by
   apply bot_unique
   rw [←
-    (mdifferentiableChart I (f.c (f.ind x hx))).ker_mfderiv_eq_bot (f.mem_chart_at_ind_source x hx),
+    (mdifferentiable_chart I (f.c (f.ind x hx))).ker_mfderiv_eq_bot
+      (f.mem_chart_at_ind_source x hx),
     ← comp_embedding_pi_tangent_mfderiv]
   exact LinearMap.ker_le_ker_comp _ _
 #align

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.list.modeq
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ theorem nth_rotate :
           (m + (n + 1)) % (a :: l : List α).length = (m + n) % (a :: l : List α).length + 1 :=
           calc
             (m + (n + 1)) % (l.length + 1) = ((m + n) % (l.length + 1) + 1) % (l.length + 1) :=
-              add_assoc m n 1 ▸ Nat.Modeq.add_right 1 (Nat.mod_mod _ _).symm
+              add_assoc m n 1 ▸ Nat.ModEq.add_right 1 (Nat.mod_mod _ _).symm
             _ = (m + n) % (l.length + 1) + 1 := Nat.mod_eq_of_lt (Nat.succ_lt_succ hml')
             
         have h₂ : (m + n) % (l ++ [a]).length < l.length := by simpa [Nat.add_one] using hml'
@@ -43,7 +43,7 @@ theorem nth_rotate :
         calc
           (m + (n + 1)) % (l.length + 1) = (l.length + 1) % (l.length + 1) :=
             add_assoc m n 1 ▸
-              Nat.Modeq.add_right 1 (hml'.trans (Nat.mod_eq_of_lt (Nat.lt_succ_self _)).symm)
+              Nat.ModEq.add_right 1 (hml'.trans (Nat.mod_eq_of_lt (Nat.lt_succ_self _)).symm)
           _ = 0 := by simp
           
       rw [List.length, List.rotate_cons_succ, nth_rotate h₃, List.length_append, List.length_cons,

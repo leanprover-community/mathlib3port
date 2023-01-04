@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -283,7 +283,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     have hsb : b ∈ upperBounds s := fun x hx => hx.1.2
     have sbd : BddAbove s := ⟨b, hsb⟩
     set c := Sup s
-    have hsc : IsLUB s c := is_lub_cSup sne sbd
+    have hsc : IsLUB s c := isLUB_csupₛ sne sbd
     have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
     obtain ⟨-, ec : Trivialization F (π E), hec : Icc a c ⊆ ec.base_set⟩ : c ∈ s :=
       by

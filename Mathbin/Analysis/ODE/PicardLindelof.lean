@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Winston Yin
 
 ! This file was ported from Lean 3 source module analysis.ODE.picard_lindelof
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ structure PicardLindelof (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E]
   t₀ : Icc t_min t_max
   x₀ : E
   (c r l : ℝ≥0)
-  isPl : IsPicardLindelof to_fun t_min t₀ t_max x₀ L R C
+  is_pl : IsPicardLindelof to_fun t_min t₀ t_max x₀ L R C
 #align picard_lindelof PicardLindelof
 
 namespace PicardLindelof
@@ -105,23 +105,23 @@ protected theorem nonempty_Icc : (Icc v.tMin v.tMax).Nonempty :=
   nonempty_Icc.2 v.t_min_le_t_max
 #align picard_lindelof.nonempty_Icc PicardLindelof.nonempty_Icc
 
-protected theorem lipschitzOnWith {t} (ht : t ∈ Icc v.tMin v.tMax) :
+protected theorem lipschitz_on_with {t} (ht : t ∈ Icc v.tMin v.tMax) :
     LipschitzOnWith v.l (v t) (closedBall v.x₀ v.r) :=
-  v.isPl.lipschitz t ht
-#align picard_lindelof.lipschitz_on_with PicardLindelof.lipschitzOnWith
+  v.is_pl.lipschitz t ht
+#align picard_lindelof.lipschitz_on_with PicardLindelof.lipschitz_on_with
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem continuous_on :
     ContinuousOn (uncurry v) (Icc v.tMin v.tMax ×ˢ closedBall v.x₀ v.r) :=
   have : ContinuousOn (uncurry (flip v)) (closedBall v.x₀ v.r ×ˢ Icc v.tMin v.tMax) :=
-    continuous_on_prod_of_continuous_on_lipschitz_on _ v.l v.isPl.cont v.isPl.lipschitz
+    continuous_on_prod_of_continuous_on_lipschitz_on _ v.l v.is_pl.cont v.is_pl.lipschitz
   this.comp continuous_swap.ContinuousOn (preimage_swap_prod _ _).symm.Subset
 #align picard_lindelof.continuous_on PicardLindelof.continuous_on
 
 theorem norm_le {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) {x : E} (hx : x ∈ closedBall v.x₀ v.r) :
     ‖v t x‖ ≤ v.c :=
-  v.isPl.norm_le _ ht _ hx
+  v.is_pl.norm_le _ ht _ hx
 #align picard_lindelof.norm_le PicardLindelof.norm_le
 
 /-- The maximum of distances from `t₀` to the endpoints of `[t_min, t_max]`. -/
@@ -227,7 +227,7 @@ protected theorem mem_closed_ball (t : Icc v.tMin v.tMax) : f t ∈ closedBall v
     dist (f t) v.x₀ = dist (f t) (f.toFun v.t₀) := by rw [f.map_t₀']
     _ ≤ v.c * dist t v.t₀ := f.lipschitz.dist_le_mul _ _
     _ ≤ v.c * v.tDist := mul_le_mul_of_nonneg_left (v.dist_t₀_le _) v.c.2
-    _ ≤ v.r := v.isPl.C_mul_le_R
+    _ ≤ v.r := v.is_pl.C_mul_le_R
     
 #align picard_lindelof.fun_space.mem_closed_ball PicardLindelof.FunSpace.mem_closed_ball
 
@@ -292,7 +292,7 @@ def next (f : FunSpace v) : FunSpace v
   toFun t := v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ
   map_t₀' := by rw [integral_same, add_zero]
   lipschitz' :=
-    LipschitzWith.ofDistLeMul fun t₁ t₂ =>
+    LipschitzWith.of_dist_le_mul fun t₁ t₂ =>
       by
       rw [dist_add_left, dist_eq_norm,
         integral_interval_sub_left (f.interval_integrable_v_comp _ _)
@@ -304,12 +304,12 @@ theorem next_apply (t : Icc v.tMin v.tMax) : f.next t = v.x₀ + ∫ τ : ℝ in
   rfl
 #align picard_lindelof.fun_space.next_apply PicardLindelof.FunSpace.next_apply
 
-theorem hasDerivWithinAtNext (t : Icc v.tMin v.tMax) :
+theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
     HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.tMin v.tMax) t :=
   by
   haveI : Fact ((t : ℝ) ∈ Icc v.t_min v.t_max) := ⟨t.2⟩
   simp only [(· ∘ ·), next_apply]
-  refine' HasDerivWithinAt.constAdd _ _
+  refine' HasDerivWithinAt.const_add _ _
   have :
     HasDerivWithinAt (fun t : ℝ => ∫ τ in v.t₀..t, f.v_comp τ) (f.v_comp t) (Icc v.t_min v.t_max)
       t :=
@@ -321,7 +321,7 @@ theorem hasDerivWithinAtNext (t : Icc v.tMin v.tMax) :
   filter_upwards [self_mem_nhds_within] with _ ht'
   rw [v.proj_of_mem ht']
 #align
-  picard_lindelof.fun_space.has_deriv_within_at_next PicardLindelof.FunSpace.hasDerivWithinAtNext
+  picard_lindelof.fun_space.has_deriv_within_at_next PicardLindelof.FunSpace.has_deriv_within_at_next
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
     (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * |t - v.t₀|) ^ n / n ! * d) (t : Icc v.tMin v.tMax) :
@@ -386,7 +386,7 @@ theorem exists_contracting_iterate :
   have : (0 : ℝ) ≤ (v.L * v.t_dist) ^ N / N ! :=
     div_nonneg (pow_nonneg (mul_nonneg v.L.2 v.t_dist_nonneg) _) (Nat.cast_nonneg _)
   exact
-    ⟨N, ⟨_, this⟩, hN, LipschitzWith.ofDistLeMul fun f g => fun_space.dist_iterate_next_le f g N⟩
+    ⟨N, ⟨_, this⟩, hN, LipschitzWith.of_dist_le_mul fun f g => fun_space.dist_iterate_next_le f g N⟩
 #align picard_lindelof.exists_contracting_iterate PicardLindelof.exists_contracting_iterate
 
 theorem exists_fixed : ∃ f : v.FunSpace, f.next = f :=

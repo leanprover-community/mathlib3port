@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gaussian
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) :
   have A : ∀ x, HasDerivAt (fun x => -(2 * b)⁻¹ * exp (-b * x ^ 2)) (x * exp (-b * x ^ 2)) x :=
     by
     intro x
-    convert ((hasDerivAtPow 2 x).const_mul (-b)).exp.const_mul (-(2 * b)⁻¹) using 1
+    convert ((has_deriv_at_pow 2 x).const_mul (-b)).exp.const_mul (-(2 * b)⁻¹) using 1
     field_simp [hb.ne']
     ring
   have :

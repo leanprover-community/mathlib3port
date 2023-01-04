@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,17 +96,17 @@ instance has_zero_object : Limits.HasZeroObject SemiNormedGroupCat.{u} :=
   ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
 #align SemiNormedGroup.has_zero_object SemiNormedGroupCat.has_zero_object
 
-theorem isoIsometryOfNormNoninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1 : i.hom.NormNoninc)
+theorem iso_isometry_of_norm_noninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1 : i.hom.NormNoninc)
     (h2 : i.inv.NormNoninc) : Isometry i.hom :=
   by
-  apply AddMonoidHomClass.isometryOfNorm
+  apply AddMonoidHomClass.isometry_of_norm
   intro v
   apply le_antisymm (h1 v)
   calc
     ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [iso.hom_inv_id_apply]
     _ ≤ ‖i.hom v‖ := h2 _
     
-#align SemiNormedGroup.iso_isometry_of_norm_noninc SemiNormedGroupCat.isoIsometryOfNormNoninc
+#align SemiNormedGroup.iso_isometry_of_norm_noninc SemiNormedGroupCat.iso_isometry_of_norm_noninc
 
 end SemiNormedGroupCat
 
@@ -240,17 +240,17 @@ instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁Cat.{u} :=
   ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
 #align SemiNormedGroup₁.has_zero_object SemiNormedGroup₁Cat.has_zero_object
 
-theorem isoIsometry {V W : SemiNormedGroup₁Cat} (i : V ≅ W) : Isometry i.hom :=
+theorem iso_isometry {V W : SemiNormedGroup₁Cat} (i : V ≅ W) : Isometry i.hom :=
   by
   change Isometry (i.hom : V →+ W)
-  refine' AddMonoidHomClass.isometryOfNorm i.hom _
+  refine' AddMonoidHomClass.isometry_of_norm i.hom _
   intro v
   apply le_antisymm (i.hom.2 v)
   calc
     ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [iso.hom_inv_id_apply]
     _ ≤ ‖i.hom v‖ := i.inv.2 _
     
-#align SemiNormedGroup₁.iso_isometry SemiNormedGroup₁Cat.isoIsometry
+#align SemiNormedGroup₁.iso_isometry SemiNormedGroup₁Cat.iso_isometry
 
 end SemiNormedGroup₁Cat
 

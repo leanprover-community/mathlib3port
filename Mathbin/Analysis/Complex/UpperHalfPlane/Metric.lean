@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.metric
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -381,25 +381,25 @@ instance : ProperSpace ℍ := by
   rw [← inducing_coe.is_compact_iff, image_coe_closed_ball]
   apply is_compact_closed_ball
 
-theorem isometryVerticalLine (a : ℝ) : Isometry fun y => mk ⟨a, exp y⟩ (exp_pos y) :=
+theorem isometry_vertical_line (a : ℝ) : Isometry fun y => mk ⟨a, exp y⟩ (exp_pos y) :=
   by
-  refine' Isometry.ofDistEq fun y₁ y₂ => _
+  refine' Isometry.of_dist_eq fun y₁ y₂ => _
   rw [dist_of_re_eq]
   exacts[congr_arg₂ _ (log_exp _) (log_exp _), rfl]
-#align upper_half_plane.isometry_vertical_line UpperHalfPlane.isometryVerticalLine
+#align upper_half_plane.isometry_vertical_line UpperHalfPlane.isometry_vertical_line
 
-theorem isometryRealVadd (a : ℝ) : Isometry ((· +ᵥ ·) a : ℍ → ℍ) :=
-  Isometry.ofDistEq fun y₁ y₂ => by simp only [dist_eq, coe_vadd, vadd_im, dist_add_left]
-#align upper_half_plane.isometry_real_vadd UpperHalfPlane.isometryRealVadd
+theorem isometry_real_vadd (a : ℝ) : Isometry ((· +ᵥ ·) a : ℍ → ℍ) :=
+  Isometry.of_dist_eq fun y₁ y₂ => by simp only [dist_eq, coe_vadd, vadd_im, dist_add_left]
+#align upper_half_plane.isometry_real_vadd UpperHalfPlane.isometry_real_vadd
 
-theorem isometryPosMul (a : { x : ℝ // 0 < x }) : Isometry ((· • ·) a : ℍ → ℍ) :=
+theorem isometry_pos_mul (a : { x : ℝ // 0 < x }) : Isometry ((· • ·) a : ℍ → ℍ) :=
   by
-  refine' Isometry.ofDistEq fun y₁ y₂ => _
+  refine' Isometry.of_dist_eq fun y₁ y₂ => _
   simp only [dist_eq, coe_pos_real_smul, pos_real_im]; congr 2
   rw [dist_smul, mul_mul_mul_comm, Real.sqrt_mul (mul_self_nonneg _), Real.sqrt_mul_self_eq_abs,
     Real.norm_eq_abs, mul_left_comm]
   exact mul_div_mul_left _ _ (mt _root_.abs_eq_zero.1 a.2.ne')
-#align upper_half_plane.isometry_pos_mul UpperHalfPlane.isometryPosMul
+#align upper_half_plane.isometry_pos_mul UpperHalfPlane.isometry_pos_mul
 
 end UpperHalfPlane
 

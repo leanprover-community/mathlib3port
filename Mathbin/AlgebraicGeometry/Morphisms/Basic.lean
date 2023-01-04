@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1388,7 +1388,7 @@ structure PropertyIsLocalAtTarget (P : MorphismProperty SchemeCat) : Prop where
       (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f
 #align algebraic_geometry.property_is_local_at_target AlgebraicGeometry.PropertyIsLocalAtTarget
 
-theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
+theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal
     {P : AffineTargetMorphismProperty} (hP : P.IsLocal) :
     PropertyIsLocalAtTarget (targetAffineLocally P) :=
   by
@@ -1423,7 +1423,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
       convert h𝒰
       simp
 #align
-  algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
+  algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -1696,7 +1696,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
                  "fun"
                  (Term.basicFun [(Term.hole "_")] [] "=>" (Order.BoundedOrder.«term⊤» "⊤")))
                 ","
-                `csupr_const
+                `csupᵢ_const
                 ","
                 (Term.fun
                  "fun"
@@ -1899,7 +1899,7 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
                 "fun"
                 (Term.basicFun [(Term.hole "_")] [] "=>" (Order.BoundedOrder.«term⊤» "⊤")))
                ","
-               `csupr_const
+               `csupᵢ_const
                ","
                (Term.fun
                 "fun"
@@ -2252,7 +2252,7 @@ theorem
         tfae_have 5 → 4
         · intro H U erw [ hP . 1 . cancel_left_is_iso ] apply H
         tfae_have 4 → 6
-        · intro H exact ⟨ PUnit , fun _ => ⊤ , csupr_const , fun _ => H _ ⟩
+        · intro H exact ⟨ PUnit , fun _ => ⊤ , csupᵢ_const , fun _ => H _ ⟩
         tfae_have 6 → 2
         ·
           rintro ⟨ ι , U , hU , H ⟩
@@ -3071,7 +3071,7 @@ theorem diagonal_target_affine_locally_eq_target_affine_locally (P : AffineTarge
 #align
   algebraic_geometry.diagonal_target_affine_locally_eq_target_affine_locally AlgebraicGeometry.diagonal_target_affine_locally_eq_target_affine_locally
 
-theorem universally_is_local_at_target (P : MorphismProperty SchemeCat)
+theorem universallyIsLocalAtTarget (P : MorphismProperty SchemeCat)
     (hP :
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y),
         (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f) :
@@ -3091,22 +3091,22 @@ theorem universally_is_local_at_target (P : MorphismProperty SchemeCat)
   rw [pullback.lift_fst, ← pullback.condition]
   exact (is_pullback.of_has_pullback _ _).pasteHoriz H.flip
 #align
-  algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universally_is_local_at_target
+  algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universallyIsLocalAtTarget
 
-theorem universally_is_local_at_target_of_morphism_restrict (P : MorphismProperty SchemeCat)
+theorem universallyIsLocalAtTargetOfMorphismRestrict (P : MorphismProperty SchemeCat)
     (hP₁ : P.RespectsIso)
     (hP₂ :
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : supᵢ U = ⊤),
         (∀ i, P (f ∣_ U i)) → P f) :
     PropertyIsLocalAtTarget P.universally :=
-  universally_is_local_at_target P
+  universallyIsLocalAtTarget P
     (by
       intro X Y f 𝒰 h𝒰
       apply hP₂ f (fun i : 𝒰.J => (𝒰.map i).opensRange) 𝒰.supr_opens_range
       simp_rw [hP₁.arrow_mk_iso_iff (morphism_restrict_opens_range f _)]
       exact h𝒰)
 #align
-  algebraic_geometry.universally_is_local_at_target_of_morphism_restrict AlgebraicGeometry.universally_is_local_at_target_of_morphism_restrict
+  algebraic_geometry.universally_is_local_at_target_of_morphism_restrict AlgebraicGeometry.universallyIsLocalAtTargetOfMorphismRestrict
 
 /-- `topologically P` holds for a morphism if the underlying topological map satisfies `P`. -/
 def MorphismProperty.topologically

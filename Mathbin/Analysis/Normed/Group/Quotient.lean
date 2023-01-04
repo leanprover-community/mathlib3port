@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.quotient
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ theorem quotient_norm_sub_rev {S : AddSubgroup M} (x y : M ⧸ S) : ‖x - y‖ 
 /-- The norm of the projection is smaller or equal to the norm of the original element. -/
 theorem quotient_norm_mk_le (S : AddSubgroup M) (m : M) : ‖mk' S m‖ ≤ ‖m‖ :=
   by
-  apply cInf_le
+  apply cinfₛ_le
   use 0
   · rintro _ ⟨n, h, rfl⟩
     apply norm_nonneg
@@ -183,7 +183,7 @@ theorem quotient_norm_nonneg (S : AddSubgroup M) : ∀ x : M ⧸ S, 0 ≤ ‖x�
   by
   rintro ⟨m⟩
   change 0 ≤ ‖mk' S m‖
-  apply le_cInf (image_norm_nonempty _)
+  apply le_cinfₛ (image_norm_nonempty _)
   rintro _ ⟨n, h, rfl⟩
   apply norm_nonneg
 #align quotient_norm_nonneg quotient_norm_nonneg
@@ -517,7 +517,7 @@ theorem IsQuotient.norm_lift {f : NormedAddGroupHom M N} (hquot : IsQuotient f) 
 theorem IsQuotient.norm_le {f : NormedAddGroupHom M N} (hquot : IsQuotient f) (m : M) :
     ‖f m‖ ≤ ‖m‖ := by
   rw [hquot.norm]
-  apply cInf_le
+  apply cinfₛ_le
   · use 0
     rintro _ ⟨m', hm', rfl⟩
     apply norm_nonneg
@@ -554,13 +554,13 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
       exact_mod_cast hc.ne'
 #align normed_add_group_hom.lift_norm_le NormedAddGroupHom.lift_norm_le
 
-theorem liftNormNoninc {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
+theorem lift_norm_noninc {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     (f : NormedAddGroupHom M N) (hf : ∀ s ∈ S, f s = 0) (fb : f.NormNoninc) :
     (lift S f hf).NormNoninc := fun x =>
   by
   have fb' : ‖f‖ ≤ (1 : ℝ≥0) := norm_noninc.norm_noninc_iff_norm_le_one.mp fb
   simpa using le_of_op_norm_le _ (f.lift_norm_le _ _ fb') _
-#align normed_add_group_hom.lift_norm_noninc NormedAddGroupHom.liftNormNoninc
+#align normed_add_group_hom.lift_norm_noninc NormedAddGroupHom.lift_norm_noninc
 
 end NormedAddGroupHom
 

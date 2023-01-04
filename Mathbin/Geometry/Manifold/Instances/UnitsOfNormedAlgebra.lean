@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.units_of_normed_algebra
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem chart_at_source {a : Rˣ} : (chartAt R a).source = Set.univ :=
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 R]
 
 instance : SmoothManifoldWithCorners 𝓘(𝕜, R) Rˣ :=
-  open_embedding_coe.singletonSmoothManifoldWithCorners 𝓘(𝕜, R)
+  open_embedding_coe.singleton_smooth_manifold_with_corners 𝓘(𝕜, R)
 
 end Units
 

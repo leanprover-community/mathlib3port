@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -748,8 +748,8 @@ theorem sub_supr {ι : Sort _} [Nonempty ι] {b : ι → ℝ≥0∞} (hr : a < �
   by
   let ⟨r, Eq, _⟩ := lt_iff_exists_coe.mp hr
   have : infₛ ((fun b => ↑r - b) '' range b) = ↑r - ⨆ i, b i :=
-    IsGLB.Inf_eq <|
-      is_lub_supr.is_glb_of_tendsto (fun x _ y _ => tsub_le_tsub (le_refl (r : ℝ≥0∞)))
+    IsGLB.infₛ_eq <|
+      isLUB_supᵢ.is_glb_of_tendsto (fun x _ y _ => tsub_le_tsub (le_refl (r : ℝ≥0∞)))
         (range_nonempty _) (Ennreal.tendsto_coe_sub.comp (tendsto_id'.2 inf_le_left))
   rw [Eq, ← this] <;> simp [infₛ_image, infᵢ_range, -mem_range] <;> exact le_rfl
 #align ennreal.sub_supr Ennreal.sub_supr
@@ -1782,14 +1782,14 @@ theorem ediam_Ioo (a b : ℝ) : Emetric.diam (Ioo a b) = Ennreal.ofReal (b - a) 
   by
   rcases le_or_lt b a with (h | h)
   · simp [h]
-  · rw [Real.ediam_eq (bounded_Ioo _ _), cSup_Ioo h, cInf_Ioo h]
+  · rw [Real.ediam_eq (bounded_Ioo _ _), csupₛ_Ioo h, cinfₛ_Ioo h]
 #align real.ediam_Ioo Real.ediam_Ioo
 
 @[simp]
 theorem ediam_Icc (a b : ℝ) : Emetric.diam (Icc a b) = Ennreal.ofReal (b - a) :=
   by
   rcases le_or_lt a b with (h | h)
-  · rw [Real.ediam_eq (bounded_Icc _ _), cSup_Icc h, cInf_Icc h]
+  · rw [Real.ediam_eq (bounded_Icc _ _), csupₛ_Icc h, cinfₛ_Icc h]
   · simp [h, h.le]
 #align real.ediam_Icc Real.ediam_Icc
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_ideal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -532,13 +532,13 @@ def Ideal.homogeneousCore.gi : GaloisCoinsertion toIdeal (Ideal.homogeneousCore 
 
 theorem Ideal.homogeneous_core_eq_Sup :
     I.homogeneousCore 𝒜 = supₛ { J : HomogeneousIdeal 𝒜 | J.toIdeal ≤ I } :=
-  Eq.symm <| IsLUB.Sup_eq <| (Ideal.homogeneousCore.gc 𝒜).is_greatest_u.IsLub
+  Eq.symm <| IsLUB.supₛ_eq <| (Ideal.homogeneousCore.gc 𝒜).is_greatest_u.IsLub
 #align ideal.homogeneous_core_eq_Sup Ideal.homogeneous_core_eq_Sup
 
 theorem Ideal.homogeneous_core'_eq_Sup :
     I.homogeneousCore' 𝒜 = supₛ { J : Ideal A | J.IsHomogeneous 𝒜 ∧ J ≤ I } :=
   by
-  refine' (IsLUB.Sup_eq _).symm
+  refine' (IsLUB.supₛ_eq _).symm
   apply IsGreatest.isLUB
   have coe_mono : Monotone (to_ideal : HomogeneousIdeal 𝒜 → Ideal A) := fun x y => id
   convert coe_mono.map_is_greatest (Ideal.homogeneousCore.gc 𝒜).is_greatest_u using 1
@@ -669,7 +669,7 @@ def Ideal.homogeneousHull.gi : GaloisInsertion (Ideal.homogeneousHull 𝒜) toId
 
 theorem Ideal.homogeneous_hull_eq_Inf (I : Ideal A) :
     Ideal.homogeneousHull 𝒜 I = infₛ { J : HomogeneousIdeal 𝒜 | I ≤ J.toIdeal } :=
-  Eq.symm <| IsGLB.Inf_eq <| (Ideal.homogeneousHull.gc 𝒜).is_least_l.IsGlb
+  Eq.symm <| IsGLB.infₛ_eq <| (Ideal.homogeneousHull.gc 𝒜).is_least_l.IsGlb
 #align ideal.homogeneous_hull_eq_Inf Ideal.homogeneous_hull_eq_Inf
 
 end GaloisConnection

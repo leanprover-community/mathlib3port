@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ include hA
 -- Prefer subclasses of `module` over `submodule_class`.
 /-- A submodule of a `module` is a `module`.  -/
 instance (priority := 75) toModule : Module R S' :=
-  Subtype.coe_injective.Module R (AddSubmonoidClass.subtype S') (SetLike.coe_smul S')
+  Subtype.coe_injective.Module R (AddSubmonoidClass.Subtype S') (SetLike.coe_smul S')
 #align submodule_class.to_module SubmoduleClass.toModule
 
 /-- The natural `R`-linear map from a submodule of an `R`-module `M` to `M`. -/
@@ -341,7 +341,7 @@ instance module' [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] :
 instance : Module R p :=
   p.module'
 
-instance no_zero_smul_divisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p :=
+instance no_zero_smul_divisors [NoZeroSMulDivisors R M] : NoZeroSMulDivisors R p :=
   ⟨fun c x h =>
     have : c = 0 ∨ (x : M) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_arg coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩

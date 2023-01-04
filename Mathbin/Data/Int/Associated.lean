@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.int.associated
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,13 @@ This file contains some results on equality up to units in the integers.
 -/
 
 
-theorem Int.nat_abs_eq_iff_associated {a b : ℤ} : a.natAbs = b.natAbs ↔ Associated a b :=
+/- warning: int.nat_abs_eq_iff_associated -> Int.natAbs_eq_iff_associated is a dubious translation:
+lean 3 declaration is
+  forall {a : Int} {b : Int}, Iff (Eq.{1} Nat (Int.natAbs a) (Int.natAbs b)) (Associated.{0} Int Int.monoid a b)
+but is expected to have type
+  forall {a : Int} {b : Int}, Iff (Eq.{1} Nat (Int.natAbs a) (Int.natAbs b)) (Associated.{0} Int Int.instMonoidInt a b)
+Case conversion may be inaccurate. Consider using '#align int.nat_abs_eq_iff_associated Int.natAbs_eq_iff_associatedₓ'. -/
+theorem Int.natAbs_eq_iff_associated {a b : ℤ} : a.natAbs = b.natAbs ↔ Associated a b :=
   by
   refine' int.nat_abs_eq_nat_abs_iff.trans _
   constructor
@@ -36,5 +42,5 @@ theorem Int.nat_abs_eq_iff_associated {a b : ℤ} : a.natAbs = b.natAbs ↔ Asso
     obtain rfl | rfl := Int.units_eq_one_or u
     · exact Or.inl (by simp)
     · exact Or.inr (by simp)
-#align int.nat_abs_eq_iff_associated Int.nat_abs_eq_iff_associated
+#align int.nat_abs_eq_iff_associated Int.natAbs_eq_iff_associated
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module order.boolean_algebra
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -883,10 +883,10 @@ theorem compl_sup_eq_top : xᶜ ⊔ x = ⊤ :=
   sup_comm.trans sup_compl_eq_top
 #align compl_sup_eq_top compl_sup_eq_top
 
-#print is_compl_compl /-
-theorem is_compl_compl : IsCompl x (xᶜ) :=
+#print isCompl_compl /-
+theorem isCompl_compl : IsCompl x (xᶜ) :=
   IsCompl.of_eq inf_compl_eq_bot' sup_compl_eq_top
-#align is_compl_compl is_compl_compl
+#align is_compl_compl isCompl_compl
 -/
 
 /- warning: sdiff_eq -> sdiff_eq is a dubious translation:
@@ -911,7 +911,7 @@ theorem himp_eq : x ⇨ y = y ⊔ xᶜ :=
 
 #print BooleanAlgebra.toComplementedLattice /-
 instance (priority := 100) BooleanAlgebra.toComplementedLattice : ComplementedLattice α :=
-  ⟨fun x => ⟨xᶜ, is_compl_compl⟩⟩
+  ⟨fun x => ⟨xᶜ, isCompl_compl⟩⟩
 #align boolean_algebra.to_complemented_lattice BooleanAlgebra.toComplementedLattice
 -/
 
@@ -964,38 +964,38 @@ theorem top_sdiff : ⊤ \ x = xᶜ :=
   top_sdiff' _
 #align top_sdiff top_sdiff
 
-#print eq_compl_iff_is_compl /-
-theorem eq_compl_iff_is_compl : x = yᶜ ↔ IsCompl x y :=
+#print eq_compl_iff_isCompl /-
+theorem eq_compl_iff_isCompl : x = yᶜ ↔ IsCompl x y :=
   ⟨fun h => by
     rw [h]
     exact is_compl_compl.symm, IsCompl.eq_compl⟩
-#align eq_compl_iff_is_compl eq_compl_iff_is_compl
+#align eq_compl_iff_is_compl eq_compl_iff_isCompl
 -/
 
-#print compl_eq_iff_is_compl /-
-theorem compl_eq_iff_is_compl : xᶜ = y ↔ IsCompl x y :=
+#print compl_eq_iff_isCompl /-
+theorem compl_eq_iff_isCompl : xᶜ = y ↔ IsCompl x y :=
   ⟨fun h => by
     rw [← h]
-    exact is_compl_compl, IsCompl.compl_eq⟩
-#align compl_eq_iff_is_compl compl_eq_iff_is_compl
+    exact isCompl_compl, IsCompl.compl_eq⟩
+#align compl_eq_iff_is_compl compl_eq_iff_isCompl
 -/
 
 #print compl_eq_comm /-
 theorem compl_eq_comm : xᶜ = y ↔ yᶜ = x := by
-  rw [eq_comm, compl_eq_iff_is_compl, eq_compl_iff_is_compl]
+  rw [eq_comm, compl_eq_iff_isCompl, eq_compl_iff_isCompl]
 #align compl_eq_comm compl_eq_comm
 -/
 
 #print eq_compl_comm /-
 theorem eq_compl_comm : x = yᶜ ↔ y = xᶜ := by
-  rw [eq_comm, compl_eq_iff_is_compl, eq_compl_iff_is_compl]
+  rw [eq_comm, compl_eq_iff_isCompl, eq_compl_iff_isCompl]
 #align eq_compl_comm eq_compl_comm
 -/
 
 #print compl_compl /-
 @[simp]
 theorem compl_compl (x : α) : xᶜᶜ = x :=
-  (@is_compl_compl _ x _).symm.compl_eq
+  (@isCompl_compl _ x _).symm.compl_eq
 #align compl_compl compl_compl
 -/
 

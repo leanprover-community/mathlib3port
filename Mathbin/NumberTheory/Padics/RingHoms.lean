@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.ring_homs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ theorem is_unit_denom (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.deno
   intro norm_denom_lt
   have hr : ‖(r * r.denom : ℚ_[p])‖ = ‖(r.num : ℚ_[p])‖ :=
     by
-    rw_mod_cast [@Rat.mul_denom_eq_num r]
+    rw_mod_cast [@Rat.mul_den_eq_num r]
     rfl
   rw [padicNormE.mul] at hr
   have key : ‖(r.num : ℚ_[p])‖ < 1 := by
@@ -147,7 +147,7 @@ theorem norm_sub_mod_part (h : ‖(r : ℚ_[p])‖ ≤ 1) : ‖(⟨r, h⟩ - mod
     simp only [sub_mul, Int.cast_ofNat, eq_int_cast, Int.cast_mul, sub_left_inj, Int.cast_sub]
     apply Subtype.coe_injective
     simp only [coe_mul, Subtype.coe_mk, coe_nat_cast]
-    rw_mod_cast [@Rat.mul_denom_eq_num r]
+    rw_mod_cast [@Rat.mul_den_eq_num r]
     rfl
   exact norm_sub_mod_part_aux r h
 #align padic_int.norm_sub_mod_part PadicInt.norm_sub_mod_part

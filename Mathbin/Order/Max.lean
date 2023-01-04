@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.max
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,6 @@ theorem NoTopOrder.to_noMaxOrder (α : Type _) [LinearOrder α] [NoTopOrder α] 
 #align no_top_order.to_no_max_order NoTopOrder.to_noMaxOrder
 -/
 
-#print no_bot_order_iff_no_min_order /-
 theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrder α] : NoBotOrder α ↔ NoMinOrder α :=
   ⟨fun h =>
     haveI := h
@@ -211,9 +210,7 @@ theorem no_bot_order_iff_no_min_order (α : Type _) [LinearOrder α] : NoBotOrde
     haveI := h
     NoMinOrder.to_no_bot_order α⟩
 #align no_bot_order_iff_no_min_order no_bot_order_iff_no_min_order
--/
 
-#print no_top_order_iff_no_max_order /-
 theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrder α] : NoTopOrder α ↔ NoMaxOrder α :=
   ⟨fun h =>
     haveI := h
@@ -222,7 +219,6 @@ theorem no_top_order_iff_no_max_order (α : Type _) [LinearOrder α] : NoTopOrde
     haveI := h
     NoMaxOrder.to_no_top_order α⟩
 #align no_top_order_iff_no_max_order no_top_order_iff_no_max_order
--/
 
 #print NoMinOrder.not_acc /-
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>

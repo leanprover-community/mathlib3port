@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,9 +71,9 @@ theorem std_simplex_subset_closed_ball : stdSimplex ℝ ι ⊆ Metric.closedBall
 variable (ι)
 
 /-- `std_simplex ℝ ι` is bounded. -/
-theorem boundedStdSimplex : Metric.Bounded (stdSimplex ℝ ι) :=
+theorem bounded_std_simplex : Metric.Bounded (stdSimplex ℝ ι) :=
   (Metric.bounded_iff_subset_ball 0).2 ⟨1, std_simplex_subset_closed_ball⟩
-#align bounded_std_simplex boundedStdSimplex
+#align bounded_std_simplex bounded_std_simplex
 
 /-- `std_simplex ℝ ι` is closed. -/
 theorem is_closed_std_simplex : IsClosed (stdSimplex ℝ ι) :=
@@ -84,7 +84,7 @@ theorem is_closed_std_simplex : IsClosed (stdSimplex ℝ ι) :=
 
 /-- `std_simplex ℝ ι` is compact. -/
 theorem is_compact_std_simplex : IsCompact (stdSimplex ℝ ι) :=
-  Metric.is_compact_iff_is_closed_bounded.2 ⟨is_closed_std_simplex ι, boundedStdSimplex ι⟩
+  Metric.is_compact_iff_is_closed_bounded.2 ⟨is_closed_std_simplex ι, bounded_std_simplex ι⟩
 #align is_compact_std_simplex is_compact_std_simplex
 
 end stdSimplex

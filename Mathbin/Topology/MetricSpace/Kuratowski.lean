@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.kuratowski
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ without density assumptions. -/
 def embeddingOfSubset : ℓ_infty_ℝ :=
   ⟨fun n => dist a (x n) - dist (x 0) (x n),
     by
-    apply memℓpInfty
+    apply mem_ℓp_infty
     use dist a (x 0)
     rintro - ⟨n, rfl⟩
     exact abs_dist_sub_le _ _ _⟩
@@ -68,9 +68,9 @@ theorem embedding_of_subset_dist_le (a b : α) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add_left, ",", expr le_abs_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
-theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubset x) :=
+theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfSubset x) :=
   by
-  refine' Isometry.ofDistEq fun a b => _
+  refine' Isometry.of_dist_eq fun a b => _
   refine' (embedding_of_subset_dist_le x a b).antisymm (le_of_forall_pos_le_add fun e epos => _)
   -- First step: find n with dist a (x n) < e
   rcases Metric.mem_closure_range_iff.1 (H a) (e / 2) (half_pos epos) with ⟨n, hn⟩
@@ -105,7 +105,7 @@ theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubs
       
   simpa [dist_comm] using this
 #align
-  Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embeddingOfSubsetIsometry
+  Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embedding_of_subset_isometry
 
 /-- Every separable metric space embeds isometrically in `ℓ_infty_ℝ`. -/
 theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] :

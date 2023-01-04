@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module group_theory.finite_abelian
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem equiv_free_prod_direct_sum_zmod [hG : AddGroup.Fg G] :
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ :=
     @Module.equiv_free_prod_direct_sum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
   refine' ⟨n, ι, fι, fun i => (p i).natAbs, fun i => _, e, ⟨_⟩⟩
-  · rw [← Int.prime_iff_nat_abs_prime, ← GcdMonoid.irreducible_iff_prime]
+  · rw [← Int.prime_iff_nat_abs_prime, ← GCDMonoid.irreducible_iff_prime]
     exact hp i
   exact
     f.to_add_equiv.trans

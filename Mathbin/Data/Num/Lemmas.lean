@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.lemmas
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,7 +231,7 @@ theorem of_nat'_zero : Num.ofNat' 0 = 0 := by simp [Num.ofNat']
 #align num.of_nat'_zero Num.of_nat'_zero
 
 theorem of_nat'_bit (b n) : ofNat' (Nat.bit b n) = cond b Num.bit1 Num.bit0 (ofNat' n) :=
-  Nat.binary_rec_eq rfl _ _
+  Nat.binaryRec_eq rfl _ _
 #align num.of_nat'_bit Num.of_nat'_bit
 
 @[simp]
@@ -797,7 +797,7 @@ theorem of_nat'_eq : ∀ n, Num.ofNat' n = n :=
   (Nat.binaryRec (by simp)) fun b n IH =>
     by
     rw [of_nat'] at IH⊢
-    rw [Nat.binary_rec_eq, IH]
+    rw [Nat.binaryRec_eq, IH]
     · cases b <;> simp [Nat.bit, bit0_of_bit0, bit1_of_bit1]
     · rfl
 #align num.of_nat'_eq Num.of_nat'_eq
@@ -931,14 +931,14 @@ theorem bitwise_to_nat {f : Num → Num → Num} {g : Bool → Bool → Bool} (p
     try change ((0 : Num) : ℕ) with 0
   · rw [f00, Nat.bitwise'_zero] <;> rfl
   · unfold Nat.bitwise
-    rw [f0n, Nat.binary_rec_zero]
+    rw [f0n, Nat.binaryRec_zero]
     cases g ff tt <;> rfl
   · unfold Nat.bitwise
     generalize h : (Pos m : ℕ) = m'
     revert h
     apply Nat.bitCasesOn m' _
     intro b m' h
-    rw [fn0, Nat.binary_rec_eq, Nat.binary_rec_zero, ← h]
+    rw [fn0, Nat.binaryRec_eq, Nat.binaryRec_zero, ← h]
     cases g tt ff <;> rfl
     apply Nat.bitwise'_bit_aux gff
   · rw [fnn]

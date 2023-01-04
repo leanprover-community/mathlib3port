@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.abs_convex
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem nhds_basis_abs_convex :
       ⟨s, ⟨hs.1, hs.2.2⟩, rfl.subset⟩
   refine' ⟨convexHull ℝ (balancedCore 𝕜 s), _, convex_hull_min (balanced_core_subset s) hs.2⟩
   refine' ⟨Filter.mem_of_superset (balanced_core_mem_nhds_zero hs.1) (subset_convex_hull ℝ _), _⟩
-  refine' ⟨balancedConvexHullOfBalanced (balancedCoreBalanced s), _⟩
+  refine' ⟨balanced_convex_hull_of_balanced (balanced_core_balanced s), _⟩
   exact convex_convex_hull ℝ (balancedCore 𝕜 s)
 #align nhds_basis_abs_convex nhds_basis_abs_convex
 
@@ -117,9 +117,9 @@ theorem coe_nhds (s : AbsConvexOpenSets 𝕜 E) : (s : Set E) ∈ 𝓝 (0 : E) :
   s.coe_is_open.mem_nhds s.coe_zero_mem
 #align abs_convex_open_sets.coe_nhds AbsConvexOpenSets.coe_nhds
 
-theorem coeBalanced (s : AbsConvexOpenSets 𝕜 E) : Balanced 𝕜 (s : Set E) :=
+theorem coe_balanced (s : AbsConvexOpenSets 𝕜 E) : Balanced 𝕜 (s : Set E) :=
   s.2.2.2.1
-#align abs_convex_open_sets.coe_balanced AbsConvexOpenSets.coeBalanced
+#align abs_convex_open_sets.coe_balanced AbsConvexOpenSets.coe_balanced
 
 theorem coe_convex (s : AbsConvexOpenSets 𝕜 E) : Convex ℝ (s : Set E) :=
   s.2.2.2.2
@@ -132,7 +132,7 @@ instance : Nonempty (AbsConvexOpenSets 𝕜 E) :=
   rw [← exists_true_iff_nonempty]
   dsimp only [AbsConvexOpenSets]
   rw [Subtype.exists]
-  exact ⟨Set.univ, ⟨mem_univ 0, is_open_univ, balancedUniv, convex_univ⟩, trivial⟩
+  exact ⟨Set.univ, ⟨mem_univ 0, is_open_univ, balanced_univ, convex_univ⟩, trivial⟩
 
 end AbsolutelyConvexSets
 
@@ -148,7 +148,7 @@ variable (𝕜 E)
 
 /-- The family of seminorms defined by the gauges of absolute convex open sets. -/
 noncomputable def gaugeSeminormFamily : SeminormFamily 𝕜 E (AbsConvexOpenSets 𝕜 E) := fun s =>
-  gaugeSeminorm s.coeBalanced s.coe_convex (absorbentNhdsZero s.coe_nhds)
+  gaugeSeminorm s.coe_balanced s.coe_convex (absorbent_nhds_zero s.coe_nhds)
 #align gauge_seminorm_family gaugeSeminormFamily
 
 variable {𝕜 E}
@@ -187,7 +187,7 @@ theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr],
       is_open_bInter (to_finite _) fun _ _ => _,
-      balancedInter₂ fun _ _ => Seminorm.balancedBallZero _ _,
+      balanced_Inter₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
       convex_Inter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open
   have hr' : r = ‖(r : 𝕜)‖ * 1 := by simp [abs_of_pos hr]

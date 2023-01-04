@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.non_integrable
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,12 +160,12 @@ theorem not_interval_integrable_of_sub_inv_is_O_punctured {f : ℝ → F} {a b c
   have A : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x :=
     by
     filter_upwards [self_mem_nhds_within] with x hx
-    simpa using ((hasDerivAtId x).sub_const c).log (sub_ne_zero.2 hx)
+    simpa using ((has_deriv_at_id x).sub_const c).log (sub_ne_zero.2 hx)
   have B : tendsto (fun x => ‖Real.log (x - c)‖) (𝓝[≠] c) at_top :=
     by
     refine' tendsto_abs_at_bot_at_top.comp (real.tendsto_log_nhds_within_zero.comp _)
     rw [← sub_self c]
-    exact ((hasDerivAtId c).sub_const c).tendsto_punctured_nhds one_ne_zero
+    exact ((has_deriv_at_id c).sub_const c).tendsto_punctured_nhds one_ne_zero
   exact
     not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured
       (A.mono fun x hx => hx.DifferentiableAt) B

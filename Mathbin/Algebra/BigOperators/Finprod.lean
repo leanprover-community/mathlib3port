@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.big_operators.finprod
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,14 +266,14 @@ theorem MulEquiv.map_finprod (g : M ≃* N) (f : α → M) : g (∏ᶠ i, f i) =
   g.toMonoidHom.map_finprod_of_injective g.Injective f
 #align mul_equiv.map_finprod MulEquiv.map_finprod
 
-theorem finsum_smul {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [NoZeroSmulDivisors R M]
+theorem finsum_smul {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [NoZeroSMulDivisors R M]
     (f : ι → R) (x : M) : (∑ᶠ i, f i) • x = ∑ᶠ i, f i • x :=
   by
   rcases eq_or_ne x 0 with (rfl | hx); · simp
   exact ((smulAddHom R M).flip x).map_finsum_of_injective (smul_left_injective R hx) _
 #align finsum_smul finsum_smul
 
-theorem smul_finsum {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [NoZeroSmulDivisors R M]
+theorem smul_finsum {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [NoZeroSMulDivisors R M]
     (c : R) (f : ι → M) : (c • ∑ᶠ i, f i) = ∑ᶠ i, c • f i :=
   by
   rcases eq_or_ne c 0 with (rfl | hc); · simp
@@ -926,7 +926,7 @@ over `a ∈ ⋃₀ t` is the product over `s ∈ t` of the products of `f a` ove
 @[to_additive
       "If `t` is a finite set of pairwise disjoint finite sets, then the sum of `f a` over\n`a ∈ ⋃₀ t` is the sum over `s ∈ t` of the sums of `f a` over `a ∈ s`."]
 theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀ : t.Finite)
-    (ht₁ : ∀ x ∈ t, Set.Finite x) : (∏ᶠ a ∈ ⋃₀t, f a) = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a :=
+    (ht₁ : ∀ x ∈ t, Set.Finite x) : (∏ᶠ a ∈ ⋃₀ t, f a) = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a :=
   by
   rw [Set.unionₛ_eq_bunionᵢ]
   exact finprod_mem_bUnion h ht₀ ht₁

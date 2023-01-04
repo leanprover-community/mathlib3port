@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.part
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -325,18 +325,18 @@ theorem eq_get_iff_mem {o : Part α} {a : α} (h : o.Dom) : a = o.get h ↔ a �
 #align part.eq_get_iff_mem Part.eq_get_iff_mem
 -/
 
-#print Part.none_to_option /-
+#print Part.none_toOption /-
 @[simp]
-theorem none_to_option [Decidable (@none α).Dom] : (none : Part α).toOption = Option.none :=
+theorem none_toOption [Decidable (@none α).Dom] : (none : Part α).toOption = Option.none :=
   dif_neg id
-#align part.none_to_option Part.none_to_option
+#align part.none_to_option Part.none_toOption
 -/
 
-#print Part.some_to_option /-
+#print Part.some_toOption /-
 @[simp]
-theorem some_to_option (a : α) [Decidable (some a).Dom] : (some a).toOption = Option.some a :=
+theorem some_toOption (a : α) [Decidable (some a).Dom] : (some a).toOption = Option.some a :=
   dif_pos trivial
-#align part.some_to_option Part.some_to_option
+#align part.some_to_option Part.some_toOption
 -/
 
 #print Part.noneDecidable /-

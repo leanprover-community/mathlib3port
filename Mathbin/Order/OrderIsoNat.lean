@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.order_iso_nat
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ variable (s : Set ℕ) [Infinite s]
 
 /-- An order embedding from `ℕ` to itself with a specified range -/
 def orderEmbeddingOfSet [DecidablePred (· ∈ s)] : ℕ ↪o ℕ :=
-  (RelEmbedding.orderEmbeddingOfLtEmbedding
+  (RelEmbedding.orderEmbeddingOfLTEmbedding
         (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _)).trans
     (OrderEmbedding.subtype s)
 #align nat.order_embedding_of_set Nat.orderEmbeddingOfSet
@@ -128,7 +128,7 @@ def orderEmbeddingOfSet [DecidablePred (· ∈ s)] : ℕ ↪o ℕ :=
 noncomputable def Subtype.orderIsoOfNat : ℕ ≃o s := by
   classical exact
       RelIso.ofSurjective
-        (RelEmbedding.orderEmbeddingOfLtEmbedding
+        (RelEmbedding.orderEmbeddingOfLTEmbedding
           (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
         Nat.Subtype.of_nat_surjective
 #align nat.subtype.order_iso_of_nat Nat.Subtype.orderIsoOfNat

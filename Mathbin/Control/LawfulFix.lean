@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.lawful_fix
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,12 +40,12 @@ functions `f`, such as the function that is defined iff its argument is not, fam
 halting problem. Instead, this requirement is limited to only functions that are `continuous` in the
 sense of `ω`-complete partial orders, which excludes the example because it is not monotone
 (making the input argument less defined can make `f` more defined). -/
-class LawfulFix (α : Type _) [OmegaCompletePartialOrder α] extends HasFix α where
-  fix_eq : ∀ {f : α →o α}, Continuous f → HasFix.fix f = f (HasFix.fix f)
+class LawfulFix (α : Type _) [OmegaCompletePartialOrder α] extends Fix α where
+  fix_eq : ∀ {f : α →o α}, Continuous f → Fix.fix f = f (Fix.fix f)
 #align lawful_fix LawfulFix
 
 theorem LawfulFix.fix_eq' {α} [OmegaCompletePartialOrder α] [LawfulFix α] {f : α → α}
-    (hf : Continuous' f) : HasFix.fix f = f (HasFix.fix f) :=
+    (hf : Continuous' f) : Fix.fix f = f (Fix.fix f) :=
   LawfulFix.fix_eq (hf.to_bundled _)
 #align lawful_fix.fix_eq' LawfulFix.fix_eq'
 
@@ -280,9 +280,9 @@ theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c =>
 
 end Monotone
 
-open HasFix
+open Fix
 
-instance [HasFix <| ∀ x : Sigma β, γ x.1 x.2] : HasFix (∀ (x) (y : β x), γ x y) :=
+instance [Fix <| ∀ x : Sigma β, γ x.1 x.2] : Fix (∀ (x) (y : β x), γ x y) :=
   ⟨fun f => curry (fix <| uncurry ∘ f ∘ curry)⟩
 
 variable [∀ x y, OmegaCompletePartialOrder <| γ x y]

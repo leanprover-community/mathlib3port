@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module topology.algebra.semigroup
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       @IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort
         (coe : c → Set M) _ _ _ _
     · simp only [Subtype.range_coe_subtype, Set.setOf_mem_eq]
-    · refine' DirectedOn.directed_coe (IsChain.directed_on hc.symm)
+    · refine' DirectedOn.directed_coe (IsChain.directedOn hc.symm)
     exacts[fun i => (hcs i.Prop).2.1, fun i => (hcs i.Prop).1.IsCompact, fun i => (hcs i.Prop).1]
   · rw [Set.mem_interₛ]
     exact fun t ht => (hcs ht).2.2 m (set.mem_sInter.mp hm t ht) m' (set.mem_sInter.mp hm' t ht)

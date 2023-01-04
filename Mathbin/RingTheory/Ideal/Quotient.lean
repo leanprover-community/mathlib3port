@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.quotient
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,7 +165,7 @@ instance no_zero_divisors (I : Ideal R) [hI : I.IsPrime] : NoZeroDivisors (R ⧸
 
 instance is_domain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
   let _ := Quotient.nontrivial hI.1
-  NoZeroDivisors.toIsDomain _
+  NoZeroDivisors.to_isDomain _
 #align ideal.quotient.is_domain Ideal.Quotient.is_domain
 
 theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
@@ -178,7 +178,7 @@ theorem is_domain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
   · haveI : Nontrivial (R ⧸ I) := ⟨H.3⟩
     exact zero_ne_one
   · simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
-    haveI := @IsDomain.toNoZeroDivisors (R ⧸ I) _ H
+    haveI := @IsDomain.to_noZeroDivisors (R ⧸ I) _ H
     exact eq_zero_or_eq_zero_of_mul_eq_zero h
 #align ideal.quotient.is_domain_iff_prime Ideal.Quotient.is_domain_iff_prime
 

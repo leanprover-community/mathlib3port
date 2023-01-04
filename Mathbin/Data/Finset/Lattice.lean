@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,7 +277,7 @@ theorem sup_id_eq_Sup [CompleteLattice α] (s : Finset α) : s.sup id = supₛ s
   simp [supₛ_eq_supᵢ, sup_eq_supᵢ]
 #align finset.sup_id_eq_Sup Finset.sup_id_eq_Sup
 
-theorem sup_id_set_eq_sUnion (s : Finset (Set α)) : s.sup id = ⋃₀↑s :=
+theorem sup_id_set_eq_sUnion (s : Finset (Set α)) : s.sup id = ⋃₀ ↑s :=
   sup_id_eq_Sup _
 #align finset.sup_id_set_eq_sUnion Finset.sup_id_set_eq_sUnion
 

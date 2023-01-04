@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_findim
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     refine' (IsClosed.closure_subset_iff Euclidean.is_closed_closed_ball).2 _
     exact f_supp.trans Euclidean.ball_subset_closed_ball
   · apply c.cont_diff.comp
-    exact ContinuousLinearEquiv.contDiff _
+    exact ContinuousLinearEquiv.cont_diff _
   · rintro t ⟨y, rfl⟩
     exact ⟨c.nonneg, c.le_one⟩
   · apply c.one_of_mem_closed_ball
@@ -93,7 +93,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   rcases eq_empty_or_nonempty s with (rfl | h's)
   ·
     exact
-      ⟨fun x => 0, Function.support_zero, contDiffConst, by
+      ⟨fun x => 0, Function.support_zero, cont_diff_const, by
         simp only [range_const, singleton_subset_iff, left_mem_Icc, zero_le_one]⟩
   let ι := { f : E → ℝ // f.support ⊆ s ∧ HasCompactSupport f ∧ ContDiff ℝ ⊤ f ∧ range f ⊆ Icc 0 1 }
   obtain ⟨T, T_count, hT⟩ : ∃ T : Set ι, T.Countable ∧ (⋃ f ∈ T, support (f : E → ℝ)) = s :=
@@ -199,7 +199,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       have I : 0 < r n * g n x := mul_pos (rpos n) (lt_of_le_of_ne (g_nonneg n x) (Ne.symm hn))
       exact ne_of_gt (tsum_pos (S x) (fun i => mul_nonneg (rpos i).le (g_nonneg i x)) n I)
   · refine'
-      contDiffTsumOfEventually (fun n => (g_smooth n).const_smul _)
+      cont_diff_tsum_of_eventually (fun n => (g_smooth n).const_smul _)
         (fun k hk => (Nnreal.has_sum_coe.2 δc).Summable) _
     intro i hi
     simp only [Nat.cofinite_eq_at_top, Pi.smul_apply, Algebra.id.smul_eq_mul,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.roots_of_unity
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1255,8 +1255,8 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
       map_one' := by
         generalize_proofs h1
         have h := h1.some_spec
-        dsimp only [AlgEquiv.one_apply, AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.to_ring_hom_eq_coe,
-          RingEquiv.coe_to_ring_hom, AlgEquiv.coe_ring_equiv] at *
+        dsimp only [AlgEquiv.one_apply, AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.toRingHom_eq_coe,
+          RingEquiv.coe_toRingHom, AlgEquiv.coe_ring_equiv] at *
         replace h : μ' = μ' ^ h1.some :=
           rootsOfUnity.coe_injective (by simpa only [rootsOfUnity.coe_pow] using h)
         rw [← pow_one μ'] at h
@@ -1267,8 +1267,8 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
         have hxy := hxy'.some_spec
         have hx := hx'.some_spec
         have hy := hy'.some_spec
-        dsimp only [AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.to_ring_hom_eq_coe,
-          RingEquiv.coe_to_ring_hom, AlgEquiv.coe_ring_equiv, AlgEquiv.mul_apply] at *
+        dsimp only [AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.toRingHom_eq_coe,
+          RingEquiv.coe_toRingHom, AlgEquiv.coe_ring_equiv, AlgEquiv.mul_apply] at *
         replace hxy : x (↑μ' ^ hy'.some) = ↑μ' ^ hxy'.some := hy ▸ hxy
         rw [x.map_pow] at hxy
         replace hxy : ((μ' : S) ^ hx'.some) ^ hy'.some = μ' ^ hxy'.some := hx ▸ hxy
@@ -1297,7 +1297,7 @@ theorem aut_to_pow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : Zmod n).v
   congr 1
   rw [pow_eq_pow_iff_modeq, ← order_of_subgroup, ← order_of_units, hμ.coe_to_roots_of_unity_coe, ←
     hμ.eq_order_of, Zmod.val_nat_cast]
-  exact Nat.mod_modeq _ _
+  exact Nat.mod_modEq _ _
 #align is_primitive_root.aut_to_pow_spec IsPrimitiveRoot.aut_to_pow_spec
 
 end Automorphisms

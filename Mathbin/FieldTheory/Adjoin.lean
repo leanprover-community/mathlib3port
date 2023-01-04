@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.adjoin
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -540,16 +540,16 @@ theorem is_splitting_field_iff {p : F[X]} {K : IntermediateField F E} :
   exact fun hp => (adjoin_root_set_eq_range hp K.val).symm.trans eq_comm
 #align intermediate_field.is_splitting_field_iff IntermediateField.is_splitting_field_iff
 
-theorem adjoinRootSetIsSplittingField {p : F[X]} (hp : p.Splits (algebraMap F E)) :
+theorem adjoin_root_set_is_splitting_field {p : F[X]} (hp : p.Splits (algebraMap F E)) :
     p.IsSplittingField F (adjoin F (p.rootSet E)) :=
   is_splitting_field_iff.mpr ⟨splits_of_splits hp fun x hx => subset_adjoin F (p.rootSet E) hx, rfl⟩
 #align
-  intermediate_field.adjoin_root_set_is_splitting_field IntermediateField.adjoinRootSetIsSplittingField
+  intermediate_field.adjoin_root_set_is_splitting_field IntermediateField.adjoin_root_set_is_splitting_field
 
 open BigOperators
 
 /-- A compositum of splitting fields is a splitting field -/
-theorem isSplittingFieldSupr {ι : Type _} {t : ι → IntermediateField F E} {p : ι → F[X]}
+theorem is_splitting_field_supr {ι : Type _} {t : ι → IntermediateField F E} {p : ι → F[X]}
     {s : Finset ι} (h0 : (∏ i in s, p i) ≠ 0) (h : ∀ i ∈ s, (p i).IsSplittingField F (t i)) :
     (∏ i in s, p i).IsSplittingField F (⨆ i ∈ s, t i : IntermediateField F E) :=
   by
@@ -563,7 +563,7 @@ theorem isSplittingFieldSupr {ι : Type _} {t : ι → IntermediateField F E} {p
       _⟩
   simp only [root_set_prod p s h0, ← Set.supᵢ_eq_unionᵢ, (@gc F _ E _ _).l_supr₂]
   exact supᵢ_congr fun i => supᵢ_congr fun hi => (h i hi).2
-#align intermediate_field.is_splitting_field_supr IntermediateField.isSplittingFieldSupr
+#align intermediate_field.is_splitting_field_supr IntermediateField.is_splitting_field_supr
 
 open Set CompleteLattice
 
@@ -1203,7 +1203,7 @@ theorem alg_hom_mk_adjoin_splits
     (hK : ∀ s ∈ S, IsIntegral F (s : E) ∧ (minpoly F s).Splits (algebraMap F K)) :
     Nonempty (adjoin F S →ₐ[F] K) :=
   by
-  obtain ⟨x : lifts F E K, hx⟩ := zorn_partial_order lifts.exists_upper_bound
+  obtain ⟨x : lifts F E K, hx⟩ := zorn_partialOrder lifts.exists_upper_bound
   refine'
     ⟨AlgHom.mk (fun s => x.2 ⟨s, adjoin_le_iff.mpr (fun s hs => _) s.Mem⟩) x.2.map_one
         (fun s t => x.2.map_mul ⟨s, _⟩ ⟨t, _⟩) x.2.map_zero (fun s t => x.2.map_add ⟨s, _⟩ ⟨t, _⟩)

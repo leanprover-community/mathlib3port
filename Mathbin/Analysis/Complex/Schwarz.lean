@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.schwarz
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁)
   filter_upwards [Ioo_mem_nhds_within_Iio ⟨hz, le_rfl⟩] with r hr
   have hr₀ : 0 < r := dist_nonneg.trans_lt hr.1
   replace hd : DiffContOnCl ℂ (dslope f c) (ball c r)
-  · refine' DifferentiableOn.diffContOnCl _
+  · refine' DifferentiableOn.diff_cont_on_cl _
     rw [closure_ball c hr₀.ne']
     exact
       ((differentiable_on_dslope <| ball_mem_nhds _ hR₁).mpr hd).mono (closed_ball_subset_ball hr.2)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.torus_integral
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,9 +136,9 @@ namespace TorusIntegrable
 variable {f g : ℂⁿ → E} {c : ℂⁿ} {R : ℝⁿ}
 
 /-- Constant functions are torus integrable -/
-theorem torusIntegrableConst (a : E) (c : ℂⁿ) (R : ℝⁿ) : TorusIntegrable (fun _ => a) c R := by
+theorem torus_integrable_const (a : E) (c : ℂⁿ) (R : ℝⁿ) : TorusIntegrable (fun _ => a) c R := by
   simp [TorusIntegrable, measure_Icc_lt_top]
-#align torus_integrable.torus_integrable_const TorusIntegrable.torusIntegrableConst
+#align torus_integrable.torus_integrable_const TorusIntegrable.torus_integrable_const
 
 /-- If `f` is torus integrable then `-f` is torus integrable. -/
 protected theorem neg (hf : TorusIntegrable f c R) : TorusIntegrable (-f) c R :=
@@ -157,11 +157,11 @@ protected theorem sub (hf : TorusIntegrable f c R) (hg : TorusIntegrable g c R) 
   hf.sub hg
 #align torus_integrable.sub TorusIntegrable.sub
 
-theorem torusIntegrableZeroRadius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegrable f c 0 :=
+theorem torus_integrable_zero_radius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegrable f c 0 :=
   by
   rw [TorusIntegrable, torus_map_zero_radius]
   apply torus_integrable_const (f c) c 0
-#align torus_integrable.torus_integrable_zero_radius TorusIntegrable.torusIntegrableZeroRadius
+#align torus_integrable.torus_integrable_zero_radius TorusIntegrable.torus_integrable_zero_radius
 
 /-- The function given in the definition of `torus_integral` is integrable. -/
 theorem functionIntegrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :

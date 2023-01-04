@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.universally_closed
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carr
   funext fun x => Subtype.ext <| morphism_restrict_base_coe f U x
 #align algebraic_geometry.morphism_restrict_base AlgebraicGeometry.morphism_restrict_base
 
-theorem universally_closed_is_local_at_target : PropertyIsLocalAtTarget @UniversallyClosed :=
+theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyClosed :=
   by
   rw [universally_closed_eq]
   apply universally_is_local_at_target_of_morphism_restrict
@@ -99,12 +99,12 @@ theorem universally_closed_is_local_at_target : PropertyIsLocalAtTarget @Univers
     simp_rw [topologically, morphism_restrict_base] at H
     exact (is_closed_map_iff_is_closed_map_of_supr_eq_top hU).mpr H
 #align
-  algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universally_closed_is_local_at_target
+  algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universallyClosedIsLocalAtTarget
 
 theorem UniversallyClosed.open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y)
     (𝒰 : SchemeCat.OpenCover.{u} Y) :
     UniversallyClosed f ↔ ∀ i, UniversallyClosed (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  universally_closed_is_local_at_target.open_cover_iff f 𝒰
+  universallyClosedIsLocalAtTarget.open_cover_iff f 𝒰
 #align
   algebraic_geometry.universally_closed.open_cover_iff AlgebraicGeometry.UniversallyClosed.open_cover_iff
 

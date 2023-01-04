@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.artinian
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem isArtinianOfLinearEquiv (f : M ≃ₗ[R] P) [IsArtinian R M] : IsArtinia
 theorem isArtinianOfRangeEqKer [IsArtinian R M] [IsArtinian R P] (f : M →ₗ[R] N) (g : N →ₗ[R] P)
     (hf : Function.Injective f) (hg : Function.Surjective g) (h : f.range = g.ker) :
     IsArtinian R N :=
-  ⟨well_founded_lt_exact_sequence (IsArtinian.well_founded_submodule_lt _ _)
+  ⟨wellFounded_lt_exact_sequence (IsArtinian.well_founded_submodule_lt _ _)
       (IsArtinian.well_founded_submodule_lt _ _) f.range (Submodule.map f) (Submodule.comap f)
       (Submodule.comap g) (Submodule.map g) (Submodule.gciMapComap hf) (Submodule.giMapComap hg)
       (by simp [Submodule.map_comap_eq, inf_comm]) (by simp [Submodule.comap_map_eq, h])⟩
@@ -491,7 +491,7 @@ theorem localization_surjective : Function.Surjective (algebraMap R L) :=
   use r
   rw [smul_eq_mul, smul_eq_mul, pow_succ', mul_assoc] at hr
   apply_fun algebraMap R L  at hr
-  simp only [map_mul, ← Submonoid.coe_pow] at hr
+  simp only [map_mul, ← [anonymous]] at hr
   rw [← IsLocalization.mk'_one L, IsLocalization.mk'_eq_iff_eq, one_mul, Submonoid.coe_one, ←
     (IsLocalization.map_units L (s ^ n)).mul_left_cancel hr, map_mul, mul_comm]
 #align is_artinian_ring.localization_surjective IsArtinianRing.localization_surjective

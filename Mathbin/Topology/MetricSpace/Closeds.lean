@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.closeds
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -446,20 +446,21 @@ theorem NonemptyCompacts.dist_eq {x y : NonemptyCompacts α} :
   rfl
 #align metric.nonempty_compacts.dist_eq Metric.NonemptyCompacts.dist_eq
 
-theorem lipschitzInfDistSet (x : α) : LipschitzWith 1 fun s : NonemptyCompacts α => infDist x s :=
-  LipschitzWith.ofLeAdd fun s t => by
+theorem lipschitz_inf_dist_set (x : α) :
+    LipschitzWith 1 fun s : NonemptyCompacts α => infDist x s :=
+  LipschitzWith.of_le_add fun s t => by
     rw [dist_comm]
     exact inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)
-#align metric.lipschitz_inf_dist_set Metric.lipschitzInfDistSet
+#align metric.lipschitz_inf_dist_set Metric.lipschitz_inf_dist_set
 
-theorem lipschitzInfDist : LipschitzWith 2 fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
+theorem lipschitz_inf_dist : LipschitzWith 2 fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
   @LipschitzWith.uncurry _ _ _ _ _ _ (fun (x : α) (s : NonemptyCompacts α) => infDist x s) 1 1
-    (fun s => lipschitzInfDistPt s) lipschitzInfDistSet
-#align metric.lipschitz_inf_dist Metric.lipschitzInfDist
+    (fun s => lipschitz_inf_dist_pt s) lipschitz_inf_dist_set
+#align metric.lipschitz_inf_dist Metric.lipschitz_inf_dist
 
 theorem uniform_continuous_inf_dist_Hausdorff_dist :
     UniformContinuous fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
-  lipschitzInfDist.UniformContinuous
+  lipschitz_inf_dist.UniformContinuous
 #align
   metric.uniform_continuous_inf_dist_Hausdorff_dist Metric.uniform_continuous_inf_dist_Hausdorff_dist
 

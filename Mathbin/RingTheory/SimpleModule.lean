@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.simple_module
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,15 +62,15 @@ theorem IsSimpleModule.congr (l : M ≃ₗ[R] N) [IsSimpleModule R N] : IsSimple
 
 theorem is_simple_module_iff_is_atom : IsSimpleModule R m ↔ IsAtom m :=
   by
-  rw [← Set.is_simple_order_Iic_iff_is_atom]
-  apply OrderIso.is_simple_order_iff
+  rw [← Set.isSimpleOrder_Iic_iff_isAtom]
+  apply OrderIso.isSimpleOrder_iff
   exact Submodule.MapSubtype.relIso m
 #align is_simple_module_iff_is_atom is_simple_module_iff_is_atom
 
 theorem is_simple_module_iff_is_coatom : IsSimpleModule R (M ⧸ m) ↔ IsCoatom m :=
   by
-  rw [← Set.is_simple_order_Ici_iff_is_coatom]
-  apply OrderIso.is_simple_order_iff
+  rw [← Set.isSimpleOrder_Ici_iff_isCoatom]
+  apply OrderIso.isSimpleOrder_iff
   exact Submodule.ComapMkq.relIso m
 #align is_simple_module_iff_is_coatom is_simple_module_iff_is_coatom
 
@@ -78,8 +78,8 @@ theorem covby_iff_quot_is_simple {A B : Submodule R M} (hAB : A ≤ B) :
     A ⋖ B ↔ IsSimpleModule R (B ⧸ Submodule.comap B.Subtype A) :=
   by
   set f : Submodule R B ≃o Set.Iic B := Submodule.MapSubtype.relIso B with hf
-  rw [covby_iff_coatom_Iic hAB, is_simple_module_iff_is_coatom, ← OrderIso.is_coatom_iff f, hf]
-  simp [-OrderIso.is_coatom_iff, Submodule.MapSubtype.relIso, Submodule.map_comap_subtype,
+  rw [covby_iff_coatom_Iic hAB, is_simple_module_iff_is_coatom, ← OrderIso.isCoatom_iff f, hf]
+  simp [-OrderIso.isCoatom_iff, Submodule.MapSubtype.relIso, Submodule.map_comap_subtype,
     inf_eq_right.2 hAB]
 #align covby_iff_quot_is_simple covby_iff_quot_is_simple
 
@@ -106,12 +106,12 @@ variable [IsSemisimpleModule R M]
 theorem Sup_simples_eq_top : supₛ { m : Submodule R M | IsSimpleModule R m } = ⊤ :=
   by
   simp_rw [is_simple_module_iff_is_atom]
-  exact Sup_atoms_eq_top
+  exact supₛ_atoms_eq_top
 #align is_semisimple_module.Sup_simples_eq_top IsSemisimpleModule.Sup_simples_eq_top
 
 instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
   haveI f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m
-  f.complemented_lattice_iff.2 IsModularLattice.complemented_lattice_Iic
+  f.complemented_lattice_iff.2 IsModularLattice.complementedLattice_Iic
 #align is_semisimple_module.is_semisimple_submodule IsSemisimpleModule.is_semisimple_submodule
 
 end IsSemisimpleModule

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Devon Tuma
 
 ! This file was ported from Lean 3 source module analysis.special_functions.polynomials
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ variable [OrderTopology 𝕜]
 
 section PolynomialAtTop
 
-theorem isEquivalentAtTopLead :
+theorem is_equivalent_at_top_lead :
     (fun x => eval x P) ~[at_top] fun x => P.leadingCoeff * x ^ P.natDegree :=
   by
   by_cases h : P = 0
@@ -56,11 +56,11 @@ theorem isEquivalentAtTopLead :
               is_o_pow_pow_at_top_of_lt (mem_range.mp hi))
             _)
         is_equivalent.refl
-#align polynomial.is_equivalent_at_top_lead Polynomial.isEquivalentAtTopLead
+#align polynomial.is_equivalent_at_top_lead Polynomial.is_equivalent_at_top_lead
 
 theorem tendsto_at_top_of_leading_coeff_nonneg (hdeg : 0 < P.degree) (hnng : 0 ≤ P.leadingCoeff) :
     Tendsto (fun x => eval x P) atTop atTop :=
-  P.isEquivalentAtTopLead.symm.tendsto_at_top <|
+  P.is_equivalent_at_top_lead.symm.tendsto_at_top <|
     tendsto_const_mul_pow_at_top (nat_degree_pos_iff_degree_pos.2 hdeg).ne' <|
       hnng.lt_of_ne' <| leading_coeff_ne_zero.mpr <| ne_zero_of_degree_gt hdeg
 #align
@@ -137,7 +137,7 @@ end PolynomialAtTop
 
 section PolynomialDivAtTop
 
-theorem isEquivalentAtTopDiv :
+theorem is_equivalent_at_top_div :
     (fun x => eval x P / eval x Q) ~[at_top] fun x =>
       P.leadingCoeff / Q.leadingCoeff * x ^ (P.natDegree - Q.natDegree : ℤ) :=
   by
@@ -149,7 +149,7 @@ theorem isEquivalentAtTopDiv :
     (P.is_equivalent_at_top_lead.symm.div Q.is_equivalent_at_top_lead.symm).symm.trans
       (eventually_eq.is_equivalent ((eventually_gt_at_top 0).mono fun x hx => _))
   simp [← div_mul_div_comm, hP, hQ, zpow_sub₀ hx.ne.symm]
-#align polynomial.is_equivalent_at_top_div Polynomial.isEquivalentAtTopDiv
+#align polynomial.is_equivalent_at_top_div Polynomial.is_equivalent_at_top_div
 
 theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
     Tendsto (fun x => eval x P / eval x Q) atTop (𝓝 0) :=

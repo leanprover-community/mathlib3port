@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.eisenstein
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,10 +208,10 @@ theorem dvd_pow_nat_degree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Inj
   rwa [hz, Polynomial.eval₂_at_apply, hf] at this
 #align polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero Polynomial.dvd_pow_nat_degree_of_eval₂_eq_zero
 
-theorem dvd_pow_nat_degree_of_aeval_eq_zero [Algebra R A] [Nontrivial A] [NoZeroSmulDivisors R A]
+theorem dvd_pow_nat_degree_of_aeval_eq_zero [Algebra R A] [Nontrivial A] [NoZeroSMulDivisors R A]
     {p : R[X]} (hp : p.Monic) (x y : R) (z : A) (h : Polynomial.aeval z p = 0)
     (hz : z * algebraMap R A x = algebraMap R A y) : x ∣ y ^ p.natDegree :=
-  dvd_pow_nat_degree_of_eval₂_eq_zero (NoZeroSmulDivisors.algebra_map_injective R A) hp x y z h
+  dvd_pow_nat_degree_of_eval₂_eq_zero (NoZeroSMulDivisors.algebra_map_injective R A) hp x y z h
     ((mul_comm _ _).trans hz)
 #align polynomial.dvd_pow_nat_degree_of_aeval_eq_zero Polynomial.dvd_pow_nat_degree_of_aeval_eq_zero
 
@@ -373,7 +373,7 @@ variable {K : Type v} {L : Type z} {p : R} [CommRing R] [Field K] [Field L]
 
 variable [Algebra K L] [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSeparable K L]
 
-variable [IsDomain R] [NormalizedGcdMonoid R] [IsFractionRing R K] [IsIntegrallyClosed R]
+variable [IsDomain R] [NormalizedGCDMonoid R] [IsFractionRing R K] [IsIntegrallyClosed R]
 
 -- mathport name: expr𝓟
 local notation "𝓟" => Submodule.span R {p}
@@ -477,7 +477,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
   dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at
 
 theorem mem_adjoin_of_dvd_coeff_of_dvd_aeval {A B : Type _} [CommSemiring A] [CommRing B]
-    [Algebra A B] [NoZeroSmulDivisors A B] {Q : A[X]} {p : A} {x z : B} (hp : p ≠ 0)
+    [Algebra A B] [NoZeroSMulDivisors A B] {Q : A[X]} {p : A} {x z : B} (hp : p ≠ 0)
     (hQ : ∀ i ∈ range (Q.natDegree + 1), p ∣ Q.coeff i) (hz : aeval x Q = p • z) :
     z ∈ adjoin A ({x} : Set B) := by
   choose! f hf using hQ
@@ -509,7 +509,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
   letI := FiniteDimensional B
   set P := minpoly R B.gen with hP
   obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero B.dim_pos.ne'
-  haveI : NoZeroSmulDivisors R L := NoZeroSmulDivisors.trans R K L
+  haveI : NoZeroSMulDivisors R L := NoZeroSMulDivisors.trans R K L
   let P₁ := P.map (algebraMap R L)
   -- There is a polynomial `Q` such that `p • z = aeval B.gen Q`. We can assume that
   -- `Q.degree < P.degree` and `Q ≠ 0`.

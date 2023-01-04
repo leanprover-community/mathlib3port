@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sheaves.operations
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)
   obj U := ⨅ x : unop U, Submonoid.comap (F.germ x) (S x)
   map U V i := by
     intro s hs
-    simp only [Submonoid.mem_comap, Submonoid.mem_infi] at hs⊢
+    simp only [Submonoid.mem_comap, Submonoid.mem_infᵢ] at hs⊢
     intro x
     change (F.map i.unop.op ≫ F.germ x) s ∈ _
     rw [F.germ_res]

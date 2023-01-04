@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gluing
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,10 +90,10 @@ theorem glue_dist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : 
     by
     have A : ∀ q, 0 ≤ dist (Φ p) (Φ q) + dist (Ψ p) (Ψ q) := fun q => by
       rw [← add_zero (0 : ℝ)] <;> exact add_le_add dist_nonneg dist_nonneg
-    refine' le_antisymm _ (le_cinfi A)
+    refine' le_antisymm _ (le_cinfᵢ A)
     have : 0 = dist (Φ p) (Φ p) + dist (Ψ p) (Ψ p) := by simp
     rw [this]
-    exact cinfi_le ⟨0, forall_range_iff.2 A⟩ p
+    exact cinfᵢ_le ⟨0, forall_range_iff.2 A⟩ p
   rw [glue_dist, this, zero_add]
 #align metric.glue_dist_glued_points Metric.glue_dist_glued_points
 
@@ -128,7 +128,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_mono (B _ _) fun p => _
+      refine' cinfᵢ_mono (B _ _) fun p => _
       calc
         dist z (Φ p) + dist x (Ψ p) ≤ dist y z + dist y (Φ p) + dist x (Ψ p) :=
           add_le_add (dist_triangle_left _ _ _) le_rfl
@@ -151,7 +151,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_mono (B _ _) fun p => _
+      refine' cinfᵢ_mono (B _ _) fun p => _
       calc
         dist z (Φ p) + dist x (Ψ p) ≤ dist z (Φ p) + (dist x y + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle _ _ _)
@@ -174,7 +174,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_mono (B _ _) fun p => _
+      refine' cinfᵢ_mono (B _ _) fun p => _
       calc
         dist x (Φ p) + dist z (Ψ p) ≤ dist x y + dist y (Φ p) + dist z (Ψ p) :=
           add_le_add (dist_triangle _ _ _) le_rfl
@@ -197,7 +197,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_mono (B _ _) fun p => _
+      refine' cinfᵢ_mono (B _ _) fun p => _
       calc
         dist x (Φ p) + dist z (Ψ p) ≤ dist x (Φ p) + (dist y z + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle_left _ _ _)
@@ -208,9 +208,9 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     le_of_forall_pos_le_add fun δ δpos =>
       by
       obtain ⟨p, hp⟩ : ∃ p, dist x (Φ p) + dist y (Ψ p) < (⨅ p, dist x (Φ p) + dist y (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfi_lt (by linarith)
+      exact exists_lt_of_cinfᵢ_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist z (Φ q) + dist y (Ψ q) < (⨅ p, dist z (Φ p) + dist y (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfi_lt (by linarith)
+      exact exists_lt_of_cinfᵢ_lt (by linarith)
       have : dist (Φ p) (Φ q) ≤ dist (Ψ p) (Ψ q) + 2 * ε :=
         by
         have := le_trans (le_abs_self _) (H p q)
@@ -228,9 +228,9 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     le_of_forall_pos_le_add fun δ δpos =>
       by
       obtain ⟨p, hp⟩ : ∃ p, dist y (Φ p) + dist x (Ψ p) < (⨅ p, dist y (Φ p) + dist x (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfi_lt (by linarith)
+      exact exists_lt_of_cinfᵢ_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist y (Φ q) + dist z (Ψ q) < (⨅ p, dist y (Φ p) + dist z (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfi_lt (by linarith)
+      exact exists_lt_of_cinfᵢ_lt (by linarith)
       have : dist (Ψ p) (Ψ q) ≤ dist (Φ p) (Φ q) + 2 * ε :=
         by
         have := le_trans (neg_le_abs_self _) (H p q)
@@ -252,14 +252,14 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
   | inl x, inr y, h =>
     by
     have : 0 ≤ ⨅ p, dist x (Φ p) + dist y (Ψ p) :=
-      le_cinfi fun p => by simpa using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
+      le_cinfᵢ fun p => by simpa using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
     have : 0 + ε ≤ glue_dist Φ Ψ ε (inl x) (inr y) := add_le_add this (le_refl ε)
     exfalso
     linarith
   | inr x, inl y, h =>
     by
     have : 0 ≤ ⨅ p, dist y (Φ p) + dist x (Ψ p) :=
-      le_cinfi fun p => by
+      le_cinfᵢ fun p => by
         simpa [add_comm] using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
     have : 0 + ε ≤ glue_dist Φ Ψ ε (inr x) (inl y) := add_le_add this (le_refl ε)
     exfalso
@@ -395,14 +395,14 @@ theorem Sum.dist_eq {x y : Sum X Y} : dist x y = Sum.dist x y :=
 #align metric.sum.dist_eq Metric.Sum.dist_eq
 
 /-- The left injection of a space in a disjoint union is an isometry -/
-theorem isometryInl : Isometry (Sum.inl : X → Sum X Y) :=
-  Isometry.ofDistEq fun x y => rfl
-#align metric.isometry_inl Metric.isometryInl
+theorem isometry_inl : Isometry (Sum.inl : X → Sum X Y) :=
+  Isometry.of_dist_eq fun x y => rfl
+#align metric.isometry_inl Metric.isometry_inl
 
 /-- The right injection of a space in a disjoint union is an isometry -/
-theorem isometryInr : Isometry (Sum.inr : Y → Sum X Y) :=
-  Isometry.ofDistEq fun x y => rfl
-#align metric.isometry_inr Metric.isometryInr
+theorem isometry_inr : Isometry (Sum.inr : Y → Sum X Y) :=
+  Isometry.of_dist_eq fun x y => rfl
+#align metric.isometry_inr Metric.isometry_inr
 
 end Sum
 
@@ -578,9 +578,9 @@ open TopologicalSpace
 open Filter
 
 /-- The injection of a space in a disjoint union is an isometry -/
-theorem isometryMk (i : ι) : Isometry (Sigma.mk i : E i → Σk, E k) :=
-  Isometry.ofDistEq fun x y => by simp
-#align metric.sigma.isometry_mk Metric.Sigma.isometryMk
+theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σk, E k) :=
+  Isometry.of_dist_eq fun x y => by simp
+#align metric.sigma.isometry_mk Metric.Sigma.isometry_mk
 
 /-- A disjoint union of complete metric spaces is complete. -/
 protected theorem complete_space [∀ i, CompleteSpace (E i)] : CompleteSpace (Σi, E i) :=
@@ -663,13 +663,13 @@ theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
   exact glue_dist_glued_points Φ Ψ 0 x
 #align metric.to_glue_commute Metric.to_glue_commute
 
-theorem toGlueLIsometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueL hΦ hΨ) :=
-  Isometry.ofDistEq fun _ _ => rfl
-#align metric.to_glue_l_isometry Metric.toGlueLIsometry
+theorem to_glue_l_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueL hΦ hΨ) :=
+  Isometry.of_dist_eq fun _ _ => rfl
+#align metric.to_glue_l_isometry Metric.to_glue_l_isometry
 
-theorem toGlueRIsometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueR hΦ hΨ) :=
-  Isometry.ofDistEq fun _ _ => rfl
-#align metric.to_glue_r_isometry Metric.toGlueRIsometry
+theorem to_glue_r_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueR hΦ hΨ) :=
+  Isometry.of_dist_eq fun _ _ => rfl
+#align metric.to_glue_r_isometry Metric.to_glue_r_isometry
 
 end Gluing
 
@@ -772,14 +772,14 @@ instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLim
   ⟨toInductiveLimit _ 0 default⟩
 
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/
-theorem toInductiveLimitIsometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
+theorem to_inductive_limit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
     Isometry (toInductiveLimit I n) :=
-  Isometry.ofDistEq fun x y =>
+  Isometry.of_dist_eq fun x y =>
     by
     change inductive_limit_dist f ⟨n, x⟩ ⟨n, y⟩ = dist x y
     rw [inductive_limit_dist_eq_dist I ⟨n, x⟩ ⟨n, y⟩ n (le_refl n) (le_refl n), le_rec_on_self,
       le_rec_on_self]
-#align metric.to_inductive_limit_isometry Metric.toInductiveLimitIsometry
+#align metric.to_inductive_limit_isometry Metric.to_inductive_limit_isometry
 
 /-- The maps `to_inductive_limit n` are compatible with the maps `f n`. -/
 theorem to_inductive_limit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :

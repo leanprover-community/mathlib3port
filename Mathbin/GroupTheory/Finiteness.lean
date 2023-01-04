@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module group_theory.finiteness
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,11 +65,11 @@ theorem Submonoid.fg_iff_add_fg (P : Submonoid M) : P.Fg ↔ P.toAddSubmonoid.Fg
   ⟨fun h =>
     let ⟨S, hS, hf⟩ := (Submonoid.fg_iff _).1 h
     (AddSubmonoid.fg_iff _).mpr
-      ⟨Additive.toMul ⁻¹' S, by simp [← Submonoid.to_add_submonoid_closure, hS], hf⟩,
+      ⟨Additive.toMul ⁻¹' S, by simp [← Submonoid.toAddSubmonoid_closure, hS], hf⟩,
     fun h =>
     let ⟨T, hT, hf⟩ := (AddSubmonoid.fg_iff _).1 h
     (Submonoid.fg_iff _).mpr
-      ⟨Multiplicative.ofAdd ⁻¹' T, by simp [← AddSubmonoid.to_submonoid'_closure, hT], hf⟩⟩
+      ⟨Multiplicative.ofAdd ⁻¹' T, by simp [← AddSubmonoid.toSubmonoid'_closure, hT], hf⟩⟩
 #align submonoid.fg_iff_add_fg Submonoid.fg_iff_add_fg
 
 theorem AddSubmonoid.fg_iff_mul_fg (P : AddSubmonoid N) : P.Fg ↔ P.toSubmonoid.Fg :=

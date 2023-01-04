@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.antilipschitz
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem antilipschitz_with_iff_le_mul_nndist :
 #align antilipschitz_with_iff_le_mul_nndist antilipschitz_with_iff_le_mul_nndist
 
 alias antilipschitz_with_iff_le_mul_nndist ↔
-  AntilipschitzWith.le_mul_nndist AntilipschitzWith.ofLeMulNndist
+  AntilipschitzWith.le_mul_nndist AntilipschitzWith.of_le_mul_nndist
 
 theorem antilipschitz_with_iff_le_mul_dist :
     AntilipschitzWith K f ↔ ∀ x y, dist x y ≤ K * dist (f x) (f y) :=
@@ -70,7 +70,7 @@ theorem antilipschitz_with_iff_le_mul_dist :
 #align antilipschitz_with_iff_le_mul_dist antilipschitz_with_iff_le_mul_dist
 
 alias antilipschitz_with_iff_le_mul_dist ↔
-  AntilipschitzWith.le_mul_dist AntilipschitzWith.ofLeMulDist
+  AntilipschitzWith.le_mul_dist AntilipschitzWith.of_le_mul_dist
 
 namespace AntilipschitzWith
 
@@ -140,28 +140,28 @@ theorem restrict (hf : AntilipschitzWith K f) (s : Set α) : AntilipschitzWith K
   fun x y => hf x y
 #align antilipschitz_with.restrict AntilipschitzWith.restrict
 
-theorem codRestrict (hf : AntilipschitzWith K f) {s : Set β} (hs : ∀ x, f x ∈ s) :
+theorem cod_restrict (hf : AntilipschitzWith K f) {s : Set β} (hs : ∀ x, f x ∈ s) :
     AntilipschitzWith K (s.codRestrict f hs) := fun x y => hf x y
-#align antilipschitz_with.cod_restrict AntilipschitzWith.codRestrict
+#align antilipschitz_with.cod_restrict AntilipschitzWith.cod_restrict
 
-theorem toRightInvOn' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g : β → α} {t : Set β}
-    (g_maps : MapsTo g t s) (g_inv : RightInvOn g f t) : LipschitzWith K (t.restrict g) :=
-  fun x y => by
+theorem to_right_inv_on' {s : Set α} (hf : AntilipschitzWith K (s.restrict f)) {g : β → α}
+    {t : Set β} (g_maps : MapsTo g t s) (g_inv : RightInvOn g f t) :
+    LipschitzWith K (t.restrict g) := fun x y => by
   simpa only [restrict_apply, g_inv x.mem, g_inv y.mem, Subtype.edist_eq, Subtype.coe_mk] using
     hf ⟨g x, g_maps x.mem⟩ ⟨g y, g_maps y.mem⟩
-#align antilipschitz_with.to_right_inv_on' AntilipschitzWith.toRightInvOn'
+#align antilipschitz_with.to_right_inv_on' AntilipschitzWith.to_right_inv_on'
 
-theorem toRightInvOn (hf : AntilipschitzWith K f) {g : β → α} {t : Set β} (h : RightInvOn g f t) :
-    LipschitzWith K (t.restrict g) :=
-  (hf.restrict univ).toRightInvOn' (mapsTo_univ g t) h
-#align antilipschitz_with.to_right_inv_on AntilipschitzWith.toRightInvOn
+theorem to_right_inv_on (hf : AntilipschitzWith K f) {g : β → α} {t : Set β}
+    (h : RightInvOn g f t) : LipschitzWith K (t.restrict g) :=
+  (hf.restrict univ).to_right_inv_on' (mapsTo_univ g t) h
+#align antilipschitz_with.to_right_inv_on AntilipschitzWith.to_right_inv_on
 
-theorem toRightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
+theorem to_right_inverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
     LipschitzWith K g := by
   intro x y
   have := hf (g x) (g y)
   rwa [hg x, hg y] at this
-#align antilipschitz_with.to_right_inverse AntilipschitzWith.toRightInverse
+#align antilipschitz_with.to_right_inverse AntilipschitzWith.to_right_inverse
 
 theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
   by
@@ -201,13 +201,13 @@ theorem closed_embedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricS
   { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
 #align antilipschitz_with.closed_embedding AntilipschitzWith.closed_embedding
 
-theorem subtypeCoe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
+theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
   AntilipschitzWith.id.restrict s
-#align antilipschitz_with.subtype_coe AntilipschitzWith.subtypeCoe
+#align antilipschitz_with.subtype_coe AntilipschitzWith.subtype_coe
 
-theorem ofSubsingleton [Subsingleton α] {K : ℝ≥0} : AntilipschitzWith K f := fun x y => by
+theorem of_subsingleton [Subsingleton α] {K : ℝ≥0} : AntilipschitzWith K f := fun x y => by
   simp only [Subsingleton.elim x y, edist_self, zero_le]
-#align antilipschitz_with.of_subsingleton AntilipschitzWith.ofSubsingleton
+#align antilipschitz_with.of_subsingleton AntilipschitzWith.of_subsingleton
 
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
 protected theorem subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β}
@@ -223,38 +223,38 @@ open Metric
 
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
 
-theorem boundedPreimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) :
+theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) :
     Bounded (f ⁻¹' s) :=
   (Exists.intro (K * diam s)) fun x hx y hy =>
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2
       
-#align antilipschitz_with.bounded_preimage AntilipschitzWith.boundedPreimage
+#align antilipschitz_with.bounded_preimage AntilipschitzWith.bounded_preimage
 
 theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α) (cobounded β) :=
   compl_surjective.forall.2 fun s (hs : IsBounded s) =>
-    Metric.is_bounded_iff.2 <| hf.boundedPreimage <| Metric.is_bounded_iff.1 hs
+    Metric.is_bounded_iff.2 <| hf.bounded_preimage <| Metric.is_bounded_iff.1 hs
 #align antilipschitz_with.tendsto_cobounded AntilipschitzWith.tendsto_cobounded
 
 /-- The image of a proper space under an expanding onto map is proper. -/
-protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : α → β} [ProperSpace α]
+protected theorem proper_space {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : α → β} [ProperSpace α]
     (hK : AntilipschitzWith K f) (f_cont : Continuous f) (hf : Function.Surjective f) :
     ProperSpace β :=
   by
-  apply properSpaceOfCompactClosedBallOfLe 0 fun x₀ r hr => _
+  apply proper_space_of_compact_closed_ball_of_le 0 fun x₀ r hr => _
   let K := f ⁻¹' closed_ball x₀ r
   have A : IsClosed K := is_closed_ball.preimage f_cont
   have B : bounded K := hK.bounded_preimage bounded_closed_ball
   have : IsCompact K := is_compact_iff_is_closed_bounded.2 ⟨A, B⟩
   convert this.image f_cont
   exact (hf.image_preimage _).symm
-#align antilipschitz_with.proper_space AntilipschitzWith.properSpace
+#align antilipschitz_with.proper_space AntilipschitzWith.proper_space
 
 end AntilipschitzWith
 
-theorem LipschitzWith.toRightInverse [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0}
+theorem LipschitzWith.to_right_inverse [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K : ℝ≥0}
     {f : α → β} (hf : LipschitzWith K f) {g : β → α} (hg : Function.RightInverse g f) :
     AntilipschitzWith K g := fun x y => by simpa only [hg _] using hf (g x) (g y)
-#align lipschitz_with.to_right_inverse LipschitzWith.toRightInverse
+#align lipschitz_with.to_right_inverse LipschitzWith.to_right_inverse
 

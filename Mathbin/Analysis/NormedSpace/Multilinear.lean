@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -350,7 +350,7 @@ theorem bounds_bdd_below {f : ContinuousMultilinearMap 𝕜 E G} :
 #align continuous_multilinear_map.bounds_bdd_below ContinuousMultilinearMap.bounds_bdd_below
 
 theorem op_norm_nonneg : 0 ≤ ‖f‖ :=
-  le_cInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
+  le_cinfₛ bounds_nonempty fun _ ⟨hx, _⟩ => hx
 #align continuous_multilinear_map.op_norm_nonneg ContinuousMultilinearMap.op_norm_nonneg
 
 /-- The fundamental property of the operator norm of a continuous multilinear map:
@@ -365,7 +365,7 @@ theorem le_op_norm : ‖f m‖ ≤ ‖f‖ * ∏ i, ‖m i‖ :=
     rw [this, norm_zero]
     exact mul_nonneg (op_norm_nonneg f) A
   · rw [← div_le_iff hlt]
-    apply le_cInf bounds_nonempty
+    apply le_cinfₛ bounds_nonempty
     rintro c ⟨_, hc⟩
     rw [div_le_iff hlt]
     apply hc
@@ -395,12 +395,12 @@ theorem unit_le_op_norm (h : ‖m‖ ≤ 1) : ‖f m‖ ≤ ‖f‖ :=
 
 /-- If one controls the norm of every `f x`, then one controls the norm of `f`. -/
 theorem op_norm_le_bound {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ m, ‖f m‖ ≤ M * ∏ i, ‖m i‖) : ‖f‖ ≤ M :=
-  cInf_le bounds_bdd_below ⟨hMp, hM⟩
+  cinfₛ_le bounds_bdd_below ⟨hMp, hM⟩
 #align continuous_multilinear_map.op_norm_le_bound ContinuousMultilinearMap.op_norm_le_bound
 
 /-- The operator norm satisfies the triangle inequality. -/
 theorem op_norm_add_le : ‖f + g‖ ≤ ‖f‖ + ‖g‖ :=
-  cInf_le bounds_bdd_below
+  cinfₛ_le bounds_bdd_below
     ⟨add_nonneg (op_norm_nonneg _) (op_norm_nonneg _), fun x =>
       by
       rw [add_mul]
@@ -530,6 +530,49 @@ theorem norm_pi {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'} [∀ i', N
     refine' le_trans _ ((pi f).le_op_norm m)
     convert norm_le_pi_norm (fun j => f j m) i
 #align continuous_multilinear_map.norm_pi ContinuousMultilinearMap.norm_pi
+
+section
+
+variable (𝕜 G)
+
+@[simp]
+theorem norm_of_subsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
+    ‖ofSubsingleton 𝕜 G i'‖ = 1 := by
+  apply le_antisymm
+  · refine' op_norm_le_bound _ zero_le_one fun m => _
+    rw [Fintype.prod_subsingleton _ i', one_mul, of_subsingleton_apply]
+  · obtain ⟨g, hg⟩ := exists_ne (0 : G)
+    rw [← norm_ne_zero_iff] at hg
+    have := (of_subsingleton 𝕜 G i').ratio_le_op_norm fun _ => g
+    rwa [Fintype.prod_subsingleton _ i', of_subsingleton_apply, div_self hg] at this
+#align continuous_multilinear_map.norm_of_subsingleton ContinuousMultilinearMap.norm_of_subsingleton
+
+@[simp]
+theorem nnnorm_of_subsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
+    ‖ofSubsingleton 𝕜 G i'‖₊ = 1 :=
+  Nnreal.eq <| norm_of_subsingleton _ _ _
+#align
+  continuous_multilinear_map.nnnorm_of_subsingleton ContinuousMultilinearMap.nnnorm_of_subsingleton
+
+variable {G} (E)
+
+@[simp]
+theorem norm_const_of_is_empty [IsEmpty ι] (x : G) : ‖constOfIsEmpty 𝕜 E x‖ = ‖x‖ :=
+  by
+  apply le_antisymm
+  · refine' op_norm_le_bound _ (norm_nonneg _) fun x => _
+    rw [Fintype.prod_empty, mul_one, const_of_is_empty_apply]
+  · simpa using (const_of_is_empty 𝕜 E x).le_op_norm 0
+#align
+  continuous_multilinear_map.norm_const_of_is_empty ContinuousMultilinearMap.norm_const_of_is_empty
+
+@[simp]
+theorem nnnorm_const_of_is_empty [IsEmpty ι] (x : G) : ‖constOfIsEmpty 𝕜 E x‖₊ = ‖x‖₊ :=
+  Nnreal.eq <| norm_const_of_is_empty _ _ _
+#align
+  continuous_multilinear_map.nnnorm_const_of_is_empty ContinuousMultilinearMap.nnnorm_const_of_is_empty
+
+end
 
 section
 
@@ -1549,12 +1592,8 @@ variable (𝕜 G)
 
 /-- Associating to an element `x` of a vector space `E₂` the continuous multilinear map in `0`
 variables taking the (unique) value `x` -/
-def ContinuousMultilinearMap.curry0 (x : G') : G[×0]→L[𝕜] G'
-    where
-  toFun m := x
-  map_add' m i := Fin.elim0 i
-  map_smul' m i := Fin.elim0 i
-  cont := continuous_const
+def ContinuousMultilinearMap.curry0 (x : G') : G[×0]→L[𝕜] G' :=
+  ContinuousMultilinearMap.constOfIsEmpty 𝕜 _ x
 #align continuous_multilinear_map.curry0 ContinuousMultilinearMap.curry0
 
 variable {G}
@@ -1595,10 +1634,7 @@ theorem ContinuousMultilinearMap.curry0_uncurry0 (x : G') :
 @[simp]
 theorem ContinuousMultilinearMap.curry0_norm (x : G') :
     ‖ContinuousMultilinearMap.curry0 𝕜 G x‖ = ‖x‖ :=
-  by
-  apply le_antisymm
-  · exact ContinuousMultilinearMap.op_norm_le_bound _ (norm_nonneg _) fun m => by simp
-  · simpa using (ContinuousMultilinearMap.curry0 𝕜 G x).le_op_norm 0
+  norm_const_of_is_empty _ _ _
 #align continuous_multilinear_map.curry0_norm ContinuousMultilinearMap.curry0_norm
 
 variable {𝕜 G}

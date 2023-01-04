@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_numbers
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1119,7 +1119,7 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ‖x‖ = p ^ (-x.Valuation)
 theorem valuation_p : valuation (p : ℚ_[p]) = 1 :=
   by
   have h : (1 : ℝ) < p := by exact_mod_cast (Fact.out p.prime).one_lt
-  refine' neg_injective ((zpow_strict_mono h).Injective <| (norm_eq_pow_val _).symm.trans _)
+  refine' neg_injective ((zpow_strictMono h).Injective <| (norm_eq_pow_val _).symm.trans _)
   · exact_mod_cast (Fact.out p.prime).NeZero
   · simp
 #align padic.valuation_p Padic.valuation_p
@@ -1226,7 +1226,7 @@ theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ �
   · simp [hx0, norm_zero, aux, le_of_lt (aux _)]
   rw [norm_eq_pow_val hx0]
   have h1p : 1 < (p : ℝ) := by exact_mod_cast hp.1.one_lt
-  have H := zpow_strict_mono h1p
+  have H := zpow_strictMono h1p
   rw [H.le_iff_le, H.lt_iff_lt, Int.lt_add_one_iff]
 #align padic.norm_le_pow_iff_norm_lt_pow_add_one Padic.norm_le_pow_iff_norm_lt_pow_add_one
 

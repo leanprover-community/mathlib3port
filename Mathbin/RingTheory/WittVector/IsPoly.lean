@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.is_poly
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -268,7 +268,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   specialize h (ULift ℤ) ((mk p) fun i => ⟨x i⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
-  simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
+  simp only [← RingEquiv.coe_toRingHom, map_eval₂_hom]
   convert h using 1
   all_goals
     funext i
@@ -622,7 +622,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   specialize h (ULift ℤ) ((mk p) fun i => ⟨x (0, i)⟩) ((mk p) fun i => ⟨x (1, i)⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
-  simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
+  simp only [← RingEquiv.coe_toRingHom, map_eval₂_hom]
   convert h using 1
   all_goals
     funext i

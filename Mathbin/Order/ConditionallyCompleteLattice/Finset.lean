@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.finset
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,7 @@ variable [ConditionallyCompleteLattice α] {s t : Set α} {a b : α}
 theorem Finset.Nonempty.sup'_eq_cSup_image {s : Finset β} (hs : s.Nonempty) (f : β → α) :
     s.sup' hs f = supₛ (f '' s) :=
   eq_of_forall_ge_iff fun a => by
-    simp [cSup_le_iff (s.finite_to_set.image f).BddAbove (hs.to_set.image f)]
+    simp [csupₛ_le_iff (s.finite_to_set.image f).BddAbove (hs.to_set.image f)]
 #align finset.nonempty.sup'_eq_cSup_image Finset.Nonempty.sup'_eq_cSup_image
 
 theorem Finset.Nonempty.sup'_id_eq_cSup {s : Finset α} (hs : s.Nonempty) : s.sup' hs id = supₛ s :=
@@ -42,7 +42,7 @@ section ConditionallyCompleteLinearOrder
 variable [ConditionallyCompleteLinearOrder α] {s t : Set α} {a b : α}
 
 theorem Finset.Nonempty.cSup_eq_max' {s : Finset α} (h : s.Nonempty) : supₛ ↑s = s.max' h :=
-  eq_of_forall_ge_iff fun a => (cSup_le_iff s.BddAbove h.to_set).trans (s.max'_le_iff h).symm
+  eq_of_forall_ge_iff fun a => (csupₛ_le_iff s.BddAbove h.to_set).trans (s.max'_le_iff h).symm
 #align finset.nonempty.cSup_eq_max' Finset.Nonempty.cSup_eq_max'
 
 theorem Finset.Nonempty.cInf_eq_min' {s : Finset α} (h : s.Nonempty) : infₛ ↑s = s.min' h :=
@@ -70,7 +70,7 @@ theorem Set.Nonempty.cInf_mem (h : s.Nonempty) (hs : s.Finite) : infₛ s ∈ s 
 #align set.nonempty.cInf_mem Set.Nonempty.cInf_mem
 
 theorem Set.Finite.cSup_lt_iff (hs : s.Finite) (h : s.Nonempty) : supₛ s < a ↔ ∀ x ∈ s, x < a :=
-  ⟨fun h x hx => (le_cSup hs.BddAbove hx).trans_lt h, fun H => H _ <| h.cSup_mem hs⟩
+  ⟨fun h x hx => (le_csupₛ hs.BddAbove hx).trans_lt h, fun H => H _ <| h.cSup_mem hs⟩
 #align set.finite.cSup_lt_iff Set.Finite.cSup_lt_iff
 
 theorem Set.Finite.lt_cInf_iff (hs : s.Finite) (h : s.Nonempty) : a < infₛ s ↔ ∀ x ∈ s, a < x :=
@@ -93,10 +93,10 @@ theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) (H)
     s.sup' H f = supₛ (f '' s) := by
   apply le_antisymm
   · refine' (Finset.sup'_le _ _) fun a ha => _
-    refine' le_cSup ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩
+    refine' le_csupₛ ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩
     rintro i ⟨j, hj, rfl⟩
     exact Finset.le_sup' _ hj
-  · apply cSup_le ((coe_nonempty.mpr H).image _)
+  · apply csupₛ_le ((coe_nonempty.mpr H).image _)
     rintro _ ⟨a, ha, rfl⟩
     exact Finset.le_sup' _ ha
 #align finset.sup'_eq_cSup_image Finset.sup'_eq_cSup_image

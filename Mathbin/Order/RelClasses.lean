@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.rel_classes
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,12 +168,10 @@ protected theorem IsTotal.is_trichotomous (r) [IsTotal α r] : IsTrichotomous α
   ⟨fun a b => or_left_comm.1 (Or.inr <| total_of r a b)⟩
 #align is_total.is_trichotomous IsTotal.is_trichotomous
 
-#print IsTotal.to_is_refl /-
 -- see Note [lower instance priority]
 instance (priority := 100) IsTotal.to_is_refl (r) [IsTotal α r] : IsRefl α r :=
   ⟨fun a => (or_self_iff _).1 <| total_of r a a⟩
 #align is_total.to_is_refl IsTotal.to_is_refl
--/
 
 #print ne_of_irrefl /-
 theorem ne_of_irrefl {r} [IsIrrefl α r] : ∀ {x y : α}, r x y → x ≠ y
@@ -427,21 +425,17 @@ instance (priority := 100) IsWellFounded.is_irrefl (r : α → α → Prop) [IsW
   IsAsymm.is_irrefl
 #align is_well_founded.is_irrefl IsWellFounded.is_irrefl
 
-#print WellFoundedLt /-
 /-- A class for a well founded relation `<`. -/
 @[reducible]
 def WellFoundedLt (α : Type _) [LT α] : Prop :=
   IsWellFounded α (· < ·)
 #align well_founded_lt WellFoundedLt
--/
 
-#print WellFoundedGt /-
 /-- A class for a well founded relation `>`. -/
 @[reducible]
 def WellFoundedGt (α : Type _) [LT α] : Prop :=
   IsWellFounded α (· > ·)
 #align well_founded_gt WellFoundedGt
--/
 
 -- See note [lower instance priority]
 instance (priority := 100) (α : Type _) [LT α] [h : WellFoundedLt α] : WellFoundedGt αᵒᵈ :=
@@ -495,34 +489,22 @@ namespace WellFoundedLt
 
 variable [LT α] [WellFoundedLt α]
 
-#print WellFoundedLt.induction /-
 /-- Inducts on a well-founded `<` relation. -/
 theorem induction {C : α → Prop} : ∀ a, (∀ x, (∀ y, y < x → C y) → C x) → C a :=
   IsWellFounded.induction _
 #align well_founded_lt.induction WellFoundedLt.induction
--/
 
-#print WellFoundedLt.apply /-
 /-- All values are accessible under the well-founded `<`. -/
 theorem apply : ∀ a : α, Acc (· < ·) a :=
   IsWellFounded.apply _
 #align well_founded_lt.apply WellFoundedLt.apply
--/
 
-#print WellFoundedLt.fix /-
 /-- Creates data, given a way to generate a value from all that compare as lesser. See also
 `well_founded_lt.fix_eq`. -/
 def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, y < x → C y) → C x) → ∀ x : α, C x :=
   IsWellFounded.fix (· < ·)
 #align well_founded_lt.fix WellFoundedLt.fix
--/
 
-/- warning: well_founded_lt.fix_eq -> WellFoundedLt.fix_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedLt.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedLt.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 y x) => WellFoundedLt.fix.{u1, u2} α _inst_1 _inst_2 C F y))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedLt.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 y x) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedLt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 y x) => WellFoundedLt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
-Case conversion may be inaccurate. Consider using '#align well_founded_lt.fix_eq WellFoundedLt.fix_eqₓ'. -/
 /-- The value from `well_founded_lt.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, y < x → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
@@ -540,34 +522,22 @@ namespace WellFoundedGt
 
 variable [LT α] [WellFoundedGt α]
 
-#print WellFoundedGt.induction /-
 /-- Inducts on a well-founded `>` relation. -/
 theorem induction {C : α → Prop} : ∀ a, (∀ x, (∀ y, x < y → C y) → C x) → C a :=
   IsWellFounded.induction _
 #align well_founded_gt.induction WellFoundedGt.induction
--/
 
-#print WellFoundedGt.apply /-
 /-- All values are accessible under the well-founded `>`. -/
 theorem apply : ∀ a : α, Acc (· > ·) a :=
   IsWellFounded.apply _
 #align well_founded_gt.apply WellFoundedGt.apply
--/
 
-#print WellFoundedGt.fix /-
 /-- Creates data, given a way to generate a value from all that compare as greater. See also
 `well_founded_gt.fix_eq`. -/
 def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, x < y → C y) → C x) → ∀ x : α, C x :=
   IsWellFounded.fix (· > ·)
 #align well_founded_gt.fix WellFoundedGt.fix
--/
 
-/- warning: well_founded_gt.fix_eq -> WellFoundedGt.fix_eq is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : WellFoundedGt.{u1} α _inst_1] {C : α -> Sort.{u2}} (F : forall (x : α), (forall (y : α), (LT.lt.{u1} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u2} (C x) (WellFoundedGt.fix.{u1, u2} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u1} α _inst_1 x y) => WellFoundedGt.fix.{u1, u2} α _inst_1 _inst_2 C F y))
-but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : LT.{u2} α] [_inst_2 : WellFoundedGt.{u2} α _inst_1] {C : α -> Sort.{u1}} (F : forall (x : α), (forall (y : α), (LT.lt.{u2} α _inst_1 x y) -> (C y)) -> (C x)) (x : α), Eq.{u1} (C x) (WellFoundedGt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F x) (F x (fun (y : α) (h : LT.lt.{u2} α _inst_1 x y) => WellFoundedGt.fix.{u2, u1} α _inst_1 _inst_2 (fun (y : α) => C y) F y))
-Case conversion may be inaccurate. Consider using '#align well_founded_gt.fix_eq WellFoundedGt.fix_eqₓ'. -/
 /-- The value from `well_founded_gt.fix` is built from the successive ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, x < y → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
@@ -581,11 +551,13 @@ def toHasWellFounded : WellFoundedRelation α :=
 
 end WellFoundedGt
 
+#print IsWellOrder.linearOrder /-
 /-- Construct a decidable linear order from a well-founded linear order. -/
 noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder α r] : LinearOrder α :=
   letI := fun x y => Classical.dec ¬r x y
   linearOrderOfSTO r
 #align is_well_order.linear_order IsWellOrder.linearOrder
+-/
 
 #print IsWellOrder.toHasWellFounded /-
 /-- Derive a `has_well_founded` instance from a `is_well_order` instance. -/

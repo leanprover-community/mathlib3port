@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.order.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3599,7 +3599,7 @@ theorem exists_seq_tendsto_Sup {α : Type _} [ConditionallyCompleteLinearOrder �
     [TopologicalSpace α] [OrderTopology α] [FirstCountableTopology α] {S : Set α} (hS : S.Nonempty)
     (hS' : BddAbove S) : ∃ u : ℕ → α, Monotone u ∧ Tendsto u atTop (𝓝 (supₛ S)) ∧ ∀ n, u n ∈ S :=
   by
-  rcases(is_lub_cSup hS hS').exists_seq_monotone_tendsto hS with ⟨u, hu⟩
+  rcases(isLUB_csupₛ hS hS').exists_seq_monotone_tendsto hS with ⟨u, hu⟩
   exact ⟨u, hu.1, hu.2.2⟩
 #align exists_seq_tendsto_Sup exists_seq_tendsto_Sup
 
@@ -4091,22 +4091,22 @@ variable [CompleteLinearOrder α] [TopologicalSpace α] [OrderTopology α] [Comp
 
 theorem Sup_mem_closure {α : Type u} [TopologicalSpace α] [CompleteLinearOrder α] [OrderTopology α]
     {s : Set α} (hs : s.Nonempty) : supₛ s ∈ closure s :=
-  (is_lub_Sup s).mem_closure hs
+  (isLUB_supₛ s).mem_closure hs
 #align Sup_mem_closure Sup_mem_closure
 
 theorem Inf_mem_closure {α : Type u} [TopologicalSpace α] [CompleteLinearOrder α] [OrderTopology α]
     {s : Set α} (hs : s.Nonempty) : infₛ s ∈ closure s :=
-  (is_glb_Inf s).mem_closure hs
+  (isGLB_infₛ s).mem_closure hs
 #align Inf_mem_closure Inf_mem_closure
 
 theorem IsClosed.Sup_mem {α : Type u} [TopologicalSpace α] [CompleteLinearOrder α] [OrderTopology α]
     {s : Set α} (hs : s.Nonempty) (hc : IsClosed s) : supₛ s ∈ s :=
-  (is_lub_Sup s).mem_of_is_closed hs hc
+  (isLUB_supₛ s).mem_of_is_closed hs hc
 #align is_closed.Sup_mem IsClosed.Sup_mem
 
 theorem IsClosed.Inf_mem {α : Type u} [TopologicalSpace α] [CompleteLinearOrder α] [OrderTopology α]
     {s : Set α} (hs : s.Nonempty) (hc : IsClosed s) : infₛ s ∈ s :=
-  (is_glb_Inf s).mem_of_is_closed hs hc
+  (isGLB_infₛ s).mem_of_is_closed hs hc
 #align is_closed.Inf_mem IsClosed.Inf_mem
 
 /-- A monotone function continuous at the supremum of a nonempty set sends this supremum to
@@ -4114,7 +4114,7 @@ the supremum of the image of this set. -/
 theorem Monotone.map_Sup_of_continuous_at' {f : α → β} {s : Set α} (Cf : ContinuousAt f (supₛ s))
     (Mf : Monotone f) (hs : s.Nonempty) : f (supₛ s) = supₛ (f '' s) :=
   ((--This is a particular case of the more general is_lub.is_lub_of_tendsto
-              is_lub_Sup
+              isLUB_supₛ
               _).is_lub_of_tendsto
           (fun x hx y hy xy => Mf xy) hs <|
         Cf.mono_left inf_le_left).Sup_eq.symm
@@ -4244,21 +4244,21 @@ variable [ConditionallyCompleteLinearOrder α] [TopologicalSpace α] [OrderTopol
   [ConditionallyCompleteLinearOrder β] [TopologicalSpace β] [OrderClosedTopology β] [Nonempty γ]
 
 theorem cSup_mem_closure {s : Set α} (hs : s.Nonempty) (B : BddAbove s) : supₛ s ∈ closure s :=
-  (is_lub_cSup hs B).mem_closure hs
+  (isLUB_csupₛ hs B).mem_closure hs
 #align cSup_mem_closure cSup_mem_closure
 
 theorem cInf_mem_closure {s : Set α} (hs : s.Nonempty) (B : BddBelow s) : infₛ s ∈ closure s :=
-  (is_glb_cInf hs B).mem_closure hs
+  (isGLB_cinfₛ hs B).mem_closure hs
 #align cInf_mem_closure cInf_mem_closure
 
 theorem IsClosed.cSup_mem {s : Set α} (hc : IsClosed s) (hs : s.Nonempty) (B : BddAbove s) :
     supₛ s ∈ s :=
-  (is_lub_cSup hs B).mem_of_is_closed hs hc
+  (isLUB_csupₛ hs B).mem_of_is_closed hs hc
 #align is_closed.cSup_mem IsClosed.cSup_mem
 
 theorem IsClosed.cInf_mem {s : Set α} (hc : IsClosed s) (hs : s.Nonempty) (B : BddBelow s) :
     infₛ s ∈ s :=
-  (is_glb_cInf hs B).mem_of_is_closed hs hc
+  (isGLB_cinfₛ hs B).mem_of_is_closed hs hc
 #align is_closed.cInf_mem IsClosed.cInf_mem
 
 /-- If a monotone function is continuous at the supremum of a nonempty bounded above set `s`,
@@ -4266,8 +4266,8 @@ then it sends this supremum to the supremum of the image of `s`. -/
 theorem Monotone.map_cSup_of_continuous_at {f : α → β} {s : Set α} (Cf : ContinuousAt f (supₛ s))
     (Mf : Monotone f) (ne : s.Nonempty) (H : BddAbove s) : f (supₛ s) = supₛ (f '' s) :=
   by
-  refine' ((is_lub_cSup (ne.image f) (Mf.map_bdd_above H)).unique _).symm
-  refine' (is_lub_cSup Ne H).is_lub_of_tendsto (fun x hx y hy xy => Mf xy) Ne _
+  refine' ((isLUB_csupₛ (ne.image f) (Mf.map_bdd_above H)).unique _).symm
+  refine' (isLUB_csupₛ Ne H).is_lub_of_tendsto (fun x hx y hy xy => Mf xy) Ne _
   exact Cf.mono_left inf_le_left
 #align monotone.map_cSup_of_continuous_at Monotone.map_cSup_of_continuous_at
 
@@ -4333,13 +4333,13 @@ theorem Monotone.tendsto_nhds_within_Iio {α β : Type _} [LinearOrder α] [Topo
   refine' tendsto_order.2 ⟨fun l hl => _, fun m hm => _⟩
   · obtain ⟨z, zx, lz⟩ : ∃ a : α, a < x ∧ l < f a := by
       simpa only [mem_image, exists_prop, exists_exists_and_eq_and] using
-        exists_lt_of_lt_cSup (nonempty_image_iff.2 h) hl
+        exists_lt_of_lt_csupₛ (nonempty_image_iff.2 h) hl
     exact
       (mem_nhds_within_Iio_iff_exists_Ioo_subset' zx).2
         ⟨z, zx, fun y hy => lz.trans_le (Mf hy.1.le)⟩
   · filter_upwards [self_mem_nhds_within] with _ hy
     apply lt_of_le_of_lt _ hm
-    exact le_cSup (Mf.map_bdd_above bddAbove_Iio) (mem_image_of_mem _ hy)
+    exact le_csupₛ (Mf.map_bdd_above bddAbove_Iio) (mem_image_of_mem _ hy)
 #align monotone.tendsto_nhds_within_Iio Monotone.tendsto_nhds_within_Iio
 
 /-- A monotone map has a limit to the right of any point `x`, equal to `Inf (f '' (Ioi x))`. -/

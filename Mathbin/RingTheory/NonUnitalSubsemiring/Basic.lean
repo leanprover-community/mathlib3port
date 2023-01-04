@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module ring_theory.non_unital_subsemiring.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s :=
 /-- The natural non-unital ring hom from a non-unital subsemiring of a non-unital semiring `R` to
 `R`. -/
 def subtype : s →ₙ+* R :=
-  { AddSubmonoidClass.subtype s, MulMemClass.subtype s with toFun := coe }
+  { AddSubmonoidClass.Subtype s, MulMemClass.subtype s with toFun := coe }
 #align non_unital_subsemiring_class.subtype NonUnitalSubsemiringClass.subtype
 
 @[simp]
@@ -473,7 +473,7 @@ instance : CompleteLattice (NonUnitalSubsemiring R) :=
   {
     completeLatticeOfInf (NonUnitalSubsemiring R) fun s =>
       IsGLB.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
-        is_glb_binfi with
+        isGLB_binfᵢ with
     bot := ⊥
     bot_le := fun s x hx => (mem_bot.mp hx).symm ▸ zero_mem s
     top := ⊤
@@ -753,7 +753,7 @@ theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, cl
   (NonUnitalSubsemiring.gi R).gc.l_supr
 #align non_unital_subsemiring.closure_Union NonUnitalSubsemiring.closure_Union
 
-theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀s) = ⨆ t ∈ s, closure t :=
+theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀ s) = ⨆ t ∈ s, closure t :=
   (NonUnitalSubsemiring.gi R).gc.l_Sup
 #align non_unital_subsemiring.closure_sUnion NonUnitalSubsemiring.closure_sUnion
 

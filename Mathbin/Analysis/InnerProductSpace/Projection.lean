@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,8 +75,8 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
   by
   let δ := ⨅ w : K, ‖u - w‖
   letI : Nonempty K := ne.to_subtype
-  have zero_le_δ : 0 ≤ δ := le_cinfi fun _ => norm_nonneg _
-  have δ_le : ∀ w : K, δ ≤ ‖u - w‖ := cinfi_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
+  have zero_le_δ : 0 ≤ δ := le_cinfᵢ fun _ => norm_nonneg _
+  have δ_le : ∀ w : K, δ ≤ ‖u - w‖ := cinfᵢ_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
   have δ_le' : ∀ w ∈ K, δ ≤ ‖u - w‖ := fun w hw => δ_le ⟨w, hw⟩
   -- Step 1: since `δ` is the infimum, can find a sequence `w : ℕ → K` in `K`
   -- such that `‖u - w n‖ < δ + 1 / (n + 1)` (which implies `‖u - w n‖ --> δ`);
@@ -85,7 +85,7 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
     by
     have hδ : ∀ n : ℕ, δ < δ + 1 / (n + 1) := fun n =>
       lt_add_of_le_of_pos le_rfl Nat.one_div_pos_of_nat
-    have h := fun n => exists_lt_of_cinfi_lt (hδ n)
+    have h := fun n => exists_lt_of_cinfᵢ_lt (hδ n)
     let w : ℕ → K := fun n => Classical.choose (h n)
     exact ⟨w, fun n => Classical.choose_spec (h n)⟩
   rcases exists_seq with ⟨w, hw⟩
@@ -225,12 +225,12 @@ theorem norm_eq_infi_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
       let q := ‖w - v‖ ^ 2
       letI : Nonempty K := ⟨⟨v, hv⟩⟩
       have zero_le_δ : 0 ≤ δ
-      apply le_cinfi
+      apply le_cinfᵢ
       intro
       exact norm_nonneg _
       have δ_le : ∀ w : K, δ ≤ ‖u - w‖
       intro w
-      apply cinfi_le
+      apply cinfᵢ_le
       use (0 : ℝ)
       rintro _ ⟨_, rfl⟩
       exact norm_nonneg _
@@ -304,7 +304,7 @@ theorem norm_eq_infi_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
       intro h
       letI : Nonempty K := ⟨⟨v, hv⟩⟩
       apply le_antisymm
-      · apply le_cinfi
+      · apply le_cinfᵢ
         intro w
         apply nonneg_le_nonneg_of_sq_le_sq (norm_nonneg _)
         have := h w w.2
@@ -322,7 +322,7 @@ theorem norm_eq_infi_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
             rw [this, sq]
           
       · show (⨅ w : K, ‖u - w‖) ≤ (fun w : K => ‖u - w‖) ⟨v, hv⟩
-        apply cinfi_le
+        apply cinfᵢ_le
         use 0
         rintro y ⟨z, rfl⟩
         exact norm_nonneg _)
@@ -945,7 +945,7 @@ theorem orthogonal_projection_tendsto_closure_supr [CompleteSpace E] {ι : Type 
   rw [norm_sub_rev, orthogonal_projection_minimal]
   refine' lt_of_le_of_lt _ hay
   change _ ≤ ‖y - (⟨a, hU hi hI⟩ : U i)‖
-  exact cinfi_le ⟨0, set.forall_range_iff.mpr fun _ => norm_nonneg _⟩ _
+  exact cinfᵢ_le ⟨0, set.forall_range_iff.mpr fun _ => norm_nonneg _⟩ _
 #align orthogonal_projection_tendsto_closure_supr orthogonal_projection_tendsto_closure_supr
 
 /-- Given a monotone family `U` of complete submodules of `E` with dense span supremum,
@@ -1317,7 +1317,7 @@ theorem OrthogonalFamily.is_internal_iff [DecidableEq ι] [FiniteDimensional �
     {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
     DirectSum.IsInternal V ↔ (supᵢ V)ᗮ = ⊥ :=
-  haveI h := FiniteDimensional.properIsROrC 𝕜 ↥(supᵢ V)
+  haveI h := FiniteDimensional.proper_is_R_or_C 𝕜 ↥(supᵢ V)
   hV.is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
 #align orthogonal_family.is_internal_iff OrthogonalFamily.is_internal_iff
 

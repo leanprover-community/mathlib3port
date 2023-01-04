@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_equiv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p :=
   · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.to_finite
   · exact mem_ℓp_infty_iff.mpr (Set.Finite.bdd_above (Set.range fun i : α => ‖f i‖).to_finite)
   · cases nonempty_fintype α
-    exact memℓpGen ⟨finset.univ.sum _, has_sum_fintype _⟩
+    exact mem_ℓp_gen ⟨finset.univ.sum _, has_sum_fintype _⟩
 #align mem_ℓp.all Memℓp.all
 
 variable [Fintype α]
@@ -145,7 +145,7 @@ section NormedAddCommGroup
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as an `add_equiv`. -/
 noncomputable def AddEquiv.lpBcf : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E)
     where
-  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupr (mem_ℓp_infty_iff.mp f.Prop)
+  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupᵢ (mem_ℓp_infty_iff.mp f.Prop)
   invFun f := ⟨f, f.bdd_above_range_norm_comp⟩
   left_inv f := lp.ext rfl
   right_inv f := ext fun x => rfl

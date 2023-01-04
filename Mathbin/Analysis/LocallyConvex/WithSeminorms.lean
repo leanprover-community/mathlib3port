@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -531,8 +531,8 @@ theorem WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded {s : Set E}
   rw [id.def, hs']
   rcases h I with ⟨r', hr', h'⟩
   simp_rw [← (I.sup p).mem_ball_zero] at h'
-  refine' Absorbs.monoRight _ h'
-  exact (Finset.sup I p).ballZeroAbsorbsBallZero hr
+  refine' Absorbs.mono_right _ h'
+  exact (Finset.sup I p).ball_zero_absorbs_ball_zero hr
 #align
   with_seminorms.is_vonN_bounded_iff_finset_seminorm_bounded WithSeminorms.is_vonN_bounded_iff_finset_seminorm_bounded
 

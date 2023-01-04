@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -462,7 +462,7 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
 @[norm_cast]
 theorem coe_Sup (s : Set ℝ≥0) : (↑(supₛ s) : ℝ) = supₛ ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <|
-    @subset_Sup_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
+    @subset_supₛ_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
       (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Sup Nnreal.coe_Sup
 
@@ -474,7 +474,7 @@ theorem coe_supr {ι : Sort _} (s : ι → ℝ≥0) : (↑(⨆ i, s i) : ℝ) = 
 @[norm_cast]
 theorem coe_Inf (s : Set ℝ≥0) : (↑(infₛ s) : ℝ) = infₛ ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <|
-    @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
+    @subset_infₛ_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0)⟩ s <|
       (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 #align nnreal.coe_Inf Nnreal.coe_Inf
 
@@ -499,15 +499,15 @@ example : Archimedean ℝ≥0 := by infer_instance
 
 -- TODO: why are these three instances necessary? why aren't they inferred?
 instance covariant_add : CovariantClass ℝ≥0 ℝ≥0 (· + ·) (· ≤ ·) :=
-  OrderedAddCommMonoid.to_CovariantClass_left ℝ≥0
+  OrderedAddCommMonoid.to_covariantClass_left ℝ≥0
 #align nnreal.covariant_add Nnreal.covariant_add
 
 instance contravariant_add : ContravariantClass ℝ≥0 ℝ≥0 (· + ·) (· < ·) :=
-  OrderedCancelAddCommMonoid.to_ContravariantClass_left ℝ≥0
+  OrderedCancelAddCommMonoid.to_contravariantClass_left ℝ≥0
 #align nnreal.contravariant_add Nnreal.contravariant_add
 
 instance covariant_mul : CovariantClass ℝ≥0 ℝ≥0 (· * ·) (· ≤ ·) :=
-  OrderedCommMonoid.to_CovariantClass_left ℝ≥0
+  OrderedCommMonoid.to_covariantClass_left ℝ≥0
 #align nnreal.covariant_mul Nnreal.covariant_mul
 
 -- Why isn't `nnreal.contravariant_add` inferred?
@@ -1058,25 +1058,25 @@ variable [Nonempty ι]
 theorem le_mul_infi {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, a ≤ g * h j) : a ≤ g * infᵢ h :=
   by
   rw [mul_infi]
-  exact le_cinfi H
+  exact le_cinfᵢ H
 #align nnreal.le_mul_infi Nnreal.le_mul_infi
 
 theorem mul_supr_le {a : ℝ≥0} {g : ℝ≥0} {h : ι → ℝ≥0} (H : ∀ j, g * h j ≤ a) : g * supᵢ h ≤ a :=
   by
   rw [mul_supr]
-  exact csupr_le H
+  exact csupᵢ_le H
 #align nnreal.mul_supr_le Nnreal.mul_supr_le
 
 theorem le_infi_mul {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, a ≤ g i * h) : a ≤ infᵢ g * h :=
   by
   rw [infi_mul]
-  exact le_cinfi H
+  exact le_cinfᵢ H
 #align nnreal.le_infi_mul Nnreal.le_infi_mul
 
 theorem supr_mul_le {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ i, g i * h ≤ a) : supᵢ g * h ≤ a :=
   by
   rw [supr_mul]
-  exact csupr_le H
+  exact csupᵢ_le H
 #align nnreal.supr_mul_le Nnreal.supr_mul_le
 
 theorem le_infi_mul_infi {a : ℝ≥0} {g h : ι → ℝ≥0} (H : ∀ i j, a ≤ g i * h j) :

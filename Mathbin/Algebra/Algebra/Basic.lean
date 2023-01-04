@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -813,7 +813,7 @@ instance int_algebra_subsingleton : Subsingleton (Algebra ℤ R) :=
 
 end Int
 
-namespace NoZeroSmulDivisors
+namespace NoZeroSMulDivisors
 
 variable {R A : Type _}
 
@@ -825,50 +825,50 @@ open Algebra
 Cannot be an instance because there is no `injective (algebra_map R A)` typeclass.
 -/
 theorem of_algebra_map_injective [CommSemiring R] [Semiring A] [Algebra R A] [NoZeroDivisors A]
-    (h : Function.Injective (algebraMap R A)) : NoZeroSmulDivisors R A :=
+    (h : Function.Injective (algebraMap R A)) : NoZeroSMulDivisors R A :=
   ⟨fun c x hcx =>
     (mul_eq_zero.mp ((smul_def c x).symm.trans hcx)).imp_left
       (map_eq_zero_iff (algebraMap R A) h).mp⟩
-#align no_zero_smul_divisors.of_algebra_map_injective NoZeroSmulDivisors.of_algebra_map_injective
+#align no_zero_smul_divisors.of_algebra_map_injective NoZeroSMulDivisors.of_algebra_map_injective
 
 variable (R A)
 
 theorem algebra_map_injective [CommRing R] [Ring A] [Nontrivial A] [Algebra R A]
-    [NoZeroSmulDivisors R A] : Function.Injective (algebraMap R A) :=
+    [NoZeroSMulDivisors R A] : Function.Injective (algebraMap R A) :=
   suffices Function.Injective fun c : R => c • (1 : A)
     by
     convert this
     ext
     rw [Algebra.smul_def, mul_one]
   smul_left_injective R one_ne_zero
-#align no_zero_smul_divisors.algebra_map_injective NoZeroSmulDivisors.algebra_map_injective
+#align no_zero_smul_divisors.algebra_map_injective NoZeroSMulDivisors.algebra_map_injective
 
 theorem NeZero.of_no_zero_smul_divisors (n : ℕ) [CommRing R] [NeZero (n : R)] [Ring A]
-    [Nontrivial A] [Algebra R A] [NoZeroSmulDivisors R A] : NeZero (n : A) :=
-  NeZero.nat_of_injective <| NoZeroSmulDivisors.algebra_map_injective R A
+    [Nontrivial A] [Algebra R A] [NoZeroSMulDivisors R A] : NeZero (n : A) :=
+  NeZero.nat_of_injective <| NoZeroSMulDivisors.algebra_map_injective R A
 #align ne_zero.of_no_zero_smul_divisors NeZero.of_no_zero_smul_divisors
 
 variable {R A}
 
 theorem iff_algebra_map_injective [CommRing R] [Ring A] [IsDomain A] [Algebra R A] :
-    NoZeroSmulDivisors R A ↔ Function.Injective (algebraMap R A) :=
-  ⟨@NoZeroSmulDivisors.algebra_map_injective R A _ _ _ _,
-    NoZeroSmulDivisors.of_algebra_map_injective⟩
-#align no_zero_smul_divisors.iff_algebra_map_injective NoZeroSmulDivisors.iff_algebra_map_injective
+    NoZeroSMulDivisors R A ↔ Function.Injective (algebraMap R A) :=
+  ⟨@NoZeroSMulDivisors.algebra_map_injective R A _ _ _ _,
+    NoZeroSMulDivisors.of_algebra_map_injective⟩
+#align no_zero_smul_divisors.iff_algebra_map_injective NoZeroSMulDivisors.iff_algebra_map_injective
 
 -- see note [lower instance priority]
 instance (priority := 100) CharZero.no_zero_smul_divisors_nat [Semiring R] [NoZeroDivisors R]
-    [CharZero R] : NoZeroSmulDivisors ℕ R :=
-  NoZeroSmulDivisors.of_algebra_map_injective <| (algebraMap ℕ R).injective_nat
+    [CharZero R] : NoZeroSMulDivisors ℕ R :=
+  NoZeroSMulDivisors.of_algebra_map_injective <| (algebraMap ℕ R).injective_nat
 #align
-  no_zero_smul_divisors.char_zero.no_zero_smul_divisors_nat NoZeroSmulDivisors.CharZero.no_zero_smul_divisors_nat
+  no_zero_smul_divisors.char_zero.no_zero_smul_divisors_nat NoZeroSMulDivisors.CharZero.no_zero_smul_divisors_nat
 
 -- see note [lower instance priority]
 instance (priority := 100) CharZero.no_zero_smul_divisors_int [Ring R] [NoZeroDivisors R]
-    [CharZero R] : NoZeroSmulDivisors ℤ R :=
-  NoZeroSmulDivisors.of_algebra_map_injective <| (algebraMap ℤ R).injective_int
+    [CharZero R] : NoZeroSMulDivisors ℤ R :=
+  NoZeroSMulDivisors.of_algebra_map_injective <| (algebraMap ℤ R).injective_int
 #align
-  no_zero_smul_divisors.char_zero.no_zero_smul_divisors_int NoZeroSmulDivisors.CharZero.no_zero_smul_divisors_int
+  no_zero_smul_divisors.char_zero.no_zero_smul_divisors_int NoZeroSMulDivisors.CharZero.no_zero_smul_divisors_int
 
 section Field
 
@@ -876,14 +876,14 @@ variable [Field R] [Semiring A] [Algebra R A]
 
 -- see note [lower instance priority]
 instance (priority := 100) Algebra.no_zero_smul_divisors [Nontrivial A] [NoZeroDivisors A] :
-    NoZeroSmulDivisors R A :=
-  NoZeroSmulDivisors.of_algebra_map_injective (algebraMap R A).Injective
+    NoZeroSMulDivisors R A :=
+  NoZeroSMulDivisors.of_algebra_map_injective (algebraMap R A).Injective
 #align
-  no_zero_smul_divisors.algebra.no_zero_smul_divisors NoZeroSmulDivisors.Algebra.no_zero_smul_divisors
+  no_zero_smul_divisors.algebra.no_zero_smul_divisors NoZeroSMulDivisors.Algebra.no_zero_smul_divisors
 
 end Field
 
-end NoZeroSmulDivisors
+end NoZeroSMulDivisors
 
 section IsScalarTower
 
@@ -909,20 +909,20 @@ theorem int_cast_smul {k V : Type _} [CommRing k] [AddCommGroup V] [Module k V] 
   algebra_map_smul k r x
 #align int_cast_smul int_cast_smul
 
-theorem NoZeroSmulDivisors.trans (R A M : Type _) [CommRing R] [Ring A] [IsDomain A] [Algebra R A]
-    [AddCommGroup M] [Module R M] [Module A M] [IsScalarTower R A M] [NoZeroSmulDivisors R A]
-    [NoZeroSmulDivisors A M] : NoZeroSmulDivisors R M :=
+theorem NoZeroSMulDivisors.trans (R A M : Type _) [CommRing R] [Ring A] [IsDomain A] [Algebra R A]
+    [AddCommGroup M] [Module R M] [Module A M] [IsScalarTower R A M] [NoZeroSMulDivisors R A]
+    [NoZeroSMulDivisors A M] : NoZeroSMulDivisors R M :=
   by
   refine' ⟨fun r m h => _⟩
   rw [algebra_compatible_smul A r m] at h
   cases' smul_eq_zero.1 h with H H
   · have : Function.Injective (algebraMap R A) :=
-      NoZeroSmulDivisors.iff_algebra_map_injective.1 inferInstance
+      NoZeroSMulDivisors.iff_algebra_map_injective.1 inferInstance
     left
     exact (injective_iff_map_eq_zero _).1 this _ H
   · right
     exact H
-#align no_zero_smul_divisors.trans NoZeroSmulDivisors.trans
+#align no_zero_smul_divisors.trans NoZeroSMulDivisors.trans
 
 variable {A}
 

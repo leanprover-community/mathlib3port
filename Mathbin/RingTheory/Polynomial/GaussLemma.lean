@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.gauss_lemma
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,9 +35,9 @@ variable {R : Type _} [CommRing R] [IsDomain R]
 
 namespace Polynomial
 
-section NormalizedGcdMonoid
+section NormalizedGCDMonoid
 
-variable [NormalizedGcdMonoid R]
+variable [NormalizedGCDMonoid R]
 
 section
 
@@ -203,7 +203,7 @@ theorem IsPrimitive.Int.dvd_iff_map_cast_dvd_map_cast (p q : ℤ[X]) (hp : p.IsP
 #align
   polynomial.is_primitive.int.dvd_iff_map_cast_dvd_map_cast Polynomial.IsPrimitive.Int.dvd_iff_map_cast_dvd_map_cast
 
-end NormalizedGcdMonoid
+end NormalizedGCDMonoid
 
 end Polynomial
 

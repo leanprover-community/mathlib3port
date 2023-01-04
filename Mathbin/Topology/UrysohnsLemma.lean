@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_lemma
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,11 +238,11 @@ theorem tendsto_approx_at_top (c : CU X) (x : X) :
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_at_top
 
 theorem lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.c) : c.lim x = 0 := by
-  simp only [CU.lim, approx_of_mem_C, h, csupr_const]
+  simp only [CU.lim, approx_of_mem_C, h, csupᵢ_const]
 #align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_C
 
 theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
-  simp only [CU.lim, approx_of_nmem_U c _ h, csupr_const]
+  simp only [CU.lim, approx_of_nmem_U c _ h, csupᵢ_const]
 #align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_U
 
 theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
@@ -253,7 +253,7 @@ theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim 
 #align urysohns.CU.lim_eq_midpoint Urysohns.CU.lim_eq_midpoint
 
 theorem approx_le_lim (c : CU X) (x : X) (n : ℕ) : c.approx n x ≤ c.lim x :=
-  le_csupr (c.bdd_above_range_approx x) _
+  le_csupᵢ (c.bdd_above_range_approx x) _
 #align urysohns.CU.approx_le_lim Urysohns.CU.approx_le_lim
 
 theorem lim_nonneg (c : CU X) (x : X) : 0 ≤ c.lim x :=
@@ -261,7 +261,7 @@ theorem lim_nonneg (c : CU X) (x : X) : 0 ≤ c.lim x :=
 #align urysohns.CU.lim_nonneg Urysohns.CU.lim_nonneg
 
 theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
-  csupr_le fun n => c.approx_le_one _ _
+  csupᵢ_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
 theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=

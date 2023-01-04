@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.measure.finite_measure
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -448,7 +448,7 @@ theorem test_against_nn_lipschitz_estimate (μ : FiniteMeasure Ω) (f g : Ω →
 #align
   measure_theory.finite_measure.test_against_nn_lipschitz_estimate MeasureTheory.FiniteMeasure.test_against_nn_lipschitz_estimate
 
-theorem testAgainstNnLipschitz (μ : FiniteMeasure Ω) :
+theorem test_against_nn_lipschitz (μ : FiniteMeasure Ω) :
     LipschitzWith μ.mass fun f : Ω →ᵇ ℝ≥0 => μ.testAgainstNn f :=
   by
   rw [lipschitz_with_iff_dist_le_mul]
@@ -468,7 +468,7 @@ theorem testAgainstNnLipschitz (μ : FiniteMeasure Ω) :
     have key := Nnreal.coe_mono key'
     rwa [Nnreal.coe_add, Nnreal.coe_mul] at key
 #align
-  measure_theory.finite_measure.test_against_nn_lipschitz MeasureTheory.FiniteMeasure.testAgainstNnLipschitz
+  measure_theory.finite_measure.test_against_nn_lipschitz MeasureTheory.FiniteMeasure.test_against_nn_lipschitz
 
 /-- Finite measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `measure_theory.finite_measure.test_against_nn`, i.e., integration. -/
@@ -477,7 +477,7 @@ def toWeakDualBcnn (μ : FiniteMeasure Ω) : WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0
   toFun f := μ.testAgainstNn f
   map_add' := test_against_nn_add μ
   map_smul' := test_against_nn_smul μ
-  cont := μ.testAgainstNnLipschitz.Continuous
+  cont := μ.test_against_nn_lipschitz.Continuous
 #align measure_theory.finite_measure.to_weak_dual_bcnn MeasureTheory.FiniteMeasure.toWeakDualBcnn
 
 @[simp]

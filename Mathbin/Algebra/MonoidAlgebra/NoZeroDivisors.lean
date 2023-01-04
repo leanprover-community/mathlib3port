@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.no_zero_divisors
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
           · rw [support_mul_single _ _ (fun y => by rw [mul_one] : ∀ y : R, y * 1 = 0 ↔ _)]
             simpa only [Finset.mem_map, add_right_embedding_apply, add_left_inj, exists_prop,
               exists_eq_right]
-        · haveI : CovariantClass A A (· + ·) (· ≤ ·) := Add.to_CovariantClass_left A
+        · haveI : CovariantClass A A (· + ·) (· ≤ ·) := Add.to_covariantClass_left A
           exact add_le_add_left (Finset.min'_le _ _ cg) _
       · refine' lt_of_le_of_lt (_ : _ ≤ b + gmin) _
         · apply Finset.min'_le
@@ -162,7 +162,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
             simpa only [Finset.mem_map, add_left_embedding_apply, add_right_inj, exists_prop,
               exists_eq_right]
         · haveI : CovariantClass A A (Function.swap (· + ·)) (· ≤ ·) :=
-            Add.to_CovariantClass_right A
+            Add.to_covariantClass_right A
           exact add_le_add_right (Finset.min'_le _ _ bf) _⟩
 #align
   add_monoid_algebra.no_zero_divisors.of_right_ordered AddMonoidAlgebra.NoZeroDivisors.of_right_ordered

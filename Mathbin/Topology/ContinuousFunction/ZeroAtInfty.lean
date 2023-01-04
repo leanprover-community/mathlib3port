@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -409,13 +409,13 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
       (add_le_add (mem_closed_ball.mp <| this x) (mem_closed_ball'.mp <| this y))
 #align zero_at_infty_continuous_map.bounded ZeroAtInftyContinuousMap.bounded
 
-theorem boundedRange (f : C₀(α, β)) : Bounded (range f) :=
+theorem bounded_range (f : C₀(α, β)) : Bounded (range f) :=
   bounded_range_iff.2 f.Bounded
-#align zero_at_infty_continuous_map.bounded_range ZeroAtInftyContinuousMap.boundedRange
+#align zero_at_infty_continuous_map.bounded_range ZeroAtInftyContinuousMap.bounded_range
 
-theorem boundedImage (f : C₀(α, β)) (s : Set α) : Bounded (f '' s) :=
-  f.boundedRange.mono <| image_subset_range _ _
-#align zero_at_infty_continuous_map.bounded_image ZeroAtInftyContinuousMap.boundedImage
+theorem bounded_image (f : C₀(α, β)) (s : Set α) : Bounded (f '' s) :=
+  f.bounded_range.mono <| image_subset_range _ _
+#align zero_at_infty_continuous_map.bounded_image ZeroAtInftyContinuousMap.bounded_image
 
 instance (priority := 100) : BoundedContinuousMapClass F α β :=
   { ‹ZeroAtInftyContinuousMapClass F α β› with
@@ -462,8 +462,8 @@ theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f
 #align
   zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendsto_uniformly
 
-theorem isometryToBcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
-#align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometryToBcf
+theorem isometry_to_bcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
+#align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometry_to_bcf
 
 theorem closed_range_to_bcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ β)) :=
   by
@@ -490,7 +490,7 @@ theorem closed_range_to_bcf : IsClosed (range (toBcf : C₀(α, β) → α →�
 /-- Continuous functions vanishing at infinity taking values in a complete space form a
 complete space. -/
 instance [CompleteSpace β] : CompleteSpace C₀(α, β) :=
-  (complete_space_iff_is_complete_range isometryToBcf.UniformInducing).mpr
+  (complete_space_iff_is_complete_range isometry_to_bcf.UniformInducing).mpr
     closed_range_to_bcf.IsComplete
 
 end Metric

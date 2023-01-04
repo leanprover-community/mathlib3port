@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.succ_pred.linear_locally_finite
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -469,7 +469,7 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
     · rw [Int.toNat_le]
       exact to_Z_iterate_succ_le _
     by_cases hn_max : IsMax ((succ^[↑n]) (⊥ : ι))
-    · rw [← isTop_iff_is_max, isTop_iff_eq_top] at hn_max
+    · rw [← isTop_iff_isMax, isTop_iff_eq_top] at hn_max
       rw [hn_max]
       exact nat.lt_succ_iff.mp (finset.mem_range.mp n.prop)
     · rw [to_Z_iterate_succ_of_not_is_max _ hn_max]

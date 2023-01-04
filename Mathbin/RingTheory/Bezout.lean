@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.bezout
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,8 +98,8 @@ variable (R)
 
 /-- Any bezout domain is a GCD domain. This is not an instance since `gcd_monoid` contains data,
 and this might not be how we would like to construct it. -/
-noncomputable def toGcdDomain [IsDomain R] [DecidableEq R] : GcdMonoid R :=
-  gcdMonoidOfGcd gcd gcd_dvd_left gcd_dvd_right fun _ _ _ => dvd_gcd
+noncomputable def toGcdDomain [IsDomain R] [DecidableEq R] : GCDMonoid R :=
+  gcdMonoidOfGCD gcd gcd_dvd_left gcd_dvd_right fun _ _ _ => dvd_gcd
 #align is_bezout.to_gcd_domain IsBezout.toGcdDomain
 
 end Gcd

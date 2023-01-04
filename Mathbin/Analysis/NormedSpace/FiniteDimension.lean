@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,7 +234,7 @@ theorem LinearMap.exists_antilipschitz_with [FiniteDimensional 𝕜 E] (f : E �
     (hf : f.ker = ⊥) : ∃ K > 0, AntilipschitzWith K f :=
   by
   cases subsingleton_or_nontrivial E
-  · exact ⟨1, zero_lt_one, AntilipschitzWith.ofSubsingleton⟩
+  · exact ⟨1, zero_lt_one, AntilipschitzWith.of_subsingleton⟩
   · rw [LinearMap.ker_eq_bot] at hf
     let e : E ≃L[𝕜] f.range := (LinearEquiv.ofInjective f hf).toContinuousLinearEquiv
     exact ⟨_, e.nnnorm_symm_pos, e.antilipschitz⟩
@@ -256,7 +256,7 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
     push_cast
     exact hg
   rw [LinearMap.ker_eq_bot]
-  refine' (hK.add_sub_lipschitz_with (LipschitzWith.ofDistLeMul fun v u => _) hg).Injective
+  refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).Injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply,
     LinearMap.comp_apply, LinearMap.proj_apply, LinearMap.smul_right_apply, LinearMap.id_apply, ←
     Finset.sum_sub_distrib, ← smul_sub, ← sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
@@ -704,10 +704,10 @@ end ProperField
 
 /- Over the real numbers, we can register the previous statement as an instance as it will not
 cause problems in instance resolution since the properness of `ℝ` is already known. -/
-instance (priority := 900) FiniteDimensional.properReal (E : Type u) [NormedAddCommGroup E]
+instance (priority := 900) FiniteDimensional.proper_real (E : Type u) [NormedAddCommGroup E]
     [NormedSpace ℝ E] [FiniteDimensional ℝ E] : ProperSpace E :=
   FiniteDimensional.proper ℝ E
-#align finite_dimensional.proper_real FiniteDimensional.properReal
+#align finite_dimensional.proper_real FiniteDimensional.proper_real
 
 /-- If `E` is a finite dimensional normed real vector space, `x : E`, and `s` is a neighborhood of
 `x` that is not equal to the whole space, then there exists a point `y ∈ frontier s` at distance

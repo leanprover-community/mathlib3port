@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.partition_of_unity
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -513,11 +513,11 @@ theorem sum_to_partition_of_unity_eq (x : X) :
   f.sum_to_pou_fun_eq x
 #align bump_covering.sum_to_partition_of_unity_eq BumpCovering.sum_to_partition_of_unity_eq
 
-theorem IsSubordinate.toPartitionOfUnity {f : BumpCovering ι X s} {U : ι → Set X}
+theorem IsSubordinate.to_partition_of_unity {f : BumpCovering ι X s} {U : ι → Set X}
     (h : f.IsSubordinate U) : f.toPartitionOfUnity.IsSubordinate U := fun i =>
   Subset.trans (closure_mono <| f.support_to_partition_of_unity_subset i) (h i)
 #align
-  bump_covering.is_subordinate.to_partition_of_unity BumpCovering.IsSubordinate.toPartitionOfUnity
+  bump_covering.is_subordinate.to_partition_of_unity BumpCovering.IsSubordinate.to_partition_of_unity
 
 end BumpCovering
 

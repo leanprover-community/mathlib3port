@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,11 +139,11 @@ theorem is_lower_set_Union₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowe
   is_lower_set_Union fun i => is_lower_set_Union <| hf i
 #align is_lower_set_Union₂ is_lower_set_Union₂
 
-theorem is_upper_set_sUnion {S : Set (Set α)} (hf : ∀ s ∈ S, IsUpperSet s) : IsUpperSet (⋃₀S) :=
+theorem is_upper_set_sUnion {S : Set (Set α)} (hf : ∀ s ∈ S, IsUpperSet s) : IsUpperSet (⋃₀ S) :=
   fun a b h => Exists₂Cat.imp fun s hs => hf s hs h
 #align is_upper_set_sUnion is_upper_set_sUnion
 
-theorem is_lower_set_sUnion {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : IsLowerSet (⋃₀S) :=
+theorem is_lower_set_sUnion {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : IsLowerSet (⋃₀ S) :=
   fun a b h => Exists₂Cat.imp fun s hs => hf s hs h
 #align is_lower_set_sUnion is_lower_set_sUnion
 
@@ -1680,12 +1680,12 @@ theorem lower_closure_Union (f : ι → Set α) : lowerClosure (⋃ i, f i) = �
 #align lower_closure_Union lower_closure_Union
 
 @[simp]
-theorem upper_closure_sUnion (S : Set (Set α)) : upperClosure (⋃₀S) = ⨅ s ∈ S, upperClosure s := by
+theorem upper_closure_sUnion (S : Set (Set α)) : upperClosure (⋃₀ S) = ⨅ s ∈ S, upperClosure s := by
   simp_rw [sUnion_eq_bUnion, upper_closure_Union]
 #align upper_closure_sUnion upper_closure_sUnion
 
 @[simp]
-theorem lower_closure_sUnion (S : Set (Set α)) : lowerClosure (⋃₀S) = ⨆ s ∈ S, lowerClosure s := by
+theorem lower_closure_sUnion (S : Set (Set α)) : lowerClosure (⋃₀ S) = ⨆ s ∈ S, lowerClosure s := by
   simp_rw [sUnion_eq_bUnion, lower_closure_Union]
 #align lower_closure_sUnion lower_closure_sUnion
 

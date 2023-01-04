@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.isocrystal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,11 +90,11 @@ def FractionRing.frobeniusRingHom : K(p, k) →+* K(p, k) :=
 scoped[Isocrystal] notation "φ(" p ", " k ")" => WittVector.FractionRing.frobeniusRingHom p k
 
 instance inv_pair₁ : RingHomInvPair φ(p, k) _ :=
-  RingHomInvPair.of_ring_equiv (FractionRing.frobenius p k)
+  RingHomInvPair.of_ringEquiv (FractionRing.frobenius p k)
 #align witt_vector.inv_pair₁ WittVector.inv_pair₁
 
 instance inv_pair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, k) →+* K(p, k)) _ :=
-  RingHomInvPair.of_ring_equiv (FractionRing.frobenius p k).symm
+  RingHomInvPair.of_ringEquiv (FractionRing.frobenius p k).symm
 #align witt_vector.inv_pair₂ WittVector.inv_pair₂
 
 -- mathport name: frobenius_ring_hom.linear_map

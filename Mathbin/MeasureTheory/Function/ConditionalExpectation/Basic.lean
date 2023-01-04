@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -524,13 +524,13 @@ theorem Lp_meas_subgroup_to_Lp_trim_norm_map [hp : Fact (1 ≤ p)] (hm : m ≤ m
 #align
   measure_theory.Lp_meas_subgroup_to_Lp_trim_norm_map MeasureTheory.Lp_meas_subgroup_to_Lp_trim_norm_map
 
-theorem isometryLpMeasSubgroupToLpTrim [hp : Fact (1 ≤ p)] (hm : m ≤ m0) :
+theorem isometry_Lp_meas_subgroup_to_Lp_trim [hp : Fact (1 ≤ p)] (hm : m ≤ m0) :
     Isometry (lpMeasSubgroupToLpTrim F p μ hm) :=
-  Isometry.ofDistEq fun f g => by
+  Isometry.of_dist_eq fun f g => by
     rw [dist_eq_norm, ← Lp_meas_subgroup_to_Lp_trim_sub, Lp_meas_subgroup_to_Lp_trim_norm_map,
       dist_eq_norm]
 #align
-  measure_theory.isometry_Lp_meas_subgroup_to_Lp_trim MeasureTheory.isometryLpMeasSubgroupToLpTrim
+  measure_theory.isometry_Lp_meas_subgroup_to_Lp_trim MeasureTheory.isometry_Lp_meas_subgroup_to_Lp_trim
 
 variable (F p μ)
 
@@ -542,7 +542,7 @@ def lpMeasSubgroupToLpTrimIso [hp : Fact (1 ≤ p)] (hm : m ≤ m0) :
   invFun := lpTrimToLpMeasSubgroup F p μ hm
   left_inv := Lp_meas_subgroup_to_Lp_trim_left_inv hm
   right_inv := Lp_meas_subgroup_to_Lp_trim_right_inv hm
-  isometryToFun := isometryLpMeasSubgroupToLpTrim hm
+  isometry_to_fun := isometry_Lp_meas_subgroup_to_Lp_trim hm
 #align measure_theory.Lp_meas_subgroup_to_Lp_trim_iso MeasureTheory.lpMeasSubgroupToLpTrimIso
 
 variable (𝕜)

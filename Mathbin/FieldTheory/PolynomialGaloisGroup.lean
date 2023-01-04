@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.polynomial_galois_group
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -366,7 +366,7 @@ variable {p q}
 /-- For a separable polynomial, its Galois group has cardinality
 equal to the dimension of its splitting field over `F`. -/
 theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.SplittingField :=
-  haveI : IsGalois F p.splitting_field := IsGalois.ofSeparableSplittingField hp
+  haveI : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
   IsGalois.card_aut_eq_finrank F p.splitting_field
 #align polynomial.gal.card_of_separable Polynomial.Gal.card_of_separable
 

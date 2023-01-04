@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.unique_factorization_domain
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,9 +181,9 @@ class UniqueFactorizationMonoid (α : Type _) [CancelCommMonoidWithZero α] exte
 
 /-- Can't be an instance because it would cause a loop `ufm → wf_dvd_monoid → ufm → ...`. -/
 @[reducible]
-theorem ufm_of_gcd_of_wf_dvd_monoid [CancelCommMonoidWithZero α] [WfDvdMonoid α] [GcdMonoid α] :
+theorem ufm_of_gcd_of_wf_dvd_monoid [CancelCommMonoidWithZero α] [WfDvdMonoid α] [GCDMonoid α] :
     UniqueFactorizationMonoid α :=
-  { ‹WfDvdMonoid α› with irreducible_iff_prime := fun _ => GcdMonoid.irreducible_iff_prime }
+  { ‹WfDvdMonoid α› with irreducible_iff_prime := fun _ => GCDMonoid.irreducible_iff_prime }
 #align ufm_of_gcd_of_wf_dvd_monoid ufm_of_gcd_of_wf_dvd_monoid
 
 instance Associates.ufm [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α] :
@@ -2062,7 +2062,7 @@ theorem Associates.quot_out {α : Type _} [CommMonoid α] (a : Associates α) :
 
 /-- `to_gcd_monoid` constructs a GCD monoid out of a unique factorization domain. -/
 noncomputable def UniqueFactorizationMonoid.toGcdMonoid (α : Type _) [CancelCommMonoidWithZero α]
-    [UniqueFactorizationMonoid α] [DecidableEq (Associates α)] [DecidableEq α] : GcdMonoid α
+    [UniqueFactorizationMonoid α] [DecidableEq (Associates α)] [DecidableEq α] : GCDMonoid α
     where
   gcd a b := Quot.out (Associates.mk a ⊓ Associates.mk b : Associates α)
   lcm a b := Quot.out (Associates.mk a ⊔ Associates.mk b : Associates α)
@@ -2096,7 +2096,7 @@ noncomputable def UniqueFactorizationMonoid.toGcdMonoid (α : Type _) [CancelCom
   unique factorization domain. -/
 noncomputable def UniqueFactorizationMonoid.toNormalizedGcdMonoid (α : Type _)
     [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α] [NormalizationMonoid α]
-    [DecidableEq (Associates α)] [DecidableEq α] : NormalizedGcdMonoid α :=
+    [DecidableEq (Associates α)] [DecidableEq α] : NormalizedGCDMonoid α :=
   {
     ‹NormalizationMonoid
         α› with

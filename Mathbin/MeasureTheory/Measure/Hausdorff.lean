@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.hausdorff
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,7 +157,7 @@ theorem finset_Union_of_pairwise_separated (hm : IsMetric μ) {I : Finset ι} {s
     simp only [Finset.mem_insert] at hI
     rw [Finset.set_bUnion_insert, hm, ihI, Finset.sum_insert hiI]
     exacts[fun i hi j hj hij => hI i (Or.inr hi) j (Or.inr hj) hij,
-      IsMetricSeparated.finsetUnionRight fun j hj =>
+      IsMetricSeparated.finset_Union_right fun j hj =>
         hI i (Or.inl rfl) j (Or.inr hj) (ne_of_mem_of_not_mem hj hiI).symm]
 #align
   measure_theory.outer_measure.is_metric.finset_Union_of_pairwise_separated MeasureTheory.OuterMeasure.IsMetric.finset_Union_of_pairwise_separated
@@ -353,7 +353,7 @@ theorem trim_pre [MeasurableSpace X] [OpensMeasurableSpace X] (m : Set X → ℝ
 end MkMetric'
 
 /-- An outer measure constructed using `outer_measure.mk_metric'` is a metric outer measure. -/
-theorem mkMetric'IsMetric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :=
+theorem mk_metric'_is_metric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :=
   by
   rintro s t ⟨r, r0, hr⟩
   refine'
@@ -367,7 +367,7 @@ theorem mkMetric'IsMetric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :=
   have : ε < diam u := εr.trans_le ((hr x hxs y hyt).trans <| edist_le_diam_of_mem hxu hyu)
   exact infᵢ_eq_top.2 fun h => (this.not_le h).elim
 #align
-  measure_theory.outer_measure.mk_metric'_is_metric MeasureTheory.OuterMeasure.mkMetric'IsMetric
+  measure_theory.outer_measure.mk_metric'_is_metric MeasureTheory.OuterMeasure.mk_metric'_is_metric
 
 /-- If `c ∉ {0, ∞}` and `m₁ d ≤ c * m₂ d` for `d < ε` for some `ε > 0`
 (we use `≤ᶠ[𝓝[≥] 0]` to state this), then `mk_metric m₁ hm₁ ≤ c • mk_metric m₂ hm₂`. -/
@@ -412,7 +412,7 @@ theorem isometry_comap_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (
     simp only [extend, le_infᵢ_iff]
     intro ht
     apply le_trans _ (h_mono (diam_mono hst))
-    simp only [(diam_mono hst).trans ht, le_refl, cinfi_pos]
+    simp only [(diam_mono hst).trans ht, le_refl, cinfᵢ_pos]
 #align
   measure_theory.outer_measure.isometry_comap_mk_metric MeasureTheory.OuterMeasure.isometry_comap_mk_metric
 
@@ -467,14 +467,14 @@ variable [MeasurableSpace X] [BorelSpace X]
 over `r > 0`, where `μ r` is the maximal outer measure `μ` such that `μ s ≤ m s`
 for all `s`. While each `μ r` is an *outer* measure, the supremum is a measure. -/
 def mkMetric' (m : Set X → ℝ≥0∞) : Measure X :=
-  (OuterMeasure.mkMetric' m).toMeasure (OuterMeasure.mkMetric'IsMetric _).le_caratheodory
+  (OuterMeasure.mkMetric' m).toMeasure (OuterMeasure.mk_metric'_is_metric _).le_caratheodory
 #align measure_theory.measure.mk_metric' MeasureTheory.Measure.mkMetric'
 
 /-- Given a function `m : ℝ≥0∞ → ℝ≥0∞`, `mk_metric m` is the supremum of `μ r` over `r > 0`, where
 `μ r` is the maximal outer measure `μ` such that `μ s ≤ m s` for all sets `s` that contain at least
 two points. While each `mk_metric'.pre` is an *outer* measure, the supremum is a measure. -/
 def mkMetric (m : ℝ≥0∞ → ℝ≥0∞) : Measure X :=
-  (OuterMeasure.mkMetric m).toMeasure (OuterMeasure.mkMetric'IsMetric _).le_caratheodory
+  (OuterMeasure.mkMetric m).toMeasure (OuterMeasure.mk_metric'_is_metric _).le_caratheodory
 #align measure_theory.measure.mk_metric MeasureTheory.Measure.mkMetric
 
 @[simp]
@@ -729,7 +729,7 @@ theorem hausdorff_measure_zero_singleton (x : X) : μH[0] ({x} : Set X) = 1 :=
     rcases mem_Union.1 (hst (mem_singleton x)) with ⟨m, hm⟩
     have A : (t m).Nonempty := ⟨x, hm⟩
     calc
-      (1 : ℝ≥0∞) = ⨆ h : (t m).Nonempty, 1 := by simp only [A, csupr_pos]
+      (1 : ℝ≥0∞) = ⨆ h : (t m).Nonempty, 1 := by simp only [A, csupᵢ_pos]
       _ ≤ ∑' n, ⨆ h : (t n).Nonempty, 1 := Ennreal.le_tsum _
       
 #align
@@ -933,7 +933,7 @@ theorem hausdorff_measure_image_le (h : HolderOnWith C r f s) (hr : 0 < r) {d : 
     · apply Ennreal.tsum_le_tsum fun n => _
       simp only [supᵢ_le_iff, nonempty_image_iff]
       intro hft
-      simp only [nonempty.mono ((t n).inter_subset_left s) hft, csupr_pos]
+      simp only [nonempty.mono ((t n).inter_subset_left s) hft, csupᵢ_pos]
       rw [Ennreal.rpow_mul, ← Ennreal.mul_rpow_of_nonneg _ _ hd]
       exact Ennreal.rpow_le_rpow (h.ediam_image_inter_le _) hd
 #align holder_on_with.hausdorff_measure_image_le HolderOnWith.hausdorff_measure_image_le
@@ -1004,7 +1004,7 @@ theorem hausdorff_measure_preimage_le (hf : AntilipschitzWith K f) (hd : 0 ≤ d
   refine' infᵢ₂_le_of_le _ hst (infᵢ_le_of_le (fun n => _) _)
   · exact (hf.ediam_preimage_le _).trans (Ennreal.mul_le_of_le_div' <| htε n)
   · refine' Ennreal.tsum_le_tsum fun n => supᵢ_le_iff.2 fun hft => _
-    simp only [nonempty_of_nonempty_preimage hft, csupr_pos]
+    simp only [nonempty_of_nonempty_preimage hft, csupᵢ_pos]
     rw [← Ennreal.mul_rpow_of_nonneg _ _ hd]
     exact Ennreal.rpow_le_rpow (hf.ediam_preimage_le _) hd
 #align

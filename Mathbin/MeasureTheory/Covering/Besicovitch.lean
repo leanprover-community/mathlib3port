@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -320,7 +320,7 @@ theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
   have A : ∀ z : β, p.c z ∈ p.Union_up_to p.last_step ∨ p.τ * p.r z < p.R p.last_step :=
     by
     have : p.last_step ∈ { i | ¬∃ b : β, p.c b ∉ p.Union_up_to i ∧ p.R i ≤ p.τ * p.r b } :=
-      Inf_mem p.last_step_nonempty
+      cinfₛ_mem p.last_step_nonempty
     simpa only [not_exists, mem_set_of_eq, not_and_or, not_le, not_not_mem]
   by_contra
   rcases A x with (H | H)
@@ -335,7 +335,7 @@ theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
     ∃ y : β, p.c y ∉ p.Union_up_to p.last_step ∧ p.τ⁻¹ * p.R p.last_step < p.r y :=
     by
     simpa only [exists_prop, mem_range, exists_exists_and_eq_and, Subtype.exists,
-      Subtype.coe_mk] using exists_lt_of_lt_cSup _ B
+      Subtype.coe_mk] using exists_lt_of_lt_csupₛ _ B
     rw [← image_univ, nonempty_image_iff]
     exact ⟨⟨_, h⟩, mem_univ _⟩
   rcases A y with (Hy | Hy)
@@ -372,7 +372,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     exact (IH j ji (ji.trans hi)).ne'
   suffices Inf (univ \ A) ≠ N
     by
-    rcases(cInf_le (OrderBot.bddBelow (univ \ A)) N_mem).lt_or_eq with (H | H)
+    rcases(cinfₛ_le (OrderBot.bddBelow (univ \ A)) N_mem).lt_or_eq with (H | H)
     · exact H
     · exact (this H).elim
   intro Inf_eq_N
@@ -426,7 +426,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
     rw [this]
     have : ∃ t, p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t := by
       simpa only [not_exists, exists_prop, not_and, not_lt, not_le, mem_set_of_eq, not_forall] using
-        not_mem_of_lt_cInf (G_lt_last n hn) (OrderBot.bddBelow _)
+        not_mem_of_lt_cinfₛ (G_lt_last n hn) (OrderBot.bddBelow _)
     exact Classical.epsilon_spec this
   -- the balls with indices `G k` satisfy the characteristic property of satellite configurations.
   have Gab :
@@ -449,7 +449,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
         intro H
         exact (fGn b hb).1 (p.monotone_Union_up_to G_lt.le H)
       let b' : { t // p.c t ∉ p.Union_up_to (G a) } := ⟨p.index (G b), B⟩
-      apply @le_csupr _ _ _ (fun t : { t // p.c t ∉ p.Union_up_to (G a) } => p.r t) _ b'
+      apply @le_csupᵢ _ _ _ (fun t : { t // p.c t ∉ p.Union_up_to (G a) } => p.r t) _ b'
       refine' ⟨p.r_bound, fun t ht => _⟩
       simp only [exists_prop, mem_range, Subtype.exists, Subtype.coe_mk] at ht
       rcases ht with ⟨u, hu⟩
@@ -547,7 +547,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
     have color_j : p.color jy = Inf (univ \ A) := by rw [tau_package.color]
     have : p.color jy ∈ univ \ A := by
       rw [color_j]
-      apply Inf_mem
+      apply cinfₛ_mem
       refine' ⟨N, _⟩
       simp only [not_exists, true_and_iff, exists_prop, mem_Union, mem_singleton_iff, not_and,
         mem_univ, mem_diff, Subtype.exists, Subtype.coe_mk]

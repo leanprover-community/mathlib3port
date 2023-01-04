@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_independent
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -464,7 +464,7 @@ theorem linear_independent_Union_of_directed {η : Type _} {s : η → Set M} (h
 
 theorem linear_independent_sUnion_of_directed {s : Set (Set M)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, LinearIndependent R (fun x => x : (a : Set M) → M)) :
-    LinearIndependent R (fun x => x : ⋃₀s → M) := by
+    LinearIndependent R (fun x => x : ⋃₀ s → M) := by
   rw [sUnion_eq_Union] <;>
     exact linear_independent_Union_of_directed hs.directed_coe (by simpa using h)
 #align linear_independent_sUnion_of_directed linear_independent_sUnion_of_directed
@@ -1155,7 +1155,7 @@ section Nontrivial
 
 variable [Ring R] [Nontrivial R] [AddCommGroup M] [AddCommGroup M']
 
-variable [Module R M] [NoZeroSmulDivisors R M] [Module R M']
+variable [Module R M] [NoZeroSMulDivisors R M] [Module R M']
 
 variable {v : ι → M} {s t : Set M} {x y z : M}
 
@@ -1329,7 +1329,7 @@ theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s �
     apply hn
     rw [← h _ ⟨insert_subset.2 ⟨xt, bt⟩, bi.insert hn⟩ (subset_insert _ _)]
     exact subset_span (mem_insert _ _)
-  · refine' fun c hc cc c0 => ⟨⋃₀c, ⟨_, _⟩, fun x => _⟩
+  · refine' fun c hc cc c0 => ⟨⋃₀ c, ⟨_, _⟩, fun x => _⟩
     · exact sUnion_subset fun x xc => (hc xc).1
     · exact linear_independent_sUnion_of_directed cc.directed_on fun x xc => (hc xc).2
     · exact subset_sUnion_of_mem

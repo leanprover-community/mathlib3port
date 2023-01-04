@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.theta
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,14 +94,17 @@ theorem IsTheta.trans_is_O {f : α → E} {g : α → F'} {k : α → G} (h₁ :
 #align asymptotics.is_Theta.trans_is_O Asymptotics.IsTheta.trans_is_O
 
 /- warning: asymptotics.is_o.trans_is_Theta clashes with asymptotics.is_O.trans_is_Theta -> Asymptotics.IsO.trans_is_Theta
+warning: asymptotics.is_o.trans_is_Theta -> Asymptotics.IsO.trans_is_Theta is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G' : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_6 : SeminormedAddCommGroup.{u4} G'] {l : Filter.{u1} α} {f : α -> E} {g : α -> F} {k : α -> G'}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsTheta.{u1, u3, u4} α F G' _inst_2 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l g k) -> (Asymptotics.IsO.{u1, u2, u4} α E G' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l f k)
+but is expected to have type
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G' : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_6 : SeminormedAddCommGroup.{u4} G'] {l : Filter.{u1} α} {f : α -> E} {g : α -> G'} {k : α -> F}, (Asymptotics.IsO.{u1, u2, u4} α E G' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l f g) -> (Asymptotics.IsTheta.{u1, u4, u3} α G' F (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) _inst_2 l g k) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f k)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans_is_Theta Asymptotics.IsO.trans_is_Thetaₓ'. -/
-#print Asymptotics.IsO.trans_is_Theta /-
 @[trans]
 theorem IsO.trans_is_Theta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g) (h₂ : g =Θ[l] k) :
     f =o[l] k :=
   h₁.trans_is_O h₂.1
 #align asymptotics.is_o.trans_is_Theta Asymptotics.IsO.trans_is_Theta
--/
 
 @[trans]
 theorem IsTheta.trans_is_o {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =o[l] k) :

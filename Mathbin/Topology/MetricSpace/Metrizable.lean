@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,10 +41,10 @@ class PseudoMetrizableSpace (X : Type _) [t : TopologicalSpace X] : Prop where
   exists_pseudo_metric : ∃ m : PseudoMetricSpace X, m.toUniformSpace.toTopologicalSpace = t
 #align topological_space.pseudo_metrizable_space TopologicalSpace.PseudoMetrizableSpace
 
-instance (priority := 100) PseudoMetricSpace.toPseudoMetrizableSpace {X : Type _}
+instance (priority := 100) PseudoMetricSpace.to_pseudo_metrizable_space {X : Type _}
     [m : PseudoMetricSpace X] : PseudoMetrizableSpace X :=
   ⟨⟨m, rfl⟩⟩
-#align pseudo_metric_space.to_pseudo_metrizable_space PseudoMetricSpace.toPseudoMetrizableSpace
+#align pseudo_metric_space.to_pseudo_metrizable_space PseudoMetricSpace.to_pseudo_metrizable_space
 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
 noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpace X]
@@ -53,21 +53,21 @@ noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpa
 #align
   topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
 
-instance pseudoMetrizableSpaceProd [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
+instance pseudo_metrizable_space_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
     PseudoMetrizableSpace (X × Y) :=
   by
   letI : PseudoMetricSpace X := pseudo_metrizable_space_pseudo_metric X
   letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
   infer_instance
-#align topological_space.pseudo_metrizable_space_prod TopologicalSpace.pseudoMetrizableSpaceProd
+#align topological_space.pseudo_metrizable_space_prod TopologicalSpace.pseudo_metrizable_space_prod
 
 /-- Given an inducing map of a topological space into a pseudo metrizable space, the source space
 is also pseudo metrizable. -/
-theorem Inducing.pseudoMetrizableSpace [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
+theorem Inducing.pseudo_metrizable_space [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
     PseudoMetrizableSpace X :=
   letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
   ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
-#align inducing.pseudo_metrizable_space Inducing.pseudoMetrizableSpace
+#align inducing.pseudo_metrizable_space Inducing.pseudo_metrizable_space
 
 /-- Every pseudo-metrizable space is first countable. -/
 instance (priority := 100) PseudoMetrizableSpace.first_countable_topology
@@ -87,13 +87,13 @@ instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) :
 #align
   topological_space.pseudo_metrizable_space.subtype TopologicalSpace.PseudoMetrizableSpace.subtype
 
-instance pseudoMetrizableSpacePi [∀ i, PseudoMetrizableSpace (π i)] :
+instance pseudo_metrizable_space_pi [∀ i, PseudoMetrizableSpace (π i)] :
     PseudoMetrizableSpace (∀ i, π i) :=
   by
   cases nonempty_fintype ι
   letI := fun i => pseudo_metrizable_space_pseudo_metric (π i)
   infer_instance
-#align topological_space.pseudo_metrizable_space_pi TopologicalSpace.pseudoMetrizableSpacePi
+#align topological_space.pseudo_metrizable_space_pi TopologicalSpace.pseudo_metrizable_space_pi
 
 /-- A topological space is metrizable if there exists a metric space structure compatible with the
 topology. To endow such a space with a compatible distance, use
@@ -102,17 +102,17 @@ class MetrizableSpace (X : Type _) [t : TopologicalSpace X] : Prop where
   exists_metric : ∃ m : MetricSpace X, m.toUniformSpace.toTopologicalSpace = t
 #align topological_space.metrizable_space TopologicalSpace.MetrizableSpace
 
-instance (priority := 100) MetricSpace.toMetrizableSpace {X : Type _} [m : MetricSpace X] :
+instance (priority := 100) MetricSpace.to_metrizable_space {X : Type _} [m : MetricSpace X] :
     MetrizableSpace X :=
   ⟨⟨m, rfl⟩⟩
-#align metric_space.to_metrizable_space MetricSpace.toMetrizableSpace
+#align metric_space.to_metrizable_space MetricSpace.to_metrizable_space
 
-instance (priority := 100) MetrizableSpace.toPseudoMetrizableSpace [h : MetrizableSpace X] :
+instance (priority := 100) MetrizableSpace.to_pseudo_metrizable_space [h : MetrizableSpace X] :
     PseudoMetrizableSpace X :=
   ⟨let ⟨m, hm⟩ := h.1
     ⟨m.toPseudoMetricSpace, hm⟩⟩
 #align
-  topological_space.metrizable_space.to_pseudo_metrizable_space TopologicalSpace.MetrizableSpace.toPseudoMetrizableSpace
+  topological_space.metrizable_space.to_pseudo_metrizable_space TopologicalSpace.MetrizableSpace.to_pseudo_metrizable_space
 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
 noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : MetrizableSpace X] :
@@ -126,31 +126,31 @@ instance (priority := 100) t2SpaceOfMetrizableSpace [MetrizableSpace X] : T2Spac
   infer_instance
 #align topological_space.t2_space_of_metrizable_space TopologicalSpace.t2SpaceOfMetrizableSpace
 
-instance metrizableSpaceProd [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) :=
+instance metrizable_space_prod [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) :=
   by
   letI : MetricSpace X := metrizable_space_metric X
   letI : MetricSpace Y := metrizable_space_metric Y
   infer_instance
-#align topological_space.metrizable_space_prod TopologicalSpace.metrizableSpaceProd
+#align topological_space.metrizable_space_prod TopologicalSpace.metrizable_space_prod
 
 /-- Given an embedding of a topological space into a metrizable space, the source space is also
 metrizable. -/
-theorem Embedding.metrizableSpace [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) :
+theorem Embedding.metrizable_space [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) :
     MetrizableSpace X :=
   letI : MetricSpace Y := metrizable_space_metric Y
   ⟨⟨hf.comap_metric_space f, rfl⟩⟩
-#align embedding.metrizable_space Embedding.metrizableSpace
+#align embedding.metrizable_space Embedding.metrizable_space
 
 instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpace s :=
   embedding_subtype_coe.MetrizableSpace
 #align topological_space.metrizable_space.subtype TopologicalSpace.MetrizableSpace.subtype
 
-instance metrizableSpacePi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) :=
+instance metrizable_space_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) :=
   by
   cases nonempty_fintype ι
   letI := fun i => metrizable_space_metric (π i)
   infer_instance
-#align topological_space.metrizable_space_pi TopologicalSpace.metrizableSpacePi
+#align topological_space.metrizable_space_pi TopologicalSpace.metrizable_space_pi
 
 variable (X) [T3Space X] [SecondCountableTopology X]
 
@@ -174,7 +174,8 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   ·
     exact
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
-        (BoundedContinuousFunction.isometryExtend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp
+        (BoundedContinuousFunction.isometry_extend (Encodable.encode' s)
+                (0 : ℕ →ᵇ ℝ)).Embedding.comp
           hf⟩
   have hd : ∀ UV : s, Disjoint (closure UV.1.1) (UV.1.2ᶜ) := fun UV =>
     disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)
@@ -255,14 +256,14 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
 /-- *Urysohn's metrization theorem* (Tychonoff's version): a T₃ topological space with second
 countable topology `X` is metrizable, i.e., there exists a metric space structure that generates the
 same topology. -/
-theorem metrizableSpaceOfT3SecondCountable : MetrizableSpace X :=
+theorem metrizable_space_of_t3_second_countable : MetrizableSpace X :=
   let ⟨f, hf⟩ := exists_embedding_l_infty X
   hf.MetrizableSpace
 #align
-  topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizableSpaceOfT3SecondCountable
+  topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizable_space_of_t3_second_countable
 
 instance : MetrizableSpace Ennreal :=
-  metrizableSpaceOfT3SecondCountable Ennreal
+  metrizable_space_of_t3_second_countable Ennreal
 
 end TopologicalSpace
 

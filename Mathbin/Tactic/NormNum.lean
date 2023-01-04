@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_num
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1563,7 +1563,7 @@ theorem int_to_nat_pos (a : ℤ) (b : ℕ)
 #align norm_num.int_to_nat_pos NormNum.int_to_nat_pos
 
 theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
-  simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
+  simp only [Int.toNat_of_nonpos, h.le, neg_nonpos]
 #align norm_num.int_to_nat_neg NormNum.int_to_nat_neg
 
 theorem nat_abs_pos (a : ℤ) (b : ℕ)

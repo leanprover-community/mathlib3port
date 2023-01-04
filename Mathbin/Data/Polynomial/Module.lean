@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module data.polynomial.module
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,7 +191,7 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
     map_smul' := fun r x =>
       by
       induction' r using Polynomial.induction_on' with _ _ _ _ n p
-      · simp_all only [add_smul, map_add, RingEquiv.to_fun_eq_coe]
+      · simp_all only [add_smul, map_add, [anonymous]]
       · ext i
         dsimp
         rw [monomial_smul_apply, ← Polynomial.C_mul_X_pow_eq_monomial, mul_assoc,

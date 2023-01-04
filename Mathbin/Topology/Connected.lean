@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ theorem is_preconnected_of_forall_pair {s : Set α}
 
 /-- A union of a family of preconnected sets with a common point is preconnected as well. -/
 theorem is_preconnected_sUnion (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x ∈ s)
-    (H2 : ∀ s ∈ c, IsPreconnected s) : IsPreconnected (⋃₀c) :=
+    (H2 : ∀ s ∈ c, IsPreconnected s) : IsPreconnected (⋃₀ c) :=
   by
   apply is_preconnected_of_forall x
   rintro y ⟨s, sc, ys⟩
@@ -167,13 +167,13 @@ theorem IsConnected.union {s t : Set α} (H : (s ∩ t).Nonempty) (Hs : IsConnec
 
 /-- The directed sUnion of a set S of preconnected subsets is preconnected. -/
 theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· ⊆ ·) S)
-    (H : ∀ s ∈ S, IsPreconnected s) : IsPreconnected (⋃₀S) :=
+    (H : ∀ s ∈ S, IsPreconnected s) : IsPreconnected (⋃₀ S) :=
   by
   rintro u v hu hv Huv ⟨a, ⟨s, hsS, has⟩, hau⟩ ⟨b, ⟨t, htS, hbt⟩, hbv⟩
   obtain ⟨r, hrS, hsr, htr⟩ : ∃ r ∈ S, s ⊆ r ∧ t ⊆ r := K s hsS t htS
   have Hnuv : (r ∩ (u ∩ v)).Nonempty :=
     H _ hrS u v hu hv ((subset_sUnion_of_mem hrS).trans Huv) ⟨a, hsr has, hau⟩ ⟨b, htr hbt, hbv⟩
-  have Kruv : r ∩ (u ∩ v) ⊆ ⋃₀S ∩ (u ∩ v) := inter_subset_inter_left _ (subset_sUnion_of_mem hrS)
+  have Kruv : r ∩ (u ∩ v) ⊆ ⋃₀ S ∩ (u ∩ v) := inter_subset_inter_left _ (subset_sUnion_of_mem hrS)
   exact Hnuv.mono Kruv
 #align is_preconnected.sUnion_directed IsPreconnected.sUnion_directed
 
@@ -261,7 +261,7 @@ variable [LinearOrder β] [SuccOrder β] [IsSuccArchimedean β]
 theorem IsPreconnected.Union_of_chain {s : β → Set α} (H : ∀ n, IsPreconnected (s n))
     (K : ∀ n, (s n ∩ s (succ n)).Nonempty) : IsPreconnected (⋃ n, s n) :=
   (IsPreconnected.Union_of_refl_trans_gen H) fun i j =>
-    (refl_trans_gen_of_succ _ fun i _ => K i) fun i _ =>
+    (reflTransGen_of_succ _ fun i _ => K i) fun i _ =>
       by
       rw [inter_comm]
       exact K i
@@ -272,7 +272,7 @@ theorem IsPreconnected.Union_of_chain {s : β → Set α} (H : ∀ n, IsPreconne
 theorem IsConnected.Union_of_chain [Nonempty β] {s : β → Set α} (H : ∀ n, IsConnected (s n))
     (K : ∀ n, (s n ∩ s (succ n)).Nonempty) : IsConnected (⋃ n, s n) :=
   (IsConnected.Union_of_refl_trans_gen H) fun i j =>
-    (refl_trans_gen_of_succ _ fun i _ => K i) fun i _ =>
+    (reflTransGen_of_succ _ fun i _ => K i) fun i _ =>
       by
       rw [inter_comm]
       exact K i
@@ -293,7 +293,7 @@ theorem IsPreconnected.bUnion_of_chain {s : β → Set α} {t : Set β} (ht : Or
     fun i j k hi hj hk => K _ (h1 hi hj hk) (h2 hi hj hk)
   refine' IsPreconnected.bUnion_of_refl_trans_gen H fun i hi j hj => _
   exact
-    refl_trans_gen_of_succ _ (fun k hk => ⟨h3 hi hj hk, h1 hi hj hk⟩) fun k hk =>
+    reflTransGen_of_succ _ (fun k hk => ⟨h3 hi hj hk, h1 hi hj hk⟩) fun k hk =>
       ⟨by
         rw [inter_comm]
         exact h3 hj hi hk, h2 hj hi hk⟩
@@ -635,7 +635,7 @@ theorem Sum.is_preconnected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
 /-- The connected component of a point is the maximal connected set
 that contains this point. -/
 def connectedComponent (x : α) : Set α :=
-  ⋃₀{ s : Set α | IsPreconnected s ∧ x ∈ s }
+  ⋃₀ { s : Set α | IsPreconnected s ∧ x ∈ s }
 #align connected_component connectedComponent
 
 /-- Given a set `F` in a topological space `α` and a point `x : α`, the connected
@@ -1003,7 +1003,7 @@ it is contained in one of the members of the collection. -/
 theorem is_connected_iff_sUnion_disjoint_open {s : Set α} :
     IsConnected s ↔
       ∀ (U : Finset (Set α)) (H : ∀ u v : Set α, u ∈ U → v ∈ U → (s ∩ (u ∩ v)).Nonempty → u = v)
-        (hU : ∀ u ∈ U, IsOpen u) (hs : s ⊆ ⋃₀↑U), ∃ u ∈ U, s ⊆ u :=
+        (hU : ∀ u ∈ U, IsOpen u) (hs : s ⊆ ⋃₀ ↑U), ∃ u ∈ U, s ⊆ u :=
   by
   rw [IsConnected, is_preconnected_iff_subset_of_disjoint]
   constructor <;> intro h
@@ -1015,7 +1015,7 @@ theorem is_connected_iff_sUnion_disjoint_open {s : Set α} :
       solve_by_elim
     · intro u U hu IH hs hU H
       rw [Finset.coe_insert, sUnion_insert] at H
-      cases' h.2 u (⋃₀↑U) _ _ H _ with hsu hsU
+      cases' h.2 u (⋃₀ ↑U) _ _ H _ with hsu hsU
       · exact ⟨u, Finset.mem_insert_self _ _, hsu⟩
       · rcases IH _ _ hsU with ⟨v, hvU, hsv⟩
         · exact ⟨v, Finset.mem_insert_of_mem hvU, hsv⟩

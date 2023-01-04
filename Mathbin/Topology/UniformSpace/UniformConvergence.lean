@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -772,7 +772,7 @@ theorem tendsto_locally_uniformly_on_bUnion {s : Set γ} {S : γ → Set α} (hS
 #align tendsto_locally_uniformly_on_bUnion tendsto_locally_uniformly_on_bUnion
 
 theorem tendsto_locally_uniformly_on_sUnion (S : Set (Set α)) (hS : ∀ s ∈ S, IsOpen s)
-    (h : ∀ s ∈ S, TendstoLocallyUniformlyOn F f p s) : TendstoLocallyUniformlyOn F f p (⋃₀S) :=
+    (h : ∀ s ∈ S, TendstoLocallyUniformlyOn F f p s) : TendstoLocallyUniformlyOn F f p (⋃₀ S) :=
   by
   rw [sUnion_eq_bUnion]
   exact tendsto_locally_uniformly_on_bUnion hS h

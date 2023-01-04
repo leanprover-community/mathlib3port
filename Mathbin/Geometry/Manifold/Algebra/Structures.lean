@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.structures
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ set_option default_priority 100
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
 class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R] [TopologicalSpace R]
   [ChartedSpace H R] extends HasSmoothAdd I R : Prop where
-  smoothMul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2
+  smooth_mul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2
 #align smooth_ring SmoothRing
 
 instance SmoothRing.toHasSmoothMul (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R]
@@ -46,20 +46,20 @@ instance SmoothRing.toLieAddGroup (I : ModelWithCorners 𝕜 E H) (R : Type _) [
     [TopologicalSpace R] [ChartedSpace H R] [SmoothRing I R] : LieAddGroup I R
     where
   compatible e e' := HasGroupoid.compatible (contDiffGroupoid ⊤ I)
-  smoothAdd := smoothAdd I
-  smoothNeg := by simpa only [neg_one_mul] using @smoothMulLeft 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
+  smooth_add := smooth_add I
+  smooth_neg := by simpa only [neg_one_mul] using @smooth_mul_left 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
 #align smooth_ring.to_lie_add_group SmoothRing.toLieAddGroup
 
 end SmoothRing
 
 instance fieldSmoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
   { normedSpaceLieAddGroup with
-    smoothMul := by
+    smooth_mul := by
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
       simp only [Prod.mk.eta, mfld_simps]
       rw [cont_diff_on_univ]
-      exact contDiffMul }
+      exact cont_diff_mul }
 #align field_smooth_ring fieldSmoothRing
 
 variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NontriviallyNormedField 𝕜]

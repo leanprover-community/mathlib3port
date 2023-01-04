@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ end DirectSum
 
 /-- The projection maps of a graded ring -/
 def GradedRing.proj (i : ι) : A →+ A :=
-  (AddSubmonoidClass.subtype (𝒜 i)).comp <|
+  (AddSubmonoidClass.Subtype (𝒜 i)).comp <|
     (Dfinsupp.evalAddMonoidHom i).comp <|
       RingHom.toAddMonoidHom <| RingEquiv.toRingHom <| DirectSum.decomposeRingEquiv 𝒜
 #align graded_ring.proj GradedRing.proj

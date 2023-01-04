@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.algebraic_closure
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -289,7 +289,7 @@ theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi :
 #align algebraic_closure.exists_root AlgebraicClosure.exists_root
 
 instance : IsAlgClosed (AlgebraicClosure k) :=
-  (IsAlgClosed.ofExistsRoot _) fun f => exists_root k
+  (IsAlgClosed.of_exists_root _) fun f => exists_root k
 
 instance {R : Type _} [CommSemiring R] [alg : Algebra R k] : Algebra R (AlgebraicClosure k) :=
   ((ofStep k 0).comp (@algebraMap _ _ _ _ alg)).toAlgebra
@@ -316,7 +316,7 @@ theorem is_algebraic : Algebra.IsAlgebraic k (AlgebraicClosure k) := fun z =>
 #align algebraic_closure.is_algebraic AlgebraicClosure.is_algebraic
 
 instance : IsAlgClosure k (AlgebraicClosure k) :=
-  ⟨AlgebraicClosure.isAlgClosed k, is_algebraic k⟩
+  ⟨AlgebraicClosure.is_alg_closed k, is_algebraic k⟩
 
 end AlgebraicClosure
 

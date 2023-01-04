@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.real.hyperreal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -305,11 +305,11 @@ theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (supₛ { y : ℝ | (
       ⟨lt_of_not_le fun c =>
           have hc : ∀ y ∈ S, y ≤ R - δ := fun y hy =>
             coe_le_coe.1 <| le_of_lt <| lt_of_lt_of_le hy c
-          not_lt_of_le (cSup_le HR₁ hc) <| sub_lt_self R hδ,
+          not_lt_of_le (csupₛ_le HR₁ hc) <| sub_lt_self R hδ,
         lt_of_not_le fun c =>
           have hc : ↑(R + δ / 2) < x :=
             lt_of_lt_of_le (add_lt_add_left (coe_lt_coe.2 (half_lt_self hδ)) R) c
-          not_lt_of_le (le_cSup HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
+          not_lt_of_le (le_csupₛ HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
 #align hyperreal.is_st_Sup Hyperreal.is_st_Sup
 
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, IsSt x r :=

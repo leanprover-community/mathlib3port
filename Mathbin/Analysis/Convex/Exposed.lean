@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.exposed
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,14 +69,15 @@ def ContinuousLinearMap.toExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
   { x ∈ A | ∀ y ∈ A, l y ≤ l x }
 #align continuous_linear_map.to_exposed ContinuousLinearMap.toExposed
 
-theorem ContinuousLinearMap.toExposed.isExposed : IsExposed 𝕜 A (l.toExposed A) := fun h => ⟨l, rfl⟩
-#align continuous_linear_map.to_exposed.is_exposed ContinuousLinearMap.toExposed.isExposed
+theorem ContinuousLinearMap.toExposed.is_exposed : IsExposed 𝕜 A (l.toExposed A) := fun h =>
+  ⟨l, rfl⟩
+#align continuous_linear_map.to_exposed.is_exposed ContinuousLinearMap.toExposed.is_exposed
 
-theorem isExposedEmpty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ =>
+theorem is_exposed_empty : IsExposed 𝕜 A ∅ := fun ⟨x, hx⟩ =>
   by
   exfalso
   exact hx
-#align is_exposed_empty isExposedEmpty
+#align is_exposed_empty is_exposed_empty
 
 namespace IsExposed
 
@@ -165,7 +166,7 @@ theorem sInter {F : Finset (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExpo
       (hF hFnemp fun B hB => hCF B (Finset.mem_insert_of_mem hB))
 #align is_exposed.sInter IsExposed.sInter
 
-theorem interLeft (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A ∩ B) C :=
+theorem inter_left (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A ∩ B) C :=
   by
   rintro ⟨w, hw⟩
   obtain ⟨l, rfl⟩ := hC ⟨w, hw⟩
@@ -173,13 +174,13 @@ theorem interLeft (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A 
     ⟨l,
       subset.antisymm (fun x hx => ⟨⟨hx.1, hCB hx⟩, fun y hy => hx.2 y hy.1⟩)
         fun x ⟨⟨hxC, _⟩, hx⟩ => ⟨hxC, fun y hy => (hw.2 y hy).trans (hx w ⟨hC.subset hw, hCB hw⟩)⟩⟩
-#align is_exposed.inter_left IsExposed.interLeft
+#align is_exposed.inter_left IsExposed.inter_left
 
-theorem interRight (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (A ∩ B) C :=
+theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (A ∩ B) C :=
   by
   rw [inter_comm]
   exact hC.inter_left hCA
-#align is_exposed.inter_right IsExposed.interRight
+#align is_exposed.inter_right IsExposed.inter_right
 
 protected theorem is_extreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
   by

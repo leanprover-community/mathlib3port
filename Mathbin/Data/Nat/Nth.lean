@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.nth
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
       simpa [hp] using hlt
   apply Finset.card_erase_of_mem
   rw [nth, Set.Finite.mem_to_finset]
-  apply Inf_mem
+  apply cinfₛ_mem
   rwa [← hp''.nonempty_to_finset, ← Finset.card_pos, hk]
 #align nat.nth_set_card_aux Nat.nth_set_card_aux
 
@@ -133,7 +133,7 @@ theorem nth_mem_of_lt_card_finite_aux (n : ℕ) (hp : (setOf p).Finite) (hlt : n
     nth p n ∈ { i : ℕ | p i ∧ ∀ k < n, nth p k < i } :=
   by
   rw [nth]
-  apply Inf_mem
+  apply cinfₛ_mem
   exact nth_set_nonempty_of_lt_card _ _ hlt
 #align nat.nth_mem_of_lt_card_finite_aux Nat.nth_mem_of_lt_card_finite_aux
 
@@ -151,7 +151,7 @@ theorem nth_mem_of_infinite_aux (hp : (setOf p).Infinite) (n : ℕ) :
     nth p n ∈ { i : ℕ | p i ∧ ∀ k < n, nth p k < i } :=
   by
   rw [nth]
-  apply Inf_mem
+  apply cinfₛ_mem
   let s : Set ℕ := ⋃ k < n, { i : ℕ | nth p k ≥ i }
   convert_to (setOf p \ s).Nonempty
   · ext i
@@ -315,7 +315,7 @@ theorem nth_count_le (hp : (setOf p).Infinite) (n : ℕ) : n ≤ nth p (count p 
   rw [nth_count_eq_Inf]
   suffices h : Inf { i : ℕ | p i ∧ n ≤ i } ∈ { i : ℕ | p i ∧ n ≤ i }
   · exact h.2
-  apply Inf_mem
+  apply cinfₛ_mem
   obtain ⟨m, hp, hn⟩ := hp.exists_nat_lt n
   exact ⟨m, hp, hn.le⟩
 #align nat.nth_count_le Nat.nth_count_le
@@ -323,7 +323,7 @@ theorem nth_count_le (hp : (setOf p).Infinite) (n : ℕ) : n ≤ nth p (count p 
 theorem count_nth_gc (hp : (setOf p).Infinite) : GaloisConnection (count p) (nth p) :=
   by
   rintro x y
-  rw [nth, le_cInf_iff ⟨0, fun _ _ => Nat.zero_le _⟩ ⟨nth p y, nth_mem_of_infinite_aux p hp y⟩]
+  rw [nth, le_cinfₛ_iff ⟨0, fun _ _ => Nat.zero_le _⟩ ⟨nth p y, nth_mem_of_infinite_aux p hp y⟩]
   dsimp
   refine' ⟨_, fun h => _⟩
   · rintro hy n ⟨hn, h⟩

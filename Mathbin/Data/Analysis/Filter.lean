@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.analysis.filter
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -335,7 +335,7 @@ warning: filter.realizer.Sup -> Filter.Realizer.sup is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> (Filter.{u2} β)}, (forall (i : α), Filter.Realizer.{u2, u3} β (f i)) -> (Filter.Realizer.{u2, max u1 u3} β (supᵢ.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (i : α) => f i)))
 but is expected to have type
-  PUnit.{max (max (succ (succ u1)) (succ (succ u2))) (succ (succ u3))}
+  forall {α : Type.{u1}} {β : Filter.{u1} α} {f : Filter.{u1} α}, (Filter.Realizer.{u1, u2} α β) -> (Filter.Realizer.{u1, u3} α f) -> (Filter.Realizer.{u1, max u2 u3} α (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) β f))
 Case conversion may be inaccurate. Consider using '#align filter.realizer.Sup Filter.Realizer.supₓ'. -/
 /-- Construct a realizer for indexed supremum -/
 protected def sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f i).Realizer :=

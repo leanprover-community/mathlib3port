@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.field_division
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem leading_coeff_normalize (p : R[X]) :
 #align polynomial.leading_coeff_normalize Polynomial.leading_coeff_normalize
 
 theorem Monic.normalize_eq_self {p : R[X]} (hp : p.Monic) : normalize p = p := by
-  simp only [Polynomial.coe_norm_unit, normalize_apply, hp.leading_coeff, norm_unit_one,
+  simp only [Polynomial.coe_norm_unit, normalize_apply, hp.leading_coeff, normUnit_one,
     Units.val_one, polynomial.C.map_one, mul_one]
 #align polynomial.monic.normalize_eq_self Polynomial.Monic.normalize_eq_self
 
@@ -471,7 +471,7 @@ theorem dvd_C_mul (ha : a ≠ 0) : p ∣ Polynomial.c a * q ↔ p ∣ q :=
 theorem coe_norm_unit_of_ne_zero (hp : p ≠ 0) : (normUnit p : R[X]) = c p.leadingCoeff⁻¹ :=
   by
   have : p.leadingCoeff ≠ 0 := mt leading_coeff_eq_zero.mp hp
-  simp [CommGroupWithZero.coe_norm_unit _ this]
+  simp [CommGroupWithZero.coe_normUnit _ this]
 #align polynomial.coe_norm_unit_of_ne_zero Polynomial.coe_norm_unit_of_ne_zero
 
 theorem normalize_monic (h : Monic p) : normalize p = p := by simp [h]

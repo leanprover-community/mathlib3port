@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.selmer_group
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,8 +156,7 @@ def valuationOfNeZeroMod (n : ℕ) : (K/n) →* Multiplicative (Zmod n) :=
       (by
         rintro _ ⟨x, rfl⟩
         exact
-          ⟨v.valuation_of_ne_zero x, by
-            simpa only [pow_monoid_hom_apply, map_pow, Int.to_add_pow] ⟩)
+          ⟨v.valuation_of_ne_zero x, by simpa only [pow_monoid_hom_apply, map_pow, Int.toAdd_pow] ⟩)
 #align
   is_dedekind_domain.height_one_spectrum.valuation_of_ne_zero_mod IsDedekindDomain.HeightOneSpectrum.valuationOfNeZeroMod
 
@@ -242,13 +241,13 @@ theorem from_unit_ker [hn : Fact <| 0 < n] :
     rcases@IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ i _ hn.out
         (hi.symm ▸ is_integral_algebra_map) with
       ⟨i', rfl⟩
-    rw [← map_mul, map_eq_one_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K] at vi
-    rw [← map_mul, map_eq_one_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K] at iv
+    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebra_map_injective R K] at vi
+    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebra_map_injective R K] at iv
     rw [Units.val_mk, ← map_pow] at hv
     exact
       ⟨⟨v', i', vi, iv⟩, by
         simpa only [Units.ext_iff, pow_monoid_hom_apply, Units.val_pow_eq_pow_val] using
-          NoZeroSmulDivisors.algebra_map_injective R K hv⟩
+          NoZeroSMulDivisors.algebra_map_injective R K hv⟩
   · rintro ⟨_, hx⟩
     rw [← hx]
     exact

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.vitali
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
   obtain ⟨u, uT, hu⟩ : ∃ u ∈ T, ∀ v ∈ T, u ⊆ v → v = u :=
     by
     refine' zorn_subset _ fun U UT hU => _
-    refine' ⟨⋃₀U, _, fun s hs => subset_sUnion_of_mem hs⟩
+    refine' ⟨⋃₀ U, _, fun s hs => subset_sUnion_of_mem hs⟩
     simp only [Set.unionₛ_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion,
       Set.mem_setOf_eq]
     refine'
@@ -120,7 +120,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     exact δle a' ha'.1
   obtain ⟨a', a'A, ha'⟩ : ∃ a' ∈ A, m / τ ≤ δ a' :=
     by
-    have : 0 ≤ m := (δnonneg a hat).trans (le_cSup bddA (mem_image_of_mem _ ⟨hat, a_disj⟩))
+    have : 0 ≤ m := (δnonneg a hat).trans (le_csupₛ bddA (mem_image_of_mem _ ⟨hat, a_disj⟩))
     rcases eq_or_lt_of_le this with (mzero | mpos)
     · refine' ⟨a, ⟨hat, a_disj⟩, _⟩
       simpa only [← mzero, zero_div] using δnonneg a hat
@@ -128,7 +128,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
         rw [div_lt_iff (zero_lt_one.trans hτ)]
         conv_lhs => rw [← mul_one m]
         exact (mul_lt_mul_left mpos).2 hτ
-      rcases exists_lt_of_lt_cSup (nonempty_image_iff.2 Anonempty) I with ⟨x, xA, hx⟩
+      rcases exists_lt_of_lt_csupₛ (nonempty_image_iff.2 Anonempty) I with ⟨x, xA, hx⟩
       rcases(mem_image _ _ _).1 xA with ⟨a', ha', rfl⟩
       exact ⟨a', ha', hx.le⟩
   clear hat hu a_disj a
@@ -158,7 +158,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
       rcases mem_insert_iff.1 ba'u with (rfl | H')
       · refine' ⟨b, mem_insert _ _, hcb, _⟩
         calc
-          δ c ≤ m := le_cSup bddA (mem_image_of_mem _ ⟨ct, H⟩)
+          δ c ≤ m := le_csupₛ bddA (mem_image_of_mem _ ⟨ct, H⟩)
           _ = τ * (m / τ) := by
             field_simp [(zero_lt_one.trans hτ).ne']
             ring
@@ -311,7 +311,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     · refine' ⟨20 * R x, hRμ x, fun a au hax => _⟩
       refine' (hB a (ut au)).trans _
       apply closed_ball_subset_closed_ball'
-      have : r a ≤ R0 := le_cSup R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
+      have : r a ≤ R0 := le_csupₛ R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
       linarith [Idist_v a ⟨au, hax⟩, hR0 x]
     · have R0pos : 0 < R0 := (hR0 x).trans_le H
       have vnonempty : v.nonempty := by
@@ -322,7 +322,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       obtain ⟨a, hav, R0a⟩ : ∃ a ∈ v, R0 / 2 < r a :=
         by
         obtain ⟨r', r'mem, hr'⟩ : ∃ r' ∈ r '' v, R0 / 2 < r' :=
-          exists_lt_of_lt_cSup (nonempty_image_iff.2 vnonempty) (half_lt_self R0pos)
+          exists_lt_of_lt_csupₛ (nonempty_image_iff.2 vnonempty) (half_lt_self R0pos)
         rcases(mem_image _ _ _).1 r'mem with ⟨a, hav, rfl⟩
         exact ⟨a, hav, hr'⟩
       refine' ⟨8 * R0, _, _⟩
@@ -333,7 +333,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       · intro b bu hbx
         refine' (hB b (ut bu)).trans _
         apply closed_ball_subset_closed_ball'
-        have : r b ≤ R0 := le_cSup R0_bdd (mem_image_of_mem _ ⟨bu, hbx⟩)
+        have : r b ≤ R0 := le_csupₛ R0_bdd (mem_image_of_mem _ ⟨bu, hbx⟩)
         linarith [Idist_v b ⟨bu, hbx⟩]
   -- we will show that, in `ball x (R x)`, almost all `s` is covered by the family `u`.
   refine'

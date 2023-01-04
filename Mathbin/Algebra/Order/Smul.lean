@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.order.smul
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,9 +326,9 @@ private theorem smul_nonneg_of_nonneg_of_pos (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤
 
 end OrderedSmul
 
-section NoZeroSmulDivisors
+section NoZeroSMulDivisors
 
-variable [Zero R] [Zero M] [HasSmul R M] [NoZeroSmulDivisors R M] {a : R} {b : M}
+variable [Zero R] [Zero M] [HasSmul R M] [NoZeroSMulDivisors R M] {a : R} {b : M}
 
 private theorem smul_ne_zero_of_pos_of_ne_zero [Preorder R] (ha : 0 < a) (hb : b ≠ 0) : a • b ≠ 0 :=
   smul_ne_zero ha.ne' hb
@@ -338,7 +338,7 @@ private theorem smul_ne_zero_of_ne_zero_of_pos [Preorder M] (ha : a ≠ 0) (hb :
   smul_ne_zero ha hb.ne'
 #align tactic.smul_ne_zero_of_ne_zero_of_pos tactic.smul_ne_zero_of_ne_zero_of_pos
 
-end NoZeroSmulDivisors
+end NoZeroSMulDivisors
 
 open Positivity
 

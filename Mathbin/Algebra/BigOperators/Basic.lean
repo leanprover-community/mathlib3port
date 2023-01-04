@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -399,13 +399,13 @@ For a version expressed with subtypes, see `fintype.prod_subtype_mul_prod_subtyp
       "Adding the sums of a function over `s` and over `sᶜ` gives the whole sum.\nFor a version expressed with subtypes, see `fintype.sum_subtype_add_sum_subtype`. "]
 theorem prod_mul_prod_compl [Fintype α] [DecidableEq α] (s : Finset α) (f : α → β) :
     ((∏ i in s, f i) * ∏ i in sᶜ, f i) = ∏ i, f i :=
-  IsCompl.prod_mul_prod is_compl_compl f
+  IsCompl.prod_mul_prod isCompl_compl f
 #align finset.prod_mul_prod_compl Finset.prod_mul_prod_compl
 
 @[to_additive]
 theorem prod_compl_mul_prod [Fintype α] [DecidableEq α] (s : Finset α) (f : α → β) :
     ((∏ i in sᶜ, f i) * ∏ i in s, f i) = ∏ i, f i :=
-  (@is_compl_compl _ s _).symm.prod_mul_prod f
+  (@isCompl_compl _ s _).symm.prod_mul_prod f
 #align finset.prod_compl_mul_prod Finset.prod_compl_mul_prod
 
 @[to_additive]

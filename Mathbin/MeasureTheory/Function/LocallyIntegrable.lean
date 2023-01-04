@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.function.locally_integrable
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,10 +228,10 @@ theorem MonotoneOn.integrableOnCompact (hs : IsCompact s) (hmono : MonotoneOn f 
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact integrable_on_empty
   have hbelow : BddBelow (f '' s) :=
-    ⟨f (Inf s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono (hs.Inf_mem h) hy (cInf_le hs.bdd_below hy)⟩
+    ⟨f (Inf s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono (hs.Inf_mem h) hy (cinfₛ_le hs.bdd_below hy)⟩
   have habove : BddAbove (f '' s) :=
-    ⟨f (Sup s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono hy (hs.Sup_mem h) (le_cSup hs.bdd_above hy)⟩
-  have : Metric.Bounded (f '' s) := Metric.boundedOfBddAboveOfBddBelow habove hbelow
+    ⟨f (Sup s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono hy (hs.Sup_mem h) (le_csupₛ hs.bdd_above hy)⟩
+  have : Metric.Bounded (f '' s) := Metric.bounded_of_bdd_above_of_bdd_below habove hbelow
   rcases bounded_iff_forall_norm_le.mp this with ⟨C, hC⟩
   refine'
     integrable.mono' (continuous_const.locally_integrable hs)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.holder
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,21 +62,21 @@ def HolderOnWith (C r : ℝ≥0) (f : X → Y) (s : Set X) : Prop :=
 #align holder_on_with HolderOnWith
 
 @[simp]
-theorem holderOnWithEmpty (C r : ℝ≥0) (f : X → Y) : HolderOnWith C r f ∅ := fun x hx => hx.elim
-#align holder_on_with_empty holderOnWithEmpty
+theorem holder_on_with_empty (C r : ℝ≥0) (f : X → Y) : HolderOnWith C r f ∅ := fun x hx => hx.elim
+#align holder_on_with_empty holder_on_with_empty
 
 @[simp]
-theorem holderOnWithSingleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderOnWith C r f {x} :=
+theorem holder_on_with_singleton (C r : ℝ≥0) (f : X → Y) (x : X) : HolderOnWith C r f {x} :=
   by
   rintro a (rfl : a = x) b (rfl : b = a)
   rw [edist_self]
   exact zero_le _
-#align holder_on_with_singleton holderOnWithSingleton
+#align holder_on_with_singleton holder_on_with_singleton
 
-theorem Set.Subsingleton.holderOnWith {s : Set X} (hs : s.Subsingleton) (C r : ℝ≥0) (f : X → Y) :
+theorem Set.Subsingleton.holder_on_with {s : Set X} (hs : s.Subsingleton) (C r : ℝ≥0) (f : X → Y) :
     HolderOnWith C r f s :=
-  hs.induction_on (holderOnWithEmpty C r f) (holderOnWithSingleton C r f)
-#align set.subsingleton.holder_on_with Set.Subsingleton.holderOnWith
+  hs.induction_on (holder_on_with_empty C r f) (holder_on_with_singleton C r f)
+#align set.subsingleton.holder_on_with Set.Subsingleton.holder_on_with
 
 theorem holder_on_with_univ {C r : ℝ≥0} {f : X → Y} : HolderOnWith C r f univ ↔ HolderWith C r f :=
   by simp only [HolderOnWith, HolderWith, mem_univ, true_imp_iff]
@@ -88,22 +88,22 @@ theorem holder_on_with_one {C : ℝ≥0} {f : X → Y} {s : Set X} :
   simp only [HolderOnWith, LipschitzOnWith, Nnreal.coe_one, Ennreal.rpow_one]
 #align holder_on_with_one holder_on_with_one
 
-alias holder_on_with_one ↔ _ LipschitzOnWith.holderOnWith
+alias holder_on_with_one ↔ _ LipschitzOnWith.holder_on_with
 
 @[simp]
 theorem holder_with_one {C : ℝ≥0} {f : X → Y} : HolderWith C 1 f ↔ LipschitzWith C f :=
   holder_on_with_univ.symm.trans <| holder_on_with_one.trans lipschitz_on_univ
 #align holder_with_one holder_with_one
 
-alias holder_with_one ↔ _ LipschitzWith.holderWith
+alias holder_with_one ↔ _ LipschitzWith.holder_with
 
-theorem holderWithId : HolderWith 1 1 (id : X → X) :=
+theorem holder_with_id : HolderWith 1 1 (id : X → X) :=
   LipschitzWith.id.HolderWith
-#align holder_with_id holderWithId
+#align holder_with_id holder_with_id
 
-protected theorem HolderWith.holderOnWith {C r : ℝ≥0} {f : X → Y} (h : HolderWith C r f)
+protected theorem HolderWith.holder_on_with {C r : ℝ≥0} {f : X → Y} (h : HolderWith C r f)
     (s : Set X) : HolderOnWith C r f s := fun x _ y _ => h x y
-#align holder_with.holder_on_with HolderWith.holderOnWith
+#align holder_with.holder_on_with HolderWith.holder_on_with
 
 namespace HolderOnWith
 
@@ -129,11 +129,11 @@ theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg r
   exact hg.edist_le_of_le (hst hx) (hst hy) (hf.edist_le hx hy)
 #align holder_on_with.comp HolderOnWith.comp
 
-theorem compHolderWith {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t)
+theorem comp_holder_with {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t)
     {Cf rf : ℝ≥0} {f : X → Y} (hf : HolderWith Cf rf f) (ht : ∀ x, f x ∈ t) :
     HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
   holder_on_with_univ.mp <| hg.comp (hf.HolderOnWith univ) fun x _ => ht x
-#align holder_on_with.comp_holder_with HolderOnWith.compHolderWith
+#align holder_on_with.comp_holder_with HolderOnWith.comp_holder_with
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem uniform_continuous_on (hf : HolderOnWith C r f s) (h0 : 0 < r) :
@@ -203,14 +203,14 @@ theorem edist_le_of_le (h : HolderWith C r f) {x y : X} {d : ℝ≥0∞} (hd : e
 
 theorem comp {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0} {f : X → Y}
     (hf : HolderWith Cf rf f) : HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
-  (hg.HolderOnWith univ).compHolderWith hf fun _ => trivial
+  (hg.HolderOnWith univ).comp_holder_with hf fun _ => trivial
 #align holder_with.comp HolderWith.comp
 
-theorem compHolderOnWith {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0}
+theorem comp_holder_on_with {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0}
     {f : X → Y} {s : Set X} (hf : HolderOnWith Cf rf f s) :
     HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s :=
   (hg.HolderOnWith univ).comp hf fun _ _ => trivial
-#align holder_with.comp_holder_on_with HolderWith.compHolderOnWith
+#align holder_with.comp_holder_on_with HolderWith.comp_holder_on_with
 
 /-- A Hölder continuous function is uniformly continuous -/
 protected theorem uniform_continuous (hf : HolderWith C r f) (h0 : 0 < r) : UniformContinuous f :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1027,8 +1027,8 @@ theorem of_fraction_ring_eq :
   funext fun x =>
     (Localization.induction_on x) fun x => by
       simp only [IsLocalization.alg_equiv_apply, IsLocalization.ring_equiv_of_ring_equiv_apply,
-        RingEquiv.to_fun_eq_coe, Localization.mk_eq_mk'_apply, IsLocalization.map_mk',
-        of_fraction_ring_mk', RingEquiv.coe_to_ring_hom, RingEquiv.refl_apply, SetLike.eta]
+        [anonymous], Localization.mk_eq_mk'_apply, IsLocalization.map_mk', of_fraction_ring_mk',
+        RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
 #align ratfunc.of_fraction_ring_eq Ratfunc.of_fraction_ring_eq
 
 @[simp]
@@ -1037,8 +1037,8 @@ theorem to_fraction_ring_eq :
   funext fun ⟨x⟩ =>
     (Localization.induction_on x) fun x => by
       simp only [Localization.mk_eq_mk'_apply, of_fraction_ring_mk', IsLocalization.alg_equiv_apply,
-        RingEquiv.to_fun_eq_coe, IsLocalization.ring_equiv_of_ring_equiv_apply,
-        IsLocalization.map_mk', RingEquiv.coe_to_ring_hom, RingEquiv.refl_apply, SetLike.eta]
+        [anonymous], IsLocalization.ring_equiv_of_ring_equiv_apply, IsLocalization.map_mk',
+        RingEquiv.coe_toRingHom, RingEquiv.refl_apply, SetLike.eta]
 #align ratfunc.to_fraction_ring_eq Ratfunc.to_fraction_ring_eq
 
 @[simp]
@@ -1056,7 +1056,7 @@ section NumDenom
 /-! ### Numerator and denominator -/
 
 
-open GcdMonoid Polynomial
+open GCDMonoid Polynomial
 
 omit hring
 
@@ -1081,7 +1081,7 @@ def numDenom (x : Ratfunc K) : K[X] × K[X] :=
       have ha' : a.leading_coeff ≠ 0 := polynomial.leading_coeff_ne_zero.mpr ha
       have hainv : a.leading_coeff⁻¹ ≠ 0 := inv_ne_zero ha'
       simp only [Prod.ext_iff, gcd_mul_left, normalize_apply, Polynomial.coe_norm_unit, mul_assoc,
-        CommGroupWithZero.coe_norm_unit _ ha']
+        CommGroupWithZero.coe_normUnit _ ha']
       have hdeg : (gcd p q).degree ≤ q.degree := degree_gcd_le_right _ hq
       have hdeg' : (Polynomial.c a.leading_coeff⁻¹ * gcd p q).degree ≤ q.degree :=
         by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,13 +67,13 @@ def starNormedAddGroupHom : NormedAddGroupHom E E :=
 #align star_normed_add_group_hom starNormedAddGroupHom
 
 /-- The `star` map in a normed star group is an isometry -/
-theorem starIsometry : Isometry (star : E → E) :=
+theorem star_isometry : Isometry (star : E → E) :=
   show Isometry starAddEquiv from
-    AddMonoidHomClass.isometryOfNorm starAddEquiv (show ∀ x, ‖x⋆‖ = ‖x‖ from norm_star)
-#align star_isometry starIsometry
+    AddMonoidHomClass.isometry_of_norm starAddEquiv (show ∀ x, ‖x⋆‖ = ‖x‖ from norm_star)
+#align star_isometry star_isometry
 
 instance (priority := 100) NormedStarGroup.to_has_continuous_star : HasContinuousStar E :=
-  ⟨starIsometry.Continuous⟩
+  ⟨star_isometry.Continuous⟩
 #align normed_star_group.to_has_continuous_star NormedStarGroup.to_has_continuous_star
 
 end NormedStarGroup
@@ -99,7 +99,7 @@ variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 
 -- see Note [lower instance priority]
 /-- In a C*-ring, star preserves the norm. -/
-instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
+instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
   ⟨by
     intro x
     by_cases htriv : x = 0
@@ -118,7 +118,7 @@ instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
           _ ≤ ‖x‖ * ‖x⋆‖ := norm_mul_le _ _
           
       exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)⟩
-#align cstar_ring.to_normed_star_group CstarRing.toNormedStarGroup
+#align cstar_ring.to_normed_star_group CstarRing.to_normed_star_group
 
 theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ :=
   by
@@ -177,7 +177,7 @@ instance Pi.starRing' : StarRing (∀ i, R i) :=
 
 variable [Fintype ι] [∀ i, CstarRing (R i)]
 
-instance Prod.cstarRing : CstarRing (R₁ × R₂)
+instance Prod.cstar_ring : CstarRing (R₁ × R₂)
     where norm_star_mul_self x := by
     unfold norm
     simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
@@ -187,9 +187,9 @@ instance Prod.cstarRing : CstarRing (R₁ × R₂)
       exact (le_max_right _ _).trans (le_abs_self _)
     · rw [le_sup_iff]
       rcases le_total ‖x.fst‖ ‖x.snd‖ with (h | h) <;> simp [h]
-#align prod.cstar_ring Prod.cstarRing
+#align prod.cstar_ring Prod.cstar_ring
 
-instance Pi.cstarRing : CstarRing (∀ i, R i)
+instance Pi.cstar_ring : CstarRing (∀ i, R i)
     where norm_star_mul_self x :=
     by
     simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
@@ -197,11 +197,11 @@ instance Pi.cstarRing : CstarRing (∀ i, R i)
     exact
       (Finset.comp_sup_eq_sup_comp_of_is_total (fun x : Nnreal => x ^ 2)
           (fun x y h => by simpa only [sq] using mul_le_mul' h h) (by simp)).symm
-#align pi.cstar_ring Pi.cstarRing
+#align pi.cstar_ring Pi.cstar_ring
 
-instance Pi.cstarRing' : CstarRing (ι → R₁) :=
-  Pi.cstarRing
-#align pi.cstar_ring' Pi.cstarRing'
+instance Pi.cstar_ring' : CstarRing (ι → R₁) :=
+  Pi.cstar_ring
+#align pi.cstar_ring' Pi.cstar_ring'
 
 end ProdPi
 
@@ -336,7 +336,7 @@ norm equal to the norm of `a`. -/
 theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
   by
   rw [← Sup_closed_unit_ball_eq_nnnorm]
-  refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
+  refine' csupₛ_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
   · rintro - ⟨x, hx, rfl⟩
     exact
@@ -372,15 +372,15 @@ variable (E)
 
 /-- In a C⋆-algebra `E`, either unital or non-unital, the left regular representation is an
 isometry. -/
-theorem mulIsometry : Isometry (mul 𝕜 E) :=
-  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe <| op_nnnorm_mul 𝕜 a
-#align mul_isometry mulIsometry
+theorem mul_isometry : Isometry (mul 𝕜 E) :=
+  AddMonoidHomClass.isometry_of_norm _ fun a => congr_arg coe <| op_nnnorm_mul 𝕜 a
+#align mul_isometry mul_isometry
 
 /-- In a C⋆-algebra `E`, either unital or non-unital, the right regular anti-representation is an
 isometry. -/
-theorem mulFlipIsometry : Isometry (mul 𝕜 E).flip :=
-  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe <| op_nnnorm_mul_flip 𝕜 a
-#align mul_flip_isometry mulFlipIsometry
+theorem mul_flip_isometry : Isometry (mul 𝕜 E).flip :=
+  AddMonoidHomClass.isometry_of_norm _ fun a => congr_arg coe <| op_nnnorm_mul_flip 𝕜 a
+#align mul_flip_isometry mul_flip_isometry
 
 end Mul
 

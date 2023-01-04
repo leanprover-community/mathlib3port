@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -466,7 +466,7 @@ theorem int_coe_eq_int_coe_iff' (a b : ℤ) (c : ℕ) : (a : Zmod c) = (b : Zmod
 #align zmod.int_coe_eq_int_coe_iff' Zmod.int_coe_eq_int_coe_iff'
 
 theorem nat_coe_eq_nat_coe_iff (a b c : ℕ) : (a : Zmod c) = (b : Zmod c) ↔ a ≡ b [MOD c] := by
-  simpa [Int.coe_nat_modeq_iff] using Zmod.int_coe_eq_int_coe_iff a b c
+  simpa [Int.coe_nat_modEq_iff] using Zmod.int_coe_eq_int_coe_iff a b c
 #align zmod.nat_coe_eq_nat_coe_iff Zmod.nat_coe_eq_nat_coe_iff
 
 theorem nat_coe_eq_nat_coe_iff' (a b c : ℕ) : (a : Zmod c) = (b : Zmod c) ↔ a % c = b % c :=
@@ -474,15 +474,15 @@ theorem nat_coe_eq_nat_coe_iff' (a b c : ℕ) : (a : Zmod c) = (b : Zmod c) ↔ 
 #align zmod.nat_coe_eq_nat_coe_iff' Zmod.nat_coe_eq_nat_coe_iff'
 
 theorem int_coe_zmod_eq_zero_iff_dvd (a : ℤ) (b : ℕ) : (a : Zmod b) = 0 ↔ (b : ℤ) ∣ a := by
-  rw [← Int.cast_zero, Zmod.int_coe_eq_int_coe_iff, Int.modeq_zero_iff_dvd]
+  rw [← Int.cast_zero, Zmod.int_coe_eq_int_coe_iff, Int.modEq_zero_iff_dvd]
 #align zmod.int_coe_zmod_eq_zero_iff_dvd Zmod.int_coe_zmod_eq_zero_iff_dvd
 
 theorem int_coe_eq_int_coe_iff_dvd_sub (a b : ℤ) (c : ℕ) : (a : Zmod c) = ↑b ↔ ↑c ∣ b - a := by
-  rw [Zmod.int_coe_eq_int_coe_iff, Int.modeq_iff_dvd]
+  rw [Zmod.int_coe_eq_int_coe_iff, Int.modEq_iff_dvd]
 #align zmod.int_coe_eq_int_coe_iff_dvd_sub Zmod.int_coe_eq_int_coe_iff_dvd_sub
 
 theorem nat_coe_zmod_eq_zero_iff_dvd (a b : ℕ) : (a : Zmod b) = 0 ↔ b ∣ a := by
-  rw [← Nat.cast_zero, Zmod.nat_coe_eq_nat_coe_iff, Nat.modeq_zero_iff_dvd]
+  rw [← Nat.cast_zero, Zmod.nat_coe_eq_nat_coe_iff, Nat.modEq_zero_iff_dvd]
 #align zmod.nat_coe_zmod_eq_zero_iff_dvd Zmod.nat_coe_zmod_eq_zero_iff_dvd
 
 theorem val_int_cast {n : ℕ} (a : ℤ) [NeZero n] : ↑(a : Zmod n).val = a % n :=
@@ -555,7 +555,7 @@ theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : Zmod p) [NeZero p] :
 theorem int_cast_mod (a : ℤ) (b : ℕ) : ((a % b : ℤ) : Zmod b) = (a : Zmod b) :=
   by
   rw [Zmod.int_coe_eq_int_coe_iff]
-  apply Int.mod_modeq
+  apply Int.mod_modEq
 #align zmod.int_cast_mod Zmod.int_cast_mod
 
 theorem ker_int_cast_add_hom (n : ℕ) : (Int.castAddHom (Zmod n)).ker = AddSubgroup.zmultiples n :=
@@ -680,8 +680,8 @@ theorem nat_cast_mod (a : ℕ) (n : ℕ) : ((a % n : ℕ) : Zmod n) = a := by
 theorem eq_iff_modeq_nat (n : ℕ) {a b : ℕ} : (a : Zmod n) = b ↔ a ≡ b [MOD n] :=
   by
   cases n
-  · simp only [Nat.Modeq, Int.coe_nat_inj', Nat.mod_zero]
-  · rw [Fin.ext_iff, Nat.Modeq, ← val_nat_cast, ← val_nat_cast]
+  · simp only [Nat.ModEq, Int.coe_nat_inj', Nat.mod_zero]
+  · rw [Fin.ext_iff, Nat.ModEq, ← val_nat_cast, ← val_nat_cast]
     exact Iff.rfl
 #align zmod.eq_iff_modeq_nat Zmod.eq_iff_modeq_nat
 
@@ -707,7 +707,7 @@ theorem val_coe_unit_coprime {n : ℕ} (u : (Zmod n)ˣ) : Nat.Coprime (u : Zmod 
   by
   cases n
   · rcases Int.units_eq_one_or u with (rfl | rfl) <;> simp
-  apply Nat.coprime_of_mul_modeq_one ((u⁻¹ : Units (Zmod (n + 1))) : Zmod (n + 1)).val
+  apply Nat.coprime_of_mul_modEq_one ((u⁻¹ : Units (Zmod (n + 1))) : Zmod (n + 1)).val
   have := Units.ext_iff.1 (mul_right_inv u)
   rw [Units.val_one] at this
   rw [← eq_iff_modeq_nat, Nat.cast_one, ← this]; clear this
@@ -775,7 +775,7 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
         intro x
         dsimp only [dvd_mul_left, dvd_mul_right, Zmod.cast_hom_apply, coe_coe, inv_fun, to_fun]
         conv_rhs => rw [← Zmod.nat_cast_zmod_val x]
-        rw [if_neg hmn0, Zmod.eq_iff_modeq_nat, ← Nat.modeq_and_modeq_iff_modeq_mul h,
+        rw [if_neg hmn0, Zmod.eq_iff_modeq_nat, ← Nat.modEq_and_modEq_iff_modEq_mul h,
           Prod.fst_zmod_cast, Prod.snd_zmod_cast]
         refine'
           ⟨(Nat.chineseRemainder h (x : Zmod m).val (x : Zmod n).val).2.left.trans _,
@@ -892,9 +892,9 @@ theorem neg_val' {n : ℕ} [NeZero n] (a : Zmod n) : (-a).val = (n - a.val) % n 
   calc
     (-a).val = val (-a) % n := by rw [Nat.mod_eq_of_lt (-a).val_lt]
     _ = (n - val a) % n :=
-      Nat.Modeq.add_right_cancel' _
+      Nat.ModEq.add_right_cancel' _
         (by
-          rw [Nat.Modeq, ← val_add, add_left_neg, tsub_add_cancel_of_le a.val_le, Nat.mod_self,
+          rw [Nat.ModEq, ← val_add, add_left_neg, tsub_add_cancel_of_le a.val_le, Nat.mod_self,
             val_zero])
     
 #align zmod.neg_val' Zmod.neg_val'
@@ -1062,7 +1062,7 @@ theorem val_eq_ite_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
 
 theorem prime_ne_zero (p q : ℕ) [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq : p ≠ q) :
     (q : Zmod p) ≠ 0 := by
-  rwa [← Nat.cast_zero, Ne.def, eq_iff_modeq_nat, Nat.modeq_zero_iff_dvd, ←
+  rwa [← Nat.cast_zero, Ne.def, eq_iff_modeq_nat, Nat.modEq_zero_iff_dvd, ←
     hp.1.coprime_iff_not_dvd, Nat.coprime_primes hp.1 hq.1]
 #align zmod.prime_ne_zero Zmod.prime_ne_zero
 
@@ -1159,7 +1159,7 @@ instance subsingleton_ring_hom [Semiring R] : Subsingleton (Zmod n →+* R) :=
 
 instance subsingleton_ring_equiv [Semiring R] : Subsingleton (Zmod n ≃+* R) :=
   ⟨fun f g => by
-    rw [RingEquiv.coe_ring_hom_inj_iff]
+    rw [RingEquiv.coe_ringHom_inj_iff]
     apply RingHom.ext_zmod _ _⟩
 #align zmod.subsingleton_ring_equiv Zmod.subsingleton_ring_equiv
 

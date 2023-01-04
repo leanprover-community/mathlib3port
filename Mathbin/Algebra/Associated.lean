@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.associated
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1307,16 +1307,16 @@ protected def mkMonoidHom : α →* Associates α :=
   ⟨Associates.mk, mk_one, fun x y => mk_mul_mk⟩
 #align associates.mk_monoid_hom Associates.mkMonoidHom
 
-/- warning: associates.mk_monoid_hom_apply -> Associates.mk_monoid_hom_apply is a dubious translation:
+/- warning: associates.mk_monoid_hom_apply -> Associates.mk_monoidHom_apply is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (a : α), Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))) (fun (_x : MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))) => α -> (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MonoidHom.hasCoeToFun.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.commMonoid.{u1} α _inst_1)))) (Associates.mkMonoidHom.{u1} α _inst_1) a) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) a) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (MulOneClass.toMul.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))) α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1))) (MonoidHom.monoidHomClass.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Monoid.toMulOneClass.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (CommMonoid.toMonoid.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1)))))) (Associates.mkMonoidHom.{u1} α _inst_1) a) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) a)
-Case conversion may be inaccurate. Consider using '#align associates.mk_monoid_hom_apply Associates.mk_monoid_hom_applyₓ'. -/
+Case conversion may be inaccurate. Consider using '#align associates.mk_monoid_hom_apply Associates.mk_monoidHom_applyₓ'. -/
 @[simp]
-theorem mk_monoid_hom_apply (a : α) : Associates.mkMonoidHom a = Associates.mk a :=
+theorem mk_monoidHom_apply (a : α) : Associates.mkMonoidHom a = Associates.mk a :=
   rfl
-#align associates.mk_monoid_hom_apply Associates.mk_monoid_hom_apply
+#align associates.mk_monoid_hom_apply Associates.mk_monoidHom_apply
 
 /- warning: associates.associated_map_mk -> Associates.associated_map_mk is a dubious translation:
 lean 3 declaration is

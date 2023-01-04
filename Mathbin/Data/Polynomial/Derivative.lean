@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.derivative
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,7 +256,7 @@ theorem iterate_derivative_X {k} (h : 1 < k) : (derivative^[k]) (x : R[X]) = 0 :
   iterate_derivative_eq_zero <| nat_degree_X_le.trans_lt h
 #align polynomial.iterate_derivative_X Polynomial.iterate_derivative_X
 
-theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f : R[X]}
+theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : R[X]}
     (h : f.derivative = 0) : f.natDegree = 0 :=
   by
   rcases eq_or_ne f 0 with (rfl | hf)
@@ -275,7 +275,7 @@ theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f :
 #align
   polynomial.nat_degree_eq_zero_of_derivative_eq_zero Polynomial.nat_degree_eq_zero_of_derivative_eq_zero
 
-theorem eq_C_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) :
+theorem eq_C_of_derivative_eq_zero [NoZeroSMulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) :
     f = c (f.coeff 0) :=
   eq_C_of_nat_degree_eq_zero <| nat_degree_eq_zero_of_derivative_eq_zero h
 #align polynomial.eq_C_of_derivative_eq_zero Polynomial.eq_C_of_derivative_eq_zero
@@ -355,7 +355,7 @@ theorem iterate_derivative_nat_cast_mul {n k : ℕ} {f : R[X]} :
   induction' k with k ih generalizing f <;> simp [*]
 #align polynomial.iterate_derivative_nat_cast_mul Polynomial.iterate_derivative_nat_cast_mul
 
-theorem mem_support_derivative [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
+theorem mem_support_derivative [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
     n ∈ (derivative p).support ↔ n + 1 ∈ p.support :=
   by
   suffices ¬p.coeff (n + 1) * (n + 1 : ℕ) = 0 ↔ coeff p (n + 1) ≠ 0 by
@@ -365,7 +365,7 @@ theorem mem_support_derivative [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
 #align polynomial.mem_support_derivative Polynomial.mem_support_derivative
 
 @[simp]
-theorem degree_derivative_eq [NoZeroSmulDivisors ℕ R] (p : R[X]) (hp : 0 < natDegree p) :
+theorem degree_derivative_eq [NoZeroSMulDivisors ℕ R] (p : R[X]) (hp : 0 < natDegree p) :
     degree (derivative p) = (natDegree p - 1 : ℕ) :=
   by
   have h0 : p ≠ 0 := by

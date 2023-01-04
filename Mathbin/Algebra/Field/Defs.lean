@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.defs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -305,17 +305,17 @@ noncomputable def IsField.toField {R : Type u} [Ring R] (h : IsField R) : Field 
 #align is_field.to_field IsField.toField
 -/
 
-/- warning: uniq_inv_of_is_field -> uniq_inv_of_is_field is a dubious translation:
+/- warning: uniq_inv_of_is_field -> uniq_inv_of_isField is a dubious translation:
 lean 3 declaration is
   forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R], (IsField.{u1} R (Ring.toSemiring.{u1} R _inst_1)) -> (forall (x : R), (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (OfNat.mk.{u1} R 0 (Zero.zero.{u1} R (MulZeroClass.toHasZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))))) -> (ExistsUnique.{succ u1} R (fun (y : R) => Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (Distrib.toHasMul.{u1} R (Ring.toDistrib.{u1} R _inst_1))) x y) (OfNat.ofNat.{u1} R 1 (OfNat.mk.{u1} R 1 (One.one.{u1} R (AddMonoidWithOne.toOne.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (NonAssocRing.toAddGroupWithOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))))))
 but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : Ring.{u1} R], (IsField.{u1} R (Ring.toSemiring.{u1} R _inst_1)) -> (forall (x : R), (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))))) -> (ExistsUnique.{succ u1} R (fun (y : R) => Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) x y) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align uniq_inv_of_is_field uniq_inv_of_is_fieldₓ'. -/
+Case conversion may be inaccurate. Consider using '#align uniq_inv_of_is_field uniq_inv_of_isFieldₓ'. -/
 /-- For each field, and for each nonzero element of said field, there is a unique inverse.
 Since `is_field` doesn't remember the data of an `inv` function and as such,
 a lemma that there is a unique inverse could be useful.
 -/
-theorem uniq_inv_of_is_field (R : Type u) [Ring R] (hf : IsField R) :
+theorem uniq_inv_of_isField (R : Type u) [Ring R] (hf : IsField R) :
     ∀ x : R, x ≠ 0 → ∃! y : R, x * y = 1 := by
   intro x hx
   apply exists_unique_of_exists_of_unique
@@ -326,7 +326,7 @@ theorem uniq_inv_of_is_field (R : Type u) [Ring R] (hf : IsField R) :
       _ = x * y * z := by rw [← mul_assoc, hf.mul_comm y x]
       _ = z := by rw [hxy, one_mul]
       
-#align uniq_inv_of_is_field uniq_inv_of_is_field
+#align uniq_inv_of_is_field uniq_inv_of_isField
 
 end IsField
 

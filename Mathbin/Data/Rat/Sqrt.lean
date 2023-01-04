@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.sqrt
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,21 +26,33 @@ and proves several theorems about it.
 
 namespace Rat
 
+#print Rat.sqrt /-
 /-- Square root function on rational numbers, defined by taking the (integer) square root of the
 numerator and the square root (on natural numbers) of the denominator. -/
 @[pp_nodot]
 def sqrt (q : ℚ) : ℚ :=
   Rat.mk (Int.sqrt q.num) (Nat.sqrt q.denom)
 #align rat.sqrt Rat.sqrt
+-/
 
+#print Rat.sqrt_eq /-
 theorem sqrt_eq (q : ℚ) : Rat.sqrt (q * q) = |q| := by
   rw [sqrt, mul_self_num, mul_self_denom, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
 #align rat.sqrt_eq Rat.sqrt_eq
+-/
 
+#print Rat.exists_mul_self /-
 theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt x = x :=
   ⟨fun ⟨n, hn⟩ => by rw [← hn, sqrt_eq, abs_mul_abs_self], fun h => ⟨Rat.sqrt x, h⟩⟩
 #align rat.exists_mul_self Rat.exists_mul_self
+-/
 
+/- warning: rat.sqrt_nonneg -> Rat.sqrt_nonneg is a dubious translation:
+lean 3 declaration is
+  forall (q : Rat), LE.le.{0} Rat Rat.hasLe (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (Rat.sqrt q)
+but is expected to have type
+  forall (q : Rat), LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (Rat.sqrt q)
+Case conversion may be inaccurate. Consider using '#align rat.sqrt_nonneg Rat.sqrt_nonnegₓ'. -/
 theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
   nonneg_iff_zero_le.1 <|
     (divInt_nonneg _ <|

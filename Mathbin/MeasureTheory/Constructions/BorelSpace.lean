@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1221,7 +1221,7 @@ theorem AeMeasurable.isGlb {ι} {μ : Measure δ} [Countable ι] {f : ι → δ 
 protected theorem Monotone.measurable [LinearOrder β] [OrderClosedTopology β] {f : β → α}
     (hf : Monotone f) : Measurable f :=
   suffices h : ∀ x, OrdConnected (f ⁻¹' Ioi x) from measurable_of_Ioi fun x => (h x).MeasurableSet
-  fun x => ord_connected_def.mpr fun a ha b hb c hc => lt_of_lt_of_le ha (hf hc.1)
+  fun x => ordConnected_def.mpr fun a ha b hb c hc => lt_of_lt_of_le ha (hf hc.1)
 #align monotone.measurable Monotone.measurable
 
 theorem aeMeasurableRestrictOfMonotoneOn [LinearOrder β] [OrderClosedTopology β] {μ : Measure β}
@@ -1311,25 +1311,25 @@ variable [CompleteLinearOrder α] [OrderTopology α] [SecondCountableTopology α
 @[measurability]
 theorem measurable_supr {ι} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i)) :
     Measurable fun b => ⨆ i, f i b :=
-  (Measurable.is_lub hf) fun b => is_lub_supr
+  (Measurable.is_lub hf) fun b => isLUB_supᵢ
 #align measurable_supr measurable_supr
 
 @[measurability]
 theorem aeMeasurableSupr {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α}
     (hf : ∀ i, AeMeasurable (f i) μ) : AeMeasurable (fun b => ⨆ i, f i b) μ :=
-  AeMeasurable.isLub hf <| ae_of_all μ fun b => is_lub_supr
+  AeMeasurable.isLub hf <| ae_of_all μ fun b => isLUB_supᵢ
 #align ae_measurable_supr aeMeasurableSupr
 
 @[measurability]
 theorem measurable_infi {ι} [Countable ι] {f : ι → δ → α} (hf : ∀ i, Measurable (f i)) :
     Measurable fun b => ⨅ i, f i b :=
-  (Measurable.is_glb hf) fun b => is_glb_infi
+  (Measurable.is_glb hf) fun b => isGLB_infᵢ
 #align measurable_infi measurable_infi
 
 @[measurability]
 theorem aeMeasurableInfi {ι} {μ : Measure δ} [Countable ι] {f : ι → δ → α}
     (hf : ∀ i, AeMeasurable (f i) μ) : AeMeasurable (fun b => ⨅ i, f i b) μ :=
-  AeMeasurable.isGlb hf <| ae_of_all μ fun b => is_glb_infi
+  AeMeasurable.isGlb hf <| ae_of_all μ fun b => isGLB_infᵢ
 #align ae_measurable_infi aeMeasurableInfi
 
 theorem measurable_bsupr {ι} (s : Set ι) {f : ι → δ → α} (hs : s.Countable)
@@ -1416,7 +1416,7 @@ theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countab
   · simp [h2s, measurable_const]
   · apply measurable_of_Iic
     intro y
-    simp_rw [preimage, mem_Iic, cSup_le_iff (bdd _) (h2s.image _), ball_image_iff, set_of_forall]
+    simp_rw [preimage, mem_Iic, csupₛ_le_iff (bdd _) (h2s.image _), ball_image_iff, set_of_forall]
     exact MeasurableSet.bInter hs fun i hi => measurable_set_le (hf i) measurable_const
 #align measurable_cSup measurable_cSup
 

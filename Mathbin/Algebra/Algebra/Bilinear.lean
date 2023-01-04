@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.bilinear
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -249,7 +249,7 @@ theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
     Function.Injective (mulLeft R x) :=
   by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
-  letI := NoZeroDivisors.toIsDomain A
+  letI := NoZeroDivisors.to_isDomain A
   exact mul_right_injective₀ hx
 #align linear_map.mul_left_injective LinearMap.mul_left_injective
 
@@ -257,14 +257,14 @@ theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
     Function.Injective (mulRight R x) :=
   by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
-  letI := NoZeroDivisors.toIsDomain A
+  letI := NoZeroDivisors.to_isDomain A
   exact mul_left_injective₀ hx
 #align linear_map.mul_right_injective LinearMap.mul_right_injective
 
 theorem mul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mul R A x) :=
   by
   letI : Nontrivial A := ⟨⟨x, 0, hx⟩⟩
-  letI := NoZeroDivisors.toIsDomain A
+  letI := NoZeroDivisors.to_isDomain A
   exact mul_right_injective₀ hx
 #align linear_map.mul_injective LinearMap.mul_injective
 

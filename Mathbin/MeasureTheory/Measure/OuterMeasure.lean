@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.outer_measure
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ theorem bUnion_null_iff (m : OuterMeasure α) {s : Set β} (hs : s.Countable) {t
 #align measure_theory.outer_measure.bUnion_null_iff MeasureTheory.OuterMeasure.bUnion_null_iff
 
 theorem sUnion_null_iff (m : OuterMeasure α) {S : Set (Set α)} (hS : S.Countable) :
-    m (⋃₀S) = 0 ↔ ∀ s ∈ S, m s = 0 := by rw [sUnion_eq_bUnion, m.bUnion_null_iff hS]
+    m (⋃₀ S) = 0 ↔ ∀ s ∈ S, m s = 0 := by rw [sUnion_eq_bUnion, m.bUnion_null_iff hS]
 #align measure_theory.outer_measure.sUnion_null_iff MeasureTheory.OuterMeasure.sUnion_null_iff
 
 protected theorem Union_finset (m : OuterMeasure α) (s : β → Set α) (t : Finset β) :

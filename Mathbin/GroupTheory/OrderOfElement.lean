@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.order_of_element
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -466,7 +466,7 @@ theorem pow_eq_pow_iff_modeq : x ^ n = x ^ m ↔ n ≡ m [MOD orderOf x] :=
   wlog hmn : m ≤ n
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
   rw [← mul_one (x ^ m), pow_add, mul_left_cancel_iff, pow_eq_one_iff_modeq]
-  exact ⟨fun h => Nat.Modeq.add_left _ h, fun h => Nat.Modeq.add_left_cancel' _ h⟩
+  exact ⟨fun h => Nat.ModEq.add_left _ h, fun h => Nat.ModEq.add_left_cancel' _ h⟩
 #align pow_eq_pow_iff_modeq pow_eq_pow_iff_modeq
 
 @[simp, to_additive injective_nsmul_iff_not_is_of_fin_add_order]

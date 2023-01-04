@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.minimal_prime
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem Ideal.exists_minimal_primes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.m
     obtain ⟨p, h₁, h₂, h₃⟩ := this
     simp_rw [← @eq_comm _ p] at h₃
     exact ⟨p, ⟨h₁, fun a b c => (h₃ a b c).le⟩, h₂⟩
-  apply zorn_nonempty_partial_order₀
+  apply zorn_nonempty_partialOrder₀
   swap
   · refine' ⟨show J.is_prime by infer_instance, e⟩
   rintro (c : Set (Ideal R)) hc hc' J' hJ'

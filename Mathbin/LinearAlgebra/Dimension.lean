@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,7 @@ theorem LinearMap.lift_dim_le_of_injective (f : M →ₗ[R] M') (i : Injective f
   dsimp [Module.rank]
   rw [Cardinal.lift_supr (Cardinal.bdd_above_range.{v', v'} _),
     Cardinal.lift_supr (Cardinal.bdd_above_range.{v, v} _)]
-  apply csupr_mono' (Cardinal.bdd_above_range.{v', v} _)
+  apply csupᵢ_mono' (Cardinal.bdd_above_range.{v', v} _)
   rintro ⟨s, li⟩
   refine' ⟨⟨f '' s, _⟩, cardinal.lift_mk_le'.mpr ⟨(Equiv.Set.image f s i).toEmbedding⟩⟩
   exact (li.map' _ <| linear_map.ker_eq_bot.mpr i).image
@@ -150,7 +150,7 @@ theorem LinearMap.dim_le_of_injective (f : M →ₗ[R] M₁) (i : Injective f) :
 theorem dim_le {n : ℕ}
     (H : ∀ s : Finset M, (LinearIndependent R fun i : s => (i : M)) → s.card ≤ n) :
     Module.rank R M ≤ n := by
-  apply csupr_le'
+  apply csupᵢ_le'
   rintro ⟨s, li⟩
   exact linear_independent_bounded_of_finset_linear_independent_bounded H _ li
 #align dim_le dim_le
@@ -160,12 +160,12 @@ theorem lift_dim_range_le (f : M →ₗ[R] M') :
   by
   dsimp [Module.rank]
   rw [Cardinal.lift_supr (Cardinal.bdd_above_range.{v', v'} _)]
-  apply csupr_le'
+  apply csupᵢ_le'
   rintro ⟨s, li⟩
   apply le_trans
   swap
   apply cardinal.lift_le.mpr
-  refine' le_csupr (Cardinal.bdd_above_range.{v, v} _) ⟨range_splitting f '' s, _⟩
+  refine' le_csupᵢ (Cardinal.bdd_above_range.{v, v} _) ⟨range_splitting f '' s, _⟩
   · apply LinearIndependent.of_comp f.range_restrict
     convert li.comp (Equiv.Set.rangeSplittingImageEquiv f s) (Equiv.injective _) using 1
   · exact (cardinal.lift_mk_eq'.mpr ⟨Equiv.Set.rangeSplittingImageEquiv f s⟩).ge
@@ -260,7 +260,7 @@ theorem cardinal_lift_le_dim_of_linear_independent.{m} {ι : Type w} {v : ι →
   · simp only [Cardinal.lift_le]
     apply le_trans
     swap
-    exact le_csupr (Cardinal.bdd_above_range.{v, v} _) ⟨range v, hv.coe_range⟩
+    exact le_csupᵢ (Cardinal.bdd_above_range.{v, v} _) ⟨range v, hv.coe_range⟩
     exact le_rfl
 #align cardinal_lift_le_dim_of_linear_independent cardinal_lift_le_dim_of_linear_independent
 
@@ -285,7 +285,7 @@ variable (R M)
 theorem dim_punit : Module.rank R PUnit = 0 :=
   by
   apply le_bot_iff.mp
-  apply csupr_le'
+  apply csupᵢ_le'
   rintro ⟨s, li⟩
   apply le_bot_iff.mpr
   apply cardinal.mk_emptyc_iff.mpr
@@ -464,7 +464,7 @@ theorem infinite_basis_le_maximal_linear_independent {ι : Type w} (b : Basis ι
   Cardinal.lift_le.mp (infinite_basis_le_maximal_linear_independent' b v i m)
 #align infinite_basis_le_maximal_linear_independent infinite_basis_le_maximal_linear_independent
 
-theorem CompleteLattice.Independent.subtype_ne_bot_le_rank [NoZeroSmulDivisors R M]
+theorem CompleteLattice.Independent.subtype_ne_bot_le_rank [NoZeroSMulDivisors R M]
     {V : ι → Submodule R M} (hV : CompleteLattice.Independent V) :
     Cardinal.lift.{v} (#{ i : ι // V i ≠ ⊥ }) ≤ Cardinal.lift.{w} (Module.rank R M) :=
   by
@@ -485,7 +485,7 @@ section rank_zero
 
 variable {R : Type u} {M : Type v}
 
-variable [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M] [NoZeroSmulDivisors R M]
+variable [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M] [NoZeroSMulDivisors R M]
 
 theorem dim_zero_iff_forall_zero : Module.rank R M = 0 ↔ ∀ x : M, x = 0 :=
   by
@@ -789,14 +789,14 @@ theorem Basis.mk_eq_dim'' {ι : Type v} (v : Basis ι R M) : (#ι) = Module.rank
   apply le_antisymm
   · trans
     swap
-    apply le_csupr (Cardinal.bdd_above_range.{v, v} _)
+    apply le_csupᵢ (Cardinal.bdd_above_range.{v, v} _)
     exact
       ⟨Set.range v, by
         convert v.reindex_range.linear_independent
         ext
         simp⟩
     exact (Cardinal.mk_range_eq v v.injective).ge
-  · apply csupr_le'
+  · apply csupᵢ_le'
     rintro ⟨s, li⟩
     apply linear_independent_le_basis v _ li
 #align basis.mk_eq_dim'' Basis.mk_eq_dim''

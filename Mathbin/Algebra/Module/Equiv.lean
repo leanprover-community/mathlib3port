@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.equiv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -620,7 +620,7 @@ end
 /-- Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
 @[simps]
 def RingEquiv.toSemilinearEquiv (f : R ≃+* S) : by
-    haveI := RingHomInvPair.of_ring_equiv f <;>
+    haveI := RingHomInvPair.of_ringEquiv f <;>
         haveI := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;>
       exact R ≃ₛₗ[(↑f : R →+* S)] S :=
   { f with

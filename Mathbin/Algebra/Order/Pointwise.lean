@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.pointwise
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,12 +39,12 @@ variable [One α]
 
 @[simp, to_additive]
 theorem cSup_one : supₛ (1 : Set α) = 1 :=
-  cSup_singleton _
+  csupₛ_singleton _
 #align cSup_one cSup_one
 
 @[simp, to_additive]
 theorem cInf_one : infₛ (1 : Set α) = 1 :=
-  cInf_singleton _
+  cinfₛ_singleton _
 #align cInf_one cInf_one
 
 end One
@@ -71,14 +71,14 @@ theorem cInf_inv (hs₀ : s.Nonempty) (hs₁ : BddAbove s) : infₛ s⁻¹ = (su
 @[to_additive]
 theorem cSup_mul (hs₀ : s.Nonempty) (hs₁ : BddAbove s) (ht₀ : t.Nonempty) (ht₁ : BddAbove t) :
     supₛ (s * t) = supₛ s * supₛ t :=
-  cSup_image2_eq_cSup_cSup (fun _ => (OrderIso.mulRight _).to_galois_connection)
+  csupₛ_image2_eq_csupₛ_csupₛ (fun _ => (OrderIso.mulRight _).to_galois_connection)
     (fun _ => (OrderIso.mulLeft _).to_galois_connection) hs₀ hs₁ ht₀ ht₁
 #align cSup_mul cSup_mul
 
 @[to_additive]
 theorem cInf_mul (hs₀ : s.Nonempty) (hs₁ : BddBelow s) (ht₀ : t.Nonempty) (ht₁ : BddBelow t) :
     infₛ (s * t) = infₛ s * infₛ t :=
-  cInf_image2_eq_cInf_cInf (fun _ => (OrderIso.mulRight _).symm.to_galois_connection)
+  cinfₛ_image2_eq_cinfₛ_cinfₛ (fun _ => (OrderIso.mulRight _).symm.to_galois_connection)
     (fun _ => (OrderIso.mulLeft _).symm.to_galois_connection) hs₀ hs₁ ht₀ ht₁
 #align cInf_mul cInf_mul
 

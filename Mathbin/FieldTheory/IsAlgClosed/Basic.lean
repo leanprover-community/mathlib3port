@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ theorem exists_aeval_eq_zero {R : Type _} [Field R] [IsAlgClosed k] [Algebra R k
   exists_eval₂_eq_zero (algebraMap R k) p hp
 #align is_alg_closed.exists_aeval_eq_zero IsAlgClosed.exists_aeval_eq_zero
 
-theorem ofExistsRoot (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p.eval x = 0) :
+theorem of_exists_root (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p.eval x = 0) :
     IsAlgClosed k :=
   ⟨fun p =>
     Or.inr fun q hq hqp =>
@@ -144,7 +144,7 @@ theorem ofExistsRoot (H : ∀ p : k[X], p.Monic → Irreducible p → ∃ x, p.e
         exact (associated_normalize _).Irreducible hq
       let ⟨x, hx⟩ := H (q * c (leadingCoeff q)⁻¹) (monic_mul_leading_coeff_inv hq.NeZero) this
       degree_mul_leading_coeff_inv q hq.NeZero ▸ degree_eq_one_of_irreducible_of_root this hx⟩
-#align is_alg_closed.of_exists_root IsAlgClosed.ofExistsRoot
+#align is_alg_closed.of_exists_root IsAlgClosed.of_exists_root
 
 theorem degree_eq_one_of_irreducible [IsAlgClosed k] {p : k[X]} (hp : Irreducible p) :
     p.degree = 1 :=
@@ -182,8 +182,8 @@ end IsAlgClosed
 
 /-- Typeclass for an extension being an algebraic closure. -/
 class IsAlgClosure (R : Type u) (K : Type v) [CommRing R] [Field K] [Algebra R K]
-  [NoZeroSmulDivisors R K] : Prop where
-  algClosed : IsAlgClosed K
+  [NoZeroSMulDivisors R K] : Prop where
+  alg_closed : IsAlgClosed K
   algebraic : Algebra.IsAlgebraic R K
 #align is_alg_closure IsAlgClosure
 
@@ -358,15 +358,15 @@ omit hL
 
 variable {R : Type u} [CommRing R]
 
-variable {S : Type v} [CommRing S] [IsDomain S] [Algebra R S] [Algebra R M] [NoZeroSmulDivisors R S]
-  [NoZeroSmulDivisors R M] (hS : Algebra.IsAlgebraic R S)
+variable {S : Type v} [CommRing S] [IsDomain S] [Algebra R S] [Algebra R M] [NoZeroSMulDivisors R S]
+  [NoZeroSMulDivisors R M] (hS : Algebra.IsAlgebraic R S)
 
 variable {M}
 
 include hS
 
 private theorem fraction_ring.is_algebraic :
-    letI : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
+    letI : IsDomain R := (NoZeroSMulDivisors.algebra_map_injective R S).IsDomain _
     Algebra.IsAlgebraic (FractionRing R) (FractionRing S) :=
   by
   intro inst x
@@ -379,7 +379,7 @@ private theorem fraction_ring.is_algebraic :
   closed extension of R. -/
 noncomputable irreducible_def lift : S →ₐ[R] M :=
   by
-  letI : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
+  letI : IsDomain R := (NoZeroSMulDivisors.algebra_map_injective R S).IsDomain _
   have hfRfS : Algebra.IsAlgebraic (FractionRing R) (FractionRing S) :=
     fraction_ring.is_algebraic hS
   let f : FractionRing S →ₐ[FractionRing R] M := lift_aux (FractionRing R) (FractionRing S) M hfRfS
@@ -412,15 +412,15 @@ end IsAlgClosed
 namespace IsAlgClosure
 
 variable (K : Type _) (J : Type _) (R : Type u) (S : Type _) [Field K] [Field J] [CommRing R]
-  (L : Type v) (M : Type w) [Field L] [Field M] [Algebra R M] [NoZeroSmulDivisors R M]
+  (L : Type v) (M : Type w) [Field L] [Field M] [Algebra R M] [NoZeroSMulDivisors R M]
   [IsAlgClosure R M] [Algebra K M] [IsAlgClosure K M] [CommRing S] [Algebra S L]
-  [NoZeroSmulDivisors S L] [IsAlgClosure S L]
+  [NoZeroSMulDivisors S L] [IsAlgClosure S L]
 
-attribute [local instance] IsAlgClosure.algClosed
+attribute [local instance] IsAlgClosure.alg_closed
 
 section
 
-variable [Algebra R L] [NoZeroSmulDivisors R L] [IsAlgClosure R L]
+variable [Algebra R L] [NoZeroSMulDivisors R L] [IsAlgClosure R L]
 
 /-- A (random) isomorphism between two algebraic closures of `R`. -/
 noncomputable def equiv : L ≃ₐ[R] M :=
@@ -435,7 +435,7 @@ noncomputable def equiv : L ≃ₐ[R] M :=
       exact
         IsAlgClosed.algebra_map_surjective_of_is_algebraic
           (Algebra.is_algebraic_of_larger_base_of_injective
-            (NoZeroSmulDivisors.algebra_map_injective R _) IsAlgClosure.algebraic)⟩
+            (NoZeroSMulDivisors.algebra_map_injective R _) IsAlgClosure.algebraic)⟩
 #align is_alg_closure.equiv IsAlgClosure.equiv
 
 end
@@ -448,18 +448,18 @@ variable [Algebra K J] [Algebra J L] [IsAlgClosure J L] [Algebra K L] [IsScalarT
 
 /-- A (random) isomorphism between an algebraic closure of `R` and an algebraic closure of
   an algebraic extension of `R` -/
-noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSmulDivisors R S]
+noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSMulDivisors R S]
     (hRL : Algebra.IsAlgebraic R L) : L ≃ₐ[R] M :=
   by
-  letI : NoZeroSmulDivisors R L :=
-    NoZeroSmulDivisors.of_algebra_map_injective
+  letI : NoZeroSMulDivisors R L :=
+    NoZeroSMulDivisors.of_algebra_map_injective
       (by
         rw [IsScalarTower.algebra_map_eq R S L]
         exact
-          Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)
-            (NoZeroSmulDivisors.algebra_map_injective _ _))
+          Function.Injective.comp (NoZeroSMulDivisors.algebra_map_injective _ _)
+            (NoZeroSMulDivisors.algebra_map_injective _ _))
   letI : IsAlgClosure R L :=
-    { algClosed := by infer_instance
+    { alg_closed := by infer_instance
       algebraic := hRL }
   exact IsAlgClosure.equiv _ _ _
 #align is_alg_closure.equiv_of_algebraic' IsAlgClosure.equivOfAlgebraic'
@@ -482,8 +482,8 @@ noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
   by
   letI : Algebra R S := RingHom.toAlgebra hSR.symm.to_ring_hom
   letI : Algebra S R := RingHom.toAlgebra hSR.to_ring_hom
-  letI : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R M).IsDomain _
-  letI : IsDomain S := (NoZeroSmulDivisors.algebra_map_injective S L).IsDomain _
+  letI : IsDomain R := (NoZeroSMulDivisors.algebra_map_injective R M).IsDomain _
+  letI : IsDomain S := (NoZeroSMulDivisors.algebra_map_injective S L).IsDomain _
   have : Algebra.IsAlgebraic R S := fun x =>
     by
     rw [← RingEquiv.symm_apply_apply hSR x]
@@ -492,15 +492,15 @@ noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
   haveI : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq fun _ => rfl
   haveI : IsScalarTower S R L :=
     IsScalarTower.of_algebra_map_eq (by simp [RingHom.algebra_map_to_algebra])
-  haveI : NoZeroSmulDivisors R S := NoZeroSmulDivisors.of_algebra_map_injective hSR.symm.injective
+  haveI : NoZeroSMulDivisors R S := NoZeroSMulDivisors.of_algebra_map_injective hSR.symm.injective
   refine'
     ⟨equiv_of_algebraic' R S L M
         (Algebra.is_algebraic_of_larger_base_of_injective
           (show Function.Injective (algebraMap S R) from hSR.injective) IsAlgClosure.algebraic),
       _⟩
   ext
-  simp only [RingEquiv.to_ring_hom_eq_coe, Function.comp_apply, RingHom.coe_comp,
-    AlgEquiv.coe_ring_equiv, RingEquiv.coe_to_ring_hom]
+  simp only [RingEquiv.toRingHom_eq_coe, Function.comp_apply, RingHom.coe_comp,
+    AlgEquiv.coe_ring_equiv, RingEquiv.coe_toRingHom]
   conv_lhs => rw [← hSR.symm_apply_apply x]
   show equiv_of_algebraic' R S L M _ (algebraMap R L (hSR x)) = _
   rw [AlgEquiv.commutes]

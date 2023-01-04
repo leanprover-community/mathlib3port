@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alistair Tucker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.intermediate_value
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,14 +266,14 @@ variable {α : Type u} {β : Type v} {γ : Type w} [ConditionallyCompleteLinearO
 `(Inf s, Sup s)`. -/
 theorem IsConnected.Ioo_cInf_cSup_subset {s : Set α} (hs : IsConnected s) (hb : BddBelow s)
     (ha : BddAbove s) : Ioo (infₛ s) (supₛ s) ⊆ s := fun x hx =>
-  let ⟨y, ys, hy⟩ := (isGLB_lt_iff (is_glb_cInf hs.Nonempty hb)).1 hx.1
-  let ⟨z, zs, hz⟩ := (lt_isLUB_iff (is_lub_cSup hs.Nonempty ha)).1 hx.2
+  let ⟨y, ys, hy⟩ := (isGLB_lt_iff (isGLB_cinfₛ hs.Nonempty hb)).1 hx.1
+  let ⟨z, zs, hz⟩ := (lt_isLUB_iff (isLUB_csupₛ hs.Nonempty ha)).1 hx.2
   hs.Icc_subset ys zs ⟨le_of_lt hy, le_of_lt hz⟩
 #align is_connected.Ioo_cInf_cSup_subset IsConnected.Ioo_cInf_cSup_subset
 
 theorem eq_Icc_cInf_cSup_of_connected_bdd_closed {s : Set α} (hc : IsConnected s) (hb : BddBelow s)
     (ha : BddAbove s) (hcl : IsClosed s) : s = Icc (infₛ s) (supₛ s) :=
-  Subset.antisymm (subset_Icc_cInf_cSup hb ha) <|
+  Subset.antisymm (subset_Icc_cinfₛ_csupₛ hb ha) <|
     hc.Icc_subset (hcl.cInf_mem hc.Nonempty hb) (hcl.cSup_mem hc.Nonempty ha)
 #align eq_Icc_cInf_cSup_of_connected_bdd_closed eq_Icc_cInf_cSup_of_connected_bdd_closed
 
@@ -282,7 +282,7 @@ theorem IsPreconnected.Ioi_cInf_subset {s : Set α} (hs : IsPreconnected s) (hb 
   by
   have sne : s.nonempty := @nonempty_of_not_bddAbove α _ s ⟨Inf ∅⟩ ha
   intro x hx
-  obtain ⟨y, ys, hy⟩ : ∃ y ∈ s, y < x := (isGLB_lt_iff (is_glb_cInf sne hb)).1 hx
+  obtain ⟨y, ys, hy⟩ : ∃ y ∈ s, y < x := (isGLB_lt_iff (isGLB_cinfₛ sne hb)).1 hx
   obtain ⟨z, zs, hz⟩ : ∃ z ∈ s, x < z := not_bddAbove_iff.1 ha x
   exact hs.Icc_subset ys zs ⟨le_of_lt hy, le_of_lt hz⟩
 #align is_preconnected.Ioi_cInf_subset IsPreconnected.Ioi_cInf_subset
@@ -310,18 +310,20 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
   have hs' : IsConnected s := ⟨hne, hs⟩
   by_cases hb : BddBelow s <;> by_cases ha : BddAbove s
   · rcases mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset (hs'.Ioo_cInf_cSup_subset hb ha)
-        (subset_Icc_cInf_cSup hb ha) with (hs | hs | hs | hs)
+        (subset_Icc_cinfₛ_csupₛ hb ha) with (hs | hs | hs | hs)
     · exact Or.inl hs
     · exact Or.inr <| Or.inl hs
     · exact Or.inr <| Or.inr <| Or.inl hs
     · exact Or.inr <| Or.inr <| Or.inr <| Or.inl hs
   · refine' Or.inr <| Or.inr <| Or.inr <| Or.inr _
-    cases' mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_cInf_subset hb ha) fun x hx => cInf_le hb hx with
+    cases'
+      mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_cInf_subset hb ha) fun x hx => cinfₛ_le hb hx with
       hs hs
     · exact Or.inl hs
     · exact Or.inr (Or.inl hs)
   · iterate 6 apply Or.inr
-    cases' mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) fun x hx => le_cSup ha hx with
+    cases'
+      mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) fun x hx => le_csupₛ ha hx with
       hs hs
     · exact Or.inl hs
     · exact Or.inr (Or.inl hs)
@@ -381,12 +383,12 @@ theorem IsClosed.mem_of_ge_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsC
   have Sbd : BddAbove S := ⟨b, fun z hz => hz.2.2⟩
   let c := Sup (s ∩ Icc a b)
   have c_mem : c ∈ S := hs.cSup_mem ⟨_, ha⟩ Sbd
-  have c_le : c ≤ b := cSup_le ⟨_, ha⟩ fun x hx => hx.2.2
+  have c_le : c ≤ b := csupₛ_le ⟨_, ha⟩ fun x hx => hx.2.2
   cases' eq_or_lt_of_le c_le with hc hc
   exact hc ▸ c_mem.1
   exfalso
   rcases hgt c ⟨c_mem.1, c_mem.2.1, hc⟩ with ⟨x, xs, cx, xb⟩
-  exact not_lt_of_le (le_cSup Sbd ⟨xs, le_trans (le_cSup Sbd ha) (le_of_lt cx), xb⟩) cx
+  exact not_lt_of_le (le_csupₛ Sbd ⟨xs, le_trans (le_csupₛ Sbd ha) (le_of_lt cx), xb⟩) cx
 #align is_closed.mem_of_ge_of_forall_exists_gt IsClosed.mem_of_ge_of_forall_exists_gt
 
 /-- A "continuous induction principle" for a closed interval: if a set `s` meets `[a, b]`
@@ -473,11 +475,11 @@ theorem is_preconnected_iff_ord_connected {s : Set α} : IsPreconnected s ↔ Or
 #align is_preconnected_iff_ord_connected is_preconnected_iff_ord_connected
 
 theorem is_preconnected_Ici : IsPreconnected (Ici a) :=
-  ord_connected_Ici.IsPreconnected
+  ordConnected_Ici.IsPreconnected
 #align is_preconnected_Ici is_preconnected_Ici
 
 theorem is_preconnected_Iic : IsPreconnected (Iic a) :=
-  ord_connected_Iic.IsPreconnected
+  ordConnected_Iic.IsPreconnected
 #align is_preconnected_Iic is_preconnected_Iic
 
 theorem is_preconnected_Iio : IsPreconnected (Iio a) :=
@@ -485,19 +487,19 @@ theorem is_preconnected_Iio : IsPreconnected (Iio a) :=
 #align is_preconnected_Iio is_preconnected_Iio
 
 theorem is_preconnected_Ioi : IsPreconnected (Ioi a) :=
-  ord_connected_Ioi.IsPreconnected
+  ordConnected_Ioi.IsPreconnected
 #align is_preconnected_Ioi is_preconnected_Ioi
 
 theorem is_preconnected_Ioo : IsPreconnected (Ioo a b) :=
-  ord_connected_Ioo.IsPreconnected
+  ordConnected_Ioo.IsPreconnected
 #align is_preconnected_Ioo is_preconnected_Ioo
 
 theorem is_preconnected_Ioc : IsPreconnected (Ioc a b) :=
-  ord_connected_Ioc.IsPreconnected
+  ordConnected_Ioc.IsPreconnected
 #align is_preconnected_Ioc is_preconnected_Ioc
 
 theorem is_preconnected_Ico : IsPreconnected (Ico a b) :=
-  ord_connected_Ico.IsPreconnected
+  ordConnected_Ico.IsPreconnected
 #align is_preconnected_Ico is_preconnected_Ico
 
 theorem is_connected_Ici : IsConnected (Ici a) :=
@@ -533,7 +535,7 @@ theorem is_connected_Ico (h : a < b) : IsConnected (Ico a b) :=
 #align is_connected_Ico is_connected_Ico
 
 instance (priority := 100) ordered_connected_space : PreconnectedSpace α :=
-  ⟨ord_connected_univ.IsPreconnected⟩
+  ⟨ordConnected_univ.IsPreconnected⟩
 #align ordered_connected_space ordered_connected_space
 
 /-- In a dense conditionally complete linear order, the set of preconnected sets is exactly

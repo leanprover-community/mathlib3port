@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.jacobian
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -734,7 +734,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux
     _ = ε * μ (⋃ n, closed_ball 0 R ∩ t n) :=
       by
       rw [measure_Union]
-      · exact PairwiseDisjoint.mono t_disj fun n => inter_subset_right _ _
+      · exact pairwise_disjoint_mono t_disj fun n => inter_subset_right _ _
       · intro n
         exact measurable_set_closed_ball.inter (t_meas n)
     _ ≤ ε * μ (closed_ball 0 R) := by
@@ -989,7 +989,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       by
       have M : ∀ n : ℕ, MeasurableSet (s ∩ t n) := fun n => hs.inter (t_meas n)
       rw [lintegral_Union M]
-      exact PairwiseDisjoint.mono t_disj fun n => inter_subset_right _ _
+      exact pairwise_disjoint_mono t_disj fun n => inter_subset_right _ _
     _ = ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) + 2 * ε ∂μ :=
       by
       have : s = ⋃ n, s ∩ t n := by
@@ -1056,7 +1056,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
       rw [lintegral_Union]
       · intro n
         exact hs.inter (u_meas n)
-      · exact PairwiseDisjoint.mono (disjoint_disjointed _) fun n => inter_subset_right _ _
+      · exact pairwise_disjoint_mono (disjoint_disjointed _) fun n => inter_subset_right _ _
     
 #align
   measure_theory.add_haar_image_le_lintegral_abs_det_fderiv MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv
@@ -1131,7 +1131,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
       conv_lhs => rw [s_eq]
       rw [lintegral_Union]
       · exact fun n => hs.inter (t_meas n)
-      · exact PairwiseDisjoint.mono t_disj fun n => inter_subset_right _ _
+      · exact pairwise_disjoint_mono t_disj fun n => inter_subset_right _ _
     _ ≤ ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal (|(A n).det|) + ε ∂μ :=
       by
       apply Ennreal.tsum_le_tsum fun n => _
@@ -1173,7 +1173,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
             (fun x hx => (hf' x hx.1).mono (inter_subset_left _ _))
             (hf.mono (inter_subset_left _ _))
       rw [measure_Union]; rotate_left
-      · exact PairwiseDisjoint.mono t_disj fun i => inter_subset_right _ _
+      · exact pairwise_disjoint_mono t_disj fun i => inter_subset_right _ _
       · exact fun i => hs.inter (t_meas i)
       rw [← Ennreal.tsum_mul_left, ← Ennreal.tsum_add]
       congr 1
@@ -1225,7 +1225,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
       rw [lintegral_Union]
       · intro n
         exact hs.inter (u_meas n)
-      · exact PairwiseDisjoint.mono (disjoint_disjointed _) fun n => inter_subset_right _ _
+      · exact pairwise_disjoint_mono (disjoint_disjointed _) fun n => inter_subset_right _ _
     _ ≤ ∑' n, μ (f '' (s ∩ u n)) :=
       by
       apply Ennreal.tsum_le_tsum fun n => _

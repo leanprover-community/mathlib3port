@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv_measurable
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -821,7 +821,7 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
         mul_le_mul_of_nonneg_left he.le (mul_nonneg (by norm_num) (norm_nonneg _))
       _ = ε * ‖y - x‖ := by ring
       
-  rw [← this.deriv_within (uniqueDiffOnIci x x le_rfl)] at f'K
+  rw [← this.deriv_within (unique_diff_on_Ici x x le_rfl)] at f'K
   exact ⟨this.differentiable_within_at, f'K⟩
 #align
   right_deriv_measurable_aux.D_subset_differentiable_set RightDerivMeasurableAux.D_subset_differentiable_set

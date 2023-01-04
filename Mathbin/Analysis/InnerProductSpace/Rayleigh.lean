@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,7 +265,7 @@ finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem has_eigenvalue_supr_of_finite_dimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨆ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
   by
-  haveI := FiniteDimensional.properIsROrC 𝕜 E
+  haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ‖x‖) := is_compact_sphere _ _
@@ -288,7 +288,7 @@ finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem has_eigenvalue_infi_of_finite_dimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨅ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
   by
-  haveI := FiniteDimensional.properIsROrC 𝕜 E
+  haveI := FiniteDimensional.proper_is_R_or_C 𝕜 E
   let T' := hT.to_self_adjoint
   obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
   have H₁ : IsCompact (sphere (0 : E) ‖x‖) := is_compact_sphere _ _

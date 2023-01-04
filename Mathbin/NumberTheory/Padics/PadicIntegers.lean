@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_integers
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -449,7 +449,7 @@ theorem valuation_nonneg (x : ℤ_[p]) : 0 ≤ x.Valuation :=
   by_cases hx : x = 0
   · simp [hx]
   have h : (1 : ℝ) < p := by exact_mod_cast hp.1.one_lt
-  rw [← neg_nonpos, ← (zpow_strict_mono h).le_iff_le]
+  rw [← neg_nonpos, ← (zpow_strictMono h).le_iff_le]
   show (p : ℝ) ^ (-Valuation x) ≤ p ^ 0
   rw [← norm_eq_pow_val hx]
   simpa using x.property

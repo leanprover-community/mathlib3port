@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.order
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -451,7 +451,7 @@ Case conversion may be inaccurate. Consider using '#align left.pow_lt_one_iff Le
 @[to_additive Left.nsmul_neg_iff]
 theorem Left.pow_lt_one_iff [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) :
     x ^ n < 1 ↔ x < 1 :=
-  haveI := Mul.to_CovariantClass_left M
+  haveI := Mul.to_covariantClass_left M
   pow_lt_one_iff hn.ne'
 #align left.pow_lt_one_iff Left.pow_lt_one_iff
 
@@ -467,7 +467,7 @@ theorem Right.pow_lt_one_iff [CovariantClass M M (swap (· * ·)) (· < ·)] {n 
   ⟨fun H =>
     not_le.mp fun k =>
       H.not_le <|
-        haveI := Mul.to_CovariantClass_right M
+        haveI := Mul.to_covariantClass_right M
         Right.one_le_pow_of_le k,
     Right.pow_lt_one_of_lt hn⟩
 #align right.pow_lt_one_iff Right.pow_lt_one_iff

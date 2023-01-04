@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_map
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -493,12 +493,12 @@ variable [AddCommGroup M] [AddCommGroup N] [AddCommGroup P]
 
 variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
-theorem lsmul_injective [NoZeroSmulDivisors R M] {x : R} (hx : x ≠ 0) :
+theorem lsmul_injective [NoZeroSMulDivisors R M] {x : R} (hx : x ≠ 0) :
     Function.Injective (lsmul R M x) :=
   smul_right_injective _ hx
 #align linear_map.lsmul_injective LinearMap.lsmul_injective
 
-theorem ker_lsmul [NoZeroSmulDivisors R M] {a : R} (ha : a ≠ 0) : (LinearMap.lsmul R M a).ker = ⊥ :=
+theorem ker_lsmul [NoZeroSMulDivisors R M] {a : R} (ha : a ≠ 0) : (LinearMap.lsmul R M a).ker = ⊥ :=
   LinearMap.ker_eq_bot_of_injective (LinearMap.lsmul_injective ha)
 #align linear_map.ker_lsmul LinearMap.ker_lsmul
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module data.nat.bits
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,11 +209,11 @@ theorem bit_eq_zero_iff {n : ℕ} {b : Bool} : bit b n = 0 ↔ n = 0 ∧ b = ff 
 #align nat.bit_eq_zero_iff Nat.bit_eq_zero_iff
 -/
 
-#print Nat.binary_rec_eq' /-
+#print Nat.binaryRec_eq' /-
 /-- The same as binary_rec_eq, but that one unfortunately requires `f` to be the identity when
   appending `ff` to `0`. Here, we allow you to explicitly say that that case is not happening, i.e.
   supplying `n = 0 → b = tt`. -/
-theorem binary_rec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (bit b n)} (b n)
+theorem binaryRec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (bit b n)} (b n)
     (h : f false 0 z = z ∨ (n = 0 → b = tt)) : binaryRec z f (bit b n) = f b n (binaryRec z f n) :=
   by
   rw [binary_rec]
@@ -227,7 +227,7 @@ theorem binary_rec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (b
     rw [bodd_bit, div2_bit]
     intros
     rfl
-#align nat.binary_rec_eq' Nat.binary_rec_eq'
+#align nat.binary_rec_eq' Nat.binaryRec_eq'
 -/
 
 #print Nat.binaryRec' /-

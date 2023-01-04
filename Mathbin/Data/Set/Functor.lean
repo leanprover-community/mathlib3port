@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.functor
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,26 +34,35 @@ instance : Monad.{u} Set where
   seq α β := Set.seq
   map α β := Set.image
 
+#print Set.bind_def /-
 @[simp]
 theorem bind_def : s >>= f = ⋃ i ∈ s, f i :=
   rfl
 #align set.bind_def Set.bind_def
+-/
 
+#print Set.fmap_eq_image /-
 @[simp]
 theorem fmap_eq_image (f : α → β) : f <$> s = f '' s :=
   rfl
 #align set.fmap_eq_image Set.fmap_eq_image
+-/
 
+#print Set.seq_eq_set_seq /-
 @[simp]
 theorem seq_eq_set_seq (s : Set (α → β)) (t : Set α) : s <*> t = s.seq t :=
   rfl
 #align set.seq_eq_set_seq Set.seq_eq_set_seq
+-/
 
+#print Set.pure_def /-
 @[simp]
 theorem pure_def (a : α) : (pure a : Set α) = {a} :=
   rfl
 #align set.pure_def Set.pure_def
+-/
 
+#print Set.image2_def /-
 /-- `set.image2` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
 theorem image2_def {α β γ : Type _} (f : α → β → γ) (s : Set α) (t : Set β) :
@@ -61,6 +70,7 @@ theorem image2_def {α β γ : Type _} (f : α → β → γ) (s : Set α) (t : 
   ext
   simp
 #align set.image2_def Set.image2_def
+-/
 
 instance : LawfulMonad Set where
   id_map α := image_id

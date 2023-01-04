@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metric_separated
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,14 +47,14 @@ theorem comm : IsMetricSeparated s t ↔ IsMetricSeparated t s :=
 #align is_metric_separated.comm IsMetricSeparated.comm
 
 @[simp]
-theorem emptyLeft (s : Set X) : IsMetricSeparated ∅ s :=
+theorem empty_left (s : Set X) : IsMetricSeparated ∅ s :=
   ⟨1, Ennreal.zero_lt_one.ne', fun x => False.elim⟩
-#align is_metric_separated.empty_left IsMetricSeparated.emptyLeft
+#align is_metric_separated.empty_left IsMetricSeparated.empty_left
 
 @[simp]
-theorem emptyRight (s : Set X) : IsMetricSeparated s ∅ :=
-  (emptyLeft s).symm
-#align is_metric_separated.empty_right IsMetricSeparated.emptyRight
+theorem empty_right (s : Set X) : IsMetricSeparated s ∅ :=
+  (empty_left s).symm
+#align is_metric_separated.empty_right IsMetricSeparated.empty_right
 
 protected theorem disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   let ⟨r, r0, hr⟩ := h
@@ -71,15 +71,15 @@ theorem mono {s' t'} (hs : s ⊆ s') (ht : t ⊆ t') :
   ⟨r, r0, fun x hx y hy => hr x (hs hx) y (ht hy)⟩
 #align is_metric_separated.mono IsMetricSeparated.mono
 
-theorem monoLeft {s'} (h' : IsMetricSeparated s' t) (hs : s ⊆ s') : IsMetricSeparated s t :=
+theorem mono_left {s'} (h' : IsMetricSeparated s' t) (hs : s ⊆ s') : IsMetricSeparated s t :=
   h'.mono hs Subset.rfl
-#align is_metric_separated.mono_left IsMetricSeparated.monoLeft
+#align is_metric_separated.mono_left IsMetricSeparated.mono_left
 
-theorem monoRight {t'} (h' : IsMetricSeparated s t') (ht : t ⊆ t') : IsMetricSeparated s t :=
+theorem mono_right {t'} (h' : IsMetricSeparated s t') (ht : t ⊆ t') : IsMetricSeparated s t :=
   h'.mono Subset.rfl ht
-#align is_metric_separated.mono_right IsMetricSeparated.monoRight
+#align is_metric_separated.mono_right IsMetricSeparated.mono_right
 
-theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t) :
+theorem union_left {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t) :
     IsMetricSeparated (s ∪ s') t :=
   by
   rcases h, h' with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩
@@ -88,7 +88,7 @@ theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t)
     exact lt_min r0 r0'
   · exact fun hx => (min_le_left _ _).trans (hr _ hx _ hy)
   · exact fun hx => (min_le_right _ _).trans (hr' _ hx _ hy)
-#align is_metric_separated.union_left IsMetricSeparated.unionLeft
+#align is_metric_separated.union_left IsMetricSeparated.union_left
 
 @[simp]
 theorem union_left_iff {s'} :
@@ -97,10 +97,10 @@ theorem union_left_iff {s'} :
     h.1.union_left h.2⟩
 #align is_metric_separated.union_left_iff IsMetricSeparated.union_left_iff
 
-theorem unionRight {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t') :
+theorem union_right {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t') :
     IsMetricSeparated s (t ∪ t') :=
   (h.symm.union_left h'.symm).symm
-#align is_metric_separated.union_right IsMetricSeparated.unionRight
+#align is_metric_separated.union_right IsMetricSeparated.union_right
 
 @[simp]
 theorem union_right_iff {t'} :

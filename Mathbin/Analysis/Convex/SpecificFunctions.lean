@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.convex.specific_functions
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,8 +53,8 @@ theorem convex_on_exp : ConvexOn ℝ univ exp :=
 /-- `x^n`, `n : ℕ` is convex on the whole real line whenever `n` is even -/
 theorem Even.convex_on_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.univ fun x : ℝ => x ^ n :=
   by
-  apply convex_on_univ_of_deriv2_nonneg (differentiablePow n)
-  · simp only [deriv_pow', Differentiable.mul, differentiableConst, differentiablePow]
+  apply convex_on_univ_of_deriv2_nonneg (differentiable_pow n)
+  · simp only [deriv_pow', Differentiable.mul, differentiable_const, differentiable_pow]
   · intro x
     obtain ⟨k, hk⟩ := (hn.tsub <| even_bit0 _).exists_two_nsmul _
     rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub, hk, nsmul_eq_mul, pow_mul']
@@ -78,9 +78,9 @@ theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n :=
   by
   apply
     convex_on_of_deriv2_nonneg (convex_Ici _) (continuous_pow n).ContinuousOn
-      (differentiableOnPow n)
+      (differentiable_on_pow n)
   · simp only [deriv_pow']
-    exact (@differentiableOnPow ℝ _ _ _).const_mul (n : ℝ)
+    exact (@differentiable_on_pow ℝ _ _ _).const_mul (n : ℝ)
   · intro x hx
     rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub]
     exact mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (interior_subset hx) _)
@@ -166,7 +166,7 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ Ico (0 
 theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m :=
   by
   have : ∀ n : ℤ, DifferentiableOn ℝ (fun x => x ^ n) (Ioi (0 : ℝ)) := fun n =>
-    differentiableOnZpow _ _ (Or.inl <| lt_irrefl _)
+    differentiable_on_zpow _ _ (Or.inl <| lt_irrefl _)
   apply convex_on_of_deriv2_nonneg (convex_Ioi 0) <;> try simp only [interior_Ioi, deriv_zpow']
   · exact (this _).ContinuousOn
   · exact this _
@@ -206,7 +206,7 @@ theorem convex_on_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : �
     replace hx : x ≠ 0
     · simp at hx
       exact ne_of_gt hx
-    simp [DifferentiableAt.differentiableWithinAt, hx]
+    simp [DifferentiableAt.differentiable_within_at, hx]
   · intro x hx
     replace hx : 0 < x
     · simpa using hx
@@ -255,22 +255,22 @@ theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log :=
 
 section SqrtMulLog
 
-theorem hasDerivAtSqrtMulLog {x : ℝ} (hx : x ≠ 0) :
+theorem has_deriv_at_sqrt_mul_log {x : ℝ} (hx : x ≠ 0) :
     HasDerivAt (fun x => sqrt x * log x) ((2 + log x) / (2 * sqrt x)) x :=
   by
   convert (has_deriv_at_sqrt hx).mul (has_deriv_at_log hx)
   rw [add_div, div_mul_right (sqrt x) two_ne_zero, ← div_eq_mul_inv, sqrt_div_self', add_comm,
     div_eq_mul_one_div, mul_comm]
-#align has_deriv_at_sqrt_mul_log hasDerivAtSqrtMulLog
+#align has_deriv_at_sqrt_mul_log has_deriv_at_sqrt_mul_log
 
 theorem deriv_sqrt_mul_log (x : ℝ) :
     deriv (fun x => sqrt x * log x) x = (2 + log x) / (2 * sqrt x) :=
   by
   cases' lt_or_le 0 x with hx hx
-  · exact (hasDerivAtSqrtMulLog hx.ne').deriv
+  · exact (has_deriv_at_sqrt_mul_log hx.ne').deriv
   · rw [sqrt_eq_zero_of_nonpos hx, mul_zero, div_zero]
-    refine' HasDerivWithinAt.deriv_eq_zero _ (uniqueDiffOnIic 0 x hx)
-    refine' (hasDerivWithinAtConst x _ 0).congrOfMem (fun x hx => _) hx
+    refine' HasDerivWithinAt.deriv_eq_zero _ (unique_diff_on_Iic 0 x hx)
+    refine' (has_deriv_within_at_const x _ 0).congr_of_mem (fun x hx => _) hx
     rw [sqrt_eq_zero_of_nonpos hx, zero_mul]
 #align deriv_sqrt_mul_log deriv_sqrt_mul_log
 
@@ -285,8 +285,8 @@ theorem deriv2_sqrt_mul_log (x : ℝ) :
   simp only [Nat.iterate, deriv_sqrt_mul_log']
   cases' le_or_lt x 0 with hx hx
   · rw [sqrt_eq_zero_of_nonpos hx, zero_pow zero_lt_three, mul_zero, div_zero]
-    refine' HasDerivWithinAt.deriv_eq_zero _ (uniqueDiffOnIic 0 x hx)
-    refine' (hasDerivWithinAtConst _ _ 0).congrOfMem (fun x hx => _) hx
+    refine' HasDerivWithinAt.deriv_eq_zero _ (unique_diff_on_Iic 0 x hx)
+    refine' (has_deriv_within_at_const _ _ 0).congr_of_mem (fun x hx => _) hx
     rw [sqrt_eq_zero_of_nonpos hx, mul_zero, div_zero]
   · have h₀ : sqrt x ≠ 0 := sqrt_ne_zero'.2 hx
     convert

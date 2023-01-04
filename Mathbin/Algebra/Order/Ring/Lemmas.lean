@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Yuyang Zhao
 
 ! This file was ported from Lean 3 source module algebra.order.ring.lemmas
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,34 +147,34 @@ section Preorder
 
 variable [Preorder α]
 
-#print PosMulMono.toCovariantClassPosMulLE /-
-instance PosMulMono.toCovariantClassPosMulLE [PosMulMono α] :
+#print PosMulMono.to_covariantClass_pos_mul_le /-
+instance PosMulMono.to_covariantClass_pos_mul_le [PosMulMono α] :
     CovariantClass α>0 α (fun x y => x * y) (· ≤ ·) :=
   ⟨fun a b c bc => @CovariantClass.elim α≥0 α (fun x y => x * y) (· ≤ ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
-#align pos_mul_mono.to_covariant_class_pos_mul_le PosMulMono.toCovariantClassPosMulLE
+#align pos_mul_mono.to_covariant_class_pos_mul_le PosMulMono.to_covariantClass_pos_mul_le
 -/
 
-#print MulPosMono.toCovariantClassPosMulLE /-
-instance MulPosMono.toCovariantClassPosMulLE [MulPosMono α] :
+#print MulPosMono.to_covariantClass_pos_mul_le /-
+instance MulPosMono.to_covariantClass_pos_mul_le [MulPosMono α] :
     CovariantClass α>0 α (fun x y => y * x) (· ≤ ·) :=
   ⟨fun a b c bc => @CovariantClass.elim α≥0 α (fun x y => y * x) (· ≤ ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
-#align mul_pos_mono.to_covariant_class_pos_mul_le MulPosMono.toCovariantClassPosMulLE
+#align mul_pos_mono.to_covariant_class_pos_mul_le MulPosMono.to_covariantClass_pos_mul_le
 -/
 
-#print PosMulReflectLT.toContravariantClassPosMulLT /-
-instance PosMulReflectLT.toContravariantClassPosMulLT [PosMulReflectLT α] :
+#print PosMulReflectLT.to_contravariantClass_pos_mul_lt /-
+instance PosMulReflectLT.to_contravariantClass_pos_mul_lt [PosMulReflectLT α] :
     ContravariantClass α>0 α (fun x y => x * y) (· < ·) :=
   ⟨fun a b c bc => @ContravariantClass.elim α≥0 α (fun x y => x * y) (· < ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
 #align
-  pos_mul_reflect_lt.to_contravariant_class_pos_mul_lt PosMulReflectLT.toContravariantClassPosMulLT
+  pos_mul_reflect_lt.to_contravariant_class_pos_mul_lt PosMulReflectLT.to_contravariantClass_pos_mul_lt
 -/
 
-#print MulPosReflectLT.toContravariantClassPosMulLT /-
-instance MulPosReflectLT.toContravariantClassPosMulLT [MulPosReflectLT α] :
+#print MulPosReflectLT.to_contravariantClass_pos_mul_lt /-
+instance MulPosReflectLT.to_contravariantClass_pos_mul_lt [MulPosReflectLT α] :
     ContravariantClass α>0 α (fun x y => y * x) (· < ·) :=
   ⟨fun a b c bc => @ContravariantClass.elim α≥0 α (fun x y => y * x) (· < ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
 #align
-  mul_pos_reflect_lt.to_contravariant_class_pos_mul_lt MulPosReflectLT.toContravariantClassPosMulLT
+  mul_pos_reflect_lt.to_contravariant_class_pos_mul_lt MulPosReflectLT.to_contravariantClass_pos_mul_lt
 -/
 
 #print mul_le_mul_of_nonneg_left /-
@@ -643,7 +643,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pos_mul_mono_iff_covariant_pos posMulMono_iff_covariant_posₓ'. -/
 theorem posMulMono_iff_covariant_pos :
     PosMulMono α ↔ CovariantClass α>0 α (fun x y => x * y) (· ≤ ·) :=
-  ⟨@PosMulMono.toCovariantClassPosMulLE _ _ _ _, fun h =>
+  ⟨@PosMulMono.to_covariantClass_pos_mul_le _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simp only [ha, zero_mul]
@@ -658,7 +658,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_pos_mono_iff_covariant_pos mulPosMono_iff_covariant_posₓ'. -/
 theorem mulPosMono_iff_covariant_pos :
     MulPosMono α ↔ CovariantClass α>0 α (fun x y => y * x) (· ≤ ·) :=
-  ⟨@MulPosMono.toCovariantClassPosMulLE _ _ _ _, fun h =>
+  ⟨@MulPosMono.to_covariantClass_pos_mul_le _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simp only [ha, mul_zero]
@@ -673,7 +673,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pos_mul_reflect_lt_iff_contravariant_pos posMulReflectLT_iff_contravariant_posₓ'. -/
 theorem posMulReflectLT_iff_contravariant_pos :
     PosMulReflectLT α ↔ ContravariantClass α>0 α (fun x y => x * y) (· < ·) :=
-  ⟨@PosMulReflectLT.toContravariantClassPosMulLT _ _ _ _, fun h =>
+  ⟨@PosMulReflectLT.to_contravariantClass_pos_mul_lt _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simpa [ha] using h
@@ -688,7 +688,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_pos_reflect_lt_iff_contravariant_pos mulPosReflectLT_iff_contravariant_posₓ'. -/
 theorem mulPosReflectLT_iff_contravariant_pos :
     MulPosReflectLT α ↔ ContravariantClass α>0 α (fun x y => y * x) (· < ·) :=
-  ⟨@MulPosReflectLT.toContravariantClassPosMulLT _ _ _ _, fun h =>
+  ⟨@MulPosReflectLT.to_contravariantClass_pos_mul_lt _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simpa [ha] using h

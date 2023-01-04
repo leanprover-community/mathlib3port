@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.compare
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,7 +201,7 @@ theorem to_padic_int_comp_from_padic_int :
   rw [← RingHom.comp_assoc, to_padic_int, PadicInt.lift_spec]
   simp only [from_padic_int, to_zmod_pow, RingHom.comp_id]
   rw [RingHom.comp_assoc, truncate_comp_lift, ← RingHom.comp_assoc]
-  simp only [RingEquiv.symm_to_ring_hom_comp_to_ring_hom, RingHom.id_comp]
+  simp only [RingEquiv.symm_toRingHom_comp_toRingHom, RingHom.id_comp]
 #align witt_vector.to_padic_int_comp_from_padic_int WittVector.to_padic_int_comp_from_padic_int
 
 theorem to_padic_int_comp_from_padic_int_ext (x) :
@@ -217,7 +217,7 @@ theorem from_padic_int_comp_to_padic_int :
   intro n
   rw [from_padic_int, ← RingHom.comp_assoc, truncate_comp_lift, RingHom.comp_assoc]
   simp only [to_padic_int, to_zmod_pow, RingHom.comp_id, PadicInt.lift_spec, RingHom.id_comp, ←
-    RingHom.comp_assoc, RingEquiv.to_ring_hom_comp_symm_to_ring_hom]
+    RingHom.comp_assoc, RingEquiv.toRingHom_comp_symm_toRingHom]
 #align witt_vector.from_padic_int_comp_to_padic_int WittVector.from_padic_int_comp_to_padic_int
 
 theorem from_padic_int_comp_to_padic_int_ext (x) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.monotone_convergence
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ theorem tendsto_at_top_csupr (h_mono : Monotone f) (hbdd : BddAbove <| range f) 
     Tendsto f atTop (𝓝 (⨆ i, f i)) :=
   by
   cases isEmpty_or_nonempty ι
-  exacts[tendsto_of_is_empty, tendsto_at_top_is_lub h_mono (is_lub_csupr hbdd)]
+  exacts[tendsto_of_is_empty, tendsto_at_top_is_lub h_mono (isLUB_csupᵢ hbdd)]
 #align tendsto_at_top_csupr tendsto_at_top_csupr
 
 theorem tendsto_at_bot_csupr (h_anti : Antitone f) (hbdd : BddAbove <| range f) :

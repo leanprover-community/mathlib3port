@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -473,7 +473,7 @@ end AlgHomFintype
 
 section GcdDomain
 
-variable {R S : Type _} (K L : Type _) [CommRing R] [IsDomain R] [NormalizedGcdMonoid R] [Field K]
+variable {R S : Type _} (K L : Type _) [CommRing R] [IsDomain R] [NormalizedGCDMonoid R] [Field K]
   [CommRing S] [IsDomain S] [Algebra R K] [IsFractionRing R K] [Algebra R S] [Field L] [Algebra S L]
   [Algebra K L] [Algebra R L] [IsScalarTower R K L] [IsScalarTower R S L] {s : S}
   (hs : IsIntegral R s)
@@ -509,7 +509,7 @@ theorem gcd_domain_eq_field_fractions' [Algebra K S] [IsScalarTower R K S] :
       rfl
 #align minpoly.gcd_domain_eq_field_fractions' minpoly.gcd_domain_eq_field_fractions'
 
-variable [NoZeroSmulDivisors R S]
+variable [NoZeroSMulDivisors R S]
 
 /-- For GCD domains, the minimal polynomial divides any primitive polynomial that has the integral
 element as root. See also `minpoly.dvd` which relaxes the assumptions on `S` in exchange for

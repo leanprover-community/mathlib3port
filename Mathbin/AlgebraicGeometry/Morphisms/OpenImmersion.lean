@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.open_immersion
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem is_open_immersion_respects_iso : MorphismProperty.RespectsIso @IsOpenImm
 #align
   algebraic_geometry.is_open_immersion_respects_iso AlgebraicGeometry.is_open_immersion_respects_iso
 
-theorem is_open_immersion_is_local_at_target : PropertyIsLocalAtTarget @IsOpenImmersion :=
+theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersion :=
   by
   constructor
   · exact is_open_immersion_respects_iso
@@ -85,7 +85,7 @@ theorem is_open_immersion_is_local_at_target : PropertyIsLocalAtTarget @IsOpenIm
           (H _)
       infer_instance
 #align
-  algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.is_open_immersion_is_local_at_target
+  algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionIsLocalAtTarget
 
 theorem IsOpenImmersion.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae
@@ -99,14 +99,14 @@ theorem IsOpenImmersion.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
           IsOpenImmersion (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤),
           ∀ i, IsOpenImmersion (f ∣_ U i)] :=
-  is_open_immersion_is_local_at_target.open_cover_tfae f
+  isOpenImmersionIsLocalAtTarget.open_cover_tfae f
 #align
   algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.open_cover_tfae
 
 theorem IsOpenImmersion.open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
     (f : X ⟶ Y) :
     IsOpenImmersion f ↔ ∀ i, IsOpenImmersion (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  is_open_immersion_is_local_at_target.open_cover_iff f 𝒰
+  isOpenImmersionIsLocalAtTarget.open_cover_iff f 𝒰
 #align
   algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersion.open_cover_iff
 

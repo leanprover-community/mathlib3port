@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.char_p.mixed_char_zero
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,18 +231,18 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
         field_simp
         repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
         trans (↑((a * b).num * a.denom * b.denom) : R)
-        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnat_denom]
+        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
           ring
-        rw [Rat.mul_num_denom' a b]
+        rw [Rat.mul_num_den' a b]
         simp
       map_add' := by
         intro a b
         field_simp
         repeat' rw [EqualCharZero.pnat_coe_units_coe_eq_coe R]
         trans (↑((a + b).num * a.denom * b.denom) : R)
-        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnat_denom]
+        · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
           ring
-        rw [Rat.add_num_denom' a b]
+        rw [Rat.add_num_den' a b]
         simp }
 #align equal_char_zero_to_Q_algebra equalCharZeroToQAlgebra
 

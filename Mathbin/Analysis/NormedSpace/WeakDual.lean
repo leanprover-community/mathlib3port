@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.weak_dual
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -237,7 +237,8 @@ variable (𝕜)
 neighborhood `s` of the origin is a closed set. -/
 theorem is_closed_image_polar_of_mem_nhds {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsClosed ((coeFn : WeakDual 𝕜 E → E → 𝕜) '' polar 𝕜 s) :=
-  is_closed_image_coe_of_bounded_of_closed (boundedPolarOfMemNhdsZero 𝕜 s_nhd) (is_closed_polar _ _)
+  is_closed_image_coe_of_bounded_of_closed (bounded_polar_of_mem_nhds_zero 𝕜 s_nhd)
+    (is_closed_polar _ _)
 #align weak_dual.is_closed_image_polar_of_mem_nhds WeakDual.is_closed_image_polar_of_mem_nhds
 
 /-- The image under `coe_fn : normed_space.dual 𝕜 E → (E → 𝕜)` of a polar `polar 𝕜 s` of a
@@ -252,14 +253,14 @@ theorem NormedSpace.Dual.is_closed_image_polar_of_mem_nhds {s : Set E} (s_nhd : 
 normed space `E` is a compact subset of `weak_dual 𝕜 E`. -/
 theorem is_compact_polar [ProperSpace 𝕜] {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) :
     IsCompact (polar 𝕜 s) :=
-  is_compact_of_bounded_of_closed (boundedPolarOfMemNhdsZero 𝕜 s_nhd) (is_closed_polar _ _)
+  is_compact_of_bounded_of_closed (bounded_polar_of_mem_nhds_zero 𝕜 s_nhd) (is_closed_polar _ _)
 #align weak_dual.is_compact_polar WeakDual.is_compact_polar
 
 /-- The **Banach-Alaoglu theorem**: closed balls of the dual of a normed space `E` are compact in
 the weak-star topology. -/
 theorem is_compact_closed_ball [ProperSpace 𝕜] (x' : Dual 𝕜 E) (r : ℝ) :
     IsCompact (to_normed_dual ⁻¹' closedBall x' r) :=
-  is_compact_of_bounded_of_closed boundedClosedBall (is_closed_closed_ball x' r)
+  is_compact_of_bounded_of_closed bounded_closed_ball (is_closed_closed_ball x' r)
 #align weak_dual.is_compact_closed_ball WeakDual.is_compact_closed_ball
 
 end WeakDual

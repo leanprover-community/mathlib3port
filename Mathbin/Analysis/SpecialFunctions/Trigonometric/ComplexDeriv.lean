@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.complex_deriv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,16 +26,16 @@ open Set Filter
 
 open Real
 
-theorem hasStrictDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x :=
+theorem has_strict_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x :=
   by
   convert (has_strict_deriv_at_sin x).div (has_strict_deriv_at_cos x) h
   rw [← sin_sq_add_cos_sq x]
   ring
-#align complex.has_strict_deriv_at_tan Complex.hasStrictDerivAtTan
+#align complex.has_strict_deriv_at_tan Complex.has_strict_deriv_at_tan
 
-theorem hasDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 2) x :=
-  (hasStrictDerivAtTan h).HasDerivAt
-#align complex.has_deriv_at_tan Complex.hasDerivAtTan
+theorem has_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 2) x :=
+  (has_strict_deriv_at_tan h).HasDerivAt
+#align complex.has_deriv_at_tan Complex.has_deriv_at_tan
 
 open TopologicalSpace
 
@@ -67,7 +67,7 @@ theorem continuous_at_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 :=
 
 @[simp]
 theorem differentiable_at_tan {x : ℂ} : DifferentiableAt ℂ tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, fun h => (hasDerivAtTan h).DifferentiableAt⟩
+  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, fun h => (has_deriv_at_tan h).DifferentiableAt⟩
 #align complex.differentiable_at_tan Complex.differentiable_at_tan
 
 @[simp]
@@ -76,12 +76,13 @@ theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
     by
     have : ¬DifferentiableAt ℂ tan x := mt differentiable_at_tan.1 (not_not.2 h)
     simp [deriv_zero_of_not_differentiable_at this, h, sq]
-  else (hasDerivAtTan h).deriv
+  else (has_deriv_at_tan h).deriv
 #align complex.deriv_tan Complex.deriv_tan
 
 @[simp]
 theorem cont_diff_at_tan {x : ℂ} {n : ℕ∞} : ContDiffAt ℂ n tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, contDiffSin.ContDiffAt.div contDiffCos.ContDiffAt⟩
+  ⟨fun h => continuous_at_tan.1 h.ContinuousAt,
+    cont_diff_sin.ContDiffAt.div cont_diff_cos.ContDiffAt⟩
 #align complex.cont_diff_at_tan Complex.cont_diff_at_tan
 
 end Complex

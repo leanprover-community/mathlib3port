@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.simple
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,7 +277,7 @@ theorem simple_iff_subobject_is_simple_order (X : C) : Simple X ↔ IsSimpleOrde
 /-- A subobject is simple iff it is an atom in the subobject lattice. -/
 theorem subobject_simple_iff_is_atom {X : C} (Y : Subobject X) : Simple (Y : C) ↔ IsAtom Y :=
   (simple_iff_subobject_is_simple_order _).trans
-    ((OrderIso.is_simple_order_iff (subobjectOrderIso Y)).trans Set.is_simple_order_Iic_iff_is_atom)
+    ((OrderIso.isSimpleOrder_iff (subobjectOrderIso Y)).trans Set.isSimpleOrder_Iic_iff_isAtom)
 #align category_theory.subobject_simple_iff_is_atom CategoryTheory.subobject_simple_iff_is_atom
 
 end Subobject

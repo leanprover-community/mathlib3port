@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -684,7 +684,7 @@ theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} {t : Set (Set β)}
-    (hs : ⋃₀s = univ) (ht : ⋃₀t = univ) :
+    (hs : ⋃₀ s = univ) (ht : ⋃₀ t = univ) :
     @Prod.topologicalSpace α β (generateFrom s) (generateFrom t) =
       generateFrom { g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v } :=
   let G := generateFrom { g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v }
@@ -1444,7 +1444,7 @@ theorem pi_generate_from_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
 #align pi_generate_from_eq pi_generate_from_eq
 
 theorem pi_generate_from_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π a))} [Finite ι]
-    (hg : ∀ a, ⋃₀g a = univ) :
+    (hg : ∀ a, ⋃₀ g a = univ) :
     (@PiCat.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom { t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi univ s } :=
   by
@@ -1458,7 +1458,7 @@ theorem pi_generate_from_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π
     choose c hc using
       show ∀ a, ∃ s, s ∈ g a ∧ f a ∈ s by
         intro a
-        have : f a ∈ ⋃₀g a := by
+        have : f a ∈ ⋃₀ g a := by
           rw [hg]
           apply mem_univ
         simpa

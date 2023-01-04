@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module topology.instances.discrete
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,17 +93,17 @@ theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α]
     · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply is_open_univ
-    · rw [isBot_iff_is_min] at ha_bot
+    · rw [isBot_iff_isMin] at ha_bot
       rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
-  · rw [isTop_iff_is_max] at ha_top
+  · rw [isTop_iff_isMax] at ha_top
     rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
     by_cases ha_bot : IsBot a
     · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-    · rw [isBot_iff_is_min] at ha_bot
+    · rw [isBot_iff_isMin] at ha_bot
       rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply IsOpen.inter
@@ -128,9 +128,9 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : Dis
   discrete_topology_iff_order_topology_of_pred_succ.mp h
 #align discrete_topology.order_topology_of_pred_succ DiscreteTopology.order_topology_of_pred_succ
 
-instance (priority := 100) DiscreteTopology.metrizableSpace [DiscreteTopology α] :
+instance (priority := 100) DiscreteTopology.metrizable_space [DiscreteTopology α] :
     MetrizableSpace α := by
   rw [DiscreteTopology.eq_bot α]
-  exact @UniformSpace.metrizableSpace α ⊥ (is_countably_generated_principal _) _
-#align discrete_topology.metrizable_space DiscreteTopology.metrizableSpace
+  exact @UniformSpace.metrizable_space α ⊥ (is_countably_generated_principal _) _
+#align discrete_topology.metrizable_space DiscreteTopology.metrizable_space
 

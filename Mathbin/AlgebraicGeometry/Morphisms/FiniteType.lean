@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.finite_type
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,12 +51,12 @@ theorem locally_of_finite_type_eq : @LocallyOfFiniteType = affineLocally @RingHo
   exact RingHom.finite_type_respects_iso
 #align algebraic_geometry.locally_of_finite_type_eq AlgebraicGeometry.locally_of_finite_type_eq
 
-instance (priority := 900) locally_of_finite_type_of_is_open_immersion {X Y : SchemeCat} (f : X ⟶ Y)
+instance (priority := 900) locallyOfFiniteTypeOfIsOpenImmersion {X Y : SchemeCat} (f : X ⟶ Y)
     [IsOpenImmersion f] : LocallyOfFiniteType f :=
   locally_of_finite_type_eq.symm ▸
     RingHom.finite_type_is_local.affine_locally_of_is_open_immersion f
 #align
-  algebraic_geometry.locally_of_finite_type_of_is_open_immersion AlgebraicGeometry.locally_of_finite_type_of_is_open_immersion
+  algebraic_geometry.locally_of_finite_type_of_is_open_immersion AlgebraicGeometry.locallyOfFiniteTypeOfIsOpenImmersion
 
 theorem locally_of_finite_type_stable_under_composition :
     MorphismProperty.StableUnderComposition @LocallyOfFiniteType :=
@@ -65,12 +65,12 @@ theorem locally_of_finite_type_stable_under_composition :
 #align
   algebraic_geometry.locally_of_finite_type_stable_under_composition AlgebraicGeometry.locally_of_finite_type_stable_under_composition
 
-instance locally_of_finite_type_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
+instance locallyOfFiniteTypeComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
     [hf : LocallyOfFiniteType f] [hg : LocallyOfFiniteType g] : LocallyOfFiniteType (f ≫ g) :=
   locally_of_finite_type_stable_under_composition f g hf hg
-#align algebraic_geometry.locally_of_finite_type_comp AlgebraicGeometry.locally_of_finite_type_comp
+#align algebraic_geometry.locally_of_finite_type_comp AlgebraicGeometry.locallyOfFiniteTypeComp
 
-theorem locally_of_finite_type_of_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
+theorem locallyOfFiniteTypeOfComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z)
     [hf : LocallyOfFiniteType (f ≫ g)] : LocallyOfFiniteType f :=
   by
   revert hf
@@ -78,8 +78,7 @@ theorem locally_of_finite_type_of_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y 
   apply ring_hom.finite_type_is_local.affine_locally_of_comp
   introv H
   exact RingHom.FiniteType.of_comp_finite_type H
-#align
-  algebraic_geometry.locally_of_finite_type_of_comp AlgebraicGeometry.locally_of_finite_type_of_comp
+#align algebraic_geometry.locally_of_finite_type_of_comp AlgebraicGeometry.locallyOfFiniteTypeOfComp
 
 theorem LocallyOfFiniteType.affine_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y)
     (𝒰 : SchemeCat.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)]
@@ -101,7 +100,7 @@ theorem LocallyOfFiniteType.open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y)
     (𝒰 : SchemeCat.OpenCover.{u} Y) :
     LocallyOfFiniteType f ↔ ∀ i, LocallyOfFiniteType (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   locally_of_finite_type_eq.symm ▸
-    RingHom.finite_type_is_local.is_local_affine_locally.open_cover_iff f 𝒰
+    RingHom.finite_type_is_local.isLocalAffineLocally.open_cover_iff f 𝒰
 #align
   algebraic_geometry.locally_of_finite_type.open_cover_iff AlgebraicGeometry.LocallyOfFiniteType.open_cover_iff
 

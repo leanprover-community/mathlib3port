@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,14 +250,14 @@ theorem continuous_on_exp : ContinuousOn (exp 𝕂 : 𝔸 → 𝔸) (Emetric.bal
   FormalMultilinearSeries.continuous_on
 #align continuous_on_exp continuous_on_exp
 
-theorem analyticAtExpOfMemBall (x : 𝔸) (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
+theorem analytic_at_exp_of_mem_ball (x : 𝔸) (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
     AnalyticAt 𝕂 (exp 𝕂) x := by
   by_cases h : (expSeries 𝕂 𝔸).radius = 0
   · rw [h] at hx
     exact (Ennreal.not_lt_zero hx).elim
   · have h := pos_iff_ne_zero.mpr h
-    exact (hasFpowerSeriesOnBallExpOfRadiusPos h).analyticAtOfMem hx
-#align analytic_at_exp_of_mem_ball analyticAtExpOfMemBall
+    exact (hasFpowerSeriesOnBallExpOfRadiusPos h).analytic_at_of_mem hx
+#align analytic_at_exp_of_mem_ball analytic_at_exp_of_mem_ball
 
 /-- In a Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero, if `x` and `y` are
 in the disk of convergence and commute, then `exp 𝕂 (x + y) = (exp 𝕂 x) * (exp 𝕂 y)`. -/
@@ -461,9 +461,9 @@ theorem exp_continuous : Continuous (exp 𝕂 : 𝔸 → 𝔸) :=
   exact continuous_on_exp
 #align exp_continuous exp_continuous
 
-theorem expAnalytic (x : 𝔸) : AnalyticAt 𝕂 (exp 𝕂) x :=
-  analyticAtExpOfMemBall x ((exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _)
-#align exp_analytic expAnalytic
+theorem exp_analytic (x : 𝔸) : AnalyticAt 𝕂 (exp 𝕂) x :=
+  analytic_at_exp_of_mem_ball x ((exp_series_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _)
+#align exp_analytic exp_analytic
 
 /-- In a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, if `x` and `y` commute, then
 `exp 𝕂 (x+y) = (exp 𝕂 x) * (exp 𝕂 y)`. -/

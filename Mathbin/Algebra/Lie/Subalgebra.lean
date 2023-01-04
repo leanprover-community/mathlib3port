@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.subalgebra
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -544,7 +544,7 @@ theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGLB S (infₛ S) :=
     exact Iff.rfl
   apply IsGLB.of_image h
   simp only [Inf_coe]
-  exact is_glb_binfi
+  exact isGLB_binfᵢ
 #align lie_subalgebra.Inf_glb LieSubalgebra.Inf_glb
 
 /-- The set of Lie subalgebras of a Lie algebra form a complete lattice.

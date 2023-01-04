@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.nat.upto
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,11 +48,11 @@ namespace Upto
 
 variable {p : ℕ → Prop}
 
-#print Nat.Upto.Gt /-
+#print Nat.Upto.GT /-
 /-- Lift the "greater than" relation on natural numbers to `nat.upto`. -/
-protected def Gt (p) (x y : Upto p) : Prop :=
+protected def GT (p) (x y : Upto p) : Prop :=
   x.1 > y.1
-#align nat.upto.gt Nat.Upto.Gt
+#align nat.upto.gt Nat.Upto.GT
 -/
 
 instance : LT (Upto p) :=
@@ -61,7 +61,7 @@ instance : LT (Upto p) :=
 #print Nat.Upto.wf /-
 /-- The "greater than" relation on `upto p` is well founded if (and only if) there exists a value
 satisfying `p`. -/
-protected theorem wf : (∃ x, p x) → WellFounded (Upto.Gt p)
+protected theorem wf : (∃ x, p x) → WellFounded (Upto.GT p)
   | ⟨x, h⟩ =>
     by
     suffices upto.gt p = Measure fun y : Nat.Upto p => x - y.val

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuyang Zhao
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.tower
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem aeval_algebra_map_apply (x : σ → A) (p : MvPolynomial σ R) :
     IsScalarTower.algebra_map_eq]
 #align mv_polynomial.aeval_algebra_map_apply MvPolynomial.aeval_algebra_map_apply
 
-theorem aeval_algebra_map_eq_zero_iff [NoZeroSmulDivisors A B] [Nontrivial B] (x : σ → A)
+theorem aeval_algebra_map_eq_zero_iff [NoZeroSMulDivisors A B] [Nontrivial B] (x : σ → A)
     (p : MvPolynomial σ R) : aeval (algebraMap A B ∘ x) p = 0 ↔ aeval x p = 0 := by
   rw [aeval_algebra_map_apply, Algebra.algebra_map_eq_smul_one, smul_eq_zero,
     iff_false_intro (one_ne_zero' B), or_false_iff]

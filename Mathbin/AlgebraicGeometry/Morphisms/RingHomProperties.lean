@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.ring_hom_properties
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1957,10 +1957,10 @@ theorem isLocalSourceAffineLocally : (sourceAffineLocally @P).IsLocal :=
 #align
   ring_hom.property_is_local.is_local_source_affine_locally RingHom.PropertyIsLocal.isLocalSourceAffineLocally
 
-theorem is_local_affine_locally : PropertyIsLocalAtTarget (affineLocally @P) :=
-  hP.isLocalSourceAffineLocally.target_affine_locally_is_local
+theorem isLocalAffineLocally : PropertyIsLocalAtTarget (affineLocally @P) :=
+  hP.isLocalSourceAffineLocally.targetAffineLocallyIsLocal
 #align
-  ring_hom.property_is_local.is_local_affine_locally RingHom.PropertyIsLocal.is_local_affine_locally
+  ring_hom.property_is_local.is_local_affine_locally RingHom.PropertyIsLocal.isLocalAffineLocally
 
 theorem affine_open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y)
     [∀ i, IsAffine (𝒰.obj i)] (𝒰' : ∀ i, SchemeCat.OpenCover.{u} ((𝒰.pullbackCover f).obj i))

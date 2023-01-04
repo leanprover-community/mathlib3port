@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,10 +67,11 @@ theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
     vsub_eq_sub]
 #align dist_line_map_line_map dist_line_map_line_map
 
-theorem lipschitzWithLineMap (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
-  LipschitzWith.ofDistLeMul fun c₁ c₂ =>
+theorem lipschitz_with_line_map (p₁ p₂ : P) :
+    LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
+  LipschitzWith.of_dist_le_mul fun c₁ c₂ =>
     ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
-#align lipschitz_with_line_map lipschitzWithLineMap
+#align lipschitz_with_line_map lipschitz_with_line_map
 
 @[simp]
 theorem dist_line_map_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ‖c‖ * dist p₁ p₂ := by
@@ -144,12 +145,12 @@ omit V
 
 include W
 
-theorem antilipschitzWithLineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
+theorem antilipschitz_with_line_map {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
     AntilipschitzWith (nndist p₁ p₂)⁻¹ (lineMap p₁ p₂ : 𝕜 → Q) :=
-  AntilipschitzWith.ofLeMulDist fun c₁ c₂ => by
+  AntilipschitzWith.of_le_mul_dist fun c₁ c₂ => by
     rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_comm,
       inv_mul_cancel (dist_ne_zero.2 h), mul_one]
-#align antilipschitz_with_line_map antilipschitzWithLineMap
+#align antilipschitz_with_line_map antilipschitz_with_line_map
 
 variable (𝕜)
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.prod.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -531,11 +531,9 @@ instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl
   ⟨Lex.refl_right _ _⟩
 #align prod.is_refl_right Prod.is_refl_right
 
-#print Prod.is_irrefl /-
 instance is_irrefl [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (α × β) (Lex r s) :=
   ⟨by rintro ⟨i, a⟩ (⟨_, _, h⟩ | ⟨_, h⟩) <;> exact irrefl _ h⟩
 #align prod.is_irrefl Prod.is_irrefl
--/
 
 /- warning: prod.lex.trans -> Prod.Lex.trans is a dubious translation:
 lean 3 declaration is

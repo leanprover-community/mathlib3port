@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.real
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,12 +202,12 @@ theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBe
     rw [Real.closed_ball_eq_Icc] at hr
     -- hr : s ⊆ Icc (0 - r) (0 + r)
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
-    fun h => boundedOfBddAboveOfBddBelow h.2 h.1⟩
+    fun h => bounded_of_bdd_above_of_bdd_below h.2 h.1⟩
 #align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bdd_below_bdd_above
 
 theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) :
     s ⊆ Icc (infₛ s) (supₛ s) :=
-  subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1
+  subset_Icc_cinfₛ_csupₛ (Real.bounded_iff_bdd_below_bdd_above.1 h).1
     (Real.bounded_iff_bdd_below_bdd_above.1 h).2
 #align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_Inf_Sup_of_bounded
 
@@ -237,10 +237,10 @@ theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c
 #align function.periodic.compact_of_continuous Function.Periodic.compact_of_continuous
 
 /-- A continuous, periodic function is bounded. -/
-theorem Periodic.boundedOfContinuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
+theorem Periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
     (hc : c ≠ 0) (hf : Continuous f) : Bounded (range f) :=
   (hp.compact_of_continuous hc hf).Bounded
-#align function.periodic.bounded_of_continuous Function.Periodic.boundedOfContinuous
+#align function.periodic.bounded_of_continuous Function.Periodic.bounded_of_continuous
 
 end Function
 
@@ -312,7 +312,7 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
     · exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
     · exact ⟨g₀, g₀_in, Hg₀⟩
   obtain ⟨a, ha⟩ : ∃ a, IsGLB G_pos a :=
-    ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
+    ⟨Inf G_pos, isGLB_cinfₛ ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
   have a_notin : a ∉ G_pos := by
     intro H
     exact H' a ⟨H, ha.1⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.bump_function
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -361,17 +361,17 @@ variable [SmoothManifoldWithCorners I M] {I}
 /-- A smooth bump function is infinitely smooth. -/
 protected theorem smooth : Smooth I 𝓘(ℝ) f :=
   by
-  refine' contMdiffOfSupport fun x hx => _
+  refine' cont_mdiff_of_support fun x hx => _
   have : x ∈ (chart_at H c).source := f.tsupport_subset_chart_at_source hx
   refine'
-    ContMdiffAt.congrOfEventuallyEq _
+    ContMdiffAt.congr_of_eventually_eq _
       (f.eq_on_source.eventually_eq_of_mem <| IsOpen.mem_nhds (chart_at _ _).open_source this)
-  exact f.to_cont_diff_bump.cont_diff_at.cont_mdiff_at.comp _ (contMdiffAtExtChartAt' this)
+  exact f.to_cont_diff_bump.cont_diff_at.cont_mdiff_at.comp _ (cont_mdiff_at_ext_chart_at' this)
 #align smooth_bump_function.smooth SmoothBumpFunction.smooth
 
-protected theorem smoothAt {x} : SmoothAt I 𝓘(ℝ) f x :=
+protected theorem smooth_at {x} : SmoothAt I 𝓘(ℝ) f x :=
   f.Smooth.SmoothAt
-#align smooth_bump_function.smooth_at SmoothBumpFunction.smoothAt
+#align smooth_bump_function.smooth_at SmoothBumpFunction.smooth_at
 
 protected theorem continuous : Continuous f :=
   f.Smooth.Continuous
@@ -379,10 +379,10 @@ protected theorem continuous : Continuous f :=
 
 /-- If `f : smooth_bump_function I c` is a smooth bump function and `g : M → G` is a function smooth
 on the source of the chart at `c`, then `f • g` is smooth on the whole manifold. -/
-theorem smoothSmul {G} [NormedAddCommGroup G] [NormedSpace ℝ G] {g : M → G}
+theorem smooth_smul {G} [NormedAddCommGroup G] [NormedSpace ℝ G] {g : M → G}
     (hg : SmoothOn I 𝓘(ℝ, G) g (chartAt H c).source) : Smooth I 𝓘(ℝ, G) fun x => f x • g x :=
   by
-  apply contMdiffOfSupport fun x hx => _
+  apply cont_mdiff_of_support fun x hx => _
   have : x ∈ (chart_at H c).source
   calc
     x ∈ tsupport fun x => f x • g x := hx
@@ -391,7 +391,7 @@ theorem smoothSmul {G} [NormedAddCommGroup G] [NormedSpace ℝ G] {g : M → G}
     
   exact
     f.smooth_at.smul ((hg _ this).ContMdiffAt <| IsOpen.mem_nhds (chart_at _ _).open_source this)
-#align smooth_bump_function.smooth_smul SmoothBumpFunction.smoothSmul
+#align smooth_bump_function.smooth_smul SmoothBumpFunction.smooth_smul
 
 end SmoothBumpFunction
 

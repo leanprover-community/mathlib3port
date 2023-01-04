@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.dslope
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,25 +132,25 @@ theorem continuous_on_dslope (h : s ∈ 𝓝 a) :
     (continuous_within_at_dslope_of_ne hne).2 (hc x hx)]
 #align continuous_on_dslope continuous_on_dslope
 
-theorem DifferentiableWithinAt.ofDslope (h : DifferentiableWithinAt 𝕜 (dslope f a) s b) :
+theorem DifferentiableWithinAt.of_dslope (h : DifferentiableWithinAt 𝕜 (dslope f a) s b) :
     DifferentiableWithinAt 𝕜 f s b := by
   simpa only [id, sub_smul_dslope f a, sub_add_cancel] using
     ((differentiable_within_at_id.sub_const a).smul h).AddConst (f a)
-#align differentiable_within_at.of_dslope DifferentiableWithinAt.ofDslope
+#align differentiable_within_at.of_dslope DifferentiableWithinAt.of_dslope
 
-theorem DifferentiableAt.ofDslope (h : DifferentiableAt 𝕜 (dslope f a) b) :
+theorem DifferentiableAt.of_dslope (h : DifferentiableAt 𝕜 (dslope f a) b) :
     DifferentiableAt 𝕜 f b :=
   differentiable_within_at_univ.1 h.DifferentiableWithinAt.of_dslope
-#align differentiable_at.of_dslope DifferentiableAt.ofDslope
+#align differentiable_at.of_dslope DifferentiableAt.of_dslope
 
-theorem DifferentiableOn.ofDslope (h : DifferentiableOn 𝕜 (dslope f a) s) :
+theorem DifferentiableOn.of_dslope (h : DifferentiableOn 𝕜 (dslope f a) s) :
     DifferentiableOn 𝕜 f s := fun x hx => (h x hx).of_dslope
-#align differentiable_on.of_dslope DifferentiableOn.ofDslope
+#align differentiable_on.of_dslope DifferentiableOn.of_dslope
 
 theorem differentiable_within_at_dslope_of_ne (h : b ≠ a) :
     DifferentiableWithinAt 𝕜 (dslope f a) s b ↔ DifferentiableWithinAt 𝕜 f s b :=
   by
-  refine' ⟨DifferentiableWithinAt.ofDslope, fun hd => _⟩
+  refine' ⟨DifferentiableWithinAt.of_dslope, fun hd => _⟩
   refine'
     (((differentiable_within_at_id.sub_const a).inv (sub_ne_zero.2 h)).smul
           (hd.sub_const (f a))).congr_of_eventually_eq

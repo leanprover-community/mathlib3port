@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.inverse
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,14 +162,14 @@ theorem approximates_linear_on_iff_lipschitz_on_with {f : E → F} {f' : E →L[
 alias approximates_linear_on_iff_lipschitz_on_with ↔
   LipschitzOnWith _root_.lipschitz_on_with.approximates_linear_on
 
-theorem lipschitzSub (hf : ApproximatesLinearOn f f' s c) :
+theorem lipschitz_sub (hf : ApproximatesLinearOn f f' s c) :
     LipschitzWith c fun x : s => f x - f' x :=
   by
-  refine' LipschitzWith.ofDistLeMul fun x y => _
+  refine' LipschitzWith.of_dist_le_mul fun x y => _
   rw [dist_eq_norm, Subtype.dist_eq, dist_eq_norm]
   convert hf x x.2 y y.2 using 2
   rw [f'.map_sub]; abel
-#align approximates_linear_on.lipschitz_sub ApproximatesLinearOn.lipschitzSub
+#align approximates_linear_on.lipschitz_sub ApproximatesLinearOn.lipschitz_sub
 
 protected theorem lipschitz (hf : ApproximatesLinearOn f f' s c) :
     LipschitzWith (‖f'‖₊ + c) (s.restrict f) := by
@@ -434,8 +434,8 @@ protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] 
   by
   cases' hc with hE hc
   · haveI : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elim _ hE _ _⟩
-    exact AntilipschitzWith.ofSubsingleton
-  convert (f'.antilipschitz.restrict s).addLipschitzWith hf.lipschitz_sub hc
+    exact AntilipschitzWith.of_subsingleton
+  convert (f'.antilipschitz.restrict s).add_lipschitz_with hf.lipschitz_sub hc
   simp [restrict]
 #align approximates_linear_on.antilipschitz ApproximatesLinearOn.antilipschitz
 
@@ -484,7 +484,7 @@ theorem inverse_continuous_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F)
     (hc : Subsingleton E ∨ c < N⁻¹) : ContinuousOn (hf.toLocalEquiv hc).symm (f '' s) :=
   by
   apply continuous_on_iff_continuous_restrict.2
-  refine' ((hf.antilipschitz hc).toRightInvOn' _ (hf.to_local_equiv hc).right_inv').Continuous
+  refine' ((hf.antilipschitz hc).to_right_inv_on' _ (hf.to_local_equiv hc).right_inv').Continuous
   exact fun x hx => (hf.to_local_equiv hc).map_target hx
 #align approximates_linear_on.inverse_continuous_on ApproximatesLinearOn.inverse_continuous_on
 
@@ -815,14 +815,14 @@ theorem map_nhds_eq : map f (𝓝 a) = 𝓝 (f a) :=
   (hf.hasStrictFderivAtEquiv hf').map_nhds_eq_of_equiv
 #align has_strict_deriv_at.map_nhds_eq HasStrictDerivAt.map_nhds_eq
 
-theorem toLocalInverse : HasStrictDerivAt (hf.localInverse f f' a hf') f'⁻¹ (f a) :=
+theorem to_local_inverse : HasStrictDerivAt (hf.localInverse f f' a hf') f'⁻¹ (f a) :=
   (hf.hasStrictFderivAtEquiv hf').toLocalInverse
-#align has_strict_deriv_at.to_local_inverse HasStrictDerivAt.toLocalInverse
+#align has_strict_deriv_at.to_local_inverse HasStrictDerivAt.to_local_inverse
 
-theorem toLocalLeftInverse {g : 𝕜 → 𝕜} (hg : ∀ᶠ x in 𝓝 a, g (f x) = x) :
+theorem to_local_left_inverse {g : 𝕜 → 𝕜} (hg : ∀ᶠ x in 𝓝 a, g (f x) = x) :
     HasStrictDerivAt g f'⁻¹ (f a) :=
   (hf.hasStrictFderivAtEquiv hf').toLocalLeftInverse hg
-#align has_strict_deriv_at.to_local_left_inverse HasStrictDerivAt.toLocalLeftInverse
+#align has_strict_deriv_at.to_local_left_inverse HasStrictDerivAt.to_local_left_inverse
 
 end HasStrictDerivAt
 
@@ -892,16 +892,17 @@ theorem local_inverse_apply_image {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
 /-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
 at `a`, the inverse function (produced by `cont_diff.to_local_homeomorph`) is
 also `cont_diff`. -/
-theorem toLocalInverse {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
-    (hn : 1 ≤ n) : ContDiffAt 𝕂 n (hf.localInverse hf' hn) (f a) :=
+theorem to_local_inverse {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
+    (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) :
+    ContDiffAt 𝕂 n (hf.localInverse hf' hn) (f a) :=
   by
   have := hf.local_inverse_apply_image hf' hn
   apply
-    (hf.to_local_homeomorph f hf' hn).contDiffAtSymm
+    (hf.to_local_homeomorph f hf' hn).cont_diff_at_symm
       (image_mem_to_local_homeomorph_target hf hf' hn)
   · convert hf'
   · convert hf
-#align cont_diff_at.to_local_inverse ContDiffAt.toLocalInverse
+#align cont_diff_at.to_local_inverse ContDiffAt.to_local_inverse
 
 end ContDiffAt
 

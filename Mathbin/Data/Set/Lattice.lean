@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.set.lattice
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ but is expected to have type
   forall {α : Type.{u1}} {x : α} {S : Set.{u1} (Set.{u1} α)}, Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.unionₛ.{u1} α S)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t S) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)))
 Case conversion may be inaccurate. Consider using '#align set.mem_sUnion Set.mem_unionₛₓ'. -/
 @[simp]
-theorem mem_unionₛ {x : α} {S : Set (Set α)} : x ∈ ⋃₀S ↔ ∃ t ∈ S, x ∈ t :=
+theorem mem_unionₛ {x : α} {S : Set (Set α)} : x ∈ ⋃₀ S ↔ ∃ t ∈ S, x ∈ t :=
   Iff.rfl
 #align set.mem_sUnion Set.mem_unionₛ
 
@@ -139,7 +139,7 @@ but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (SupSet.supₛ.{u1} (Set.{u1} α) (Set.instSupSetSet.{u1} α) S) (Set.unionₛ.{u1} α S)
 Case conversion may be inaccurate. Consider using '#align set.Sup_eq_sUnion Set.supₛ_eq_unionₛₓ'. -/
 @[simp]
-theorem supₛ_eq_unionₛ (S : Set (Set α)) : supₛ S = ⋃₀S :=
+theorem supₛ_eq_unionₛ (S : Set (Set α)) : supₛ S = ⋃₀ S :=
   rfl
 #align set.Sup_eq_sUnion Set.supₛ_eq_unionₛ
 
@@ -1900,14 +1900,14 @@ theorem interᵢ₂_union (s : ∀ i, κ i → Set α) (t : Set α) :
 
 #print Set.mem_unionₛ_of_mem /-
 theorem mem_unionₛ_of_mem {x : α} {t : Set α} {S : Set (Set α)} (hx : x ∈ t) (ht : t ∈ S) :
-    x ∈ ⋃₀S :=
+    x ∈ ⋃₀ S :=
   ⟨t, ht, hx⟩
 #align set.mem_sUnion_of_mem Set.mem_unionₛ_of_mem
 -/
 
 #print Set.not_mem_of_not_mem_unionₛ /-
 -- is this theorem really necessary?
-theorem not_mem_of_not_mem_unionₛ {x : α} {t : Set α} {S : Set (Set α)} (hx : x ∉ ⋃₀S)
+theorem not_mem_of_not_mem_unionₛ {x : α} {t : Set α} {S : Set (Set α)} (hx : x ∉ ⋃₀ S)
     (ht : t ∈ S) : x ∉ t := fun h => hx ⟨t, ht, h⟩
 #align set.not_mem_of_not_mem_sUnion Set.not_mem_of_not_mem_unionₛ
 -/
@@ -1919,27 +1919,27 @@ theorem interₛ_subset_of_mem {S : Set (Set α)} {t : Set α} (tS : t ∈ S) : 
 -/
 
 #print Set.subset_unionₛ_of_mem /-
-theorem subset_unionₛ_of_mem {S : Set (Set α)} {t : Set α} (tS : t ∈ S) : t ⊆ ⋃₀S :=
+theorem subset_unionₛ_of_mem {S : Set (Set α)} {t : Set α} (tS : t ∈ S) : t ⊆ ⋃₀ S :=
   le_supₛ tS
 #align set.subset_sUnion_of_mem Set.subset_unionₛ_of_mem
 -/
 
 #print Set.subset_unionₛ_of_subset /-
 theorem subset_unionₛ_of_subset {s : Set α} (t : Set (Set α)) (u : Set α) (h₁ : s ⊆ u)
-    (h₂ : u ∈ t) : s ⊆ ⋃₀t :=
+    (h₂ : u ∈ t) : s ⊆ ⋃₀ t :=
   Subset.trans h₁ (subset_unionₛ_of_mem h₂)
 #align set.subset_sUnion_of_subset Set.subset_unionₛ_of_subset
 -/
 
 #print Set.unionₛ_subset /-
-theorem unionₛ_subset {S : Set (Set α)} {t : Set α} (h : ∀ t' ∈ S, t' ⊆ t) : ⋃₀S ⊆ t :=
+theorem unionₛ_subset {S : Set (Set α)} {t : Set α} (h : ∀ t' ∈ S, t' ⊆ t) : ⋃₀ S ⊆ t :=
   supₛ_le h
 #align set.sUnion_subset Set.unionₛ_subset
 -/
 
 #print Set.unionₛ_subset_iff /-
 @[simp]
-theorem unionₛ_subset_iff {s : Set (Set α)} {t : Set α} : ⋃₀s ⊆ t ↔ ∀ t' ∈ s, t' ⊆ t :=
+theorem unionₛ_subset_iff {s : Set (Set α)} {t : Set α} : ⋃₀ s ⊆ t ↔ ∀ t' ∈ s, t' ⊆ t :=
   @supₛ_le_iff (Set α) _ _ _
 #align set.sUnion_subset_iff Set.unionₛ_subset_iff
 -/
@@ -1958,7 +1958,7 @@ theorem subset_interₛ_iff {S : Set (Set α)} {t : Set α} : t ⊆ ⋂₀ S ↔
 -/
 
 #print Set.unionₛ_subset_unionₛ /-
-theorem unionₛ_subset_unionₛ {S T : Set (Set α)} (h : S ⊆ T) : ⋃₀S ⊆ ⋃₀T :=
+theorem unionₛ_subset_unionₛ {S T : Set (Set α)} (h : S ⊆ T) : ⋃₀ S ⊆ ⋃₀ T :=
   sUnion_subset fun s hs => subset_unionₛ_of_mem (h hs)
 #align set.sUnion_subset_sUnion Set.unionₛ_subset_unionₛ
 -/
@@ -1971,7 +1971,7 @@ theorem interₛ_subset_interₛ {S T : Set (Set α)} (h : S ⊆ T) : ⋂₀ T �
 
 #print Set.unionₛ_empty /-
 @[simp]
-theorem unionₛ_empty : ⋃₀∅ = (∅ : Set α) :=
+theorem unionₛ_empty : ⋃₀ ∅ = (∅ : Set α) :=
   supₛ_empty
 #align set.sUnion_empty Set.unionₛ_empty
 -/
@@ -1985,7 +1985,7 @@ theorem interₛ_empty : ⋂₀ ∅ = (univ : Set α) :=
 
 #print Set.unionₛ_singleton /-
 @[simp]
-theorem unionₛ_singleton (s : Set α) : ⋃₀{s} = s :=
+theorem unionₛ_singleton (s : Set α) : ⋃₀ {s} = s :=
   supₛ_singleton
 #align set.sUnion_singleton Set.unionₛ_singleton
 -/
@@ -1999,7 +1999,7 @@ theorem interₛ_singleton (s : Set α) : ⋂₀ {s} = s :=
 
 #print Set.unionₛ_eq_empty /-
 @[simp]
-theorem unionₛ_eq_empty {S : Set (Set α)} : ⋃₀S = ∅ ↔ ∀ s ∈ S, s = ∅ :=
+theorem unionₛ_eq_empty {S : Set (Set α)} : ⋃₀ S = ∅ ↔ ∀ s ∈ S, s = ∅ :=
   supₛ_eq_bot
 #align set.sUnion_eq_empty Set.unionₛ_eq_empty
 -/
@@ -2018,19 +2018,19 @@ but is expected to have type
   forall {α : Type.{u1}} {S : Set.{u1} (Set.{u1} α)}, Iff (Set.Nonempty.{u1} α (Set.unionₛ.{u1} α S)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) (Set.Nonempty.{u1} α s)))
 Case conversion may be inaccurate. Consider using '#align set.nonempty_sUnion Set.nonempty_unionₛₓ'. -/
 @[simp]
-theorem nonempty_unionₛ {S : Set (Set α)} : (⋃₀S).Nonempty ↔ ∃ s ∈ S, Set.Nonempty s := by
+theorem nonempty_unionₛ {S : Set (Set α)} : (⋃₀ S).Nonempty ↔ ∃ s ∈ S, Set.Nonempty s := by
   simp [nonempty_iff_ne_empty]
 #align set.nonempty_sUnion Set.nonempty_unionₛ
 
 #print Set.Nonempty.of_unionₛ /-
-theorem Nonempty.of_unionₛ {s : Set (Set α)} (h : (⋃₀s).Nonempty) : s.Nonempty :=
+theorem Nonempty.of_unionₛ {s : Set (Set α)} (h : (⋃₀ s).Nonempty) : s.Nonempty :=
   let ⟨s, hs, _⟩ := nonempty_unionₛ.1 h
   ⟨s, hs⟩
 #align set.nonempty.of_sUnion Set.Nonempty.of_unionₛ
 -/
 
 #print Set.Nonempty.of_unionₛ_eq_univ /-
-theorem Nonempty.of_unionₛ_eq_univ [Nonempty α] {s : Set (Set α)} (h : ⋃₀s = univ) : s.Nonempty :=
+theorem Nonempty.of_unionₛ_eq_univ [Nonempty α] {s : Set (Set α)} (h : ⋃₀ s = univ) : s.Nonempty :=
   nonempty.of_sUnion <| h.symm ▸ univ_nonempty
 #align set.nonempty.of_sUnion_eq_univ Set.Nonempty.of_unionₛ_eq_univ
 -/
@@ -2041,7 +2041,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)) (T : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α (Union.union.{u1} (Set.{u1} (Set.{u1} α)) (Set.instUnionSet_1.{u1} (Set.{u1} α)) S T)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) (Set.unionₛ.{u1} α S) (Set.unionₛ.{u1} α T))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_union Set.unionₛ_unionₓ'. -/
-theorem unionₛ_union (S T : Set (Set α)) : ⋃₀(S ∪ T) = ⋃₀S ∪ ⋃₀T :=
+theorem unionₛ_union (S T : Set (Set α)) : ⋃₀ (S ∪ T) = ⋃₀ S ∪ ⋃₀ T :=
   supₛ_union
 #align set.sUnion_union Set.unionₛ_union
 
@@ -2062,7 +2062,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (T : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α (Insert.insert.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instInsertSet.{u1} (Set.{u1} α)) s T)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s (Set.unionₛ.{u1} α T))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_insert Set.unionₛ_insertₓ'. -/
 @[simp]
-theorem unionₛ_insert (s : Set α) (T : Set (Set α)) : ⋃₀insert s T = s ∪ ⋃₀T :=
+theorem unionₛ_insert (s : Set α) (T : Set (Set α)) : ⋃₀ insert s T = s ∪ ⋃₀ T :=
   supₛ_insert
 #align set.sUnion_insert Set.unionₛ_insert
 
@@ -2084,7 +2084,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α (SDiff.sdiff.{u1} (Set.{u1} (Set.{u1} α)) (Set.instSDiffSet.{u1} (Set.{u1} α)) s (Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instSingletonSet.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))) (Set.unionₛ.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align set.sUnion_diff_singleton_empty Set.unionₛ_diff_singleton_emptyₓ'. -/
 @[simp]
-theorem unionₛ_diff_singleton_empty (s : Set (Set α)) : ⋃₀(s \ {∅}) = ⋃₀s :=
+theorem unionₛ_diff_singleton_empty (s : Set (Set α)) : ⋃₀ (s \ {∅}) = ⋃₀ s :=
   supₛ_diff_singleton_bot s
 #align set.sUnion_diff_singleton_empty Set.unionₛ_diff_singleton_empty
 
@@ -2105,7 +2105,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α (Insert.insert.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instInsertSet.{u1} (Set.{u1} α)) s (Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instSingletonSet.{u1} (Set.{u1} α)) t))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s t)
 Case conversion may be inaccurate. Consider using '#align set.sUnion_pair Set.unionₛ_pairₓ'. -/
-theorem unionₛ_pair (s t : Set α) : ⋃₀{s, t} = s ∪ t :=
+theorem unionₛ_pair (s t : Set α) : ⋃₀ {s, t} = s ∪ t :=
   supₛ_pair
 #align set.sUnion_pair Set.unionₛ_pair
 
@@ -2121,7 +2121,7 @@ theorem interₛ_pair (s t : Set α) : ⋂₀ {s, t} = s ∩ t :=
 
 #print Set.unionₛ_image /-
 @[simp]
-theorem unionₛ_image (f : α → Set β) (s : Set α) : ⋃₀(f '' s) = ⋃ x ∈ s, f x :=
+theorem unionₛ_image (f : α → Set β) (s : Set α) : ⋃₀ (f '' s) = ⋃ x ∈ s, f x :=
   supₛ_image
 #align set.sUnion_image Set.unionₛ_image
 -/
@@ -2140,7 +2140,7 @@ but is expected to have type
   forall {β : Type.{u2}} {ι : Sort.{u1}} (f : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (Set.unionₛ.{u2} β (Set.range.{u2, u1} (Set.{u2} β) ι f)) (Set.unionᵢ.{u2, u1} β ι (fun (x : ι) => f x))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_range Set.unionₛ_rangeₓ'. -/
 @[simp]
-theorem unionₛ_range (f : ι → Set β) : ⋃₀range f = ⋃ x, f x :=
+theorem unionₛ_range (f : ι → Set β) : ⋃₀ range f = ⋃ x, f x :=
   rfl
 #align set.sUnion_range Set.unionₛ_range
 
@@ -2182,7 +2182,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, Iff (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α c) (Set.univ.{u1} α)) (forall (a : α), Exists.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a b)))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_eq_univ_iff Set.unionₛ_eq_univ_iffₓ'. -/
-theorem unionₛ_eq_univ_iff {c : Set (Set α)} : ⋃₀c = univ ↔ ∀ a, ∃ b ∈ c, a ∈ b := by
+theorem unionₛ_eq_univ_iff {c : Set (Set α)} : ⋃₀ c = univ ↔ ∀ a, ∃ b ∈ c, a ∈ b := by
   simp only [eq_univ_iff_forall, mem_sUnion]
 #align set.sUnion_eq_univ_iff Set.unionₛ_eq_univ_iff
 
@@ -2262,7 +2262,7 @@ but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.unionₛ.{u1} α S)) (Set.interₛ.{u1} α (Set.image.{u1, u1} (Set.{u1} α) (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) S))
 Case conversion may be inaccurate. Consider using '#align set.compl_sUnion Set.compl_unionₛₓ'. -/
 -- classical
-theorem compl_unionₛ (S : Set (Set α)) : (⋃₀S)ᶜ = ⋂₀ (compl '' S) :=
+theorem compl_unionₛ (S : Set (Set α)) : (⋃₀ S)ᶜ = ⋂₀ (compl '' S) :=
   ext fun x => by simp
 #align set.compl_sUnion Set.compl_unionₛ
 
@@ -2273,8 +2273,8 @@ but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α S) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.interₛ.{u1} α (Set.image.{u1, u1} (Set.{u1} α) (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) S)))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_eq_compl_sInter_compl Set.unionₛ_eq_compl_interₛ_complₓ'. -/
 -- classical
-theorem unionₛ_eq_compl_interₛ_compl (S : Set (Set α)) : ⋃₀S = (⋂₀ (compl '' S))ᶜ := by
-  rw [← compl_compl (⋃₀S), compl_sUnion]
+theorem unionₛ_eq_compl_interₛ_compl (S : Set (Set α)) : ⋃₀ S = (⋂₀ (compl '' S))ᶜ := by
+  rw [← compl_compl (⋃₀ S), compl_sUnion]
 #align set.sUnion_eq_compl_sInter_compl Set.unionₛ_eq_compl_interₛ_compl
 
 /- warning: set.compl_sInter -> Set.compl_interₛ is a dubious translation:
@@ -2284,7 +2284,7 @@ but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.interₛ.{u1} α S)) (Set.unionₛ.{u1} α (Set.image.{u1, u1} (Set.{u1} α) (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) S))
 Case conversion may be inaccurate. Consider using '#align set.compl_sInter Set.compl_interₛₓ'. -/
 -- classical
-theorem compl_interₛ (S : Set (Set α)) : (⋂₀ S)ᶜ = ⋃₀(compl '' S) := by
+theorem compl_interₛ (S : Set (Set α)) : (⋂₀ S)ᶜ = ⋃₀ (compl '' S) := by
   rw [sUnion_eq_compl_sInter_compl, compl_compl_image]
 #align set.compl_sInter Set.compl_interₛ
 
@@ -2295,7 +2295,7 @@ but is expected to have type
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Set.interₛ.{u1} α S) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.unionₛ.{u1} α (Set.image.{u1, u1} (Set.{u1} α) (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) S)))
 Case conversion may be inaccurate. Consider using '#align set.sInter_eq_compl_sUnion_compl Set.interₛ_eq_compl_unionₛ_complₓ'. -/
 -- classical
-theorem interₛ_eq_compl_unionₛ_compl (S : Set (Set α)) : ⋂₀ S = (⋃₀(compl '' S))ᶜ := by
+theorem interₛ_eq_compl_unionₛ_compl (S : Set (Set α)) : ⋂₀ S = (⋃₀ (compl '' S))ᶜ := by
   rw [← compl_compl (⋂₀ S), compl_sInter]
 #align set.sInter_eq_compl_sUnion_compl Set.interₛ_eq_compl_unionₛ_compl
 
@@ -2306,7 +2306,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {S : Set.{u1} (Set.{u1} α)}, (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t S) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s (Set.unionₛ.{u1} α S)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s t) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align set.inter_empty_of_inter_sUnion_empty Set.inter_empty_of_inter_unionₛ_emptyₓ'. -/
 theorem inter_empty_of_inter_unionₛ_empty {s t : Set α} {S : Set (Set α)} (hs : t ∈ S)
-    (h : s ∩ ⋃₀S = ∅) : s ∩ t = ∅ :=
+    (h : s ∩ ⋃₀ S = ∅) : s ∩ t = ∅ :=
   eq_empty_of_subset_empty <| by
     rw [← h] <;> exact inter_subset_inter_right _ (subset_sUnion_of_mem hs)
 #align set.inter_empty_of_inter_sUnion_empty Set.inter_empty_of_inter_unionₛ_empty
@@ -2365,7 +2365,7 @@ theorem Sigma.univ (X : α → Type _) : (Set.univ : Set (Σa, X a)) = ⋃ a, ra
 -/
 
 #print Set.unionₛ_mono /-
-theorem unionₛ_mono {s t : Set (Set α)} (h : s ⊆ t) : ⋃₀s ⊆ ⋃₀t :=
+theorem unionₛ_mono {s t : Set (Set α)} (h : s ⊆ t) : ⋃₀ s ⊆ ⋃₀ t :=
   sUnion_subset fun t' ht' => subset_sUnion_of_mem <| h ht'
 #align set.sUnion_mono Set.unionₛ_mono
 -/
@@ -2404,7 +2404,7 @@ theorem unionᵢ_of_singleton_coe (s : Set α) : (⋃ i : s, {i} : Set α) = s :
 -/
 
 #print Set.unionₛ_eq_bunionᵢ /-
-theorem unionₛ_eq_bunionᵢ {s : Set (Set α)} : ⋃₀s = ⋃ (i : Set α) (h : i ∈ s), i := by
+theorem unionₛ_eq_bunionᵢ {s : Set (Set α)} : ⋃₀ s = ⋃ (i : Set α) (h : i ∈ s), i := by
   rw [← sUnion_image, image_id']
 #align set.sUnion_eq_bUnion Set.unionₛ_eq_bunionᵢ
 -/
@@ -2416,7 +2416,7 @@ theorem interₛ_eq_binterᵢ {s : Set (Set α)} : ⋂₀ s = ⋂ (i : Set α) (
 -/
 
 #print Set.unionₛ_eq_unionᵢ /-
-theorem unionₛ_eq_unionᵢ {s : Set (Set α)} : ⋃₀s = ⋃ i : s, i := by
+theorem unionₛ_eq_unionᵢ {s : Set (Set α)} : ⋃₀ s = ⋃ i : s, i := by
   simp only [← sUnion_range, Subtype.range_coe]
 #align set.sUnion_eq_Union Set.unionₛ_eq_unionᵢ
 -/
@@ -2481,7 +2481,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sUnion_inter_sUnion Set.unionₛ_inter_unionₛₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem unionₛ_inter_unionₛ {s t : Set (Set α)} :
-    ⋃₀s ∩ ⋃₀t = ⋃ p ∈ s ×ˢ t, (p : Set α × Set α).1 ∩ p.2 :=
+    ⋃₀ s ∩ ⋃₀ t = ⋃ p ∈ s ×ˢ t, (p : Set α × Set α).1 ∩ p.2 :=
   supₛ_inf_supₛ
 #align set.sUnion_inter_sUnion Set.unionₛ_inter_unionₛ
 
@@ -2511,7 +2511,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} (s : ι -> (Set.{u2} (Set.{u2} α))), Eq.{succ u2} (Set.{u2} α) (Set.unionₛ.{u2} α (Set.unionᵢ.{u2, u1} (Set.{u2} α) ι (fun (i : ι) => s i))) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => Set.unionₛ.{u2} α (s i)))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_Union Set.unionₛ_unionᵢₓ'. -/
-theorem unionₛ_unionᵢ (s : ι → Set (Set α)) : (⋃₀⋃ i, s i) = ⋃ i, ⋃₀s i := by
+theorem unionₛ_unionᵢ (s : ι → Set (Set α)) : (⋃₀ ⋃ i, s i) = ⋃ i, ⋃₀ s i := by
   simp only [sUnion_eq_bUnion, bUnion_Union]
 #align set.sUnion_Union Set.unionₛ_unionᵢ
 
@@ -2532,7 +2532,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (C : Set.{u2} (Set.{u2} α)) {f : forall (s : Set.Elem.{u2} (Set.{u2} α) C), β -> (Set.Elem.{u2} α (Subtype.val.{succ u2} (Set.{u2} α) (fun (x : Set.{u2} α) => Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) x C) s))}, (forall (s : Set.Elem.{u2} (Set.{u2} α) C), Function.Surjective.{succ u1, succ u2} β (Set.Elem.{u2} α (Subtype.val.{succ u2} (Set.{u2} α) (fun (x : Set.{u2} α) => Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) x C) s)) (f s)) -> (Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α β (fun (y : β) => Set.range.{u2, succ u2} α (Set.Elem.{u2} (Set.{u2} α) C) (fun (s : Set.Elem.{u2} (Set.{u2} α) C) => Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (Subtype.val.{succ u2} (Set.{u2} α) (fun (x : Set.{u2} α) => Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) x C) s)) (f s y)))) (Set.unionₛ.{u2} α C))
 Case conversion may be inaccurate. Consider using '#align set.Union_range_eq_sUnion Set.unionᵢ_range_eq_unionₛₓ'. -/
 theorem unionᵢ_range_eq_unionₛ {α β : Type _} (C : Set (Set α)) {f : ∀ s : C, β → s}
-    (hf : ∀ s : C, Surjective (f s)) : (⋃ y : β, range fun s : C => (f s y).val) = ⋃₀C :=
+    (hf : ∀ s : C, Surjective (f s)) : (⋃ y : β, range fun s : C => (f s y).val) = ⋃₀ C :=
   by
   ext x; constructor
   · rintro ⟨s, ⟨y, rfl⟩, ⟨s, hs⟩, rfl⟩
@@ -2617,7 +2617,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {S : Set.{u2} (Set.{u2} α)} {t : Set.{u1} β} {f : α -> β}, (forall (s : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) s S) -> (Set.MapsTo.{u2, u1} α β f s t)) -> (Set.MapsTo.{u2, u1} α β f (Set.unionₛ.{u2} α S) t)
 Case conversion may be inaccurate. Consider using '#align set.maps_to_sUnion Set.mapsTo_unionₛₓ'. -/
 theorem mapsTo_unionₛ {S : Set (Set α)} {t : Set β} {f : α → β} (H : ∀ s ∈ S, MapsTo f s t) :
-    MapsTo f (⋃₀S) t := fun x ⟨s, hs, hx⟩ => H s hs hx
+    MapsTo f (⋃₀ S) t := fun x ⟨s, hs, hx⟩ => H s hs hx
 #align set.maps_to_sUnion Set.mapsTo_unionₛ
 
 /- warning: set.maps_to_Union -> Set.mapsTo_unionᵢ is a dubious translation:
@@ -2915,7 +2915,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {T : Set.{u1} (Set.{u1} β)} {f : α -> β}, (forall (t : Set.{u1} β), (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t T) -> (Set.SurjOn.{u2, u1} α β f s t)) -> (Set.SurjOn.{u2, u1} α β f s (Set.unionₛ.{u1} β T))
 Case conversion may be inaccurate. Consider using '#align set.surj_on_sUnion Set.surjOn_unionₛₓ'. -/
 theorem surjOn_unionₛ {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀ t ∈ T, SurjOn f s t) :
-    SurjOn f s (⋃₀T) := fun x ⟨t, ht, hx⟩ => H t ht hx
+    SurjOn f s (⋃₀ T) := fun x ⟨t, ht, hx⟩ => H t ht hx
 #align set.surj_on_sUnion Set.surjOn_unionₛ
 
 /- warning: set.surj_on_Union -> Set.surjOn_unionᵢ is a dubious translation:
@@ -3195,7 +3195,7 @@ theorem preimage_unionᵢ₂ {f : α → β} {s : ∀ i, κ i → Set β} :
 
 #print Set.preimage_unionₛ /-
 @[simp]
-theorem preimage_unionₛ {f : α → β} {s : Set (Set β)} : f ⁻¹' ⋃₀s = ⋃ t ∈ s, f ⁻¹' t := by
+theorem preimage_unionₛ {f : α → β} {s : Set (Set β)} : f ⁻¹' ⋃₀ s = ⋃ t ∈ s, f ⁻¹' t := by
   rw [sUnion_eq_bUnion, preimage_Union₂]
 #align set.preimage_sUnion Set.preimage_unionₛ
 -/
@@ -3286,7 +3286,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.prod_sUnion Set.prod_unionₛₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prod_unionₛ {s : Set α} {C : Set (Set β)} : s ×ˢ ⋃₀C = ⋃₀((fun t => s ×ˢ t) '' C) := by
+theorem prod_unionₛ {s : Set α} {C : Set (Set β)} : s ×ˢ ⋃₀ C = ⋃₀ ((fun t => s ×ˢ t) '' C) := by
   simp_rw [sUnion_eq_bUnion, bUnion_image, prod_Union₂]
 #align set.prod_sUnion Set.prod_unionₛ
 
@@ -3327,7 +3327,7 @@ Case conversion may be inaccurate. Consider using '#align set.sUnion_prod_const 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem unionₛ_prod_const {C : Set (Set α)} {t : Set β} :
-    ⋃₀C ×ˢ t = ⋃₀((fun s : Set α => s ×ˢ t) '' C) := by
+    ⋃₀ C ×ˢ t = ⋃₀ ((fun s : Set α => s ×ˢ t) '' C) := by
   simp only [sUnion_eq_bUnion, Union₂_prod_const, bUnion_image]
 #align set.sUnion_prod_const Set.unionₛ_prod_const
 
@@ -3883,7 +3883,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.disjoint_sUnion_left Set.disjoint_unionₛ_leftₓ'. -/
 @[simp]
 theorem disjoint_unionₛ_left {S : Set (Set α)} {t : Set α} :
-    Disjoint (⋃₀S) t ↔ ∀ s ∈ S, Disjoint s t :=
+    Disjoint (⋃₀ S) t ↔ ∀ s ∈ S, Disjoint s t :=
   supₛ_disjoint_iff
 #align set.disjoint_sUnion_left Set.disjoint_unionₛ_left
 
@@ -3895,7 +3895,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.disjoint_sUnion_right Set.disjoint_unionₛ_rightₓ'. -/
 @[simp]
 theorem disjoint_unionₛ_right {s : Set α} {S : Set (Set α)} :
-    Disjoint s (⋃₀S) ↔ ∀ t ∈ S, Disjoint s t :=
+    Disjoint s (⋃₀ S) ↔ ∀ t ∈ S, Disjoint s t :=
   disjoint_supₛ_iff
 #align set.disjoint_sUnion_right Set.disjoint_unionₛ_right
 
@@ -4150,7 +4150,7 @@ lean 3 declaration is
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CompleteLattice.{u1} β] (s : Set.{u1} (Set.{u1} β)), Eq.{succ u1} β (SupSet.supₛ.{u1} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Set.unionₛ.{u1} β s)) (supᵢ.{u1, succ u1} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Set.{u1} β) (fun (t : Set.{u1} β) => supᵢ.{u1, 0} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t s) (fun (H : Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t s) => SupSet.supₛ.{u1} β (CompleteLattice.toSupSet.{u1} β _inst_1) t)))
 Case conversion may be inaccurate. Consider using '#align Sup_sUnion supₛ_unionₛₓ'. -/
-theorem supₛ_unionₛ (s : Set (Set β)) : supₛ (⋃₀s) = ⨆ t ∈ s, supₛ t := by
+theorem supₛ_unionₛ (s : Set (Set β)) : supₛ (⋃₀ s) = ⨆ t ∈ s, supₛ t := by
   simp only [sUnion_eq_bUnion, supₛ_eq_supᵢ, supᵢ_unionᵢ]
 #align Sup_sUnion supₛ_unionₛ
 
@@ -4160,7 +4160,7 @@ lean 3 declaration is
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CompleteLattice.{u1} β] (s : Set.{u1} (Set.{u1} β)), Eq.{succ u1} β (InfSet.infₛ.{u1} β (CompleteLattice.toInfSet.{u1} β _inst_1) (Set.unionₛ.{u1} β s)) (infᵢ.{u1, succ u1} β (CompleteLattice.toInfSet.{u1} β _inst_1) (Set.{u1} β) (fun (t : Set.{u1} β) => infᵢ.{u1, 0} β (CompleteLattice.toInfSet.{u1} β _inst_1) (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t s) (fun (H : Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t s) => InfSet.infₛ.{u1} β (CompleteLattice.toInfSet.{u1} β _inst_1) t)))
 Case conversion may be inaccurate. Consider using '#align Inf_sUnion infₛ_unionₛₓ'. -/
-theorem infₛ_unionₛ (s : Set (Set β)) : infₛ (⋃₀s) = ⨅ t ∈ s, infₛ t :=
+theorem infₛ_unionₛ (s : Set (Set β)) : infₛ (⋃₀ s) = ⨅ t ∈ s, infₛ t :=
   @supₛ_unionₛ βᵒᵈ _ _
 #align Inf_sUnion infₛ_unionₛ
 

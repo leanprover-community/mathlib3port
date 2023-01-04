@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module measure_theory.card_measurable_space
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
   have J : (#⋃ j : Iio i, generate_measurable_rec s j.1) ≤ max (#s) 2 ^ aleph_0.{u} :=
     by
     apply (mk_Union_le _).trans
-    have D : (⨆ j : Iio i, #generate_measurable_rec s j) ≤ _ := csupr_le' fun ⟨j, hj⟩ => IH j hj
+    have D : (⨆ j : Iio i, #generate_measurable_rec s j) ≤ _ := csupᵢ_le' fun ⟨j, hj⟩ => IH j hj
     apply (mul_le_mul' ((mk_subtype_le _).trans (aleph 1).mk_ord_out.le) D).trans
     rw [mul_eq_max A C]
     exact max_le B le_rfl
@@ -188,7 +188,7 @@ theorem cardinal_generate_measurable_le (s : Set (Set α)) :
   refine'
     le_trans
       (mul_le_mul' aleph_one_le_continuum
-        (csupr_le' fun i => cardinal_generate_measurable_rec_le s i))
+        (csupᵢ_le' fun i => cardinal_generate_measurable_rec_le s i))
       _
   have := power_le_power_right (le_max_right (#s) 2)
   rw [mul_eq_max aleph_0_le_continuum (aleph_0_le_continuum.trans this)]

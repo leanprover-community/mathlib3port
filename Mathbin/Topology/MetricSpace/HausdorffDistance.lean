@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -621,13 +621,13 @@ theorem dist_le_inf_dist_add_diam (hs : Bounded s) (hy : y ∈ s) : dist x y ≤
 variable (s)
 
 /-- The minimal distance to a set is Lipschitz in point with constant 1 -/
-theorem lipschitzInfDistPt : LipschitzWith 1 fun x => infDist x s :=
-  LipschitzWith.ofLeAdd fun x y => inf_dist_le_inf_dist_add_dist
-#align metric.lipschitz_inf_dist_pt Metric.lipschitzInfDistPt
+theorem lipschitz_inf_dist_pt : LipschitzWith 1 fun x => infDist x s :=
+  LipschitzWith.of_le_add fun x y => inf_dist_le_inf_dist_add_dist
+#align metric.lipschitz_inf_dist_pt Metric.lipschitz_inf_dist_pt
 
 /-- The minimal distance to a set is uniformly continuous in point -/
 theorem uniform_continuous_inf_dist_pt : UniformContinuous fun x => infDist x s :=
-  (lipschitzInfDistPt s).UniformContinuous
+  (lipschitz_inf_dist_pt s).UniformContinuous
 #align metric.uniform_continuous_inf_dist_pt Metric.uniform_continuous_inf_dist_pt
 
 /-- The minimal distance to a set is continuous in point -/
@@ -725,13 +725,13 @@ theorem coe_inf_nndist : (infNndist x s : ℝ) = infDist x s :=
 #align metric.coe_inf_nndist Metric.coe_inf_nndist
 
 /-- The minimal distance to a set (as `ℝ≥0`) is Lipschitz in point with constant 1 -/
-theorem lipschitzInfNndistPt (s : Set α) : LipschitzWith 1 fun x => infNndist x s :=
-  LipschitzWith.ofLeAdd fun x y => inf_dist_le_inf_dist_add_dist
-#align metric.lipschitz_inf_nndist_pt Metric.lipschitzInfNndistPt
+theorem lipschitz_inf_nndist_pt (s : Set α) : LipschitzWith 1 fun x => infNndist x s :=
+  LipschitzWith.of_le_add fun x y => inf_dist_le_inf_dist_add_dist
+#align metric.lipschitz_inf_nndist_pt Metric.lipschitz_inf_nndist_pt
 
 /-- The minimal distance to a set (as `ℝ≥0`) is uniformly continuous in point -/
 theorem uniform_continuous_inf_nndist_pt (s : Set α) : UniformContinuous fun x => infNndist x s :=
-  (lipschitzInfNndistPt s).UniformContinuous
+  (lipschitz_inf_nndist_pt s).UniformContinuous
 #align metric.uniform_continuous_inf_nndist_pt Metric.uniform_continuous_inf_nndist_pt
 
 /-- The minimal distance to a set (as `ℝ≥0`) is continuous in point -/

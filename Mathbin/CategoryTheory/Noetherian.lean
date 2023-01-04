@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.noetherian
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) :
     ∃ Y : Subobject X, Simple (Y : C) :=
   by
   haveI : Nontrivial (subobject X) := nontrivial_of_not_is_zero h
-  haveI := is_atomic_of_order_bot_well_founded_lt (artinian_object.subobject_lt_well_founded X)
+  haveI := isAtomic_of_orderBot_wellFounded_lt (artinian_object.subobject_lt_well_founded X)
   have := IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)
   obtain ⟨Y, s⟩ := (IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)).resolve_left top_ne_bot
   exact ⟨Y, (subobject_simple_iff_is_atom _).mpr s.1⟩

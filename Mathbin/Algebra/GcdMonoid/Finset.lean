@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.finset
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ namespace Finset
 
 open Multiset
 
-variable [CancelCommMonoidWithZero α] [NormalizedGcdMonoid α]
+variable [CancelCommMonoidWithZero α] [NormalizedGCDMonoid α]
 
 /-! ### lcm -/
 
@@ -47,7 +47,7 @@ section Lcm
 
 /-- Least common multiple of a finite set -/
 def lcm (s : Finset β) (f : β → α) : α :=
-  s.fold GcdMonoid.lcm 1 f
+  s.fold GCDMonoid.lcm 1 f
 #align finset.lcm Finset.lcm
 
 variable {s s₁ s₂ : Finset β} {f : β → α}
@@ -79,7 +79,7 @@ theorem dvd_lcm {b : β} (hb : b ∈ s) : f b ∣ s.lcm f :=
 
 @[simp]
 theorem lcm_insert [DecidableEq β] {b : β} :
-    (insert b s : Finset β).lcm f = GcdMonoid.lcm (f b) (s.lcm f) :=
+    (insert b s : Finset β).lcm f = GCDMonoid.lcm (f b) (s.lcm f) :=
   by
   by_cases h : b ∈ s
   ·
@@ -97,7 +97,7 @@ theorem lcm_singleton {b : β} : ({b} : Finset β).lcm f = normalize (f b) :=
 theorem normalize_lcm : normalize (s.lcm f) = s.lcm f := by simp [lcm_def]
 #align finset.normalize_lcm Finset.normalize_lcm
 
-theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GcdMonoid.lcm (s₁.lcm f) (s₂.lcm f) :=
+theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GCDMonoid.lcm (s₁.lcm f) (s₂.lcm f) :=
   (Finset.induction_on s₁ (by rw [empty_union, lcm_empty, lcm_one_left, normalize_lcm]))
     fun a s has ih => by rw [insert_union, lcm_insert, lcm_insert, ih, lcm_assoc]
 #align finset.lcm_union Finset.lcm_union
@@ -138,7 +138,7 @@ section Gcd
 
 /-- Greatest common divisor of a finite set -/
 def gcd (s : Finset β) (f : β → α) : α :=
-  s.fold GcdMonoid.gcd 0 f
+  s.fold GCDMonoid.gcd 0 f
 #align finset.gcd Finset.gcd
 
 variable {s s₁ s₂ : Finset β} {f : β → α}
@@ -169,7 +169,7 @@ theorem dvd_gcd {a : α} : (∀ b ∈ s, a ∣ f b) → a ∣ s.gcd f :=
 
 @[simp]
 theorem gcd_insert [DecidableEq β] {b : β} :
-    (insert b s : Finset β).gcd f = GcdMonoid.gcd (f b) (s.gcd f) :=
+    (insert b s : Finset β).gcd f = GCDMonoid.gcd (f b) (s.gcd f) :=
   by
   by_cases h : b ∈ s
   ·
@@ -187,7 +187,7 @@ theorem gcd_singleton {b : β} : ({b} : Finset β).gcd f = normalize (f b) :=
 theorem normalize_gcd : normalize (s.gcd f) = s.gcd f := by simp [gcd_def]
 #align finset.normalize_gcd Finset.normalize_gcd
 
-theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GcdMonoid.gcd (s₁.gcd f) (s₂.gcd f) :=
+theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GCDMonoid.gcd (s₁.gcd f) (s₂.gcd f) :=
   (Finset.induction_on s₁ (by rw [empty_union, gcd_empty, gcd_zero_left, normalize_gcd]))
     fun a s has ih => by rw [insert_union, gcd_insert, gcd_insert, ih, gcd_assoc]
 #align finset.gcd_union Finset.gcd_union
@@ -235,7 +235,7 @@ theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] :
     trans ((s.filter fun x => f x = 0) ∪ s.filter fun x => f x ≠ 0).gcd f
     · rw [filter_union_filter_neg_eq]
     rw [gcd_union]
-    trans GcdMonoid.gcd (0 : α) _
+    trans GCDMonoid.gcd (0 : α) _
     · refine' congr (congr rfl _) rfl
       apply s.induction_on
       · simp
@@ -293,10 +293,10 @@ namespace Finset
 
 section IsDomain
 
-variable [CommRing α] [IsDomain α] [NormalizedGcdMonoid α]
+variable [CommRing α] [IsDomain α] [NormalizedGCDMonoid α]
 
 theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α}
-    (h : ∀ x : β, x ∈ s → a ∣ f x - g x) : GcdMonoid.gcd a (s.gcd f) = GcdMonoid.gcd a (s.gcd g) :=
+    (h : ∀ x : β, x ∈ s → a ∣ f x - g x) : GCDMonoid.gcd a (s.gcd f) = GCDMonoid.gcd a (s.gcd g) :=
   by
   classical
     revert h
@@ -305,7 +305,7 @@ theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α}
     intro b s bs hi h
     rw [gcd_insert, gcd_insert, gcd_comm (f b), ← gcd_assoc,
       hi fun x hx => h _ (mem_insert_of_mem hx), gcd_comm a, gcd_assoc,
-      gcd_comm a (GcdMonoid.gcd _ _), gcd_comm (g b), gcd_assoc _ _ a, gcd_comm _ a]
+      gcd_comm a (GCDMonoid.gcd _ _), gcd_comm (g b), gcd_assoc _ _ a, gcd_comm _ a]
     exact congr_arg _ (gcd_eq_of_dvd_sub_right (h _ (mem_insert_self _ _)))
 #align finset.gcd_eq_of_dvd_sub Finset.gcd_eq_of_dvd_sub
 

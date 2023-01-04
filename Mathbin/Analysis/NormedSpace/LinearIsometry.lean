@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.linear_isometry
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ abbrev LinearIsometryClass (𝓕 : Type _) (R E E₂ : outParam (Type _)) [Semir
 namespace SemilinearIsometryClass
 
 protected theorem isometry [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : Isometry f :=
-  AddMonoidHomClass.isometryOfNorm _ (norm_map _)
+  AddMonoidHomClass.isometry_of_norm _ (norm_map _)
 #align semilinear_isometry_class.isometry SemilinearIsometryClass.isometry
 
 @[continuity]
@@ -241,7 +241,7 @@ theorem nnnorm_map (x : E) : ‖f x‖₊ = ‖x‖₊ :=
 #align linear_isometry.nnnorm_map LinearIsometry.nnnorm_map
 
 protected theorem isometry : Isometry f :=
-  AddMonoidHomClass.isometryOfNorm _ (norm_map _)
+  AddMonoidHomClass.isometry_of_norm _ (norm_map _)
 #align linear_isometry.isometry LinearIsometry.isometry
 
 @[simp]

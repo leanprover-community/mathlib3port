@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.contracting
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,9 +50,9 @@ variable [EmetricSpace α] [cs : CompleteSpace α] {K : ℝ≥0} {f : α → α}
 
 open Emetric Set
 
-theorem toLipschitzWith (hf : ContractingWith K f) : LipschitzWith K f :=
+theorem to_lipschitz_with (hf : ContractingWith K f) : LipschitzWith K f :=
   hf.2
-#align contracting_with.to_lipschitz_with ContractingWith.toLipschitzWith
+#align contracting_with.to_lipschitz_with ContractingWith.to_lipschitz_with
 
 theorem one_sub_K_pos' (hf : ContractingWith K f) : (0 : ℝ≥0∞) < 1 - K := by simp [hf.1]
 #align contracting_with.one_sub_K_pos' ContractingWith.one_sub_K_pos'
@@ -114,11 +114,11 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
           ∀ n : ℕ, edist ((f^[n]) x) y ≤ edist x (f x) * K ^ n / (1 - K) :=
   have : CauchySeq fun n => (f^[n]) x :=
     cauchy_seq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
-      (hf.toLipschitzWith.edist_iterate_succ_le_geometric x)
+      (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x)
   let ⟨y, hy⟩ := cauchy_seq_tendsto_of_complete this
   ⟨y, is_fixed_pt_of_tendsto_iterate hy hf.2.Continuous.ContinuousAt, hy,
     edist_le_of_edist_le_geometric_of_tendsto K (edist x (f x))
-      (hf.toLipschitzWith.edist_iterate_succ_le_geometric x) hy⟩
+      (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x) hy⟩
 #align contracting_with.exists_fixed_point ContractingWith.exists_fixed_point
 
 variable (f)
@@ -293,7 +293,7 @@ theorem one_sub_K_pos (hf : ContractingWith K f) : (0 : ℝ) < 1 - K :=
 #align contracting_with.one_sub_K_pos ContractingWith.one_sub_K_pos
 
 theorem dist_le_mul (x y : α) : dist (f x) (f y) ≤ K * dist x y :=
-  hf.toLipschitzWith.dist_le_mul x y
+  hf.to_lipschitz_with.dist_le_mul x y
 #align contracting_with.dist_le_mul ContractingWith.dist_le_mul
 
 theorem dist_inequality (x y) : dist x y ≤ (dist x (f x) + dist y (f y)) / (1 - K) :=
@@ -364,7 +364,7 @@ theorem aposteriori_dist_iterate_fixed_point_le (x n) :
 theorem apriori_dist_iterate_fixed_point_le (x n) :
     dist ((f^[n]) x) (fixedPoint f hf) ≤ dist x (f x) * K ^ n / (1 - K) :=
   le_trans (hf.aposteriori_dist_iterate_fixed_point_le x n) <|
-    (div_le_div_right hf.one_sub_K_pos).2 <| hf.toLipschitzWith.dist_iterate_succ_le_geometric x n
+    (div_le_div_right hf.one_sub_K_pos).2 <| hf.to_lipschitz_with.dist_iterate_succ_le_geometric x n
 #align
   contracting_with.apriori_dist_iterate_fixed_point_le ContractingWith.apriori_dist_iterate_fixed_point_le
 

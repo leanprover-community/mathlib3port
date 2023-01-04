@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pequiv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -360,11 +360,11 @@ theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm 
 #align pequiv.symm_trans_self PEquiv.symm_trans_self
 -/
 
-#print PEquiv.trans_symm_eq_iff_forall_is_some /-
-theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} :
+#print PEquiv.trans_symm_eq_iff_forall_isSome /-
+theorem trans_symm_eq_iff_forall_isSome {f : α ≃. β} :
     f.trans f.symm = PEquiv.refl α ↔ ∀ a, isSome (f a) := by
   rw [self_trans_symm, of_set_eq_refl, Set.eq_univ_iff_forall] <;> rfl
-#align pequiv.trans_symm_eq_iff_forall_is_some PEquiv.trans_symm_eq_iff_forall_is_some
+#align pequiv.trans_symm_eq_iff_forall_is_some PEquiv.trans_symm_eq_iff_forall_isSome
 -/
 
 instance : Bot (α ≃. β) :=

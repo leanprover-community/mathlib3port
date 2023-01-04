@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.null_measurable
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : s.Countable)
 #align measure_theory.null_measurable_set.bUnion MeasureTheory.NullMeasurableSet.bUnion
 
 protected theorem sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
-    NullMeasurableSet (⋃₀s) μ := by
+    NullMeasurableSet (⋃₀ s) μ := by
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
 #align measure_theory.null_measurable_set.sUnion MeasureTheory.NullMeasurableSet.sUnion
@@ -404,7 +404,7 @@ theorem Finset.nullMeasurableSetBUnion {f : ι → Set α} (s : Finset ι)
 #align finset.null_measurable_set_bUnion Finset.nullMeasurableSetBUnion
 
 theorem Set.Finite.nullMeasurableSetSUnion {s : Set (Set α)} (hs : s.Finite)
-    (h : ∀ t ∈ s, NullMeasurableSet t μ) : NullMeasurableSet (⋃₀s) μ :=
+    (h : ∀ t ∈ s, NullMeasurableSet t μ) : NullMeasurableSet (⋃₀ s) μ :=
   Finite.measurable_set_sUnion hs h
 #align set.finite.null_measurable_set_sUnion Set.Finite.nullMeasurableSetSUnion
 

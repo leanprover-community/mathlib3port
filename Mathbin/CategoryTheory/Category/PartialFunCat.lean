@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.PartialFun
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ noncomputable def partialFunToPointed : PartialFunCat ⥤ PointedCat := by
         map := fun X Y f => ⟨Option.elim' none fun a => (f a).toOption, rfl⟩
         map_id' := fun X =>
           PointedCat.Hom.ext _ _ <|
-            funext fun o => (Option.recOn o rfl) fun a => Part.some_to_option _
+            funext fun o => (Option.recOn o rfl) fun a => Part.some_toOption _
         map_comp' := fun X Y Z f g =>
           PointedCat.Hom.ext _ _ <|
             funext fun o => (Option.recOn o rfl) fun a => Part.bind_toOption _ _ }
@@ -201,6 +201,6 @@ noncomputable def typeToPartialFunIsoPartialFunToPointed :
         inv_hom_id' := rfl })
     fun X Y f =>
     PointedCat.Hom.ext _ _ <|
-      funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_to_option _
+      funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_toOption _
 #align Type_to_PartialFun_iso_PartialFun_to_Pointed typeToPartialFunIsoPartialFunToPointed
 

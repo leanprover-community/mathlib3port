@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.tagged
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -311,7 +311,7 @@ theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.I
     (hJ : J ∈ π.boxes) : diam J.IccCat ≤ 2 * r (π.Tag J) :=
   calc
     diam J.IccCat ≤ diam (closedBall (π.Tag J) (r <| π.Tag J)) :=
-      diam_mono (h J hJ) boundedClosedBall
+      diam_mono (h J hJ) bounded_closed_ball
     _ ≤ 2 * r (π.Tag J) := diam_closed_ball (le_of_lt (r _).2)
     
 #align

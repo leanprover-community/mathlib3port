@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.complex.is_R_or_C
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1013,19 +1013,20 @@ variable (K E) [NormedAddCommGroup E] [NormedSpace K E]
 
 This is not an instance because it would cause a search for `finite_dimensional ?x E` before
 `is_R_or_C ?x`. -/
-theorem properIsROrC [FiniteDimensional K E] : ProperSpace E :=
+theorem proper_is_R_or_C [FiniteDimensional K E] : ProperSpace E :=
   by
   letI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E
   letI : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E
   infer_instance
-#align finite_dimensional.proper_is_R_or_C FiniteDimensional.properIsROrC
+#align finite_dimensional.proper_is_R_or_C FiniteDimensional.proper_is_R_or_C
 
 variable {E}
 
-instance IsROrC.properSpaceSubmodule (S : Submodule K E) [FiniteDimensional K ↥S] : ProperSpace S :=
-  properIsROrC K S
+instance IsROrC.proper_space_submodule (S : Submodule K E) [FiniteDimensional K ↥S] :
+    ProperSpace S :=
+  proper_is_R_or_C K S
 #align
-  finite_dimensional.is_R_or_C.proper_space_submodule FiniteDimensional.IsROrC.properSpaceSubmodule
+  finite_dimensional.is_R_or_C.proper_space_submodule FiniteDimensional.IsROrC.proper_space_submodule
 
 end FiniteDimensional
 

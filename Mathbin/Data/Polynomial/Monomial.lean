@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.monomial
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,20 +67,20 @@ theorem ring_hom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a
   set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
   have A : f' = g' := by
     ext
-    · simp [h₁, RingEquiv.to_ring_hom_eq_coe]
-    · simpa [RingEquiv.to_ring_hom_eq_coe] using h₂
+    · simp [h₁, RingEquiv.toRingHom_eq_coe]
+    · simpa [RingEquiv.toRingHom_eq_coe] using h₂
   have B : f = f'.comp (to_finsupp_iso R) :=
     by
     rw [hf', RingHom.comp_assoc]
     ext x
-    simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
-      RingHom.coe_comp, RingEquiv.coe_to_ring_hom]
+    simp only [RingEquiv.toRingHom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
+      RingHom.coe_comp, RingEquiv.coe_toRingHom]
   have C : g = g'.comp (to_finsupp_iso R) :=
     by
     rw [hg', RingHom.comp_assoc]
     ext x
-    simp only [RingEquiv.to_ring_hom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
-      RingHom.coe_comp, RingEquiv.coe_to_ring_hom]
+    simp only [RingEquiv.toRingHom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
+      RingHom.coe_comp, RingEquiv.coe_toRingHom]
   rw [B, C, A]
 #align polynomial.ring_hom_ext Polynomial.ring_hom_ext
 

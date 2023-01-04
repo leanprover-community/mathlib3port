@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1541,8 +1541,8 @@ scoped[Pointwise]
 instance [DecidableEq α] [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (Finset α) :=
   coe_injective.NoZeroDivisors _ coe_zero coe_mul
 
-instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
-    NoZeroSmulDivisors (Finset α) (Finset β) :=
+instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+    NoZeroSMulDivisors (Finset α) (Finset β) :=
   ⟨fun s t h => by
     by_contra' H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
@@ -1553,8 +1553,8 @@ instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
     exact
       (eq_zero_or_eq_zero_of_smul_eq_zero <| mem_zero.1 <| this <| smul_mem_smul hs ht).elim ha hb⟩
 
-instance no_zero_smul_divisors_finset [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
-    NoZeroSmulDivisors α (Finset β) :=
+instance no_zero_smul_divisors_finset [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+    NoZeroSMulDivisors α (Finset β) :=
   coe_injective.NoZeroSmulDivisors _ coe_zero coe_smul_finset
 #align finset.no_zero_smul_divisors_finset Finset.no_zero_smul_divisors_finset
 
@@ -1735,7 +1735,7 @@ theorem zero_mem_smul_finset {t : Finset β} {a : α} (h : (0 : β) ∈ t) : (0 
   mem_smul_finset.2 ⟨0, h, smul_zero _⟩
 #align finset.zero_mem_smul_finset Finset.zero_mem_smul_finset
 
-variable [NoZeroSmulDivisors α β] {a : α}
+variable [NoZeroSMulDivisors α β] {a : α}
 
 theorem zero_mem_smul_iff : (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonempty ∨ (0 : β) ∈ t ∧ s.Nonempty :=
   by

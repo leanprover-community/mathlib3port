@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.digits
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -569,7 +569,7 @@ theorem of_digits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List
   induction' L with d L ih
   · rfl
   · dsimp [of_digits]
-    dsimp [Nat.Modeq] at *
+    dsimp [Nat.ModEq] at *
     conv_lhs => rw [Nat.add_mod, Nat.mul_mod, h, ih]
     conv_rhs => rw [Nat.add_mod, Nat.mul_mod]
 #align nat.of_digits_modeq' Nat.of_digits_modeq'
@@ -588,7 +588,7 @@ theorem of_digits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Li
   induction' L with d L ih
   · rfl
   · dsimp [of_digits]
-    dsimp [Int.Modeq] at *
+    dsimp [Int.ModEq] at *
     conv_lhs => rw [Int.add_emod, Int.mul_emod, h, ih]
     conv_rhs => rw [Int.add_emod, Int.mul_emod]
 #align nat.of_digits_zmodeq' Nat.of_digits_zmodeq'
@@ -647,7 +647,7 @@ theorem of_digits_neg_one :
 theorem modeq_eleven_digits_sum (n : ℕ) :
     n ≡ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum [ZMOD 11] :=
   by
-  have t := zmodeq_of_digits_digits 11 10 (-1 : ℤ) (by unfold Int.Modeq <;> norm_num) n
+  have t := zmodeq_of_digits_digits 11 10 (-1 : ℤ) (by unfold Int.ModEq <;> norm_num) n
   rwa [of_digits_neg_one] at t
 #align nat.modeq_eleven_digits_sum Nat.modeq_eleven_digits_sum
 
@@ -675,7 +675,7 @@ theorem dvd_iff_dvd_of_digits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : �
   by
   rw [← Int.coe_nat_dvd]
   exact
-    dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modeq_iff_dvd.2 h).symm _).symm.Dvd
+    dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modEq_iff_dvd.2 h).symm _).symm.Dvd
 #align nat.dvd_iff_dvd_of_digits Nat.dvd_iff_dvd_of_digits
 
 theorem eleven_dvd_iff :

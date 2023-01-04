@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.box.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -786,7 +786,7 @@ theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ :
       Union_univ_pi_of_monotone fun i => (hl' i).IooCat (hu' i)
     _ = I.IooCat :=
       pi_congr rfl fun i hi =>
-        Union_Ioo_of_mono_of_is_glb_of_is_lub (hl' i) (hu' i)
+        unionᵢ_Ioo_of_mono_of_isGLB_of_isLUB (hl' i) (hu' i)
           (is_glb_of_tendsto_at_top (hl' i) (tendsto_pi_nhds.1 hl _))
           (is_lub_of_tendsto_at_top (hu' i) (tendsto_pi_nhds.1 hu _))
     

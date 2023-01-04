@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.defs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,13 +66,13 @@ instance OrderedCommGroup.to_covariantClass_left_le (α : Type u) [OrderedCommGr
     where elim a b c bc := OrderedCommGroup.mul_le_mul_left b c bc a
 #align ordered_comm_group.to_covariant_class_left_le OrderedCommGroup.to_covariantClass_left_le
 
-#print OrderedCommGroup.to_OrderedCancelCommMonoid /-
+#print OrderedCommGroup.toOrderedCancelCommMonoid /-
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) OrderedCommGroup.to_OrderedCancelCommMonoid [OrderedCommGroup α] :
+instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid [OrderedCommGroup α] :
     OrderedCancelCommMonoid α :=
   { ‹OrderedCommGroup α› with le_of_mul_le_mul_left := fun a b c => le_of_mul_le_mul_left' }
-#align ordered_comm_group.to_ordered_cancel_comm_monoid OrderedCommGroup.to_OrderedCancelCommMonoid
+#align ordered_comm_group.to_ordered_cancel_comm_monoid OrderedCommGroup.toOrderedCancelCommMonoid
 -/
 
 example (α : Type u) [OrderedAddCommGroup α] : CovariantClass α α (swap (· + ·)) (· < ·) :=
@@ -1581,34 +1581,34 @@ theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a :=
   · exact ⟨y, h⟩
 #align exists_one_lt' exists_one_lt'
 
-#print LinearOrderedCommGroup.to_no_max_order /-
+#print LinearOrderedCommGroup.to_noMaxOrder /-
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 100) LinearOrderedCommGroup.to_no_max_order [Nontrivial α] : NoMaxOrder α :=
+instance (priority := 100) LinearOrderedCommGroup.to_noMaxOrder [Nontrivial α] : NoMaxOrder α :=
   ⟨by
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a * y, lt_mul_of_one_lt_right' a hy⟩⟩
-#align linear_ordered_comm_group.to_no_max_order LinearOrderedCommGroup.to_no_max_order
+#align linear_ordered_comm_group.to_no_max_order LinearOrderedCommGroup.to_noMaxOrder
 -/
 
-#print LinearOrderedCommGroup.to_no_min_order /-
+#print LinearOrderedCommGroup.to_noMinOrder /-
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 100) LinearOrderedCommGroup.to_no_min_order [Nontrivial α] : NoMinOrder α :=
+instance (priority := 100) LinearOrderedCommGroup.to_noMinOrder [Nontrivial α] : NoMinOrder α :=
   ⟨by
     obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt'
     exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩
-#align linear_ordered_comm_group.to_no_min_order LinearOrderedCommGroup.to_no_min_order
+#align linear_ordered_comm_group.to_no_min_order LinearOrderedCommGroup.to_noMinOrder
 -/
 
-#print LinearOrderedCommGroup.to_LinearOrderedCancelCommMonoid /-
+#print LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid /-
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) LinearOrderedCommGroup.to_LinearOrderedCancelCommMonoid :
+instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid :
     LinearOrderedCancelCommMonoid α :=
-  { ‹LinearOrderedCommGroup α›, OrderedCommGroup.to_OrderedCancelCommMonoid with }
+  { ‹LinearOrderedCommGroup α›, OrderedCommGroup.toOrderedCancelCommMonoid with }
 #align
-  linear_ordered_comm_group.to_linear_ordered_cancel_comm_monoid LinearOrderedCommGroup.to_LinearOrderedCancelCommMonoid
+  linear_ordered_comm_group.to_linear_ordered_cancel_comm_monoid LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid
 -/
 
 end LinearOrderedCommGroup

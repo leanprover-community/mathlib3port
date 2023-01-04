@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,10 +68,10 @@ theorem Normal.out : Normal F K → ∀ x : K, IsIntegral F x ∧ Splits (algebr
 
 variable (F K)
 
-instance normalSelf : Normal F F :=
+instance normal_self : Normal F F :=
   ⟨fun x => is_integral_algebra_map.IsAlgebraic F, fun x =>
     (minpoly.eq_X_sub_C' x).symm ▸ splits_X_sub_C _⟩
-#align normal_self normalSelf
+#align normal_self normal_self
 
 variable {K}
 
@@ -101,7 +101,7 @@ section NormalTower
 
 variable (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
-theorem Normal.towerTopOfNormal [h : Normal F E] : Normal K E :=
+theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
   normal_iff.2 fun x => by
     cases' h.out x with hx hhx
     rw [algebra_map_eq F K E] at hhx
@@ -111,7 +111,7 @@ theorem Normal.towerTopOfNormal [h : Normal F E] : Normal K E :=
           (Polynomial.map_ne_zero (minpoly.ne_zero hx))
           ((Polynomial.splits_map_iff (algebraMap F K) (algebraMap K E)).mpr hhx)
           (minpoly.dvd_map_of_is_scalar_tower F K x)⟩
-#align normal.tower_top_of_normal Normal.towerTopOfNormal
+#align normal.tower_top_of_normal Normal.tower_top_of_normal
 
 theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function.Bijective ϕ :=
   ⟨ϕ.toRingHom.Injective, fun x =>
@@ -135,7 +135,7 @@ theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function
 
 variable {F} {E} {E' : Type _} [Field E'] [Algebra F E']
 
-theorem Normal.ofAlgEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
+theorem Normal.of_alg_equiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
   normal_iff.2 fun x => by
     cases' h.out (f.symm x) with hx hhx
     have H := map_is_integral f.to_alg_hom hx
@@ -149,13 +149,13 @@ theorem Normal.ofAlgEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
       exact
         Eq.trans (Polynomial.aeval_alg_hom_apply f.symm.to_alg_hom x (minpoly F (f.symm x))).symm
           (minpoly.aeval _ _)
-#align normal.of_alg_equiv Normal.ofAlgEquiv
+#align normal.of_alg_equiv Normal.of_alg_equiv
 
 theorem AlgEquiv.transfer_normal (f : E ≃ₐ[F] E') : Normal F E ↔ Normal F E' :=
-  ⟨fun h => Normal.ofAlgEquiv f, fun h => Normal.ofAlgEquiv f.symm⟩
+  ⟨fun h => Normal.of_alg_equiv f, fun h => Normal.of_alg_equiv f.symm⟩
 #align alg_equiv.transfer_normal AlgEquiv.transfer_normal
 
-theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E :=
+theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E :=
   by
   by_cases hp : p = 0
   · have : is_splitting_field F F p := by
@@ -164,7 +164,7 @@ theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : N
     exact
       (AlgEquiv.transfer_normal
             ((is_splitting_field.alg_equiv F p).trans (is_splitting_field.alg_equiv E p).symm)).mp
-        (normalSelf F)
+        (normal_self F)
   refine' normal_iff.2 fun x => _
   haveI hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p
   have Hx : IsIntegral F x := is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x
@@ -234,17 +234,17 @@ theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : N
     Eq.trans
       (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
   rw [Set.image_singleton, RingHom.algebra_map_to_algebra, AdjoinRoot.lift_root]
-#align normal.of_is_splitting_field Normal.ofIsSplittingField
+#align normal.of_is_splitting_field Normal.of_is_splitting_field
 
 instance (p : F[X]) : Normal F p.SplittingField :=
-  Normal.ofIsSplittingField p
+  Normal.of_is_splitting_field p
 
 end NormalTower
 
 namespace IntermediateField
 
 /-- A compositum of normal extensions is normal -/
-instance normalSupr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i, Normal F (t i)] :
+instance normal_supr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i, Normal F (t i)] :
     Normal F (⨆ i, t i : IntermediateField F K) :=
   by
   refine' ⟨is_algebraic_supr fun i => (h i).1, fun x => _⟩
@@ -252,7 +252,7 @@ instance normalSupr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i,
   let E : IntermediateField F K := ⨆ i ∈ s, adjoin F ((minpoly F (i.2 : _)).rootSet K)
   have hF : Normal F E :=
     by
-    apply Normal.ofIsSplittingField (∏ i in s, minpoly F i.2)
+    apply Normal.of_is_splitting_field (∏ i in s, minpoly F i.2)
     refine' is_splitting_field_supr _ fun i hi => adjoin_root_set_is_splitting_field _
     · exact finset.prod_ne_zero_iff.mpr fun i hi => minpoly.ne_zero ((h i.1).IsIntegral i.2)
     · exact Polynomial.splits_comp_of_splits _ (algebraMap (t i.1) K) ((h i.1).Splits i.2)
@@ -264,7 +264,7 @@ instance normalSupr {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i,
   have := hF.splits ⟨x, hx⟩
   rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this
   exact Polynomial.splits_comp_of_splits _ (inclusion hE).toRingHom this
-#align intermediate_field.normal_supr IntermediateField.normalSupr
+#align intermediate_field.normal_supr IntermediateField.normal_supr
 
 variable {F K} {L : Type _} [Field L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
 
@@ -371,7 +371,7 @@ def Normal.algHomEquivAut [Normal F E] : (E →ₐ[F] K₁) ≃ E ≃ₐ[F] E
   right_inv σ := by
     ext
     simp only [AlgHom.restrictNormal', AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_of_bijective]
-    apply NoZeroSmulDivisors.algebra_map_injective E K₁
+    apply NoZeroSMulDivisors.algebra_map_injective E K₁
     rw [AlgHom.restrict_normal_commutes]
     simp
 #align normal.alg_hom_equiv_aut Normal.algHomEquivAut
@@ -505,9 +505,9 @@ instance normal [h : Normal F L] : Normal F (normalClosure F K L) :=
   by
   let ϕ := algebraMap K L
   rw [← IntermediateField.restrict_scalars_normal, restrict_scalars_eq_supr_adjoin]
-  apply IntermediateField.normalSupr F L _
+  apply IntermediateField.normal_supr F L _
   intro x
-  apply Normal.ofIsSplittingField (minpoly F x)
+  apply Normal.of_is_splitting_field (minpoly F x)
   exact
     adjoin_root_set_is_splitting_field
       ((minpoly.eq_of_algebra_map_eq ϕ.injective

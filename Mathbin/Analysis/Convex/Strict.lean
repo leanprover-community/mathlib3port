@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.strict
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem Directed.strict_convex_Union {ι : Sort _} {s : ι → Set E} (hdir : Di
 #align directed.strict_convex_Union Directed.strict_convex_Union
 
 theorem DirectedOn.strict_convex_sUnion {S : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) S)
-    (hS : ∀ s ∈ S, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀S) :=
+    (hS : ∀ s ∈ S, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀ S) :=
   by
   rw [sUnion_eq_Union]
   exact (directedOn_iff_directed.1 hdir).strict_convex_Union fun s => hS _ s.2
@@ -175,11 +175,11 @@ protected theorem Set.OrdConnected.strict_convex {s : Set β} (hs : OrdConnected
 #align set.ord_connected.strict_convex Set.OrdConnected.strict_convex
 
 theorem strict_convex_Iic (r : β) : StrictConvex 𝕜 (Iic r) :=
-  ord_connected_Iic.StrictConvex
+  ordConnected_Iic.StrictConvex
 #align strict_convex_Iic strict_convex_Iic
 
 theorem strict_convex_Ici (r : β) : StrictConvex 𝕜 (Ici r) :=
-  ord_connected_Ici.StrictConvex
+  ordConnected_Ici.StrictConvex
 #align strict_convex_Ici strict_convex_Ici
 
 theorem strict_convex_Iio (r : β) : StrictConvex 𝕜 (Iio r) :=
@@ -187,23 +187,23 @@ theorem strict_convex_Iio (r : β) : StrictConvex 𝕜 (Iio r) :=
 #align strict_convex_Iio strict_convex_Iio
 
 theorem strict_convex_Ioi (r : β) : StrictConvex 𝕜 (Ioi r) :=
-  ord_connected_Ioi.StrictConvex
+  ordConnected_Ioi.StrictConvex
 #align strict_convex_Ioi strict_convex_Ioi
 
 theorem strict_convex_Icc (r s : β) : StrictConvex 𝕜 (Icc r s) :=
-  ord_connected_Icc.StrictConvex
+  ordConnected_Icc.StrictConvex
 #align strict_convex_Icc strict_convex_Icc
 
 theorem strict_convex_Ioo (r s : β) : StrictConvex 𝕜 (Ioo r s) :=
-  ord_connected_Ioo.StrictConvex
+  ordConnected_Ioo.StrictConvex
 #align strict_convex_Ioo strict_convex_Ioo
 
 theorem strict_convex_Ico (r s : β) : StrictConvex 𝕜 (Ico r s) :=
-  ord_connected_Ico.StrictConvex
+  ordConnected_Ico.StrictConvex
 #align strict_convex_Ico strict_convex_Ico
 
 theorem strict_convex_Ioc (r s : β) : StrictConvex 𝕜 (Ioc r s) :=
-  ord_connected_Ioc.StrictConvex
+  ordConnected_Ioc.StrictConvex
 #align strict_convex_Ioc strict_convex_Ioc
 
 theorem strict_convex_interval (r s : β) : StrictConvex 𝕜 (interval r s) :=
@@ -310,7 +310,7 @@ variable [OrderedCommSemiring 𝕜] [TopologicalSpace E]
 
 section AddCommGroup
 
-variable [AddCommGroup E] [Module 𝕜 E] [NoZeroSmulDivisors 𝕜 E] [HasContinuousConstSmul 𝕜 E]
+variable [AddCommGroup E] [Module 𝕜 E] [NoZeroSMulDivisors 𝕜 E] [HasContinuousConstSmul 𝕜 E]
   {s : Set E}
 
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) :

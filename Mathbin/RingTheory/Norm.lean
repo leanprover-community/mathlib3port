@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -329,7 +329,7 @@ theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlg
 theorem norm_eq_prod_automorphisms [FiniteDimensional K L] [IsGalois K L] (x : L) :
     algebraMap K L (norm K x) = ∏ σ : L ≃ₐ[K] L, σ x :=
   by
-  apply NoZeroSmulDivisors.algebra_map_injective L (AlgebraicClosure L)
+  apply NoZeroSMulDivisors.algebra_map_injective L (AlgebraicClosure L)
   rw [map_prod (algebraMap L (AlgebraicClosure L))]
   rw [← Fintype.prod_equiv (Normal.algHomEquivAut K (AlgebraicClosure L) L)]
   · rw [← norm_eq_prod_embeddings]

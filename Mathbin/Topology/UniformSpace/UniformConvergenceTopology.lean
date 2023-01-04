@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence_topology
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -867,7 +867,7 @@ protected def congrLeft {𝔗 : Set (Set γ)} (e : γ ≃ α) (he : 𝔗 ⊆ ima
 #align uniform_on_fun.congr_left UniformOnFun.congrLeft
 
 /-- If `𝔖` covers `α`, then the topology of `𝔖`-convergence is T₂. -/
-theorem t2SpaceOfCovering [T2Space β] (h : ⋃₀𝔖 = univ) : T2Space (α →ᵤ[𝔖] β) :=
+theorem t2SpaceOfCovering [T2Space β] (h : ⋃₀ 𝔖 = univ) : T2Space (α →ᵤ[𝔖] β) :=
   {
     t2 := by
       intro f g hfg
@@ -881,7 +881,7 @@ uniformly continuous.
 
 In other words, if `𝔖` covers `α`, then the uniform structure of `𝔖`-convergence is finer than
 that of pointwise convergence. -/
-protected theorem uniform_continuous_to_fun (h : ⋃₀𝔖 = univ) :
+protected theorem uniform_continuous_to_fun (h : ⋃₀ 𝔖 = univ) :
     UniformContinuous (toFun 𝔖 : (α →ᵤ[𝔖] β) → α → β) :=
   by
   rw [uniform_continuous_pi]

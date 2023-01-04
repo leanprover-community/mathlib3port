@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.order
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ inductive GenerateOpen (g : Set (Set α)) : Set α → Prop
   | basic : ∀ s ∈ g, generate_open s
   | univ : generate_open univ
   | inter : ∀ s t, generate_open s → generate_open t → generate_open (s ∩ t)
-  | sUnion : ∀ k, (∀ s ∈ k, generate_open s) → generate_open (⋃₀k)
+  | sUnion : ∀ k, (∀ s ∈ k, generate_open s) → generate_open (⋃₀ k)
 #align topological_space.generate_open TopologicalSpace.GenerateOpen
 
 /-- The smallest topological space containing the collection `g` of basic sets -/
@@ -1082,7 +1082,7 @@ theorem set_of_is_open_supr {t : ι → TopologicalSpace α} :
 #align set_of_is_open_supr set_of_is_open_supr
 
 theorem generate_from_sUnion {S : Set (Set (Set α))} :
-    TopologicalSpace.generateFrom (⋃₀S) = ⨅ s ∈ S, TopologicalSpace.generateFrom s :=
+    TopologicalSpace.generateFrom (⋃₀ S) = ⨅ s ∈ S, TopologicalSpace.generateFrom s :=
   @GaloisConnection.l_supₛ _ (TopologicalSpace α)ᵒᵈ _ _ _ _
     (fun g t => generate_from_le_iff_subset_is_open) S
 #align generate_from_sUnion generate_from_sUnion

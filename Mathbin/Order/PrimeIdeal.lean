@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Noam Atar
 
 ! This file was ported from Lean 3 source module order.prime_ideal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ variable [Preorder P]
 def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
   { i
     f := h.compl_filter.toPfilter
-    is_compl_I_F := is_compl_compl }
+    is_compl_I_F := isCompl_compl }
 #align order.ideal.is_prime.to_prime_pair Order.Ideal.IsPrime.toPrimePair
 
 theorem PrimePair.I_is_prime (IF : PrimePair P) : IsPrime IF.i :=
@@ -229,7 +229,7 @@ class IsPrime (F : Pfilter P) : Prop where
 def IsPrime.toPrimePair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
   { i := h.compl_ideal.toIdeal
     f
-    is_compl_I_F := is_compl_compl.symm }
+    is_compl_I_F := isCompl_compl.symm }
 #align order.pfilter.is_prime.to_prime_pair Order.Pfilter.IsPrime.toPrimePair
 
 theorem Order.Ideal.PrimePair.F_is_prime (IF : Ideal.PrimePair P) : IsPrime IF.f :=

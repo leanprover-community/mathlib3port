@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,22 +65,22 @@ def Absorbs (A B : Set E) :=
 variable {𝕜} {s t u v A B : Set E}
 
 @[simp]
-theorem absorbsEmpty {s : Set E} : Absorbs 𝕜 s (∅ : Set E) :=
+theorem absorbs_empty {s : Set E} : Absorbs 𝕜 s (∅ : Set E) :=
   ⟨1, one_pos, fun a ha => Set.empty_subset _⟩
-#align absorbs_empty absorbsEmpty
+#align absorbs_empty absorbs_empty
 
 theorem Absorbs.mono (hs : Absorbs 𝕜 s u) (hst : s ⊆ t) (hvu : v ⊆ u) : Absorbs 𝕜 t v :=
   let ⟨r, hr, h⟩ := hs
   ⟨r, hr, fun a ha => hvu.trans <| (h _ ha).trans <| smul_set_mono hst⟩
 #align absorbs.mono Absorbs.mono
 
-theorem Absorbs.monoLeft (hs : Absorbs 𝕜 s u) (h : s ⊆ t) : Absorbs 𝕜 t u :=
+theorem Absorbs.mono_left (hs : Absorbs 𝕜 s u) (h : s ⊆ t) : Absorbs 𝕜 t u :=
   hs.mono h Subset.rfl
-#align absorbs.mono_left Absorbs.monoLeft
+#align absorbs.mono_left Absorbs.mono_left
 
-theorem Absorbs.monoRight (hs : Absorbs 𝕜 s u) (h : v ⊆ u) : Absorbs 𝕜 s v :=
+theorem Absorbs.mono_right (hs : Absorbs 𝕜 s u) (h : v ⊆ u) : Absorbs 𝕜 s v :=
   hs.mono Subset.rfl h
-#align absorbs.mono_right Absorbs.monoRight
+#align absorbs.mono_right Absorbs.mono_right
 
 theorem Absorbs.union (hu : Absorbs 𝕜 s u) (hv : Absorbs 𝕜 s v) : Absorbs 𝕜 s (u ∪ v) :=
   by
@@ -102,7 +102,7 @@ theorem absorbs_Union_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
   classical
     induction' t using Finset.induction_on with i t ht hi
     ·
-      simp only [Finset.not_mem_empty, Set.unionᵢ_false, Set.unionᵢ_empty, absorbsEmpty,
+      simp only [Finset.not_mem_empty, Set.unionᵢ_false, Set.unionᵢ_empty, absorbs_empty,
         IsEmpty.forall_iff, imp_true_iff]
     rw [Finset.set_bUnion_insert, absorbs_union, hi]
     constructor <;> intro h
@@ -152,11 +152,11 @@ theorem absorbent_iff_nonneg_lt :
         hx ((lt_add_of_pos_right r zero_lt_one).trans_le ha)⟩⟩
 #align absorbent_iff_nonneg_lt absorbent_iff_nonneg_lt
 
-theorem Absorbent.absorbsFinite {s : Set E} (hs : Absorbent 𝕜 s) {v : Set E} (hv : v.Finite) :
+theorem Absorbent.absorbs_finite {s : Set E} (hs : Absorbent 𝕜 s) {v : Set E} (hv : v.Finite) :
     Absorbs 𝕜 s v := by
   rw [← Set.bunionᵢ_of_singleton v]
   exact hv.absorbs_Union.mpr fun _ _ => hs.absorbs
-#align absorbent.absorbs_finite Absorbent.absorbsFinite
+#align absorbent.absorbs_finite Absorbent.absorbs_finite
 
 variable (𝕜)
 
@@ -174,12 +174,12 @@ theorem balanced_iff_smul_mem : Balanced 𝕜 s ↔ ∀ ⦃a : 𝕜⦄, ‖a‖ 
 alias balanced_iff_smul_mem ↔ Balanced.smul_mem _
 
 @[simp]
-theorem balancedEmpty : Balanced 𝕜 (∅ : Set E) := fun _ _ => by rw [smul_set_empty]
-#align balanced_empty balancedEmpty
+theorem balanced_empty : Balanced 𝕜 (∅ : Set E) := fun _ _ => by rw [smul_set_empty]
+#align balanced_empty balanced_empty
 
 @[simp]
-theorem balancedUniv : Balanced 𝕜 (univ : Set E) := fun a ha => subset_univ _
-#align balanced_univ balancedUniv
+theorem balanced_univ : Balanced 𝕜 (univ : Set E) := fun a ha => subset_univ _
+#align balanced_univ balanced_univ
 
 theorem Balanced.union (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 𝕜 (A ∪ B) := fun a ha =>
   smul_set_union.Subset.trans <| union_subset_union (hA _ ha) <| hB _ ha
@@ -189,25 +189,25 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
   smul_set_inter_subset.trans <| inter_subset_inter (hA _ ha) <| hB _ ha
 #align balanced.inter Balanced.inter
 
-theorem balancedUnion {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
+theorem balanced_Union {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
   fun a ha => (smul_set_Union _ _).Subset.trans <| Union_mono fun _ => h _ _ ha
-#align balanced_Union balancedUnion
+#align balanced_Union balanced_Union
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem balancedUnion₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
+theorem balanced_Union₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
     Balanced 𝕜 (⋃ (i) (j), f i j) :=
-  balancedUnion fun _ => balancedUnion <| h _
-#align balanced_Union₂ balancedUnion₂
+  balanced_Union fun _ => balanced_Union <| h _
+#align balanced_Union₂ balanced_Union₂
 
-theorem balancedInter {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) :=
+theorem balanced_Inter {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) :=
   fun a ha => (smul_set_Inter_subset _ _).trans <| Inter_mono fun _ => h _ _ ha
-#align balanced_Inter balancedInter
+#align balanced_Inter balanced_Inter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem balancedInter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
+theorem balanced_Inter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
     Balanced 𝕜 (⋂ (i) (j), f i j) :=
-  balancedInter fun _ => balancedInter <| h _
-#align balanced_Inter₂ balancedInter₂
+  balanced_Inter fun _ => balanced_Inter <| h _
+#align balanced_Inter₂ balanced_Inter₂
 
 variable [HasSmul 𝕝 E] [SMulCommClass 𝕜 𝕝 E]
 
@@ -253,8 +253,8 @@ theorem Balanced.sub (hs : Balanced 𝕜 s) (ht : Balanced 𝕜 t) : Balanced �
   exact hs.add ht.neg
 #align balanced.sub Balanced.sub
 
-theorem balancedZero : Balanced 𝕜 (0 : Set E) := fun a ha => (smul_zero _).Subset
-#align balanced_zero balancedZero
+theorem balanced_zero : Balanced 𝕜 (0 : Set E) := fun a ha => (smul_zero _).Subset
+#align balanced_zero balanced_zero
 
 end Module
 
@@ -283,14 +283,14 @@ theorem Balanced.smul_mono (hs : Balanced 𝕝 s) {a : 𝕝} {b : 𝕜} (h : ‖
 #align balanced.smul_mono Balanced.smul_mono
 
 /-- A balanced set absorbs itself. -/
-theorem Balanced.absorbsSelf (hA : Balanced 𝕜 A) : Absorbs 𝕜 A A :=
+theorem Balanced.absorbs_self (hA : Balanced 𝕜 A) : Absorbs 𝕜 A A :=
   by
   refine' ⟨1, zero_lt_one, fun a ha x hx => _⟩
   rw [mem_smul_set_iff_inv_smul_mem₀ (norm_pos_iff.1 <| zero_lt_one.trans_le ha)]
   refine' hA a⁻¹ _ (smul_mem_smul_set hx)
   rw [norm_inv]
   exact inv_le_one ha
-#align balanced.absorbs_self Balanced.absorbsSelf
+#align balanced.absorbs_self Balanced.absorbs_self
 
 theorem Balanced.subset_smul (hA : Balanced 𝕜 A) (ha : 1 ≤ ‖a‖) : A ⊆ a • A :=
   by
@@ -339,17 +339,17 @@ theorem absorbs_inter : Absorbs 𝕜 (s ∩ t) u ↔ Absorbs 𝕜 s u ∧ Absorb
     h.1.inter h.2⟩
 #align absorbs_inter absorbs_inter
 
-theorem absorbentUniv : Absorbent 𝕜 (univ : Set E) :=
+theorem absorbent_univ : Absorbent 𝕜 (univ : Set E) :=
   by
   refine' fun x => ⟨1, zero_lt_one, fun a ha => _⟩
   rw [smul_set_univ₀ (norm_pos_iff.1 <| zero_lt_one.trans_le ha)]
   exact trivial
-#align absorbent_univ absorbentUniv
+#align absorbent_univ absorbent_univ
 
 variable [TopologicalSpace E] [HasContinuousSmul 𝕜 E]
 
 /-- Every neighbourhood of the origin is absorbent. -/
-theorem absorbentNhdsZero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A :=
+theorem absorbent_nhds_zero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A :=
   by
   intro x
   obtain ⟨w, hw₁, hw₂, hw₃⟩ := mem_nhds_iff.mp hA
@@ -365,10 +365,10 @@ theorem absorbentNhdsZero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A :=
     ‖a‖⁻¹ ≤ r / 2 := (inv_le (half_pos hr₁) ha₂).mp ha₁
     _ < r := half_lt_self hr₁
     
-#align absorbent_nhds_zero absorbentNhdsZero
+#align absorbent_nhds_zero absorbent_nhds_zero
 
 /-- The union of `{0}` with the interior of a balanced set is balanced. -/
-theorem balancedZeroUnionInterior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ interior A) :=
+theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ interior A) :=
   by
   intro a ha
   obtain rfl | h := eq_or_ne a 0
@@ -383,14 +383,14 @@ theorem balancedZeroUnionInterior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : S
         a • interior A ⊆ interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A
         _ ⊆ interior A := interior_mono (hA _ ha)
         
-#align balanced_zero_union_interior balancedZeroUnionInterior
+#align balanced_zero_union_interior balanced_zero_union_interior
 
 /-- The interior of a balanced set is balanced if it contains the origin. -/
 theorem Balanced.interior (hA : Balanced 𝕜 A) (h : (0 : E) ∈ interior A) :
     Balanced 𝕜 (interior A) :=
   by
   rw [← union_eq_self_of_subset_left (singleton_subset_iff.2 h)]
-  exact balancedZeroUnionInterior hA
+  exact balanced_zero_union_interior hA
 #align balanced.interior Balanced.interior
 
 theorem Balanced.closure (hA : Balanced 𝕜 A) : Balanced 𝕜 (closure A) := fun a ha =>
@@ -420,7 +420,7 @@ theorem Absorbent.zero_mem (hs : Absorbent 𝕜 s) : (0 : E) ∈ s :=
 
 variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
-theorem balancedConvexHullOfBalanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) :=
+theorem balanced_convex_hull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) :=
   by
   suffices Convex ℝ { x | ∀ a : 𝕜, ‖a‖ ≤ 1 → a • x ∈ convexHull ℝ s }
     by
@@ -430,7 +430,7 @@ theorem balancedConvexHullOfBalanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (con
   intro x hx y hy u v hu hv huv a ha
   simp only [smul_add, ← smul_comm]
   exact convex_convex_hull ℝ s (hx a ha) (hy a ha) hu hv huv
-#align balanced_convex_hull_of_balanced balancedConvexHullOfBalanced
+#align balanced_convex_hull_of_balanced balanced_convex_hull_of_balanced
 
 end NontriviallyNormedField
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.p_group
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,7 @@ theorem card_modeq_card_fixed_points [Fintype (fixedPoints G α)] :
           (lt_of_not_ge
             (mt (pow_dvd_pow p)
               (by
-                rwa [pow_one, ← hk, ← Nat.modeq_zero_iff_dvd, ← Zmod.eq_iff_modeq_nat, ← key,
+                rwa [pow_one, ← hk, ← Nat.modEq_zero_iff_dvd, ← Zmod.eq_iff_modeq_nat, ← key,
                   Nat.cast_zero]))))
     exact
       ⟨⟨b, mem_fixed_points_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩,
@@ -237,7 +237,7 @@ theorem nonempty_fixed_point_of_prime_not_dvd_card (hpα : ¬p ∣ card α) [Fin
       cases nonempty_fintype (fixed_points G α)
       rw [← card_pos_iff, pos_iff_ne_zero]
       contrapose! hpα
-      rw [← Nat.modeq_zero_iff_dvd, ← hpα]
+      rw [← Nat.modEq_zero_iff_dvd, ← hpα]
       exact hG.card_modeq_card_fixed_points α)
 #align
   is_p_group.nonempty_fixed_point_of_prime_not_dvd_card IsPGroup.nonempty_fixed_point_of_prime_not_dvd_card

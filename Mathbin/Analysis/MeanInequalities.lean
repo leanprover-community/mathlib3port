@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -420,7 +420,7 @@ theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0} {p q : ℝ} (hpq : p.IsCo
     refine' ⟨(∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q), _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s
-  have H₂ : Summable _ := (has_sum_of_is_lub _ (is_lub_csupr bdd)).Summable
+  have H₂ : Summable _ := (has_sum_of_is_lub _ (isLUB_csupᵢ bdd)).Summable
   exact ⟨H₂, tsum_le_of_sum_le H₂ H₁⟩
 #align nnreal.inner_le_Lp_mul_Lq_tsum Nnreal.inner_le_Lp_mul_Lq_tsum
 
@@ -541,7 +541,7 @@ theorem Lp_add_le_tsum {f g : ι → ℝ≥0} {p : ℝ} (hp : 1 ≤ p) (hf : Sum
     refine' ⟨((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p, _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s
-  have H₂ : Summable _ := (has_sum_of_is_lub _ (is_lub_csupr bdd)).Summable
+  have H₂ : Summable _ := (has_sum_of_is_lub _ (isLUB_csupᵢ bdd)).Summable
   refine' ⟨H₂, _⟩
   rw [Nnreal.rpow_one_div_le_iff Pos]
   refine' tsum_le_of_sum_le H₂ H₁

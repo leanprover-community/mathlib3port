@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.is_adjoin_root
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -696,7 +696,7 @@ def ofEquiv (h : IsAdjoinRoot S f) (e : S ≃ₐ[R] T) : IsAdjoinRoot T f
   algebra_map_eq := by
     ext <;>
       simp only [AlgEquiv.commutes, RingHom.comp_apply, AlgEquiv.coe_ring_equiv,
-        RingEquiv.coe_to_ring_hom, ← h.algebra_map_apply]
+        RingEquiv.coe_toRingHom, ← h.algebra_map_apply]
 #align is_adjoin_root.of_equiv IsAdjoinRoot.ofEquiv
 
 @[simp]
@@ -725,7 +725,7 @@ end IsAdjoinRoot
 
 namespace IsAdjoinRootMonic
 
-theorem minpoly_eq [IsDomain R] [IsDomain S] [NoZeroSmulDivisors R S] [NormalizedGcdMonoid R]
+theorem minpoly_eq [IsDomain R] [IsDomain S] [NoZeroSMulDivisors R S] [NormalizedGCDMonoid R]
     (h : IsAdjoinRootMonic S f) (hirr : Irreducible f) : minpoly R h.root = f :=
   let ⟨q, hq⟩ := minpoly.gcd_domain_dvd h.is_integral_root h.Monic.NeZero h.aeval_root
   symm <|

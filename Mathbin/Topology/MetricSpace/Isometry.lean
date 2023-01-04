@@ -5,7 +5,7 @@ Isometries of emetric and metric spaces
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometry
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,13 +56,13 @@ theorem isometry_iff_dist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : 
 alias isometry_iff_dist_eq ↔ Isometry.dist_eq _
 
 /-- A map that preserves distances is an isometry -/
-alias isometry_iff_dist_eq ↔ _ Isometry.ofDistEq
+alias isometry_iff_dist_eq ↔ _ Isometry.of_dist_eq
 
 /-- An isometry preserves non-negative distances. -/
 alias isometry_iff_nndist_eq ↔ Isometry.nndist_eq _
 
 /-- A map that preserves non-negative distances is an isometry. -/
-alias isometry_iff_nndist_eq ↔ _ Isometry.ofNndistEq
+alias isometry_iff_nndist_eq ↔ _ Isometry.of_nndist_eq
 
 namespace Isometry
 
@@ -78,7 +78,7 @@ theorem edist_eq (hf : Isometry f) (x y : α) : edist (f x) (f y) = edist x y :=
 #align isometry.edist_eq Isometry.edist_eq
 
 theorem lipschitz (h : Isometry f) : LipschitzWith 1 f :=
-  LipschitzWith.ofEdistLe fun x y => (h x y).le
+  LipschitzWith.of_edist_le fun x y => (h x y).le
 #align isometry.lipschitz Isometry.lipschitz
 
 theorem antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
@@ -87,13 +87,13 @@ theorem antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
 
 /-- Any map on a subsingleton is an isometry -/
 @[nontriviality]
-theorem isometrySubsingleton [Subsingleton α] : Isometry f := fun x y => by
+theorem isometry_subsingleton [Subsingleton α] : Isometry f := fun x y => by
   rw [Subsingleton.elim x y] <;> simp
-#align isometry_subsingleton isometrySubsingleton
+#align isometry_subsingleton isometry_subsingleton
 
 /-- The identity is an isometry -/
-theorem isometryId : Isometry (id : α → α) := fun x y => rfl
-#align isometry_id isometryId
+theorem isometry_id : Isometry (id : α → α) := fun x y => rfl
+#align isometry_id isometry_id
 
 /-- The composition of isometries is an isometry -/
 theorem comp {g : β → γ} {f : α → β} (hg : Isometry g) (hf : Isometry f) : Isometry (g ∘ f) :=
@@ -121,9 +121,9 @@ protected theorem continuous (hf : Isometry f) : Continuous f :=
 #align isometry.continuous Isometry.continuous
 
 /-- The right inverse of an isometry is an isometry. -/
-theorem rightInv {f : α → β} {g : β → α} (h : Isometry f) (hg : RightInverse g f) : Isometry g :=
+theorem right_inv {f : α → β} {g : β → α} (h : Isometry f) (hg : RightInverse g f) : Isometry g :=
   fun x y => by rw [← h, hg _, hg _]
-#align isometry.right_inv Isometry.rightInv
+#align isometry.right_inv Isometry.right_inv
 
 theorem preimage_emetric_closed_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) :
     f ⁻¹' Emetric.closedBall (f x) r = Emetric.closedBall x r :=
@@ -161,8 +161,8 @@ theorem maps_to_emetric_closed_ball (hf : Isometry f) (x : α) (r : ℝ≥0∞) 
 #align isometry.maps_to_emetric_closed_ball Isometry.maps_to_emetric_closed_ball
 
 /-- The injection from a subtype is an isometry -/
-theorem isometrySubtypeCoe {s : Set α} : Isometry (coe : s → α) := fun x y => rfl
-#align isometry_subtype_coe isometrySubtypeCoe
+theorem isometry_subtype_coe {s : Set α} : Isometry (coe : s → α) := fun x y => rfl
+#align isometry_subtype_coe isometry_subtype_coe
 
 theorem comp_continuous_on_iff {γ} [TopologicalSpace γ] (hf : Isometry f) {g : γ → α} {s : Set γ} :
     ContinuousOn (f ∘ g) s ↔ ContinuousOn g s :=
@@ -265,38 +265,38 @@ end Isometry
 -- namespace
 /-- A uniform embedding from a uniform space to a metric space is an isometry with respect to the
 induced metric space structure on the source space. -/
-theorem UniformEmbedding.toIsometry {α β} [UniformSpace α] [MetricSpace β] {f : α → β}
+theorem UniformEmbedding.to_isometry {α β} [UniformSpace α] [MetricSpace β] {f : α → β}
     (h : UniformEmbedding f) :
     @Isometry α β
       (@PseudoMetricSpace.toPseudoEmetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
   by
-  apply Isometry.ofDistEq
+  apply Isometry.of_dist_eq
   intro x y
   rfl
-#align uniform_embedding.to_isometry UniformEmbedding.toIsometry
+#align uniform_embedding.to_isometry UniformEmbedding.to_isometry
 
 /-- An embedding from a topological space to a metric space is an isometry with respect to the
 induced metric space structure on the source space. -/
-theorem Embedding.toIsometry {α β} [TopologicalSpace α] [MetricSpace β] {f : α → β}
+theorem Embedding.to_isometry {α β} [TopologicalSpace α] [MetricSpace β] {f : α → β}
     (h : Embedding f) :
     @Isometry α β
       (@PseudoMetricSpace.toPseudoEmetricSpace α
         (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
       (by infer_instance) f :=
   by
-  apply Isometry.ofDistEq
+  apply Isometry.of_dist_eq
   intro x y
   rfl
-#align embedding.to_isometry Embedding.toIsometry
+#align embedding.to_isometry Embedding.to_isometry
 
 -- such a bijection need not exist
 /-- `α` and `β` are isometric if there is an isometric bijection between them. -/
 @[nolint has_nonempty_instance]
 structure Isometric (α : Type _) (β : Type _) [PseudoEmetricSpace α] [PseudoEmetricSpace β] extends
   α ≃ β where
-  isometryToFun : Isometry to_fun
+  isometry_to_fun : Isometry to_fun
 #align isometric Isometric
 
 -- mathport name: «expr ≃ᵢ »
@@ -321,7 +321,7 @@ theorem coe_to_equiv (h : α ≃ᵢ β) : ⇑h.toEquiv = h :=
 #align isometric.coe_to_equiv Isometric.coe_to_equiv
 
 protected theorem isometry (h : α ≃ᵢ β) : Isometry h :=
-  h.isometryToFun
+  h.isometry_to_fun
 #align isometric.isometry Isometric.isometry
 
 protected theorem bijective (h : α ≃ᵢ β) : Bijective h :=
@@ -378,17 +378,18 @@ def mk' {α : Type u} [EmetricSpace α] (f : α → β) (g : β → α) (hfg : �
   invFun := g
   left_inv x := hf.Injective <| hfg _
   right_inv := hfg
-  isometryToFun := hf
+  isometry_to_fun := hf
 #align isometric.mk' Isometric.mk'
 
 /-- The identity isometry of a space. -/
 protected def refl (α : Type _) [PseudoEmetricSpace α] : α ≃ᵢ α :=
-  { Equiv.refl α with isometryToFun := isometryId }
+  { Equiv.refl α with isometry_to_fun := isometry_id }
 #align isometric.refl Isometric.refl
 
 /-- The composition of two isometric isomorphisms, as an isometric isomorphism. -/
 protected def trans (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) : α ≃ᵢ γ :=
-  { Equiv.trans h₁.toEquiv h₂.toEquiv with isometryToFun := h₂.isometryToFun.comp h₁.isometryToFun }
+  { Equiv.trans h₁.toEquiv h₂.toEquiv with
+    isometry_to_fun := h₂.isometry_to_fun.comp h₁.isometry_to_fun }
 #align isometric.trans Isometric.trans
 
 @[simp]
@@ -399,7 +400,7 @@ theorem trans_apply (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) (x : α) : h₁.
 /-- The inverse of an isometric isomorphism, as an isometric isomorphism. -/
 protected def symm (h : α ≃ᵢ β) : β ≃ᵢ α
     where
-  isometryToFun := h.Isometry.right_inv h.right_inv
+  isometry_to_fun := h.Isometry.right_inv h.right_inv
   toEquiv := h.toEquiv.symm
 #align isometric.symm Isometric.symm
 
@@ -647,7 +648,7 @@ range of the isometry. -/
 def Isometry.isometricOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : Isometry f) :
     α ≃ᵢ range f
     where
-  isometryToFun x y := by simpa [Subtype.edist_eq] using h x y
+  isometry_to_fun x y := by simpa [Subtype.edist_eq] using h x y
   toEquiv := Equiv.ofInjective f h.Injective
 #align isometry.isometric_on_range Isometry.isometricOnRange
 

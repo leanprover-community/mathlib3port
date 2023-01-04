@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.pid
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -376,7 +376,7 @@ variable {M}
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (i «expr ∉ » I) -/
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
-    (hs : span R (range s) = ⊤) [NoZeroSmulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
+    (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
   classical
     -- We define `N` as the submodule spanned by a maximal linear independent subfamily of `s`
     have := exists_maximal_independent R s
@@ -431,7 +431,7 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
 #align module.free_of_finite_type_torsion_free Module.freeOfFiniteTypeTorsionFree
 
 /-- A finite type torsion free module over a PID is free. -/
-noncomputable def Module.freeOfFiniteTypeTorsionFree' [Module.Finite R M] [NoZeroSmulDivisors R M] :
+noncomputable def Module.freeOfFiniteTypeTorsionFree' [Module.Finite R M] [NoZeroSMulDivisors R M] :
     Σn : ℕ, Basis (Fin n) R M :=
   Module.freeOfFiniteTypeTorsionFree Module.Finite.exists_fin.some_spec.some_spec
 #align module.free_of_finite_type_torsion_free' Module.freeOfFiniteTypeTorsionFree'

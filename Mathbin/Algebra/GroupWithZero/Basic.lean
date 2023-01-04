@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,14 +248,14 @@ section CancelMonoidWithZero
 
 variable [CancelMonoidWithZero M₀] {a b c : M₀}
 
-/- warning: cancel_monoid_with_zero.to_no_zero_divisors -> CancelMonoidWithZero.toNoZeroDivisors is a dubious translation:
+/- warning: cancel_monoid_with_zero.to_no_zero_divisors -> CancelMonoidWithZero.to_noZeroDivisors is a dubious translation:
 lean 3 declaration is
   forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀], NoZeroDivisors.{u1} M₀ (MulZeroClass.toHasMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))) (MulZeroClass.toHasZero.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))))
 but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : CancelMonoidWithZero.{u1} M₀], NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ (MulZeroOneClass.toMulZeroClass.{u1} M₀ (MonoidWithZero.toMulZeroOneClass.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1)))) (MonoidWithZero.toZero.{u1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u1} M₀ _inst_1))
-Case conversion may be inaccurate. Consider using '#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.toNoZeroDivisorsₓ'. -/
+Case conversion may be inaccurate. Consider using '#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.to_noZeroDivisorsₓ'. -/
 -- see Note [lower instance priority]
-instance (priority := 10) CancelMonoidWithZero.toNoZeroDivisors : NoZeroDivisors M₀ :=
+instance (priority := 10) CancelMonoidWithZero.to_noZeroDivisors : NoZeroDivisors M₀ :=
   ⟨fun a b ab0 => by
     by_cases a = 0
     · left
@@ -263,7 +263,7 @@ instance (priority := 10) CancelMonoidWithZero.toNoZeroDivisors : NoZeroDivisors
     right
     apply CancelMonoidWithZero.mul_left_cancel_of_ne_zero h
     rw [ab0, mul_zero]⟩
-#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.toNoZeroDivisors
+#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.to_noZeroDivisors
 
 /- warning: mul_left_inj' -> mul_left_inj' is a dubious translation:
 lean 3 declaration is

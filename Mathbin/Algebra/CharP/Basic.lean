@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module algebra.char_p.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem CharP.int_cast_eq_zero_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a 
 
 theorem CharP.int_coe_eq_int_coe_iff [AddGroupWithOne R] (p : ℕ) [CharP R p] (a b : ℤ) :
     (a : R) = (b : R) ↔ a ≡ b [ZMOD p] := by
-  rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modeq_iff_dvd]
+  rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modEq_iff_dvd]
 #align char_p.int_coe_eq_int_coe_iff CharP.int_coe_eq_int_coe_iff
 
 theorem CharP.eq [AddMonoidWithOne R] {p q : ℕ} (c1 : CharP R p) (c2 : CharP R q) : p = q :=
@@ -226,7 +226,7 @@ theorem sub_pow_char_pow [CommRing R] {p : ℕ} [Fact p.Prime] [CharP R p] {n : 
 #align sub_pow_char_pow sub_pow_char_pow
 
 theorem eq_iff_modeq_int [Ring R] (p : ℕ) [CharP R p] (a b : ℤ) : (a : R) = b ↔ a ≡ b [ZMOD p] := by
-  rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modeq_iff_dvd]
+  rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modEq_iff_dvd]
 #align eq_iff_modeq_int eq_iff_modeq_int
 
 theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1 : R) ≠ (1 : R) :=

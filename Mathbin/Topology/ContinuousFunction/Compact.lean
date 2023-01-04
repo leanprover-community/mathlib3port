@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.compact
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ isometric to `C(α, β)`.
 @[simps (config := { fullyApplied := false }) toEquiv apply symmApply]
 def isometricBoundedOfCompact : C(α, β) ≃ᵢ (α →ᵇ β)
     where
-  isometryToFun x y := rfl
+  isometry_to_fun x y := rfl
   toEquiv := equivBoundedOfCompact α β
 #align continuous_map.isometric_bounded_of_compact ContinuousMap.isometricBoundedOfCompact
 

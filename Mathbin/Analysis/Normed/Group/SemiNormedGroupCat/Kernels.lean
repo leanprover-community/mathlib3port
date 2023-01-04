@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.kernels
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ def cokernelLift {X Y : SemiNormedGroup₁Cat.{u}} (f : X ⟶ Y) (s : CokernelCo
     change (f ≫ s.π) b = 0
     simp
   -- The lift has norm at most one:
-  exact NormedAddGroupHom.liftNormNoninc _ _ _ s.π.2
+  exact NormedAddGroupHom.lift_norm_noninc _ _ _ s.π.2
 #align SemiNormedGroup₁.cokernel_lift SemiNormedGroup₁Cat.cokernelLift
 
 instance : HasCokernels SemiNormedGroup₁Cat.{u}
@@ -287,11 +287,11 @@ theorem isQuotientExplicitCokernelπ {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y
 #align
   SemiNormedGroup.is_quotient_explicit_cokernel_π SemiNormedGroupCat.isQuotientExplicitCokernelπ
 
-theorem normNonincExplicitCokernelπ {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) :
+theorem norm_noninc_explicit_cokernel_π {X Y : SemiNormedGroupCat.{u}} (f : X ⟶ Y) :
     (explicitCokernelπ f).NormNoninc :=
   (isQuotientExplicitCokernelπ f).norm_le
 #align
-  SemiNormedGroup.norm_noninc_explicit_cokernel_π SemiNormedGroupCat.normNonincExplicitCokernelπ
+  SemiNormedGroup.norm_noninc_explicit_cokernel_π SemiNormedGroupCat.norm_noninc_explicit_cokernel_π
 
 open Nnreal
 
@@ -301,7 +301,7 @@ theorem explicit_cokernel_desc_norm_le_of_norm_le {X Y Z : SemiNormedGroupCat.{u
 #align
   SemiNormedGroup.explicit_cokernel_desc_norm_le_of_norm_le SemiNormedGroupCat.explicit_cokernel_desc_norm_le_of_norm_le
 
-theorem explicitCokernelDescNormNoninc {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ Y} {g : Y ⟶ Z}
+theorem explicit_cokernel_desc_norm_noninc {X Y Z : SemiNormedGroupCat.{u}} {f : X ⟶ Y} {g : Y ⟶ Z}
     {cond : f ≫ g = 0} (hg : g.NormNoninc) : (explicitCokernelDesc cond).NormNoninc :=
   by
   refine' NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.2 _
@@ -310,7 +310,7 @@ theorem explicitCokernelDescNormNoninc {X Y Z : SemiNormedGroupCat.{u}} {f : X �
     explicit_cokernel_desc_norm_le_of_norm_le cond 1
       (NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.1 hg)
 #align
-  SemiNormedGroup.explicit_cokernel_desc_norm_noninc SemiNormedGroupCat.explicitCokernelDescNormNoninc
+  SemiNormedGroup.explicit_cokernel_desc_norm_noninc SemiNormedGroupCat.explicit_cokernel_desc_norm_noninc
 
 theorem explicit_cokernel_desc_comp_eq_zero {X Y Z W : SemiNormedGroupCat.{u}} {f : X ⟶ Y}
     {g : Y ⟶ Z} {h : Z ⟶ W} (cond : f ≫ g = 0) (cond2 : g ≫ h = 0) :

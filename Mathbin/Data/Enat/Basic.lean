@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.enat.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ theorem add_one_le_of_lt (h : m < n) : m + 1 ≤ n :=
 #align enat.add_one_le_of_lt Enat.add_one_le_of_lt
 
 theorem add_one_le_iff (hm : m ≠ ⊤) : m + 1 ≤ n ↔ m < n :=
-  m.succ_def ▸ (Order.succ_le_iff_of_not_is_max <| by rwa [isMax_iff_eq_top])
+  m.succ_def ▸ (Order.succ_le_iff_of_not_isMax <| by rwa [isMax_iff_eq_top])
 #align enat.add_one_le_iff Enat.add_one_le_iff
 
 theorem one_le_iff_pos : 1 ≤ n ↔ 0 < n :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.hitting_time
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ theorem hitting_le {m : ι} (ω : Ω) : hitting u s n m ω ≤ m :=
   · simp only [hitting]
     split_ifs
     · obtain ⟨j, hj₁, hj₂⟩ := h
-      exact (cInf_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
+      exact (cinfₛ_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
     · exact le_rfl
   · rw [hitting_of_lt h_lt]
 #align measure_theory.hitting_le MeasureTheory.hitting_le
@@ -91,7 +91,7 @@ theorem not_mem_of_lt_hitting {m k : ι} (hk₁ : k < hitting u s n m ω) (hk₂
     refine' ⟨k, ⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
     refine' not_le.2 hk₁ _
     simp_rw [hitting, if_pos hexists]
-    exact cInf_le bdd_below_Icc.inter_of_left ⟨⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
+    exact cinfₛ_le bdd_below_Icc.inter_of_left ⟨⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
 #align measure_theory.not_mem_of_lt_hitting MeasureTheory.not_mem_of_lt_hitting
 
 theorem hitting_eq_end_iff {m : ι} :
@@ -106,7 +106,7 @@ theorem hitting_of_le {m : ι} (hmn : m ≤ n) : hitting u s n m ω = m :=
   · simp only [hitting, Set.Icc_self, ite_eq_right_iff, Set.mem_Icc, exists_prop,
       forall_exists_index, and_imp]
     intro i hi₁ hi₂ hi
-    rw [Set.inter_eq_left_iff_subset.2, cInf_singleton]
+    rw [Set.inter_eq_left_iff_subset.2, cinfₛ_singleton]
     exact Set.singleton_subset_iff.2 (le_antisymm hi₂ hi₁ ▸ hi)
   · exact hitting_of_lt h
 #align measure_theory.hitting_of_le MeasureTheory.hitting_of_le
@@ -115,7 +115,7 @@ theorem le_hitting {m : ι} (hnm : n ≤ m) (ω : Ω) : n ≤ hitting u s n m ω
   by
   simp only [hitting]
   split_ifs
-  · refine' le_cInf _ fun b hb => _
+  · refine' le_cinfₛ _ fun b hb => _
     · obtain ⟨k, hk_Icc, hk_s⟩ := h
       exact ⟨k, hk_Icc, hk_s⟩
     · rw [Set.mem_inter_iff] at hb
@@ -143,7 +143,7 @@ theorem hitting_mem_set [IsWellOrder ι (· < ·)] {m : ι} (h_exists : ∃ j �
     by
     obtain ⟨k, hk₁, hk₂⟩ := h_exists
     exact ⟨k, Set.mem_inter hk₁ hk₂⟩
-  have h_mem := Inf_mem h_nonempty
+  have h_mem := cinfₛ_mem h_nonempty
   rw [Set.mem_inter_iff] at h_mem
   exact h_mem.2
 #align measure_theory.hitting_mem_set MeasureTheory.hitting_mem_set
@@ -162,7 +162,7 @@ theorem hitting_le_of_mem {m : ι} (hin : n ≤ i) (him : i ≤ m) (his : u i ω
   by
   have h_exists : ∃ k ∈ Set.Icc n m, u k ω ∈ s := ⟨i, ⟨hin, him⟩, his⟩
   simp_rw [hitting, if_pos h_exists]
-  exact cInf_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter ⟨hin, him⟩ his)
+  exact cinfₛ_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter ⟨hin, him⟩ his)
 #align measure_theory.hitting_le_of_mem MeasureTheory.hitting_le_of_mem
 
 theorem hitting_le_iff_of_exists [IsWellOrder ι (· < ·)] {m : ι}
@@ -215,14 +215,14 @@ theorem hitting_eq_hitting_of_exists {m₁ m₂ : ι} (h : m₁ ≤ m₂)
   rw [if_pos]
   · refine'
       le_antisymm _
-        (cInf_le_cInf bdd_below_Icc.inter_of_left ⟨j, hj₁, hj₂⟩
+        (cinfₛ_le_cinfₛ bdd_below_Icc.inter_of_left ⟨j, hj₁, hj₂⟩
           (Set.inter_subset_inter_left _ (Set.Icc_subset_Icc_right h)))
-    refine' le_cInf ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => _
+    refine' le_cinfₛ ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => _
     by_cases hi' : i ≤ m₁
-    · exact cInf_le bdd_below_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
+    · exact cinfₛ_le bdd_below_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
     ·
       exact
-        ((cInf_le bdd_below_Icc.inter_of_left ⟨hj₁, hj₂⟩).trans (hj₁.2.trans le_rfl)).trans
+        ((cinfₛ_le bdd_below_Icc.inter_of_left ⟨hj₁, hj₂⟩).trans (hj₁.2.trans le_rfl)).trans
           (le_of_lt (not_le.1 hi'))
   exact ⟨j, ⟨hj₁.1, hj₁.2.trans h⟩, hj₂⟩
 #align measure_theory.hitting_eq_hitting_of_exists MeasureTheory.hitting_eq_hitting_of_exists
@@ -234,7 +234,7 @@ theorem hitting_mono {m₁ m₂ : ι} (hm : m₁ ≤ m₂) : hitting u s n m₁ 
   · simp_rw [hitting, if_neg h]
     split_ifs with h'
     · obtain ⟨j, hj₁, hj₂⟩ := h'
-      refine' le_cInf ⟨j, hj₁, hj₂⟩ _
+      refine' le_cinfₛ ⟨j, hj₁, hj₂⟩ _
       by_contra hneg
       push_neg  at hneg
       obtain ⟨i, hi₁, hi₂⟩ := hneg
@@ -272,7 +272,7 @@ theorem stopped_value_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellO
   simp only [stopped_value, hitting, if_pos h]
   obtain ⟨j, hj₁, hj₂⟩ := h
   have : Inf (Set.Icc n m ∩ { i | u i ω ∈ s }) ∈ Set.Icc n m ∩ { i | u i ω ∈ s } :=
-    Inf_mem (Set.nonempty_of_mem ⟨hj₁, hj₂⟩)
+    cinfₛ_mem (Set.nonempty_of_mem ⟨hj₁, hj₂⟩)
   exact this.2
 #align measure_theory.stopped_value_hitting_mem MeasureTheory.stopped_value_hitting_mem
 

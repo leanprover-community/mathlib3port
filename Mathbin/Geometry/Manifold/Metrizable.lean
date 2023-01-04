@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.metrizable
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ open TopologicalSpace
 
 /-- A σ-compact Hausdorff topological manifold over a finite dimensional real vector space is
 metrizable. -/
-theorem ManifoldWithCorners.metrizableSpace {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem ManifoldWithCorners.metrizable_space {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners ℝ E H)
     (M : Type _) [TopologicalSpace M] [ChartedSpace H M] [SigmaCompactSpace M] [T2Space M] :
     MetrizableSpace M := by
@@ -33,5 +33,5 @@ theorem ManifoldWithCorners.metrizableSpace {E : Type _} [NormedAddCommGroup E] 
   haveI := I.second_countable_topology
   haveI := ChartedSpace.second_countable_of_sigma_compact H M
   exact metrizable_space_of_t3_second_countable M
-#align manifold_with_corners.metrizable_space ManifoldWithCorners.metrizableSpace
+#align manifold_with_corners.metrizable_space ManifoldWithCorners.metrizable_space
 

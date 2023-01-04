@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.subadditive
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ protected irreducible_def lim :=
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :
     h.lim ≤ u n / n := by
   rw [Subadditive.lim]
-  apply cInf_le _ _
+  apply cinfₛ_le _ _
   · rcases hbdd with ⟨c, hc⟩
     exact ⟨c, fun x hx => hc (image_subset_range _ _ hx)⟩
   · apply mem_image_of_mem
@@ -133,7 +133,7 @@ theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
   · obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ u n / n < L :=
       by
       rw [Subadditive.lim] at hL
-      rcases exists_lt_of_cInf_lt (by simp) hL with ⟨x, hx, xL⟩
+      rcases exists_lt_of_cinfₛ_lt (by simp) hL with ⟨x, hx, xL⟩
       rcases(mem_image _ _ _).1 hx with ⟨n, hn, rfl⟩
       exact ⟨n, zero_lt_one.trans_le hn, xL⟩
     exact h.eventually_div_lt_of_div_lt npos.ne' hn

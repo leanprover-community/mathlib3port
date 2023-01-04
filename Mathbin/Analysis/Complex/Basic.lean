@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -319,18 +319,18 @@ theorem conj_lie_symm : conjLie.symm = conj_lie :=
   rfl
 #align complex.conj_lie_symm Complex.conj_lie_symm
 
-theorem isometryConj : Isometry (conj : ℂ → ℂ) :=
+theorem isometry_conj : Isometry (conj : ℂ → ℂ) :=
   conjLie.Isometry
-#align complex.isometry_conj Complex.isometryConj
+#align complex.isometry_conj Complex.isometry_conj
 
 @[simp]
 theorem dist_conj_conj (z w : ℂ) : dist (conj z) (conj w) = dist z w :=
-  isometryConj.dist_eq z w
+  isometry_conj.dist_eq z w
 #align complex.dist_conj_conj Complex.dist_conj_conj
 
 @[simp]
 theorem nndist_conj_conj (z w : ℂ) : nndist (conj z) (conj w) = nndist z w :=
-  isometryConj.nndist_eq z w
+  isometry_conj.nndist_eq z w
 #align complex.nndist_conj_conj Complex.nndist_conj_conj
 
 theorem dist_conj_comm (z w : ℂ) : dist (conj z) w = dist z (conj w) := by
@@ -401,9 +401,9 @@ def ofRealLi : ℝ →ₗᵢ[ℝ] ℂ :=
   ⟨ofRealAm.toLinearMap, norm_real⟩
 #align complex.of_real_li Complex.ofRealLi
 
-theorem isometryOfReal : Isometry (coe : ℝ → ℂ) :=
+theorem isometry_of_real : Isometry (coe : ℝ → ℂ) :=
   ofRealLi.Isometry
-#align complex.isometry_of_real Complex.isometryOfReal
+#align complex.isometry_of_real Complex.isometry_of_real
 
 @[continuity]
 theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=

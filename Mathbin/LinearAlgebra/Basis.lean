@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -775,11 +775,11 @@ theorem prod_apply (i) :
 
 end Prod
 
-section NoZeroSmulDivisors
+section NoZeroSMulDivisors
 
 -- Can't be an instance because the basis can't be inferred.
 protected theorem no_zero_smul_divisors [NoZeroDivisors R] (b : Basis ι R M) :
-    NoZeroSmulDivisors R M :=
+    NoZeroSMulDivisors R M :=
   ⟨fun c x hcx =>
     or_iff_not_imp_right.mpr fun hx =>
       by
@@ -809,7 +809,7 @@ theorem eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : Submod
   convert (b.smul_eq_zero.mp sum_eq).resolve_right x_ne
 #align eq_bot_of_rank_eq_zero eq_bot_of_rank_eq_zero
 
-end NoZeroSmulDivisors
+end NoZeroSMulDivisors
 
 section Singleton
 
@@ -836,7 +836,7 @@ theorem singleton_repr (ι R : Type _) [Unique ι] [Semiring R] (x i) :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup M] [Module R M]
-    [NoZeroSmulDivisors R M] (ι : Type _) [Unique ι] :
+    [NoZeroSMulDivisors R M] (ι : Type _) [Unique ι] :
     Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y :=
   by
   fconstructor

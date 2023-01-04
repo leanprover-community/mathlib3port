@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module ring_theory.subring.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ instance (priority := 75) toCommRing {R} [CommRing R] [SetLike S R] [SubringClas
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
 /-- A subring of a domain is a domain. -/
 instance (priority := 75) {R} [Ring R] [IsDomain R] [SetLike S R] [SubringClass S R] : IsDomain s :=
-  NoZeroDivisors.toIsDomain _
+  NoZeroDivisors.to_isDomain _
 
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
 /-- A subring of an `ordered_ring` is an `ordered_ring`. -/
@@ -160,7 +160,7 @@ include hSR
 
 /-- The natural ring hom from a subring of ring `R` to `R`. -/
 def subtype (s : S) : s →+* R :=
-  { SubmonoidClass.subtype s, AddSubgroupClass.subtype s with toFun := coe }
+  { SubmonoidClass.Subtype s, AddSubgroupClass.subtype s with toFun := coe }
 #align subring_class.subtype SubringClass.subtype
 
 @[simp]
@@ -488,7 +488,7 @@ instance {R} [Ring R] [NoZeroDivisors R] (s : Subring R) : NoZeroDivisors s :=
 
 /-- A subring of a domain is a domain. -/
 instance {R} [Ring R] [IsDomain R] (s : Subring R) : IsDomain s :=
-  NoZeroDivisors.toIsDomain _
+  NoZeroDivisors.to_isDomain _
 
 /-- A subring of an `ordered_ring` is an `ordered_ring`. -/
 instance toOrderedRing {R} [OrderedRing R] (s : Subring R) : OrderedRing s :=
@@ -783,7 +783,7 @@ instance : CompleteLattice (Subring R) :=
   {
     completeLatticeOfInf (Subring R) fun s =>
       IsGLB.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
-        is_glb_binfi with
+        isGLB_binfᵢ with
     bot := ⊥
     bot_le := fun s x hx =>
       let ⟨n, hn⟩ := mem_bot.1 hx
@@ -1037,7 +1037,7 @@ theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, cl
   (Subring.gi R).gc.l_supr
 #align subring.closure_Union Subring.closure_Union
 
-theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀s) = ⨆ t ∈ s, closure t :=
+theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀ s) = ⨆ t ∈ s, closure t :=
   (Subring.gi R).gc.l_Sup
 #align subring.closure_sUnion Subring.closure_sUnion
 

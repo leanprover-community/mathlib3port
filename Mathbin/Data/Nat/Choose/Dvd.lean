@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Patrick Stevens
 
 ! This file was ported from Lean 3 source module data.nat.choose.dvd
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,6 +25,7 @@ open Nat
 
 namespace Prime
 
+#print Nat.Prime.dvd_choose_add /-
 theorem dvd_choose_add {p a b : ℕ} (hap : a < p) (hbp : b < p) (h : p ≤ a + b) (hp : Prime p) :
     p ∣ choose (a + b) a :=
   by
@@ -35,7 +36,9 @@ theorem dvd_choose_add {p a b : ℕ} (hap : a < p) (hbp : b < p) (h : p ≤ a + 
       add_tsub_cancel_left a b] at h₁ <;>
     exact h₁.resolve_right (not_or.2 ⟨h₂, h₃⟩)
 #align nat.prime.dvd_choose_add Nat.Prime.dvd_choose_add
+-/
 
+#print Nat.Prime.dvd_choose_self /-
 theorem dvd_choose_self {p k : ℕ} (hk : 0 < k) (hkp : k < p) (hp : Prime p) : p ∣ choose p k :=
   by
   have r : k + (p - k) = p := by
@@ -44,6 +47,7 @@ theorem dvd_choose_self {p k : ℕ} (hk : 0 < k) (hkp : k < p) (hp : Prime p) : 
     dvd_choose_add hkp (Nat.sub_lt (hk.trans hkp) hk) (by rw [r]) hp
   rwa [r] at e
 #align nat.prime.dvd_choose_self Nat.Prime.dvd_choose_self
+-/
 
 end Prime
 

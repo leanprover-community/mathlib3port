@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.content
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,9 +72,9 @@ end Primitive
 
 variable {R : Type _} [CommRing R] [IsDomain R]
 
-section NormalizedGcdMonoid
+section NormalizedGCDMonoid
 
-variable [NormalizedGcdMonoid R]
+variable [NormalizedGCDMonoid R]
 
 /-- `p.content` is the `gcd` of the coefficients of `p`. -/
 def content (p : R[X]) : R :=
@@ -198,7 +198,7 @@ theorem content_eq_gcd_range_succ (p : R[X]) :
 #align polynomial.content_eq_gcd_range_succ Polynomial.content_eq_gcd_range_succ
 
 theorem content_eq_gcd_leading_coeff_content_erase_lead (p : R[X]) :
-    p.content = GcdMonoid.gcd p.leadingCoeff (eraseLead p).content :=
+    p.content = GCDMonoid.gcd p.leadingCoeff (eraseLead p).content :=
   by
   by_cases h : p = 0
   · simp [h]
@@ -313,12 +313,12 @@ theorem prim_part_dvd (p : R[X]) : p.primPart ∣ p :=
 #align polynomial.prim_part_dvd Polynomial.prim_part_dvd
 
 theorem aeval_prim_part_eq_zero {S : Type _} [Ring S] [IsDomain S] [Algebra R S]
-    [NoZeroSmulDivisors R S] {p : R[X]} {s : S} (hpzero : p ≠ 0) (hp : aeval s p = 0) :
+    [NoZeroSMulDivisors R S] {p : R[X]} {s : S} (hpzero : p ≠ 0) (hp : aeval s p = 0) :
     aeval s p.primPart = 0 :=
   by
   rw [eq_C_content_mul_prim_part p, map_mul, aeval_C] at hp
   have hcont : p.content ≠ 0 := fun h => hpzero (content_eq_zero_iff.1 h)
-  replace hcont := Function.Injective.ne (NoZeroSmulDivisors.algebra_map_injective R S) hcont
+  replace hcont := Function.Injective.ne (NoZeroSMulDivisors.algebra_map_injective R S) hcont
   rw [map_zero] at hcont
   exact eq_zero_of_ne_zero_of_mul_left_eq_zero hcont hp
 #align polynomial.aeval_prim_part_eq_zero Polynomial.aeval_prim_part_eq_zero
@@ -337,7 +337,7 @@ theorem eval₂_prim_part_eq_zero {S : Type _} [CommRing S] [IsDomain S] {f : R 
 end PrimPart
 
 theorem gcd_content_eq_of_dvd_sub {a : R} {p q : R[X]} (h : c a ∣ p - q) :
-    GcdMonoid.gcd a p.content = GcdMonoid.gcd a q.content :=
+    GCDMonoid.gcd a p.content = GCDMonoid.gcd a q.content :=
   by
   rw [content_eq_gcd_range_of_lt p (max p.nat_degree q.nat_degree).succ
       (lt_of_le_of_lt (le_max_left _ _) (Nat.lt_succ_self _))]
@@ -351,8 +351,8 @@ theorem gcd_content_eq_of_dvd_sub {a : R} {p q : R[X]} (h : c a ∣ p - q) :
 #align polynomial.gcd_content_eq_of_dvd_sub Polynomial.gcd_content_eq_of_dvd_sub
 
 theorem content_mul_aux {p q : R[X]} :
-    GcdMonoid.gcd (p * q).eraseLead.content p.leadingCoeff =
-      GcdMonoid.gcd (p.eraseLead * q).content p.leadingCoeff :=
+    GCDMonoid.gcd (p * q).eraseLead.content p.leadingCoeff =
+      GCDMonoid.gcd (p.eraseLead * q).content p.leadingCoeff :=
   by
   rw [gcd_comm (content _) _, gcd_comm (content _) _]
   apply gcd_content_eq_of_dvd_sub
@@ -495,8 +495,8 @@ theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : R[X]} (hq
 #align
   polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part Polynomial.dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part
 
-instance (priority := 100) normalizedGcdMonoid : NormalizedGcdMonoid R[X] :=
-  normalizedGcdMonoidOfExistsLcm fun p q =>
+instance (priority := 100) normalizedGcdMonoid : NormalizedGCDMonoid R[X] :=
+  normalizedGCDMonoidOfExistsLCM fun p q =>
     by
     rcases exists_primitive_lcm_of_is_primitive p.is_primitive_prim_part
         q.is_primitive_prim_part with
@@ -526,7 +526,7 @@ theorem degree_gcd_le_right (p) {q : R[X]} (hq : q ≠ 0) : (gcd p q).degree ≤
   exact degree_gcd_le_left hq p
 #align polynomial.degree_gcd_le_right Polynomial.degree_gcd_le_right
 
-end NormalizedGcdMonoid
+end NormalizedGCDMonoid
 
 end Polynomial
 

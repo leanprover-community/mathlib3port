@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -578,10 +578,10 @@ def CoordinateRing : Type u :=
   AdjoinRoot W.Polynomial deriving Inhabited, CommRing
 #align weierstrass_curve.coordinate_ring WeierstrassCurve.CoordinateRing
 
-instance [IsDomain R] [NormalizedGcdMonoid R] : IsDomain W.CoordinateRing :=
+instance [IsDomain R] [NormalizedGCDMonoid R] : IsDomain W.CoordinateRing :=
   (Ideal.Quotient.is_domain_iff_prime _).mpr <| by
     simpa only [Ideal.span_singleton_prime W.polynomial_ne_zero, ←
-      GcdMonoid.irreducible_iff_prime] using W.polynomial_irreducible
+      GCDMonoid.irreducible_iff_prime] using W.polynomial_irreducible
 
 instance CoordinateRing.is_domain_of_field {F : Type u} [Field F] (W : WeierstrassCurve F) :
     IsDomain W.CoordinateRing := by classical infer_instance

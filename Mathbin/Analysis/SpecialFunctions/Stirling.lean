@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Firsching, Fabian Kruse, Nikolas Kuhn
 
 ! This file was ported from Lean 3 source module analysis.special_functions.stirling
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,7 +230,7 @@ theorem stirling_seq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSe
   by
   obtain ⟨x, x_pos, hx⟩ := stirling_seq'_bounded_by_pos_constant
   have hx' : x ∈ lowerBounds (Set.range (stirling_seq ∘ succ)) := by simpa [lowerBounds] using hx
-  refine' ⟨_, lt_of_lt_of_le x_pos (le_cInf (Set.range_nonempty _) hx'), _⟩
+  refine' ⟨_, lt_of_lt_of_le x_pos (le_cinfₛ (Set.range_nonempty _) hx'), _⟩
   rw [← Filter.tendsto_add_at_top_iff_nat 1]
   exact tendsto_at_top_cinfi stirling_seq'_antitone ⟨x, hx'⟩
 #align stirling.stirling_seq_has_pos_limit_a Stirling.stirling_seq_has_pos_limit_a

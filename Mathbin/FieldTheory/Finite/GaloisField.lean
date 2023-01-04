@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module field_theory.finite.galois_field
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ instance : Algebra (Zmod p) (GaloisField p n) :=
   SplittingField.algebra _
 
 instance : IsSplittingField (Zmod p) (GaloisField p n) (X ^ p ^ n - X) :=
-  Polynomial.IsSplittingField.splittingField _
+  Polynomial.IsSplittingField.splitting_field _
 
 instance : CharP (GaloisField p n) p :=
   (Algebra.char_p_iff (Zmod p) (GaloisField p n) p).mp (by infer_instance)
@@ -161,13 +161,13 @@ def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
 variable {K : Type _} [Field K] [Fintype K] [Algebra (Zmod p) K]
 
 theorem splits_X_pow_card_sub_X : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) :=
-  (FiniteField.HasSub.Sub.Polynomial.isSplittingField K (Zmod p)).Splits
+  (FiniteField.HasSub.Sub.Polynomial.is_splitting_field K (Zmod p)).Splits
 #align galois_field.splits_X_pow_card_sub_X GaloisField.splits_X_pow_card_sub_X
 
-theorem isSplittingFieldOfCardEq (h : Fintype.card K = p ^ n) :
+theorem is_splitting_field_of_card_eq (h : Fintype.card K = p ^ n) :
     IsSplittingField (Zmod p) K (X ^ p ^ n - X) :=
-  h ▸ FiniteField.HasSub.Sub.Polynomial.isSplittingField K (Zmod p)
-#align galois_field.is_splitting_field_of_card_eq GaloisField.isSplittingFieldOfCardEq
+  h ▸ FiniteField.HasSub.Sub.Polynomial.is_splitting_field K (Zmod p)
+#align galois_field.is_splitting_field_of_card_eq GaloisField.is_splitting_field_of_card_eq
 
 instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Algebra K K'] :
     IsGalois K K' := by
@@ -176,7 +176,7 @@ instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Alg
   haveI : CharP K p := hp
   haveI : CharP K' p := char_p_of_injective_algebra_map' K K' p
   exact
-    IsGalois.ofSeparableSplittingField
+    IsGalois.of_separable_splitting_field
       (galois_poly_separable p (Fintype.card K')
         (let ⟨n, hp, hn⟩ := FiniteField.card K' p
         hn.symm ▸ dvd_pow_self p n.NeZero))

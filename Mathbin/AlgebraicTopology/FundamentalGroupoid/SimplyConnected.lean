@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.simply_connected
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,9 +72,9 @@ instance (priority := 100) : PathConnectedSpace X :=
     Joined := fun x y => ⟨(unique_homotopic.2 x y).some.default.out⟩ }
 
 /-- In a simply connected space, any two paths are homotopic -/
-theorem pathsHomotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p₂ := by
+theorem paths_homotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p₂ := by
   simpa using @Subsingleton.elim (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
-#align simply_connected_space.paths_homotopic SimplyConnectedSpace.pathsHomotopic
+#align simply_connected_space.paths_homotopic SimplyConnectedSpace.paths_homotopic
 
 instance (priority := 100) ofContractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :
     SimplyConnectedSpace Y

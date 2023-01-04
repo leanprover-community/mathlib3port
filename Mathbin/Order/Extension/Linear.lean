@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.extension.linear
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,6 +25,7 @@ open Set Classical
 
 open Classical
 
+#print extend_partial_order /-
 /-- Any partial order can be extended to a linear order.
 -/
 theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
@@ -55,7 +56,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
       cases hc₂.total h₁s₁ h₁s₂
       · exact antisymm (h _ _ h₂s₁) h₂s₂
       · apply antisymm h₂s₁ (h _ _ h₂s₂)
-  obtain ⟨s, hs₁ : IsPartialOrder _ _, rs, hs₂⟩ := zorn_nonempty_partial_order₀ S hS r ‹_›
+  obtain ⟨s, hs₁ : IsPartialOrder _ _, rs, hs₂⟩ := zorn_nonempty_partialOrder₀ S hS r ‹_›
   skip
   refine' ⟨s, { Total := _ }, rs⟩
   intro x y
@@ -78,11 +79,14 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
       · exact (h.2 (trans yb (trans ba ax))).elim
       · exact (h.2 (trans yb bx)).elim
 #align extend_partial_order extend_partial_order
+-/
 
+#print LinearExtension /-
 /-- A type alias for `α`, intended to extend a partial order on `α` to a linear order. -/
 def LinearExtension (α : Type u) : Type u :=
   α
 #align linear_extension LinearExtension
+-/
 
 noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExtension α)
     where
@@ -93,6 +97,12 @@ noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExte
   le_total := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.2.1
   decidableLe := Classical.decRel _
 
+/- warning: to_linear_extension -> toLinearExtension is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], RelHom.{u1, u1} α (LinearExtension.{u1} α) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u1} (LinearExtension.{u1} α) (Preorder.toLE.{u1} (LinearExtension.{u1} α) (PartialOrder.toPreorder.{u1} (LinearExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (LinearExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (LinearExtension.{u1} α) (LinearOrder.toLattice.{u1} (LinearExtension.{u1} α) (LinearExtension.linearOrder.{u1} α _inst_1)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α], RelHom.{u1, u1} α (LinearExtension.{u1} α) (fun (x._@.Mathlib.Order.Extension.Linear._hyg.988 : α) (x._@.Mathlib.Order.Extension.Linear._hyg.990 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Extension.Linear._hyg.988 x._@.Mathlib.Order.Extension.Linear._hyg.990) (fun (x._@.Mathlib.Order.Extension.Linear._hyg.1012 : LinearExtension.{u1} α) (x._@.Mathlib.Order.Extension.Linear._hyg.1014 : LinearExtension.{u1} α) => LE.le.{u1} (LinearExtension.{u1} α) (Preorder.toLE.{u1} (LinearExtension.{u1} α) (PartialOrder.toPreorder.{u1} (LinearExtension.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (LinearExtension.{u1} α) (Lattice.toSemilatticeInf.{u1} (LinearExtension.{u1} α) (DistribLattice.toLattice.{u1} (LinearExtension.{u1} α) (instDistribLattice.{u1} (LinearExtension.{u1} α) (instLinearOrderLinearExtension.{u1} α _inst_1))))))) x._@.Mathlib.Order.Extension.Linear._hyg.1012 x._@.Mathlib.Order.Extension.Linear._hyg.1014)
+Case conversion may be inaccurate. Consider using '#align to_linear_extension toLinearExtensionₓ'. -/
 /-- The embedding of `α` into `linear_extension α` as a relation homomorphism. -/
 def toLinearExtension {α : Type u} [PartialOrder α] :
     ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop)

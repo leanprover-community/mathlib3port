@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.hasse_deriv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -222,7 +222,7 @@ theorem nat_degree_hasse_deriv_le (p : R[X]) (n : ℕ) :
     · simp
 #align polynomial.nat_degree_hasse_deriv_le Polynomial.nat_degree_hasse_deriv_le
 
-theorem nat_degree_hasse_deriv [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
+theorem nat_degree_hasse_deriv [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
     natDegree (hasseDeriv n p) = natDegree p - n :=
   by
   cases' lt_or_le p.nat_degree n with hn hn

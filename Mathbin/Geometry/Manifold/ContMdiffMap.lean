@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_map
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 @[protect_proj]
 structure ContMdiffMap where
   toFun : M → M'
-  contMdiffToFun : ContMdiff I I' n to_fun
+  cont_mdiff_to_fun : ContMdiff I I' n to_fun
 #align cont_mdiff_map ContMdiffMap
 
 /-- Bundled smooth maps. -/
@@ -57,7 +57,7 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
   ⟨ContMdiffMap.toFun⟩
 
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
-  ⟨fun f => ⟨f, f.contMdiffToFun.Continuous⟩⟩
+  ⟨fun f => ⟨f, f.cont_mdiff_to_fun.Continuous⟩⟩
 
 attribute [to_additive_ignore_args 21]
   ContMdiffMap ContMdiffMap.hasCoeToFun ContMdiffMap.ContinuousMap.hasCoe
@@ -69,12 +69,12 @@ theorem coe_fn_mk (f : M → M') (hf : ContMdiff I I' n f) : (mk f hf : M → M'
   rfl
 #align cont_mdiff_map.coe_fn_mk ContMdiffMap.coe_fn_mk
 
-protected theorem contMdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
-  f.contMdiffToFun
-#align cont_mdiff_map.cont_mdiff ContMdiffMap.contMdiff
+protected theorem cont_mdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
+  f.cont_mdiff_to_fun
+#align cont_mdiff_map.cont_mdiff ContMdiffMap.cont_mdiff
 
 protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
-  f.contMdiffToFun
+  f.cont_mdiff_to_fun
 #align cont_mdiff_map.smooth ContMdiffMap.smooth
 
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
@@ -85,9 +85,9 @@ protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiabl
   f.ContMdiff.Mdifferentiable le_top
 #align cont_mdiff_map.mdifferentiable ContMdiffMap.mdifferentiable
 
-protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
+protected theorem mdifferentiable_at (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
   f.Mdifferentiable x
-#align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiableAt
+#align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiable_at
 
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
   cases f <;> cases g <;> cases h <;> rfl
@@ -99,14 +99,14 @@ theorem ext (h : ∀ x, f x = g x) : f = g := by cases f <;> cases g <;> congr <
 
 /-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=
-  ⟨id, contMdiffId⟩
+  ⟨id, cont_mdiff_id⟩
 #align cont_mdiff_map.id ContMdiffMap.id
 
 /-- The composition of smooth maps, as a smooth map. -/
 def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯
     where
   toFun a := f (g a)
-  contMdiffToFun := f.contMdiffToFun.comp g.contMdiffToFun
+  cont_mdiff_to_fun := f.cont_mdiff_to_fun.comp g.cont_mdiff_to_fun
 #align cont_mdiff_map.comp ContMdiffMap.comp
 
 @[simp]
@@ -116,11 +116,11 @@ theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (
 #align cont_mdiff_map.comp_apply ContMdiffMap.comp_apply
 
 instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
-  ⟨⟨fun _ => default, contMdiffConst⟩⟩
+  ⟨⟨fun _ => default, cont_mdiff_const⟩⟩
 
 /-- Constant map as a smooth map -/
 def const (y : M') : C^n⟮I, M; I', M'⟯ :=
-  ⟨fun x => y, contMdiffConst⟩
+  ⟨fun x => y, cont_mdiff_const⟩
 #align cont_mdiff_map.const ContMdiffMap.const
 
 end ContMdiffMap

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ instance covariant_class_mul_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· * ·)
 #align ennreal.covariant_class_mul_le Ennreal.covariant_class_mul_le
 
 instance covariant_class_add_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· + ·) (· ≤ ·) :=
-  OrderedAddCommMonoid.to_CovariantClass_left ℝ≥0∞
+  OrderedAddCommMonoid.to_covariantClass_left ℝ≥0∞
 #align ennreal.covariant_class_add_le Ennreal.covariant_class_add_le
 
 noncomputable instance : LinearOrderedCommMonoidWithZero ℝ≥0∞ :=
@@ -1088,11 +1088,11 @@ end Order
 section CompleteLattice
 
 theorem coe_Sup {s : Set ℝ≥0} : BddAbove s → (↑(supₛ s) : ℝ≥0∞) = ⨆ a ∈ s, ↑a :=
-  WithTop.coe_Sup
+  WithTop.coe_supₛ
 #align ennreal.coe_Sup Ennreal.coe_Sup
 
 theorem coe_Inf {s : Set ℝ≥0} : s.Nonempty → (↑(infₛ s) : ℝ≥0∞) = ⨅ a ∈ s, ↑a :=
-  WithTop.coe_Inf
+  WithTop.coe_infₛ
 #align ennreal.coe_Inf Ennreal.coe_Inf
 
 @[simp]

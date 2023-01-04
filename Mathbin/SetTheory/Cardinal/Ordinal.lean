@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.ordinal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ def alephIdx.relIso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
       apply (lt_succ s).not_le
       have I : injective aleph_idx := aleph_idx.initial_seg.to_embedding.injective
       simpa only [typein_enum, left_inverse_inv_fun I (succ s)] using
-        le_csupr
+        le_csupᵢ
           (Cardinal.bdd_above_range.{u, u} fun a : α => inv_fun aleph_idx (Ordinal.typein r a))
           (Ordinal.enum r _ (h (succ s)))
 #align cardinal.aleph_idx.rel_iso Cardinal.alephIdx.relIso
@@ -228,9 +228,9 @@ theorem aleph'_le_of_limit {o : Ordinal} (l : o.IsLimit) {c} :
 
 theorem aleph'_limit {o : Ordinal} (ho : IsLimit o) : aleph' o = ⨆ a : Iio o, aleph' a :=
   by
-  refine' le_antisymm _ (csupr_le' fun i => aleph'_le.2 (le_of_lt i.2))
+  refine' le_antisymm _ (csupᵢ_le' fun i => aleph'_le.2 (le_of_lt i.2))
   rw [aleph'_le_of_limit ho]
-  exact fun a ha => le_csupr (bdd_above_of_small _) (⟨a, ha⟩ : Iio o)
+  exact fun a ha => le_csupᵢ (bdd_above_of_small _) (⟨a, ha⟩ : Iio o)
 #align cardinal.aleph'_limit Cardinal.aleph'_limit
 
 @[simp]
@@ -283,9 +283,9 @@ theorem aleph_zero : aleph 0 = ℵ₀ := by rw [aleph, add_zero, aleph'_omega]
 
 theorem aleph_limit {o : Ordinal} (ho : IsLimit o) : aleph o = ⨆ a : Iio o, aleph a :=
   by
-  apply le_antisymm _ (csupr_le' _)
+  apply le_antisymm _ (csupᵢ_le' _)
   · rw [aleph, aleph'_limit (ho.add _)]
-    refine' csupr_mono' (bdd_above_of_small _) _
+    refine' csupᵢ_mono' (bdd_above_of_small _) _
     rintro ⟨i, hi⟩
     cases lt_or_le i ω
     · rcases lt_omega.1 h with ⟨n, rfl⟩
@@ -456,7 +456,7 @@ theorem beth_strict_mono : StrictMono beth :=
     exact (IH c (lt_succ c) h).le
   · apply (cantor _).trans_le
     rw [beth_limit hb, ← beth_succ]
-    exact le_csupr (bdd_above_of_small _) (⟨_, hb.succ_lt h⟩ : Iio b)
+    exact le_csupᵢ (bdd_above_of_small _) (⟨_, hb.succ_lt h⟩ : Iio b)
 #align cardinal.beth_strict_mono Cardinal.beth_strict_mono
 
 theorem beth_mono : Monotone beth :=
@@ -482,7 +482,7 @@ theorem aleph_le_beth (o : Ordinal) : aleph o ≤ beth o :=
     exact (cantor _).trans_le (power_le_power_left two_ne_zero h)
   · intro o ho IH
     rw [aleph_limit ho, beth_limit ho]
-    exact csupr_mono (bdd_above_of_small _) fun x => IH x.1 x.2
+    exact csupᵢ_mono (bdd_above_of_small _) fun x => IH x.1 x.2
 #align cardinal.aleph_le_beth Cardinal.aleph_le_beth
 
 theorem aleph_0_le_beth (o : Ordinal) : ℵ₀ ≤ beth o :=
@@ -502,7 +502,7 @@ theorem beth_normal : IsNormal.{u} fun o => (beth o).ord :=
     ⟨ord_strict_mono.comp beth_strict_mono, fun o ho a ha =>
       by
       rw [beth_limit ho, ord_le]
-      exact csupr_le' fun b => ord_le.1 (ha _ b.2)⟩
+      exact csupᵢ_le' fun b => ord_le.1 (ha _ b.2)⟩
 #align cardinal.beth_normal Cardinal.beth_normal
 
 /-! ### Properties of `mul` -/

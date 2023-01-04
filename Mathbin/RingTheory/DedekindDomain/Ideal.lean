@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,7 @@ theorem span_singleton_inv (x : K) : (spanSingleton R₁⁰ x)⁻¹ = spanSingle
 theorem coe_ideal_span_singleton_mul_inv {x : R₁} (hx : x ≠ 0) :
     ((Ideal.span {x} : Ideal R₁) : FractionalIdeal R₁⁰ K) * (Ideal.span {x} : Ideal R₁)⁻¹ = 1 := by
   rw [coe_ideal_span_singleton, span_singleton_inv, span_singleton_mul_span_singleton,
-    mul_inv_cancel <| (map_ne_zero_iff _ <| NoZeroSmulDivisors.algebra_map_injective R₁ K).mpr hx,
+    mul_inv_cancel <| (map_ne_zero_iff _ <| NoZeroSMulDivisors.algebra_map_injective R₁ K).mpr hx,
     span_singleton_one]
 #align
   fractional_ideal.coe_ideal_span_singleton_mul_inv FractionalIdeal.coe_ideal_span_singleton_mul_inv
@@ -900,7 +900,7 @@ theorem sup_mul_inf (I J : Ideal A) : (I ⊔ J) * (I ⊓ J) = I * J :=
 
 /-- Ideals in a Dedekind domain have gcd and lcm operators that (trivially) are compatible with
 the normalization operator. -/
-instance : NormalizedGcdMonoid (Ideal A) :=
+instance : NormalizedGCDMonoid (Ideal A) :=
   { Ideal.normalizationMonoid with
     gcd := (· ⊔ ·)
     gcd_dvd_left := fun _ _ => by simpa only [dvd_iff_le] using le_sup_left
@@ -1164,14 +1164,14 @@ def idealFactorsEquivOfQuotEquiv : { p : Ideal R | p ∣ I } ≃o { p : Ideal A 
       (show Function.Surjective (f.symm : A ⧸ J →+* R ⧸ I) from f.symm.Surjective))
     (by
       simp only [← ideal_factors_fun_of_quot_hom_id, OrderHom.coe_eq, OrderHom.coe_eq,
-        ideal_factors_fun_of_quot_hom_comp, ← RingEquiv.to_ring_hom_eq_coe, ←
-        RingEquiv.to_ring_hom_eq_coe, ← RingEquiv.to_ring_hom_trans, RingEquiv.symm_trans_self,
-        RingEquiv.to_ring_hom_refl])
+        ideal_factors_fun_of_quot_hom_comp, ← RingEquiv.toRingHom_eq_coe, ←
+        RingEquiv.toRingHom_eq_coe, ← RingEquiv.toRingHom_trans, RingEquiv.symm_trans_self,
+        RingEquiv.toRingHom_refl])
     (by
       simp only [← ideal_factors_fun_of_quot_hom_id, OrderHom.coe_eq, OrderHom.coe_eq,
-        ideal_factors_fun_of_quot_hom_comp, ← RingEquiv.to_ring_hom_eq_coe, ←
-        RingEquiv.to_ring_hom_eq_coe, ← RingEquiv.to_ring_hom_trans, RingEquiv.self_trans_symm,
-        RingEquiv.to_ring_hom_refl])
+        ideal_factors_fun_of_quot_hom_comp, ← RingEquiv.toRingHom_eq_coe, ←
+        RingEquiv.toRingHom_eq_coe, ← RingEquiv.toRingHom_trans, RingEquiv.self_trans_symm,
+        RingEquiv.toRingHom_refl])
 #align ideal_factors_equiv_of_quot_equiv idealFactorsEquivOfQuotEquiv
 
 theorem ideal_factors_equiv_of_quot_equiv_symm :
@@ -1389,7 +1389,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintyp
     (prod_eq : (∏ i, P i ^ e i) = I) : R ⧸ I ≃+* ∀ i, R ⧸ P i ^ e i :=
   (Ideal.quotEquivOfEq
         (by
-          simp only [← prod_eq, Finset.inf_eq_infi, Finset.mem_univ, cinfi_pos, ←
+          simp only [← prod_eq, Finset.inf_eq_infi, Finset.mem_univ, cinfᵢ_pos, ←
             IsDedekindDomain.inf_prime_pow_eq_prod _ _ _ (fun i _ => Prime i) fun i _ j _ =>
               coprime i j])).trans <|
     Ideal.quotientInfRingEquivPiQuotient _ fun i j hij =>

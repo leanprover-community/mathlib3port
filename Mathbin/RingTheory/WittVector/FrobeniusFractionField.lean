@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius_fraction_field
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,7 +277,7 @@ theorem exists_frobenius_solution_fraction_ring_aux (m n : ℕ) (r' q' : 𝕎 k)
   rw [zpow_sub₀ (fraction_ring.p_nonzero p k)]
   field_simp [fraction_ring.p_nonzero p k]
   simp only [IsFractionRing.fieldEquivOfRingEquiv, IsLocalization.ring_equiv_of_ring_equiv_eq,
-    RingEquiv.coe_of_bijective]
+    RingEquiv.coe_ofBijective]
   convert congr_arg (fun x => algebraMap (𝕎 k) (FractionRing (𝕎 k)) x) key using 1
   · simp only [RingHom.map_mul, RingHom.map_pow, map_nat_cast, frobenius_equiv_apply]
     ring

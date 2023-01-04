@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jesse Reimann, Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.integral.riesz_markov_kakutani
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem riesz_content_aux_image_nonempty (K : Compacts X) :
 monotone: if `K₁ ⊆ K₂` are compact subsets in X, then `λ(K₁) ≤ λ(K₂)`. -/
 theorem riesz_content_aux_mono {K₁ K₂ : Compacts X} (h : K₁ ≤ K₂) :
     rieszContentAux Λ K₁ ≤ rieszContentAux Λ K₂ :=
-  cInf_le_cInf (OrderBot.bddBelow _) (riesz_content_aux_image_nonempty Λ K₂)
+  cinfₛ_le_cinfₛ (OrderBot.bddBelow _) (riesz_content_aux_image_nonempty Λ K₂)
     (image_subset Λ (setOf_subset_setOf.mpr fun f f_hyp x x_in_K₁ => f_hyp x (h x_in_K₁)))
 #align riesz_content_aux_mono riesz_content_aux_mono
 
@@ -77,7 +77,7 @@ section RieszSubadditive
 content of K; namely `λ(K) ≤ Λ f`. -/
 theorem riesz_content_aux_le {K : Compacts X} {f : X →ᵇ ℝ≥0} (h : ∀ x ∈ K, (1 : ℝ≥0) ≤ f x) :
     rieszContentAux Λ K ≤ Λ f :=
-  cInf_le (OrderBot.bddBelow _) ⟨f, ⟨h, rfl⟩⟩
+  cinfₛ_le (OrderBot.bddBelow _) ⟨f, ⟨h, rfl⟩⟩
 #align riesz_content_aux_le riesz_content_aux_le
 
 /-- The Riesz content can be approximated arbitrarily well by evaluating the positive linear
@@ -88,7 +88,7 @@ theorem exists_lt_riesz_content_aux_add_pos (K : Compacts X) {ε : ℝ≥0} (εp
   by
   --choose a test function `f` s.t. `Λf = α < λ(K) + ε`
   obtain ⟨α, ⟨⟨f, f_hyp⟩, α_hyp⟩⟩ :=
-    exists_lt_of_cInf_lt (riesz_content_aux_image_nonempty Λ K)
+    exists_lt_of_cinfₛ_lt (riesz_content_aux_image_nonempty Λ K)
       (lt_add_of_pos_right (rieszContentAux Λ K) εpos)
   refine' ⟨f, f_hyp.left, _⟩
   rw [f_hyp.right]

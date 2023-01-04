@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.fraction_ring
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ instance Rat.is_fraction_ring : IsFractionRing ℤ ℚ
     simpa only [eq_int_cast, isUnit_iff_ne_zero, Int.cast_eq_zero, Ne.def, Subtype.coe_mk] using hx
   surj := by
     rintro ⟨n, d, hd, h⟩
-    refine' ⟨⟨n, ⟨d, _⟩⟩, Rat.mul_denom_eq_num⟩
+    refine' ⟨⟨n, ⟨d, _⟩⟩, Rat.mul_den_eq_num⟩
     rwa [mem_non_zero_divisors_iff_ne_zero, Int.coe_nat_ne_zero_iff_pos]
   eq_iff_exists := by
     intro x y
@@ -97,8 +97,8 @@ theorem coe_inj {a b : R} : (↑a : K) = ↑b ↔ a = b :=
   (IsFractionRing.injective R K).eq_iff
 #align is_fraction_ring.coe_inj IsFractionRing.coe_inj
 
-instance (priority := 100) [NoZeroDivisors K] : NoZeroSmulDivisors R K :=
-  NoZeroSmulDivisors.of_algebra_map_injective <| IsFractionRing.injective R K
+instance (priority := 100) [NoZeroDivisors K] : NoZeroSMulDivisors R K :=
+  NoZeroSMulDivisors.of_algebra_map_injective <| IsFractionRing.injective R K
 
 variable {R K}
 
@@ -266,7 +266,7 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
   convert is_localization_iff_of_base_ring_equiv _ _ h
   ext x
   erw [Submonoid.map_equiv_eq_comap_symm]
-  simp only [MulEquiv.coe_toMonoidHom, RingEquiv.to_mul_equiv_eq_coe, Submonoid.mem_comap]
+  simp only [MulEquiv.coe_toMonoidHom, RingEquiv.toMulEquiv_eq_coe, Submonoid.mem_comap]
   constructor
   · rintro hx z (hz : z * h.symm x = 0)
     rw [← h.map_eq_zero_iff]
@@ -336,11 +336,11 @@ theorem mk_eq_div {r s} :
   by rw [Localization.mk_eq_mk', IsFractionRing.mk'_eq_div]
 #align fraction_ring.mk_eq_div FractionRing.mk_eq_div
 
-noncomputable instance [IsDomain R] [Field K] [Algebra R K] [NoZeroSmulDivisors R K] :
+noncomputable instance [IsDomain R] [Field K] [Algebra R K] [NoZeroSMulDivisors R K] :
     Algebra (FractionRing R) K :=
-  RingHom.toAlgebra (IsFractionRing.lift (NoZeroSmulDivisors.algebra_map_injective R _))
+  RingHom.toAlgebra (IsFractionRing.lift (NoZeroSMulDivisors.algebra_map_injective R _))
 
-instance [IsDomain R] [Field K] [Algebra R K] [NoZeroSmulDivisors R K] :
+instance [IsDomain R] [Field K] [Algebra R K] [NoZeroSMulDivisors R K] :
     IsScalarTower R (FractionRing R) K :=
   IsScalarTower.of_algebra_map_eq fun x => (IsFractionRing.lift_algebra_map _ x).symm
 
@@ -354,13 +354,13 @@ noncomputable def algEquiv (K : Type _) [Field K] [Algebra A K] [IsFractionRing 
   Localization.algEquiv (nonZeroDivisors A) K
 #align fraction_ring.alg_equiv FractionRing.algEquiv
 
-instance [Algebra R A] [NoZeroSmulDivisors R A] : NoZeroSmulDivisors R (FractionRing A) :=
-  NoZeroSmulDivisors.of_algebra_map_injective
+instance [Algebra R A] [NoZeroSMulDivisors R A] : NoZeroSMulDivisors R (FractionRing A) :=
+  NoZeroSMulDivisors.of_algebra_map_injective
     (by
       rw [IsScalarTower.algebra_map_eq R A]
       exact
-        Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)
-          (NoZeroSmulDivisors.algebra_map_injective _ _))
+        Function.Injective.comp (NoZeroSMulDivisors.algebra_map_injective _ _)
+          (NoZeroSMulDivisors.algebra_map_injective _ _))
 
 end FractionRing
 

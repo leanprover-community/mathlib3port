@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.perm.subgroup
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem subtypeCongrHom.card_range {α : Type _} (p : α → Prop) [DecidablePre
 recovers the usual statement of Cayley's theorem via `right_cancel_monoid.to_has_faithful_smul` -/
 noncomputable def subgroupOfMulAction (G H : Type _) [Group G] [MulAction G H] [FaithfulSMul G H] :
     G ≃* (MulAction.toPermHom G H).range :=
-  MulEquiv.ofLeftInverse' _ (Classical.choose_spec MulAction.to_perm_injective.HasLeftInverse)
+  MulEquiv.ofLeftInverse' _ (Classical.choose_spec MulAction.toPerm_injective.HasLeftInverse)
 #align equiv.perm.subgroup_of_mul_action Equiv.Perm.subgroupOfMulAction
 
 end Perm

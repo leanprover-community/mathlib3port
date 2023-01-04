@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.conservative
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,7 +218,7 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative (f^[
   set m := (l - k) / (n + 1)
   have : (n + 1) * m = l - k := by
     apply Nat.mul_div_cancel'
-    exact (Nat.modeq_iff_dvd' hkl.le).1 hn
+    exact (Nat.modEq_iff_dvd' hkl.le).1 hn
   refine' ⟨(f^[k]) x, hk, m, _, _⟩
   · intro hm
     rw [hm, mul_zero, eq_comm, tsub_eq_zero_iff_le] at this

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom_properties
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S 
   revert e₁ e₂
   dsimp [RingEquiv.toRingHom, IsLocalization.Away.map]
   simp only [CategoryTheory.comp_apply, RingEquiv.refl_apply, IsLocalization.alg_equiv_apply,
-    IsLocalization.ring_equiv_of_ring_equiv_apply, RingHom.coe_mk, RingEquiv.to_fun_eq_coe,
+    IsLocalization.ring_equiv_of_ring_equiv_apply, RingHom.coe_mk, [anonymous],
     IsLocalization.ring_equiv_of_ring_equiv_eq, IsLocalization.map_eq]
 #align ring_hom.respects_iso.is_localization_away_iff RingHom.RespectsIso.is_localization_away_iff
 

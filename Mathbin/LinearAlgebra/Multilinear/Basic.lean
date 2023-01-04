@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,7 +275,7 @@ def ofSubsingleton [Subsingleton ι] (i' : ι) : MultilinearMap R (fun _ : ι =>
     simp only [Function.eval, Function.update_same]
 #align multilinear_map.of_subsingleton MultilinearMap.ofSubsingleton
 
-variable {M₂}
+variable (M₁) {M₂}
 
 /-- The constant map is multilinear when `ι` is empty. -/
 @[simps (config := { fullyApplied := false })]
@@ -884,7 +884,7 @@ instance [Module R' M₂] [SMulCommClass A R' M₂] : Module R' (MultilinearMap 
   add_smul r₁ r₂ f := ext fun x => add_smul _ _ _
   zero_smul f := ext fun x => zero_smul _ _
 
-instance [NoZeroSmulDivisors R' M₃] : NoZeroSmulDivisors R' (MultilinearMap A M₁ M₃) :=
+instance [NoZeroSMulDivisors R' M₃] : NoZeroSMulDivisors R' (MultilinearMap A M₁ M₃) :=
   coe_injective.NoZeroSmulDivisors _ rfl coe_smul
 
 variable (M₂ M₃ R' A)
@@ -947,7 +947,7 @@ to an empty family. -/
 @[simps]
 def constLinearEquivOfIsEmpty [IsEmpty ι] : M₂ ≃ₗ[R] MultilinearMap R M₁ M₂
     where
-  toFun := MultilinearMap.constOfIsEmpty R
+  toFun := MultilinearMap.constOfIsEmpty R _
   map_add' x y := rfl
   map_smul' t x := rfl
   invFun f := f 0

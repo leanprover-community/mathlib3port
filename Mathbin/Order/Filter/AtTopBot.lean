@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module order.filter.at_top_bot
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ theorem Subsingleton.at_top_eq (α) [Subsingleton α] [Preorder α] : (atTop : F
   by
   refine' top_unique fun s hs x => _
   letI : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elim y x⟩
-  rw [at_top, infi_unique, Unique.default_eq x, mem_principal] at hs
+  rw [at_top, cinfᵢ_unique, Unique.default_eq x, mem_principal] at hs
   exact hs left_mem_Ici
 #align filter.subsingleton.at_top_eq Filter.Subsingleton.at_top_eq
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s
 
 /-- The natural ring hom from a subsemiring of semiring `R` to `R`. -/
 def subtype : s →+* R :=
-  { SubmonoidClass.subtype s, AddSubmonoidClass.subtype s with toFun := coe }
+  { SubmonoidClass.Subtype s, AddSubmonoidClass.Subtype s with toFun := coe }
 #align subsemiring_class.subtype SubsemiringClass.subtype
 
 @[simp]
@@ -709,7 +709,7 @@ instance : CompleteLattice (Subsemiring R) :=
   {
     completeLatticeOfInf (Subsemiring R) fun s =>
       IsGLB.of_image (fun s t => show (s : Set R) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe)
-        is_glb_binfi with
+        isGLB_binfᵢ with
     bot := ⊥
     bot_le := fun s x hx =>
       let ⟨n, hn⟩ := mem_bot.1 hx
@@ -1007,7 +1007,7 @@ theorem closure_Union {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, cl
   (Subsemiring.gi R).gc.l_supr
 #align subsemiring.closure_Union Subsemiring.closure_Union
 
-theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀s) = ⨆ t ∈ s, closure t :=
+theorem closure_sUnion (s : Set (Set R)) : closure (⋃₀ s) = ⨆ t ∈ s, closure t :=
   (Subsemiring.gi R).gc.l_Sup
 #align subsemiring.closure_sUnion Subsemiring.closure_sUnion
 
@@ -1397,12 +1397,12 @@ instance [Semiring α] [MulSemiringAction R' α] (S : Subsemiring R') : MulSemir
 
 /-- The center of a semiring acts commutatively on that semiring. -/
 instance center.smul_comm_class_left : SMulCommClass (center R') R' R' :=
-  Submonoid.center.smul_comm_class_left
+  Submonoid.center.smulCommClass_left
 #align subsemiring.center.smul_comm_class_left Subsemiring.center.smul_comm_class_left
 
 /-- The center of a semiring acts commutatively on that semiring. -/
 instance center.smul_comm_class_right : SMulCommClass R' (center R') R' :=
-  Submonoid.center.smul_comm_class_right
+  Submonoid.center.smulCommClass_right
 #align subsemiring.center.smul_comm_class_right Subsemiring.center.smul_comm_class_right
 
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/

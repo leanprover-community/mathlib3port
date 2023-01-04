@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem Directed.convex_Union {ι : Sort _} {s : ι → Set E} (hdir : Directed 
 #align directed.convex_Union Directed.convex_Union
 
 theorem DirectedOn.convex_sUnion {c : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) c)
-    (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀c) :=
+    (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀ c) :=
   by
   rw [sUnion_eq_Union]
   exact (directedOn_iff_directed.1 hdir).convex_Union fun A => hc A.2
@@ -602,7 +602,7 @@ theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommM
 
 theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid E] [Module 𝕜 E]
     [OrderedSmul 𝕜 E] {s : Set E} (hs : s.OrdConnected) : Convex 𝕜 s :=
-  hs.convex_of_chain <| is_chain_of_trichotomous s
+  hs.convex_of_chain <| isChain_of_trichotomous s
 #align set.ord_connected.convex Set.OrdConnected.convex
 
 theorem convex_iff_ord_connected [LinearOrderedField 𝕜] {s : Set 𝕜} : Convex 𝕜 s ↔ s.OrdConnected :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.complete_field
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,9 +74,9 @@ instance (priority := 100) ConditionallyCompleteLinearOrderedField.toArchimedean
       by_contra' h
       obtain ⟨x, h⟩ := h
       have :=
-        cSup_le (range_nonempty (coe : ℕ → α))
+        csupₛ_le (range_nonempty (coe : ℕ → α))
           (forall_range_iff.2 fun n =>
-            le_sub_iff_add_le.2 <| le_cSup ⟨x, forall_range_iff.2 h⟩ ⟨n + 1, Nat.cast_succ n⟩)
+            le_sub_iff_add_le.2 <| le_csupₛ ⟨x, forall_range_iff.2 h⟩ ⟨n + 1, Nat.cast_succ n⟩)
       linarith)
 #align
   conditionally_complete_linear_ordered_field.to_archimedean ConditionallyCompleteLinearOrderedField.toArchimedean
@@ -194,13 +194,13 @@ def inducedMap (x : α) : β :=
 variable [Archimedean α]
 
 theorem induced_map_mono : Monotone (inducedMap α β) := fun a b h =>
-  cSup_le_cSup (cut_map_bdd_above β _) (cut_map_nonempty β _) (cut_map_mono β h)
+  csupₛ_le_csupₛ (cut_map_bdd_above β _) (cut_map_nonempty β _) (cut_map_mono β h)
 #align linear_ordered_field.induced_map_mono LinearOrderedField.induced_map_mono
 
 theorem induced_map_rat (q : ℚ) : inducedMap α β (q : α) = q :=
   by
   refine'
-    cSup_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β q) (fun x h => _) fun w h => _
+    csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β q) (fun x h => _) fun w h => _
   · rw [cut_map_coe] at h
     obtain ⟨r, h, rfl⟩ := h
     exact le_of_lt h
@@ -229,7 +229,7 @@ theorem coe_lt_induced_map_iff : (q : β) < inducedMap α β a ↔ (q : α) < a 
   · rw [← induced_map_rat α] at h
     exact (induced_map_mono α β).reflect_lt h
   · obtain ⟨q', hq, hqa⟩ := exists_rat_btwn hq
-    apply lt_cSup_of_lt (cut_map_bdd_above β a) (coe_mem_cut_map_iff.mpr hqa)
+    apply lt_csupₛ_of_lt (cut_map_bdd_above β a) (coe_mem_cut_map_iff.mpr hqa)
     exact_mod_cast hq
 #align linear_ordered_field.coe_lt_induced_map_iff LinearOrderedField.coe_lt_induced_map_iff
 
@@ -277,7 +277,7 @@ theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈
   rw [pow_two] at hqa⊢
   exact
     mul_self_le_mul_self (by exact_mod_cast hq'.le)
-      (le_cSup (cut_map_bdd_above β a) <|
+      (le_csupₛ (cut_map_bdd_above β a) <|
         coe_mem_cut_map_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
 #align
   linear_ordered_field.le_induced_map_mul_self_of_mem_cut_map LinearOrderedField.le_induced_map_mul_self_of_mem_cut_map
@@ -328,7 +328,7 @@ def inducedOrderRingHom : α →+*o β :=
           · exact this x h
         -- prove that the (Sup of rationals less than x) ^ 2 is the Sup of the set of rationals less
         -- than (x ^ 2) by showing it is an upper bound and any smaller number is not an upper bound
-        refine' fun x hx => cSup_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β _) _ _
+        refine' fun x hx => csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β _) _ _
         exact le_induced_map_mul_self_of_mem_cut_map hx
         exact exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self hx)
       two_ne_zero (induced_map_one _ _) with

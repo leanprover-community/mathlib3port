@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ include cplt hV
 protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) :=
   by
   rw [hV.summable_iff_norm_sq_summable]
-  convert (lp.memℓp f).Summable _
+  convert (lp.mem_ℓp f).Summable _
   · norm_cast
   · norm_num
 #align orthogonal_family.summable_of_lp OrthogonalFamily.summable_of_lp

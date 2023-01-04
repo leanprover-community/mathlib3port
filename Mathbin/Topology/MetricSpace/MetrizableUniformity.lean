@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable_uniformity
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
   dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self x :=
     (Nnreal.coe_eq_zero _).2 <|
-      nonpos_iff_eq_zero.1 <| (cinfi_le (OrderBot.bddBelow _) []).trans_eq <| by simp [dist_self]
+      nonpos_iff_eq_zero.1 <| (cinfᵢ_le (OrderBot.bddBelow _) []).trans_eq <| by simp [dist_self]
   dist_comm x y :=
     Nnreal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
@@ -84,7 +84,7 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
     calc
       (⨅ l, (zip_with d (x::l) (l ++ [z])).Sum) ≤
           (zip_with d (x::lxy ++ y::lyz) ((lxy ++ y::lyz) ++ [z])).Sum :=
-        cinfi_le (OrderBot.bddBelow _) (lxy ++ y::lyz)
+        cinfᵢ_le (OrderBot.bddBelow _) (lxy ++ y::lyz)
       _ = (zip_with d (x::lxy) (lxy ++ [y])).Sum + (zip_with d (y::lyz) (lyz ++ [z])).Sum := _
       
     rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc,
@@ -106,7 +106,7 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
         y ≤
       d x y :=
-  Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bddBelow _) []).trans_eq <| by simp
+  Nnreal.coe_le_coe.2 <| (cinfᵢ_le (OrderBot.bddBelow _) []).trans_eq <| by simp
 #align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_of_prenndist_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -132,7 +132,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
     `d xₖ₊₁ xₖ₊₂ + ... + d xₙ₋₁ xₙ` are less than or equal to `L / 2`.
     Then `d x₀ xₖ ≤ L`, `d xₖ xₖ₊₁ ≤ L`, and `d xₖ₊₁ xₙ ≤ L`, thus `d x₀ xₙ ≤ 2 * L`. -/
   rw [dist_of_prenndist, ← Nnreal.coe_two, ← Nnreal.coe_mul, Nnreal.mul_infi, Nnreal.coe_le_coe]
-  refine' le_cinfi fun l => _
+  refine' le_cinfᵢ fun l => _
   have hd₀_trans : Transitive fun x y => d x y = 0 :=
     by
     intro a b c hab hbc
@@ -163,7 +163,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
         [skip, · simp]
       exact hd₀ (hm.rel (mem_append.2 <| Or.inr <| mem_singleton_self _))
     have hs_bdd : BddAbove s := ⟨length l, hs_ub⟩
-    exact ⟨Sup s, cSup_le hsne hs_ub, ⟨Nat.Sup_mem hsne hs_bdd, fun k => le_cSup hs_bdd⟩⟩
+    exact ⟨Sup s, csupₛ_le hsne hs_ub, ⟨Nat.Sup_mem hsne hs_bdd, fun k => le_csupₛ hs_bdd⟩⟩
   have hM_lt : M < length L := by rwa [hL_len, Nat.lt_succ_iff]
   have hM_ltx : M < length (x::l) := lt_length_left_of_zip_with hM_lt
   have hM_lty : M < length (l ++ [y]) := lt_length_right_of_zip_with hM_lt
@@ -288,19 +288,19 @@ protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace 
 #align uniform_space.metric_space UniformSpace.metricSpace
 
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/
-instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X]
+instance (priority := 100) UniformSpace.pseudo_metrizable_space [UniformSpace X]
     [IsCountablyGenerated (𝓤 X)] : TopologicalSpace.PseudoMetrizableSpace X :=
   by
   letI := UniformSpace.pseudoMetricSpace X
   infer_instance
-#align uniform_space.pseudo_metrizable_space UniformSpace.pseudoMetrizableSpace
+#align uniform_space.pseudo_metrizable_space UniformSpace.pseudo_metrizable_space
 
 /-- A T₀ uniform space with countably generated `𝓤 X` is metrizable. This is not an instance to
 avoid loops. -/
-theorem UniformSpace.metrizableSpace [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
+theorem UniformSpace.metrizable_space [UniformSpace X] [IsCountablyGenerated (𝓤 X)] [T0Space X] :
     TopologicalSpace.MetrizableSpace X :=
   by
   letI := UniformSpace.metricSpace X
   infer_instance
-#align uniform_space.metrizable_space UniformSpace.metrizableSpace
+#align uniform_space.metrizable_space UniformSpace.metrizable_space
 

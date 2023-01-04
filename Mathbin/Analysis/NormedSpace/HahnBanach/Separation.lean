@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed_space.hahn_banach.separation
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
   let f : E →ₗ.[ℝ] ℝ := LinearPmap.mkSpanSingleton x₀ 1 (ne_of_mem_of_not_mem hs₀ hx₀).symm
   obtain ⟨φ, hφ₁, hφ₂⟩ :=
     exists_extension_of_le_sublinear f (gauge s) (fun c hc => gauge_smul_of_nonneg hc.le)
-      (gauge_add_le hs₁ <| absorbentNhdsZero <| hs₂.mem_nhds hs₀) _
+      (gauge_add_le hs₁ <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀) _
   have hφ₃ : φ x₀ = 1 := by
     rw [← Submodule.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
       LinearPmap.mk_span_singleton'_apply_self]
@@ -75,8 +75,8 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
   · exact h.trans (gauge_nonneg _)
   · rw [gauge_smul_of_nonneg h.le, smul_eq_mul, le_mul_iff_one_le_right h]
     exact
-      one_le_gauge_of_not_mem (hs₁.star_convex hs₀) (absorbentNhdsZero <| hs₂.mem_nhds hs₀).Absorbs
-        hx₀
+      one_le_gauge_of_not_mem (hs₁.star_convex hs₀)
+        (absorbent_nhds_zero <| hs₂.mem_nhds hs₀).Absorbs hx₀
     infer_instance
 #align separate_convex_open_set separate_convex_open_set
 
@@ -112,10 +112,10 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
   refine' ⟨f, Inf (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (Inf (f '' t))), fun b hb => _⟩
   · rw [← interior_Iic]
     refine' interior_maximal (image_subset_iff.2 fun a ha => _) (f.is_open_map_of_ne_zero _ _ hs₂)
-    · exact le_cInf (nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
+    · exact le_cinfₛ (nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
     · rintro rfl
       simpa using hf₁
-  · exact cInf_le ⟨f a₀, ball_image_of_ball <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)
+  · exact cinfₛ_le ⟨f a₀, ball_image_of_ball <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)
 #align geometric_hahn_banach_open geometric_hahn_banach_open
 
 theorem geometric_hahn_banach_open_point (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (disj : x ∉ s) :

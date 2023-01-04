@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.types
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,7 +297,7 @@ theorem binary_cofan_is_colimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
                       (binary_coproduct_colimit X Y)).symm.toEquiv.Injective.comp
             Sum.inr_injective,
           _⟩
-      erw [Set.range_comp, ← eq_compl_iff_is_compl, Set.range_comp _ Sum.inr, ←
+      erw [Set.range_comp, ← eq_compl_iff_isCompl, Set.range_comp _ Sum.inr, ←
         Set.image_compl_eq
           (h.cocone_point_unique_up_to_iso (binary_coproduct_colimit X Y)).symm.toEquiv.Bijective]
       congr 1
@@ -338,7 +338,7 @@ noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
   Nonempty.some <|
     (binary_cofan_is_colimit_iff _).mpr
       ⟨(mono_iff_injective f).mp inferInstance, Subtype.val_injective,
-        (eq_compl_iff_is_compl.mp <| Subtype.range_val).symm⟩
+        (eq_compl_iff_isCompl.mp <| Subtype.range_val).symm⟩
 #align category_theory.limits.types.is_coprod_of_mono CategoryTheory.Limits.Types.isCoprodOfMono
 
 /-- The category of types has `Π j, f j` as the product of a type family `f : J → Type`.

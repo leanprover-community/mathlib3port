@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.mazur_ulam
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,14 +84,14 @@ theorem midpoint_fixed {x y : PE} :
   -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
   set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z
   have : c ≤ c / 2 := by
-    apply csupr_le
+    apply csupᵢ_le
     rintro ⟨e, he⟩
     simp only [Subtype.coe_mk, le_div_iff' (zero_lt_two' ℝ), ← hf_dist]
-    exact le_csupr h_bdd ⟨f e, hf_maps_to he⟩
+    exact le_csupᵢ h_bdd ⟨f e, hf_maps_to he⟩
   replace : c ≤ 0
   · linarith
   refine' fun e hx hy => dist_le_zero.1 (le_trans _ this)
-  exact le_csupr h_bdd ⟨e, hx, hy⟩
+  exact le_csupᵢ h_bdd ⟨e, hx, hy⟩
 #align isometric.midpoint_fixed Isometric.midpoint_fixed
 
 include F

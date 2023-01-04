@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -283,7 +283,7 @@ instance fintypeUnion [DecidableEq α] [Fintype (PLift ι)] (f : ι → Set α) 
 #align set.fintype_Union Set.fintypeUnion
 
 instance fintypeSUnion [DecidableEq α] {s : Set (Set α)} [Fintype s]
-    [H : ∀ t : s, Fintype (t : Set α)] : Fintype (⋃₀s) :=
+    [H : ∀ t : s, Fintype (t : Set α)] : Fintype (⋃₀ s) :=
   by
   rw [sUnion_eq_Union]
   exact @Set.fintypeUnion _ _ _ _ _ H
@@ -551,7 +551,7 @@ instance finite_Union [Finite ι] (f : ι → Set α) [∀ i, Finite (f i)] : Fi
 #align finite.set.finite_Union Finite.Set.finite_Union
 
 instance finite_sUnion {s : Set (Set α)} [Finite s] [H : ∀ t : s, Finite (t : Set α)] :
-    Finite (⋃₀s) := by
+    Finite (⋃₀ s) := by
   rw [sUnion_eq_Union]
   exact @Finite.Set.finite_Union _ _ _ _ H
 #align finite.set.finite_sUnion Finite.Set.finite_sUnion
@@ -715,7 +715,7 @@ theorem finite_Union [Finite ι] {f : ι → Set α} (H : ∀ i, (f i).Finite) :
 #align set.finite_Union Set.finite_Union
 
 theorem Finite.sUnion {s : Set (Set α)} (hs : s.Finite) (H : ∀ t ∈ s, Set.Finite t) :
-    (⋃₀s).Finite := by
+    (⋃₀ s).Finite := by
   cases hs
   haveI := fun i : s => (H i i.2).to_subtype
   apply to_finite

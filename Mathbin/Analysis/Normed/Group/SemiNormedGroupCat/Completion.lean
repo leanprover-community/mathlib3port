@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.completion
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,12 +71,12 @@ theorem completion.norm_incl_eq {V : SemiNormedGroupCat} {v : V} : ‖completion
   simp
 #align SemiNormedGroup.Completion.norm_incl_eq SemiNormedGroupCat.completion.norm_incl_eq
 
-theorem completion.mapNormNoninc {V W : SemiNormedGroupCat} {f : V ⟶ W} (hf : f.NormNoninc) :
+theorem completion.map_norm_noninc {V W : SemiNormedGroupCat} {f : V ⟶ W} (hf : f.NormNoninc) :
     (completion.map f).NormNoninc :=
   NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.2 <|
     (NormedAddGroupHom.norm_completion f).le.trans <|
       NormedAddGroupHom.NormNoninc.norm_noninc_iff_norm_le_one.1 hf
-#align SemiNormedGroup.Completion.map_norm_noninc SemiNormedGroupCat.completion.mapNormNoninc
+#align SemiNormedGroup.Completion.map_norm_noninc SemiNormedGroupCat.completion.map_norm_noninc
 
 /-- Given a normed group hom `V ⟶ W`, this defines the associated morphism
 from the completion of `V` to the completion of `W`.

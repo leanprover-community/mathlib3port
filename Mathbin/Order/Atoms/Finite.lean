@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.atoms.finite
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ instance (priority := 100) Finite.to_is_coatomic [PartialOrder α] [OrderTop α]
 -- see Note [lower instance priority]
 instance (priority := 100) Finite.to_is_atomic [PartialOrder α] [OrderBot α] [Finite α] :
     IsAtomic α :=
-  is_coatomic_dual_iff_is_atomic.mp Finite.to_is_coatomic
+  isCoatomic_dual_iff_isAtomic.mp Finite.to_is_coatomic
 #align finite.to_is_atomic Finite.to_is_atomic
 
 end Fintype

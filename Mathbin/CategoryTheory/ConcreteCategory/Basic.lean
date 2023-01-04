@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Reid Barton, Sean Leather, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,14 +265,14 @@ instance FullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCat
     (Z : C → Prop) : ConcreteCategory (FullSubcategory Z)
     where forget := fullSubcategoryInclusion Z ⋙ forget C
 #align
-  category_theory.full_subcategory.concrete_category CategoryTheory.FullSubcategory.concreteCategory
+  category_theory.full_subcategory.concrete_category CategoryTheory.FullSubcategoryₓ.concreteCategory
 
 instance FullSubcategory.hasForget₂ {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
     HasForget₂ (FullSubcategory Z) C
     where
   forget₂ := fullSubcategoryInclusion Z
   forget_comp := rfl
-#align category_theory.full_subcategory.has_forget₂ CategoryTheory.FullSubcategory.hasForget₂
+#align category_theory.full_subcategory.has_forget₂ CategoryTheory.FullSubcategoryₓ.hasForget₂
 
 /-- In order to construct a “partially forgetting” functor, we do not need to verify functor laws;
 it suffices to ensure that compositions agree with `forget₂ C D ⋙ forget D = forget C`.

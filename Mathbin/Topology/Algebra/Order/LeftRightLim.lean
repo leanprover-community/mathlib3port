@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.order.left_right_lim
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem left_lim_le (h : x ≤ y) : leftLim f x ≤ f y :=
   · simpa [left_lim, h'] using hf h
   haveI A : ne_bot (𝓝[<] x) := ne_bot_iff.2 h'
   rw [left_lim_eq_Sup hf h']
-  refine' cSup_le _ _
+  refine' csupₛ_le _ _
   · simp only [nonempty_image_iff]
     exact (forall_mem_nonempty_iff_ne_bot.2 A) _ self_mem_nhds_within
   · simp only [mem_image, mem_Iio, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
@@ -122,7 +122,7 @@ theorem le_left_lim (h : x < y) : f x ≤ leftLim f y :=
   · rw [left_lim_eq_of_eq_bot _ h']
     exact hf h.le
   rw [left_lim_eq_Sup hf h']
-  refine' le_cSup ⟨f y, _⟩ (mem_image_of_mem _ h)
+  refine' le_csupₛ ⟨f y, _⟩ (mem_image_of_mem _ h)
   simp only [upperBounds, mem_image, mem_Iio, forall_exists_index, and_imp,
     forall_apply_eq_imp_iff₂, mem_set_of_eq]
   intro z hz

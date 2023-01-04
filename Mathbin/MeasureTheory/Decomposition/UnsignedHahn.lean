@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.unsigned_hahn
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,12 +91,12 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     rw [Nnreal.coe_le_coe, ← Ennreal.coe_le_coe, to_nnreal_μ, to_nnreal_μ]
     exact measure_mono (subset_univ _)
   have c_nonempty : c.nonempty := nonempty.image _ ⟨_, MeasurableSet.empty⟩
-  have d_le_γ : ∀ s, MeasurableSet s → d s ≤ γ := fun s hs => le_cSup bdd_c ⟨s, hs, rfl⟩
+  have d_le_γ : ∀ s, MeasurableSet s → d s ≤ γ := fun s hs => le_csupₛ bdd_c ⟨s, hs, rfl⟩
   have : ∀ n : ℕ, ∃ s : Set α, MeasurableSet s ∧ γ - (1 / 2) ^ n < d s :=
     by
     intro n
     have : γ - (1 / 2) ^ n < γ := sub_lt_self γ (pow_pos (half_pos zero_lt_one) n)
-    rcases exists_lt_of_lt_cSup c_nonempty this with ⟨r, ⟨s, hs, rfl⟩, hlt⟩
+    rcases exists_lt_of_lt_csupₛ c_nonempty this with ⟨r, ⟨s, hs, rfl⟩, hlt⟩
     exact ⟨s, hs, hlt⟩
   rcases Classical.axiom_of_choice this with ⟨e, he⟩
   change ℕ → Set α at e

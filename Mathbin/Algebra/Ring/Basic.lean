@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,23 +181,23 @@ variable [NonUnitalCommRing α] {a b c : α}
 
 attribute [local simp] add_assoc add_comm add_left_comm mul_comm
 
-/- warning: Vieta_formula_quadratic -> Vieta_formula_quadratic is a dubious translation:
+/- warning: Vieta_formula_quadratic -> vieta_formula_quadratic is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : NonUnitalCommRing.{u1} α] {b : α} {c : α} {x : α}, (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) x x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) b x)) c) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))))) -> (Exists.{succ u1} α (fun (y : α) => And (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) y y) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) b y)) c) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))))) (And (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) x y) b) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) x y) c))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonUnitalCommRing.{u1} α] {b : α} {c : α} {x : α}, (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))) x x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))) b x)) c) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) -> (Exists.{succ u1} α (fun (y : α) => And (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (NonUnitalNonAssocRing.toAddCommGroup.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))) y y) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))) b y)) c) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (SemigroupWithZero.toZero.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (NonUnitalRing.toNonUnitalSemiring.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1))))))) (And (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))))) x y) b) (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonUnitalRing.toNonUnitalNonAssocRing.{u1} α (NonUnitalCommRing.toNonUnitalRing.{u1} α _inst_1)))) x y) c))))
-Case conversion may be inaccurate. Consider using '#align Vieta_formula_quadratic Vieta_formula_quadraticₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Vieta_formula_quadratic vieta_formula_quadraticₓ'. -/
 /-- Vieta's formula for a quadratic equation, relating the coefficients of the polynomial with
   its roots. This particular version states that if we have a root `x` of a monic quadratic
   polynomial, then there is another root `y` such that `x + y` is negative the `a_1` coefficient
   and `x * y` is the `a_0` coefficient. -/
-theorem Vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
+theorem vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
     ∃ y : α, y * y - b * y + c = 0 ∧ x + y = b ∧ x * y = c :=
   by
   have : c = x * (b - x) := (eq_neg_of_add_eq_zero_right h).trans (by simp [mul_sub, mul_comm])
   refine' ⟨b - x, _, by simp, by rw [this]⟩
   rw [this, sub_add, ← sub_mul, sub_self]
-#align Vieta_formula_quadratic Vieta_formula_quadratic
+#align Vieta_formula_quadratic vieta_formula_quadratic
 
 end NonUnitalCommRing
 
@@ -225,13 +225,13 @@ section NoZeroDivisors
 
 variable (α)
 
-/- warning: is_left_cancel_mul_zero.to_no_zero_divisors -> IsLeftCancelMulZero.toNoZeroDivisors is a dubious translation:
+/- warning: is_left_cancel_mul_zero.to_no_zero_divisors -> IsLeftCancelMulZero.to_noZeroDivisors is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsLeftCancelMulZero.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))], NoZeroDivisors.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsLeftCancelMulZero.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))], NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.toNoZeroDivisorsₓ'. -/
-theorem IsLeftCancelMulZero.toNoZeroDivisors [Ring α] [IsLeftCancelMulZero α] : NoZeroDivisors α :=
+Case conversion may be inaccurate. Consider using '#align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.to_noZeroDivisorsₓ'. -/
+theorem IsLeftCancelMulZero.to_noZeroDivisors [Ring α] [IsLeftCancelMulZero α] : NoZeroDivisors α :=
   by
   refine' ⟨fun x y h => _⟩
   by_cases hx : x = 0
@@ -241,15 +241,15 @@ theorem IsLeftCancelMulZero.toNoZeroDivisors [Ring α] [IsLeftCancelMulZero α] 
     rw [← sub_zero (x * y), ← mul_zero x, ← mul_sub] at h
     convert IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hx h
     rw [sub_zero]
-#align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.toNoZeroDivisors
+#align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.to_noZeroDivisors
 
-/- warning: is_right_cancel_mul_zero.to_no_zero_divisors -> IsRightCancelMulZero.toNoZeroDivisors is a dubious translation:
+/- warning: is_right_cancel_mul_zero.to_no_zero_divisors -> IsRightCancelMulZero.to_noZeroDivisors is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsRightCancelMulZero.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))], NoZeroDivisors.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsRightCancelMulZero.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))], NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.toNoZeroDivisorsₓ'. -/
-theorem IsRightCancelMulZero.toNoZeroDivisors [Ring α] [IsRightCancelMulZero α] :
+Case conversion may be inaccurate. Consider using '#align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.to_noZeroDivisorsₓ'. -/
+theorem IsRightCancelMulZero.to_noZeroDivisors [Ring α] [IsRightCancelMulZero α] :
     NoZeroDivisors α := by
   refine' ⟨fun x y h => _⟩
   by_cases hy : y = 0
@@ -259,15 +259,15 @@ theorem IsRightCancelMulZero.toNoZeroDivisors [Ring α] [IsRightCancelMulZero α
     rw [← sub_zero (x * y), ← zero_mul y, ← sub_mul] at h
     convert IsRightCancelMulZero.mul_right_cancel_of_ne_zero hy h
     rw [sub_zero]
-#align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.toNoZeroDivisors
+#align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.to_noZeroDivisors
 
-/- warning: no_zero_divisors.to_is_cancel_mul_zero -> NoZeroDivisors.toIsCancelMulZero is a dubious translation:
+/- warning: no_zero_divisors.to_is_cancel_mul_zero -> NoZeroDivisors.to_isCancelMulZero is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : NoZeroDivisors.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))], IsCancelMulZero.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))], IsCancelMulZero.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.toIsCancelMulZeroₓ'. -/
-instance (priority := 100) NoZeroDivisors.toIsCancelMulZero [Ring α] [NoZeroDivisors α] :
+Case conversion may be inaccurate. Consider using '#align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.to_isCancelMulZeroₓ'. -/
+instance (priority := 100) NoZeroDivisors.to_isCancelMulZero [Ring α] [NoZeroDivisors α] :
     IsCancelMulZero α
     where
   mul_left_cancel_of_ne_zero a b c ha h :=
@@ -278,27 +278,27 @@ instance (priority := 100) NoZeroDivisors.toIsCancelMulZero [Ring α] [NoZeroDiv
     by
     rw [← sub_eq_zero, ← sub_mul] at h
     exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb)
-#align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.toIsCancelMulZero
+#align no_zero_divisors.to_is_cancel_mul_zero NoZeroDivisors.to_isCancelMulZero
 
-/- warning: no_zero_divisors.to_is_domain -> NoZeroDivisors.toIsDomain is a dubious translation:
+/- warning: no_zero_divisors.to_is_domain -> NoZeroDivisors.to_isDomain is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [h : Nontrivial.{u1} α] [_inst_2 : NoZeroDivisors.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))], IsDomain.{u1} α (Ring.toSemiring.{u1} α _inst_1)
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [h : Nontrivial.{u1} α] [_inst_2 : NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))], IsDomain.{u1} α (Ring.toSemiring.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align no_zero_divisors.to_is_domain NoZeroDivisors.toIsDomainₓ'. -/
-theorem NoZeroDivisors.toIsDomain [Ring α] [h : Nontrivial α] [NoZeroDivisors α] : IsDomain α :=
-  { NoZeroDivisors.toIsCancelMulZero α, h with }
-#align no_zero_divisors.to_is_domain NoZeroDivisors.toIsDomain
+Case conversion may be inaccurate. Consider using '#align no_zero_divisors.to_is_domain NoZeroDivisors.to_isDomainₓ'. -/
+theorem NoZeroDivisors.to_isDomain [Ring α] [h : Nontrivial α] [NoZeroDivisors α] : IsDomain α :=
+  { NoZeroDivisors.to_isCancelMulZero α, h with }
+#align no_zero_divisors.to_is_domain NoZeroDivisors.to_isDomain
 
-/- warning: is_domain.to_no_zero_divisors -> IsDomain.toNoZeroDivisors is a dubious translation:
+/- warning: is_domain.to_no_zero_divisors -> IsDomain.to_noZeroDivisors is a dubious translation:
 lean 3 declaration is
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsDomain.{u1} α (Ring.toSemiring.{u1} α _inst_1)], NoZeroDivisors.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α _inst_1)) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1)))))
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : Ring.{u1} α] [_inst_2 : IsDomain.{u1} α (Ring.toSemiring.{u1} α _inst_1)], NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α _inst_1))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align is_domain.to_no_zero_divisors IsDomain.toNoZeroDivisorsₓ'. -/
-instance (priority := 100) IsDomain.toNoZeroDivisors [Ring α] [IsDomain α] : NoZeroDivisors α :=
-  IsRightCancelMulZero.toNoZeroDivisors α
-#align is_domain.to_no_zero_divisors IsDomain.toNoZeroDivisors
+Case conversion may be inaccurate. Consider using '#align is_domain.to_no_zero_divisors IsDomain.to_noZeroDivisorsₓ'. -/
+instance (priority := 100) IsDomain.to_noZeroDivisors [Ring α] [IsDomain α] : NoZeroDivisors α :=
+  IsRightCancelMulZero.to_noZeroDivisors α
+#align is_domain.to_no_zero_divisors IsDomain.to_noZeroDivisors
 
 end NoZeroDivisors
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.nat.parity
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align nat.odd_iff_not_even Nat.odd_iff_not_even
 
 theorem is_compl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
-  simp only [← Set.compl_setOf, is_compl_compl, odd_iff_not_even]
+  simp only [← Set.compl_setOf, isCompl_compl, odd_iff_not_even]
 #align nat.is_compl_even_odd Nat.is_compl_even_odd
 
 theorem even_or_odd (n : ℕ) : Even n ∨ Odd n :=

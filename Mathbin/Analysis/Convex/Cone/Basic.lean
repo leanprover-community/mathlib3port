@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -719,7 +719,7 @@ theorem convex_hull_to_cone_is_least (s : Set E) :
 
 theorem convex_hull_to_cone_eq_Inf (s : Set E) :
     (convex_convex_hull 𝕜 s).toCone _ = infₛ { t : ConvexCone 𝕜 E | s ⊆ t } :=
-  Eq.symm <| IsGLB.Inf_eq <| IsLeast.isGLB <| convex_hull_to_cone_is_least s
+  Eq.symm <| IsGLB.infₛ_eq <| IsLeast.isGLB <| convex_hull_to_cone_is_least s
 #align convex_hull_to_cone_eq_Inf convex_hull_to_cone_eq_Inf
 
 end ConeFromConvex
@@ -813,7 +813,7 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
   replace hp_nonneg : p ∈ { p | _ };
   · rw [mem_set_of_eq]
     exact hp_nonneg
-  obtain ⟨q, hqs, hpq, hq⟩ := zorn_nonempty_partial_order₀ _ _ _ hp_nonneg
+  obtain ⟨q, hqs, hpq, hq⟩ := zorn_nonempty_partialOrder₀ _ _ _ hp_nonneg
   · refine' ⟨q, hpq, _, hqs⟩
     contrapose! hq
     rcases step s q hqs _ hq with ⟨r, hqr, hr⟩
@@ -982,7 +982,7 @@ theorem inner_dual_cone_Union {ι : Sort _} (f : ι → Set H) :
 #align inner_dual_cone_Union inner_dual_cone_Union
 
 theorem inner_dual_cone_sUnion (S : Set (Set H)) :
-    (⋃₀S).innerDualCone = infₛ (Set.innerDualCone '' S) := by
+    (⋃₀ S).innerDualCone = infₛ (Set.innerDualCone '' S) := by
   simp_rw [infₛ_image, sUnion_eq_bUnion, inner_dual_cone_Union]
 #align inner_dual_cone_sUnion inner_dual_cone_sUnion
 

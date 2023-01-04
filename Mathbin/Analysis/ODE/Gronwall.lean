@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.ODE.gronwall
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,29 +57,29 @@ theorem gronwall_bound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
   funext fun x => if_neg hK
 #align gronwall_bound_of_K_ne_0 gronwall_bound_of_K_ne_0
 
-theorem hasDerivAtGronwallBound (δ K ε x : ℝ) :
+theorem has_deriv_at_gronwall_bound (δ K ε x : ℝ) :
     HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x :=
   by
   by_cases hK : K = 0
   · subst K
     simp only [gronwall_bound_K0, zero_mul, zero_add]
-    convert ((hasDerivAtId x).const_mul ε).const_add δ
+    convert ((has_deriv_at_id x).const_mul ε).const_add δ
     rw [mul_one]
   · simp only [gronwall_bound_of_K_ne_0 hK]
     convert
-      (((hasDerivAtId x).const_mul K).exp.const_mul δ).add
-        ((((hasDerivAtId x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
+      (((has_deriv_at_id x).const_mul K).exp.const_mul δ).add
+        ((((has_deriv_at_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
       1
     simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
     ring
-#align has_deriv_at_gronwall_bound hasDerivAtGronwallBound
+#align has_deriv_at_gronwall_bound has_deriv_at_gronwall_bound
 
-theorem hasDerivAtGronwallBoundShift (δ K ε x a : ℝ) :
+theorem has_deriv_at_gronwall_bound_shift (δ K ε x a : ℝ) :
     HasDerivAt (fun y => gronwallBound δ K ε (y - a)) (K * gronwallBound δ K ε (x - a) + ε) x :=
   by
-  convert (hasDerivAtGronwallBound δ K ε _).comp x ((hasDerivAtId x).sub_const a)
+  convert (has_deriv_at_gronwall_bound δ K ε _).comp x ((has_deriv_at_id x).sub_const a)
   rw [id, mul_one]
-#align has_deriv_at_gronwall_bound_shift hasDerivAtGronwallBoundShift
+#align has_deriv_at_gronwall_bound_shift has_deriv_at_gronwall_bound_shift
 
 theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
   by
@@ -129,7 +129,7 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
     intro x hx ε' hε'
     apply image_le_of_liminf_slope_right_lt_deriv_boundary hf hf'
     · rwa [sub_self, gronwall_bound_x0]
-    · exact fun x => hasDerivAtGronwallBoundShift δ K ε' x a
+    · exact fun x => has_deriv_at_gronwall_bound_shift δ K ε' x a
     · intro x hx hfB
       rw [← hfB]
       apply lt_of_le_of_lt (bound x hx)

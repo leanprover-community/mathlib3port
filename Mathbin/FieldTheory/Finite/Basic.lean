@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module field_theory.finite.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -412,7 +412,7 @@ theorem Zmod.pow_totient {n : ℕ} (x : (Zmod n)ˣ) : x ^ φ n = 1 :=
 
 /-- The **Fermat-Euler totient theorem**. `zmod.pow_totient` is an alternative statement
   of the same theorem. -/
-theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1 [MOD n] :=
+theorem Nat.ModEq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1 [MOD n] :=
   by
   rw [← Zmod.eq_iff_modeq_nat]
   let x' : Units (Zmod n) := Zmod.unitOfCoprime _ h
@@ -420,7 +420,7 @@ theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : x ^ φ n ≡ 1
   apply_fun (coe : Units (Zmod n) → Zmod n)  at this
   simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.val_one, Nat.cast_one,
     coe_unit_of_coprime, Units.val_pow_eq_pow_val]
-#align nat.modeq.pow_totient Nat.Modeq.pow_totient
+#align nat.modeq.pow_totient Nat.ModEq.pow_totient
 
 section
 
@@ -494,7 +494,7 @@ end Zmod
 
 /-- **Fermat's Little Theorem**: for all `a : ℤ` coprime to `p`, we have
 `a ^ (p - 1) ≡ 1 [ZMOD p]`. -/
-theorem Int.Modeq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ} (hpn : IsCoprime n p) :
+theorem Int.ModEq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ} (hpn : IsCoprime n p) :
     n ^ (p - 1) ≡ 1 [ZMOD p] := by
   haveI : Fact p.prime := ⟨hp⟩
   have : ¬(n : Zmod p) = 0 :=
@@ -503,7 +503,7 @@ theorem Int.Modeq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ}
     · exact hpn.symm
     exact Zmod.char_p p
   simpa [← Zmod.int_coe_eq_int_coe_iff] using Zmod.pow_card_sub_one_eq_one this
-#align int.modeq.pow_card_sub_one_eq_one Int.Modeq.pow_card_sub_one_eq_one
+#align int.modeq.pow_card_sub_one_eq_one Int.ModEq.pow_card_sub_one_eq_one
 
 section
 

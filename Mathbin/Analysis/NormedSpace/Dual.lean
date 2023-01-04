@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.dual
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,7 @@ def inclusionInDoubleDualLi : E →ₗᵢ[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
       apply le_antisymm
       · exact double_dual_bound 𝕜 E x
       rw [ContinuousLinearMap.norm_def]
-      refine' le_cInf ContinuousLinearMap.bounds_nonempty _
+      refine' le_cinfₛ ContinuousLinearMap.bounds_nonempty _
       rintro c ⟨hc1, hc2⟩
       exact norm_le_dual_bound 𝕜 x hc1 hc2 }
 #align normed_space.inclusion_in_double_dual_li NormedSpace.inclusionInDoubleDualLi
@@ -274,7 +274,7 @@ theorem polar_closed_ball {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E]
 
 /-- Given a neighborhood `s` of the origin in a normed space `E`, the dual norms
 of all elements of the polar `polar 𝕜 s` are bounded by a constant. -/
-theorem boundedPolarOfMemNhdsZero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bounded (polar 𝕜 s) :=
+theorem bounded_polar_of_mem_nhds_zero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bounded (polar 𝕜 s) :=
   by
   obtain ⟨a, ha⟩ : ∃ a : 𝕜, 1 < ‖a‖ := NormedField.exists_one_lt_norm 𝕜
   obtain ⟨r, r_pos, r_ball⟩ : ∃ (r : ℝ)(hr : 0 < r), ball 0 r ⊆ s := Metric.mem_nhds_iff.1 s_nhd
@@ -282,7 +282,7 @@ theorem boundedPolarOfMemNhdsZero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bou
     bounded_closed_ball.mono
       (((dual_pairing 𝕜 E).flip.polar_antitone r_ball).trans <|
         polar_ball_subset_closed_ball_div ha r_pos)
-#align normed_space.bounded_polar_of_mem_nhds_zero NormedSpace.boundedPolarOfMemNhdsZero
+#align normed_space.bounded_polar_of_mem_nhds_zero NormedSpace.bounded_polar_of_mem_nhds_zero
 
 end PolarSets
 

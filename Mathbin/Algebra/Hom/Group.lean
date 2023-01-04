@@ -5,7 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.group
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -518,17 +518,23 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align map_pow map_powₓ'. -/
 -- to_additive puts the arguments in the wrong order, so generate an auxiliary lemma, then
 -- swap its arguments.
-@[to_additive MapNsmul.aux, simp]
+@[to_additive map_nsmul.aux, simp]
 theorem map_pow [Monoid G] [Monoid H] [MonoidHomClass F G H] (f : F) (a : G) :
     ∀ n : ℕ, f (a ^ n) = f a ^ n
   | 0 => by rw [pow_zero, pow_zero, map_one]
   | n + 1 => by rw [pow_succ, pow_succ, map_mul, map_pow]
 #align map_pow map_pow
 
+/- warning: map_nsmul -> map_nsmul is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {H : Type.{u2}} {F : Type.{u3}} [_inst_3 : AddMonoid.{u1} G] [_inst_4 : AddMonoid.{u2} H] [_inst_5 : AddMonoidHomClass.{u3, u1, u2} F G H (AddMonoid.toAddZeroClass.{u1} G _inst_3) (AddMonoid.toAddZeroClass.{u2} H _inst_4)] (f : F) (n : Nat) (a : G), Eq.{succ u2} H (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => G -> H) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F G (fun (_x : G) => H) (AddHomClass.toFunLike.{u3, u1, u2} F G H (AddZeroClass.toHasAdd.{u1} G (AddMonoid.toAddZeroClass.{u1} G _inst_3)) (AddZeroClass.toHasAdd.{u2} H (AddMonoid.toAddZeroClass.{u2} H _inst_4)) (AddMonoidHomClass.toAddHomClass.{u3, u1, u2} F G H (AddMonoid.toAddZeroClass.{u1} G _inst_3) (AddMonoid.toAddZeroClass.{u2} H _inst_4) _inst_5))) f (HasSmul.smul.{0, u1} Nat G (AddMonoid.SMul.{u1} G _inst_3) n a)) (HasSmul.smul.{0, u2} Nat H (AddMonoid.SMul.{u2} H _inst_4) n (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => G -> H) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F G (fun (_x : G) => H) (AddHomClass.toFunLike.{u3, u1, u2} F G H (AddZeroClass.toHasAdd.{u1} G (AddMonoid.toAddZeroClass.{u1} G _inst_3)) (AddZeroClass.toHasAdd.{u2} H (AddMonoid.toAddZeroClass.{u2} H _inst_4)) (AddMonoidHomClass.toAddHomClass.{u3, u1, u2} F G H (AddMonoid.toAddZeroClass.{u1} G _inst_3) (AddMonoid.toAddZeroClass.{u2} H _inst_4) _inst_5))) f a))
+but is expected to have type
+  forall {G : Type.{u3}} {H : Type.{u2}} {F : Type.{u1}} [_inst_3 : AddMonoid.{u3} G] [_inst_4 : AddMonoid.{u2} H] [_inst_5 : AddMonoidHomClass.{u1, u3, u2} F G H (AddMonoid.toAddZeroClass.{u3} G _inst_3) (AddMonoid.toAddZeroClass.{u2} H _inst_4)] (f : F) (n : Nat) (a : G), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) (HSMul.hSMul.{0, u3, u3} Nat G G (instHSMul.{0, u3} Nat G (AddMonoid.SMul.{u3} G _inst_3)) n a)) (FunLike.coe.{succ u1, succ u3, succ u2} F G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (AddHomClass.toFunLike.{u1, u3, u2} F G H (AddZeroClass.toAdd.{u3} G (AddMonoid.toAddZeroClass.{u3} G _inst_3)) (AddZeroClass.toAdd.{u2} H (AddMonoid.toAddZeroClass.{u2} H _inst_4)) (AddMonoidHomClass.toAddHomClass.{u1, u3, u2} F G H (AddMonoid.toAddZeroClass.{u3} G _inst_3) (AddMonoid.toAddZeroClass.{u2} H _inst_4) _inst_5)) f (HSMul.hSMul.{0, u3, u3} Nat G G (instHSMul.{0, u3} Nat G (AddMonoid.SMul.{u3} G _inst_3)) n a)) (HSMul.hSMul.{0, u2, u2} Nat ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) a) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) a) (instHSMul.{0, u2} Nat ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) a) (AddMonoid.SMul.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) a) _inst_4)) n (FunLike.coe.{succ u1, succ u3, succ u2} F G (fun (_x : G) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : G) => H) _x) (AddHomClass.toFunLike.{u1, u3, u2} F G H (AddZeroClass.toAdd.{u3} G (AddMonoid.toAddZeroClass.{u3} G _inst_3)) (AddZeroClass.toAdd.{u2} H (AddMonoid.toAddZeroClass.{u2} H _inst_4)) (AddMonoidHomClass.toAddHomClass.{u1, u3, u2} F G H (AddMonoid.toAddZeroClass.{u3} G _inst_3) (AddMonoid.toAddZeroClass.{u2} H _inst_4) _inst_5)) f a))
+Case conversion may be inaccurate. Consider using '#align map_nsmul map_nsmulₓ'. -/
 @[simp]
 theorem map_nsmul [AddMonoid G] [AddMonoid H] [AddMonoidHomClass F G H] (f : F) (n : ℕ) (a : G) :
     f (n • a) = n • f a :=
-  MapNsmul.aux f a n
+  map_nsmul.aux f a n
 #align map_nsmul map_nsmul
 
 attribute [to_additive_reorder 8, to_additive] map_pow

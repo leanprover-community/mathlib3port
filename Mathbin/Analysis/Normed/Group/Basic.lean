@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -639,7 +639,7 @@ namespace Isometric
 /-- Multiplication `y ↦ y * x` as an `isometry`. -/
 @[to_additive "Addition `y ↦ y + x` as an `isometry`"]
 protected def mulRight (x : E) : E ≃ᵢ E :=
-  { Equiv.mulRight x with isometryToFun := Isometry.ofDistEq fun y z => dist_mul_right _ _ _ }
+  { Equiv.mulRight x with isometry_to_fun := Isometry.of_dist_eq fun y z => dist_mul_right _ _ _ }
 #align isometric.mul_right Isometric.mulRight
 
 @[simp, to_additive]
@@ -713,10 +713,10 @@ for all `x`, one has `‖f x‖ ≤ C * ‖x‖`. The analogous condition for a 
 (semi)normed spaces is in `normed_space.operator_norm`. -/
 @[to_additive
       "A homomorphism `f` of seminormed groups is Lipschitz, if there exists a constant `C`\nsuch that for all `x`, one has `‖f x‖ ≤ C * ‖x‖`. The analogous condition for a linear map of\n(semi)normed spaces is in `normed_space.operator_norm`."]
-theorem MonoidHomClass.lipschitzOfBound [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ)
+theorem MonoidHomClass.lipschitz_of_bound [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ)
     (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : LipschitzWith (Real.toNnreal C) f :=
-  LipschitzWith.ofDistLe' fun x y => by simpa only [dist_eq_norm_div, map_div] using h (x / y)
-#align monoid_hom_class.lipschitz_of_bound MonoidHomClass.lipschitzOfBound
+  LipschitzWith.of_dist_le' fun x y => by simpa only [dist_eq_norm_div, map_div] using h (x / y)
+#align monoid_hom_class.lipschitz_of_bound MonoidHomClass.lipschitz_of_bound
 
 @[to_additive]
 theorem lipschitz_on_with_iff_norm_div_le {f : E → F} {C : ℝ≥0} :
@@ -756,13 +756,13 @@ for all `x`, one has `‖f x‖ ≤ C * ‖x‖`. -/
       "A homomorphism `f` of seminormed groups is continuous, if there exists a constant `C`\nsuch that for all `x`, one has `‖f x‖ ≤ C * ‖x‖`"]
 theorem MonoidHomClass.continuous_of_bound [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ)
     (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : Continuous f :=
-  (MonoidHomClass.lipschitzOfBound f C h).Continuous
+  (MonoidHomClass.lipschitz_of_bound f C h).Continuous
 #align monoid_hom_class.continuous_of_bound MonoidHomClass.continuous_of_bound
 
 @[to_additive]
 theorem MonoidHomClass.uniform_continuous_of_bound [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ)
     (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : UniformContinuous f :=
-  (MonoidHomClass.lipschitzOfBound f C h).UniformContinuous
+  (MonoidHomClass.lipschitz_of_bound f C h).UniformContinuous
 #align monoid_hom_class.uniform_continuous_of_bound MonoidHomClass.uniform_continuous_of_bound
 
 @[to_additive IsCompact.exists_bound_of_continuous_on]
@@ -781,9 +781,9 @@ theorem MonoidHomClass.isometry_iff_norm [MonoidHomClass 𝓕 E F] (f : 𝓕) :
   simpa using h x 1
 #align monoid_hom_class.isometry_iff_norm MonoidHomClass.isometry_iff_norm
 
-alias MonoidHomClass.isometry_iff_norm ↔ _ MonoidHomClass.isometryOfNorm
+alias MonoidHomClass.isometry_iff_norm ↔ _ MonoidHomClass.isometry_of_norm
 
-attribute [to_additive] MonoidHomClass.isometryOfNorm
+attribute [to_additive] MonoidHomClass.isometry_of_norm
 
 section Nnnorm
 
@@ -897,16 +897,17 @@ theorem edist_div_right (a₁ a₂ b : E) : edist (a₁ / b) (a₂ / b) = edist 
 #align edist_div_right edist_div_right
 
 @[to_additive]
-theorem MonoidHomClass.lipschitzOfBoundNnnorm [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ≥0)
+theorem MonoidHomClass.lipschitz_of_bound_nnnorm [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ≥0)
     (h : ∀ x, ‖f x‖₊ ≤ C * ‖x‖₊) : LipschitzWith C f :=
-  @Real.to_nnreal_coe C ▸ MonoidHomClass.lipschitzOfBound f C h
-#align monoid_hom_class.lipschitz_of_bound_nnnorm MonoidHomClass.lipschitzOfBoundNnnorm
+  @Real.to_nnreal_coe C ▸ MonoidHomClass.lipschitz_of_bound f C h
+#align monoid_hom_class.lipschitz_of_bound_nnnorm MonoidHomClass.lipschitz_of_bound_nnnorm
 
 @[to_additive]
-theorem MonoidHomClass.antilipschitzOfBound [MonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0}
+theorem MonoidHomClass.antilipschitz_of_bound [MonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0}
     (h : ∀ x, ‖x‖ ≤ K * ‖f x‖) : AntilipschitzWith K f :=
-  AntilipschitzWith.ofLeMulDist fun x y => by simpa only [dist_eq_norm_div, map_div] using h (x / y)
-#align monoid_hom_class.antilipschitz_of_bound MonoidHomClass.antilipschitzOfBound
+  AntilipschitzWith.of_le_mul_dist fun x y => by
+    simpa only [dist_eq_norm_div, map_div] using h (x / y)
+#align monoid_hom_class.antilipschitz_of_bound MonoidHomClass.antilipschitz_of_bound
 
 @[to_additive]
 theorem MonoidHomClass.bound_of_antilipschitz [MonoidHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0}
@@ -985,19 +986,19 @@ theorem continuous_nnnorm' : Continuous fun a : E => ‖a‖₊ :=
   continuous_norm'.subtype_mk _
 #align continuous_nnnorm' continuous_nnnorm'
 
-@[to_additive lipschitzWithOneNorm]
-theorem lipschitzWithOneNorm' : LipschitzWith 1 (norm : E → ℝ) := by
-  simpa only [dist_one_left] using LipschitzWith.distRight (1 : E)
-#align lipschitz_with_one_norm' lipschitzWithOneNorm'
+@[to_additive lipschitz_with_one_norm]
+theorem lipschitz_with_one_norm' : LipschitzWith 1 (norm : E → ℝ) := by
+  simpa only [dist_one_left] using LipschitzWith.dist_right (1 : E)
+#align lipschitz_with_one_norm' lipschitz_with_one_norm'
 
-@[to_additive lipschitzWithOneNnnorm]
-theorem lipschitzWithOneNnnorm' : LipschitzWith 1 (HasNnnorm.nnnorm : E → ℝ≥0) :=
-  lipschitzWithOneNorm'
-#align lipschitz_with_one_nnnorm' lipschitzWithOneNnnorm'
+@[to_additive lipschitz_with_one_nnnorm]
+theorem lipschitz_with_one_nnnorm' : LipschitzWith 1 (HasNnnorm.nnnorm : E → ℝ≥0) :=
+  lipschitz_with_one_norm'
+#align lipschitz_with_one_nnnorm' lipschitz_with_one_nnnorm'
 
 @[to_additive uniform_continuous_norm]
 theorem uniform_continuous_norm' : UniformContinuous (norm : E → ℝ) :=
-  lipschitzWithOneNorm'.UniformContinuous
+  lipschitz_with_one_norm'.UniformContinuous
 #align uniform_continuous_norm' uniform_continuous_norm'
 
 @[to_additive uniform_continuous_nnnorm]
@@ -1462,7 +1463,7 @@ namespace Isometric
 @[to_additive "Addition `y ↦ x + y` as an `isometry`"]
 protected def mulLeft (x : E) : E ≃ᵢ E
     where
-  isometryToFun := Isometry.ofDistEq fun y z => dist_mul_left _ _ _
+  isometry_to_fun := Isometry.of_dist_eq fun y z => dist_mul_left _ _ _
   toEquiv := Equiv.mulLeft x
 #align isometric.mul_left Isometric.mulLeft
 
@@ -1487,7 +1488,7 @@ variable (E)
 @[to_additive "Negation `x ↦ -x` as an `isometry`."]
 protected def inv : E ≃ᵢ E
     where
-  isometryToFun := Isometry.ofDistEq fun x y => dist_inv_inv _ _
+  isometry_to_fun := Isometry.of_dist_eq fun x y => dist_inv_inv _ _
   toEquiv := Equiv.inv E
 #align isometric.inv Isometric.inv
 
@@ -1724,11 +1725,11 @@ namespace AntilipschitzWith
 variable [PseudoEmetricSpace α] {K Kf Kg : ℝ≥0} {f g : α → E}
 
 @[to_additive]
-theorem mulLipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g) (hK : Kg < Kf⁻¹) :
-    AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ fun x => f x * g x :=
+theorem mul_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g)
+    (hK : Kg < Kf⁻¹) : AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ fun x => f x * g x :=
   by
   letI : PseudoMetricSpace α := PseudoEmetricSpace.toPseudoMetricSpace hf.edist_ne_top
-  refine' AntilipschitzWith.ofLeMulDist fun x y => _
+  refine' AntilipschitzWith.of_le_mul_dist fun x y => _
   rw [Nnreal.coe_inv, ← div_eq_inv_mul]
   rw [le_div_iff (Nnreal.coe_pos.2 <| tsub_pos_iff_lt.2 hK)]
   rw [mul_comm, Nnreal.coe_sub hK.le, sub_mul]
@@ -1737,13 +1738,13 @@ theorem mulLipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g)
       sub_le_sub (hf.mul_le_dist x y) (hg.dist_le_mul x y)
     _ ≤ _ := le_trans (le_abs_self _) (abs_dist_sub_le_dist_mul_mul _ _ _ _)
     
-#align antilipschitz_with.mul_lipschitz_with AntilipschitzWith.mulLipschitzWith
+#align antilipschitz_with.mul_lipschitz_with AntilipschitzWith.mul_lipschitz_with
 
 @[to_additive]
-theorem mulDivLipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg (g / f))
+theorem mul_div_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg (g / f))
     (hK : Kg < Kf⁻¹) : AntilipschitzWith (Kf⁻¹ - Kg)⁻¹ g := by
   simpa only [Pi.div_apply, mul_div_cancel'_right] using hf.mul_lipschitz_with hg hK
-#align antilipschitz_with.mul_div_lipschitz_with AntilipschitzWith.mulDivLipschitzWith
+#align antilipschitz_with.mul_div_lipschitz_with AntilipschitzWith.mul_div_lipschitz_with
 
 @[to_additive]
 theorem le_mul_norm_div {f : E → F} (hf : AntilipschitzWith K f) (x y : E) :
@@ -1754,9 +1755,9 @@ end AntilipschitzWith
 
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) SeminormedCommGroup.toHasLipschitzMul : HasLipschitzMul E :=
-  ⟨⟨1 + 1, LipschitzWith.prodFst.mul' LipschitzWith.prodSnd⟩⟩
-#align seminormed_comm_group.to_has_lipschitz_mul SeminormedCommGroup.toHasLipschitzMul
+instance (priority := 100) SeminormedCommGroup.to_has_lipschitz_mul : HasLipschitzMul E :=
+  ⟨⟨1 + 1, LipschitzWith.prod_fst.mul' LipschitzWith.prod_snd⟩⟩
+#align seminormed_comm_group.to_has_lipschitz_mul SeminormedCommGroup.to_has_lipschitz_mul
 
 -- See note [lower instance priority]
 /-- A seminormed group is a uniform group, i.e., multiplication and division are uniformly
@@ -1764,7 +1765,7 @@ continuous. -/
 @[to_additive
       "A seminormed group is a uniform additive group, i.e., addition and\nsubtraction are uniformly continuous."]
 instance (priority := 100) SeminormedCommGroup.to_uniform_group : UniformGroup E :=
-  ⟨(LipschitzWith.prodFst.div LipschitzWith.prodSnd).UniformContinuous⟩
+  ⟨(LipschitzWith.prod_fst.div LipschitzWith.prod_snd).UniformContinuous⟩
 #align seminormed_comm_group.to_uniform_group SeminormedCommGroup.to_uniform_group
 
 -- short-circuit type class inference

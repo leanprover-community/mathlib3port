@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_val
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -279,7 +279,7 @@ protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz 
           (finite_int_iff.2 ⟨Ne.symm <| ne_of_lt hp.1.one_lt, fun hd => by simp_all⟩) :=
   by
   have hd : d ≠ 0 := Rat.mk_denom_ne_zero_of_ne_zero hqz qdf
-  let ⟨c, hc1, hc2⟩ := Rat.num_denom_mk hd qdf
+  let ⟨c, hc1, hc2⟩ := Rat.num_den_mk hd qdf
   rw [padicValRat.multiplicity_sub_multiplicity] <;>
     simp [hc1, hc2, multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1),
       Ne.symm (ne_of_lt hp.1.one_lt), hqz, pos_iff_ne_zero, int.coe_nat_multiplicity p q.denom]
@@ -357,7 +357,7 @@ theorem le_padic_val_rat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0)
       have hrn : r.num ≠ 0 := Rat.num_ne_zero_of_ne_zero hr
       have hrd : (r.denom : ℤ) ≠ 0 := by exact_mod_cast Rat.den_nz _
       have hqreq : q + r = (q.num * r.denom + q.denom * r.num) /. (q.denom * r.denom) :=
-        Rat.add_num_denom _ _
+        Rat.add_num_den _ _
       have hqrd : q.num * r.denom + q.denom * r.num ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqr hqreq
       conv_lhs => rw [← @Rat.num_den q]
       rw [hqreq, padic_val_rat_le_padic_val_rat_iff hqn hqrd hqd (mul_ne_zero hqd hrd), ←

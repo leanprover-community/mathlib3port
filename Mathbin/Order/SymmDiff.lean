@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.symm_diff
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -945,15 +945,15 @@ theorem symmDiff_assoc : a ∆ b ∆ c = a ∆ (b ∆ c) := by
   rw [symmDiff_symmDiff_left, symmDiff_symmDiff_right]
 #align symm_diff_assoc symmDiff_assoc
 
-/- warning: symm_diff_is_assoc -> symmDiff_is_assoc is a dubious translation:
+/- warning: symm_diff_is_assoc -> symmDiff_isAssociative is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], IsAssociative.{u1} α (symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], IsAssociative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.6449 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6451 : α) => symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6449 x._@.Mathlib.Order.SymmDiff._hyg.6451)
-Case conversion may be inaccurate. Consider using '#align symm_diff_is_assoc symmDiff_is_assocₓ'. -/
-instance symmDiff_is_assoc : IsAssociative α (· ∆ ·) :=
+Case conversion may be inaccurate. Consider using '#align symm_diff_is_assoc symmDiff_isAssociativeₓ'. -/
+instance symmDiff_isAssociative : IsAssociative α (· ∆ ·) :=
   ⟨symmDiff_assoc⟩
-#align symm_diff_is_assoc symmDiff_is_assoc
+#align symm_diff_is_assoc symmDiff_isAssociative
 
 /- warning: symm_diff_left_comm -> symmDiff_left_comm is a dubious translation:
 lean 3 declaration is
@@ -1276,15 +1276,15 @@ theorem bihimp_assoc : a ⇔ b ⇔ c = a ⇔ (b ⇔ c) :=
   @symmDiff_assoc αᵒᵈ _ _ _ _
 #align bihimp_assoc bihimp_assoc
 
-/- warning: bihimp_is_assoc -> bihimp_is_assoc is a dubious translation:
+/- warning: bihimp_is_assoc -> bihimp_isAssociative is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α], IsAssociative.{u1} α (bihimp.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHasHimp.{u1} α _inst_1))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α], IsAssociative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.7925 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7927 : α) => bihimp.{u1} α (Lattice.toHasInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7925 x._@.Mathlib.Order.SymmDiff._hyg.7927)
-Case conversion may be inaccurate. Consider using '#align bihimp_is_assoc bihimp_is_assocₓ'. -/
-instance bihimp_is_assoc : IsAssociative α (· ⇔ ·) :=
+Case conversion may be inaccurate. Consider using '#align bihimp_is_assoc bihimp_isAssociativeₓ'. -/
+instance bihimp_isAssociative : IsAssociative α (· ⇔ ·) :=
   ⟨bihimp_assoc⟩
-#align bihimp_is_assoc bihimp_is_assoc
+#align bihimp_is_assoc bihimp_isAssociative
 
 /- warning: bihimp_left_comm -> bihimp_left_comm is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
 lean 3 declaration is
   StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))))
 but is expected to have type
-  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.888 : Nat) => Nat.cast.{0} Int Int.instNatCastInt x._@.Mathlib.Data.Int.Basic._hyg.888)
+  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.869 : Nat) => Nat.cast.{0} Int Int.instNatCastInt x._@.Mathlib.Data.Int.Basic._hyg.869)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_strict_mono Int.coe_nat_strictMonoₓ'. -/
 theorem coe_nat_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.ofNat_lt.2
 #align int.coe_nat_strict_mono Int.coe_nat_strictMono
@@ -880,13 +880,13 @@ theorem toNat_sub_toNat_neg : ∀ n : ℤ, ↑n.toNat - ↑(-n).toNat = n
 #align int.to_nat_sub_to_nat_neg Int.toNat_sub_toNat_neg
 -/
 
-#print Int.toNat_add_toNat_neg_eq_nat_abs /-
+#print Int.toNat_add_toNat_neg_eq_natAbs /-
 @[simp]
-theorem toNat_add_toNat_neg_eq_nat_abs : ∀ n : ℤ, n.toNat + (-n).toNat = n.natAbs
+theorem toNat_add_toNat_neg_eq_natAbs : ∀ n : ℤ, n.toNat + (-n).toNat = n.natAbs
   | (0 : ℕ) => rfl
   | (n + 1 : ℕ) => show n + 1 + 0 = n + 1 from add_zero _
   | -[n+1] => show 0 + (n + 1) = n + 1 from zero_add _
-#align int.to_nat_add_to_nat_neg_eq_nat_abs Int.toNat_add_toNat_neg_eq_nat_abs
+#align int.to_nat_add_to_nat_neg_eq_nat_abs Int.toNat_add_toNat_neg_eq_natAbs
 -/
 
 #print Int.toNat' /-

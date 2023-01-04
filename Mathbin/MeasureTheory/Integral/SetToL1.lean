@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_to_l1
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1444,10 +1444,10 @@ theorem norm_set_to_L1_le' (hT : DominatedFinMeasAdditive μ T C) : ‖setToL1 h
   ContinuousLinearMap.op_norm_le_bound _ (le_max_right _ _) (norm_set_to_L1_le_mul_norm' hT)
 #align measure_theory.L1.norm_set_to_L1_le' MeasureTheory.L1Cat.norm_set_to_L1_le'
 
-theorem setToL1Lipschitz (hT : DominatedFinMeasAdditive μ T C) :
+theorem set_to_L1_lipschitz (hT : DominatedFinMeasAdditive μ T C) :
     LipschitzWith (Real.toNnreal C) (setToL1 hT) :=
   (setToL1 hT).lipschitz.weaken (norm_set_to_L1_le' hT)
-#align measure_theory.L1.set_to_L1_lipschitz MeasureTheory.L1Cat.setToL1Lipschitz
+#align measure_theory.L1.set_to_L1_lipschitz MeasureTheory.L1Cat.set_to_L1_lipschitz
 
 /-- If `fs i → f` in `L1`, then `set_to_L1 hT (fs i) → set_to_L1 hT f`. -/
 theorem tendsto_set_to_L1 (hT : DominatedFinMeasAdditive μ T C) (f : α →₁[μ] E) {ι}

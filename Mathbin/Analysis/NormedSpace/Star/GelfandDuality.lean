@@ -4,7 +4,7 @@ Reeased under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.gelfand_duality
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,10 +137,10 @@ theorem gelfand_transform_map_star (a : A) :
 variable (A)
 
 /-- The Gelfand transform is an isometry when the algebra is a C⋆-algebra over `ℂ`. -/
-theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) :=
+theorem gelfand_transform_isometry : Isometry (gelfandTransform ℂ A) :=
   by
   nontriviality A
-  refine' AddMonoidHomClass.isometryOfNorm (gelfand_transform ℂ A) fun a => _
+  refine' AddMonoidHomClass.isometry_of_norm (gelfand_transform ℂ A) fun a => _
   /- By `spectrum.gelfand_transform_eq`, the spectra of `star a * a` and its
     `gelfand_transform` coincide. Therefore, so do their spectral radii, and since they are
     self-adjoint, so also do their norms. Applying the C⋆-property of the norm and taking square
@@ -153,12 +153,12 @@ theorem gelfandTransformIsometry : Isometry (gelfandTransform ℂ A) :=
     gelfand_transform_map_star a, Ennreal.coe_eq_coe, CstarRing.nnnorm_star_mul_self, ← sq] at this
   simpa only [Function.comp_apply, Nnreal.sqrt_sq] using
     congr_arg ((coe : ℝ≥0 → ℝ) ∘ ⇑Nnreal.sqrt) this
-#align gelfand_transform_isometry gelfandTransformIsometry
+#align gelfand_transform_isometry gelfand_transform_isometry
 
 /-- The Gelfand transform is bijective when the algebra is a C⋆-algebra over `ℂ`. -/
 theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A) :=
   by
-  refine' ⟨(gelfandTransformIsometry A).Injective, _⟩
+  refine' ⟨(gelfand_transform_isometry A).Injective, _⟩
   suffices (gelfand_transform ℂ A).range = ⊤ by
     exact fun x => this.symm ▸ (gelfand_transform ℂ A).mem_range.mp (this.symm ▸ Algebra.mem_top)
   /- Because the `gelfand_transform ℂ A` is an isometry, it has closed range, and so by the
@@ -167,7 +167,7 @@ theorem gelfand_transform_bijective : Function.Bijective (gelfandTransform ℂ A
   have h : (gelfand_transform ℂ A).range.topologicalClosure = (gelfand_transform ℂ A).range :=
     le_antisymm
       (Subalgebra.topological_closure_minimal _ le_rfl
-        (gelfandTransformIsometry A).ClosedEmbedding.closed_range)
+        (gelfand_transform_isometry A).ClosedEmbedding.closed_range)
       (Subalgebra.le_topological_closure _)
   refine'
     h ▸

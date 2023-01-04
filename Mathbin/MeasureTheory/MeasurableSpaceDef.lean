@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space_def
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,13 +140,13 @@ theorem Finset.measurable_set_bUnion {f : β → Set α} (s : Finset β)
 #align finset.measurable_set_bUnion Finset.measurable_set_bUnion
 
 theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
-    MeasurableSet (⋃₀s) := by
+    MeasurableSet (⋃₀ s) := by
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
 #align measurable_set.sUnion MeasurableSet.sUnion
 
 theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite)
-    (h : ∀ t ∈ s, MeasurableSet t) : MeasurableSet (⋃₀s) :=
+    (h : ∀ t ∈ s, MeasurableSet t) : MeasurableSet (⋃₀ s) :=
   MeasurableSet.sUnion hs.Countable h
 #align set.finite.measurable_set_sUnion Set.Finite.measurable_set_sUnion
 
@@ -526,7 +526,7 @@ theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
     measurable_set[supₛ ms] s ↔
       GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s :=
   by
-  change @measurable_set' _ (generate_from <| ⋃₀_) _ ↔ _
+  change @measurable_set' _ (generate_from <| ⋃₀ _) _ ↔ _
   simp [generate_from, ← set_of_exists]
 #align measurable_space.measurable_set_Sup MeasurableSpace.measurable_set_Sup
 

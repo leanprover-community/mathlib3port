@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integral_eq_improper
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -398,7 +398,7 @@ theorem AeCover.supr_lintegral_eq_of_countably_generated [Nonempty ι] [l.ne_bot
   by
   have := hφ.lintegral_tendsto_of_countably_generated hfm
   refine'
-    csupr_eq_of_forall_le_of_forall_lt_exists_gt
+    csupᵢ_eq_of_forall_le_of_forall_lt_exists_gt
       (fun i => lintegral_mono' measure.restrict_le_self le_rfl) fun w hw => _
   rcases exists_between hw with ⟨m, hm₁, hm₂⟩
   rcases(eventually_ge_of_tendsto_gt hm₂ this).exists with ⟨i, hi⟩

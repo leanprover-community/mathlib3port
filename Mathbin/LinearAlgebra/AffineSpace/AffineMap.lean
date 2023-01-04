@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_map
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -569,27 +569,27 @@ theorem line_map_apply_one (p₀ p₁ : P1) : lineMap p₀ p₁ (1 : k) = p₁ :
 #align affine_map.line_map_apply_one AffineMap.line_map_apply_one
 
 @[simp]
-theorem line_map_eq_line_map_iff [NoZeroSmulDivisors k V1] {p₀ p₁ : P1} {c₁ c₂ : k} :
+theorem line_map_eq_line_map_iff [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} {c₁ c₂ : k} :
     lineMap p₀ p₁ c₁ = lineMap p₀ p₁ c₂ ↔ p₀ = p₁ ∨ c₁ = c₂ := by
   rw [line_map_apply, line_map_apply, ← @vsub_eq_zero_iff_eq V1, vadd_vsub_vadd_cancel_right, ←
     sub_smul, smul_eq_zero, sub_eq_zero, vsub_eq_zero_iff_eq, or_comm', eq_comm]
 #align affine_map.line_map_eq_line_map_iff AffineMap.line_map_eq_line_map_iff
 
 @[simp]
-theorem line_map_eq_left_iff [NoZeroSmulDivisors k V1] {p₀ p₁ : P1} {c : k} :
+theorem line_map_eq_left_iff [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} {c : k} :
     lineMap p₀ p₁ c = p₀ ↔ p₀ = p₁ ∨ c = 0 := by
   rw [← @line_map_eq_line_map_iff k V1, line_map_apply_zero]
 #align affine_map.line_map_eq_left_iff AffineMap.line_map_eq_left_iff
 
 @[simp]
-theorem line_map_eq_right_iff [NoZeroSmulDivisors k V1] {p₀ p₁ : P1} {c : k} :
+theorem line_map_eq_right_iff [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} {c : k} :
     lineMap p₀ p₁ c = p₁ ↔ p₀ = p₁ ∨ c = 1 := by
   rw [← @line_map_eq_line_map_iff k V1, line_map_apply_one]
 #align affine_map.line_map_eq_right_iff AffineMap.line_map_eq_right_iff
 
 variable (k)
 
-theorem line_map_injective [NoZeroSmulDivisors k V1] {p₀ p₁ : P1} (h : p₀ ≠ p₁) :
+theorem line_map_injective [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} (h : p₀ ≠ p₁) :
     Function.Injective (lineMap p₀ p₁ : k → P1) := fun c₁ c₂ hc =>
   (line_map_eq_line_map_iff.mp hc).resolve_left h
 #align affine_map.line_map_injective AffineMap.line_map_injective

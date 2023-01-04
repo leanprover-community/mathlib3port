@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.prop_instances
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,12 +70,12 @@ theorem Prop.top_eq_true : (⊤ : Prop) = True :=
   rfl
 #align Prop.top_eq_true Prop.top_eq_true
 
-#print Prop.le_is_total /-
-instance Prop.le_is_total : IsTotal Prop (· ≤ ·) :=
+#print Prop.le_isTotal /-
+instance Prop.le_isTotal : IsTotal Prop (· ≤ ·) :=
   ⟨fun p q => by
     change (p → q) ∨ (q → p)
     tauto⟩
-#align Prop.le_is_total Prop.le_is_total
+#align Prop.le_is_total Prop.le_isTotal
 -/
 
 #print Prop.linearOrder /-

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.monoid
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ instances `add_monoid α` and `has_smooth_add α`. -/
 class HasSmoothAdd {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
   {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
   [Add G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
-  smoothAdd : Smooth (I.Prod I) I fun p : G × G => p.1 + p.2
+  smooth_add : Smooth (I.Prod I) I fun p : G × G => p.1 + p.2
 #align has_smooth_add HasSmoothAdd
 
 -- See note [Design choices about smooth algebraic structures]
@@ -60,7 +60,7 @@ and `has_smooth_mul I G`. -/
 class HasSmoothMul {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
   {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
   [Mul G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
-  smoothMul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
+  smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
 #align has_smooth_mul HasSmoothMul
 
 section HasSmoothMul
@@ -76,16 +76,16 @@ section
 variable (I)
 
 @[to_additive]
-theorem smoothMul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2 :=
-  HasSmoothMul.smoothMul
-#align smooth_mul smoothMul
+theorem smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2 :=
+  HasSmoothMul.smooth_mul
+#align smooth_mul smooth_mul
 
 /-- If the multiplication is smooth, then it is continuous. This is not an instance for technical
 reasons, see note [Design choices about smooth algebraic structures]. -/
 @[to_additive
       "If the addition is smooth, then it is continuous. This is not an instance for technical reasons,\nsee note [Design choices about smooth algebraic structures]."]
 theorem has_continuous_mul_of_smooth : HasContinuousMul G :=
-  ⟨(smoothMul I).Continuous⟩
+  ⟨(smooth_mul I).Continuous⟩
 #align has_continuous_mul_of_smooth has_continuous_mul_of_smooth
 
 end
@@ -97,7 +97,7 @@ variable {f g : M → G} {s : Set M} {x : M} {n : ℕ∞}
 @[to_additive]
 theorem ContMdiffWithinAt.mul (hf : ContMdiffWithinAt I' I n f s x)
     (hg : ContMdiffWithinAt I' I n g s x) : ContMdiffWithinAt I' I n (f * g) s x :=
-  ((smoothMul I).SmoothAt.of_le le_top).compContMdiffWithinAt x (hf.prod_mk hg)
+  ((smooth_mul I).SmoothAt.of_le le_top).comp_cont_mdiff_within_at x (hf.prod_mk hg)
 #align cont_mdiff_within_at.mul ContMdiffWithinAt.mul
 
 @[to_additive]
@@ -138,14 +138,14 @@ theorem Smooth.mul (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f * 
 #align smooth.mul Smooth.mul
 
 @[to_additive]
-theorem smoothMulLeft {a : G} : Smooth I I fun b : G => a * b :=
-  smoothConst.mul smoothId
-#align smooth_mul_left smoothMulLeft
+theorem smooth_mul_left {a : G} : Smooth I I fun b : G => a * b :=
+  smooth_const.mul smooth_id
+#align smooth_mul_left smooth_mul_left
 
 @[to_additive]
-theorem smoothMulRight {a : G} : Smooth I I fun b : G => b * a :=
-  smoothId.mul smoothConst
-#align smooth_mul_right smoothMulRight
+theorem smooth_mul_right {a : G} : Smooth I I fun b : G => b * a :=
+  smooth_id.mul smooth_const
+#align smooth_mul_right smooth_mul_right
 
 end
 
@@ -155,14 +155,14 @@ variable (I) (g h : G)
 Lemmas involving `smooth_left_mul` with the notation `𝑳` usually use `L` instead of `𝑳` in the
 names. -/
 def smoothLeftMul : C^∞⟮I, G; I, G⟯ :=
-  ⟨leftMul g, smoothMulLeft⟩
+  ⟨leftMul g, smooth_mul_left⟩
 #align smooth_left_mul smoothLeftMul
 
 /-- Right multiplication by `g`. It is meant to mimic the usual notation in Lie groups.
 Lemmas involving `smooth_right_mul` with the notation `𝑹` usually use `R` instead of `𝑹` in the
 names. -/
 def smoothRightMul : C^∞⟮I, G; I, G⟯ :=
-  ⟨rightMul g, smoothMulRight⟩
+  ⟨rightMul g, smooth_mul_right⟩
 #align smooth_right_mul smoothRightMul
 
 -- mathport name: smooth_left_mul
@@ -225,9 +225,9 @@ instance HasSmoothMul.prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : T
     [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') (G' : Type _) [TopologicalSpace G']
     [ChartedSpace H' G'] [Mul G'] [HasSmoothMul I' G'] : HasSmoothMul (I.Prod I') (G × G') :=
   { SmoothManifoldWithCorners.prod G G' with
-    smoothMul :=
-      ((smoothFst.comp smoothFst).Smooth.mul (smoothFst.comp smoothSnd)).prod_mk
-        ((smoothSnd.comp smoothFst).Smooth.mul (smoothSnd.comp smoothSnd)) }
+    smooth_mul :=
+      ((smooth_fst.comp smooth_fst).Smooth.mul (smooth_fst.comp smooth_snd)).prod_mk
+        ((smooth_snd.comp smooth_fst).Smooth.mul (smooth_snd.comp smooth_snd)) }
 #align has_smooth_mul.prod HasSmoothMul.prod
 
 end HasSmoothMul
@@ -240,19 +240,19 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
   {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {I' : ModelWithCorners 𝕜 E' H'}
   {G' : Type _} [Monoid G'] [TopologicalSpace G'] [ChartedSpace H' G'] [HasSmoothMul I' G']
 
-theorem smoothPow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
+theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a ^ n
   | 0 => by
     simp only [pow_zero]
-    exact smoothConst
-  | k + 1 => by simpa [pow_succ] using smooth_id.mul (smoothPow _)
-#align smooth_pow smoothPow
+    exact smooth_const
+  | k + 1 => by simpa [pow_succ] using smooth_id.mul (smooth_pow _)
+#align smooth_pow smooth_pow
 
 /-- Morphism of additive smooth monoids. -/
 structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H')
   (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [AddMonoid G] [HasSmoothAdd I G]
   (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G'] [AddMonoid G']
   [HasSmoothAdd I' G'] extends G →+ G' where
-  smoothToFun : Smooth I I' to_fun
+  smooth_to_fun : Smooth I I' to_fun
 #align smooth_add_monoid_morphism SmoothAddMonoidMorphism
 
 /-- Morphism of smooth monoids. -/
@@ -260,12 +260,12 @@ structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWit
 structure SmoothMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H')
   (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoid G] [HasSmoothMul I G] (G' : Type _)
   [TopologicalSpace G'] [ChartedSpace H' G'] [Monoid G'] [HasSmoothMul I' G'] extends G →* G' where
-  smoothToFun : Smooth I I' to_fun
+  smooth_to_fun : Smooth I I' to_fun
 #align smooth_monoid_morphism SmoothMonoidMorphism
 
 @[to_additive]
 instance : One (SmoothMonoidMorphism I I' G G') :=
-  ⟨{  smoothToFun := smoothConst
+  ⟨{  smooth_to_fun := smooth_const
       toMonoidHom := 1 }⟩
 
 @[to_additive]
@@ -290,132 +290,134 @@ variable {ι 𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topolog
   {f : ι → M → G} {n : ℕ∞} {p : ι → Prop}
 
 @[to_additive]
-theorem contMdiffWithinAtFinsetProd' (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
+theorem cont_mdiff_within_at_finset_prod' (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
     ContMdiffWithinAt I' I n (∏ i in t, f i) s x :=
   Finset.prod_induction f (fun f => ContMdiffWithinAt I' I n f s x) (fun f g hf hg => hf.mul hg)
-    contMdiffWithinAtConst h
-#align cont_mdiff_within_at_finset_prod' contMdiffWithinAtFinsetProd'
+    cont_mdiff_within_at_const h
+#align cont_mdiff_within_at_finset_prod' cont_mdiff_within_at_finset_prod'
 
 @[to_additive]
-theorem contMdiffAtFinsetProd' (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) :
+theorem cont_mdiff_at_finset_prod' (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) :
     ContMdiffAt I' I n (∏ i in t, f i) x :=
-  contMdiffWithinAtFinsetProd' h
-#align cont_mdiff_at_finset_prod' contMdiffAtFinsetProd'
+  cont_mdiff_within_at_finset_prod' h
+#align cont_mdiff_at_finset_prod' cont_mdiff_at_finset_prod'
 
 @[to_additive]
-theorem contMdiffOnFinsetProd' (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) :
+theorem cont_mdiff_on_finset_prod' (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) :
     ContMdiffOn I' I n (∏ i in t, f i) s := fun x hx =>
-  contMdiffWithinAtFinsetProd' fun i hi => h i hi x hx
-#align cont_mdiff_on_finset_prod' contMdiffOnFinsetProd'
+  cont_mdiff_within_at_finset_prod' fun i hi => h i hi x hx
+#align cont_mdiff_on_finset_prod' cont_mdiff_on_finset_prod'
 
 @[to_additive]
-theorem contMdiffFinsetProd' (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
-    ContMdiff I' I n (∏ i in t, f i) := fun x => contMdiffAtFinsetProd' fun i hi => h i hi x
-#align cont_mdiff_finset_prod' contMdiffFinsetProd'
+theorem cont_mdiff_finset_prod' (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
+    ContMdiff I' I n (∏ i in t, f i) := fun x => cont_mdiff_at_finset_prod' fun i hi => h i hi x
+#align cont_mdiff_finset_prod' cont_mdiff_finset_prod'
 
 @[to_additive]
-theorem contMdiffWithinAtFinsetProd (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
+theorem cont_mdiff_within_at_finset_prod (h : ∀ i ∈ t, ContMdiffWithinAt I' I n (f i) s x) :
     ContMdiffWithinAt I' I n (fun x => ∏ i in t, f i x) s x :=
   by
   simp only [← Finset.prod_apply]
-  exact contMdiffWithinAtFinsetProd' h
-#align cont_mdiff_within_at_finset_prod contMdiffWithinAtFinsetProd
+  exact cont_mdiff_within_at_finset_prod' h
+#align cont_mdiff_within_at_finset_prod cont_mdiff_within_at_finset_prod
 
 @[to_additive]
-theorem contMdiffAtFinsetProd (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) :
+theorem cont_mdiff_at_finset_prod (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) :
     ContMdiffAt I' I n (fun x => ∏ i in t, f i x) x :=
-  contMdiffWithinAtFinsetProd h
-#align cont_mdiff_at_finset_prod contMdiffAtFinsetProd
+  cont_mdiff_within_at_finset_prod h
+#align cont_mdiff_at_finset_prod cont_mdiff_at_finset_prod
 
 @[to_additive]
-theorem contMdiffOnFinsetProd (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) :
+theorem cont_mdiff_on_finset_prod (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) :
     ContMdiffOn I' I n (fun x => ∏ i in t, f i x) s := fun x hx =>
-  contMdiffWithinAtFinsetProd fun i hi => h i hi x hx
-#align cont_mdiff_on_finset_prod contMdiffOnFinsetProd
+  cont_mdiff_within_at_finset_prod fun i hi => h i hi x hx
+#align cont_mdiff_on_finset_prod cont_mdiff_on_finset_prod
 
 @[to_additive]
-theorem contMdiffFinsetProd (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
-    ContMdiff I' I n fun x => ∏ i in t, f i x := fun x => contMdiffAtFinsetProd fun i hi => h i hi x
-#align cont_mdiff_finset_prod contMdiffFinsetProd
+theorem cont_mdiff_finset_prod (h : ∀ i ∈ t, ContMdiff I' I n (f i)) :
+    ContMdiff I' I n fun x => ∏ i in t, f i x := fun x =>
+  cont_mdiff_at_finset_prod fun i hi => h i hi x
+#align cont_mdiff_finset_prod cont_mdiff_finset_prod
 
 @[to_additive]
-theorem smoothWithinAtFinsetProd' (h : ∀ i ∈ t, SmoothWithinAt I' I (f i) s x) :
+theorem smooth_within_at_finset_prod' (h : ∀ i ∈ t, SmoothWithinAt I' I (f i) s x) :
     SmoothWithinAt I' I (∏ i in t, f i) s x :=
-  contMdiffWithinAtFinsetProd' h
-#align smooth_within_at_finset_prod' smoothWithinAtFinsetProd'
+  cont_mdiff_within_at_finset_prod' h
+#align smooth_within_at_finset_prod' smooth_within_at_finset_prod'
 
 @[to_additive]
-theorem smoothAtFinsetProd' (h : ∀ i ∈ t, SmoothAt I' I (f i) x) :
+theorem smooth_at_finset_prod' (h : ∀ i ∈ t, SmoothAt I' I (f i) x) :
     SmoothAt I' I (∏ i in t, f i) x :=
-  contMdiffAtFinsetProd' h
-#align smooth_at_finset_prod' smoothAtFinsetProd'
+  cont_mdiff_at_finset_prod' h
+#align smooth_at_finset_prod' smooth_at_finset_prod'
 
 @[to_additive]
-theorem smoothOnFinsetProd' (h : ∀ i ∈ t, SmoothOn I' I (f i) s) :
+theorem smooth_on_finset_prod' (h : ∀ i ∈ t, SmoothOn I' I (f i) s) :
     SmoothOn I' I (∏ i in t, f i) s :=
-  contMdiffOnFinsetProd' h
-#align smooth_on_finset_prod' smoothOnFinsetProd'
+  cont_mdiff_on_finset_prod' h
+#align smooth_on_finset_prod' smooth_on_finset_prod'
 
 @[to_additive]
-theorem smoothFinsetProd' (h : ∀ i ∈ t, Smooth I' I (f i)) : Smooth I' I (∏ i in t, f i) :=
-  contMdiffFinsetProd' h
-#align smooth_finset_prod' smoothFinsetProd'
+theorem smooth_finset_prod' (h : ∀ i ∈ t, Smooth I' I (f i)) : Smooth I' I (∏ i in t, f i) :=
+  cont_mdiff_finset_prod' h
+#align smooth_finset_prod' smooth_finset_prod'
 
 @[to_additive]
-theorem smoothWithinAtFinsetProd (h : ∀ i ∈ t, SmoothWithinAt I' I (f i) s x) :
+theorem smooth_within_at_finset_prod (h : ∀ i ∈ t, SmoothWithinAt I' I (f i) s x) :
     SmoothWithinAt I' I (fun x => ∏ i in t, f i x) s x :=
-  contMdiffWithinAtFinsetProd h
-#align smooth_within_at_finset_prod smoothWithinAtFinsetProd
+  cont_mdiff_within_at_finset_prod h
+#align smooth_within_at_finset_prod smooth_within_at_finset_prod
 
 @[to_additive]
-theorem smoothAtFinsetProd (h : ∀ i ∈ t, SmoothAt I' I (f i) x) :
+theorem smooth_at_finset_prod (h : ∀ i ∈ t, SmoothAt I' I (f i) x) :
     SmoothAt I' I (fun x => ∏ i in t, f i x) x :=
-  contMdiffAtFinsetProd h
-#align smooth_at_finset_prod smoothAtFinsetProd
+  cont_mdiff_at_finset_prod h
+#align smooth_at_finset_prod smooth_at_finset_prod
 
 @[to_additive]
-theorem smoothOnFinsetProd (h : ∀ i ∈ t, SmoothOn I' I (f i) s) :
+theorem smooth_on_finset_prod (h : ∀ i ∈ t, SmoothOn I' I (f i) s) :
     SmoothOn I' I (fun x => ∏ i in t, f i x) s :=
-  contMdiffOnFinsetProd h
-#align smooth_on_finset_prod smoothOnFinsetProd
+  cont_mdiff_on_finset_prod h
+#align smooth_on_finset_prod smooth_on_finset_prod
 
 @[to_additive]
-theorem smoothFinsetProd (h : ∀ i ∈ t, Smooth I' I (f i)) : Smooth I' I fun x => ∏ i in t, f i x :=
-  contMdiffFinsetProd h
-#align smooth_finset_prod smoothFinsetProd
+theorem smooth_finset_prod (h : ∀ i ∈ t, Smooth I' I (f i)) :
+    Smooth I' I fun x => ∏ i in t, f i x :=
+  cont_mdiff_finset_prod h
+#align smooth_finset_prod smooth_finset_prod
 
 open Function Filter
 
 @[to_additive]
-theorem contMdiffFinprod (h : ∀ i, ContMdiff I' I n (f i))
+theorem cont_mdiff_finprod (h : ∀ i, ContMdiff I' I n (f i))
     (hfin : LocallyFinite fun i => mulSupport (f i)) : ContMdiff I' I n fun x => ∏ᶠ i, f i x :=
   by
   intro x
   rcases finprod_eventually_eq_prod hfin x with ⟨s, hs⟩
-  exact (contMdiffFinsetProd (fun i hi => h i) x).congr_of_eventually_eq hs
-#align cont_mdiff_finprod contMdiffFinprod
+  exact (cont_mdiff_finset_prod (fun i hi => h i) x).congr_of_eventually_eq hs
+#align cont_mdiff_finprod cont_mdiff_finprod
 
 @[to_additive]
-theorem contMdiffFinprodCond (hc : ∀ i, p i → ContMdiff I' I n (f i))
+theorem cont_mdiff_finprod_cond (hc : ∀ i, p i → ContMdiff I' I n (f i))
     (hf : LocallyFinite fun i => mulSupport (f i)) :
     ContMdiff I' I n fun x => ∏ᶠ (i) (hi : p i), f i x :=
   by
   simp only [← finprod_subtype_eq_finprod_cond]
-  exact contMdiffFinprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
-#align cont_mdiff_finprod_cond contMdiffFinprodCond
+  exact cont_mdiff_finprod (fun i => hc i i.2) (hf.comp_injective Subtype.coe_injective)
+#align cont_mdiff_finprod_cond cont_mdiff_finprod_cond
 
 @[to_additive]
-theorem smoothFinprod (h : ∀ i, Smooth I' I (f i))
+theorem smooth_finprod (h : ∀ i, Smooth I' I (f i))
     (hfin : LocallyFinite fun i => mulSupport (f i)) : Smooth I' I fun x => ∏ᶠ i, f i x :=
-  contMdiffFinprod h hfin
-#align smooth_finprod smoothFinprod
+  cont_mdiff_finprod h hfin
+#align smooth_finprod smooth_finprod
 
 @[to_additive]
-theorem smoothFinprodCond (hc : ∀ i, p i → Smooth I' I (f i))
+theorem smooth_finprod_cond (hc : ∀ i, p i → Smooth I' I (f i))
     (hf : LocallyFinite fun i => mulSupport (f i)) :
     Smooth I' I fun x => ∏ᶠ (i) (hi : p i), f i x :=
-  contMdiffFinprodCond hc hf
-#align smooth_finprod_cond smoothFinprodCond
+  cont_mdiff_finprod_cond hc hf
+#align smooth_finprod_cond smooth_finprod_cond
 
 end CommMonoid
 

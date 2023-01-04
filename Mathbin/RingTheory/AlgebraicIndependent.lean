@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic_independent
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -358,7 +358,7 @@ theorem algebraic_independent_Union_of_directed {η : Type _} [Nonempty η] {s :
 theorem algebraic_independent_sUnion_of_directed {s : Set (Set A)} (hsn : s.Nonempty)
     (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
-    AlgebraicIndependent R (fun x => x : ⋃₀s → A) := by
+    AlgebraicIndependent R (fun x => x : ⋃₀ s → A) := by
   letI : Nonempty s := nonempty.to_subtype hsn <;> rw [sUnion_eq_Union] <;>
     exact algebraic_independent_Union_of_directed hs.directed_coe (by simpa using h)
 #align algebraic_independent_sUnion_of_directed algebraic_independent_sUnion_of_directed
@@ -371,7 +371,7 @@ theorem exists_maximal_algebraic_independent (s t : Set A) (hst : s ⊆ t)
   by
   rcases zorn_subset_nonempty { u : Set A | AlgebraicIndependent R (coe : u → A) ∧ s ⊆ u ∧ u ⊆ t }
       (fun c hc chainc hcn =>
-        ⟨⋃₀c,
+        ⟨⋃₀ c,
           by
           refine'
             ⟨⟨algebraic_independent_sUnion_of_directed hcn chainc.directed_on fun a ha => (hc ha).1,
@@ -507,7 +507,7 @@ theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_ad
       ↑(MvPolynomial.aeval fun o : Option ι => o.elim a x : MvPolynomial (Option ι) R →ₐ[R] A) :=
   by
   refine' MvPolynomial.ring_hom_ext _ _ <;>
-    simp only [RingHom.comp_apply, RingEquiv.to_ring_hom_eq_coe, RingEquiv.coe_to_ring_hom,
+    simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
       AlgHom.coe_to_ring_hom, AlgHom.coe_to_ring_hom]
   · intro r
     rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_C, Polynomial.aeval_C,

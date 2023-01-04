@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.real
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,11 +111,11 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
     exact ⟨max_eq_left xprop, fun i _ => rfl⟩
   right_inv' x hx := update_eq_iff.2 ⟨max_eq_left hx, fun i _ => rfl⟩
   source_eq := rfl
-  uniqueDiff' :=
+  unique_diff' :=
     by
     have this : UniqueDiffOn ℝ _ :=
       UniqueDiffOn.pi (Fin n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Fin n))) =>
-        uniqueDiffOnIci 0
+        unique_diff_on_Ici 0
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
@@ -141,10 +141,10 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     ext1 i
     simp only [hx i, max_eq_left]
   source_eq := rfl
-  uniqueDiff' :=
+  unique_diff' :=
     by
     have this : UniqueDiffOn ℝ _ :=
-      UniqueDiffOn.univPi (Fin n) (fun _ => ℝ) _ fun i => uniqueDiffOnIci 0
+      UniqueDiffOn.univ_pi (Fin n) (fun _ => ℝ) _ fun i => unique_diff_on_Ici 0
     simpa only [pi_univ_Ici] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
@@ -286,13 +286,14 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
-instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorners (𝓡∂ 1) (Icc x y) :=
+instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
+    SmoothManifoldWithCorners (𝓡∂ 1) (Icc x y) :=
   by
   have M : ContDiffOn ℝ ∞ (fun z : EuclideanSpace ℝ (Fin 1) => -z + fun i => y - x) univ :=
     by
     rw [cont_diff_on_univ]
-    exact cont_diff_id.neg.add contDiffConst
-  apply smoothManifoldWithCornersOfContDiffOn
+    exact cont_diff_id.neg.add cont_diff_const
+  apply smooth_manifold_with_corners_of_cont_diff_on
   intro e e' he he'
   simp only [atlas, mem_singleton_iff, mem_insert_iff] at he he'
   /- We need to check that any composition of two charts gives a `C^∞` function. Each chart can be
@@ -326,7 +327,7 @@ instance iccSmoothManifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorner
     abel
   ·-- `e = right chart`, `e' = right chart`
     exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
-#align Icc_smooth_manifold iccSmoothManifold
+#align Icc_smooth_manifold Icc_smooth_manifold
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/
 

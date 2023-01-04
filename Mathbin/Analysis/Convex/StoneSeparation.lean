@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.stone_separation
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
   obtain ⟨C, hC, hsC, hCmax⟩ :=
     zorn_subset_nonempty S
       (fun c hcS hc ⟨t, ht⟩ =>
-        ⟨⋃₀c,
+        ⟨⋃₀ c,
           ⟨hc.directed_on.convex_sUnion fun s hs => (hcS hs).1,
             disjoint_sUnion_left.2 fun c hc => (hcS hc).2⟩,
           fun s => subset_sUnion_of_mem⟩)

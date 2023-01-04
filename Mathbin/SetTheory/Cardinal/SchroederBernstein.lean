@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.schroeder_bernstein
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,6 +47,7 @@ section antisymm
 
 variable {α : Type u} {β : Type v}
 
+#print Function.Embedding.schroeder_bernstein /-
 /-- **The Schröder-Bernstein Theorem**:
 Given injections `α → β` and `β → α`, we can get a bijection `α → β`. -/
 theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f)
@@ -81,7 +82,9 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
       exact hy' ⟨x, hx, hxy⟩
   exact ⟨h, ‹injective h›, ‹surjective h›⟩
 #align function.embedding.schroeder_bernstein Function.Embedding.schroeder_bernstein
+-/
 
+#print Function.Embedding.antisymm /-
 /-- **The Schröder-Bernstein Theorem**: Given embeddings `α ↪ β` and `β ↪ α`, there exists an
 equivalence `α ≃ β`. -/
 theorem antisymm : (α ↪ β) → (β ↪ α) → Nonempty (α ≃ β)
@@ -89,6 +92,7 @@ theorem antisymm : (α ↪ β) → (β ↪ α) → Nonempty (α ≃ β)
     let ⟨f, hf⟩ := schroeder_bernstein h₁ h₂
     ⟨Equiv.ofBijective f hf⟩
 #align function.embedding.antisymm Function.Embedding.antisymm
+-/
 
 end antisymm
 
@@ -101,6 +105,7 @@ private def sets :=
   { s : Set (∀ i, β i) | ∀ x ∈ s, ∀ y ∈ s, ∀ (i), (x : ∀ i, β i) i = y i → x = y }
 #align function.embedding.sets function.embedding.sets
 
+#print Function.Embedding.min_injective /-
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the
 lattice instances. -/
@@ -108,7 +113,7 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
   let ⟨s, hs, ms⟩ :=
     show ∃ s ∈ sets, ∀ a ∈ sets, s ⊆ a → a = s from
       zorn_subset sets fun c hc hcc =>
-        ⟨⋃₀c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
+        ⟨⋃₀ c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
           (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h =>
             hc hpc x hxp y (h hyq) i hi,
           fun _ => subset_unionₛ_of_mem⟩
@@ -138,9 +143,11 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
         let ⟨sb, eb⟩ := hf b
         rw [← ea, ← eb, hs _ sa _ sb _ e']⟩⟩⟩
 #align function.embedding.min_injective Function.Embedding.min_injective
+-/
 
 end Wo
 
+#print Function.Embedding.total /-
 /-- The cardinals are totally ordered. See `cardinal.linear_order` for (one of) the lattice
 instance. -/
 theorem total (α : Type u) (β : Type v) : Nonempty (α ↪ β) ∨ Nonempty (β ↪ α) :=
@@ -152,6 +159,7 @@ theorem total (α : Type u) (β : Type v) : Nonempty (α ↪ β) ∨ Nonempty (�
     let ⟨f, hf⟩ := h true
     Or.inr ⟨Embedding.congr Equiv.ulift Equiv.ulift ⟨f, hf⟩⟩
 #align function.embedding.total Function.Embedding.total
+-/
 
 end Embedding
 

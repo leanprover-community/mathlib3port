@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.rat.nnrat
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -472,7 +472,7 @@ theorem denom_coe : (q : ℚ).denom = q.denom :=
 theorem ext_num_denom (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
   ext <|
     Rat.ext
-      ((Int.nat_abs_inj_of_nonneg_of_nonneg (Rat.num_nonneg_iff_zero_le.2 p.2) <|
+      ((Int.natAbs_inj_of_nonneg_of_nonneg (Rat.num_nonneg_iff_zero_le.2 p.2) <|
             Rat.num_nonneg_iff_zero_le.2 q.2).1
         hn)
       hd

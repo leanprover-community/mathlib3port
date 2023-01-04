@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1060,7 +1060,7 @@ theorem orthonormalUnionOfDirected {η : Type _} {s : η → Set E} (hs : Direct
 
 theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) :
-    Orthonormal 𝕜 (fun x => x : ⋃₀s → E) := by
+    Orthonormal 𝕜 (fun x => x : ⋃₀ s → E) := by
   rw [Set.unionₛ_eq_unionᵢ] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
 #align orthonormal_sUnion_of_directed orthonormalSUnionOfDirected
 
@@ -1075,7 +1075,7 @@ theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s �
   obtain ⟨b, bi, sb, h⟩ := zorn_subset_nonempty { b | Orthonormal 𝕜 (coe : b → E) } _ _ hs
   · refine' ⟨b, sb, bi, _⟩
     exact fun u hus hu => h u hu hus
-  · refine' fun c hc cc c0 => ⟨⋃₀c, _, _⟩
+  · refine' fun c hc cc c0 => ⟨⋃₀ c, _, _⟩
     · exact orthonormalSUnionOfDirected cc.directed_on fun x xc => hc xc
     · exact fun _ => Set.subset_unionₛ_of_mem
 #align exists_maximal_orthonormal exists_maximal_orthonormal
@@ -1338,7 +1338,7 @@ theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) 
 #align dist_div_norm_sq_smul dist_div_norm_sq_smul
 
 -- See note [lower instance priority]
-instance (priority := 100) InnerProductSpace.toUniformConvexSpace : UniformConvexSpace F :=
+instance (priority := 100) InnerProductSpace.to_uniform_convex_space : UniformConvexSpace F :=
   ⟨fun ε hε =>
     by
     refine'
@@ -1350,7 +1350,7 @@ instance (priority := 100) InnerProductSpace.toUniformConvexSpace : UniformConve
     rw [sq, eq_sub_iff_add_eq.2 (parallelogram_law_with_norm x y), ← sq ‖x - y‖, hx, hy]
     norm_num
     exact pow_le_pow_of_le_left hε.le hxy _⟩
-#align inner_product_space.to_uniform_convex_space InnerProductSpace.toUniformConvexSpace
+#align inner_product_space.to_uniform_convex_space InnerProductSpace.to_uniform_convex_space
 
 section Complex
 
@@ -2136,7 +2136,7 @@ theorem Orthonormal.inner_products_summable (hv : Orthonormal 𝕜 v) :
   apply has_sum_of_is_lub_of_nonneg
   · intro b
     simp only [norm_nonneg, pow_nonneg]
-  · refine' is_lub_csupr _
+  · refine' isLUB_csupᵢ _
     use ‖x‖ ^ 2
     rintro y ⟨s, rfl⟩
     exact hv.sum_inner_products_le x

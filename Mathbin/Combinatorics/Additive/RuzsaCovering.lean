@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.additive.ruzsa_covering
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) :
   haveI : ∀ u, Decidable ((u : Set α).PairwiseDisjoint (· • t)) := fun u => Classical.dec _
   set C := s.powerset.filter fun u => (u : Set α).PairwiseDisjoint (· • t)
   obtain ⟨u, hu, hCmax⟩ :=
-    C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwise_disjoint_empty⟩)
+    C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwiseDisjoint_empty⟩)
   rw [mem_filter, mem_powerset] at hu
   refine'
     ⟨u,

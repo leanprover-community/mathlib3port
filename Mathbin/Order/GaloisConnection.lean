@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.galois_connection
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -407,9 +407,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_connection.l_supr GaloisConnection.l_supᵢₓ'. -/
 theorem l_supᵢ {f : ι → α} : l (supᵢ f) = ⨆ i, l (f i) :=
   Eq.symm <|
-    IsLUB.supr_eq <|
+    IsLUB.supᵢ_eq <|
       show IsLUB (range (l ∘ f)) (l (supᵢ f)) by
-        rw [range_comp, ← supₛ_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
+        rw [range_comp, ← supₛ_range] <;> exact gc.is_lub_l_image (isLUB_supₛ _)
 #align galois_connection.l_supr GaloisConnection.l_supᵢ
 
 /- warning: galois_connection.l_supr₂ -> GaloisConnection.l_supᵢ₂ is a dubious translation:
@@ -1008,18 +1008,18 @@ def liftCompleteLattice [CompleteLattice α] (gi : GaloisInsertion l u) : Comple
   { gi.liftBoundedOrder,
     gi.liftLattice with
     sup := fun s => l (supₛ (u '' s))
-    Sup_le := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).2
-    le_Sup := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).1
+    Sup_le := fun s => (gi.is_lub_of_u_image (isLUB_supₛ _)).2
+    le_Sup := fun s => (gi.is_lub_of_u_image (isLUB_supₛ _)).1
     inf := fun s =>
       gi.choice (infₛ (u '' s)) <|
-        (is_glb_Inf _).2 <|
-          gi.gc.monotone_u.mem_lower_bounds_image (gi.is_glb_of_u_image <| is_glb_Inf _).1
+        (isGLB_infₛ _).2 <|
+          gi.gc.monotone_u.mem_lower_bounds_image (gi.is_glb_of_u_image <| isGLB_infₛ _).1
     Inf_le := fun s => by
       rw [gi.choice_eq]
-      exact (gi.is_glb_of_u_image (is_glb_Inf _)).1
+      exact (gi.is_glb_of_u_image (isGLB_infₛ _)).1
     le_Inf := fun s => by
       rw [gi.choice_eq]
-      exact (gi.is_glb_of_u_image (is_glb_Inf _)).2 }
+      exact (gi.is_glb_of_u_image (isGLB_infₛ _)).2 }
 #align galois_insertion.lift_complete_lattice GaloisInsertion.liftCompleteLattice
 -/
 

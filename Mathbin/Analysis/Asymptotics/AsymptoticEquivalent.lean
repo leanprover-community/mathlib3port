@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.asymptotic_equivalent
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,15 +114,15 @@ theorem IsEquivalent.trans {l : Filter α} {u v w : α → β} (huv : u ~[l] v) 
   (huv.IsO.trans_is_O hvw.IsO).triangle hvw.IsO
 #align asymptotics.is_equivalent.trans Asymptotics.IsEquivalent.trans
 
-theorem IsEquivalent.congrLeft {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) :
+theorem IsEquivalent.congr_left {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) :
     w ~[l] v :=
   huv.congr' (huw.sub (EventuallyEq.refl _ _)) (EventuallyEq.refl _ _)
-#align asymptotics.is_equivalent.congr_left Asymptotics.IsEquivalent.congrLeft
+#align asymptotics.is_equivalent.congr_left Asymptotics.IsEquivalent.congr_left
 
-theorem IsEquivalent.congrRight {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (hvw : v =ᶠ[l] w) :
+theorem IsEquivalent.congr_right {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (hvw : v =ᶠ[l] w) :
     u ~[l] w :=
   (huv.symm.congr_left hvw).symm
-#align asymptotics.is_equivalent.congr_right Asymptotics.IsEquivalent.congrRight
+#align asymptotics.is_equivalent.congr_right Asymptotics.IsEquivalent.congr_right
 
 theorem is_equivalent_zero_iff_eventually_zero : u ~[l] 0 ↔ u =ᶠ[l] 0 :=
   by
@@ -175,21 +175,21 @@ theorem IsEquivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) :
   ⟨huv.tendsto_nhds, huv.symm.tendsto_nhds⟩
 #align asymptotics.is_equivalent.tendsto_nhds_iff Asymptotics.IsEquivalent.tendsto_nhds_iff
 
-theorem IsEquivalent.addIsO (huv : u ~[l] v) (hwv : w =o[l] v) : u + w ~[l] v := by
+theorem IsEquivalent.add_is_o (huv : u ~[l] v) (hwv : w =o[l] v) : u + w ~[l] v := by
   simpa only [is_equivalent, add_sub_right_comm] using huv.add hwv
-#align asymptotics.is_equivalent.add_is_o Asymptotics.IsEquivalent.addIsO
+#align asymptotics.is_equivalent.add_is_o Asymptotics.IsEquivalent.add_is_o
 
-theorem IsEquivalent.subIsO (huv : u ~[l] v) (hwv : w =o[l] v) : u - w ~[l] v := by
+theorem IsEquivalent.sub_is_o (huv : u ~[l] v) (hwv : w =o[l] v) : u - w ~[l] v := by
   simpa only [sub_eq_add_neg] using huv.add_is_o hwv.neg_left
-#align asymptotics.is_equivalent.sub_is_o Asymptotics.IsEquivalent.subIsO
+#align asymptotics.is_equivalent.sub_is_o Asymptotics.IsEquivalent.sub_is_o
 
-theorem IsO.addIsEquivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
+theorem IsO.add_is_equivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
   add_comm v u ▸ hv.add_is_o hu
-#align asymptotics.is_o.add_is_equivalent Asymptotics.IsO.addIsEquivalent
+#align asymptotics.is_o.add_is_equivalent Asymptotics.IsO.add_is_equivalent
 
-theorem IsO.isEquivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
+theorem IsO.is_equivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
   huv
-#align asymptotics.is_o.is_equivalent Asymptotics.IsO.isEquivalent
+#align asymptotics.is_o.is_equivalent Asymptotics.IsO.is_equivalent
 
 theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x :=
   by
@@ -225,17 +225,17 @@ theorem IsEquivalent.exists_eq_mul (huv : u ~[l] v) :
   is_equivalent_iff_exists_eq_mul.mp huv
 #align asymptotics.is_equivalent.exists_eq_mul Asymptotics.IsEquivalent.exists_eq_mul
 
-theorem isEquivalentOfTendstoOne (hz : ∀ᶠ x in l, v x = 0 → u x = 0)
+theorem is_equivalent_of_tendsto_one (hz : ∀ᶠ x in l, v x = 0 → u x = 0)
     (huv : Tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
   by
   rw [is_equivalent_iff_exists_eq_mul]
   refine' ⟨u / v, huv, hz.mono fun x hz' => (div_mul_cancel_of_imp hz').symm⟩
-#align asymptotics.is_equivalent_of_tendsto_one Asymptotics.isEquivalentOfTendstoOne
+#align asymptotics.is_equivalent_of_tendsto_one Asymptotics.is_equivalent_of_tendsto_one
 
-theorem isEquivalentOfTendstoOne' (hz : ∀ x, v x = 0 → u x = 0) (huv : Tendsto (u / v) l (𝓝 1)) :
-    u ~[l] v :=
-  isEquivalentOfTendstoOne (eventually_of_forall hz) huv
-#align asymptotics.is_equivalent_of_tendsto_one' Asymptotics.isEquivalentOfTendstoOne'
+theorem is_equivalent_of_tendsto_one' (hz : ∀ x, v x = 0 → u x = 0)
+    (huv : Tendsto (u / v) l (𝓝 1)) : u ~[l] v :=
+  is_equivalent_of_tendsto_one (eventually_of_forall hz) huv
+#align asymptotics.is_equivalent_of_tendsto_one' Asymptotics.is_equivalent_of_tendsto_one'
 
 theorem is_equivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) :
     u ~[l] v ↔ Tendsto (u / v) l (𝓝 1) := by
@@ -365,7 +365,7 @@ open Asymptotics
 
 variable {α β : Type _} [NormedAddCommGroup β]
 
-theorem Filter.EventuallyEq.isEquivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
-  IsEquivalent.congrRight (is_o_refl_left _ _) h
-#align filter.eventually_eq.is_equivalent Filter.EventuallyEq.isEquivalent
+theorem Filter.EventuallyEq.is_equivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
+  IsEquivalent.congr_right (is_o_refl_left _ _) h
+#align filter.eventually_eq.is_equivalent Filter.EventuallyEq.is_equivalent
 

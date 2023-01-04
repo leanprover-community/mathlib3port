@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -735,12 +735,12 @@ theorem mapEquiv.symm (f : R ≃+* S) : (mapEquiv f).symm = mapEquiv f.symm :=
 @[simp]
 theorem map_equiv_trans (e₁ : R ≃+* S) (e₂ : S ≃+* T) :
     mapEquiv (e₁.trans e₂) = (mapEquiv e₁).trans (mapEquiv e₂) :=
-  RingEquiv.to_ring_hom_injective <| map_comp (e₁ : R →+* S) (e₂ : S →+* T)
+  RingEquiv.toRingHom_injective <| map_comp (e₁ : R →+* S) (e₂ : S →+* T)
 #align local_ring.residue_field.map_equiv_trans LocalRing.ResidueField.map_equiv_trans
 
 @[simp]
 theorem map_equiv_refl : mapEquiv (RingEquiv.refl R) = RingEquiv.refl _ :=
-  RingEquiv.to_ring_hom_injective map_id
+  RingEquiv.toRingHom_injective map_id
 #align local_ring.residue_field.map_equiv_refl LocalRing.ResidueField.map_equiv_refl
 
 /-- The group homomorphism from `ring_aut R` to `ring_aut k` where `k`

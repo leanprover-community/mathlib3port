@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.fix
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,11 +35,13 @@ open Classical
 
 variable {α : Type _} {β : α → Type _}
 
+#print Fix /-
 /-- `has_fix α` gives us a way to calculate the fixed point
 of function of type `α → α`. -/
-class HasFix (α : Type _) where
+class Fix (α : Type _) where
   fix : (α → α) → α
-#align has_fix HasFix
+#align has_fix Fix
+-/
 
 namespace Part
 
@@ -49,19 +51,24 @@ section Basic
 
 variable (f : (∀ a, Part <| β a) → ∀ a, Part <| β a)
 
+#print Part.Fix.approx /-
 /-- A series of successive, finite approximation of the fixed point of `f`, defined by
 `approx f n = f^[n] ⊥`. The limit of this chain is the fixed point of `f`. -/
 def Fix.approx : Stream' <| ∀ a, Part <| β a
   | 0 => ⊥
   | Nat.succ i => f (fix.approx i)
 #align part.fix.approx Part.Fix.approx
+-/
 
+#print Part.fixAux /-
 /-- loop body for finding the fixed point of `f` -/
 def fixAux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) :
     ∀ a, Part <| β a :=
   f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_self _) x
 #align part.fix_aux Part.fixAux
+-/
 
+#print Part.fix /-
 /-- The least fixed point of `f`.
 
 If `f` is a continuous function (according to complete partial orders),
@@ -74,7 +81,9 @@ protected def fix (x : α) : Part <| β x :=
   (Part.assert (∃ i, (Fix.approx f i x).Dom)) fun h =>
     WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
 #align part.fix Part.fix
+-/
 
+#print Part.fix_def /-
 protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     Part.fix f x = Fix.approx f (Nat.succ <| Nat.find h') x :=
   by
@@ -108,10 +117,13 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     rw [succ_add_eq_succ_add] at this hk
     rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
 #align part.fix_def Part.fix_def
+-/
 
+#print Part.fix_def' /-
 theorem fix_def' {x : α} (h' : ¬∃ i, (Fix.approx f i x).Dom) : Part.fix f x = none := by
   dsimp [Part.fix] <;> rw [assert_neg h']
 #align part.fix_def' Part.fix_def'
+-/
 
 end Basic
 
@@ -119,7 +131,7 @@ end Part
 
 namespace Part
 
-instance : HasFix (Part α) :=
+instance : Fix (Part α) :=
   ⟨fun f => Part.fix (fun x u => f (x u)) ()⟩
 
 end Part
@@ -128,9 +140,11 @@ open Sigma
 
 namespace Pi
 
-instance Part.hasFix {β} : HasFix (α → Part β) :=
+#print Pi.Part.hasFix /-
+instance Part.hasFix {β} : Fix (α → Part β) :=
   ⟨Part.fix⟩
 #align pi.part.has_fix Pi.Part.hasFix
+-/
 
 end Pi
 

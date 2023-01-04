@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1218,8 +1218,8 @@ end FindGreatest
 /-! ### decidability of predicates -/
 
 
-#print Nat.decidableBallLt /-
-instance decidableBallLt (n : Nat) (P : ∀ k < n, Prop) :
+#print Nat.decidableBallLT /-
+instance decidableBallLT (n : Nat) (P : ∀ k < n, Prop) :
     ∀ [H : ∀ n h, Decidable (P n h)], Decidable (∀ n h, P n h) :=
   by
   induction' n with n IH <;> intro <;> skip
@@ -1236,7 +1236,7 @@ instance decidableBallLt (n : Nat) (P : ∀ k < n, Prop) :
           match k, e, h' with
           | _, rfl, h => p
   · exact is_false (mt (fun hn => hn _ _) p)
-#align nat.decidable_ball_lt Nat.decidableBallLt
+#align nat.decidable_ball_lt Nat.decidableBallLT
 -/
 
 #print Nat.decidableForallFin /-
@@ -1254,14 +1254,14 @@ instance decidableBallLe (n : ℕ) (P : ∀ k ≤ n, Prop) [H : ∀ n h, Decidab
 #align nat.decidable_ball_le Nat.decidableBallLe
 -/
 
-#print Nat.decidableExistsLt /-
-instance decidableExistsLt {P : ℕ → Prop} [h : DecidablePred P] :
+#print Nat.decidableExistsLT /-
+instance decidableExistsLT {P : ℕ → Prop} [h : DecidablePred P] :
     DecidablePred fun n => ∃ m : ℕ, m < n ∧ P m
   | 0 => isFalse (by simp)
   | n + 1 =>
     decidable_of_decidable_of_iff (@Or.decidable _ _ (decidable_exists_lt n) (h n))
       (by simp only [lt_succ_iff_lt_or_eq, or_and_right, exists_or, exists_eq_left])
-#align nat.decidable_exists_lt Nat.decidableExistsLt
+#align nat.decidable_exists_lt Nat.decidableExistsLT
 -/
 
 #print Nat.decidableExistsLe /-

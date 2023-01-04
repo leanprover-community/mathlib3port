@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,6 +265,31 @@ theorem pi_apply {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M' 
     (f : ∀ i, ContinuousMultilinearMap R M₁ (M' i)) (m : ∀ i, M₁ i) (j : ι') : pi f m j = f j m :=
   rfl
 #align continuous_multilinear_map.pi_apply ContinuousMultilinearMap.pi_apply
+
+section
+
+variable (R M₂)
+
+/-- The evaluation map from `ι → M₂` to `M₂` is multilinear at a given `i` when `ι` is subsingleton.
+-/
+@[simps toMultilinearMap apply]
+def ofSubsingleton [Subsingleton ι] (i' : ι) : ContinuousMultilinearMap R (fun _ : ι => M₂) M₂
+    where
+  toMultilinearMap := MultilinearMap.ofSubsingleton R _ i'
+  cont := continuous_apply _
+#align continuous_multilinear_map.of_subsingleton ContinuousMultilinearMap.ofSubsingleton
+
+variable (M₁) {M₂}
+
+/-- The constant map is multilinear when `ι` is empty. -/
+@[simps toMultilinearMap apply]
+def constOfIsEmpty [IsEmpty ι] (m : M₂) : ContinuousMultilinearMap R M₁ M₂
+    where
+  toMultilinearMap := MultilinearMap.constOfIsEmpty R _ m
+  cont := continuous_const
+#align continuous_multilinear_map.const_of_is_empty ContinuousMultilinearMap.constOfIsEmpty
+
+end
 
 /-- If `g` is continuous multilinear and `f` is a collection of continuous linear maps,
 then `g (f₁ m₁, ..., fₙ mₙ)` is again a continuous multilinear map, that we call

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.lie_group
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ the addition and negation operations are smooth. -/
 class LieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
   {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
   [AddGroup G] [TopologicalSpace G] [ChartedSpace H G] extends HasSmoothAdd I G : Prop where
-  smoothNeg : Smooth I I fun a : G => -a
+  smooth_neg : Smooth I I fun a : G => -a
 #align lie_add_group LieAddGroup
 
 -- See note [Design choices about smooth algebraic structures]
@@ -61,7 +61,7 @@ the multiplication and inverse operations are smooth. -/
 class LieGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
   {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
   [Group G] [TopologicalSpace G] [ChartedSpace H G] extends HasSmoothMul I G : Prop where
-  smoothInv : Smooth I I fun a : G => a⁻¹
+  smooth_inv : Smooth I I fun a : G => a⁻¹
 #align lie_group LieGroup
 
 section LieGroup
@@ -80,43 +80,43 @@ section
 variable (I)
 
 @[to_additive]
-theorem smoothInv : Smooth I I fun x : G => x⁻¹ :=
-  LieGroup.smoothInv
-#align smooth_inv smoothInv
+theorem smooth_inv : Smooth I I fun x : G => x⁻¹ :=
+  LieGroup.smooth_inv
+#align smooth_inv smooth_inv
 
 /-- A Lie group is a topological group. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/
 @[to_additive
       "An additive Lie group is an additive topological group. This is not an instance for technical\nreasons, see note [Design choices about smooth algebraic structures]."]
 theorem topological_group_of_lie_group : TopologicalGroup G :=
-  { has_continuous_mul_of_smooth I with continuous_inv := (smoothInv I).Continuous }
+  { has_continuous_mul_of_smooth I with continuous_inv := (smooth_inv I).Continuous }
 #align topological_group_of_lie_group topological_group_of_lie_group
 
 end
 
 @[to_additive]
 theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => (f x)⁻¹ :=
-  (smoothInv I).comp hf
+  (smooth_inv I).comp hf
 #align smooth.inv Smooth.inv
 
 @[to_additive]
 theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) :
     SmoothOn I' I (fun x => (f x)⁻¹) s :=
-  (smoothInv I).compSmoothOn hf
+  (smooth_inv I).comp_smooth_on hf
 #align smooth_on.inv SmoothOn.inv
 
 @[to_additive]
 theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) :=
   by
   rw [div_eq_mul_inv]
-  exact ((smoothMul I).comp (hf.prod_mk hg.inv) : _)
+  exact ((smooth_mul I).comp (hf.prod_mk hg.inv) : _)
 #align smooth.div Smooth.div
 
 @[to_additive]
 theorem SmoothOn.div {f g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) :
     SmoothOn I' I (f / g) s := by
   rw [div_eq_mul_inv]
-  exact ((smoothMul I).compSmoothOn (hf.prod_mk hg.inv) : _)
+  exact ((smooth_mul I).comp_smooth_on (hf.prod_mk hg.inv) : _)
 #align smooth_on.div SmoothOn.div
 
 end LieGroup
@@ -131,7 +131,7 @@ instance {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
     [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
     {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [TopologicalSpace G'] [ChartedSpace H' G']
     [Group G'] [LieGroup I' G'] : LieGroup (I.Prod I') (G × G') :=
-  { HasSmoothMul.prod _ _ _ _ with smoothInv := smoothFst.inv.prod_mk smoothSnd.inv }
+  { HasSmoothMul.prod _ _ _ _ with smooth_inv := smooth_fst.inv.prod_mk smooth_snd.inv }
 
 end ProdLieGroup
 
@@ -141,8 +141,8 @@ end ProdLieGroup
 instance normedSpaceLieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
   {
-    modelSpaceSmooth with
-    smoothAdd := smooth_iff.2 ⟨continuous_add, fun x y => contDiffAdd.ContDiffOn⟩
-    smoothNeg := smooth_iff.2 ⟨continuous_neg, fun x y => contDiffNeg.ContDiffOn⟩ }
+    model_space_smooth with
+    smooth_add := smooth_iff.2 ⟨continuous_add, fun x y => cont_diff_add.ContDiffOn⟩
+    smooth_neg := smooth_iff.2 ⟨continuous_neg, fun x y => cont_diff_neg.ContDiffOn⟩ }
 #align normed_space_lie_add_group normedSpaceLieAddGroup
 

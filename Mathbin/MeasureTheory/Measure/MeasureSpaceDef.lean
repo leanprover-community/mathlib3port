@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -303,7 +303,7 @@ theorem measure_bUnion_null_iff {s : Set ι} (hs : s.Countable) {t : ι → Set 
 #align measure_theory.measure_bUnion_null_iff MeasureTheory.measure_bUnion_null_iff
 
 theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : S.Countable) :
-    μ (⋃₀S) = 0 ↔ ∀ s ∈ S, μ s = 0 :=
+    μ (⋃₀ S) = 0 ↔ ∀ s ∈ S, μ s = 0 :=
   μ.toOuterMeasure.sUnion_null_iff hS
 #align measure_theory.measure_sUnion_null_iff MeasureTheory.measure_sUnion_null_iff
 

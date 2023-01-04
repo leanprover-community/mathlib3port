@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.shrinking_lemma
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,7 +253,7 @@ theorem exists_subset_Union_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen
       fun c hc ne =>
       ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv =>
         partial_refinement.le_chain_Sup _ _ _ _ hv⟩
-    rcases zorn_nonempty_partial_order this with ⟨v, hv⟩
+    rcases zorn_nonempty_partialOrder this with ⟨v, hv⟩
     suffices : ∀ i, i ∈ v.carrier
     exact ⟨v, v.subset_Union, fun i => v.is_open _, fun i => v.closure_subset (this i)⟩
     contrapose! hv

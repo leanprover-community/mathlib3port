@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.splitting_field
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -365,9 +365,9 @@ namespace IsSplittingField
 
 variable {K}
 
-instance splittingField (f : K[X]) : IsSplittingField K (SplittingField f) f :=
+instance splitting_field (f : K[X]) : IsSplittingField K (SplittingField f) f :=
   ⟨SplittingField.splits f, SplittingField.adjoin_roots f⟩
-#align polynomial.is_splitting_field.splitting_field Polynomial.IsSplittingField.splittingField
+#align polynomial.is_splitting_field.splitting_field Polynomial.IsSplittingField.splitting_field
 
 section ScalarTower
 
@@ -398,10 +398,10 @@ theorem splits_iff (f : K[X]) [IsSplittingField K L f] :
             let ⟨x, hxs, hxy⟩ := Finset.mem_image.1 (by rwa [Multiset.to_finset_map] at hy)
             hxy ▸ SetLike.mem_coe.2 <| Subalgebra.algebra_map_mem _ _,
     fun h =>
-    @RingEquiv.to_ring_hom_refl K _ ▸
+    @RingEquiv.toRingHom_refl K _ ▸
       RingEquiv.self_trans_symm (RingEquiv.ofBijective _ <| Algebra.bijective_algebra_map_iff.2 h) ▸
         by
-        rw [RingEquiv.to_ring_hom_trans]
+        rw [RingEquiv.toRingHom_trans]
         exact splits_comp_of_splits _ _ (splits L f)⟩
 #align polynomial.is_splitting_field.splits_iff Polynomial.IsSplittingField.splits_iff
 
@@ -486,7 +486,7 @@ def algEquiv (f : K[X]) [IsSplittingField K L f] : L ≃ₐ[K] SplittingField f 
   exact RingHom.injective (lift L f <| splits (splitting_field f) f : L →+* f.splitting_field)
 #align polynomial.is_splitting_field.alg_equiv Polynomial.IsSplittingField.algEquiv
 
-theorem ofAlgEquiv [Algebra K F] (p : K[X]) (f : F ≃ₐ[K] L) [IsSplittingField K F p] :
+theorem of_alg_equiv [Algebra K F] (p : K[X]) (f : F ≃ₐ[K] L) [IsSplittingField K F p] :
     IsSplittingField K L p := by
   constructor
   · rw [← f.to_alg_hom.comp_algebra_map]
@@ -494,7 +494,7 @@ theorem ofAlgEquiv [Algebra K F] (p : K[X]) (f : F ≃ₐ[K] L) [IsSplittingFiel
   ·
     rw [← (Algebra.range_top_iff_surjective f.to_alg_hom).mpr f.surjective, ← root_set,
       adjoin_root_set_eq_range (splits F p), root_set, adjoin_roots F p]
-#align polynomial.is_splitting_field.of_alg_equiv Polynomial.IsSplittingField.ofAlgEquiv
+#align polynomial.is_splitting_field.of_alg_equiv Polynomial.IsSplittingField.of_alg_equiv
 
 end IsSplittingField
 

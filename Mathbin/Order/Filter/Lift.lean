@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.filter.lift
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -290,7 +290,7 @@ theorem eventually_lift'_iff (hh : Monotone h) {p : β → Prop} :
 #align filter.eventually_lift'_iff Filter.eventually_lift'_iff
 
 theorem sInter_lift'_sets (hh : Monotone h) : ⋂₀ { s | s ∈ f.lift' h } = ⋂ s ∈ f, h s :=
-  (sInter_lift_sets (monotone_principal.comp hh)).trans <| Inter₂_congr fun s hs => cInf_Ici
+  (sInter_lift_sets (monotone_principal.comp hh)).trans <| Inter₂_congr fun s hs => cinfₛ_Ici
 #align filter.sInter_lift'_sets Filter.sInter_lift'_sets
 
 theorem lift'_le {f : Filter α} {g : Set α → Set β} {h : Filter β} {s : Set α} (hs : s ∈ f)

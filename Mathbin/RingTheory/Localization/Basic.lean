@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -796,7 +796,7 @@ theorem is_localization_iff_of_base_ring_equiv (h : R ≃+* P) :
   · erw [Submonoid.map_equiv_eq_comap_symm, Submonoid.comap_map_eq_of_injective]
     exact h.to_equiv.injective
   rw [RingHom.algebra_map_to_algebra, RingHom.comp_assoc]
-  simp only [RingHom.comp_id, RingEquiv.symm_symm, RingEquiv.symm_to_ring_hom_comp_to_ring_hom]
+  simp only [RingHom.comp_id, RingEquiv.symm_symm, RingEquiv.symm_toRingHom_comp_toRingHom]
   apply Algebra.algebra_ext
   intro r
   rw [RingHom.algebra_map_to_algebra]
@@ -1260,7 +1260,7 @@ See note [reducible non-instances]. -/
 theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLocalization M S]
     (hM : M ≤ nonZeroDivisors A) : IsDomain S :=
   by
-  apply NoZeroDivisors.toIsDomain _
+  apply NoZeroDivisors.to_isDomain _
   ·
     exact
       ⟨⟨(algebraMap A S) 0, (algebraMap A S) 1, fun h =>

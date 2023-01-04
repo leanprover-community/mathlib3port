@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.tower
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -396,7 +396,7 @@ variable [CommSemiring R] [Semiring A] [Algebra R A]
 
 variable [AddCommGroup M] [Module A M] [Module R M] [IsScalarTower R A M]
 
-theorem lsmul_injective [NoZeroSmulDivisors A M] {x : A} (hx : x ≠ 0) :
+theorem lsmul_injective [NoZeroSMulDivisors A M] {x : A} (hx : x ≠ 0) :
     Function.Injective (lsmul R M x) :=
   smul_right_injective _ hx
 #align algebra.lsmul_injective Algebra.lsmul_injective

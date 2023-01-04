@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.completion
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,13 +197,13 @@ instance : MetricSpace (Completion α)
   uniformity_dist := Completion.uniformity_dist
 
 /-- The embedding of a metric space in its completion is an isometry. -/
-theorem coeIsometry : Isometry (coe : α → Completion α) :=
-  Isometry.ofDistEq Completion.dist_eq
-#align uniform_space.completion.coe_isometry UniformSpace.Completion.coeIsometry
+theorem coe_isometry : Isometry (coe : α → Completion α) :=
+  Isometry.of_dist_eq Completion.dist_eq
+#align uniform_space.completion.coe_isometry UniformSpace.Completion.coe_isometry
 
 @[simp]
 protected theorem edist_eq (x y : α) : edist (x : Completion α) y = edist x y :=
-  coeIsometry x y
+  coe_isometry x y
 #align uniform_space.completion.edist_eq UniformSpace.Completion.edist_eq
 
 end UniformSpace.Completion

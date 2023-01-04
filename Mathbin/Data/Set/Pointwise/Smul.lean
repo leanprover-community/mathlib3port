@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.smul
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -466,8 +466,8 @@ protected def mulDistribMulActionSet [Monoid α] [Monoid β] [MulDistribMulActio
 
 scoped[Pointwise] attribute [instance] Set.distribMulActionSet Set.mulDistribMulActionSet
 
-instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
-    NoZeroSmulDivisors (Set α) (Set β) :=
+instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+    NoZeroSMulDivisors (Set α) (Set β) :=
   ⟨fun s t h => by
     by_contra' H
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
@@ -476,8 +476,8 @@ instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
     obtain ⟨⟨a, hs, ha⟩, b, ht, hb⟩ := H
     exact (eq_zero_or_eq_zero_of_smul_eq_zero <| h.subset <| smul_mem_smul hs ht).elim ha hb⟩
 
-instance no_zero_smul_divisors_set [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
-    NoZeroSmulDivisors α (Set β) :=
+instance no_zero_smul_divisors_set [Zero α] [Zero β] [HasSmul α β] [NoZeroSMulDivisors α β] :
+    NoZeroSMulDivisors α (Set β) :=
   ⟨fun a s h => by
     by_contra' H
     have hst : (a • s).Nonempty := h.symm.subst zero_nonempty
@@ -701,7 +701,7 @@ theorem zero_mem_smul_set {t : Set β} {a : α} (h : (0 : β) ∈ t) : (0 : β) 
   ⟨0, h, smul_zero _⟩
 #align set.zero_mem_smul_set Set.zero_mem_smul_set
 
-variable [NoZeroSmulDivisors α β] {a : α}
+variable [NoZeroSMulDivisors α β] {a : α}
 
 theorem zero_mem_smul_iff : (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonempty ∨ (0 : β) ∈ t ∧ s.Nonempty :=
   by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,7 +269,7 @@ instance : MonoidWithZeroHomClass (InfinitePlace K) K ℝ
   map_one w := w.1.map_one
   map_zero w := w.1.map_zero
 
-instance : NonNegHomClass (InfinitePlace K) K ℝ
+instance : NonnegHomClass (InfinitePlace K) K ℝ
     where
   coe w x := w x
   coe_injective' _ _ h := Subtype.eq (AbsoluteValue.ext fun x => congr_fun h x)

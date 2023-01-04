@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.real.pointwise
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : infₛ (a • s) 
   · rw [smul_set_empty, Real.Inf_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
   · rw [zero_smul_set hs, zero_smul]
-    exact cInf_singleton 0
+    exact cinfₛ_singleton 0
   by_cases BddBelow s
   · exact ((OrderIso.smulLeft ℝ ha').map_cInf' hs h).symm
   ·
@@ -60,7 +60,7 @@ theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : supₛ (a • s) 
   · rw [smul_set_empty, Real.Sup_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
   · rw [zero_smul_set hs, zero_smul]
-    exact cSup_singleton 0
+    exact csupₛ_singleton 0
   by_cases BddAbove s
   · exact ((OrderIso.smulLeft ℝ ha').map_cSup' hs h).symm
   ·
@@ -84,7 +84,7 @@ theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : infₛ (a • s) 
   · rw [smul_set_empty, Real.Inf_empty, Real.Sup_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
   · rw [zero_smul_set hs, zero_smul]
-    exact cInf_singleton 0
+    exact cinfₛ_singleton 0
   by_cases BddAbove s
   · exact ((OrderIso.smulLeftDual ℝ ha').map_cSup' hs h).symm
   ·
@@ -102,7 +102,7 @@ theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : supₛ (a • s) 
   · rw [smul_set_empty, Real.Sup_empty, Real.Inf_empty, smul_zero]
   obtain rfl | ha' := ha.eq_or_lt
   · rw [zero_smul_set hs, zero_smul]
-    exact cSup_singleton 0
+    exact csupₛ_singleton 0
   by_cases BddBelow s
   · exact ((OrderIso.smulLeftDual ℝ ha').map_cInf' hs h).symm
   ·

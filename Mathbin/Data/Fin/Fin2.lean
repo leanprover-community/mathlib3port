@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fin.fin2
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,27 +128,26 @@ def remapLeft {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m + k) → Fin2 (n + 
 #align fin2.remap_left Fin2.remapLeft
 -/
 
-#print Fin2.IsLt /-
 /-- This is a simple type class inference prover for proof obligations
   of the form `m < n` where `m n : ℕ`. -/
 class IsLt (m n : ℕ) where
   h : m < n
 #align fin2.is_lt Fin2.IsLt
--/
 
-#print Fin2.IsLt.zero /-
 instance IsLt.zero (n) : IsLt 0 (succ n) :=
   ⟨succ_pos _⟩
 #align fin2.is_lt.zero Fin2.IsLt.zero
--/
 
-#print Fin2.IsLt.succ /-
 instance IsLt.succ (m n) [l : IsLt m n] : IsLt (succ m) (succ n) :=
   ⟨succ_lt_succ l.h⟩
 #align fin2.is_lt.succ Fin2.IsLt.succ
--/
 
-#print Fin2.ofNat' /-
+/- warning: fin2.of_nat' -> Fin2.ofNat' is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} (m : Nat) [_inst_1 : Fin2.IsLt m n], Fin2 n
+but is expected to have type
+  forall {n : Nat} (m : Nat) [_inst_1 : Fin2.IsLT m n], Fin2 n
+Case conversion may be inaccurate. Consider using '#align fin2.of_nat' Fin2.ofNat'ₓ'. -/
 /-- Use type class inference to infer the boundedness proof, so that we can directly convert a
 `nat` into a `fin2 n`. This supports notation like `&1 : fin 3`. -/
 def ofNat' : ∀ {n} (m) [IsLt m n], Fin2 n
@@ -156,7 +155,6 @@ def ofNat' : ∀ {n} (m) [IsLt m n], Fin2 n
   | succ n, 0, ⟨h⟩ => fz
   | succ n, succ m, ⟨h⟩ => fs (@of_nat' n m ⟨lt_of_succ_lt_succ h⟩)
 #align fin2.of_nat' Fin2.ofNat'
--/
 
 -- mathport name: «expr& »
 local prefix:arg "&" => ofNat'

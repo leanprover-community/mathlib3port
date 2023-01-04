@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_torsor
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ addition/subtraction of `x : P`. -/
 def Isometric.vaddConst (x : P) : V ≃ᵢ P
     where
   toEquiv := Equiv.vaddConst x
-  isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_right _ _ _
+  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_right _ _ _
 #align isometric.vadd_const Isometric.vaddConst
 
 section
@@ -119,7 +119,7 @@ variable (P)
 def Isometric.constVadd (x : V) : P ≃ᵢ P
     where
   toEquiv := Equiv.constVadd P x
-  isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_left _ _ _
+  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_left _ _ _
 #align isometric.const_vadd Isometric.constVadd
 
 end
@@ -135,7 +135,7 @@ subtraction from `x : P`. -/
 def Isometric.constVsub (x : P) : P ≃ᵢ V
     where
   toEquiv := Equiv.constVsub x
-  isometryToFun := Isometry.ofDistEq fun y z => dist_vsub_cancel_left _ _ _
+  isometry_to_fun := Isometry.of_dist_eq fun y z => dist_vsub_cancel_left _ _ _
 #align isometric.const_vsub Isometric.constVsub
 
 @[simp]
@@ -263,11 +263,11 @@ theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ
 #align lipschitz_with.vsub LipschitzWith.vsub
 
 theorem uniform_continuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x.2 :=
-  (LipschitzWith.prodFst.vadd LipschitzWith.prodSnd).UniformContinuous
+  (LipschitzWith.prod_fst.vadd LipschitzWith.prod_snd).UniformContinuous
 #align uniform_continuous_vadd uniform_continuous_vadd
 
 theorem uniform_continuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
-  (LipschitzWith.prodFst.vsub LipschitzWith.prodSnd).UniformContinuous
+  (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
 #align uniform_continuous_vsub uniform_continuous_vsub
 
 instance (priority := 100) NormedAddTorsor.to_has_continuous_vadd : HasContinuousVadd V P

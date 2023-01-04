@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1035,7 +1035,7 @@ instance : CompleteLattice (Subgroup G) :=
   {
     (completeLatticeOfInf (Subgroup G)) fun s =>
       IsGLB.of_image (fun H K => show (H : Set G) ≤ K ↔ H ≤ K from SetLike.coe_subset_coe)
-        is_glb_binfi with
+        isGLB_binfᵢ with
     bot := ⊥
     bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem
     top := ⊤
@@ -2798,7 +2798,7 @@ variable {M : Type _} [Monoid M]
 /-- The subgroup of elements `x : G` such that `f x = g x` -/
 @[to_additive "The additive subgroup of elements `x : G` such that `f x = g x`"]
 def eqLocus (f g : G →* M) : Subgroup G :=
-  { eqMlocus f g with inv_mem' := fun x => eq_on_inv f g }
+  { eqLocusM f g with inv_mem' := fun x => eq_on_inv f g }
 #align monoid_hom.eq_locus MonoidHom.eqLocus
 
 @[simp, to_additive]
@@ -3854,12 +3854,12 @@ instance [Monoid α] [MulDistribMulAction G α] (S : Subgroup G) : MulDistribMul
 
 /-- The center of a group acts commutatively on that group. -/
 instance center.smul_comm_class_left : SMulCommClass (center G) G G :=
-  Submonoid.center.smul_comm_class_left
+  Submonoid.center.smulCommClass_left
 #align subgroup.center.smul_comm_class_left Subgroup.center.smul_comm_class_left
 
 /-- The center of a group acts commutatively on that group. -/
 instance center.smul_comm_class_right : SMulCommClass G (center G) G :=
-  Submonoid.center.smul_comm_class_right
+  Submonoid.center.smulCommClass_right
 #align subgroup.center.smul_comm_class_right Subgroup.center.smul_comm_class_right
 
 end Subgroup
@@ -3960,7 +3960,7 @@ end Subgroup
 
 namespace AddSubgroup
 
-theorem ker_saturated {A₁ A₂ : Type _} [AddCommGroup A₁] [AddCommGroup A₂] [NoZeroSmulDivisors ℕ A₂]
+theorem ker_saturated {A₁ A₂ : Type _} [AddCommGroup A₁] [AddCommGroup A₂] [NoZeroSMulDivisors ℕ A₂]
     (f : A₁ →+ A₂) : f.ker.Saturated := by
   intro n g hg
   simpa only [f.mem_ker, nsmul_eq_smul, f.map_nsmul, smul_eq_zero] using hg

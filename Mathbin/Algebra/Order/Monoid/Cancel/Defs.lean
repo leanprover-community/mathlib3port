@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.cancel.defs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,19 +50,19 @@ section OrderedCancelCommMonoid
 
 variable [OrderedCancelCommMonoid α] {a b c d : α}
 
-/- warning: ordered_cancel_comm_monoid.to_contravariant_class_le_left -> OrderedCancelCommMonoid.to_ContravariantClass_le_left is a dubious translation:
+/- warning: ordered_cancel_comm_monoid.to_contravariant_class_le_left -> OrderedCancelCommMonoid.to_contravariantClass_le_left is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : OrderedCancelCommMonoid.{u1} α], ContravariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCancelCommMonoid.toCommMonoid.{u1} α _inst_1)))))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelCommMonoid.toPartialOrder.{u1} α _inst_1))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedCancelCommMonoid.{u1} α], ContravariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.158 : α) (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.160 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α (OrderedCancelCommMonoid.toCommMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.158 x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.160) (fun (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.173 : α) (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.175 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCancelCommMonoid.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.173 x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.175)
-Case conversion may be inaccurate. Consider using '#align ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_ContravariantClass_le_leftₓ'. -/
+Case conversion may be inaccurate. Consider using '#align ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_contravariantClass_le_leftₓ'. -/
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 200) OrderedCancelCommMonoid.to_ContravariantClass_le_left :
+instance (priority := 200) OrderedCancelCommMonoid.to_contravariantClass_le_left :
     ContravariantClass α α (· * ·) (· ≤ ·) :=
   ⟨OrderedCancelCommMonoid.le_of_mul_le_mul_left⟩
 #align
-  ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_ContravariantClass_le_left
+  ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_contravariantClass_le_left
 
 /- warning: ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left -> OrderedCancelCommMonoid.lt_of_mul_lt_mul_left is a dubious translation:
 lean 3 declaration is
@@ -78,35 +78,35 @@ theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < 
 #align
   ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left OrderedCancelCommMonoid.lt_of_mul_lt_mul_left
 
-/- warning: ordered_cancel_comm_monoid.to_contravariant_class_left -> OrderedCancelCommMonoid.to_ContravariantClass_left is a dubious translation:
+/- warning: ordered_cancel_comm_monoid.to_contravariant_class_left -> OrderedCancelCommMonoid.to_contravariantClass_left is a dubious translation:
 lean 3 declaration is
   forall (M : Type.{u1}) [_inst_2 : OrderedCancelCommMonoid.{u1} M], ContravariantClass.{u1, u1} M M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCancelCommMonoid.toCommMonoid.{u1} M _inst_2)))))) (LT.lt.{u1} M (Preorder.toLT.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelCommMonoid.toPartialOrder.{u1} M _inst_2))))
 but is expected to have type
   forall (M : Type.{u1}) [_inst_2 : OrderedCancelCommMonoid.{u1} M], ContravariantClass.{u1, u1} M M (fun (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.281 : M) (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.283 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCancelCommMonoid.toCommMonoid.{u1} M _inst_2))))) x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.281 x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.283) (fun (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.296 : M) (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.298 : M) => LT.lt.{u1} M (Preorder.toLT.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelCommMonoid.toPartialOrder.{u1} M _inst_2))) x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.296 x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.298)
-Case conversion may be inaccurate. Consider using '#align ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_ContravariantClass_leftₓ'. -/
+Case conversion may be inaccurate. Consider using '#align ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_contravariantClass_leftₓ'. -/
 @[to_additive]
-instance OrderedCancelCommMonoid.to_ContravariantClass_left (M : Type _)
+instance OrderedCancelCommMonoid.to_contravariantClass_left (M : Type _)
     [OrderedCancelCommMonoid M] : ContravariantClass M M (· * ·) (· < ·)
     where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
 #align
-  ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_ContravariantClass_left
+  ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_contravariantClass_left
 
-/- warning: ordered_cancel_comm_monoid.to_contravariant_class_right -> OrderedCancelCommMonoid.to_ContravariantClass_right is a dubious translation:
+/- warning: ordered_cancel_comm_monoid.to_contravariant_class_right -> OrderedCancelCommMonoid.to_contravariantClass_right is a dubious translation:
 lean 3 declaration is
   forall (M : Type.{u1}) [_inst_2 : OrderedCancelCommMonoid.{u1} M], ContravariantClass.{u1, u1} M M (Function.swap.{succ u1, succ u1, succ u1} M M (fun (ᾰ : M) (ᾰ : M) => M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCancelCommMonoid.toCommMonoid.{u1} M _inst_2))))))) (LT.lt.{u1} M (Preorder.toLT.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelCommMonoid.toPartialOrder.{u1} M _inst_2))))
 but is expected to have type
   forall (M : Type.{u1}) [_inst_2 : OrderedCancelCommMonoid.{u1} M], ContravariantClass.{u1, u1} M M (Function.swap.{succ u1, succ u1, succ u1} M M (fun (ᾰ : M) (ᾰ : M) => M) (fun (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.352 : M) (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.354 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCancelCommMonoid.toCommMonoid.{u1} M _inst_2))))) x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.352 x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.354)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.367 : M) (x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.369 : M) => LT.lt.{u1} M (Preorder.toLT.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCancelCommMonoid.toPartialOrder.{u1} M _inst_2))) x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.367 x._@.Mathlib.Algebra.Order.Monoid.Cancel.Defs._hyg.369)
-Case conversion may be inaccurate. Consider using '#align ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_ContravariantClass_rightₓ'. -/
+Case conversion may be inaccurate. Consider using '#align ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_contravariantClass_rightₓ'. -/
 /- This instance can be proven with `by apply_instance`.  However, by analogy with the
 instance `ordered_cancel_comm_monoid.to_covariant_class_right` above, I imagine that without
 this instance, some Type would not have a `contravariant_class M M (function.swap (*)) (<)`
 instance. -/
 @[to_additive]
-instance OrderedCancelCommMonoid.to_ContravariantClass_right (M : Type _)
+instance OrderedCancelCommMonoid.to_contravariantClass_right (M : Type _)
     [OrderedCancelCommMonoid M] : ContravariantClass M M (swap (· * ·)) (· < ·) :=
   contravariant_swap_mul_lt_of_contravariant_mul_lt M
 #align
-  ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_ContravariantClass_right
+  ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_contravariantClass_right
 
 #print OrderedCancelCommMonoid.toOrderedCommMonoid /-
 -- see Note [lower instance priority]

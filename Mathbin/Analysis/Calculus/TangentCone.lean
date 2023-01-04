@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.tangent_cone
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,11 +293,11 @@ theorem uniqueDiffWithinAtUniv : UniqueDiffWithinAt 𝕜 univ x :=
   simp
 #align unique_diff_within_at_univ uniqueDiffWithinAtUniv
 
-theorem uniqueDiffOnUniv : UniqueDiffOn 𝕜 (univ : Set E) := fun x hx => uniqueDiffWithinAtUniv
-#align unique_diff_on_univ uniqueDiffOnUniv
+theorem unique_diff_on_univ : UniqueDiffOn 𝕜 (univ : Set E) := fun x hx => uniqueDiffWithinAtUniv
+#align unique_diff_on_univ unique_diff_on_univ
 
-theorem uniqueDiffOnEmpty : UniqueDiffOn 𝕜 (∅ : Set E) := fun x hx => hx.elim
-#align unique_diff_on_empty uniqueDiffOnEmpty
+theorem unique_diff_on_empty : UniqueDiffOn 𝕜 (∅ : Set E) := fun x hx => hx.elim
+#align unique_diff_on_empty unique_diff_on_empty
 
 theorem UniqueDiffWithinAt.monoNhds (h : UniqueDiffWithinAt 𝕜 s x) (st : 𝓝[s] x ≤ 𝓝[t] x) :
     UniqueDiffWithinAt 𝕜 t x :=
@@ -349,9 +349,9 @@ theorem UniqueDiffOn.inter (hs : UniqueDiffOn 𝕜 s) (ht : IsOpen t) : UniqueDi
   fun x hx => (hs x hx.1).inter (IsOpen.mem_nhds ht hx.2)
 #align unique_diff_on.inter UniqueDiffOn.inter
 
-theorem IsOpen.uniqueDiffOn (hs : IsOpen s) : UniqueDiffOn 𝕜 s := fun x hx =>
+theorem IsOpen.unique_diff_on (hs : IsOpen s) : UniqueDiffOn 𝕜 s := fun x hx =>
   IsOpen.uniqueDiffWithinAt hs hx
-#align is_open.unique_diff_on IsOpen.uniqueDiffOn
+#align is_open.unique_diff_on IsOpen.unique_diff_on
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -409,11 +409,11 @@ theorem UniqueDiffOn.pi (ι : Type _) [Finite ι] (E : ι → Type _) [∀ i, No
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique
 differentiability. -/
-theorem UniqueDiffOn.univPi (ι : Type _) [Finite ι] (E : ι → Type _) [∀ i, NormedAddCommGroup (E i)]
-    [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (h : ∀ i, UniqueDiffOn 𝕜 (s i)) :
-    UniqueDiffOn 𝕜 (Set.pi univ s) :=
+theorem UniqueDiffOn.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
+    [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i))
+    (h : ∀ i, UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.pi univ s) :=
   (UniqueDiffOn.pi _ _ _ _) fun i _ => h i
-#align unique_diff_on.univ_pi UniqueDiffOn.univPi
+#align unique_diff_on.univ_pi UniqueDiffOn.univ_pi
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique
 differentiability at every point of its closure. -/
@@ -436,50 +436,50 @@ theorem uniqueDiffWithinAtConvex {s : Set G} (conv : Convex ℝ s) (hs : (interi
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique
 differentiability. -/
-theorem uniqueDiffOnConvex {s : Set G} (conv : Convex ℝ s) (hs : (interior s).Nonempty) :
+theorem unique_diff_on_convex {s : Set G} (conv : Convex ℝ s) (hs : (interior s).Nonempty) :
     UniqueDiffOn ℝ s := fun x xs => uniqueDiffWithinAtConvex conv hs (subset_closure xs)
-#align unique_diff_on_convex uniqueDiffOnConvex
+#align unique_diff_on_convex unique_diff_on_convex
 
-theorem uniqueDiffOnIci (a : ℝ) : UniqueDiffOn ℝ (Ici a) :=
-  uniqueDiffOnConvex (convex_Ici a) <| by simp only [interior_Ici, nonempty_Ioi]
-#align unique_diff_on_Ici uniqueDiffOnIci
+theorem unique_diff_on_Ici (a : ℝ) : UniqueDiffOn ℝ (Ici a) :=
+  unique_diff_on_convex (convex_Ici a) <| by simp only [interior_Ici, nonempty_Ioi]
+#align unique_diff_on_Ici unique_diff_on_Ici
 
-theorem uniqueDiffOnIic (a : ℝ) : UniqueDiffOn ℝ (Iic a) :=
-  uniqueDiffOnConvex (convex_Iic a) <| by simp only [interior_Iic, nonempty_Iio]
-#align unique_diff_on_Iic uniqueDiffOnIic
+theorem unique_diff_on_Iic (a : ℝ) : UniqueDiffOn ℝ (Iic a) :=
+  unique_diff_on_convex (convex_Iic a) <| by simp only [interior_Iic, nonempty_Iio]
+#align unique_diff_on_Iic unique_diff_on_Iic
 
-theorem uniqueDiffOnIoi (a : ℝ) : UniqueDiffOn ℝ (Ioi a) :=
+theorem unique_diff_on_Ioi (a : ℝ) : UniqueDiffOn ℝ (Ioi a) :=
   is_open_Ioi.UniqueDiffOn
-#align unique_diff_on_Ioi uniqueDiffOnIoi
+#align unique_diff_on_Ioi unique_diff_on_Ioi
 
-theorem uniqueDiffOnIio (a : ℝ) : UniqueDiffOn ℝ (Iio a) :=
+theorem unique_diff_on_Iio (a : ℝ) : UniqueDiffOn ℝ (Iio a) :=
   is_open_Iio.UniqueDiffOn
-#align unique_diff_on_Iio uniqueDiffOnIio
+#align unique_diff_on_Iio unique_diff_on_Iio
 
-theorem uniqueDiffOnIcc {a b : ℝ} (hab : a < b) : UniqueDiffOn ℝ (Icc a b) :=
-  uniqueDiffOnConvex (convex_Icc a b) <| by simp only [interior_Icc, nonempty_Ioo, hab]
-#align unique_diff_on_Icc uniqueDiffOnIcc
+theorem unique_diff_on_Icc {a b : ℝ} (hab : a < b) : UniqueDiffOn ℝ (Icc a b) :=
+  unique_diff_on_convex (convex_Icc a b) <| by simp only [interior_Icc, nonempty_Ioo, hab]
+#align unique_diff_on_Icc unique_diff_on_Icc
 
-theorem uniqueDiffOnIco (a b : ℝ) : UniqueDiffOn ℝ (Ico a b) :=
+theorem unique_diff_on_Ico (a b : ℝ) : UniqueDiffOn ℝ (Ico a b) :=
   if hab : a < b then
-    uniqueDiffOnConvex (convex_Ico a b) <| by simp only [interior_Ico, nonempty_Ioo, hab]
-  else by simp only [Ico_eq_empty hab, uniqueDiffOnEmpty]
-#align unique_diff_on_Ico uniqueDiffOnIco
+    unique_diff_on_convex (convex_Ico a b) <| by simp only [interior_Ico, nonempty_Ioo, hab]
+  else by simp only [Ico_eq_empty hab, unique_diff_on_empty]
+#align unique_diff_on_Ico unique_diff_on_Ico
 
-theorem uniqueDiffOnIoc (a b : ℝ) : UniqueDiffOn ℝ (Ioc a b) :=
+theorem unique_diff_on_Ioc (a b : ℝ) : UniqueDiffOn ℝ (Ioc a b) :=
   if hab : a < b then
-    uniqueDiffOnConvex (convex_Ioc a b) <| by simp only [interior_Ioc, nonempty_Ioo, hab]
-  else by simp only [Ioc_eq_empty hab, uniqueDiffOnEmpty]
-#align unique_diff_on_Ioc uniqueDiffOnIoc
+    unique_diff_on_convex (convex_Ioc a b) <| by simp only [interior_Ioc, nonempty_Ioo, hab]
+  else by simp only [Ioc_eq_empty hab, unique_diff_on_empty]
+#align unique_diff_on_Ioc unique_diff_on_Ioc
 
-theorem uniqueDiffOnIoo (a b : ℝ) : UniqueDiffOn ℝ (Ioo a b) :=
+theorem unique_diff_on_Ioo (a b : ℝ) : UniqueDiffOn ℝ (Ioo a b) :=
   is_open_Ioo.UniqueDiffOn
-#align unique_diff_on_Ioo uniqueDiffOnIoo
+#align unique_diff_on_Ioo unique_diff_on_Ioo
 
 /-- The real interval `[0, 1]` is a set of unique differentiability. -/
-theorem uniqueDiffOnIccZeroOne : UniqueDiffOn ℝ (Icc (0 : ℝ) 1) :=
-  uniqueDiffOnIcc zero_lt_one
-#align unique_diff_on_Icc_zero_one uniqueDiffOnIccZeroOne
+theorem unique_diff_on_Icc_zero_one : UniqueDiffOn ℝ (Icc (0 : ℝ) 1) :=
+  unique_diff_on_Icc zero_lt_one
+#align unique_diff_on_Icc_zero_one unique_diff_on_Icc_zero_one
 
 theorem uniqueDiffWithinAtIoo {a b t : ℝ} (ht : t ∈ Set.Ioo a b) :
     UniqueDiffWithinAt ℝ (Set.Ioo a b) t :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.sylow
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,7 +147,7 @@ end Sylow
   Every `p`-subgroup is contained in a Sylow `p`-subgroup. -/
 theorem IsPGroup.exists_le_sylow {P : Subgroup G} (hP : IsPGroup p P) : ∃ Q : Sylow p G, P ≤ Q :=
   Exists.elim
-    (zorn_nonempty_partial_order₀ { Q : Subgroup G | IsPGroup p Q }
+    (zorn_nonempty_partialOrder₀ { Q : Subgroup G | IsPGroup p Q }
       (fun c hc1 hc2 Q hQ =>
         ⟨{  carrier := ⋃ R : c, R
             one_mem' := ⟨Q, ⟨⟨Q, hQ⟩, rfl⟩, Q.one_mem⟩
@@ -349,8 +349,8 @@ theorem not_dvd_card_sylow [hp : Fact p.Prime] [Fintype (Sylow p G)] : ¬p ∣ c
   fun h =>
   hp.1.ne_one
     (Nat.dvd_one.mp
-      ((Nat.modeq_iff_dvd' zero_le_one).mp
-        ((Nat.modeq_zero_iff_dvd.mpr h).symm.trans (card_sylow_modeq_one p G))))
+      ((Nat.modEq_iff_dvd' zero_le_one).mp
+        ((Nat.modEq_zero_iff_dvd.mpr h).symm.trans (card_sylow_modeq_one p G))))
 #align not_dvd_card_sylow not_dvd_card_sylow
 
 variable {p} {G}
@@ -599,7 +599,7 @@ theorem prime_dvd_card_quotient_normalizer [Fintype G] {p : ℕ} {n : ℕ} [hp :
 theorem prime_pow_dvd_card_normalizer [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact p.Prime]
     (hdvd : p ^ (n + 1) ∣ card G) {H : Subgroup G} (hH : Fintype.card H = p ^ n) :
     p ^ (n + 1) ∣ card (normalizer H) :=
-  Nat.modeq_zero_iff_dvd.1 ((card_normalizer_modeq_card hH).trans hdvd.modeq_zero_nat)
+  Nat.modEq_zero_iff_dvd.1 ((card_normalizer_modeq_card hH).trans hdvd.modeq_zero_nat)
 #align sylow.prime_pow_dvd_card_normalizer Sylow.prime_pow_dvd_card_normalizer
 
 /-- If `H` is a subgroup of `G` of cardinality `p ^ n`,

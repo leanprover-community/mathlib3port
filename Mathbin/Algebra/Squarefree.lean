@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.squarefree
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem Squarefree.squarefree_of_dvd [CommMonoid R] {x y : R} (hdvd : x ∣ y) (
 
 section SquarefreeGcdOfSquarefree
 
-variable {α : Type _} [CancelCommMonoidWithZero α] [GcdMonoid α]
+variable {α : Type _} [CancelCommMonoidWithZero α] [GCDMonoid α]
 
 theorem Squarefree.gcd_right (a : α) {b : α} (hb : Squarefree b) : Squarefree (gcd a b) :=
   hb.squarefree_of_dvd (gcd_dvd_right _ _)
@@ -204,7 +204,7 @@ theorem IsRadical.squarefree {x : R} (h0 : x ≠ 0) (h : IsRadical x) : Squarefr
   rw [mul_assoc, mul_ne_zero_iff] at h0; exact h0.2
 #align is_radical.squarefree IsRadical.squarefree
 
-variable [GcdMonoid R]
+variable [GCDMonoid R]
 
 theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
   (is_radical_iff_pow_one_lt 2 one_lt_two).2 fun y hy =>

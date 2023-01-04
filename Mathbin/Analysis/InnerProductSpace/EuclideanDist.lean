@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.euclidean_dist
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,12 +130,12 @@ end Euclidean
 
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F] {f g : F → E} {n : ℕ∞}
 
-theorem ContDiff.euclideanDist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
+theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
     ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) :=
   by
   simp only [Euclidean.dist]
   apply @ContDiff.dist ℝ
   exacts[(@toEuclidean E _ _ _).ContDiff.comp hf, (@toEuclidean E _ _ _).ContDiff.comp hg, fun x =>
     to_euclidean.injective.ne (h x)]
-#align cont_diff.euclidean_dist ContDiff.euclideanDist
+#align cont_diff.euclidean_dist ContDiff.euclidean_dist
 

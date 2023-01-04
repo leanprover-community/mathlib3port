@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.euclidean_domain
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,42 +32,42 @@ open Classical
 
 open EuclideanDomain Set Ideal
 
-section GcdMonoid
+section GCDMonoid
 
-variable {R : Type _} [EuclideanDomain R] [GcdMonoid R]
+variable {R : Type _} [EuclideanDomain R] [GCDMonoid R]
 
-theorem gcd_ne_zero_of_left (p q : R) (hp : p ≠ 0) : GcdMonoid.gcd p q ≠ 0 := fun h =>
+theorem gcd_ne_zero_of_left (p q : R) (hp : p ≠ 0) : GCDMonoid.gcd p q ≠ 0 := fun h =>
   hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_left p q)
 #align gcd_ne_zero_of_left gcd_ne_zero_of_left
 
-theorem gcd_ne_zero_of_right (p q : R) (hp : q ≠ 0) : GcdMonoid.gcd p q ≠ 0 := fun h =>
+theorem gcd_ne_zero_of_right (p q : R) (hp : q ≠ 0) : GCDMonoid.gcd p q ≠ 0 := fun h =>
   hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_right p q)
 #align gcd_ne_zero_of_right gcd_ne_zero_of_right
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
-theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GcdMonoid.gcd p q ≠ 0 :=
+theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GCDMonoid.gcd p q ≠ 0 :=
   by
-  obtain ⟨r, hr⟩ := GcdMonoid.gcd_dvd_left p q
-  obtain ⟨pq0, r0⟩ : GcdMonoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hp)
+  obtain ⟨r, hr⟩ := GCDMonoid.gcd_dvd_left p q
+  obtain ⟨pq0, r0⟩ : GCDMonoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hp)
   rw [hr, mul_comm, mul_div_cancel _ pq0]
   exact r0
 #align left_div_gcd_ne_zero left_div_gcd_ne_zero
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
-theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GcdMonoid.gcd p q ≠ 0 :=
+theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GCDMonoid.gcd p q ≠ 0 :=
   by
-  obtain ⟨r, hr⟩ := GcdMonoid.gcd_dvd_right p q
-  obtain ⟨pq0, r0⟩ : GcdMonoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hq)
+  obtain ⟨r, hr⟩ := GCDMonoid.gcd_dvd_right p q
+  obtain ⟨pq0, r0⟩ : GCDMonoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hq)
   rw [hr, mul_comm, mul_div_cancel _ pq0]
   exact r0
 #align right_div_gcd_ne_zero right_div_gcd_ne_zero
 
-end GcdMonoid
+end GCDMonoid
 
 namespace EuclideanDomain
 
 /-- Create a `gcd_monoid` whose `gcd_monoid.gcd` matches `euclidean_domain.gcd`. -/
-def gcdMonoid (R) [EuclideanDomain R] : GcdMonoid R
+def gcdMonoid (R) [EuclideanDomain R] : GCDMonoid R
     where
   gcd := gcd
   lcm := lcm

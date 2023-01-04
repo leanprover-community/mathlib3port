@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Spec
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -453,7 +453,7 @@ instance isLocalizedModuleToPushforwardStalkAlgHom :
         this
     obtain ⟨⟨_, n, rfl⟩, e⟩ := (IsLocalization.mk'_eq_zero_iff _ _).mp this
     refine' ⟨⟨r, hpr⟩ ^ n, _⟩
-    rw [Submonoid.smul_def, Algebra.smul_def, Submonoid.coe_pow, Subtype.coe_mk, mul_comm, map_pow]
+    rw [Submonoid.smul_def, Algebra.smul_def, [anonymous], Subtype.coe_mk, mul_comm, map_pow]
     exact e
 #align
   algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom AlgebraicGeometry.StructureSheaf.isLocalizedModuleToPushforwardStalkAlgHom

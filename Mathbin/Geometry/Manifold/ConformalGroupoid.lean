@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module geometry.manifold.conformal_groupoid
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ def conformalPregroupoid : Pregroupoid X
     where
   property f u := ∀ x, x ∈ u → ConformalAt f x
   comp f g u v hf hg hu hv huv x hx := (hg (f x) hx.2).comp x (hf x hx.1)
-  id_mem x hx := conformalAtId x
+  id_mem x hx := conformal_at_id x
   locality f u hu h x hx :=
     let ⟨v, h₁, h₂, h₃⟩ := h x hx
     h₃ x ⟨hx, h₂⟩

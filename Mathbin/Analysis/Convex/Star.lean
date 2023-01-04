@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.star
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ theorem star_convex_Union {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConv
 #align star_convex_Union star_convex_Union
 
 theorem star_convex_sUnion {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 x s) :
-    StarConvex 𝕜 x (⋃₀S) := by
+    StarConvex 𝕜 x (⋃₀ S) := by
   rw [sUnion_eq_Union]
   exact star_convex_Union fun s => hS _ s.2
 #align star_convex_sUnion star_convex_sUnion

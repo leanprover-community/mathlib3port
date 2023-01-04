@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1639,7 +1639,7 @@ theorem support_smul {_ : Monoid R} [AddMonoid M] [DistribMulAction R M] {b : R}
 #align finsupp.support_smul Finsupp.support_smul
 
 @[simp]
-theorem support_smul_eq [Semiring R] [AddCommMonoid M] [Module R M] [NoZeroSmulDivisors R M] {b : R}
+theorem support_smul_eq [Semiring R] [AddCommMonoid M] [Module R M] [NoZeroSMulDivisors R M] {b : R}
     (hb : b ≠ 0) {g : α →₀ M} : (b • g).support = g.support :=
   Finset.ext fun a => by simp [Finsupp.smul_apply, hb]
 #align finsupp.support_smul_eq Finsupp.support_smul_eq
@@ -1723,8 +1723,8 @@ theorem sum_smul_index_add_monoid_hom [AddMonoid M] [AddCommMonoid N] [DistribSM
   sum_map_range_index fun i => (h i).map_zero
 #align finsupp.sum_smul_index_add_monoid_hom Finsupp.sum_smul_index_add_monoid_hom
 
-instance [Semiring R] [AddCommMonoid M] [Module R M] {ι : Type _} [NoZeroSmulDivisors R M] :
-    NoZeroSmulDivisors R (ι →₀ M) :=
+instance [Semiring R] [AddCommMonoid M] [Module R M] {ι : Type _} [NoZeroSMulDivisors R M] :
+    NoZeroSMulDivisors R (ι →₀ M) :=
   ⟨fun c f h =>
     or_iff_not_imp_left.mpr fun hc =>
       Finsupp.ext fun i => (smul_eq_zero.mp (Finsupp.ext_iff.mp h i)).resolve_left hc⟩

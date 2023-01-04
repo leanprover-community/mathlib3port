@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 
 ! This file was ported from Lean 3 source module analysis.calculus.uniform_limits_deriv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -538,7 +538,7 @@ theorem uniform_cauchy_seq_on_ball_of_deriv {r : ℝ}
   exact uniform_cauchy_seq_on_ball_of_fderiv hf' hf hfg
 #align uniform_cauchy_seq_on_ball_of_deriv uniform_cauchy_seq_on_ball_of_deriv
 
-theorem hasDerivAtOfTendstoUniformlyOnFilter [NeBot l]
+theorem has_deriv_at_of_tendsto_uniformly_on_filter [NeBot l]
     (hf' : TendstoUniformlyOnFilter f' g' l (𝓝 x))
     (hf : ∀ᶠ n : ι × 𝕜 in l ×ᶠ 𝓝 x, HasDerivAt (f n.1) (f' n.1 n.2) n.2)
     (hfg : ∀ᶠ y in 𝓝 x, Tendsto (fun n => f n y) l (𝓝 (g y))) : HasDerivAt g (g' x) x :=
@@ -567,9 +567,9 @@ theorem hasDerivAtOfTendstoUniformlyOnFilter [NeBot l]
     rw [← smul_sub, norm_smul, mul_comm]
     exact mul_le_mul hn.le rfl.le (norm_nonneg _) hq.le
   exact hasFderivAtOfTendstoUniformlyOnFilter hf' hf hfg
-#align has_deriv_at_of_tendsto_uniformly_on_filter hasDerivAtOfTendstoUniformlyOnFilter
+#align has_deriv_at_of_tendsto_uniformly_on_filter has_deriv_at_of_tendsto_uniformly_on_filter
 
-theorem hasDerivAtOfTendstoLocallyUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
+theorem has_deriv_at_of_tendsto_locally_uniformly_on [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
     (hf' : TendstoLocallyUniformlyOn f' g' l s)
     (hf : ∀ᶠ n in l, ∀ x ∈ s, HasDerivAt (f n) (f' n x) x)
     (hfg : ∀ x ∈ s, Tendsto (fun n => f n x) l (𝓝 (g x))) (hx : x ∈ s) : HasDerivAt g (g' x) x :=
@@ -577,31 +577,31 @@ theorem hasDerivAtOfTendstoLocallyUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsO
   have h1 : s ∈ 𝓝 x := hs.mem_nhds hx
   have h2 : ∀ᶠ n : ι × 𝕜 in l ×ᶠ 𝓝 x, HasDerivAt (f n.1) (f' n.1 n.2) n.2 :=
     eventually_prod_iff.2 ⟨_, hf, fun x => x ∈ s, h1, fun n => id⟩
-  refine' hasDerivAtOfTendstoUniformlyOnFilter _ h2 (eventually_of_mem h1 hfg)
+  refine' has_deriv_at_of_tendsto_uniformly_on_filter _ h2 (eventually_of_mem h1 hfg)
   simpa [IsOpen.nhds_within_eq hs hx] using tendsto_locally_uniformly_on_iff_filter.mp hf' x hx
-#align has_deriv_at_of_tendsto_locally_uniformly_on hasDerivAtOfTendstoLocallyUniformlyOn
+#align has_deriv_at_of_tendsto_locally_uniformly_on has_deriv_at_of_tendsto_locally_uniformly_on
 
 /-- A slight variant of `has_deriv_at_of_tendsto_locally_uniformly_on` with the assumption stated in
 terms of `differentiable_on` rather than `has_deriv_at`. This makes a few proofs nicer in complex
 analysis where holomorphicity is assumed but the derivative is not known a priori. -/
-theorem hasDerivAtOfTendstoLocallyUniformlyOn' [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
+theorem has_deriv_at_of_tendsto_locally_uniformly_on' [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
     (hf' : TendstoLocallyUniformlyOn (deriv ∘ f) g' l s)
     (hf : ∀ᶠ n in l, DifferentiableOn 𝕜 (f n) s)
     (hfg : ∀ x ∈ s, Tendsto (fun n => f n x) l (𝓝 (g x))) (hx : x ∈ s) : HasDerivAt g (g' x) x :=
   by
-  refine' hasDerivAtOfTendstoLocallyUniformlyOn hs hf' _ hfg hx
+  refine' has_deriv_at_of_tendsto_locally_uniformly_on hs hf' _ hfg hx
   filter_upwards [hf] with n h z hz using((h z hz).DifferentiableAt (hs.mem_nhds hz)).HasDerivAt
-#align has_deriv_at_of_tendsto_locally_uniformly_on' hasDerivAtOfTendstoLocallyUniformlyOn'
+#align has_deriv_at_of_tendsto_locally_uniformly_on' has_deriv_at_of_tendsto_locally_uniformly_on'
 
-theorem hasDerivAtOfTendstoUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
+theorem has_deriv_at_of_tendsto_uniformly_on [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
     (hf' : TendstoUniformlyOn f' g' l s)
     (hf : ∀ᶠ n in l, ∀ x : 𝕜, x ∈ s → HasDerivAt (f n) (f' n x) x)
     (hfg : ∀ x : 𝕜, x ∈ s → Tendsto (fun n => f n x) l (𝓝 (g x))) :
     ∀ x : 𝕜, x ∈ s → HasDerivAt g (g' x) x := fun x =>
-  hasDerivAtOfTendstoLocallyUniformlyOn hs hf'.TendstoLocallyUniformlyOn hf hfg
-#align has_deriv_at_of_tendsto_uniformly_on hasDerivAtOfTendstoUniformlyOn
+  has_deriv_at_of_tendsto_locally_uniformly_on hs hf'.TendstoLocallyUniformlyOn hf hfg
+#align has_deriv_at_of_tendsto_uniformly_on has_deriv_at_of_tendsto_uniformly_on
 
-theorem hasDerivAtOfTendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
+theorem has_deriv_at_of_tendsto_uniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
     (hf : ∀ᶠ n in l, ∀ x : 𝕜, HasDerivAt (f n) (f' n x) x)
     (hfg : ∀ x : 𝕜, Tendsto (fun n => f n x) l (𝓝 (g x))) : ∀ x : 𝕜, HasDerivAt g (g' x) x :=
   by
@@ -610,8 +610,8 @@ theorem hasDerivAtOfTendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
     filter_upwards [hf] with n h x hx using h x
   have hfg : ∀ x : 𝕜, x ∈ Set.univ → tendsto (fun n => f n x) l (𝓝 (g x)) := by simp [hfg]
   have hf' : TendstoUniformlyOn f' g' l Set.univ := by rwa [tendsto_uniformly_on_univ]
-  exact hasDerivAtOfTendstoUniformlyOn is_open_univ hf' hf hfg x (Set.mem_univ x)
-#align has_deriv_at_of_tendsto_uniformly hasDerivAtOfTendstoUniformly
+  exact has_deriv_at_of_tendsto_uniformly_on is_open_univ hf' hf hfg x (Set.mem_univ x)
+#align has_deriv_at_of_tendsto_uniformly has_deriv_at_of_tendsto_uniformly
 
 end deriv
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -415,7 +415,7 @@ theorem HasSum.add_is_compl {s t : Set β} (hs : IsCompl s t) (ha : HasSum (f �
 
 theorem HasSum.add_compl {s : Set β} (ha : HasSum (f ∘ coe : s → α) a)
     (hb : HasSum (f ∘ coe : sᶜ → α) b) : HasSum f (a + b) :=
-  ha.add_is_compl is_compl_compl hb
+  ha.add_is_compl isCompl_compl hb
 #align has_sum.add_compl HasSum.add_compl
 
 theorem Summable.add_compl {s : Set β} (hs : Summable (f ∘ coe : s → α))
@@ -425,7 +425,7 @@ theorem Summable.add_compl {s : Set β} (hs : Summable (f ∘ coe : s → α))
 
 theorem HasSum.compl_add {s : Set β} (ha : HasSum (f ∘ coe : sᶜ → α) a)
     (hb : HasSum (f ∘ coe : s → α) b) : HasSum f (a + b) :=
-  ha.add_is_compl is_compl_compl.symm hb
+  ha.add_is_compl isCompl_compl.symm hb
 #align has_sum.compl_add HasSum.compl_add
 
 theorem HasSum.even_add_odd {f : ℕ → α} (he : HasSum (fun k => f (2 * k)) a)

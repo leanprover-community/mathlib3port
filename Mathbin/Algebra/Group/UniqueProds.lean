@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.group.unique_prods
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,7 @@ theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
     [ContravariantClass A A (· * ·) (· ≤ ·)] {a b a0 b0 : A} (ha : a0 ≤ a) (hb : b0 ≤ b)
     (ab : a * b ≤ a0 * b0) : a = a0 ∧ b = b0 :=
   by
-  haveI := Mul.to_CovariantClass_right A
+  haveI := Mul.to_covariantClass_right A
   have ha' : ¬a0 * b0 < a * b → ¬a0 < a := mt fun h => mul_lt_mul_of_lt_of_le h hb
   have hb' : ¬a0 * b0 < a * b → ¬b0 < b := mt fun h => mul_lt_mul_of_le_of_lt ha h
   push_neg  at ha' hb'

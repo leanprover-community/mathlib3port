@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.ring_division
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -336,7 +336,7 @@ section Ring
 variable [Ring R] [IsDomain R] {p q : R[X]}
 
 instance : IsDomain R[X] :=
-  NoZeroDivisors.toIsDomain _
+  NoZeroDivisors.to_isDomain _
 
 end Ring
 
@@ -909,14 +909,14 @@ theorem mem_root_set' {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra
 #align polynomial.mem_root_set' Polynomial.mem_root_set'
 
 theorem mem_root_set {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra T S]
-    [NoZeroSmulDivisors T S] {a : S} : a ∈ p.rootSet S ↔ p ≠ 0 ∧ aeval a p = 0 := by
+    [NoZeroSMulDivisors T S] {a : S} : a ∈ p.rootSet S ↔ p ≠ 0 ∧ aeval a p = 0 := by
   rw [mem_root_set',
-    (map_injective _ (NoZeroSmulDivisors.algebra_map_injective T S)).ne_iff'
+    (map_injective _ (NoZeroSMulDivisors.algebra_map_injective T S)).ne_iff'
       (Polynomial.map_zero _)]
 #align polynomial.mem_root_set Polynomial.mem_root_set
 
 theorem mem_root_set_of_ne {p : T[X]} {S : Type _} [CommRing S] [IsDomain S] [Algebra T S]
-    [NoZeroSmulDivisors T S] (hp : p ≠ 0) {a : S} : a ∈ p.rootSet S ↔ aeval a p = 0 :=
+    [NoZeroSMulDivisors T S] (hp : p ≠ 0) {a : S} : a ∈ p.rootSet S ↔ aeval a p = 0 :=
   mem_root_set.trans <| and_iff_right hp
 #align polynomial.mem_root_set_of_ne Polynomial.mem_root_set_of_ne
 
@@ -939,12 +939,12 @@ theorem aeval_eq_zero_of_mem_root_set {p : T[X]} [CommRing S] [IsDomain S] [Alge
 #align polynomial.aeval_eq_zero_of_mem_root_set Polynomial.aeval_eq_zero_of_mem_root_set
 
 theorem root_set_maps_to {p : T[X]} {S S'} [CommRing S] [IsDomain S] [Algebra T S] [CommRing S']
-    [IsDomain S'] [Algebra T S'] [NoZeroSmulDivisors T S'] (f : S →ₐ[T] S') :
+    [IsDomain S'] [Algebra T S'] [NoZeroSMulDivisors T S'] (f : S →ₐ[T] S') :
     (p.rootSet S).MapsTo f (p.rootSet S') :=
   by
   refine' root_set_maps_to' (fun h₀ => _) f
   obtain rfl : p = 0 :=
-    map_injective _ (NoZeroSmulDivisors.algebra_map_injective T S') (by rwa [Polynomial.map_zero])
+    map_injective _ (NoZeroSMulDivisors.algebra_map_injective T S') (by rwa [Polynomial.map_zero])
   exact Polynomial.map_zero _
 #align polynomial.root_set_maps_to Polynomial.root_set_maps_to
 

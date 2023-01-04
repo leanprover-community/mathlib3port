@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.integral
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -396,7 +396,7 @@ variable (R S K)
 
 /-- `S` is algebraic over `R` iff a fraction ring of `S` is algebraic over `R` -/
 theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Algebra S K]
-    [NoZeroSmulDivisors R K] [IsFractionRing S K] [IsScalarTower R S K] :
+    [NoZeroSMulDivisors R K] [IsFractionRing S K] [IsScalarTower R S K] :
     Algebra.IsAlgebraic R S ↔ Algebra.IsAlgebraic R K :=
   by
   simp only [Algebra.IsAlgebraic]
@@ -410,7 +410,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
     · rw [← is_algebraic_iff_is_integral]
       refine'
         _root_.is_algebraic_of_larger_base_of_injective
-          (NoZeroSmulDivisors.algebra_map_injective R (FractionRing R)) _
+          (NoZeroSMulDivisors.algebra_map_injective R (FractionRing R)) _
       exact is_algebraic_algebra_map_of_is_algebraic (h a)
     · rw [← is_algebraic_iff_is_integral]
       use (f.map (algebraMap R (FractionRing R))).reverse
@@ -418,7 +418,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
       ·
         rwa [Ne.def, Polynomial.reverse_eq_zero, ← Polynomial.degree_eq_bot,
           Polynomial.degree_map_eq_of_injective
-            (NoZeroSmulDivisors.algebra_map_injective R (FractionRing R)),
+            (NoZeroSMulDivisors.algebra_map_injective R (FractionRing R)),
           Polynomial.degree_eq_bot]
       · have : Invertible (algebraMap S K b) :=
           IsUnit.invertible
@@ -426,7 +426,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
               (mem_non_zero_divisors_iff_ne_zero.2 fun h =>
                 nonZeroDivisors.ne_zero ha
                   ((injective_iff_map_eq_zero (algebraMap S K)).1
-                    (NoZeroSmulDivisors.algebra_map_injective _ _) b h)))
+                    (NoZeroSMulDivisors.algebra_map_injective _ _) b h)))
         rw [Polynomial.aeval_def, ← invOf_eq_inv, Polynomial.eval₂_reverse_eq_zero_iff,
           Polynomial.eval₂_map, ← IsScalarTower.algebra_map_eq, ← Polynomial.aeval_def,
           Polynomial.aeval_algebra_map_apply, hf₂, RingHom.map_zero]
@@ -435,7 +435,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
     use f, hf₁
     rw [Polynomial.aeval_algebra_map_apply] at hf₂
     exact
-      (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _)
+      (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSMulDivisors.algebra_map_injective _ _)
         _ hf₂
 #align is_fraction_ring.is_algebraic_iff' IsFractionRing.is_algebraic_iff'
 

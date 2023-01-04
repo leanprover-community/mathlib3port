@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Roca González
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.lax_milgram
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0, 0 < C ∧ Ant
   by
   rcases coercive.bounded_below with ⟨C, C_pos, below_bound⟩
   refine' ⟨C⁻¹.toNnreal, real.to_nnreal_pos.mpr (inv_pos.mpr C_pos), _⟩
-  refine' ContinuousLinearMap.antilipschitzOfBound B♯ _
+  refine' ContinuousLinearMap.antilipschitz_of_bound B♯ _
   simp_rw [Real.coe_to_nnreal', max_eq_left_of_lt (inv_pos.mpr C_pos), ←
     inv_mul_le_iff (inv_pos.mpr C_pos)]
   simpa using below_bound

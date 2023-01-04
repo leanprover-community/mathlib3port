@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.alexandroff
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ instance : TopologicalSpace (Alexandroff X)
     simpa [compl_inter] using (hms hms').union (hmt hmt')
   is_open_sUnion S ho :=
     by
-    suffices IsOpen (coe ⁻¹' ⋃₀S : Set X) by
+    suffices IsOpen (coe ⁻¹' ⋃₀ S : Set X) by
       refine' ⟨_, this⟩
       rintro ⟨s, hsS : s ∈ S, hs : ∞ ∈ s⟩
       refine' is_compact_of_is_closed_subset ((ho s hsS).1 hs) this.is_closed_compl _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.lex
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ instance Lex.covariant_class_lt_left :
 
 instance Lex.covariant_class_le_left :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (· + ·) (· ≤ ·) :=
-  Add.to_CovariantClass_left _
+  Add.to_covariantClass_left _
 #align dfinsupp.lex.covariant_class_le_left Dfinsupp.Lex.covariant_class_le_left
 
 end Left
@@ -191,7 +191,7 @@ instance Lex.covariant_class_lt_right :
 
 instance Lex.covariant_class_le_right :
     CovariantClass (Lex (Π₀ i, α i)) (Lex (Π₀ i, α i)) (Function.swap (· + ·)) (· ≤ ·) :=
-  Add.to_CovariantClass_right _
+  Add.to_covariantClass_right _
 #align dfinsupp.lex.covariant_class_le_right Dfinsupp.Lex.covariant_class_le_right
 
 end Right

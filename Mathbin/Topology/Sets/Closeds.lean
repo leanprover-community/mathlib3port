@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.closeds
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,7 +260,7 @@ theorem Closeds.is_atom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, 
 theorem Opens.is_coatom_iff [T1Space α] {s : Opens α} :
     IsCoatom s ↔ ∃ x, s = (Closeds.singleton x).compl :=
   by
-  rw [← s.compl_compl, ← is_atom_dual_iff_is_coatom]
+  rw [← s.compl_compl, ← isAtom_dual_iff_isCoatom]
   change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
   rw [(closeds.compl_order_iso α).is_atom_iff, closeds.is_atom_iff]
   trace

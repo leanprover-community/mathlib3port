@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.maximal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem infi_localization_eq_bot :
           rw [Algebra.smul_def, mul_one, map_mul, smul_comm, Algebra.smul_def, Algebra.smul_def,
             mul_comm <| algebraMap R K d,
             inv_mul_cancel_right₀ <|
-              (map_ne_zero_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K).mpr fun h =>
+              (map_ne_zero_iff _ <| NoZeroSMulDivisors.algebra_map_injective R K).mpr fun h =>
                 (h ▸ hd) max.zero_mem]⟩
   · rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩

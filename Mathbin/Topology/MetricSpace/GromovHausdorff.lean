@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem eq_to_GH_space_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonemp
 #align Gromov_Hausdorff.eq_to_GH_space_iff GromovHausdorff.eq_to_GH_space_iff
 
 theorem eq_to_GH_space {p : NonemptyCompacts ℓ_infty_ℝ} : ⟦p⟧ = toGHSpace p :=
-  eq_to_GH_space_iff.2 ⟨fun x => x, isometrySubtypeCoe, Subtype.range_coe⟩
+  eq_to_GH_space_iff.2 ⟨fun x => x, isometry_subtype_coe, Subtype.range_coe⟩
 #align Gromov_Hausdorff.eq_to_GH_space GromovHausdorff.eq_to_GH_space
 
 section
@@ -235,7 +235,7 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
   have : Hausdorff_dist (range Φ) (range Ψ) = Hausdorff_dist (range Φ') (range Ψ') :=
     by
     rw [ΦΦ', ΨΨ', range_comp, range_comp]
-    exact Hausdorff_dist_image isometrySubtypeCoe
+    exact Hausdorff_dist_image isometry_subtype_coe
   rw [this]
   -- Embed `s` in `ℓ^∞(ℝ)` through its Kuratowski embedding
   let F := kuratowskiEmbedding (Subtype s)
@@ -258,7 +258,7 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
   have BY : ⟦B⟧ = to_GH_space Y := by
     rw [eq_to_GH_space_iff]
     exact ⟨fun x => F (Ψ' x), (kuratowskiEmbedding.isometry _).comp IΨ', range_comp _ _⟩
-  refine' cInf_le ⟨0, _⟩ _
+  refine' cinfₛ_le ⟨0, _⟩ _
   · simp only [lowerBounds, mem_image, mem_prod, mem_set_of_eq, Prod.exists, and_imp,
       forall_exists_index]
     intro t _ _ _ _ ht
@@ -382,7 +382,7 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
       rcases mem_range.1 this with ⟨y, hy⟩
       calc
         (⨅ y, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
-          cinfi_le (by simpa only [add_zero] using HD_below_aux1 0) y
+          cinfᵢ_le (by simpa only [add_zero] using HD_below_aux1 0) y
         _ = dist (Φ x) (Ψ y) := rfl
         _ = dist (f (inl x)) z := by rw [hy]
         _ ≤ r := le_of_lt hz
@@ -399,12 +399,12 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
       rcases mem_range.1 this with ⟨x, hx⟩
       calc
         (⨅ x, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
-          cinfi_le (by simpa only [add_zero] using HD_below_aux2 0) x
+          cinfᵢ_le (by simpa only [add_zero] using HD_below_aux2 0) x
         _ = dist (Φ x) (Ψ y) := rfl
         _ = dist z (f (inr y)) := by rw [hx]
         _ ≤ r := le_of_lt hz
         
-    simp only [HD, csupr_le I1, csupr_le I2, max_le_iff, and_self_iff]
+    simp only [HD, csupᵢ_le I1, csupᵢ_le I2, max_le_iff, and_self_iff]
   /- Get the same inequality for any coupling. If the coupling is quite good, the desired
     inequality has been proved above. If it is bad, then the inequality is obvious. -/
   have B :
@@ -427,7 +427,7 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
         _ ≤ Hausdorff_dist (p : Set ℓ_infty_ℝ) q := not_lt.1 h
         
   refine' le_antisymm _ _
-  · apply le_cInf
+  · apply le_cinfₛ
     · refine' (Set.Nonempty.prod _ _).image _ <;> exact ⟨_, rfl⟩
     · rintro b ⟨⟨p, q⟩, ⟨hp, hq⟩, rfl⟩
       exact B p q hp hq
@@ -461,7 +461,7 @@ instance : MetricSpace GHSpace where
   dist_self x := by
     rcases exists_rep x with ⟨y, hy⟩
     refine' le_antisymm _ _
-    · apply cInf_le
+    · apply cinfₛ_le
       ·
         exact
           ⟨0, by
@@ -470,7 +470,7 @@ instance : MetricSpace GHSpace where
       · simp only [mem_image, mem_prod, mem_set_of_eq, Prod.exists]
         exists y, y
         simpa only [and_self_iff, Hausdorff_dist_self_zero, eq_self_iff_true, and_true_iff]
-    · apply le_cInf
+    · apply le_cinfₛ
       · exact (nonempty.prod ⟨y, hy⟩ ⟨y, hy⟩).image _
       · rintro b ⟨⟨u, v⟩, ⟨hu, hv⟩, rfl⟩
         exact Hausdorff_dist_nonneg
@@ -601,8 +601,8 @@ variable {X : Type u} [MetricSpace X]
 theorem GH_dist_le_nonempty_compacts_dist (p q : NonemptyCompacts X) :
     dist p.toGHSpace q.toGHSpace ≤ dist p q :=
   by
-  have ha : Isometry (coe : p → X) := isometrySubtypeCoe
-  have hb : Isometry (coe : q → X) := isometrySubtypeCoe
+  have ha : Isometry (coe : p → X) := isometry_subtype_coe
+  have hb : Isometry (coe : q → X) := isometry_subtype_coe
   have A : dist p q = Hausdorff_dist (p : Set X) q := rfl
   have I : ↑p = range (coe : p → X) := subtype.range_coe_subtype.symm
   have J : ↑q = range (coe : q → X) := subtype.range_coe_subtype.symm
@@ -611,14 +611,14 @@ theorem GH_dist_le_nonempty_compacts_dist (p q : NonemptyCompacts X) :
 #align
   Gromov_Hausdorff.GH_dist_le_nonempty_compacts_dist GromovHausdorff.GH_dist_le_nonempty_compacts_dist
 
-theorem toGHSpaceLipschitz :
+theorem to_GH_space_lipschitz :
     LipschitzWith 1 (NonemptyCompacts.toGHSpace : NonemptyCompacts X → GHSpace) :=
-  LipschitzWith.mkOne GH_dist_le_nonempty_compacts_dist
-#align Gromov_Hausdorff.to_GH_space_lipschitz GromovHausdorff.toGHSpaceLipschitz
+  LipschitzWith.mk_one GH_dist_le_nonempty_compacts_dist
+#align Gromov_Hausdorff.to_GH_space_lipschitz GromovHausdorff.to_GH_space_lipschitz
 
 theorem to_GH_space_continuous :
     Continuous (NonemptyCompacts.toGHSpace : NonemptyCompacts X → GHSpace) :=
-  toGHSpaceLipschitz.Continuous
+  to_GH_space_lipschitz.Continuous
 #align Gromov_Hausdorff.to_GH_space_continuous GromovHausdorff.to_GH_space_continuous
 
 end NonemptyCompacts
@@ -659,8 +659,8 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
     glue_metric_approx (fun x : s => (x : X)) (fun x => Φ x) (ε₂ / 2 + δ) (by linarith) this
   let Fl := @Sum.inl X Y
   let Fr := @Sum.inr X Y
-  have Il : Isometry Fl := Isometry.ofDistEq fun x y => rfl
-  have Ir : Isometry Fr := Isometry.ofDistEq fun x y => rfl
+  have Il : Isometry Fl := Isometry.of_dist_eq fun x y => rfl
+  have Ir : Isometry Fr := Isometry.of_dist_eq fun x y => rfl
   /- The proof goes as follows : the `GH_dist` is bounded by the Hausdorff distance of the images
     in the coupling, which is bounded (using the triangular inequality) by the sum of the Hausdorff
     distances of `X` and `s` (in the coupling or, equivalently in the original space), of `s` and

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 
 ! This file was ported from Lean 3 source module topology.metric_space.infsep
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -255,7 +255,7 @@ theorem einfsep_insert : einfsep (insert x s) = (⨅ (y ∈ s) (hxy : x ≠ y), 
 theorem einfsep_triple (hxy : x ≠ y) (hyz : y ≠ z) (hxz : x ≠ z) :
     einfsep ({x, y, z} : Set α) = edist x y ⊓ edist x z ⊓ edist y z := by
   simp_rw [einfsep_insert, infᵢ_insert, infᵢ_singleton, einfsep_singleton, inf_top_eq,
-    cinfi_pos hxy, cinfi_pos hyz, cinfi_pos hxz]
+    cinfᵢ_pos hxy, cinfᵢ_pos hyz, cinfᵢ_pos hxz]
 #align set.einfsep_triple Set.einfsep_triple
 
 theorem le_einfsep_pi_of_le {π : β → Type _} [Fintype β] [∀ b, PseudoEmetricSpace (π b)]
@@ -496,7 +496,7 @@ theorem infsep_eq_infi [Decidable s.Nontrivial] :
       rcases h with ⟨_, _, _, rfl⟩
       exact dist_nonneg
     refine' eq_of_forall_le_iff fun _ => _
-    simp_rw [hs.le_infsep_iff, le_cinfi_set_iff (off_diag_nonempty.mpr hs) hb, imp_forall_iff,
+    simp_rw [hs.le_infsep_iff, le_cinfᵢ_set_iff (off_diag_nonempty.mpr hs) hb, imp_forall_iff,
       mem_off_diag, Prod.forall, uncurry_apply_pair, and_imp]
   · exact (not_nontrivial_iff.mp hs).infsep_zero
 #align set.infsep_eq_infi Set.infsep_eq_infi

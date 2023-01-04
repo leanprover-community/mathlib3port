@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.ring.opposite
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors αᵐᵒᵖ
       (fun hy => Or.inr <| unop_injective <| hy) fun hx => Or.inl <| unop_injective <| hx
 
 instance [Ring α] [IsDomain α] : IsDomain αᵐᵒᵖ :=
-  NoZeroDivisors.toIsDomain _
+  NoZeroDivisors.to_isDomain _
 
 instance [GroupWithZero α] : GroupWithZero αᵐᵒᵖ :=
   { MulOpposite.monoidWithZero α, MulOpposite.divInvMonoid α,
@@ -173,7 +173,7 @@ instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors αᵃᵒᵖ
       (@eq_zero_or_eq_zero_of_mul_eq_zero α _ _ _ _ _ <| op_injective H)
 
 instance [Ring α] [IsDomain α] : IsDomain αᵃᵒᵖ :=
-  NoZeroDivisors.toIsDomain _
+  NoZeroDivisors.to_isDomain _
 
 instance [GroupWithZero α] : GroupWithZero αᵃᵒᵖ :=
   { AddOpposite.monoidWithZero α, AddOpposite.divInvMonoid α,

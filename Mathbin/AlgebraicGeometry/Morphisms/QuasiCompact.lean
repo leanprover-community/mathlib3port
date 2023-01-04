@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_compact
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ def QuasiCompact.affineProperty : AffineTargetMorphismProperty := fun X Y f hf =
 #align
   algebraic_geometry.quasi_compact.affine_property AlgebraicGeometry.QuasiCompact.affineProperty
 
-instance (priority := 900) quasi_compact_of_is_iso {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] :
+instance (priority := 900) quasiCompactOfIsIso {X Y : SchemeCat} (f : X ⟶ Y) [IsIso f] :
     QuasiCompact f := by
   constructor
   intro U hU hU'
@@ -64,9 +64,9 @@ instance (priority := 900) quasi_compact_of_is_iso {X Y : SchemeCat} (f : X ⟶ 
   rw [Set.image_eq_preimage_of_inverse]
   delta Function.LeftInverse
   exacts[is_iso.inv_hom_id_apply f.1.base, is_iso.hom_inv_id_apply f.1.base]
-#align algebraic_geometry.quasi_compact_of_is_iso AlgebraicGeometry.quasi_compact_of_is_iso
+#align algebraic_geometry.quasi_compact_of_is_iso AlgebraicGeometry.quasiCompactOfIsIso
 
-instance quasi_compact_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiCompact f]
+instance quasiCompactComp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiCompact f]
     [QuasiCompact g] : QuasiCompact (f ≫ g) :=
   by
   constructor
@@ -75,7 +75,7 @@ instance quasi_compact_comp {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [Qua
   apply quasi_compact.is_compact_preimage
   · exact Continuous.is_open_preimage (by continuity) _ hU
   apply quasi_compact.is_compact_preimage <;> assumption
-#align algebraic_geometry.quasi_compact_comp AlgebraicGeometry.quasi_compact_comp
+#align algebraic_geometry.quasi_compact_comp AlgebraicGeometry.quasiCompactComp
 
 theorem is_compact_open_iff_eq_finset_affine_union {X : SchemeCat} (U : Set X.carrier) :
     IsCompact U ∧ IsOpen U ↔
@@ -216,11 +216,11 @@ theorem QuasiCompact.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) 
 #align
   algebraic_geometry.quasi_compact.affine_open_cover_tfae AlgebraicGeometry.QuasiCompact.affine_open_cover_tfae
 
-theorem QuasiCompact.is_local_at_target : PropertyIsLocalAtTarget @QuasiCompact :=
+theorem QuasiCompact.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiCompact :=
   quasi_compact_eq_affine_property.symm ▸
-    QuasiCompact.affinePropertyIsLocal.target_affine_locally_is_local
+    QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal
 #align
-  algebraic_geometry.quasi_compact.is_local_at_target AlgebraicGeometry.QuasiCompact.is_local_at_target
+  algebraic_geometry.quasi_compact.is_local_at_target AlgebraicGeometry.QuasiCompact.isLocalAtTarget
 
 theorem QuasiCompact.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
     Tfae
@@ -234,7 +234,7 @@ theorem QuasiCompact.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
           QuasiCompact (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, QuasiCompact (f ∣_ U i)] :=
   quasi_compact_eq_affine_property.symm ▸
-    QuasiCompact.affinePropertyIsLocal.target_affine_locally_is_local.open_cover_tfae f
+    QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal.open_cover_tfae f
 #align
   algebraic_geometry.quasi_compact.open_cover_tfae AlgebraicGeometry.QuasiCompact.open_cover_tfae
 
@@ -261,7 +261,7 @@ theorem QuasiCompact.affine_open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeC
 theorem QuasiCompact.open_cover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
     (f : X ⟶ Y) : QuasiCompact f ↔ ∀ i, QuasiCompact (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   quasi_compact_eq_affine_property.symm ▸
-    QuasiCompact.affinePropertyIsLocal.target_affine_locally_is_local.open_cover_iff f 𝒰
+    QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal.open_cover_iff f 𝒰
 #align algebraic_geometry.quasi_compact.open_cover_iff AlgebraicGeometry.QuasiCompact.open_cover_iff
 
 theorem quasi_compact_respects_iso : MorphismProperty.RespectsIso @QuasiCompact :=

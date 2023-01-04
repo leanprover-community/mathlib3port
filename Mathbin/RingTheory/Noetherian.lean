@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.noetherian
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -400,7 +400,7 @@ theorem isNoetherianOfRangeEqKer [IsNoetherian R M] [IsNoetherian R P] (f : M �
     (g : N →ₗ[R] P) (hf : Function.Injective f) (hg : Function.Surjective g) (h : f.range = g.ker) :
     IsNoetherian R N :=
   is_noetherian_iff_well_founded.2 <|
-    well_founded_gt_exact_sequence (well_founded_submodule_gt R M) (well_founded_submodule_gt R P)
+    wellFounded_gt_exact_sequence (well_founded_submodule_gt R M) (well_founded_submodule_gt R P)
       f.range (Submodule.map f) (Submodule.comap f) (Submodule.comap g) (Submodule.map g)
       (Submodule.gciMapComap hf) (Submodule.giMapComap hg)
       (by simp [Submodule.map_comap_eq, inf_comm]) (by simp [Submodule.comap_map_eq, h])

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.torsion
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem torsion_of_eq_top_iff (m : M) : torsionOf R M m = ⊤ ↔ m = 0 :=
 #align ideal.torsion_of_eq_top_iff Ideal.torsion_of_eq_top_iff
 
 @[simp]
-theorem torsion_of_eq_bot_iff_of_no_zero_smul_divisors [Nontrivial R] [NoZeroSmulDivisors R M]
+theorem torsion_of_eq_bot_iff_of_no_zero_smul_divisors [Nontrivial R] [NoZeroSMulDivisors R M]
     (m : M) : torsionOf R M m = ⊥ ↔ m ≠ 0 :=
   by
   refine' ⟨fun h contra => _, fun h => (Submodule.eq_bot_iff _).mpr fun r hr => _⟩
@@ -714,10 +714,10 @@ theorem coe_torsion_eq_annihilator_ne_bot :
 #align submodule.coe_torsion_eq_annihilator_ne_bot Submodule.coe_torsion_eq_annihilator_ne_bot
 
 /-- A module over a domain has `no_zero_smul_divisors` iff its torsion submodule is trivial. -/
-theorem no_zero_smul_divisors_iff_torsion_eq_bot : NoZeroSmulDivisors R M ↔ torsion R M = ⊥ :=
+theorem no_zero_smul_divisors_iff_torsion_eq_bot : NoZeroSMulDivisors R M ↔ torsion R M = ⊥ :=
   by
   constructor <;> intro h
-  · haveI : NoZeroSmulDivisors R M := h
+  · haveI : NoZeroSMulDivisors R M := h
     rw [eq_bot_iff]
     rintro x ⟨a, hax⟩
     change (a : R) • x = 0 at hax
@@ -757,7 +757,7 @@ theorem torsion_eq_bot : torsion R (M ⧸ torsion R M) = ⊥ :=
       exact ⟨b * a, (mul_smul _ _ _).trans h⟩
 #align submodule.quotient_torsion.torsion_eq_bot Submodule.QuotientTorsion.torsion_eq_bot
 
-instance no_zero_smul_divisors [IsDomain R] : NoZeroSmulDivisors R (M ⧸ torsion R M) :=
+instance no_zero_smul_divisors [IsDomain R] : NoZeroSMulDivisors R (M ⧸ torsion R M) :=
   no_zero_smul_divisors_iff_torsion_eq_bot.mpr torsion_eq_bot
 #align
   submodule.quotient_torsion.no_zero_smul_divisors Submodule.QuotientTorsion.no_zero_smul_divisors

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.ring.seminorm
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ attribute [nolint doc_blame]
 
 You should extend this class when you extend `ring_seminorm`. -/
 class RingSeminormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends
-  AddGroupSeminormClass F α, SubMultiplicativeHomClass F α ℝ
+  AddGroupSeminormClass F α, SubmultiplicativeHomClass F α ℝ
 #align ring_seminorm_class RingSeminormClass
 
 /-- `ring_norm_class F α` states that `F` is a type of norms on the ring `α`.

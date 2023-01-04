@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.linear
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,9 +64,9 @@ protected theorem hasFpowerSeriesAt (f : E →L[𝕜] F) (x : E) :
   ⟨∞, f.HasFpowerSeriesOnBall x⟩
 #align continuous_linear_map.has_fpower_series_at ContinuousLinearMap.hasFpowerSeriesAt
 
-protected theorem analyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x :=
+protected theorem analytic_at (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x :=
   (f.HasFpowerSeriesAt x).AnalyticAt
-#align continuous_linear_map.analytic_at ContinuousLinearMap.analyticAt
+#align continuous_linear_map.analytic_at ContinuousLinearMap.analytic_at
 
 /-- Reinterpret a bilinear map `f : E →L[𝕜] F →L[𝕜] G` as a multilinear map
 `(E × F) [×2]→L[𝕜] G`. This multilinear map is the second term in the formal
@@ -119,10 +119,10 @@ protected theorem hasFpowerSeriesAtBilinear (f : E →L[𝕜] F →L[𝕜] G) (x
 #align
   continuous_linear_map.has_fpower_series_at_bilinear ContinuousLinearMap.hasFpowerSeriesAtBilinear
 
-protected theorem analyticAtBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
+protected theorem analytic_at_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     AnalyticAt 𝕜 (fun x : E × F => f x.1 x.2) x :=
   (f.hasFpowerSeriesAtBilinear x).AnalyticAt
-#align continuous_linear_map.analytic_at_bilinear ContinuousLinearMap.analyticAtBilinear
+#align continuous_linear_map.analytic_at_bilinear ContinuousLinearMap.analytic_at_bilinear
 
 end ContinuousLinearMap
 

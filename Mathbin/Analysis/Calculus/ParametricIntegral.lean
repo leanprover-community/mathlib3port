@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.calculus.parametric_integral
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,7 +207,7 @@ theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → α → E} {F' : H �
     apply (h_diff.and h_bound).mono
     rintro a ⟨ha_deriv, ha_bound⟩
     refine'
-      (convex_ball _ _).lipschitzOnWithOfNnnormHasFderivWithinLe
+      (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_fderiv_within_le
         (fun x x_in => (ha_deriv x x_in).HasFderivWithinAt) fun x x_in => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
@@ -267,7 +267,7 @@ theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → 
     apply (h_diff.and h_bound).mono
     rintro a ⟨ha_deriv, ha_bound⟩
     refine'
-      (convex_ball _ _).lipschitzOnWithOfNnnormHasDerivWithinLe
+      (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_deriv_within_le
         (fun x x_in => (ha_deriv x x_in).HasDerivWithinAt) fun x x_in => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)

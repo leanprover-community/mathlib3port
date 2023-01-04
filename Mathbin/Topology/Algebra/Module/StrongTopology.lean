@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.strong_topology
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,7 @@ theorem strongTopology.topological_add_group [TopologicalSpace F] [TopologicalAd
   continuous_linear_map.strong_topology.topological_add_group ContinuousLinearMap.strongTopology.topological_add_group
 
 theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2Space F]
-    (𝔖 : Set (Set E)) (h𝔖 : ⋃₀𝔖 = Set.univ) : @T2Space (E →SL[σ] F) (strongTopology σ F 𝔖) :=
+    (𝔖 : Set (Set E)) (h𝔖 : ⋃₀ 𝔖 = Set.univ) : @T2Space (E →SL[σ] F) (strongTopology σ F 𝔖) :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := topological_add_comm_group_is_uniform
@@ -219,7 +219,7 @@ instance [TopologicalSpace F] [TopologicalAddGroup F] : TopologicalAddGroup (E �
 instance [RingHomSurjective σ] [RingHomIsometric σ] [TopologicalSpace F] [TopologicalAddGroup F]
     [HasContinuousSmul 𝕜₂ F] : HasContinuousSmul 𝕜₂ (E →SL[σ] F) :=
   strongTopology.has_continuous_smul σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
-    ⟨∅, Bornology.isVonNBoundedEmpty 𝕜₁ E⟩
+    ⟨∅, Bornology.is_vonN_bounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
 
 instance [UniformSpace F] [UniformAddGroup F] : UniformSpace (E →SL[σ] F) :=
@@ -232,14 +232,14 @@ instance [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousSmul 𝕜₁
     T2Space (E →SL[σ] F) :=
   strongTopology.t2Space σ F _
     (Set.eq_univ_of_forall fun x =>
-      Set.mem_unionₛ_of_mem (Set.mem_singleton x) (Bornology.isVonNBoundedSingleton x))
+      Set.mem_unionₛ_of_mem (Set.mem_singleton x) (Bornology.is_vonN_bounded_singleton x))
 
 protected theorem has_basis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
     {ι : Type _} {p : ι → Prop} {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
     (𝓝 (0 : E →SL[σ] F)).HasBasis (fun Si : Set E × ι => Bornology.IsVonNBounded 𝕜₁ Si.1 ∧ p Si.2)
       fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   strongTopology.has_basis_nhds_zero_of_basis σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
-    ⟨∅, Bornology.isVonNBoundedEmpty 𝕜₁ E⟩
+    ⟨∅, Bornology.is_vonN_bounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) h
 #align
   continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.has_basis_nhds_zero_of_basis
@@ -253,7 +253,7 @@ protected theorem has_basis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup 
 
 instance [TopologicalSpace E'] [TopologicalSpace F'] [TopologicalAddGroup F']
     [HasContinuousConstSmul ℝ F'] [LocallyConvexSpace ℝ F'] : LocallyConvexSpace ℝ (E' →L[ℝ] F') :=
-  strongTopology.locallyConvexSpace _ ⟨∅, Bornology.isVonNBoundedEmpty ℝ E'⟩
+  strongTopology.locallyConvexSpace _ ⟨∅, Bornology.is_vonN_bounded_empty ℝ E'⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
 
 end BoundedSets

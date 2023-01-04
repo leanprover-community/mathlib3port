@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,18 +173,18 @@ def seminormAux (k n : ℕ) (f : 𝓢(E, F)) : ℝ :=
 #align schwartz_map.seminorm_aux SchwartzMap.seminormAux
 
 theorem seminorm_aux_nonneg (k n : ℕ) (f : 𝓢(E, F)) : 0 ≤ f.seminormAux k n :=
-  le_cInf (bounds_nonempty k n f) fun _ ⟨hx, _⟩ => hx
+  le_cinfₛ (bounds_nonempty k n f) fun _ ⟨hx, _⟩ => hx
 #align schwartz_map.seminorm_aux_nonneg SchwartzMap.seminorm_aux_nonneg
 
 theorem le_seminorm_aux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n (⇑f) x‖ ≤ f.seminormAux k n :=
-  le_cInf (bounds_nonempty k n f) fun y ⟨_, h⟩ => h x
+  le_cinfₛ (bounds_nonempty k n f) fun y ⟨_, h⟩ => h x
 #align schwartz_map.le_seminorm_aux SchwartzMap.le_seminorm_aux
 
 /-- If one controls the norm of every `A x`, then one controls the norm of `A`. -/
 theorem seminorm_aux_le_bound (k n : ℕ) (f : 𝓢(E, F)) {M : ℝ} (hMp : 0 ≤ M)
     (hM : ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ M) : f.seminormAux k n ≤ M :=
-  cInf_le (bounds_bdd_below k n f) ⟨hMp, hM⟩
+  cinfₛ_le (bounds_bdd_below k n f) ⟨hMp, hM⟩
 #align schwartz_map.seminorm_aux_le_bound SchwartzMap.seminorm_aux_le_bound
 
 end SeminormAux
@@ -265,7 +265,7 @@ section Zero
 
 instance : Zero 𝓢(E, F) :=
   ⟨{  toFun := fun _ => 0
-      smooth' := contDiffConst
+      smooth' := cont_diff_const
       decay' := fun _ _ => ⟨1, fun _ => by simp⟩ }⟩
 
 instance : Inhabited 𝓢(E, F) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.module.pi
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddC
 #align pi.module' Pi.module'
 
 instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i]
-    [∀ i, NoZeroSmulDivisors α <| f i] : NoZeroSmulDivisors α (∀ i : I, f i) :=
+    [∀ i, NoZeroSMulDivisors α <| f i] : NoZeroSMulDivisors α (∀ i : I, f i) :=
   ⟨fun c x h =>
     or_iff_not_imp_left.mpr fun hc =>
       funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
@@ -111,7 +111,7 @@ instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module
 /-- A special case of `pi.no_zero_smul_divisors` for non-dependent types. Lean struggles to
 synthesize this instance by itself elsewhere in the library. -/
 instance Function.no_zero_smul_divisors {ι α β : Type _} {r : Semiring α} {m : AddCommMonoid β}
-    [Module α β] [NoZeroSmulDivisors α β] : NoZeroSmulDivisors α (ι → β) :=
+    [Module α β] [NoZeroSMulDivisors α β] : NoZeroSMulDivisors α (ι → β) :=
   Pi.no_zero_smul_divisors _
 #align function.no_zero_smul_divisors Function.no_zero_smul_divisors
 

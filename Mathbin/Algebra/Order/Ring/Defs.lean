@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.ring.defs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1728,14 +1728,14 @@ instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup :
   linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
 -/
 
-/- warning: linear_ordered_ring.no_zero_divisors -> LinearOrderedRing.no_zero_divisors is a dubious translation:
+/- warning: linear_ordered_ring.no_zero_divisors -> LinearOrderedRing.noZeroDivisors is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α], NoZeroDivisors.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α], NoZeroDivisors.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))
-Case conversion may be inaccurate. Consider using '#align linear_ordered_ring.no_zero_divisors LinearOrderedRing.no_zero_divisorsₓ'. -/
+Case conversion may be inaccurate. Consider using '#align linear_ordered_ring.no_zero_divisors LinearOrderedRing.noZeroDivisorsₓ'. -/
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedRing.no_zero_divisors : NoZeroDivisors α :=
+instance (priority := 100) LinearOrderedRing.noZeroDivisors : NoZeroDivisors α :=
   { ‹LinearOrderedRing α› with
     eq_zero_or_eq_zero_of_mul_eq_zero := by
       intro a b hab
@@ -1743,12 +1743,12 @@ instance (priority := 100) LinearOrderedRing.no_zero_divisors : NoZeroDivisors �
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
       exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne,
         (mul_neg_of_pos_of_neg ha hb).Ne, (mul_pos ha hb).Ne.symm] }
-#align linear_ordered_ring.no_zero_divisors LinearOrderedRing.no_zero_divisors
+#align linear_ordered_ring.no_zero_divisors LinearOrderedRing.noZeroDivisors
 
-#print LinearOrderedRing.is_domain /-
+#print LinearOrderedRing.isDomain /-
 -- see Note [lower instance priority]
 --We don't want to import `algebra.ring.basic`, so we cannot use `no_zero_divisors.to_is_domain`.
-instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
+instance (priority := 100) LinearOrderedRing.isDomain : IsDomain α :=
   {
     (inferInstance :
       Nontrivial
@@ -1761,7 +1761,7 @@ instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
       by
       rw [← sub_eq_zero, ← sub_mul] at h
       exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb) }
-#align linear_ordered_ring.is_domain LinearOrderedRing.is_domain
+#align linear_ordered_ring.is_domain LinearOrderedRing.isDomain
 -/
 
 /- warning: mul_pos_iff -> mul_pos_iff is a dubious translation:

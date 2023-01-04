@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.exponent
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -300,7 +300,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   suffices orderOf t < orderOf (t ^ p ^ k * g)
     by
     rw [ht] at this
-    exact this.not_le (le_cSup hfin.bdd_above <| Set.mem_range_self _)
+    exact this.not_le (le_csupₛ hfin.bdd_above <| Set.mem_range_self _)
   have hpk : p ^ k ∣ orderOf t := Nat.ord_proj_dvd _ _
   have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
     rw [order_of_pow' t (pow_ne_zero k hp.ne_zero), Nat.gcd_eq_right hpk]

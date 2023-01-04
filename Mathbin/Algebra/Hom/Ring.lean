@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.hom.ring
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1340,9 +1340,9 @@ protected theorem Function.Injective.isDomain [Ring α] [IsDomain α] [Ring β] 
     (hf : Injective f) : IsDomain β :=
   by
   haveI := pullback_nonzero f f.map_zero f.map_one
-  haveI := IsRightCancelMulZero.toNoZeroDivisors α
+  haveI := IsRightCancelMulZero.to_noZeroDivisors α
   haveI := hf.no_zero_divisors f f.map_zero f.map_mul
-  exact NoZeroDivisors.toIsDomain β
+  exact NoZeroDivisors.to_isDomain β
 #align function.injective.is_domain Function.Injective.isDomain
 
 namespace AddMonoidHom

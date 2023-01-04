@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ theorem add_haar_eq_zero_of_disjoint_translates {E : Type _} [NormedAddCommGroup
     add_haar_eq_zero_of_disjoint_translates_aux μ u
       (bounded.mono (inter_subset_right _ _) bounded_closed_ball) hu _
       (h's.inter measurable_set_closed_ball)
-  apply PairwiseDisjoint.mono hs fun n => _
+  apply pairwise_disjoint_mono hs fun n => _
   exact add_subset_add (subset.refl _) (inter_subset_left _ _)
 #align
   measure_theory.measure.add_haar_eq_zero_of_disjoint_translates MeasureTheory.Measure.add_haar_eq_zero_of_disjoint_translates

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.setoid.partition
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ theorem mk_classes_classes (r : Setoid α) : mkClasses r.classes classes_eqv_cla
 #align setoid.mk_classes_classes Setoid.mk_classes_classes
 
 @[simp]
-theorem sUnion_classes (r : Setoid α) : ⋃₀r.classes = Set.univ :=
+theorem sUnion_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
   Set.eq_univ_of_forall fun x => Set.mem_unionₛ.2 ⟨{ y | r.Rel y x }, ⟨x, rfl⟩, Setoid.refl _⟩
 #align setoid.sUnion_classes Setoid.sUnion_classes
 
@@ -221,7 +221,7 @@ theorem IsPartition.pairwise_disjoint {c : Set (Set α)} (hc : IsPartition c) :
   eqv_classes_disjoint hc.2
 #align setoid.is_partition.pairwise_disjoint Setoid.IsPartition.pairwise_disjoint
 
-theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀c = Set.univ :=
+theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀ c = Set.univ :=
   Set.eq_univ_of_forall fun x =>
     Set.mem_unionₛ.2 <|
       let ⟨t, ht⟩ := hc.2 x

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -556,7 +556,7 @@ theorem Minpoly.toAdjoin.surjective : Function.Surjective (Minpoly.toAdjoin R x)
   refine' ⟨mk (minpoly R x) X, by simpa using h.symm⟩
 #align adjoin_root.minpoly.to_adjoin.surjective AdjoinRoot.Minpoly.toAdjoin.surjective
 
-variable {R} {x} [IsDomain R] [NormalizedGcdMonoid R] [IsDomain S] [NoZeroSmulDivisors R S]
+variable {R} {x} [IsDomain R] [NormalizedGCDMonoid R] [IsDomain S] [NoZeroSMulDivisors R S]
 
 theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) :
     Function.Injective (Minpoly.toAdjoin R x) :=
@@ -570,7 +570,7 @@ theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) :
     [anonymous], P.eq_C_content_mul_prim_part, aeval_mul, aeval_C] at hP₁
   replace hP₁ :=
     eq_zero_of_ne_zero_of_mul_left_eq_zero
-      ((map_ne_zero_iff _ (NoZeroSmulDivisors.algebra_map_injective R S)).2 hPcont) hP₁
+      ((map_ne_zero_iff _ (NoZeroSMulDivisors.algebra_map_injective R S)).2 hPcont) hP₁
   obtain ⟨Q, hQ⟩ := minpoly.gcd_domain_dvd hx P.is_primitive_prim_part.ne_zero hP₁
   rw [P.eq_C_content_mul_prim_part] at hP
   simpa [hQ] using hP.symm
@@ -734,7 +734,7 @@ def Polynomial.quotQuotEquivComm :
   quotientEquiv (span ({f.map I} : Set (Polynomial (R ⧸ I))))
     (span {Ideal.Quotient.mk (I.map Polynomial.c) f}) (polynomialQuotientEquivQuotientPolynomial I)
     (by
-      rw [map_span, Set.image_singleton, RingEquiv.coe_to_ring_hom,
+      rw [map_span, Set.image_singleton, RingEquiv.coe_toRingHom,
         polynomial_quotient_equiv_quotient_polynomial_map_mk I f])
 #align adjoin_root.polynomial.quot_quot_equiv_comm AdjoinRoot.Polynomial.quotQuotEquivComm
 
@@ -864,7 +864,7 @@ noncomputable def quotientEquivQuotientMinpolyMap (pb : PowerBasis R S) (I : Ide
               algebraMap R _ x
           from fun x => by
           rw [← Ideal.Quotient.mk_algebra_map, Ideal.quotient_equiv_apply, RingHom.toFun_eq_coe,
-            Ideal.quotient_map_mk, AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.coe_to_ring_hom,
+            Ideal.quotient_map_mk, AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.coe_toRingHom,
             AlgEquiv.coe_ring_equiv, AlgEquiv.commutes, quotient.mk_algebra_map])).trans
     (AdjoinRoot.quotEquivQuotMap _ _)
 #align power_basis.quotient_equiv_quotient_minpoly_map PowerBasis.quotientEquivQuotientMinpolyMap

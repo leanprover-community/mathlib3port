@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.option.defs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,11 +53,9 @@ theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
 #align option.mem_iff Option.mem_iff
 -/
 
-#print Option.is_none_iff_eq_none /-
 theorem is_none_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
   ⟨Option.eq_none_of_isNone, fun e => e.symm ▸ rfl⟩
 #align option.is_none_iff_eq_none Option.is_none_iff_eq_none
--/
 
 #print Option.some_inj /-
 theorem some_inj {a b : α} : some a = some b ↔ a = b := by simp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.cauchy_integral
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -375,7 +375,7 @@ theorem circle_integral_eq_of_differentiable_on_annulus_off_countable {c : ℂ} 
     _ = ∮ z in C(c, r), (z - c)⁻¹ • (z - c) • f z :=
       circle_integral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable h0 hle hs
         ((continuous_on_id.sub continuous_on_const).smul hc) fun z hz =>
-        (differentiableAtId.sub_const _).smul (hd z hz)
+        (differentiable_at_id.sub_const _).smul (hd z hz)
     _ = ∮ z in C(c, r), f z := circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _
     
 #align
@@ -666,23 +666,23 @@ protected theorem DifferentiableOn.hasFpowerSeriesOnBall {R : ℝ≥0} {c : ℂ}
 
 /-- If `f : ℂ → E` is complex differentiable on some set `s`, then it is analytic at any point `z`
 such that `s ∈ 𝓝 z` (equivalently, `z ∈ interior s`). -/
-protected theorem DifferentiableOn.analyticAt {s : Set ℂ} {f : ℂ → E} {z : ℂ}
+protected theorem DifferentiableOn.analytic_at {s : Set ℂ} {f : ℂ → E} {z : ℂ}
     (hd : DifferentiableOn ℂ f s) (hz : s ∈ 𝓝 z) : AnalyticAt ℂ f z :=
   by
   rcases nhds_basis_closed_ball.mem_iff.1 hz with ⟨R, hR0, hRs⟩
   lift R to ℝ≥0 using hR0.le
   exact ((hd.mono hRs).HasFpowerSeriesOnBall hR0).AnalyticAt
-#align differentiable_on.analytic_at DifferentiableOn.analyticAt
+#align differentiable_on.analytic_at DifferentiableOn.analytic_at
 
-theorem DifferentiableOn.analyticOn {s : Set ℂ} {f : ℂ → E} (hd : DifferentiableOn ℂ f s)
+theorem DifferentiableOn.analytic_on {s : Set ℂ} {f : ℂ → E} (hd : DifferentiableOn ℂ f s)
     (hs : IsOpen s) : AnalyticOn ℂ f s := fun z hz => hd.AnalyticAt (hs.mem_nhds hz)
-#align differentiable_on.analytic_on DifferentiableOn.analyticOn
+#align differentiable_on.analytic_on DifferentiableOn.analytic_on
 
 /-- A complex differentiable function `f : ℂ → E` is analytic at every point. -/
-protected theorem Differentiable.analyticAt {f : ℂ → E} (hf : Differentiable ℂ f) (z : ℂ) :
+protected theorem Differentiable.analytic_at {f : ℂ → E} (hf : Differentiable ℂ f) (z : ℂ) :
     AnalyticAt ℂ f z :=
   hf.DifferentiableOn.AnalyticAt univ_mem
-#align differentiable.analytic_at Differentiable.analyticAt
+#align differentiable.analytic_at Differentiable.analytic_at
 
 /-- When `f : ℂ → E` is differentiable, the `cauchy_power_series f z R` represents `f` as a power
 series centered at `z` in the entirety of `ℂ`, regardless of `R : ℝ≥0`, with  `0 < R`. -/

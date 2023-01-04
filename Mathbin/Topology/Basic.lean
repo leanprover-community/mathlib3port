@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ structure TopologicalSpace (α : Type u) where
   IsOpen : Set α → Prop
   is_open_univ : IsOpen univ
   is_open_inter : ∀ s t, IsOpen s → IsOpen t → IsOpen (s ∩ t)
-  is_open_sUnion : ∀ s, (∀ t ∈ s, IsOpen t) → IsOpen (⋃₀s)
+  is_open_sUnion : ∀ s, (∀ t ∈ s, IsOpen t) → IsOpen (⋃₀ s)
 #align topological_space TopologicalSpace
 
 attribute [class] TopologicalSpace
@@ -122,7 +122,7 @@ theorem IsOpen.inter (h₁ : IsOpen s₁) (h₂ : IsOpen s₂) : IsOpen (s₁ �
   TopologicalSpace.is_open_inter _ s₁ s₂ h₁ h₂
 #align is_open.inter IsOpen.inter
 
-theorem is_open_sUnion {s : Set (Set α)} (h : ∀ t ∈ s, IsOpen t) : IsOpen (⋃₀s) :=
+theorem is_open_sUnion {s : Set (Set α)} (h : ∀ t ∈ s, IsOpen t) : IsOpen (⋃₀ s) :=
   TopologicalSpace.is_open_sUnion _ s h
 #align is_open_sUnion is_open_sUnion
 
@@ -301,7 +301,7 @@ theorem IsClosed.not : IsClosed { a | p a } → IsOpen { a | ¬p a } :=
 
 /-- The interior of a set `s` is the largest open subset of `s`. -/
 def interior (s : Set α) : Set α :=
-  ⋃₀{ t | IsOpen t ∧ t ⊆ s }
+  ⋃₀ { t | IsOpen t ∧ t ⊆ s }
 #align interior interior
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (t «expr ⊆ » s) -/

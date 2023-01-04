@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.series
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,7 +175,7 @@ theorem hasFderivAtTsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f' n
 with a summable bound on the derivatives, then the series is differentiable.
 Note that our assumptions do not ensure the pointwise convergence, but if there is no pointwise
 convergence then the series is zero everywhere so the result still holds. -/
-theorem differentiableTsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f' n x) x)
+theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f' n x) x)
     (hf' : ∀ n x, ‖f' n x‖ ≤ u n) : Differentiable 𝕜 fun y => ∑' n, f n y :=
   by
   by_cases h : ∃ x₀, Summable fun n => f n x₀
@@ -187,8 +187,8 @@ theorem differentiableTsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f
       ext1 x
       exact tsum_eq_zero_of_not_summable (h x)
     rw [this]
-    exact differentiableConst 0
-#align differentiable_tsum differentiableTsum
+    exact differentiable_const 0
+#align differentiable_tsum differentiable_tsum
 
 theorem fderiv_tsum_apply (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
     (hf' : ∀ n x, ‖fderiv 𝕜 (f n) x‖ ≤ u n) (hf0 : Summable fun n => f n x₀) (x : E) :
@@ -223,7 +223,7 @@ theorem iterated_fderiv_tsum (hf : ∀ i, ContDiff 𝕜 N (f i))
     have A : Summable fun n => iteratedFderiv 𝕜 k (f n) 0 :=
       summable_of_norm_bounded (v k) (hv k h'k.le) fun n => h'f k n 0 h'k.le
     simp_rw [iterated_fderiv_succ_eq_comp_left, IH h'k.le]
-    rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiableIteratedFderiv h'k) _ A]
+    rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiable_iterated_fderiv h'k) _ A]
     · ext1 x
       exact
         (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (k + 1) => E)
@@ -246,7 +246,7 @@ theorem iterated_fderiv_tsum_apply (hf : ∀ i, ContDiff 𝕜 N (f i))
 /-- Consider a series of functions `∑' i, f i x`. Assume that each individual function `f i` is of
 class `C^N`, and moreover there is a uniform summable upper bound on the `k`-th derivative
 for each `k ≤ N`. Then the series is also `C^N`. -/
-theorem contDiffTsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
+theorem cont_diff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
     (h'f : ∀ (k : ℕ) (i : α) (x : E), (k : ℕ∞) ≤ N → ‖iteratedFderiv 𝕜 k (f i) x‖ ≤ v k i) :
     ContDiff 𝕜 N fun x => ∑' i, f i x :=
   by
@@ -265,16 +265,16 @@ theorem contDiffTsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k :
     rw [iterated_fderiv_tsum hf hv h'f hm.le]
     have A :
       ∀ n x, HasFderivAt (iteratedFderiv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFderiv 𝕜 m (f n)) x) x :=
-      fun n x => (ContDiff.differentiableIteratedFderiv hm (hf n)).DifferentiableAt.HasFderivAt
-    apply differentiableTsum (hv _ h'm) A fun n x => _
+      fun n x => (ContDiff.differentiable_iterated_fderiv hm (hf n)).DifferentiableAt.HasFderivAt
+    apply differentiable_tsum (hv _ h'm) A fun n x => _
     rw [fderiv_iterated_fderiv, LinearIsometryEquiv.norm_map]
     exact h'f _ _ _ h'm
-#align cont_diff_tsum contDiffTsum
+#align cont_diff_tsum cont_diff_tsum
 
 /-- Consider a series of functions `∑' i, f i x`. Assume that each individual function `f i` is of
 class `C^N`, and moreover there is a uniform summable upper bound on the `k`-th derivative
 for each `k ≤ N` (except maybe for finitely many `i`s). Then the series is also `C^N`. -/
-theorem contDiffTsumOfEventually (hf : ∀ i, ContDiff 𝕜 N (f i))
+theorem cont_diff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
     (hv : ∀ k : ℕ, (k : ℕ∞) ≤ N → Summable (v k))
     (h'f :
       ∀ k : ℕ,
@@ -309,11 +309,11 @@ theorem contDiffTsumOfEventually (hf : ∀ i, ContDiff 𝕜 N (f i))
     apply (ContDiff.sum fun i hi => (hf i).of_le hm).add
     have h'u : ∀ k : ℕ, (k : ℕ∞) ≤ m → Summable (v k ∘ (coe : { i // i ∉ T } → α)) := fun k hk =>
       (hv k (hk.trans hm)).Subtype _
-    refine' contDiffTsum (fun i => (hf i).of_le hm) h'u _
+    refine' cont_diff_tsum (fun i => (hf i).of_le hm) h'u _
     rintro k ⟨i, hi⟩ x hk
     dsimp
     simp only [finite.mem_to_finset, mem_set_of_eq, Finset.mem_range, not_forall, not_le,
       exists_prop, not_exists, not_and, not_lt] at hi
     exact hi k (Nat.lt_succ_iff.2 (WithTop.coe_le_coe.1 hk)) x
-#align cont_diff_tsum_of_eventually contDiffTsumOfEventually
+#align cont_diff_tsum_of_eventually cont_diff_tsum_of_eventually
 

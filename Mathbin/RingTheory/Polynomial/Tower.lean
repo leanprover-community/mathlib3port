@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yuyang Zhao
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.tower
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem aeval_algebra_map_apply (x : A) (p : R[X]) :
 #align polynomial.aeval_algebra_map_apply Polynomial.aeval_algebra_map_apply
 
 @[simp]
-theorem aeval_algebra_map_eq_zero_iff [NoZeroSmulDivisors A B] [Nontrivial B] (x : A) (p : R[X]) :
+theorem aeval_algebra_map_eq_zero_iff [NoZeroSMulDivisors A B] [Nontrivial B] (x : A) (p : R[X]) :
     aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
   rw [aeval_algebra_map_apply, Algebra.algebra_map_eq_smul_one, smul_eq_zero,
     iff_false_intro (one_ne_zero' B), or_false_iff]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.ray
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -406,7 +406,7 @@ theorem same_ray_neg_swap : SameRay R (-x) y ↔ SameRay R x (-y) := by
   rw [← same_ray_neg_iff, neg_neg]
 #align same_ray_neg_swap same_ray_neg_swap
 
-theorem eq_zero_of_same_ray_neg_smul_right [NoZeroSmulDivisors R M] {r : R} (hr : r < 0)
+theorem eq_zero_of_same_ray_neg_smul_right [NoZeroSMulDivisors R M] {r : R} (hr : r < 0)
     (h : SameRay R x (r • x)) : x = 0 :=
   by
   rcases h with (rfl | h₀ | ⟨r₁, r₂, hr₁, hr₂, h⟩)
@@ -418,7 +418,7 @@ theorem eq_zero_of_same_ray_neg_smul_right [NoZeroSmulDivisors R M] {r : R} (hr 
 #align eq_zero_of_same_ray_neg_smul_right eq_zero_of_same_ray_neg_smul_right
 
 /-- If a vector is in the same ray as its negation, that vector is zero. -/
-theorem eq_zero_of_same_ray_self_neg [NoZeroSmulDivisors R M] (h : SameRay R x (-x)) : x = 0 :=
+theorem eq_zero_of_same_ray_self_neg [NoZeroSMulDivisors R M] (h : SameRay R x (-x)) : x = 0 :=
   by
   nontriviality M; haveI : Nontrivial R := Module.nontrivial R M
   refine' eq_zero_of_same_ray_neg_smul_right (neg_lt_zero.2 (zero_lt_one' R)) _
@@ -477,7 +477,7 @@ instance : InvolutiveNeg (Module.Ray R M)
 variable {R M}
 
 /-- A ray does not equal its own negation. -/
-theorem ne_neg_self [NoZeroSmulDivisors R M] (x : Module.Ray R M) : x ≠ -x :=
+theorem ne_neg_self [NoZeroSMulDivisors R M] (x : Module.Ray R M) : x ≠ -x :=
   by
   induction' x using Module.Ray.ind with x hx
   rw [neg_ray_of_ne_zero, Ne.def, ray_eq_iff]
@@ -534,7 +534,7 @@ theorem units_inv_smul (u : Rˣ) (v : Module.Ray R M) : u⁻¹ • v = u • v :
 
 section
 
-variable [NoZeroSmulDivisors R M]
+variable [NoZeroSMulDivisors R M]
 
 @[simp]
 theorem same_ray_smul_right_iff {v : M} {r : R} : SameRay R v (r • v) ↔ 0 ≤ r ∨ v = 0 :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.signed_hahn
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -481,7 +481,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
         exact MeasurableSet.Union hB₁
       · infer_instance
       · exact (MeasurableSet.Union hB₁).diff (hB₁ n)
-    · exact cInf_le bdd_below_measure_of_negatives ⟨A, ⟨hA₁, hA₂⟩, rfl⟩
+    · exact cinfₛ_le bdd_below_measure_of_negatives ⟨A, ⟨hA₁, hA₂⟩, rfl⟩
   refine' ⟨Aᶜ, hA₁.compl, _, (compl_compl A).symm ▸ hA₂⟩
   rw [restrict_le_restrict_iff _ _ hA₁.compl]
   intro C hC hC₁
@@ -495,7 +495,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
     linarith
     infer_instance
   refine' not_le.2 this _
-  refine' cInf_le bdd_below_measure_of_negatives ⟨A ∪ D, ⟨_, _⟩, rfl⟩
+  refine' cinfₛ_le bdd_below_measure_of_negatives ⟨A ∪ D, ⟨_, _⟩, rfl⟩
   · exact hA₁.union hD₁
   · exact restrict_le_restrict_union _ _ hA₁ hA₂ hD₁ hD₂
 #align
@@ -506,7 +506,7 @@ complement measurable sets `i` and `j` such that `i` is positive, `j` is negativ
 theorem exists_is_compl_positive_negative (s : SignedMeasure α) :
     ∃ i j : Set α, MeasurableSet i ∧ 0 ≤[i] s ∧ MeasurableSet j ∧ s ≤[j] 0 ∧ IsCompl i j :=
   let ⟨i, hi₁, hi₂, hi₃⟩ := exists_compl_positive_negative s
-  ⟨i, iᶜ, hi₁, hi₂, hi₁.compl, hi₃, is_compl_compl⟩
+  ⟨i, iᶜ, hi₁, hi₂, hi₁.compl, hi₃, isCompl_compl⟩
 #align
   measure_theory.signed_measure.exists_is_compl_positive_negative MeasureTheory.SignedMeasure.exists_is_compl_positive_negative
 
@@ -527,7 +527,7 @@ theorem of_symm_diff_compl_positive_negative {s : SignedMeasure α} {i j : Set �
       exact
         Set.disjoint_of_subset_left (Set.inter_subset_left _ _)
           (Set.disjoint_of_subset_right (Set.inter_subset_right _ _)
-            (Disjoint.comm.1 (IsCompl.disjoint is_compl_compl)))
+            (Disjoint.comm.1 (IsCompl.disjoint isCompl_compl)))
     · exact hj.compl.inter hi
     · exact hi.compl.inter hj
   · rw [symmDiff_def, Set.diff_eq_compl_inter, Set.diff_eq_compl_inter, compl_compl, compl_compl,
@@ -541,7 +541,7 @@ theorem of_symm_diff_compl_positive_negative {s : SignedMeasure α} {i j : Set �
       exact
         Set.disjoint_of_subset_left (Set.inter_subset_left _ _)
           (Set.disjoint_of_subset_right (Set.inter_subset_right _ _)
-            (IsCompl.disjoint is_compl_compl))
+            (IsCompl.disjoint isCompl_compl))
     · exact hj.inter hi.compl
     · exact hi.inter hj.compl
   all_goals measurability

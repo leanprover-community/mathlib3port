@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.directed
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,16 +326,16 @@ theorem isBot_or_exists_lt [IsDirected α (· ≥ ·)] (a : α) : IsBot a ∨ �
 #align is_bot_or_exists_lt isBot_or_exists_lt
 -/
 
-#print isBot_iff_is_min /-
-theorem isBot_iff_is_min [IsDirected α (· ≥ ·)] : IsBot a ↔ IsMin a :=
+#print isBot_iff_isMin /-
+theorem isBot_iff_isMin [IsDirected α (· ≥ ·)] : IsBot a ↔ IsMin a :=
   ⟨IsBot.isMin, IsMin.isBot⟩
-#align is_bot_iff_is_min isBot_iff_is_min
+#align is_bot_iff_is_min isBot_iff_isMin
 -/
 
-#print isTop_iff_is_max /-
-theorem isTop_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
+#print isTop_iff_isMax /-
+theorem isTop_iff_isMax [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
   ⟨IsTop.isMax, IsMax.isTop⟩
-#align is_top_iff_is_max isTop_iff_is_max
+#align is_top_iff_is_max isTop_iff_isMax
 -/
 
 variable (β) [PartialOrder β]

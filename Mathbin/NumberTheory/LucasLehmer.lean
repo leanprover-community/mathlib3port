@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
 
 ! This file was ported from Lean 3 source module number_theory.lucas_lehmer
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -782,13 +782,13 @@ theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
   by
   -- See https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/help.20finding.20a.20lemma/near/177698446
   conv in k => rw [← Nat.div_add_mod k (2 ^ n)]
-  refine' Nat.Modeq.add_right _ _
+  refine' Nat.ModEq.add_right _ _
   conv =>
     congr
     skip
     skip
     rw [← one_mul (k / 2 ^ n)]
-  exact (Nat.modeq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
+  exact (Nat.modEq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
 #align modeq_mersenne modeq_mersenne
 
 -- It's hard to know what the limiting factor for large Mersenne primes would be.

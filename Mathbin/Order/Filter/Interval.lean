@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.interval
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem HasBasis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filt
 
 instance tendsto_Icc_at_top_at_top : TendstoIxxClass Icc (atTop : Filter α) atTop :=
   (has_basis_infi_principal_finite _).TendstoIxxClass fun s hs =>
-    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ord_connected_Ici
+    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ordConnected_Ici
 #align filter.tendsto_Icc_at_top_at_top Filter.tendsto_Icc_at_top_at_top
 
 instance tendsto_Ico_at_top_at_top : TendstoIxxClass Ico (atTop : Filter α) atTop :=
@@ -138,7 +138,7 @@ instance tendsto_Ioo_at_top_at_top : TendstoIxxClass Ioo (atTop : Filter α) atT
 
 instance tendsto_Icc_at_bot_at_bot : TendstoIxxClass Icc (atBot : Filter α) atBot :=
   (has_basis_infi_principal_finite _).TendstoIxxClass fun s hs =>
-    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ord_connected_Iic
+    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ordConnected_Iic
 #align filter.tendsto_Icc_at_bot_at_bot Filter.tendsto_Icc_at_bot_at_bot
 
 instance tendsto_Ico_at_bot_at_bot : TendstoIxxClass Ico (atBot : Filter α) atBot :=

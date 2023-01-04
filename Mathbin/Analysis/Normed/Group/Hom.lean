@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.hom
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,9 +167,9 @@ theorem bound : ∃ C, 0 < C ∧ ∀ x, ‖f x‖ ≤ C * ‖x‖ :=
   exists_pos_bound_of_bound _ hC
 #align normed_add_group_hom.bound NormedAddGroupHom.bound
 
-theorem antilipschitzOfNormGe {K : ℝ≥0} (h : ∀ x, ‖x‖ ≤ K * ‖f x‖) : AntilipschitzWith K f :=
-  AntilipschitzWith.ofLeMulDist fun x y => by simpa only [dist_eq_norm, map_sub] using h (x - y)
-#align normed_add_group_hom.antilipschitz_of_norm_ge NormedAddGroupHom.antilipschitzOfNormGe
+theorem antilipschitz_of_norm_ge {K : ℝ≥0} (h : ∀ x, ‖x‖ ≤ K * ‖f x‖) : AntilipschitzWith K f :=
+  AntilipschitzWith.of_le_mul_dist fun x y => by simpa only [dist_eq_norm, map_sub] using h (x - y)
+#align normed_add_group_hom.antilipschitz_of_norm_ge NormedAddGroupHom.antilipschitz_of_norm_ge
 
 /-- A normed group hom is surjective on the subgroup `K` with constant `C` if every element
 `x` of `K` has a preimage whose norm is bounded above by `C*‖x‖`. This is a more
@@ -235,7 +235,7 @@ theorem bounds_bdd_below {f : NormedAddGroupHom V₁ V₂} :
 #align normed_add_group_hom.bounds_bdd_below NormedAddGroupHom.bounds_bdd_below
 
 theorem op_norm_nonneg : 0 ≤ ‖f‖ :=
-  le_cInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
+  le_cinfₛ bounds_nonempty fun _ ⟨hx, _⟩ => hx
 #align normed_add_group_hom.op_norm_nonneg NormedAddGroupHom.op_norm_nonneg
 
 /-- The fundamental property of the operator norm: `‖f x‖ ≤ ‖f‖ * ‖x‖`. -/
@@ -248,7 +248,7 @@ theorem le_op_norm (x : V₁) : ‖f x‖ ≤ ‖f‖ * ‖x‖ :=
   have hlt : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg x) (Ne.symm h)
   exact
     (div_le_iff hlt).mp
-      (le_cInf bounds_nonempty fun c ⟨_, hc⟩ => (div_le_iff hlt).mpr <| by apply hc)
+      (le_cinfₛ bounds_nonempty fun c ⟨_, hc⟩ => (div_le_iff hlt).mpr <| by apply hc)
 #align normed_add_group_hom.le_op_norm NormedAddGroupHom.le_op_norm
 
 theorem le_op_norm_of_le {c : ℝ} {x} (h : ‖x‖ ≤ c) : ‖f x‖ ≤ ‖f‖ * c :=
@@ -261,7 +261,7 @@ theorem le_of_op_norm_le {c : ℝ} (h : ‖f‖ ≤ c) (x : V₁) : ‖f x‖ �
 
 /-- continuous linear maps are Lipschitz continuous. -/
 theorem lipschitz : LipschitzWith ⟨‖f‖, op_norm_nonneg f⟩ f :=
-  LipschitzWith.ofDistLeMul fun x y =>
+  LipschitzWith.of_dist_le_mul fun x y =>
     by
     rw [dist_eq_norm, dist_eq_norm, ← map_sub]
     apply le_op_norm
@@ -282,13 +282,13 @@ theorem ratio_le_op_norm (x : V₁) : ‖f x‖ / ‖x‖ ≤ ‖f‖ :=
 
 /-- If one controls the norm of every `f x`, then one controls the norm of `f`. -/
 theorem op_norm_le_bound {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ x, ‖f x‖ ≤ M * ‖x‖) : ‖f‖ ≤ M :=
-  cInf_le bounds_bdd_below ⟨hMp, hM⟩
+  cinfₛ_le bounds_bdd_below ⟨hMp, hM⟩
 #align normed_add_group_hom.op_norm_le_bound NormedAddGroupHom.op_norm_le_bound
 
 theorem op_norm_eq_of_bounds {M : ℝ} (M_nonneg : 0 ≤ M) (h_above : ∀ x, ‖f x‖ ≤ M * ‖x‖)
     (h_below : ∀ N ≥ 0, (∀ x, ‖f x‖ ≤ N * ‖x‖) → M ≤ N) : ‖f‖ = M :=
   le_antisymm (f.op_norm_le_bound M_nonneg h_above)
-    ((le_cInf_iff NormedAddGroupHom.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr
+    ((le_cinfₛ_iff NormedAddGroupHom.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr
       fun N ⟨N_nonneg, hN⟩ => h_below N N_nonneg hN)
 #align normed_add_group_hom.op_norm_eq_of_bounds NormedAddGroupHom.op_norm_eq_of_bounds
 
@@ -371,7 +371,7 @@ instance : Inhabited (NormedAddGroupHom V₁ V₂) :=
 /-- The norm of the `0` operator is `0`. -/
 theorem op_norm_zero : ‖(0 : NormedAddGroupHom V₁ V₂)‖ = 0 :=
   le_antisymm
-    (cInf_le bounds_bdd_below
+    (cinfₛ_le bounds_bdd_below
       ⟨ge_of_eq rfl, fun _ =>
         le_of_eq
           (by
@@ -884,18 +884,18 @@ theorem norm_eq_of_isometry {f : NormedAddGroupHom V W} (hf : Isometry f) (v : V
   (AddMonoidHomClass.isometry_iff_norm f).mp hf v
 #align normed_add_group_hom.norm_eq_of_isometry NormedAddGroupHom.norm_eq_of_isometry
 
-theorem isometryId : @Isometry V V _ _ (id V) :=
-  isometryId
-#align normed_add_group_hom.isometry_id NormedAddGroupHom.isometryId
+theorem isometry_id : @Isometry V V _ _ (id V) :=
+  isometry_id
+#align normed_add_group_hom.isometry_id NormedAddGroupHom.isometry_id
 
-theorem isometryComp {g : NormedAddGroupHom V₂ V₃} {f : NormedAddGroupHom V₁ V₂} (hg : Isometry g)
+theorem isometry_comp {g : NormedAddGroupHom V₂ V₃} {f : NormedAddGroupHom V₁ V₂} (hg : Isometry g)
     (hf : Isometry f) : Isometry (g.comp f) :=
   hg.comp hf
-#align normed_add_group_hom.isometry_comp NormedAddGroupHom.isometryComp
+#align normed_add_group_hom.isometry_comp NormedAddGroupHom.isometry_comp
 
-theorem normNonincOfIsometry (hf : Isometry f) : f.NormNoninc := fun v =>
+theorem norm_noninc_of_isometry (hf : Isometry f) : f.NormNoninc := fun v =>
   le_of_eq <| norm_eq_of_isometry hf v
-#align normed_add_group_hom.norm_noninc_of_isometry NormedAddGroupHom.normNonincOfIsometry
+#align normed_add_group_hom.norm_noninc_of_isometry NormedAddGroupHom.norm_noninc_of_isometry
 
 end Isometry
 
@@ -1010,14 +1010,14 @@ theorem map_comp_map (hf : ψ.comp f₁ = f₂.comp φ) (hg : ψ.comp g₁ = g�
   rfl
 #align normed_add_group_hom.equalizer.map_comp_map NormedAddGroupHom.equalizer.map_comp_map
 
-theorem ιNormNoninc : (ι f g).NormNoninc := fun v => le_rfl
-#align normed_add_group_hom.equalizer.ι_norm_noninc NormedAddGroupHom.equalizer.ιNormNoninc
+theorem ι_norm_noninc : (ι f g).NormNoninc := fun v => le_rfl
+#align normed_add_group_hom.equalizer.ι_norm_noninc NormedAddGroupHom.equalizer.ι_norm_noninc
 
 /-- The lifting of a norm nonincreasing morphism is norm nonincreasing. -/
-theorem liftNormNoninc (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ) (hφ : φ.NormNoninc) :
-    (lift φ h).NormNoninc :=
+theorem lift_norm_noninc (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ)
+    (hφ : φ.NormNoninc) : (lift φ h).NormNoninc :=
   hφ
-#align normed_add_group_hom.equalizer.lift_norm_noninc NormedAddGroupHom.equalizer.liftNormNoninc
+#align normed_add_group_hom.equalizer.lift_norm_noninc NormedAddGroupHom.equalizer.lift_norm_noninc
 
 /-- If `φ` satisfies `‖φ‖ ≤ C`, then the same is true for the lifted morphism. -/
 theorem norm_lift_le (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ) (C : ℝ) (hφ : ‖φ‖ ≤ C) :
@@ -1025,10 +1025,10 @@ theorem norm_lift_le (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ)
   hφ
 #align normed_add_group_hom.equalizer.norm_lift_le NormedAddGroupHom.equalizer.norm_lift_le
 
-theorem mapNormNoninc (hf : ψ.comp f₁ = f₂.comp φ) (hg : ψ.comp g₁ = g₂.comp φ)
+theorem map_norm_noninc (hf : ψ.comp f₁ = f₂.comp φ) (hg : ψ.comp g₁ = g₂.comp φ)
     (hφ : φ.NormNoninc) : (map φ ψ hf hg).NormNoninc :=
-  liftNormNoninc _ _ <| hφ.comp ιNormNoninc
-#align normed_add_group_hom.equalizer.map_norm_noninc NormedAddGroupHom.equalizer.mapNormNoninc
+  lift_norm_noninc _ _ <| hφ.comp ι_norm_noninc
+#align normed_add_group_hom.equalizer.map_norm_noninc NormedAddGroupHom.equalizer.map_norm_noninc
 
 theorem norm_map_le (hf : ψ.comp f₁ = f₂.comp φ) (hg : ψ.comp g₁ = g₂.comp φ) (C : ℝ)
     (hφ : ‖φ.comp (ι f₁ g₁)‖ ≤ C) : ‖map φ ψ hf hg‖ ≤ C :=
@@ -1054,7 +1054,7 @@ element `x` of `K` has a preimage under `f` whose norm is at most `C*‖x‖` th
 elements of the (topological) closure of `K` with constant `C+ε` instead of `C`, for any
 positive `ε`.
 -/
-theorem controlledClosureOfComplete {f : NormedAddGroupHom G H} {K : AddSubgroup H} {C ε : ℝ}
+theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgroup H} {C ε : ℝ}
     (hC : 0 < C) (hε : 0 < ε) (hyp : f.SurjectiveOnWith K C) :
     f.SurjectiveOnWith K.topologicalClosure (C + ε) :=
   by
@@ -1145,7 +1145,7 @@ theorem controlledClosureOfComplete {f : NormedAddGroupHom G H} {K : AddSubgroup
         rw [add_comm, add_mul]
         apply add_le_add_left this
       
-#align controlled_closure_of_complete controlledClosureOfComplete
+#align controlled_closure_of_complete controlled_closure_of_complete
 
 /-- Given `f : normed_add_group_hom G H` for some complete `G`, if every element `x` of the image of
 an isometric immersion `j : normed_add_group_hom K H` has a preimage under `f` whose norm is at most
@@ -1154,7 +1154,7 @@ an isometric immersion `j : normed_add_group_hom K H` has a preimage under `f` w
 This is useful in particular if `j` is the inclusion of a normed group into its completion
 (in this case the closure is the full target group).
 -/
-theorem controlledClosureRangeOfComplete {f : NormedAddGroupHom G H} {K : Type _}
+theorem controlled_closure_range_of_complete {f : NormedAddGroupHom G H} {K : Type _}
     [SeminormedAddCommGroup K] {j : NormedAddGroupHom K H} (hj : ∀ x, ‖j x‖ = ‖x‖) {C ε : ℝ}
     (hC : 0 < C) (hε : 0 < ε) (hyp : ∀ k, ∃ g, f g = j k ∧ ‖g‖ ≤ C * ‖k‖) :
     f.SurjectiveOnWith j.range.topologicalClosure (C + ε) :=
@@ -1164,8 +1164,8 @@ theorem controlledClosureRangeOfComplete {f : NormedAddGroupHom G H} {K : Type _
     rcases(j.mem_range _).mp h_in with ⟨k, rfl⟩
     rw [hj]
     exact hyp k
-  exact controlledClosureOfComplete hC hε hyp
-#align controlled_closure_range_of_complete controlledClosureRangeOfComplete
+  exact controlled_closure_of_complete hC hε hyp
+#align controlled_closure_range_of_complete controlled_closure_range_of_complete
 
 end ControlledClosure
 

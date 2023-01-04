@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.tietze_extension
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -218,9 +218,9 @@ theorem exists_extension_forall_exists_le_ge_of_closed_embedding [Nonempty X] (f
   inhabit X
   -- Put `a = ⨅ x, f x` and `b = ⨆ x, f x`
   obtain ⟨a, ha⟩ : ∃ a, IsGLB (range f) a
-  exact ⟨_, is_glb_cinfi (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1⟩
+  exact ⟨_, isGLB_cinfᵢ (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1⟩
   obtain ⟨b, hb⟩ : ∃ b, IsLUB (range f) b
-  exact ⟨_, is_lub_csupr (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2⟩
+  exact ⟨_, isLUB_csupᵢ (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2⟩
   -- Then `f x ∈ [a, b]` for all `x`
   have hmem : ∀ x, f x ∈ Icc a b := fun x => ⟨ha.1 ⟨x, rfl⟩, hb.1 ⟨x, rfl⟩⟩
   -- Rule out the trivial case `a = b`

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -308,7 +308,7 @@ theorem bounds_bdd_below {f : E →SL[σ₁₂] F} : BddBelow { c | 0 ≤ c ∧ 
 /-- If one controls the norm of every `A x`, then one controls the norm of `A`. -/
 theorem op_norm_le_bound (f : E →SL[σ₁₂] F) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ x, ‖f x‖ ≤ M * ‖x‖) :
     ‖f‖ ≤ M :=
-  cInf_le bounds_bdd_below ⟨hMp, hM⟩
+  cinfₛ_le bounds_bdd_below ⟨hMp, hM⟩
 #align continuous_linear_map.op_norm_le_bound ContinuousLinearMap.op_norm_le_bound
 
 /-- If one controls the norm of every `A x`, `‖x‖ ≠ 0`, then one controls the norm of `A`. -/
@@ -328,17 +328,17 @@ theorem op_norm_eq_of_bounds {φ : E →SL[σ₁₂] F} {M : ℝ} (M_nonneg : 0 
     (h_above : ∀ x, ‖φ x‖ ≤ M * ‖x‖) (h_below : ∀ N ≥ 0, (∀ x, ‖φ x‖ ≤ N * ‖x‖) → M ≤ N) :
     ‖φ‖ = M :=
   le_antisymm (φ.op_norm_le_bound M_nonneg h_above)
-    ((le_cInf_iff ContinuousLinearMap.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr
+    ((le_cinfₛ_iff ContinuousLinearMap.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr
       fun N ⟨N_nonneg, hN⟩ => h_below N N_nonneg hN)
 #align continuous_linear_map.op_norm_eq_of_bounds ContinuousLinearMap.op_norm_eq_of_bounds
 
 theorem op_norm_neg (f : E →SL[σ₁₂] F) : ‖-f‖ = ‖f‖ := by simp only [norm_def, neg_apply, norm_neg]
 #align continuous_linear_map.op_norm_neg ContinuousLinearMap.op_norm_neg
 
-theorem antilipschitzOfBound (f : E →SL[σ₁₂] F) {K : ℝ≥0} (h : ∀ x, ‖x‖ ≤ K * ‖f x‖) :
+theorem antilipschitz_of_bound (f : E →SL[σ₁₂] F) {K : ℝ≥0} (h : ∀ x, ‖x‖ ≤ K * ‖f x‖) :
     AntilipschitzWith K f :=
-  AddMonoidHomClass.antilipschitzOfBound _ h
-#align continuous_linear_map.antilipschitz_of_bound ContinuousLinearMap.antilipschitzOfBound
+  AddMonoidHomClass.antilipschitz_of_bound _ h
+#align continuous_linear_map.antilipschitz_of_bound ContinuousLinearMap.antilipschitz_of_bound
 
 theorem bound_of_antilipschitz (f : E →SL[σ₁₂] F) {K : ℝ≥0} (h : AntilipschitzWith K f) (x) :
     ‖x‖ ≤ K * ‖f x‖ :=
@@ -351,7 +351,7 @@ variable [RingHomIsometric σ₁₂] [RingHomIsometric σ₂₃] (f g : E →SL[
   (x : E)
 
 theorem op_norm_nonneg : 0 ≤ ‖f‖ :=
-  le_cInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
+  le_cinfₛ bounds_nonempty fun _ ⟨hx, _⟩ => hx
 #align continuous_linear_map.op_norm_nonneg ContinuousLinearMap.op_norm_nonneg
 
 /-- The fundamental property of the operator norm: `‖f x‖ ≤ ‖f‖ * ‖x‖`. -/
@@ -364,7 +364,7 @@ theorem le_op_norm : ‖f x‖ ≤ ‖f‖ * ‖x‖ :=
   have hlt : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg x) (Ne.symm h)
   exact
     (div_le_iff hlt).mp
-      (le_cInf bounds_nonempty fun c ⟨_, hc⟩ => (div_le_iff hlt).mpr <| by apply hc)
+      (le_cinfₛ bounds_nonempty fun c ⟨_, hc⟩ => (div_le_iff hlt).mpr <| by apply hc)
 #align continuous_linear_map.le_op_norm ContinuousLinearMap.le_op_norm
 
 theorem dist_le_op_norm (x y : E) : dist (f x) (f y) ≤ ‖f‖ * dist x y := by
@@ -441,7 +441,7 @@ theorem op_norm_add_le : ‖f + g‖ ≤ ‖f‖ + ‖g‖ :=
 /-- The norm of the `0` operator is `0`. -/
 theorem op_norm_zero : ‖(0 : E →SL[σ₁₂] F)‖ = 0 :=
   le_antisymm
-    (cInf_le bounds_bdd_below
+    (cinfₛ_le bounds_bdd_below
       ⟨le_rfl, fun _ =>
         le_of_eq
           (by
@@ -546,7 +546,8 @@ protected theorem tmp_topology_eq :
         (ContinuousLinearMap.has_basis_nhds_zero_of_basis Metric.nhds_basis_closed_ball) _ _)
   · rcases NormedField.exists_norm_lt_one 𝕜 with ⟨c, hc₀, hc₁⟩
     refine' fun ε hε =>
-      ⟨⟨closed_ball 0 (1 / ‖c‖), ε⟩, ⟨NormedSpace.isVonNBoundedClosedBall _ _ _, hε⟩, fun f hf => _⟩
+      ⟨⟨closed_ball 0 (1 / ‖c‖), ε⟩, ⟨NormedSpace.is_vonN_bounded_closed_ball _ _ _, hε⟩,
+        fun f hf => _⟩
     change ∀ x, _ at hf
     simp_rw [mem_closed_ball_zero_iff] at hf
     rw [@mem_closed_ball_zero_iff _ SeminormedAddCommGroup.toSeminormedAddGroup]
@@ -630,7 +631,7 @@ include σ₁₃
 
 /-- The operator norm is submultiplicative. -/
 theorem op_norm_comp_le (f : E →SL[σ₁₂] F) : ‖h.comp f‖ ≤ ‖h‖ * ‖f‖ :=
-  cInf_le bounds_bdd_below
+  cinfₛ_le bounds_bdd_below
     ⟨mul_nonneg (op_norm_nonneg _) (op_norm_nonneg _), fun x =>
       by
       rw [mul_assoc]
@@ -665,13 +666,13 @@ theorem nndist_le_op_nnnorm (x y : E) : nndist (f x) (f y) ≤ ‖f‖₊ * nndi
 
 /-- continuous linear maps are Lipschitz continuous. -/
 theorem lipschitz : LipschitzWith ‖f‖₊ f :=
-  AddMonoidHomClass.lipschitzOfBoundNnnorm f _ f.le_op_nnnorm
+  AddMonoidHomClass.lipschitz_of_bound_nnnorm f _ f.le_op_nnnorm
 #align continuous_linear_map.lipschitz ContinuousLinearMap.lipschitz
 
 /-- Evaluation of a continuous linear map `f` at a point is Lipschitz continuous in `f`. -/
-theorem lipschitzApply (x : E) : LipschitzWith ‖x‖₊ fun f : E →SL[σ₁₂] F => f x :=
+theorem lipschitz_apply (x : E) : LipschitzWith ‖x‖₊ fun f : E →SL[σ₁₂] F => f x :=
   lipschitz_with_iff_norm_sub_le.2 fun f g => ((f - g).le_op_norm x).trans_eq (mul_comm _ _)
-#align continuous_linear_map.lipschitz_apply ContinuousLinearMap.lipschitzApply
+#align continuous_linear_map.lipschitz_apply ContinuousLinearMap.lipschitz_apply
 
 end
 
@@ -682,7 +683,7 @@ variable [RingHomIsometric σ₁₂]
 theorem exists_mul_lt_apply_of_lt_op_nnnorm (f : E →SL[σ₁₂] F) {r : ℝ≥0} (hr : r < ‖f‖₊) :
     ∃ x, r * ‖x‖₊ < ‖f x‖₊ := by
   simpa only [not_forall, not_le, Set.mem_setOf] using
-    not_mem_of_lt_cInf (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
+    not_mem_of_lt_cinfₛ (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
       (OrderBot.bddBelow _)
 #align
   continuous_linear_map.exists_mul_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_mul_lt_apply_of_lt_op_nnnorm
@@ -731,7 +732,7 @@ theorem Sup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup 
     supₛ ((fun x => ‖f x‖₊) '' ball 0 1) = ‖f‖₊ :=
   by
   refine'
-    cSup_eq_of_forall_le_of_forall_lt_exists_gt ((nonempty_ball.mpr zero_lt_one).image _) _
+    csupₛ_eq_of_forall_le_of_forall_lt_exists_gt ((nonempty_ball.mpr zero_lt_one).image _) _
       fun ub hub => _
   · rintro - ⟨x, hx, rfl⟩
     simpa only [mul_one] using f.le_op_norm_of_le (mem_ball_zero_iff.1 hx).le
@@ -755,10 +756,10 @@ theorem Sup_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCom
     by
     rintro - ⟨x, hx, rfl⟩
     exact f.unit_le_op_norm x (mem_closed_ball_zero_iff.1 hx)
-  refine' le_antisymm (cSup_le ((nonempty_closed_ball.mpr zero_le_one).image _) hbdd) _
+  refine' le_antisymm (csupₛ_le ((nonempty_closed_ball.mpr zero_le_one).image _) hbdd) _
   rw [← Sup_unit_ball_eq_nnnorm]
   exact
-    cSup_le_cSup ⟨‖f‖₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).image _)
+    csupₛ_le_csupₛ ⟨‖f‖₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).image _)
       (Set.image_subset _ ball_subset_closed_ball)
 #align
   continuous_linear_map.Sup_closed_unit_ball_eq_nnnorm ContinuousLinearMap.Sup_closed_unit_ball_eq_nnnorm
@@ -1733,7 +1734,7 @@ theorem homothety_norm [RingHomIsometric σ₁₂] [Nontrivial E] (f : E →SL[�
 variable (f)
 
 theorem uniform_embedding_of_bound {K : ℝ≥0} (hf : ∀ x, ‖x‖ ≤ K * ‖f x‖) : UniformEmbedding f :=
-  (AddMonoidHomClass.antilipschitzOfBound f hf).UniformEmbedding f.UniformContinuous
+  (AddMonoidHomClass.antilipschitz_of_bound f hf).UniformEmbedding f.UniformContinuous
 #align
   continuous_linear_map.uniform_embedding_of_bound ContinuousLinearMap.uniform_embedding_of_bound
 
@@ -1754,7 +1755,7 @@ theorem antilipschitz_of_uniform_embedding (f : E →L[𝕜] Fₗ) (hf : Uniform
       exact hx.trans_lt (half_lt_self εpos)
     simpa using this
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-  refine' ⟨⟨δ⁻¹, _⟩ * ‖c‖₊, (AddMonoidHomClass.antilipschitzOfBound f) fun x => _⟩
+  refine' ⟨⟨δ⁻¹, _⟩ * ‖c‖₊, (AddMonoidHomClass.antilipschitz_of_bound f) fun x => _⟩
   exact inv_nonneg.2 (le_of_lt δ_pos)
   by_cases hx : f x = 0
   · have : f x = f 0 := by simp [hx]
@@ -1864,7 +1865,7 @@ pointwise convergence is precompact: its closure is a compact set. -/
 theorem is_compact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)}
     (hb : Bounded s) : IsCompact (closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
   have : ∀ x, IsCompact (closure (apply' F σ₁₂ x '' s)) := fun x =>
-    ((apply' F σ₁₂ x).lipschitz.boundedImage hb).is_compact_closure
+    ((apply' F σ₁₂ x).lipschitz.bounded_image hb).is_compact_closure
   is_compact_closure_of_subset_compact (is_compact_pi_infinite this)
     (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
 #align
@@ -1928,7 +1929,8 @@ at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is closed in the topology 
 This is one of the key steps in the proof of the **Banach-Alaoglu** theorem. -/
 theorem is_closed_image_coe_closed_ball (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
     IsClosed ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
-  is_closed_image_coe_of_bounded_of_weak_closed boundedClosedBall (is_weak_closed_closed_ball f₀ r)
+  is_closed_image_coe_of_bounded_of_weak_closed bounded_closed_ball
+    (is_weak_closed_closed_ball f₀ r)
 #align
   continuous_linear_map.is_closed_image_coe_closed_ball ContinuousLinearMap.is_closed_image_coe_closed_ball
 
@@ -1938,7 +1940,7 @@ pointwise convergence. Other versions of this theorem can be found in
 `analysis.normed_space.weak_dual`. -/
 theorem is_compact_image_coe_closed_ball [ProperSpace F] (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
     IsCompact ((coeFn : (E →SL[σ₁₂] F) → E → F) '' closedBall f₀ r) :=
-  is_compact_image_coe_of_bounded_of_weak_closed boundedClosedBall <|
+  is_compact_image_coe_of_bounded_of_weak_closed bounded_closed_ball <|
     is_weak_closed_closed_ball f₀ r
 #align
   continuous_linear_map.is_compact_image_coe_closed_ball ContinuousLinearMap.is_compact_image_coe_closed_ball
@@ -2229,7 +2231,7 @@ variable [RingHomIsometric σ₂₁]
 
 protected theorem antilipschitz (e : E ≃SL[σ₁₂] F) :
     AntilipschitzWith ‖(e.symm : F →SL[σ₂₁] E)‖₊ e :=
-  e.symm.lipschitz.toRightInverse e.left_inv
+  e.symm.lipschitz.to_right_inverse e.left_inv
 #align continuous_linear_equiv.antilipschitz ContinuousLinearEquiv.antilipschitz
 
 theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) :

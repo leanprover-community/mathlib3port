@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.lattice
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,13 +63,13 @@ instance [ConditionallyCompleteLattice R] : ConditionallyCompleteLattice (Tropic
   { Tropical.hasSup, Tropical.hasInf,
     Tropical.lattice with
     le_cSup := fun s x hs hx =>
-      le_cSup (untrop_monotone.map_bdd_above hs) (Set.mem_image_of_mem untrop hx)
+      le_csupₛ (untrop_monotone.map_bdd_above hs) (Set.mem_image_of_mem untrop hx)
     cSup_le := fun s x hs hx =>
-      cSup_le (hs.image untrop) (untrop_monotone.mem_upper_bounds_image hx)
+      csupₛ_le (hs.image untrop) (untrop_monotone.mem_upper_bounds_image hx)
     le_cInf := fun s x hs hx =>
-      le_cInf (hs.image untrop) (untrop_monotone.mem_lower_bounds_image hx)
+      le_cinfₛ (hs.image untrop) (untrop_monotone.mem_lower_bounds_image hx)
     cInf_le := fun s x hs hx =>
-      cInf_le (untrop_monotone.map_bdd_below hs) (Set.mem_image_of_mem untrop hx) }
+      cinfₛ_le (untrop_monotone.map_bdd_below hs) (Set.mem_image_of_mem untrop hx) }
 
 instance [ConditionallyCompleteLinearOrder R] : ConditionallyCompleteLinearOrder (Tropical R) :=
   { Tropical.conditionallyCompleteLattice, Tropical.linearOrder with }

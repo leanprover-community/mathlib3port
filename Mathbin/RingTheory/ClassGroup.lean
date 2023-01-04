@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.class_group
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,15 +144,15 @@ noncomputable def ClassGroup.equiv :
     constructor
     · rintro ⟨I, ⟨x, hx⟩, rfl⟩
       refine' ⟨FractionRing.algEquiv R K x, _⟩
-      rw [Units.coe_mapEquiv, ← hx, RingEquiv.coe_to_mul_equiv, canonical_equiv_span_singleton]
+      rw [Units.coe_mapEquiv, ← hx, RingEquiv.coe_toMulEquiv, canonical_equiv_span_singleton]
       rfl
     · rintro ⟨x, hx⟩
       refine'
         ⟨Units.mapEquiv (↑(canonical_equiv R⁰ K (FractionRing R))) I,
           ⟨(FractionRing.algEquiv R K).symm x, _⟩, Units.ext _⟩
-      · rw [Units.coe_mapEquiv, ← hx, RingEquiv.coe_to_mul_equiv, canonical_equiv_span_singleton]
+      · rw [Units.coe_mapEquiv, ← hx, RingEquiv.coe_toMulEquiv, canonical_equiv_span_singleton]
         rfl
-      simp only [RingEquiv.coe_to_mul_equiv, canonical_equiv_flip, Units.coe_mapEquiv]
+      simp only [RingEquiv.coe_toMulEquiv, canonical_equiv_flip, Units.coe_mapEquiv]
 #align class_group.equiv ClassGroup.equiv
 
 @[simp]
@@ -175,7 +175,7 @@ theorem ClassGroup.mk_canonical_equiv (K' : Type _) [Field K'] [Algebra R K'] [I
       ClassGroup.mk I :=
   by
   rw [ClassGroup.mk, MonoidHom.comp_apply, ← MonoidHom.comp_apply (Units.map _), ← Units.map_comp, ←
-      RingEquiv.coe_monoid_hom_trans, FractionalIdeal.canonical_equiv_trans_canonical_equiv] <;>
+      RingEquiv.coe_monoidHom_trans, FractionalIdeal.canonical_equiv_trans_canonical_equiv] <;>
     rfl
 #align class_group.mk_canonical_equiv ClassGroup.mk_canonical_equiv
 
@@ -328,7 +328,7 @@ theorem ClassGroup.mk_eq_one_iff {I : (FractionalIdeal R⁰ K)ˣ} :
   simp only [← (ClassGroup.equiv K).Injective.eq_iff, _root_.map_one, ClassGroup.equiv_mk,
     QuotientGroup.mk'_apply, QuotientGroup.eq_one_iff, MonoidHom.mem_range, Units.ext_iff,
     coe_to_principal_ideal, Units.coe_mapEquiv, FractionalIdeal.canonical_equiv_self, coe_coe,
-    RingEquiv.coe_mul_equiv_refl, MulEquiv.refl_apply]
+    RingEquiv.coe_mulEquiv_refl, MulEquiv.refl_apply]
   refine' ⟨fun ⟨x, hx⟩ => ⟨⟨x, by rw [← hx, coe_span_singleton]⟩⟩, _⟩
   intro hI
   obtain ⟨x, hx⟩ := @Submodule.IsPrincipal.principal _ _ _ _ _ _ hI

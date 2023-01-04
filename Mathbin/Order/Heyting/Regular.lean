@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.heyting.regular
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,18 +44,24 @@ section HasCompl
 
 variable [HasCompl α] {a : α}
 
+#print Heyting.IsRegular /-
 /-- An element of an Heyting algebra is regular if its double complement is itself. -/
 def IsRegular (a : α) : Prop :=
   aᶜᶜ = a
 #align heyting.is_regular Heyting.IsRegular
+-/
 
+#print Heyting.IsRegular.eq /-
 protected theorem IsRegular.eq : IsRegular a → aᶜᶜ = a :=
   id
 #align heyting.is_regular.eq Heyting.IsRegular.eq
+-/
 
+#print Heyting.IsRegular.decidablePred /-
 instance IsRegular.decidablePred [DecidableEq α] : @DecidablePred α IsRegular := fun _ =>
   ‹DecidableEq α› _ _
 #align heyting.is_regular.decidable_pred Heyting.IsRegular.decidablePred
+-/
 
 end HasCompl
 
@@ -63,32 +69,59 @@ section HeytingAlgebra
 
 variable [HeytingAlgebra α] {a b : α}
 
-theorem is_regular_bot : IsRegular (⊥ : α) := by rw [IsRegular, compl_bot, compl_top]
-#align heyting.is_regular_bot Heyting.is_regular_bot
+/- warning: heyting.is_regular_bot -> Heyting.isRegular_bot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) (Bot.bot.{u1} α (HeytingAlgebra.toHasBot.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) (Bot.bot.{u1} α (HeytingAlgebra.toBot.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align heyting.is_regular_bot Heyting.isRegular_botₓ'. -/
+theorem isRegular_bot : IsRegular (⊥ : α) := by rw [IsRegular, compl_bot, compl_top]
+#align heyting.is_regular_bot Heyting.isRegular_bot
 
-theorem is_regular_top : IsRegular (⊤ : α) := by rw [IsRegular, compl_top, compl_bot]
-#align heyting.is_regular_top Heyting.is_regular_top
+/- warning: heyting.is_regular_top -> Heyting.isRegular_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) (Top.top.{u1} α (GeneralizedHeytingAlgebra.toHasTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) (Top.top.{u1} α (GeneralizedHeytingAlgebra.toTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align heyting.is_regular_top Heyting.isRegular_topₓ'. -/
+theorem isRegular_top : IsRegular (⊤ : α) := by rw [IsRegular, compl_top, compl_bot]
+#align heyting.is_regular_top Heyting.isRegular_top
 
+#print Heyting.IsRegular.inf /-
 theorem IsRegular.inf (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⊓ b) := by
   rw [IsRegular, compl_compl_inf_distrib, ha.eq, hb.eq]
 #align heyting.is_regular.inf Heyting.IsRegular.inf
+-/
 
+/- warning: heyting.is_regular.himp -> Heyting.IsRegular.himp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α] {a : α} {b : α}, (Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) a) -> (Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) b) -> (Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHasHimp.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α] {a : α} {b : α}, (Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) a) -> (Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) b) -> (Heyting.IsRegular.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)) a b))
+Case conversion may be inaccurate. Consider using '#align heyting.is_regular.himp Heyting.IsRegular.himpₓ'. -/
 theorem IsRegular.himp (ha : IsRegular a) (hb : IsRegular b) : IsRegular (a ⇨ b) := by
   rw [IsRegular, compl_compl_himp_distrib, ha.eq, hb.eq]
 #align heyting.is_regular.himp Heyting.IsRegular.himp
 
-theorem is_regular_compl (a : α) : IsRegular (aᶜ) :=
+#print Heyting.isRegular_compl /-
+theorem isRegular_compl (a : α) : IsRegular (aᶜ) :=
   compl_compl_compl _
-#align heyting.is_regular_compl Heyting.is_regular_compl
+#align heyting.is_regular_compl Heyting.isRegular_compl
+-/
 
+#print Heyting.IsRegular.disjoint_compl_left_iff /-
 protected theorem IsRegular.disjoint_compl_left_iff (ha : IsRegular a) : Disjoint (aᶜ) b ↔ b ≤ a :=
   by rw [← le_compl_iff_disjoint_left, ha.eq]
 #align heyting.is_regular.disjoint_compl_left_iff Heyting.IsRegular.disjoint_compl_left_iff
+-/
 
+#print Heyting.IsRegular.disjoint_compl_right_iff /-
 protected theorem IsRegular.disjoint_compl_right_iff (hb : IsRegular b) : Disjoint a (bᶜ) ↔ a ≤ b :=
   by rw [← le_compl_iff_disjoint_right, hb.eq]
 #align heyting.is_regular.disjoint_compl_right_iff Heyting.IsRegular.disjoint_compl_right_iff
+-/
 
+#print BooleanAlgebra.ofRegular /-
 -- See note [reducible non-instances]
 /-- A Heyting algebra with regular excluded middle is a boolean algebra. -/
 @[reducible]
@@ -103,13 +136,16 @@ def BooleanAlgebra.ofRegular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanA
     inf_compl_le_bot := fun a => (this _).1.le_bot
     top_le_sup_compl := fun a => (this _).2.top_le }
 #align boolean_algebra.of_regular BooleanAlgebra.ofRegular
+-/
 
 variable (α)
 
+#print Heyting.Regular /-
 /-- The boolean algebra of Heyting regular elements. -/
 def Regular : Type _ :=
   { a : α // IsRegular a }
 #align heyting.regular Heyting.Regular
+-/
 
 variable {α}
 
@@ -118,20 +154,24 @@ namespace Regular
 instance : Coe (Regular α) α :=
   coeSubtype
 
+#print Heyting.Regular.coe_injective /-
 theorem coe_injective : Injective (coe : Regular α → α) :=
   Subtype.coe_injective
 #align heyting.regular.coe_injective Heyting.Regular.coe_injective
+-/
 
+#print Heyting.Regular.coe_inj /-
 @[simp]
 theorem coe_inj {a b : Regular α} : (a : α) = b ↔ a = b :=
   Subtype.coe_inj
 #align heyting.regular.coe_inj Heyting.Regular.coe_inj
+-/
 
 instance : Top (Regular α) :=
-  ⟨⟨⊤, is_regular_top⟩⟩
+  ⟨⟨⊤, isRegular_top⟩⟩
 
 instance : Bot (Regular α) :=
-  ⟨⟨⊥, is_regular_bot⟩⟩
+  ⟨⟨⊥, isRegular_bot⟩⟩
 
 instance : HasInf (Regular α) :=
   ⟨fun a b => ⟨a ⊓ b, a.2.inf b.2⟩⟩
@@ -140,32 +180,54 @@ instance : HImp (Regular α) :=
   ⟨fun a b => ⟨a ⇨ b, a.2.himp b.2⟩⟩
 
 instance : HasCompl (Regular α) :=
-  ⟨fun a => ⟨aᶜ, is_regular_compl _⟩⟩
+  ⟨fun a => ⟨aᶜ, isRegular_compl _⟩⟩
 
+/- warning: heyting.regular.coe_top -> Heyting.Regular.coe_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) (Top.top.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.hasTop.{u1} α _inst_1))) (Top.top.{u1} α (GeneralizedHeytingAlgebra.toHasTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Eq.{succ u1} α (Heyting.Regular.val.{u1} α _inst_1 (Top.top.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.top.{u1} α _inst_1))) (Top.top.{u1} α (GeneralizedHeytingAlgebra.toTop.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align heyting.regular.coe_top Heyting.Regular.coe_topₓ'. -/
 @[simp, norm_cast]
 theorem coe_top : ((⊤ : Regular α) : α) = ⊤ :=
   rfl
 #align heyting.regular.coe_top Heyting.Regular.coe_top
 
+/- warning: heyting.regular.coe_bot -> Heyting.Regular.coe_bot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) (Bot.bot.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.hasBot.{u1} α _inst_1))) (Bot.bot.{u1} α (HeytingAlgebra.toHasBot.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α], Eq.{succ u1} α (Heyting.Regular.val.{u1} α _inst_1 (Bot.bot.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.bot.{u1} α _inst_1))) (Bot.bot.{u1} α (HeytingAlgebra.toBot.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align heyting.regular.coe_bot Heyting.Regular.coe_botₓ'. -/
 @[simp, norm_cast]
 theorem coe_bot : ((⊥ : Regular α) : α) = ⊥ :=
   rfl
 #align heyting.regular.coe_bot Heyting.Regular.coe_bot
 
+#print Heyting.Regular.coe_inf /-
 @[simp, norm_cast]
 theorem coe_inf (a b : Regular α) : (↑(a ⊓ b) : α) = a ⊓ b :=
   rfl
 #align heyting.regular.coe_inf Heyting.Regular.coe_inf
+-/
 
+/- warning: heyting.regular.coe_himp -> Heyting.Regular.coe_himp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α] (a : Heyting.Regular.{u1} α _inst_1) (b : Heyting.Regular.{u1} α _inst_1), Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) (HImp.himp.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.hasHimp.{u1} α _inst_1) a b)) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHasHimp.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α] (a : Heyting.Regular.{u1} α _inst_1) (b : Heyting.Regular.{u1} α _inst_1), Eq.{succ u1} α (Heyting.Regular.val.{u1} α _inst_1 (HImp.himp.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.himp.{u1} α _inst_1) a b)) (HImp.himp.{u1} α (GeneralizedHeytingAlgebra.toHImp.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)) (Heyting.Regular.val.{u1} α _inst_1 a) (Heyting.Regular.val.{u1} α _inst_1 b))
+Case conversion may be inaccurate. Consider using '#align heyting.regular.coe_himp Heyting.Regular.coe_himpₓ'. -/
 @[simp, norm_cast]
 theorem coe_himp (a b : Regular α) : (↑(a ⇨ b) : α) = a ⇨ b :=
   rfl
 #align heyting.regular.coe_himp Heyting.Regular.coe_himp
 
+#print Heyting.Regular.coe_compl /-
 @[simp, norm_cast]
 theorem coe_compl (a : Regular α) : (↑(aᶜ) : α) = aᶜ :=
   rfl
 #align heyting.regular.coe_compl Heyting.Regular.coe_compl
+-/
 
 instance : Inhabited (Regular α) :=
   ⟨⊥⟩
@@ -176,32 +238,43 @@ instance : SemilatticeInf (Regular α) :=
 instance : BoundedOrder (Regular α) :=
   BoundedOrder.lift coe (fun _ _ => id) coe_top coe_bot
 
+#print Heyting.Regular.coe_le_coe /-
 @[simp, norm_cast]
 theorem coe_le_coe {a b : Regular α} : (a : α) ≤ b ↔ a ≤ b :=
   Iff.rfl
 #align heyting.regular.coe_le_coe Heyting.Regular.coe_le_coe
+-/
 
+#print Heyting.Regular.coe_lt_coe /-
 @[simp, norm_cast]
 theorem coe_lt_coe {a b : Regular α} : (a : α) < b ↔ a < b :=
   Iff.rfl
 #align heyting.regular.coe_lt_coe Heyting.Regular.coe_lt_coe
+-/
 
+#print Heyting.Regular.toRegular /-
 /-- **Regularization** of `a`. The smallest regular element greater than `a`. -/
 def toRegular : α →o Regular α :=
-  ⟨fun a => ⟨aᶜᶜ, is_regular_compl _⟩, fun a b h =>
+  ⟨fun a => ⟨aᶜᶜ, isRegular_compl _⟩, fun a b h =>
     coe_le_coe.1 <| compl_le_compl <| compl_le_compl h⟩
 #align heyting.regular.to_regular Heyting.Regular.toRegular
+-/
 
+#print Heyting.Regular.coe_toRegular /-
 @[simp, norm_cast]
-theorem coe_to_regular (a : α) : (toRegular a : α) = aᶜᶜ :=
+theorem coe_toRegular (a : α) : (toRegular a : α) = aᶜᶜ :=
   rfl
-#align heyting.regular.coe_to_regular Heyting.Regular.coe_to_regular
+#align heyting.regular.coe_to_regular Heyting.Regular.coe_toRegular
+-/
 
+#print Heyting.Regular.toRegular_coe /-
 @[simp]
-theorem to_regular_coe (a : Regular α) : toRegular (a : α) = a :=
+theorem toRegular_coe (a : Regular α) : toRegular (a : α) = a :=
   coe_injective a.2
-#align heyting.regular.to_regular_coe Heyting.Regular.to_regular_coe
+#align heyting.regular.to_regular_coe Heyting.Regular.toRegular_coe
+-/
 
+#print Heyting.Regular.gi /-
 /-- The Galois insertion between `regular.to_regular` and `coe`. -/
 def gi : GaloisInsertion toRegular (coe : Regular α → α)
     where
@@ -212,14 +285,17 @@ def gi : GaloisInsertion toRegular (coe : Regular α → α)
   le_l_u _ := le_compl_compl
   choice_eq a ha := coe_injective <| le_compl_compl.antisymm ha
 #align heyting.regular.gi Heyting.Regular.gi
+-/
 
 instance : Lattice (Regular α) :=
   gi.liftLattice
 
+#print Heyting.Regular.coe_sup /-
 @[simp, norm_cast]
 theorem coe_sup (a b : Regular α) : (↑(a ⊔ b) : α) = (a ⊔ b)ᶜᶜ :=
   rfl
 #align heyting.regular.coe_sup Heyting.Regular.coe_sup
+-/
 
 instance : BooleanAlgebra (Regular α) :=
   { Regular.lattice, Regular.boundedOrder, Regular.hasHimp,
@@ -242,6 +318,12 @@ instance : BooleanAlgebra (Regular α) :=
           refine' eq_of_forall_le_iff fun c => le_himp_iff.trans _
           rw [le_compl_iff_disjoint_right, disjoint_left_comm, b.prop.disjoint_compl_left_iff]) }
 
+/- warning: heyting.regular.coe_sdiff -> Heyting.Regular.coe_sdiff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α] (a : Heyting.Regular.{u1} α _inst_1) (b : Heyting.Regular.{u1} α _inst_1), Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) (SDiff.sdiff.{u1} (Heyting.Regular.{u1} α _inst_1) (BooleanAlgebra.toHasSdiff.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.booleanAlgebra.{u1} α _inst_1)) a b)) (HasInf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) a) (HasCompl.compl.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Heyting.Regular.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Heyting.Regular.{u1} α _inst_1) α (Heyting.Regular.hasCoe.{u1} α _inst_1)))) b)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : HeytingAlgebra.{u1} α] (a : Heyting.Regular.{u1} α _inst_1) (b : Heyting.Regular.{u1} α _inst_1), Eq.{succ u1} α (Heyting.Regular.val.{u1} α _inst_1 (SDiff.sdiff.{u1} (Heyting.Regular.{u1} α _inst_1) (BooleanAlgebra.toSDiff.{u1} (Heyting.Regular.{u1} α _inst_1) (Heyting.Regular.instBooleanAlgebraRegular.{u1} α _inst_1)) a b)) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u1} α _inst_1))) (Heyting.Regular.val.{u1} α _inst_1 a) (HasCompl.compl.{u1} α (HeytingAlgebra.toHasCompl.{u1} α _inst_1) (Heyting.Regular.val.{u1} α _inst_1 b)))
+Case conversion may be inaccurate. Consider using '#align heyting.regular.coe_sdiff Heyting.Regular.coe_sdiffₓ'. -/
 @[simp, norm_cast]
 theorem coe_sdiff (a b : Regular α) : (↑(a \ b) : α) = a ⊓ bᶜ :=
   rfl
@@ -253,15 +335,19 @@ end HeytingAlgebra
 
 variable [BooleanAlgebra α]
 
-theorem is_regular_of_boolean : ∀ a : α, IsRegular a :=
+#print Heyting.isRegular_of_boolean /-
+theorem isRegular_of_boolean : ∀ a : α, IsRegular a :=
   compl_compl
-#align heyting.is_regular_of_boolean Heyting.is_regular_of_boolean
+#align heyting.is_regular_of_boolean Heyting.isRegular_of_boolean
+-/
 
+#print Heyting.isRegular_of_decidable /-
 /-- A decidable proposition is intuitionistically Heyting-regular. -/
 @[nolint decidable_classical]
-theorem is_regular_of_decidable (p : Prop) [Decidable p] : IsRegular p :=
+theorem isRegular_of_decidable (p : Prop) [Decidable p] : IsRegular p :=
   propext <| Decidable.not_not_iff _
-#align heyting.is_regular_of_decidable Heyting.is_regular_of_decidable
+#align heyting.is_regular_of_decidable Heyting.isRegular_of_decidable
+-/
 
 end Heyting
 

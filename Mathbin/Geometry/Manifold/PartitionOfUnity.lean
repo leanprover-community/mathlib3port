@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.partition_of_unity
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -157,9 +157,9 @@ def toPartitionOfUnity : PartitionOfUnity ι M s :=
   { f with toFun := fun i => f i }
 #align smooth_partition_of_unity.to_partition_of_unity SmoothPartitionOfUnity.toPartitionOfUnity
 
-theorem smoothSum : Smooth I 𝓘(ℝ) fun x => ∑ᶠ i, f i x :=
-  smoothFinsum (fun i => (f i).Smooth) f.LocallyFinite
-#align smooth_partition_of_unity.smooth_sum SmoothPartitionOfUnity.smoothSum
+theorem smooth_sum : Smooth I 𝓘(ℝ) fun x => ∑ᶠ i, f i x :=
+  smooth_finsum (fun i => (f i).Smooth) f.LocallyFinite
+#align smooth_partition_of_unity.smooth_sum SmoothPartitionOfUnity.smooth_sum
 
 theorem le_one (i : ι) (x : M) : f i x ≤ 1 :=
   f.toPartitionOfUnity.le_one i x
@@ -169,35 +169,36 @@ theorem sum_nonneg (x : M) : 0 ≤ ∑ᶠ i, f i x :=
   f.toPartitionOfUnity.sum_nonneg x
 #align smooth_partition_of_unity.sum_nonneg SmoothPartitionOfUnity.sum_nonneg
 
-theorem contMdiffSmul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n g x) :
+theorem cont_mdiff_smul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n g x) :
     ContMdiff I 𝓘(ℝ, F) n fun x => f i x • g x :=
-  contMdiffOfSupport fun x hx =>
+  cont_mdiff_of_support fun x hx =>
     ((f i).ContMdiff.ContMdiffAt.of_le le_top).smul <| hg x <| tsupport_smul_subset_left _ _ hx
-#align smooth_partition_of_unity.cont_mdiff_smul SmoothPartitionOfUnity.contMdiffSmul
+#align smooth_partition_of_unity.cont_mdiff_smul SmoothPartitionOfUnity.cont_mdiff_smul
 
-theorem smoothSmul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), SmoothAt I 𝓘(ℝ, F) g x) :
+theorem smooth_smul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), SmoothAt I 𝓘(ℝ, F) g x) :
     Smooth I 𝓘(ℝ, F) fun x => f i x • g x :=
-  f.contMdiffSmul hg
-#align smooth_partition_of_unity.smooth_smul SmoothPartitionOfUnity.smoothSmul
+  f.cont_mdiff_smul hg
+#align smooth_partition_of_unity.smooth_smul SmoothPartitionOfUnity.smooth_smul
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is $C^n$ smooth at every point of the topological support of `f i`, then
 the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem contMdiffFinsumSmul {g : ι → M → F}
+theorem cont_mdiff_finsum_smul {g : ι → M → F}
     (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n (g i) x) :
     ContMdiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
-  (contMdiffFinsum fun i => f.contMdiffSmul (hg i)) <|
+  (cont_mdiff_finsum fun i => f.cont_mdiff_smul (hg i)) <|
     f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
-#align smooth_partition_of_unity.cont_mdiff_finsum_smul SmoothPartitionOfUnity.contMdiffFinsumSmul
+#align
+  smooth_partition_of_unity.cont_mdiff_finsum_smul SmoothPartitionOfUnity.cont_mdiff_finsum_smul
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is smooth at every point of the topological support of `f i`, then the sum
 `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem smoothFinsumSmul {g : ι → M → F}
+theorem smooth_finsum_smul {g : ι → M → F}
     (hg : ∀ (i), ∀ x ∈ tsupport (f i), SmoothAt I 𝓘(ℝ, F) (g i) x) :
     Smooth I 𝓘(ℝ, F) fun x => ∑ᶠ i, f i x • g i x :=
-  f.contMdiffFinsumSmul hg
-#align smooth_partition_of_unity.smooth_finsum_smul SmoothPartitionOfUnity.smoothFinsumSmul
+  f.cont_mdiff_finsum_smul hg
+#align smooth_partition_of_unity.smooth_finsum_smul SmoothPartitionOfUnity.smooth_finsum_smul
 
 theorem finsum_smul_mem_convex {g : ι → M → F} {t : Set F} {x : M} (hx : x ∈ s)
     (hg : ∀ i, f i x ≠ 0 → g i x ∈ t) (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
@@ -225,38 +226,38 @@ alias is_subordinate_to_partition_of_unity ↔ _ is_subordinate.to_partition_of_
 /-- If `f` is a smooth partition of unity on a set `s : set M` subordinate to a family of open sets
 `U : ι → set M` and `g : ι → M → F` is a family of functions such that `g i` is $C^n$ smooth on
 `U i`, then the sum `λ x, ∑ᶠ i, f i x • g i x` is $C^n$ smooth on the whole manifold. -/
-theorem IsSubordinate.contMdiffFinsumSmul {g : ι → M → F} (hf : f.IsSubordinate U)
+theorem IsSubordinate.cont_mdiff_finsum_smul {g : ι → M → F} (hf : f.IsSubordinate U)
     (ho : ∀ i, IsOpen (U i)) (hg : ∀ i, ContMdiffOn I 𝓘(ℝ, F) n (g i) (U i)) :
     ContMdiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
-  f.contMdiffFinsumSmul fun i x hx => (hg i).ContMdiffAt <| (ho i).mem_nhds (hf i hx)
+  f.cont_mdiff_finsum_smul fun i x hx => (hg i).ContMdiffAt <| (ho i).mem_nhds (hf i hx)
 #align
-  smooth_partition_of_unity.is_subordinate.cont_mdiff_finsum_smul SmoothPartitionOfUnity.IsSubordinate.contMdiffFinsumSmul
+  smooth_partition_of_unity.is_subordinate.cont_mdiff_finsum_smul SmoothPartitionOfUnity.IsSubordinate.cont_mdiff_finsum_smul
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` subordinate to a family of open sets
 `U : ι → set M` and `g : ι → M → F` is a family of functions such that `g i` is smooth on `U i`,
 then the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem IsSubordinate.smoothFinsumSmul {g : ι → M → F} (hf : f.IsSubordinate U)
+theorem IsSubordinate.smooth_finsum_smul {g : ι → M → F} (hf : f.IsSubordinate U)
     (ho : ∀ i, IsOpen (U i)) (hg : ∀ i, SmoothOn I 𝓘(ℝ, F) (g i) (U i)) :
     Smooth I 𝓘(ℝ, F) fun x => ∑ᶠ i, f i x • g i x :=
-  hf.contMdiffFinsumSmul ho hg
+  hf.cont_mdiff_finsum_smul ho hg
 #align
-  smooth_partition_of_unity.is_subordinate.smooth_finsum_smul SmoothPartitionOfUnity.IsSubordinate.smoothFinsumSmul
+  smooth_partition_of_unity.is_subordinate.smooth_finsum_smul SmoothPartitionOfUnity.IsSubordinate.smooth_finsum_smul
 
 end SmoothPartitionOfUnity
 
 namespace BumpCovering
 
 -- Repeat variables to drop [finite_dimensional ℝ E] and [smooth_manifold_with_corners I M]
-theorem smoothToPartitionOfUnity {E : Type uE} [NormedAddCommGroup E] [NormedSpace ℝ E]
+theorem smooth_to_partition_of_unity {E : Type uE} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {H : Type uH} [TopologicalSpace H] {I : ModelWithCorners ℝ E H} {M : Type uM}
     [TopologicalSpace M] [ChartedSpace H M] {s : Set M} (f : BumpCovering ι M s)
     (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) (i : ι) : Smooth I 𝓘(ℝ) (f.toPartitionOfUnity i) :=
   (hf i).mul <|
-    (smoothFinprodCond fun j _ => smoothConst.sub (hf j)) <|
+    (smooth_finprod_cond fun j _ => smooth_const.sub (hf j)) <|
       by
       simp only [mul_support_one_sub]
       exact f.locally_finite
-#align bump_covering.smooth_to_partition_of_unity BumpCovering.smoothToPartitionOfUnity
+#align bump_covering.smooth_to_partition_of_unity BumpCovering.smooth_to_partition_of_unity
 
 variable {s : Set M}
 
@@ -270,7 +271,7 @@ in `smooth_bump_covering.to_smooth_partition_of_unity`. -/
 def toSmoothPartitionOfUnity (f : BumpCovering ι M s) (hf : ∀ i, Smooth I 𝓘(ℝ) (f i)) :
     SmoothPartitionOfUnity ι I M s :=
   { f.toPartitionOfUnity with
-    toFun := fun i => ⟨f.toPartitionOfUnity i, f.smoothToPartitionOfUnity hf i⟩ }
+    toFun := fun i => ⟨f.toPartitionOfUnity i, f.smooth_to_partition_of_unity hf i⟩ }
 #align bump_covering.to_smooth_partition_of_unity BumpCovering.toSmoothPartitionOfUnity
 
 @[simp]
@@ -518,8 +519,8 @@ def single (i : ι) (s : Set M) : SmoothPartitionOfUnity ι I M s :=
   (BumpCovering.single i s).toSmoothPartitionOfUnity fun j =>
     by
     rcases eq_or_ne j i with (rfl | h)
-    · simp only [smoothOne, ContinuousMap.coe_one, BumpCovering.coe_single, Pi.single_eq_same]
-    · simp only [smoothZero, BumpCovering.coe_single, Pi.single_eq_of_ne h, ContinuousMap.coe_zero]
+    · simp only [smooth_one, ContinuousMap.coe_one, BumpCovering.coe_single, Pi.single_eq_same]
+    · simp only [smooth_zero, BumpCovering.coe_single, Pi.single_eq_of_ne h, ContinuousMap.coe_zero]
 #align smooth_partition_of_unity.single SmoothPartitionOfUnity.single
 
 instance [Inhabited ι] (s : Set M) : Inhabited (SmoothPartitionOfUnity ι I M s) :=
@@ -589,7 +590,7 @@ theorem exists_smooth_forall_mem_convex_of_local_const (ht : ∀ x, Convex ℝ (
     (Hloc : ∀ x : M, ∃ c : F, ∀ᶠ y in 𝓝 x, c ∈ t y) : ∃ g : C^∞⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x :=
   (exists_smooth_forall_mem_convex_of_local I ht) fun x =>
     let ⟨c, hc⟩ := Hloc x
-    ⟨_, hc, fun _ => c, smoothOnConst, fun y => id⟩
+    ⟨_, hc, fun _ => c, smooth_on_const, fun y => id⟩
 #align exists_smooth_forall_mem_convex_of_local_const exists_smooth_forall_mem_convex_of_local_const
 
 /-- Let `M` be a smooth σ-compact manifold with extended distance. Let `K : ι → set M` be a locally

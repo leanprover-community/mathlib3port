@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -480,7 +480,7 @@ theorem Finset.is_compact_bUnion (s : Finset ι) {f : ι → Set α} (hf : ∀ i
 #align finset.is_compact_bUnion Finset.is_compact_bUnion
 
 theorem is_compact_accumulate {K : ℕ → Set α} (hK : ∀ n, IsCompact (K n)) (n : ℕ) :
-    IsCompact (accumulate K n) :=
+    IsCompact (Accumulate K n) :=
   (finite_le_nat n).is_compact_bUnion fun k _ => hK k
 #align is_compact_accumulate is_compact_accumulate
 
@@ -1368,7 +1368,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
       · obtain ⟨U₀, hU₀⟩ := hcne
         haveI : Nonempty { U // U ∈ c } := ⟨⟨U₀, hU₀⟩⟩
         obtain ⟨U₀compl, U₀opn, U₀ne⟩ := hc hU₀
-        use ⋃₀c
+        use ⋃₀ c
         refine' ⟨⟨_, _, _⟩, fun U hU a ha => ⟨U, hU, ha⟩⟩
         · exact fun a ha => ⟨U₀, hU₀, U₀compl ha⟩
         · exact is_open_sUnion fun _ h => (hc h).2.1
@@ -1411,7 +1411,7 @@ instance (priority := 200) CompactSpace.sigma_compact [CompactSpace α] : SigmaC
 #align compact_space.sigma_compact CompactSpace.sigma_compact
 
 theorem SigmaCompactSpace.of_countable (S : Set (Set α)) (Hc : S.Countable)
-    (Hcomp : ∀ s ∈ S, IsCompact s) (HU : ⋃₀S = univ) : SigmaCompactSpace α :=
+    (Hcomp : ∀ s ∈ S, IsCompact s) (HU : ⋃₀ S = univ) : SigmaCompactSpace α :=
   ⟨(exists_seq_cover_iff_countable ⟨_, is_compact_empty⟩).2 ⟨S, Hc, Hcomp, HU⟩⟩
 #align sigma_compact_space.of_countable SigmaCompactSpace.of_countable
 
@@ -1432,7 +1432,7 @@ open SigmaCompactSpace
 
 /-- A choice of compact covering for a `σ`-compact space, chosen to be monotone. -/
 def compactCovering : ℕ → Set α :=
-  accumulate exists_compact_covering.some
+  Accumulate exists_compact_covering.some
 #align compact_covering compactCovering
 
 theorem is_compact_compact_covering (n : ℕ) : IsCompact (compactCovering α n) :=
@@ -1825,7 +1825,7 @@ theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
     zorn_subset_nonempty { t : Set α | IsPreirreducible t }
       (fun c hc hcc hcn =>
         let ⟨t, htc⟩ := hcn
-        ⟨⋃₀c, fun u v hu hv ⟨y, hy, hyu⟩ ⟨z, hz, hzv⟩ =>
+        ⟨⋃₀ c, fun u v hu hv ⟨y, hy, hyu⟩ ⟨z, hz, hzv⟩ =>
           let ⟨p, hpc, hyp⟩ := mem_unionₛ.1 hy
           let ⟨q, hqc, hzq⟩ := mem_unionₛ.1 hz
           Or.cases_on (hcc.Total hpc hqc)
@@ -2062,7 +2062,7 @@ for every cover by a finite collection of closed sets,
 it is contained in one of the members of the collection. -/
 theorem is_irreducible_iff_sUnion_closed {s : Set α} :
     IsIrreducible s ↔
-      ∀ (Z : Finset (Set α)) (hZ : ∀ z ∈ Z, IsClosed z) (H : s ⊆ ⋃₀↑Z), ∃ z ∈ Z, s ⊆ z :=
+      ∀ (Z : Finset (Set α)) (hZ : ∀ z ∈ Z, IsClosed z) (H : s ⊆ ⋃₀ ↑Z), ∃ z ∈ Z, s ⊆ z :=
   by
   rw [IsIrreducible, is_preirreducible_iff_closed_union_closed]
   constructor <;> intro h
@@ -2074,7 +2074,7 @@ theorem is_irreducible_iff_sUnion_closed {s : Set α} :
       exfalso
       tauto
     · intro z Z hz IH hZ H
-      cases' h.2 z (⋃₀↑Z) _ _ _ with h' h'
+      cases' h.2 z (⋃₀ ↑Z) _ _ _ with h' h'
       · exact ⟨z, Finset.mem_insert_self _ _, h'⟩
       · rcases IH _ h' with ⟨z', hz', hsz'⟩
         · exact ⟨z', Finset.mem_insert_of_mem hz', hsz'⟩

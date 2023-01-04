@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,9 +24,9 @@ lifting everything to `ℚ`.
 
 assert_not_exists finset
 
-assert_not_exists module
+assert_not_exists Module
 
-assert_not_exists submonoid
+assert_not_exists Submonoid
 
 open Pointwise
 
@@ -538,7 +538,7 @@ noncomputable instance : LinearOrderedRing ℝ := by infer_instance
 noncomputable instance : LinearOrderedSemiring ℝ := by infer_instance
 
 instance : IsDomain ℝ :=
-  { Real.nontrivial, Real.commRing, LinearOrderedRing.is_domain with }
+  { Real.nontrivial, Real.commRing, LinearOrderedRing.isDomain with }
 
 noncomputable instance : LinearOrderedField ℝ :=
   { Real.linearOrderedCommRing with
@@ -743,12 +743,12 @@ noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
 
 theorem lt_Inf_add_pos {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : 0 < ε) :
     ∃ a ∈ s, a < infₛ s + ε :=
-  exists_lt_of_cInf_lt h <| lt_add_of_pos_right _ hε
+  exists_lt_of_cinfₛ_lt h <| lt_add_of_pos_right _ hε
 #align real.lt_Inf_add_pos Real.lt_Inf_add_pos
 
 theorem add_neg_lt_Sup {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : ε < 0) :
     ∃ a ∈ s, supₛ s + ε < a :=
-  exists_lt_of_lt_cSup h <| add_lt_iff_neg_left.2 hε
+  exists_lt_of_lt_csupₛ h <| add_lt_iff_neg_left.2 hε
 #align real.add_neg_lt_Sup Real.add_neg_lt_Sup
 
 theorem Inf_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.Nonempty) {a : ℝ} :
@@ -756,9 +756,9 @@ theorem Inf_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.Nonempty) {a : ℝ} :
   by
   rw [le_iff_forall_pos_lt_add]
   constructor <;> intro H ε ε_pos
-  · exact exists_lt_of_cInf_lt h' (H ε ε_pos)
+  · exact exists_lt_of_cinfₛ_lt h' (H ε ε_pos)
   · rcases H ε ε_pos with ⟨x, x_in, hx⟩
-    exact cInf_lt_of_lt h x_in hx
+    exact cinfₛ_lt_of_lt h x_in hx
 #align real.Inf_le_iff Real.Inf_le_iff
 
 theorem le_Sup_iff {s : Set ℝ} (h : BddAbove s) (h' : s.Nonempty) {a : ℝ} :
@@ -766,9 +766,9 @@ theorem le_Sup_iff {s : Set ℝ} (h : BddAbove s) (h' : s.Nonempty) {a : ℝ} :
   by
   rw [le_iff_forall_pos_lt_add]
   refine' ⟨fun H ε ε_neg => _, fun H ε ε_pos => _⟩
-  · exact exists_lt_of_lt_cSup h' (lt_sub_iff_add_lt.mp (H _ (neg_pos.mpr ε_neg)))
+  · exact exists_lt_of_lt_csupₛ h' (lt_sub_iff_add_lt.mp (H _ (neg_pos.mpr ε_neg)))
   · rcases H _ (neg_lt_zero.mpr ε_pos) with ⟨x, x_in, hx⟩
-    exact sub_lt_iff_lt_add.mp (lt_cSup_of_lt h x_in hx)
+    exact sub_lt_iff_lt_add.mp (lt_csupₛ_of_lt h x_in hx)
 #align real.le_Sup_iff Real.le_Sup_iff
 
 @[simp]
@@ -789,7 +789,7 @@ theorem csupr_const_zero {α : Sort _} : (⨆ i : α, (0 : ℝ)) = 0 :=
   by
   cases isEmpty_or_nonempty α
   · exact Real.csupr_empty _
-  · exact csupr_const
+  · exact csupᵢ_const
 #align real.csupr_const_zero Real.csupr_const_zero
 
 theorem Sup_of_not_bdd_above {s : Set ℝ} (hs : ¬BddAbove s) : supₛ s = 0 :=
@@ -818,7 +818,7 @@ theorem cinfi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 :=
   by
   cases isEmpty_or_nonempty α
   · exact Real.cinfi_empty _
-  · exact cinfi_const
+  · exact cinfᵢ_const
 #align real.cinfi_const_zero Real.cinfi_const_zero
 
 theorem Inf_of_not_bdd_below {s : Set ℝ} (hs : ¬BddBelow s) : infₛ s = 0 :=
@@ -838,7 +838,7 @@ theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sup
   by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Sup_empty.ge
-  · apply dite _ (fun h => le_cSup_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
+  · apply dite _ (fun h => le_csupₛ_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
 #align real.Sup_nonneg Real.Sup_nonneg
 
 /-- As `0` is the default value for `real.Sup` of the empty set, it suffices to show that `S` is
@@ -847,7 +847,7 @@ bounded above by `0` to show that `Sup S ≤ 0`.
 theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : supₛ S ≤ 0 :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
-  exacts[Sup_empty.le, cSup_le hS₂ hS]
+  exacts[Sup_empty.le, csupₛ_le hS₂ hS]
 #align real.Sup_nonpos Real.Sup_nonpos
 
 /-- As `0` is the default value for `real.Inf` of the empty set, it suffices to show that `S` is
@@ -856,7 +856,7 @@ bounded below by `0` to show that `0 ≤ Inf S`.
 theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ infₛ S :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
-  exacts[Inf_empty.ge, le_cInf hS₂ hS]
+  exacts[Inf_empty.ge, le_cinfₛ hS₂ hS]
 #align real.Inf_nonneg Real.Inf_nonneg
 
 /--
@@ -867,14 +867,14 @@ theorem Inf_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : infₛ S 
   by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Inf_empty.le
-  · apply dite _ (fun h => cInf_le_of_le h hy <| hS y hy) fun h => (Inf_of_not_bdd_below h).le
+  · apply dite _ (fun h => cinfₛ_le_of_le h hy <| hS y hy) fun h => (Inf_of_not_bdd_below h).le
 #align real.Inf_nonpos Real.Inf_nonpos
 
 theorem Inf_le_Sup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : infₛ s ≤ supₛ s :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
   · rw [infₛ_empty, supₛ_empty]
-  · exact cInf_le_cSup h₁ h₂ hne
+  · exact cinfₛ_le_csupₛ h₁ h₂ hne
 #align real.Inf_le_Sup Real.Inf_le_Sup
 
 theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
@@ -886,12 +886,12 @@ theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
   have ub : ∃ x, ∀ y ∈ S, y ≤ x := (exists_gt f).imp ub'
   refine' ⟨Sup S, ((lt_total _ _).resolve_left fun h => _).resolve_right fun h => _⟩
   · rcases h with ⟨ε, ε0, i, ih⟩
-    refine' (cSup_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))
+    refine' (csupₛ_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))
     refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
     rw [sub_apply, const_apply, sub_right_comm, le_sub_iff_add_le, add_halves]
     exact ih _ ij
   · rcases h with ⟨ε, ε0, i, ih⟩
-    refine' (le_cSup ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
+    refine' (le_csupₛ ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
     refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
     rw [sub_apply, const_apply, add_comm, ← sub_sub, le_sub_iff_add_le, add_halves]
     exact ih _ ij

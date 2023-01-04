@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -917,7 +917,7 @@ theorem radical_eq_Inf (I : Ideal R) : radical I = infₛ { J : Ideal R | I ≤ 
   (le_antisymm (le_infₛ fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
     by_contradiction fun hri =>
       let ⟨m, (hrm : r ∉ radical m), him, hm⟩ :=
-        zorn_nonempty_partial_order₀ { K : Ideal R | r ∉ radical K }
+        zorn_nonempty_partialOrder₀ { K : Ideal R | r ∉ radical K }
           (fun c hc hcc y hyc =>
             ⟨supₛ c, fun ⟨n, hrnc⟩ =>
               let ⟨y, hyc, hrny⟩ := (Submodule.mem_Sup_of_directed ⟨y, hyc⟩ hcc.DirectedOn).1 hrnc
@@ -1706,14 +1706,14 @@ end Surjective
 @[simp]
 theorem map_of_equiv (I : Ideal R) (f : R ≃+* S) :
     (I.map (f : R →+* S)).map (f.symm : S →+* R) = I := by
-  simp [← RingEquiv.to_ring_hom_eq_coe, map_map]
+  simp [← RingEquiv.toRingHom_eq_coe, map_map]
 #align ideal.map_of_equiv Ideal.map_of_equiv
 
 /-- If `f : R ≃+* S` is a ring isomorphism and `I : ideal R`, then `comap f.symm (comap f) = I`. -/
 @[simp]
 theorem comap_of_equiv (I : Ideal R) (f : R ≃+* S) :
     (I.comap (f.symm : S →+* R)).comap (f : R →+* S) = I := by
-  simp [← RingEquiv.to_ring_hom_eq_coe, comap_comap]
+  simp [← RingEquiv.toRingHom_eq_coe, comap_comap]
 #align ideal.comap_of_equiv Ideal.comap_of_equiv
 
 /-- If `f : R ≃+* S` is a ring isomorphism and `I : ideal R`, then `map f I = comap f.symm I`. -/

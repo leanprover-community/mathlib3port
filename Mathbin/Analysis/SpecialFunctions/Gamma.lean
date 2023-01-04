@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,10 +231,10 @@ theorem partial_Gamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X)
     by
     intro x hx
     have d1 : HasDerivAt (fun y : ℝ => (-y).exp) (-(-x).exp) x := by
-      simpa using (hasDerivAtNeg x).exp
+      simpa using (has_deriv_at_neg x).exp
     have d2 : HasDerivAt (fun y : ℝ => ↑y ^ s) (s * x ^ (s - 1)) x :=
       by
-      have t := @HasDerivAt.cpowConst _ _ _ s (hasDerivAtId ↑x) _
+      have t := @HasDerivAt.cpow_const _ _ _ s (has_deriv_at_id ↑x) _
       simpa only [mul_one] using t.comp_of_real
       simpa only [id.def, of_real_re, of_real_im, Ne.def, eq_self_iff_true, not_true, or_false_iff,
         mul_one] using hx.1
@@ -589,16 +589,16 @@ theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
     rw [mem_Ioi] at hx
     simp only [dGammaIntegrand]
     rw [mul_assoc]
-    apply HasDerivAt.constMul
+    apply HasDerivAt.const_mul
     rw [of_real_log hx.le, mul_comm]
-    have := ((hasDerivAtId t).sub_const 1).const_cpow (Or.inl (of_real_ne_zero.mpr hx.ne'))
+    have := ((has_deriv_at_id t).sub_const 1).const_cpow (Or.inl (of_real_ne_zero.mpr hx.ne'))
     rwa [mul_one] at this
   exact
     has_deriv_at_integral_of_dominated_loc_of_deriv_le eps_pos hF_meas
       (Gamma_integral_convergent (zero_lt_one.trans hs)) hF'_meas h_bound bound_integrable h_diff
 #align complex.has_deriv_at_Gamma_integral Complex.has_deriv_at_Gamma_integral
 
-theorem differentiableAtGammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : ∀ m : ℕ, s + m ≠ 0) :
+theorem differentiable_at_Gamma_aux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : ∀ m : ℕ, s + m ≠ 0) :
     DifferentiableAt ℂ (gammaAux n) s :=
   by
   induction' n with n hn generalizing s
@@ -619,9 +619,9 @@ theorem differentiableAtGammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : �
     simp
     simp
     simpa using h2 0
-#align complex.differentiable_at_Gamma_aux Complex.differentiableAtGammaAux
+#align complex.differentiable_at_Gamma_aux Complex.differentiable_at_Gamma_aux
 
-theorem differentiableAtGamma (s : ℂ) (hs : ∀ m : ℕ, s + m ≠ 0) : DifferentiableAt ℂ gamma s :=
+theorem differentiable_at_Gamma (s : ℂ) (hs : ∀ m : ℕ, s + m ≠ 0) : DifferentiableAt ℂ gamma s :=
   by
   let n := ⌊1 - s.re⌋₊ + 1
   have hn : 1 - s.re < n := by exact_mod_cast Nat.lt_floor_add_one (1 - s.re)
@@ -642,7 +642,7 @@ theorem differentiableAtGamma (s : ℂ) (hs : ∀ m : ℕ, s + m ≠ 0) : Differ
   rw [mem_set_of_eq] at ht
   apply Gamma_eq_Gamma_aux
   linarith
-#align complex.differentiable_at_Gamma Complex.differentiableAtGamma
+#align complex.differentiable_at_Gamma Complex.differentiable_at_Gamma
 
 end Complex
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.coloring
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,14 +269,14 @@ theorem chromatic_number_bdd_below : BddBelow { n : ℕ | G.Colorable n } :=
 theorem chromatic_number_le_of_colorable {n : ℕ} (hc : G.Colorable n) : G.chromaticNumber ≤ n :=
   by
   rw [chromatic_number]
-  apply cInf_le chromatic_number_bdd_below
+  apply cinfₛ_le chromatic_number_bdd_below
   fconstructor
   exact Classical.choice hc
 #align simple_graph.chromatic_number_le_of_colorable SimpleGraph.chromatic_number_le_of_colorable
 
 theorem chromatic_number_le_card [Fintype α] (C : G.Coloring α) :
     G.chromaticNumber ≤ Fintype.card α :=
-  cInf_le chromatic_number_bdd_below C.to_colorable
+  cinfₛ_le chromatic_number_bdd_below C.to_colorable
 #align simple_graph.chromatic_number_le_card SimpleGraph.chromatic_number_le_card
 
 theorem colorable_chromatic_number {m : ℕ} (hc : G.Colorable m) : G.Colorable G.chromaticNumber :=
@@ -297,7 +297,7 @@ theorem colorable_chromatic_number_of_fintype (G : SimpleGraph V) [Finite V] :
 theorem chromatic_number_le_one_of_subsingleton (G : SimpleGraph V) [Subsingleton V] :
     G.chromaticNumber ≤ 1 := by
   rw [chromatic_number]
-  apply cInf_le chromatic_number_bdd_below
+  apply cinfₛ_le chromatic_number_bdd_below
   fconstructor
   refine' coloring.mk (fun _ => 0) _
   intro v w
@@ -309,7 +309,7 @@ theorem chromatic_number_le_one_of_subsingleton (G : SimpleGraph V) [Subsingleto
 theorem chromatic_number_eq_zero_of_isempty (G : SimpleGraph V) [IsEmpty V] :
     G.chromaticNumber = 0 := by
   rw [← nonpos_iff_eq_zero]
-  apply cInf_le chromatic_number_bdd_below
+  apply cinfₛ_le chromatic_number_bdd_below
   apply colorable_of_is_empty
 #align
   simple_graph.chromatic_number_eq_zero_of_isempty SimpleGraph.chromatic_number_eq_zero_of_isempty
@@ -325,7 +325,7 @@ theorem is_empty_of_chromatic_number_eq_zero (G : SimpleGraph V) [Finite V]
 
 theorem chromatic_number_pos [Nonempty V] {n : ℕ} (hc : G.Colorable n) : 0 < G.chromaticNumber :=
   by
-  apply le_cInf (colorable_set_nonempty_of_colorable hc)
+  apply le_cinfₛ (colorable_set_nonempty_of_colorable hc)
   intro m hm
   by_contra h'
   simp only [not_le, Nat.lt_one_iff] at h'
@@ -350,7 +350,7 @@ theorem Colorable.chromatic_number_le_of_forall_imp {V' : Type _} {G' : SimpleGr
     (hc : G'.Colorable m) (h : ∀ n, G'.Colorable n → G.Colorable n) :
     G.chromaticNumber ≤ G'.chromaticNumber :=
   by
-  apply cInf_le chromatic_number_bdd_below
+  apply cinfₛ_le chromatic_number_bdd_below
   apply h
   apply colorable_chromatic_number hc
 #align
@@ -375,7 +375,7 @@ theorem chromatic_number_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
   · by_contra hc
     rw [not_le] at hc
     obtain ⟨n, cn, hc⟩ :=
-      exists_lt_of_cInf_lt (colorable_set_nonempty_of_colorable C.to_colorable) hc
+      exists_lt_of_cinfₛ_lt (colorable_set_nonempty_of_colorable C.to_colorable) hc
     rw [← Fintype.card_fin n] at hc
     have f := (Function.Embedding.nonempty_of_card_le (le_of_lt hc)).some
     have C' := cn.some

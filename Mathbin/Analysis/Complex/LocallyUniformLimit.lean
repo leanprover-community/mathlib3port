@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.locally_uniform_limit
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ theorem exists_cthickening_tendsto_uniformly_on (hf : TendstoLocallyUniformlyOn 
 /-- A locally uniform limit of holomorphic functions on an open domain of the complex plane is
 holomorphic (the derivatives converge locally uniformly to that of the limit, which is proved
 as `tendsto_locally_uniformly_on.deriv`). -/
-theorem TendstoLocallyUniformlyOn.differentiableOn [φ.ne_bot]
+theorem TendstoLocallyUniformlyOn.differentiable_on [φ.ne_bot]
     (hf : TendstoLocallyUniformlyOn F f φ U) (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U)
     (hU : IsOpen U) : DifferentiableOn ℂ f U :=
   by
@@ -166,11 +166,11 @@ theorem TendstoLocallyUniformlyOn.differentiableOn [φ.ne_bot]
   have h5 : TendstoLocallyUniformlyOn (deriv ∘ F) (cderiv δ f) φ (interior K) :=
     h1.tendsto_locally_uniformly_on.mono interior_subset
   have h6 : ∀ x ∈ interior K, HasDerivAt f (cderiv δ f x) x := fun x h =>
-    hasDerivAtOfTendstoLocallyUniformlyOn' is_open_interior h5 h3 (fun _ => h4.tendsto_at) h
+    has_deriv_at_of_tendsto_locally_uniformly_on' is_open_interior h5 h3 (fun _ => h4.tendsto_at) h
   have h7 : DifferentiableOn ℂ f (interior K) := fun x hx =>
     (h6 x hx).DifferentiableAt.DifferentiableWithinAt
   exact (h7.differentiable_at (interior_mem_nhds.mpr hKx)).DifferentiableWithinAt
-#align tendsto_locally_uniformly_on.differentiable_on TendstoLocallyUniformlyOn.differentiableOn
+#align tendsto_locally_uniformly_on.differentiable_on TendstoLocallyUniformlyOn.differentiable_on
 
 theorem TendstoLocallyUniformlyOn.deriv (hf : TendstoLocallyUniformlyOn F f φ U)
     (hF : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) U) (hU : IsOpen U) :

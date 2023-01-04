@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sober
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,12 +231,12 @@ theorem OpenEmbedding.quasi_sober {f : α → β} (hf : OpenEmbedding f) [QuasiS
 
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/
 theorem quasi_sober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Set α))
-    [hS' : ∀ s : S, QuasiSober s] (hS'' : ⋃₀S = ⊤) : QuasiSober α :=
+    [hS' : ∀ s : S, QuasiSober s] (hS'' : ⋃₀ S = ⊤) : QuasiSober α :=
   by
   rw [quasi_sober_iff]
   intro t h h'
   obtain ⟨x, hx⟩ := h.1
-  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀S := by
+  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀ S := by
     rw [hS'']
     trivial
   haveI : QuasiSober U := hS' ⟨U, hU⟩

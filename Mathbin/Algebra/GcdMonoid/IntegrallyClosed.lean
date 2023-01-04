@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.integrally_closed
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,7 +21,7 @@ import Mathbin.RingTheory.Polynomial.Eisenstein
 
 open BigOperators Polynomial
 
-variable {R A : Type _} [CommRing R] [IsDomain R] [GcdMonoid R] [CommRing A] [Algebra R A]
+variable {R A : Type _} [CommRing R] [IsDomain R] [GCDMonoid R] [CommRing A] [Algebra R A]
 
 theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A] (z : A) :
     ∃ a b : R, IsUnit (gcd a b) ∧ z * algebraMap R A b = algebraMap R A a :=
@@ -36,7 +36,7 @@ theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A]
   · infer_instance
 #align is_localization.surj_of_gcd_domain IsLocalization.surj_of_gcd_domain
 
-instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=
+instance (priority := 100) GCDMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=
   ⟨fun X ⟨p, hp₁, hp₂⟩ =>
     by
     obtain ⟨x, y, hg, he⟩ := IsLocalization.surj_of_gcd_domain (nonZeroDivisors R) X
@@ -51,5 +51,5 @@ instance (priority := 100) GcdMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R
     use x * (this.unit⁻¹ : _)
     erw [map_mul, ← Units.coe_map_inv, eq_comm, Units.eq_mul_inv_iff_mul_eq]
     exact he⟩
-#align gcd_monoid.to_is_integrally_closed GcdMonoid.toIsIntegrallyClosed
+#align gcd_monoid.to_is_integrally_closed GCDMonoid.toIsIntegrallyClosed
 

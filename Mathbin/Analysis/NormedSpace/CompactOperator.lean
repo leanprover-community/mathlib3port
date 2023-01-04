@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.normed_space.compact_operator
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,27 +152,27 @@ theorem IsCompactOperator.is_compact_closure_image_of_bounded [HasContinuousCons
 theorem IsCompactOperator.image_ball_subset_compact [HasContinuousConstSmul 𝕜₂ M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     ∃ K : Set M₂, IsCompact K ∧ f '' Metric.ball 0 r ⊆ K :=
-  hf.image_subset_compact_of_vonN_bounded (NormedSpace.isVonNBoundedBall 𝕜₁ M₁ r)
+  hf.image_subset_compact_of_vonN_bounded (NormedSpace.is_vonN_bounded_ball 𝕜₁ M₁ r)
 #align is_compact_operator.image_ball_subset_compact IsCompactOperator.image_ball_subset_compact
 
 theorem IsCompactOperator.image_closed_ball_subset_compact [HasContinuousConstSmul 𝕜₂ M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     ∃ K : Set M₂, IsCompact K ∧ f '' Metric.closedBall 0 r ⊆ K :=
-  hf.image_subset_compact_of_vonN_bounded (NormedSpace.isVonNBoundedClosedBall 𝕜₁ M₁ r)
+  hf.image_subset_compact_of_vonN_bounded (NormedSpace.is_vonN_bounded_closed_ball 𝕜₁ M₁ r)
 #align
   is_compact_operator.image_closed_ball_subset_compact IsCompactOperator.image_closed_ball_subset_compact
 
 theorem IsCompactOperator.is_compact_closure_image_ball [HasContinuousConstSmul 𝕜₂ M₂] [T2Space M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     IsCompact (closure <| f '' Metric.ball 0 r) :=
-  hf.is_compact_closure_image_of_vonN_bounded (NormedSpace.isVonNBoundedBall 𝕜₁ M₁ r)
+  hf.is_compact_closure_image_of_vonN_bounded (NormedSpace.is_vonN_bounded_ball 𝕜₁ M₁ r)
 #align
   is_compact_operator.is_compact_closure_image_ball IsCompactOperator.is_compact_closure_image_ball
 
 theorem IsCompactOperator.is_compact_closure_image_closed_ball [HasContinuousConstSmul 𝕜₂ M₂]
     [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     IsCompact (closure <| f '' Metric.closedBall 0 r) :=
-  hf.is_compact_closure_image_of_vonN_bounded (NormedSpace.isVonNBoundedClosedBall 𝕜₁ M₁ r)
+  hf.is_compact_closure_image_of_vonN_bounded (NormedSpace.is_vonN_bounded_closed_ball 𝕜₁ M₁ r)
 #align
   is_compact_operator.is_compact_closure_image_closed_ball IsCompactOperator.is_compact_closure_image_closed_ball
 
@@ -443,7 +443,7 @@ theorem is_closed_set_of_is_compact_operator {𝕜₁ 𝕜₂ : Type _} [Nontriv
   let SV : Set M₁ × Set M₂ := ⟨closed_ball 0 1, -V⟩
   rcases hu { f | ∀ x ∈ SV.1, f x ∈ SV.2 }
       (continuous_linear_map.has_basis_nhds_zero.mem_of_mem
-        ⟨NormedSpace.isVonNBoundedClosedBall _ _ _, neg_mem_nhds_zero M₂ hV⟩) with
+        ⟨NormedSpace.is_vonN_bounded_closed_ball _ _ _, neg_mem_nhds_zero M₂ hV⟩) with
     ⟨v, hv, huv⟩
   rcases totally_bounded_iff_subset_finite_Union_nhds_zero.mp
       (hv.is_compact_closure_image_closed_ball 1).TotallyBounded V hV with

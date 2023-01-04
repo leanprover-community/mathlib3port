@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.asymptotics
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -525,7 +525,7 @@ warning: asymptotics.is_o.trans -> Asymptotics.IsO.trans is a dubious translatio
 lean 3 declaration is
   forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_3 : HasNorm.{u4} G] {l : Filter.{u1} α} {f : α -> E} {g : α -> F} {k : α -> G}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsO.{u1, u3, u4} α F G _inst_2 _inst_3 l g k) -> (Asymptotics.IsO.{u1, u2, u4} α E G _inst_1 _inst_3 l f k)
 but is expected to have type
-  PUnit.{0}
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_3 : SeminormedAddCommGroup.{u4} G] {l : Filter.{u1} α} {f : α -> E} {g : α -> G} {k : α -> F}, (Asymptotics.IsO.{u1, u2, u4} α E G _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G _inst_3) l f g) -> (Asymptotics.IsO.{u1, u4, u3} α G F (SeminormedAddCommGroup.toHasNorm.{u4} G _inst_3) _inst_2 l g k) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f k)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans Asymptotics.IsO.transₓ'. -/
 @[trans]
 theorem IsO.trans {f : α → E} {g : α → F} {k : α → G} (hfg : f =o[l] g) (hgk : g =o[l] k) :
@@ -589,7 +589,7 @@ warning: asymptotics.is_o.trans_le -> Asymptotics.IsO.trans_le is a dubious tran
 lean 3 declaration is
   forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_3 : HasNorm.{u4} G] {f : α -> E} {g : α -> F} {k : α -> G} {l : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (forall (x : α), LE.le.{0} Real Real.hasLe (HasNorm.norm.{u3} F _inst_2 (g x)) (HasNorm.norm.{u4} G _inst_3 (k x))) -> (Asymptotics.IsO.{u1, u2, u4} α E G _inst_1 _inst_3 l f k)
 but is expected to have type
-  PUnit.{0}
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_3 : SeminormedAddCommGroup.{u4} G] {f : α -> E} {g : α -> F} {k : α -> G} {l : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u4} α E G _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G _inst_3) l f k) -> (forall (x : α), LE.le.{0} Real Real.hasLe (HasNorm.norm.{u4} G (SeminormedAddCommGroup.toHasNorm.{u4} G _inst_3) (k x)) (HasNorm.norm.{u3} F _inst_2 (g x))) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans_le Asymptotics.IsO.trans_leₓ'. -/
 theorem IsO.trans_le (hfg : f =o[l] g) (hgk : ∀ x, ‖g x‖ ≤ ‖k x‖) : f =o[l] k :=
   hfg.trans_is_O_with (is_O_with_of_le _ hgk) zero_lt_one
@@ -662,7 +662,7 @@ warning: asymptotics.is_o.sup -> Asymptotics.IsO.sup is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l' f g) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l l') f g)
 but is expected to have type
-  PUnit.{0}
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : SeminormedAddCommGroup.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F _inst_2) l f g) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F _inst_2) l' f g) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 (SeminormedAddCommGroup.toHasNorm.{u3} F _inst_2) (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))) l l') f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.sup Asymptotics.IsO.supₓ'. -/
 theorem IsO.sup (h : f =o[l] g) (h' : f =o[l'] g) : f =o[l ⊔ l'] g :=
   is_o.of_is_O_with fun c cpos => (h.forall_is_O_with cpos).sup (h'.forall_is_O_with cpos)
@@ -1684,8 +1684,12 @@ theorem IsO.of_pow {f : α → 𝕜} {g : α → R} {n : ℕ} (hn : n ≠ 0) (h 
 #align asymptotics.is_O.of_pow Asymptotics.IsO.of_pow
 
 /- warning: asymptotics.is_o.pow clashes with asymptotics.is_O.pow -> Asymptotics.IsO.pow
+warning: asymptotics.is_o.pow -> Asymptotics.IsO.pow is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {R : Type.{u2}} {𝕜 : Type.{u3}} [_inst_10 : SemiNormedRing.{u2} R] [_inst_12 : NormedField.{u3} 𝕜] {l : Filter.{u1} α} {f : α -> R} {g : α -> 𝕜}, (Asymptotics.IsO.{u1, u2, u3} α R 𝕜 (SemiNormedRing.toHasNorm.{u2} R _inst_10) (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f g) -> (forall {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (Asymptotics.IsO.{u1, u2, u3} α R 𝕜 (SemiNormedRing.toHasNorm.{u2} R _inst_10) (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l (fun (x : α) => HPow.hPow.{u2, 0, u2} R Nat R (instHPow.{u2, 0} R Nat (Monoid.Pow.{u2} R (Ring.toMonoid.{u2} R (SemiNormedRing.toRing.{u2} R _inst_10)))) (f x) n) (fun (x : α) => HPow.hPow.{u3, 0, u3} 𝕜 Nat 𝕜 (instHPow.{u3, 0} 𝕜 Nat (Monoid.Pow.{u3} 𝕜 (Ring.toMonoid.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) (g x) n)))
+but is expected to have type
+  forall {α : Type.{u1}} {R : Type.{u2}} {𝕜 : Type.{u3}} [_inst_10 : SemiNormedRing.{u2} R] [_inst_12 : NormedField.{u3} 𝕜] {l : Filter.{u1} α} {f : α -> R} {g : α -> 𝕜}, (Asymptotics.IsO.{u1, u2, u3} α R 𝕜 (SemiNormedRing.toHasNorm.{u2} R _inst_10) (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l f g) -> (forall (n : Nat), Asymptotics.IsO.{u1, u2, u3} α R 𝕜 (SemiNormedRing.toHasNorm.{u2} R _inst_10) (NormedField.toHasNorm.{u3} 𝕜 _inst_12) l (fun (x : α) => HPow.hPow.{u2, 0, u2} R Nat R (instHPow.{u2, 0} R Nat (Monoid.Pow.{u2} R (Ring.toMonoid.{u2} R (SemiNormedRing.toRing.{u2} R _inst_10)))) (f x) n) (fun (x : α) => HPow.hPow.{u3, 0, u3} 𝕜 Nat 𝕜 (instHPow.{u3, 0} 𝕜 Nat (Monoid.Pow.{u3} 𝕜 (Ring.toMonoid.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12)))))) (g x) n))
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.pow Asymptotics.IsO.powₓ'. -/
-#print Asymptotics.IsO.pow /-
 theorem IsO.pow {f : α → R} {g : α → 𝕜} (h : f =o[l] g) {n : ℕ} (hn : 0 < n) :
     (fun x => f x ^ n) =o[l] fun x => g x ^ n :=
   by
@@ -1693,16 +1697,18 @@ theorem IsO.pow {f : α → R} {g : α → 𝕜} (h : f =o[l] g) {n : ℕ} (hn :
   induction' n with n ihn; · simpa only [pow_one]
   convert h.mul ihn <;> simp [pow_succ]
 #align asymptotics.is_o.pow Asymptotics.IsO.pow
--/
 
 /- warning: asymptotics.is_o.of_pow clashes with asymptotics.is_O.of_pow -> Asymptotics.IsO.of_pow
+warning: asymptotics.is_o.of_pow -> Asymptotics.IsO.of_pow is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {R : Type.{u2}} {𝕜 : Type.{u3}} [_inst_10 : SemiNormedRing.{u2} R] [_inst_12 : NormedField.{u3} 𝕜] {l : Filter.{u1} α} {f : α -> 𝕜} {g : α -> R} {n : Nat}, (Asymptotics.IsO.{u1, u3, u2} α 𝕜 R (NormedField.toHasNorm.{u3} 𝕜 _inst_12) (SemiNormedRing.toHasNorm.{u2} R _inst_10) l (HPow.hPow.{max u1 u3, 0, max u1 u3} (α -> 𝕜) Nat (α -> 𝕜) (instHPow.{max u1 u3, 0} (α -> 𝕜) Nat (Pi.hasPow.{u1, u3, 0} α Nat (fun (ᾰ : α) => 𝕜) (fun (i : α) => Monoid.Pow.{u3} 𝕜 (Ring.toMonoid.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) f n) (HPow.hPow.{max u1 u2, 0, max u1 u2} (α -> R) Nat (α -> R) (instHPow.{max u1 u2, 0} (α -> R) Nat (Pi.hasPow.{u1, u2, 0} α Nat (fun (ᾰ : α) => R) (fun (i : α) => Monoid.Pow.{u2} R (Ring.toMonoid.{u2} R (SemiNormedRing.toRing.{u2} R _inst_10))))) g n)) -> (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Asymptotics.IsO.{u1, u3, u2} α 𝕜 R (NormedField.toHasNorm.{u3} 𝕜 _inst_12) (SemiNormedRing.toHasNorm.{u2} R _inst_10) l f g)
+but is expected to have type
+  forall {α : Type.{u1}} {R : Type.{u2}} {𝕜 : Type.{u3}} [_inst_10 : SemiNormedRing.{u2} R] [_inst_12 : NormedField.{u3} 𝕜] {l : Filter.{u1} α} {f : α -> 𝕜} {g : α -> R} {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Asymptotics.IsO.{u1, u3, u2} α 𝕜 R (NormedField.toHasNorm.{u3} 𝕜 _inst_12) (SemiNormedRing.toHasNorm.{u2} R _inst_10) l (HPow.hPow.{max u1 u3, 0, max u1 u3} (α -> 𝕜) Nat (α -> 𝕜) (instHPow.{max u1 u3, 0} (α -> 𝕜) Nat (Pi.hasPow.{u1, u3, 0} α Nat (fun (ᾰ : α) => 𝕜) (fun (i : α) => Monoid.Pow.{u3} 𝕜 (Ring.toMonoid.{u3} 𝕜 (NormedRing.toRing.{u3} 𝕜 (NormedCommRing.toNormedRing.{u3} 𝕜 (NormedField.toNormedCommRing.{u3} 𝕜 _inst_12))))))) f n) (HPow.hPow.{max u1 u2, 0, max u1 u2} (α -> R) Nat (α -> R) (instHPow.{max u1 u2, 0} (α -> R) Nat (Pi.hasPow.{u1, u2, 0} α Nat (fun (ᾰ : α) => R) (fun (i : α) => Monoid.Pow.{u2} R (Ring.toMonoid.{u2} R (SemiNormedRing.toRing.{u2} R _inst_10))))) g n)) -> (Asymptotics.IsO.{u1, u3, u2} α 𝕜 R (NormedField.toHasNorm.{u3} 𝕜 _inst_12) (SemiNormedRing.toHasNorm.{u2} R _inst_10) l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.of_pow Asymptotics.IsO.of_powₓ'. -/
-#print Asymptotics.IsO.of_pow /-
 theorem IsO.of_pow {f : α → 𝕜} {g : α → R} {n : ℕ} (h : (f ^ n) =o[l] (g ^ n)) (hn : n ≠ 0) :
     f =o[l] g :=
   is_o.of_is_O_with fun c hc => (h.def' <| pow_pos hc _).ofPow hn le_rfl hc.le
 #align asymptotics.is_o.of_pow Asymptotics.IsO.of_pow
--/
 
 /-! ### Inverse -/
 
@@ -1752,12 +1758,15 @@ theorem IsO.const_smul_left (h : f' =O[l] g) (c : 𝕜) : (c • f') =O[l] g :=
 #align asymptotics.is_O.const_smul_left Asymptotics.IsO.const_smul_left
 
 /- warning: asymptotics.is_o.const_smul_left clashes with asymptotics.is_O.const_smul_left -> Asymptotics.IsO.const_smul_left
+warning: asymptotics.is_o.const_smul_left -> Asymptotics.IsO.const_smul_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {F : Type.{u2}} {E' : Type.{u3}} {𝕜 : Type.{u4}} [_inst_2 : HasNorm.{u2} F] [_inst_4 : SeminormedAddCommGroup.{u3} E'] [_inst_12 : NormedField.{u4} 𝕜] {g : α -> F} {f' : α -> E'} {l : Filter.{u1} α} [_inst_14 : NormedSpace.{u4, u3} 𝕜 E' _inst_12 _inst_4], (Asymptotics.IsO.{u1, u3, u2} α E' F (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) _inst_2 l f' g) -> (forall (c : 𝕜), Asymptotics.IsO.{u1, u3, u2} α E' F (SeminormedAddCommGroup.toHasNorm.{u3} E' _inst_4) _inst_2 l (HasSmul.smul.{u4, max u1 u3} 𝕜 (α -> E') (Function.hasSMul.{u1, u4, u3} α 𝕜 E' (SMulZeroClass.toHasSmul.{u4, u3} 𝕜 E' (AddZeroClass.toHasZero.{u3} E' (AddMonoid.toAddZeroClass.{u3} E' (AddCommMonoid.toAddMonoid.{u3} E' (AddCommGroup.toAddCommMonoid.{u3} E' (SeminormedAddCommGroup.toAddCommGroup.{u3} E' _inst_4))))) (SMulWithZero.toSmulZeroClass.{u4, u3} 𝕜 E' (MulZeroClass.toHasZero.{u4} 𝕜 (MulZeroOneClass.toMulZeroClass.{u4} 𝕜 (MonoidWithZero.toMulZeroOneClass.{u4} 𝕜 (Semiring.toMonoidWithZero.{u4} 𝕜 (Ring.toSemiring.{u4} 𝕜 (NormedRing.toRing.{u4} 𝕜 (NormedCommRing.toNormedRing.{u4} 𝕜 (NormedField.toNormedCommRing.{u4} 𝕜 _inst_12)))))))) (AddZeroClass.toHasZero.{u3} E' (AddMonoid.toAddZeroClass.{u3} E' (AddCommMonoid.toAddMonoid.{u3} E' (AddCommGroup.toAddCommMonoid.{u3} E' (SeminormedAddCommGroup.toAddCommGroup.{u3} E' _inst_4))))) (MulActionWithZero.toSMulWithZero.{u4, u3} 𝕜 E' (Semiring.toMonoidWithZero.{u4} 𝕜 (Ring.toSemiring.{u4} 𝕜 (NormedRing.toRing.{u4} 𝕜 (NormedCommRing.toNormedRing.{u4} 𝕜 (NormedField.toNormedCommRing.{u4} 𝕜 _inst_12))))) (AddZeroClass.toHasZero.{u3} E' (AddMonoid.toAddZeroClass.{u3} E' (AddCommMonoid.toAddMonoid.{u3} E' (AddCommGroup.toAddCommMonoid.{u3} E' (SeminormedAddCommGroup.toAddCommGroup.{u3} E' _inst_4))))) (Module.toMulActionWithZero.{u4, u3} 𝕜 E' (Ring.toSemiring.{u4} 𝕜 (NormedRing.toRing.{u4} 𝕜 (NormedCommRing.toNormedRing.{u4} 𝕜 (NormedField.toNormedCommRing.{u4} 𝕜 _inst_12)))) (AddCommGroup.toAddCommMonoid.{u3} E' (SeminormedAddCommGroup.toAddCommGroup.{u3} E' _inst_4)) (NormedSpace.toModule.{u4, u3} 𝕜 E' _inst_12 _inst_4 _inst_14)))))) c f') g)
+but is expected to have type
+  PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.const_smul_left Asymptotics.IsO.const_smul_leftₓ'. -/
-#print Asymptotics.IsO.const_smul_left /-
 theorem IsO.const_smul_left (h : f' =o[l] g) (c : 𝕜) : (c • f') =o[l] g :=
   is_o.of_norm_left <| by simpa only [← norm_smul] using h.norm_left.const_mul_left ‖c‖
 #align asymptotics.is_o.const_smul_left Asymptotics.IsO.const_smul_left
--/
 
 theorem is_O_const_smul_left {c : 𝕜} (hc : c ≠ 0) : (fun x => c • f' x) =O[l] g ↔ f' =O[l] g :=
   by
@@ -1822,14 +1831,17 @@ theorem IsO.smul_is_O (h₁ : k₁ =o[l] k₂) (h₂ : f' =O[l] g') :
 #align asymptotics.is_o.smul_is_O Asymptotics.IsO.smul_is_O
 
 /- warning: asymptotics.is_o.smul clashes with asymptotics.is_O.smul -> Asymptotics.IsO.smul
+warning: asymptotics.is_o.smul -> Asymptotics.IsO.smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {E' : Type.{u2}} {F' : Type.{u3}} {𝕜 : Type.{u4}} {𝕜' : Type.{u5}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u3} F'] [_inst_12 : NormedField.{u4} 𝕜] [_inst_13 : NormedField.{u5} 𝕜'] {f' : α -> E'} {g' : α -> F'} {l : Filter.{u1} α} [_inst_14 : NormedSpace.{u4, u2} 𝕜 E' _inst_12 _inst_4] [_inst_15 : NormedSpace.{u5, u3} 𝕜' F' _inst_13 _inst_5] {k₁ : α -> 𝕜} {k₂ : α -> 𝕜'}, (Asymptotics.IsO.{u1, u4, u5} α 𝕜 𝕜' (NormedField.toHasNorm.{u4} 𝕜 _inst_12) (NormedField.toHasNorm.{u5} 𝕜' _inst_13) l k₁ k₂) -> (Asymptotics.IsO.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l f' g') -> (Asymptotics.IsO.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l (fun (x : α) => HasSmul.smul.{u4, u2} 𝕜 E' (SMulZeroClass.toHasSmul.{u4, u2} 𝕜 E' (AddZeroClass.toHasZero.{u2} E' (AddMonoid.toAddZeroClass.{u2} E' (AddCommMonoid.toAddMonoid.{u2} E' (AddCommGroup.toAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4))))) (SMulWithZero.toSmulZeroClass.{u4, u2} 𝕜 E' (MulZeroClass.toHasZero.{u4} 𝕜 (MulZeroOneClass.toMulZeroClass.{u4} 𝕜 (MonoidWithZero.toMulZeroOneClass.{u4} 𝕜 (Semiring.toMonoidWithZero.{u4} 𝕜 (Ring.toSemiring.{u4} 𝕜 (NormedRing.toRing.{u4} 𝕜 (NormedCommRing.toNormedRing.{u4} 𝕜 (NormedField.toNormedCommRing.{u4} 𝕜 _inst_12)))))))) (AddZeroClass.toHasZero.{u2} E' (AddMonoid.toAddZeroClass.{u2} E' (AddCommMonoid.toAddMonoid.{u2} E' (AddCommGroup.toAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4))))) (MulActionWithZero.toSMulWithZero.{u4, u2} 𝕜 E' (Semiring.toMonoidWithZero.{u4} 𝕜 (Ring.toSemiring.{u4} 𝕜 (NormedRing.toRing.{u4} 𝕜 (NormedCommRing.toNormedRing.{u4} 𝕜 (NormedField.toNormedCommRing.{u4} 𝕜 _inst_12))))) (AddZeroClass.toHasZero.{u2} E' (AddMonoid.toAddZeroClass.{u2} E' (AddCommMonoid.toAddMonoid.{u2} E' (AddCommGroup.toAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4))))) (Module.toMulActionWithZero.{u4, u2} 𝕜 E' (Ring.toSemiring.{u4} 𝕜 (NormedRing.toRing.{u4} 𝕜 (NormedCommRing.toNormedRing.{u4} 𝕜 (NormedField.toNormedCommRing.{u4} 𝕜 _inst_12)))) (AddCommGroup.toAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4)) (NormedSpace.toModule.{u4, u2} 𝕜 E' _inst_12 _inst_4 _inst_14))))) (k₁ x) (f' x)) (fun (x : α) => HasSmul.smul.{u5, u3} 𝕜' F' (SMulZeroClass.toHasSmul.{u5, u3} 𝕜' F' (AddZeroClass.toHasZero.{u3} F' (AddMonoid.toAddZeroClass.{u3} F' (AddCommMonoid.toAddMonoid.{u3} F' (AddCommGroup.toAddCommMonoid.{u3} F' (SeminormedAddCommGroup.toAddCommGroup.{u3} F' _inst_5))))) (SMulWithZero.toSmulZeroClass.{u5, u3} 𝕜' F' (MulZeroClass.toHasZero.{u5} 𝕜' (MulZeroOneClass.toMulZeroClass.{u5} 𝕜' (MonoidWithZero.toMulZeroOneClass.{u5} 𝕜' (Semiring.toMonoidWithZero.{u5} 𝕜' (Ring.toSemiring.{u5} 𝕜' (NormedRing.toRing.{u5} 𝕜' (NormedCommRing.toNormedRing.{u5} 𝕜' (NormedField.toNormedCommRing.{u5} 𝕜' _inst_13)))))))) (AddZeroClass.toHasZero.{u3} F' (AddMonoid.toAddZeroClass.{u3} F' (AddCommMonoid.toAddMonoid.{u3} F' (AddCommGroup.toAddCommMonoid.{u3} F' (SeminormedAddCommGroup.toAddCommGroup.{u3} F' _inst_5))))) (MulActionWithZero.toSMulWithZero.{u5, u3} 𝕜' F' (Semiring.toMonoidWithZero.{u5} 𝕜' (Ring.toSemiring.{u5} 𝕜' (NormedRing.toRing.{u5} 𝕜' (NormedCommRing.toNormedRing.{u5} 𝕜' (NormedField.toNormedCommRing.{u5} 𝕜' _inst_13))))) (AddZeroClass.toHasZero.{u3} F' (AddMonoid.toAddZeroClass.{u3} F' (AddCommMonoid.toAddMonoid.{u3} F' (AddCommGroup.toAddCommMonoid.{u3} F' (SeminormedAddCommGroup.toAddCommGroup.{u3} F' _inst_5))))) (Module.toMulActionWithZero.{u5, u3} 𝕜' F' (Ring.toSemiring.{u5} 𝕜' (NormedRing.toRing.{u5} 𝕜' (NormedCommRing.toNormedRing.{u5} 𝕜' (NormedField.toNormedCommRing.{u5} 𝕜' _inst_13)))) (AddCommGroup.toAddCommMonoid.{u3} F' (SeminormedAddCommGroup.toAddCommGroup.{u3} F' _inst_5)) (NormedSpace.toModule.{u5, u3} 𝕜' F' _inst_13 _inst_5 _inst_15))))) (k₂ x) (g' x)))
+but is expected to have type
+  PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.smul Asymptotics.IsO.smulₓ'. -/
-#print Asymptotics.IsO.smul /-
 theorem IsO.smul (h₁ : k₁ =o[l] k₂) (h₂ : f' =o[l] g') :
     (fun x => k₁ x • f' x) =o[l] fun x => k₂ x • g' x := by
   refine' ((h₁.norm_norm.mul h₂.norm_norm).congr _ _).of_norm_norm <;>
     · intros <;> simp only [norm_smul]
 #align asymptotics.is_o.smul Asymptotics.IsO.smul
--/
 
 end Smul
 
@@ -1857,8 +1869,12 @@ theorem IsO.sum (h : ∀ i ∈ s, A i =O[l] g) : (fun x => ∑ i in s, A i x) =O
 #align asymptotics.is_O.sum Asymptotics.IsO.sum
 
 /- warning: asymptotics.is_o.sum clashes with asymptotics.is_O.sum -> Asymptotics.IsO.sum
+warning: asymptotics.is_o.sum -> Asymptotics.IsO.sum is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {E' : Type.{u2}} {F' : Type.{u3}} [_inst_4 : SeminormedAddCommGroup.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {g' : α -> F'} {l : Filter.{u1} α} {ι : Type.{u4}} {A : ι -> α -> E'} {s : Finset.{u4} ι}, (forall (i : ι), (Membership.Mem.{u4, u4} ι (Finset.{u4} ι) (Finset.hasMem.{u4} ι) i s) -> (Asymptotics.IsO.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l (A i) g')) -> (Asymptotics.IsO.{u1, u2, u3} α E' F' (SeminormedAddCommGroup.toHasNorm.{u2} E' _inst_4) (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) l (fun (x : α) => Finset.sum.{u2, u4} E' ι (AddCommGroup.toAddCommMonoid.{u2} E' (SeminormedAddCommGroup.toAddCommGroup.{u2} E' _inst_4)) s (fun (i : ι) => A i x)) g')
+but is expected to have type
+  forall {α : Type.{u1}} {E' : Type.{u2}} {F' : Type.{u3}} [_inst_4 : HasNorm.{u2} E'] [_inst_5 : SeminormedAddCommGroup.{u3} F'] {g' : α -> E'} {l : Filter.{u1} α} {ι : Type.{u4}} {A : ι -> α -> F'} {s : Finset.{u4} ι}, (forall (i : ι), (Membership.Mem.{u4, u4} ι (Finset.{u4} ι) (Finset.hasMem.{u4} ι) i s) -> (Asymptotics.IsO.{u1, u3, u2} α F' E' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) _inst_4 l (A i) g')) -> (Asymptotics.IsO.{u1, u3, u2} α F' E' (SeminormedAddCommGroup.toHasNorm.{u3} F' _inst_5) _inst_4 l (fun (x : α) => Finset.sum.{u3, u4} F' ι (AddCommGroup.toAddCommMonoid.{u3} F' (SeminormedAddCommGroup.toAddCommGroup.{u3} F' _inst_5)) s (fun (i : ι) => A i x)) g')
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.sum Asymptotics.IsO.sumₓ'. -/
-#print Asymptotics.IsO.sum /-
 theorem IsO.sum (h : ∀ i ∈ s, A i =o[l] g') : (fun x => ∑ i in s, A i x) =o[l] g' :=
   by
   induction' s using Finset.induction_on with i s is IH
@@ -1866,7 +1882,6 @@ theorem IsO.sum (h : ∀ i ∈ s, A i =o[l] g') : (fun x => ∑ i in s, A i x) =
   · simp only [is, Finset.sum_insert, not_false_iff]
     exact (h _ (Finset.mem_insert_self i s)).add (IH fun j hj => h _ (Finset.mem_insert_of_mem hj))
 #align asymptotics.is_o.sum Asymptotics.IsO.sum
--/
 
 end Sum
 

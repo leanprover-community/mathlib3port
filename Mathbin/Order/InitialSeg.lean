@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.initial_seg
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -503,14 +503,14 @@ theorem trans_top [IsTrans γ t] (f : r ≺i s) (g : s ≺i t) : (f.trans g).top
   rfl
 #align principal_seg.trans_top PrincipalSeg.trans_top
 
-#print PrincipalSeg.equivLt /-
+#print PrincipalSeg.equivLT /-
 /-- Composition of an order isomorphism with a principal segment, as a principal segment -/
-def equivLt (f : r ≃r s) (g : s ≺i t) : r ≺i t :=
+def equivLT (f : r ≃r s) (g : s ≺i t) : r ≺i t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g.top, fun c =>
     suffices (∃ a : β, g a = c) ↔ ∃ a : α, g (f a) = c by simpa [g.down]
     ⟨fun ⟨b, h⟩ => ⟨f.symm b, by simp only [h, RelIso.apply_symm_apply, RelIso.coe_coe_fn]⟩,
       fun ⟨a, h⟩ => ⟨f a, h⟩⟩⟩
-#align principal_seg.equiv_lt PrincipalSeg.equivLt
+#align principal_seg.equiv_lt PrincipalSeg.equivLT
 -/
 
 #print PrincipalSeg.ltEquiv /-
@@ -525,27 +525,27 @@ def ltEquiv {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ →
 #align principal_seg.lt_equiv PrincipalSeg.ltEquiv
 -/
 
-/- warning: principal_seg.equiv_lt_apply -> PrincipalSeg.equivLt_apply is a dubious translation:
+/- warning: principal_seg.equiv_lt_apply -> PrincipalSeg.equivLT_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u1, u2} α β r s) (g : PrincipalSeg.{u2, u3} β γ s t) (a : α), Eq.{succ u3} γ (coeFn.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (PrincipalSeg.{u1, u3} α γ r t) (fun (_x : PrincipalSeg.{u1, u3} α γ r t) => α -> γ) (PrincipalSeg.hasCoeToFun.{u1, u3} α γ r t) (PrincipalSeg.equivLt.{u1, u2, u3} α β γ r s t f g) a) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (PrincipalSeg.{u2, u3} β γ s t) (fun (_x : PrincipalSeg.{u2, u3} β γ s t) => β -> γ) (PrincipalSeg.hasCoeToFun.{u2, u3} β γ s t) g (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r s) (fun (_x : RelIso.{u1, u2} α β r s) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r s) f a))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u1, u2} α β r s) (g : PrincipalSeg.{u2, u3} β γ s t) (a : α), Eq.{succ u3} γ (coeFn.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (PrincipalSeg.{u1, u3} α γ r t) (fun (_x : PrincipalSeg.{u1, u3} α γ r t) => α -> γ) (PrincipalSeg.hasCoeToFun.{u1, u3} α γ r t) (PrincipalSeg.equivLT.{u1, u2, u3} α β γ r s t f g) a) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (PrincipalSeg.{u2, u3} β γ s t) (fun (_x : PrincipalSeg.{u2, u3} β γ s t) => β -> γ) (PrincipalSeg.hasCoeToFun.{u2, u3} β γ s t) g (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r s) (fun (_x : RelIso.{u1, u2} α β r s) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r s) f a))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u3, u2} α β r s) (g : PrincipalSeg.{u2, u1} β γ s t) (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) a) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (Function.Embedding.{succ u3, succ u1} α γ) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u1), succ u3, succ u1} (Function.Embedding.{succ u3, succ u1} α γ) α γ (Function.instEmbeddingLikeEmbedding.{succ u3, succ u1} α γ)) (RelEmbedding.toEmbedding.{u3, u1} α γ r t (PrincipalSeg.toRelEmbedding.{u3, u1} α γ r t (PrincipalSeg.equivLt.{u3, u2, u1} α β γ r s t f g))) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} β γ)) (RelEmbedding.toEmbedding.{u2, u1} β γ s t (PrincipalSeg.toRelEmbedding.{u2, u1} β γ s t g)) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u3, succ u2} α β)) (RelEmbedding.toEmbedding.{u3, u2} α β r s (RelIso.toRelEmbedding.{u3, u2} α β r s f)) a))
-Case conversion may be inaccurate. Consider using '#align principal_seg.equiv_lt_apply PrincipalSeg.equivLt_applyₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u3, u2} α β r s) (g : PrincipalSeg.{u2, u1} β γ s t) (a : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) a) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (Function.Embedding.{succ u3, succ u1} α γ) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u1), succ u3, succ u1} (Function.Embedding.{succ u3, succ u1} α γ) α γ (Function.instEmbeddingLikeEmbedding.{succ u3, succ u1} α γ)) (RelEmbedding.toEmbedding.{u3, u1} α γ r t (PrincipalSeg.toRelEmbedding.{u3, u1} α γ r t (PrincipalSeg.equivLT.{u3, u2, u1} α β γ r s t f g))) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} β γ)) (RelEmbedding.toEmbedding.{u2, u1} β γ s t (PrincipalSeg.toRelEmbedding.{u2, u1} β γ s t g)) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u3, succ u2} α β)) (RelEmbedding.toEmbedding.{u3, u2} α β r s (RelIso.toRelEmbedding.{u3, u2} α β r s f)) a))
+Case conversion may be inaccurate. Consider using '#align principal_seg.equiv_lt_apply PrincipalSeg.equivLT_applyₓ'. -/
 @[simp]
-theorem equivLt_apply (f : r ≃r s) (g : s ≺i t) (a : α) : (equivLt f g) a = g (f a) :=
+theorem equivLT_apply (f : r ≃r s) (g : s ≺i t) (a : α) : (equivLT f g) a = g (f a) :=
   RelEmbedding.trans_apply _ _ _
-#align principal_seg.equiv_lt_apply PrincipalSeg.equivLt_apply
+#align principal_seg.equiv_lt_apply PrincipalSeg.equivLT_apply
 
-/- warning: principal_seg.equiv_lt_top -> PrincipalSeg.equivLt_top is a dubious translation:
+/- warning: principal_seg.equiv_lt_top -> PrincipalSeg.equivLT_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u1, u2} α β r s) (g : PrincipalSeg.{u2, u3} β γ s t), Eq.{succ u3} γ (PrincipalSeg.top.{u1, u3} α γ r t (PrincipalSeg.equivLt.{u1, u2, u3} α β γ r s t f g)) (PrincipalSeg.top.{u2, u3} β γ s t g)
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u1, u2} α β r s) (g : PrincipalSeg.{u2, u3} β γ s t), Eq.{succ u3} γ (PrincipalSeg.top.{u1, u3} α γ r t (PrincipalSeg.equivLT.{u1, u2, u3} α β γ r s t f g)) (PrincipalSeg.top.{u2, u3} β γ s t g)
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u3, u2} α β r s) (g : PrincipalSeg.{u2, u1} β γ s t), Eq.{succ u1} γ (PrincipalSeg.top.{u3, u1} α γ r t (PrincipalSeg.equivLt.{u3, u2, u1} α β γ r s t f g)) (PrincipalSeg.top.{u2, u1} β γ s t g)
-Case conversion may be inaccurate. Consider using '#align principal_seg.equiv_lt_top PrincipalSeg.equivLt_topₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : RelIso.{u3, u2} α β r s) (g : PrincipalSeg.{u2, u1} β γ s t), Eq.{succ u1} γ (PrincipalSeg.top.{u3, u1} α γ r t (PrincipalSeg.equivLT.{u3, u2, u1} α β γ r s t f g)) (PrincipalSeg.top.{u2, u1} β γ s t g)
+Case conversion may be inaccurate. Consider using '#align principal_seg.equiv_lt_top PrincipalSeg.equivLT_topₓ'. -/
 @[simp]
-theorem equivLt_top (f : r ≃r s) (g : s ≺i t) : (equivLt f g).top = g.top :=
+theorem equivLT_top (f : r ≃r s) (g : s ≺i t) : (equivLT f g).top = g.top :=
   rfl
-#align principal_seg.equiv_lt_top PrincipalSeg.equivLt_top
+#align principal_seg.equiv_lt_top PrincipalSeg.equivLT_top
 
 /-- Given a well order `s`, there is a most one principal segment embedding of `r` into `s`. -/
 instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
@@ -570,21 +570,21 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u3} γ t], (RelIso.{u2, u1} α β r s) -> (forall (f : PrincipalSeg.{u2, u3} α γ r t) (g : PrincipalSeg.{u1, u3} β γ s t), Eq.{succ u3} γ (PrincipalSeg.top.{u2, u3} α γ r t f) (PrincipalSeg.top.{u1, u3} β γ s t g))
 Case conversion may be inaccurate. Consider using '#align principal_seg.top_eq PrincipalSeg.top_eqₓ'. -/
 theorem top_eq [IsWellOrder γ t] (e : r ≃r s) (f : r ≺i t) (g : s ≺i t) : f.top = g.top := by
-  rw [Subsingleton.elim f (PrincipalSeg.equivLt e g)] <;> rfl
+  rw [Subsingleton.elim f (PrincipalSeg.equivLT e g)] <;> rfl
 #align principal_seg.top_eq PrincipalSeg.top_eq
 
-/- warning: principal_seg.top_lt_top -> PrincipalSeg.topLtTop is a dubious translation:
+/- warning: principal_seg.top_lt_top -> PrincipalSeg.topLTTop is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u3} γ t], (PrincipalSeg.{u1, u2} α β r s) -> (forall (g : PrincipalSeg.{u2, u3} β γ s t) (h : PrincipalSeg.{u1, u3} α γ r t), t (PrincipalSeg.top.{u1, u3} α γ r t h) (PrincipalSeg.top.{u2, u3} β γ s t g))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u3} γ t], (PrincipalSeg.{u2, u1} α β r s) -> (forall (g : PrincipalSeg.{u1, u3} β γ s t) (h : PrincipalSeg.{u2, u3} α γ r t), t (PrincipalSeg.top.{u2, u3} α γ r t h) (PrincipalSeg.top.{u1, u3} β γ s t g))
-Case conversion may be inaccurate. Consider using '#align principal_seg.top_lt_top PrincipalSeg.topLtTopₓ'. -/
-theorem topLtTop {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
+Case conversion may be inaccurate. Consider using '#align principal_seg.top_lt_top PrincipalSeg.topLTTopₓ'. -/
+theorem topLTTop {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
     (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top :=
   by
   rw [Subsingleton.elim h (f.trans g)]
   apply PrincipalSeg.lt_top
-#align principal_seg.top_lt_top PrincipalSeg.topLtTop
+#align principal_seg.top_lt_top PrincipalSeg.topLTTop
 
 #print PrincipalSeg.ofElement /-
 /-- Any element of a well order yields a principal segment -/
@@ -715,29 +715,29 @@ theorem InitialSeg.ltOrEq_apply_right [IsWellOrder β s] (f : r ≼i s) (g : r �
   InitialSeg.eq (InitialSeg.ofIso g) f a
 #align initial_seg.lt_or_eq_apply_right InitialSeg.ltOrEq_apply_right
 
-#print InitialSeg.leLt /-
+#print InitialSeg.leLT /-
 /-- Composition of an initial segment taking values in a well order and a principal segment. -/
-noncomputable def InitialSeg.leLt [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) :
+noncomputable def InitialSeg.leLT [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) :
     r ≺i t :=
   match f.lt_or_eq with
   | Sum.inl f' => f'.trans g
-  | Sum.inr f' => PrincipalSeg.equivLt f' g
-#align initial_seg.le_lt InitialSeg.leLt
+  | Sum.inr f' => PrincipalSeg.equivLT f' g
+#align initial_seg.le_lt InitialSeg.leLT
 -/
 
-/- warning: initial_seg.le_lt_apply -> InitialSeg.leLt_apply is a dubious translation:
+/- warning: initial_seg.le_lt_apply -> InitialSeg.leLT_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u2} β s] [_inst_2 : IsTrans.{u3} γ t] (f : InitialSeg.{u1, u2} α β r s) (g : PrincipalSeg.{u2, u3} β γ s t) (a : α), Eq.{succ u3} γ (coeFn.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (PrincipalSeg.{u1, u3} α γ r t) (fun (_x : PrincipalSeg.{u1, u3} α γ r t) => α -> γ) (PrincipalSeg.hasCoeToFun.{u1, u3} α γ r t) (InitialSeg.leLt.{u1, u2, u3} α β γ r s t _inst_1 _inst_2 f g) a) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (PrincipalSeg.{u2, u3} β γ s t) (fun (_x : PrincipalSeg.{u2, u3} β γ s t) => β -> γ) (PrincipalSeg.hasCoeToFun.{u2, u3} β γ s t) g (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (InitialSeg.hasCoeToFun.{u1, u2} α β r s) f a))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u2} β s] [_inst_2 : IsTrans.{u3} γ t] (f : InitialSeg.{u1, u2} α β r s) (g : PrincipalSeg.{u2, u3} β γ s t) (a : α), Eq.{succ u3} γ (coeFn.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (PrincipalSeg.{u1, u3} α γ r t) (fun (_x : PrincipalSeg.{u1, u3} α γ r t) => α -> γ) (PrincipalSeg.hasCoeToFun.{u1, u3} α γ r t) (InitialSeg.leLT.{u1, u2, u3} α β γ r s t _inst_1 _inst_2 f g) a) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (PrincipalSeg.{u2, u3} β γ s t) (fun (_x : PrincipalSeg.{u2, u3} β γ s t) => β -> γ) (PrincipalSeg.hasCoeToFun.{u2, u3} β γ s t) g (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InitialSeg.{u1, u2} α β r s) (fun (_x : InitialSeg.{u1, u2} α β r s) => α -> β) (InitialSeg.hasCoeToFun.{u1, u2} α β r s) f a))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u3} β s] [_inst_2 : IsTrans.{u2} γ t] (f : InitialSeg.{u1, u3} α β r s) (g : PrincipalSeg.{u3, u2} β γ s t) (a : α), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) a) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α γ) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α γ) α γ (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α γ)) (RelEmbedding.toEmbedding.{u1, u2} α γ r t (PrincipalSeg.toRelEmbedding.{u1, u2} α γ r t (InitialSeg.leLt.{u1, u3, u2} α β γ r s t _inst_1 _inst_2 f g))) a) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u3, succ u2} β γ)) (RelEmbedding.toEmbedding.{u3, u2} β γ s t (PrincipalSeg.toRelEmbedding.{u3, u2} β γ s t g)) ((fun (x : α) => FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (Function.Embedding.{succ u1, succ u3} α β) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (EmbeddingLike.toFunLike.{max (succ u1) (succ u3), succ u1, succ u3} (Function.Embedding.{succ u1, succ u3} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u3} α β)) (RelEmbedding.toEmbedding.{u1, u3} α β r s (InitialSeg.toRelEmbedding.{u1, u3} α β r s f)) x) a))
-Case conversion may be inaccurate. Consider using '#align initial_seg.le_lt_apply InitialSeg.leLt_applyₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} [_inst_1 : IsWellOrder.{u3} β s] [_inst_2 : IsTrans.{u2} γ t] (f : InitialSeg.{u1, u3} α β r s) (g : PrincipalSeg.{u3, u2} β γ s t) (a : α), Eq.{succ u2} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) a) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α γ) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α γ) α γ (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α γ)) (RelEmbedding.toEmbedding.{u1, u2} α γ r t (PrincipalSeg.toRelEmbedding.{u1, u2} α γ r t (InitialSeg.leLT.{u1, u3, u2} α β γ r s t _inst_1 _inst_2 f g))) a) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} β γ) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : β) => γ) _x) (EmbeddingLike.toFunLike.{max (succ u3) (succ u2), succ u3, succ u2} (Function.Embedding.{succ u3, succ u2} β γ) β γ (Function.instEmbeddingLikeEmbedding.{succ u3, succ u2} β γ)) (RelEmbedding.toEmbedding.{u3, u2} β γ s t (PrincipalSeg.toRelEmbedding.{u3, u2} β γ s t g)) ((fun (x : α) => FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (Function.Embedding.{succ u1, succ u3} α β) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) a) (EmbeddingLike.toFunLike.{max (succ u1) (succ u3), succ u1, succ u3} (Function.Embedding.{succ u1, succ u3} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u3} α β)) (RelEmbedding.toEmbedding.{u1, u3} α β r s (InitialSeg.toRelEmbedding.{u1, u3} α β r s f)) x) a))
+Case conversion may be inaccurate. Consider using '#align initial_seg.le_lt_apply InitialSeg.leLT_applyₓ'. -/
 @[simp]
-theorem InitialSeg.leLt_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) (a : α) :
+theorem InitialSeg.leLT_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) (a : α) :
     (f.leLt g) a = g (f a) := by
-  delta InitialSeg.leLt; cases' h : f.lt_or_eq with f' f'
+  delta InitialSeg.leLT; cases' h : f.lt_or_eq with f' f'
   · simp only [PrincipalSeg.trans_apply, f.lt_or_eq_apply_left]
-  · simp only [PrincipalSeg.equivLt_apply, f.lt_or_eq_apply_right]
-#align initial_seg.le_lt_apply InitialSeg.leLt_apply
+  · simp only [PrincipalSeg.equivLT_apply, f.lt_or_eq_apply_right]
+#align initial_seg.le_lt_apply InitialSeg.leLT_apply
 
 namespace RelEmbedding
 

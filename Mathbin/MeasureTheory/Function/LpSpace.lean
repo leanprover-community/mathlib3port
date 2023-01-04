@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2365,14 +2365,14 @@ theorem norm_comp_Lp_le (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : lp E p μ) 
     ‖hg.compLp g0 f‖ ≤ c * ‖f‖ := by simpa using hg.norm_comp_Lp_sub_le g0 f 0
 #align lipschitz_with.norm_comp_Lp_le LipschitzWith.norm_comp_Lp_le
 
-theorem lipschitzWithCompLp [Fact (1 ≤ p)] (hg : LipschitzWith c g) (g0 : g 0 = 0) :
+theorem lipschitz_with_comp_Lp [Fact (1 ≤ p)] (hg : LipschitzWith c g) (g0 : g 0 = 0) :
     LipschitzWith c (hg.compLp g0 : lp E p μ → lp F p μ) :=
-  LipschitzWith.ofDistLeMul fun f g => by simp [dist_eq_norm, norm_comp_Lp_sub_le]
-#align lipschitz_with.lipschitz_with_comp_Lp LipschitzWith.lipschitzWithCompLp
+  LipschitzWith.of_dist_le_mul fun f g => by simp [dist_eq_norm, norm_comp_Lp_sub_le]
+#align lipschitz_with.lipschitz_with_comp_Lp LipschitzWith.lipschitz_with_comp_Lp
 
 theorem continuous_comp_Lp [Fact (1 ≤ p)] (hg : LipschitzWith c g) (g0 : g 0 = 0) :
     Continuous (hg.compLp g0 : lp E p μ → lp F p μ) :=
-  (lipschitzWithCompLp hg g0).Continuous
+  (lipschitz_with_comp_Lp hg g0).Continuous
 #align lipschitz_with.continuous_comp_Lp LipschitzWith.continuous_comp_Lp
 
 end LipschitzWith
@@ -2543,23 +2543,23 @@ namespace LpCat
 
 section PosPart
 
-theorem lipschitzWithPosPart : LipschitzWith 1 fun x : ℝ => max x 0 :=
-  LipschitzWith.ofDistLeMul fun x y => by simp [Real.dist_eq, abs_max_sub_max_le_abs]
-#align measure_theory.Lp.lipschitz_with_pos_part MeasureTheory.lp.lipschitzWithPosPart
+theorem lipschitz_with_pos_part : LipschitzWith 1 fun x : ℝ => max x 0 :=
+  LipschitzWith.of_dist_le_mul fun x y => by simp [Real.dist_eq, abs_max_sub_max_le_abs]
+#align measure_theory.Lp.lipschitz_with_pos_part MeasureTheory.lp.lipschitz_with_pos_part
 
 theorem MeasureTheory.Memℒp.posPart {f : α → ℝ} (hf : Memℒp f p μ) :
     Memℒp (fun x => max (f x) 0) p μ :=
-  lipschitzWithPosPart.compMemℒp (max_eq_right le_rfl) hf
+  lipschitz_with_pos_part.compMemℒp (max_eq_right le_rfl) hf
 #align measure_theory.mem_ℒp.pos_part MeasureTheory.Memℒp.posPart
 
 theorem MeasureTheory.Memℒp.negPart {f : α → ℝ} (hf : Memℒp f p μ) :
     Memℒp (fun x => max (-f x) 0) p μ :=
-  lipschitzWithPosPart.compMemℒp (max_eq_right le_rfl) hf.neg
+  lipschitz_with_pos_part.compMemℒp (max_eq_right le_rfl) hf.neg
 #align measure_theory.mem_ℒp.neg_part MeasureTheory.Memℒp.negPart
 
 /-- Positive part of a function in `L^p`. -/
 def posPart (f : lp ℝ p μ) : lp ℝ p μ :=
-  lipschitzWithPosPart.compLp (max_eq_right le_rfl) f
+  lipschitz_with_pos_part.compLp (max_eq_right le_rfl) f
 #align measure_theory.Lp.pos_part MeasureTheory.lp.posPart
 
 /-- Negative part of a function in `L^p`. -/

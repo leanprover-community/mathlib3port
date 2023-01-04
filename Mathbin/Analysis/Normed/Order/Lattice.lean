@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module analysis.normed.order.lattice
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,19 +185,19 @@ theorem norm_inf_sub_inf_le_norm (x y z : α) : ‖x ⊓ z - y ⊓ z‖ ≤ ‖x
   solid (abs_inf_sub_inf_le_abs x y z)
 #align norm_inf_sub_inf_le_norm norm_inf_sub_inf_le_norm
 
-theorem lipschitzWithSupRight (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
-  LipschitzWith.ofDistLeMul fun x y =>
+theorem lipschitz_with_sup_right (z : α) : LipschitzWith 1 fun x => x ⊔ z :=
+  LipschitzWith.of_dist_le_mul fun x y =>
     by
     rw [Nonneg.coe_one, one_mul, dist_eq_norm, dist_eq_norm]
     exact norm_sup_sub_sup_le_norm x y z
-#align lipschitz_with_sup_right lipschitzWithSupRight
+#align lipschitz_with_sup_right lipschitz_with_sup_right
 
-theorem lipschitzWithPos : LipschitzWith 1 (PosPart.pos : α → α) :=
-  lipschitzWithSupRight 0
-#align lipschitz_with_pos lipschitzWithPos
+theorem lipschitz_with_pos : LipschitzWith 1 (PosPart.pos : α → α) :=
+  lipschitz_with_sup_right 0
+#align lipschitz_with_pos lipschitz_with_pos
 
 theorem continuous_pos : Continuous (PosPart.pos : α → α) :=
-  LipschitzWith.continuous lipschitzWithPos
+  LipschitzWith.continuous lipschitz_with_pos
 #align continuous_pos continuous_pos
 
 theorem continuous_neg' : Continuous (NegPart.neg : α → α) :=

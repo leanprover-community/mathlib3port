@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.complete_lattice
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,13 +153,25 @@ theorem supₛ_le : (∀ b ∈ s, b ≤ a) → supₛ s ≤ a :=
   CompleteSemilatticeSup.Sup_le s a
 #align Sup_le supₛ_le
 
-theorem is_lub_Sup (s : Set α) : IsLUB s (supₛ s) :=
+/- warning: is_lub_Sup -> isLUB_supₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeSup.{u1} α] (s : Set.{u1} α), IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeSup.toPartialOrder.{u1} α _inst_1)) s (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeSup.{u1} α] (s : Set.{u1} α), IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeSup.toPartialOrder.{u1} α _inst_1)) s (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toSupSet.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align is_lub_Sup isLUB_supₛₓ'. -/
+theorem isLUB_supₛ (s : Set α) : IsLUB s (supₛ s) :=
   ⟨fun x => le_supₛ, fun x => supₛ_le⟩
-#align is_lub_Sup is_lub_Sup
+#align is_lub_Sup isLUB_supₛ
 
-theorem IsLUB.Sup_eq (h : IsLUB s a) : supₛ s = a :=
-  (is_lub_Sup s).unique h
-#align is_lub.Sup_eq IsLUB.Sup_eq
+/- warning: is_lub.Sup_eq -> IsLUB.supₛ_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeSup.{u1} α] {s : Set.{u1} α} {a : α}, (IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeSup.toPartialOrder.{u1} α _inst_1)) s a) -> (Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α _inst_1) s) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeSup.{u1} α] {s : Set.{u1} α} {a : α}, (IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeSup.toPartialOrder.{u1} α _inst_1)) s a) -> (Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toSupSet.{u1} α _inst_1) s) a)
+Case conversion may be inaccurate. Consider using '#align is_lub.Sup_eq IsLUB.supₛ_eqₓ'. -/
+theorem IsLUB.supₛ_eq (h : IsLUB s a) : supₛ s = a :=
+  (isLUB_supₛ s).unique h
+#align is_lub.Sup_eq IsLUB.supₛ_eq
 
 /- warning: le_Sup_of_le -> le_supₛ_of_le is a dubious translation:
 lean 3 declaration is
@@ -178,7 +190,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeSup.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeSup.toPartialOrder.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toSupSet.{u1} α _inst_1) s) (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toSupSet.{u1} α _inst_1) t))
 Case conversion may be inaccurate. Consider using '#align Sup_le_Sup supₛ_le_supₛₓ'. -/
 theorem supₛ_le_supₛ (h : s ⊆ t) : supₛ s ≤ supₛ t :=
-  (is_lub_Sup s).mono (is_lub_Sup t) h
+  (isLUB_supₛ s).mono (isLUB_supₛ t) h
 #align Sup_le_Sup supₛ_le_supₛ
 
 /- warning: Sup_le_iff -> supₛ_le_iff is a dubious translation:
@@ -189,7 +201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Sup_le_iff supₛ_le_iffₓ'. -/
 @[simp]
 theorem supₛ_le_iff : supₛ s ≤ a ↔ ∀ b ∈ s, b ≤ a :=
-  isLUB_le_iff (is_lub_Sup s)
+  isLUB_le_iff (isLUB_supₛ s)
 #align Sup_le_iff supₛ_le_iff
 
 /- warning: le_Sup_iff -> le_supₛ_iff is a dubious translation:
@@ -275,13 +287,25 @@ theorem le_infₛ : (∀ b ∈ s, a ≤ b) → a ≤ infₛ s :=
   CompleteSemilatticeInf.le_Inf s a
 #align le_Inf le_infₛ
 
-theorem is_glb_Inf (s : Set α) : IsGLB s (infₛ s) :=
+/- warning: is_glb_Inf -> isGLB_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] (s : Set.{u1} α), IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1)) s (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] (s : Set.{u1} α), IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1)) s (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align is_glb_Inf isGLB_infₛₓ'. -/
+theorem isGLB_infₛ (s : Set α) : IsGLB s (infₛ s) :=
   ⟨fun a => infₛ_le, fun a => le_infₛ⟩
-#align is_glb_Inf is_glb_Inf
+#align is_glb_Inf isGLB_infₛ
 
-theorem IsGLB.Inf_eq (h : IsGLB s a) : infₛ s = a :=
-  (is_glb_Inf s).unique h
-#align is_glb.Inf_eq IsGLB.Inf_eq
+/- warning: is_glb.Inf_eq -> IsGLB.infₛ_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1)) s a) -> (Eq.{succ u1} α (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1)) s a) -> (Eq.{succ u1} α (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s) a)
+Case conversion may be inaccurate. Consider using '#align is_glb.Inf_eq IsGLB.infₛ_eqₓ'. -/
+theorem IsGLB.infₛ_eq (h : IsGLB s a) : infₛ s = a :=
+  (isGLB_infₛ s).unique h
+#align is_glb.Inf_eq IsGLB.infₛ_eq
 
 /- warning: Inf_le_of_le -> infₛ_le_of_le is a dubious translation:
 lean 3 declaration is
@@ -300,7 +324,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s t) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) t) (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align Inf_le_Inf infₛ_le_infₛₓ'. -/
 theorem infₛ_le_infₛ (h : s ⊆ t) : infₛ t ≤ infₛ s :=
-  (is_glb_Inf s).mono (is_glb_Inf t) h
+  (isGLB_infₛ s).mono (isGLB_infₛ t) h
 #align Inf_le_Inf infₛ_le_infₛ
 
 /- warning: le_Inf_iff -> le_infₛ_iff is a dubious translation:
@@ -311,7 +335,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_Inf_iff le_infₛ_iffₓ'. -/
 @[simp]
 theorem le_infₛ_iff : a ≤ infₛ s ↔ ∀ b ∈ s, a ≤ b :=
-  le_isGLB_iff (is_glb_Inf s)
+  le_isGLB_iff (isGLB_infₛ s)
 #align le_Inf_iff le_infₛ_iff
 
 /- warning: Inf_le_iff -> infₛ_le_iff is a dubious translation:
@@ -394,24 +418,24 @@ def completeLatticeOfInf (α : Type _) [H1 : PartialOrder α] [H2 : InfSet α]
     (is_glb_Inf : ∀ s : Set α, IsGLB s (infₛ s)) : CompleteLattice α :=
   { H1, H2 with
     bot := infₛ univ
-    bot_le := fun x => (is_glb_Inf univ).1 trivial
+    bot_le := fun x => (isGLB_infₛ univ).1 trivial
     top := infₛ ∅
-    le_top := fun a => (is_glb_Inf ∅).2 <| by simp
+    le_top := fun a => (isGLB_infₛ ∅).2 <| by simp
     sup := fun a b => infₛ { x | a ≤ x ∧ b ≤ x }
     inf := fun a b => infₛ {a, b}
     le_inf := fun a b c hab hac => by
-      apply (is_glb_Inf _).2
+      apply (isGLB_infₛ _).2
       simp [*]
-    inf_le_right := fun a b => (is_glb_Inf _).1 <| mem_insert_of_mem _ <| mem_singleton _
-    inf_le_left := fun a b => (is_glb_Inf _).1 <| mem_insert _ _
-    sup_le := fun a b c hac hbc => (is_glb_Inf _).1 <| by simp [*]
-    le_sup_left := fun a b => (is_glb_Inf _).2 fun x => And.left
-    le_sup_right := fun a b => (is_glb_Inf _).2 fun x => And.right
-    le_Inf := fun s a ha => (is_glb_Inf s).2 ha
-    Inf_le := fun s a ha => (is_glb_Inf s).1 ha
+    inf_le_right := fun a b => (isGLB_infₛ _).1 <| mem_insert_of_mem _ <| mem_singleton _
+    inf_le_left := fun a b => (isGLB_infₛ _).1 <| mem_insert _ _
+    sup_le := fun a b c hac hbc => (isGLB_infₛ _).1 <| by simp [*]
+    le_sup_left := fun a b => (isGLB_infₛ _).2 fun x => And.left
+    le_sup_right := fun a b => (isGLB_infₛ _).2 fun x => And.right
+    le_Inf := fun s a ha => (isGLB_infₛ s).2 ha
+    Inf_le := fun s a ha => (isGLB_infₛ s).1 ha
     sup := fun s => infₛ (upperBounds s)
-    le_Sup := fun s a ha => (is_glb_Inf (upperBounds s)).2 fun b hb => hb ha
-    Sup_le := fun s a ha => (is_glb_Inf (upperBounds s)).1 ha }
+    le_Sup := fun s a ha => (isGLB_infₛ (upperBounds s)).2 fun b hb => hb ha
+    Sup_le := fun s a ha => (isGLB_infₛ (upperBounds s)).1 ha }
 #align complete_lattice_of_Inf completeLatticeOfInf
 -/
 
@@ -423,7 +447,7 @@ see the doc-string on `complete_lattice_of_Inf`.
 -/
 def completeLatticeOfCompleteSemilatticeInf (α : Type _) [CompleteSemilatticeInf α] :
     CompleteLattice α :=
-  completeLatticeOfInf α fun s => is_glb_Inf s
+  completeLatticeOfInf α fun s => isGLB_infₛ s
 #align complete_lattice_of_complete_semilattice_Inf completeLatticeOfCompleteSemilatticeInf
 -/
 
@@ -447,22 +471,22 @@ def completeLatticeOfSup (α : Type _) [H1 : PartialOrder α] [H2 : SupSet α]
     (is_lub_Sup : ∀ s : Set α, IsLUB s (supₛ s)) : CompleteLattice α :=
   { H1, H2 with
     top := supₛ univ
-    le_top := fun x => (is_lub_Sup univ).1 trivial
+    le_top := fun x => (isLUB_supₛ univ).1 trivial
     bot := supₛ ∅
-    bot_le := fun x => (is_lub_Sup ∅).2 <| by simp
+    bot_le := fun x => (isLUB_supₛ ∅).2 <| by simp
     sup := fun a b => supₛ {a, b}
-    sup_le := fun a b c hac hbc => (is_lub_Sup _).2 (by simp [*])
-    le_sup_left := fun a b => (is_lub_Sup _).1 <| mem_insert _ _
-    le_sup_right := fun a b => (is_lub_Sup _).1 <| mem_insert_of_mem _ <| mem_singleton _
+    sup_le := fun a b c hac hbc => (isLUB_supₛ _).2 (by simp [*])
+    le_sup_left := fun a b => (isLUB_supₛ _).1 <| mem_insert _ _
+    le_sup_right := fun a b => (isLUB_supₛ _).1 <| mem_insert_of_mem _ <| mem_singleton _
     inf := fun a b => supₛ { x | x ≤ a ∧ x ≤ b }
-    le_inf := fun a b c hab hac => (is_lub_Sup _).1 <| by simp [*]
-    inf_le_left := fun a b => (is_lub_Sup _).2 fun x => And.left
-    inf_le_right := fun a b => (is_lub_Sup _).2 fun x => And.right
+    le_inf := fun a b c hab hac => (isLUB_supₛ _).1 <| by simp [*]
+    inf_le_left := fun a b => (isLUB_supₛ _).2 fun x => And.left
+    inf_le_right := fun a b => (isLUB_supₛ _).2 fun x => And.right
     inf := fun s => supₛ (lowerBounds s)
-    Sup_le := fun s a ha => (is_lub_Sup s).2 ha
-    le_Sup := fun s a ha => (is_lub_Sup s).1 ha
-    Inf_le := fun s a ha => (is_lub_Sup (lowerBounds s)).2 fun b hb => hb ha
-    le_Inf := fun s a ha => (is_lub_Sup (lowerBounds s)).1 ha }
+    Sup_le := fun s a ha => (isLUB_supₛ s).2 ha
+    le_Sup := fun s a ha => (isLUB_supₛ s).1 ha
+    Inf_le := fun s a ha => (isLUB_supₛ (lowerBounds s)).2 fun b hb => hb ha
+    le_Inf := fun s a ha => (isLUB_supₛ (lowerBounds s)).1 ha }
 #align complete_lattice_of_Sup completeLatticeOfSup
 -/
 
@@ -474,7 +498,7 @@ see the doc-string on `complete_lattice_of_Sup`.
 -/
 def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSup α] :
     CompleteLattice α :=
-  completeLatticeOfSup α fun s => is_lub_Sup s
+  completeLatticeOfSup α fun s => isLUB_supₛ s
 #align complete_lattice_of_complete_semilattice_Sup completeLatticeOfCompleteSemilatticeSup
 -/
 
@@ -588,7 +612,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) s) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align Inf_le_Sup infₛ_le_supₛₓ'. -/
 theorem infₛ_le_supₛ (hs : s.Nonempty) : infₛ s ≤ supₛ s :=
-  isGLB_le_isLUB (is_glb_Inf s) (is_lub_Sup s) hs
+  isGLB_le_isLUB (isGLB_infₛ s) (isLUB_supₛ s) hs
 #align Inf_le_Sup infₛ_le_supₛ
 
 /- warning: Sup_union -> supₛ_union is a dubious translation:
@@ -598,7 +622,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s t)) (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) t))
 Case conversion may be inaccurate. Consider using '#align Sup_union supₛ_unionₓ'. -/
 theorem supₛ_union {s t : Set α} : supₛ (s ∪ t) = supₛ s ⊔ supₛ t :=
-  ((is_lub_Sup s).union (is_lub_Sup t)).Sup_eq
+  ((isLUB_supₛ s).union (isLUB_supₛ t)).Sup_eq
 #align Sup_union supₛ_union
 
 /- warning: Inf_union -> infₛ_union is a dubious translation:
@@ -608,7 +632,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Eq.{succ u1} α (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) s t)) (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (CompleteLattice.toLattice.{u1} α _inst_1)) (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) s) (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) t))
 Case conversion may be inaccurate. Consider using '#align Inf_union infₛ_unionₓ'. -/
 theorem infₛ_union {s t : Set α} : infₛ (s ∪ t) = infₛ s ⊓ infₛ t :=
-  ((is_glb_Inf s).union (is_glb_Inf t)).Inf_eq
+  ((isGLB_infₛ s).union (isGLB_infₛ t)).Inf_eq
 #align Inf_union infₛ_union
 
 /- warning: Sup_inter_le -> supₛ_inter_le is a dubious translation:
@@ -684,7 +708,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_insert supₛ_inse
 -- TODO(Jeremy): get this automatically
 @[simp]
 theorem supₛ_insert {a : α} {s : Set α} : supₛ (insert a s) = a ⊔ supₛ s :=
-  ((is_lub_Sup s).insert a).Sup_eq
+  ((isLUB_supₛ s).insert a).Sup_eq
 #align Sup_insert supₛ_insert
 
 /- warning: Inf_insert -> infₛ_insert is a dubious translation:
@@ -695,7 +719,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Inf_insert infₛ_insertₓ'. -/
 @[simp]
 theorem infₛ_insert {a : α} {s : Set α} : infₛ (insert a s) = a ⊓ infₛ s :=
-  ((is_glb_Inf s).insert a).Inf_eq
+  ((isGLB_infₛ s).insert a).Inf_eq
 #align Inf_insert infₛ_insert
 
 /- warning: Sup_le_Sup_of_subset_insert_bot -> supₛ_le_supₛ_of_subset_insert_bot is a dubious translation:
@@ -853,7 +877,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLinearOrder.{u1} α] {s : Set.{u1} α} {b : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_1))))) b (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_1)) s)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_1))))) b a)))
 Case conversion may be inaccurate. Consider using '#align lt_Sup_iff lt_supₛ_iffₓ'. -/
 theorem lt_supₛ_iff : b < supₛ s ↔ ∃ a ∈ s, b < a :=
-  lt_isLUB_iff <| is_lub_Sup s
+  lt_isLUB_iff <| isLUB_supₛ s
 #align lt_Sup_iff lt_supₛ_iff
 
 /- warning: Inf_lt_iff -> infₛ_lt_iff is a dubious translation:
@@ -863,7 +887,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLinearOrder.{u1} α] {s : Set.{u1} α} {b : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_1))))) (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_1)) s) b) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (CompleteLinearOrder.toCompleteLattice.{u1} α _inst_1))))) a b)))
 Case conversion may be inaccurate. Consider using '#align Inf_lt_iff infₛ_lt_iffₓ'. -/
 theorem infₛ_lt_iff : infₛ s < b ↔ ∃ a ∈ s, a < b :=
-  isGLB_lt_iff <| is_glb_Inf s
+  isGLB_lt_iff <| isGLB_infₛ s
 #align Inf_lt_iff infₛ_lt_iff
 
 /- warning: Sup_eq_top -> supₛ_eq_top is a dubious translation:
@@ -1196,26 +1220,50 @@ theorem infᵢ_le' (f : ι → α) (i : ι) : infᵢ f ≤ f i :=
   infₛ_le ⟨i, rfl⟩
 #align infi_le' infᵢ_le'
 
+/- warning: is_lub_supr -> isLUB_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] {f : ι -> α}, IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.range.{u1, u2} α ι f) (supᵢ.{u1, u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (j : ι) => f j))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α}, IsLUB.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (Set.range.{u2, u1} α ι f) (supᵢ.{u2, u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) ι (fun (j : ι) => f j))
+Case conversion may be inaccurate. Consider using '#align is_lub_supr isLUB_supᵢₓ'. -/
 /- TODO: this version would be more powerful, but, alas, the pattern matcher
    doesn't accept it.
 @[ematch] lemma le_supr' (f : ι → α) (i : ι) : (: f i :) ≤ (: supr f :) :=
 le_Sup ⟨i, rfl⟩
 -/
-theorem is_lub_supr : IsLUB (range f) (⨆ j, f j) :=
-  is_lub_Sup _
-#align is_lub_supr is_lub_supr
+theorem isLUB_supᵢ : IsLUB (range f) (⨆ j, f j) :=
+  isLUB_supₛ _
+#align is_lub_supr isLUB_supᵢ
 
-theorem is_glb_infi : IsGLB (range f) (⨅ j, f j) :=
-  is_glb_Inf _
-#align is_glb_infi is_glb_infi
+/- warning: is_glb_infi -> isGLB_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] {f : ι -> α}, IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.range.{u1, u2} α ι f) (infᵢ.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (j : ι) => f j))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α}, IsGLB.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (Set.range.{u2, u1} α ι f) (infᵢ.{u2, u1} α (CompleteLattice.toInfSet.{u2} α _inst_1) ι (fun (j : ι) => f j))
+Case conversion may be inaccurate. Consider using '#align is_glb_infi isGLB_infᵢₓ'. -/
+theorem isGLB_infᵢ : IsGLB (range f) (⨅ j, f j) :=
+  isGLB_infₛ _
+#align is_glb_infi isGLB_infᵢ
 
-theorem IsLUB.supr_eq (h : IsLUB (range f) a) : (⨆ j, f j) = a :=
+/- warning: is_lub.supr_eq -> IsLUB.supᵢ_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] {f : ι -> α} {a : α}, (IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.range.{u1, u2} α ι f) a) -> (Eq.{succ u1} α (supᵢ.{u1, u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (j : ι) => f j)) a)
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} {a : α}, (IsLUB.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (Set.range.{u2, u1} α ι f) a) -> (Eq.{succ u2} α (supᵢ.{u2, u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) ι (fun (j : ι) => f j)) a)
+Case conversion may be inaccurate. Consider using '#align is_lub.supr_eq IsLUB.supᵢ_eqₓ'. -/
+theorem IsLUB.supᵢ_eq (h : IsLUB (range f) a) : (⨆ j, f j) = a :=
   h.Sup_eq
-#align is_lub.supr_eq IsLUB.supr_eq
+#align is_lub.supr_eq IsLUB.supᵢ_eq
 
-theorem IsGLB.infi_eq (h : IsGLB (range f) a) : (⨅ j, f j) = a :=
+/- warning: is_glb.infi_eq -> IsGLB.infᵢ_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] {f : ι -> α} {a : α}, (IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.range.{u1, u2} α ι f) a) -> (Eq.{succ u1} α (infᵢ.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (j : ι) => f j)) a)
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} {a : α}, (IsGLB.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (Set.range.{u2, u1} α ι f) a) -> (Eq.{succ u2} α (infᵢ.{u2, u1} α (CompleteLattice.toInfSet.{u2} α _inst_1) ι (fun (j : ι) => f j)) a)
+Case conversion may be inaccurate. Consider using '#align is_glb.infi_eq IsGLB.infᵢ_eqₓ'. -/
+theorem IsGLB.infᵢ_eq (h : IsGLB (range f) a) : (⨅ j, f j) = a :=
   h.Inf_eq
-#align is_glb.infi_eq IsGLB.infi_eq
+#align is_glb.infi_eq IsGLB.infᵢ_eq
 
 /- warning: le_supr_of_le -> le_supᵢ_of_le is a dubious translation:
 lean 3 declaration is
@@ -1501,7 +1549,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align supr_le_iff supᵢ_le_iffₓ'. -/
 @[simp]
 theorem supᵢ_le_iff : supᵢ f ≤ a ↔ ∀ i, f i ≤ a :=
-  (isLUB_le_iff is_lub_supr).trans forall_range_iff
+  (isLUB_le_iff isLUB_supᵢ).trans forall_range_iff
 #align supr_le_iff supᵢ_le_iff
 
 /- warning: le_infi_iff -> le_infᵢ_iff is a dubious translation:
@@ -1512,7 +1560,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_infi_iff le_infᵢ_iffₓ'. -/
 @[simp]
 theorem le_infᵢ_iff : a ≤ infᵢ f ↔ ∀ i, a ≤ f i :=
-  (le_isGLB_iff is_glb_infi).trans forall_range_iff
+  (le_isGLB_iff isGLB_infᵢ).trans forall_range_iff
 #align le_infi_iff le_infᵢ_iff
 
 /- warning: supr₂_le_iff -> supᵢ₂_le_iff is a dubious translation:
@@ -2888,13 +2936,25 @@ theorem inf_eq_infᵢ (x y : α) : x ⊓ y = ⨅ b : Bool, cond b x y :=
   @sup_eq_supᵢ αᵒᵈ _ _ _
 #align inf_eq_infi inf_eq_infᵢ
 
-theorem is_glb_binfi {s : Set β} {f : β → α} : IsGLB (f '' s) (⨅ x ∈ s, f x) := by
-  simpa only [range_comp, Subtype.range_coe, infᵢ_subtype'] using @is_glb_infi α s _ (f ∘ coe)
-#align is_glb_binfi is_glb_binfi
+/- warning: is_glb_binfi -> isGLB_binfᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u2} β} {f : β -> α}, IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.image.{u2, u1} β α f s) (infᵢ.{u1, succ u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) β (fun (x : β) => infᵢ.{u1, 0} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) => f x)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u2} β} {f : β -> α}, IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.image.{u2, u1} β α f s) (infᵢ.{u1, succ u2} α (CompleteLattice.toInfSet.{u1} α _inst_1) β (fun (x : β) => infᵢ.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) => f x)))
+Case conversion may be inaccurate. Consider using '#align is_glb_binfi isGLB_binfᵢₓ'. -/
+theorem isGLB_binfᵢ {s : Set β} {f : β → α} : IsGLB (f '' s) (⨅ x ∈ s, f x) := by
+  simpa only [range_comp, Subtype.range_coe, infᵢ_subtype'] using @isGLB_infᵢ α s _ (f ∘ coe)
+#align is_glb_binfi isGLB_binfᵢ
 
-theorem is_lub_bsupr {s : Set β} {f : β → α} : IsLUB (f '' s) (⨆ x ∈ s, f x) := by
-  simpa only [range_comp, Subtype.range_coe, supᵢ_subtype'] using @is_lub_supr α s _ (f ∘ coe)
-#align is_lub_bsupr is_lub_bsupr
+/- warning: is_lub_bsupr -> isLUB_bsupᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u2} β} {f : β -> α}, IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.image.{u2, u1} β α f s) (supᵢ.{u1, succ u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) β (fun (x : β) => supᵢ.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) => f x)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {s : Set.{u2} β} {f : β -> α}, IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (Set.image.{u2, u1} β α f s) (supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α _inst_1) β (fun (x : β) => supᵢ.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) => f x)))
+Case conversion may be inaccurate. Consider using '#align is_lub_bsupr isLUB_bsupᵢₓ'. -/
+theorem isLUB_bsupᵢ {s : Set β} {f : β → α} : IsLUB (f '' s) (⨆ x ∈ s, f x) := by
+  simpa only [range_comp, Subtype.range_coe, supᵢ_subtype'] using @isLUB_supᵢ α s _ (f ∘ coe)
+#align is_lub_bsupr isLUB_bsupᵢ
 
 /- warning: supr_sigma -> supᵢ_sigma is a dubious translation:
 lean 3 declaration is

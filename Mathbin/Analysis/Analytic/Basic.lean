@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -437,13 +437,13 @@ theorem HasFpowerSeriesOnBall.hasFpowerSeriesAt (hf : HasFpowerSeriesOnBall f p 
   ⟨r, hf⟩
 #align has_fpower_series_on_ball.has_fpower_series_at HasFpowerSeriesOnBall.hasFpowerSeriesAt
 
-theorem HasFpowerSeriesAt.analyticAt (hf : HasFpowerSeriesAt f p x) : AnalyticAt 𝕜 f x :=
+theorem HasFpowerSeriesAt.analytic_at (hf : HasFpowerSeriesAt f p x) : AnalyticAt 𝕜 f x :=
   ⟨p, hf⟩
-#align has_fpower_series_at.analytic_at HasFpowerSeriesAt.analyticAt
+#align has_fpower_series_at.analytic_at HasFpowerSeriesAt.analytic_at
 
-theorem HasFpowerSeriesOnBall.analyticAt (hf : HasFpowerSeriesOnBall f p x r) : AnalyticAt 𝕜 f x :=
+theorem HasFpowerSeriesOnBall.analytic_at (hf : HasFpowerSeriesOnBall f p x r) : AnalyticAt 𝕜 f x :=
   hf.HasFpowerSeriesAt.AnalyticAt
-#align has_fpower_series_on_ball.analytic_at HasFpowerSeriesOnBall.analyticAt
+#align has_fpower_series_on_ball.analytic_at HasFpowerSeriesOnBall.analytic_at
 
 theorem HasFpowerSeriesOnBall.congr (hf : HasFpowerSeriesOnBall f p x r)
     (hg : EqOn f g (Emetric.ball x r)) : HasFpowerSeriesOnBall g p x r :=
@@ -549,13 +549,13 @@ theorem hasFpowerSeriesAtConst {c : F} {e : E} :
   ⟨⊤, hasFpowerSeriesOnBallConst⟩
 #align has_fpower_series_at_const hasFpowerSeriesAtConst
 
-theorem analyticAtConst {v : F} : AnalyticAt 𝕜 (fun _ => v) x :=
+theorem analytic_at_const {v : F} : AnalyticAt 𝕜 (fun _ => v) x :=
   ⟨constFormalMultilinearSeries 𝕜 E v, hasFpowerSeriesAtConst⟩
-#align analytic_at_const analyticAtConst
+#align analytic_at_const analytic_at_const
 
-theorem analyticOnConst {v : F} {s : Set E} : AnalyticOn 𝕜 (fun _ => v) s := fun z _ =>
-  analyticAtConst
-#align analytic_on_const analyticOnConst
+theorem analytic_on_const {v : F} {s : Set E} : AnalyticOn 𝕜 (fun _ => v) s := fun z _ =>
+  analytic_at_const
+#align analytic_on_const analytic_on_const
 
 theorem HasFpowerSeriesOnBall.add (hf : HasFpowerSeriesOnBall f pf x r)
     (hg : HasFpowerSeriesOnBall g pg x r) : HasFpowerSeriesOnBall (f + g) (pf + pg) x r :=
@@ -657,12 +657,12 @@ theorem ContinuousLinearMap.compHasFpowerSeriesOnBall (g : F →L[𝕜] G)
 
 /-- If a function `f` is analytic on a set `s` and `g` is linear, then `g ∘ f` is analytic
 on `s`. -/
-theorem ContinuousLinearMap.compAnalyticOn {s : Set E} (g : F →L[𝕜] G) (h : AnalyticOn 𝕜 f s) :
+theorem ContinuousLinearMap.comp_analytic_on {s : Set E} (g : F →L[𝕜] G) (h : AnalyticOn 𝕜 f s) :
     AnalyticOn 𝕜 (g ∘ f) s := by
   rintro x hx
   rcases h x hx with ⟨p, r, hp⟩
   exact ⟨g.comp_formal_multilinear_series p, r, g.comp_has_fpower_series_on_ball hp⟩
-#align continuous_linear_map.comp_analytic_on ContinuousLinearMap.compAnalyticOn
+#align continuous_linear_map.comp_analytic_on ContinuousLinearMap.comp_analytic_on
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr sub_pos.2, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr pow_nonneg, ",", expr hC.lt.le, ",", expr ha.1.le, ",", expr norm_nonneg, ",", expr nnreal.coe_nonneg, ",", expr ha.2, ",", expr (sub_le_sub_iff_left
     _).2, "]"],
@@ -1453,18 +1453,18 @@ theorem HasFpowerSeriesOnBall.changeOrigin (hf : HasFpowerSeriesOnBall f p x r)
 
 /-- If a function admits a power series expansion `p` on an open ball `B (x, r)`, then
 it is analytic at every point of this ball. -/
-theorem HasFpowerSeriesOnBall.analyticAtOfMem (hf : HasFpowerSeriesOnBall f p x r)
+theorem HasFpowerSeriesOnBall.analytic_at_of_mem (hf : HasFpowerSeriesOnBall f p x r)
     (h : y ∈ Emetric.ball x r) : AnalyticAt 𝕜 f y :=
   by
   have : (‖y - x‖₊ : ℝ≥0∞) < r := by simpa [edist_eq_coe_nnnorm_sub] using h
   have := hf.change_origin this
   rw [add_sub_cancel'_right] at this
   exact this.analytic_at
-#align has_fpower_series_on_ball.analytic_at_of_mem HasFpowerSeriesOnBall.analyticAtOfMem
+#align has_fpower_series_on_ball.analytic_at_of_mem HasFpowerSeriesOnBall.analytic_at_of_mem
 
-theorem HasFpowerSeriesOnBall.analyticOn (hf : HasFpowerSeriesOnBall f p x r) :
-    AnalyticOn 𝕜 f (Emetric.ball x r) := fun y hy => hf.analyticAtOfMem hy
-#align has_fpower_series_on_ball.analytic_on HasFpowerSeriesOnBall.analyticOn
+theorem HasFpowerSeriesOnBall.analytic_on (hf : HasFpowerSeriesOnBall f p x r) :
+    AnalyticOn 𝕜 f (Emetric.ball x r) := fun y hy => hf.analytic_at_of_mem hy
+#align has_fpower_series_on_ball.analytic_on HasFpowerSeriesOnBall.analytic_on
 
 variable (𝕜 f)
 

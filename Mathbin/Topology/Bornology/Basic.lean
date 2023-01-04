@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.bornology.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ and showing that they satisfy the appropriate conditions. -/
 @[simps]
 def Bornology.ofBounded' {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
-    (union_mem : ∀ (s₁) (_ : s₁ ∈ B) (s₂) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀B = univ) :
+    (union_mem : ∀ (s₁) (_ : s₁ ∈ B) (s₂) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀ B = univ) :
     Bornology α :=
   (Bornology.ofBounded B empty_mem subset_mem union_mem) fun x =>
     by
@@ -179,7 +179,7 @@ theorem IsBounded.subset (ht : IsBounded t) (hs : s ⊆ t) : IsBounded s :=
 #align bornology.is_bounded.subset Bornology.IsBounded.subset
 
 @[simp]
-theorem sUnion_bounded_univ : ⋃₀{ s : Set α | IsBounded s } = univ :=
+theorem sUnion_bounded_univ : ⋃₀ { s : Set α | IsBounded s } = univ :=
   unionₛ_eq_univ_iff.2 fun a => ⟨{a}, is_bounded_singleton, mem_singleton a⟩
 #align bornology.sUnion_bounded_univ Bornology.sUnion_bounded_univ
 
@@ -255,7 +255,7 @@ theorem is_bounded_bUnion_finset (s : Finset ι) {f : ι → Set α} :
 #align bornology.is_bounded_bUnion_finset Bornology.is_bounded_bUnion_finset
 
 theorem is_bounded_sUnion {S : Set (Set α)} (hs : S.Finite) :
-    IsBounded (⋃₀S) ↔ ∀ s ∈ S, IsBounded s := by rw [sUnion_eq_bUnion, is_bounded_bUnion hs]
+    IsBounded (⋃₀ S) ↔ ∀ s ∈ S, IsBounded s := by rw [sUnion_eq_bUnion, is_bounded_bUnion hs]
 #align bornology.is_bounded_sUnion Bornology.is_bounded_sUnion
 
 @[simp]

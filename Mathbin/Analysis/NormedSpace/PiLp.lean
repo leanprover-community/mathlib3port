@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -292,7 +292,7 @@ def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β)
     rcases p.dichotomy with (rfl | hp)
     · simp only [edist_eq_supr]
       cases isEmpty_or_nonempty ι
-      · simp only [csupr_of_empty, Ennreal.bot_eq_zero, add_zero, nonpos_iff_eq_zero]
+      · simp only [csupᵢ_of_empty, Ennreal.bot_eq_zero, add_zero, nonpos_iff_eq_zero]
       exact
         supᵢ_le fun i => (edist_triangle _ (g i) _).trans <| add_le_add (le_supᵢ _ i) (le_supᵢ _ i)
     · simp only [edist_eq_sum (zero_lt_one.trans_le hp)]
@@ -349,8 +349,8 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
     rcases p.dichotomy with (rfl | h)
     · rw [edist_eq_supr, dist_eq_csupr]
       · cases isEmpty_or_nonempty ι
-        · simp only [Real.csupr_empty, csupr_of_empty, Ennreal.bot_eq_zero, Ennreal.zero_to_real]
-        · refine' le_antisymm (csupr_le fun i => _) _
+        · simp only [Real.csupr_empty, csupᵢ_of_empty, Ennreal.bot_eq_zero, Ennreal.zero_to_real]
+        · refine' le_antisymm (csupᵢ_le fun i => _) _
           · rw [← Ennreal.of_real_le_iff_le_to_real (supr_edist_ne_top_aux f g), ←
               PseudoMetricSpace.edist_dist]
             exact le_supᵢ _ i
@@ -359,7 +359,7 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
               exact dist_nonneg
             · unfold edist
               rw [PseudoMetricSpace.edist_dist]
-              exact Ennreal.of_real_le_of_real (le_csupr (Fintype.bdd_above_range _) i)
+              exact Ennreal.of_real_le_of_real (le_csupᵢ (Fintype.bdd_above_range _) i)
     · have A : ∀ i, edist (f i) (g i) ^ p.to_real ≠ ⊤ := fun i =>
         Ennreal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)
       simp only [edist_eq_sum (zero_lt_one.trans_le h), dist_edist, Ennreal.to_real_rpow,
@@ -368,7 +368,7 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
 
 attribute [local instance] PiLp.pseudoMetricAux
 
-theorem lipschitzWithEquivAux : LipschitzWith 1 (PiLp.equiv p β) :=
+theorem lipschitz_with_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) :=
   by
   intro x y
   rcases p.dichotomy with (rfl | h)
@@ -388,9 +388,9 @@ theorem lipschitzWithEquivAux : LipschitzWith 1 (PiLp.equiv p β) :=
         apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| zero_le_one.trans h)
         exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
       
-#align pi_Lp.lipschitz_with_equiv_aux PiLp.lipschitzWithEquivAux
+#align pi_Lp.lipschitz_with_equiv_aux PiLp.lipschitz_with_equiv_aux
 
-theorem antilipschitzWithEquivAux :
+theorem antilipschitz_with_equiv_aux :
     AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (PiLp.equiv p β) :=
   by
   intro x y
@@ -421,7 +421,7 @@ theorem antilipschitzWithEquivAux :
           (Ennreal.coe_nat (Fintype.card ι)).symm
         rw [this, Ennreal.coe_rpow_of_nonneg _ nonneg]
       
-#align pi_Lp.antilipschitz_with_equiv_aux PiLp.antilipschitzWithEquivAux
+#align pi_Lp.antilipschitz_with_equiv_aux PiLp.antilipschitz_with_equiv_aux
 
 theorem aux_uniformity_eq : 𝓤 (PiLp p β) = @uniformity _ (PiCat.uniformSpace _) :=
   by
@@ -436,8 +436,8 @@ theorem aux_uniformity_eq : 𝓤 (PiLp p β) = @uniformity _ (PiCat.uniformSpace
 theorem aux_cobounded_eq : cobounded (PiLp p α) = @cobounded _ Pi.bornology :=
   calc
     cobounded (PiLp p α) = comap (PiLp.equiv p α) (cobounded _) :=
-      le_antisymm (antilipschitzWithEquivAux p α).tendsto_cobounded.le_comap
-        (lipschitzWithEquivAux p α).comap_cobounded_le
+      le_antisymm (antilipschitz_with_equiv_aux p α).tendsto_cobounded.le_comap
+        (lipschitz_with_equiv_aux p α).comap_cobounded_le
     _ = _ := comap_id
     
 #align pi_Lp.aux_cobounded_eq PiLp.aux_cobounded_eq
@@ -496,21 +496,22 @@ theorem nndist_eq_supr {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (x
     exact dist_eq_csupr _ _
 #align pi_Lp.nndist_eq_supr PiLp.nndist_eq_supr
 
-theorem lipschitzWithEquiv [∀ i, PseudoEmetricSpace (β i)] : LipschitzWith 1 (PiLp.equiv p β) :=
-  lipschitzWithEquivAux p β
-#align pi_Lp.lipschitz_with_equiv PiLp.lipschitzWithEquiv
+theorem lipschitz_with_equiv [∀ i, PseudoEmetricSpace (β i)] : LipschitzWith 1 (PiLp.equiv p β) :=
+  lipschitz_with_equiv_aux p β
+#align pi_Lp.lipschitz_with_equiv PiLp.lipschitz_with_equiv
 
-theorem antilipschitzWithEquiv [∀ i, PseudoEmetricSpace (β i)] :
+theorem antilipschitz_with_equiv [∀ i, PseudoEmetricSpace (β i)] :
     AntilipschitzWith ((Fintype.card ι : ℝ≥0) ^ (1 / p).toReal) (PiLp.equiv p β) :=
-  antilipschitzWithEquivAux p β
-#align pi_Lp.antilipschitz_with_equiv PiLp.antilipschitzWithEquiv
+  antilipschitz_with_equiv_aux p β
+#align pi_Lp.antilipschitz_with_equiv PiLp.antilipschitz_with_equiv
 
-theorem inftyEquivIsometry [∀ i, PseudoEmetricSpace (β i)] : Isometry (PiLp.equiv ∞ β) := fun x y =>
+theorem infty_equiv_isometry [∀ i, PseudoEmetricSpace (β i)] : Isometry (PiLp.equiv ∞ β) :=
+  fun x y =>
   le_antisymm (by simpa only [Ennreal.coe_one, one_mul] using lipschitz_with_equiv ∞ β x y)
     (by
       simpa only [Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, Ennreal.coe_one,
         one_mul] using antilipschitz_with_equiv ∞ β x y)
-#align pi_Lp.infty_equiv_isometry PiLp.inftyEquivIsometry
+#align pi_Lp.infty_equiv_isometry PiLp.infty_equiv_isometry
 
 variable (p β)
 
@@ -663,10 +664,10 @@ def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] ∀ i, β i :=
       suffices (finset.univ.sup fun i => ‖f i‖₊) = ⨆ i, ‖f i‖₊ by
         simpa only [Nnreal.coe_supr] using congr_arg (coe : ℝ≥0 → ℝ) this
       refine'
-        antisymm (Finset.sup_le fun i _ => le_csupr (Fintype.bdd_above_range fun i => ‖f i‖₊) _) _
+        antisymm (Finset.sup_le fun i _ => le_csupᵢ (Fintype.bdd_above_range fun i => ‖f i‖₊) _) _
       cases isEmpty_or_nonempty ι
-      · simp only [csupr_of_empty, Finset.univ_eq_empty, Finset.sup_empty]
-      · exact csupr_le fun i => Finset.le_sup (Finset.mem_univ i) }
+      · simp only [csupᵢ_of_empty, Finset.univ_eq_empty, Finset.sup_empty]
+      · exact csupᵢ_le fun i => Finset.le_sup (Finset.mem_univ i) }
 #align pi_Lp.equivₗᵢ PiLp.equivₗᵢ
 
 variable {ι' : Type _}
@@ -795,7 +796,7 @@ theorem nnnorm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] 
   rcases em <| p = ∞ with (rfl | hp)
   ·
     simp only [equiv_symm_apply, Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, one_mul,
-      nnnorm_eq_csupr, Function.const_apply, csupr_const]
+      nnnorm_eq_csupr, Function.const_apply, csupᵢ_const]
   · exact nnnorm_equiv_symm_const hp b
 #align pi_Lp.nnnorm_equiv_symm_const' PiLp.nnnorm_equiv_symm_const'
 

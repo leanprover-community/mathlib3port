@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.lemmas
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1794,44 +1794,44 @@ section Multiplicative
 
 open Multiplicative
 
-#print Nat.to_add_pow /-
+#print Nat.toAdd_pow /-
 @[simp]
-theorem Nat.to_add_pow (a : Multiplicative ℕ) (b : ℕ) : toAdd (a ^ b) = toAdd a * b :=
+theorem Nat.toAdd_pow (a : Multiplicative ℕ) (b : ℕ) : toAdd (a ^ b) = toAdd a * b :=
   by
   induction' b with b ih
   · erw [pow_zero, toAdd_one, mul_zero]
   · simp [*, pow_succ, add_comm, Nat.mul_succ]
-#align nat.to_add_pow Nat.to_add_pow
+#align nat.to_add_pow Nat.toAdd_pow
 -/
 
-#print Nat.of_add_mul /-
+#print Nat.ofAdd_mul /-
 @[simp]
-theorem Nat.of_add_mul (a b : ℕ) : ofAdd (a * b) = ofAdd a ^ b :=
-  (Nat.to_add_pow _ _).symm
-#align nat.of_add_mul Nat.of_add_mul
+theorem Nat.ofAdd_mul (a b : ℕ) : ofAdd (a * b) = ofAdd a ^ b :=
+  (Nat.toAdd_pow _ _).symm
+#align nat.of_add_mul Nat.ofAdd_mul
 -/
 
-#print Int.to_add_pow /-
+#print Int.toAdd_pow /-
 @[simp]
-theorem Int.to_add_pow (a : Multiplicative ℤ) (b : ℕ) : toAdd (a ^ b) = toAdd a * b := by
+theorem Int.toAdd_pow (a : Multiplicative ℤ) (b : ℕ) : toAdd (a ^ b) = toAdd a * b := by
   induction b <;> simp [*, mul_add, pow_succ, add_comm]
-#align int.to_add_pow Int.to_add_pow
+#align int.to_add_pow Int.toAdd_pow
 -/
 
-#print Int.to_add_zpow /-
+#print Int.toAdd_zpow /-
 @[simp]
-theorem Int.to_add_zpow (a : Multiplicative ℤ) (b : ℤ) : toAdd (a ^ b) = toAdd a * b :=
+theorem Int.toAdd_zpow (a : Multiplicative ℤ) (b : ℤ) : toAdd (a ^ b) = toAdd a * b :=
   Int.induction_on b (by simp) (by simp (config := { contextual := true }) [zpow_add, mul_add])
     (by
       simp (config := { contextual := true }) [zpow_add, mul_add, sub_eq_add_neg, -Int.add_neg_one])
-#align int.to_add_zpow Int.to_add_zpow
+#align int.to_add_zpow Int.toAdd_zpow
 -/
 
-#print Int.of_add_mul /-
+#print Int.ofAdd_mul /-
 @[simp]
-theorem Int.of_add_mul (a b : ℤ) : ofAdd (a * b) = ofAdd a ^ b :=
-  (Int.to_add_zpow _ _).symm
-#align int.of_add_mul Int.of_add_mul
+theorem Int.ofAdd_mul (a b : ℤ) : ofAdd (a * b) = ofAdd a ^ b :=
+  (Int.toAdd_zpow _ _).symm
+#align int.of_add_mul Int.ofAdd_mul
 -/
 
 end Multiplicative

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.countable
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -180,7 +180,7 @@ theorem exists_seq_supr_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
     (∃ s : ℕ → Set α, (∀ n, p (s n)) ∧ (⋃ n, s n) = univ) ↔
-      ∃ S : Set (Set α), S.Countable ∧ (∀ s ∈ S, p s) ∧ ⋃₀S = univ :=
+      ∃ S : Set (Set α), S.Countable ∧ (∀ s ∈ S, p s) ∧ ⋃₀ S = univ :=
   exists_seq_supr_eq_top_iff_countable h
 #align set.exists_seq_cover_iff_countable Set.exists_seq_cover_iff_countable
 
@@ -211,7 +211,7 @@ theorem Countable.bUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Coun
 #align set.countable.bUnion_iff Set.Countable.bUnion_iff
 
 theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) :
-    (⋃₀s).Countable ↔ ∀ a ∈ s, (a : _).Countable := by rw [sUnion_eq_bUnion, hs.bUnion_iff]
+    (⋃₀ s).Countable ↔ ∀ a ∈ s, (a : _).Countable := by rw [sUnion_eq_bUnion, hs.bUnion_iff]
 #align set.countable.sUnion_iff Set.Countable.sUnion_iff
 
 alias countable.bUnion_iff ↔ _ countable.bUnion

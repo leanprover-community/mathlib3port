@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.completion
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpac
 
 instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul :
     HasUniformContinuousConstSmul 𝕜 E :=
-  ⟨fun c => (lipschitzWithSmul c).UniformContinuous⟩
+  ⟨fun c => (lipschitz_with_smul c).UniformContinuous⟩
 #align
   uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_has_uniform_continuous_const_smul
 

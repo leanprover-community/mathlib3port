@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1113,7 +1113,7 @@ theorem xy_modeq_yn (n) :
     let ⟨hx, hy⟩ := xy_modeq_yn k
     have L : xn (n * k) * xn n + d * yn (n * k) * yn n ≡ xn n ^ k * xn n + 0 [MOD yn n ^ 2] :=
       (hx.mul_right _).add <|
-        modeq_zero_iff_dvd.2 <| by
+        modEq_zero_iff_dvd.2 <| by
           rw [pow_succ'] <;>
             exact
               mul_dvd_mul_right
@@ -1126,7 +1126,7 @@ theorem xy_modeq_yn (n) :
     have R :
       xn (n * k) * yn n + yn (n * k) * xn n ≡ xn n ^ k * yn n + k * xn n ^ k * yn n [MOD
         yn n ^ 3] :=
-      Modeq.add
+      ModEq.add
           (by
             rw [pow_succ']
             exact hx.mul_right' _) <|
@@ -1141,9 +1141,9 @@ theorem xy_modeq_yn (n) :
 #align pell.xy_modeq_yn Pell.xy_modeq_yn
 
 theorem ysq_dvd_yy (n) : yn n * yn n ∣ yn (n * yn n) :=
-  modeq_zero_iff_dvd.1 <|
+  modEq_zero_iff_dvd.1 <|
     ((xy_modeq_yn n (yn n)).right.modeq_of_dvd <| by simp [pow_succ]).trans
-      (modeq_zero_iff_dvd.2 <| by simp [mul_dvd_mul_left, mul_assoc])
+      (modEq_zero_iff_dvd.2 <| by simp [mul_dvd_mul_left, mul_assoc])
 #align pell.ysq_dvd_yy Pell.ysq_dvd_yy
 
 theorem dvd_of_ysq_dvd {n t} (h : yn n * yn n ∣ yn t) : yn n ∣ t :=
@@ -1153,7 +1153,7 @@ theorem dvd_of_ysq_dvd {n t} (h : yn n * yn n ∣ yn t) : yn n ∣ t :=
     let ⟨k, ke⟩ := nt
     have : yn n ∣ k * xn n ^ (k - 1) :=
       Nat.dvd_of_mul_dvd_mul_right (strict_mono_y n0l) <|
-        modeq_zero_iff_dvd.1 <| by
+        modEq_zero_iff_dvd.1 <| by
           have xm := (xy_modeq_yn a1 n k).right <;> rw [← ke] at xm <;>
             exact (xm.modeq_of_dvd <| by simp [pow_succ]).symm.trans h.modeq_zero_nat
     rw [ke] <;>
@@ -1293,7 +1293,7 @@ theorem xn_modeq_x2n_sub {n j} (h : j ≤ 2 * n) : xn (2 * n - j) + xn j ≡ 0 [
 #align pell.xn_modeq_x2n_sub Pell.xn_modeq_x2n_sub
 
 theorem xn_modeq_x4n_add (n j) : xn (4 * n + j) ≡ xn j [MOD xn n] :=
-  Modeq.add_right_cancel' (xn (2 * n + j)) <| by
+  ModEq.add_right_cancel' (xn (2 * n + j)) <| by
     refine' @modeq.trans _ _ 0 _ _ (by rw [add_comm] <;> exact (xn_modeq_x2n_add _ _ _).symm) <;>
         rw [show 4 * n = 2 * n + 2 * n from right_distrib 2 2 n, add_assoc] <;>
       apply xn_modeq_x2n_add
@@ -1301,7 +1301,7 @@ theorem xn_modeq_x4n_add (n j) : xn (4 * n + j) ≡ xn j [MOD xn n] :=
 
 theorem xn_modeq_x4n_sub {n j} (h : j ≤ 2 * n) : xn (4 * n - j) ≡ xn j [MOD xn n] :=
   have h' : j ≤ 2 * n := le_trans h (by rw [Nat.succ_mul] <;> apply Nat.le_add_left)
-  Modeq.add_right_cancel' (xn (2 * n - j)) <| by
+  ModEq.add_right_cancel' (xn (2 * n - j)) <| by
     refine' @modeq.trans _ _ 0 _ _ (by rw [add_comm] <;> exact (xn_modeq_x2n_sub _ h).symm) <;>
         rw [show 4 * n = 2 * n + 2 * n from right_distrib 2 2 n, add_tsub_assoc_of_le h'] <;>
       apply xn_modeq_x2n_add

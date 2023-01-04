@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,19 +50,19 @@ namespace SubmonoidClass
 
 @[simp, norm_cast, to_additive]
 theorem coe_list_prod (l : List S) : (l.Prod : M) = (l.map coe).Prod :=
-  (SubmonoidClass.subtype S : _ →* M).map_list_prod l
+  (SubmonoidClass.Subtype S : _ →* M).map_list_prod l
 #align submonoid_class.coe_list_prod SubmonoidClass.coe_list_prod
 
 @[simp, norm_cast, to_additive]
 theorem coe_multiset_prod {M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (m : Multiset S) :
     (m.Prod : M) = (m.map coe).Prod :=
-  (SubmonoidClass.subtype S : _ →* M).map_multiset_prod m
+  (SubmonoidClass.Subtype S : _ →* M).map_multiset_prod m
 #align submonoid_class.coe_multiset_prod SubmonoidClass.coe_multiset_prod
 
 @[simp, norm_cast, to_additive]
 theorem coe_finset_prod {ι M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (f : ι → S)
     (s : Finset ι) : ↑(∏ i in s, f i) = (∏ i in s, f i : M) :=
-  (SubmonoidClass.subtype S : _ →* M).map_prod f s
+  (SubmonoidClass.Subtype S : _ →* M).map_prod f s
 #align submonoid_class.coe_finset_prod SubmonoidClass.coe_finset_prod
 
 end SubmonoidClass

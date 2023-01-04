@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2941,7 +2941,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, Iff (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) t (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) u))) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) s u) t)
 Case conversion may be inaccurate. Consider using '#align set.subset_union_compl_iff_inter_subset Set.subset_union_compl_iff_inter_subsetₓ'. -/
 theorem subset_union_compl_iff_inter_subset {s t u : Set α} : s ⊆ t ∪ uᶜ ↔ s ∩ u ⊆ t :=
-  (@is_compl_compl _ u _).le_sup_right_iff_inf_left_le
+  (@isCompl_compl _ u _).le_sup_right_iff_inf_left_le
 #align set.subset_union_compl_iff_inter_subset Set.subset_union_compl_iff_inter_subset
 
 /- warning: set.compl_subset_iff_union -> Set.compl_subset_iff_union is a dubious translation:

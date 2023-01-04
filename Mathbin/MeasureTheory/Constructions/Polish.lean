@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -622,7 +622,7 @@ theorem IsClosed.measurable_set_image_of_continuous_on_inj_on {β : Type _} [Top
     (f_cont : ContinuousOn f s) (f_inj : InjOn f s) : MeasurableSet (f '' s) :=
   by
   rw [image_eq_range]
-  haveI : PolishSpace s := IsClosed.polishSpace hs
+  haveI : PolishSpace s := IsClosed.polish_space hs
   apply measurable_set_range_of_continuous_injective
   · rwa [continuous_on_iff_continuous_restrict] at f_cont
   · rwa [inj_on_iff_injective] at f_inj

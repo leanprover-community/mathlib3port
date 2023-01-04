@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.abs_max
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,7 +206,7 @@ theorem norm_eq_on_closed_ball_of_is_max_on {f : E → F} {z : E} {r : ℝ}
   have hball : maps_to e (ball 0 1) (ball z r) :=
     by
     refine'
-      ((lipschitzWithLineMap z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
+      ((lipschitz_with_line_map z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
     simpa only [line_map_apply_zero, mul_one, coe_nndist] using ball_subset_ball hw
   exact
     norm_max_aux₃ hr (hd.comp hde.diff_cont_on_cl hball)
@@ -235,7 +235,7 @@ theorem norm_eventually_eq_of_is_local_max {f : E → F} {c : E}
     nhds_basis_closed_ball.eventually_iff.2
       ⟨r, hr₀,
         norm_eq_on_closed_ball_of_is_max_on
-          (DifferentiableOn.diffContOnCl fun x hx =>
+          (DifferentiableOn.diff_cont_on_cl fun x hx =>
             (hr <| closure_ball_subset_closed_ball hx).1.DifferentiableWithinAt)
           fun x hx => (hr <| ball_subset_closed_ball hx).2⟩
 #align complex.norm_eventually_eq_of_is_local_max Complex.norm_eventually_eq_of_is_local_max
@@ -371,7 +371,7 @@ theorem eventually_eq_of_is_local_max_norm {f : E → F} {c : E}
     nhds_basis_closed_ball.eventually_iff.2
       ⟨r, hr₀,
         eq_on_closed_ball_of_is_max_on_norm
-          (DifferentiableOn.diffContOnCl fun x hx =>
+          (DifferentiableOn.diff_cont_on_cl fun x hx =>
             (hr <| closure_ball_subset_closed_ball hx).1.DifferentiableWithinAt)
           fun x hx => (hr <| ball_subset_closed_ball hx).2⟩
 #align complex.eventually_eq_of_is_local_max_norm Complex.eventually_eq_of_is_local_max_norm
@@ -438,7 +438,7 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
   rcases exists_ne z with ⟨w, hne⟩
   set e : ℂ → E := line_map z w
   have hde : Differentiable ℂ e := (differentiable_id.smul_const (w - z)).AddConst z
-  have hL : AntilipschitzWith (nndist z w)⁻¹ e := antilipschitzWithLineMap hne.symm
+  have hL : AntilipschitzWith (nndist z w)⁻¹ e := antilipschitz_with_line_map hne.symm
   replace hd : DiffContOnCl ℂ (f ∘ e) (e ⁻¹' U)
   exact hd.comp hde.diff_cont_on_cl (maps_to_preimage _ _)
   have h₀ : (0 : ℂ) ∈ e ⁻¹' U := by simpa only [e, mem_preimage, line_map_apply_zero]

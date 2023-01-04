@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.tangent_bundle
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ structure BasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField �
       ∀ x ∈ ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).source,
         ∀ v,
           (coord_change j k ((i.1.symm.trans j.1) x)) (coord_change i j x v) = coord_change i k x v
-  coordChangeSmoothClm :
+  coord_change_smooth_clm :
     ∀ i j : atlas H M, ContDiffOn 𝕜 ∞ (coord_change i j ∘ I.symm) (I '' (i.1.symm.trans j.1).source)
 #align basic_smooth_vector_bundle_core BasicSmoothVectorBundleCore
 
@@ -117,9 +117,9 @@ def trivialBasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField 
   coordChange i j x := ContinuousLinearMap.id 𝕜 F
   coord_change_self i x hx v := rfl
   coord_change_comp i j k x hx v := rfl
-  coordChangeSmoothClm i j := by
+  coord_change_smooth_clm i j := by
     dsimp
-    exact contDiffOnConst
+    exact cont_diff_on_const
 #align trivial_basic_smooth_vector_bundle_core trivialBasicSmoothVectorBundleCore
 
 namespace BasicSmoothVectorBundleCore
@@ -185,13 +185,13 @@ theorem coord_change_continuous (i j : atlas H M) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem coordChangeSmooth (i j : atlas H M) :
+theorem coord_change_smooth (i j : atlas H M) :
     ContDiffOn 𝕜 ∞ (fun p : E × F => Z.coordChange i j (I.symm p.1) p.2)
       ((I '' (i.1.symm.trans j.1).source) ×ˢ univ) :=
   by
   have A : ContDiff 𝕜 ∞ fun p : (F →L[𝕜] F) × F => p.1 p.2 :=
     by
-    apply IsBoundedBilinearMap.contDiff
+    apply IsBoundedBilinearMap.cont_diff
     exact isBoundedBilinearMapApply
   have B :
     ContDiffOn 𝕜 ∞ (fun p : E × F => (Z.coord_change i j (I.symm p.1), p.snd))
@@ -205,7 +205,7 @@ theorem coordChangeSmooth (i j : atlas H M) :
     · exact is_bounded_linear_map.snd.cont_diff.cont_diff_on
   exact A.comp_cont_diff_on B
 #align
-  basic_smooth_vector_bundle_core.coord_change_smooth BasicSmoothVectorBundleCore.coordChangeSmooth
+  basic_smooth_vector_bundle_core.coord_change_smooth BasicSmoothVectorBundleCore.coord_change_smooth
 
 /-- Vector bundle core associated to a basic smooth bundle core -/
 @[simps coordChange indexAt]
@@ -326,7 +326,7 @@ theorem coe_chart_at_symm_fst (p : H × F) (q : Z.toVectorBundleCore.TotalSpace)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Smooth manifold structure on the total space of a basic smooth bundle -/
-instance toSmoothManifold :
+instance to_smooth_manifold :
     SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z.toVectorBundleCore.TotalSpace :=
   by
   /- We have to check that the charts belong to the smooth groupoid, i.e., they are smooth on their
@@ -392,7 +392,7 @@ instance toSmoothManifold :
   rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
   exact ⟨A e e' he he', A e' e he' he⟩
 #align
-  basic_smooth_vector_bundle_core.to_smooth_manifold BasicSmoothVectorBundleCore.toSmoothManifold
+  basic_smooth_vector_bundle_core.to_smooth_manifold BasicSmoothVectorBundleCore.to_smooth_manifold
 
 end BasicSmoothVectorBundleCore
 
@@ -410,7 +410,7 @@ fiber corresponds to the derivative of the coordinate change in `M`. -/
 def tangentBundleCore : BasicSmoothVectorBundleCore I M E
     where
   coordChange i j x := fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) (I x)
-  coordChangeSmoothClm i j := by
+  coord_change_smooth_clm i j := by
     rw [I.image_eq]
     have A :
       ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm)
@@ -426,7 +426,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E
               E → E)
             p.2)
         ((I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I) ×ˢ univ) :=
-      contDiffOnFderivWithinApply A B le_top
+      cont_diff_on_fderiv_within_apply A B le_top
     have D :
       ∀ x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).source ∩ range I,
         fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) x =
@@ -662,7 +662,7 @@ instance : ChartedSpace (ModelProd H E) TM :=
   (tangentBundleCore I M).toChartedSpace
 
 instance : SmoothManifoldWithCorners I.tangent TM :=
-  (tangentBundleCore I M).toSmoothManifold
+  (tangentBundleCore I M).to_smooth_manifold
 
 instance : FiberBundle E (TangentSpace I : M → Type _) :=
   (tangentBundleCore I M).toVectorBundleCore.FiberBundle

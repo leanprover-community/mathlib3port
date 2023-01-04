@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.gauge
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,13 +89,14 @@ theorem Absorbent.gauge_set_nonempty (absorbs : Absorbent ℝ s) :
 #align absorbent.gauge_set_nonempty Absorbent.gauge_set_nonempty
 
 theorem gauge_mono (hs : Absorbent ℝ s) (h : s ⊆ t) : gauge t ≤ gauge s := fun x =>
-  (cInf_le_cInf gauge_set_bdd_below hs.gauge_set_nonempty) fun r hr => ⟨hr.1, smul_set_mono h hr.2⟩
+  (cinfₛ_le_cinfₛ gauge_set_bdd_below hs.gauge_set_nonempty) fun r hr =>
+    ⟨hr.1, smul_set_mono h hr.2⟩
 #align gauge_mono gauge_mono
 
 theorem exists_lt_of_gauge_lt (absorbs : Absorbent ℝ s) (h : gauge s x < a) :
     ∃ b, 0 < b ∧ b < a ∧ x ∈ b • s :=
   by
-  obtain ⟨b, ⟨hb, hx⟩, hba⟩ := exists_lt_of_cInf_lt absorbs.gauge_set_nonempty h
+  obtain ⟨b, ⟨hb, hx⟩, hba⟩ := exists_lt_of_cinfₛ_lt absorbs.gauge_set_nonempty h
   exact ⟨b, hb, hba, hx⟩
 #align exists_lt_of_gauge_lt exists_lt_of_gauge_lt
 
@@ -105,7 +106,7 @@ but, the real infimum of the empty set in Lean being defined as `0`, it holds un
 theorem gauge_zero : gauge s 0 = 0 := by
   rw [gauge_def']
   by_cases (0 : E) ∈ s
-  · simp only [smul_zero, sep_true, h, cInf_Ioi]
+  · simp only [smul_zero, sep_true, h, cinfₛ_Ioi]
   · simp only [smul_zero, sep_false, h, Real.Inf_empty]
 #align gauge_zero gauge_zero
 
@@ -114,7 +115,7 @@ theorem gauge_zero' : gauge (0 : Set E) = 0 := by
   ext
   rw [gauge_def']
   obtain rfl | hx := eq_or_ne x 0
-  · simp only [cInf_Ioi, mem_zero, Pi.zero_apply, eq_self_iff_true, sep_true, smul_zero]
+  · simp only [cinfₛ_Ioi, mem_zero, Pi.zero_apply, eq_self_iff_true, sep_true, smul_zero]
   · simp only [mem_zero, Pi.zero_apply, inv_eq_zero, smul_eq_zero]
     convert Real.Inf_empty
     exact eq_empty_iff_forall_not_mem.2 fun r hr => hr.2.elim (ne_of_gt hr.1) hx
@@ -155,7 +156,7 @@ theorem gauge_le_of_mem (ha : 0 ≤ a) (hx : x ∈ a • s) : gauge s x ≤ a :=
   by
   obtain rfl | ha' := ha.eq_or_lt
   · rw [mem_singleton_iff.1 (zero_smul_set_subset _ hx), gauge_zero]
-  · exact cInf_le gauge_set_bdd_below ⟨ha', hx⟩
+  · exact cinfₛ_le gauge_set_bdd_below ⟨ha', hx⟩
 #align gauge_le_of_mem gauge_le_of_mem
 
 theorem gauge_le_eq (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : Absorbent ℝ s) (ha : 0 ≤ a) :
@@ -230,7 +231,7 @@ theorem le_gauge_of_not_mem (hs₀ : StarConvex ℝ 0 s) (hs₂ : Absorbs ℝ s 
     a ≤ gauge s x := by
   rw [star_convex_zero_iff] at hs₀
   obtain ⟨r, hr, h⟩ := hs₂
-  refine' le_cInf ⟨r, hr, singleton_subset_iff.1 <| h _ (Real.norm_of_nonneg hr.le).ge⟩ _
+  refine' le_cinfₛ ⟨r, hr, singleton_subset_iff.1 <| h _ (Real.norm_of_nonneg hr.le).ge⟩ _
   rintro b ⟨hb, x, hx', rfl⟩
   refine' not_lt.1 fun hba => hx _
   have ha := hb.trans hba
@@ -370,7 +371,7 @@ theorem interior_subset_gauge_lt_one (s : Set E) : interior s ⊆ { x | gauge s 
 theorem gauge_lt_one_eq_self_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) :
     { x | gauge s x < 1 } = s :=
   by
-  refine' (gauge_lt_one_subset_self hs₁ ‹_› <| absorbentNhdsZero <| hs₂.mem_nhds hs₀).antisymm _
+  refine' (gauge_lt_one_subset_self hs₁ ‹_› <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀).antisymm _
   convert interior_subset_gauge_lt_one s
   exact hs₂.interior_eq.symm
 #align gauge_lt_one_eq_self_of_open gauge_lt_one_eq_self_of_open
@@ -449,7 +450,7 @@ protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) 
     rw [p.mem_ball_zero, map_smul_eq_mul, Real.norm_eq_abs, abs_of_pos (inv_pos.2 hpx₂),
       inv_mul_lt_iff hpx₂, mul_one]
     exact lt_mul_of_one_lt_left hpx one_lt_two
-  refine' IsGLB.cInf_eq ⟨fun r => _, fun r hr => le_of_forall_pos_le_add fun ε hε => _⟩ hp
+  refine' IsGLB.cinfₛ_eq ⟨fun r => _, fun r hr => le_of_forall_pos_le_add fun ε hε => _⟩ hp
   · rintro ⟨hr, y, hy, rfl⟩
     rw [p.mem_ball_zero] at hy
     rw [map_smul_eq_mul, Real.norm_eq_abs, abs_of_pos hr]
@@ -462,7 +463,7 @@ protected theorem Seminorm.gauge_ball (p : Seminorm ℝ E) : gauge (p.ball 0 1) 
 #align seminorm.gauge_ball Seminorm.gauge_ball
 
 theorem Seminorm.gauge_seminorm_ball (p : Seminorm ℝ E) :
-    gaugeSeminorm (p.balancedBallZero 1) (p.convex_ball 0 1) (p.absorbentBallZero zero_lt_one) =
+    gaugeSeminorm (p.balanced_ball_zero 1) (p.convex_ball 0 1) (p.absorbent_ball_zero zero_lt_one) =
       p :=
   FunLike.coe_injective p.gauge_ball
 #align seminorm.gauge_seminorm_ball Seminorm.gauge_seminorm_ball
@@ -483,7 +484,7 @@ theorem gauge_unit_ball (x : E) : gauge (Metric.ball (0 : E) 1) x = ‖x‖ :=
     rw [smul_ball this.ne', smul_zero, Real.norm_of_nonneg this.le, mul_one, mem_ball_zero_iff]
     exact lt_add_of_pos_right _ hε
   refine'
-    le_gauge_of_not_mem balanced_ball_zero.star_convex (absorbentBallZero zero_lt_one).Absorbs
+    le_gauge_of_not_mem balanced_ball_zero.star_convex (absorbent_ball_zero zero_lt_one).Absorbs
       fun h => _
   obtain hx' | hx' := eq_or_ne ‖x‖ 0
   · rw [hx'] at h
@@ -506,7 +507,7 @@ theorem mul_gauge_le_norm (hs : Metric.ball (0 : E) r ⊆ s) : r * gauge s x ≤
   obtain hr | hr := le_or_lt r 0
   · exact (mul_nonpos_of_nonpos_of_nonneg hr <| gauge_nonneg _).trans (norm_nonneg _)
   rw [mul_comm, ← le_div_iff hr, ← gauge_ball hr]
-  exact gauge_mono (absorbentBallZero hr) hs x
+  exact gauge_mono (absorbent_ball_zero hr) hs x
 #align mul_gauge_le_norm mul_gauge_le_norm
 
 end Norm

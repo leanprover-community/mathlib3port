@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.iterated_deriv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,27 +137,28 @@ theorem iterated_deriv_within_one (hs : UniqueDiffOn 𝕜 s) {x : 𝕜} (hx : x 
 derivatives are differentiable, then the function is `C^n`. This is not an equivalence in general,
 but this is an equivalence when the set has unique derivatives, see
 `cont_diff_on_iff_continuous_on_differentiable_on_deriv`. -/
-theorem contDiffOnOfContinuousOnDifferentiableOnDeriv {n : ℕ∞}
+theorem cont_diff_on_of_continuous_on_differentiable_on_deriv {n : ℕ∞}
     (Hcont : ∀ m : ℕ, (m : ℕ∞) ≤ n → ContinuousOn (fun x => iteratedDerivWithin m f s x) s)
     (Hdiff : ∀ m : ℕ, (m : ℕ∞) < n → DifferentiableOn 𝕜 (fun x => iteratedDerivWithin m f s x) s) :
-    ContDiffOn 𝕜 n f s := by
-  apply contDiffOnOfContinuousOnDifferentiableOn
+    ContDiffOn 𝕜 n f s :=
+  by
+  apply cont_diff_on_of_continuous_on_differentiable_on
   · simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff]
   · simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 #align
-  cont_diff_on_of_continuous_on_differentiable_on_deriv contDiffOnOfContinuousOnDifferentiableOnDeriv
+  cont_diff_on_of_continuous_on_differentiable_on_deriv cont_diff_on_of_continuous_on_differentiable_on_deriv
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
 require on the `n`-th derivative is differentiability instead of continuity, but it has the
 advantage of avoiding the discussion of continuity in the proof (and for `n = ∞` this is optimal).
 -/
-theorem contDiffOnOfDifferentiableOnDeriv {n : ℕ∞}
+theorem cont_diff_on_of_differentiable_on_deriv {n : ℕ∞}
     (h : ∀ m : ℕ, (m : ℕ∞) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) :
     ContDiffOn 𝕜 n f s := by
-  apply contDiffOnOfDifferentiableOn
+  apply cont_diff_on_of_differentiable_on
   simpa only [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
-#align cont_diff_on_of_differentiable_on_deriv contDiffOnOfDifferentiableOnDeriv
+#align cont_diff_on_of_differentiable_on_deriv cont_diff_on_of_differentiable_on_deriv
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives up to `n` which are
 continuous. -/
@@ -170,14 +171,14 @@ theorem ContDiffOn.continuous_on_iterated_deriv_within {n : ℕ∞} {m : ℕ} (h
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
 differentiable. -/
-theorem ContDiffOn.differentiableOnIteratedDerivWithin {n : ℕ∞} {m : ℕ} (h : ContDiffOn 𝕜 n f s)
+theorem ContDiffOn.differentiable_on_iterated_deriv_within {n : ℕ∞} {m : ℕ} (h : ContDiffOn 𝕜 n f s)
     (hmn : (m : ℕ∞) < n) (hs : UniqueDiffOn 𝕜 s) :
     DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s := by
   simpa only [iterated_deriv_within_eq_equiv_comp,
     LinearIsometryEquiv.comp_differentiable_on_iff] using
     h.differentiable_on_iterated_fderiv_within hmn hs
 #align
-  cont_diff_on.differentiable_on_iterated_deriv_within ContDiffOn.differentiableOnIteratedDerivWithin
+  cont_diff_on.differentiable_on_iterated_deriv_within ContDiffOn.differentiable_on_iterated_deriv_within
 
 /-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
 reformulated in terms of the one-dimensional derivative on sets with unique derivatives. -/
@@ -296,20 +297,20 @@ first `n` derivatives are differentiable. This is slightly too strong as the con
 require on the `n`-th derivative is differentiability instead of continuity, but it has the
 advantage of avoiding the discussion of continuity in the proof (and for `n = ∞` this is optimal).
 -/
-theorem contDiffOfDifferentiableIteratedDeriv {n : ℕ∞}
+theorem cont_diff_of_differentiable_iterated_deriv {n : ℕ∞}
     (h : ∀ m : ℕ, (m : ℕ∞) ≤ n → Differentiable 𝕜 (iteratedDeriv m f)) : ContDiff 𝕜 n f :=
   cont_diff_iff_iterated_deriv.2 ⟨fun m hm => (h m hm).Continuous, fun m hm => h m (le_of_lt hm)⟩
-#align cont_diff_of_differentiable_iterated_deriv contDiffOfDifferentiableIteratedDeriv
+#align cont_diff_of_differentiable_iterated_deriv cont_diff_of_differentiable_iterated_deriv
 
 theorem ContDiff.continuous_iterated_deriv {n : ℕ∞} (m : ℕ) (h : ContDiff 𝕜 n f)
     (hmn : (m : ℕ∞) ≤ n) : Continuous (iteratedDeriv m f) :=
   (cont_diff_iff_iterated_deriv.1 h).1 m hmn
 #align cont_diff.continuous_iterated_deriv ContDiff.continuous_iterated_deriv
 
-theorem ContDiff.differentiableIteratedDeriv {n : ℕ∞} (m : ℕ) (h : ContDiff 𝕜 n f)
+theorem ContDiff.differentiable_iterated_deriv {n : ℕ∞} (m : ℕ) (h : ContDiff 𝕜 n f)
     (hmn : (m : ℕ∞) < n) : Differentiable 𝕜 (iteratedDeriv m f) :=
   (cont_diff_iff_iterated_deriv.1 h).2 m hmn
-#align cont_diff.differentiable_iterated_deriv ContDiff.differentiableIteratedDeriv
+#align cont_diff.differentiable_iterated_deriv ContDiff.differentiable_iterated_deriv
 
 /-- The `n+1`-th iterated derivative can be obtained by differentiating the `n`-th
 iterated derivative. -/
@@ -326,7 +327,7 @@ theorem iterated_deriv_eq_iterate : iteratedDeriv n f = (deriv^[n]) f :=
   by
   ext x
   rw [← iterated_deriv_within_univ]
-  convert iterated_deriv_within_eq_iterate uniqueDiffOnUniv (mem_univ x)
+  convert iterated_deriv_within_eq_iterate unique_diff_on_univ (mem_univ x)
   simp [deriv_within_univ]
 #align iterated_deriv_eq_iterate iterated_deriv_eq_iterate
 

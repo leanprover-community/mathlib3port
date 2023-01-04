@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.dfinsupp
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -563,7 +563,7 @@ omit dec_ι
 forms a linearly independent family.
 
 See also `complete_lattice.independent.linear_independent'`. -/
-theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N)
+theorem Independent.linear_independent [NoZeroSMulDivisors R N] (p : ι → Submodule R N)
     (hp : Independent p) {v : ι → N} (hv : ∀ i, v i ∈ p i) (hv' : ∀ i, v i ≠ 0) :
     LinearIndependent R v := by
   classical
@@ -582,7 +582,7 @@ theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Subm
 #align
   complete_lattice.independent.linear_independent CompleteLattice.Independent.linear_independent
 
-theorem independent_iff_linear_independent_of_ne_zero [NoZeroSmulDivisors R N] {v : ι → N}
+theorem independent_iff_linear_independent_of_ne_zero [NoZeroSMulDivisors R N] {v : ι → N}
     (h_ne_zero : ∀ i, v i ≠ 0) : (Independent fun i => R ∙ v i) ↔ LinearIndependent R v :=
   ⟨fun hv => hv.LinearIndependent _ (fun i => Submodule.mem_span_singleton_self <| v i) h_ne_zero,
     fun hv => hv.independent_span_singleton⟩

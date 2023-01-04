@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.ultrafilter
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ open Classical Filter
 /-- `filter α` is an atomic type: for every filter there exists an ultrafilter that is less than or
 equal to this filter. -/
 instance : IsAtomic (Filter α) :=
-  IsAtomic.of_is_chain_bounded fun c hc hne hb =>
+  IsAtomic.of_isChain_bounded fun c hc hne hb =>
     ⟨infₛ c, (Inf_ne_bot_of_directed' hne (show IsChain (· ≥ ·) c from hc.symm).DirectedOn hb).Ne,
       fun x hx => infₛ_le hx⟩
 
@@ -150,7 +150,7 @@ def ofAtom (f : Filter α) (hf : IsAtom f) : Ultrafilter α
     where
   toFilter := f
   ne_bot' := ⟨hf.1⟩
-  le_of_le g hg := (is_atom_iff.1 hf).2 g hg.Ne
+  le_of_le g hg := (isAtom_iff.1 hf).2 g hg.Ne
 #align ultrafilter.of_atom Ultrafilter.ofAtom
 
 theorem nonempty_of_mem (hs : s ∈ f) : s.Nonempty :=
@@ -196,7 +196,7 @@ theorem eventually_imp : (∀ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) �
   simp only [imp_iff_not_or, eventually_or, eventually_not]
 #align ultrafilter.eventually_imp Ultrafilter.eventually_imp
 
-theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
+theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀ s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
   (Finite.induction_on hs (by simp)) fun a s ha hs his => by
     simp [union_mem_iff, his, or_and_right, exists_or]
 #align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_sUnion_mem_iff

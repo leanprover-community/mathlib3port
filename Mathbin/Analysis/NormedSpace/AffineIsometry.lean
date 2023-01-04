@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.affine_isometry
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -825,12 +825,12 @@ include 𝕜 V
 
 /-- The map `g` from `V` to `V₂` corresponding to a map `f` from `P` to `P₂`, at a base point `p`,
 is an isometry if `f` is one. -/
-theorem vaddVsub {f : P → P₂} (hf : Isometry f) {p : P} {g : V → V₂}
+theorem vadd_vsub {f : P → P₂} (hf : Isometry f) {p : P} {g : V → V₂}
     (hg : ∀ v, g v = f (v +ᵥ p) -ᵥ f p) : Isometry g :=
   by
   convert (vadd_const 𝕜 (f p)).symm.Isometry.comp (hf.comp (vadd_const 𝕜 p).Isometry)
   exact funext hg
-#align affine_isometry_equiv.vadd_vsub AffineIsometryEquiv.vaddVsub
+#align affine_isometry_equiv.vadd_vsub AffineIsometryEquiv.vadd_vsub
 
 omit 𝕜
 

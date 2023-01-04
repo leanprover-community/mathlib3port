@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -765,7 +765,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) :
 @[simp]
 theorem polynomial_quotient_equiv_quotient_polynomial_symm_mk (I : Ideal R) (f : R[X]) :
     I.polynomialQuotientEquivQuotientPolynomial.symm (Quotient.mk _ f) = f.map (Quotient.mk I) := by
-  rw [polynomial_quotient_equiv_quotient_polynomial, RingEquiv.symm_mk, RingEquiv.coe_mk,
+  rw [polynomial_quotient_equiv_quotient_polynomial, RingEquiv.symm_mk, [anonymous],
     Ideal.Quotient.lift_mk, coe_eval₂_ring_hom, eval₂_eq_eval_map, ← Polynomial.map_map, ←
     eval₂_eq_eval_map, Polynomial.eval₂_C_X]
 #align
@@ -783,7 +783,7 @@ theorem polynomial_quotient_equiv_quotient_polynomial_map_mk (I : Ideal R) (f : 
 /-- If `P` is a prime ideal of `R`, then `R[x]/(P)` is an integral domain. -/
 theorem is_domain_map_C_quotient {P : Ideal R} (H : IsPrime P) :
     IsDomain (R[X] ⧸ (map (c : R →+* R[X]) P : Ideal R[X])) :=
-  RingEquiv.is_domain (Polynomial (R ⧸ P)) (polynomialQuotientEquivQuotientPolynomial P).symm
+  RingEquiv.isDomain (Polynomial (R ⧸ P)) (polynomialQuotientEquivQuotientPolynomial P).symm
 #align ideal.is_domain_map_C_quotient Ideal.is_domain_map_C_quotient
 
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
@@ -1221,7 +1221,7 @@ instance {R : Type u} [CommSemiring R] [NoZeroDivisors R] {σ : Type v} :
 /-- The multivariate polynomial ring over an integral domain is an integral domain. -/
 instance {R : Type u} {σ : Type v} [CommRing R] [IsDomain R] : IsDomain (MvPolynomial σ R) :=
   by
-  apply NoZeroDivisors.toIsDomain _
+  apply NoZeroDivisors.to_isDomain _
   exact AddMonoidAlgebra.nontrivial
   exact MvPolynomial.no_zero_divisors
 

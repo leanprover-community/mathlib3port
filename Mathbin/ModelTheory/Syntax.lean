@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.syntax
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -790,10 +790,10 @@ variable {v : α → M} {xs : Fin l → M}
 /-- An atomic formula is either equality or a relation symbol applied to terms.
   Note that `⊥` and `⊤` are not considered atomic in this convention. -/
 inductive IsAtomic : L.BoundedFormula α n → Prop
-  | equal (t₁ t₂ : L.term (Sum α (Fin n))) : is_atomic (bdEqual t₁ t₂)
+  | equal (t₁ t₂ : L.term (Sum α (Fin n))) : IsAtomic (bdEqual t₁ t₂)
   |
   Rel {l : ℕ} (R : L.Relations l) (ts : Fin l → L.term (Sum α (Fin n))) :
-    is_atomic (R.BoundedFormula ts)
+    IsAtomic (R.BoundedFormula ts)
 #align first_order.language.bounded_formula.is_atomic FirstOrder.Language.BoundedFormula.IsAtomic
 
 theorem not_all_is_atomic (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsAtomic := fun con => by

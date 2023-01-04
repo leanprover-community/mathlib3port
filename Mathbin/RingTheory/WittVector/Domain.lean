@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.domain
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ instance [CharP R p] [NoZeroDivisors R] : NoZeroDivisors (𝕎 R) :=
     refine' mul_ne_zero (pow_ne_zero _ hwa0) (pow_ne_zero _ hwb0)⟩
 
 instance [CharP R p] [IsDomain R] : IsDomain (𝕎 R) :=
-  NoZeroDivisors.toIsDomain _
+  NoZeroDivisors.to_isDomain _
 
 end WittVector
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.semicontinuous
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -588,8 +588,8 @@ theorem lower_semicontinuous_within_at_csupr {f : ι → α → δ'}
   cases isEmpty_or_nonempty ι
   · simpa only [supᵢ_of_empty'] using lower_semicontinuous_within_at_const
   · intro y hy
-    rcases exists_lt_of_lt_csupr hy with ⟨i, hi⟩
-    filter_upwards [h i y hi, bdd] with y hy hy' using hy.trans_le (le_csupr hy' i)
+    rcases exists_lt_of_lt_csupᵢ hy with ⟨i, hi⟩
+    filter_upwards [h i y hi, bdd] with y hy hy' using hy.trans_le (le_csupᵢ hy' i)
 #align lower_semicontinuous_within_at_csupr lower_semicontinuous_within_at_csupr
 
 theorem lower_semicontinuous_within_at_supr {f : ι → α → δ}

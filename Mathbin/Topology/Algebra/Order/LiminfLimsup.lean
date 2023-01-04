@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.liminf_limsup
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ variable [ConditionallyCompleteLinearOrder α]
 
 theorem lt_mem_sets_of_Limsup_lt {f : Filter α} {b} (h : f.IsBounded (· ≤ ·)) (l : f.limsup < b) :
     ∀ᶠ a in f, a < b :=
-  let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_cInf_lt h l
+  let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_cinfₛ_lt h l
   (mem_of_superset h) fun a hac => lt_of_le_of_lt hac hcb
 #align lt_mem_sets_of_Limsup_lt lt_mem_sets_of_Limsup_lt
 
@@ -154,7 +154,7 @@ theorem le_nhds_of_Limsup_eq_Liminf {f : Filter α} {a : α} (hl : f.IsBounded (
 #align le_nhds_of_Limsup_eq_Liminf le_nhds_of_Limsup_eq_Liminf
 
 theorem Limsup_nhds (a : α) : limsup (𝓝 a) = a :=
-  cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)
+  cinfₛ_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)
     (fun a' (h : { n : α | n ≤ a' } ∈ 𝓝 a) => show a ≤ a' from @mem_of_mem_nhds α _ a _ h)
     fun b (hba : a < b) =>
     show ∃ (c : _)(h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
@@ -418,7 +418,7 @@ theorem Union_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} 
     rcases mem_range.mp maybe_x_is with ⟨i, hi⟩
     simpa only [hi, lt_self_iff_false] using x_lt i
   rw [← infi_eq_of_forall_le_of_tendsto (fun i => (x_lt i).le) as_lim] at *
-  exact Union_Ici_eq_Ioi_infi obs
+  exact unionᵢ_Ici_eq_Ioi_infᵢ obs
 #align Union_Ici_eq_Ioi_of_lt_of_tendsto Union_Ici_eq_Ioi_of_lt_of_tendsto
 
 theorem Union_Iic_eq_Iio_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.properties
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleS
     refine' zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 _)
     convert hx₁.mul hx₂
     exact e.symm
-  exact NoZeroDivisors.toIsDomain _
+  exact NoZeroDivisors.to_isDomain _
 #align
   algebraic_geometry.is_integral_of_is_irreducible_is_reduced AlgebraicGeometry.is_integral_of_is_irreducible_is_reduced
 
@@ -358,7 +358,7 @@ instance {R : CommRingCat} [H : IsDomain R] : IsIntegral (SchemeCat.spec.obj <| 
 theorem affine_is_integral_iff (R : CommRingCat) :
     IsIntegral (SchemeCat.spec.obj <| op R) ↔ IsDomain R :=
   ⟨fun h =>
-    RingEquiv.is_domain ((Scheme.Spec.obj <| op R).Presheaf.obj _)
+    RingEquiv.isDomain ((Scheme.Spec.obj <| op R).Presheaf.obj _)
       (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv,
     fun h => inferInstance⟩
 #align algebraic_geometry.affine_is_integral_iff AlgebraicGeometry.affine_is_integral_iff

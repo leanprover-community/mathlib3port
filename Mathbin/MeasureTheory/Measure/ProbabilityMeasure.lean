@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.measure.probability_measure
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,11 +226,11 @@ theorem to_finite_measure_nonzero (μ : ProbabilityMeasure Ω) : μ.toFiniteMeas
 
 variable [TopologicalSpace Ω] [OpensMeasurableSpace Ω]
 
-theorem testAgainstNnLipschitz (μ : ProbabilityMeasure Ω) :
+theorem test_against_nn_lipschitz (μ : ProbabilityMeasure Ω) :
     LipschitzWith 1 fun f : Ω →ᵇ ℝ≥0 => μ.toFiniteMeasure.testAgainstNn f :=
-  μ.mass_to_finite_measure ▸ μ.toFiniteMeasure.testAgainstNnLipschitz
+  μ.mass_to_finite_measure ▸ μ.toFiniteMeasure.test_against_nn_lipschitz
 #align
-  measure_theory.probability_measure.test_against_nn_lipschitz MeasureTheory.ProbabilityMeasure.testAgainstNnLipschitz
+  measure_theory.probability_measure.test_against_nn_lipschitz MeasureTheory.ProbabilityMeasure.test_against_nn_lipschitz
 
 /-- The topology of weak convergence on `measure_theory.probability_measure Ω`. This is inherited
 (induced) from the topology of weak convergence of finite measures via the inclusion

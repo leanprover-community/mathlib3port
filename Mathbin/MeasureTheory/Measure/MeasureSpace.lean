@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,12 +173,12 @@ theorem measure_bUnion {s : Set β} {f : β → Set α} (hs : s.Countable) (hd :
 #align measure_theory.measure_bUnion MeasureTheory.measure_bUnion
 
 theorem measure_sUnion₀ {S : Set (Set α)} (hs : S.Countable) (hd : S.Pairwise (AeDisjoint μ))
-    (h : ∀ s ∈ S, NullMeasurableSet s μ) : μ (⋃₀S) = ∑' s : S, μ s := by
+    (h : ∀ s ∈ S, NullMeasurableSet s μ) : μ (⋃₀ S) = ∑' s : S, μ s := by
   rw [sUnion_eq_bUnion, measure_bUnion₀ hs hd h]
 #align measure_theory.measure_sUnion₀ MeasureTheory.measure_sUnion₀
 
 theorem measure_sUnion {S : Set (Set α)} (hs : S.Countable) (hd : S.Pairwise Disjoint)
-    (h : ∀ s ∈ S, MeasurableSet s) : μ (⋃₀S) = ∑' s : S, μ s := by
+    (h : ∀ s ∈ S, MeasurableSet s) : μ (⋃₀ S) = ∑' s : S, μ s := by
   rw [sUnion_eq_bUnion, measure_bUnion hs hd h]
 #align measure_theory.measure_sUnion MeasureTheory.measure_sUnion
 
@@ -1890,7 +1890,7 @@ theorem restrict_bUnion_congr {s : Set ι} {t : ι → Set α} (hc : s.Countable
 #align measure_theory.measure.restrict_bUnion_congr MeasureTheory.Measure.restrict_bUnion_congr
 
 theorem restrict_sUnion_congr {S : Set (Set α)} (hc : S.Countable) :
-    μ.restrict (⋃₀S) = ν.restrict (⋃₀S) ↔ ∀ s ∈ S, μ.restrict s = ν.restrict s := by
+    μ.restrict (⋃₀ S) = ν.restrict (⋃₀ S) ↔ ∀ s ∈ S, μ.restrict s = ν.restrict s := by
   rw [sUnion_eq_bUnion, restrict_bUnion_congr hc]
 #align measure_theory.measure.restrict_sUnion_congr MeasureTheory.Measure.restrict_sUnion_congr
 
@@ -1940,7 +1940,7 @@ alias ext_iff_of_bUnion_eq_univ ↔ _ ext_of_bUnion_eq_univ
 
 /-- Two measures are equal if they have equal restrictions on a spanning collection of sets
   (formulated using `sUnion`). -/
-theorem ext_iff_of_sUnion_eq_univ {S : Set (Set α)} (hc : S.Countable) (hs : ⋃₀S = univ) :
+theorem ext_iff_of_sUnion_eq_univ {S : Set (Set α)} (hc : S.Countable) (hs : ⋃₀ S = univ) :
     μ = ν ↔ ∀ s ∈ S, μ.restrict s = ν.restrict s :=
   ext_iff_of_bUnion_eq_univ hc <| by rwa [← sUnion_eq_bUnion]
 #align
@@ -1949,7 +1949,7 @@ theorem ext_iff_of_sUnion_eq_univ {S : Set (Set α)} (hc : S.Countable) (hs : �
 alias ext_iff_of_sUnion_eq_univ ↔ _ ext_of_sUnion_eq_univ
 
 theorem ext_of_generate_from_of_cover {S T : Set (Set α)} (h_gen : ‹_› = generateFrom S)
-    (hc : T.Countable) (h_inter : IsPiSystem S) (hU : ⋃₀T = univ) (htop : ∀ t ∈ T, μ t ≠ ∞)
+    (hc : T.Countable) (h_inter : IsPiSystem S) (hU : ⋃₀ T = univ) (htop : ∀ t ∈ T, μ t ≠ ∞)
     (ST_eq : ∀ t ∈ T, ∀ s ∈ S, μ (s ∩ t) = ν (s ∩ t)) (T_eq : ∀ t ∈ T, μ t = ν t) : μ = ν :=
   by
   refine' ext_of_sUnion_eq_univ hc hU fun t ht => _
@@ -1973,7 +1973,7 @@ theorem ext_of_generate_from_of_cover {S T : Set (Set α)} (h_gen : ‹_› = ge
   and they are both finite on a increasing spanning sequence of sets in the π-system.
   This lemma is formulated using `sUnion`. -/
 theorem ext_of_generate_from_of_cover_subset {S T : Set (Set α)} (h_gen : ‹_› = generateFrom S)
-    (h_inter : IsPiSystem S) (h_sub : T ⊆ S) (hc : T.Countable) (hU : ⋃₀T = univ)
+    (h_inter : IsPiSystem S) (h_sub : T ⊆ S) (hc : T.Countable) (hU : ⋃₀ T = univ)
     (htop : ∀ s ∈ T, μ s ≠ ∞) (h_eq : ∀ s ∈ S, μ s = ν s) : μ = ν :=
   by
   refine' ext_of_generate_from_of_cover h_gen hc h_inter hU htop _ fun t ht => h_eq t (h_sub ht)
@@ -3563,7 +3563,7 @@ def Measure.toFiniteSpanningSetsIn (μ : Measure α) [h : SigmaFinite μ] :
   measure using `classical.some`. This definition satisfies monotonicity in addition to all other
   properties in `sigma_finite`. -/
 def spanningSets (μ : Measure α) [SigmaFinite μ] (i : ℕ) : Set α :=
-  accumulate μ.toFiniteSpanningSetsIn.Set i
+  Accumulate μ.toFiniteSpanningSetsIn.Set i
 #align measure_theory.spanning_sets MeasureTheory.spanningSets
 
 theorem monotone_spanning_sets (μ : Measure α) [SigmaFinite μ] : Monotone (spanningSets μ) :=
@@ -3868,7 +3868,7 @@ protected theorem is_countably_spanning (h : μ.FiniteSpanningSetsIn C) : IsCoun
 end FiniteSpanningSetsIn
 
 theorem sigmaFiniteOfCountable {S : Set (Set α)} (hc : S.Countable) (hμ : ∀ s ∈ S, μ s < ∞)
-    (hU : ⋃₀S = univ) : SigmaFinite μ :=
+    (hU : ⋃₀ S = univ) : SigmaFinite μ :=
   by
   obtain ⟨s, hμ, hs⟩ : ∃ s : ℕ → Set α, (∀ n, μ (s n) < ∞) ∧ (⋃ n, s n) = univ
   exact (@exists_seq_cover_iff_countable _ (fun x => μ x < ⊤) ⟨∅, by simp⟩).2 ⟨S, hc, hμ, hU⟩
@@ -4070,12 +4070,12 @@ theorem Metric.Bounded.measure_lt_top [PseudoMetricSpace α] [ProperSpace α] {�
 
 theorem measure_closed_ball_lt_top [PseudoMetricSpace α] [ProperSpace α] {μ : Measure α}
     [IsFiniteMeasureOnCompacts μ] {x : α} {r : ℝ} : μ (Metric.closedBall x r) < ∞ :=
-  Metric.boundedClosedBall.measure_lt_top
+  Metric.bounded_closed_ball.measure_lt_top
 #align measure_theory.measure_closed_ball_lt_top MeasureTheory.measure_closed_ball_lt_top
 
 theorem measure_ball_lt_top [PseudoMetricSpace α] [ProperSpace α] {μ : Measure α}
     [IsFiniteMeasureOnCompacts μ] {x : α} {r : ℝ} : μ (Metric.ball x r) < ∞ :=
-  Metric.boundedBall.measure_lt_top
+  Metric.bounded_ball.measure_lt_top
 #align measure_theory.measure_ball_lt_top MeasureTheory.measure_ball_lt_top
 
 protected theorem IsFiniteMeasureOnCompacts.smul [TopologicalSpace α] (μ : Measure α)
@@ -4728,7 +4728,7 @@ irreducible_def MeasureTheory.Measure.finiteSpanningSetsInOpen' [TopologicalSpac
           spanning := by simp }⟩
   inhabit α
   let S : Set (Set α) := { s | IsOpen s ∧ μ s < ∞ }
-  obtain ⟨T, T_count, TS, hT⟩ : ∃ T : Set (Set α), T.Countable ∧ T ⊆ S ∧ ⋃₀T = ⋃₀S :=
+  obtain ⟨T, T_count, TS, hT⟩ : ∃ T : Set (Set α), T.Countable ∧ T ⊆ S ∧ ⋃₀ T = ⋃₀ S :=
     is_open_sUnion_countable S fun s hs => hs.1
   rw [μ.is_topological_basis_is_open_lt_top.sUnion_eq] at hT
   have T_ne : T.nonempty := by
@@ -4750,7 +4750,7 @@ irreducible_def MeasureTheory.Measure.finiteSpanningSetsInOpen' [TopologicalSpac
   apply eq_univ_of_forall fun x => _
   obtain ⟨t, tT, xt⟩ : ∃ t : Set α, t ∈ range f ∧ x ∈ t :=
     by
-    have : x ∈ ⋃₀T := by simp only [hT]
+    have : x ∈ ⋃₀ T := by simp only [hT]
     simpa only [mem_sUnion, exists_prop, ← hf]
   obtain ⟨n, rfl⟩ : ∃ n : ℕ, f n = t := by simpa only using tT
   exact mem_Union_of_mem _ xt

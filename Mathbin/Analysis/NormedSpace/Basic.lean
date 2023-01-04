@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,13 +54,13 @@ end Prio
 variable [NormedField α] [SeminormedAddCommGroup β]
 
 -- see Note [lower instance priority]
-instance (priority := 100) NormedSpace.hasBoundedSmul [NormedSpace α β] : HasBoundedSmul α β
+instance (priority := 100) NormedSpace.has_bounded_smul [NormedSpace α β] : HasBoundedSmul α β
     where
   dist_smul_pair' x y₁ y₂ := by
     simpa [dist_eq_norm, smul_sub] using NormedSpace.norm_smul_le x (y₁ - y₂)
   dist_pair_smul' x₁ x₂ y := by
     simpa [dist_eq_norm, sub_smul] using NormedSpace.norm_smul_le (x₁ - x₂) y
-#align normed_space.has_bounded_smul NormedSpace.hasBoundedSmul
+#align normed_space.has_bounded_smul NormedSpace.has_bounded_smul
 
 -- Shortcut instance, as otherwise this will be found by `normed_space.to_module` and be
 -- noncomputable.
@@ -111,9 +111,9 @@ theorem nndist_smul [NormedSpace α β] (s : α) (x y : β) :
   Nnreal.eq <| dist_smul s x y
 #align nndist_smul nndist_smul
 
-theorem lipschitzWithSmul [NormedSpace α β] (s : α) : LipschitzWith ‖s‖₊ ((· • ·) s : β → β) :=
+theorem lipschitz_with_smul [NormedSpace α β] (s : α) : LipschitzWith ‖s‖₊ ((· • ·) s : β → β) :=
   lipschitz_with_iff_dist_le_mul.2 fun x y => by rw [dist_smul, coe_nnnorm]
-#align lipschitz_with_smul lipschitzWithSmul
+#align lipschitz_with_smul lipschitz_with_smul
 
 theorem norm_smul_of_nonneg [NormedSpace ℝ β] {t : ℝ} (ht : 0 ≤ t) (x : β) : ‖t • x‖ = t * ‖x‖ := by
   rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ht]
@@ -530,11 +530,11 @@ end Nnreal
 variable (𝕜 𝕜')
 
 /-- In a normed algebra, the inclusion of the base field in the extended field is an isometry. -/
-theorem algebraMapIsometry [NormOneClass 𝕜'] : Isometry (algebraMap 𝕜 𝕜') :=
+theorem algebra_map_isometry [NormOneClass 𝕜'] : Isometry (algebraMap 𝕜 𝕜') :=
   by
-  refine' Isometry.ofDistEq fun x y => _
+  refine' Isometry.of_dist_eq fun x y => _
   rw [dist_eq_norm, dist_eq_norm, ← RingHom.map_sub, norm_algebra_map']
-#align algebra_map_isometry algebraMapIsometry
+#align algebra_map_isometry algebra_map_isometry
 
 instance NormedAlgebra.id : NormedAlgebra 𝕜 𝕜 :=
   { NormedField.toNormedSpace, Algebra.id 𝕜 with }

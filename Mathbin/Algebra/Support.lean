@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.support
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,7 +171,7 @@ theorem mul_support_supr [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι 
   rw [mul_support_subset_iff']
   simp only [mem_Union, not_exists, nmem_mul_support]
   intro x hx
-  simp only [hx, csupr_const]
+  simp only [hx, csupᵢ_const]
 #align function.mul_support_supr Function.mul_support_supr
 
 @[to_additive]
@@ -270,7 +270,7 @@ theorem mul_support_div : (mulSupport fun x => f x / g x) ⊆ mulSupport f ∪ m
 
 end DivisionMonoid
 
-theorem support_smul [Zero R] [Zero M] [SMulWithZero R M] [NoZeroSmulDivisors R M] (f : α → R)
+theorem support_smul [Zero R] [Zero M] [SMulWithZero R M] [NoZeroSMulDivisors R M] (f : α → R)
     (g : α → M) : support (f • g) = support f ∩ support g :=
   ext fun x => smul_ne_zero_iff
 #align function.support_smul Function.support_smul
@@ -301,7 +301,7 @@ theorem support_smul_subset_left [Zero M] [Zero β] [SMulWithZero M β] (f : α 
 #align function.support_smul_subset_left Function.support_smul_subset_left
 
 theorem support_const_smul_of_ne_zero [Semiring R] [AddCommMonoid M] [Module R M]
-    [NoZeroSmulDivisors R M] (c : R) (g : α → M) (hc : c ≠ 0) : support (c • g) = support g :=
+    [NoZeroSMulDivisors R M] (c : R) (g : α → M) (hc : c ≠ 0) : support (c • g) = support g :=
   ext fun x => by simp only [hc, mem_support, Pi.smul_apply, Ne.def, smul_eq_zero, false_or_iff]
 #align function.support_const_smul_of_ne_zero Function.support_const_smul_of_ne_zero
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ noncomputable def constr {S : Type z} [Semiring S] [Module S N] [SMulCommClass R
   Basis.constr (chooseBasis R M) S
 #align module.free.constr Module.Free.constr
 
-instance (priority := 100) no_zero_smul_divisors [NoZeroDivisors R] : NoZeroSmulDivisors R M :=
+instance (priority := 100) no_zero_smul_divisors [NoZeroDivisors R] : NoZeroSMulDivisors R M :=
   let ⟨⟨_, b⟩⟩ := exists_basis R M
   b.NoZeroSmulDivisors
 #align module.free.no_zero_smul_divisors Module.Free.no_zero_smul_divisors

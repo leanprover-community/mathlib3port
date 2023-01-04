@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.removable_singularity
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ namespace Complex
 
 /-- **Removable singularity** theorem, weak version. If `f : ℂ → E` is differentiable in a punctured
 neighborhood of a point and is continuous at this point, then it is analytic at this point. -/
-theorem analyticAtOfDifferentiableOnPuncturedNhdsOfContinuousAt {f : ℂ → E} {c : ℂ}
+theorem analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at {f : ℂ → E} {c : ℂ}
     (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z) (hc : ContinuousAt f c) : AnalyticAt ℂ f c :=
   by
   rcases(nhds_within_has_basis nhds_basis_closed_ball _).mem_iff.1 hd with ⟨R, hR0, hRs⟩
@@ -47,7 +47,7 @@ theorem analyticAtOfDifferentiableOnPuncturedNhdsOfContinuousAt {f : ℂ → E} 
     (has_fpower_series_on_ball_of_differentiable_off_countable (countable_singleton c) hc
         (fun z hz => hRs (diff_subset_diff_left ball_subset_closed_ball hz)) hR0).AnalyticAt
 #align
-  complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at Complex.analyticAtOfDifferentiableOnPuncturedNhdsOfContinuousAt
+  complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at Complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at
 
 theorem differentiable_on_compl_singleton_and_continuous_at_iff {f : ℂ → E} {s : Set ℂ} {c : ℂ}
     (hs : s ∈ 𝓝 c) : DifferentiableOn ℂ f (s \ {c}) ∧ ContinuousAt f c ↔ DifferentiableOn ℂ f s :=
@@ -77,7 +77,7 @@ theorem differentiable_on_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
 is complex differentiable on `s \ {c}`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to be
 equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
-theorem differentiableOnUpdateLimOfIsO {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
+theorem differentiable_on_update_lim_of_is_o {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
     (hd : DifferentiableOn ℂ f (s \ {c}))
     (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
     DifferentiableOn ℂ (update f c (lim (𝓝[≠] c) f)) s :=
@@ -97,33 +97,35 @@ theorem differentiableOnUpdateLimOfIsO {f : ℂ → E} {s : Set ℂ} {c : ℂ} (
   have H' : tendsto (fun z => (z - c) • f c) (𝓝[≠] c) (𝓝 (F c)) :=
     (continuous_within_at_id.tendsto.sub tendsto_const_nhds).smul tendsto_const_nhds
   simpa [← smul_add, ContinuousWithinAt] using H.add H'
-#align complex.differentiable_on_update_lim_of_is_o Complex.differentiableOnUpdateLimOfIsO
+#align complex.differentiable_on_update_lim_of_is_o Complex.differentiable_on_update_lim_of_is_o
 
 /-- **Removable singularity** theorem: if `s` is a punctured neighborhood of `c : ℂ`, a function
 `f : ℂ → E` is complex differentiable on `s`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to
 be equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `{c} ∪ s`. -/
-theorem differentiableOnUpdateLimInsertOfIsO {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝[≠] c)
-    (hd : DifferentiableOn ℂ f s) (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
+theorem differentiable_on_update_lim_insert_of_is_o {f : ℂ → E} {s : Set ℂ} {c : ℂ}
+    (hc : s ∈ 𝓝[≠] c) (hd : DifferentiableOn ℂ f s)
+    (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
     DifferentiableOn ℂ (update f c (lim (𝓝[≠] c) f)) (insert c s) :=
-  differentiableOnUpdateLimOfIsO (insert_mem_nhds_iff.2 hc)
+  differentiable_on_update_lim_of_is_o (insert_mem_nhds_iff.2 hc)
     (hd.mono fun z hz => hz.1.resolve_left hz.2) ho
 #align
-  complex.differentiable_on_update_lim_insert_of_is_o Complex.differentiableOnUpdateLimInsertOfIsO
+  complex.differentiable_on_update_lim_insert_of_is_o Complex.differentiable_on_update_lim_insert_of_is_o
 
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
 is complex differentiable and is bounded on `s \ {c}`, then `f` redefined to be equal to
 `lim (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
-theorem differentiableOnUpdateLimOfBddAbove {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
+theorem differentiable_on_update_lim_of_bdd_above {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
     (hd : DifferentiableOn ℂ f (s \ {c})) (hb : BddAbove (norm ∘ f '' (s \ {c}))) :
     DifferentiableOn ℂ (update f c (lim (𝓝[≠] c) f)) s :=
-  differentiableOnUpdateLimOfIsO hc hd <|
+  differentiable_on_update_lim_of_is_o hc hd <|
     is_bounded_under.is_o_sub_self_inv <|
       let ⟨C, hC⟩ := hb
       ⟨C + ‖f c‖,
         eventually_map.2 <|
           mem_nhds_within_iff_exists_mem_nhds_inter.2
             ⟨s, hc, fun z hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rfl⟩⟩
-#align complex.differentiable_on_update_lim_of_bdd_above Complex.differentiableOnUpdateLimOfBddAbove
+#align
+  complex.differentiable_on_update_lim_of_bdd_above Complex.differentiable_on_update_lim_of_bdd_above
 
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable on a
 punctured neighborhood of `c` and $f(z) - f(c)=o((z-c)^{-1})$, then `f` has a limit at `c`. -/
@@ -170,10 +172,10 @@ theorem two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable {U :
       exact sphere_disjoint_ball.ne_of_mem hw hw₀ (sub_eq_zero.mp (sq_eq_zero_iff.mp h))
     have h2 : CircleIntegrable (fun z : ℂ => ((z - w₀) ^ 2)⁻¹ • f z) c R :=
       by
-      refine' ContinuousOn.circleIntegrable (pos_of_mem_ball hw₀).le _
+      refine' ContinuousOn.circle_integrable (pos_of_mem_ball hw₀).le _
       exact h1.smul (hf.continuous_on.mono (sphere_subset_closed_ball.trans hc))
     have h3 : CircleIntegrable (fun z : ℂ => ((z - w₀) ^ 2)⁻¹ • f w₀) c R :=
-      ContinuousOn.circleIntegrable (pos_of_mem_ball hw₀).le (h1.smul continuous_on_const)
+      ContinuousOn.circle_integrable (pos_of_mem_ball hw₀).le (h1.smul continuous_on_const)
     have h4 : (∮ z : ℂ in C(c, R), ((z - w₀) ^ 2)⁻¹) = 0 := by
       simpa using circleIntegral.integral_sub_zpow_of_ne (by decide : (-2 : ℤ) ≠ -1) c w₀ R
     simp only [smul_sub, circleIntegral.integral_sub h2 h3, h4, circleIntegral.integral_smul_const,

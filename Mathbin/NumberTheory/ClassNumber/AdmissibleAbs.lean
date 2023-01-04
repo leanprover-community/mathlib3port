@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.admissible_abs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
 
 /-- `abs : ℤ → ℤ` is an admissible absolute value -/
 noncomputable def absIsAdmissible : IsAdmissible AbsoluteValue.abs :=
-  { AbsoluteValue.abs_is_euclidean with
+  { AbsoluteValue.abs_isEuclidean with
     card := fun ε => ⌈1 / ε⌉₊
     exists_partition' := fun n ε hε b hb => exists_partition_int n hε hb }
 #align absolute_value.abs_is_admissible AbsoluteValue.absIsAdmissible

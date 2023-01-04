@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem HasCompactSupport.convolution_integrand_bound_right (hcg : HasCompactSup
   · refine' (L.le_op_norm₂ _ _).trans _
     exact
       mul_le_mul_of_nonneg_left
-        (le_csupr (hg.norm.bdd_above_range_of_has_compact_support hcg.norm) <| x - t)
+        (le_csupᵢ (hg.norm.bdd_above_range_of_has_compact_support hcg.norm) <| x - t)
         (mul_nonneg (norm_nonneg _) (norm_nonneg _))
   · have : x - t ∉ support g := by
       refine' mt (fun hxt => _) ht
@@ -223,7 +223,7 @@ theorem BddAbove.convolutionExistsAt' {x₀ : G} {s : Set G}
     refine' le_indicator (fun t ht => _) fun t ht => _
     · refine' (L.le_op_norm₂ _ _).trans _
       refine'
-        mul_le_mul_of_nonneg_left (le_csupr_set hbg <| mem_preimage.mpr _)
+        mul_le_mul_of_nonneg_left (le_csupᵢ_set hbg <| mem_preimage.mpr _)
           (mul_nonneg (norm_nonneg _) (norm_nonneg _))
       rwa [neg_sub, sub_add_cancel]
     · have : t ∉ support fun t => L (f t) (g (x₀ - t)) := mt (fun h => h2s h) ht
@@ -613,7 +613,7 @@ theorem BddAbove.continuous_convolution_right_of_integrable (hbg : BddAbove (ran
     refine' eventually_of_forall fun x => eventually_of_forall fun t => _
     refine' (L.le_op_norm₂ _ _).trans _
     exact
-      mul_le_mul_of_nonneg_left (le_csupr hbg <| x - t) (mul_nonneg (norm_nonneg _) (norm_nonneg _))
+      mul_le_mul_of_nonneg_left (le_csupᵢ hbg <| x - t) (mul_nonneg (norm_nonneg _) (norm_nonneg _))
   refine' continuous_at_of_dominated _ this _ _
   ·
     exact
@@ -1112,7 +1112,7 @@ theorem convolution_precompR_apply {g : G → E'' →L[𝕜] E'} (hf : LocallyIn
   rcases hcg.eq_zero_or_finite_dimensional 𝕜 hg with (rfl | fin_dim)
   · simp only [convolution, Pi.zero_apply, integral_const, smul_zero, zero_apply, _root_.map_zero]
   skip
-  have : ProperSpace G := FiniteDimensional.properIsROrC 𝕜 G
+  have : ProperSpace G := FiniteDimensional.proper_is_R_or_C 𝕜 G
   have := hcg.convolution_exists_right (L.precompR E'' : _) hf hg x₀
   simp_rw [convolution_def, ContinuousLinearMap.integral_apply this]
   rfl
@@ -1132,7 +1132,7 @@ theorem HasCompactSupport.hasFderivAtConvolutionRight (hcg : HasCompactSupport g
     simp only [this, convolution_zero, Pi.zero_apply]
     exact hasFderivAtConst (0 : F) x₀
   skip
-  have : ProperSpace G := FiniteDimensional.properIsROrC 𝕜 G
+  have : ProperSpace G := FiniteDimensional.proper_is_R_or_C 𝕜 G
   set L' := L.precompR G
   have h1 : ∀ᶠ x in 𝓝 x₀, ae_strongly_measurable (fun t => L (f t) (g (x - t))) μ :=
     eventually_of_forall
@@ -1170,14 +1170,14 @@ theorem HasCompactSupport.hasFderivAtConvolutionLeft [IsNegInvariant μ] (hcf : 
 #align
   has_compact_support.has_fderiv_at_convolution_left HasCompactSupport.hasFderivAtConvolutionLeft
 
-theorem HasCompactSupport.contDiffConvolutionRight (hcg : HasCompactSupport g)
+theorem HasCompactSupport.cont_diff_convolution_right (hcg : HasCompactSupport g)
     (hf : LocallyIntegrable f μ) (hg : ContDiff 𝕜 n g) : ContDiff 𝕜 n (f ⋆[L, μ] g) :=
   by
   rcases hcg.eq_zero_or_finite_dimensional 𝕜 hg.continuous with (rfl | fin_dim)
   · simp only [convolution_zero]
-    exact contDiffZeroFun
+    exact cont_diff_zero_fun
   skip
-  have : ProperSpace G := FiniteDimensional.properIsROrC 𝕜 G
+  have : ProperSpace G := FiniteDimensional.proper_is_R_or_C 𝕜 G
   induction' n using Enat.nat_induction with n ih ih generalizing g
   · rw [cont_diff_zero] at hg⊢
     exact hcg.continuous_convolution_right L hf hg
@@ -1199,14 +1199,14 @@ theorem HasCompactSupport.contDiffConvolutionRight (hcg : HasCompactSupport g)
         exact (cont_diff_succ_iff_fderiv.mp hg).2
   · rw [cont_diff_top] at hg⊢
     exact fun n => ih n hcg (hg n)
-#align has_compact_support.cont_diff_convolution_right HasCompactSupport.contDiffConvolutionRight
+#align has_compact_support.cont_diff_convolution_right HasCompactSupport.cont_diff_convolution_right
 
-theorem HasCompactSupport.contDiffConvolutionLeft [IsNegInvariant μ] (hcf : HasCompactSupport f)
+theorem HasCompactSupport.cont_diff_convolution_left [IsNegInvariant μ] (hcf : HasCompactSupport f)
     (hf : ContDiff 𝕜 n f) (hg : LocallyIntegrable g μ) : ContDiff 𝕜 n (f ⋆[L, μ] g) :=
   by
   rw [← convolution_flip]
   exact hcf.cont_diff_convolution_right L.flip hg hf
-#align has_compact_support.cont_diff_convolution_left HasCompactSupport.contDiffConvolutionLeft
+#align has_compact_support.cont_diff_convolution_left HasCompactSupport.cont_diff_convolution_left
 
 end IsROrC
 
@@ -1235,7 +1235,7 @@ variable {μ : Measure 𝕜}
 
 variable [IsAddLeftInvariant μ] [SigmaFinite μ]
 
-theorem HasCompactSupport.hasDerivAtConvolutionRight (hf : LocallyIntegrable f₀ μ)
+theorem HasCompactSupport.has_deriv_at_convolution_right (hf : LocallyIntegrable f₀ μ)
     (hcg : HasCompactSupport g₀) (hg : ContDiff 𝕜 1 g₀) (x₀ : 𝕜) :
     HasDerivAt (f₀ ⋆[L, μ] g₀) ((f₀ ⋆[L, μ] deriv g₀) x₀) x₀ :=
   by
@@ -1243,15 +1243,16 @@ theorem HasCompactSupport.hasDerivAtConvolutionRight (hf : LocallyIntegrable f�
   rw [convolution_precompR_apply L hf (hcg.fderiv 𝕜) (hg.continuous_fderiv le_rfl)]
   rfl
 #align
-  has_compact_support.has_deriv_at_convolution_right HasCompactSupport.hasDerivAtConvolutionRight
+  has_compact_support.has_deriv_at_convolution_right HasCompactSupport.has_deriv_at_convolution_right
 
-theorem HasCompactSupport.hasDerivAtConvolutionLeft [IsNegInvariant μ] (hcf : HasCompactSupport f₀)
-    (hf : ContDiff 𝕜 1 f₀) (hg : LocallyIntegrable g₀ μ) (x₀ : 𝕜) :
+theorem HasCompactSupport.has_deriv_at_convolution_left [IsNegInvariant μ]
+    (hcf : HasCompactSupport f₀) (hf : ContDiff 𝕜 1 f₀) (hg : LocallyIntegrable g₀ μ) (x₀ : 𝕜) :
     HasDerivAt (f₀ ⋆[L, μ] g₀) ((deriv f₀ ⋆[L, μ] g₀) x₀) x₀ :=
   by
   simp (config := { singlePass := true }) only [← convolution_flip]
   exact hcf.has_deriv_at_convolution_right L.flip hg hf x₀
-#align has_compact_support.has_deriv_at_convolution_left HasCompactSupport.hasDerivAtConvolutionLeft
+#align
+  has_compact_support.has_deriv_at_convolution_left HasCompactSupport.has_deriv_at_convolution_left
 
 end Real
 

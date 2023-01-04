@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
 
 ! This file was ported from Lean 3 source module set_theory.game.nim
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -323,7 +323,7 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
         rw [grundy_value_eq_mex_left]
         intro i₂
         have hnotin : _ ∉ _ := fun hin =>
-          (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (cInf_le' hin)
+          (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (cinfₛ_le' hin)
         simpa using hnotin
       cases' h' with i hi
       use to_left_moves_add (Sum.inl i)

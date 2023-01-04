@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.defs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -223,11 +223,13 @@ class CancelCommMonoidWithZero (M₀ : Type _) extends CommMonoidWithZero M₀ w
 #align cancel_comm_monoid_with_zero CancelCommMonoidWithZero
 -/
 
+#print CancelCommMonoidWithZero.toCancelMonoidWithZero /-
 instance (priority := 100) CancelCommMonoidWithZero.toCancelMonoidWithZero
     [h : CancelCommMonoidWithZero M₀] : CancelMonoidWithZero M₀ :=
   { h, @IsLeftCancelMulZero.to_is_right_cancel_mul_zero M₀ _ _ { h with } with }
 #align
   cancel_comm_monoid_with_zero.to_cancel_monoid_with_zero CancelCommMonoidWithZero.toCancelMonoidWithZero
+-/
 
 #print GroupWithZero /-
 /-- A type `G₀` is a “group with zero” if it is a monoid with zero element (distinct from `1`)

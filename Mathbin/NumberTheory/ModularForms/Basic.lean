@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,9 +34,9 @@ instance UpperHalfPlane.chartedSpace : ChartedSpace ℂ ℍ :=
   UpperHalfPlane.open_embedding_coe.singletonChartedSpace
 #align upper_half_plane.charted_space UpperHalfPlane.chartedSpace
 
-instance UpperHalfPlane.smoothManifoldWithCorners : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
-  UpperHalfPlane.open_embedding_coe.singletonSmoothManifoldWithCorners 𝓘(ℂ)
-#align upper_half_plane.smooth_manifold_with_corners UpperHalfPlane.smoothManifoldWithCorners
+instance UpperHalfPlane.smooth_manifold_with_corners : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
+  UpperHalfPlane.open_embedding_coe.singleton_smooth_manifold_with_corners 𝓘(ℂ)
+#align upper_half_plane.smooth_manifold_with_corners UpperHalfPlane.smooth_manifold_with_corners
 
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
@@ -182,7 +182,7 @@ instance hasZero : Zero (ModularForm Γ k) :=
       (0 :
         SlashInvariantForm Γ
           k) with
-      holo' := fun _ => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
+      holo' := fun _ => mdifferentiable_at_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       bdd_at_infty' := fun A => by simpa using zero_form_is_bounded_at_im_infty }⟩
 #align modular_form.has_zero ModularForm.hasZero
 
@@ -290,7 +290,7 @@ instance : One (ModularForm Γ 0) :=
       (1 :
         SlashInvariantForm Γ
           0) with
-      holo' := fun x => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
+      holo' := fun x => mdifferentiable_at_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       bdd_at_infty' := fun A => by simpa using at_im_infty.const_bounded_at_filter (1 : ℂ) }⟩
 
 @[simp]
@@ -327,7 +327,7 @@ theorem add_apply (f g : CuspForm Γ k) (z : ℍ) : (f + g) z = f z + g z :=
 instance hasZero : Zero (CuspForm Γ k) :=
   ⟨{ (0 : SlashInvariantForm Γ k) with
       toFun := 0
-      holo' := fun _ => mdifferentiableAtConst 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
+      holo' := fun _ => mdifferentiable_at_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
       zero_at_infty' := by simpa using Filter.zero_zero_at_filter _ }⟩
 #align cusp_form.has_zero CuspForm.hasZero
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module algebra.algebraic_card
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem aleph_0_le_cardinal_mk_of_char_zero (R A : Type _) [CommRing R] [IsDomai
 section lift
 
 variable (R : Type u) (A : Type v) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A]
-  [NoZeroSmulDivisors R A]
+  [NoZeroSMulDivisors R A]
 
 theorem cardinal_mk_lift_le_mul :
     Cardinal.lift.{u} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v} (#R[X]) * ℵ₀ :=
@@ -70,7 +70,7 @@ theorem cardinal_mk_lift_of_infinite [Infinite R] :
   ((cardinal_mk_lift_le_max R A).trans_eq (max_eq_left <| aleph_0_le_mk _)).antisymm <|
     lift_mk_le'.2
       ⟨⟨fun x => ⟨algebraMap R A x, is_algebraic_algebra_map _⟩, fun x y h =>
-          NoZeroSmulDivisors.algebra_map_injective R A (Subtype.ext_iff.1 h)⟩⟩
+          NoZeroSMulDivisors.algebra_map_injective R A (Subtype.ext_iff.1 h)⟩⟩
 #align algebraic.cardinal_mk_lift_of_infinite Algebraic.cardinal_mk_lift_of_infinite
 
 variable [Countable R]
@@ -94,7 +94,7 @@ end lift
 section NonLift
 
 variable (R A : Type u) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A]
-  [NoZeroSmulDivisors R A]
+  [NoZeroSMulDivisors R A]
 
 theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#R[X]) * ℵ₀ :=
   by

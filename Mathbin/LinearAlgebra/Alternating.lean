@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 
 ! This file was ported from Lean 3 source module linear_algebra.alternating
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -355,7 +355,7 @@ instance : Module S (AlternatingMap R M N ι)
   add_smul r₁ r₂ f := ext fun x => add_smul _ _ _
   zero_smul f := ext fun x => zero_smul _ _
 
-instance [NoZeroSmulDivisors S N] : NoZeroSmulDivisors S (AlternatingMap R M N ι) :=
+instance [NoZeroSMulDivisors S N] : NoZeroSMulDivisors S (AlternatingMap R M N ι) :=
   coe_injective.NoZeroSmulDivisors _ rfl coe_fn_smul
 
 end Module
@@ -379,7 +379,7 @@ def ofSubsingleton [Subsingleton ι] (i : ι) : AlternatingMap R M M ι :=
 @[simps (config := { fullyApplied := false })]
 def constOfIsEmpty [IsEmpty ι] (m : N) : AlternatingMap R M N ι :=
   {
-    MultilinearMap.constOfIsEmpty R
+    MultilinearMap.constOfIsEmpty R _
       m with
     toFun := Function.const _ m
     map_eq_zero_of_eq' := fun v => isEmptyElim }
@@ -719,7 +719,7 @@ end DomDomCongr
 
 /-- If the arguments are linearly dependent then the result is `0`. -/
 theorem map_linear_dependent {K : Type _} [Ring K] {M : Type _} [AddCommGroup M] [Module K M]
-    {N : Type _} [AddCommGroup N] [Module K N] [NoZeroSmulDivisors K N] (f : AlternatingMap K M N ι)
+    {N : Type _} [AddCommGroup N] [Module K N] [NoZeroSMulDivisors K N] (f : AlternatingMap K M N ι)
     (v : ι → M) (h : ¬LinearIndependent K v) : f v = 0 :=
   by
   obtain ⟨s, g, h, i, hi, hz⟩ := not_linear_independent_iff.mp h

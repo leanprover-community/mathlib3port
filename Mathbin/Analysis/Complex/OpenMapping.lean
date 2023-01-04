@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.open_mapping
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem DiffContOnCl.ball_subset_image_closed_ball (h : DiffContOnCl ℂ f (ball
   have h7 : ∀ᶠ w in 𝓝 z, f w = f z := by filter_upwards [key] with h <;> field_simp
   replace h7 : ∃ᶠ w in 𝓝[≠] z, f w = f z := (h7.filter_mono nhds_within_le_nhds).Frequently
   have h8 : IsPreconnected (ball z₀ r) := (convex_ball z₀ r).IsPreconnected
-  have h9 := h3.eq_on_of_preconnected_of_frequently_eq analyticOnConst h8 hz1 h7
+  have h9 := h3.eq_on_of_preconnected_of_frequently_eq analytic_on_const h8 hz1 h7
   have h10 : f z = f z₀ := (h9 (mem_ball_self hr)).symm
   exact not_eventually.mpr hz₀ (mem_of_superset (ball_mem_nhds z₀ hr) (h10 ▸ h9))
 #align diff_cont_on_cl.ball_subset_image_closed_ball DiffContOnCl.ball_subset_image_closed_ball
@@ -87,7 +87,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt 
     provides an explicit ball centered at `f z₀` contained in the range of `f`. -/
   refine' or_iff_not_imp_left.mpr fun h => _
   refine' (nhds_basis_ball.le_basis_iff (nhds_basis_closed_ball.map f)).mpr fun R hR => _
-  have h1 := (hf.eventually_eq_or_eventually_ne analyticAtConst).resolve_left h
+  have h1 := (hf.eventually_eq_or_eventually_ne analytic_at_const).resolve_left h
   have h2 : ∀ᶠ z in 𝓝 z₀, AnalyticAt ℂ f z := (is_open_analytic_at ℂ f).eventually_mem hf
   obtain ⟨ρ, hρ, h3, h4⟩ :
     ∃ ρ > 0, AnalyticOn ℂ f (closed_ball z₀ ρ) ∧ ∀ z ∈ closed_ball z₀ ρ, z ≠ z₀ → f z ≠ f z₀ := by
@@ -151,7 +151,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
       have e1 : IsPreconnected (ball (0 : ℂ) r) := (convex_ball 0 r).IsPreconnected
       have e2 : w ∈ sphere (0 : E) 1 := by simp [w, norm_smul, h']
       specialize h1 w e2
-      apply h1.eq_on_of_preconnected_of_eventually_eq analyticOnConst e1 (mem_ball_self hr)
+      apply h1.eq_on_of_preconnected_of_eventually_eq analytic_on_const e1 (mem_ball_self hr)
       simpa [gray, ray] using h w e2
     have h4 : ‖z - z₀‖ < r := by simpa [dist_eq_norm] using mem_ball.mp hz
     replace h4 : ↑‖z - z₀‖ ∈ ball (0 : ℂ) r := by
@@ -181,7 +181,7 @@ theorem AnalyticOn.is_constant_or_is_open (hg : AnalyticOn ℂ g U) (hU : IsPrec
   by
   by_cases ∃ z₀ ∈ U, ∀ᶠ z in 𝓝 z₀, g z = g z₀
   · obtain ⟨z₀, hz₀, h⟩ := h
-    exact Or.inl ⟨g z₀, hg.eq_on_of_preconnected_of_eventually_eq analyticOnConst hU hz₀ h⟩
+    exact Or.inl ⟨g z₀, hg.eq_on_of_preconnected_of_eventually_eq analytic_on_const hU hz₀ h⟩
   · push_neg  at h
     refine' Or.inr fun s hs1 hs2 => is_open_iff_mem_nhds.mpr _
     rintro z ⟨w, hw1, rfl⟩

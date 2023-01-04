@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3057,8 +3057,14 @@ Case conversion may be inaccurate. Consider using '#align function.insert_inj_on
 theorem insert_injOn (s : Set α) : sᶜ.InjOn fun a => insert a s := fun a ha b _ => (insert_inj ha).1
 #align function.insert_inj_on Function.insert_injOn
 
-theorem monotone_on_of_right_inv_on_of_maps_to [PartialOrder α] [LinearOrder β] {φ : β → α}
-    {ψ : α → β} {t : Set β} {s : Set α} (hφ : MonotoneOn φ t) (φψs : Set.RightInvOn ψ φ s)
+/- warning: function.monotone_on_of_right_inv_on_of_maps_to -> Function.monotoneOn_of_rightInvOn_of_mapsTo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {φ : β -> α} {ψ : α -> β} {t : Set.{u2} β} {s : Set.{u1} α}, (MonotoneOn.{u2, u1} β α (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (PartialOrder.toPreorder.{u1} α _inst_1) φ t) -> (Set.RightInvOn.{u2, u1} β α ψ φ s) -> (Set.MapsTo.{u1, u2} α β ψ s t) -> (MonotoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) ψ s)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : LinearOrder.{u1} β] {φ : β -> α} {ψ : α -> β} {t : Set.{u1} β} {s : Set.{u2} α}, (MonotoneOn.{u1, u2} β α (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) (PartialOrder.toPreorder.{u2} α _inst_1) φ t) -> (Set.RightInvOn.{u1, u2} β α ψ φ s) -> (Set.MapsTo.{u2, u1} α β ψ s t) -> (MonotoneOn.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) ψ s)
+Case conversion may be inaccurate. Consider using '#align function.monotone_on_of_right_inv_on_of_maps_to Function.monotoneOn_of_rightInvOn_of_mapsToₓ'. -/
+theorem monotoneOn_of_rightInvOn_of_mapsTo [PartialOrder α] [LinearOrder β] {φ : β → α} {ψ : α → β}
+    {t : Set β} {s : Set α} (hφ : MonotoneOn φ t) (φψs : Set.RightInvOn ψ φ s)
     (ψts : Set.MapsTo ψ s t) : MonotoneOn ψ s :=
   by
   rintro x xs y ys l
@@ -3066,15 +3072,19 @@ theorem monotone_on_of_right_inv_on_of_maps_to [PartialOrder α] [LinearOrder β
   · exact ψxy
   · cases le_antisymm l (φψs.eq ys ▸ φψs.eq xs ▸ hφ (ψts ys) (ψts xs) ψyx)
     rfl
-#align
-  function.monotone_on_of_right_inv_on_of_maps_to Function.monotone_on_of_right_inv_on_of_maps_to
+#align function.monotone_on_of_right_inv_on_of_maps_to Function.monotoneOn_of_rightInvOn_of_mapsTo
 
-theorem antitone_on_of_right_inv_on_of_maps_to [PartialOrder α] [LinearOrder β] {φ : β → α}
-    {ψ : α → β} {t : Set β} {s : Set α} (hφ : AntitoneOn φ t) (φψs : Set.RightInvOn ψ φ s)
+/- warning: function.antitone_on_of_right_inv_on_of_maps_to -> Function.antitoneOn_of_rightInvOn_of_mapsTo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {φ : β -> α} {ψ : α -> β} {t : Set.{u2} β} {s : Set.{u1} α}, (AntitoneOn.{u2, u1} β α (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) (PartialOrder.toPreorder.{u1} α _inst_1) φ t) -> (Set.RightInvOn.{u2, u1} β α ψ φ s) -> (Set.MapsTo.{u1, u2} α β ψ s t) -> (AntitoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) ψ s)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : LinearOrder.{u1} β] {φ : β -> α} {ψ : α -> β} {t : Set.{u1} β} {s : Set.{u2} α}, (AntitoneOn.{u1, u2} β α (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) (PartialOrder.toPreorder.{u2} α _inst_1) φ t) -> (Set.RightInvOn.{u1, u2} β α ψ φ s) -> (Set.MapsTo.{u2, u1} α β ψ s t) -> (AntitoneOn.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) ψ s)
+Case conversion may be inaccurate. Consider using '#align function.antitone_on_of_right_inv_on_of_maps_to Function.antitoneOn_of_rightInvOn_of_mapsToₓ'. -/
+theorem antitoneOn_of_rightInvOn_of_mapsTo [PartialOrder α] [LinearOrder β] {φ : β → α} {ψ : α → β}
+    {t : Set β} {s : Set α} (hφ : AntitoneOn φ t) (φψs : Set.RightInvOn ψ φ s)
     (ψts : Set.MapsTo ψ s t) : AntitoneOn ψ s :=
-  (monotone_on_of_right_inv_on_of_maps_to hφ.dual_left φψs ψts).dual_right
-#align
-  function.antitone_on_of_right_inv_on_of_maps_to Function.antitone_on_of_right_inv_on_of_maps_to
+  (monotoneOn_of_rightInvOn_of_mapsTo hφ.dual_left φψs ψts).dual_right
+#align function.antitone_on_of_right_inv_on_of_maps_to Function.antitoneOn_of_rightInvOn_of_mapsTo
 
 end Function
 

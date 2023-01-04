@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -461,7 +461,7 @@ noncomputable instance : HasInf (Seminorm 𝕜 E)
         obtain rfl | ha := eq_or_ne a 0
         · rw [norm_zero, zero_mul, zero_smul]
           refine'
-            cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => by positivity) fun x hx =>
+            cinfᵢ_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => by positivity) fun x hx =>
               ⟨0, by rwa [map_zero, sub_zero, map_zero, add_zero]⟩
         simp_rw [Real.mul_infi_of_nonneg (norm_nonneg a), mul_add, ← map_smul_eq_mul p, ←
           map_smul_eq_mul q, smul_sub]
@@ -479,11 +479,11 @@ noncomputable instance : Lattice (Seminorm 𝕜 E) :=
   { Seminorm.semilatticeSup with
     inf := (· ⊓ ·)
     inf_le_left := fun p q x =>
-      cinfi_le_of_le bdd_below_range_add x <| by simp only [sub_self, map_zero, add_zero]
+      cinfᵢ_le_of_le bdd_below_range_add x <| by simp only [sub_self, map_zero, add_zero]
     inf_le_right := fun p q x =>
-      cinfi_le_of_le bdd_below_range_add 0 <| by simp only [sub_self, map_zero, zero_add, sub_zero]
+      cinfᵢ_le_of_le bdd_below_range_add 0 <| by simp only [sub_self, map_zero, zero_add, sub_zero]
     le_inf := fun a b c hab hac x =>
-      le_cinfi fun u => (le_map_add_map_sub a _ _).trans <| add_le_add (hab _) (hac _) }
+      le_cinfᵢ fun u => (le_map_add_map_sub a _ _).trans <| add_le_add (hab _) (hac _) }
 
 theorem smul_inf [HasSmul R ℝ] [HasSmul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R)
     (p q : Seminorm 𝕜 E) : r • (p ⊓ q) = r • p ⊓ r • q :=
@@ -532,9 +532,9 @@ noncomputable instance : SupSet (Seminorm 𝕜 E)
           haveI : Nonempty ↥s := h.coe_sort
           simp only [supᵢ_apply]
           refine'
-                csupr_le fun i =>
+                csupᵢ_le fun i =>
                   ((i : Seminorm 𝕜 E).add_le' x y).trans <|
-                    add_le_add (le_csupr ⟨q x, _⟩ i) (le_csupr ⟨q y, _⟩ i) <;>
+                    add_le_add (le_csupᵢ ⟨q x, _⟩ i) (le_csupᵢ ⟨q y, _⟩ i) <;>
               rw [mem_upperBounds, forall_range_iff] <;>
             exact fun j => hq (mem_image_of_mem _ j.2) _
         neg' := fun x => by
@@ -563,7 +563,7 @@ protected theorem bdd_above_iff {s : Set <| Seminorm 𝕜 E} :
       rw [Seminorm.coe_Sup_eq' H, supᵢ_apply]
       rcases H with ⟨q, hq⟩
       exact
-        le_csupr ⟨q x, forall_range_iff.mpr fun i : s => hq (mem_image_of_mem _ i.2) x⟩ ⟨p, hp⟩⟩⟩
+        le_csupᵢ ⟨q x, forall_range_iff.mpr fun i : s => hq (mem_image_of_mem _ i.2) x⟩ ⟨p, hp⟩⟩⟩
 #align seminorm.bdd_above_iff Seminorm.bdd_above_iff
 
 protected theorem coe_Sup_eq {s : Set <| Seminorm 𝕜 E} (hs : BddAbove s) :
@@ -582,8 +582,8 @@ private theorem seminorm.is_lub_Sup (s : Set (Seminorm 𝕜 E)) (hs₁ : BddAbov
   refine' ⟨fun p hp x => _, fun p hp x => _⟩ <;> haveI : Nonempty ↥s := hs₂.coe_sort <;>
     rw [Seminorm.coe_Sup_eq hs₁, supᵢ_apply]
   · rcases hs₁ with ⟨q, hq⟩
-    exact le_csupr ⟨q x, forall_range_iff.mpr fun i : s => hq i.2 x⟩ ⟨p, hp⟩
-  · exact csupr_le fun q => hp q.2 x
+    exact le_csupᵢ ⟨q x, forall_range_iff.mpr fun i : s => hq i.2 x⟩ ⟨p, hp⟩
+  · exact csupᵢ_le fun q => hp q.2 x
 #align seminorm.seminorm.is_lub_Sup seminorm.seminorm.is_lub_Sup
 
 /-- `seminorm 𝕜 E` is a conditionally complete lattice.
@@ -594,7 +594,7 @@ defined as the supremum of the lower bounds of `s`, which is not really useful i
 need to use `Inf` on seminorms, then you should probably provide a more workable definition first,
 but this is unlikely to happen so we keep the "bad" definition for now. -/
 noncomputable instance : ConditionallyCompleteLattice (Seminorm 𝕜 E) :=
-  conditionallyCompleteLatticeOfLatticeOfSup (Seminorm 𝕜 E) Seminorm.is_lub_Sup
+  conditionallyCompleteLatticeOfLatticeOfSupₛ (Seminorm 𝕜 E) Seminorm.is_lub_Sup
 
 end Classical
 
@@ -828,7 +828,7 @@ theorem closed_ball_bot {r : ℝ} (x : E) (hr : 0 < r) :
 #align seminorm.closed_ball_bot Seminorm.closed_ball_bot
 
 /-- Seminorm-balls at the origin are balanced. -/
-theorem balancedBallZero (r : ℝ) : Balanced 𝕜 (ball p 0 r) :=
+theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (ball p 0 r) :=
   by
   rintro a ha x ⟨y, hy, hx⟩
   rw [mem_ball_zero, ← hx, map_smul_eq_mul]
@@ -836,10 +836,10 @@ theorem balancedBallZero (r : ℝ) : Balanced 𝕜 (ball p 0 r) :=
     _ ≤ p y := mul_le_of_le_one_left (map_nonneg p _) ha
     _ < r := by rwa [mem_ball_zero] at hy
     
-#align seminorm.balanced_ball_zero Seminorm.balancedBallZero
+#align seminorm.balanced_ball_zero Seminorm.balanced_ball_zero
 
 /-- Closed seminorm-balls at the origin are balanced. -/
-theorem balancedClosedBallZero (r : ℝ) : Balanced 𝕜 (closedBall p 0 r) :=
+theorem balanced_closed_ball_zero (r : ℝ) : Balanced 𝕜 (closedBall p 0 r) :=
   by
   rintro a ha x ⟨y, hy, hx⟩
   rw [mem_closed_ball_zero, ← hx, map_smul_eq_mul]
@@ -847,7 +847,7 @@ theorem balancedClosedBallZero (r : ℝ) : Balanced 𝕜 (closedBall p 0 r) :=
     _ ≤ p y := mul_le_of_le_one_left (map_nonneg p _) ha
     _ ≤ r := by rwa [mem_closed_ball_zero] at hy
     
-#align seminorm.balanced_closed_ball_zero Seminorm.balancedClosedBallZero
+#align seminorm.balanced_closed_ball_zero Seminorm.balanced_closed_ball_zero
 
 theorem ball_finset_sup_eq_Inter (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ}
     (hr : 0 < r) : ball (s.sup p) x r = ⋂ i ∈ s, ball (p i) x r :=
@@ -946,12 +946,12 @@ theorem smul_ball_zero {p : Seminorm 𝕜 E} {k : 𝕜} {r : ℝ} (hk : 0 < ‖k
   rw [← smul_assoc, smul_eq_mul, ← div_eq_mul_inv, div_self (norm_pos_iff.mp hk), one_smul]
 #align seminorm.smul_ball_zero Seminorm.smul_ball_zero
 
-theorem ballZeroAbsorbsBallZero (p : Seminorm 𝕜 E) {r₁ r₂ : ℝ} (hr₁ : 0 < r₁) :
+theorem ball_zero_absorbs_ball_zero (p : Seminorm 𝕜 E) {r₁ r₂ : ℝ} (hr₁ : 0 < r₁) :
     Absorbs 𝕜 (p.ball 0 r₁) (p.ball 0 r₂) :=
   by
   by_cases hr₂ : r₂ ≤ 0
   · rw [ball_eq_emptyset p hr₂]
-    exact absorbsEmpty
+    exact absorbs_empty
   rw [not_le] at hr₂
   rcases exists_between hr₁ with ⟨r, hr, hr'⟩
   refine' ⟨r₂ / r, div_pos hr₂ hr, _⟩
@@ -962,10 +962,10 @@ theorem ballZeroAbsorbsBallZero (p : Seminorm 𝕜 E) {r₁ r₂ : ℝ} (hr₁ :
   rw [p.mem_ball_zero] at hx
   rw [div_le_iff hr] at ha
   exact hx.trans (lt_of_le_of_lt ha ((mul_lt_mul_left ha').mpr hr'))
-#align seminorm.ball_zero_absorbs_ball_zero Seminorm.ballZeroAbsorbsBallZero
+#align seminorm.ball_zero_absorbs_ball_zero Seminorm.ball_zero_absorbs_ball_zero
 
 /-- Seminorm-balls at the origin are absorbent. -/
-protected theorem absorbentBallZero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) :=
+protected theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) :=
   by
   rw [absorbent_iff_nonneg_lt]
   rintro x
@@ -974,31 +974,31 @@ protected theorem absorbentBallZero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E
   have ha₀ : 0 < ‖a‖ := hxr.trans_lt ha
   refine' ⟨a⁻¹ • x, _, smul_inv_smul₀ (norm_pos_iff.1 ha₀) x⟩
   rwa [mem_ball_zero, map_smul_eq_mul, norm_inv, inv_mul_lt_iff ha₀, ← div_lt_iff hr]
-#align seminorm.absorbent_ball_zero Seminorm.absorbentBallZero
+#align seminorm.absorbent_ball_zero Seminorm.absorbent_ball_zero
 
 /-- Closed seminorm-balls at the origin are absorbent. -/
-protected theorem absorbentClosedBallZero (hr : 0 < r) : Absorbent 𝕜 (closedBall p (0 : E) r) :=
-  (p.absorbentBallZero hr).Subset (p.ball_subset_closed_ball _ _)
-#align seminorm.absorbent_closed_ball_zero Seminorm.absorbentClosedBallZero
+protected theorem absorbent_closed_ball_zero (hr : 0 < r) : Absorbent 𝕜 (closedBall p (0 : E) r) :=
+  (p.absorbent_ball_zero hr).Subset (p.ball_subset_closed_ball _ _)
+#align seminorm.absorbent_closed_ball_zero Seminorm.absorbent_closed_ball_zero
 
 /-- Seminorm-balls containing the origin are absorbent. -/
-protected theorem absorbentBall (hpr : p x < r) : Absorbent 𝕜 (ball p x r) :=
+protected theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (ball p x r) :=
   by
   refine' (p.absorbent_ball_zero <| sub_pos.2 hpr).Subset fun y hy => _
   rw [p.mem_ball_zero] at hy
   exact p.mem_ball.2 ((map_sub_le_add p _ _).trans_lt <| add_lt_of_lt_sub_right hy)
-#align seminorm.absorbent_ball Seminorm.absorbentBall
+#align seminorm.absorbent_ball Seminorm.absorbent_ball
 
 /-- Seminorm-balls containing the origin are absorbent. -/
-protected theorem absorbentClosedBall (hpr : p x < r) : Absorbent 𝕜 (closedBall p x r) :=
+protected theorem absorbent_closed_ball (hpr : p x < r) : Absorbent 𝕜 (closedBall p x r) :=
   by
   refine' (p.absorbent_closed_ball_zero <| sub_pos.2 hpr).Subset fun y hy => _
   rw [p.mem_closed_ball_zero] at hy
   exact p.mem_closed_ball.2 ((map_sub_le_add p _ _).trans <| add_le_of_le_sub_right hy)
-#align seminorm.absorbent_closed_ball Seminorm.absorbentClosedBall
+#align seminorm.absorbent_closed_ball Seminorm.absorbent_closed_ball
 
 theorem symmetric_ball_zero (r : ℝ) (hx : x ∈ ball p 0 r) : -x ∈ ball p 0 r :=
-  balancedBallZero p r (-1) (by rw [norm_neg, norm_one]) ⟨x, hx, by rw [neg_smul, one_smul]⟩
+  balanced_ball_zero p r (-1) (by rw [norm_neg, norm_one]) ⟨x, hx, by rw [neg_smul, one_smul]⟩
 #align seminorm.symmetric_ball_zero Seminorm.symmetric_ball_zero
 
 @[simp]
@@ -1188,25 +1188,25 @@ theorem ball_norm_seminorm : (normSeminorm 𝕜 E).ball = Metric.ball :=
 variable {𝕜 E} {x : E}
 
 /-- Balls at the origin are absorbent. -/
-theorem absorbentBallZero (hr : 0 < r) : Absorbent 𝕜 (Metric.ball (0 : E) r) :=
+theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (Metric.ball (0 : E) r) :=
   by
   rw [← ball_norm_seminorm 𝕜]
-  exact (normSeminorm _ _).absorbentBallZero hr
-#align absorbent_ball_zero absorbentBallZero
+  exact (normSeminorm _ _).absorbent_ball_zero hr
+#align absorbent_ball_zero absorbent_ball_zero
 
 /-- Balls containing the origin are absorbent. -/
-theorem absorbentBall (hx : ‖x‖ < r) : Absorbent 𝕜 (Metric.ball x r) :=
+theorem absorbent_ball (hx : ‖x‖ < r) : Absorbent 𝕜 (Metric.ball x r) :=
   by
   rw [← ball_norm_seminorm 𝕜]
-  exact (normSeminorm _ _).absorbentBall hx
-#align absorbent_ball absorbentBall
+  exact (normSeminorm _ _).absorbent_ball hx
+#align absorbent_ball absorbent_ball
 
 /-- Balls at the origin are balanced. -/
-theorem balancedBallZero : Balanced 𝕜 (Metric.ball (0 : E) r) :=
+theorem balanced_ball_zero : Balanced 𝕜 (Metric.ball (0 : E) r) :=
   by
   rw [← ball_norm_seminorm 𝕜]
-  exact (normSeminorm _ _).balancedBallZero r
-#align balanced_ball_zero balancedBallZero
+  exact (normSeminorm _ _).balanced_ball_zero r
+#align balanced_ball_zero balanced_ball_zero
 
 end normSeminorm
 

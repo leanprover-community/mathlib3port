@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.extend_deriv
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
 
 /-- If a function is differentiable on the right of a point `a : ℝ`, continuous at `a`, and
 its derivative also converges at `a`, then `f` is differentiable on the right at `a`. -/
-theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
+theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
     (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[>] a)
     (f_lim' : Tendsto (fun x => deriv f x) (𝓝[>] a) (𝓝 e)) : HasDerivWithinAt f e (Ici a) a :=
   by
@@ -156,13 +156,14 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Ici <| left_mem_Ico.2 ab)
 #align
-  has_deriv_at_interval_left_endpoint_of_tendsto_deriv hasDerivAtIntervalLeftEndpointOfTendstoDeriv
+  has_deriv_at_interval_left_endpoint_of_tendsto_deriv has_deriv_at_interval_left_endpoint_of_tendsto_deriv
 
 /-- If a function is differentiable on the left of a point `a : ℝ`, continuous at `a`, and
 its derivative also converges at `a`, then `f` is differentiable on the left at `a`. -/
-theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : ℝ} {f : ℝ → E}
-    (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a) (hs : s ∈ 𝓝[<] a)
-    (f_lim' : Tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) : HasDerivWithinAt f e (Iic a) a :=
+theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ}
+    {f : ℝ → E} (f_diff : DifferentiableOn ℝ f s) (f_lim : ContinuousWithinAt f s a)
+    (hs : s ∈ 𝓝[<] a) (f_lim' : Tendsto (fun x => deriv f x) (𝓝[<] a) (𝓝 e)) :
+    HasDerivWithinAt f e (Iic a) a :=
   by
   /- This is a specialization of `has_fderiv_at_boundary_of_differentiable`. To be in the setting of
     this theorem, we need to work on an open interval with closure contained in `s ∪ {a}`, that we
@@ -197,12 +198,12 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhds_within_Iic <| right_mem_Ioc.2 ba)
 #align
-  has_deriv_at_interval_right_endpoint_of_tendsto_deriv hasDerivAtIntervalRightEndpointOfTendstoDeriv
+  has_deriv_at_interval_right_endpoint_of_tendsto_deriv has_deriv_at_interval_right_endpoint_of_tendsto_deriv
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is also the derivative of `f` at this point. -/
-theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
+theorem has_deriv_at_of_has_deriv_at_of_ne {f g : ℝ → E} {x : ℝ}
     (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y) (hf : ContinuousAt f x)
     (hg : ContinuousAt g x) : HasDerivAt f (g x) x :=
   by
@@ -213,7 +214,8 @@ theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
     -- next line is the nontrivial bit of this proof, appealing to differentiability
     -- extension results.
     apply
-      hasDerivAtIntervalLeftEndpointOfTendstoDeriv diff hf.continuous_within_at self_mem_nhds_within
+      has_deriv_at_interval_left_endpoint_of_tendsto_deriv diff hf.continuous_within_at
+        self_mem_nhds_within
     have : tendsto g (𝓝[>] x) (𝓝 (g x)) := tendsto_inf_left hg
     apply this.congr' _
     apply mem_of_superset self_mem_nhds_within fun y hy => _
@@ -225,24 +227,24 @@ theorem hasDerivAtOfHasDerivAtOfNe {f g : ℝ → E} {x : ℝ}
     -- next line is the nontrivial bit of this proof, appealing to differentiability
     -- extension results.
     apply
-      hasDerivAtIntervalRightEndpointOfTendstoDeriv diff hf.continuous_within_at
+      has_deriv_at_interval_right_endpoint_of_tendsto_deriv diff hf.continuous_within_at
         self_mem_nhds_within
     have : tendsto g (𝓝[<] x) (𝓝 (g x)) := tendsto_inf_left hg
     apply this.congr' _
     apply mem_of_superset self_mem_nhds_within fun y hy => _
     exact (f_diff y (ne_of_lt hy)).deriv.symm
   simpa using B.union A
-#align has_deriv_at_of_has_deriv_at_of_ne hasDerivAtOfHasDerivAtOfNe
+#align has_deriv_at_of_has_deriv_at_of_ne has_deriv_at_of_has_deriv_at_of_ne
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
-theorem hasDerivAtOfHasDerivAtOfNe' {f g : ℝ → E} {x : ℝ}
+theorem has_deriv_at_of_has_deriv_at_of_ne' {f g : ℝ → E} {x : ℝ}
     (f_diff : ∀ (y) (_ : y ≠ x), HasDerivAt f (g y) y) (hf : ContinuousAt f x)
     (hg : ContinuousAt g x) (y : ℝ) : HasDerivAt f (g y) y :=
   by
   rcases eq_or_ne y x with (rfl | hne)
-  · exact hasDerivAtOfHasDerivAtOfNe f_diff hf hg
+  · exact has_deriv_at_of_has_deriv_at_of_ne f_diff hf hg
   · exact f_diff y hne
-#align has_deriv_at_of_has_deriv_at_of_ne' hasDerivAtOfHasDerivAtOfNe'
+#align has_deriv_at_of_has_deriv_at_of_ne' has_deriv_at_of_has_deriv_at_of_ne'
 

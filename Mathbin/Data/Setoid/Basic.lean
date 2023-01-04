@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module data.setoid.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,7 +266,7 @@ theorem top_def : (⊤ : Setoid α).Rel = ⊤ :=
 lean 3 declaration is
   forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toHasBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (Eq.{succ u1} α)
 but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (fun (x._@.Mathlib.Data.Setoid.Basic._hyg.1214 : α) (x._@.Mathlib.Data.Setoid.Basic._hyg.1216 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Setoid.Basic._hyg.1214 x._@.Mathlib.Data.Setoid.Basic._hyg.1216)
+  forall {α : Type.{u1}}, Eq.{succ u1} (α -> α -> Prop) (Setoid.Rel.{u1} α (Bot.bot.{u1} (Setoid.{succ u1} α) (CompleteLattice.toBot.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)))) (fun (x._@.Mathlib.Data.Setoid.Basic._hyg.1216 : α) (x._@.Mathlib.Data.Setoid.Basic._hyg.1218 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Setoid.Basic._hyg.1216 x._@.Mathlib.Data.Setoid.Basic._hyg.1218)
 Case conversion may be inaccurate. Consider using '#align setoid.bot_def Setoid.bot_defₓ'. -/
 @[simp]
 theorem bot_def : (⊥ : Setoid α).Rel = (· = ·) :=

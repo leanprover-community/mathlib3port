@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -493,7 +493,7 @@ section Singleton
 variable [IsCyclotomicExtension {n} K L]
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `X ^ n - 1`. -/
-theorem splittingFieldXPowSubOne : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
+theorem splitting_field_X_pow_sub_one : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
   { Splits := splits_X_pow_sub_one K L (mem_singleton n)
     adjoin_roots := by
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
@@ -504,30 +504,30 @@ theorem splittingFieldXPowSubOne : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
       rwa [← RingHom.map_one C, mem_roots (@X_pow_sub_C_ne_zero L _ _ _ n.pos _), is_root.def,
         eval_sub, eval_pow, eval_C, eval_X, sub_eq_zero] }
 #align
-  is_cyclotomic_extension.splitting_field_X_pow_sub_one IsCyclotomicExtension.splittingFieldXPowSubOne
+  is_cyclotomic_extension.splitting_field_X_pow_sub_one IsCyclotomicExtension.splitting_field_X_pow_sub_one
 
 /-- Any two `n`-th cyclotomic extensions are isomorphic. -/
 def algEquiv (L' : Type _) [Field L'] [Algebra K L'] [IsCyclotomicExtension {n} K L'] :
     L ≃ₐ[K] L' :=
-  let _ := splittingFieldXPowSubOne n K L
-  let _ := splittingFieldXPowSubOne n K L'
+  let _ := splitting_field_X_pow_sub_one n K L
+  let _ := splitting_field_X_pow_sub_one n K L'
   (is_splitting_field.alg_equiv L (X ^ (n : ℕ) - 1)).trans
     (is_splitting_field.alg_equiv L' (X ^ (n : ℕ) - 1)).symm
 #align is_cyclotomic_extension.alg_equiv IsCyclotomicExtension.algEquiv
 
-scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.splittingFieldXPowSubOne
+scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.splitting_field_X_pow_sub_one
 
 include n
 
-theorem isGalois : IsGalois K L :=
+theorem is_galois : IsGalois K L :=
   letI := splitting_field_X_pow_sub_one n K L
-  IsGalois.ofSeparableSplittingField (X_pow_sub_one_separable_iff.2 (ne_zero' n K L).1)
-#align is_cyclotomic_extension.is_galois IsCyclotomicExtension.isGalois
+  IsGalois.of_separable_splitting_field (X_pow_sub_one_separable_iff.2 (ne_zero' n K L).1)
+#align is_cyclotomic_extension.is_galois IsCyclotomicExtension.is_galois
 
-scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.isGalois
+scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.is_galois
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `cyclotomic n K`. -/
-theorem splittingFieldCyclotomic : IsSplittingField K L (cyclotomic n K) :=
+theorem splitting_field_cyclotomic : IsSplittingField K L (cyclotomic n K) :=
   { Splits := splits_cyclotomic K L (mem_singleton n)
     adjoin_roots := by
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
@@ -535,9 +535,9 @@ theorem splittingFieldCyclotomic : IsSplittingField K L (cyclotomic n K) :=
       obtain ⟨ζ, hζ⟩ := @IsCyclotomicExtension.exists_prim_root {n} K L _ _ _ _ _ (mem_singleton n)
       exact adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ }
 #align
-  is_cyclotomic_extension.splitting_field_cyclotomic IsCyclotomicExtension.splittingFieldCyclotomic
+  is_cyclotomic_extension.splitting_field_cyclotomic IsCyclotomicExtension.splitting_field_cyclotomic
 
-scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.splittingFieldCyclotomic
+scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.splitting_field_cyclotomic
 
 end Singleton
 
@@ -596,9 +596,9 @@ def CyclotomicField.algebraBase : Algebra A (CyclotomicField n K) :=
 
 attribute [local instance] CyclotomicField.algebraBase
 
-instance CyclotomicField.no_zero_smul_divisors : NoZeroSmulDivisors A (CyclotomicField n K) :=
-  NoZeroSmulDivisors.of_algebra_map_injective <|
-    Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _) <|
+instance CyclotomicField.no_zero_smul_divisors : NoZeroSMulDivisors A (CyclotomicField n K) :=
+  NoZeroSMulDivisors.of_algebra_map_injective <|
+    Function.Injective.comp (NoZeroSMulDivisors.algebra_map_injective _ _) <|
       IsFractionRing.injective A K
 #align cyclotomic_field.no_zero_smul_divisors CyclotomicField.no_zero_smul_divisors
 
@@ -619,11 +619,11 @@ def algebraBase : Algebra A (CyclotomicRing n A K) :=
 
 attribute [local instance] CyclotomicRing.algebraBase
 
-instance : NoZeroSmulDivisors A (CyclotomicRing n A K) :=
+instance : NoZeroSMulDivisors A (CyclotomicRing n A K) :=
   (adjoin A _).no_zero_smul_divisors_bot
 
 theorem algebra_base_injective : Function.Injective <| algebraMap A (CyclotomicRing n A K) :=
-  NoZeroSmulDivisors.algebra_map_injective _ _
+  NoZeroSMulDivisors.algebra_map_injective _ _
 #align cyclotomic_ring.algebra_base_injective CyclotomicRing.algebra_base_injective
 
 instance : Algebra (CyclotomicRing n A K) (CyclotomicField n K) :=
@@ -634,8 +634,8 @@ theorem adjoin_algebra_injective :
   Subtype.val_injective
 #align cyclotomic_ring.adjoin_algebra_injective CyclotomicRing.adjoin_algebra_injective
 
-instance : NoZeroSmulDivisors (CyclotomicRing n A K) (CyclotomicField n K) :=
-  NoZeroSmulDivisors.of_algebra_map_injective (adjoin_algebra_injective n A K)
+instance : NoZeroSMulDivisors (CyclotomicRing n A K) (CyclotomicField n K) :=
+  NoZeroSMulDivisors.of_algebra_map_injective (adjoin_algebra_injective n A K)
 
 instance : IsScalarTower A (CyclotomicRing n A K) (CyclotomicField n K) :=
   IsScalarTower.subalgebra' _ _ _ _

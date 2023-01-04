@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.seminorm
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ attribute [nolint doc_blame]
 
 You should extend this class when you extend `add_group_seminorm`. -/
 class AddGroupSeminormClass (F : Type _) (α : outParam <| Type _) [AddGroup α] extends
-  SubAdditiveHomClass F α ℝ where
+  SubadditiveHomClass F α ℝ where
   map_zero (f : F) : f 0 = 0
   map_neg_eq_map (f : F) (a : α) : f (-a) = f a
 #align add_group_seminorm_class AddGroupSeminormClass
@@ -172,7 +172,7 @@ end GroupSeminormClass
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) GroupSeminormClass.toNonnegHomClass [Group E] [GroupSeminormClass F E] :
-    NonNegHomClass F E ℝ :=
+    NonnegHomClass F E ℝ :=
   { ‹GroupSeminormClass F E› with
     map_nonneg := fun f a =>
       nonneg_of_mul_nonneg_right
@@ -413,12 +413,12 @@ noncomputable instance : HasInf (GroupSeminorm E) :=
   ⟨fun p q =>
     { toFun := fun x => ⨅ y, p y + q (x / y)
       map_one' :=
-        cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun x => by positivity) fun r hr =>
+        cinfᵢ_eq_of_forall_ge_of_forall_gt_exists_lt (fun x => by positivity) fun r hr =>
           ⟨1, by rwa [div_one, map_one_eq_zero p, map_one_eq_zero q, add_zero]⟩
       mul_le' := fun x y =>
         le_cinfi_add_cinfi fun u v =>
           by
-          refine' cinfi_le_of_le mul_bdd_below_range_add (u * v) _
+          refine' cinfᵢ_le_of_le mul_bdd_below_range_add (u * v) _
           rw [mul_div_mul_comm, add_add_add_comm]
           exact add_le_add (map_mul_le_add p _ _) (map_mul_le_add q _ _)
       inv' := fun x =>
@@ -435,12 +435,12 @@ noncomputable instance : Lattice (GroupSeminorm E) :=
   { GroupSeminorm.semilatticeSup with
     inf := (· ⊓ ·)
     inf_le_left := fun p q x =>
-      cinfi_le_of_le mul_bdd_below_range_add x <| by rw [div_self', map_one_eq_zero q, add_zero]
+      cinfᵢ_le_of_le mul_bdd_below_range_add x <| by rw [div_self', map_one_eq_zero q, add_zero]
     inf_le_right := fun p q x =>
-      cinfi_le_of_le mul_bdd_below_range_add (1 : E) <| by
+      cinfᵢ_le_of_le mul_bdd_below_range_add (1 : E) <| by
         simp only [div_one, map_one_eq_zero p, zero_add]
     le_inf := fun a b c hb hc x =>
-      le_cinfi fun u => (le_map_add_map_div a _ _).trans <| add_le_add (hb _) (hc _) }
+      le_cinfᵢ fun u => (le_map_add_map_div a _ _).trans <| add_le_add (hb _) (hc _) }
 
 end CommGroup
 

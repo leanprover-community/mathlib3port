@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.bounded
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,13 +119,13 @@ theorem ext (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align bounded_continuous_function.ext BoundedContinuousFunction.ext
 
-theorem boundedRange (f : α →ᵇ β) : Bounded (range f) :=
+theorem bounded_range (f : α →ᵇ β) : Bounded (range f) :=
   bounded_range_iff.2 f.Bounded
-#align bounded_continuous_function.bounded_range BoundedContinuousFunction.boundedRange
+#align bounded_continuous_function.bounded_range BoundedContinuousFunction.bounded_range
 
-theorem boundedImage (f : α →ᵇ β) (s : Set α) : Bounded (f '' s) :=
-  f.boundedRange.mono <| image_subset_range _ _
-#align bounded_continuous_function.bounded_image BoundedContinuousFunction.boundedImage
+theorem bounded_image (f : α →ᵇ β) (s : Set α) : Bounded (f '' s) :=
+  f.bounded_range.mono <| image_subset_range _ _
+#align bounded_continuous_function.bounded_image BoundedContinuousFunction.bounded_image
 
 theorem eq_of_empty [IsEmpty α] (f g : α →ᵇ β) : f = g :=
   ext <| IsEmpty.elim ‹_›
@@ -177,19 +177,19 @@ theorem dist_set_exists : ∃ C, 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C 
 
 /-- The pointwise distance is controlled by the distance between functions, by definition. -/
 theorem dist_coe_le_dist (x : α) : dist (f x) (g x) ≤ dist f g :=
-  (le_cInf dist_set_exists) fun b hb => hb.2 x
+  (le_cinfₛ dist_set_exists) fun b hb => hb.2 x
 #align bounded_continuous_function.dist_coe_le_dist BoundedContinuousFunction.dist_coe_le_dist
 
 /- This lemma will be needed in the proof of the metric space instance, but it will become
 useless afterwards as it will be superseded by the general result that the distance is nonnegative
 in metric spaces. -/
 private theorem dist_nonneg' : 0 ≤ dist f g :=
-  le_cInf dist_set_exists fun C => And.left
+  le_cinfₛ dist_set_exists fun C => And.left
 #align bounded_continuous_function.dist_nonneg' bounded_continuous_function.dist_nonneg'
 
 /-- The distance between two functions is controlled by the supremum of the pointwise distances -/
 theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ x : α, dist (f x) (g x) ≤ C :=
-  ⟨fun h x => le_trans (dist_coe_le_dist x) h, fun H => cInf_le ⟨0, fun C => And.left⟩ ⟨C0, H⟩⟩
+  ⟨fun h x => le_trans (dist_coe_le_dist x) h, fun H => cinfₛ_le ⟨0, fun C => And.left⟩ ⟨C0, H⟩⟩
 #align bounded_continuous_function.dist_le BoundedContinuousFunction.dist_le
 
 theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (f x) (g x) ≤ C :=
@@ -221,7 +221,7 @@ theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) :
       convert C0
       apply le_antisymm _ dist_nonneg'
       rw [dist_eq]
-      exact cInf_le ⟨0, fun C => And.left⟩ ⟨le_rfl, fun x => False.elim (h (Nonempty.intro x))⟩
+      exact cinfₛ_le ⟨0, fun C => And.left⟩ ⟨le_rfl, fun x => False.elim (h (Nonempty.intro x))⟩
 #align
   bounded_continuous_function.dist_lt_iff_of_compact BoundedContinuousFunction.dist_lt_iff_of_compact
 
@@ -269,7 +269,7 @@ theorem dist_zero_of_empty [IsEmpty α] : dist f g = 0 := by
 theorem dist_eq_supr : dist f g = ⨆ x : α, dist (f x) (g x) :=
   by
   cases isEmpty_or_nonempty α; · rw [supᵢ_of_empty', Real.Sup_empty, dist_zero_of_empty]
-  refine' (dist_le_iff_of_nonempty.mpr <| le_csupr _).antisymm (csupr_le dist_coe_le_dist)
+  refine' (dist_le_iff_of_nonempty.mpr <| le_csupᵢ _).antisymm (csupᵢ_le dist_coe_le_dist)
   exact dist_set_exists.imp fun C hC => forall_range_iff.2 hC.2
 #align bounded_continuous_function.dist_eq_supr BoundedContinuousFunction.dist_eq_supr
 
@@ -328,12 +328,12 @@ theorem const_apply' (a : α) (b : β) : (const α b : α → β) a = b :=
 instance [Inhabited β] : Inhabited (α →ᵇ β) :=
   ⟨const α default⟩
 
-theorem lipschitzEvalx (x : α) : LipschitzWith 1 fun f : α →ᵇ β => f x :=
-  LipschitzWith.mkOne fun f g => dist_coe_le_dist x
-#align bounded_continuous_function.lipschitz_evalx BoundedContinuousFunction.lipschitzEvalx
+theorem lipschitz_evalx (x : α) : LipschitzWith 1 fun f : α →ᵇ β => f x :=
+  LipschitzWith.mk_one fun f g => dist_coe_le_dist x
+#align bounded_continuous_function.lipschitz_evalx BoundedContinuousFunction.lipschitz_evalx
 
 theorem uniform_continuous_coe : @UniformContinuous (α →ᵇ β) (α → β) _ _ coeFn :=
-  uniform_continuous_pi.2 fun x => (lipschitzEvalx x).UniformContinuous
+  uniform_continuous_pi.2 fun x => (lipschitz_evalx x).UniformContinuous
 #align
   bounded_continuous_function.uniform_continuous_coe BoundedContinuousFunction.uniform_continuous_coe
 
@@ -400,15 +400,15 @@ def compContinuous {δ : Type _} [TopologicalSpace δ] (f : α →ᵇ β) (g : C
   map_bounded' := f.map_bounded'.imp fun C hC x y => hC _ _
 #align bounded_continuous_function.comp_continuous BoundedContinuousFunction.compContinuous
 
-theorem lipschitzCompContinuous {δ : Type _} [TopologicalSpace δ] (g : C(δ, α)) :
+theorem lipschitz_comp_continuous {δ : Type _} [TopologicalSpace δ] (g : C(δ, α)) :
     LipschitzWith 1 fun f : α →ᵇ β => f.comp_continuous g :=
-  LipschitzWith.mkOne fun f₁ f₂ => (dist_le dist_nonneg).2 fun x => dist_coe_le_dist (g x)
+  LipschitzWith.mk_one fun f₁ f₂ => (dist_le dist_nonneg).2 fun x => dist_coe_le_dist (g x)
 #align
-  bounded_continuous_function.lipschitz_comp_continuous BoundedContinuousFunction.lipschitzCompContinuous
+  bounded_continuous_function.lipschitz_comp_continuous BoundedContinuousFunction.lipschitz_comp_continuous
 
 theorem continuous_comp_continuous {δ : Type _} [TopologicalSpace δ] (g : C(δ, α)) :
     Continuous fun f : α →ᵇ β => f.comp_continuous g :=
-  (lipschitzCompContinuous g).Continuous
+  (lipschitz_comp_continuous g).Continuous
 #align
   bounded_continuous_function.continuous_comp_continuous BoundedContinuousFunction.continuous_comp_continuous
 
@@ -432,27 +432,27 @@ def comp (G : β → γ) {C : ℝ≥0} (H : LipschitzWith C G) (f : α →ᵇ β
 #align bounded_continuous_function.comp BoundedContinuousFunction.comp
 
 /-- The composition operator (in the target) with a Lipschitz map is Lipschitz -/
-theorem lipschitzComp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) :
+theorem lipschitz_comp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) :
     LipschitzWith C (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
-  LipschitzWith.ofDistLeMul fun f g =>
+  LipschitzWith.of_dist_le_mul fun f g =>
     (dist_le (mul_nonneg C.2 dist_nonneg)).2 fun x =>
       calc
         dist (G (f x)) (G (g x)) ≤ C * dist (f x) (g x) := H.dist_le_mul _ _
         _ ≤ C * dist f g := mul_le_mul_of_nonneg_left (dist_coe_le_dist _) C.2
         
-#align bounded_continuous_function.lipschitz_comp BoundedContinuousFunction.lipschitzComp
+#align bounded_continuous_function.lipschitz_comp BoundedContinuousFunction.lipschitz_comp
 
 /-- The composition operator (in the target) with a Lipschitz map is uniformly continuous -/
 theorem uniform_continuous_comp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) :
     UniformContinuous (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
-  (lipschitzComp H).UniformContinuous
+  (lipschitz_comp H).UniformContinuous
 #align
   bounded_continuous_function.uniform_continuous_comp BoundedContinuousFunction.uniform_continuous_comp
 
 /-- The composition operator (in the target) with a Lipschitz map is continuous -/
 theorem continuous_comp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) :
     Continuous (comp G H : (α →ᵇ β) → α →ᵇ γ) :=
-  (lipschitzComp H).Continuous
+  (lipschitz_comp H).Continuous
 #align bounded_continuous_function.continuous_comp BoundedContinuousFunction.continuous_comp
 
 /-- Restriction (in the target) of a bounded continuous function taking values in a subset -/
@@ -522,9 +522,9 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
       
 #align bounded_continuous_function.dist_extend_extend BoundedContinuousFunction.dist_extend_extend
 
-theorem isometryExtend (f : α ↪ δ) (h : δ →ᵇ β) : Isometry fun g : α →ᵇ β => extend f g h :=
-  Isometry.ofDistEq fun g₁ g₂ => by simp [dist_nonneg]
-#align bounded_continuous_function.isometry_extend BoundedContinuousFunction.isometryExtend
+theorem isometry_extend (f : α ↪ δ) (h : δ →ᵇ β) : Isometry fun g : α →ᵇ β => extend f g h :=
+  Isometry.of_dist_eq fun g₁ g₂ => by simp [dist_nonneg]
+#align bounded_continuous_function.isometry_extend BoundedContinuousFunction.isometry_extend
 
 end Extend
 
@@ -615,7 +615,7 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   by
   /- This version is deduced from the previous one by restricting to the compact type in the target,
   using compactness there and then lifting everything to the original space. -/
-  have M : LipschitzWith 1 coe := LipschitzWith.subtypeCoe s
+  have M : LipschitzWith 1 coe := LipschitzWith.subtype_coe s
   let F : (α →ᵇ s) → α →ᵇ β := comp coe M
   refine'
     is_compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).image (continuous_comp M)) closed
@@ -963,7 +963,7 @@ theorem coe_of_normed_add_comm_group_discrete {α : Type u} {β : Type v} [Topol
 /-- Taking the pointwise norm of a bounded continuous function with values in a
 `seminormed_add_comm_group` yields a bounded continuous function with values in ℝ. -/
 def normComp : α →ᵇ ℝ :=
-  f.comp norm lipschitzWithOneNorm
+  f.comp norm lipschitz_with_one_norm
 #align bounded_continuous_function.norm_comp BoundedContinuousFunction.normComp
 
 @[simp]
@@ -976,7 +976,7 @@ theorem norm_norm_comp : ‖f.normComp‖ = ‖f‖ := by simp only [norm_eq, co
 #align bounded_continuous_function.norm_norm_comp BoundedContinuousFunction.norm_norm_comp
 
 theorem bdd_above_range_norm_comp : BddAbove <| Set.range <| norm ∘ f :=
-  (Real.bounded_iff_bdd_below_bdd_above.mp <| @boundedRange _ _ _ _ f.normComp).2
+  (Real.bounded_iff_bdd_below_bdd_above.mp <| @bounded_range _ _ _ _ f.normComp).2
 #align
   bounded_continuous_function.bdd_above_range_norm_comp BoundedContinuousFunction.bdd_above_range_norm_comp
 
@@ -986,7 +986,7 @@ theorem norm_eq_supr_norm : ‖f‖ = ⨆ x : α, ‖f x‖ := by
 
 /-- If `‖(1 : β)‖ = 1`, then `‖(1 : α →ᵇ β)‖ = 1` if `α` is nonempty. -/
 instance [Nonempty α] [One β] [NormOneClass β] : NormOneClass (α →ᵇ β)
-    where norm_one := by simp only [norm_eq_supr_norm, coe_one, Pi.one_apply, norm_one, csupr_const]
+    where norm_one := by simp only [norm_eq_supr_norm, coe_one, Pi.one_apply, norm_one, csupᵢ_const]
 
 /-- The pointwise opposite of a bounded continuous function is again bounded continuous. -/
 instance : Neg (α →ᵇ β) :=
@@ -1112,7 +1112,7 @@ theorem coe_le_coe_add_dist {f g : α →ᵇ ℝ} : f x ≤ g x + dist f g :=
 
 theorem norm_comp_continuous_le [TopologicalSpace γ] (f : α →ᵇ β) (g : C(γ, α)) :
     ‖f.comp_continuous g‖ ≤ ‖f‖ :=
-  ((lipschitzCompContinuous g).dist_le_mul f 0).trans <| by
+  ((lipschitz_comp_continuous g).dist_le_mul f 0).trans <| by
     rw [Nnreal.coe_one, one_mul, dist_zero_right]
 #align
   bounded_continuous_function.norm_comp_continuous_le BoundedContinuousFunction.norm_comp_continuous_le
@@ -1675,7 +1675,7 @@ variable [TopologicalSpace α]
 /-- The nonnegative part of a bounded continuous `ℝ`-valued function as a bounded
 continuous `ℝ≥0`-valued function. -/
 def nnrealPart (f : α →ᵇ ℝ) : α →ᵇ ℝ≥0 :=
-  BoundedContinuousFunction.comp _ (show LipschitzWith 1 Real.toNnreal from lipschitzWithPos) f
+  BoundedContinuousFunction.comp _ (show LipschitzWith 1 Real.toNnreal from lipschitz_with_pos) f
 #align bounded_continuous_function.nnreal_part BoundedContinuousFunction.nnrealPart
 
 @[simp]
@@ -1688,7 +1688,7 @@ theorem nnreal_part_coe_fun_eq (f : α →ᵇ ℝ) : ⇑f.nnrealPart = Real.toNn
 continuous `ℝ≥0`-valued function. -/
 def nnnorm (f : α →ᵇ ℝ) : α →ᵇ ℝ≥0 :=
   BoundedContinuousFunction.comp _
-    (show LipschitzWith 1 fun x : ℝ => ‖x‖₊ from lipschitzWithOneNorm) f
+    (show LipschitzWith 1 fun x : ℝ => ‖x‖₊ from lipschitz_with_one_norm) f
 #align bounded_continuous_function.nnnorm BoundedContinuousFunction.nnnorm
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_circle
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem norm_neg_period (x : ℝ) : ‖(x : AddCircle (-p))‖ = ‖(x : AddCirc
 theorem norm_eq_of_zero {x : ℝ} : ‖(x : AddCircle (0 : ℝ))‖ = |x| :=
   by
   suffices { y : ℝ | (y : AddCircle (0 : ℝ)) = (x : AddCircle (0 : ℝ)) } = {x} by
-    rw [quotient_norm_eq, this, image_singleton, Real.norm_eq_abs, cInf_singleton]
+    rw [quotient_norm_eq, this, image_singleton, Real.norm_eq_abs, cinfₛ_singleton]
   ext y
   simp [QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff, sub_eq_zero]
 #align add_circle.norm_eq_of_zero AddCircle.norm_eq_of_zero
@@ -108,7 +108,7 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
     ⟨0, by simp [mem_lowerBounds]⟩
   have h₂ : (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }).Nonempty := ⟨|x|, ⟨x, rfl, rfl⟩⟩
   apply le_antisymm
-  · simp only [le_min_iff, Real.norm_eq_abs, cInf_le_iff h₁ h₂]
+  · simp only [le_min_iff, Real.norm_eq_abs, cinfₛ_le_iff h₁ h₂]
     intro b h
     refine'
       ⟨mem_lowerBounds.1 h _ ⟨fract x, _, abs_fract⟩,
@@ -120,7 +120,7 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
       simp only [mem_set_of_eq, fract, sub_eq_self, QuotientAddGroup.coe_sub,
         QuotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one, sub_sub,
         (by norm_cast : (⌊x⌋ : ℝ) + 1 = (↑(⌊x⌋ + 1) : ℝ))]
-  · simp only [QuotientAddGroup.mk'_apply, Real.norm_eq_abs, le_cInf_iff h₁ h₂]
+  · simp only [QuotientAddGroup.mk'_apply, Real.norm_eq_abs, le_cinfₛ_iff h₁ h₂]
     rintro b' ⟨b, hb, rfl⟩
     simp only [mem_set_of_eq, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
       smul_one_eq_coe] at hb

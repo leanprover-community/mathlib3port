@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -417,7 +417,7 @@ theorem prop (F : HomotopyWith f₀ f₁ P) (t : I) : P (F.toHomotopy.curry t) :
   F.prop' t
 #align continuous_map.homotopy_with.prop ContinuousMap.HomotopyWith.prop
 
-theorem extendProp (F : HomotopyWith f₀ f₁ P) (t : ℝ) : P (F.toHomotopy.extend t) :=
+theorem extend_prop (F : HomotopyWith f₀ f₁ P) (t : ℝ) : P (F.toHomotopy.extend t) :=
   by
   by_cases ht₀ : 0 ≤ t
   · by_cases ht₁ : t ≤ 1
@@ -432,7 +432,7 @@ theorem extendProp (F : HomotopyWith f₀ f₁ P) (t : ℝ) : P (F.toHomotopy.ex
     ext
     rw [F.to_homotopy.extend_apply_of_le_zero (le_of_not_le ht₀), F.to_homotopy.curry_apply,
       F.to_homotopy.apply_zero]
-#align continuous_map.homotopy_with.extend_prop ContinuousMap.HomotopyWith.extendProp
+#align continuous_map.homotopy_with.extend_prop ContinuousMap.HomotopyWith.extend_prop
 
 end
 

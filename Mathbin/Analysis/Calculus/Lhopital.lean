@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.calculus.lhopital
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,9 +122,9 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x)
   by
   -- Here, we essentially compose by `has_neg.neg`. The following is mostly technical details.
   have hdnf : ∀ x ∈ -Ioo a b, HasDerivAt (f ∘ Neg.neg) (f' (-x) * -1) x := fun x hx =>
-    comp x (hff' (-x) hx) (hasDerivAtNeg x)
+    comp x (hff' (-x) hx) (has_deriv_at_neg x)
   have hdng : ∀ x ∈ -Ioo a b, HasDerivAt (g ∘ Neg.neg) (g' (-x) * -1) x := fun x hx =>
-    comp x (hgg' (-x) hx) (hasDerivAtNeg x)
+    comp x (hgg' (-x) hx) (has_deriv_at_neg x)
   rw [preimage_neg_Ioo] at hdnf
   rw [preimage_neg_Ioo] at hdng
   have :=
@@ -172,9 +172,9 @@ theorem lhopital_zero_at_top_on_Ioi (hff' : ∀ x ∈ Ioi a, HasDerivAt f (f' x)
   have fact1 : ∀ x : ℝ, x ∈ Ioo 0 a'⁻¹ → x ≠ 0 := fun _ hx => (ne_of_lt hx.1).symm
   have fact2 : ∀ x ∈ Ioo 0 a'⁻¹, a < x⁻¹ := fun _ hx => lt_trans haa' ((lt_inv ha' hx.1).mpr hx.2)
   have hdnf : ∀ x ∈ Ioo 0 a'⁻¹, HasDerivAt (f ∘ Inv.inv) (f' x⁻¹ * -(x ^ 2)⁻¹) x := fun x hx =>
-    comp x (hff' x⁻¹ <| fact2 x hx) (hasDerivAtInv <| fact1 x hx)
+    comp x (hff' x⁻¹ <| fact2 x hx) (has_deriv_at_inv <| fact1 x hx)
   have hdng : ∀ x ∈ Ioo 0 a'⁻¹, HasDerivAt (g ∘ Inv.inv) (g' x⁻¹ * -(x ^ 2)⁻¹) x := fun x hx =>
-    comp x (hgg' x⁻¹ <| fact2 x hx) (hasDerivAtInv <| fact1 x hx)
+    comp x (hgg' x⁻¹ <| fact2 x hx) (has_deriv_at_inv <| fact1 x hx)
   have :=
     lhopital_zero_right_on_Ioo (inv_pos.mpr ha') hdnf hdng
       (by
@@ -202,9 +202,9 @@ theorem lhopital_zero_at_bot_on_Iio (hff' : ∀ x ∈ Iio a, HasDerivAt f (f' x)
   by
   -- Here, we essentially compose by `has_neg.neg`. The following is mostly technical details.
   have hdnf : ∀ x ∈ -Iio a, HasDerivAt (f ∘ Neg.neg) (f' (-x) * -1) x := fun x hx =>
-    comp x (hff' (-x) hx) (hasDerivAtNeg x)
+    comp x (hff' (-x) hx) (has_deriv_at_neg x)
   have hdng : ∀ x ∈ -Iio a, HasDerivAt (g ∘ Neg.neg) (g' (-x) * -1) x := fun x hx =>
-    comp x (hgg' (-x) hx) (hasDerivAtNeg x)
+    comp x (hgg' (-x) hx) (has_deriv_at_neg x)
   rw [preimage_neg_Iio] at hdnf
   rw [preimage_neg_Iio] at hdng
   have :=
@@ -436,9 +436,9 @@ theorem lhopital_zero_nhds_right (hdf : ∀ᶠ x in 𝓝[>] a, DifferentiableAt 
       (eventually_of_forall fun _ hg' =>
         by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (deriv f x) x :=
-    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   have hdg' : ∀ᶠ x in 𝓝[>] a, HasDerivAt g (deriv g x) x :=
-    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   exact HasDerivAt.lhopital_zero_nhds_right hdf' hdg' hg' hfa hga hdiv
 #align deriv.lhopital_zero_nhds_right deriv.lhopital_zero_nhds_right
 
@@ -454,9 +454,9 @@ theorem lhopital_zero_nhds_left (hdf : ∀ᶠ x in 𝓝[<] a, DifferentiableAt �
       (eventually_of_forall fun _ hg' =>
         by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in 𝓝[<] a, HasDerivAt f (deriv f x) x :=
-    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   have hdg' : ∀ᶠ x in 𝓝[<] a, HasDerivAt g (deriv g x) x :=
-    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   exact HasDerivAt.lhopital_zero_nhds_left hdf' hdg' hg' hfa hga hdiv
 #align deriv.lhopital_zero_nhds_left deriv.lhopital_zero_nhds_left
 
@@ -497,9 +497,9 @@ theorem lhopital_zero_at_top (hdf : ∀ᶠ x : ℝ in at_top, DifferentiableAt �
       (eventually_of_forall fun _ hg' =>
         by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in at_top, HasDerivAt f (deriv f x) x :=
-    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   have hdg' : ∀ᶠ x in at_top, HasDerivAt g (deriv g x) x :=
-    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   exact HasDerivAt.lhopital_zero_at_top hdf' hdg' hg' hftop hgtop hdiv
 #align deriv.lhopital_zero_at_top deriv.lhopital_zero_at_top
 
@@ -514,9 +514,9 @@ theorem lhopital_zero_at_bot (hdf : ∀ᶠ x : ℝ in at_bot, DifferentiableAt �
       (eventually_of_forall fun _ hg' =>
         by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
   have hdf' : ∀ᶠ x in at_bot, HasDerivAt f (deriv f x) x :=
-    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdf.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   have hdg' : ∀ᶠ x in at_bot, HasDerivAt g (deriv g x) x :=
-    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
+    hdg.mp (eventually_of_forall fun _ => DifferentiableAt.has_deriv_at)
   exact HasDerivAt.lhopital_zero_at_bot hdf' hdg' hg' hfbot hgbot hdiv
 #align deriv.lhopital_zero_at_bot deriv.lhopital_zero_at_bot
 

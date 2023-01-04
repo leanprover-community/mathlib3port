@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.substructures
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -229,7 +229,7 @@ instance : CompleteLattice (L.Substructure M) :=
   {
     (completeLatticeOfInf (L.Substructure M)) fun s =>
       IsGLB.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
-        is_glb_binfi with
+        isGLB_binfᵢ with
     le := (· ≤ ·)
     lt := (· < ·)
     top := ⊤

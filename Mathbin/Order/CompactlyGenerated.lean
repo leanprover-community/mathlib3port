@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module order.compactly_generated
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -615,7 +615,7 @@ theorem CompleteLattice.set_independent_Union_of_directed {η : Type _} {s : η 
   complete_lattice.set_independent_Union_of_directed CompleteLattice.set_independent_Union_of_directed
 
 theorem CompleteLattice.independent_sUnion_of_directed {s : Set (Set α)} (hs : DirectedOn (· ⊆ ·) s)
-    (h : ∀ a ∈ s, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀s) := by
+    (h : ∀ a ∈ s, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀ s) := by
   rw [Set.unionₛ_eq_unionᵢ] <;>
     exact CompleteLattice.set_independent_Union_of_directed hs.directed_coe (by simpa using h)
 #align
@@ -625,14 +625,14 @@ end
 
 namespace CompleteLattice
 
-theorem compactlyGeneratedOfWellFounded (h : WellFounded ((· > ·) : α → α → Prop)) :
+theorem compactly_generated_of_well_founded (h : WellFounded ((· > ·) : α → α → Prop)) :
     IsCompactlyGenerated α :=
   by
   rw [well_founded_iff_is_Sup_finite_compact, is_Sup_finite_compact_iff_all_elements_compact] at h
   -- x is the join of the set of compact elements {x}
   exact ⟨fun x => ⟨{x}, ⟨fun x _ => h x, supₛ_singleton⟩⟩⟩
 #align
-  complete_lattice.compactly_generated_of_well_founded CompleteLattice.compactlyGeneratedOfWellFounded
+  complete_lattice.compactly_generated_of_well_founded CompleteLattice.compactly_generated_of_well_founded
 
 /-- A compact element `k` has the property that any `b < k` lies below a "maximal element below
 `k`", which is to say `[⊥, k]` is coatomic. -/
@@ -643,7 +643,7 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
       ext
       simp only [htriv, Set.Iic.coe_top, Subtype.coe_mk]
     right
-    obtain ⟨a, a₀, ba, h⟩ := zorn_nonempty_partial_order₀ (Set.Iio k) _ b (lt_of_le_of_ne hbk htriv)
+    obtain ⟨a, a₀, ba, h⟩ := zorn_nonempty_partialOrder₀ (Set.Iio k) _ b (lt_of_le_of_ne hbk htriv)
     · refine' ⟨⟨a, le_of_lt a₀⟩, ⟨ne_of_lt a₀, fun c hck => by_contradiction fun c₀ => _⟩, ba⟩
       cases h c.1 (lt_of_le_of_ne c.2 fun con => c₀ (Subtype.ext con)) hck.le
       exact lt_irrefl _ hck
@@ -676,7 +676,7 @@ instance (priority := 100) is_atomic_of_complemented_lattice [ComplementedLattic
     · rcases Set.not_subset.1 h with ⟨c, ⟨hc, hcb⟩, hcbot⟩
       right
       have hc' := CompleteLattice.Iic_coatomic_of_compact_element hc
-      rw [← is_atomic_iff_is_coatomic] at hc'
+      rw [← isAtomic_iff_isCoatomic] at hc'
       haveI := hc'
       obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_refl c⟩ : Set.Iic c)
       · exfalso
@@ -748,7 +748,7 @@ theorem complemented_lattice_of_Sup_atoms_eq_top (h : supₛ { a : α | IsAtom a
           exact ha
     · intro c hc1 hc2
       refine'
-        ⟨⋃₀c,
+        ⟨⋃₀ c,
           ⟨CompleteLattice.independent_sUnion_of_directed hc2.directed_on fun s hs => (hc1 hs).1, _,
             fun a ha => _⟩,
           fun _ => Set.subset_unionₛ_of_mem⟩
@@ -766,7 +766,7 @@ theorem complemented_lattice_of_Sup_atoms_eq_top (h : supₛ { a : α | IsAtom a
 
 /-- See Theorem 6.6, Călugăreanu -/
 theorem complemented_lattice_of_is_atomistic [IsAtomistic α] : ComplementedLattice α :=
-  complemented_lattice_of_Sup_atoms_eq_top Sup_atoms_eq_top
+  complemented_lattice_of_Sup_atoms_eq_top supₛ_atoms_eq_top
 #align complemented_lattice_of_is_atomistic complemented_lattice_of_is_atomistic
 
 theorem complemented_lattice_iff_is_atomistic : ComplementedLattice α ↔ IsAtomistic α :=

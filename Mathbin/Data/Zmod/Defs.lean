@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.zmod.defs
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ to register the ring structure on `zmod n` as type class instance.
 -/
 
 
-open Nat.Modeq Int
+open Nat.ModEq Int
 
 /-- Multiplicative commutative semigroup structure on `fin (n+1)`. -/
 instance (n : ℕ) : CommSemigroup (Fin (n + 1)) :=
@@ -52,9 +52,9 @@ instance (n : ℕ) : CommSemigroup (Fin (n + 1)) :=
     mul_assoc := fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
       Fin.eq_of_veq
         (calc
-          a * b % (n + 1) * c ≡ a * b * c [MOD n + 1] := (Nat.mod_modeq _ _).mul_right _
+          a * b % (n + 1) * c ≡ a * b * c [MOD n + 1] := (Nat.mod_modEq _ _).mul_right _
           _ ≡ a * (b * c) [MOD n + 1] := by rw [mul_assoc]
-          _ ≡ a * (b * c % (n + 1)) [MOD n + 1] := (Nat.mod_modeq _ _).symm.mul_left _
+          _ ≡ a * (b * c % (n + 1)) [MOD n + 1] := (Nat.mod_modEq _ _).symm.mul_left _
           )
     mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ =>
       Fin.eq_of_veq (show a * b % (n + 1) = b * a % (n + 1) by rw [mul_comm]) }
@@ -63,10 +63,10 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin (n + 1), a * (b + c
   fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
   Fin.eq_of_veq
     (calc
-      a * ((b + c) % (n + 1)) ≡ a * (b + c) [MOD n + 1] := (Nat.mod_modeq _ _).mul_left _
+      a * ((b + c) % (n + 1)) ≡ a * (b + c) [MOD n + 1] := (Nat.mod_modEq _ _).mul_left _
       _ ≡ a * b + a * c [MOD n + 1] := by rw [mul_add]
       _ ≡ a * b % (n + 1) + a * c % (n + 1) [MOD n + 1] :=
-        (Nat.mod_modeq _ _).symm.add (Nat.mod_modeq _ _).symm
+        (Nat.mod_modEq _ _).symm.add (Nat.mod_modEq _ _).symm
       )
 #align fin.left_distrib_aux fin.left_distrib_aux
 

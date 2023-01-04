@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, E. W. Ayers
 
 ! This file was ported from Lean 3 source module category_theory.sites.grothendieck
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -299,7 +299,7 @@ theorem is_glb_Inf (s : Set (GrothendieckTopology C)) : IsGLB s (infₛ s) :=
   refine' @IsGLB.of_image _ _ _ _ sieves _ _ _ _
   · intros
     rfl
-  · exact is_glb_Inf _
+  · exact isGLB_infₛ _
 #align
   category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.is_glb_Inf
 
@@ -310,7 +310,7 @@ instance : CompleteLattice (GrothendieckTopology C) :=
   CompleteLattice.copy (completeLatticeOfInf _ is_glb_Inf) _ rfl (discrete C)
     (by
       apply le_antisymm
-      · exact @CompleteLattice.le_top _ (completeLatticeOfInf _ is_glb_Inf) (discrete C)
+      · exact @CompleteLattice.le_top _ (completeLatticeOfInf _ isGLB_infₛ) (discrete C)
       · intro X S hS
         apply Set.mem_univ)
     (trivial C)
@@ -319,7 +319,7 @@ instance : CompleteLattice (GrothendieckTopology C) :=
       · intro X S hS
         rw [trivial_covering] at hS
         apply covering_of_eq_top _ hS
-      · refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ is_glb_Inf) (trivial C))
+      · refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ isGLB_infₛ) (trivial C))
     _ rfl _ rfl _ rfl infₛ rfl
 
 instance : Inhabited (GrothendieckTopology C) :=

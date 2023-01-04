@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -318,7 +318,7 @@ theorem mem_segment_add_sub [Invertible (2 : 𝕜)] (x y : E) : x ∈ [x + y -[�
 #align mem_segment_add_sub mem_segment_add_sub
 
 @[simp]
-theorem left_mem_open_segment_iff [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] :
+theorem left_mem_open_segment_iff [DenselyOrdered 𝕜] [NoZeroSMulDivisors 𝕜 E] :
     x ∈ openSegment 𝕜 x y ↔ x = y := by
   constructor
   · rintro ⟨a, b, ha, hb, hab, hx⟩
@@ -330,7 +330,7 @@ theorem left_mem_open_segment_iff [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜
 #align left_mem_open_segment_iff left_mem_open_segment_iff
 
 @[simp]
-theorem right_mem_open_segment_iff [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] :
+theorem right_mem_open_segment_iff [DenselyOrdered 𝕜] [NoZeroSMulDivisors 𝕜 E] :
     y ∈ openSegment 𝕜 x y ↔ x = y := by rw [open_segment_symm, left_mem_open_segment_iff, eq_comm]
 #align right_mem_open_segment_iff right_mem_open_segment_iff
 

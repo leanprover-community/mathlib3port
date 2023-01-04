@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.local_properties
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -632,7 +632,7 @@ theorem IsLocalization.exists_smul_mem_of_mem_adjoin [Algebra R S] [Algebra R S'
   use a * y ^ n
   convert A.mul_mem hx' (hA₂ a.2)
   convert ha₂.symm
-  simp only [Submonoid.smul_def, Submonoid.coe_pow, smul_eq_mul, Submonoid.coe_mul]
+  simp only [Submonoid.smul_def, [anonymous], smul_eq_mul, Submonoid.coe_mul]
   ring
 #align is_localization.exists_smul_mem_of_mem_adjoin IsLocalization.exists_smul_mem_of_mem_adjoin
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.category.Top.limits
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -872,7 +872,7 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
                       (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
             open_embedding_inr,
           _⟩
-      erw [Set.range_comp, ← eq_compl_iff_is_compl, Set.range_comp _ Sum.inr, ←
+      erw [Set.range_comp, ← eq_compl_iff_isCompl, Set.range_comp _ Sum.inr, ←
         Set.image_compl_eq
           (homeo_of_iso <|
                 h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.Bijective]

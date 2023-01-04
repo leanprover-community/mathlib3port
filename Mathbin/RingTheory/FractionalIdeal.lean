@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.fractional_ideal
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -881,7 +881,7 @@ noncomputable irreducible_def canonicalEquiv : FractionalIdeal S P ≃+* Fractio
   mapEquiv
     {
       ringEquivOfRingEquiv P P' (RingEquiv.refl R)
-        (show S.map _ = S by rw [RingEquiv.to_monoid_hom_refl, Submonoid.map_id]) with
+        (show S.map _ = S by rw [RingEquiv.toMonoidHom_refl, Submonoid.map_id]) with
       commutes' := fun r => ring_equiv_of_ring_equiv_eq _ _ }
 #align fractional_ideal.canonical_equiv FractionalIdeal.canonicalEquiv
 
@@ -902,7 +902,7 @@ theorem canonical_equiv_symm : (canonicalEquiv S P P').symm = canonicalEquiv S P
   RingEquiv.ext fun I =>
     SetLike.ext_iff.mpr fun x =>
       by
-      rw [mem_canonical_equiv_apply, canonical_equiv, map_equiv_symm, map_equiv, RingEquiv.coe_mk,
+      rw [mem_canonical_equiv_apply, canonical_equiv, map_equiv_symm, map_equiv, [anonymous],
         mem_map]
       exact ⟨fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩, fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩⟩
 #align fractional_ideal.canonical_equiv_symm FractionalIdeal.canonical_equiv_symm
@@ -1312,7 +1312,7 @@ theorem mem_span_singleton_self (x : P) : x ∈ spanSingleton S x :=
 
 variable {S}
 
-theorem span_singleton_eq_span_singleton [NoZeroSmulDivisors R P] {x y : P} :
+theorem span_singleton_eq_span_singleton [NoZeroSMulDivisors R P] {x y : P} :
     spanSingleton S x = spanSingleton S y ↔ ∃ z : Rˣ, z • x = y :=
   by
   rw [← Submodule.span_singleton_eq_span_singleton]

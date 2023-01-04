@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
 
 ! This file was ported from Lean 3 source module number_theory.pythagorean_triples
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -281,7 +281,7 @@ theorem coprime_of_coprime (hc : Int.gcd x y = 1) : Int.gcd y z = 1 :=
   obtain ⟨p, hp, hpy, hpz⟩ := nat.prime.not_coprime_iff_dvd.mp H
   apply hp.not_dvd_one
   rw [← hc]
-  apply Nat.dvd_gcd (Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp _ _) hpy
+  apply Nat.dvd_gcd (Int.Prime.dvd_natAbs_of_coe_dvd_sq hp _ _) hpy
   rw [sq, eq_sub_of_add_eq h]
   rw [← Int.coe_nat_dvd_left] at hpy hpz
   exact dvd_sub (hpz.mul_right _) (hpy.mul_right _)
@@ -468,10 +468,10 @@ private theorem coprime_sq_sub_sq_sum_of_odd_odd {m n : ℤ} (h : Int.gcd m n = 
   rw [← h]
   rw [← Int.coe_nat_dvd_left] at hp1 hp2
   apply Nat.dvd_gcd
-  · apply Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp
+  · apply Int.Prime.dvd_natAbs_of_coe_dvd_sq hp
     convert dvd_add hp1 hp2
     ring
-  · apply Int.Prime.dvd_nat_abs_of_coe_dvd_sq hp
+  · apply Int.Prime.dvd_natAbs_of_coe_dvd_sq hp
     convert dvd_sub hp2 hp1
     ring
 #align coprime_sq_sub_sq_sum_of_odd_odd coprime_sq_sub_sq_sum_of_odd_odd

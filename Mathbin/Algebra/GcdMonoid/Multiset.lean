@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.multiset
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ multiset, gcd
 
 namespace Multiset
 
-variable {α : Type _} [CancelCommMonoidWithZero α] [NormalizedGcdMonoid α]
+variable {α : Type _} [CancelCommMonoidWithZero α] [NormalizedGCDMonoid α]
 
 /-! ### lcm -/
 
@@ -41,7 +41,7 @@ section Lcm
 
 /-- Least common multiple of a multiset -/
 def lcm (s : Multiset α) : α :=
-  s.fold GcdMonoid.lcm 1
+  s.fold GCDMonoid.lcm 1
 #align multiset.lcm Multiset.lcm
 
 @[simp]
@@ -50,7 +50,7 @@ theorem lcm_zero : (0 : Multiset α).lcm = 1 :=
 #align multiset.lcm_zero Multiset.lcm_zero
 
 @[simp]
-theorem lcm_cons (a : α) (s : Multiset α) : (a ::ₘ s).lcm = GcdMonoid.lcm a s.lcm :=
+theorem lcm_cons (a : α) (s : Multiset α) : (a ::ₘ s).lcm = GCDMonoid.lcm a s.lcm :=
   fold_cons_left _ _ _ _
 #align multiset.lcm_cons Multiset.lcm_cons
 
@@ -60,7 +60,7 @@ theorem lcm_singleton {a : α} : ({a} : Multiset α).lcm = normalize a :=
 #align multiset.lcm_singleton Multiset.lcm_singleton
 
 @[simp]
-theorem lcm_add (s₁ s₂ : Multiset α) : (s₁ + s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm :=
+theorem lcm_add (s₁ s₂ : Multiset α) : (s₁ + s₂).lcm = GCDMonoid.lcm s₁.lcm s₂.lcm :=
   Eq.trans (by simp [lcm]) (fold_add _ _ _ _ _)
 #align multiset.lcm_add Multiset.lcm_add
 
@@ -103,21 +103,21 @@ theorem lcm_dedup (s : Multiset α) : (dedup s).lcm = s.lcm :=
 #align multiset.lcm_dedup Multiset.lcm_dedup
 
 @[simp]
-theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm :=
+theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GCDMonoid.lcm s₁.lcm s₂.lcm :=
   by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
 #align multiset.lcm_ndunion Multiset.lcm_ndunion
 
 @[simp]
-theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm :=
+theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GCDMonoid.lcm s₁.lcm s₂.lcm :=
   by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
 #align multiset.lcm_union Multiset.lcm_union
 
 @[simp]
-theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GcdMonoid.lcm a s.lcm :=
+theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GCDMonoid.lcm a s.lcm :=
   by
   rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_cons]
   simp
@@ -132,7 +132,7 @@ section Gcd
 
 /-- Greatest common divisor of a multiset -/
 def gcd (s : Multiset α) : α :=
-  s.fold GcdMonoid.gcd 0
+  s.fold GCDMonoid.gcd 0
 #align multiset.gcd Multiset.gcd
 
 @[simp]
@@ -141,7 +141,7 @@ theorem gcd_zero : (0 : Multiset α).gcd = 0 :=
 #align multiset.gcd_zero Multiset.gcd_zero
 
 @[simp]
-theorem gcd_cons (a : α) (s : Multiset α) : (a ::ₘ s).gcd = GcdMonoid.gcd a s.gcd :=
+theorem gcd_cons (a : α) (s : Multiset α) : (a ::ₘ s).gcd = GCDMonoid.gcd a s.gcd :=
   fold_cons_left _ _ _ _
 #align multiset.gcd_cons Multiset.gcd_cons
 
@@ -151,7 +151,7 @@ theorem gcd_singleton {a : α} : ({a} : Multiset α).gcd = normalize a :=
 #align multiset.gcd_singleton Multiset.gcd_singleton
 
 @[simp]
-theorem gcd_add (s₁ s₂ : Multiset α) : (s₁ + s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd :=
+theorem gcd_add (s₁ s₂ : Multiset α) : (s₁ + s₂).gcd = GCDMonoid.gcd s₁.gcd s₂.gcd :=
   Eq.trans (by simp [gcd]) (fold_add _ _ _ _ _)
 #align multiset.gcd_add Multiset.gcd_add
 
@@ -210,21 +210,21 @@ theorem gcd_dedup (s : Multiset α) : (dedup s).gcd = s.gcd :=
 #align multiset.gcd_dedup Multiset.gcd_dedup
 
 @[simp]
-theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd :=
+theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GCDMonoid.gcd s₁.gcd s₂.gcd :=
   by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
 #align multiset.gcd_ndunion Multiset.gcd_ndunion
 
 @[simp]
-theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd :=
+theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GCDMonoid.gcd s₁.gcd s₂.gcd :=
   by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
 #align multiset.gcd_union Multiset.gcd_union
 
 @[simp]
-theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GcdMonoid.gcd a s.gcd :=
+theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GCDMonoid.gcd a s.gcd :=
   by
   rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_cons]
   simp

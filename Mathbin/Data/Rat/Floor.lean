@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module data.rat.floor
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
   obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom :=
     by
     rw [q_eq]
-    exact_mod_cast @Rat.exists_eq_mul_div_num_and_eq_mul_div_denom n d (by exact_mod_cast hd.ne')
+    exact_mod_cast @Rat.exists_eq_mul_div_num_and_eq_mul_div_den n d (by exact_mod_cast hd.ne')
   rw [n_eq_c_mul_num, d_eq_c_mul_denom]
   refine' (Int.mul_ediv_mul_of_pos _ _ <| pos_of_mul_pos_left _ <| Int.coe_nat_nonneg q.denom).symm
   rwa [← d_eq_c_mul_denom, Int.coe_nat_pos]
@@ -147,7 +147,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   -- we will work with the absolute value of the numerator, which is equal to the numerator
   have q_num_abs_eq_q_num : (q.num.nat_abs : ℤ) = q.num := Int.natAbs_of_nonneg q_num_pos.le
   set q_inv := (q.denom : ℚ) / q.num with q_inv_def
-  have q_inv_eq : q⁻¹ = q_inv := Rat.inv_def'
+  have q_inv_eq : q⁻¹ = q_inv := Rat.inv_def''
   suffices (q_inv - ⌊q_inv⌋).num < q.num by rwa [q_inv_eq]
   suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by
     field_simp [this, ne_of_gt q_num_pos]
@@ -180,7 +180,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
     · exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
     · suffices (((q.denom : ℚ) / q.num).denom : ℤ) = q.num.nat_abs by exact_mod_cast this
       rw [q_num_abs_eq_q_num]
-      exact_mod_cast Rat.denom_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
+      exact_mod_cast Rat.den_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
   rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq
 #align rat.fract_inv_num_lt_num_of_pos Rat.fract_inv_num_lt_num_of_pos
 

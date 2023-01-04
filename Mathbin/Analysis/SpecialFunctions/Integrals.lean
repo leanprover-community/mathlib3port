@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
     have hderiv : ∀ x ∈ Ioo 0 c, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
       by
       intro x hx
-      convert (Real.hasDerivAtRpowConst (Or.inl hx.1.ne')).div_const (r + 1)
+      convert (Real.has_deriv_at_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
       field_simp [(by linarith : r + 1 ≠ 0)]
       ring
     apply integrable_on_deriv_of_nonneg hc _ hderiv
@@ -276,7 +276,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
   have hderiv : ∀ x : ℝ, x ≠ 0 → HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
     by
     intro x hx
-    convert (Real.hasDerivAtRpowConst (Or.inl hx)).div_const (r + 1)
+    convert (Real.has_deriv_at_rpow_const (Or.inl hx)).div_const (r + 1)
     rw [add_sub_cancel, mul_div_cancel_left]
     contrapose! h
     rw [← eq_neg_iff_add_eq_zero] at h
@@ -334,7 +334,7 @@ theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
   rw [sub_div]
   suffices ∀ x ∈ Set.interval a b, HasDerivAt (fun z : ℂ => z ^ (r + 1) / (r + 1)) (x ^ r) x by
     exact
-      integral_eq_sub_of_has_deriv_at (fun x hx => (this x hx).compOfReal)
+      integral_eq_sub_of_has_deriv_at (fun x hx => (this x hx).comp_of_real)
         (interval_integrable_cpow ha hb)
   intro x hx
   have hx' : 0 < (x : ℂ).re ∨ (x : ℂ).im ≠ 0 := by
@@ -344,7 +344,7 @@ theorem integral_cpow {r : ℂ} (ha : 0 < a) (hb : 0 < b) (hr : r ≠ -1) :
       0 < min a b := lt_min ha hb
       _ ≤ x := hx.left
       
-  convert ((hasDerivAtId (x : ℂ)).cpow_const hx').div_const (r + 1)
+  convert ((has_deriv_at_id (x : ℂ)).cpow_const hx').div_const (r + 1)
   simp only [id.def, add_sub_cancel, mul_one]
   rw [mul_comm, mul_div_cancel]
   contrapose! hr
@@ -454,8 +454,8 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
       congr
       skip
       rw [← mul_div_cancel (Complex.exp (c * x)) hc]
-    convert ((Complex.hasDerivAtExp _).comp x _).div_const c using 1
-    simpa only [mul_one] using ((hasDerivAtId (x : ℂ)).const_mul _).compOfReal
+    convert ((Complex.has_deriv_at_exp _).comp x _).div_const c using 1
+    simpa only [mul_one] using ((has_deriv_at_id (x : ℂ)).const_mul _).comp_of_real
   rw [integral_deriv_eq_sub' _ (funext fun x => (D x).deriv) fun x hx => (D x).DifferentiableAt]
   · ring_nf
   · apply Continuous.continuous_on
@@ -469,7 +469,7 @@ theorem integral_log (h : (0 : ℝ) ∉ [a, b]) :
   obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
   convert
       integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx))
-        (fun x hx => hasDerivAtId x)
+        (fun x hx => has_deriv_at_id x)
         (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
       1 <;>
@@ -658,7 +658,7 @@ theorem integral_sin_pow_mul_cos_pow_odd (m n : ℕ) :
         ∫ x in a..b, sin x ^ m * (1 - sin x ^ 2) ^ n * cos x :=
       by simp only [pow_succ', ← mul_assoc, pow_mul, cos_sq']
     _ = ∫ u in sin a..sin b, u ^ m * (1 - u ^ 2) ^ n :=
-      integral_comp_mul_deriv (fun x hx => hasDerivAtSin x) continuous_on_cos hc
+      integral_comp_mul_deriv (fun x hx => has_deriv_at_sin x) continuous_on_cos hc
     
 #align integral_sin_pow_mul_cos_pow_odd integral_sin_pow_mul_cos_pow_odd
 
@@ -696,7 +696,7 @@ theorem integral_sin_pow_odd_mul_cos_pow (m n : ℕ) :
       ext
       ring
     _ = ∫ u in cos b..cos a, u ^ n * (1 - u ^ 2) ^ m :=
-      integral_comp_mul_deriv (fun x hx => hasDerivAtCos x) continuous_on_sin.neg hc
+      integral_comp_mul_deriv (fun x hx => has_deriv_at_cos x) continuous_on_sin.neg hc
     
 #align integral_sin_pow_odd_mul_cos_pow integral_sin_pow_odd_mul_cos_pow
 

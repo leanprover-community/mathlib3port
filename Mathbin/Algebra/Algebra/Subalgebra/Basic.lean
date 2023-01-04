@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.basic
-! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
+! leanprover-community/mathlib commit 44b58b42794e5abe2bf86397c38e26b587e07e59
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -387,7 +387,7 @@ instance : Algebra R S :=
 
 end
 
-instance no_zero_smul_divisors_bot [NoZeroSmulDivisors R A] : NoZeroSmulDivisors R S :=
+instance no_zero_smul_divisors_bot [NoZeroSMulDivisors R A] : NoZeroSMulDivisors R S :=
   ⟨fun c x h =>
     have : c = 0 ∨ (x : A) = 0 := eq_zero_or_eq_zero_of_smul_eq_zero (congr_arg coe h)
     this.imp_right (@Subtype.ext_iff _ _ x 0).mpr⟩
@@ -1211,22 +1211,22 @@ noncomputable def suprLift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Dire
   subst hT <;>
     exact
       { toFun :=
-          Set.unionLift (fun i => ↑(K i)) (fun i x => f i x)
+          Set.unionᵢLift (fun i => ↑(K i)) (fun i x => f i x)
             (fun i j x hxi hxj => by
               let ⟨k, hik, hjk⟩ := dir i j
               rw [hf i k hik, hf j k hjk]
               rfl)
             (↑(supᵢ K)) (by rw [coe_supr_of_directed dir] <;> rfl)
-        map_one' := Set.Union_lift_const _ (fun _ => 1) (fun _ => rfl) _ (by simp)
-        map_zero' := Set.Union_lift_const _ (fun _ => 0) (fun _ => rfl) _ (by simp)
+        map_one' := Set.unionᵢLift_const _ (fun _ => 1) (fun _ => rfl) _ (by simp)
+        map_zero' := Set.unionᵢLift_const _ (fun _ => 0) (fun _ => rfl) _ (by simp)
         map_mul' :=
-          Set.Union_lift_binary (coe_supr_of_directed dir) dir _ (fun _ => (· * ·))
+          Set.unionᵢLift_binary (coe_supr_of_directed dir) dir _ (fun _ => (· * ·))
             (fun _ _ _ => rfl) _ (by simp)
         map_add' :=
-          Set.Union_lift_binary (coe_supr_of_directed dir) dir _ (fun _ => (· + ·))
+          Set.unionᵢLift_binary (coe_supr_of_directed dir) dir _ (fun _ => (· + ·))
             (fun _ _ _ => rfl) _ (by simp)
         commutes' := fun r =>
-          Set.Union_lift_const _ (fun _ => algebraMap _ _ r) (fun _ => rfl) _ fun i => by
+          Set.unionᵢLift_const _ (fun _ => algebraMap _ _ r) (fun _ => rfl) _ fun i => by
             erw [AlgHom.commutes (f i)] }
 #align subalgebra.supr_lift Subalgebra.suprLift
 
@@ -1237,7 +1237,7 @@ variable [Nonempty ι] {K : ι → Subalgebra R A} {dir : Directed (· ≤ ·) K
 @[simp]
 theorem supr_lift_inclusion {i : ι} (x : K i) (h : K i ≤ T) :
     suprLift K dir f hf T hT (inclusion h x) = f i x := by
-  subst T <;> exact Set.Union_lift_inclusion _ _
+  subst T <;> exact Set.unionᵢLift_inclusion _ _
 #align subalgebra.supr_lift_inclusion Subalgebra.supr_lift_inclusion
 
 @[simp]
@@ -1247,11 +1247,11 @@ theorem supr_lift_comp_inclusion {i : ι} (h : K i ≤ T) :
 
 @[simp]
 theorem supr_lift_mk {i : ι} (x : K i) (hx : (x : A) ∈ T) :
-    suprLift K dir f hf T hT ⟨x, hx⟩ = f i x := by subst hT <;> exact Set.Union_lift_mk x hx
+    suprLift K dir f hf T hT ⟨x, hx⟩ = f i x := by subst hT <;> exact Set.unionᵢLift_mk x hx
 #align subalgebra.supr_lift_mk Subalgebra.supr_lift_mk
 
 theorem supr_lift_of_mem {i : ι} (x : T) (hx : (x : A) ∈ K i) :
-    suprLift K dir f hf T hT x = f i ⟨x, hx⟩ := by subst hT <;> exact Set.Union_lift_of_mem x hx
+    suprLift K dir f hf T hT x = f i ⟨x, hx⟩ := by subst hT <;> exact Set.unionᵢLift_of_mem x hx
 #align subalgebra.supr_lift_of_mem Subalgebra.supr_lift_of_mem
 
 end SuprLift
@@ -1347,7 +1347,7 @@ theorem range_algebra_map {R A : Type _} [CommRing R] [CommRing A] [Algebra R A]
 #align subalgebra.range_algebra_map Subalgebra.range_algebra_map
 
 instance no_zero_smul_divisors_top [NoZeroDivisors A] (S : Subalgebra R A) :
-    NoZeroSmulDivisors S A :=
+    NoZeroSMulDivisors S A :=
   ⟨fun c x h =>
     have : (c : A) = 0 ∨ x = 0 := eq_zero_or_eq_zero_of_mul_eq_zero h
     this.imp_left (@Subtype.ext_iff _ _ c 0).mpr⟩
