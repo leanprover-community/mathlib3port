@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.defs
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ instance OrderedCommMonoid.to_covariantClass_left (M : Type _) [OrderedCommMonoi
 lean 3 declaration is
   forall (M : Type.{u1}) [_inst_1 : OrderedCommMonoid.{u1} M], CovariantClass.{u1, u1} M M (Function.swap.{succ u1, succ u1, succ u1} M M (fun (ᾰ : M) (ᾰ : M) => M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toHasMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCommMonoid.toCommMonoid.{u1} M _inst_1))))))) (LE.le.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M _inst_1))))
 but is expected to have type
-  forall (M : Type.{u1}) [_inst_1 : OrderedCommMonoid.{u1} M], CovariantClass.{u1, u1} M M (Function.swap.{succ u1, succ u1, succ u1} M M (fun (ᾰ : M) (ᾰ : M) => M) (fun (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.172 : M) (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.174 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCommMonoid.toCommMonoid.{u1} M _inst_1))))) x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.172 x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.174)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.187 : M) (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.189 : M) => LE.le.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M _inst_1))) x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.187 x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.189)
+  forall (M : Type.{u1}) [_inst_1 : OrderedCommMonoid.{u1} M], CovariantClass.{u1, u1} M M (Function.swap.{succ u1, succ u1, succ u1} M M (fun (ᾰ : M) (ᾰ : M) => M) (fun (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.170 : M) (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.172 : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCommMonoid.toCommMonoid.{u1} M _inst_1))))) x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.170 x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.172)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.185 : M) (x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.187 : M) => LE.le.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M _inst_1))) x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.185 x._@.Mathlib.Algebra.Order.Monoid.Defs._hyg.187)
 Case conversion may be inaccurate. Consider using '#align ordered_comm_monoid.to_covariant_class_right OrderedCommMonoid.to_covariantClass_rightₓ'. -/
 /- This instance can be proven with `by apply_instance`.  However, `with_bot ℕ` does not
 pick up a `covariant_class M M (function.swap (*)) (≤)` instance without it (see PR #7940). -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.homogeneous_localization
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -303,11 +303,95 @@ end HasSmul
 
 variable (𝒜)
 
-/-- For `x : prime ideal of A` and any `p : num_denom_same_deg 𝒜 x`, or equivalent a numerator and a
-denominator of the same degree, we get an element `p.num / p.denom` of `Aₓ`.
--/
-def embedding (p : NumDenomSameDeg 𝒜 x) : at x :=
-  Localization.mk p.num ⟨p.denom, p.denom_mem⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "For `x : prime ideal of A` and any `p : num_denom_same_deg 𝒜 x`, or equivalent a numerator and a\ndenominator of the same degree, we get an element `p.num / p.denom` of `Aₓ`.\n-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `embedding [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`p] [":" (Term.app `NumDenomSameDeg [`𝒜 `x])] [] ")")]
+       [(Term.typeSpec ":" (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        `Localization.mk
+        [(Term.proj `p "." `num)
+         (Term.anonymousCtor
+          "⟨"
+          [(Term.proj `p "." `denom) "," (Term.proj `p "." `denom_mem)]
+          "⟩")])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Localization.mk
+       [(Term.proj `p "." `num)
+        (Term.anonymousCtor "⟨" [(Term.proj `p "." `denom) "," (Term.proj `p "." `denom_mem)] "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor "⟨" [(Term.proj `p "." `denom) "," (Term.proj `p "." `denom_mem)] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `p "." `denom_mem)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `p "." `denom)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.proj `p "." `num)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Localization.mk
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.GradedAlgebra.HomogeneousLocalization.termat_', expected 'RingTheory.GradedAlgebra.HomogeneousLocalization.termat_._@.RingTheory.GradedAlgebra.HomogeneousLocalization._hyg.17'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    For `x : prime ideal of A` and any `p : num_denom_same_deg 𝒜 x`, or equivalent a numerator and a
+    denominator of the same degree, we get an element `p.num / p.denom` of `Aₓ`.
+    -/
+  def
+    embedding
+    ( p : NumDenomSameDeg 𝒜 x ) : at x
+    := Localization.mk p . num ⟨ p . denom , p . denom_mem ⟩
 #align
   homogeneous_localization.num_denom_same_deg.embedding HomogeneousLocalization.NumDenomSameDeg.embedding
 
@@ -331,11 +415,126 @@ open HomogeneousLocalization HomogeneousLocalization.NumDenomSameDeg
 
 variable {𝒜} {x}
 
-/-- View an element of `homogeneous_localization 𝒜 x` as an element of `Aₓ` by forgetting that the
-numerator and denominator are of the same grading.
--/
-def val (y : HomogeneousLocalization 𝒜 x) : at x :=
-  (Quotient.liftOn' y (NumDenomSameDeg.embedding 𝒜 x)) fun _ _ => id
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "View an element of `homogeneous_localization 𝒜 x` as an element of `Aₓ` by forgetting that the\nnumerator and denominator are of the same grading.\n-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `val [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`y] [":" (Term.app `HomogeneousLocalization [`𝒜 `x])] [] ")")]
+       [(Term.typeSpec ":" (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        (Term.app `Quotient.liftOn' [`y (Term.app `NumDenomSameDeg.embedding [`𝒜 `x])])
+        [(Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `id))])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.app `Quotient.liftOn' [`y (Term.app `NumDenomSameDeg.embedding [`𝒜 `x])])
+       [(Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `id))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `id))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `id
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.app `Quotient.liftOn' [`y (Term.app `NumDenomSameDeg.embedding [`𝒜 `x])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `NumDenomSameDeg.embedding [`𝒜 `x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `𝒜
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `NumDenomSameDeg.embedding
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `NumDenomSameDeg.embedding [`𝒜 `x])
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Quotient.liftOn'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023,
+     term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app
+      `Quotient.liftOn'
+      [`y (Term.paren "(" (Term.app `NumDenomSameDeg.embedding [`𝒜 `x]) ")")])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.GradedAlgebra.HomogeneousLocalization.termat_', expected 'RingTheory.GradedAlgebra.HomogeneousLocalization.termat_._@.RingTheory.GradedAlgebra.HomogeneousLocalization._hyg.17'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    View an element of `homogeneous_localization 𝒜 x` as an element of `Aₓ` by forgetting that the
+    numerator and denominator are of the same grading.
+    -/
+  def
+    val
+    ( y : HomogeneousLocalization 𝒜 x ) : at x
+    := Quotient.liftOn' y NumDenomSameDeg.embedding 𝒜 x fun _ _ => id
 #align homogeneous_localization.val HomogeneousLocalization.val
 
 @[simp]
@@ -367,13 +566,434 @@ variable {α : Type _} [HasSmul α R] [HasSmul α A] [IsScalarTower α R A]
 
 variable [IsScalarTower α A A]
 
-instance : HasSmul α (HomogeneousLocalization 𝒜 x)
-    where smul m :=
-    Quotient.map' ((· • ·) m) fun c1 c2 (h : Localization.mk _ _ = Localization.mk _ _) =>
-      by
-      change Localization.mk _ _ = Localization.mk _ _
-      simp only [num_smul, denom_smul]
-      convert congr_arg (fun z : at x => m • z) h <;> rw [Localization.smul_mk] <;> rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      []
+      (Command.declSig
+       []
+       (Term.typeSpec ":" (Term.app `HasSmul [`α (Term.app `HomogeneousLocalization [`𝒜 `x])])))
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `smul
+           [`m]
+           []
+           ":="
+           (Term.app
+            `Quotient.map'
+            [(Term.app
+              (Term.paren
+               "("
+               (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·"))
+               ")")
+              [`m])
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`c1
+                `c2
+                (Term.typeAscription
+                 "("
+                 (Term.app `h [])
+                 ":"
+                 [(«term_=_»
+                   (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")])
+                   "="
+                   (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")]))]
+                 ")")]
+               []
+               "=>"
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.change
+                    "change"
+                    («term_=_»
+                     (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")])
+                     "="
+                     (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")]))
+                    [])
+                   []
+                   (Tactic.simp
+                    "simp"
+                    []
+                    []
+                    ["only"]
+                    ["["
+                     [(Tactic.simpLemma [] [] `num_smul) "," (Tactic.simpLemma [] [] `denom_smul)]
+                     "]"]
+                    [])
+                   []
+                   (Tactic.«tactic_<;>_»
+                    (Tactic.«tactic_<;>_»
+                     (convert
+                      "convert"
+                      []
+                      (Term.app
+                       `congr_arg
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`z]
+                          [(Term.typeSpec
+                            ":"
+                            (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+                          "=>"
+                          (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+                        `h])
+                      [])
+                     "<;>"
+                     (Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Localization.smul_mk)] "]")
+                      []))
+                    "<;>"
+                    (Tactic.tacticRfl "rfl"))])))))]))))]
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Quotient.map'
+       [(Term.app
+         (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")")
+         [`m])
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`c1
+           `c2
+           (Term.typeAscription
+            "("
+            (Term.app `h [])
+            ":"
+            [(«term_=_»
+              (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")])
+              "="
+              (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")]))]
+            ")")]
+          []
+          "=>"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.change
+               "change"
+               («term_=_»
+                (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")])
+                "="
+                (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")]))
+               [])
+              []
+              (Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `num_smul) "," (Tactic.simpLemma [] [] `denom_smul)]
+                "]"]
+               [])
+              []
+              (Tactic.«tactic_<;>_»
+               (Tactic.«tactic_<;>_»
+                (convert
+                 "convert"
+                 []
+                 (Term.app
+                  `congr_arg
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`z]
+                     [(Term.typeSpec
+                       ":"
+                       (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+                     "=>"
+                     (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+                   `h])
+                 [])
+                "<;>"
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Localization.smul_mk)] "]")
+                 []))
+               "<;>"
+               (Tactic.tacticRfl "rfl"))])))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`c1
+         `c2
+         (Term.typeAscription
+          "("
+          (Term.app `h [])
+          ":"
+          [(«term_=_»
+            (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")])
+            "="
+            (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")]))]
+          ")")]
+        []
+        "=>"
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.change
+             "change"
+             («term_=_»
+              (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")])
+              "="
+              (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")]))
+             [])
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["[" [(Tactic.simpLemma [] [] `num_smul) "," (Tactic.simpLemma [] [] `denom_smul)] "]"]
+             [])
+            []
+            (Tactic.«tactic_<;>_»
+             (Tactic.«tactic_<;>_»
+              (convert
+               "convert"
+               []
+               (Term.app
+                `congr_arg
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`z]
+                   [(Term.typeSpec
+                     ":"
+                     (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+                   "=>"
+                   (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+                 `h])
+               [])
+              "<;>"
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Localization.smul_mk)] "]")
+               []))
+             "<;>"
+             (Tactic.tacticRfl "rfl"))])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.change
+           "change"
+           («term_=_»
+            (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")])
+            "="
+            (Term.app `Localization.mk [(Term.hole "_") (Term.hole "_")]))
+           [])
+          []
+          (Tactic.simp
+           "simp"
+           []
+           []
+           ["only"]
+           ["[" [(Tactic.simpLemma [] [] `num_smul) "," (Tactic.simpLemma [] [] `denom_smul)] "]"]
+           [])
+          []
+          (Tactic.«tactic_<;>_»
+           (Tactic.«tactic_<;>_»
+            (convert
+             "convert"
+             []
+             (Term.app
+              `congr_arg
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`z]
+                 [(Term.typeSpec
+                   ":"
+                   (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+                 "=>"
+                 (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+               `h])
+             [])
+            "<;>"
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Localization.smul_mk)] "]")
+             []))
+           "<;>"
+           (Tactic.tacticRfl "rfl"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.«tactic_<;>_»
+        (convert
+         "convert"
+         []
+         (Term.app
+          `congr_arg
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`z]
+             [(Term.typeSpec
+               ":"
+               (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+             "=>"
+             (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+           `h])
+         [])
+        "<;>"
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Localization.smul_mk)] "]")
+         []))
+       "<;>"
+       (Tactic.tacticRfl "rfl"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.«tactic_<;>_»
+       (convert
+        "convert"
+        []
+        (Term.app
+         `congr_arg
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`z]
+            [(Term.typeSpec
+              ":"
+              (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+            "=>"
+            (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+          `h])
+        [])
+       "<;>"
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Localization.smul_mk)] "]")
+        []))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Localization.smul_mk)] "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Localization.smul_mk
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (convert
+       "convert"
+       []
+       (Term.app
+        `congr_arg
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`z]
+           [(Term.typeSpec ":" (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+           "=>"
+           (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+         `h])
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `congr_arg
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`z]
+          [(Term.typeSpec ":" (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+          "=>"
+          (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+        `h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`z]
+        [(Term.typeSpec ":" (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x))]
+        "=>"
+        (Algebra.Group.Defs.«term_•_» `m " • " `z)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_» `m " • " `z)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+      `m
+[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 73, (some 73, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (RingTheory.GradedAlgebra.HomogeneousLocalization.termat_ "at " `x)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.GradedAlgebra.HomogeneousLocalization.termat_', expected 'RingTheory.GradedAlgebra.HomogeneousLocalization.termat_._@.RingTheory.GradedAlgebra.HomogeneousLocalization._hyg.17'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+instance
+  : HasSmul α HomogeneousLocalization 𝒜 x
+  where
+    smul
+      m
+      :=
+      Quotient.map'
+        ( · • · ) m
+          fun
+            c1 c2 ( h : Localization.mk _ _ = Localization.mk _ _ )
+              =>
+              by
+                change Localization.mk _ _ = Localization.mk _ _
+                  simp only [ num_smul , denom_smul ]
+                  convert congr_arg fun z : at x => m • z h <;> rw [ Localization.smul_mk ] <;> rfl
 
 @[simp]
 theorem smul_val (y : HomogeneousLocalization 𝒜 x) (n : α) : (n • y).val = n • y.val :=

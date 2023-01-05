@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.basic
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -357,28 +357,531 @@ variable (α) (β)
 -- mathport name: exprΩ
 local notation "Ω" => orbitRel.Quotient α β
 
-/-- Decomposition of a type `X` as a disjoint union of its orbits under a group action.
-
-This version is expressed in terms of `mul_action.orbit_rel.quotient.orbit` instead of
-`mul_action.orbit`, to avoid mentioning `quotient.out'`. -/
-@[to_additive
-      "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction.\n\nThis version is expressed in terms of `add_action.orbit_rel.quotient.orbit` instead of\n`add_action.orbit`, to avoid mentioning `quotient.out'`. "]
-def selfEquivSigmaOrbits' : β ≃ Σω : Ω, ω.orbit :=
-  calc
-    β ≃ Σω : Ω, { b // Quotient.mk' b = ω } := (Equiv.sigmaFiberEquiv Quotient.mk').symm
-    _ ≃ Σω : Ω, ω.orbit :=
-      Equiv.sigmaCongrRight fun ω =>
-        Equiv.subtypeEquivRight fun x => orbitRel.Quotient.mem_orbit.symm
-    
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Decomposition of a type `X` as a disjoint union of its orbits under a group action.\n\nThis version is expressed in terms of `mul_action.orbit_rel.quotient.orbit` instead of\n`mul_action.orbit`, to avoid mentioning `quotient.out'`. -/")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive
+           "to_additive"
+           []
+           []
+           (to_additiveRest
+            []
+            []
+            [(str
+              "\"Decomposition of a type `X` as a disjoint union of its orbits under an additive group\\naction.\\n\\nThis version is expressed in terms of `add_action.orbit_rel.quotient.orbit` instead of\\n`add_action.orbit`, to avoid mentioning `quotient.out'`. \"")])))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `selfEquivSigmaOrbits' [])
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Logic.Equiv.Defs.«term_≃_»
+          `β
+          " ≃ "
+          («termΣ_,_»
+           "Σ"
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders
+             [(Lean.binderIdent `ω)]
+             [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+           ","
+           (Term.proj `ω "." `orbit))))])
+      (Command.declValSimple
+       ":="
+       (calc
+        "calc"
+        (calcStep
+         (Logic.Equiv.Defs.«term_≃_»
+          `β
+          " ≃ "
+          («termΣ_,_»
+           "Σ"
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders
+             [(Lean.binderIdent `ω)]
+             [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+           ","
+           («term{_:_//_}» "{" `b [] "//" («term_=_» (Term.app `Quotient.mk' [`b]) "=" `ω) "}")))
+         ":="
+         (Term.proj (Term.app `Equiv.sigmaFiberEquiv [`Quotient.mk']) "." `symm))
+        [(calcStep
+          (Logic.Equiv.Defs.«term_≃_»
+           (Term.hole "_")
+           " ≃ "
+           («termΣ_,_»
+            "Σ"
+            (Lean.explicitBinders
+             (Lean.unbracketedExplicitBinders
+              [(Lean.binderIdent `ω)]
+              [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+            ","
+            (Term.proj `ω "." `orbit)))
+          ":="
+          (Term.app
+           `Equiv.sigmaCongrRight
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`ω]
+              []
+              "=>"
+              (Term.app
+               `Equiv.subtypeEquivRight
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`x]
+                  []
+                  "=>"
+                  (Term.proj `orbitRel.Quotient.mem_orbit "." `symm)))])))]))])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calc
+       "calc"
+       (calcStep
+        (Logic.Equiv.Defs.«term_≃_»
+         `β
+         " ≃ "
+         («termΣ_,_»
+          "Σ"
+          (Lean.explicitBinders
+           (Lean.unbracketedExplicitBinders
+            [(Lean.binderIdent `ω)]
+            [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+          ","
+          («term{_:_//_}» "{" `b [] "//" («term_=_» (Term.app `Quotient.mk' [`b]) "=" `ω) "}")))
+        ":="
+        (Term.proj (Term.app `Equiv.sigmaFiberEquiv [`Quotient.mk']) "." `symm))
+       [(calcStep
+         (Logic.Equiv.Defs.«term_≃_»
+          (Term.hole "_")
+          " ≃ "
+          («termΣ_,_»
+           "Σ"
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders
+             [(Lean.binderIdent `ω)]
+             [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+           ","
+           (Term.proj `ω "." `orbit)))
+         ":="
+         (Term.app
+          `Equiv.sigmaCongrRight
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`ω]
+             []
+             "=>"
+             (Term.app
+              `Equiv.subtypeEquivRight
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`x]
+                 []
+                 "=>"
+                 (Term.proj `orbitRel.Quotient.mem_orbit "." `symm)))])))]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Equiv.sigmaCongrRight
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`ω]
+          []
+          "=>"
+          (Term.app
+           `Equiv.subtypeEquivRight
+           [(Term.fun
+             "fun"
+             (Term.basicFun [`x] [] "=>" (Term.proj `orbitRel.Quotient.mem_orbit "." `symm)))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`ω]
+        []
+        "=>"
+        (Term.app
+         `Equiv.subtypeEquivRight
+         [(Term.fun
+           "fun"
+           (Term.basicFun [`x] [] "=>" (Term.proj `orbitRel.Quotient.mem_orbit "." `symm)))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Equiv.subtypeEquivRight
+       [(Term.fun
+         "fun"
+         (Term.basicFun [`x] [] "=>" (Term.proj `orbitRel.Quotient.mem_orbit "." `symm)))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun [`x] [] "=>" (Term.proj `orbitRel.Quotient.mem_orbit "." `symm)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `orbitRel.Quotient.mem_orbit "." `symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `orbitRel.Quotient.mem_orbit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Equiv.subtypeEquivRight
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ω
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Equiv.sigmaCongrRight
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Logic.Equiv.Defs.«term_≃_»
+       (Term.hole "_")
+       " ≃ "
+       («termΣ_,_»
+        "Σ"
+        (Lean.explicitBinders
+         (Lean.unbracketedExplicitBinders
+          [(Lean.binderIdent `ω)]
+          [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+        ","
+        (Term.proj `ω "." `orbit)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («termΣ_,_»
+       "Σ"
+       (Lean.explicitBinders
+        (Lean.unbracketedExplicitBinders
+         [(Lean.binderIdent `ω)]
+         [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+       ","
+       (Term.proj `ω "." `orbit))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `ω "." `orbit)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `ω
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'MulAction.GroupTheory.GroupAction.Basic.termΩ', expected 'MulAction.GroupTheory.GroupAction.Basic.termΩ._@.GroupTheory.GroupAction.Basic._hyg.9'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      Decomposition of a type `X` as a disjoint union of its orbits under a group action.
+      
+      This version is expressed in terms of `mul_action.orbit_rel.quotient.orbit` instead of
+      `mul_action.orbit`, to avoid mentioning `quotient.out'`. -/
+    @[
+      to_additive
+        "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction.\n\nThis version is expressed in terms of `add_action.orbit_rel.quotient.orbit` instead of\n`add_action.orbit`, to avoid mentioning `quotient.out'`. "
+      ]
+  def
+    selfEquivSigmaOrbits'
+    : β ≃ Σ ω : Ω , ω . orbit
+    :=
+      calc
+        β ≃ Σ ω : Ω , { b // Quotient.mk' b = ω } := Equiv.sigmaFiberEquiv Quotient.mk' . symm
+        _ ≃ Σ ω : Ω , ω . orbit
+          :=
+          Equiv.sigmaCongrRight
+            fun ω => Equiv.subtypeEquivRight fun x => orbitRel.Quotient.mem_orbit . symm
 #align mul_action.self_equiv_sigma_orbits' MulAction.selfEquivSigmaOrbits'
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Decomposition of a type `X` as a disjoint union of its orbits under a group action. -/")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive
+           "to_additive"
+           []
+           []
+           (to_additiveRest
+            []
+            []
+            [(str
+              "\"Decomposition of a type `X` as a disjoint union of its orbits under an additive group\\naction.\"")])))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `selfEquivSigmaOrbits [])
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Logic.Equiv.Defs.«term_≃_»
+          `β
+          " ≃ "
+          («termΣ_,_»
+           "Σ"
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders
+             [(Lean.binderIdent `ω)]
+             [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+           ","
+           (Term.app `orbit [`α (Term.proj `ω "." `out')]))))])
+      (Command.declValSimple
+       ":="
+       («term_<|_»
+        (Term.proj (Term.app `selfEquivSigmaOrbits' [`α `β]) "." `trans)
+        "<|"
+        (Term.app
+         `Equiv.sigmaCongrRight
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`i]
+            []
+            "=>"
+            («term_<|_»
+             `Equiv.Set.ofEq
+             "<|"
+             (Term.app
+              `orbitRel.Quotient.orbit_eq_orbit_out
+              [(Term.hole "_") `Quotient.out_eq']))))]))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.proj (Term.app `selfEquivSigmaOrbits' [`α `β]) "." `trans)
+       "<|"
+       (Term.app
+        `Equiv.sigmaCongrRight
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`i]
+           []
+           "=>"
+           («term_<|_»
+            `Equiv.Set.ofEq
+            "<|"
+            (Term.app
+             `orbitRel.Quotient.orbit_eq_orbit_out
+             [(Term.hole "_") `Quotient.out_eq']))))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Equiv.sigmaCongrRight
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`i]
+          []
+          "=>"
+          («term_<|_»
+           `Equiv.Set.ofEq
+           "<|"
+           (Term.app `orbitRel.Quotient.orbit_eq_orbit_out [(Term.hole "_") `Quotient.out_eq']))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`i]
+        []
+        "=>"
+        («term_<|_»
+         `Equiv.Set.ofEq
+         "<|"
+         (Term.app `orbitRel.Quotient.orbit_eq_orbit_out [(Term.hole "_") `Quotient.out_eq']))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `Equiv.Set.ofEq
+       "<|"
+       (Term.app `orbitRel.Quotient.orbit_eq_orbit_out [(Term.hole "_") `Quotient.out_eq']))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `orbitRel.Quotient.orbit_eq_orbit_out [(Term.hole "_") `Quotient.out_eq'])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Quotient.out_eq'
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `orbitRel.Quotient.orbit_eq_orbit_out
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `Equiv.Set.ofEq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Equiv.sigmaCongrRight
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.proj (Term.app `selfEquivSigmaOrbits' [`α `β]) "." `trans)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `selfEquivSigmaOrbits' [`α `β])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `selfEquivSigmaOrbits'
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `selfEquivSigmaOrbits' [`α `β])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Logic.Equiv.Defs.«term_≃_»
+       `β
+       " ≃ "
+       («termΣ_,_»
+        "Σ"
+        (Lean.explicitBinders
+         (Lean.unbracketedExplicitBinders
+          [(Lean.binderIdent `ω)]
+          [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+        ","
+        (Term.app `orbit [`α (Term.proj `ω "." `out')])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («termΣ_,_»
+       "Σ"
+       (Lean.explicitBinders
+        (Lean.unbracketedExplicitBinders
+         [(Lean.binderIdent `ω)]
+         [":" (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")]))
+       ","
+       (Term.app `orbit [`α (Term.proj `ω "." `out')]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `orbit [`α (Term.proj `ω "." `out')])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `ω "." `out')
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `ω
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `orbit
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (MulAction.GroupTheory.GroupAction.Basic.termΩ "Ω")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'MulAction.GroupTheory.GroupAction.Basic.termΩ', expected 'MulAction.GroupTheory.GroupAction.Basic.termΩ._@.GroupTheory.GroupAction.Basic._hyg.9'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Decomposition of a type `X` as a disjoint union of its orbits under a group action. -/
-@[to_additive
-      "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction."]
-def selfEquivSigmaOrbits : β ≃ Σω : Ω, orbit α ω.out' :=
-  (selfEquivSigmaOrbits' α β).trans <|
-    Equiv.sigmaCongrRight fun i =>
-      Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ Quotient.out_eq'
+    @[
+      to_additive
+        "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction."
+      ]
+  def
+    selfEquivSigmaOrbits
+    : β ≃ Σ ω : Ω , orbit α ω . out'
+    :=
+      selfEquivSigmaOrbits' α β . trans
+        <|
+        Equiv.sigmaCongrRight
+          fun i => Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ Quotient.out_eq'
 #align mul_action.self_equiv_sigma_orbits MulAction.selfEquivSigmaOrbits
 
 variable {α β}

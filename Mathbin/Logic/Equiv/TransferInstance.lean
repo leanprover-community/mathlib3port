@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.equiv.transfer_instance
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -439,7 +439,7 @@ protected theorem is_domain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) 
 
 /-- Transfer `has_rat_cast` across an `equiv` -/
 @[reducible]
-protected def hasRatCast [HasRatCast β] : HasRatCast α where ratCast n := e.symm n
+protected def hasRatCast [RatCast β] : RatCast α where ratCast n := e.symm n
 #align equiv.has_rat_cast Equiv.hasRatCast
 
 /-- Transfer `division_ring` across an `equiv` -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.push_neg
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -300,7 +300,548 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
   Prod.mk <$> ident <*> (some <$> (tk "with" *> ident) <|> return none)
 #align name_with_opt name_with_opt
 
--- failed to format: unknown constant 'term.pseudo.antiquot'
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Transforms the goal into its contrapositive.\n\n* `contrapose`     turns a goal `P → Q` into `¬ Q → ¬ P`\n* `contrapose!`    turns a goal `P → Q` into `¬ Q → ¬ P` and pushes negations inside `P` and `Q`\n  using `push_neg`\n* `contrapose h`   first reverts the local assumption `h`, and then uses `contrapose` and `intro h`\n* `contrapose! h`  first reverts the local assumption `h`, and then uses `contrapose!` and `intro h`\n* `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis\n-/")]
+      []
+      []
+      []
+      [(Command.unsafe "unsafe")]
+      [])
+     (Command.def
+      "def"
+      (Command.declId `tactic.interactive.contrapose [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`push]
+         [":"
+          (Term.app `parse [(Tactic.PushNeg.parser.optional (Term.app `tk [(str "\"!\"")]) "?")])]
+         []
+         ")")]
+       [(Term.typeSpec
+         ":"
+         (Term.arrow
+          (Term.app `parse [(Tactic.PushNeg.parser.optional `name_with_opt "?")])
+          "→"
+          (Term.app `tactic [`Unit])))])
+      (Command.declValEqns
+       (Term.matchAltsWhereDecls
+        (Term.matchAlts
+         [(Term.matchAlt
+           "|"
+           [[(Term.app `some [(Term.tuple "(" [`h "," [`h']] ")")])]]
+           "=>"
+           («term_>>_»
+            («term_>>_»
+             («term_>>_»
+              («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert)
+              ">>"
+              (Term.app `tactic.interactive.contrapose [`none]))
+             ">>"
+             (Term.app `intro [(Term.app (Term.proj `h' "." `getOrElse) [`h])]))
+            ">>"
+            `skip))
+          (Term.matchAlt
+           "|"
+           [[`none]]
+           "=>"
+           (Term.do
+            "do"
+            (Term.doSeqIndent
+             [(Term.doSeqItem
+               (Term.doLetArrow
+                "let"
+                []
+                (Term.doPatDecl
+                 (Qq.«termQ(__)»
+                  "q("
+                  (Term.arrow
+                   (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `P ")") [])
+                   "→"
+                   (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `Q ")") []))
+                  []
+                  ")")
+                 "←"
+                 (Term.doExpr `target)
+                 ["|"
+                  (Term.doSeqIndent
+                   [(Term.doSeqItem
+                     (Term.doExpr
+                      (Term.app
+                       `fail
+                       [(str
+                         "\"The goal is not an implication, and you didn't specify an assumption\"")]))
+                     [])])]))
+               [])
+              (Term.doSeqItem
+               (Term.doLetArrow
+                "let"
+                []
+                (Term.doIdDecl
+                 `cp
+                 []
+                 "←"
+                 (Term.doExpr
+                  («term_<|>_»
+                   (Term.app
+                    `mk_mapp
+                    [(Term.doubleQuotedName "`" "`" `imp_of_not_imp_not)
+                     («term[_]» "[" [`P "," `Q] "]")])
+                   "<|>"
+                   (Term.app
+                    `fail
+                    [(str "\"contrapose only applies to nondependent arrows between props\"")])))))
+               [])
+              (Term.doSeqItem (Term.doExpr (Term.app `apply [`cp])) [])
+              (Term.doSeqItem
+               (Term.doExpr
+                («term_<|_»
+                 (Term.app `when [`push])
+                 "<|"
+                 (Term.app
+                  `try
+                  [(Term.app
+                    `tactic.interactive.push_neg
+                    [(Term.app `loc.ns [(«term[_]» "[" [`none] "]")])])])))
+               [])])))])
+        []))
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.do
+       "do"
+       (Term.doSeqIndent
+        [(Term.doSeqItem
+          (Term.doLetArrow
+           "let"
+           []
+           (Term.doPatDecl
+            (Qq.«termQ(__)»
+             "q("
+             (Term.arrow
+              (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `P ")") [])
+              "→"
+              (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `Q ")") []))
+             []
+             ")")
+            "←"
+            (Term.doExpr `target)
+            ["|"
+             (Term.doSeqIndent
+              [(Term.doSeqItem
+                (Term.doExpr
+                 (Term.app
+                  `fail
+                  [(str
+                    "\"The goal is not an implication, and you didn't specify an assumption\"")]))
+                [])])]))
+          [])
+         (Term.doSeqItem
+          (Term.doLetArrow
+           "let"
+           []
+           (Term.doIdDecl
+            `cp
+            []
+            "←"
+            (Term.doExpr
+             («term_<|>_»
+              (Term.app
+               `mk_mapp
+               [(Term.doubleQuotedName "`" "`" `imp_of_not_imp_not)
+                («term[_]» "[" [`P "," `Q] "]")])
+              "<|>"
+              (Term.app
+               `fail
+               [(str "\"contrapose only applies to nondependent arrows between props\"")])))))
+          [])
+         (Term.doSeqItem (Term.doExpr (Term.app `apply [`cp])) [])
+         (Term.doSeqItem
+          (Term.doExpr
+           («term_<|_»
+            (Term.app `when [`push])
+            "<|"
+            (Term.app
+             `try
+             [(Term.app
+               `tactic.interactive.push_neg
+               [(Term.app `loc.ns [(«term[_]» "[" [`none] "]")])])])))
+          [])]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.doSeqIndent', expected 'Lean.Parser.Term.doSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.app `when [`push])
+       "<|"
+       (Term.app
+        `try
+        [(Term.app
+          `tactic.interactive.push_neg
+          [(Term.app `loc.ns [(«term[_]» "[" [`none] "]")])])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `try
+       [(Term.app `tactic.interactive.push_neg [(Term.app `loc.ns [(«term[_]» "[" [`none] "]")])])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `tactic.interactive.push_neg [(Term.app `loc.ns [(«term[_]» "[" [`none] "]")])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `loc.ns [(«term[_]» "[" [`none] "]")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term[_]» "[" [`none] "]")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `none
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `loc.ns
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `loc.ns [(«term[_]» "[" [`none] "]")])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tactic.interactive.push_neg
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app
+      `tactic.interactive.push_neg
+      [(Term.paren "(" (Term.app `loc.ns [(«term[_]» "[" [`none] "]")]) ")")])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `try
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.app `when [`push])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `push
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `when
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, doElem))
+      (Term.app `apply [`cp])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `cp
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `apply
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, doElem)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, doElem))
+      («term_<|>_»
+       (Term.app
+        `mk_mapp
+        [(Term.doubleQuotedName "`" "`" `imp_of_not_imp_not) («term[_]» "[" [`P "," `Q] "]")])
+       "<|>"
+       (Term.app `fail [(str "\"contrapose only applies to nondependent arrows between props\"")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `fail [(str "\"contrapose only applies to nondependent arrows between props\"")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (str "\"contrapose only applies to nondependent arrows between props\"")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `fail
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 20 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 20, term))
+      (Term.app
+       `mk_mapp
+       [(Term.doubleQuotedName "`" "`" `imp_of_not_imp_not) («term[_]» "[" [`P "," `Q] "]")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term[_]» "[" [`P "," `Q] "]")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Q
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `P
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.doubleQuotedName', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.doubleQuotedName', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.doubleQuotedName "`" "`" `imp_of_not_imp_not)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mk_mapp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 21 >? 1022, (some 1023, term) <=? (some 20, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 20, (some 20, term) <=? (none, doElem)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.doPatDecl', expected 'Lean.Parser.Term.doIdDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.doSeqIndent', expected 'Lean.Parser.Term.doSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, doElem))
+      (Term.app
+       `fail
+       [(str "\"The goal is not an implication, and you didn't specify an assumption\"")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (str "\"The goal is not an implication, and you didn't specify an assumption\"")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `fail
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, doElem)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `target
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Qq.«termQ(__)»
+       "q("
+       (Term.arrow
+        (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `P ")") [])
+        "→"
+        (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `Q ")") []))
+       []
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `P ")") [])
+       "→"
+       (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `Q ")") []))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `Q ")") [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'antiquotName'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'antiquotNestedExpr', expected 'ident'
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (term.pseudo.antiquot "$" [] (antiquotNestedExpr "(" `P ")") [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'antiquotName'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'antiquotNestedExpr', expected 'ident'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1023, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `none
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_>>_»
+       («term_>>_»
+        («term_>>_»
+         («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert)
+         ">>"
+         (Term.app `tactic.interactive.contrapose [`none]))
+        ">>"
+        (Term.app `intro [(Term.app (Term.proj `h' "." `getOrElse) [`h])]))
+       ">>"
+       `skip)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `skip
+[PrettyPrinter.parenthesize] ...precedences are 60 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 60, term))
+      («term_>>_»
+       («term_>>_»
+        («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert)
+        ">>"
+        (Term.app `tactic.interactive.contrapose [`none]))
+       ">>"
+       (Term.app `intro [(Term.app (Term.proj `h' "." `getOrElse) [`h])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `intro [(Term.app (Term.proj `h' "." `getOrElse) [`h])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `h' "." `getOrElse) [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `h' "." `getOrElse)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `h'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `h' "." `getOrElse) [`h])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `intro
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 60 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 60, term))
+      («term_>>_»
+       («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert)
+       ">>"
+       (Term.app `tactic.interactive.contrapose [`none]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `tactic.interactive.contrapose [`none])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `none
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tactic.interactive.contrapose
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 60 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 60, term))
+      («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `revert
+[PrettyPrinter.parenthesize] ...precedences are 56 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 55, term))
+      (Term.app `get_local [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `get_local
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 55 >? 1022, (some 1023, term) <=? (some 55, term)
+[PrettyPrinter.parenthesize] ...precedences are 61 >? 55, (some 56, term) <=? (some 60, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert)
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 61 >? 60, (some 60, term) <=? (some 60, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_>>_»
+      (Term.paren "(" («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert) ")")
+      ">>"
+      (Term.app `tactic.interactive.contrapose [`none]))
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 61 >? 60, (some 60, term) <=? (some 60, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_>>_»
+      (Term.paren
+       "("
+       («term_>>_»
+        (Term.paren "(" («term_>>=_» (Term.app `get_local [`h]) ">>=" `revert) ")")
+        ">>"
+        (Term.app `tactic.interactive.contrapose [`none]))
+       ")")
+      ">>"
+      (Term.app `intro [(Term.paren "(" (Term.app (Term.proj `h' "." `getOrElse) [`h]) ")")]))
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 60, (some 60,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `some [(Term.tuple "(" [`h "," [`h']] ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.tuple', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.tuple', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.tuple "(" [`h "," [`h']] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `some
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.arrow
+       (Term.app `parse [(Tactic.PushNeg.parser.optional `name_with_opt "?")])
+       "→"
+       (Term.app `tactic [`Unit]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `tactic [`Unit])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Unit
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tactic
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (Term.app `parse [(Tactic.PushNeg.parser.optional `name_with_opt "?")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.PushNeg.parser.optional', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.PushNeg.parser.optional', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.PushNeg.parser.optional `name_with_opt "?")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.PushNeg.parser.optional', expected 'Tactic.PushNeg.parser.optional._@.Tactic.PushNeg._hyg.16'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Transforms the goal into its contrapositive.
       
@@ -314,15 +855,11 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
     unsafe
   def
     tactic.interactive.contrapose
-    ( push : parse ( tk "!" ) ? ) : parse name_with_opt ? → tactic Unit
+    ( push : parse tk "!" ? ) : parse name_with_opt ? → tactic Unit
     |
         some ( h , h' )
         =>
-        (
-            ( ( get_local h >>= revert ) >> tactic.interactive.contrapose none )
-              >>
-              intro ( h' . getOrElse h )
-            )
+        get_local h >>= revert >> tactic.interactive.contrapose none >> intro h' . getOrElse h
           >>
           skip
       |
@@ -341,7 +878,7 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
                   <|>
                   fail "contrapose only applies to nondependent arrows between props"
             apply cp
-            when push <| try ( tactic.interactive.push_neg ( loc.ns [ none ] ) )
+            when push <| try tactic.interactive.push_neg loc.ns [ none ]
 #align tactic.interactive.contrapose tactic.interactive.contrapose
 
 add_tactic_doc

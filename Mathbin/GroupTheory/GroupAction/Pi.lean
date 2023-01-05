@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module group_theory.group_action.pi
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -379,7 +379,7 @@ section Extend
 lean 3 declaration is
   forall {R : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} [_inst_1 : HasSmul.{u1, u4} R γ] (r : R) (f : α -> β) (g : α -> γ) (e : β -> γ), Eq.{max (succ u3) (succ u4)} (β -> γ) (Function.extend.{succ u2, succ u3, succ u4} α β γ f (HasSmul.smul.{u1, max u2 u4} R (α -> γ) (Function.hasSMul.{u2, u1, u4} α R γ _inst_1) r g) (HasSmul.smul.{u1, max u3 u4} R (β -> γ) (Function.hasSMul.{u3, u1, u4} β R γ _inst_1) r e)) (HasSmul.smul.{u1, max u3 u4} R (β -> γ) (Function.hasSMul.{u3, u1, u4} β R γ _inst_1) r (Function.extend.{succ u2, succ u3, succ u4} α β γ f g e))
 but is expected to have type
-  forall {R : Type.{u4}} {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : SMul.{u4, u1} R γ] (r : R) (f : α -> β) (g : α -> γ) (e : β -> γ), Eq.{max (succ u2) (succ u1)} (β -> γ) (Function.extend.{succ u3, succ u2, succ u1} α β γ f (HSMul.hSMul.{u4, max u3 u1, max u3 u1} R (α -> γ) (α -> γ) (instHSMul.{u4, max u3 u1} R (α -> γ) (Pi.instSMul.{u3, u1, u4} α R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2665 : α) => γ) (fun (i : α) => _inst_1))) r g) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2668 : β) => γ) (fun (i : β) => _inst_1))) r e)) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.Logic.Function.Basic._hyg.7436 : β) => γ) (fun (i : β) => _inst_1))) r (Function.extend.{succ u3, succ u2, succ u1} α β γ f g e))
+  forall {R : Type.{u4}} {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : SMul.{u4, u1} R γ] (r : R) (f : α -> β) (g : α -> γ) (e : β -> γ), Eq.{max (succ u2) (succ u1)} (β -> γ) (Function.extend.{succ u3, succ u2, succ u1} α β γ f (HSMul.hSMul.{u4, max u3 u1, max u3 u1} R (α -> γ) (α -> γ) (instHSMul.{u4, max u3 u1} R (α -> γ) (Pi.instSMul.{u3, u1, u4} α R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2665 : α) => γ) (fun (i : α) => _inst_1))) r g) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.GroupTheory.GroupAction.Pi._hyg.2668 : β) => γ) (fun (i : β) => _inst_1))) r e)) (HSMul.hSMul.{u4, max u2 u1, max u2 u1} R (β -> γ) (β -> γ) (instHSMul.{u4, max u2 u1} R (β -> γ) (Pi.instSMul.{u2, u1, u4} β R (fun (a._@.Mathlib.Logic.Function.Basic._hyg.7304 : β) => γ) (fun (i : β) => _inst_1))) r (Function.extend.{succ u3, succ u2, succ u1} α β γ f g e))
 Case conversion may be inaccurate. Consider using '#align function.extend_smul Function.extend_smulₓ'. -/
 @[to_additive]
 theorem Function.extend_smul {R α β γ : Type _} [HasSmul R γ] (r : R) (f : α → β) (g : α → γ)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.ring
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -876,23 +876,524 @@ open Tactic.Ring (normalize normalize_mode.horner)
 -- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.\n-/")]
+      []
+      []
+      []
+      [(Command.unsafe "unsafe")]
+      [])
+     (Command.def
+      "def"
+      (Command.declId `ring_nf [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`red]
+         [":"
+          (Term.app
+           `parse
+           [(Conv.Interactive.Tactic.Ring.parser.optional
+             (Term.app `lean.parser.tk [(str "\"!\"")])
+             "?")])]
+         []
+         ")")
+        (Term.explicitBinder "(" [`SOP] [":" (Term.app `parse [`ring.mode])] [] ")")
+        (Term.explicitBinder
+         "("
+         [`cfg]
+         [":" `Ring.RingNfCfg]
+         [(Term.binderDefault ":=" (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}"))]
+         ")")]
+       [(Term.typeSpec ":" (Term.app `conv [`Unit]))])
+      (Command.declValSimple
+       ":="
+       (Term.let
+        "let"
+        (Term.letDecl
+         (Term.letIdDecl
+          `transp
+          []
+          []
+          ":="
+          (termIfThenElse
+           "if"
+           (Term.proj `red "." `isSome)
+           "then"
+           `semireducible
+           "else"
+           `reducible)))
+        []
+        («term_<|>_»
+         (Term.app
+          `replace_lhs
+          [(Term.app `normalize [`transp `SOP (Term.proj `cfg "." `recursive)])])
+         "<|>"
+         (Term.app `fail [(str "\"ring_nf failed to simplify\"")])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.let
+       "let"
+       (Term.letDecl
+        (Term.letIdDecl
+         `transp
+         []
+         []
+         ":="
+         (termIfThenElse
+          "if"
+          (Term.proj `red "." `isSome)
+          "then"
+          `semireducible
+          "else"
+          `reducible)))
+       []
+       («term_<|>_»
+        (Term.app
+         `replace_lhs
+         [(Term.app `normalize [`transp `SOP (Term.proj `cfg "." `recursive)])])
+        "<|>"
+        (Term.app `fail [(str "\"ring_nf failed to simplify\"")])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|>_»
+       (Term.app
+        `replace_lhs
+        [(Term.app `normalize [`transp `SOP (Term.proj `cfg "." `recursive)])])
+       "<|>"
+       (Term.app `fail [(str "\"ring_nf failed to simplify\"")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `fail [(str "\"ring_nf failed to simplify\"")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (str "\"ring_nf failed to simplify\"")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `fail
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 20 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 20, term))
+      (Term.app `replace_lhs [(Term.app `normalize [`transp `SOP (Term.proj `cfg "." `recursive)])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `normalize [`transp `SOP (Term.proj `cfg "." `recursive)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `cfg "." `recursive)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `cfg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `SOP
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `transp
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `normalize
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `normalize [`transp `SOP (Term.proj `cfg "." `recursive)])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `replace_lhs
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 21 >? 1022, (some 1023, term) <=? (some 20, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 20, (some 20, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (termIfThenElse "if" (Term.proj `red "." `isSome) "then" `semireducible "else" `reducible)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `reducible
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `semireducible
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `red "." `isSome)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `red
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app `conv [`Unit])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Unit
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `conv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.binderDefault', expected 'Lean.Parser.Term.binderTactic'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Ring.RingNfCfg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `parse [`ring.mode])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ring.mode
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `parse
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `parse
+       [(Conv.Interactive.Tactic.Ring.parser.optional
+         (Term.app `lean.parser.tk [(str "\"!\"")])
+         "?")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Conv.Interactive.Tactic.Ring.parser.optional', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Conv.Interactive.Tactic.Ring.parser.optional', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Conv.Interactive.Tactic.Ring.parser.optional (Term.app `lean.parser.tk [(str "\"!\"")]) "?")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Conv.Interactive.Tactic.Ring.parser.optional', expected 'Conv.Interactive.Tactic.Ring.parser.optional._@.Tactic.Ring._hyg.31'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /--
-Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
--/
-unsafe def ring_nf (red : parse (lean.parser.tk "!")?) (SOP : parse ring.mode)
-    (cfg : Ring.RingNfCfg := { }) : conv Unit :=
-  let transp := if red.isSome then semireducible else reducible
-  replace_lhs (normalize transp SOP cfg.recursive) <|> fail "ring_nf failed to simplify"
+      Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
+      -/
+    unsafe
+  def
+    ring_nf
+    ( red : parse lean.parser.tk "!" ? ) ( SOP : parse ring.mode ) ( cfg : Ring.RingNfCfg := { } )
+      : conv Unit
+    :=
+      let
+        transp := if red . isSome then semireducible else reducible
+        replace_lhs normalize transp SOP cfg . recursive <|> fail "ring_nf failed to simplify"
 #align conv.interactive.ring_nf conv.interactive.ring_nf
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.\n-/")]
+      []
+      []
+      []
+      [(Command.unsafe "unsafe")]
+      [])
+     (Command.def
+      "def"
+      (Command.declId `ring [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`red]
+         [":"
+          (Term.app
+           `parse
+           [(Conv.Interactive.Tactic.Ring.parser.optional
+             (Term.app `lean.parser.tk [(str "\"!\"")])
+             "?")])]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.app `conv [`Unit]))])
+      (Command.declValSimple
+       ":="
+       (Term.let
+        "let"
+        (Term.letDecl
+         (Term.letIdDecl
+          `transp
+          []
+          []
+          ":="
+          (termIfThenElse
+           "if"
+           (Term.proj `red "." `isSome)
+           "then"
+           `semireducible
+           "else"
+           `reducible)))
+        []
+        («term_<|>_»
+         (Term.app `discharge_eq_lhs [(Term.app `ring1 [`red])])
+         "<|>"
+         («term_<|>_»
+          («term_>>_»
+           (Term.app `replace_lhs [(Term.app `normalize [`transp `NormalizeMode.horner])])
+           ">>"
+           (Term.app `trace [(str "\"Try this: ring_nf\"")]))
+          "<|>"
+          (Term.app `fail [(str "\"ring failed to simplify\"")]))))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.let
+       "let"
+       (Term.letDecl
+        (Term.letIdDecl
+         `transp
+         []
+         []
+         ":="
+         (termIfThenElse
+          "if"
+          (Term.proj `red "." `isSome)
+          "then"
+          `semireducible
+          "else"
+          `reducible)))
+       []
+       («term_<|>_»
+        (Term.app `discharge_eq_lhs [(Term.app `ring1 [`red])])
+        "<|>"
+        («term_<|>_»
+         («term_>>_»
+          (Term.app `replace_lhs [(Term.app `normalize [`transp `NormalizeMode.horner])])
+          ">>"
+          (Term.app `trace [(str "\"Try this: ring_nf\"")]))
+         "<|>"
+         (Term.app `fail [(str "\"ring failed to simplify\"")]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|>_»
+       (Term.app `discharge_eq_lhs [(Term.app `ring1 [`red])])
+       "<|>"
+       («term_<|>_»
+        («term_>>_»
+         (Term.app `replace_lhs [(Term.app `normalize [`transp `NormalizeMode.horner])])
+         ">>"
+         (Term.app `trace [(str "\"Try this: ring_nf\"")]))
+        "<|>"
+        (Term.app `fail [(str "\"ring failed to simplify\"")])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|>_»
+       («term_>>_»
+        (Term.app `replace_lhs [(Term.app `normalize [`transp `NormalizeMode.horner])])
+        ">>"
+        (Term.app `trace [(str "\"Try this: ring_nf\"")]))
+       "<|>"
+       (Term.app `fail [(str "\"ring failed to simplify\"")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `fail [(str "\"ring failed to simplify\"")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (str "\"ring failed to simplify\"")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `fail
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 20 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 20, term))
+      («term_>>_»
+       (Term.app `replace_lhs [(Term.app `normalize [`transp `NormalizeMode.horner])])
+       ">>"
+       (Term.app `trace [(str "\"Try this: ring_nf\"")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `trace [(str "\"Try this: ring_nf\"")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'str', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (str "\"Try this: ring_nf\"")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `trace
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 60 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 60, term))
+      (Term.app `replace_lhs [(Term.app `normalize [`transp `NormalizeMode.horner])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `normalize [`transp `NormalizeMode.horner])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `NormalizeMode.horner
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `transp
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `normalize
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `normalize [`transp `NormalizeMode.horner])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `replace_lhs
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 61 >? 1022, (some 1023, term) <=? (some 60, term)
+[PrettyPrinter.parenthesize] ...precedences are 21 >? 60, (some 60, term) <=? (some 20, term)
+[PrettyPrinter.parenthesize] ...precedences are 20 >? 20, (some 20, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 20, term))
+      (Term.app `discharge_eq_lhs [(Term.app `ring1 [`red])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `ring1 [`red])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `red
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `ring1
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `ring1 [`red]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `discharge_eq_lhs
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 21 >? 1022, (some 1023, term) <=? (some 20, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 20, (some 20, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (termIfThenElse "if" (Term.proj `red "." `isSome) "then" `semireducible "else" `reducible)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `reducible
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `semireducible
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `red "." `isSome)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `red
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app `conv [`Unit])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Unit
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `conv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `parse
+       [(Conv.Interactive.Tactic.Ring.parser.optional
+         (Term.app `lean.parser.tk [(str "\"!\"")])
+         "?")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Conv.Interactive.Tactic.Ring.parser.optional', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Conv.Interactive.Tactic.Ring.parser.optional', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Conv.Interactive.Tactic.Ring.parser.optional (Term.app `lean.parser.tk [(str "\"!\"")]) "?")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Conv.Interactive.Tactic.Ring.parser.optional', expected 'Conv.Interactive.Tactic.Ring.parser.optional._@.Tactic.Ring._hyg.31'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /--
-Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
--/
-unsafe def ring (red : parse (lean.parser.tk "!")?) : conv Unit :=
-  let transp := if red.isSome then semireducible else reducible
-  discharge_eq_lhs (ring1 red) <|>
-    replace_lhs (normalize transp NormalizeMode.horner) >> trace "Try this: ring_nf" <|>
-      fail "ring failed to simplify"
+      Normalises expressions in commutative (semi-)rings inside of a `conv` block using the tactic `ring`.
+      -/
+    unsafe
+  def
+    ring
+    ( red : parse lean.parser.tk "!" ? ) : conv Unit
+    :=
+      let
+        transp := if red . isSome then semireducible else reducible
+        discharge_eq_lhs ring1 red
+          <|>
+          replace_lhs normalize transp NormalizeMode.horner >> trace "Try this: ring_nf"
+            <|>
+            fail "ring failed to simplify"
 #align conv.interactive.ring conv.interactive.ring
 
 end Conv.Interactive

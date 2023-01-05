@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1118,16 +1118,310 @@ variable {𝕜 E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E] {f : α → 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
-theorem Integrable.constInner (c : E) (hf : Integrable f μ) : Integrable (fun x => ⟪c, f x⟫) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable] at hf⊢
-  exact hf.const_inner c
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `Integrable.constInner [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`c] [":" `E] [] ")")
+        (Term.explicitBinder "(" [`hf] [":" (Term.app `Integrable [`f `μ])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Integrable
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`x]
+            []
+            "=>"
+            (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»
+             "⟪"
+             `c
+             ", "
+             (Term.app `f [`x])
+             "⟫")))
+          `μ])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_ℒp_one_iff_integrable)]
+             "]")
+            [(Tactic.location "at" (Tactic.locationHyp [`hf] [(patternIgnore (token.«⊢» "⊢"))]))])
+           []
+           (Tactic.exact "exact" (Term.app `hf.const_inner [`c]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_ℒp_one_iff_integrable)]
+            "]")
+           [(Tactic.location "at" (Tactic.locationHyp [`hf] [(patternIgnore (token.«⊢» "⊢"))]))])
+          []
+          (Tactic.exact "exact" (Term.app `hf.const_inner [`c]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `hf.const_inner [`c]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `hf.const_inner [`c])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hf.const_inner
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_ℒp_one_iff_integrable)]
+        "]")
+       [(Tactic.location "at" (Tactic.locationHyp [`hf] [(patternIgnore (token.«⊢» "⊢"))]))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hf
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mem_ℒp_one_iff_integrable
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `Integrable
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`x]
+          []
+          "=>"
+          (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»
+           "⟪"
+           `c
+           ", "
+           (Term.app `f [`x])
+           "⟫")))
+        `μ])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `μ
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`x]
+        []
+        "=>"
+        (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»
+         "⟪"
+         `c
+         ", "
+         (Term.app `f [`x])
+         "⟫")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫» "⟪" `c ", " (Term.app `f [`x]) "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»', expected 'MeasureTheory.MeasureTheory.Function.L1Space.term⟪_,_⟫._@.MeasureTheory.Function.L1Space._hyg.26'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  Integrable.constInner
+  ( c : E ) ( hf : Integrable f μ ) : Integrable fun x => ⟪ c , f x ⟫ μ
+  := by rw [ ← mem_ℒp_one_iff_integrable ] at hf ⊢ exact hf.const_inner c
 #align measure_theory.integrable.const_inner MeasureTheory.Integrable.constInner
 
-theorem Integrable.innerConst (hf : Integrable f μ) (c : E) : Integrable (fun x => ⟪f x, c⟫) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable] at hf⊢
-  exact hf.inner_const c
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `Integrable.innerConst [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`hf] [":" (Term.app `Integrable [`f `μ])] [] ")")
+        (Term.explicitBinder "(" [`c] [":" `E] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `Integrable
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`x]
+            []
+            "=>"
+            (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»
+             "⟪"
+             (Term.app `f [`x])
+             ", "
+             `c
+             "⟫")))
+          `μ])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_ℒp_one_iff_integrable)]
+             "]")
+            [(Tactic.location "at" (Tactic.locationHyp [`hf] [(patternIgnore (token.«⊢» "⊢"))]))])
+           []
+           (Tactic.exact "exact" (Term.app `hf.inner_const [`c]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_ℒp_one_iff_integrable)]
+            "]")
+           [(Tactic.location "at" (Tactic.locationHyp [`hf] [(patternIgnore (token.«⊢» "⊢"))]))])
+          []
+          (Tactic.exact "exact" (Term.app `hf.inner_const [`c]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `hf.inner_const [`c]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `hf.inner_const [`c])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hf.inner_const
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `mem_ℒp_one_iff_integrable)]
+        "]")
+       [(Tactic.location "at" (Tactic.locationHyp [`hf] [(patternIgnore (token.«⊢» "⊢"))]))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hf
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mem_ℒp_one_iff_integrable
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `Integrable
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`x]
+          []
+          "=>"
+          (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»
+           "⟪"
+           (Term.app `f [`x])
+           ", "
+           `c
+           "⟫")))
+        `μ])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `μ
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`x]
+        []
+        "=>"
+        (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»
+         "⟪"
+         (Term.app `f [`x])
+         ", "
+         `c
+         "⟫")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫» "⟪" (Term.app `f [`x]) ", " `c "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'MeasureTheory.MeasureTheory.Function.L1Space.«term⟪_,_⟫»', expected 'MeasureTheory.MeasureTheory.Function.L1Space.term⟪_,_⟫._@.MeasureTheory.Function.L1Space._hyg.26'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  Integrable.innerConst
+  ( hf : Integrable f μ ) ( c : E ) : Integrable fun x => ⟪ f x , c ⟫ μ
+  := by rw [ ← mem_ℒp_one_iff_integrable ] at hf ⊢ exact hf.inner_const c
 #align measure_theory.integrable.inner_const MeasureTheory.Integrable.innerConst
 
 end InnerProduct

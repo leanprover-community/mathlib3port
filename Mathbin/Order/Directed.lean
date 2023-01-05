@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.directed
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,18 +40,195 @@ variable {α : Type u} {β : Type v} {ι : Sort w} (r r' s : α → α → Prop)
 local infixl:50 " ≼ " => r
 
 #print Directed /-
-/-- A family of elements of α is directed (with respect to a relation `≼` on α)
-  if there is a member of the family `≼`-above any pair in the family.  -/
-def Directed (f : ι → α) :=
-  ∀ x y, ∃ z, f x ≼ f z ∧ f y ≼ f z
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A family of elements of α is directed (with respect to a relation `≼` on α)\n  if there is a member of the family `≼`-above any pair in the family.  -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `Directed [])
+      (Command.optDeclSig [(Term.explicitBinder "(" [`f] [":" (Term.arrow `ι "→" `α)] [] ")")] [])
+      (Command.declValSimple
+       ":="
+       (Term.forall
+        "∀"
+        [`x `y]
+        []
+        ","
+        («term∃_,_»
+         "∃"
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] []))
+         ","
+         («term_∧_»
+          (Order.Directed.«term_≼_» (Term.app `f [`x]) " ≼ " (Term.app `f [`z]))
+          "∧"
+          (Order.Directed.«term_≼_» (Term.app `f [`y]) " ≼ " (Term.app `f [`z])))))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [`x `y]
+       []
+       ","
+       («term∃_,_»
+        "∃"
+        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] []))
+        ","
+        («term_∧_»
+         (Order.Directed.«term_≼_» (Term.app `f [`x]) " ≼ " (Term.app `f [`z]))
+         "∧"
+         (Order.Directed.«term_≼_» (Term.app `f [`y]) " ≼ " (Term.app `f [`z])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term∃_,_»
+       "∃"
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] []))
+       ","
+       («term_∧_»
+        (Order.Directed.«term_≼_» (Term.app `f [`x]) " ≼ " (Term.app `f [`z]))
+        "∧"
+        (Order.Directed.«term_≼_» (Term.app `f [`y]) " ≼ " (Term.app `f [`z]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∧_»
+       (Order.Directed.«term_≼_» (Term.app `f [`x]) " ≼ " (Term.app `f [`z]))
+       "∧"
+       (Order.Directed.«term_≼_» (Term.app `f [`y]) " ≼ " (Term.app `f [`z])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Directed.«term_≼_» (Term.app `f [`y]) " ≼ " (Term.app `f [`z]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Directed.«term_≼_»', expected 'Order.Directed.term_≼_._@.Order.Directed._hyg.8'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A family of elements of α is directed (with respect to a relation `≼` on α)
+      if there is a member of the family `≼`-above any pair in the family.  -/
+  def Directed ( f : ι → α ) := ∀ x y , ∃ z , f x ≼ f z ∧ f y ≼ f z
 #align directed Directed
 -/
 
 #print DirectedOn /-
-/-- A subset of α is directed if there is an element of the set `≼`-above any
-  pair of elements in the set. -/
-def DirectedOn (s : Set α) :=
-  ∀ x ∈ s, ∀ y ∈ s, ∃ z ∈ s, x ≼ z ∧ y ≼ z
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A subset of α is directed if there is an element of the set `≼`-above any\n  pair of elements in the set. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `DirectedOn [])
+      (Command.optDeclSig [(Term.explicitBinder "(" [`s] [":" (Term.app `Set [`α])] [] ")")] [])
+      (Command.declValSimple
+       ":="
+       (Std.ExtendedBinder.«term∀__,_»
+        "∀"
+        (Lean.binderIdent `x)
+        («binderTerm∈_» "∈" `s)
+        ","
+        (Std.ExtendedBinder.«term∀__,_»
+         "∀"
+         (Lean.binderIdent `y)
+         («binderTerm∈_» "∈" `s)
+         ","
+         (Std.ExtendedBinder.«term∃__,_»
+          "∃"
+          (Lean.binderIdent `z)
+          («binderTerm∈_» "∈" `s)
+          ","
+          («term_∧_»
+           (Order.Directed.«term_≼_» `x " ≼ " `z)
+           "∧"
+           (Order.Directed.«term_≼_» `y " ≼ " `z)))))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.ExtendedBinder.«term∀__,_»
+       "∀"
+       (Lean.binderIdent `x)
+       («binderTerm∈_» "∈" `s)
+       ","
+       (Std.ExtendedBinder.«term∀__,_»
+        "∀"
+        (Lean.binderIdent `y)
+        («binderTerm∈_» "∈" `s)
+        ","
+        (Std.ExtendedBinder.«term∃__,_»
+         "∃"
+         (Lean.binderIdent `z)
+         («binderTerm∈_» "∈" `s)
+         ","
+         («term_∧_»
+          (Order.Directed.«term_≼_» `x " ≼ " `z)
+          "∧"
+          (Order.Directed.«term_≼_» `y " ≼ " `z)))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.ExtendedBinder.«term∀__,_»
+       "∀"
+       (Lean.binderIdent `y)
+       («binderTerm∈_» "∈" `s)
+       ","
+       (Std.ExtendedBinder.«term∃__,_»
+        "∃"
+        (Lean.binderIdent `z)
+        («binderTerm∈_» "∈" `s)
+        ","
+        («term_∧_»
+         (Order.Directed.«term_≼_» `x " ≼ " `z)
+         "∧"
+         (Order.Directed.«term_≼_» `y " ≼ " `z))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.ExtendedBinder.«term∃__,_»
+       "∃"
+       (Lean.binderIdent `z)
+       («binderTerm∈_» "∈" `s)
+       ","
+       («term_∧_»
+        (Order.Directed.«term_≼_» `x " ≼ " `z)
+        "∧"
+        (Order.Directed.«term_≼_» `y " ≼ " `z)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∧_» (Order.Directed.«term_≼_» `x " ≼ " `z) "∧" (Order.Directed.«term_≼_» `y " ≼ " `z))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Directed.«term_≼_» `y " ≼ " `z)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Directed.«term_≼_»', expected 'Order.Directed.term_≼_._@.Order.Directed._hyg.8'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A subset of α is directed if there is an element of the set `≼`-above any
+      pair of elements in the set. -/
+  def DirectedOn ( s : Set α ) := ∀ x ∈ s , ∀ y ∈ s , ∃ z ∈ s , x ≼ z ∧ y ≼ z
 #align directed_on DirectedOn
 -/
 
@@ -118,9 +295,208 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {r : α -> α -> Prop} {ι : Sort.{u1}} {rb : β -> β -> Prop} {g : α -> β} {f : ι -> α}, (forall {{x : α}} {{y : α}}, (r x y) -> (rb (g x) (g y))) -> (Directed.{u2, u1} α ι r f) -> (Directed.{u3, u1} β ι rb (Function.comp.{u1, succ u2, succ u3} ι α β g f))
 Case conversion may be inaccurate. Consider using '#align directed.mono_comp Directed.mono_compₓ'. -/
-theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : ι → α}
-    (hg : ∀ ⦃x y⦄, x ≼ y → rb (g x) (g y)) (hf : Directed r f) : Directed rb (g ∘ f) :=
-  directed_comp.2 <| hf.mono hg
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `Directed.mono_comp [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`ι] [] "}")
+        (Term.implicitBinder
+         "{"
+         [`rb]
+         [":" (Term.arrow `β "→" (Term.arrow `β "→" (Term.prop "Prop")))]
+         "}")
+        (Term.implicitBinder "{" [`g] [":" (Term.arrow `α "→" `β)] "}")
+        (Term.implicitBinder "{" [`f] [":" (Term.arrow `ι "→" `α)] "}")
+        (Term.explicitBinder
+         "("
+         [`hg]
+         [":"
+          (Term.forall
+           "∀"
+           [(Term.strictImplicitBinder "⦃" [`x `y] [] "⦄")]
+           []
+           ","
+           (Term.arrow
+            (Order.Directed.«term_≼_» `x " ≼ " `y)
+            "→"
+            (Term.app `rb [(Term.app `g [`x]) (Term.app `g [`y])])))]
+         []
+         ")")
+        (Term.explicitBinder "(" [`hf] [":" (Term.app `Directed [`r `f])] [] ")")]
+       (Term.typeSpec ":" (Term.app `Directed [`rb («term_∘_» `g "∘" `f)])))
+      (Command.declValSimple
+       ":="
+       («term_<|_»
+        (Term.proj `directed_comp "." (fieldIdx "2"))
+        "<|"
+        (Term.app (Term.proj `hf "." `mono) [`hg]))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.proj `directed_comp "." (fieldIdx "2"))
+       "<|"
+       (Term.app (Term.proj `hf "." `mono) [`hg]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `hf "." `mono) [`hg])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hg
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `hf "." `mono)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hf
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.proj `directed_comp "." (fieldIdx "2"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `directed_comp
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app `Directed [`rb («term_∘_» `g "∘" `f)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_∘_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_∘_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_» `g "∘" `f)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 90, (some 90, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_∘_» `g "∘" `f) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `rb
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Directed
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Directed [`r `f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `r
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Directed
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [(Term.strictImplicitBinder "⦃" [`x `y] [] "⦄")]
+       []
+       ","
+       (Term.arrow
+        (Order.Directed.«term_≼_» `x " ≼ " `y)
+        "→"
+        (Term.app `rb [(Term.app `g [`x]) (Term.app `g [`y])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       (Order.Directed.«term_≼_» `x " ≼ " `y)
+       "→"
+       (Term.app `rb [(Term.app `g [`x]) (Term.app `g [`y])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `rb [(Term.app `g [`x]) (Term.app `g [`y])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `g [`y])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `g [`y]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `g [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `g [`x]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `rb
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (Order.Directed.«term_≼_» `x " ≼ " `y)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Directed.«term_≼_»', expected 'Order.Directed.term_≼_._@.Order.Directed._hyg.8'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  Directed.mono_comp
+  { ι }
+      { rb : β → β → Prop }
+      { g : α → β }
+      { f : ι → α }
+      ( hg : ∀ ⦃ x y ⦄ , x ≼ y → rb g x g y )
+      ( hf : Directed r f )
+    : Directed rb g ∘ f
+  := directed_comp . 2 <| hf . mono hg
 #align directed.mono_comp Directed.mono_comp
 
 #print directed_of_sup /-
@@ -157,7 +533,7 @@ theorem directedOn_of_sup_mem [SemilatticeSup α] {S : Set α}
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u2 u1} (β -> α) (Pi.hasBot.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (fun (x._@.Mathlib.Order.Directed._hyg.1245 : α) (x._@.Mathlib.Order.Directed._hyg.1247 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1245 x._@.Mathlib.Order.Directed._hyg.1247) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (fun (x._@.Mathlib.Order.Directed._hyg.1264 : α) (x._@.Mathlib.Order.Directed._hyg.1266 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1264 x._@.Mathlib.Order.Directed._hyg.1266) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u1 u2} (β -> α) (Pi.instBotForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (fun (x._@.Mathlib.Order.Directed._hyg.1273 : α) (x._@.Mathlib.Order.Directed._hyg.1275 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1273 x._@.Mathlib.Order.Directed._hyg.1275) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (fun (x._@.Mathlib.Order.Directed._hyg.1292 : α) (x._@.Mathlib.Order.Directed._hyg.1294 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1292 x._@.Mathlib.Order.Directed._hyg.1294) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u1 u2} (β -> α) (Pi.instBotForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align directed.extend_bot Directed.extend_botₓ'. -/
 theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι → α}
     (hf : Directed (· ≤ ·) f) (he : Function.Injective e) :

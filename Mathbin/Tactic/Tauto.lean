@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.tauto
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -373,31 +373,261 @@ namespace Interactive
 local postfix:1024 "?" => optional
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/-- `tautology` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
-and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
-using `reflexivity` or `solve_by_elim`.
-This is a finishing tactic: it either closes the goal or raises an error.
-The variant `tautology!` uses the law of excluded middle.
-
-`tautology {closer := tac}` will use `tac` on any subgoals created by `tautology`
-that it is unable to solve before failing.
--/
-unsafe def tautology (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := { }) :=
-  tactic.tautology <| { cfg with classical := c.isSome }
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`tautology` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`\nand splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged\nusing `reflexivity` or `solve_by_elim`.\nThis is a finishing tactic: it either closes the goal or raises an error.\nThe variant `tautology!` uses the law of excluded middle.\n\n`tautology {closer := tac}` will use `tac` on any subgoals created by `tautology`\nthat it is unable to solve before failing.\n-/")]
+      []
+      []
+      []
+      [(Command.unsafe "unsafe")]
+      [])
+     (Command.def
+      "def"
+      (Command.declId `tautology [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`c]
+         [":"
+          («term_<|_»
+           `parse
+           "<|"
+           (Tactic.Interactive.Tactic.Tauto.parser.optional (Term.app `tk [(str "\"!\"")]) "?"))]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`cfg]
+         [":" `tactic.tauto_cfg]
+         [(Term.binderDefault ":=" (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}"))]
+         ")")]
+       [])
+      (Command.declValSimple
+       ":="
+       («term_<|_»
+        `tactic.tautology
+        "<|"
+        (Term.structInst
+         "{"
+         [[`cfg] "with"]
+         [(Term.structInstField
+           (Term.structInstLVal `classical [])
+           ":="
+           (Term.proj `c "." `isSome))]
+         (Term.optEllipsis [])
+         []
+         "}"))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `tactic.tautology
+       "<|"
+       (Term.structInst
+        "{"
+        [[`cfg] "with"]
+        [(Term.structInstField (Term.structInstLVal `classical []) ":=" (Term.proj `c "." `isSome))]
+        (Term.optEllipsis [])
+        []
+        "}"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst
+       "{"
+       [[`cfg] "with"]
+       [(Term.structInstField (Term.structInstLVal `classical []) ":=" (Term.proj `c "." `isSome))]
+       (Term.optEllipsis [])
+       []
+       "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `c "." `isSome)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `cfg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `tactic.tautology
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.binderDefault', expected 'Lean.Parser.Term.binderTactic'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `tactic.tauto_cfg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `parse
+       "<|"
+       (Tactic.Interactive.Tactic.Tauto.parser.optional (Term.app `tk [(str "\"!\"")]) "?"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.Interactive.Tactic.Tauto.parser.optional (Term.app `tk [(str "\"!\"")]) "?")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Interactive.Tactic.Tauto.parser.optional', expected 'Tactic.Interactive.Tactic.Tauto.parser.optional._@.Tactic.Tauto._hyg.11'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      `tautology` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
+      and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
+      using `reflexivity` or `solve_by_elim`.
+      This is a finishing tactic: it either closes the goal or raises an error.
+      The variant `tautology!` uses the law of excluded middle.
+      
+      `tautology {closer := tac}` will use `tac` on any subgoals created by `tautology`
+      that it is unable to solve before failing.
+      -/
+    unsafe
+  def
+    tautology
+    ( c : parse <| tk "!" ? ) ( cfg : tactic.tauto_cfg := { } )
+    := tactic.tautology <| { cfg with classical := c . isSome }
 #align tactic.interactive.tautology tactic.interactive.tautology
 
--- Now define a shorter name for the tactic `tautology`.
-/-- `tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
-and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
-using `reflexivity` or `solve_by_elim`.
-This is a finishing tactic: it either closes the goal or raises an error.
-The variant `tauto!` uses the law of excluded middle.
-
-`tauto {closer := tac}` will use `tac` on any subgoals created by `tauto`
-that it is unable to solve before failing.
--/
-unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := { }) : tactic Unit :=
-  tautology c cfg
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`\nand splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged\nusing `reflexivity` or `solve_by_elim`.\nThis is a finishing tactic: it either closes the goal or raises an error.\nThe variant `tauto!` uses the law of excluded middle.\n\n`tauto {closer := tac}` will use `tac` on any subgoals created by `tauto`\nthat it is unable to solve before failing.\n-/")]
+      []
+      []
+      []
+      [(Command.unsafe "unsafe")]
+      [])
+     (Command.def
+      "def"
+      (Command.declId `tauto [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`c]
+         [":"
+          («term_<|_»
+           `parse
+           "<|"
+           (Tactic.Interactive.Tactic.Tauto.parser.optional (Term.app `tk [(str "\"!\"")]) "?"))]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`cfg]
+         [":" `tactic.tauto_cfg]
+         [(Term.binderDefault ":=" (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}"))]
+         ")")]
+       [(Term.typeSpec ":" (Term.app `tactic [`Unit]))])
+      (Command.declValSimple ":=" (Term.app `tautology [`c `cfg]) [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `tautology [`c `cfg])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `cfg
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tautology
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app `tactic [`Unit])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Unit
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tactic
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.binderDefault', expected 'Lean.Parser.Term.binderTactic'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `tactic.tauto_cfg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `parse
+       "<|"
+       (Tactic.Interactive.Tactic.Tauto.parser.optional (Term.app `tk [(str "\"!\"")]) "?"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.Interactive.Tactic.Tauto.parser.optional (Term.app `tk [(str "\"!\"")]) "?")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Interactive.Tactic.Tauto.parser.optional', expected 'Tactic.Interactive.Tactic.Tauto.parser.optional._@.Tactic.Tauto._hyg.11'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      `tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
+      and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
+      using `reflexivity` or `solve_by_elim`.
+      This is a finishing tactic: it either closes the goal or raises an error.
+      The variant `tauto!` uses the law of excluded middle.
+      
+      `tauto {closer := tac}` will use `tac` on any subgoals created by `tauto`
+      that it is unable to solve before failing.
+      -/
+    unsafe
+  def
+    tauto
+    ( c : parse <| tk "!" ? ) ( cfg : tactic.tauto_cfg := { } ) : tactic Unit
+    := tautology c cfg
 #align tactic.interactive.tauto tactic.interactive.tauto
 
 add_hint_tactic tauto

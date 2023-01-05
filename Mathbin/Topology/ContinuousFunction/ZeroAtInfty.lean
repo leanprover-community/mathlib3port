@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -623,18 +623,367 @@ section
 
 variable [Zero δ]
 
-/-- Composition of a continuous function vanishing at infinity with a cocompact map yields another
-continuous function vanishing at infinity. -/
-def comp (f : C₀(γ, δ)) (g : β →co γ) : C₀(β, δ)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Composition of a continuous function vanishing at infinity with a cocompact map yields another\ncontinuous function vanishing at infinity. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `comp [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`f]
+         [":"
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")]
+       [(Term.typeSpec
+         ":"
+         (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+          "C₀("
+          `β
+          ", "
+          `δ
+          ")"))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `toContinuousMap
+           []
+           []
+           ":="
+           (Term.app
+            (Term.proj
+             (Term.typeAscription
+              "("
+              `f
+              ":"
+              [(Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `γ ", " `δ ")")]
+              ")")
+             "."
+             `comp)
+            [`g]))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `zero_at_infty'
+           []
+           []
+           ":="
+           (Term.app
+            (Term.proj (Term.app `zero_at_infty [`f]) "." `comp)
+            [(Term.app `cocompact_tendsto [`g])]))))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj (Term.app `zero_at_infty [`f]) "." `comp)
+       [(Term.app `cocompact_tendsto [`g])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `cocompact_tendsto [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `cocompact_tendsto
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `cocompact_tendsto [`g]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app `zero_at_infty [`f]) "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `zero_at_infty [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `zero_at_infty
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `zero_at_infty [`f]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.typeAscription
+         "("
+         `f
+         ":"
+         [(Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `γ ", " `δ ")")]
+         ")")
+        "."
+        `comp)
+       [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.typeAscription
+        "("
+        `f
+        ":"
+        [(Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `γ ", " `δ ")")]
+        ")")
+       "."
+       `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.typeAscription
+       "("
+       `f
+       ":"
+       [(Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `γ ", " `δ ")")]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Topology.ContinuousFunction.Basic.«termC(_,_)» "C(" `γ ", " `δ ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `γ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `β
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `β " →co " `γ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    Composition of a continuous function vanishing at infinity with a cocompact map yields another
+    continuous function vanishing at infinity. -/
+  def
+    comp
+    ( f : C₀( γ , δ ) ) ( g : β →co γ ) : C₀( β , δ )
     where
-  toContinuousMap := (f : C(γ, δ)).comp g
-  zero_at_infty' := (zero_at_infty f).comp (cocompact_tendsto g)
+      toContinuousMap := ( f : C( γ , δ ) ) . comp g
+        zero_at_infty' := zero_at_infty f . comp cocompact_tendsto g
 #align zero_at_infty_continuous_map.comp ZeroAtInftyContinuousMap.comp
 
-@[simp]
-theorem coe_comp_to_continuous_fun (f : C₀(γ, δ)) (g : β →co γ) :
-    ((f.comp g).toContinuousMap : β → δ) = f ∘ g :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `coe_comp_to_continuous_fun [])
+      (Command.declSig
+       [(Term.explicitBinder
+         "("
+         [`f]
+         [":"
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.typeAscription
+          "("
+          (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `toContinuousMap)
+          ":"
+          [(Term.arrow `β "→" `δ)]
+          ")")
+         "="
+         («term_∘_» `f "∘" `g))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.typeAscription
+        "("
+        (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `toContinuousMap)
+        ":"
+        [(Term.arrow `β "→" `δ)]
+        ")")
+       "="
+       («term_∘_» `f "∘" `g))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_» `f "∘" `g)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 90, (some 90, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.typeAscription
+       "("
+       (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `toContinuousMap)
+       ":"
+       [(Term.arrow `β "→" `δ)]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow `β "→" `δ)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `toContinuousMap)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app (Term.proj `f "." `comp) [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `f "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `f "." `comp) [`g])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `β " →co " `γ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    coe_comp_to_continuous_fun
+    ( f : C₀( γ , δ ) ) ( g : β →co γ ) : ( f . comp g . toContinuousMap : β → δ ) = f ∘ g
+    := rfl
 #align
   zero_at_infty_continuous_map.coe_comp_to_continuous_fun ZeroAtInftyContinuousMap.coe_comp_to_continuous_fun
 
@@ -643,52 +992,1007 @@ theorem comp_id (f : C₀(γ, δ)) : f.comp (CocompactMap.id γ) = f :=
   ext fun x => rfl
 #align zero_at_infty_continuous_map.comp_id ZeroAtInftyContinuousMap.comp_id
 
-@[simp]
-theorem comp_assoc (f : C₀(γ, δ)) (g : β →co γ) (h : α →co β) :
-    (f.comp g).comp h = f.comp (g.comp h) :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `comp_assoc [])
+      (Command.declSig
+       [(Term.explicitBinder
+         "("
+         [`f]
+         [":"
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`h]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `α
+           " →co "
+           `β)]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `comp) [`h])
+         "="
+         (Term.app (Term.proj `f "." `comp) [(Term.app (Term.proj `g "." `comp) [`h])]))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `comp) [`h])
+       "="
+       (Term.app (Term.proj `f "." `comp) [(Term.app (Term.proj `g "." `comp) [`h])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `f "." `comp) [(Term.app (Term.proj `g "." `comp) [`h])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `g "." `comp) [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `g "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `g "." `comp) [`h])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `f "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `comp) [`h])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app (Term.proj `f "." `comp) [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `f "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `f "." `comp) [`g])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `α " →co " `β)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    comp_assoc
+    ( f : C₀( γ , δ ) ) ( g : β →co γ ) ( h : α →co β ) : f . comp g . comp h = f . comp g . comp h
+    := rfl
 #align zero_at_infty_continuous_map.comp_assoc ZeroAtInftyContinuousMap.comp_assoc
 
-@[simp]
-theorem zero_comp (g : β →co γ) : (0 : C₀(γ, δ)).comp g = 0 :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `zero_comp [])
+      (Command.declSig
+       [(Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app
+          (Term.proj
+           (Term.typeAscription
+            "("
+            (num "0")
+            ":"
+            [(ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+              "C₀("
+              `γ
+              ", "
+              `δ
+              ")")]
+            ")")
+           "."
+           `comp)
+          [`g])
+         "="
+         (num "0"))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app
+        (Term.proj
+         (Term.typeAscription
+          "("
+          (num "0")
+          ":"
+          [(ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+            "C₀("
+            `γ
+            ", "
+            `δ
+            ")")]
+          ")")
+         "."
+         `comp)
+        [`g])
+       "="
+       (num "0"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       (Term.proj
+        (Term.typeAscription
+         "("
+         (num "0")
+         ":"
+         [(ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")]
+         ")")
+        "."
+        `comp)
+       [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.typeAscription
+        "("
+        (num "0")
+        ":"
+        [(ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+          "C₀("
+          `γ
+          ", "
+          `δ
+          ")")]
+        ")")
+       "."
+       `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.typeAscription
+       "("
+       (num "0")
+       ":"
+       [(ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+         "C₀("
+         `γ
+         ", "
+         `δ
+         ")")]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `γ
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `γ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `β " →co " `γ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ] theorem zero_comp ( g : β →co γ ) : ( 0 : C₀( γ , δ ) ) . comp g = 0 := rfl
 #align zero_at_infty_continuous_map.zero_comp ZeroAtInftyContinuousMap.zero_comp
 
 end
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Composition as an additive monoid homomorphism. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `compAddMonoidHom [])
+      (Command.optDeclSig
+       [(Term.instBinder "[" [] (Term.app `AddMonoid [`δ]) "]")
+        (Term.instBinder "[" [] (Term.app `HasContinuousAdd [`δ]) "]")
+        (Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")]
+       [(Term.typeSpec
+         ":"
+         (Algebra.Hom.Group.«term_→+_»
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")
+          " →+ "
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `β
+           ", "
+           `δ
+           ")")))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl `toFun [`f] [] ":=" (Term.app (Term.proj `f "." `comp) [`g]))))
+        []
+        (Command.whereStructField
+         (Term.letDecl (Term.letIdDecl `map_zero' [] [] ":=" (Term.app `zero_comp [`g]))))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_add' [`f₁ `f₂] [] ":=" `rfl)))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `zero_comp [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `zero_comp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `f "." `comp) [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `f "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Algebra.Hom.Group.«term_→+_»
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `γ
+        ", "
+        `δ
+        ")")
+       " →+ "
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `β
+        ", "
+        `δ
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `β
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `γ
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `γ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 26 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `β " →co " `γ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Composition as an additive monoid homomorphism. -/
-def compAddMonoidHom [AddMonoid δ] [HasContinuousAdd δ] (g : β →co γ) : C₀(γ, δ) →+ C₀(β, δ)
-    where
-  toFun f := f.comp g
-  map_zero' := zero_comp g
-  map_add' f₁ f₂ := rfl
+  def
+    compAddMonoidHom
+    [ AddMonoid δ ] [ HasContinuousAdd δ ] ( g : β →co γ ) : C₀( γ , δ ) →+ C₀( β , δ )
+    where toFun f := f . comp g map_zero' := zero_comp g map_add' f₁ f₂ := rfl
 #align zero_at_infty_continuous_map.comp_add_monoid_hom ZeroAtInftyContinuousMap.compAddMonoidHom
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Composition as a semigroup homomorphism. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `compMulHom [])
+      (Command.optDeclSig
+       [(Term.instBinder "[" [] (Term.app `MulZeroClass [`δ]) "]")
+        (Term.instBinder "[" [] (Term.app `HasContinuousMul [`δ]) "]")
+        (Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")]
+       [(Term.typeSpec
+         ":"
+         (Algebra.Hom.Group.«term_→ₙ*_»
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")
+          " →ₙ* "
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `β
+           ", "
+           `δ
+           ")")))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl `toFun [`f] [] ":=" (Term.app (Term.proj `f "." `comp) [`g]))))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_mul' [`f₁ `f₂] [] ":=" `rfl)))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `f "." `comp) [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `f "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Algebra.Hom.Group.«term_→ₙ*_»
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `γ
+        ", "
+        `δ
+        ")")
+       " →ₙ* "
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `β
+        ", "
+        `δ
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `β
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `γ
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `γ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 26 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `β " →co " `γ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Composition as a semigroup homomorphism. -/
-def compMulHom [MulZeroClass δ] [HasContinuousMul δ] (g : β →co γ) : C₀(γ, δ) →ₙ* C₀(β, δ)
-    where
-  toFun f := f.comp g
-  map_mul' f₁ f₂ := rfl
+  def
+    compMulHom
+    [ MulZeroClass δ ] [ HasContinuousMul δ ] ( g : β →co γ ) : C₀( γ , δ ) →ₙ* C₀( β , δ )
+    where toFun f := f . comp g map_mul' f₁ f₂ := rfl
 #align zero_at_infty_continuous_map.comp_mul_hom ZeroAtInftyContinuousMap.compMulHom
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Composition as a linear map. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `compLinearMap [])
+      (Command.optDeclSig
+       [(Term.instBinder "[" [] (Term.app `AddCommMonoid [`δ]) "]")
+        (Term.instBinder "[" [] (Term.app `HasContinuousAdd [`δ]) "]")
+        (Term.implicitBinder "{" [`R] [":" (Term.type "Type" [(Level.hole "_")])] "}")
+        (Term.instBinder "[" [] (Term.app `Semiring [`R]) "]")
+        (Term.instBinder "[" [] (Term.app `Module [`R `δ]) "]")
+        (Term.instBinder "[" [] (Term.app `HasContinuousConstSmul [`R `δ]) "]")
+        (Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")]
+       [(Term.typeSpec
+         ":"
+         (Algebra.Module.LinearMap.«term_→ₗ[_]_»
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")
+          " →ₗ["
+          `R
+          "] "
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `β
+           ", "
+           `δ
+           ")")))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl `toFun [`f] [] ":=" (Term.app (Term.proj `f "." `comp) [`g]))))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_add' [`f₁ `f₂] [] ":=" `rfl)))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_smul' [`r `f] [] ":=" `rfl)))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `f "." `comp) [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `f "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Algebra.Module.LinearMap.«term_→ₗ[_]_»
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `γ
+        ", "
+        `δ
+        ")")
+       " →ₗ["
+       `R
+       "] "
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `β
+        ", "
+        `δ
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `β
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `R
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `γ
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `γ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 0, term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `β " →co " `γ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Composition as a linear map. -/
-def compLinearMap [AddCommMonoid δ] [HasContinuousAdd δ] {R : Type _} [Semiring R] [Module R δ]
-    [HasContinuousConstSmul R δ] (g : β →co γ) : C₀(γ, δ) →ₗ[R] C₀(β, δ)
-    where
-  toFun f := f.comp g
-  map_add' f₁ f₂ := rfl
-  map_smul' r f := rfl
+  def
+    compLinearMap
+    [ AddCommMonoid δ ]
+        [ HasContinuousAdd δ ]
+        { R : Type _ }
+        [ Semiring R ]
+        [ Module R δ ]
+        [ HasContinuousConstSmul R δ ]
+        ( g : β →co γ )
+      : C₀( γ , δ ) →ₗ[ R ] C₀( β , δ )
+    where toFun f := f . comp g map_add' f₁ f₂ := rfl map_smul' r f := rfl
 #align zero_at_infty_continuous_map.comp_linear_map ZeroAtInftyContinuousMap.compLinearMap
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Composition as a non-unital algebra homomorphism. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `compNonUnitalAlgHom [])
+      (Command.optDeclSig
+       [(Term.implicitBinder "{" [`R] [":" (Term.type "Type" [(Level.hole "_")])] "}")
+        (Term.instBinder "[" [] (Term.app `Semiring [`R]) "]")
+        (Term.instBinder "[" [] (Term.app `NonUnitalNonAssocSemiring [`δ]) "]")
+        (Term.instBinder "[" [] (Term.app `TopologicalSemiring [`δ]) "]")
+        (Term.instBinder "[" [] (Term.app `Module [`R `δ]) "]")
+        (Term.instBinder "[" [] (Term.app `HasContinuousConstSmul [`R `δ]) "]")
+        (Term.explicitBinder
+         "("
+         [`g]
+         [":"
+          (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»
+           `β
+           " →co "
+           `γ)]
+         []
+         ")")]
+       [(Term.typeSpec
+         ":"
+         (Algebra.Hom.NonUnitalAlg.«term_→ₙₐ[_]_»
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `γ
+           ", "
+           `δ
+           ")")
+          " →ₙₐ["
+          `R
+          "] "
+          (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+           "C₀("
+           `β
+           ", "
+           `δ
+           ")")))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl `toFun [`f] [] ":=" (Term.app (Term.proj `f "." `comp) [`g]))))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_smul' [`r `f] [] ":=" `rfl)))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_zero' [] [] ":=" `rfl)))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_add' [`f₁ `f₂] [] ":=" `rfl)))
+        []
+        (Command.whereStructField (Term.letDecl (Term.letIdDecl `map_mul' [`f₁ `f₂] [] ":=" `rfl)))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `f "." `comp) [`g])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `f "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Algebra.Hom.NonUnitalAlg.«term_→ₙₐ[_]_»
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `γ
+        ", "
+        `δ
+        ")")
+       " →ₙₐ["
+       `R
+       "] "
+       (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+        "C₀("
+        `β
+        ", "
+        `δ
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `β
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `R
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (ZeroAtInfty.Topology.ContinuousFunction.ZeroAtInfty.zero_at_infty_continuous_map
+       "C₀("
+       `γ
+       ", "
+       `δ
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `δ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `γ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 0, term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_» `β " →co " `γ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.«term_→co_»', expected 'ZeroAtInftyContinuousMap.Topology.ContinuousFunction.ZeroAtInfty.term_→co_._@.Topology.ContinuousFunction.ZeroAtInfty._hyg.1313'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Composition as a non-unital algebra homomorphism. -/
-def compNonUnitalAlgHom {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring δ]
-    [TopologicalSemiring δ] [Module R δ] [HasContinuousConstSmul R δ] (g : β →co γ) :
-    C₀(γ, δ) →ₙₐ[R] C₀(β, δ) where
-  toFun f := f.comp g
-  map_smul' r f := rfl
-  map_zero' := rfl
-  map_add' f₁ f₂ := rfl
-  map_mul' f₁ f₂ := rfl
+  def
+    compNonUnitalAlgHom
+    { R : Type _ }
+        [ Semiring R ]
+        [ NonUnitalNonAssocSemiring δ ]
+        [ TopologicalSemiring δ ]
+        [ Module R δ ]
+        [ HasContinuousConstSmul R δ ]
+        ( g : β →co γ )
+      : C₀( γ , δ ) →ₙₐ[ R ] C₀( β , δ )
+    where
+      toFun f := f . comp g
+        map_smul' r f := rfl
+        map_zero' := rfl
+        map_add' f₁ f₂ := rfl
+        map_mul' f₁ f₂ := rfl
 #align
   zero_at_infty_continuous_map.comp_non_unital_alg_hom ZeroAtInftyContinuousMap.compNonUnitalAlgHom
 

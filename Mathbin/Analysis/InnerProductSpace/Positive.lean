@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.positive
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,22 +62,422 @@ theorem IsPositive.is_self_adjoint {T : E →L[𝕜] E} (hT : IsPositive T) : Is
 #align
   continuous_linear_map.is_positive.is_self_adjoint ContinuousLinearMap.IsPositive.is_self_adjoint
 
-theorem IsPositive.inner_nonneg_left {T : E →L[𝕜] E} (hT : IsPositive T) (x : E) :
-    0 ≤ re ⟪T x, x⟫ :=
-  hT.2 x
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `IsPositive.inner_nonneg_left [])
+      (Command.declSig
+       [(Term.implicitBinder
+         "{"
+         [`T]
+         [":" (Topology.Algebra.Module.Basic.«term_→L[_]_» `E " →L[" `𝕜 "] " `E)]
+         "}")
+        (Term.explicitBinder "(" [`hT] [":" (Term.app `IsPositive [`T])] [] ")")
+        (Term.explicitBinder "(" [`x] [":" `E] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_≤_»
+         (num "0")
+         "≤"
+         (Term.app
+          `re
+          [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+            "⟪"
+            (Term.app `T [`x])
+            ", "
+            `x
+            "⟫")]))))
+      (Command.declValSimple ":=" (Term.app (Term.proj `hT "." (fieldIdx "2")) [`x]) [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `hT "." (fieldIdx "2")) [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `hT "." (fieldIdx "2"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hT
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_≤_»
+       (num "0")
+       "≤"
+       (Term.app
+        `re
+        [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+          "⟪"
+          (Term.app `T [`x])
+          ", "
+          `x
+          "⟫")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `re
+       [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+         "⟪"
+         (Term.app `T [`x])
+         ", "
+         `x
+         "⟫")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+       "⟪"
+       (Term.app `T [`x])
+       ", "
+       `x
+       "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.term⟪_,_⟫._@.Analysis.InnerProductSpace.Positive._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  IsPositive.inner_nonneg_left
+  { T : E →L[ 𝕜 ] E } ( hT : IsPositive T ) ( x : E ) : 0 ≤ re ⟪ T x , x ⟫
+  := hT . 2 x
 #align
   continuous_linear_map.is_positive.inner_nonneg_left ContinuousLinearMap.IsPositive.inner_nonneg_left
 
-theorem IsPositive.inner_nonneg_right {T : E →L[𝕜] E} (hT : IsPositive T) (x : E) :
-    0 ≤ re ⟪x, T x⟫ := by rw [inner_re_symm] <;> exact hT.inner_nonneg_left x
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `IsPositive.inner_nonneg_right [])
+      (Command.declSig
+       [(Term.implicitBinder
+         "{"
+         [`T]
+         [":" (Topology.Algebra.Module.Basic.«term_→L[_]_» `E " →L[" `𝕜 "] " `E)]
+         "}")
+        (Term.explicitBinder "(" [`hT] [":" (Term.app `IsPositive [`T])] [] ")")
+        (Term.explicitBinder "(" [`x] [":" `E] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_≤_»
+         (num "0")
+         "≤"
+         (Term.app
+          `re
+          [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+            "⟪"
+            `x
+            ", "
+            (Term.app `T [`x])
+            "⟫")]))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.«tactic_<;>_»
+            (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_re_symm)] "]") [])
+            "<;>"
+            (Tactic.exact "exact" (Term.app `hT.inner_nonneg_left [`x])))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_re_symm)] "]") [])
+           "<;>"
+           (Tactic.exact "exact" (Term.app `hT.inner_nonneg_left [`x])))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_re_symm)] "]") [])
+       "<;>"
+       (Tactic.exact "exact" (Term.app `hT.inner_nonneg_left [`x])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `hT.inner_nonneg_left [`x]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `hT.inner_nonneg_left [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hT.inner_nonneg_left
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_re_symm)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inner_re_symm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_≤_»
+       (num "0")
+       "≤"
+       (Term.app
+        `re
+        [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+          "⟪"
+          `x
+          ", "
+          (Term.app `T [`x])
+          "⟫")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `re
+       [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+         "⟪"
+         `x
+         ", "
+         (Term.app `T [`x])
+         "⟫")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+       "⟪"
+       `x
+       ", "
+       (Term.app `T [`x])
+       "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.term⟪_,_⟫._@.Analysis.InnerProductSpace.Positive._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  IsPositive.inner_nonneg_right
+  { T : E →L[ 𝕜 ] E } ( hT : IsPositive T ) ( x : E ) : 0 ≤ re ⟪ x , T x ⟫
+  := by rw [ inner_re_symm ] <;> exact hT.inner_nonneg_left x
 #align
   continuous_linear_map.is_positive.inner_nonneg_right ContinuousLinearMap.IsPositive.inner_nonneg_right
 
-theorem isPositiveZero : IsPositive (0 : E →L[𝕜] E) :=
-  by
-  refine' ⟨is_self_adjoint_zero _, fun x => _⟩
-  change 0 ≤ re ⟪_, _⟫
-  rw [zero_apply, inner_zero_left, ZeroHomClass.map_zero]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `isPositiveZero [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `IsPositive
+         [(Term.typeAscription
+           "("
+           (num "0")
+           ":"
+           [(Topology.Algebra.Module.Basic.«term_→L[_]_» `E " →L[" `𝕜 "] " `E)]
+           ")")])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.refine'
+            "refine'"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.app `is_self_adjoint_zero [(Term.hole "_")])
+              ","
+              (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Term.hole "_")))]
+             "⟩"))
+           []
+           (Tactic.change
+            "change"
+            («term_≤_»
+             (num "0")
+             "≤"
+             (Term.app
+              `re
+              [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+                "⟪"
+                (Term.hole "_")
+                ", "
+                (Term.hole "_")
+                "⟫")]))
+            [])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `zero_apply)
+              ","
+              (Tactic.rwRule [] `inner_zero_left)
+              ","
+              (Tactic.rwRule [] `ZeroHomClass.map_zero)]
+             "]")
+            [])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.refine'
+           "refine'"
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.app `is_self_adjoint_zero [(Term.hole "_")])
+             ","
+             (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Term.hole "_")))]
+            "⟩"))
+          []
+          (Tactic.change
+           "change"
+           («term_≤_»
+            (num "0")
+            "≤"
+            (Term.app
+             `re
+             [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+               "⟪"
+               (Term.hole "_")
+               ", "
+               (Term.hole "_")
+               "⟫")]))
+           [])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `zero_apply)
+             ","
+             (Tactic.rwRule [] `inner_zero_left)
+             ","
+             (Tactic.rwRule [] `ZeroHomClass.map_zero)]
+            "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `zero_apply)
+         ","
+         (Tactic.rwRule [] `inner_zero_left)
+         ","
+         (Tactic.rwRule [] `ZeroHomClass.map_zero)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ZeroHomClass.map_zero
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inner_zero_left
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `zero_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.change
+       "change"
+       («term_≤_»
+        (num "0")
+        "≤"
+        (Term.app
+         `re
+         [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+           "⟪"
+           (Term.hole "_")
+           ", "
+           (Term.hole "_")
+           "⟫")]))
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_≤_»
+       (num "0")
+       "≤"
+       (Term.app
+        `re
+        [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+          "⟪"
+          (Term.hole "_")
+          ", "
+          (Term.hole "_")
+          "⟫")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `re
+       [(ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+         "⟪"
+         (Term.hole "_")
+         ", "
+         (Term.hole "_")
+         "⟫")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»
+       "⟪"
+       (Term.hole "_")
+       ", "
+       (Term.hole "_")
+       "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.«term⟪_,_⟫»', expected 'ContinuousLinearMap.Analysis.InnerProductSpace.Positive.term⟪_,_⟫._@.Analysis.InnerProductSpace.Positive._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  isPositiveZero
+  : IsPositive ( 0 : E →L[ 𝕜 ] E )
+  :=
+    by
+      refine' ⟨ is_self_adjoint_zero _ , fun x => _ ⟩
+        change 0 ≤ re ⟪ _ , _ ⟫
+        rw [ zero_apply , inner_zero_left , ZeroHomClass.map_zero ]
 #align continuous_linear_map.is_positive_zero ContinuousLinearMap.isPositiveZero
 
 theorem isPositiveOne : IsPositive (1 : E →L[𝕜] E) :=

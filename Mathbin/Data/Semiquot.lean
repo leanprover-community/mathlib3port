@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.semiquot
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,7 +273,7 @@ instance : Monad Semiquot where
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_1}}, Eq.{succ u_1} ((α -> β) -> (Semiquotₓ.{u_2, u_1} α) -> (Semiquotₓ.{u_2, u_1} β)) (Functor.map.{u_1, u_1} (fun {α : Type.{u_1}} => Semiquotₓ.{u_2, u_1} α) (Applicative.toFunctor.{u_1, u_1} (fun {α : Type.{u_1}} => Semiquotₓ.{u_2, u_1} α) (Monad.toApplicative.{u_1, u_1} (fun {α : Type.{u_1}} => Semiquotₓ.{u_2, u_1} α) Semiquotₓ.monad.{u_1, u_2})) α β) (Semiquot.map.{u_1, u_1, u_2, u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_1}}, Eq.{succ u_1} ((α -> β) -> (Semiquot.{u_1} α) -> (Semiquot.{u_1} β)) (fun (x._@.Mathlib.Data.Semiquot._hyg.997 : α -> β) (x._@.Mathlib.Data.Semiquot._hyg.999 : Semiquot.{u_1} α) => Functor.map.{u_1, u_1} Semiquot.{u_1} (Applicative.toFunctor.{u_1, u_1} Semiquot.{u_1} (Monad.toApplicative.{u_1, u_1} Semiquot.{u_1} Semiquot.instMonadSemiquot.{u_1})) α β x._@.Mathlib.Data.Semiquot._hyg.997 x._@.Mathlib.Data.Semiquot._hyg.999) (Semiquot.map.{u_1, u_1} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_1}}, Eq.{succ u_1} ((α -> β) -> (Semiquot.{u_1} α) -> (Semiquot.{u_1} β)) (fun (x._@.Mathlib.Data.Semiquot._hyg.993 : α -> β) (x._@.Mathlib.Data.Semiquot._hyg.995 : Semiquot.{u_1} α) => Functor.map.{u_1, u_1} Semiquot.{u_1} (Applicative.toFunctor.{u_1, u_1} Semiquot.{u_1} (Monad.toApplicative.{u_1, u_1} Semiquot.{u_1} Semiquot.instMonadSemiquot.{u_1})) α β x._@.Mathlib.Data.Semiquot._hyg.993 x._@.Mathlib.Data.Semiquot._hyg.995) (Semiquot.map.{u_1, u_1} α β)
 Case conversion may be inaccurate. Consider using '#align semiquot.map_def Semiquot.map_defₓ'. -/
 @[simp]
 theorem map_def {β} : ((· <$> ·) : (α → β) → Semiquot α → Semiquot β) = map :=
@@ -284,7 +284,7 @@ theorem map_def {β} : ((· <$> ·) : (α → β) → Semiquot α → Semiquot �
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_1}}, Eq.{succ u_1} ((Semiquotₓ.{u_2, u_1} α) -> (α -> (Semiquotₓ.{u_2, u_1} β)) -> (Semiquotₓ.{u_2, u_1} β)) (Bind.bind.{u_1, u_1} Semiquotₓ.{u_2, u_1} (Monad.toHasBind.{u_1, u_1} Semiquotₓ.{u_2, u_1} Semiquotₓ.monad.{u_1, u_2}) α β) (Semiquot.bind.{u_1, u_1, u_2, u_2, u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_1}}, Eq.{succ u_1} ((Semiquot.{u_1} α) -> (α -> (Semiquot.{u_1} β)) -> (Semiquot.{u_1} β)) (fun (x._@.Mathlib.Data.Semiquot._hyg.1037 : Semiquot.{u_1} α) (x._@.Mathlib.Data.Semiquot._hyg.1039 : α -> (Semiquot.{u_1} β)) => Bind.bind.{u_1, u_1} Semiquot.{u_1} (Monad.toBind.{u_1, u_1} Semiquot.{u_1} Semiquot.instMonadSemiquot.{u_1}) α β x._@.Mathlib.Data.Semiquot._hyg.1037 x._@.Mathlib.Data.Semiquot._hyg.1039) (Semiquot.bind.{u_1, u_1} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_1}}, Eq.{succ u_1} ((Semiquot.{u_1} α) -> (α -> (Semiquot.{u_1} β)) -> (Semiquot.{u_1} β)) (fun (x._@.Mathlib.Data.Semiquot._hyg.1033 : Semiquot.{u_1} α) (x._@.Mathlib.Data.Semiquot._hyg.1035 : α -> (Semiquot.{u_1} β)) => Bind.bind.{u_1, u_1} Semiquot.{u_1} (Monad.toBind.{u_1, u_1} Semiquot.{u_1} Semiquot.instMonadSemiquot.{u_1}) α β x._@.Mathlib.Data.Semiquot._hyg.1033 x._@.Mathlib.Data.Semiquot._hyg.1035) (Semiquot.bind.{u_1, u_1} α β)
 Case conversion may be inaccurate. Consider using '#align semiquot.bind_def Semiquot.bind_defₓ'. -/
 @[simp]
 theorem bind_def {β} : ((· >>= ·) : Semiquot α → (α → Semiquot β) → Semiquot β) = bind :=

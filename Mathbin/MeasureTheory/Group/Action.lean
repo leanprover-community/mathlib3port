@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -336,7 +336,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]")
               [])
              []
-             (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs]))])
+             (Tactic.exact "exact" (Term.app `H [(«term_⁻¹» `c "⁻¹") `s `hs]))])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -438,7 +438,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
             []
             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") [])
             []
-            (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs]))])
+            (Tactic.exact "exact" (Term.app `H [(«term_⁻¹» `c "⁻¹") `s `hs]))])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -452,11 +452,11 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
         []
         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") [])
         []
-        (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs]))])
+        (Tactic.exact "exact" (Term.app `H [(«term_⁻¹» `c "⁻¹") `s `hs]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs]))
+      (Tactic.exact "exact" (Term.app `H [(«term_⁻¹» `c "⁻¹") `s `hs]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])
+      (Term.app `H [(«term_⁻¹» `c "⁻¹") `s `hs])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -469,10 +469,10 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
       `s
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
      [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_⁻¹_1» `c "⁻¹")
+      («term_⁻¹» `c "⁻¹")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,

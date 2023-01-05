@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.antichain
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsAntichain.{u1} α r s) -> (forall (φ : RelEmbedding.{u1, u2} α β r r'), IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r r') (fun (_x : RelEmbedding.{u1, u2} α β r r') => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r r') φ) s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (φ : RelEmbedding.{u2, u1} α β r r'), IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' φ)) s))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (φ : RelEmbedding.{u2, u1} α β r r'), IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' φ)) s))
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_embedding IsAntichain.image_relEmbeddingₓ'. -/
 theorem image_relEmbedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain r' (φ '' s) :=
   by
@@ -182,7 +182,7 @@ theorem image_relEmbedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelEmbedding.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r r') (fun (_x : RelEmbedding.{u1, u2} α β r r') => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r r') φ) t))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelEmbedding.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r r' φ)) t))
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelEmbedding.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r r' φ)) t))
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_rel_embedding IsAntichain.preimage_relEmbeddingₓ'. -/
 theorem preimage_relEmbedding {t : Set β} (ht : IsAntichain r' t) (φ : r ↪r r') :
     IsAntichain r (φ ⁻¹' t) := fun a ha a' ha' hne hle =>
@@ -193,7 +193,7 @@ theorem preimage_relEmbedding {t : Set β} (ht : IsAntichain r' t) (φ : r ↪r 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α}, (IsAntichain.{u1} α r s) -> (forall (φ : RelIso.{u1, u2} α β r r'), IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r r') (fun (_x : RelIso.{u1, u2} α β r r') => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r r') φ) s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (φ : RelIso.{u2, u1} α β r r'), IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' (RelIso.toRelEmbedding.{u2, u1} α β r r' φ))) s))
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (φ : RelIso.{u2, u1} α β r r'), IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' (RelIso.toRelEmbedding.{u2, u1} α β r r' φ))) s))
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_iso IsAntichain.image_relIsoₓ'. -/
 theorem image_relIso (hs : IsAntichain r s) (φ : r ≃r r') : IsAntichain r' (φ '' s) :=
   hs.image_rel_embedding φ
@@ -203,7 +203,7 @@ theorem image_relIso (hs : IsAntichain r s) (φ : r ≃r r') : IsAntichain r' (�
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelIso.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r r') (fun (_x : RelIso.{u1, u2} α β r r') => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r r') φ) t))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelIso.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r r' (RelIso.toRelEmbedding.{u1, u2} α β r r' φ))) t))
+  forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {t : Set.{u2} β}, (IsAntichain.{u2} β r' t) -> (forall (φ : RelIso.{u1, u2} α β r r'), IsAntichain.{u1} α r (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Function.Embedding.{succ u1, succ u2} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u1, succ u2} α β)) (RelEmbedding.toEmbedding.{u1, u2} α β r r' (RelIso.toRelEmbedding.{u1, u2} α β r r' φ))) t))
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_rel_iso IsAntichain.preimage_relIsoₓ'. -/
 theorem preimage_relIso {t : Set β} (hs : IsAntichain r' t) (φ : r ≃r r') :
     IsAntichain r (φ ⁻¹' t) :=
@@ -214,7 +214,7 @@ theorem preimage_relIso {t : Set β} (hs : IsAntichain r' t) (φ : r ≃r r') :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α} {φ : RelEmbedding.{u1, u2} α β r r'}, Iff (IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelEmbedding.{u1, u2} α β r r') (fun (_x : RelEmbedding.{u1, u2} α β r r') => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β r r') φ) s)) (IsAntichain.{u1} α r s)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelEmbedding.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' φ)) s)) (IsAntichain.{u2} α r s)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelEmbedding.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' φ)) s)) (IsAntichain.{u2} α r s)
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_embedding_iff IsAntichain.image_relEmbedding_iffₓ'. -/
 theorem image_relEmbedding_iff {φ : r ↪r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
   ⟨fun h => (φ.Injective.preimage_image s).subst (h.preimage_rel_embedding φ), fun h =>
@@ -225,7 +225,7 @@ theorem image_relEmbedding_iff {φ : r ↪r r'} : IsAntichain r' (φ '' s) ↔ I
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u1} α} {φ : RelIso.{u1, u2} α β r r'}, Iff (IsAntichain.{u2} β r' (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r r') (fun (_x : RelIso.{u1, u2} α β r r') => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r r') φ) s)) (IsAntichain.{u1} α r s)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelIso.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' (RelIso.toRelEmbedding.{u2, u1} α β r r' φ))) s)) (IsAntichain.{u2} α r s)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelIso.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' (RelIso.toRelEmbedding.{u2, u1} α β r r' φ))) s)) (IsAntichain.{u2} α r s)
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_iso_iff IsAntichain.image_relIso_iffₓ'. -/
 theorem image_relIso_iff {φ : r ≃r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
   @image_relEmbedding_iff _ _ _ _ _ (φ : r ↪r r')
@@ -235,7 +235,7 @@ theorem image_relIso_iff {φ : r ≃r r'} : IsAntichain r' (φ '' s) ↔ IsAntic
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β], (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s) -> (forall (φ : OrderEmbedding.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β], (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1593 : α) (x._@.Mathlib.Order.Antichain._hyg.1595 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1593 x._@.Mathlib.Order.Antichain._hyg.1595) s) -> (forall (φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1615 : β) (x._@.Mathlib.Order.Antichain._hyg.1617 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1615 x._@.Mathlib.Order.Antichain._hyg.1617) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) φ)) s))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β], (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1593 : α) (x._@.Mathlib.Order.Antichain._hyg.1595 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1593 x._@.Mathlib.Order.Antichain._hyg.1595) s) -> (forall (φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1615 : β) (x._@.Mathlib.Order.Antichain._hyg.1617 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1615 x._@.Mathlib.Order.Antichain._hyg.1617) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) φ)) s))
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_embedding IsAntichain.image_embeddingₓ'. -/
 theorem image_embedding [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : α ↪o β) :
     IsAntichain (· ≤ ·) (φ '' s) :=
@@ -246,7 +246,7 @@ theorem image_embedding [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {t : Set.{u2} β}, (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) t) -> (forall (φ : OrderEmbedding.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u1} α (LE.le.{u1} α _inst_1) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β}, (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1678 : β) (x._@.Mathlib.Order.Antichain._hyg.1680 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1678 x._@.Mathlib.Order.Antichain._hyg.1680) t) -> (forall (φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1700 : α) (x._@.Mathlib.Order.Antichain._hyg.1702 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1700 x._@.Mathlib.Order.Antichain._hyg.1702) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) φ)) t))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β}, (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1678 : β) (x._@.Mathlib.Order.Antichain._hyg.1680 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1678 x._@.Mathlib.Order.Antichain._hyg.1680) t) -> (forall (φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1700 : α) (x._@.Mathlib.Order.Antichain._hyg.1702 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1700 x._@.Mathlib.Order.Antichain._hyg.1702) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) φ)) t))
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_embedding IsAntichain.preimage_embeddingₓ'. -/
 theorem preimage_embedding [LE α] [LE β] {t : Set β} (ht : IsAntichain (· ≤ ·) t) (φ : α ↪o β) :
     IsAntichain (· ≤ ·) (φ ⁻¹' t) :=
@@ -257,7 +257,7 @@ theorem preimage_embedding [LE α] [LE β] {t : Set β} (ht : IsAntichain (· �
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {φ : OrderEmbedding.{u1, u2} α β _inst_1 _inst_2}, Iff (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s)) (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1769 : β) (x._@.Mathlib.Order.Antichain._hyg.1771 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1769 x._@.Mathlib.Order.Antichain._hyg.1771) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) φ)) s)) (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1792 : α) (x._@.Mathlib.Order.Antichain._hyg.1794 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1792 x._@.Mathlib.Order.Antichain._hyg.1794) s)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {φ : OrderEmbedding.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1769 : β) (x._@.Mathlib.Order.Antichain._hyg.1771 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1769 x._@.Mathlib.Order.Antichain._hyg.1771) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.744 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.746 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.744 x._@.Mathlib.Order.Hom.Basic._hyg.746) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.759 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.761 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.759 x._@.Mathlib.Order.Hom.Basic._hyg.761) φ)) s)) (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1792 : α) (x._@.Mathlib.Order.Antichain._hyg.1794 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1792 x._@.Mathlib.Order.Antichain._hyg.1794) s)
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_embedding_iff IsAntichain.image_embedding_iffₓ'. -/
 theorem image_embedding_iff [LE α] [LE β] {φ : α ↪o β} :
     IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
@@ -268,7 +268,7 @@ theorem image_embedding_iff [LE α] [LE β] {φ : α ↪o β} :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β], (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s) -> (forall (φ : OrderIso.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β], (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1845 : α) (x._@.Mathlib.Order.Antichain._hyg.1847 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1845 x._@.Mathlib.Order.Antichain._hyg.1847) s) -> (forall (φ : OrderIso.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1867 : β) (x._@.Mathlib.Order.Antichain._hyg.1869 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1867 x._@.Mathlib.Order.Antichain._hyg.1869) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) s))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β], (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1845 : α) (x._@.Mathlib.Order.Antichain._hyg.1847 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1845 x._@.Mathlib.Order.Antichain._hyg.1847) s) -> (forall (φ : OrderIso.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1867 : β) (x._@.Mathlib.Order.Antichain._hyg.1869 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1867 x._@.Mathlib.Order.Antichain._hyg.1869) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) s))
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_iso IsAntichain.image_isoₓ'. -/
 theorem image_iso [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : α ≃o β) :
     IsAntichain (· ≤ ·) (φ '' s) :=
@@ -279,7 +279,7 @@ theorem image_iso [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : α ≃o
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {φ : OrderIso.{u1, u2} α β _inst_1 _inst_2}, Iff (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) (Set.image.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) s)) (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) s)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {φ : OrderIso.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1936 : β) (x._@.Mathlib.Order.Antichain._hyg.1938 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1936 x._@.Mathlib.Order.Antichain._hyg.1938) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) s)) (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1959 : α) (x._@.Mathlib.Order.Antichain._hyg.1961 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1959 x._@.Mathlib.Order.Antichain._hyg.1961) s)
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {φ : OrderIso.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.1936 : β) (x._@.Mathlib.Order.Antichain._hyg.1938 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.1936 x._@.Mathlib.Order.Antichain._hyg.1938) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) s)) (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.1959 : α) (x._@.Mathlib.Order.Antichain._hyg.1961 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.1959 x._@.Mathlib.Order.Antichain._hyg.1961) s)
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_iso_iff IsAntichain.image_iso_iffₓ'. -/
 theorem image_iso_iff [LE α] [LE β] {φ : α ≃o β} :
     IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
@@ -290,7 +290,7 @@ theorem image_iso_iff [LE α] [LE β] {φ : α ≃o β} :
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {t : Set.{u2} β}, (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) t) -> (forall (φ : OrderIso.{u1, u2} α β _inst_1 _inst_2), IsAntichain.{u1} α (LE.le.{u1} α _inst_1) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β}, (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.2014 : β) (x._@.Mathlib.Order.Antichain._hyg.2016 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.2014 x._@.Mathlib.Order.Antichain._hyg.2016) t) -> (forall (φ : OrderIso.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.2036 : α) (x._@.Mathlib.Order.Antichain._hyg.2038 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.2036 x._@.Mathlib.Order.Antichain._hyg.2038) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) t))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β}, (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.2014 : β) (x._@.Mathlib.Order.Antichain._hyg.2016 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.2014 x._@.Mathlib.Order.Antichain._hyg.2016) t) -> (forall (φ : OrderIso.{u2, u1} α β _inst_1 _inst_2), IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.2036 : α) (x._@.Mathlib.Order.Antichain._hyg.2038 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.2036 x._@.Mathlib.Order.Antichain._hyg.2038) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) t))
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_iso IsAntichain.preimage_isoₓ'. -/
 theorem preimage_iso [LE α] [LE β] {t : Set β} (ht : IsAntichain (· ≤ ·) t) (φ : α ≃o β) :
     IsAntichain (· ≤ ·) (φ ⁻¹' t) :=
@@ -301,7 +301,7 @@ theorem preimage_iso [LE α] [LE β] {t : Set β} (ht : IsAntichain (· ≤ ·) 
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LE.{u1} α] [_inst_2 : LE.{u2} β] {t : Set.{u2} β} {φ : OrderIso.{u1, u2} α β _inst_1 _inst_2}, Iff (IsAntichain.{u1} α (LE.le.{u1} α _inst_1) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β _inst_1 _inst_2) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α _inst_1) (LE.le.{u2} β _inst_2)) φ) t)) (IsAntichain.{u2} β (LE.le.{u2} β _inst_2) t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β} {φ : OrderIso.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.2107 : α) (x._@.Mathlib.Order.Antichain._hyg.2109 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.2107 x._@.Mathlib.Order.Antichain._hyg.2109) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) t)) (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.2130 : β) (x._@.Mathlib.Order.Antichain._hyg.2132 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.2130 x._@.Mathlib.Order.Antichain._hyg.2132) t)
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {t : Set.{u1} β} {φ : OrderIso.{u2, u1} α β _inst_1 _inst_2}, Iff (IsAntichain.{u2} α (fun (x._@.Mathlib.Order.Antichain._hyg.2107 : α) (x._@.Mathlib.Order.Antichain._hyg.2109 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Antichain._hyg.2107 x._@.Mathlib.Order.Antichain._hyg.2109) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) φ))) t)) (IsAntichain.{u1} β (fun (x._@.Mathlib.Order.Antichain._hyg.2130 : β) (x._@.Mathlib.Order.Antichain._hyg.2132 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Antichain._hyg.2130 x._@.Mathlib.Order.Antichain._hyg.2132) t)
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_iso_iff IsAntichain.preimage_iso_iffₓ'. -/
 theorem preimage_iso_iff [LE α] [LE β] {t : Set β} {φ : α ≃o β} :
     IsAntichain (· ≤ ·) (φ ⁻¹' t) ↔ IsAntichain (· ≤ ·) t :=
@@ -537,10 +537,69 @@ variable {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s t : Set 
 local infixl:50 " ≺ " => StrongLT
 
 #print IsWeakAntichain /-
-/-- A weak antichain in `Π i, α i` is a set such that no two distinct elements are strongly less
-than each other. -/
-def IsWeakAntichain (s : Set (∀ i, α i)) : Prop :=
-  IsAntichain (· ≺ ·) s
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A weak antichain in `Π i, α i` is a set such that no two distinct elements are strongly less\nthan each other. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `IsWeakAntichain [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`s]
+         [":" (Term.app `Set [(Term.forall "∀" [`i] [] "," (Term.app `α [`i]))])]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.prop "Prop"))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        `IsAntichain
+        [(Term.paren "(" (Order.Antichain.«term_≺_» (Term.cdot "·") " ≺ " (Term.cdot "·")) ")") `s])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `IsAntichain
+       [(Term.paren "(" (Order.Antichain.«term_≺_» (Term.cdot "·") " ≺ " (Term.cdot "·")) ")") `s])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.paren', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.paren "(" (Order.Antichain.«term_≺_» (Term.cdot "·") " ≺ " (Term.cdot "·")) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Antichain.«term_≺_» (Term.cdot "·") " ≺ " (Term.cdot "·"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Antichain.«term_≺_»', expected 'Order.Antichain.term_≺_._@.Order.Antichain._hyg.17'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A weak antichain in `Π i, α i` is a set such that no two distinct elements are strongly less
+    than each other. -/
+  def IsWeakAntichain ( s : Set ∀ i , α i ) : Prop := IsAntichain ( · ≺ · ) s
 #align is_weak_antichain IsWeakAntichain
 -/
 
@@ -562,8 +621,71 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {a : forall (i : ι), α i} {b : forall (i : ι), α i}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) a s) -> (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) a b) -> (Eq.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b)
 Case conversion may be inaccurate. Consider using '#align is_weak_antichain.eq IsWeakAntichain.eqₓ'. -/
-protected theorem eq (hs : IsWeakAntichain s) : a ∈ s → b ∈ s → a ≺ b → a = b :=
-  hs.Eq
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [(Command.protected "protected")] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `eq [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`hs] [":" (Term.app `IsWeakAntichain [`s])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.arrow
+         («term_∈_» `a "∈" `s)
+         "→"
+         (Term.arrow
+          («term_∈_» `b "∈" `s)
+          "→"
+          (Term.arrow (Order.Antichain.«term_≺_» `a " ≺ " `b) "→" («term_=_» `a "=" `b))))))
+      (Command.declValSimple ":=" (Term.proj `hs "." `Eq) [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `hs "." `Eq)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hs
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.arrow
+       («term_∈_» `a "∈" `s)
+       "→"
+       (Term.arrow
+        («term_∈_» `b "∈" `s)
+        "→"
+        (Term.arrow (Order.Antichain.«term_≺_» `a " ≺ " `b) "→" («term_=_» `a "=" `b))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       («term_∈_» `b "∈" `s)
+       "→"
+       (Term.arrow (Order.Antichain.«term_≺_» `a " ≺ " `b) "→" («term_=_» `a "=" `b)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow (Order.Antichain.«term_≺_» `a " ≺ " `b) "→" («term_=_» `a "=" `b))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_» `a "=" `b)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `b
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (Order.Antichain.«term_≺_» `a " ≺ " `b)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Antichain.«term_≺_»', expected 'Order.Antichain.term_≺_._@.Order.Antichain._hyg.17'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+protected theorem eq ( hs : IsWeakAntichain s ) : a ∈ s → b ∈ s → a ≺ b → a = b := hs . Eq
 #align is_weak_antichain.eq IsWeakAntichain.eq
 
 /- warning: is_weak_antichain.insert -> IsWeakAntichain.insert is a dubious translation:
@@ -572,10 +694,178 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {a : forall (i : ι), α i}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (forall {{b : forall (i : ι), α i}}, (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b) -> (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) b a))) -> (forall {{b : forall (i : ι), α i}}, (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b) -> (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) a b))) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Insert.insert.{max u2 u1, max u1 u2} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instInsertSet.{max u2 u1} (forall (i : ι), α i)) a s))
 Case conversion may be inaccurate. Consider using '#align is_weak_antichain.insert IsWeakAntichain.insertₓ'. -/
-protected theorem insert (hs : IsWeakAntichain s) :
-    (∀ ⦃b⦄, b ∈ s → a ≠ b → ¬b ≺ a) →
-      (∀ ⦃b⦄, b ∈ s → a ≠ b → ¬a ≺ b) → IsWeakAntichain (insert a s) :=
-  hs.insert
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [(Command.protected "protected")] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `insert [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`hs] [":" (Term.app `IsWeakAntichain [`s])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.arrow
+         (Term.forall
+          "∀"
+          [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+          []
+          ","
+          (Term.arrow
+           («term_∈_» `b "∈" `s)
+           "→"
+           (Term.arrow
+            («term_≠_» `a "≠" `b)
+            "→"
+            («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a)))))
+         "→"
+         (Term.arrow
+          (Term.forall
+           "∀"
+           [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+           []
+           ","
+           (Term.arrow
+            («term_∈_» `b "∈" `s)
+            "→"
+            (Term.arrow
+             («term_≠_» `a "≠" `b)
+             "→"
+             («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b)))))
+          "→"
+          (Term.app `IsWeakAntichain [(Term.app `insert [`a `s])])))))
+      (Command.declValSimple ":=" (Term.proj `hs "." `insert) [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `hs "." `insert)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hs
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.arrow
+       (Term.forall
+        "∀"
+        [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+        []
+        ","
+        (Term.arrow
+         («term_∈_» `b "∈" `s)
+         "→"
+         (Term.arrow
+          («term_≠_» `a "≠" `b)
+          "→"
+          («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a)))))
+       "→"
+       (Term.arrow
+        (Term.forall
+         "∀"
+         [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+         []
+         ","
+         (Term.arrow
+          («term_∈_» `b "∈" `s)
+          "→"
+          (Term.arrow
+           («term_≠_» `a "≠" `b)
+           "→"
+           («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b)))))
+        "→"
+        (Term.app `IsWeakAntichain [(Term.app `insert [`a `s])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       (Term.forall
+        "∀"
+        [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+        []
+        ","
+        (Term.arrow
+         («term_∈_» `b "∈" `s)
+         "→"
+         (Term.arrow
+          («term_≠_» `a "≠" `b)
+          "→"
+          («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b)))))
+       "→"
+       (Term.app `IsWeakAntichain [(Term.app `insert [`a `s])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `IsWeakAntichain [(Term.app `insert [`a `s])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `insert [`a `s])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `insert
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `insert [`a `s]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `IsWeakAntichain
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (Term.forall
+       "∀"
+       [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+       []
+       ","
+       (Term.arrow
+        («term_∈_» `b "∈" `s)
+        "→"
+        (Term.arrow
+         («term_≠_» `a "≠" `b)
+         "→"
+         («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b)))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       («term_∈_» `b "∈" `s)
+       "→"
+       (Term.arrow
+        («term_≠_» `a "≠" `b)
+        "→"
+        («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow («term_≠_» `a "≠" `b) "→" («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Antichain.«term_≺_» `a " ≺ " `b)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Antichain.«term_≺_»', expected 'Order.Antichain.term_≺_._@.Order.Antichain._hyg.17'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+protected
+  theorem
+    insert
+    ( hs : IsWeakAntichain s )
+      :
+        ∀ ⦃ b ⦄ , b ∈ s → a ≠ b → ¬ b ≺ a
+          →
+          ∀ ⦃ b ⦄ , b ∈ s → a ≠ b → ¬ a ≺ b → IsWeakAntichain insert a s
+    := hs . insert
 #align is_weak_antichain.insert IsWeakAntichain.insert
 
 end IsWeakAntichain
@@ -586,16 +876,150 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {a : forall (i : ι), α i}, Iff (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Insert.insert.{max u2 u1, max u1 u2} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instInsertSet.{max u2 u1} (forall (i : ι), α i)) a s)) (And (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) (forall {{b : forall (i : ι), α i}}, (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (Ne.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b) -> (And (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) a b)) (Not (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) b a)))))
 Case conversion may be inaccurate. Consider using '#align is_weak_antichain_insert isWeakAntichain_insertₓ'. -/
-theorem isWeakAntichain_insert :
-    IsWeakAntichain (insert a s) ↔ IsWeakAntichain s ∧ ∀ ⦃b⦄, b ∈ s → a ≠ b → ¬a ≺ b ∧ ¬b ≺ a :=
-  isAntichain_insert
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `isWeakAntichain_insert [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_↔_»
+         (Term.app `IsWeakAntichain [(Term.app `insert [`a `s])])
+         "↔"
+         («term_∧_»
+          (Term.app `IsWeakAntichain [`s])
+          "∧"
+          (Term.forall
+           "∀"
+           [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+           []
+           ","
+           (Term.arrow
+            («term_∈_» `b "∈" `s)
+            "→"
+            (Term.arrow
+             («term_≠_» `a "≠" `b)
+             "→"
+             («term_∧_»
+              («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+              "∧"
+              («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a))))))))))
+      (Command.declValSimple ":=" `isAntichain_insert [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `isAntichain_insert
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_↔_»
+       (Term.app `IsWeakAntichain [(Term.app `insert [`a `s])])
+       "↔"
+       («term_∧_»
+        (Term.app `IsWeakAntichain [`s])
+        "∧"
+        (Term.forall
+         "∀"
+         [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+         []
+         ","
+         (Term.arrow
+          («term_∈_» `b "∈" `s)
+          "→"
+          (Term.arrow
+           («term_≠_» `a "≠" `b)
+           "→"
+           («term_∧_»
+            («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+            "∧"
+            («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a))))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∧_»
+       (Term.app `IsWeakAntichain [`s])
+       "∧"
+       (Term.forall
+        "∀"
+        [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+        []
+        ","
+        (Term.arrow
+         («term_∈_» `b "∈" `s)
+         "→"
+         (Term.arrow
+          («term_≠_» `a "≠" `b)
+          "→"
+          («term_∧_»
+           («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+           "∧"
+           («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a)))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [(Term.strictImplicitBinder "⦃" [`b] [] "⦄")]
+       []
+       ","
+       (Term.arrow
+        («term_∈_» `b "∈" `s)
+        "→"
+        (Term.arrow
+         («term_≠_» `a "≠" `b)
+         "→"
+         («term_∧_»
+          («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+          "∧"
+          («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       («term_∈_» `b "∈" `s)
+       "→"
+       (Term.arrow
+        («term_≠_» `a "≠" `b)
+        "→"
+        («term_∧_»
+         («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+         "∧"
+         («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a)))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       («term_≠_» `a "≠" `b)
+       "→"
+       («term_∧_»
+        («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+        "∧"
+        («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∧_»
+       («term¬_» "¬" (Order.Antichain.«term_≺_» `a " ≺ " `b))
+       "∧"
+       («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term¬_» "¬" (Order.Antichain.«term_≺_» `b " ≺ " `a))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Antichain.«term_≺_» `b " ≺ " `a)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Antichain.«term_≺_»', expected 'Order.Antichain.term_≺_._@.Order.Antichain._hyg.17'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  isWeakAntichain_insert
+  : IsWeakAntichain insert a s ↔ IsWeakAntichain s ∧ ∀ ⦃ b ⦄ , b ∈ s → a ≠ b → ¬ a ≺ b ∧ ¬ b ≺ a
+  := isAntichain_insert
 #align is_weak_antichain_insert isWeakAntichain_insert
 
 /- warning: is_antichain.is_weak_antichain -> IsAntichain.isWeakAntichain is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Preorder.{u2} (α i)] {s : Set.{max u1 u2} (forall (i : ι), α i)}, (IsAntichain.{max u1 u2} (forall (i : ι), α i) (LE.le.{max u1 u2} (forall (i : ι), α i) (Pi.hasLe.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_1 i)))) s) -> (IsWeakAntichain.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
 but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)}, (IsAntichain.{max u2 u1} (forall (i : ι), α i) (fun (x._@.Mathlib.Order.Antichain._hyg.5740 : forall (i : ι), α i) (x._@.Mathlib.Order.Antichain._hyg.5742 : forall (i : ι), α i) => LE.le.{max u2 u1} (forall (i : ι), α i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{u1} (α i) (_inst_1 i))) x._@.Mathlib.Order.Antichain._hyg.5740 x._@.Mathlib.Order.Antichain._hyg.5742) s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)}, (IsAntichain.{max u2 u1} (forall (i : ι), α i) (fun (x._@.Mathlib.Order.Antichain._hyg.5796 : forall (i : ι), α i) (x._@.Mathlib.Order.Antichain._hyg.5798 : forall (i : ι), α i) => LE.le.{max u2 u1} (forall (i : ι), α i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLE.{u1} (α i) (_inst_1 i))) x._@.Mathlib.Order.Antichain._hyg.5796 x._@.Mathlib.Order.Antichain._hyg.5798) s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
 Case conversion may be inaccurate. Consider using '#align is_antichain.is_weak_antichain IsAntichain.isWeakAntichainₓ'. -/
 protected theorem IsAntichain.isWeakAntichain (hs : IsAntichain (· ≤ ·) s) : IsWeakAntichain s :=
   hs.mono fun a b => le_of_strongLT

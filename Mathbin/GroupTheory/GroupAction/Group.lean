@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.group
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ instance Equiv.Perm.applyMulAction (α : Type _) : MulAction (Equiv.Perm α) α
 lean 3 declaration is
   forall {α : Type.{u1}} (f : Equiv.Perm.{succ u1} α) (a : α), Eq.{succ u1} α (HasSmul.smul.{u1, u1} (Equiv.Perm.{succ u1} α) α (MulAction.toHasSmul.{u1, u1} (Equiv.Perm.{succ u1} α) α (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.applyMulAction.{u1} α)) f a) (coeFn.{succ u1, succ u1} (Equiv.Perm.{succ u1} α) (fun (_x : Equiv.{succ u1, succ u1} α α) => α -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} α α) f a)
 but is expected to have type
-  forall {α : Type.{u1}} (f : Equiv.Perm.{succ u1} α) (a : α), Eq.{succ u1} α (HSMul.hSMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) α α (instHSMul.{u1, u1} (Equiv.Perm.{succ u1} α) α (MulAction.toSMul.{u1, u1} (Equiv.Perm.{succ u1} α) α (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.applyMulAction.{u1} α))) f a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) f a)
+  forall {α : Type.{u1}} (f : Equiv.Perm.{succ u1} α) (a : α), Eq.{succ u1} α (HSMul.hSMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) α α (instHSMul.{u1, u1} (Equiv.Perm.{succ u1} α) α (MulAction.toSMul.{u1, u1} (Equiv.Perm.{succ u1} α) α (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))) (Equiv.Perm.applyMulAction.{u1} α))) f a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α α))) f a)
 Case conversion may be inaccurate. Consider using '#align equiv.perm.smul_def Equiv.Perm.smul_defₓ'. -/
 @[simp]
 protected theorem Equiv.Perm.smul_def {α : Type _} (f : Equiv.Perm α) (a : α) : f • a = f a :=

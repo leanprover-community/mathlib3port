@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Apurva Nakade
 
 ! This file was ported from Lean 3 source module set_theory.surreal.dyadic
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,54 +130,1076 @@ theorem zero_le_pow_half (n : ℕ) : 0 ≤ powHalf n :=
   (pow_half_pos n).le
 #align pgame.zero_le_pow_half Pgame.zero_le_pow_half
 
-theorem add_pow_half_succ_self_eq_pow_half (n) : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n :=
-  by
-  induction' n using Nat.strong_induction_on with n hn
-  · constructor <;> rw [le_iff_forall_lf] <;> constructor
-    · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
-      ·
-        calc
-          0 + pow_half n.succ ≈ pow_half n.succ := zero_add_equiv _
-          _ < pow_half n := pow_half_succ_lt_pow_half n
-          
-      ·
-        calc
-          pow_half n.succ + 0 ≈ pow_half n.succ := add_zero_equiv _
-          _ < pow_half n := pow_half_succ_lt_pow_half n
-          
-    · cases n
-      · rintro ⟨⟩
-      rintro ⟨⟩
-      apply lf_of_move_right_le
-      swap
-      exact Sum.inl default
-      calc
-        pow_half n.succ + pow_half (n.succ + 1) ≤ pow_half n.succ + pow_half n.succ :=
-          add_le_add_left (pow_half_succ_le_pow_half _) _
-        _ ≈ pow_half n := hn _ (Nat.lt_succ_self n)
-        
-    · simp only [pow_half_move_left, forall_const]
-      apply lf_of_lt
-      calc
-        0 ≈ 0 + 0 := (add_zero_equiv 0).symm
-        _ ≤ pow_half n.succ + 0 := add_le_add_right (zero_le_pow_half _) _
-        _ < pow_half n.succ + pow_half n.succ := add_lt_add_left (pow_half_pos _) _
-        
-    · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
-      ·
-        calc
-          pow_half n ≈ pow_half n + 0 := (add_zero_equiv _).symm
-          _ < pow_half n + pow_half n.succ := add_lt_add_left (pow_half_pos _) _
-          
-      ·
-        calc
-          pow_half n ≈ 0 + pow_half n := (zero_add_equiv _).symm
-          _ < pow_half n.succ + pow_half n := add_lt_add_right (pow_half_pos _) _
-          
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `add_pow_half_succ_self_eq_pow_half [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`n] [] [] ")")]
+       (Term.typeSpec
+        ":"
+        (SetTheory.Surreal.Dyadic.pgame.equiv
+         («term_+_»
+          (Term.app `powHalf [(«term_+_» `n "+" (num "1"))])
+          "+"
+          (Term.app `powHalf [(«term_+_» `n "+" (num "1"))]))
+         " ≈ "
+         (Term.app `powHalf [`n]))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.induction'
+            "induction'"
+            [(Tactic.casesTarget [] `n)]
+            ["using" `Nat.strong_induction_on]
+            ["with" [(Lean.binderIdent `n) (Lean.binderIdent `hn)]]
+            [])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.«tactic_<;>_»
+              (Tactic.«tactic_<;>_»
+               (Tactic.constructor "constructor")
+               "<;>"
+               (Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `le_iff_forall_lf)] "]")
+                []))
+              "<;>"
+              (Tactic.constructor "constructor"))
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.«tactic_<;>_»
+                (Std.Tactic.rintro
+                 "rintro"
+                 [(Std.Tactic.RCases.rintroPat.one
+                   (Std.Tactic.RCases.rcasesPat.paren
+                    "("
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed
+                           [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                          [])]
+                        "⟩")
+                       "|"
+                       (Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed
+                           [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                          [])]
+                        "⟩")])
+                     [])
+                    ")"))]
+                 [])
+                "<;>"
+                (Tactic.apply "apply" `lf_of_lt))
+               []
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
+                [(calcTactic
+                  "calc"
+                  (calcStep
+                   (SetTheory.Surreal.Dyadic.pgame.equiv
+                    («term_+_» (num "0") "+" (Term.app `pow_half [`n.succ]))
+                    " ≈ "
+                    (Term.app `pow_half [`n.succ]))
+                   ":="
+                   (Term.app `zero_add_equiv [(Term.hole "_")]))
+                  [(calcStep
+                    («term_<_» (Term.hole "_") "<" (Term.app `pow_half [`n]))
+                    ":="
+                    (Term.app `pow_half_succ_lt_pow_half [`n]))])])
+               []
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
+                [(calcTactic
+                  "calc"
+                  (calcStep
+                   (SetTheory.Surreal.Dyadic.pgame.equiv
+                    («term_+_» (Term.app `pow_half [`n.succ]) "+" (num "0"))
+                    " ≈ "
+                    (Term.app `pow_half [`n.succ]))
+                   ":="
+                   (Term.app `add_zero_equiv [(Term.hole "_")]))
+                  [(calcStep
+                    («term_<_» (Term.hole "_") "<" (Term.app `pow_half [`n]))
+                    ":="
+                    (Term.app `pow_half_succ_lt_pow_half [`n]))])])])
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
+               []
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
+                [(Std.Tactic.rintro
+                  "rintro"
+                  [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩"))]
+                  [])])
+               []
+               (Std.Tactic.rintro
+                "rintro"
+                [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩"))]
+                [])
+               []
+               (Tactic.apply "apply" `lf_of_move_right_le)
+               []
+               (Mathlib.Tactic.tacticSwap "swap")
+               []
+               (Tactic.exact "exact" (Term.app `Sum.inl [`default]))
+               []
+               (calcTactic
+                "calc"
+                (calcStep
+                 («term_≤_»
+                  («term_+_»
+                   (Term.app `pow_half [`n.succ])
+                   "+"
+                   (Term.app `pow_half [(«term_+_» `n.succ "+" (num "1"))]))
+                  "≤"
+                  («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n.succ])))
+                 ":="
+                 (Term.app
+                  `add_le_add_left
+                  [(Term.app `pow_half_succ_le_pow_half [(Term.hole "_")]) (Term.hole "_")]))
+                [(calcStep
+                  (SetTheory.Surreal.Dyadic.pgame.equiv
+                   (Term.hole "_")
+                   " ≈ "
+                   (Term.app `pow_half [`n]))
+                  ":="
+                  (Term.app `hn [(Term.hole "_") (Term.app `Nat.lt_succ_self [`n])]))])])
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `pow_half_move_left)
+                  ","
+                  (Tactic.simpLemma [] [] `forall_const)]
+                 "]"]
+                [])
+               []
+               (Tactic.apply "apply" `lf_of_lt)
+               []
+               (calcTactic
+                "calc"
+                (calcStep
+                 (SetTheory.Surreal.Dyadic.pgame.equiv
+                  (num "0")
+                  " ≈ "
+                  («term_+_» (num "0") "+" (num "0")))
+                 ":="
+                 (Term.proj (Term.app `add_zero_equiv [(num "0")]) "." `symm))
+                [(calcStep
+                  («term_≤_»
+                   (Term.hole "_")
+                   "≤"
+                   («term_+_» (Term.app `pow_half [`n.succ]) "+" (num "0")))
+                  ":="
+                  (Term.app
+                   `add_le_add_right
+                   [(Term.app `zero_le_pow_half [(Term.hole "_")]) (Term.hole "_")]))
+                 (calcStep
+                  («term_<_»
+                   (Term.hole "_")
+                   "<"
+                   («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n.succ])))
+                  ":="
+                  (Term.app
+                   `add_lt_add_left
+                   [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.«tactic_<;>_»
+                (Std.Tactic.rintro
+                 "rintro"
+                 [(Std.Tactic.RCases.rintroPat.one
+                   (Std.Tactic.RCases.rcasesPat.paren
+                    "("
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed
+                           [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                          [])]
+                        "⟩")
+                       "|"
+                       (Std.Tactic.RCases.rcasesPat.tuple
+                        "⟨"
+                        [(Std.Tactic.RCases.rcasesPatLo
+                          (Std.Tactic.RCases.rcasesPatMed
+                           [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                          [])]
+                        "⟩")])
+                     [])
+                    ")"))]
+                 [])
+                "<;>"
+                (Tactic.apply "apply" `lf_of_lt))
+               []
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
+                [(calcTactic
+                  "calc"
+                  (calcStep
+                   (SetTheory.Surreal.Dyadic.pgame.equiv
+                    (Term.app `pow_half [`n])
+                    " ≈ "
+                    («term_+_» (Term.app `pow_half [`n]) "+" (num "0")))
+                   ":="
+                   (Term.proj (Term.app `add_zero_equiv [(Term.hole "_")]) "." `symm))
+                  [(calcStep
+                    («term_<_»
+                     (Term.hole "_")
+                     "<"
+                     («term_+_» (Term.app `pow_half [`n]) "+" (Term.app `pow_half [`n.succ])))
+                    ":="
+                    (Term.app
+                     `add_lt_add_left
+                     [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+               []
+               (tactic__
+                (cdotTk (patternIgnore (token.«· » "·")))
+                [(calcTactic
+                  "calc"
+                  (calcStep
+                   (SetTheory.Surreal.Dyadic.pgame.equiv
+                    (Term.app `pow_half [`n])
+                    " ≈ "
+                    («term_+_» (num "0") "+" (Term.app `pow_half [`n])))
+                   ":="
+                   (Term.proj (Term.app `zero_add_equiv [(Term.hole "_")]) "." `symm))
+                  [(calcStep
+                    («term_<_»
+                     (Term.hole "_")
+                     "<"
+                     («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n])))
+                    ":="
+                    (Term.app
+                     `add_lt_add_right
+                     [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])])])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.induction'
+           "induction'"
+           [(Tactic.casesTarget [] `n)]
+           ["using" `Nat.strong_induction_on]
+           ["with" [(Lean.binderIdent `n) (Lean.binderIdent `hn)]]
+           [])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.«tactic_<;>_»
+             (Tactic.«tactic_<;>_»
+              (Tactic.constructor "constructor")
+              "<;>"
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `le_iff_forall_lf)] "]")
+               []))
+             "<;>"
+             (Tactic.constructor "constructor"))
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.«tactic_<;>_»
+               (Std.Tactic.rintro
+                "rintro"
+                [(Std.Tactic.RCases.rintroPat.one
+                  (Std.Tactic.RCases.rcasesPat.paren
+                   "("
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                         [])]
+                       "⟩")
+                      "|"
+                      (Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                         [])]
+                       "⟩")])
+                    [])
+                   ")"))]
+                [])
+               "<;>"
+               (Tactic.apply "apply" `lf_of_lt))
+              []
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
+               [(calcTactic
+                 "calc"
+                 (calcStep
+                  (SetTheory.Surreal.Dyadic.pgame.equiv
+                   («term_+_» (num "0") "+" (Term.app `pow_half [`n.succ]))
+                   " ≈ "
+                   (Term.app `pow_half [`n.succ]))
+                  ":="
+                  (Term.app `zero_add_equiv [(Term.hole "_")]))
+                 [(calcStep
+                   («term_<_» (Term.hole "_") "<" (Term.app `pow_half [`n]))
+                   ":="
+                   (Term.app `pow_half_succ_lt_pow_half [`n]))])])
+              []
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
+               [(calcTactic
+                 "calc"
+                 (calcStep
+                  (SetTheory.Surreal.Dyadic.pgame.equiv
+                   («term_+_» (Term.app `pow_half [`n.succ]) "+" (num "0"))
+                   " ≈ "
+                   (Term.app `pow_half [`n.succ]))
+                  ":="
+                  (Term.app `add_zero_equiv [(Term.hole "_")]))
+                 [(calcStep
+                   («term_<_» (Term.hole "_") "<" (Term.app `pow_half [`n]))
+                   ":="
+                   (Term.app `pow_half_succ_lt_pow_half [`n]))])])])
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
+              []
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
+               [(Std.Tactic.rintro
+                 "rintro"
+                 [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩"))]
+                 [])])
+              []
+              (Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩"))]
+               [])
+              []
+              (Tactic.apply "apply" `lf_of_move_right_le)
+              []
+              (Mathlib.Tactic.tacticSwap "swap")
+              []
+              (Tactic.exact "exact" (Term.app `Sum.inl [`default]))
+              []
+              (calcTactic
+               "calc"
+               (calcStep
+                («term_≤_»
+                 («term_+_»
+                  (Term.app `pow_half [`n.succ])
+                  "+"
+                  (Term.app `pow_half [(«term_+_» `n.succ "+" (num "1"))]))
+                 "≤"
+                 («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n.succ])))
+                ":="
+                (Term.app
+                 `add_le_add_left
+                 [(Term.app `pow_half_succ_le_pow_half [(Term.hole "_")]) (Term.hole "_")]))
+               [(calcStep
+                 (SetTheory.Surreal.Dyadic.pgame.equiv
+                  (Term.hole "_")
+                  " ≈ "
+                  (Term.app `pow_half [`n]))
+                 ":="
+                 (Term.app `hn [(Term.hole "_") (Term.app `Nat.lt_succ_self [`n])]))])])
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `pow_half_move_left)
+                 ","
+                 (Tactic.simpLemma [] [] `forall_const)]
+                "]"]
+               [])
+              []
+              (Tactic.apply "apply" `lf_of_lt)
+              []
+              (calcTactic
+               "calc"
+               (calcStep
+                (SetTheory.Surreal.Dyadic.pgame.equiv
+                 (num "0")
+                 " ≈ "
+                 («term_+_» (num "0") "+" (num "0")))
+                ":="
+                (Term.proj (Term.app `add_zero_equiv [(num "0")]) "." `symm))
+               [(calcStep
+                 («term_≤_»
+                  (Term.hole "_")
+                  "≤"
+                  («term_+_» (Term.app `pow_half [`n.succ]) "+" (num "0")))
+                 ":="
+                 (Term.app
+                  `add_le_add_right
+                  [(Term.app `zero_le_pow_half [(Term.hole "_")]) (Term.hole "_")]))
+                (calcStep
+                 («term_<_»
+                  (Term.hole "_")
+                  "<"
+                  («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n.succ])))
+                 ":="
+                 (Term.app
+                  `add_lt_add_left
+                  [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.«tactic_<;>_»
+               (Std.Tactic.rintro
+                "rintro"
+                [(Std.Tactic.RCases.rintroPat.one
+                  (Std.Tactic.RCases.rcasesPat.paren
+                   "("
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                         [])]
+                       "⟩")
+                      "|"
+                      (Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                         [])]
+                       "⟩")])
+                    [])
+                   ")"))]
+                [])
+               "<;>"
+               (Tactic.apply "apply" `lf_of_lt))
+              []
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
+               [(calcTactic
+                 "calc"
+                 (calcStep
+                  (SetTheory.Surreal.Dyadic.pgame.equiv
+                   (Term.app `pow_half [`n])
+                   " ≈ "
+                   («term_+_» (Term.app `pow_half [`n]) "+" (num "0")))
+                  ":="
+                  (Term.proj (Term.app `add_zero_equiv [(Term.hole "_")]) "." `symm))
+                 [(calcStep
+                   («term_<_»
+                    (Term.hole "_")
+                    "<"
+                    («term_+_» (Term.app `pow_half [`n]) "+" (Term.app `pow_half [`n.succ])))
+                   ":="
+                   (Term.app
+                    `add_lt_add_left
+                    [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+              []
+              (tactic__
+               (cdotTk (patternIgnore (token.«· » "·")))
+               [(calcTactic
+                 "calc"
+                 (calcStep
+                  (SetTheory.Surreal.Dyadic.pgame.equiv
+                   (Term.app `pow_half [`n])
+                   " ≈ "
+                   («term_+_» (num "0") "+" (Term.app `pow_half [`n])))
+                  ":="
+                  (Term.proj (Term.app `zero_add_equiv [(Term.hole "_")]) "." `symm))
+                 [(calcStep
+                   («term_<_»
+                    (Term.hole "_")
+                    "<"
+                    («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n])))
+                   ":="
+                   (Term.app
+                    `add_lt_add_right
+                    [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])])])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.«tactic_<;>_»
+         (Tactic.«tactic_<;>_»
+          (Tactic.constructor "constructor")
+          "<;>"
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `le_iff_forall_lf)] "]")
+           []))
+         "<;>"
+         (Tactic.constructor "constructor"))
+        []
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
+         [(Tactic.«tactic_<;>_»
+           (Std.Tactic.rintro
+            "rintro"
+            [(Std.Tactic.RCases.rintroPat.one
+              (Std.Tactic.RCases.rcasesPat.paren
+               "("
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                     [])]
+                   "⟩")
+                  "|"
+                  (Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                     [])]
+                   "⟩")])
+                [])
+               ")"))]
+            [])
+           "<;>"
+           (Tactic.apply "apply" `lf_of_lt))
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(calcTactic
+             "calc"
+             (calcStep
+              (SetTheory.Surreal.Dyadic.pgame.equiv
+               («term_+_» (num "0") "+" (Term.app `pow_half [`n.succ]))
+               " ≈ "
+               (Term.app `pow_half [`n.succ]))
+              ":="
+              (Term.app `zero_add_equiv [(Term.hole "_")]))
+             [(calcStep
+               («term_<_» (Term.hole "_") "<" (Term.app `pow_half [`n]))
+               ":="
+               (Term.app `pow_half_succ_lt_pow_half [`n]))])])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(calcTactic
+             "calc"
+             (calcStep
+              (SetTheory.Surreal.Dyadic.pgame.equiv
+               («term_+_» (Term.app `pow_half [`n.succ]) "+" (num "0"))
+               " ≈ "
+               (Term.app `pow_half [`n.succ]))
+              ":="
+              (Term.app `add_zero_equiv [(Term.hole "_")]))
+             [(calcStep
+               («term_<_» (Term.hole "_") "<" (Term.app `pow_half [`n]))
+               ":="
+               (Term.app `pow_half_succ_lt_pow_half [`n]))])])])
+        []
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
+         [(Tactic.cases "cases" [(Tactic.casesTarget [] `n)] [] [])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩"))]
+             [])])
+          []
+          (Std.Tactic.rintro
+           "rintro"
+           [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩"))]
+           [])
+          []
+          (Tactic.apply "apply" `lf_of_move_right_le)
+          []
+          (Mathlib.Tactic.tacticSwap "swap")
+          []
+          (Tactic.exact "exact" (Term.app `Sum.inl [`default]))
+          []
+          (calcTactic
+           "calc"
+           (calcStep
+            («term_≤_»
+             («term_+_»
+              (Term.app `pow_half [`n.succ])
+              "+"
+              (Term.app `pow_half [(«term_+_» `n.succ "+" (num "1"))]))
+             "≤"
+             («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n.succ])))
+            ":="
+            (Term.app
+             `add_le_add_left
+             [(Term.app `pow_half_succ_le_pow_half [(Term.hole "_")]) (Term.hole "_")]))
+           [(calcStep
+             (SetTheory.Surreal.Dyadic.pgame.equiv (Term.hole "_") " ≈ " (Term.app `pow_half [`n]))
+             ":="
+             (Term.app `hn [(Term.hole "_") (Term.app `Nat.lt_succ_self [`n])]))])])
+        []
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
+         [(Tactic.simp
+           "simp"
+           []
+           []
+           ["only"]
+           ["["
+            [(Tactic.simpLemma [] [] `pow_half_move_left)
+             ","
+             (Tactic.simpLemma [] [] `forall_const)]
+            "]"]
+           [])
+          []
+          (Tactic.apply "apply" `lf_of_lt)
+          []
+          (calcTactic
+           "calc"
+           (calcStep
+            (SetTheory.Surreal.Dyadic.pgame.equiv
+             (num "0")
+             " ≈ "
+             («term_+_» (num "0") "+" (num "0")))
+            ":="
+            (Term.proj (Term.app `add_zero_equiv [(num "0")]) "." `symm))
+           [(calcStep
+             («term_≤_»
+              (Term.hole "_")
+              "≤"
+              («term_+_» (Term.app `pow_half [`n.succ]) "+" (num "0")))
+             ":="
+             (Term.app
+              `add_le_add_right
+              [(Term.app `zero_le_pow_half [(Term.hole "_")]) (Term.hole "_")]))
+            (calcStep
+             («term_<_»
+              (Term.hole "_")
+              "<"
+              («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n.succ])))
+             ":="
+             (Term.app
+              `add_lt_add_left
+              [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+        []
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
+         [(Tactic.«tactic_<;>_»
+           (Std.Tactic.rintro
+            "rintro"
+            [(Std.Tactic.RCases.rintroPat.one
+              (Std.Tactic.RCases.rcasesPat.paren
+               "("
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                     [])]
+                   "⟩")
+                  "|"
+                  (Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                     [])]
+                   "⟩")])
+                [])
+               ")"))]
+            [])
+           "<;>"
+           (Tactic.apply "apply" `lf_of_lt))
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(calcTactic
+             "calc"
+             (calcStep
+              (SetTheory.Surreal.Dyadic.pgame.equiv
+               (Term.app `pow_half [`n])
+               " ≈ "
+               («term_+_» (Term.app `pow_half [`n]) "+" (num "0")))
+              ":="
+              (Term.proj (Term.app `add_zero_equiv [(Term.hole "_")]) "." `symm))
+             [(calcStep
+               («term_<_»
+                (Term.hole "_")
+                "<"
+                («term_+_» (Term.app `pow_half [`n]) "+" (Term.app `pow_half [`n.succ])))
+               ":="
+               (Term.app
+                `add_lt_add_left
+                [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(calcTactic
+             "calc"
+             (calcStep
+              (SetTheory.Surreal.Dyadic.pgame.equiv
+               (Term.app `pow_half [`n])
+               " ≈ "
+               («term_+_» (num "0") "+" (Term.app `pow_half [`n])))
+              ":="
+              (Term.proj (Term.app `zero_add_equiv [(Term.hole "_")]) "." `symm))
+             [(calcStep
+               («term_<_»
+                (Term.hole "_")
+                "<"
+                («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n])))
+               ":="
+               (Term.app
+                `add_lt_add_right
+                [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.«tactic_<;>_»
+         (Std.Tactic.rintro
+          "rintro"
+          [(Std.Tactic.RCases.rintroPat.one
+            (Std.Tactic.RCases.rcasesPat.paren
+             "("
+             (Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                   [])]
+                 "⟩")
+                "|"
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                   [])]
+                 "⟩")])
+              [])
+             ")"))]
+          [])
+         "<;>"
+         (Tactic.apply "apply" `lf_of_lt))
+        []
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
+         [(calcTactic
+           "calc"
+           (calcStep
+            (SetTheory.Surreal.Dyadic.pgame.equiv
+             (Term.app `pow_half [`n])
+             " ≈ "
+             («term_+_» (Term.app `pow_half [`n]) "+" (num "0")))
+            ":="
+            (Term.proj (Term.app `add_zero_equiv [(Term.hole "_")]) "." `symm))
+           [(calcStep
+             («term_<_»
+              (Term.hole "_")
+              "<"
+              («term_+_» (Term.app `pow_half [`n]) "+" (Term.app `pow_half [`n.succ])))
+             ":="
+             (Term.app
+              `add_lt_add_left
+              [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+        []
+        (tactic__
+         (cdotTk (patternIgnore (token.«· » "·")))
+         [(calcTactic
+           "calc"
+           (calcStep
+            (SetTheory.Surreal.Dyadic.pgame.equiv
+             (Term.app `pow_half [`n])
+             " ≈ "
+             («term_+_» (num "0") "+" (Term.app `pow_half [`n])))
+            ":="
+            (Term.proj (Term.app `zero_add_equiv [(Term.hole "_")]) "." `symm))
+           [(calcStep
+             («term_<_»
+              (Term.hole "_")
+              "<"
+              («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n])))
+             ":="
+             (Term.app
+              `add_lt_add_right
+              [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(calcTactic
+         "calc"
+         (calcStep
+          (SetTheory.Surreal.Dyadic.pgame.equiv
+           (Term.app `pow_half [`n])
+           " ≈ "
+           («term_+_» (num "0") "+" (Term.app `pow_half [`n])))
+          ":="
+          (Term.proj (Term.app `zero_add_equiv [(Term.hole "_")]) "." `symm))
+         [(calcStep
+           («term_<_»
+            (Term.hole "_")
+            "<"
+            («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n])))
+           ":="
+           (Term.app
+            `add_lt_add_right
+            [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calcTactic
+       "calc"
+       (calcStep
+        (SetTheory.Surreal.Dyadic.pgame.equiv
+         (Term.app `pow_half [`n])
+         " ≈ "
+         («term_+_» (num "0") "+" (Term.app `pow_half [`n])))
+        ":="
+        (Term.proj (Term.app `zero_add_equiv [(Term.hole "_")]) "." `symm))
+       [(calcStep
+         («term_<_»
+          (Term.hole "_")
+          "<"
+          («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n])))
+         ":="
+         (Term.app
+          `add_lt_add_right
+          [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `add_lt_add_right [(Term.app `pow_half_pos [(Term.hole "_")]) (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.app `pow_half_pos [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pow_half_pos
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `pow_half_pos [(Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `add_lt_add_right
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<_»
+       (Term.hole "_")
+       "<"
+       («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_+_» (Term.app `pow_half [`n.succ]) "+" (Term.app `pow_half [`n]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pow_half [`n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pow_half
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 66 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
+      (Term.app `pow_half [`n.succ])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `n.succ
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pow_half
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 65 >? 1022, (some 1023, term) <=? (some 65, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
+      (Term.proj (Term.app `zero_add_equiv [(Term.hole "_")]) "." `symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `zero_add_equiv [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `zero_add_equiv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `zero_add_equiv [(Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (SetTheory.Surreal.Dyadic.pgame.equiv
+       (Term.app `pow_half [`n])
+       " ≈ "
+       («term_+_» (num "0") "+" (Term.app `pow_half [`n])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SetTheory.Surreal.Dyadic.pgame.equiv', expected 'SetTheory.Surreal.Dyadic.pgame.equiv._@.SetTheory.Surreal.Dyadic._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  add_pow_half_succ_self_eq_pow_half
+  ( n ) : powHalf n + 1 + powHalf n + 1 ≈ powHalf n
+  :=
+    by
+      induction' n using Nat.strong_induction_on with n hn
+        ·
+          constructor <;> rw [ le_iff_forall_lf ] <;> constructor
+            ·
+              rintro ( ⟨ ⟨ ⟩ ⟩ | ⟨ ⟨ ⟩ ⟩ ) <;> apply lf_of_lt
+                ·
+                  calc
+                    0 + pow_half n.succ ≈ pow_half n.succ := zero_add_equiv _
+                    _ < pow_half n := pow_half_succ_lt_pow_half n
+                ·
+                  calc
+                    pow_half n.succ + 0 ≈ pow_half n.succ := add_zero_equiv _
+                    _ < pow_half n := pow_half_succ_lt_pow_half n
+            ·
+              cases n
+                · rintro ⟨ ⟩
+                rintro ⟨ ⟩
+                apply lf_of_move_right_le
+                swap
+                exact Sum.inl default
+                calc
+                  pow_half n.succ + pow_half n.succ + 1 ≤ pow_half n.succ + pow_half n.succ
+                    :=
+                    add_le_add_left pow_half_succ_le_pow_half _ _
+                  _ ≈ pow_half n := hn _ Nat.lt_succ_self n
+            ·
+              simp only [ pow_half_move_left , forall_const ]
+                apply lf_of_lt
+                calc
+                  0 ≈ 0 + 0 := add_zero_equiv 0 . symm
+                  _ ≤ pow_half n.succ + 0 := add_le_add_right zero_le_pow_half _ _
+                    _ < pow_half n.succ + pow_half n.succ := add_lt_add_left pow_half_pos _ _
+            ·
+              rintro ( ⟨ ⟨ ⟩ ⟩ | ⟨ ⟨ ⟩ ⟩ ) <;> apply lf_of_lt
+                ·
+                  calc
+                    pow_half n ≈ pow_half n + 0 := add_zero_equiv _ . symm
+                    _ < pow_half n + pow_half n.succ := add_lt_add_left pow_half_pos _ _
+                ·
+                  calc
+                    pow_half n ≈ 0 + pow_half n := zero_add_equiv _ . symm
+                    _ < pow_half n.succ + pow_half n := add_lt_add_right pow_half_pos _ _
 #align pgame.add_pow_half_succ_self_eq_pow_half Pgame.add_pow_half_succ_self_eq_pow_half
 
-theorem half_add_half_equiv_one : powHalf 1 + powHalf 1 ≈ 1 :=
-  add_pow_half_succ_self_eq_pow_half 0
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `half_add_half_equiv_one [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (SetTheory.Surreal.Dyadic.pgame.equiv
+         («term_+_» (Term.app `powHalf [(num "1")]) "+" (Term.app `powHalf [(num "1")]))
+         " ≈ "
+         (num "1"))))
+      (Command.declValSimple ":=" (Term.app `add_pow_half_succ_self_eq_pow_half [(num "0")]) [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `add_pow_half_succ_self_eq_pow_half [(num "0")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `add_pow_half_succ_self_eq_pow_half
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (SetTheory.Surreal.Dyadic.pgame.equiv
+       («term_+_» (Term.app `powHalf [(num "1")]) "+" (Term.app `powHalf [(num "1")]))
+       " ≈ "
+       (num "1"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SetTheory.Surreal.Dyadic.pgame.equiv', expected 'SetTheory.Surreal.Dyadic.pgame.equiv._@.SetTheory.Surreal.Dyadic._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem half_add_half_equiv_one : powHalf 1 + powHalf 1 ≈ 1 := add_pow_half_succ_self_eq_pow_half 0
 #align pgame.half_add_half_equiv_one Pgame.half_add_half_equiv_one
 
 end Pgame

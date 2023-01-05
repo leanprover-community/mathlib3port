@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.basic
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1845,9 +1845,60 @@ theorem uniform_continuous₂_curry (f : α × β → γ) :
   rw [UniformContinuous₂, uncurry_curry]
 #align uniform_continuous₂_curry uniform_continuous₂_curry
 
-theorem UniformContinuous₂.comp {f : α → β → γ} {g : γ → δ} (hg : UniformContinuous g)
-    (hf : UniformContinuous₂ f) : UniformContinuous₂ (g ∘₂ f) :=
-  hg.comp hf
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `UniformContinuous₂.comp [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`f] [":" (Term.arrow `α "→" (Term.arrow `β "→" `γ))] "}")
+        (Term.implicitBinder "{" [`g] [":" (Term.arrow `γ "→" `δ)] "}")
+        (Term.explicitBinder "(" [`hg] [":" (Term.app `UniformContinuous [`g])] [] ")")
+        (Term.explicitBinder "(" [`hf] [":" (Term.app `UniformContinuous₂ [`f])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app `UniformContinuous₂ [(Topology.UniformSpace.Basic.«term_∘₂_» `g " ∘₂ " `f)])))
+      (Command.declValSimple ":=" (Term.app (Term.proj `hg "." `comp) [`hf]) [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `hg "." `comp) [`hf])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hf
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `hg "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app `UniformContinuous₂ [(Topology.UniformSpace.Basic.«term_∘₂_» `g " ∘₂ " `f)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.UniformSpace.Basic.«term_∘₂_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.UniformSpace.Basic.«term_∘₂_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Topology.UniformSpace.Basic.«term_∘₂_» `g " ∘₂ " `f)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.UniformSpace.Basic.«term_∘₂_»', expected 'Topology.UniformSpace.Basic.term_∘₂_._@.Topology.UniformSpace.Basic._hyg.998'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  UniformContinuous₂.comp
+  { f : α → β → γ } { g : γ → δ } ( hg : UniformContinuous g ) ( hf : UniformContinuous₂ f )
+    : UniformContinuous₂ g ∘₂ f
+  := hg . comp hf
 #align uniform_continuous₂.comp UniformContinuous₂.comp
 
 theorem UniformContinuous₂.bicompl {f : α → β → γ} {ga : δ → α} {gb : δ' → β}

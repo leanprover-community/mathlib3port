@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.basic
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3648,26 +3648,567 @@ local notation l " <*> " a => foldl op a l
 
 include ha
 
-theorem foldl_assoc : ∀ {l : List α} {a₁ a₂}, (l <*> a₁ * a₂) = a₁ * l <*> a₂
-  | [], a₁, a₂ => rfl
-  | a :: l, a₁, a₂ =>
-    calc
-      ((a :: l) <*> a₁ * a₂) = l <*> a₁ * a₂ * a := by simp only [foldl_cons, ha.assoc]
-      _ = a₁ * (a :: l) <*> a₂ := by rw [foldl_assoc, foldl_cons]
-      
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `foldl_assoc [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.forall
+         "∀"
+         [(Term.implicitBinder "{" [`l] [":" (Term.app `List [`α])] "}")
+          (Term.implicitBinder "{" [`a₁ `a₂] [] "}")]
+         []
+         ","
+         («term_=_»
+          (List.Data.List.Basic.foldl `l " <*> " (List.Data.List.Basic.op `a₁ " * " `a₂))
+          "="
+          (List.Data.List.Basic.op `a₁ " * " (List.Data.List.Basic.foldl `l " <*> " `a₂))))))
+      (Command.declValEqns
+       (Term.matchAltsWhereDecls
+        (Term.matchAlts
+         [(Term.matchAlt "|" [[(«term[_]» "[" [] "]") "," `a₁ "," `a₂]] "=>" `rfl)
+          (Term.matchAlt
+           "|"
+           [[(«term_::_» `a "::" `l) "," `a₁ "," `a₂]]
+           "=>"
+           (calc
+            "calc"
+            (calcStep
+             («term_=_»
+              (List.Data.List.Basic.foldl
+               («term_::_» `a "::" `l)
+               " <*> "
+               (List.Data.List.Basic.op `a₁ " * " `a₂))
+              "="
+              (List.Data.List.Basic.foldl
+               `l
+               " <*> "
+               (List.Data.List.Basic.op `a₁ " * " (List.Data.List.Basic.op `a₂ " * " `a))))
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.simp
+                  "simp"
+                  []
+                  []
+                  ["only"]
+                  ["["
+                   [(Tactic.simpLemma [] [] `foldl_cons) "," (Tactic.simpLemma [] [] `ha.assoc)]
+                   "]"]
+                  [])]))))
+            [(calcStep
+              («term_=_»
+               (Term.hole "_")
+               "="
+               (List.Data.List.Basic.op
+                `a₁
+                " * "
+                (List.Data.List.Basic.foldl («term_::_» `a "::" `l) " <*> " `a₂)))
+              ":="
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `foldl_assoc) "," (Tactic.rwRule [] `foldl_cons)]
+                    "]")
+                   [])]))))]))])
+        []))
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calc
+       "calc"
+       (calcStep
+        («term_=_»
+         (List.Data.List.Basic.foldl
+          («term_::_» `a "::" `l)
+          " <*> "
+          (List.Data.List.Basic.op `a₁ " * " `a₂))
+         "="
+         (List.Data.List.Basic.foldl
+          `l
+          " <*> "
+          (List.Data.List.Basic.op `a₁ " * " (List.Data.List.Basic.op `a₂ " * " `a))))
+        ":="
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["[" [(Tactic.simpLemma [] [] `foldl_cons) "," (Tactic.simpLemma [] [] `ha.assoc)] "]"]
+             [])]))))
+       [(calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (List.Data.List.Basic.op
+           `a₁
+           " * "
+           (List.Data.List.Basic.foldl («term_::_» `a "::" `l) " <*> " `a₂)))
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `foldl_assoc) "," (Tactic.rwRule [] `foldl_cons)]
+               "]")
+              [])]))))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `foldl_assoc) "," (Tactic.rwRule [] `foldl_cons)]
+            "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `foldl_assoc) "," (Tactic.rwRule [] `foldl_cons)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldl_cons
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldl_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.hole "_")
+       "="
+       (List.Data.List.Basic.op
+        `a₁
+        " * "
+        (List.Data.List.Basic.foldl («term_::_» `a "::" `l) " <*> " `a₂)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (List.Data.List.Basic.op
+       `a₁
+       " * "
+       (List.Data.List.Basic.foldl («term_::_» `a "::" `l) " <*> " `a₂))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'List.Data.List.Basic.op', expected 'List.Data.List.Basic.op._@.Data.List.Basic._hyg.23'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  foldl_assoc
+  : ∀ { l : List α } { a₁ a₂ } , l <*> a₁ * a₂ = a₁ * l <*> a₂
+  | [ ] , a₁ , a₂ => rfl
+    |
+      a :: l , a₁ , a₂
+      =>
+      calc
+        a :: l <*> a₁ * a₂ = l <*> a₁ * a₂ * a := by simp only [ foldl_cons , ha.assoc ]
+        _ = a₁ * a :: l <*> a₂ := by rw [ foldl_assoc , foldl_cons ]
 #align list.foldl_assoc List.foldl_assoc
 
-theorem foldl_op_eq_op_foldr_assoc :
-    ∀ {l : List α} {a₁ a₂}, ((l <*> a₁) * a₂) = a₁ * l.foldr (· * ·) a₂
-  | [], a₁, a₂ => rfl
-  | a :: l, a₁, a₂ => by
-    simp only [foldl_cons, foldr_cons, foldl_assoc, ha.assoc] <;> rw [foldl_op_eq_op_foldr_assoc]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `foldl_op_eq_op_foldr_assoc [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.forall
+         "∀"
+         [(Term.implicitBinder "{" [`l] [":" (Term.app `List [`α])] "}")
+          (Term.implicitBinder "{" [`a₁ `a₂] [] "}")]
+         []
+         ","
+         («term_=_»
+          (List.Data.List.Basic.op (List.Data.List.Basic.foldl `l " <*> " `a₁) " * " `a₂)
+          "="
+          (List.Data.List.Basic.op
+           `a₁
+           " * "
+           (Term.app
+            (Term.proj `l "." `foldr)
+            [(Term.paren "(" (List.Data.List.Basic.op (Term.cdot "·") " * " (Term.cdot "·")) ")")
+             `a₂]))))))
+      (Command.declValEqns
+       (Term.matchAltsWhereDecls
+        (Term.matchAlts
+         [(Term.matchAlt "|" [[(«term[_]» "[" [] "]") "," `a₁ "," `a₂]] "=>" `rfl)
+          (Term.matchAlt
+           "|"
+           [[(«term_::_» `a "::" `l) "," `a₁ "," `a₂]]
+           "=>"
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.«tactic_<;>_»
+                (Tactic.simp
+                 "simp"
+                 []
+                 []
+                 ["only"]
+                 ["["
+                  [(Tactic.simpLemma [] [] `foldl_cons)
+                   ","
+                   (Tactic.simpLemma [] [] `foldr_cons)
+                   ","
+                   (Tactic.simpLemma [] [] `foldl_assoc)
+                   ","
+                   (Tactic.simpLemma [] [] `ha.assoc)]
+                  "]"]
+                 [])
+                "<;>"
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `foldl_op_eq_op_foldr_assoc)] "]")
+                 []))]))))])
+        []))
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Tactic.simp
+            "simp"
+            []
+            []
+            ["only"]
+            ["["
+             [(Tactic.simpLemma [] [] `foldl_cons)
+              ","
+              (Tactic.simpLemma [] [] `foldr_cons)
+              ","
+              (Tactic.simpLemma [] [] `foldl_assoc)
+              ","
+              (Tactic.simpLemma [] [] `ha.assoc)]
+             "]"]
+            [])
+           "<;>"
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `foldl_op_eq_op_foldr_assoc)] "]")
+            []))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.simp
+        "simp"
+        []
+        []
+        ["only"]
+        ["["
+         [(Tactic.simpLemma [] [] `foldl_cons)
+          ","
+          (Tactic.simpLemma [] [] `foldr_cons)
+          ","
+          (Tactic.simpLemma [] [] `foldl_assoc)
+          ","
+          (Tactic.simpLemma [] [] `ha.assoc)]
+         "]"]
+        [])
+       "<;>"
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `foldl_op_eq_op_foldr_assoc)] "]")
+        []))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `foldl_op_eq_op_foldr_assoc)] "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldl_op_eq_op_foldr_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["["
+        [(Tactic.simpLemma [] [] `foldl_cons)
+         ","
+         (Tactic.simpLemma [] [] `foldr_cons)
+         ","
+         (Tactic.simpLemma [] [] `foldl_assoc)
+         ","
+         (Tactic.simpLemma [] [] `ha.assoc)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ha.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldl_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldr_cons
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldl_cons
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `a₂
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `a₁
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_::_» `a "::" `l)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `l
+[PrettyPrinter.parenthesize] ...precedences are 67 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 67, term))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 68 >? 1024, (none, [anonymous]) <=? (some 67, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 67, (some 67, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `a₂
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `a₁
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term[_]» "[" [] "]")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.forall
+       "∀"
+       [(Term.implicitBinder "{" [`l] [":" (Term.app `List [`α])] "}")
+        (Term.implicitBinder "{" [`a₁ `a₂] [] "}")]
+       []
+       ","
+       («term_=_»
+        (List.Data.List.Basic.op (List.Data.List.Basic.foldl `l " <*> " `a₁) " * " `a₂)
+        "="
+        (List.Data.List.Basic.op
+         `a₁
+         " * "
+         (Term.app
+          (Term.proj `l "." `foldr)
+          [(Term.paren "(" (List.Data.List.Basic.op (Term.cdot "·") " * " (Term.cdot "·")) ")")
+           `a₂]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (List.Data.List.Basic.op (List.Data.List.Basic.foldl `l " <*> " `a₁) " * " `a₂)
+       "="
+       (List.Data.List.Basic.op
+        `a₁
+        " * "
+        (Term.app
+         (Term.proj `l "." `foldr)
+         [(Term.paren "(" (List.Data.List.Basic.op (Term.cdot "·") " * " (Term.cdot "·")) ")")
+          `a₂])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (List.Data.List.Basic.op
+       `a₁
+       " * "
+       (Term.app
+        (Term.proj `l "." `foldr)
+        [(Term.paren "(" (List.Data.List.Basic.op (Term.cdot "·") " * " (Term.cdot "·")) ")") `a₂]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'List.Data.List.Basic.op', expected 'List.Data.List.Basic.op._@.Data.List.Basic._hyg.23'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  foldl_op_eq_op_foldr_assoc
+  : ∀ { l : List α } { a₁ a₂ } , l <*> a₁ * a₂ = a₁ * l . foldr ( · * · ) a₂
+  | [ ] , a₁ , a₂ => rfl
+    |
+      a :: l , a₁ , a₂
+      =>
+      by
+        simp only [ foldl_cons , foldr_cons , foldl_assoc , ha.assoc ]
+          <;>
+          rw [ foldl_op_eq_op_foldr_assoc ]
 #align list.foldl_op_eq_op_foldr_assoc List.foldl_op_eq_op_foldr_assoc
 
 include hc
 
-theorem foldl_assoc_comm_cons {l : List α} {a₁ a₂} : ((a₁ :: l) <*> a₂) = a₁ * l <*> a₂ := by
-  rw [foldl_cons, hc.comm, foldl_assoc]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `foldl_assoc_comm_cons [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`l] [":" (Term.app `List [`α])] "}")
+        (Term.implicitBinder "{" [`a₁ `a₂] [] "}")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (List.Data.List.Basic.foldl («term_::_» `a₁ "::" `l) " <*> " `a₂)
+         "="
+         (List.Data.List.Basic.op `a₁ " * " (List.Data.List.Basic.foldl `l " <*> " `a₂)))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `foldl_cons)
+              ","
+              (Tactic.rwRule [] `hc.comm)
+              ","
+              (Tactic.rwRule [] `foldl_assoc)]
+             "]")
+            [])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `foldl_cons)
+             ","
+             (Tactic.rwRule [] `hc.comm)
+             ","
+             (Tactic.rwRule [] `foldl_assoc)]
+            "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `foldl_cons)
+         ","
+         (Tactic.rwRule [] `hc.comm)
+         ","
+         (Tactic.rwRule [] `foldl_assoc)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldl_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hc.comm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `foldl_cons
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (List.Data.List.Basic.foldl («term_::_» `a₁ "::" `l) " <*> " `a₂)
+       "="
+       (List.Data.List.Basic.op `a₁ " * " (List.Data.List.Basic.foldl `l " <*> " `a₂)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (List.Data.List.Basic.op `a₁ " * " (List.Data.List.Basic.foldl `l " <*> " `a₂))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'List.Data.List.Basic.op', expected 'List.Data.List.Basic.op._@.Data.List.Basic._hyg.23'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  foldl_assoc_comm_cons
+  { l : List α } { a₁ a₂ } : a₁ :: l <*> a₂ = a₁ * l <*> a₂
+  := by rw [ foldl_cons , hc.comm , foldl_assoc ]
 #align list.foldl_assoc_comm_cons List.foldl_assoc_comm_cons
 
 end

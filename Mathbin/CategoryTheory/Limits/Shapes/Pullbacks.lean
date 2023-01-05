@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Markus Himmel, Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.pullbacks
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2524,107 +2524,2143 @@ local notation "Z₁" => pullback f₁ f₂
 local notation "Z₂" => pullback f₃ f₄
 
 -- mathport name: exprg₁
-local notation "g₁" => (pullback.fst : Z₁ ⟶ X₁)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"g₁\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pullback.fst
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+        " ⟶ "
+        `X₁)]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pullback.fst
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+         " ⟶ "
+         `X₁)]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+       " ⟶ "
+       `X₁)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `X₁
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.59'-/-- failed to format: format: uncaught backtrack exception
+local notation "g₁" => ( pullback.fst : Z₁ ⟶ X₁ )
 
 -- mathport name: exprg₂
-local notation "g₂" => (pullback.snd : Z₁ ⟶ X₂)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"g₂\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pullback.snd
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+        " ⟶ "
+        `X₂)]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pullback.snd
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+         " ⟶ "
+         `X₂)]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+       " ⟶ "
+       `X₂)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `X₂
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.59'-/-- failed to format: format: uncaught backtrack exception
+local notation "g₂" => ( pullback.snd : Z₁ ⟶ X₂ )
 
 -- mathport name: exprg₃
-local notation "g₃" => (pullback.fst : Z₂ ⟶ X₂)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"g₃\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pullback.fst
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+        " ⟶ "
+        `X₂)]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pullback.fst
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+         " ⟶ "
+         `X₂)]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+       " ⟶ "
+       `X₂)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `X₂
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.673'-/-- failed to format: format: uncaught backtrack exception
+local notation "g₃" => ( pullback.fst : Z₂ ⟶ X₂ )
 
 -- mathport name: exprg₄
-local notation "g₄" => (pullback.snd : Z₂ ⟶ X₃)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"g₄\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pullback.snd
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+        " ⟶ "
+        `X₃)]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pullback.snd
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+         " ⟶ "
+         `X₃)]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+       " ⟶ "
+       `X₃)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `X₃
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.673'-/-- failed to format: format: uncaught backtrack exception
+local notation "g₄" => ( pullback.snd : Z₂ ⟶ X₃ )
 
 -- mathport name: exprW
-local notation "W" => pullback (g₂ ≫ f₃) f₄
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"W\"")]
+     "=>"
+     (Term.app
+      `pullback
+      [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+        " ≫ "
+        `f₃)
+       `f₄]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pullback
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+         " ≫ "
+         `f₃)
+        `f₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+       " ≫ "
+       `f₃)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₃
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1316'-/-- failed to format: format: uncaught backtrack exception
+local notation "W" => pullback g₂ ≫ f₃ f₄
 
 -- mathport name: exprW'
-local notation "W'" => pullback f₁ (g₃ ≫ f₂)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"W'\"")]
+     "=>"
+     (Term.app
+      `pullback
+      [`f₁
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+        " ≫ "
+        `f₂)]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pullback
+       [`f₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+         " ≫ "
+         `f₂)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+       " ≫ "
+       `f₂)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1361'-/-- failed to format: format: uncaught backtrack exception
+local notation "W'" => pullback f₁ g₃ ≫ f₂
 
 -- mathport name: exprl₁
-local notation "l₁" => (pullback.fst : W ⟶ Z₁)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₁\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pullback.fst
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW "W")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pullback.fst
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW "W")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW "W")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.59'-/-- failed to format: format: uncaught backtrack exception
+local notation "l₁" => ( pullback.fst : W ⟶ Z₁ )
 
 -- mathport name: exprl₂
-local notation "l₂" =>
-  (pullback.lift (pullback.fst ≫ g₂) pullback.snd
-      ((Category.assoc _ _ _).trans pullback.condition) :
-    W ⟶ Z₂)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₂\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      (Term.app
+       `pullback.lift
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `pullback.fst
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂"))
+        `pullback.snd
+        (Term.app
+         (Term.proj
+          (Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+          "."
+          `trans)
+         [`pullback.condition])])
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW "W")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (Term.app
+        `pullback.lift
+        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `pullback.fst
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂"))
+         `pullback.snd
+         (Term.app
+          (Term.proj
+           (Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+           "."
+           `trans)
+          [`pullback.condition])])
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW "W")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW "W")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.673'-/-- failed to format: format: uncaught backtrack exception
+local
+  notation
+  "l₂"
+  =>
+  (
+    pullback.lift pullback.fst ≫ g₂ pullback.snd Category.assoc _ _ _ . trans pullback.condition
+    :
+    W ⟶ Z₂
+    )
 
 -- mathport name: exprl₁'
-local notation "l₁'" =>
-  (pullback.lift pullback.fst (pullback.snd ≫ g₃)
-      (pullback.condition.trans (Category.assoc _ _ _).symm) :
-    W' ⟶ Z₁)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₁'\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      (Term.app
+       `pullback.lift
+       [`pullback.fst
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `pullback.snd
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃"))
+        (Term.app
+         (Term.proj `pullback.condition "." `trans)
+         [(Term.proj
+           (Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+           "."
+           `symm)])])
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW' "W'")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (Term.app
+        `pullback.lift
+        [`pullback.fst
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `pullback.snd
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃"))
+         (Term.app
+          (Term.proj `pullback.condition "." `trans)
+          [(Term.proj
+            (Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+            "."
+            `symm)])])
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW' "W'")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW' "W'")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁ "Z₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₁._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.59'-/-- failed to format: format: uncaught backtrack exception
+local
+  notation
+  "l₁'"
+  =>
+  (
+    pullback.lift
+      pullback.fst pullback.snd ≫ g₃ pullback.condition . trans Category.assoc _ _ _ . symm
+    :
+    W' ⟶ Z₁
+    )
 
 -- mathport name: exprl₂'
-local notation "l₂'" => (pullback.snd : W' ⟶ Z₂)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₂'\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pullback.snd
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW' "W'")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pullback.snd
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW' "W'")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW' "W'")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂ "Z₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termZ₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.673'-/-- failed to format: format: uncaught backtrack exception
+local notation "l₂'" => ( pullback.snd : W' ⟶ Z₂ )
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pullbackPullbackLeftIsPullback [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPullback
+          [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+            " ≫ "
+            `f₃)
+           `f₄])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsLimit
+          [(Term.app
+            `PullbackCone.mk
+            [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂"))
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")))
+              (Term.fromTerm
+               "from"
+               (Term.proj
+                (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                "."
+                `symm)))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `left_square_is_pullback)
+           []
+           (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₃ `f₄]))
+           []
+           (convert
+            "convert"
+            []
+            (Term.app
+             `pullback_is_pullback
+             [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+               (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+               " ≫ "
+               `f₃)
+              `f₄])
+            [])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pullback.lift_snd)] "]")
+            [])])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `left_square_is_pullback)
+          []
+          (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₃ `f₄]))
+          []
+          (convert
+           "convert"
+           []
+           (Term.app
+            `pullback_is_pullback
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+              " ≫ "
+              `f₃)
+             `f₄])
+           [])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pullback.lift_snd)] "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pullback.lift_snd)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.lift_snd
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (convert
+       "convert"
+       []
+       (Term.app
+        `pullback_is_pullback
+        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+          " ≫ "
+          `f₃)
+         `f₄])
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pullback_is_pullback
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+         " ≫ "
+         `f₃)
+        `f₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+       " ≫ "
+       `f₃)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₃
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1316'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/
-def pullbackPullbackLeftIsPullback [HasPullback (g₂ ≫ f₃) f₄] :
-    IsLimit (PullbackCone.mk l₁ l₂ (show l₁ ≫ g₂ = l₂ ≫ g₃ from (pullback.lift_fst _ _ _).symm)) :=
-  by
-  apply left_square_is_pullback
-  exact pullback_is_pullback f₃ f₄
-  convert pullback_is_pullback (g₂ ≫ f₃) f₄
-  rw [pullback.lift_snd]
+  def
+    pullbackPullbackLeftIsPullback
+    [ HasPullback g₂ ≫ f₃ f₄ ]
+      : IsLimit PullbackCone.mk l₁ l₂ show l₁ ≫ g₂ = l₂ ≫ g₃ from pullback.lift_fst _ _ _ . symm
+    :=
+      by
+        apply left_square_is_pullback
+          exact pullback_is_pullback f₃ f₄
+          convert pullback_is_pullback g₂ ≫ f₃ f₄
+          rw [ pullback.lift_snd ]
 #align
   category_theory.limits.pullback_pullback_left_is_pullback CategoryTheory.Limits.pullbackPullbackLeftIsPullback
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pullbackAssocIsPullback [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPullback
+          [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+            " ≫ "
+            `f₃)
+           `f₄])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsLimit
+          [(Term.app
+            `PullbackCone.mk
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+                " ≫ "
+                `f₁)
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+                " ≫ "
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+                 " ≫ "
+                 `f₂)))
+              (Term.byTactic'
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `pullback.lift_fst_assoc)
+                     ","
+                     (Tactic.rwRule [] `category.assoc)
+                     ","
+                     (Tactic.rwRule [] `category.assoc)
+                     ","
+                     (Tactic.rwRule [] `pullback.condition)]
+                    "]")
+                   [])]))))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+           []
+           (Tactic.apply "apply" `big_square_is_pullback)
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+             []
+             (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₁ `f₂]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+             []
+             (Tactic.apply "apply" `pullback_pullback_left_is_pullback)])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact
+              "exact"
+              (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact "exact" `pullback.condition.symm)])])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+          []
+          (Tactic.apply "apply" `big_square_is_pullback)
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+            []
+            (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₁ `f₂]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+            []
+            (Tactic.apply "apply" `pullback_pullback_left_is_pullback)])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact "exact" `pullback.condition.symm)])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact "exact" `pullback.condition.symm)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `pullback.condition.symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.condition.symm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact
+         "exact"
+         (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullback.lift_fst
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+        []
+        (Tactic.apply "apply" `pullback_pullback_left_is_pullback)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pullback_pullback_left_is_pullback)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback_pullback_left_is_pullback
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pullback_cone.flip_is_limit)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback_cone.flip_is_limit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+        []
+        (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₁ `f₂]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₁ `f₂]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullback_is_pullback [`f₁ `f₂])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullback_is_pullback
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pullback_cone.flip_is_limit)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback_cone.flip_is_limit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `big_square_is_pullback)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `big_square_is_pullback
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pullback_cone.flip_is_limit)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback_cone.flip_is_limit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `IsLimit
+       [(Term.app
+         `PullbackCone.mk
+         [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+          (Term.show
+           "show"
+           («term_=_»
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+             " ≫ "
+             `f₁)
+            "="
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+             " ≫ "
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+              " ≫ "
+              `f₂)))
+           (Term.byTactic'
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `pullback.lift_fst_assoc)
+                  ","
+                  (Tactic.rwRule [] `category.assoc)
+                  ","
+                  (Tactic.rwRule [] `category.assoc)
+                  ","
+                  (Tactic.rwRule [] `pullback.condition)]
+                 "]")
+                [])]))))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `PullbackCone.mk
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+        (Term.show
+         "show"
+         («term_=_»
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+           " ≫ "
+           `f₁)
+          "="
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+           " ≫ "
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+            " ≫ "
+            `f₂)))
+         (Term.byTactic'
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `pullback.lift_fst_assoc)
+                ","
+                (Tactic.rwRule [] `category.assoc)
+                ","
+                (Tactic.rwRule [] `category.assoc)
+                ","
+                (Tactic.rwRule [] `pullback.condition)]
+               "]")
+              [])]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.show
+       "show"
+       («term_=_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+         " ≫ "
+         `f₁)
+        "="
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+         " ≫ "
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+          " ≫ "
+          `f₂)))
+       (Term.byTactic'
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `pullback.lift_fst_assoc)
+              ","
+              (Tactic.rwRule [] `category.assoc)
+              ","
+              (Tactic.rwRule [] `category.assoc)
+              ","
+              (Tactic.rwRule [] `pullback.condition)]
+             "]")
+            [])]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic'', expected 'Lean.Parser.Term.fromTerm'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `pullback.lift_fst_assoc)
+         ","
+         (Tactic.rwRule [] `category.assoc)
+         ","
+         (Tactic.rwRule [] `category.assoc)
+         ","
+         (Tactic.rwRule [] `pullback.condition)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.condition
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.lift_fst_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁ "l₁")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₁ "g₁"))
+        " ≫ "
+        `f₁)
+       "="
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+        " ≫ "
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+         " ≫ "
+         `f₂)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+       " ≫ "
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+        " ≫ "
+        `f₂))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+       " ≫ "
+       `f₂)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1361'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `(X₁ ×[Y₁] X₂) ×[Y₂] X₃` is the pullback `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)`. -/
-def pullbackAssocIsPullback [HasPullback (g₂ ≫ f₃) f₄] :
-    IsLimit
-      (PullbackCone.mk (l₁ ≫ g₁) l₂
-        (show (l₁ ≫ g₁) ≫ f₁ = l₂ ≫ g₃ ≫ f₂ by
-          rw [pullback.lift_fst_assoc, category.assoc, category.assoc, pullback.condition])) :=
-  by
-  apply pullback_cone.flip_is_limit
-  apply big_square_is_pullback
-  · apply pullback_cone.flip_is_limit
-    exact pullback_is_pullback f₁ f₂
-  · apply pullback_cone.flip_is_limit
-    apply pullback_pullback_left_is_pullback
-  · exact pullback.lift_fst _ _ _
-  · exact pullback.condition.symm
+  def
+    pullbackAssocIsPullback
+    [ HasPullback g₂ ≫ f₃ f₄ ]
+      :
+        IsLimit
+          PullbackCone.mk
+            l₁ ≫ g₁
+              l₂
+              show
+                l₁ ≫ g₁ ≫ f₁ = l₂ ≫ g₃ ≫ f₂
+                by
+                  rw
+                    [
+                      pullback.lift_fst_assoc , category.assoc , category.assoc , pullback.condition
+                      ]
+    :=
+      by
+        apply pullback_cone.flip_is_limit
+          apply big_square_is_pullback
+          · apply pullback_cone.flip_is_limit exact pullback_is_pullback f₁ f₂
+          · apply pullback_cone.flip_is_limit apply pullback_pullback_left_is_pullback
+          · exact pullback.lift_fst _ _ _
+          · exact pullback.condition.symm
 #align
   category_theory.limits.pullback_assoc_is_pullback CategoryTheory.Limits.pullbackAssocIsPullback
 
-theorem has_pullback_assoc [HasPullback (g₂ ≫ f₃) f₄] : HasPullback f₁ (g₃ ≫ f₂) :=
-  ⟨⟨⟨_, pullbackAssocIsPullback f₁ f₂ f₃ f₄⟩⟩⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `has_pullback_assoc [])
+      (Command.declSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPullback
+          [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+            " ≫ "
+            `f₃)
+           `f₄])
+         "]")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `HasPullback
+         [`f₁
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+           " ≫ "
+           `f₂)])))
+      (Command.declValSimple
+       ":="
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.anonymousCtor
+          "⟨"
+          [(Term.anonymousCtor
+            "⟨"
+            [(Term.hole "_") "," (Term.app `pullbackAssocIsPullback [`f₁ `f₂ `f₃ `f₄])]
+            "⟩")]
+          "⟩")]
+        "⟩")
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.anonymousCtor
+           "⟨"
+           [(Term.hole "_") "," (Term.app `pullbackAssocIsPullback [`f₁ `f₂ `f₃ `f₄])]
+           "⟩")]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.hole "_") "," (Term.app `pullbackAssocIsPullback [`f₁ `f₂ `f₃ `f₄])]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.hole "_") "," (Term.app `pullbackAssocIsPullback [`f₁ `f₂ `f₃ `f₄])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullbackAssocIsPullback [`f₁ `f₂ `f₃ `f₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullbackAssocIsPullback
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `HasPullback
+       [`f₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+         " ≫ "
+         `f₂)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+       " ≫ "
+       `f₂)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1361'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  has_pullback_assoc
+  [ HasPullback g₂ ≫ f₃ f₄ ] : HasPullback f₁ g₃ ≫ f₂
+  := ⟨ ⟨ ⟨ _ , pullbackAssocIsPullback f₁ f₂ f₃ f₄ ⟩ ⟩ ⟩
 #align category_theory.limits.has_pullback_assoc CategoryTheory.Limits.has_pullback_assoc
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`X₁ ×[Y₁] (X₂ ×[Y₂] X₃)` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pullbackPullbackRightIsPullback [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPullback
+          [`f₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+            " ≫ "
+            `f₂)])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsLimit
+          [(Term.app
+            `PullbackCone.mk
+            [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂"))
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")))
+              (Term.fromTerm
+               "from"
+               (Term.app
+                `pullback.lift_snd
+                [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+           []
+           (Tactic.apply "apply" `left_square_is_pullback)
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+             []
+             (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₁ `f₂]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+             []
+             (convert
+              "convert"
+              []
+              (Term.app
+               `pullback_is_pullback
+               [`f₁
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+                 " ≫ "
+                 `f₂)])
+              [])
+             []
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pullback.lift_fst)] "]")
+              [])])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact "exact" `pullback.condition.symm)])])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+          []
+          (Tactic.apply "apply" `left_square_is_pullback)
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+            []
+            (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₁ `f₂]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+            []
+            (convert
+             "convert"
+             []
+             (Term.app
+              `pullback_is_pullback
+              [`f₁
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+                " ≫ "
+                `f₂)])
+             [])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pullback.lift_fst)] "]")
+             [])])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact "exact" `pullback.condition.symm)])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact "exact" `pullback.condition.symm)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `pullback.condition.symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.condition.symm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.apply "apply" `pullback_cone.flip_is_limit)
+        []
+        (convert
+         "convert"
+         []
+         (Term.app
+          `pullback_is_pullback
+          [`f₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+            " ≫ "
+            `f₂)])
+         [])
+        []
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pullback.lift_fst)] "]")
+         [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pullback.lift_fst)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.lift_fst
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (convert
+       "convert"
+       []
+       (Term.app
+        `pullback_is_pullback
+        [`f₁
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+          " ≫ "
+          `f₂)])
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pullback_is_pullback
+       [`f₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+         " ≫ "
+         `f₂)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+       " ≫ "
+       `f₂)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1361'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)` is the pullback `(X₁ ×[Y₁] X₂) ×[X₂] (X₂ ×[Y₂] X₃)`. -/
-def pullbackPullbackRightIsPullback [HasPullback f₁ (g₃ ≫ f₂)] :
-    IsLimit (PullbackCone.mk l₁' l₂' (show l₁' ≫ g₂ = l₂' ≫ g₃ from pullback.lift_snd _ _ _)) :=
-  by
-  apply pullback_cone.flip_is_limit
-  apply left_square_is_pullback
-  · apply pullback_cone.flip_is_limit
-    exact pullback_is_pullback f₁ f₂
-  · apply pullback_cone.flip_is_limit
-    convert pullback_is_pullback f₁ (g₃ ≫ f₂)
-    rw [pullback.lift_fst]
-  · exact pullback.condition.symm
+  def
+    pullbackPullbackRightIsPullback
+    [ HasPullback f₁ g₃ ≫ f₂ ]
+      : IsLimit PullbackCone.mk l₁' l₂' show l₁' ≫ g₂ = l₂' ≫ g₃ from pullback.lift_snd _ _ _
+    :=
+      by
+        apply pullback_cone.flip_is_limit
+          apply left_square_is_pullback
+          · apply pullback_cone.flip_is_limit exact pullback_is_pullback f₁ f₂
+          ·
+            apply pullback_cone.flip_is_limit
+              convert pullback_is_pullback f₁ g₃ ≫ f₂
+              rw [ pullback.lift_fst ]
+          · exact pullback.condition.symm
 #align
   category_theory.limits.pullback_pullback_right_is_pullback CategoryTheory.Limits.pullbackPullbackRightIsPullback
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`X₁ ×[Y₁] (X₂ ×[Y₂] X₃)` is the pullback `(X₁ ×[Y₁] X₂) ×[Y₂] X₃`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pullbackAssocSymmIsPullback [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPullback
+          [`f₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+            " ≫ "
+            `f₂)])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsLimit
+          [(Term.app
+            `PullbackCone.mk
+            [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+                " ≫ "
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+                 " ≫ "
+                 `f₃))
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+                " ≫ "
+                `f₄))
+              (Term.byTactic'
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `pullback.lift_snd_assoc)
+                     ","
+                     (Tactic.rwRule [] `category.assoc)
+                     ","
+                     (Tactic.rwRule [] `category.assoc)
+                     ","
+                     (Tactic.rwRule [] `pullback.condition)]
+                    "]")
+                   [])]))))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `big_square_is_pullback)
+           []
+           (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₃ `f₄]))
+           []
+           (Tactic.apply "apply" `pullback_pullback_right_is_pullback)])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `big_square_is_pullback)
+          []
+          (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₃ `f₄]))
+          []
+          (Tactic.apply "apply" `pullback_pullback_right_is_pullback)])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pullback_pullback_right_is_pullback)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback_pullback_right_is_pullback
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `pullback_is_pullback [`f₃ `f₄]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullback_is_pullback [`f₃ `f₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullback_is_pullback
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `big_square_is_pullback)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `big_square_is_pullback
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `IsLimit
+       [(Term.app
+         `PullbackCone.mk
+         [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+          (Term.show
+           "show"
+           («term_=_»
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+             " ≫ "
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+              " ≫ "
+              `f₃))
+            "="
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+             " ≫ "
+             `f₄))
+           (Term.byTactic'
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `pullback.lift_snd_assoc)
+                  ","
+                  (Tactic.rwRule [] `category.assoc)
+                  ","
+                  (Tactic.rwRule [] `category.assoc)
+                  ","
+                  (Tactic.rwRule [] `pullback.condition)]
+                 "]")
+                [])]))))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `PullbackCone.mk
+       [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+        (Term.show
+         "show"
+         («term_=_»
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+           " ≫ "
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+            " ≫ "
+            `f₃))
+          "="
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+           " ≫ "
+           `f₄))
+         (Term.byTactic'
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `pullback.lift_snd_assoc)
+                ","
+                (Tactic.rwRule [] `category.assoc)
+                ","
+                (Tactic.rwRule [] `category.assoc)
+                ","
+                (Tactic.rwRule [] `pullback.condition)]
+               "]")
+              [])]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.show
+       "show"
+       («term_=_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+         " ≫ "
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+          " ≫ "
+          `f₃))
+        "="
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+         " ≫ "
+         `f₄))
+       (Term.byTactic'
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `pullback.lift_snd_assoc)
+              ","
+              (Tactic.rwRule [] `category.assoc)
+              ","
+              (Tactic.rwRule [] `category.assoc)
+              ","
+              (Tactic.rwRule [] `pullback.condition)]
+             "]")
+            [])]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic'', expected 'Lean.Parser.Term.fromTerm'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `pullback.lift_snd_assoc)
+         ","
+         (Tactic.rwRule [] `category.assoc)
+         ","
+         (Tactic.rwRule [] `category.assoc)
+         ","
+         (Tactic.rwRule [] `pullback.condition)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.condition
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.lift_snd_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+        " ≫ "
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+         " ≫ "
+         `f₃))
+       "="
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+        " ≫ "
+        `f₄))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+        " ≫ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+       " ≫ "
+       `f₄)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₄
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂' "l₂'")
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄ "g₄")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₄._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1406'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `X₁ ×[Y₁] (X₂ ×[Y₂] X₃)` is the pullback `(X₁ ×[Y₁] X₂) ×[Y₂] X₃`. -/
-def pullbackAssocSymmIsPullback [HasPullback f₁ (g₃ ≫ f₂)] :
-    IsLimit
-      (PullbackCone.mk l₁' (l₂' ≫ g₄)
-        (show l₁' ≫ g₂ ≫ f₃ = (l₂' ≫ g₄) ≫ f₄ by
-          rw [pullback.lift_snd_assoc, category.assoc, category.assoc, pullback.condition])) :=
-  by
-  apply big_square_is_pullback
-  exact pullback_is_pullback f₃ f₄
-  apply pullback_pullback_right_is_pullback
+  def
+    pullbackAssocSymmIsPullback
+    [ HasPullback f₁ g₃ ≫ f₂ ]
+      :
+        IsLimit
+          PullbackCone.mk
+            l₁'
+              l₂' ≫ g₄
+              show
+                l₁' ≫ g₂ ≫ f₃ = l₂' ≫ g₄ ≫ f₄
+                by
+                  rw
+                    [
+                      pullback.lift_snd_assoc , category.assoc , category.assoc , pullback.condition
+                      ]
+    :=
+      by
+        apply big_square_is_pullback
+          exact pullback_is_pullback f₃ f₄
+          apply pullback_pullback_right_is_pullback
 #align
   category_theory.limits.pullback_assoc_symm_is_pullback CategoryTheory.Limits.pullbackAssocSymmIsPullback
 
-theorem has_pullback_assoc_symm [HasPullback f₁ (g₃ ≫ f₂)] : HasPullback (g₂ ≫ f₃) f₄ :=
-  ⟨⟨⟨_, pullbackAssocSymmIsPullback f₁ f₂ f₃ f₄⟩⟩⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `has_pullback_assoc_symm [])
+      (Command.declSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPullback
+          [`f₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+            " ≫ "
+            `f₂)])
+         "]")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `HasPullback
+         [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+           " ≫ "
+           `f₃)
+          `f₄])))
+      (Command.declValSimple
+       ":="
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.anonymousCtor
+          "⟨"
+          [(Term.anonymousCtor
+            "⟨"
+            [(Term.hole "_") "," (Term.app `pullbackAssocSymmIsPullback [`f₁ `f₂ `f₃ `f₄])]
+            "⟩")]
+          "⟩")]
+        "⟩")
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.anonymousCtor
+           "⟨"
+           [(Term.hole "_") "," (Term.app `pullbackAssocSymmIsPullback [`f₁ `f₂ `f₃ `f₄])]
+           "⟩")]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.hole "_") "," (Term.app `pullbackAssocSymmIsPullback [`f₁ `f₂ `f₃ `f₄])]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.hole "_") "," (Term.app `pullbackAssocSymmIsPullback [`f₁ `f₂ `f₃ `f₄])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullbackAssocSymmIsPullback [`f₁ `f₂ `f₃ `f₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullbackAssocSymmIsPullback
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `HasPullback
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+         " ≫ "
+         `f₃)
+        `f₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+       " ≫ "
+       `f₃)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₃
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1316'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  has_pullback_assoc_symm
+  [ HasPullback f₁ g₃ ≫ f₂ ] : HasPullback g₂ ≫ f₃ f₄
+  := ⟨ ⟨ ⟨ _ , pullbackAssocSymmIsPullback f₁ f₂ f₃ f₄ ⟩ ⟩ ⟩
 #align category_theory.limits.has_pullback_assoc_symm CategoryTheory.Limits.has_pullback_assoc_symm
 
-variable [HasPullback (g₂ ≫ f₃) f₄] [HasPullback f₁ (g₃ ≫ f₂)]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.variable
+     "variable"
+     [(Term.instBinder
+       "["
+       []
+       (Term.app
+        `HasPullback
+        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₂ "g₂")
+          " ≫ "
+          `f₃)
+         `f₄])
+       "]")
+      (Term.instBinder
+       "["
+       []
+       (Term.app
+        `HasPullback
+        [`f₁
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+          " ≫ "
+          `f₂)])
+       "]")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.instBinder', expected 'Lean.Parser.Term.explicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.instBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.instBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `HasPullback
+       [`f₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+         " ≫ "
+         `f₂)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+       " ≫ "
+       `f₂)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f₂
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃ "g₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termg₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1361'-/-- failed to format: format: uncaught backtrack exception
+variable [ HasPullback g₂ ≫ f₃ f₄ ] [ HasPullback f₁ g₃ ≫ f₂ ]
 
 /-- The canonical isomorphism `(X₁ ×[Y₁] X₂) ×[Y₂] X₃ ≅ X₁ ×[Y₁] (X₂ ×[Y₂] X₃)`. -/
 noncomputable def pullbackAssoc :
@@ -2634,15 +4670,230 @@ noncomputable def pullbackAssoc :
     (pullbackPullbackRightIsPullback f₁ f₂ f₃ f₄)
 #align category_theory.limits.pullback_assoc CategoryTheory.Limits.pullbackAssoc
 
-@[simp, reassoc.1]
-theorem pullback_assoc_inv_fst_fst :
-    (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫ pullback.fst ≫ pullback.fst = pullback.fst :=
-  by
-  trans l₁' ≫ pullback.fst
-  rw [← category.assoc]
-  congr 1
-  exact is_limit.cone_point_unique_up_to_iso_inv_comp _ _ walking_cospan.left
-  exact pullback.lift_fst _ _ _
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
+         ","
+         (Term.attrInstance
+          (Term.attrKind [])
+          (Attr.simple `reassoc._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1 []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `pullback_assoc_inv_fst_fst [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (Term.proj (Term.app `pullbackAssoc [`f₁ `f₂ `f₃ `f₄]) "." `inv)
+          " ≫ "
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `pullback.fst
+           " ≫ "
+           `pullback.fst))
+         "="
+         `pullback.fst)))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticTrans___
+            "trans"
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+              " ≫ "
+              `pullback.fst)])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+             "]")
+            [])
+           []
+           (Tactic.congr "congr" [(num "1")])
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app
+             `is_limit.cone_point_unique_up_to_iso_inv_comp
+             [(Term.hole "_") (Term.hole "_") `walking_cospan.left]))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticTrans___
+           "trans"
+           [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+             " ≫ "
+             `pullback.fst)])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+            "]")
+           [])
+          []
+          (Tactic.congr "congr" [(num "1")])
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app
+            `is_limit.cone_point_unique_up_to_iso_inv_comp
+            [(Term.hole "_") (Term.hole "_") `walking_cospan.left]))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullback.lift_fst
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `is_limit.cone_point_unique_up_to_iso_inv_comp
+        [(Term.hole "_") (Term.hole "_") `walking_cospan.left]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `is_limit.cone_point_unique_up_to_iso_inv_comp
+       [(Term.hole "_") (Term.hole "_") `walking_cospan.left])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `walking_cospan.left
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `is_limit.cone_point_unique_up_to_iso_inv_comp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.congr "congr" [(num "1")])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticTrans___
+       "trans"
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+         " ≫ "
+         `pullback.fst)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+       " ≫ "
+       `pullback.fst)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.fst
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁' "l₁'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.3169'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp , reassoc ]
+  theorem
+    pullback_assoc_inv_fst_fst
+    : pullbackAssoc f₁ f₂ f₃ f₄ . inv ≫ pullback.fst ≫ pullback.fst = pullback.fst
+    :=
+      by
+        trans l₁' ≫ pullback.fst
+          rw [ ← category.assoc ]
+          congr 1
+          exact is_limit.cone_point_unique_up_to_iso_inv_comp _ _ walking_cospan.left
+          exact pullback.lift_fst _ _ _
 #align
   category_theory.limits.pullback_assoc_inv_fst_fst CategoryTheory.Limits.pullback_assoc_inv_fst_fst
 
@@ -2652,27 +4903,460 @@ theorem pullback_assoc_hom_fst :
   rw [← iso.eq_inv_comp, pullback_assoc_inv_fst_fst]
 #align category_theory.limits.pullback_assoc_hom_fst CategoryTheory.Limits.pullback_assoc_hom_fst
 
-@[simp, reassoc.1]
-theorem pullback_assoc_hom_snd_fst :
-    (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
-  by
-  trans l₂ ≫ pullback.fst
-  rw [← category.assoc]
-  congr 1
-  exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
-  exact pullback.lift_fst _ _ _
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
+         ","
+         (Term.attrInstance
+          (Term.attrKind [])
+          (Attr.simple `reassoc._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1 []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `pullback_assoc_hom_snd_fst [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (Term.proj (Term.app `pullbackAssoc [`f₁ `f₂ `f₃ `f₄]) "." `Hom)
+          " ≫ "
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `pullback.snd
+           " ≫ "
+           `pullback.fst))
+         "="
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `pullback.fst
+          " ≫ "
+          `pullback.snd))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticTrans___
+            "trans"
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+              " ≫ "
+              `pullback.fst)])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+             "]")
+            [])
+           []
+           (Tactic.congr "congr" [(num "1")])
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app
+             `is_limit.cone_point_unique_up_to_iso_hom_comp
+             [(Term.hole "_") (Term.hole "_") `walking_cospan.right]))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticTrans___
+           "trans"
+           [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+             " ≫ "
+             `pullback.fst)])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+            "]")
+           [])
+          []
+          (Tactic.congr "congr" [(num "1")])
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app
+            `is_limit.cone_point_unique_up_to_iso_hom_comp
+            [(Term.hole "_") (Term.hole "_") `walking_cospan.right]))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullback.lift_fst [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullback.lift_fst
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `is_limit.cone_point_unique_up_to_iso_hom_comp
+        [(Term.hole "_") (Term.hole "_") `walking_cospan.right]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `is_limit.cone_point_unique_up_to_iso_hom_comp
+       [(Term.hole "_") (Term.hole "_") `walking_cospan.right])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `walking_cospan.right
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `is_limit.cone_point_unique_up_to_iso_hom_comp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.congr "congr" [(num "1")])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticTrans___
+       "trans"
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+         " ≫ "
+         `pullback.fst)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+       " ≫ "
+       `pullback.fst)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.fst
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.3124'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp , reassoc ]
+  theorem
+    pullback_assoc_hom_snd_fst
+    : pullbackAssoc f₁ f₂ f₃ f₄ . Hom ≫ pullback.snd ≫ pullback.fst = pullback.fst ≫ pullback.snd
+    :=
+      by
+        trans l₂ ≫ pullback.fst
+          rw [ ← category.assoc ]
+          congr 1
+          exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
+          exact pullback.lift_fst _ _ _
 #align
   category_theory.limits.pullback_assoc_hom_snd_fst CategoryTheory.Limits.pullback_assoc_hom_snd_fst
 
-@[simp, reassoc.1]
-theorem pullback_assoc_hom_snd_snd :
-    (pullbackAssoc f₁ f₂ f₃ f₄).Hom ≫ pullback.snd ≫ pullback.snd = pullback.snd :=
-  by
-  trans l₂ ≫ pullback.snd
-  rw [← category.assoc]
-  congr 1
-  exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
-  exact pullback.lift_snd _ _ _
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
+         ","
+         (Term.attrInstance
+          (Term.attrKind [])
+          (Attr.simple `reassoc._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1 []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `pullback_assoc_hom_snd_snd [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (Term.proj (Term.app `pullbackAssoc [`f₁ `f₂ `f₃ `f₄]) "." `Hom)
+          " ≫ "
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `pullback.snd
+           " ≫ "
+           `pullback.snd))
+         "="
+         `pullback.snd)))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticTrans___
+            "trans"
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+              " ≫ "
+              `pullback.snd)])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+             "]")
+            [])
+           []
+           (Tactic.congr "congr" [(num "1")])
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app
+             `is_limit.cone_point_unique_up_to_iso_hom_comp
+             [(Term.hole "_") (Term.hole "_") `walking_cospan.right]))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app `pullback.lift_snd [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticTrans___
+           "trans"
+           [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+             " ≫ "
+             `pullback.snd)])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+            "]")
+           [])
+          []
+          (Tactic.congr "congr" [(num "1")])
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app
+            `is_limit.cone_point_unique_up_to_iso_hom_comp
+            [(Term.hole "_") (Term.hole "_") `walking_cospan.right]))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app `pullback.lift_snd [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pullback.lift_snd [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pullback.lift_snd [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pullback.lift_snd
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `is_limit.cone_point_unique_up_to_iso_hom_comp
+        [(Term.hole "_") (Term.hole "_") `walking_cospan.right]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `is_limit.cone_point_unique_up_to_iso_hom_comp
+       [(Term.hole "_") (Term.hole "_") `walking_cospan.right])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `walking_cospan.right
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `is_limit.cone_point_unique_up_to_iso_hom_comp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.congr "congr" [(num "1")])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `category.assoc)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticTrans___
+       "trans"
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+         " ≫ "
+         `pullback.snd)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+       " ≫ "
+       `pullback.snd)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pullback.snd
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂ "l₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.3124'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp , reassoc ]
+  theorem
+    pullback_assoc_hom_snd_snd
+    : pullbackAssoc f₁ f₂ f₃ f₄ . Hom ≫ pullback.snd ≫ pullback.snd = pullback.snd
+    :=
+      by
+        trans l₂ ≫ pullback.snd
+          rw [ ← category.assoc ]
+          congr 1
+          exact is_limit.cone_point_unique_up_to_iso_hom_comp _ _ walking_cospan.right
+          exact pullback.lift_snd _ _ _
 #align
   category_theory.limits.pullback_assoc_hom_snd_snd CategoryTheory.Limits.pullback_assoc_hom_snd_snd
 
@@ -2743,106 +5427,2151 @@ local notation "Y₁" => pushout g₁ g₂
 local notation "Y₂" => pushout g₃ g₄
 
 -- mathport name: exprf₁
-local notation "f₁" => (pushout.inl : X₁ ⟶ Y₁)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"f₁\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pushout.inl
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        `X₁
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pushout.inl
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         `X₁
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       `X₁
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.3261'-/-- failed to format: format: uncaught backtrack exception
+local notation "f₁" => ( pushout.inl : X₁ ⟶ Y₁ )
 
 -- mathport name: exprf₂
-local notation "f₂" => (pushout.inr : X₂ ⟶ Y₁)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"f₂\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pushout.inr
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        `X₂
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pushout.inr
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         `X₂
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       `X₂
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.3261'-/-- failed to format: format: uncaught backtrack exception
+local notation "f₂" => ( pushout.inr : X₂ ⟶ Y₁ )
 
 -- mathport name: exprf₃
-local notation "f₃" => (pushout.inl : X₂ ⟶ Y₂)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"f₃\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pushout.inl
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        `X₂
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pushout.inl
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         `X₂
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       `X₂
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.3859'-/-- failed to format: format: uncaught backtrack exception
+local notation "f₃" => ( pushout.inl : X₂ ⟶ Y₂ )
 
 -- mathport name: exprf₄
-local notation "f₄" => (pushout.inr : X₃ ⟶ Y₂)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"f₄\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pushout.inr
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        `X₃
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pushout.inr
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         `X₃
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       `X₃
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.3859'-/-- failed to format: format: uncaught backtrack exception
+local notation "f₄" => ( pushout.inr : X₃ ⟶ Y₂ )
 
 -- mathport name: exprW
-local notation "W" => pushout g₁ (g₂ ≫ f₃)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"W\"")]
+     "=>"
+     (Term.app
+      `pushout
+      [`g₁
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        `g₂
+        " ≫ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pushout
+       [`g₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₂
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₂
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4547'-/-- failed to format: format: uncaught backtrack exception
+local notation "W" => pushout g₁ g₂ ≫ f₃
 
 -- mathport name: exprW'
-local notation "W'" => pushout (g₃ ≫ f₂) g₄
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"W'\"")]
+     "=>"
+     (Term.app
+      `pushout
+      [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        `g₃
+        " ≫ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+       `g₄]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pushout
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₃
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+        `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₃
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4502'-/-- failed to format: format: uncaught backtrack exception
+local notation "W'" => pushout g₃ ≫ f₂ g₄
 
 -- mathport name: exprl₁
-local notation "l₁" =>
-  (pushout.desc pushout.inl (f₃ ≫ pushout.inr) (pushout.condition.trans (Category.assoc _ _ _)) :
-    Y₁ ⟶ W)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₁\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      (Term.app
+       `pushout.desc
+       [`pushout.inl
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+         " ≫ "
+         `pushout.inr)
+        (Term.app
+         (Term.proj `pushout.condition "." `trans)
+         [(Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])])
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (Term.app
+        `pushout.desc
+        [`pushout.inl
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+          " ≫ "
+          `pushout.inr)
+         (Term.app
+          (Term.proj `pushout.condition "." `trans)
+          [(Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])])
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4637'-/-- failed to format: format: uncaught backtrack exception
+local
+  notation
+  "l₁"
+  =>
+  (
+    pushout.desc pushout.inl f₃ ≫ pushout.inr pushout.condition . trans Category.assoc _ _ _
+    :
+    Y₁ ⟶ W
+    )
 
 -- mathport name: exprl₂
-local notation "l₂" => (pushout.inr : Y₂ ⟶ W)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₂\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pushout.inr
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pushout.inr
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1 "W")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4637'-/-- failed to format: format: uncaught backtrack exception
+local notation "l₂" => ( pushout.inr : Y₂ ⟶ W )
 
 -- mathport name: exprl₁'
-local notation "l₁'" => (pushout.inl : Y₁ ⟶ W')
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₁'\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      `pushout.inl
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `pushout.inl
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₁ "Y₁")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.5435'-/-- failed to format: format: uncaught backtrack exception
+local notation "l₁'" => ( pushout.inl : Y₁ ⟶ W' )
 
 -- mathport name: exprl₂'
-local notation "l₂'" =>
-  (pushout.desc (f₂ ≫ pushout.inl) pushout.inr
-      ((Category.assoc _ _ _).symm.trans pushout.condition) :
-    Y₂ ⟶ W')
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"l₂'\"")]
+     "=>"
+     (Term.typeAscription
+      "("
+      (Term.app
+       `pushout.desc
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+         " ≫ "
+         `pushout.inl)
+        `pushout.inr
+        (Term.app
+         (Term.proj
+          (Term.proj
+           (Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+           "."
+           `symm)
+          "."
+          `trans)
+         [`pushout.condition])])
+      ":"
+      [(Combinatorics.Quiver.Basic.«term_⟶_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+        " ⟶ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'"))]
+      ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (Term.app
+        `pushout.desc
+        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+          " ≫ "
+          `pushout.inl)
+         `pushout.inr
+         (Term.app
+          (Term.proj
+           (Term.proj
+            (Term.app `Category.assoc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+            "."
+            `symm)
+           "."
+           `trans)
+          [`pushout.condition])])
+       ":"
+       [(Combinatorics.Quiver.Basic.«term_⟶_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+         " ⟶ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Combinatorics.Quiver.Basic.«term_⟶_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termY₂ "Y₂")
+       " ⟶ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1 "W'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termW'_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.5435'-/-- failed to format: format: uncaught backtrack exception
+local
+  notation
+  "l₂'"
+  =>
+  (
+    pushout.desc f₂ ≫ pushout.inl pushout.inr Category.assoc _ _ _ . symm . trans pushout.condition
+    :
+    Y₂ ⟶ W'
+    )
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃` is the pushout `(X₁ ⨿[Z₁] X₂) ×[X₂] (X₂ ⨿[Z₂] X₃)`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pushoutPushoutLeftIsPushout [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPushout
+          [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₃
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+           `g₄])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsColimit
+          [(Term.app
+            `PushoutCocone.mk
+            [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'")
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'"))
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")))
+              (Term.fromTerm
+               "from"
+               (Term.proj
+                (Term.app `pushout.inl_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                "."
+                `symm)))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+           []
+           (Tactic.apply "apply" `right_square_is_pushout)
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+             []
+             (Tactic.exact
+              "exact"
+              (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+             []
+             (convert
+              "convert"
+              []
+              (Term.app
+               `pushout_is_pushout
+               [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 `g₃
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+                `g₄])
+              [])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact "exact" `pushout.condition.symm)])])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+          []
+          (Tactic.apply "apply" `right_square_is_pushout)
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+            []
+            (convert
+             "convert"
+             []
+             (Term.app
+              `pushout_is_pushout
+              [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                `g₃
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+               `g₄])
+             [])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact "exact" `pushout.condition.symm)])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact "exact" `pushout.condition.symm)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `pushout.condition.symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout.condition.symm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+        []
+        (convert
+         "convert"
+         []
+         (Term.app
+          `pushout_is_pushout
+          [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₃
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+           `g₄])
+         [])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout.inr_desc
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (convert
+       "convert"
+       []
+       (Term.app
+        `pushout_is_pushout
+        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `g₃
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+         `g₄])
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pushout_is_pushout
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₃
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+        `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₃
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4502'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃` is the pushout `(X₁ ⨿[Z₁] X₂) ×[X₂] (X₂ ⨿[Z₂] X₃)`. -/
-def pushoutPushoutLeftIsPushout [HasPushout (g₃ ≫ f₂) g₄] :
-    IsColimit
-      (PushoutCocone.mk l₁' l₂' (show f₂ ≫ l₁' = f₃ ≫ l₂' from (pushout.inl_desc _ _ _).symm)) :=
-  by
-  apply pushout_cocone.flip_is_colimit
-  apply right_square_is_pushout
-  · apply pushout_cocone.flip_is_colimit
-    exact pushout_is_pushout _ _
-  · apply pushout_cocone.flip_is_colimit
-    convert pushout_is_pushout (g₃ ≫ f₂) g₄
-    exact pushout.inr_desc _ _ _
-  · exact pushout.condition.symm
+  def
+    pushoutPushoutLeftIsPushout
+    [ HasPushout g₃ ≫ f₂ g₄ ]
+      :
+        IsColimit
+          PushoutCocone.mk l₁' l₂' show f₂ ≫ l₁' = f₃ ≫ l₂' from pushout.inl_desc _ _ _ . symm
+    :=
+      by
+        apply pushout_cocone.flip_is_colimit
+          apply right_square_is_pushout
+          · apply pushout_cocone.flip_is_colimit exact pushout_is_pushout _ _
+          ·
+            apply pushout_cocone.flip_is_colimit
+              convert pushout_is_pushout g₃ ≫ f₂ g₄
+              exact pushout.inr_desc _ _ _
+          · exact pushout.condition.symm
 #align
   category_theory.limits.pushout_pushout_left_is_pushout CategoryTheory.Limits.pushoutPushoutLeftIsPushout
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃` is the pushout `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pushoutAssocIsPushout [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPushout
+          [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₃
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+           `g₄])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsColimit
+          [(Term.app
+            `PushoutCocone.mk
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'"))
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                `g₁
+                " ≫ "
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'")))
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 `g₂
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")))
+              (Term.byTactic'
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `category.assoc)
+                     ","
+                     (Tactic.rwRule [] `pushout.inl_desc)
+                     ","
+                     (Tactic.rwRule [] `pushout.condition_assoc)]
+                    "]")
+                   [])]))))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `big_square_is_pushout)
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pushout_pushout_left_is_pushout)])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact
+              "exact"
+              (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `big_square_is_pushout)
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pushout_pushout_left_is_pushout)])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact "exact" (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.apply "apply" `pushout_pushout_left_is_pushout)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pushout_pushout_left_is_pushout)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout_pushout_left_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `big_square_is_pushout)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `big_square_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `IsColimit
+       [(Term.app
+         `PushoutCocone.mk
+         [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'"))
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")
+          (Term.show
+           "show"
+           («term_=_»
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             `g₁
+             " ≫ "
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'")))
+            "="
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              `g₂
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+             " ≫ "
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")))
+           (Term.byTactic'
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `category.assoc)
+                  ","
+                  (Tactic.rwRule [] `pushout.inl_desc)
+                  ","
+                  (Tactic.rwRule [] `pushout.condition_assoc)]
+                 "]")
+                [])]))))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `PushoutCocone.mk
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'"))
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")
+        (Term.show
+         "show"
+         («term_=_»
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `g₁
+           " ≫ "
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'")))
+          "="
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₂
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")))
+         (Term.byTactic'
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `category.assoc)
+                ","
+                (Tactic.rwRule [] `pushout.inl_desc)
+                ","
+                (Tactic.rwRule [] `pushout.condition_assoc)]
+               "]")
+              [])]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.show
+       "show"
+       («term_=_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₁
+         " ≫ "
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'")))
+        "="
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `g₂
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")))
+       (Term.byTactic'
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `category.assoc)
+              ","
+              (Tactic.rwRule [] `pushout.inl_desc)
+              ","
+              (Tactic.rwRule [] `pushout.condition_assoc)]
+             "]")
+            [])]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic'', expected 'Lean.Parser.Term.fromTerm'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `category.assoc)
+         ","
+         (Tactic.rwRule [] `pushout.inl_desc)
+         ","
+         (Tactic.rwRule [] `pushout.condition_assoc)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout.condition_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout.inl_desc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        `g₁
+        " ≫ "
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁'_1 "l₁'")))
+       "="
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₂
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+        " ≫ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        `g₂
+        " ≫ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.6400'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃` is the pushout `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)`. -/
-def pushoutAssocIsPushout [HasPushout (g₃ ≫ f₂) g₄] :
-    IsColimit
-      (PushoutCocone.mk (f₁ ≫ l₁') l₂'
-        (show g₁ ≫ f₁ ≫ l₁' = (g₂ ≫ f₃) ≫ l₂' by
-          rw [category.assoc, pushout.inl_desc, pushout.condition_assoc])) :=
-  by
-  apply big_square_is_pushout
-  · apply pushout_pushout_left_is_pushout
-  · exact pushout_is_pushout _ _
+  def
+    pushoutAssocIsPushout
+    [ HasPushout g₃ ≫ f₂ g₄ ]
+      :
+        IsColimit
+          PushoutCocone.mk
+            f₁ ≫ l₁'
+              l₂'
+              show
+                g₁ ≫ f₁ ≫ l₁' = g₂ ≫ f₃ ≫ l₂'
+                by rw [ category.assoc , pushout.inl_desc , pushout.condition_assoc ]
+    :=
+      by
+        apply big_square_is_pushout
+          · apply pushout_pushout_left_is_pushout
+          · exact pushout_is_pushout _ _
 #align category_theory.limits.pushout_assoc_is_pushout CategoryTheory.Limits.pushoutAssocIsPushout
 
-theorem has_pushout_assoc [HasPushout (g₃ ≫ f₂) g₄] : HasPushout g₁ (g₂ ≫ f₃) :=
-  ⟨⟨⟨_, pushoutAssocIsPushout g₁ g₂ g₃ g₄⟩⟩⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `has_pushout_assoc [])
+      (Command.declSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPushout
+          [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₃
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+           `g₄])
+         "]")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `HasPushout
+         [`g₁
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `g₂
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])))
+      (Command.declValSimple
+       ":="
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.anonymousCtor
+          "⟨"
+          [(Term.anonymousCtor
+            "⟨"
+            [(Term.hole "_") "," (Term.app `pushoutAssocIsPushout [`g₁ `g₂ `g₃ `g₄])]
+            "⟩")]
+          "⟩")]
+        "⟩")
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.anonymousCtor
+           "⟨"
+           [(Term.hole "_") "," (Term.app `pushoutAssocIsPushout [`g₁ `g₂ `g₃ `g₄])]
+           "⟩")]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.hole "_") "," (Term.app `pushoutAssocIsPushout [`g₁ `g₂ `g₃ `g₄])]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.hole "_") "," (Term.app `pushoutAssocIsPushout [`g₁ `g₂ `g₃ `g₄])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushoutAssocIsPushout [`g₁ `g₂ `g₃ `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushoutAssocIsPushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `HasPushout
+       [`g₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₂
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₂
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4547'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  has_pushout_assoc
+  [ HasPushout g₃ ≫ f₂ g₄ ] : HasPushout g₁ g₂ ≫ f₃
+  := ⟨ ⟨ ⟨ _ , pushoutAssocIsPushout g₁ g₂ g₃ g₄ ⟩ ⟩ ⟩
 #align category_theory.limits.has_pushout_assoc CategoryTheory.Limits.has_pushout_assoc
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)` is the pushout `(X₁ ⨿[Z₁] X₂) ×[X₂] (X₂ ⨿[Z₂] X₃)`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pushoutPushoutRightIsPushout [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPushout
+          [`g₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₂
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsColimit
+          [(Term.app
+            `PushoutCocone.mk
+            [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁")
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂")
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂")))
+              (Term.fromTerm
+               "from"
+               (Term.app
+                `pushout.inr_desc
+                [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `right_square_is_pushout)
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact
+              "exact"
+              (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(convert
+              "convert"
+              []
+              (Term.app
+               `pushout_is_pushout
+               [`g₁
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 `g₂
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+              [])
+             []
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pushout.inl_desc)] "]")
+              [])])])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `right_square_is_pushout)
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(convert
+             "convert"
+             []
+             (Term.app
+              `pushout_is_pushout
+              [`g₁
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                `g₂
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+             [])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pushout.inl_desc)] "]")
+             [])])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(convert
+         "convert"
+         []
+         (Term.app
+          `pushout_is_pushout
+          [`g₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₂
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+         [])
+        []
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pushout.inl_desc)] "]")
+         [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `pushout.inl_desc)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout.inl_desc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (convert
+       "convert"
+       []
+       (Term.app
+        `pushout_is_pushout
+        [`g₁
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `g₂
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `pushout_is_pushout
+       [`g₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₂
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₂
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4547'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)` is the pushout `(X₁ ⨿[Z₁] X₂) ×[X₂] (X₂ ⨿[Z₂] X₃)`. -/
-def pushoutPushoutRightIsPushout [HasPushout g₁ (g₂ ≫ f₃)] :
-    IsColimit (PushoutCocone.mk l₁ l₂ (show f₂ ≫ l₁ = f₃ ≫ l₂ from pushout.inr_desc _ _ _)) :=
-  by
-  apply right_square_is_pushout
-  · exact pushout_is_pushout _ _
-  · convert pushout_is_pushout g₁ (g₂ ≫ f₃)
-    rw [pushout.inl_desc]
+  def
+    pushoutPushoutRightIsPushout
+    [ HasPushout g₁ g₂ ≫ f₃ ]
+      : IsColimit PushoutCocone.mk l₁ l₂ show f₂ ≫ l₁ = f₃ ≫ l₂ from pushout.inr_desc _ _ _
+    :=
+      by
+        apply right_square_is_pushout
+          · exact pushout_is_pushout _ _
+          · convert pushout_is_pushout g₁ g₂ ≫ f₃ rw [ pushout.inl_desc ]
 #align
   category_theory.limits.pushout_pushout_right_is_pushout CategoryTheory.Limits.pushoutPushoutRightIsPushout
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "`X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)` is the pushout `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `pushoutAssocSymmIsPushout [])
+      (Command.optDeclSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPushout
+          [`g₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₂
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+         "]")]
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `IsColimit
+          [(Term.app
+            `PushoutCocone.mk
+            [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁")
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))
+             (Term.show
+              "show"
+              («term_=_»
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 `g₃
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+                " ≫ "
+                (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+               "="
+               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                `g₄
+                " ≫ "
+                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+                 " ≫ "
+                 (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))))
+              (Term.byTactic'
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `category.assoc)
+                     ","
+                     (Tactic.rwRule [] `pushout.inr_desc)
+                     ","
+                     (Tactic.rwRule [] `pushout.condition_assoc)]
+                    "]")
+                   [])]))))])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+           []
+           (Tactic.apply "apply" `big_square_is_pushout)
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+             []
+             (Tactic.apply "apply" `pushout_pushout_right_is_pushout)])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+             []
+             (Tactic.exact
+              "exact"
+              (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact "exact" `pushout.condition.symm)])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact
+              "exact"
+              (Term.proj
+               (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+               "."
+               `symm))])])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+          []
+          (Tactic.apply "apply" `big_square_is_pushout)
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+            []
+            (Tactic.apply "apply" `pushout_pushout_right_is_pushout)])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact "exact" `pushout.condition.symm)])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.proj
+              (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+              "."
+              `symm))])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact
+         "exact"
+         (Term.proj
+          (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+          "."
+          `symm))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.proj
+        (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+        "."
+        `symm))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj
+       (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+       "."
+       `symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout.inr_desc
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact "exact" `pushout.condition.symm)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `pushout.condition.symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout.condition.symm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+        []
+        (Tactic.exact "exact" (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushout_is_pushout [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout_cocone.flip_is_colimit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+        []
+        (Tactic.apply "apply" `pushout_pushout_right_is_pushout)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pushout_pushout_right_is_pushout)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout_pushout_right_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout_cocone.flip_is_colimit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `big_square_is_pushout)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `big_square_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply "apply" `pushout_cocone.flip_is_colimit)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout_cocone.flip_is_colimit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `IsColimit
+       [(Term.app
+         `PushoutCocone.mk
+         [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁")
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))
+          (Term.show
+           "show"
+           («term_=_»
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              `g₃
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+             " ≫ "
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+            "="
+            (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             `g₄
+             " ≫ "
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))))
+           (Term.byTactic'
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `category.assoc)
+                  ","
+                  (Tactic.rwRule [] `pushout.inr_desc)
+                  ","
+                  (Tactic.rwRule [] `pushout.condition_assoc)]
+                 "]")
+                [])]))))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `PushoutCocone.mk
+       [(CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁")
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))
+        (Term.show
+         "show"
+         («term_=_»
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₃
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+          "="
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `g₄
+           " ≫ "
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))))
+         (Term.byTactic'
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `category.assoc)
+                ","
+                (Tactic.rwRule [] `pushout.inr_desc)
+                ","
+                (Tactic.rwRule [] `pushout.condition_assoc)]
+               "]")
+              [])]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.show', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.show
+       "show"
+       («term_=_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `g₃
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+        "="
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₄
+         " ≫ "
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))))
+       (Term.byTactic'
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `category.assoc)
+              ","
+              (Tactic.rwRule [] `pushout.inr_desc)
+              ","
+              (Tactic.rwRule [] `pushout.condition_assoc)]
+             "]")
+            [])]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic'', expected 'Lean.Parser.Term.fromTerm'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `category.assoc)
+         ","
+         (Tactic.rwRule [] `pushout.inr_desc)
+         ","
+         (Tactic.rwRule [] `pushout.condition_assoc)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout.condition_assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pushout.inr_desc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `category.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₃
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+        " ≫ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+       "="
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        `g₄
+        " ≫ "
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₄
+       " ≫ "
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+        " ≫ "
+        (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1 "l₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.6310'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- `X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)` is the pushout `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃`. -/
-def pushoutAssocSymmIsPushout [HasPushout g₁ (g₂ ≫ f₃)] :
-    IsColimit
-      (PushoutCocone.mk l₁ (f₄ ≫ l₂)
-        (show (g₃ ≫ f₂) ≫ l₁ = g₄ ≫ f₄ ≫ l₂ by
-          rw [category.assoc, pushout.inr_desc, pushout.condition_assoc])) :=
-  by
-  apply pushout_cocone.flip_is_colimit
-  apply big_square_is_pushout
-  · apply pushout_cocone.flip_is_colimit
-    apply pushout_pushout_right_is_pushout
-  · apply pushout_cocone.flip_is_colimit
-    exact pushout_is_pushout _ _
-  · exact pushout.condition.symm
-  · exact (pushout.inr_desc _ _ _).symm
+  def
+    pushoutAssocSymmIsPushout
+    [ HasPushout g₁ g₂ ≫ f₃ ]
+      :
+        IsColimit
+          PushoutCocone.mk
+            l₁
+              f₄ ≫ l₂
+              show
+                g₃ ≫ f₂ ≫ l₁ = g₄ ≫ f₄ ≫ l₂
+                by rw [ category.assoc , pushout.inr_desc , pushout.condition_assoc ]
+    :=
+      by
+        apply pushout_cocone.flip_is_colimit
+          apply big_square_is_pushout
+          · apply pushout_cocone.flip_is_colimit apply pushout_pushout_right_is_pushout
+          · apply pushout_cocone.flip_is_colimit exact pushout_is_pushout _ _
+          · exact pushout.condition.symm
+          · exact pushout.inr_desc _ _ _ . symm
 #align
   category_theory.limits.pushout_assoc_symm_is_pushout CategoryTheory.Limits.pushoutAssocSymmIsPushout
 
-theorem has_pushout_assoc_symm [HasPushout g₁ (g₂ ≫ f₃)] : HasPushout (g₃ ≫ f₂) g₄ :=
-  ⟨⟨⟨_, pushoutAssocSymmIsPushout g₁ g₂ g₃ g₄⟩⟩⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `has_pushout_assoc_symm [])
+      (Command.declSig
+       [(Term.instBinder
+         "["
+         []
+         (Term.app
+          `HasPushout
+          [`g₁
+           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+            `g₂
+            " ≫ "
+            (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+         "]")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `HasPushout
+         [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `g₃
+           " ≫ "
+           (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+          `g₄])))
+      (Command.declValSimple
+       ":="
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.anonymousCtor
+          "⟨"
+          [(Term.anonymousCtor
+            "⟨"
+            [(Term.hole "_") "," (Term.app `pushoutAssocSymmIsPushout [`g₁ `g₂ `g₃ `g₄])]
+            "⟩")]
+          "⟩")]
+        "⟩")
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.anonymousCtor
+           "⟨"
+           [(Term.hole "_") "," (Term.app `pushoutAssocSymmIsPushout [`g₁ `g₂ `g₃ `g₄])]
+           "⟩")]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.hole "_") "," (Term.app `pushoutAssocSymmIsPushout [`g₁ `g₂ `g₃ `g₄])]
+         "⟩")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.hole "_") "," (Term.app `pushoutAssocSymmIsPushout [`g₁ `g₂ `g₃ `g₄])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushoutAssocSymmIsPushout [`g₁ `g₂ `g₃ `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushoutAssocSymmIsPushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `HasPushout
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₃
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+        `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₃
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4502'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  has_pushout_assoc_symm
+  [ HasPushout g₁ g₂ ≫ f₃ ] : HasPushout g₃ ≫ f₂ g₄
+  := ⟨ ⟨ ⟨ _ , pushoutAssocSymmIsPushout g₁ g₂ g₃ g₄ ⟩ ⟩ ⟩
 #align category_theory.limits.has_pushout_assoc_symm CategoryTheory.Limits.has_pushout_assoc_symm
 
-variable [HasPushout (g₃ ≫ f₂) g₄] [HasPushout g₁ (g₂ ≫ f₃)]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.variable
+     "variable"
+     [(Term.instBinder
+       "["
+       []
+       (Term.app
+        `HasPushout
+        [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `g₃
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂"))
+         `g₄])
+       "]")
+      (Term.instBinder
+       "["
+       []
+       (Term.app
+        `HasPushout
+        [`g₁
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `g₂
+          " ≫ "
+          (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+       "]")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.instBinder', expected 'Lean.Parser.Term.explicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.instBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.instBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `HasPushout
+       [`g₁
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         `g₂
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       `g₂
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃ "f₃")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₃._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.4547'-/-- failed to format: format: uncaught backtrack exception
+variable [ HasPushout g₃ ≫ f₂ g₄ ] [ HasPushout g₁ g₂ ≫ f₃ ]
 
 /-- The canonical isomorphism `(X₁ ⨿[Z₁] X₂) ⨿[Z₂] X₃ ≅ X₁ ⨿[Z₁] (X₂ ⨿[Z₂] X₃)`. -/
 noncomputable def pushoutAssoc :
@@ -2852,42 +7581,835 @@ noncomputable def pushoutAssoc :
     (pushoutPushoutRightIsPushout g₁ g₂ g₃ g₄)
 #align category_theory.limits.pushout_assoc CategoryTheory.Limits.pushoutAssoc
 
-@[simp, reassoc.1]
-theorem inl_inl_pushout_assoc_hom :
-    pushout.inl ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl :=
-  by
-  trans f₁ ≫ l₁
-  · congr 1
-    exact
-      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _
-        walking_cospan.left
-  · exact pushout.inl_desc _ _ _
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
+         ","
+         (Term.attrInstance
+          (Term.attrKind [])
+          (Attr.simple `reassoc._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1 []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `inl_inl_pushout_assoc_hom [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `pushout.inl
+          " ≫ "
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `pushout.inl
+           " ≫ "
+           (Term.proj (Term.app `pushoutAssoc [`g₁ `g₂ `g₃ `g₄]) "." `Hom)))
+         "="
+         `pushout.inl)))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticTrans___
+            "trans"
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.congr "congr" [(num "1")])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.app
+               (Term.proj
+                (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+                "."
+                `comp_cocone_point_unique_up_to_iso_hom)
+               [(Term.hole "_") `walking_cospan.left]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact
+              "exact"
+              (Term.app `pushout.inl_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticTrans___
+           "trans"
+           [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+             " ≫ "
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.congr "congr" [(num "1")])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj
+               (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+               "."
+               `comp_cocone_point_unique_up_to_iso_hom)
+              [(Term.hole "_") `walking_cospan.left]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.app `pushout.inl_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact
+         "exact"
+         (Term.app `pushout.inl_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pushout.inl_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushout.inl_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout.inl_desc
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.congr "congr" [(num "1")])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.app
+          (Term.proj
+           (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+           "."
+           `comp_cocone_point_unique_up_to_iso_hom)
+          [(Term.hole "_") `walking_cospan.left]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        (Term.proj
+         (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+         "."
+         `comp_cocone_point_unique_up_to_iso_hom)
+        [(Term.hole "_") `walking_cospan.left]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+        "."
+        `comp_cocone_point_unique_up_to_iso_hom)
+       [(Term.hole "_") `walking_cospan.left])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `walking_cospan.left
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+       "."
+       `comp_cocone_point_unique_up_to_iso_hom)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout_pushout_left_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.congr "congr" [(num "1")])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticTrans___
+       "trans"
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₁ "f₁")
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.6265'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp , reassoc ]
+  theorem
+    inl_inl_pushout_assoc_hom
+    : pushout.inl ≫ pushout.inl ≫ pushoutAssoc g₁ g₂ g₃ g₄ . Hom = pushout.inl
+    :=
+      by
+        trans f₁ ≫ l₁
+          ·
+            congr 1
+              exact
+                pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄ . comp_cocone_point_unique_up_to_iso_hom
+                  _ walking_cospan.left
+          · exact pushout.inl_desc _ _ _
 #align
   category_theory.limits.inl_inl_pushout_assoc_hom CategoryTheory.Limits.inl_inl_pushout_assoc_hom
 
-@[simp, reassoc.1]
-theorem inr_inl_pushout_assoc_hom :
-    pushout.inr ≫ pushout.inl ≫ (pushoutAssoc g₁ g₂ g₃ g₄).Hom = pushout.inl ≫ pushout.inr :=
-  by
-  trans f₂ ≫ l₁
-  · congr 1
-    exact
-      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _
-        walking_cospan.left
-  · exact pushout.inr_desc _ _ _
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
+         ","
+         (Term.attrInstance
+          (Term.attrKind [])
+          (Attr.simple `reassoc._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1 []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `inr_inl_pushout_assoc_hom [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `pushout.inr
+          " ≫ "
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `pushout.inl
+           " ≫ "
+           (Term.proj (Term.app `pushoutAssoc [`g₁ `g₂ `g₃ `g₄]) "." `Hom)))
+         "="
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `pushout.inl " ≫ " `pushout.inr))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticTrans___
+            "trans"
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.congr "congr" [(num "1")])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.app
+               (Term.proj
+                (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+                "."
+                `comp_cocone_point_unique_up_to_iso_hom)
+               [(Term.hole "_") `walking_cospan.left]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact
+              "exact"
+              (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticTrans___
+           "trans"
+           [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+             " ≫ "
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.congr "congr" [(num "1")])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj
+               (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+               "."
+               `comp_cocone_point_unique_up_to_iso_hom)
+              [(Term.hole "_") `walking_cospan.left]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact
+         "exact"
+         (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout.inr_desc
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.congr "congr" [(num "1")])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.app
+          (Term.proj
+           (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+           "."
+           `comp_cocone_point_unique_up_to_iso_hom)
+          [(Term.hole "_") `walking_cospan.left]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        (Term.proj
+         (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+         "."
+         `comp_cocone_point_unique_up_to_iso_hom)
+        [(Term.hole "_") `walking_cospan.left]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+        "."
+        `comp_cocone_point_unique_up_to_iso_hom)
+       [(Term.hole "_") `walking_cospan.left])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `walking_cospan.left
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+       "."
+       `comp_cocone_point_unique_up_to_iso_hom)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout_pushout_left_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.congr "congr" [(num "1")])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticTrans___
+       "trans"
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₂ "f₂")
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1 "l₁")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₁_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.6265'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp , reassoc ]
+  theorem
+    inr_inl_pushout_assoc_hom
+    : pushout.inr ≫ pushout.inl ≫ pushoutAssoc g₁ g₂ g₃ g₄ . Hom = pushout.inl ≫ pushout.inr
+    :=
+      by
+        trans f₂ ≫ l₁
+          ·
+            congr 1
+              exact
+                pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄ . comp_cocone_point_unique_up_to_iso_hom
+                  _ walking_cospan.left
+          · exact pushout.inr_desc _ _ _
 #align
   category_theory.limits.inr_inl_pushout_assoc_hom CategoryTheory.Limits.inr_inl_pushout_assoc_hom
 
-@[simp, reassoc.1]
-theorem inr_inr_pushout_assoc_inv :
-    pushout.inr ≫ pushout.inr ≫ (pushoutAssoc g₁ g₂ g₃ g₄).inv = pushout.inr :=
-  by
-  trans f₄ ≫ l₂'
-  · congr 1
-    exact
-      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_inv
-        (pushout_pushout_right_is_pushout g₁ g₂ g₃ g₄) walking_cospan.right
-  · exact pushout.inr_desc _ _ _
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
+         ","
+         (Term.attrInstance
+          (Term.attrKind [])
+          (Attr.simple `reassoc._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.1 []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `inr_inr_pushout_assoc_inv [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          `pushout.inr
+          " ≫ "
+          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+           `pushout.inr
+           " ≫ "
+           (Term.proj (Term.app `pushoutAssoc [`g₁ `g₂ `g₃ `g₄]) "." `inv)))
+         "="
+         `pushout.inr)))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticTrans___
+            "trans"
+            [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+              " ≫ "
+              (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'"))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.congr "congr" [(num "1")])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.app
+               (Term.proj
+                (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+                "."
+                `comp_cocone_point_unique_up_to_iso_inv)
+               [(Term.app `pushout_pushout_right_is_pushout [`g₁ `g₂ `g₃ `g₄])
+                `walking_cospan.right]))])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.exact
+              "exact"
+              (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticTrans___
+           "trans"
+           [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+             " ≫ "
+             (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'"))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.congr "congr" [(num "1")])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.app
+              (Term.proj
+               (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+               "."
+               `comp_cocone_point_unique_up_to_iso_inv)
+              [(Term.app `pushout_pushout_right_is_pushout [`g₁ `g₂ `g₃ `g₄])
+               `walking_cospan.right]))])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.exact
+             "exact"
+             (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.exact
+         "exact"
+         (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `pushout.inr_desc [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout.inr_desc
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.congr "congr" [(num "1")])
+        []
+        (Tactic.exact
+         "exact"
+         (Term.app
+          (Term.proj
+           (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+           "."
+           `comp_cocone_point_unique_up_to_iso_inv)
+          [(Term.app `pushout_pushout_right_is_pushout [`g₁ `g₂ `g₃ `g₄]) `walking_cospan.right]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        (Term.proj
+         (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+         "."
+         `comp_cocone_point_unique_up_to_iso_inv)
+        [(Term.app `pushout_pushout_right_is_pushout [`g₁ `g₂ `g₃ `g₄]) `walking_cospan.right]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+        "."
+        `comp_cocone_point_unique_up_to_iso_inv)
+       [(Term.app `pushout_pushout_right_is_pushout [`g₁ `g₂ `g₃ `g₄]) `walking_cospan.right])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `walking_cospan.right
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `pushout_pushout_right_is_pushout [`g₁ `g₂ `g₃ `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout_pushout_right_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `pushout_pushout_right_is_pushout [`g₁ `g₂ `g₃ `g₄])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+       "."
+       `comp_cocone_point_unique_up_to_iso_inv)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `g₄
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₃
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₂
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g₁
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `pushout_pushout_left_is_pushout
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `pushout_pushout_left_is_pushout [`g₁ `g₂ `g₃ `g₄])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.congr "congr" [(num "1")])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticTrans___
+       "trans"
+       [(CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+         " ≫ "
+         (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'"))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.termf₄ "f₄")
+       " ≫ "
+       (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1 "l₂'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1', expected 'CategoryTheory.Limits.CategoryTheory.Limits.Shapes.Pullbacks.terml₂'_1._@.CategoryTheory.Limits.Shapes.Pullbacks._hyg.6400'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp , reassoc ]
+  theorem
+    inr_inr_pushout_assoc_inv
+    : pushout.inr ≫ pushout.inr ≫ pushoutAssoc g₁ g₂ g₃ g₄ . inv = pushout.inr
+    :=
+      by
+        trans f₄ ≫ l₂'
+          ·
+            congr 1
+              exact
+                pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄ . comp_cocone_point_unique_up_to_iso_inv
+                  pushout_pushout_right_is_pushout g₁ g₂ g₃ g₄ walking_cospan.right
+          · exact pushout.inr_desc _ _ _
 #align
   category_theory.limits.inr_inr_pushout_assoc_inv CategoryTheory.Limits.inr_inr_pushout_assoc_inv
 

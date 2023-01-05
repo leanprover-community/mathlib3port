@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.free
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,61 +115,829 @@ local notation "λ⁻¹_" => Hom₂.left_unitor_inv
 -- mathport name: right_unitor_inv
 local notation "ρ⁻¹_" => Hom₂.right_unitor_inv
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Relations between 2-morphisms in the free bicategory. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.inductive
+      "inductive"
+      (Command.declId `Rel [])
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Term.forall
+          "∀"
+          [(Term.implicitBinder "{" [`a `b] [":" `B] "}")
+           (Term.implicitBinder "{" [`f `g] [":" (Term.app `Hom [`a `b])] "}")]
+          []
+          ","
+          (Term.arrow
+           (Term.app `Hom₂ [`f `g])
+           "→"
+           (Term.arrow (Term.app `Hom₂ [`f `g]) "→" (Term.prop "Prop")))))])
+      []
+      [(Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `vcomp_right
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.implicitBinder "{" [`f `g `h] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")
+          (Term.explicitBinder "(" [`θ₁ `θ₂] [":" (Term.app `Hom₂ [`g `h])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.arrow
+            (Term.app `Rel [`θ₁ `θ₂])
+            "→"
+            (Term.app
+             `Rel
+             [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp `η " ≫ " `θ₁)
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               `η
+               " ≫ "
+               `θ₂)])))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `vcomp_left
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.implicitBinder "{" [`f `g `h] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`η₁ `η₂] [":" (Term.app `Hom₂ [`f `g])] [] ")")
+          (Term.explicitBinder "(" [`θ] [":" (Term.app `Hom₂ [`g `h])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.arrow
+            (Term.app `Rel [`η₁ `η₂])
+            "→"
+            (Term.app
+             `Rel
+             [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp `η₁ " ≫ " `θ)
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               `η₂
+               " ≫ "
+               `θ)])))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `id_comp
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.implicitBinder "{" [`f `g] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙") [`f])
+              " ≫ "
+              `η)
+             `η]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `comp_id
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.implicitBinder "{" [`f `g] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              `η
+              " ≫ "
+              (Term.app (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙") [`g]))
+             `η]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `assoc
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.implicitBinder "{" [`f `g `h `i] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")
+          (Term.explicitBinder "(" [`θ] [":" (Term.app `Hom₂ [`g `h])] [] ")")
+          (Term.explicitBinder "(" [`ι] [":" (Term.app `Hom₂ [`h `i])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp `η " ≫ " `θ)
+              " ≫ "
+              `ι)
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              `η
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               `θ
+               " ≫ "
+               `ι))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_left
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g `h] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.explicitBinder "(" [`η `η'] [":" (Term.app `Hom₂ [`g `h])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.arrow
+            (Term.app `Rel [`η `η'])
+            "→"
+            (Term.app
+             `Rel
+             [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `f
+               " ◁ "
+               `η)
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `f
+               " ◁ "
+               `η')])))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_left_id
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+              `f
+              " ◁ "
+              (Term.app (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙") [`g]))
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [(Term.app (Term.proj `f "." `comp) [`g])])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_left_comp
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.implicitBinder "{" [`g `h `i] [":" (Term.app `Hom [`b `c])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`g `h])] [] ")")
+          (Term.explicitBinder "(" [`θ] [":" (Term.app `Hom₂ [`h `i])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+              `f
+              " ◁ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp `η " ≫ " `θ))
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `f
+               " ◁ "
+               `η)
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `f
+               " ◁ "
+               `θ))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `id_whisker_left
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.implicitBinder "{" [`f `g] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+              (Term.app `Hom.id [`a])
+              " ◁ "
+              `η)
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor "λ_")
+               [`f])
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               `η
+               " ≫ "
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor_inv
+                 "λ⁻¹_")
+                [`g])))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `comp_whisker_left
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c `d] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.implicitBinder "{" [`h `h'] [":" (Term.app `Hom [`c `d])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`h `h'])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+              (Term.app (Term.proj `f "." `comp) [`g])
+              " ◁ "
+              `η)
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+               [`f `g `h])
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+                `f
+                " ◁ "
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+                 `g
+                 " ◁ "
+                 `η))
+               " ≫ "
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator_inv "α⁻¹_")
+                [`f `g `h'])))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_right
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.explicitBinder "(" [`f `g] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`h] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.explicitBinder "(" [`η `η'] [":" (Term.app `Hom₂ [`f `g])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.arrow
+            (Term.app `Rel [`η `η'])
+            "→"
+            (Term.app
+             `Rel
+             [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+               `η
+               " ▷ "
+               `h)
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+               `η'
+               " ▷ "
+               `h)])))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `id_whisker_right
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+              (Term.app (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙") [`f])
+              " ▷ "
+              `g)
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [(Term.app (Term.proj `f "." `comp) [`g])])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `comp_whisker_right
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.implicitBinder "{" [`f `g `h] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`i] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")
+          (Term.explicitBinder "(" [`θ] [":" (Term.app `Hom₂ [`g `h])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp `η " ≫ " `θ)
+              " ▷ "
+              `i)
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+               `η
+               " ▷ "
+               `i)
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+               `θ
+               " ▷ "
+               `i))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_right_id
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.implicitBinder "{" [`f `g] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+              `η
+              " ▷ "
+              (Term.app `Hom.id [`b]))
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor "ρ_")
+               [`f])
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               `η
+               " ≫ "
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor_inv
+                 "ρ⁻¹_")
+                [`g])))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_right_comp
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c `d] [] "}")
+          (Term.implicitBinder "{" [`f `f'] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.explicitBinder "(" [`h] [":" (Term.app `Hom [`c `d])] [] ")")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `f'])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+              `η
+              " ▷ "
+              (Term.app (Term.proj `g "." `comp) [`h]))
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator_inv "α⁻¹_")
+               [`f `g `h])
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+                 `η
+                 " ▷ "
+                 `g)
+                " ▷ "
+                `h)
+               " ≫ "
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+                [`f' `g `h])))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_assoc
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c `d] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.implicitBinder "{" [`g `g'] [":" (Term.app `Hom [`b `c])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`g `g'])] [] ")")
+          (Term.explicitBinder "(" [`h] [":" (Term.app `Hom [`c `d])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `f
+               " ◁ "
+               `η)
+              " ▷ "
+              `h)
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+               [`f `g `h])
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+                `f
+                " ◁ "
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+                 `η
+                 " ▷ "
+                 `h))
+               " ≫ "
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator_inv "α⁻¹_")
+                [`f `g' `h])))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `whisker_exchange
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.implicitBinder "{" [`f `g] [":" (Term.app `Hom [`a `b])] "}")
+          (Term.implicitBinder "{" [`h `i] [":" (Term.app `Hom [`b `c])] "}")
+          (Term.explicitBinder "(" [`η] [":" (Term.app `Hom₂ [`f `g])] [] ")")
+          (Term.explicitBinder "(" [`θ] [":" (Term.app `Hom₂ [`h `i])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `f
+               " ◁ "
+               `θ)
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+               `η
+               " ▷ "
+               `i))
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+               `η
+               " ▷ "
+               `h)
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `g
+               " ◁ "
+               `θ))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `associator_hom_inv
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c `d] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.explicitBinder "(" [`h] [":" (Term.app `Hom [`c `d])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+               [`f `g `h])
+              " ≫ "
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator_inv "α⁻¹_")
+               [`f `g `h]))
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [(Term.app
+                (Term.proj (Term.app (Term.proj `f "." `comp) [`g]) "." `comp)
+                [`h])])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `associator_inv_hom
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c `d] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.explicitBinder "(" [`h] [":" (Term.app `Hom [`c `d])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator_inv "α⁻¹_")
+               [`f `g `h])
+              " ≫ "
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+               [`f `g `h]))
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [(Term.app
+                (Term.proj `f "." `comp)
+                [(Term.app (Term.proj `g "." `comp) [`h])])])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `left_unitor_hom_inv
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor "λ_")
+               [`f])
+              " ≫ "
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor_inv "λ⁻¹_")
+               [`f]))
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [(Term.app (Term.proj (Term.app `Hom.id [`a]) "." `comp) [`f])])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `left_unitor_inv_hom
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor_inv "λ⁻¹_")
+               [`f])
+              " ≫ "
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor "λ_")
+               [`f]))
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [`f])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `right_unitor_hom_inv
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor "ρ_")
+               [`f])
+              " ≫ "
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor_inv
+                "ρ⁻¹_")
+               [`f]))
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [(Term.app (Term.proj `f "." `comp) [(Term.app `Hom.id [`b])])])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `right_unitor_inv_hom
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor_inv
+                "ρ⁻¹_")
+               [`f])
+              " ≫ "
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor "ρ_")
+               [`f]))
+             (Term.app
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.id "𝟙")
+              [`f])]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `pentagon
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c `d `e] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")
+          (Term.explicitBinder "(" [`h] [":" (Term.app `Hom [`c `d])] [] ")")
+          (Term.explicitBinder "(" [`i] [":" (Term.app `Hom [`d `e])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+                [`f `g `h])
+               " ▷ "
+               `i)
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+                [`f (Term.app (Term.proj `g "." `comp) [`h]) `i])
+               " ≫ "
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+                `f
+                " ◁ "
+                (Term.app
+                 (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+                 [`g `h `i]))))
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+               [(Term.app (Term.proj `f "." `comp) [`g]) `h `i])
+              " ≫ "
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+               [`f `g (Term.app (Term.proj `h "." `comp) [`i])]))]))]))
+       (Command.ctor
+        []
+        "|"
+        (Command.declModifiers [] [] [] [] [] [])
+        `triangle
+        (Command.optDeclSig
+         [(Term.implicitBinder "{" [`a `b `c] [] "}")
+          (Term.explicitBinder "(" [`f] [":" (Term.app `Hom [`a `b])] [] ")")
+          (Term.explicitBinder "(" [`g] [":" (Term.app `Hom [`b `c])] [] ")")]
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `Rel
+            [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+               [`f (Term.app `Hom.id [`b]) `g])
+              " ≫ "
+              (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+               `f
+               " ◁ "
+               (Term.app
+                (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor "λ_")
+                [`g])))
+             (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+              (Term.app
+               (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor "ρ_")
+               [`f])
+              " ▷ "
+              `g)]))]))]
+      []
+      (Command.optDeriving [])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `Rel
+       [(CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.vcomp
+         (Term.app
+          (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.associator "α_")
+          [`f (Term.app `Hom.id [`b]) `g])
+         " ≫ "
+         (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_left
+          `f
+          " ◁ "
+          (Term.app
+           (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.left_unitor "λ_")
+           [`g])))
+        (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+         (Term.app
+          (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor "ρ_")
+          [`f])
+         " ▷ "
+         `g)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right
+       (Term.app
+        (CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.right_unitor "ρ_")
+        [`f])
+       " ▷ "
+       `g)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right', expected 'CategoryTheory.FreeBicategory.CategoryTheory.Bicategory.Free.whisker_right._@.CategoryTheory.Bicategory.Free._hyg.1412'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.inductive', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Relations between 2-morphisms in the free bicategory. -/
-inductive Rel : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → Hom₂ f g → Prop
-  |
-  vcomp_right {a b} {f g h : Hom a b} (η : Hom₂ f g) (θ₁ θ₂ : Hom₂ g h) :
-    Rel θ₁ θ₂ → Rel (η ≫ θ₁) (η ≫ θ₂)
-  |
-  vcomp_left {a b} {f g h : Hom a b} (η₁ η₂ : Hom₂ f g) (θ : Hom₂ g h) :
-    Rel η₁ η₂ → Rel (η₁ ≫ θ) (η₂ ≫ θ)
-  | id_comp {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (𝟙 f ≫ η) η
-  | comp_id {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (η ≫ 𝟙 g) η
-  |
-  assoc {a b} {f g h i : Hom a b} (η : Hom₂ f g) (θ : Hom₂ g h) (ι : Hom₂ h i) :
-    Rel ((η ≫ θ) ≫ ι) (η ≫ θ ≫ ι)
-  |
-  whisker_left {a b c} (f : Hom a b) (g h : Hom b c) (η η' : Hom₂ g h) :
-    Rel η η' → Rel (f ◁ η) (f ◁ η')
-  | whisker_left_id {a b c} (f : Hom a b) (g : Hom b c) : Rel (f ◁ 𝟙 g) (𝟙 (f.comp g))
-  |
-  whisker_left_comp {a b c} (f : Hom a b) {g h i : Hom b c} (η : Hom₂ g h) (θ : Hom₂ h i) :
-    Rel (f ◁ η ≫ θ) ((f ◁ η) ≫ f ◁ θ)
-  | id_whisker_left {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (Hom.id a ◁ η) (λ_ f ≫ η ≫ λ⁻¹_ g)
-  |
-  comp_whisker_left {a b c d} (f : Hom a b) (g : Hom b c) {h h' : Hom c d} (η : Hom₂ h h') :
-    Rel (f.comp g ◁ η) (α_ f g h ≫ (f ◁ g ◁ η) ≫ α⁻¹_ f g h')
-  |
-  whisker_right {a b c} (f g : Hom a b) (h : Hom b c) (η η' : Hom₂ f g) :
-    Rel η η' → Rel (η ▷ h) (η' ▷ h)
-  | id_whisker_right {a b c} (f : Hom a b) (g : Hom b c) : Rel (𝟙 f ▷ g) (𝟙 (f.comp g))
-  |
-  comp_whisker_right {a b c} {f g h : Hom a b} (i : Hom b c) (η : Hom₂ f g) (θ : Hom₂ g h) :
-    Rel ((η ≫ θ) ▷ i) ((η ▷ i) ≫ θ ▷ i)
-  | whisker_right_id {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (η ▷ Hom.id b) (ρ_ f ≫ η ≫ ρ⁻¹_ g)
-  |
-  whisker_right_comp {a b c d} {f f' : Hom a b} (g : Hom b c) (h : Hom c d) (η : Hom₂ f f') :
-    Rel (η ▷ g.comp h) (α⁻¹_ f g h ≫ ((η ▷ g) ▷ h) ≫ α_ f' g h)
-  |
-  whisker_assoc {a b c d} (f : Hom a b) {g g' : Hom b c} (η : Hom₂ g g') (h : Hom c d) :
-    Rel ((f ◁ η) ▷ h) (α_ f g h ≫ (f ◁ η ▷ h) ≫ α⁻¹_ f g' h)
-  |
-  whisker_exchange {a b c} {f g : Hom a b} {h i : Hom b c} (η : Hom₂ f g) (θ : Hom₂ h i) :
-    Rel ((f ◁ θ) ≫ η ▷ i) ((η ▷ h) ≫ g ◁ θ)
-  |
-  associator_hom_inv {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
-    Rel (α_ f g h ≫ α⁻¹_ f g h) (𝟙 ((f.comp g).comp h))
-  |
-  associator_inv_hom {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
-    Rel (α⁻¹_ f g h ≫ α_ f g h) (𝟙 (f.comp (g.comp h)))
-  | left_unitor_hom_inv {a b} (f : Hom a b) : Rel (λ_ f ≫ λ⁻¹_ f) (𝟙 ((Hom.id a).comp f))
-  | left_unitor_inv_hom {a b} (f : Hom a b) : Rel (λ⁻¹_ f ≫ λ_ f) (𝟙 f)
-  | right_unitor_hom_inv {a b} (f : Hom a b) : Rel (ρ_ f ≫ ρ⁻¹_ f) (𝟙 (f.comp (Hom.id b)))
-  | right_unitor_inv_hom {a b} (f : Hom a b) : Rel (ρ⁻¹_ f ≫ ρ_ f) (𝟙 f)
-  |
-  pentagon {a b c d e} (f : Hom a b) (g : Hom b c) (h : Hom c d) (i : Hom d e) :
-    Rel ((α_ f g h ▷ i) ≫ α_ f (g.comp h) i ≫ f ◁ α_ g h i) (α_ (f.comp g) h i ≫ α_ f g (h.comp i))
-  | triangle {a b c} (f : Hom a b) (g : Hom b c) : Rel (α_ f (Hom.id b) g ≫ f ◁ λ_ g) (ρ_ f ▷ g)
+  inductive
+    Rel
+    : ∀ { a b : B } { f g : Hom a b } , Hom₂ f g → Hom₂ f g → Prop
+    |
+        vcomp_right
+        { a b } { f g h : Hom a b } ( η : Hom₂ f g ) ( θ₁ θ₂ : Hom₂ g h )
+          : Rel θ₁ θ₂ → Rel η ≫ θ₁ η ≫ θ₂
+      |
+        vcomp_left
+        { a b } { f g h : Hom a b } ( η₁ η₂ : Hom₂ f g ) ( θ : Hom₂ g h )
+          : Rel η₁ η₂ → Rel η₁ ≫ θ η₂ ≫ θ
+      | id_comp { a b } { f g : Hom a b } ( η : Hom₂ f g ) : Rel 𝟙 f ≫ η η
+      | comp_id { a b } { f g : Hom a b } ( η : Hom₂ f g ) : Rel η ≫ 𝟙 g η
+      |
+        assoc
+        { a b } { f g h i : Hom a b } ( η : Hom₂ f g ) ( θ : Hom₂ g h ) ( ι : Hom₂ h i )
+          : Rel η ≫ θ ≫ ι η ≫ θ ≫ ι
+      |
+        whisker_left
+        { a b c } ( f : Hom a b ) ( g h : Hom b c ) ( η η' : Hom₂ g h )
+          : Rel η η' → Rel f ◁ η f ◁ η'
+      | whisker_left_id { a b c } ( f : Hom a b ) ( g : Hom b c ) : Rel f ◁ 𝟙 g 𝟙 f . comp g
+      |
+        whisker_left_comp
+        { a b c } ( f : Hom a b ) { g h i : Hom b c } ( η : Hom₂ g h ) ( θ : Hom₂ h i )
+          : Rel f ◁ η ≫ θ f ◁ η ≫ f ◁ θ
+      |
+        id_whisker_left
+        { a b } { f g : Hom a b } ( η : Hom₂ f g ) : Rel Hom.id a ◁ η λ_ f ≫ η ≫ λ⁻¹_ g
+      |
+        comp_whisker_left
+        { a b c d } ( f : Hom a b ) ( g : Hom b c ) { h h' : Hom c d } ( η : Hom₂ h h' )
+          : Rel f . comp g ◁ η α_ f g h ≫ f ◁ g ◁ η ≫ α⁻¹_ f g h'
+      |
+        whisker_right
+        { a b c } ( f g : Hom a b ) ( h : Hom b c ) ( η η' : Hom₂ f g )
+          : Rel η η' → Rel η ▷ h η' ▷ h
+      | id_whisker_right { a b c } ( f : Hom a b ) ( g : Hom b c ) : Rel 𝟙 f ▷ g 𝟙 f . comp g
+      |
+        comp_whisker_right
+        { a b c } { f g h : Hom a b } ( i : Hom b c ) ( η : Hom₂ f g ) ( θ : Hom₂ g h )
+          : Rel η ≫ θ ▷ i η ▷ i ≫ θ ▷ i
+      |
+        whisker_right_id
+        { a b } { f g : Hom a b } ( η : Hom₂ f g ) : Rel η ▷ Hom.id b ρ_ f ≫ η ≫ ρ⁻¹_ g
+      |
+        whisker_right_comp
+        { a b c d } { f f' : Hom a b } ( g : Hom b c ) ( h : Hom c d ) ( η : Hom₂ f f' )
+          : Rel η ▷ g . comp h α⁻¹_ f g h ≫ η ▷ g ▷ h ≫ α_ f' g h
+      |
+        whisker_assoc
+        { a b c d } ( f : Hom a b ) { g g' : Hom b c } ( η : Hom₂ g g' ) ( h : Hom c d )
+          : Rel f ◁ η ▷ h α_ f g h ≫ f ◁ η ▷ h ≫ α⁻¹_ f g' h
+      |
+        whisker_exchange
+        { a b c } { f g : Hom a b } { h i : Hom b c } ( η : Hom₂ f g ) ( θ : Hom₂ h i )
+          : Rel f ◁ θ ≫ η ▷ i η ▷ h ≫ g ◁ θ
+      |
+        associator_hom_inv
+        { a b c d } ( f : Hom a b ) ( g : Hom b c ) ( h : Hom c d )
+          : Rel α_ f g h ≫ α⁻¹_ f g h 𝟙 f . comp g . comp h
+      |
+        associator_inv_hom
+        { a b c d } ( f : Hom a b ) ( g : Hom b c ) ( h : Hom c d )
+          : Rel α⁻¹_ f g h ≫ α_ f g h 𝟙 f . comp g . comp h
+      | left_unitor_hom_inv { a b } ( f : Hom a b ) : Rel λ_ f ≫ λ⁻¹_ f 𝟙 Hom.id a . comp f
+      | left_unitor_inv_hom { a b } ( f : Hom a b ) : Rel λ⁻¹_ f ≫ λ_ f 𝟙 f
+      | right_unitor_hom_inv { a b } ( f : Hom a b ) : Rel ρ_ f ≫ ρ⁻¹_ f 𝟙 f . comp Hom.id b
+      | right_unitor_inv_hom { a b } ( f : Hom a b ) : Rel ρ⁻¹_ f ≫ ρ_ f 𝟙 f
+      |
+        pentagon
+        { a b c d e } ( f : Hom a b ) ( g : Hom b c ) ( h : Hom c d ) ( i : Hom d e )
+          :
+            Rel
+              α_ f g h ▷ i ≫ α_ f g . comp h i ≫ f ◁ α_ g h i α_ f . comp g h i ≫ α_ f g h . comp i
+      | triangle { a b c } ( f : Hom a b ) ( g : Hom b c ) : Rel α_ f Hom.id b g ≫ f ◁ λ_ g ρ_ f ▷ g
 #align category_theory.free_bicategory.rel CategoryTheory.FreeBicategory.Rel
 
 end

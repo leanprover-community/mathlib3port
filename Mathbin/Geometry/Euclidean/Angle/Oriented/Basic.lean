@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.basic
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -644,60 +644,2236 @@ theorem oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq {x y : V} (hn : x ≠ y
 #align
   orientation.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq Orientation.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Auxiliary construction to build a rotation by the oriented angle `θ`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `rotationAux [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`θ] [":" `Real.Angle] [] ")")]
+       [(Term.typeSpec
+         ":"
+         (Analysis.NormedSpace.LinearIsometry.«term_→ₗᵢ[_]_»
+          `V
+          " →ₗᵢ["
+          (Data.Real.Basic.termℝ "ℝ")
+          "] "
+          `V))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        `LinearMap.isometryOfInner
+        [(«term_+_»
+          (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `LinearMap.id)
+          "+"
+          (Algebra.Group.Defs.«term_•_»
+           (Term.app `Real.Angle.sin [`θ])
+           " • "
+           (coeNotation
+            "↑"
+            (Term.app
+             `LinearIsometryEquiv.toLinearEquiv
+             [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))))
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.intro "intro" [`x `y])
+             []
+             (Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `IsROrC.conj_to_real)
+                ","
+                (Tactic.simpLemma [] [] `id.def)
+                ","
+                (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+                ","
+                (Tactic.simpLemma [] [] `LinearMap.add_apply)
+                ","
+                (Tactic.simpLemma [] [] `LinearMap.id_coe)
+                ","
+                (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+                ","
+                (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+                ","
+                (Tactic.simpLemma [] [] `Orientation.area_form_right_angle_rotation_left)
+                ","
+                (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_left)
+                ","
+                (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_right)
+                ","
+                (Tactic.simpLemma [] [] `inner_add_left)
+                ","
+                (Tactic.simpLemma [] [] `inner_smul_left)
+                ","
+                (Tactic.simpLemma [] [] `inner_add_right)
+                ","
+                (Tactic.simpLemma [] [] `inner_smul_right)]
+               "]"]
+              [])
+             []
+             (Mathlib.Tactic.LinearCombination.linearCombination
+              "linear_combination"
+              []
+              [(«term_*_» (Term.app `inner [`x `y]) "*" `θ.cos_sq_add_sin_sq)])])))])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `LinearMap.isometryOfInner
+       [(«term_+_»
+         (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `LinearMap.id)
+         "+"
+         (Algebra.Group.Defs.«term_•_»
+          (Term.app `Real.Angle.sin [`θ])
+          " • "
+          (coeNotation
+           "↑"
+           (Term.app
+            `LinearIsometryEquiv.toLinearEquiv
+            [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))))
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.intro "intro" [`x `y])
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `IsROrC.conj_to_real)
+               ","
+               (Tactic.simpLemma [] [] `id.def)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.add_apply)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.id_coe)
+               ","
+               (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+               ","
+               (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+               ","
+               (Tactic.simpLemma [] [] `Orientation.area_form_right_angle_rotation_left)
+               ","
+               (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_left)
+               ","
+               (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_right)
+               ","
+               (Tactic.simpLemma [] [] `inner_add_left)
+               ","
+               (Tactic.simpLemma [] [] `inner_smul_left)
+               ","
+               (Tactic.simpLemma [] [] `inner_add_right)
+               ","
+               (Tactic.simpLemma [] [] `inner_smul_right)]
+              "]"]
+             [])
+            []
+            (Mathlib.Tactic.LinearCombination.linearCombination
+             "linear_combination"
+             []
+             [(«term_*_» (Term.app `inner [`x `y]) "*" `θ.cos_sq_add_sin_sq)])])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.intro "intro" [`x `y])
+          []
+          (Tactic.simp
+           "simp"
+           []
+           []
+           ["only"]
+           ["["
+            [(Tactic.simpLemma [] [] `IsROrC.conj_to_real)
+             ","
+             (Tactic.simpLemma [] [] `id.def)
+             ","
+             (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+             ","
+             (Tactic.simpLemma [] [] `LinearMap.add_apply)
+             ","
+             (Tactic.simpLemma [] [] `LinearMap.id_coe)
+             ","
+             (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+             ","
+             (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+             ","
+             (Tactic.simpLemma [] [] `Orientation.area_form_right_angle_rotation_left)
+             ","
+             (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_left)
+             ","
+             (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_right)
+             ","
+             (Tactic.simpLemma [] [] `inner_add_left)
+             ","
+             (Tactic.simpLemma [] [] `inner_smul_left)
+             ","
+             (Tactic.simpLemma [] [] `inner_add_right)
+             ","
+             (Tactic.simpLemma [] [] `inner_smul_right)]
+            "]"]
+           [])
+          []
+          (Mathlib.Tactic.LinearCombination.linearCombination
+           "linear_combination"
+           []
+           [(«term_*_» (Term.app `inner [`x `y]) "*" `θ.cos_sq_add_sin_sq)])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.LinearCombination.linearCombination
+       "linear_combination"
+       []
+       [(«term_*_» (Term.app `inner [`x `y]) "*" `θ.cos_sq_add_sin_sq)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_*_» (Term.app `inner [`x `y]) "*" `θ.cos_sq_add_sin_sq)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `θ.cos_sq_add_sin_sq
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
+      (Term.app `inner [`x `y])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `inner
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["["
+        [(Tactic.simpLemma [] [] `IsROrC.conj_to_real)
+         ","
+         (Tactic.simpLemma [] [] `id.def)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.add_apply)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.id_coe)
+         ","
+         (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+         ","
+         (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+         ","
+         (Tactic.simpLemma [] [] `Orientation.area_form_right_angle_rotation_left)
+         ","
+         (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_left)
+         ","
+         (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_right)
+         ","
+         (Tactic.simpLemma [] [] `inner_add_left)
+         ","
+         (Tactic.simpLemma [] [] `inner_smul_left)
+         ","
+         (Tactic.simpLemma [] [] `inner_add_right)
+         ","
+         (Tactic.simpLemma [] [] `inner_smul_right)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inner_smul_right
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inner_add_right
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inner_smul_left
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inner_add_left
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Orientation.inner_right_angle_rotation_right
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Orientation.inner_right_angle_rotation_left
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Orientation.area_form_right_angle_rotation_left
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearIsometryEquiv.coe_to_linear_equiv
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearEquiv.coe_coe
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.id_coe
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.add_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.smul_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `id.def
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `IsROrC.conj_to_real
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.intro "intro" [`x `y])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0,
+     tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(Tactic.intro "intro" [`x `y])
+         []
+         (Tactic.simp
+          "simp"
+          []
+          []
+          ["only"]
+          ["["
+           [(Tactic.simpLemma [] [] `IsROrC.conj_to_real)
+            ","
+            (Tactic.simpLemma [] [] `id.def)
+            ","
+            (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+            ","
+            (Tactic.simpLemma [] [] `LinearMap.add_apply)
+            ","
+            (Tactic.simpLemma [] [] `LinearMap.id_coe)
+            ","
+            (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+            ","
+            (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+            ","
+            (Tactic.simpLemma [] [] `Orientation.area_form_right_angle_rotation_left)
+            ","
+            (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_left)
+            ","
+            (Tactic.simpLemma [] [] `Orientation.inner_right_angle_rotation_right)
+            ","
+            (Tactic.simpLemma [] [] `inner_add_left)
+            ","
+            (Tactic.simpLemma [] [] `inner_smul_left)
+            ","
+            (Tactic.simpLemma [] [] `inner_add_right)
+            ","
+            (Tactic.simpLemma [] [] `inner_smul_right)]
+           "]"]
+          [])
+         []
+         (Mathlib.Tactic.LinearCombination.linearCombination
+          "linear_combination"
+          []
+          [(«term_*_» (Term.app `inner [`x `y]) "*" `θ.cos_sq_add_sin_sq)])])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_+_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_+_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      («term_+_»
+       (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `LinearMap.id)
+       "+"
+       (Algebra.Group.Defs.«term_•_»
+        (Term.app `Real.Angle.sin [`θ])
+        " • "
+        (coeNotation
+         "↑"
+         (Term.app
+          `LinearIsometryEquiv.toLinearEquiv
+          [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_»
+       (Term.app `Real.Angle.sin [`θ])
+       " • "
+       (coeNotation
+        "↑"
+        (Term.app
+         `LinearIsometryEquiv.toLinearEquiv
+         [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (coeNotation
+       "↑"
+       (Term.app
+        `LinearIsometryEquiv.toLinearEquiv
+        [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `LinearIsometryEquiv.toLinearEquiv
+       [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ._@.Geometry.Euclidean.Angle.Oriented.Basic._hyg.58'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Auxiliary construction to build a rotation by the oriented angle `θ`. -/
-def rotationAux (θ : Real.Angle) : V →ₗᵢ[ℝ] V :=
-  LinearMap.isometryOfInner
-    (Real.Angle.cos θ • LinearMap.id + Real.Angle.sin θ • ↑(LinearIsometryEquiv.toLinearEquiv J))
-    (by
-      intro x y
-      simp only [IsROrC.conj_to_real, id.def, LinearMap.smul_apply, LinearMap.add_apply,
-        LinearMap.id_coe, LinearEquiv.coe_coe, LinearIsometryEquiv.coe_to_linear_equiv,
-        Orientation.area_form_right_angle_rotation_left,
-        Orientation.inner_right_angle_rotation_left, Orientation.inner_right_angle_rotation_right,
-        inner_add_left, inner_smul_left, inner_add_right, inner_smul_right]
-      linear_combination inner x y * θ.cos_sq_add_sin_sq)
+  def
+    rotationAux
+    ( θ : Real.Angle ) : V →ₗᵢ[ ℝ ] V
+    :=
+      LinearMap.isometryOfInner
+        Real.Angle.cos θ • LinearMap.id + Real.Angle.sin θ • ↑ LinearIsometryEquiv.toLinearEquiv J
+          by
+            intro x y
+              simp
+                only
+                [
+                  IsROrC.conj_to_real
+                    ,
+                    id.def
+                    ,
+                    LinearMap.smul_apply
+                    ,
+                    LinearMap.add_apply
+                    ,
+                    LinearMap.id_coe
+                    ,
+                    LinearEquiv.coe_coe
+                    ,
+                    LinearIsometryEquiv.coe_to_linear_equiv
+                    ,
+                    Orientation.area_form_right_angle_rotation_left
+                    ,
+                    Orientation.inner_right_angle_rotation_left
+                    ,
+                    Orientation.inner_right_angle_rotation_right
+                    ,
+                    inner_add_left
+                    ,
+                    inner_smul_left
+                    ,
+                    inner_add_right
+                    ,
+                    inner_smul_right
+                  ]
+              linear_combination inner x y * θ.cos_sq_add_sin_sq
 #align orientation.rotation_aux Orientation.rotationAux
 
-@[simp]
-theorem rotation_aux_apply (θ : Real.Angle) (x : V) :
-    o.rotationAux θ x = Real.Angle.cos θ • x + Real.Angle.sin θ • J x :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `rotation_aux_apply [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`θ] [":" `Real.Angle] [] ")")
+        (Term.explicitBinder "(" [`x] [":" `V] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app (Term.proj `o "." `rotationAux) [`θ `x])
+         "="
+         («term_+_»
+          (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+          "+"
+          (Algebra.Group.Defs.«term_•_»
+           (Term.app `Real.Angle.sin [`θ])
+           " • "
+           (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app (Term.proj `o "." `rotationAux) [`θ `x])
+       "="
+       («term_+_»
+        (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+        "+"
+        (Algebra.Group.Defs.«term_•_»
+         (Term.app `Real.Angle.sin [`θ])
+         " • "
+         (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_+_»
+       (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+       "+"
+       (Algebra.Group.Defs.«term_•_»
+        (Term.app `Real.Angle.sin [`θ])
+        " • "
+        (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_»
+       (Term.app `Real.Angle.sin [`θ])
+       " • "
+       (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ._@.Geometry.Euclidean.Angle.Oriented.Basic._hyg.58'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    rotation_aux_apply
+    ( θ : Real.Angle ) ( x : V )
+      : o . rotationAux θ x = Real.Angle.cos θ • x + Real.Angle.sin θ • J x
+    := rfl
 #align orientation.rotation_aux_apply Orientation.rotation_aux_apply
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "A rotation by the oriented angle `θ`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `rotation [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`θ] [":" `Real.Angle] [] ")")]
+       [(Term.typeSpec
+         ":"
+         (Analysis.NormedSpace.LinearIsometry.«term_≃ₗᵢ[_]_»
+          `V
+          " ≃ₗᵢ["
+          (Data.Real.Basic.termℝ "ℝ")
+          "] "
+          `V))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        `LinearIsometryEquiv.ofLinearIsometry
+        [(Term.app (Term.proj `o "." `rotationAux) [`θ])
+         («term_-_»
+          (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `LinearMap.id)
+          "-"
+          (Algebra.Group.Defs.«term_•_»
+           (Term.app `Real.Angle.sin [`θ])
+           " • "
+           (coeNotation
+            "↑"
+            (Term.app
+             `LinearIsometryEquiv.toLinearEquiv
+             [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))))
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Std.Tactic.Ext.«tacticExt___:_»
+              "ext"
+              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+              [])
+             []
+             (convert
+              "convert"
+              []
+              (Term.app
+               `congr_arg
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`t]
+                  [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+                  "=>"
+                  (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+                `θ.cos_sq_add_sin_sq])
+              ["using" (num "1")])
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+                  ","
+                  (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `Function.comp_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `id.def)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+                  ","
+                  (Tactic.simpLemma [] [] `map_smul)
+                  ","
+                  (Tactic.simpLemma [] [] `map_sub)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.id_coe)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+                  ","
+                  (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+                  ","
+                  (Tactic.simpLemma [] [] `add_smul)
+                  ","
+                  (Tactic.simpLemma [] [] `smul_add)
+                  ","
+                  (Tactic.simpLemma [] [] `smul_neg)
+                  ","
+                  (Tactic.simpLemma [] [] `smul_sub)
+                  ","
+                  (Tactic.simpLemma [] [] `mul_comm)
+                  ","
+                  (Tactic.simpLemma [] [] `sq)]
+                 "]"]
+                [])
+               []
+               (Tactic.abel "abel" [] [])])
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.simp "simp" [] [] [] [] [])])])))
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Std.Tactic.Ext.«tacticExt___:_»
+              "ext"
+              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+              [])
+             []
+             (convert
+              "convert"
+              []
+              (Term.app
+               `congr_arg
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`t]
+                  [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+                  "=>"
+                  (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+                `θ.cos_sq_add_sin_sq])
+              ["using" (num "1")])
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+                  ","
+                  (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `Function.comp_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `id.def)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+                  ","
+                  (Tactic.simpLemma [] [] `map_add)
+                  ","
+                  (Tactic.simpLemma [] [] `map_smul)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.id_coe)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `add_smul)
+                  ","
+                  (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+                  ","
+                  (Tactic.simpLemma [] [] `mul_comm)
+                  ","
+                  (Tactic.simpLemma [] [] `smul_add)
+                  ","
+                  (Tactic.simpLemma [] [] `smul_neg)
+                  ","
+                  (Tactic.simpLemma [] [] `sq)]
+                 "]"]
+                [])
+               []
+               (Tactic.abel "abel" [] [])])
+             []
+             (tactic__
+              (cdotTk (patternIgnore (token.«· » "·")))
+              [(Tactic.simp "simp" [] [] [] [] [])])])))])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `LinearIsometryEquiv.ofLinearIsometry
+       [(Term.app (Term.proj `o "." `rotationAux) [`θ])
+        («term_-_»
+         (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `LinearMap.id)
+         "-"
+         (Algebra.Group.Defs.«term_•_»
+          (Term.app `Real.Angle.sin [`θ])
+          " • "
+          (coeNotation
+           "↑"
+           (Term.app
+            `LinearIsometryEquiv.toLinearEquiv
+            [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))))
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Std.Tactic.Ext.«tacticExt___:_»
+             "ext"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+             [])
+            []
+            (convert
+             "convert"
+             []
+             (Term.app
+              `congr_arg
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`t]
+                 [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+                 "=>"
+                 (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+               `θ.cos_sq_add_sin_sq])
+             ["using" (num "1")])
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+                 ","
+                 (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `Function.comp_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `id.def)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+                 ","
+                 (Tactic.simpLemma [] [] `map_smul)
+                 ","
+                 (Tactic.simpLemma [] [] `map_sub)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.id_coe)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+                 ","
+                 (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+                 ","
+                 (Tactic.simpLemma [] [] `add_smul)
+                 ","
+                 (Tactic.simpLemma [] [] `smul_add)
+                 ","
+                 (Tactic.simpLemma [] [] `smul_neg)
+                 ","
+                 (Tactic.simpLemma [] [] `smul_sub)
+                 ","
+                 (Tactic.simpLemma [] [] `mul_comm)
+                 ","
+                 (Tactic.simpLemma [] [] `sq)]
+                "]"]
+               [])
+              []
+              (Tactic.abel "abel" [] [])])
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.simp "simp" [] [] [] [] [])])])))
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Std.Tactic.Ext.«tacticExt___:_»
+             "ext"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+             [])
+            []
+            (convert
+             "convert"
+             []
+             (Term.app
+              `congr_arg
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`t]
+                 [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+                 "=>"
+                 (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+               `θ.cos_sq_add_sin_sq])
+             ["using" (num "1")])
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+                 ","
+                 (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `Function.comp_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `id.def)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+                 ","
+                 (Tactic.simpLemma [] [] `map_add)
+                 ","
+                 (Tactic.simpLemma [] [] `map_smul)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.id_coe)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `add_smul)
+                 ","
+                 (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+                 ","
+                 (Tactic.simpLemma [] [] `mul_comm)
+                 ","
+                 (Tactic.simpLemma [] [] `smul_add)
+                 ","
+                 (Tactic.simpLemma [] [] `smul_neg)
+                 ","
+                 (Tactic.simpLemma [] [] `sq)]
+                "]"]
+               [])
+              []
+              (Tactic.abel "abel" [] [])])
+            []
+            (tactic__
+             (cdotTk (patternIgnore (token.«· » "·")))
+             [(Tactic.simp "simp" [] [] [] [] [])])])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.Ext.«tacticExt___:_»
+           "ext"
+           [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+           [])
+          []
+          (convert
+           "convert"
+           []
+           (Term.app
+            `congr_arg
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`t]
+               [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+               "=>"
+               (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+             `θ.cos_sq_add_sin_sq])
+           ["using" (num "1")])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+               ","
+               (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+               ","
+               (Tactic.simpLemma [] [] `Function.comp_apply)
+               ","
+               (Tactic.simpLemma [] [] `id.def)
+               ","
+               (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+               ","
+               (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+               ","
+               (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+               ","
+               (Tactic.simpLemma [] [] `map_add)
+               ","
+               (Tactic.simpLemma [] [] `map_smul)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.id_coe)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+               ","
+               (Tactic.simpLemma [] [] `add_smul)
+               ","
+               (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+               ","
+               (Tactic.simpLemma [] [] `mul_comm)
+               ","
+               (Tactic.simpLemma [] [] `smul_add)
+               ","
+               (Tactic.simpLemma [] [] `smul_neg)
+               ","
+               (Tactic.simpLemma [] [] `sq)]
+              "]"]
+             [])
+            []
+            (Tactic.abel "abel" [] [])])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.simp "simp" [] [] [] [] [])])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__ (cdotTk (patternIgnore (token.«· » "·"))) [(Tactic.simp "simp" [] [] [] [] [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp "simp" [] [] [] [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.simp
+         "simp"
+         []
+         []
+         ["only"]
+         ["["
+          [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+           ","
+           (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+           ","
+           (Tactic.simpLemma [] [] `Function.comp_apply)
+           ","
+           (Tactic.simpLemma [] [] `id.def)
+           ","
+           (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+           ","
+           (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+           ","
+           (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+           ","
+           (Tactic.simpLemma [] [] `map_add)
+           ","
+           (Tactic.simpLemma [] [] `map_smul)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.id_coe)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+           ","
+           (Tactic.simpLemma [] [] `add_smul)
+           ","
+           (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+           ","
+           (Tactic.simpLemma [] [] `mul_comm)
+           ","
+           (Tactic.simpLemma [] [] `smul_add)
+           ","
+           (Tactic.simpLemma [] [] `smul_neg)
+           ","
+           (Tactic.simpLemma [] [] `sq)]
+          "]"]
+         [])
+        []
+        (Tactic.abel "abel" [] [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.abel "abel" [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["["
+        [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+         ","
+         (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+         ","
+         (Tactic.simpLemma [] [] `Function.comp_apply)
+         ","
+         (Tactic.simpLemma [] [] `id.def)
+         ","
+         (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+         ","
+         (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+         ","
+         (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+         ","
+         (Tactic.simpLemma [] [] `map_add)
+         ","
+         (Tactic.simpLemma [] [] `map_smul)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.id_coe)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+         ","
+         (Tactic.simpLemma [] [] `add_smul)
+         ","
+         (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+         ","
+         (Tactic.simpLemma [] [] `mul_comm)
+         ","
+         (Tactic.simpLemma [] [] `smul_add)
+         ","
+         (Tactic.simpLemma [] [] `smul_neg)
+         ","
+         (Tactic.simpLemma [] [] `sq)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `sq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `smul_neg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `smul_add
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mul_comm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mul_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `add_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.sub_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.smul_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.id_coe
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.coe_comp
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_add
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearIsometryEquiv.coe_to_linear_equiv
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearIsometry.coe_to_linear_map
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearEquiv.coe_coe
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `id.def
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Function.comp_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `o.rotation_aux_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `o.right_angle_rotation_right_angle_rotation
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (convert
+       "convert"
+       []
+       (Term.app
+        `congr_arg
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`t]
+           [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+           "=>"
+           (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+         `θ.cos_sq_add_sin_sq])
+       ["using" (num "1")])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `congr_arg
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`t]
+          [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+          "=>"
+          (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+        `θ.cos_sq_add_sin_sq])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `θ.cos_sq_add_sin_sq
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`t]
+        [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+        "=>"
+        (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_» `t " • " `x)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+      `t
+[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 73, (some 73, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Data.Real.Basic.termℝ "ℝ")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      `t
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`t]
+       [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+       "=>"
+       (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `congr_arg
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.Tactic.Ext.«tacticExt___:_»
+       "ext"
+       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0,
+     tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(Std.Tactic.Ext.«tacticExt___:_»
+          "ext"
+          [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+          [])
+         []
+         (convert
+          "convert"
+          []
+          (Term.app
+           `congr_arg
+           [(Term.paren
+             "("
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`t]
+               [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+               "=>"
+               (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+             ")")
+            `θ.cos_sq_add_sin_sq])
+          ["using" (num "1")])
+         []
+         (tactic__
+          (cdotTk (patternIgnore (token.«· » "·")))
+          [(Tactic.simp
+            "simp"
+            []
+            []
+            ["only"]
+            ["["
+             [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+              ","
+              (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+              ","
+              (Tactic.simpLemma [] [] `Function.comp_apply)
+              ","
+              (Tactic.simpLemma [] [] `id.def)
+              ","
+              (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+              ","
+              (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+              ","
+              (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+              ","
+              (Tactic.simpLemma [] [] `map_add)
+              ","
+              (Tactic.simpLemma [] [] `map_smul)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.id_coe)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+              ","
+              (Tactic.simpLemma [] [] `add_smul)
+              ","
+              (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+              ","
+              (Tactic.simpLemma [] [] `mul_comm)
+              ","
+              (Tactic.simpLemma [] [] `smul_add)
+              ","
+              (Tactic.simpLemma [] [] `smul_neg)
+              ","
+              (Tactic.simpLemma [] [] `sq)]
+             "]"]
+            [])
+           []
+           (Tactic.abel "abel" [] [])])
+         []
+         (tactic__
+          (cdotTk (patternIgnore (token.«· » "·")))
+          [(Tactic.simp "simp" [] [] [] [] [])])])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.Ext.«tacticExt___:_»
+           "ext"
+           [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+           [])
+          []
+          (convert
+           "convert"
+           []
+           (Term.app
+            `congr_arg
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`t]
+               [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+               "=>"
+               (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+             `θ.cos_sq_add_sin_sq])
+           ["using" (num "1")])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+               ","
+               (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+               ","
+               (Tactic.simpLemma [] [] `Function.comp_apply)
+               ","
+               (Tactic.simpLemma [] [] `id.def)
+               ","
+               (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+               ","
+               (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+               ","
+               (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+               ","
+               (Tactic.simpLemma [] [] `map_smul)
+               ","
+               (Tactic.simpLemma [] [] `map_sub)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.id_coe)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+               ","
+               (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+               ","
+               (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+               ","
+               (Tactic.simpLemma [] [] `add_smul)
+               ","
+               (Tactic.simpLemma [] [] `smul_add)
+               ","
+               (Tactic.simpLemma [] [] `smul_neg)
+               ","
+               (Tactic.simpLemma [] [] `smul_sub)
+               ","
+               (Tactic.simpLemma [] [] `mul_comm)
+               ","
+               (Tactic.simpLemma [] [] `sq)]
+              "]"]
+             [])
+            []
+            (Tactic.abel "abel" [] [])])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.simp "simp" [] [] [] [] [])])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__ (cdotTk (patternIgnore (token.«· » "·"))) [(Tactic.simp "simp" [] [] [] [] [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp "simp" [] [] [] [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.simp
+         "simp"
+         []
+         []
+         ["only"]
+         ["["
+          [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+           ","
+           (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+           ","
+           (Tactic.simpLemma [] [] `Function.comp_apply)
+           ","
+           (Tactic.simpLemma [] [] `id.def)
+           ","
+           (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+           ","
+           (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+           ","
+           (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+           ","
+           (Tactic.simpLemma [] [] `map_smul)
+           ","
+           (Tactic.simpLemma [] [] `map_sub)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.id_coe)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+           ","
+           (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+           ","
+           (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+           ","
+           (Tactic.simpLemma [] [] `add_smul)
+           ","
+           (Tactic.simpLemma [] [] `smul_add)
+           ","
+           (Tactic.simpLemma [] [] `smul_neg)
+           ","
+           (Tactic.simpLemma [] [] `smul_sub)
+           ","
+           (Tactic.simpLemma [] [] `mul_comm)
+           ","
+           (Tactic.simpLemma [] [] `sq)]
+          "]"]
+         [])
+        []
+        (Tactic.abel "abel" [] [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.abel "abel" [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["["
+        [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+         ","
+         (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+         ","
+         (Tactic.simpLemma [] [] `Function.comp_apply)
+         ","
+         (Tactic.simpLemma [] [] `id.def)
+         ","
+         (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+         ","
+         (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+         ","
+         (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+         ","
+         (Tactic.simpLemma [] [] `map_smul)
+         ","
+         (Tactic.simpLemma [] [] `map_sub)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.id_coe)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+         ","
+         (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+         ","
+         (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+         ","
+         (Tactic.simpLemma [] [] `add_smul)
+         ","
+         (Tactic.simpLemma [] [] `smul_add)
+         ","
+         (Tactic.simpLemma [] [] `smul_neg)
+         ","
+         (Tactic.simpLemma [] [] `smul_sub)
+         ","
+         (Tactic.simpLemma [] [] `mul_comm)
+         ","
+         (Tactic.simpLemma [] [] `sq)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `sq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mul_comm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `smul_sub
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `smul_neg
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `smul_add
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `add_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mul_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.sub_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.smul_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.id_coe
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearMap.coe_comp
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_sub
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearIsometryEquiv.coe_to_linear_equiv
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearIsometry.coe_to_linear_map
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `LinearEquiv.coe_coe
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `id.def
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Function.comp_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `o.rotation_aux_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `o.right_angle_rotation_right_angle_rotation
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (convert
+       "convert"
+       []
+       (Term.app
+        `congr_arg
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`t]
+           [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+           "=>"
+           (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+         `θ.cos_sq_add_sin_sq])
+       ["using" (num "1")])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `congr_arg
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`t]
+          [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+          "=>"
+          (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+        `θ.cos_sq_add_sin_sq])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `θ.cos_sq_add_sin_sq
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`t]
+        [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+        "=>"
+        (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_» `t " • " `x)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 73 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 73, term))
+      `t
+[PrettyPrinter.parenthesize] ...precedences are 74 >? 1024, (none, [anonymous]) <=? (some 73, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 73, (some 73, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Data.Real.Basic.termℝ "ℝ")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      `t
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`t]
+       [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+       "=>"
+       (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `congr_arg
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.Tactic.Ext.«tacticExt___:_»
+       "ext"
+       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, tactic) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(Std.Tactic.Ext.«tacticExt___:_»
+          "ext"
+          [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+          [])
+         []
+         (convert
+          "convert"
+          []
+          (Term.app
+           `congr_arg
+           [(Term.paren
+             "("
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`t]
+               [(Term.typeSpec ":" (Data.Real.Basic.termℝ "ℝ"))]
+               "=>"
+               (Algebra.Group.Defs.«term_•_» `t " • " `x)))
+             ")")
+            `θ.cos_sq_add_sin_sq])
+          ["using" (num "1")])
+         []
+         (tactic__
+          (cdotTk (patternIgnore (token.«· » "·")))
+          [(Tactic.simp
+            "simp"
+            []
+            []
+            ["only"]
+            ["["
+             [(Tactic.simpLemma [] [] `o.right_angle_rotation_right_angle_rotation)
+              ","
+              (Tactic.simpLemma [] [] `o.rotation_aux_apply)
+              ","
+              (Tactic.simpLemma [] [] `Function.comp_apply)
+              ","
+              (Tactic.simpLemma [] [] `id.def)
+              ","
+              (Tactic.simpLemma [] [] `LinearEquiv.coe_coe)
+              ","
+              (Tactic.simpLemma [] [] `LinearIsometry.coe_to_linear_map)
+              ","
+              (Tactic.simpLemma [] [] `LinearIsometryEquiv.coe_to_linear_equiv)
+              ","
+              (Tactic.simpLemma [] [] `map_smul)
+              ","
+              (Tactic.simpLemma [] [] `map_sub)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.coe_comp)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.id_coe)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.smul_apply)
+              ","
+              (Tactic.simpLemma [] [] `LinearMap.sub_apply)
+              ","
+              (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `mul_smul)
+              ","
+              (Tactic.simpLemma [] [] `add_smul)
+              ","
+              (Tactic.simpLemma [] [] `smul_add)
+              ","
+              (Tactic.simpLemma [] [] `smul_neg)
+              ","
+              (Tactic.simpLemma [] [] `smul_sub)
+              ","
+              (Tactic.simpLemma [] [] `mul_comm)
+              ","
+              (Tactic.simpLemma [] [] `sq)]
+             "]"]
+            [])
+           []
+           (Tactic.abel "abel" [] [])])
+         []
+         (tactic__
+          (cdotTk (patternIgnore (token.«· » "·")))
+          [(Tactic.simp "simp" [] [] [] [] [])])])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      («term_-_»
+       (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `LinearMap.id)
+       "-"
+       (Algebra.Group.Defs.«term_•_»
+        (Term.app `Real.Angle.sin [`θ])
+        " • "
+        (coeNotation
+         "↑"
+         (Term.app
+          `LinearIsometryEquiv.toLinearEquiv
+          [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_»
+       (Term.app `Real.Angle.sin [`θ])
+       " • "
+       (coeNotation
+        "↑"
+        (Term.app
+         `LinearIsometryEquiv.toLinearEquiv
+         [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (coeNotation
+       "↑"
+       (Term.app
+        `LinearIsometryEquiv.toLinearEquiv
+        [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `LinearIsometryEquiv.toLinearEquiv
+       [(Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ._@.Geometry.Euclidean.Angle.Oriented.Basic._hyg.58'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- A rotation by the oriented angle `θ`. -/
-def rotation (θ : Real.Angle) : V ≃ₗᵢ[ℝ] V :=
-  LinearIsometryEquiv.ofLinearIsometry (o.rotationAux θ)
-    (Real.Angle.cos θ • LinearMap.id - Real.Angle.sin θ • ↑(LinearIsometryEquiv.toLinearEquiv J))
-    (by
-      ext x
-      convert congr_arg (fun t : ℝ => t • x) θ.cos_sq_add_sin_sq using 1
-      · simp only [o.right_angle_rotation_right_angle_rotation, o.rotation_aux_apply,
-          Function.comp_apply, id.def, LinearEquiv.coe_coe, LinearIsometry.coe_to_linear_map,
-          LinearIsometryEquiv.coe_to_linear_equiv, map_smul, map_sub, LinearMap.coe_comp,
-          LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply, ← mul_smul, add_smul,
-          smul_add, smul_neg, smul_sub, mul_comm, sq]
-        abel
-      · simp)
-    (by
-      ext x
-      convert congr_arg (fun t : ℝ => t • x) θ.cos_sq_add_sin_sq using 1
-      · simp only [o.right_angle_rotation_right_angle_rotation, o.rotation_aux_apply,
-          Function.comp_apply, id.def, LinearEquiv.coe_coe, LinearIsometry.coe_to_linear_map,
-          LinearIsometryEquiv.coe_to_linear_equiv, map_add, map_smul, LinearMap.coe_comp,
-          LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply, add_smul, ← mul_smul,
-          mul_comm, smul_add, smul_neg, sq]
-        abel
-      · simp)
+  def
+    rotation
+    ( θ : Real.Angle ) : V ≃ₗᵢ[ ℝ ] V
+    :=
+      LinearIsometryEquiv.ofLinearIsometry
+        o . rotationAux θ
+          Real.Angle.cos θ • LinearMap.id - Real.Angle.sin θ • ↑ LinearIsometryEquiv.toLinearEquiv J
+          by
+            ext x
+              convert congr_arg fun t : ℝ => t • x θ.cos_sq_add_sin_sq using 1
+              ·
+                simp
+                    only
+                    [
+                      o.right_angle_rotation_right_angle_rotation
+                        ,
+                        o.rotation_aux_apply
+                        ,
+                        Function.comp_apply
+                        ,
+                        id.def
+                        ,
+                        LinearEquiv.coe_coe
+                        ,
+                        LinearIsometry.coe_to_linear_map
+                        ,
+                        LinearIsometryEquiv.coe_to_linear_equiv
+                        ,
+                        map_smul
+                        ,
+                        map_sub
+                        ,
+                        LinearMap.coe_comp
+                        ,
+                        LinearMap.id_coe
+                        ,
+                        LinearMap.smul_apply
+                        ,
+                        LinearMap.sub_apply
+                        ,
+                        ← mul_smul
+                        ,
+                        add_smul
+                        ,
+                        smul_add
+                        ,
+                        smul_neg
+                        ,
+                        smul_sub
+                        ,
+                        mul_comm
+                        ,
+                        sq
+                      ]
+                  abel
+              · simp
+          by
+            ext x
+              convert congr_arg fun t : ℝ => t • x θ.cos_sq_add_sin_sq using 1
+              ·
+                simp
+                    only
+                    [
+                      o.right_angle_rotation_right_angle_rotation
+                        ,
+                        o.rotation_aux_apply
+                        ,
+                        Function.comp_apply
+                        ,
+                        id.def
+                        ,
+                        LinearEquiv.coe_coe
+                        ,
+                        LinearIsometry.coe_to_linear_map
+                        ,
+                        LinearIsometryEquiv.coe_to_linear_equiv
+                        ,
+                        map_add
+                        ,
+                        map_smul
+                        ,
+                        LinearMap.coe_comp
+                        ,
+                        LinearMap.id_coe
+                        ,
+                        LinearMap.smul_apply
+                        ,
+                        LinearMap.sub_apply
+                        ,
+                        add_smul
+                        ,
+                        ← mul_smul
+                        ,
+                        mul_comm
+                        ,
+                        smul_add
+                        ,
+                        smul_neg
+                        ,
+                        sq
+                      ]
+                  abel
+              · simp
 #align orientation.rotation Orientation.rotation
 
-theorem rotation_apply (θ : Real.Angle) (x : V) :
-    o.rotation θ x = Real.Angle.cos θ • x + Real.Angle.sin θ • J x :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `rotation_apply [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`θ] [":" `Real.Angle] [] ")")
+        (Term.explicitBinder "(" [`x] [":" `V] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app (Term.proj `o "." `rotation) [`θ `x])
+         "="
+         («term_+_»
+          (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+          "+"
+          (Algebra.Group.Defs.«term_•_»
+           (Term.app `Real.Angle.sin [`θ])
+           " • "
+           (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app (Term.proj `o "." `rotation) [`θ `x])
+       "="
+       («term_+_»
+        (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+        "+"
+        (Algebra.Group.Defs.«term_•_»
+         (Term.app `Real.Angle.sin [`θ])
+         " • "
+         (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_+_»
+       (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+       "+"
+       (Algebra.Group.Defs.«term_•_»
+        (Term.app `Real.Angle.sin [`θ])
+        " • "
+        (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_»
+       (Term.app `Real.Angle.sin [`θ])
+       " • "
+       (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ._@.Geometry.Euclidean.Angle.Oriented.Basic._hyg.58'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  rotation_apply
+  ( θ : Real.Angle ) ( x : V ) : o . rotation θ x = Real.Angle.cos θ • x + Real.Angle.sin θ • J x
+  := rfl
 #align orientation.rotation_apply Orientation.rotation_apply
 
-theorem rotation_symm_apply (θ : Real.Angle) (x : V) :
-    (o.rotation θ).symm x = Real.Angle.cos θ • x - Real.Angle.sin θ • J x :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `rotation_symm_apply [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`θ] [":" `Real.Angle] [] ")")
+        (Term.explicitBinder "(" [`x] [":" `V] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app (Term.proj (Term.app (Term.proj `o "." `rotation) [`θ]) "." `symm) [`x])
+         "="
+         («term_-_»
+          (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+          "-"
+          (Algebra.Group.Defs.«term_•_»
+           (Term.app `Real.Angle.sin [`θ])
+           " • "
+           (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app (Term.proj (Term.app (Term.proj `o "." `rotation) [`θ]) "." `symm) [`x])
+       "="
+       («term_-_»
+        (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+        "-"
+        (Algebra.Group.Defs.«term_•_»
+         (Term.app `Real.Angle.sin [`θ])
+         " • "
+         (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_-_»
+       (Algebra.Group.Defs.«term_•_» (Term.app `Real.Angle.cos [`θ]) " • " `x)
+       "-"
+       (Algebra.Group.Defs.«term_•_»
+        (Term.app `Real.Angle.sin [`θ])
+        " • "
+        (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_»
+       (Term.app `Real.Angle.sin [`θ])
+       " • "
+       (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ._@.Geometry.Euclidean.Angle.Oriented.Basic._hyg.58'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  rotation_symm_apply
+  ( θ : Real.Angle ) ( x : V )
+    : o . rotation θ . symm x = Real.Angle.cos θ • x - Real.Angle.sin θ • J x
+  := rfl
 #align orientation.rotation_symm_apply Orientation.rotation_symm_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
@@ -757,11 +2933,105 @@ theorem rotation_pi : o.rotation π = LinearIsometryEquiv.neg ℝ :=
 theorem rotation_pi_apply (x : V) : o.rotation π x = -x := by simp
 #align orientation.rotation_pi_apply Orientation.rotation_pi_apply
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Rotation by π / 2 is the \"right-angle-rotation\" map `J`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `rotation_pi_div_two [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app
+          (Term.proj `o "." `rotation)
+          [(Term.typeAscription
+            "("
+            («term_/_»
+             (Real.Analysis.SpecialFunctions.Trigonometric.Basic.real.pi "π")
+             "/"
+             (num "2"))
+            ":"
+            [(Data.Real.Basic.termℝ "ℝ")]
+            ")")])
+         "="
+         (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J"))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Std.Tactic.Ext.«tacticExt___:_»
+            "ext"
+            [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+            [])
+           []
+           (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `rotation)] "]"] [])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.Ext.«tacticExt___:_»
+           "ext"
+           [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+           [])
+          []
+          (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `rotation)] "]"] [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `rotation)] "]"] [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rotation
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.Tactic.Ext.«tacticExt___:_»
+       "ext"
+       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `x))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app
+        (Term.proj `o "." `rotation)
+        [(Term.typeAscription
+          "("
+          («term_/_» (Real.Analysis.SpecialFunctions.Trigonometric.Basic.real.pi "π") "/" (num "2"))
+          ":"
+          [(Data.Real.Basic.termℝ "ℝ")]
+          ")")])
+       "="
+       (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ._@.Geometry.Euclidean.Angle.Oriented.Basic._hyg.58'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Rotation by π / 2 is the "right-angle-rotation" map `J`. -/
-theorem rotation_pi_div_two : o.rotation (π / 2 : ℝ) = J :=
-  by
-  ext x
-  simp [rotation]
+  theorem rotation_pi_div_two : o . rotation ( π / 2 : ℝ ) = J := by ext x simp [ rotation ]
 #align orientation.rotation_pi_div_two Orientation.rotation_pi_div_two
 
 /-- Rotating twice is equivalent to rotating by the sum of the angles. -/
@@ -992,25 +3262,525 @@ theorem oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero {x y : V} (θ : Real.Angle
 #align
   orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero Orientation.oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Any linear isometric equivalence in `V` with positive determinant is `rotation`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `exists_linear_isometry_equiv_eq_of_det_pos [])
+      (Command.declSig
+       [(Term.implicitBinder
+         "{"
+         [`f]
+         [":"
+          (Analysis.NormedSpace.LinearIsometry.«term_≃ₗᵢ[_]_»
+           `V
+           " ≃ₗᵢ["
+           (Data.Real.Basic.termℝ "ℝ")
+           "] "
+           `V)]
+         "}")
+        (Term.explicitBinder
+         "("
+         [`hd]
+         [":"
+          («term_<_»
+           (num "0")
+           "<"
+           (Term.proj
+            (Term.typeAscription
+             "("
+             (Term.proj `f "." `toLinearEquiv)
+             ":"
+             [(Algebra.Module.LinearMap.«term_→ₗ[_]_»
+               `V
+               " →ₗ["
+               (Data.Real.Basic.termℝ "ℝ")
+               "] "
+               `V)]
+             ")")
+            "."
+            `det))]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term∃_,_»
+         "∃"
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `θ)] [":" `Real.Angle]))
+         ","
+         («term_=_» `f "=" (Term.app (Term.proj `o "." `rotation) [`θ])))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Std.Tactic.tacticHaveI_
+            "haveI"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              []
+              [(Term.typeSpec ":" (Term.app `Nontrivial [`V]))]
+              ":="
+              (Term.app
+               `FiniteDimensional.nontrivial_of_finrank_eq_succ
+               [(Term.app
+                 `Fact.out
+                 [(«term_=_»
+                   (Term.app `finrank [(Data.Real.Basic.termℝ "ℝ") `V])
+                   "="
+                   (num "2"))])]))))
+           []
+           (Std.Tactic.obtain
+            "obtain"
+            [(Std.Tactic.RCases.rcasesPatMed
+              [(Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                  [])]
+                "⟩")])]
+            [":"
+             («term∃_,_»
+              "∃"
+              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+              ","
+              («term_≠_» `x "≠" (Term.typeAscription "(" (num "0") ":" [`V] ")")))]
+            [":=" [(Term.app `exists_ne [(Term.typeAscription "(" (num "0") ":" [`V] ")")])]])
+           []
+           (Mathlib.Tactic.«tacticUse_,,» "use" [(Term.app `o.oangle [`x (Term.app `f [`x])])])
+           []
+           (Tactic.apply "apply" `LinearIsometryEquiv.to_linear_equiv_injective)
+           []
+           (Tactic.apply "apply" `LinearEquiv.to_linear_map_injective)
+           []
+           (Tactic.apply
+            "apply"
+            (Term.proj (Term.app `o.basis_right_angle_rotation [`x `hx]) "." `ext))
+           []
+           (Tactic.intro "intro" [`i])
+           []
+           (Mathlib.Tactic.tacticSymm_ "symm" [])
+           []
+           (Lean.Elab.Tactic.finCases "fin_cases" [`i] [])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.simp "simp" [] [] [] [] [])])
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              []
+              [(Term.typeSpec
+                ":"
+                («term_=_»
+                 (Term.app
+                  `o.oangle
+                  [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+                   (Term.app
+                    `f
+                    [(Term.app
+                      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+                      [`x])])])
+                 "="
+                 (Term.app `o.oangle [`x (Term.app `f [`x])])))]
+              ":="
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.simp
+                   "simp"
+                   []
+                   []
+                   ["only"]
+                   ["["
+                    [(Tactic.simpLemma [] [] `oangle)
+                     ","
+                     (Tactic.simpLemma
+                      []
+                      []
+                      (Term.app `o.linear_isometry_equiv_comp_right_angle_rotation [`f `hd]))
+                     ","
+                     (Tactic.simpLemma [] [] `o.kahler_comp_right_angle_rotation)]
+                    "]"]
+                   [])]))))))
+           []
+           (Tactic.simp
+            "simp"
+            []
+            []
+            []
+            ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `this)] "]"]
+            [])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.tacticHaveI_
+           "haveI"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec ":" (Term.app `Nontrivial [`V]))]
+             ":="
+             (Term.app
+              `FiniteDimensional.nontrivial_of_finrank_eq_succ
+              [(Term.app
+                `Fact.out
+                [(«term_=_»
+                  (Term.app `finrank [(Data.Real.Basic.termℝ "ℝ") `V])
+                  "="
+                  (num "2"))])]))))
+          []
+          (Std.Tactic.obtain
+           "obtain"
+           [(Std.Tactic.RCases.rcasesPatMed
+             [(Std.Tactic.RCases.rcasesPat.tuple
+               "⟨"
+               [(Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hx)])
+                 [])]
+               "⟩")])]
+           [":"
+            («term∃_,_»
+             "∃"
+             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] []))
+             ","
+             («term_≠_» `x "≠" (Term.typeAscription "(" (num "0") ":" [`V] ")")))]
+           [":=" [(Term.app `exists_ne [(Term.typeAscription "(" (num "0") ":" [`V] ")")])]])
+          []
+          (Mathlib.Tactic.«tacticUse_,,» "use" [(Term.app `o.oangle [`x (Term.app `f [`x])])])
+          []
+          (Tactic.apply "apply" `LinearIsometryEquiv.to_linear_equiv_injective)
+          []
+          (Tactic.apply "apply" `LinearEquiv.to_linear_map_injective)
+          []
+          (Tactic.apply
+           "apply"
+           (Term.proj (Term.app `o.basis_right_angle_rotation [`x `hx]) "." `ext))
+          []
+          (Tactic.intro "intro" [`i])
+          []
+          (Mathlib.Tactic.tacticSymm_ "symm" [])
+          []
+          (Lean.Elab.Tactic.finCases "fin_cases" [`i] [])
+          []
+          (tactic__ (cdotTk (patternIgnore (token.«· » "·"))) [(Tactic.simp "simp" [] [] [] [] [])])
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                (Term.app
+                 `o.oangle
+                 [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+                  (Term.app
+                   `f
+                   [(Term.app
+                     (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+                     [`x])])])
+                "="
+                (Term.app `o.oangle [`x (Term.app `f [`x])])))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.simp
+                  "simp"
+                  []
+                  []
+                  ["only"]
+                  ["["
+                   [(Tactic.simpLemma [] [] `oangle)
+                    ","
+                    (Tactic.simpLemma
+                     []
+                     []
+                     (Term.app `o.linear_isometry_equiv_comp_right_angle_rotation [`f `hd]))
+                    ","
+                    (Tactic.simpLemma [] [] `o.kahler_comp_right_angle_rotation)]
+                   "]"]
+                  [])]))))))
+          []
+          (Tactic.simp
+           "simp"
+           []
+           []
+           []
+           ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `this)] "]"]
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       []
+       ["[" [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `this)] "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticHave_
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         []
+         [(Term.typeSpec
+           ":"
+           («term_=_»
+            (Term.app
+             `o.oangle
+             [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+              (Term.app
+               `f
+               [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])])])
+            "="
+            (Term.app `o.oangle [`x (Term.app `f [`x])])))]
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `oangle)
+                ","
+                (Tactic.simpLemma
+                 []
+                 []
+                 (Term.app `o.linear_isometry_equiv_comp_right_angle_rotation [`f `hd]))
+                ","
+                (Tactic.simpLemma [] [] `o.kahler_comp_right_angle_rotation)]
+               "]"]
+              [])]))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.simp
+           "simp"
+           []
+           []
+           ["only"]
+           ["["
+            [(Tactic.simpLemma [] [] `oangle)
+             ","
+             (Tactic.simpLemma
+              []
+              []
+              (Term.app `o.linear_isometry_equiv_comp_right_angle_rotation [`f `hd]))
+             ","
+             (Tactic.simpLemma [] [] `o.kahler_comp_right_angle_rotation)]
+            "]"]
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["["
+        [(Tactic.simpLemma [] [] `oangle)
+         ","
+         (Tactic.simpLemma
+          []
+          []
+          (Term.app `o.linear_isometry_equiv_comp_right_angle_rotation [`f `hd]))
+         ","
+         (Tactic.simpLemma [] [] `o.kahler_comp_right_angle_rotation)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `o.kahler_comp_right_angle_rotation
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `o.linear_isometry_equiv_comp_right_angle_rotation [`f `hd])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hd
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `o.linear_isometry_equiv_comp_right_angle_rotation
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `oangle
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.app
+        `o.oangle
+        [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+         (Term.app
+          `f
+          [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])])])
+       "="
+       (Term.app `o.oangle [`x (Term.app `f [`x])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `o.oangle [`x (Term.app `f [`x])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `f [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `f [`x]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `o.oangle
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       `o.oangle
+       [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+        (Term.app
+         `f
+         [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `f
+       [(Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J") [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ "J")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ', expected 'Orientation.Geometry.Euclidean.Angle.Oriented.Basic.termJ._@.Geometry.Euclidean.Angle.Oriented.Basic._hyg.58'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.haveEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Any linear isometric equivalence in `V` with positive determinant is `rotation`. -/
-theorem exists_linear_isometry_equiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V}
-    (hd : 0 < (f.toLinearEquiv : V →ₗ[ℝ] V).det) : ∃ θ : Real.Angle, f = o.rotation θ :=
-  by
-  haveI : Nontrivial V :=
-    FiniteDimensional.nontrivial_of_finrank_eq_succ (Fact.out (finrank ℝ V = 2))
-  obtain ⟨x, hx⟩ : ∃ x, x ≠ (0 : V) := exists_ne (0 : V)
-  use o.oangle x (f x)
-  apply LinearIsometryEquiv.to_linear_equiv_injective
-  apply LinearEquiv.to_linear_map_injective
-  apply (o.basis_right_angle_rotation x hx).ext
-  intro i
-  symm
-  fin_cases i
-  · simp
-  have : o.oangle (J x) (f (J x)) = o.oangle x (f x) := by
-    simp only [oangle, o.linear_isometry_equiv_comp_right_angle_rotation f hd,
-      o.kahler_comp_right_angle_rotation]
-  simp [← this]
+  theorem
+    exists_linear_isometry_equiv_eq_of_det_pos
+    { f : V ≃ₗᵢ[ ℝ ] V } ( hd : 0 < ( f . toLinearEquiv : V →ₗ[ ℝ ] V ) . det )
+      : ∃ θ : Real.Angle , f = o . rotation θ
+    :=
+      by
+        haveI
+            : Nontrivial V
+              :=
+              FiniteDimensional.nontrivial_of_finrank_eq_succ Fact.out finrank ℝ V = 2
+          obtain ⟨ x , hx ⟩ : ∃ x , x ≠ ( 0 : V ) := exists_ne ( 0 : V )
+          use o.oangle x f x
+          apply LinearIsometryEquiv.to_linear_equiv_injective
+          apply LinearEquiv.to_linear_map_injective
+          apply o.basis_right_angle_rotation x hx . ext
+          intro i
+          symm
+          fin_cases i
+          · simp
+          have
+            : o.oangle J x f J x = o.oangle x f x
+              :=
+              by
+                simp
+                  only
+                  [
+                    oangle
+                      ,
+                      o.linear_isometry_equiv_comp_right_angle_rotation f hd
+                      ,
+                      o.kahler_comp_right_angle_rotation
+                    ]
+          simp [ ← this ]
 #align
   orientation.exists_linear_isometry_equiv_eq_of_det_pos Orientation.exists_linear_isometry_equiv_eq_of_det_pos
 

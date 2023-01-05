@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.pairwise
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -525,7 +525,7 @@ theorem PairwiseDisjoint.union (hs : s.PairwiseDisjoint f) (ht : t.PairwiseDisjo
 lean 3 declaration is
   forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α} {g : ι' -> (Set.{u2} ι)}, (Directed.{u2, succ u3} (Set.{u2} ι) ι' (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι)) g) -> (Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.unionᵢ.{u2, succ u3} ι ι' (fun (n : ι') => g n)) f) (forall {{n : ι'}}, Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (g n) f))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Type.{u3}} {ι' : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α} {g : ι' -> (Set.{u3} ι)}, (Directed.{u3, succ u2} (Set.{u3} ι) ι' (fun (x._@.Mathlib.Data.Set.Pairwise._hyg.4278 : Set.{u3} ι) (x._@.Mathlib.Data.Set.Pairwise._hyg.4280 : Set.{u3} ι) => HasSubset.Subset.{u3} (Set.{u3} ι) (Set.instHasSubsetSet_1.{u3} ι) x._@.Mathlib.Data.Set.Pairwise._hyg.4278 x._@.Mathlib.Data.Set.Pairwise._hyg.4280) g) -> (Iff (Set.PairwiseDisjoint.{u1, u3} α ι _inst_1 _inst_2 (Set.unionᵢ.{u3, succ u2} ι ι' (fun (n : ι') => g n)) f) (forall {{n : ι'}}, Set.PairwiseDisjoint.{u1, u3} α ι _inst_1 _inst_2 (g n) f))
+  forall {α : Type.{u1}} {ι : Type.{u3}} {ι' : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α} {g : ι' -> (Set.{u3} ι)}, (Directed.{u3, succ u2} (Set.{u3} ι) ι' (fun (x._@.Mathlib.Data.Set.Pairwise._hyg.4276 : Set.{u3} ι) (x._@.Mathlib.Data.Set.Pairwise._hyg.4278 : Set.{u3} ι) => HasSubset.Subset.{u3} (Set.{u3} ι) (Set.instHasSubsetSet_1.{u3} ι) x._@.Mathlib.Data.Set.Pairwise._hyg.4276 x._@.Mathlib.Data.Set.Pairwise._hyg.4278) g) -> (Iff (Set.PairwiseDisjoint.{u1, u3} α ι _inst_1 _inst_2 (Set.unionᵢ.{u3, succ u2} ι ι' (fun (n : ι') => g n)) f) (forall {{n : ι'}}, Set.PairwiseDisjoint.{u1, u3} α ι _inst_1 _inst_2 (g n) f))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_Union Set.pairwiseDisjoint_unionᵢₓ'. -/
 theorem pairwiseDisjoint_unionᵢ {g : ι' → Set ι} (h : Directed (· ⊆ ·) g) :
     (⋃ n, g n).PairwiseDisjoint f ↔ ∀ ⦃n⦄, (g n).PairwiseDisjoint f :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pequiv
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -623,7 +623,7 @@ theorem toPEquiv_symm (f : α ≃ β) : f.symm.toPequiv = f.toPequiv.symm :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : Equiv.{succ u1, succ u2} α β) (x : α), Eq.{succ u2} (Option.{u2} β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (PEquiv.{u1, u2} α β) (fun (_x : PEquiv.{u1, u2} α β) => α -> (Option.{u2} β)) (PEquiv.hasCoeToFun.{u1, u2} α β) (Equiv.toPEquiv.{u1, u2} α β f) x) (Option.some.{u2} β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) f x))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β) (x : α), Eq.{succ u1} (Option.{u1} β) (PEquiv.toFun.{u2, u1} α β (Equiv.toPEquiv.{u2, u1} α β f) x) (Option.some.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) f x))
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β) (x : α), Eq.{succ u1} (Option.{u1} β) (PEquiv.toFun.{u2, u1} α β (Equiv.toPEquiv.{u2, u1} α β f) x) (Option.some.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) f x))
 Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_apply Equiv.toPEquiv_applyₓ'. -/
 theorem toPEquiv_apply (f : α ≃ β) (x : α) : f.toPequiv x = some (f x) :=
   rfl

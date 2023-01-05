@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.ldl
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,18 +76,371 @@ noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) :=
   infer_instance
 #align LDL.invertible_lower_inv LDL.invertibleLowerInv
 
-theorem LDL.lower_inv_orthogonal {i j : n} (h₀ : i ≠ j) :
-    ⟪LDL.lowerInv hS i, Sᵀ.mulVec (LDL.lowerInv hS j)⟫ = 0 :=
-  show
-    @inner 𝕜 (n → 𝕜) (InnerProductSpace.ofMatrix hS.transpose).toHasInner (LDL.lowerInv hS i)
-        (LDL.lowerInv hS j) =
-      0
-    by apply gram_schmidt_orthogonal _ _ h₀
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `LDL.lower_inv_orthogonal [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`i `j] [":" `n] "}")
+        (Term.explicitBinder "(" [`h₀] [":" («term_≠_» `i "≠" `j)] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»
+          "⟪"
+          (Term.app `LDL.lowerInv [`hS `i])
+          ", "
+          (Term.app
+           (Term.proj (Matrix.Data.Matrix.Basic.matrix.transpose `S "ᵀ") "." `mulVec)
+           [(Term.app `LDL.lowerInv [`hS `j])])
+          "⟫")
+         "="
+         (num "0"))))
+      (Command.declValSimple
+       ":="
+       (Term.show
+        "show"
+        («term_=_»
+         (Term.app
+          (Term.explicit "@" `inner)
+          [`𝕜
+           (Term.arrow `n "→" `𝕜)
+           (Term.proj
+            (Term.app `InnerProductSpace.ofMatrix [(Term.proj `hS "." `transpose)])
+            "."
+            `toHasInner)
+           (Term.app `LDL.lowerInv [`hS `i])
+           (Term.app `LDL.lowerInv [`hS `j])])
+         "="
+         (num "0"))
+        (Term.byTactic'
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.apply
+             "apply"
+             (Term.app `gram_schmidt_orthogonal [(Term.hole "_") (Term.hole "_") `h₀]))]))))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.show
+       "show"
+       («term_=_»
+        (Term.app
+         (Term.explicit "@" `inner)
+         [`𝕜
+          (Term.arrow `n "→" `𝕜)
+          (Term.proj
+           (Term.app `InnerProductSpace.ofMatrix [(Term.proj `hS "." `transpose)])
+           "."
+           `toHasInner)
+          (Term.app `LDL.lowerInv [`hS `i])
+          (Term.app `LDL.lowerInv [`hS `j])])
+        "="
+        (num "0"))
+       (Term.byTactic'
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.apply
+            "apply"
+            (Term.app `gram_schmidt_orthogonal [(Term.hole "_") (Term.hole "_") `h₀]))]))))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic'', expected 'Lean.Parser.Term.fromTerm'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.apply
+       "apply"
+       (Term.app `gram_schmidt_orthogonal [(Term.hole "_") (Term.hole "_") `h₀]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `gram_schmidt_orthogonal [(Term.hole "_") (Term.hole "_") `h₀])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h₀
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `gram_schmidt_orthogonal
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app
+        (Term.explicit "@" `inner)
+        [`𝕜
+         (Term.arrow `n "→" `𝕜)
+         (Term.proj
+          (Term.app `InnerProductSpace.ofMatrix [(Term.proj `hS "." `transpose)])
+          "."
+          `toHasInner)
+         (Term.app `LDL.lowerInv [`hS `i])
+         (Term.app `LDL.lowerInv [`hS `j])])
+       "="
+       (num "0"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       (Term.explicit "@" `inner)
+       [`𝕜
+        (Term.arrow `n "→" `𝕜)
+        (Term.proj
+         (Term.app `InnerProductSpace.ofMatrix [(Term.proj `hS "." `transpose)])
+         "."
+         `toHasInner)
+        (Term.app `LDL.lowerInv [`hS `i])
+        (Term.app `LDL.lowerInv [`hS `j])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `LDL.lowerInv [`hS `j])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hS
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `LDL.lowerInv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `LDL.lowerInv [`hS `j]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `LDL.lowerInv [`hS `i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hS
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `LDL.lowerInv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `LDL.lowerInv [`hS `i]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj
+       (Term.app `InnerProductSpace.ofMatrix [(Term.proj `hS "." `transpose)])
+       "."
+       `toHasInner)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `InnerProductSpace.ofMatrix [(Term.proj `hS "." `transpose)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `hS "." `transpose)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hS
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `InnerProductSpace.ofMatrix
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `InnerProductSpace.ofMatrix [(Term.proj `hS "." `transpose)])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.arrow', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.arrow `n "→" `𝕜)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `𝕜
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 25, (some 25, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.arrow `n "→" `𝕜) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `𝕜
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.explicit "@" `inner)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inner
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (some 1024,
+     term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»
+        "⟪"
+        (Term.app `LDL.lowerInv [`hS `i])
+        ", "
+        (Term.app
+         (Term.proj (Matrix.Data.Matrix.Basic.matrix.transpose `S "ᵀ") "." `mulVec)
+         [(Term.app `LDL.lowerInv [`hS `j])])
+        "⟫")
+       "="
+       (num "0"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»
+       "⟪"
+       (Term.app `LDL.lowerInv [`hS `i])
+       ", "
+       (Term.app
+        (Term.proj (Matrix.Data.Matrix.Basic.matrix.transpose `S "ᵀ") "." `mulVec)
+        [(Term.app `LDL.lowerInv [`hS `j])])
+       "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»', expected 'LinearAlgebra.Matrix.Ldl.term⟪_,_⟫._@.LinearAlgebra.Matrix.Ldl._hyg.5'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  LDL.lower_inv_orthogonal
+  { i j : n } ( h₀ : i ≠ j ) : ⟪ LDL.lowerInv hS i , S ᵀ . mulVec LDL.lowerInv hS j ⟫ = 0
+  :=
+    show
+      @ inner
+          𝕜
+            n → 𝕜
+            InnerProductSpace.ofMatrix hS . transpose . toHasInner
+            LDL.lowerInv hS i
+            LDL.lowerInv hS j
+        =
+        0
+      by apply gram_schmidt_orthogonal _ _ h₀
 #align LDL.lower_inv_orthogonal LDL.lower_inv_orthogonal
 
-/-- The entries of the diagonal matrix `D` of the LDL decomposition. -/
-noncomputable def LDL.diagEntries : n → 𝕜 := fun i =>
-  ⟪star (LDL.lowerInv hS i), S.mulVec (star (LDL.lowerInv hS i))⟫
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The entries of the diagonal matrix `D` of the LDL decomposition. -/")]
+      []
+      []
+      [(Command.noncomputable "noncomputable")]
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `LDL.diagEntries [])
+      (Command.optDeclSig [] [(Term.typeSpec ":" (Term.arrow `n "→" `𝕜))])
+      (Command.declValSimple
+       ":="
+       (Term.fun
+        "fun"
+        (Term.basicFun
+         [`i]
+         []
+         "=>"
+         (LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»
+          "⟪"
+          (Term.app `star [(Term.app `LDL.lowerInv [`hS `i])])
+          ", "
+          (Term.app
+           (Term.proj `S "." `mulVec)
+           [(Term.app `star [(Term.app `LDL.lowerInv [`hS `i])])])
+          "⟫")))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`i]
+        []
+        "=>"
+        (LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»
+         "⟪"
+         (Term.app `star [(Term.app `LDL.lowerInv [`hS `i])])
+         ", "
+         (Term.app
+          (Term.proj `S "." `mulVec)
+          [(Term.app `star [(Term.app `LDL.lowerInv [`hS `i])])])
+         "⟫")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»
+       "⟪"
+       (Term.app `star [(Term.app `LDL.lowerInv [`hS `i])])
+       ", "
+       (Term.app (Term.proj `S "." `mulVec) [(Term.app `star [(Term.app `LDL.lowerInv [`hS `i])])])
+       "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'LinearAlgebra.Matrix.Ldl.«term⟪_,_⟫»', expected 'LinearAlgebra.Matrix.Ldl.term⟪_,_⟫._@.LinearAlgebra.Matrix.Ldl._hyg.5'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/-- The entries of the diagonal matrix `D` of the LDL decomposition. -/ noncomputable
+  def
+    LDL.diagEntries
+    : n → 𝕜
+    := fun i => ⟪ star LDL.lowerInv hS i , S . mulVec star LDL.lowerInv hS i ⟫
 #align LDL.diag_entries LDL.diagEntries
 
 /-- The diagonal matrix `D` of the LDL decomposition. -/

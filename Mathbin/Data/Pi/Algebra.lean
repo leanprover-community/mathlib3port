@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.pi.algebra
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -586,7 +586,7 @@ variable (a a' : α → γ) (b b' : β → γ)
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : One.{u3} γ], Eq.{max (max (succ u1) (succ u2)) (succ u3)} ((Sum.{u1, u2} α β) -> γ) (Sum.elim.{u1, u2, succ u3} α β γ (OfNat.ofNat.{max u1 u3} (α -> γ) 1 (OfNat.mk.{max u1 u3} (α -> γ) 1 (One.one.{max u1 u3} (α -> γ) (Pi.instOne.{u1, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_1))))) (OfNat.ofNat.{max u2 u3} (β -> γ) 1 (OfNat.mk.{max u2 u3} (β -> γ) 1 (One.one.{max u2 u3} (β -> γ) (Pi.instOne.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1)))))) (OfNat.ofNat.{max (max u1 u2) u3} ((Sum.{u1, u2} α β) -> γ) 1 (OfNat.mk.{max (max u1 u2) u3} ((Sum.{u1, u2} α β) -> γ) 1 (One.one.{max (max u1 u2) u3} ((Sum.{u1, u2} α β) -> γ) (Pi.instOne.{max u1 u2, u3} (Sum.{u1, u2} α β) (fun (ᾰ : Sum.{u1, u2} α β) => γ) (fun (i : Sum.{u1, u2} α β) => _inst_1)))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : One.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (OfNat.ofNat.{max u2 u3} (α -> γ) 1 (One.toOfNat1.{max u2 u3} (α -> γ) (Pi.instOne.{u2, u3} α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4078 : α) => γ) (fun (i : α) => _inst_1)))) (OfNat.ofNat.{max u1 u3} (β -> γ) 1 (One.toOfNat1.{max u1 u3} (β -> γ) (Pi.instOne.{u1, u3} β (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4084 : β) => γ) (fun (i : β) => _inst_1))))) (OfNat.ofNat.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) 1 (One.toOfNat1.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instOne.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (a._@.Mathlib.Data.Sum.Basic._hyg.1625 : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : One.{u3} γ], Eq.{max (max (succ u2) (succ u1)) (succ u3)} ((Sum.{u2, u1} α β) -> γ) (Sum.elim.{u2, u1, succ u3} α β γ (OfNat.ofNat.{max u2 u3} (α -> γ) 1 (One.toOfNat1.{max u2 u3} (α -> γ) (Pi.instOne.{u2, u3} α (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4078 : α) => γ) (fun (i : α) => _inst_1)))) (OfNat.ofNat.{max u1 u3} (β -> γ) 1 (One.toOfNat1.{max u1 u3} (β -> γ) (Pi.instOne.{u1, u3} β (fun (a._@.Mathlib.Data.Pi.Algebra._hyg.4084 : β) => γ) (fun (i : β) => _inst_1))))) (OfNat.ofNat.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) 1 (One.toOfNat1.{max (max u2 u1) u3} ((Sum.{u2, u1} α β) -> γ) (Pi.instOne.{max u2 u1, u3} (Sum.{u2, u1} α β) (fun (a._@.Mathlib.Data.Sum.Basic._hyg.1613 : Sum.{u2, u1} α β) => γ) (fun (i : Sum.{u2, u1} α β) => _inst_1))))
 Case conversion may be inaccurate. Consider using '#align sum.elim_one_one Sum.elim_one_oneₓ'. -/
 @[simp, to_additive]
 theorem elim_one_one [One γ] : Sum.elim (1 : α → γ) (1 : β → γ) = 1 :=

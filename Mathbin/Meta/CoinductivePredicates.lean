@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl (CMU)
 
 ! This file was ported from Lean 3 source module meta.coinductive_predicates
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -628,13 +628,237 @@ local postfix:1024 "?" => optional
 -- mathport name: parser.many
 local postfix:1024 "*" => many
 
-unsafe def coinduction (corec_name : parse ident) (ns : parse with_ident_list)
-    (revert : parse <| (tk "generalizing" *> ident*)?) : tactic Unit := do
-  let rule ← mk_const corec_name
-  let locals ← mapM tactic.get_local <| revert.getOrElse []
-  revert_lst locals
-  tactic.coinduction rule ns
-  skip
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [(Command.unsafe "unsafe")] [])
+     (Command.def
+      "def"
+      (Command.declId `coinduction [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`corec_name] [":" (Term.app `parse [`ident])] [] ")")
+        (Term.explicitBinder "(" [`ns] [":" (Term.app `parse [`with_ident_list])] [] ")")
+        (Term.explicitBinder
+         "("
+         [`revert]
+         [":"
+          («term_<|_»
+           `parse
+           "<|"
+           (Tactic.Interactive.Meta.CoinductivePredicates.term_?
+            («term_*>_»
+             (Term.app `tk [(str "\"generalizing\"")])
+             "*>"
+             (Tactic.Interactive.Meta.CoinductivePredicates.parser.many `ident "*"))
+            "?"))]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.app `tactic [`Unit]))])
+      (Command.declValSimple
+       ":="
+       (Term.do
+        "do"
+        (Term.doSeqIndent
+         [(Term.doSeqItem
+           (Term.doLetArrow
+            "let"
+            []
+            (Term.doIdDecl `rule [] "←" (Term.doExpr (Term.app `mk_const [`corec_name]))))
+           [])
+          (Term.doSeqItem
+           (Term.doLetArrow
+            "let"
+            []
+            (Term.doIdDecl
+             `locals
+             []
+             "←"
+             (Term.doExpr
+              («term_<|_»
+               (Term.app `mapM [`tactic.get_local])
+               "<|"
+               (Term.app (Term.proj `revert "." `getOrElse) [(«term[_]» "[" [] "]")])))))
+           [])
+          (Term.doSeqItem (Term.doExpr (Term.app `revert_lst [`locals])) [])
+          (Term.doSeqItem (Term.doExpr (Term.app `tactic.coinduction [`rule `ns])) [])
+          (Term.doSeqItem (Term.doExpr `skip) [])]))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.do
+       "do"
+       (Term.doSeqIndent
+        [(Term.doSeqItem
+          (Term.doLetArrow
+           "let"
+           []
+           (Term.doIdDecl `rule [] "←" (Term.doExpr (Term.app `mk_const [`corec_name]))))
+          [])
+         (Term.doSeqItem
+          (Term.doLetArrow
+           "let"
+           []
+           (Term.doIdDecl
+            `locals
+            []
+            "←"
+            (Term.doExpr
+             («term_<|_»
+              (Term.app `mapM [`tactic.get_local])
+              "<|"
+              (Term.app (Term.proj `revert "." `getOrElse) [(«term[_]» "[" [] "]")])))))
+          [])
+         (Term.doSeqItem (Term.doExpr (Term.app `revert_lst [`locals])) [])
+         (Term.doSeqItem (Term.doExpr (Term.app `tactic.coinduction [`rule `ns])) [])
+         (Term.doSeqItem (Term.doExpr `skip) [])]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.doSeqIndent', expected 'Lean.Parser.Term.doSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `skip
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, doElem))
+      (Term.app `tactic.coinduction [`rule `ns])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ns
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `rule
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tactic.coinduction
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, doElem)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, doElem))
+      (Term.app `revert_lst [`locals])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `locals
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `revert_lst
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1023, doElem)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, doElem))
+      («term_<|_»
+       (Term.app `mapM [`tactic.get_local])
+       "<|"
+       (Term.app (Term.proj `revert "." `getOrElse) [(«term[_]» "[" [] "]")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `revert "." `getOrElse) [(«term[_]» "[" [] "]")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term[_]» "[" [] "]")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `revert "." `getOrElse)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `revert
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.app `mapM [`tactic.get_local])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `tactic.get_local
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mapM
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, doElem)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, doElem))
+      (Term.app `mk_const [`corec_name])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `corec_name
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mk_const
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, doElem)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1023, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app `tactic [`Unit])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Unit
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tactic
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
+     term) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `parse
+       "<|"
+       (Tactic.Interactive.Meta.CoinductivePredicates.term_?
+        («term_*>_»
+         (Term.app `tk [(str "\"generalizing\"")])
+         "*>"
+         (Tactic.Interactive.Meta.CoinductivePredicates.parser.many `ident "*"))
+        "?"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.Interactive.Meta.CoinductivePredicates.term_?
+       («term_*>_»
+        (Term.app `tk [(str "\"generalizing\"")])
+        "*>"
+        (Tactic.Interactive.Meta.CoinductivePredicates.parser.many `ident "*"))
+       "?")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Interactive.Meta.CoinductivePredicates.term_?', expected 'Tactic.Interactive.Meta.CoinductivePredicates.term_?._@.Meta.CoinductivePredicates._hyg.21'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+unsafe
+  def
+    coinduction
+    ( corec_name : parse ident )
+        ( ns : parse with_ident_list )
+        ( revert : parse <| tk "generalizing" *> ident * ? )
+      : tactic Unit
+    :=
+      do
+        let rule ← mk_const corec_name
+          let locals ← mapM tactic.get_local <| revert . getOrElse [ ]
+          revert_lst locals
+          tactic.coinduction rule ns
+          skip
 #align tactic.interactive.coinduction tactic.interactive.coinduction
 
 end Interactive

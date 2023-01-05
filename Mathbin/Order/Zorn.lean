@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.zorn
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,34 +77,1531 @@ variable {α β : Type _} {r : α → α → Prop} {c : Set α}
 local infixl:50 " ≺ " => r
 
 #print exists_maximal_of_chains_bounded /-
-/-- **Zorn's lemma**
-
-If every chain has an upper bound, then there exists a maximal element. -/
-theorem exists_maximal_of_chains_bounded (h : ∀ c, IsChain r c → ∃ ub, ∀ a ∈ c, a ≺ ub)
-    (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) : ∃ m, ∀ a, m ≺ a → a ≺ m :=
-  have : ∃ ub, ∀ a ∈ maxChain r, a ≺ ub := h _ <| maxChain_spec.left
-  let ⟨ub, (hub : ∀ a ∈ maxChain r, a ≺ ub)⟩ := this
-  ⟨ub, fun a ha =>
-    have : IsChain r (insert a <| maxChain r) :=
-      maxChain_spec.1.insert fun b hb _ => Or.inr <| trans (hub b hb) ha
-    hub a <| by
-      rw [max_chain_spec.right this (subset_insert _ _)]
-      exact mem_insert _ _⟩
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "**Zorn's lemma**\n\nIf every chain has an upper bound, then there exists a maximal element. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `exists_maximal_of_chains_bounded [])
+      (Command.declSig
+       [(Term.explicitBinder
+         "("
+         [`h]
+         [":"
+          (Term.forall
+           "∀"
+           [`c]
+           []
+           ","
+           (Term.arrow
+            (Term.app `IsChain [`r `c])
+            "→"
+            («term∃_,_»
+             "∃"
+             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] []))
+             ","
+             (Std.ExtendedBinder.«term∀__,_»
+              "∀"
+              (Lean.binderIdent `a)
+              («binderTerm∈_» "∈" `c)
+              ","
+              (Order.Zorn.«term_≺_» `a " ≺ " `ub)))))]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`trans]
+         [":"
+          (Term.forall
+           "∀"
+           [(Term.implicitBinder "{" [`a `b `c] [] "}")]
+           []
+           ","
+           (Term.arrow
+            (Order.Zorn.«term_≺_» `a " ≺ " `b)
+            "→"
+            (Term.arrow
+             (Order.Zorn.«term_≺_» `b " ≺ " `c)
+             "→"
+             (Order.Zorn.«term_≺_» `a " ≺ " `c))))]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term∃_,_»
+         "∃"
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] []))
+         ","
+         (Term.forall
+          "∀"
+          [`a]
+          []
+          ","
+          (Term.arrow (Order.Zorn.«term_≺_» `m " ≺ " `a) "→" (Order.Zorn.«term_≺_» `a " ≺ " `m))))))
+      (Command.declValSimple
+       ":="
+       (Term.have
+        "have"
+        (Term.haveDecl
+         (Term.haveIdDecl
+          []
+          [(Term.typeSpec
+            ":"
+            («term∃_,_»
+             "∃"
+             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] []))
+             ","
+             (Std.ExtendedBinder.«term∀__,_»
+              "∀"
+              (Lean.binderIdent `a)
+              («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+              ","
+              (Order.Zorn.«term_≺_» `a " ≺ " `ub))))]
+          ":="
+          («term_<|_» (Term.app `h [(Term.hole "_")]) "<|" (Term.proj `maxChain_spec "." `left))))
+        []
+        (Term.let
+         "let"
+         (Term.letDecl
+          (Term.letPatDecl
+           (Term.anonymousCtor
+            "⟨"
+            [`ub
+             ","
+             (Term.typeAscription
+              "("
+              `hub
+              ":"
+              [(Std.ExtendedBinder.«term∀__,_»
+                "∀"
+                (Lean.binderIdent `a)
+                («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+                ","
+                (Order.Zorn.«term_≺_» `a " ≺ " `ub))]
+              ")")]
+            "⟩")
+           []
+           []
+           ":="
+           `this))
+         []
+         (Term.anonymousCtor
+          "⟨"
+          [`ub
+           ","
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`a `ha]
+             []
+             "=>"
+             (Term.have
+              "have"
+              (Term.haveDecl
+               (Term.haveIdDecl
+                []
+                [(Term.typeSpec
+                  ":"
+                  (Term.app
+                   `IsChain
+                   [`r («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))]))]
+                ":="
+                (Term.app
+                 (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`b `hb (Term.hole "_")]
+                    []
+                    "=>"
+                    («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))])))
+              []
+              («term_<|_»
+               (Term.app `hub [`a])
+               "<|"
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule
+                       []
+                       (Term.app
+                        `max_chain_spec.right
+                        [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+                     "]")
+                    [])
+                   []
+                   (Tactic.exact
+                    "exact"
+                    (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))])))))))]
+          "⟩")))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.have
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         []
+         [(Term.typeSpec
+           ":"
+           («term∃_,_»
+            "∃"
+            (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] []))
+            ","
+            (Std.ExtendedBinder.«term∀__,_»
+             "∀"
+             (Lean.binderIdent `a)
+             («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+             ","
+             (Order.Zorn.«term_≺_» `a " ≺ " `ub))))]
+         ":="
+         («term_<|_» (Term.app `h [(Term.hole "_")]) "<|" (Term.proj `maxChain_spec "." `left))))
+       []
+       (Term.let
+        "let"
+        (Term.letDecl
+         (Term.letPatDecl
+          (Term.anonymousCtor
+           "⟨"
+           [`ub
+            ","
+            (Term.typeAscription
+             "("
+             `hub
+             ":"
+             [(Std.ExtendedBinder.«term∀__,_»
+               "∀"
+               (Lean.binderIdent `a)
+               («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+               ","
+               (Order.Zorn.«term_≺_» `a " ≺ " `ub))]
+             ")")]
+           "⟩")
+          []
+          []
+          ":="
+          `this))
+        []
+        (Term.anonymousCtor
+         "⟨"
+         [`ub
+          ","
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`a `ha]
+            []
+            "=>"
+            (Term.have
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec
+                 ":"
+                 (Term.app
+                  `IsChain
+                  [`r («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))]))]
+               ":="
+               (Term.app
+                (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`b `hb (Term.hole "_")]
+                   []
+                   "=>"
+                   («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))])))
+             []
+             («term_<|_»
+              (Term.app `hub [`a])
+              "<|"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule
+                      []
+                      (Term.app
+                       `max_chain_spec.right
+                       [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+                    "]")
+                   [])
+                  []
+                  (Tactic.exact
+                   "exact"
+                   (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))])))))))]
+         "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.let
+       "let"
+       (Term.letDecl
+        (Term.letPatDecl
+         (Term.anonymousCtor
+          "⟨"
+          [`ub
+           ","
+           (Term.typeAscription
+            "("
+            `hub
+            ":"
+            [(Std.ExtendedBinder.«term∀__,_»
+              "∀"
+              (Lean.binderIdent `a)
+              («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+              ","
+              (Order.Zorn.«term_≺_» `a " ≺ " `ub))]
+            ")")]
+          "⟩")
+         []
+         []
+         ":="
+         `this))
+       []
+       (Term.anonymousCtor
+        "⟨"
+        [`ub
+         ","
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`a `ha]
+           []
+           "=>"
+           (Term.have
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              []
+              [(Term.typeSpec
+                ":"
+                (Term.app
+                 `IsChain
+                 [`r («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))]))]
+              ":="
+              (Term.app
+               (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`b `hb (Term.hole "_")]
+                  []
+                  "=>"
+                  («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))])))
+            []
+            («term_<|_»
+             (Term.app `hub [`a])
+             "<|"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule
+                     []
+                     (Term.app
+                      `max_chain_spec.right
+                      [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+                   "]")
+                  [])
+                 []
+                 (Tactic.exact
+                  "exact"
+                  (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))])))))))]
+        "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [`ub
+        ","
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`a `ha]
+          []
+          "=>"
+          (Term.have
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec
+               ":"
+               (Term.app
+                `IsChain
+                [`r («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))]))]
+             ":="
+             (Term.app
+              (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`b `hb (Term.hole "_")]
+                 []
+                 "=>"
+                 («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))])))
+           []
+           («term_<|_»
+            (Term.app `hub [`a])
+            "<|"
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule
+                    []
+                    (Term.app
+                     `max_chain_spec.right
+                     [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+                  "]")
+                 [])
+                []
+                (Tactic.exact
+                 "exact"
+                 (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))])))))))]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`a `ha]
+        []
+        "=>"
+        (Term.have
+         "have"
+         (Term.haveDecl
+          (Term.haveIdDecl
+           []
+           [(Term.typeSpec
+             ":"
+             (Term.app
+              `IsChain
+              [`r («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))]))]
+           ":="
+           (Term.app
+            (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`b `hb (Term.hole "_")]
+               []
+               "=>"
+               («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))])))
+         []
+         («term_<|_»
+          (Term.app `hub [`a])
+          "<|"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule
+                  []
+                  (Term.app
+                   `max_chain_spec.right
+                   [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+                "]")
+               [])
+              []
+              (Tactic.exact
+               "exact"
+               (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))])))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.have
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         []
+         [(Term.typeSpec
+           ":"
+           (Term.app
+            `IsChain
+            [`r («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))]))]
+         ":="
+         (Term.app
+          (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`b `hb (Term.hole "_")]
+             []
+             "=>"
+             («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))])))
+       []
+       («term_<|_»
+        (Term.app `hub [`a])
+        "<|"
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule
+                []
+                (Term.app
+                 `max_chain_spec.right
+                 [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+              "]")
+             [])
+            []
+            (Tactic.exact "exact" (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.app `hub [`a])
+       "<|"
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule
+               []
+               (Term.app
+                `max_chain_spec.right
+                [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+             "]")
+            [])
+           []
+           (Tactic.exact "exact" (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule
+              []
+              (Term.app
+               `max_chain_spec.right
+               [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+            "]")
+           [])
+          []
+          (Tactic.exact "exact" (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `mem_insert [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mem_insert
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule
+          []
+          (Term.app
+           `max_chain_spec.right
+           [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])]))]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `max_chain_spec.right
+       [`this (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `subset_insert
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `subset_insert [(Term.hole "_") (Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `max_chain_spec.right
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.app `hub [`a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hub
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`b `hb (Term.hole "_")]
+          []
+          "=>"
+          («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`b `hb (Term.hole "_")]
+        []
+        "=>"
+        («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_» `Or.inr "<|" (Term.app `trans [(Term.app `hub [`b `hb]) `ha]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `trans [(Term.app `hub [`b `hb]) `ha])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ha
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `hub [`b `hb])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hb
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `b
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hub
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hub [`b `hb]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `trans
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `Or.inr
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      `hb
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `b
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.proj `maxChain_spec "." (fieldIdx "1")) "." `insert)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj `maxChain_spec "." (fieldIdx "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `maxChain_spec
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `IsChain [`r («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `maxChain [`r])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `r
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `maxChain
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.app `insert [`a])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `insert
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_<|_» (Term.app `insert [`a]) "<|" (Term.app `maxChain [`r]))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `r
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `IsChain
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ha
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `ub
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [`ub
+        ","
+        (Term.typeAscription
+         "("
+         `hub
+         ":"
+         [(Std.ExtendedBinder.«term∀__,_»
+           "∀"
+           (Lean.binderIdent `a)
+           («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+           ","
+           (Order.Zorn.«term_≺_» `a " ≺ " `ub))]
+         ")")]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       `hub
+       ":"
+       [(Std.ExtendedBinder.«term∀__,_»
+         "∀"
+         (Lean.binderIdent `a)
+         («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+         ","
+         (Order.Zorn.«term_≺_» `a " ≺ " `ub))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.ExtendedBinder.«term∀__,_»
+       "∀"
+       (Lean.binderIdent `a)
+       («binderTerm∈_» "∈" (Term.app `maxChain [`r]))
+       ","
+       (Order.Zorn.«term_≺_» `a " ≺ " `ub))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Zorn.«term_≺_» `a " ≺ " `ub)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Zorn.«term_≺_»', expected 'Order.Zorn.term_≺_._@.Order.Zorn._hyg.8'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    **Zorn's lemma**
+    
+    If every chain has an upper bound, then there exists a maximal element. -/
+  theorem
+    exists_maximal_of_chains_bounded
+    ( h : ∀ c , IsChain r c → ∃ ub , ∀ a ∈ c , a ≺ ub )
+        ( trans : ∀ { a b c } , a ≺ b → b ≺ c → a ≺ c )
+      : ∃ m , ∀ a , m ≺ a → a ≺ m
+    :=
+      have
+        : ∃ ub , ∀ a ∈ maxChain r , a ≺ ub := h _ <| maxChain_spec . left
+        let
+          ⟨ ub , ( hub : ∀ a ∈ maxChain r , a ≺ ub ) ⟩ := this
+          ⟨
+            ub
+              ,
+              fun
+                a ha
+                  =>
+                  have
+                    : IsChain r insert a <| maxChain r
+                      :=
+                      maxChain_spec . 1 . insert fun b hb _ => Or.inr <| trans hub b hb ha
+                    hub a
+                      <|
+                      by rw [ max_chain_spec.right this subset_insert _ _ ] exact mem_insert _ _
+            ⟩
 #align exists_maximal_of_chains_bounded exists_maximal_of_chains_bounded
 -/
 
 #print exists_maximal_of_nonempty_chains_bounded /-
-/-- A variant of Zorn's lemma. If every nonempty chain of a nonempty type has an upper bound, then
-there is a maximal element.
--/
-theorem exists_maximal_of_nonempty_chains_bounded [Nonempty α]
-    (h : ∀ c, IsChain r c → c.Nonempty → ∃ ub, ∀ a ∈ c, a ≺ ub)
-    (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) : ∃ m, ∀ a, m ≺ a → a ≺ m :=
-  exists_maximal_of_chains_bounded
-    (fun c hc =>
-      (eq_empty_or_nonempty c).elim
-        (fun h => ⟨Classical.arbitrary α, fun x hx => (h ▸ hx : x ∈ (∅ : Set α)).elim⟩) (h c hc))
-    fun a b c => trans
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A variant of Zorn's lemma. If every nonempty chain of a nonempty type has an upper bound, then\nthere is a maximal element.\n-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `exists_maximal_of_nonempty_chains_bounded [])
+      (Command.declSig
+       [(Term.instBinder "[" [] (Term.app `Nonempty [`α]) "]")
+        (Term.explicitBinder
+         "("
+         [`h]
+         [":"
+          (Term.forall
+           "∀"
+           [`c]
+           []
+           ","
+           (Term.arrow
+            (Term.app `IsChain [`r `c])
+            "→"
+            (Term.arrow
+             (Term.proj `c "." `Nonempty)
+             "→"
+             («term∃_,_»
+              "∃"
+              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] []))
+              ","
+              (Std.ExtendedBinder.«term∀__,_»
+               "∀"
+               (Lean.binderIdent `a)
+               («binderTerm∈_» "∈" `c)
+               ","
+               (Order.Zorn.«term_≺_» `a " ≺ " `ub))))))]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`trans]
+         [":"
+          (Term.forall
+           "∀"
+           [(Term.implicitBinder "{" [`a `b `c] [] "}")]
+           []
+           ","
+           (Term.arrow
+            (Order.Zorn.«term_≺_» `a " ≺ " `b)
+            "→"
+            (Term.arrow
+             (Order.Zorn.«term_≺_» `b " ≺ " `c)
+             "→"
+             (Order.Zorn.«term_≺_» `a " ≺ " `c))))]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term∃_,_»
+         "∃"
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] []))
+         ","
+         (Term.forall
+          "∀"
+          [`a]
+          []
+          ","
+          (Term.arrow (Order.Zorn.«term_≺_» `m " ≺ " `a) "→" (Order.Zorn.«term_≺_» `a " ≺ " `m))))))
+      (Command.declValSimple
+       ":="
+       (Term.app
+        `exists_maximal_of_chains_bounded
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`c `hc]
+           []
+           "=>"
+           (Term.app
+            (Term.proj (Term.app `eq_empty_or_nonempty [`c]) "." `elim)
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`h]
+               []
+               "=>"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app `Classical.arbitrary [`α])
+                 ","
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`x `hx]
+                   []
+                   "=>"
+                   (Term.proj
+                    (Term.typeAscription
+                     "("
+                     (Term.subst `h "▸" [`hx])
+                     ":"
+                     [(«term_∈_»
+                       `x
+                       "∈"
+                       (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+                     ")")
+                    "."
+                    `elim)))]
+                "⟩")))
+             (Term.app `h [`c `hc])])))
+         (Term.fun "fun" (Term.basicFun [`a `b `c] [] "=>" `trans))])
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `exists_maximal_of_chains_bounded
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`c `hc]
+          []
+          "=>"
+          (Term.app
+           (Term.proj (Term.app `eq_empty_or_nonempty [`c]) "." `elim)
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`h]
+              []
+              "=>"
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.app `Classical.arbitrary [`α])
+                ","
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`x `hx]
+                  []
+                  "=>"
+                  (Term.proj
+                   (Term.typeAscription
+                    "("
+                    (Term.subst `h "▸" [`hx])
+                    ":"
+                    [(«term_∈_»
+                      `x
+                      "∈"
+                      (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+                    ")")
+                   "."
+                   `elim)))]
+               "⟩")))
+            (Term.app `h [`c `hc])])))
+        (Term.fun "fun" (Term.basicFun [`a `b `c] [] "=>" `trans))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`a `b `c] [] "=>" `trans))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `trans
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `b
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`c `hc]
+        []
+        "=>"
+        (Term.app
+         (Term.proj (Term.app `eq_empty_or_nonempty [`c]) "." `elim)
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`h]
+            []
+            "=>"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.app `Classical.arbitrary [`α])
+              ","
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`x `hx]
+                []
+                "=>"
+                (Term.proj
+                 (Term.typeAscription
+                  "("
+                  (Term.subst `h "▸" [`hx])
+                  ":"
+                  [(«term_∈_»
+                    `x
+                    "∈"
+                    (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+                  ")")
+                 "."
+                 `elim)))]
+             "⟩")))
+          (Term.app `h [`c `hc])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj (Term.app `eq_empty_or_nonempty [`c]) "." `elim)
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`h]
+          []
+          "=>"
+          (Term.anonymousCtor
+           "⟨"
+           [(Term.app `Classical.arbitrary [`α])
+            ","
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`x `hx]
+              []
+              "=>"
+              (Term.proj
+               (Term.typeAscription
+                "("
+                (Term.subst `h "▸" [`hx])
+                ":"
+                [(«term_∈_»
+                  `x
+                  "∈"
+                  (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+                ")")
+               "."
+               `elim)))]
+           "⟩")))
+        (Term.app `h [`c `hc])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `h [`c `hc])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hc
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `h [`c `hc]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`h]
+        []
+        "=>"
+        (Term.anonymousCtor
+         "⟨"
+         [(Term.app `Classical.arbitrary [`α])
+          ","
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`x `hx]
+            []
+            "=>"
+            (Term.proj
+             (Term.typeAscription
+              "("
+              (Term.subst `h "▸" [`hx])
+              ":"
+              [(«term_∈_»
+                `x
+                "∈"
+                (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+              ")")
+             "."
+             `elim)))]
+         "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app `Classical.arbitrary [`α])
+        ","
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`x `hx]
+          []
+          "=>"
+          (Term.proj
+           (Term.typeAscription
+            "("
+            (Term.subst `h "▸" [`hx])
+            ":"
+            [(«term_∈_»
+              `x
+              "∈"
+              (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+            ")")
+           "."
+           `elim)))]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`x `hx]
+        []
+        "=>"
+        (Term.proj
+         (Term.typeAscription
+          "("
+          (Term.subst `h "▸" [`hx])
+          ":"
+          [(«term_∈_»
+            `x
+            "∈"
+            (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+          ")")
+         "."
+         `elim)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj
+       (Term.typeAscription
+        "("
+        (Term.subst `h "▸" [`hx])
+        ":"
+        [(«term_∈_» `x "∈" (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+        ")")
+       "."
+       `elim)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.typeAscription
+       "("
+       (Term.subst `h "▸" [`hx])
+       ":"
+       [(«term_∈_» `x "∈" (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∈_» `x "∈" (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Set [`α])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Set
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term∅» "∅")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.subst `h "▸" [`hx])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 75, term))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 75, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 75, (some 75, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Classical.arbitrary [`α])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Classical.arbitrary
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`h]
+       []
+       "=>"
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.app `Classical.arbitrary [`α])
+         ","
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`x `hx]
+           []
+           "=>"
+           (Term.proj
+            (Term.typeAscription
+             "("
+             (Term.subst `h "▸" [`hx])
+             ":"
+             [(«term_∈_»
+               `x
+               "∈"
+               (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+             ")")
+            "."
+            `elim)))]
+        "⟩")))
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app `eq_empty_or_nonempty [`c]) "." `elim)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `eq_empty_or_nonempty [`c])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `eq_empty_or_nonempty
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `eq_empty_or_nonempty [`c])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hc
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `c
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`c `hc]
+       []
+       "=>"
+       (Term.app
+        (Term.proj (Term.paren "(" (Term.app `eq_empty_or_nonempty [`c]) ")") "." `elim)
+        [(Term.paren
+          "("
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`h]
+            []
+            "=>"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.app `Classical.arbitrary [`α])
+              ","
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`x `hx]
+                []
+                "=>"
+                (Term.proj
+                 (Term.typeAscription
+                  "("
+                  (Term.subst `h "▸" [`hx])
+                  ":"
+                  [(«term_∈_»
+                    `x
+                    "∈"
+                    (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`α])] ")"))]
+                  ")")
+                 "."
+                 `elim)))]
+             "⟩")))
+          ")")
+         (Term.paren "(" (Term.app `h [`c `hc]) ")")])))
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `exists_maximal_of_chains_bounded
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term∃_,_»
+       "∃"
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] []))
+       ","
+       (Term.forall
+        "∀"
+        [`a]
+        []
+        ","
+        (Term.arrow (Order.Zorn.«term_≺_» `m " ≺ " `a) "→" (Order.Zorn.«term_≺_» `a " ≺ " `m))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [`a]
+       []
+       ","
+       (Term.arrow (Order.Zorn.«term_≺_» `m " ≺ " `a) "→" (Order.Zorn.«term_≺_» `a " ≺ " `m)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow (Order.Zorn.«term_≺_» `m " ≺ " `a) "→" (Order.Zorn.«term_≺_» `a " ≺ " `m))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Zorn.«term_≺_» `a " ≺ " `m)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.Zorn.«term_≺_»', expected 'Order.Zorn.term_≺_._@.Order.Zorn._hyg.8'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A variant of Zorn's lemma. If every nonempty chain of a nonempty type has an upper bound, then
+    there is a maximal element.
+    -/
+  theorem
+    exists_maximal_of_nonempty_chains_bounded
+    [ Nonempty α ]
+        ( h : ∀ c , IsChain r c → c . Nonempty → ∃ ub , ∀ a ∈ c , a ≺ ub )
+        ( trans : ∀ { a b c } , a ≺ b → b ≺ c → a ≺ c )
+      : ∃ m , ∀ a , m ≺ a → a ≺ m
+    :=
+      exists_maximal_of_chains_bounded
+        fun
+            c hc
+              =>
+              eq_empty_or_nonempty c . elim
+                fun
+                    h
+                      =>
+                      ⟨ Classical.arbitrary α , fun x hx => ( h ▸ hx : x ∈ ( ∅ : Set α ) ) . elim ⟩
+                  h c hc
+          fun a b c => trans
 #align exists_maximal_of_nonempty_chains_bounded exists_maximal_of_nonempty_chains_bounded
 -/
 
@@ -130,7 +1627,7 @@ theorem zorn_nonempty_preorder [Nonempty α]
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) c s) -> (IsChain.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) c) -> (Exists.{succ u1} α (fun (ub : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) => forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) => forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.834 : α) (x._@.Mathlib.Order.Zorn._hyg.836 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Zorn._hyg.834 x._@.Mathlib.Order.Zorn._hyg.836) c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.862 : α) (x._@.Mathlib.Order.Zorn._hyg.864 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Zorn._hyg.862 x._@.Mathlib.Order.Zorn._hyg.864) c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))
 Case conversion may be inaccurate. Consider using '#align zorn_preorder₀ zorn_preorder₀ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_preorder₀ (s : Set α)
@@ -151,7 +1648,7 @@ theorem zorn_preorder₀ (s : Set α)
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) c s) -> (IsChain.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) c) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) => forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub)))))) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) => And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x m) (forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.1150 : α) (x._@.Mathlib.Order.Zorn._hyg.1152 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Zorn._hyg.1150 x._@.Mathlib.Order.Zorn._hyg.1152) c) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub)))))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x m) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.1178 : α) (x._@.Mathlib.Order.Zorn._hyg.1180 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Zorn._hyg.1178 x._@.Mathlib.Order.Zorn._hyg.1180) c) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z ub)))))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x m) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) m z) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) z m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_nonempty_preorder₀ (s : Set α)
@@ -202,7 +1699,7 @@ theorem zorn_nonempty_partialOrder [Nonempty α]
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) c s) -> (IsChain.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) c) -> (Exists.{succ u1} α (fun (ub : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) => forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) => forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.1848 : α) (x._@.Mathlib.Order.Zorn._hyg.1850 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Zorn._hyg.1848 x._@.Mathlib.Order.Zorn._hyg.1850) c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.1874 : α) (x._@.Mathlib.Order.Zorn._hyg.1876 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Zorn._hyg.1874 x._@.Mathlib.Order.Zorn._hyg.1876) c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub))))) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))
 Case conversion may be inaccurate. Consider using '#align zorn_partial_order₀ zorn_partialOrder₀ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_partialOrder₀ (s : Set α)
@@ -216,7 +1713,7 @@ theorem zorn_partialOrder₀ (s : Set α)
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) c s) -> (IsChain.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) c) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) ub s) => forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub)))))) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) m s) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x m) (forall (z : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.2016 : α) (x._@.Mathlib.Order.Zorn._hyg.2018 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Zorn._hyg.2016 x._@.Mathlib.Order.Zorn._hyg.2018) c) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub)))))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x m) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Set.{u1} α), (forall (c : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) c s) -> (IsChain.{u1} α (fun (x._@.Mathlib.Order.Zorn._hyg.2042 : α) (x._@.Mathlib.Order.Zorn._hyg.2044 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Zorn._hyg.2042 x._@.Mathlib.Order.Zorn._hyg.2044) c) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y c) -> (Exists.{succ u1} α (fun (ub : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) ub s) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) z ub)))))) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) m s) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x m) (forall (z : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m z) -> (Eq.{succ u1} α z m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_nonempty_partial_order₀ zorn_nonempty_partialOrder₀ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_nonempty_partialOrder₀ (s : Set α)
@@ -232,7 +1729,7 @@ end PartialOrder
 lean 3 declaration is
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) ub S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) ub S) => forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s ub))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) => forall (a : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))
 but is expected to have type
-  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2223 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2225 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2223 x._@.Mathlib.Order.Zorn._hyg.2225) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) ub S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s ub))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))
+  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2249 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2251 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2249 x._@.Mathlib.Order.Zorn._hyg.2251) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) ub S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s ub))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))
 Case conversion may be inaccurate. Consider using '#align zorn_subset zorn_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_subset (S : Set (Set α))
@@ -245,7 +1742,7 @@ theorem zorn_subset (S : Set (Set α))
 lean 3 declaration is
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) ub S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) ub S) => forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s ub))))) -> (forall (x : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) x m) (forall (a : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
 but is expected to have type
-  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2347 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2349 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2347 x._@.Mathlib.Order.Zorn._hyg.2349) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) ub S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s ub))))) -> (forall (x : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x m) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
+  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2373 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2375 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2373 x._@.Mathlib.Order.Zorn._hyg.2375) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (ub : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) ub S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) s ub))))) -> (forall (x : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x m) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) m a) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_subset_nonempty zorn_subset_nonemptyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_subset_nonempty (S : Set (Set α))
@@ -258,7 +1755,7 @@ theorem zorn_subset_nonempty (S : Set (Set α))
 lean 3 declaration is
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) lb S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) lb S) => forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) lb s))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) => forall (a : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))
 but is expected to have type
-  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2506 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2508 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2506 x._@.Mathlib.Order.Zorn._hyg.2508) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) lb S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) lb s))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))
+  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2532 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2534 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2532 x._@.Mathlib.Order.Zorn._hyg.2534) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) lb S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) lb s))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))
 Case conversion may be inaccurate. Consider using '#align zorn_superset zorn_supersetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_superset (S : Set (Set α))
@@ -271,7 +1768,7 @@ theorem zorn_superset (S : Set (Set α))
 lean 3 declaration is
   forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α)) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) lb S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) lb S) => forall (s : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) lb s))))) -> (forall (x : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) m S) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) m x) (forall (a : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
 but is expected to have type
-  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2648 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2650 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2648 x._@.Mathlib.Order.Zorn._hyg.2650) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) lb S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) lb s))))) -> (forall (x : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) m x) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
+  forall {α : Type.{u1}} (S : Set.{u1} (Set.{u1} α)), (forall (c : Set.{u1} (Set.{u1} α)), (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.instHasSubsetSet_1.{u1} (Set.{u1} α)) c S) -> (IsChain.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Order.Zorn._hyg.2674 : Set.{u1} α) (x._@.Mathlib.Order.Zorn._hyg.2676 : Set.{u1} α) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) x._@.Mathlib.Order.Zorn._hyg.2674 x._@.Mathlib.Order.Zorn._hyg.2676) c) -> (Set.Nonempty.{u1} (Set.{u1} α) c) -> (Exists.{succ u1} (Set.{u1} α) (fun (lb : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) lb S) (forall (s : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s c) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) lb s))))) -> (forall (x : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x S) -> (Exists.{succ u1} (Set.{u1} α) (fun (m : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) m S) (And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) m x) (forall (a : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) a S) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet_1.{u1} α) a m) -> (Eq.{succ u1} (Set.{u1} α) a m))))))
 Case conversion may be inaccurate. Consider using '#align zorn_superset_nonempty zorn_superset_nonemptyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_superset_nonempty (S : Set (Set α))

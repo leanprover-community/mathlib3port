@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence_topology
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,39 +244,741 @@ local notation "Φ" => fun (α β : Type _) (uvx : ((α →ᵤ β) × (α →ᵤ
   (uvx.1.1 uvx.2, uvx.1.2 uvx.2)
 
 -- mathport name: exprlower_adjoint
-/- This is a lower adjoint to `uniform_convergence.filter` (see `uniform_convergence.gc`).
-The exact definition of the lower adjoint `l` is not interesting; we will only use that it exists
-(in `uniform_convergence.mono` and `uniform_convergence.infi_eq`) and that
-`l (filter.map (prod.map f f) 𝓕) = filter.map (prod.map ((∘) f) ((∘) f)) (l 𝓕)` for each
-`𝓕 : filter (γ × γ)` and `f : γ → α` (in `uniform_convergence.comap_eq`). -/
-local notation "lower_adjoint" => fun 𝓐 => map (Φ α β) (𝓐 ×ᶠ ⊤)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.notation
+     []
+     []
+     (Term.attrKind [(Term.local "local")])
+     "notation"
+     []
+     []
+     []
+     [(str "\"lower_adjoint\"")]
+     "=>"
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`𝓐]
+       []
+       "=>"
+       (Term.app
+        `map
+        [(Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `β])
+         (Filter.Order.Filter.Prod.filter.prod `𝓐 " ×ᶠ " (Order.BoundedOrder.«term⊤» "⊤"))]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`𝓐]
+        []
+        "=>"
+        (Term.app
+         `map
+         [(Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `β])
+          (Filter.Order.Filter.Prod.filter.prod `𝓐 " ×ᶠ " (Order.BoundedOrder.«term⊤» "⊤"))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `map
+       [(Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `β])
+        (Filter.Order.Filter.Prod.filter.prod `𝓐 " ×ᶠ " (Order.BoundedOrder.«term⊤» "⊤"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Filter.Order.Filter.Prod.filter.prod', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Filter.Order.Filter.Prod.filter.prod', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Filter.Order.Filter.Prod.filter.prod `𝓐 " ×ᶠ " (Order.BoundedOrder.«term⊤» "⊤"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.BoundedOrder.«term⊤» "⊤")
+[PrettyPrinter.parenthesize] ...precedences are 61 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 60, term))
+      `𝓐
+[PrettyPrinter.parenthesize] ...precedences are 60 >? 1024, (none, [anonymous]) <=? (some 60, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 60, (some 61, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Filter.Order.Filter.Prod.filter.prod `𝓐 " ×ᶠ " (Order.BoundedOrder.«term⊤» "⊤"))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `β])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ', expected 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.1927'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'-/-- failed to format: format: uncaught backtrack exception
+local notation "lower_adjoint" => fun 𝓐 => map Φ α β 𝓐 ×ᶠ ⊤
 
-/-- The function `uniform_convergence.filter α β : filter (β × β) → filter ((α →ᵤ β) × (α →ᵤ β))`
-has a lower adjoint `l` (in the sense of `galois_connection`). The exact definition of `l` is not
-interesting; we will only use that it exists (in `uniform_convergence.mono` and
-`uniform_convergence.infi_eq`) and that
-`l (filter.map (prod.map f f) 𝓕) = filter.map (prod.map ((∘) f) ((∘) f)) (l 𝓕)` for each
-`𝓕 : filter (γ × γ)` and `f : γ → α` (in `uniform_convergence.comap_eq`). -/
-protected theorem gc : GaloisConnection lower_adjoint fun 𝓕 => UniformFun.filter α β 𝓕 :=
-  by
-  intro 𝓐 𝓕
-  symm
-  calc
-    𝓐 ≤ UniformFun.filter α β 𝓕 ↔ (UniformFun.basis α β 𝓕).sets ⊆ 𝓐.sets := by
-      rw [UniformFun.filter, ← FilterBasis.generate, sets_iff_generate]
-    _ ↔ ∀ U ∈ 𝓕, UniformFun.gen α β U ∈ 𝓐 := image_subset_iff
-    _ ↔
-        ∀ U ∈ 𝓕,
-          { uv | ∀ x, (uv, x) ∈ { t : ((α →ᵤ β) × (α →ᵤ β)) × α | (t.1.1 t.2, t.1.2 t.2) ∈ U } } ∈
-            𝓐 :=
-      Iff.rfl
-    _ ↔
-        ∀ U ∈ 𝓕,
-          { uvx : ((α →ᵤ β) × (α →ᵤ β)) × α | (uvx.1.1 uvx.2, uvx.1.2 uvx.2) ∈ U } ∈
-            𝓐 ×ᶠ (⊤ : Filter α) :=
-      forall₂_congr fun U hU => mem_prod_top.symm
-    _ ↔ lower_adjoint 𝓐 ≤ 𝓕 := Iff.rfl
-    
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The function `uniform_convergence.filter α β : filter (β × β) → filter ((α →ᵤ β) × (α →ᵤ β))`\nhas a lower adjoint `l` (in the sense of `galois_connection`). The exact definition of `l` is not\ninteresting; we will only use that it exists (in `uniform_convergence.mono` and\n`uniform_convergence.infi_eq`) and that\n`l (filter.map (prod.map f f) 𝓕) = filter.map (prod.map ((∘) f) ((∘) f)) (l 𝓕)` for each\n`𝓕 : filter (γ × γ)` and `f : γ → α` (in `uniform_convergence.comap_eq`). -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `gc [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `GaloisConnection
+         [(UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+           "lower_adjoint")
+          (Term.fun "fun" (Term.basicFun [`𝓕] [] "=>" (Term.app `UniformFun.filter [`α `β `𝓕])))])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.intro "intro" [`𝓐 `𝓕])
+           []
+           (Mathlib.Tactic.tacticSymm_ "symm" [])
+           []
+           (calcTactic
+            "calc"
+            (calcStep
+             («term_↔_»
+              («term_≤_» `𝓐 "≤" (Term.app `UniformFun.filter [`α `β `𝓕]))
+              "↔"
+              («term_⊆_» (Term.proj (Term.app `UniformFun.basis [`α `β `𝓕]) "." `sets) "⊆" `𝓐.sets))
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [] `UniformFun.filter)
+                    ","
+                    (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `FilterBasis.generate)
+                    ","
+                    (Tactic.rwRule [] `sets_iff_generate)]
+                   "]")
+                  [])]))))
+            [(calcStep
+              («term_↔_»
+               (Term.hole "_")
+               "↔"
+               (Std.ExtendedBinder.«term∀__,_»
+                "∀"
+                (Lean.binderIdent `U)
+                («binderTerm∈_» "∈" `𝓕)
+                ","
+                («term_∈_» (Term.app `UniformFun.gen [`α `β `U]) "∈" `𝓐)))
+              ":="
+              `image_subset_iff)
+             (calcStep
+              («term_↔_»
+               (Term.hole "_")
+               "↔"
+               (Std.ExtendedBinder.«term∀__,_»
+                "∀"
+                (Lean.binderIdent `U)
+                («binderTerm∈_» "∈" `𝓕)
+                ","
+                («term_∈_»
+                 (Set.«term{_|_}»
+                  "{"
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `uv) [])
+                  "|"
+                  (Term.forall
+                   "∀"
+                   [`x]
+                   []
+                   ","
+                   («term_∈_»
+                    (Term.tuple "(" [`uv "," [`x]] ")")
+                    "∈"
+                    (Set.«term{_|_}»
+                     "{"
+                     (Std.ExtendedBinder.extBinder
+                      (Lean.binderIdent `t)
+                      [(group
+                        ":"
+                        («term_×_»
+                         («term_×_»
+                          (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                           `α
+                           " →ᵤ "
+                           `β)
+                          "×"
+                          (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                           `α
+                           " →ᵤ "
+                           `β))
+                         "×"
+                         `α))])
+                     "|"
+                     («term_∈_»
+                      (Term.tuple
+                       "("
+                       [(Term.app
+                         (Term.proj (Term.proj `t "." (fieldIdx "1")) "." (fieldIdx "1"))
+                         [(Term.proj `t "." (fieldIdx "2"))])
+                        ","
+                        [(Term.app
+                          (Term.proj (Term.proj `t "." (fieldIdx "1")) "." (fieldIdx "2"))
+                          [(Term.proj `t "." (fieldIdx "2"))])]]
+                       ")")
+                      "∈"
+                      `U)
+                     "}")))
+                  "}")
+                 "∈"
+                 `𝓐)))
+              ":="
+              `Iff.rfl)
+             (calcStep
+              («term_↔_»
+               (Term.hole "_")
+               "↔"
+               (Std.ExtendedBinder.«term∀__,_»
+                "∀"
+                (Lean.binderIdent `U)
+                («binderTerm∈_» "∈" `𝓕)
+                ","
+                («term_∈_»
+                 (Set.«term{_|_}»
+                  "{"
+                  (Std.ExtendedBinder.extBinder
+                   (Lean.binderIdent `uvx)
+                   [(group
+                     ":"
+                     («term_×_»
+                      («term_×_»
+                       (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                        `α
+                        " →ᵤ "
+                        `β)
+                       "×"
+                       (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                        `α
+                        " →ᵤ "
+                        `β))
+                      "×"
+                      `α))])
+                  "|"
+                  («term_∈_»
+                   (Term.tuple
+                    "("
+                    [(Term.app
+                      (Term.proj (Term.proj `uvx "." (fieldIdx "1")) "." (fieldIdx "1"))
+                      [(Term.proj `uvx "." (fieldIdx "2"))])
+                     ","
+                     [(Term.app
+                       (Term.proj (Term.proj `uvx "." (fieldIdx "1")) "." (fieldIdx "2"))
+                       [(Term.proj `uvx "." (fieldIdx "2"))])]]
+                    ")")
+                   "∈"
+                   `U)
+                  "}")
+                 "∈"
+                 (Filter.Order.Filter.Prod.filter.prod
+                  `𝓐
+                  " ×ᶠ "
+                  (Term.typeAscription
+                   "("
+                   (Order.BoundedOrder.«term⊤» "⊤")
+                   ":"
+                   [(Term.app `Filter [`α])]
+                   ")")))))
+              ":="
+              (Term.app
+               `forall₂_congr
+               [(Term.fun "fun" (Term.basicFun [`U `hU] [] "=>" `mem_prod_top.symm))]))
+             (calcStep
+              («term_↔_»
+               (Term.hole "_")
+               "↔"
+               («term_≤_»
+                (Term.app
+                 (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+                  "lower_adjoint")
+                 [`𝓐])
+                "≤"
+                `𝓕))
+              ":="
+              `Iff.rfl)])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.intro "intro" [`𝓐 `𝓕])
+          []
+          (Mathlib.Tactic.tacticSymm_ "symm" [])
+          []
+          (calcTactic
+           "calc"
+           (calcStep
+            («term_↔_»
+             («term_≤_» `𝓐 "≤" (Term.app `UniformFun.filter [`α `β `𝓕]))
+             "↔"
+             («term_⊆_» (Term.proj (Term.app `UniformFun.basis [`α `β `𝓕]) "." `sets) "⊆" `𝓐.sets))
+            ":="
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] `UniformFun.filter)
+                   ","
+                   (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `FilterBasis.generate)
+                   ","
+                   (Tactic.rwRule [] `sets_iff_generate)]
+                  "]")
+                 [])]))))
+           [(calcStep
+             («term_↔_»
+              (Term.hole "_")
+              "↔"
+              (Std.ExtendedBinder.«term∀__,_»
+               "∀"
+               (Lean.binderIdent `U)
+               («binderTerm∈_» "∈" `𝓕)
+               ","
+               («term_∈_» (Term.app `UniformFun.gen [`α `β `U]) "∈" `𝓐)))
+             ":="
+             `image_subset_iff)
+            (calcStep
+             («term_↔_»
+              (Term.hole "_")
+              "↔"
+              (Std.ExtendedBinder.«term∀__,_»
+               "∀"
+               (Lean.binderIdent `U)
+               («binderTerm∈_» "∈" `𝓕)
+               ","
+               («term_∈_»
+                (Set.«term{_|_}»
+                 "{"
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `uv) [])
+                 "|"
+                 (Term.forall
+                  "∀"
+                  [`x]
+                  []
+                  ","
+                  («term_∈_»
+                   (Term.tuple "(" [`uv "," [`x]] ")")
+                   "∈"
+                   (Set.«term{_|_}»
+                    "{"
+                    (Std.ExtendedBinder.extBinder
+                     (Lean.binderIdent `t)
+                     [(group
+                       ":"
+                       («term_×_»
+                        («term_×_»
+                         (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                          `α
+                          " →ᵤ "
+                          `β)
+                         "×"
+                         (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                          `α
+                          " →ᵤ "
+                          `β))
+                        "×"
+                        `α))])
+                    "|"
+                    («term_∈_»
+                     (Term.tuple
+                      "("
+                      [(Term.app
+                        (Term.proj (Term.proj `t "." (fieldIdx "1")) "." (fieldIdx "1"))
+                        [(Term.proj `t "." (fieldIdx "2"))])
+                       ","
+                       [(Term.app
+                         (Term.proj (Term.proj `t "." (fieldIdx "1")) "." (fieldIdx "2"))
+                         [(Term.proj `t "." (fieldIdx "2"))])]]
+                      ")")
+                     "∈"
+                     `U)
+                    "}")))
+                 "}")
+                "∈"
+                `𝓐)))
+             ":="
+             `Iff.rfl)
+            (calcStep
+             («term_↔_»
+              (Term.hole "_")
+              "↔"
+              (Std.ExtendedBinder.«term∀__,_»
+               "∀"
+               (Lean.binderIdent `U)
+               («binderTerm∈_» "∈" `𝓕)
+               ","
+               («term_∈_»
+                (Set.«term{_|_}»
+                 "{"
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `uvx)
+                  [(group
+                    ":"
+                    («term_×_»
+                     («term_×_»
+                      (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                       `α
+                       " →ᵤ "
+                       `β)
+                      "×"
+                      (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                       `α
+                       " →ᵤ "
+                       `β))
+                     "×"
+                     `α))])
+                 "|"
+                 («term_∈_»
+                  (Term.tuple
+                   "("
+                   [(Term.app
+                     (Term.proj (Term.proj `uvx "." (fieldIdx "1")) "." (fieldIdx "1"))
+                     [(Term.proj `uvx "." (fieldIdx "2"))])
+                    ","
+                    [(Term.app
+                      (Term.proj (Term.proj `uvx "." (fieldIdx "1")) "." (fieldIdx "2"))
+                      [(Term.proj `uvx "." (fieldIdx "2"))])]]
+                   ")")
+                  "∈"
+                  `U)
+                 "}")
+                "∈"
+                (Filter.Order.Filter.Prod.filter.prod
+                 `𝓐
+                 " ×ᶠ "
+                 (Term.typeAscription
+                  "("
+                  (Order.BoundedOrder.«term⊤» "⊤")
+                  ":"
+                  [(Term.app `Filter [`α])]
+                  ")")))))
+             ":="
+             (Term.app
+              `forall₂_congr
+              [(Term.fun "fun" (Term.basicFun [`U `hU] [] "=>" `mem_prod_top.symm))]))
+            (calcStep
+             («term_↔_»
+              (Term.hole "_")
+              "↔"
+              («term_≤_»
+               (Term.app
+                (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+                 "lower_adjoint")
+                [`𝓐])
+               "≤"
+               `𝓕))
+             ":="
+             `Iff.rfl)])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calcTactic
+       "calc"
+       (calcStep
+        («term_↔_»
+         («term_≤_» `𝓐 "≤" (Term.app `UniformFun.filter [`α `β `𝓕]))
+         "↔"
+         («term_⊆_» (Term.proj (Term.app `UniformFun.basis [`α `β `𝓕]) "." `sets) "⊆" `𝓐.sets))
+        ":="
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `UniformFun.filter)
+               ","
+               (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `FilterBasis.generate)
+               ","
+               (Tactic.rwRule [] `sets_iff_generate)]
+              "]")
+             [])]))))
+       [(calcStep
+         («term_↔_»
+          (Term.hole "_")
+          "↔"
+          (Std.ExtendedBinder.«term∀__,_»
+           "∀"
+           (Lean.binderIdent `U)
+           («binderTerm∈_» "∈" `𝓕)
+           ","
+           («term_∈_» (Term.app `UniformFun.gen [`α `β `U]) "∈" `𝓐)))
+         ":="
+         `image_subset_iff)
+        (calcStep
+         («term_↔_»
+          (Term.hole "_")
+          "↔"
+          (Std.ExtendedBinder.«term∀__,_»
+           "∀"
+           (Lean.binderIdent `U)
+           («binderTerm∈_» "∈" `𝓕)
+           ","
+           («term_∈_»
+            (Set.«term{_|_}»
+             "{"
+             (Std.ExtendedBinder.extBinder (Lean.binderIdent `uv) [])
+             "|"
+             (Term.forall
+              "∀"
+              [`x]
+              []
+              ","
+              («term_∈_»
+               (Term.tuple "(" [`uv "," [`x]] ")")
+               "∈"
+               (Set.«term{_|_}»
+                "{"
+                (Std.ExtendedBinder.extBinder
+                 (Lean.binderIdent `t)
+                 [(group
+                   ":"
+                   («term_×_»
+                    («term_×_»
+                     (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                      `α
+                      " →ᵤ "
+                      `β)
+                     "×"
+                     (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                      `α
+                      " →ᵤ "
+                      `β))
+                    "×"
+                    `α))])
+                "|"
+                («term_∈_»
+                 (Term.tuple
+                  "("
+                  [(Term.app
+                    (Term.proj (Term.proj `t "." (fieldIdx "1")) "." (fieldIdx "1"))
+                    [(Term.proj `t "." (fieldIdx "2"))])
+                   ","
+                   [(Term.app
+                     (Term.proj (Term.proj `t "." (fieldIdx "1")) "." (fieldIdx "2"))
+                     [(Term.proj `t "." (fieldIdx "2"))])]]
+                  ")")
+                 "∈"
+                 `U)
+                "}")))
+             "}")
+            "∈"
+            `𝓐)))
+         ":="
+         `Iff.rfl)
+        (calcStep
+         («term_↔_»
+          (Term.hole "_")
+          "↔"
+          (Std.ExtendedBinder.«term∀__,_»
+           "∀"
+           (Lean.binderIdent `U)
+           («binderTerm∈_» "∈" `𝓕)
+           ","
+           («term_∈_»
+            (Set.«term{_|_}»
+             "{"
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `uvx)
+              [(group
+                ":"
+                («term_×_»
+                 («term_×_»
+                  (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                   `α
+                   " →ᵤ "
+                   `β)
+                  "×"
+                  (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+                   `α
+                   " →ᵤ "
+                   `β))
+                 "×"
+                 `α))])
+             "|"
+             («term_∈_»
+              (Term.tuple
+               "("
+               [(Term.app
+                 (Term.proj (Term.proj `uvx "." (fieldIdx "1")) "." (fieldIdx "1"))
+                 [(Term.proj `uvx "." (fieldIdx "2"))])
+                ","
+                [(Term.app
+                  (Term.proj (Term.proj `uvx "." (fieldIdx "1")) "." (fieldIdx "2"))
+                  [(Term.proj `uvx "." (fieldIdx "2"))])]]
+               ")")
+              "∈"
+              `U)
+             "}")
+            "∈"
+            (Filter.Order.Filter.Prod.filter.prod
+             `𝓐
+             " ×ᶠ "
+             (Term.typeAscription
+              "("
+              (Order.BoundedOrder.«term⊤» "⊤")
+              ":"
+              [(Term.app `Filter [`α])]
+              ")")))))
+         ":="
+         (Term.app
+          `forall₂_congr
+          [(Term.fun "fun" (Term.basicFun [`U `hU] [] "=>" `mem_prod_top.symm))]))
+        (calcStep
+         («term_↔_»
+          (Term.hole "_")
+          "↔"
+          («term_≤_»
+           (Term.app
+            (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+             "lower_adjoint")
+            [`𝓐])
+           "≤"
+           `𝓕))
+         ":="
+         `Iff.rfl)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Iff.rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_↔_»
+       (Term.hole "_")
+       "↔"
+       («term_≤_»
+        (Term.app
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+          "lower_adjoint")
+         [`𝓐])
+        "≤"
+        `𝓕))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_≤_»
+       (Term.app
+        (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+         "lower_adjoint")
+        [`𝓐])
+       "≤"
+       `𝓕)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `𝓕
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+        "lower_adjoint")
+       [`𝓐])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `𝓐
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint
+       "lower_adjoint")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint', expected 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termlower_adjoint._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.1966'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      The function `uniform_convergence.filter α β : filter (β × β) → filter ((α →ᵤ β) × (α →ᵤ β))`
+      has a lower adjoint `l` (in the sense of `galois_connection`). The exact definition of `l` is not
+      interesting; we will only use that it exists (in `uniform_convergence.mono` and
+      `uniform_convergence.infi_eq`) and that
+      `l (filter.map (prod.map f f) 𝓕) = filter.map (prod.map ((∘) f) ((∘) f)) (l 𝓕)` for each
+      `𝓕 : filter (γ × γ)` and `f : γ → α` (in `uniform_convergence.comap_eq`). -/
+    protected
+  theorem
+    gc
+    : GaloisConnection lower_adjoint fun 𝓕 => UniformFun.filter α β 𝓕
+    :=
+      by
+        intro 𝓐 𝓕
+          symm
+          calc
+            𝓐 ≤ UniformFun.filter α β 𝓕 ↔ UniformFun.basis α β 𝓕 . sets ⊆ 𝓐.sets
+              :=
+              by rw [ UniformFun.filter , ← FilterBasis.generate , sets_iff_generate ]
+            _ ↔ ∀ U ∈ 𝓕 , UniformFun.gen α β U ∈ 𝓐 := image_subset_iff
+              _
+                  ↔
+                  ∀
+                    U
+                    ∈ 𝓕
+                    ,
+                    {
+                        uv
+                        |
+                        ∀
+                          x
+                          ,
+                          ( uv , x )
+                            ∈
+                            { t : α →ᵤ β × α →ᵤ β × α | ( t . 1 . 1 t . 2 , t . 1 . 2 t . 2 ) ∈ U }
+                        }
+                      ∈
+                      𝓐
+                :=
+                Iff.rfl
+              _
+                  ↔
+                  ∀
+                    U
+                    ∈ 𝓕
+                    ,
+                    {
+                        uvx : α →ᵤ β × α →ᵤ β × α
+                        |
+                        ( uvx . 1 . 1 uvx . 2 , uvx . 1 . 2 uvx . 2 ) ∈ U
+                        }
+                      ∈
+                      𝓐 ×ᶠ ( ⊤ : Filter α )
+                :=
+                forall₂_congr fun U hU => mem_prod_top.symm
+              _ ↔ lower_adjoint 𝓐 ≤ 𝓕 := Iff.rfl
 #align uniform_fun.gc UniformFun.gc
 
 variable [UniformSpace β]
@@ -361,66 +1063,1495 @@ protected theorem mono : Monotone (@UniformFun.uniformSpace α γ) := fun u₁ u
   (UniformFun.gc α γ).monotone_u hu
 #align uniform_fun.mono UniformFun.mono
 
-/-- If `u` is a family of uniform structures on `γ`, then
-`𝒰(α, γ, (⨅ i, u i)) = ⨅ i, 𝒰(α, γ, u i)`. -/
-protected theorem infi_eq {u : ι → UniformSpace γ} : 𝒰(α, γ, ⨅ i, u i) = ⨅ i, 𝒰(α, γ, u i) :=
-  by
-  -- This follows directly from the fact that the upper adjoint in a Galois connection maps
-  -- infimas to infimas.
-  ext : 1
-  change UniformFun.filter α γ (@uniformity _ (⨅ i, u i)) = @uniformity _ (⨅ i, 𝒰(α, γ, u i))
-  rw [infi_uniformity', infi_uniformity']
-  exact (UniformFun.gc α γ).u_infi
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "If `u` is a family of uniform structures on `γ`, then\n`𝒰(α, γ, (⨅ i, u i)) = ⨅ i, 𝒰(α, γ, u i)`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `infi_eq [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`u] [":" (Term.arrow `ι "→" (Term.app `UniformSpace [`γ]))] "}")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          `γ
+          ", "
+          (Order.CompleteLattice.«term⨅_,_»
+           "⨅"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+           ", "
+           (Term.app `u [`i]))
+          ")")
+         "="
+         (Order.CompleteLattice.«term⨅_,_»
+          "⨅"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+          ", "
+          (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `α
+           ", "
+           `γ
+           ", "
+           (Term.app `u [`i])
+           ")")))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [":" (num "1")])
+           []
+           (Tactic.change
+            "change"
+            («term_=_»
+             (Term.app
+              `UniformFun.filter
+              [`α
+               `γ
+               (Term.app
+                (Term.explicit "@" `uniformity)
+                [(Term.hole "_")
+                 (Order.CompleteLattice.«term⨅_,_»
+                  "⨅"
+                  (Std.ExtendedBinder.extBinders
+                   (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                  ", "
+                  (Term.app `u [`i]))])])
+             "="
+             (Term.app
+              (Term.explicit "@" `uniformity)
+              [(Term.hole "_")
+               (Order.CompleteLattice.«term⨅_,_»
+                "⨅"
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                ", "
+                (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+                 "𝒰("
+                 `α
+                 ", "
+                 `γ
+                 ", "
+                 (Term.app `u [`i])
+                 ")"))]))
+            [])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `infi_uniformity') "," (Tactic.rwRule [] `infi_uniformity')]
+             "]")
+            [])
+           []
+           (Tactic.exact "exact" (Term.proj (Term.app `UniformFun.gc [`α `γ]) "." `u_infi))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.Ext.«tacticExt___:_» "ext" [] [":" (num "1")])
+          []
+          (Tactic.change
+           "change"
+           («term_=_»
+            (Term.app
+             `UniformFun.filter
+             [`α
+              `γ
+              (Term.app
+               (Term.explicit "@" `uniformity)
+               [(Term.hole "_")
+                (Order.CompleteLattice.«term⨅_,_»
+                 "⨅"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 ", "
+                 (Term.app `u [`i]))])])
+            "="
+            (Term.app
+             (Term.explicit "@" `uniformity)
+             [(Term.hole "_")
+              (Order.CompleteLattice.«term⨅_,_»
+               "⨅"
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+               ", "
+               (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+                "𝒰("
+                `α
+                ", "
+                `γ
+                ", "
+                (Term.app `u [`i])
+                ")"))]))
+           [])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `infi_uniformity') "," (Tactic.rwRule [] `infi_uniformity')]
+            "]")
+           [])
+          []
+          (Tactic.exact "exact" (Term.proj (Term.app `UniformFun.gc [`α `γ]) "." `u_infi))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" (Term.proj (Term.app `UniformFun.gc [`α `γ]) "." `u_infi))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj (Term.app `UniformFun.gc [`α `γ]) "." `u_infi)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `UniformFun.gc [`α `γ])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `γ
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `UniformFun.gc
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `UniformFun.gc [`α `γ]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `infi_uniformity') "," (Tactic.rwRule [] `infi_uniformity')]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `infi_uniformity'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `infi_uniformity'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.change
+       "change"
+       («term_=_»
+        (Term.app
+         `UniformFun.filter
+         [`α
+          `γ
+          (Term.app
+           (Term.explicit "@" `uniformity)
+           [(Term.hole "_")
+            (Order.CompleteLattice.«term⨅_,_»
+             "⨅"
+             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+             ", "
+             (Term.app `u [`i]))])])
+        "="
+        (Term.app
+         (Term.explicit "@" `uniformity)
+         [(Term.hole "_")
+          (Order.CompleteLattice.«term⨅_,_»
+           "⨅"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+           ", "
+           (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+            "𝒰("
+            `α
+            ", "
+            `γ
+            ", "
+            (Term.app `u [`i])
+            ")"))]))
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.app
+        `UniformFun.filter
+        [`α
+         `γ
+         (Term.app
+          (Term.explicit "@" `uniformity)
+          [(Term.hole "_")
+           (Order.CompleteLattice.«term⨅_,_»
+            "⨅"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+            ", "
+            (Term.app `u [`i]))])])
+       "="
+       (Term.app
+        (Term.explicit "@" `uniformity)
+        [(Term.hole "_")
+         (Order.CompleteLattice.«term⨅_,_»
+          "⨅"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+          ", "
+          (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `α
+           ", "
+           `γ
+           ", "
+           (Term.app `u [`i])
+           ")"))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.explicit "@" `uniformity)
+       [(Term.hole "_")
+        (Order.CompleteLattice.«term⨅_,_»
+         "⨅"
+         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+         ", "
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          `γ
+          ", "
+          (Term.app `u [`i])
+          ")"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.CompleteLattice.«term⨅_,_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Order.CompleteLattice.«term⨅_,_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.CompleteLattice.«term⨅_,_»
+       "⨅"
+       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+       ", "
+       (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+        "𝒰("
+        `α
+        ", "
+        `γ
+        ", "
+        (Term.app `u [`i])
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+       "𝒰("
+       `α
+       ", "
+       `γ
+       ", "
+       (Term.app `u [`i])
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»', expected 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒰(_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2005'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      If `u` is a family of uniform structures on `γ`, then
+      `𝒰(α, γ, (⨅ i, u i)) = ⨅ i, 𝒰(α, γ, u i)`. -/
+    protected
+  theorem
+    infi_eq
+    { u : ι → UniformSpace γ } : 𝒰( α , γ , ⨅ i , u i ) = ⨅ i , 𝒰( α , γ , u i )
+    :=
+      by
+        ext : 1
+          change
+            UniformFun.filter α γ @ uniformity _ ⨅ i , u i = @ uniformity _ ⨅ i , 𝒰( α , γ , u i )
+          rw [ infi_uniformity' , infi_uniformity' ]
+          exact UniformFun.gc α γ . u_infi
 #align uniform_fun.infi_eq UniformFun.infi_eq
 
-/-- If `u₁` and `u₂` are two uniform structures on `γ`, then
-`𝒰(α, γ, u₁ ⊓ u₂) = 𝒰(α, γ, u₁) ⊓ 𝒰(α, γ, u₂)`. -/
-protected theorem inf_eq {u₁ u₂ : UniformSpace γ} : 𝒰(α, γ, u₁ ⊓ u₂) = 𝒰(α, γ, u₁) ⊓ 𝒰(α, γ, u₂) :=
-  by
-  -- This follows directly from the fact that the upper adjoint in a Galois connection maps
-  -- infimas to infimas.
-  rw [inf_eq_infᵢ, inf_eq_infᵢ, UniformFun.infi_eq]
-  refine' infᵢ_congr fun i => _
-  cases i <;> rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "If `u₁` and `u₂` are two uniform structures on `γ`, then\n`𝒰(α, γ, u₁ ⊓ u₂) = 𝒰(α, γ, u₁) ⊓ 𝒰(α, γ, u₂)`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `inf_eq [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`u₁ `u₂] [":" (Term.app `UniformSpace [`γ])] "}")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          `γ
+          ", "
+          (Order.Basic.«term_⊓_» `u₁ " ⊓ " `u₂)
+          ")")
+         "="
+         (Order.Basic.«term_⊓_»
+          (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `α
+           ", "
+           `γ
+           ", "
+           `u₁
+           ")")
+          " ⊓ "
+          (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `α
+           ", "
+           `γ
+           ", "
+           `u₂
+           ")")))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `inf_eq_infᵢ)
+              ","
+              (Tactic.rwRule [] `inf_eq_infᵢ)
+              ","
+              (Tactic.rwRule [] `UniformFun.infi_eq)]
+             "]")
+            [])
+           []
+           (Tactic.refine'
+            "refine'"
+            (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+           []
+           (Tactic.«tactic_<;>_»
+            (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+            "<;>"
+            (Tactic.tacticRfl "rfl"))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `inf_eq_infᵢ)
+             ","
+             (Tactic.rwRule [] `inf_eq_infᵢ)
+             ","
+             (Tactic.rwRule [] `UniformFun.infi_eq)]
+            "]")
+           [])
+          []
+          (Tactic.refine'
+           "refine'"
+           (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+          []
+          (Tactic.«tactic_<;>_»
+           (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+           "<;>"
+           (Tactic.tacticRfl "rfl"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+       "<;>"
+       (Tactic.tacticRfl "rfl"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.refine'
+       "refine'"
+       (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `infᵢ_congr
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `inf_eq_infᵢ)
+         ","
+         (Tactic.rwRule [] `inf_eq_infᵢ)
+         ","
+         (Tactic.rwRule [] `UniformFun.infi_eq)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformFun.infi_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inf_eq_infᵢ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inf_eq_infᵢ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+        "𝒰("
+        `α
+        ", "
+        `γ
+        ", "
+        (Order.Basic.«term_⊓_» `u₁ " ⊓ " `u₂)
+        ")")
+       "="
+       (Order.Basic.«term_⊓_»
+        (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+         "𝒰("
+         `α
+         ", "
+         `γ
+         ", "
+         `u₁
+         ")")
+        " ⊓ "
+        (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+         "𝒰("
+         `α
+         ", "
+         `γ
+         ", "
+         `u₂
+         ")")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Basic.«term_⊓_»
+       (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+        "𝒰("
+        `α
+        ", "
+        `γ
+        ", "
+        `u₁
+        ")")
+       " ⊓ "
+       (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+        "𝒰("
+        `α
+        ", "
+        `γ
+        ", "
+        `u₂
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+       "𝒰("
+       `α
+       ", "
+       `γ
+       ", "
+       `u₂
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»', expected 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒰(_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2005'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      If `u₁` and `u₂` are two uniform structures on `γ`, then
+      `𝒰(α, γ, u₁ ⊓ u₂) = 𝒰(α, γ, u₁) ⊓ 𝒰(α, γ, u₂)`. -/
+    protected
+  theorem
+    inf_eq
+    { u₁ u₂ : UniformSpace γ } : 𝒰( α , γ , u₁ ⊓ u₂ ) = 𝒰( α , γ , u₁ ) ⊓ 𝒰( α , γ , u₂ )
+    :=
+      by
+        rw [ inf_eq_infᵢ , inf_eq_infᵢ , UniformFun.infi_eq ]
+          refine' infᵢ_congr fun i => _
+          cases i <;> rfl
 #align uniform_fun.inf_eq UniformFun.inf_eq
 
-/-- If `u` is a uniform structures on `β` and `f : γ → β`, then
-`𝒰(α, γ, comap f u) = comap (λ g, f ∘ g) 𝒰(α, γ, u₁)`. -/
-protected theorem comap_eq {f : γ → β} :
-    𝒰(α, γ, ‹UniformSpace β›.comap f) = 𝒰(α, β, _).comap ((· ∘ ·) f) :=
-  by
-  letI : UniformSpace γ := ‹UniformSpace β›.comap f
-  ext : 1
-  change UniformFun.filter α γ ((𝓤 β).comap _) = (UniformFun.filter α β (𝓤 β)).comap _
-  -- We have the following four Galois connection which form a square diagram, and we want
-  -- to show that the square of upper adjoints is commutative. The trick then is to use
-  -- `galois_connection.u_comm_of_l_comm` to reduce it to commutativity of the lower adjoints,
-  -- which is way easier to prove.
-  have h₁ := Filter.gc_map_comap (Prod.map ((· ∘ ·) f) ((· ∘ ·) f))
-  have h₂ := Filter.gc_map_comap (Prod.map f f)
-  have h₃ := UniformFun.gc α β
-  have h₄ := UniformFun.gc α γ
-  refine' GaloisConnection.u_comm_of_l_comm h₁ h₂ h₃ h₄ fun 𝓐 => _
-  have : Prod.map f f ∘ Φ α γ = Φ α β ∘ Prod.map (Prod.map ((· ∘ ·) f) ((· ∘ ·) f)) id := by
-    ext <;> rfl
-  rw [map_comm this, ← prod_map_map_eq']
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "If `u` is a uniform structures on `β` and `f : γ → β`, then\n`𝒰(α, γ, comap f u) = comap (λ g, f ∘ g) 𝒰(α, γ, u₁)`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `comap_eq [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`f] [":" (Term.arrow `γ "→" `β)] "}")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          `γ
+          ", "
+          (Term.app (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap) [`f])
+          ")")
+         "="
+         (Term.app
+          (Term.proj
+           (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+            "𝒰("
+            `α
+            ", "
+            `β
+            ", "
+            (Term.hole "_")
+            ")")
+           "."
+           `comap)
+          [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Std.Tactic.tacticLetI_
+            "letI"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              []
+              [(Term.typeSpec ":" (Term.app `UniformSpace [`γ]))]
+              ":="
+              (Term.app
+               (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap)
+               [`f]))))
+           []
+           (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [":" (num "1")])
+           []
+           (Tactic.change
+            "change"
+            («term_=_»
+             (Term.app
+              `UniformFun.filter
+              [`α
+               `γ
+               (Term.app
+                (Term.proj
+                 (Term.app (uniformity.Topology.UniformSpace.Basic.uniformity "𝓤") [`β])
+                 "."
+                 `comap)
+                [(Term.hole "_")])])
+             "="
+             (Term.app
+              (Term.proj
+               (Term.app
+                `UniformFun.filter
+                [`α `β (Term.app (uniformity.Topology.UniformSpace.Basic.uniformity "𝓤") [`β])])
+               "."
+               `comap)
+              [(Term.hole "_")]))
+            [])
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              [`h₁ []]
+              []
+              ":="
+              (Term.app
+               `Filter.gc_map_comap
+               [(Term.app
+                 `Prod.map
+                 [(Term.app
+                   (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                   [`f])
+                  (Term.app
+                   (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                   [`f])])]))))
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              [`h₂ []]
+              []
+              ":="
+              (Term.app `Filter.gc_map_comap [(Term.app `Prod.map [`f `f])]))))
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl (Term.haveIdDecl [`h₃ []] [] ":=" (Term.app `UniformFun.gc [`α `β]))))
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl (Term.haveIdDecl [`h₄ []] [] ":=" (Term.app `UniformFun.gc [`α `γ]))))
+           []
+           (Tactic.refine'
+            "refine'"
+            (Term.app
+             `GaloisConnection.u_comm_of_l_comm
+             [`h₁ `h₂ `h₃ `h₄ (Term.fun "fun" (Term.basicFun [`𝓐] [] "=>" (Term.hole "_")))]))
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              []
+              [(Term.typeSpec
+                ":"
+                («term_=_»
+                 («term_∘_»
+                  (Term.app `Prod.map [`f `f])
+                  "∘"
+                  (Term.app
+                   (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+                   [`α `γ]))
+                 "="
+                 («term_∘_»
+                  (Term.app
+                   (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+                   [`α `β])
+                  "∘"
+                  (Term.app
+                   `Prod.map
+                   [(Term.app
+                     `Prod.map
+                     [(Term.app
+                       (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                       [`f])
+                      (Term.app
+                       (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                       [`f])])
+                    `id]))))]
+              ":="
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.«tactic_<;>_»
+                   (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+                   "<;>"
+                   (Tactic.tacticRfl "rfl"))]))))))
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] (Term.app `map_comm [`this]))
+              ","
+              (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `prod_map_map_eq')]
+             "]")
+            [])
+           []
+           (Tactic.tacticRfl "rfl")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.tacticLetI_
+           "letI"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec ":" (Term.app `UniformSpace [`γ]))]
+             ":="
+             (Term.app
+              (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap)
+              [`f]))))
+          []
+          (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [":" (num "1")])
+          []
+          (Tactic.change
+           "change"
+           («term_=_»
+            (Term.app
+             `UniformFun.filter
+             [`α
+              `γ
+              (Term.app
+               (Term.proj
+                (Term.app (uniformity.Topology.UniformSpace.Basic.uniformity "𝓤") [`β])
+                "."
+                `comap)
+               [(Term.hole "_")])])
+            "="
+            (Term.app
+             (Term.proj
+              (Term.app
+               `UniformFun.filter
+               [`α `β (Term.app (uniformity.Topology.UniformSpace.Basic.uniformity "𝓤") [`β])])
+              "."
+              `comap)
+             [(Term.hole "_")]))
+           [])
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`h₁ []]
+             []
+             ":="
+             (Term.app
+              `Filter.gc_map_comap
+              [(Term.app
+                `Prod.map
+                [(Term.app
+                  (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                  [`f])
+                 (Term.app
+                  (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                  [`f])])]))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`h₂ []]
+             []
+             ":="
+             (Term.app `Filter.gc_map_comap [(Term.app `Prod.map [`f `f])]))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl (Term.haveIdDecl [`h₃ []] [] ":=" (Term.app `UniformFun.gc [`α `β]))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl (Term.haveIdDecl [`h₄ []] [] ":=" (Term.app `UniformFun.gc [`α `γ]))))
+          []
+          (Tactic.refine'
+           "refine'"
+           (Term.app
+            `GaloisConnection.u_comm_of_l_comm
+            [`h₁ `h₂ `h₃ `h₄ (Term.fun "fun" (Term.basicFun [`𝓐] [] "=>" (Term.hole "_")))]))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                («term_∘_»
+                 (Term.app `Prod.map [`f `f])
+                 "∘"
+                 (Term.app
+                  (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+                  [`α `γ]))
+                "="
+                («term_∘_»
+                 (Term.app
+                  (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+                  [`α `β])
+                 "∘"
+                 (Term.app
+                  `Prod.map
+                  [(Term.app
+                    `Prod.map
+                    [(Term.app
+                      (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                      [`f])
+                     (Term.app
+                      (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                      [`f])])
+                   `id]))))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.«tactic_<;>_»
+                  (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+                  "<;>"
+                  (Tactic.tacticRfl "rfl"))]))))))
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] (Term.app `map_comm [`this]))
+             ","
+             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `prod_map_map_eq')]
+            "]")
+           [])
+          []
+          (Tactic.tacticRfl "rfl")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] (Term.app `map_comm [`this]))
+         ","
+         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `prod_map_map_eq')]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `prod_map_map_eq'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `map_comm [`this])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `map_comm
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticHave_
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         []
+         [(Term.typeSpec
+           ":"
+           («term_=_»
+            («term_∘_»
+             (Term.app `Prod.map [`f `f])
+             "∘"
+             (Term.app
+              (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+              [`α `γ]))
+            "="
+            («term_∘_»
+             (Term.app
+              (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+              [`α `β])
+             "∘"
+             (Term.app
+              `Prod.map
+              [(Term.app
+                `Prod.map
+                [(Term.app
+                  (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                  [`f])
+                 (Term.app
+                  (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                  [`f])])
+               `id]))))]
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.«tactic_<;>_»
+              (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+              "<;>"
+              (Tactic.tacticRfl "rfl"))]))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+           "<;>"
+           (Tactic.tacticRfl "rfl"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+       "<;>"
+       (Tactic.tacticRfl "rfl"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       («term_∘_»
+        (Term.app `Prod.map [`f `f])
+        "∘"
+        (Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `γ]))
+       "="
+       («term_∘_»
+        (Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `β])
+        "∘"
+        (Term.app
+         `Prod.map
+         [(Term.app
+           `Prod.map
+           [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+            (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])])
+          `id])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_»
+       (Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `β])
+       "∘"
+       (Term.app
+        `Prod.map
+        [(Term.app
+          `Prod.map
+          [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+           (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])])
+         `id]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Prod.map
+       [(Term.app
+         `Prod.map
+         [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+          (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])])
+        `id])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `id
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app
+       `Prod.map
+       [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+        (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 90, (some 90, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 90, (some 90, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Prod.map
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app
+      `Prod.map
+      [(Term.paren
+        "("
+        (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+        ")")
+       (Term.paren
+        "("
+        (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+        ")")])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Prod.map
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      (Term.app (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ") [`α `β])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `β
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ "Φ")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ', expected 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.termΦ._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.1927'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.haveEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      If `u` is a uniform structures on `β` and `f : γ → β`, then
+      `𝒰(α, γ, comap f u) = comap (λ g, f ∘ g) 𝒰(α, γ, u₁)`. -/
+    protected
+  theorem
+    comap_eq
+    { f : γ → β } : 𝒰( α , γ , ‹ UniformSpace β › . comap f ) = 𝒰( α , β , _ ) . comap ( · ∘ · ) f
+    :=
+      by
+        letI : UniformSpace γ := ‹ UniformSpace β › . comap f
+          ext : 1
+          change UniformFun.filter α γ 𝓤 β . comap _ = UniformFun.filter α β 𝓤 β . comap _
+          have h₁ := Filter.gc_map_comap Prod.map ( · ∘ · ) f ( · ∘ · ) f
+          have h₂ := Filter.gc_map_comap Prod.map f f
+          have h₃ := UniformFun.gc α β
+          have h₄ := UniformFun.gc α γ
+          refine' GaloisConnection.u_comm_of_l_comm h₁ h₂ h₃ h₄ fun 𝓐 => _
+          have
+            : Prod.map f f ∘ Φ α γ = Φ α β ∘ Prod.map Prod.map ( · ∘ · ) f ( · ∘ · ) f id
+              :=
+              by ext <;> rfl
+          rw [ map_comm this , ← prod_map_map_eq' ]
+          rfl
 #align uniform_fun.comap_eq UniformFun.comap_eq
 
-/-- Post-composition by a uniformly continuous function is uniformly continuous on `α →ᵤ β`.
-
-More precisely, if `f : γ → β` is uniformly continuous, then `(λ g, f ∘ g) : (α →ᵤ γ) → (α →ᵤ β)`
-is uniformly continuous. -/
-protected theorem postcomp_uniform_continuous [UniformSpace γ] {f : γ → β}
-    (hf : UniformContinuous f) :
-    UniformContinuous (of_fun ∘ (· ∘ ·) f ∘ to_fun : (α →ᵤ γ) → α →ᵤ β) :=
-  -- This is a direct consequence of `uniform_convergence.comap_eq`
-      uniform_continuous_iff.mpr <|
-    calc
-      𝒰(α, γ, _) ≤ 𝒰(α, γ, ‹UniformSpace β›.comap f) :=
-        UniformFun.mono (uniform_continuous_iff.mp hf)
-      _ = 𝒰(α, β, _).comap ((· ∘ ·) f) := UniformFun.comap_eq
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Post-composition by a uniformly continuous function is uniformly continuous on `α →ᵤ β`.\n\nMore precisely, if `f : γ → β` is uniformly continuous, then `(λ g, f ∘ g) : (α →ᵤ γ) → (α →ᵤ β)`\nis uniformly continuous. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `postcomp_uniform_continuous [])
+      (Command.declSig
+       [(Term.instBinder "[" [] (Term.app `UniformSpace [`γ]) "]")
+        (Term.implicitBinder "{" [`f] [":" (Term.arrow `γ "→" `β)] "}")
+        (Term.explicitBinder "(" [`hf] [":" (Term.app `UniformContinuous [`f])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `UniformContinuous
+         [(Term.typeAscription
+           "("
+           («term_∘_»
+            `of_fun
+            "∘"
+            («term_∘_»
+             (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+             "∘"
+             `to_fun))
+           ":"
+           [(Term.arrow
+             (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+              `α
+              " →ᵤ "
+              `γ)
+             "→"
+             (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+              `α
+              " →ᵤ "
+              `β))]
+           ")")])))
+      (Command.declValSimple
+       ":="
+       («term_<|_»
+        (Term.proj `uniform_continuous_iff "." `mpr)
+        "<|"
+        (calc
+         "calc"
+         (calcStep
+          («term_≤_»
+           (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+            "𝒰("
+            `α
+            ", "
+            `γ
+            ", "
+            (Term.hole "_")
+            ")")
+           "≤"
+           (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+            "𝒰("
+            `α
+            ", "
+            `γ
+            ", "
+            (Term.app (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap) [`f])
+            ")"))
+          ":="
+          (Term.app
+           `UniformFun.mono
+           [(Term.app (Term.proj `uniform_continuous_iff "." `mp) [`hf])]))
+         [(calcStep
+           («term_=_»
+            (Term.hole "_")
+            "="
+            (Term.app
+             (Term.proj
+              (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+               "𝒰("
+               `α
+               ", "
+               `β
+               ", "
+               (Term.hole "_")
+               ")")
+              "."
+              `comap)
+             [(Term.app
+               (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+               [`f])]))
+           ":="
+           `UniformFun.comap_eq)]))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.proj `uniform_continuous_iff "." `mpr)
+       "<|"
+       (calc
+        "calc"
+        (calcStep
+         («term_≤_»
+          (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `α
+           ", "
+           `γ
+           ", "
+           (Term.hole "_")
+           ")")
+          "≤"
+          (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `α
+           ", "
+           `γ
+           ", "
+           (Term.app (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap) [`f])
+           ")"))
+         ":="
+         (Term.app `UniformFun.mono [(Term.app (Term.proj `uniform_continuous_iff "." `mp) [`hf])]))
+        [(calcStep
+          («term_=_»
+           (Term.hole "_")
+           "="
+           (Term.app
+            (Term.proj
+             (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+              "𝒰("
+              `α
+              ", "
+              `β
+              ", "
+              (Term.hole "_")
+              ")")
+             "."
+             `comap)
+            [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))
+          ":="
+          `UniformFun.comap_eq)]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calc
+       "calc"
+       (calcStep
+        («term_≤_»
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          `γ
+          ", "
+          (Term.hole "_")
+          ")")
+         "≤"
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          `γ
+          ", "
+          (Term.app (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap) [`f])
+          ")"))
+        ":="
+        (Term.app `UniformFun.mono [(Term.app (Term.proj `uniform_continuous_iff "." `mp) [`hf])]))
+       [(calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (Term.app
+           (Term.proj
+            (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+             "𝒰("
+             `α
+             ", "
+             `β
+             ", "
+             (Term.hole "_")
+             ")")
+            "."
+            `comap)
+           [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))
+         ":="
+         `UniformFun.comap_eq)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformFun.comap_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.hole "_")
+       "="
+       (Term.app
+        (Term.proj
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          `β
+          ", "
+          (Term.hole "_")
+          ")")
+         "."
+         `comap)
+        [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+         "𝒰("
+         `α
+         ", "
+         `β
+         ", "
+         (Term.hole "_")
+         ")")
+        "."
+        `comap)
+       [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 90, (some 90, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+        "𝒰("
+        `α
+        ", "
+        `β
+        ", "
+        (Term.hole "_")
+        ")")
+       "."
+       `comap)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+       "𝒰("
+       `α
+       ", "
+       `β
+       ", "
+       (Term.hole "_")
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»', expected 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒰(_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2005'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      Post-composition by a uniformly continuous function is uniformly continuous on `α →ᵤ β`.
       
+      More precisely, if `f : γ → β` is uniformly continuous, then `(λ g, f ∘ g) : (α →ᵤ γ) → (α →ᵤ β)`
+      is uniformly continuous. -/
+    protected
+  theorem
+    postcomp_uniform_continuous
+    [ UniformSpace γ ] { f : γ → β } ( hf : UniformContinuous f )
+      : UniformContinuous ( of_fun ∘ ( · ∘ · ) f ∘ to_fun : α →ᵤ γ → α →ᵤ β )
+    :=
+      uniform_continuous_iff . mpr
+        <|
+        calc
+          𝒰( α , γ , _ ) ≤ 𝒰( α , γ , ‹ UniformSpace β › . comap f )
+            :=
+            UniformFun.mono uniform_continuous_iff . mp hf
+          _ = 𝒰( α , β , _ ) . comap ( · ∘ · ) f := UniformFun.comap_eq
 #align uniform_fun.postcomp_uniform_continuous UniformFun.postcomp_uniform_continuous
 
 /-- Post-composition by a uniform inducing is a uniform inducing for the
@@ -532,26 +2663,656 @@ protected def uniformEquivProdArrow [UniformSpace γ] : (α →ᵤ β × γ) ≃
 -- the relevant diagram commutes by definition
 variable (α) (δ : ι → Type _) [∀ i, UniformSpace (δ i)]
 
-/-- The natural bijection between `α → Π i, δ i` and `Π i, α → δ i`, upgraded to a uniform
-isomorphism between `α →ᵤ (Π i, δ i)` and `Π i, α →ᵤ δ i`. -/
-protected def uniformEquivPiComm : UniformEquiv (α →ᵤ ∀ i, δ i) (∀ i, α →ᵤ δ i) :=
-  -- Denote `φ` this bijection. We want to show that
-    -- `comap φ (Π i, 𝒰(α, δ i, uδ i)) = 𝒰(α, (Π i, δ i), (Π i, uδ i))`.
-    -- But `Π i, uδ i` is defined as `⨅ i, comap (eval i) (uδ i)`, so we just have to apply
-    -- `uniform_convergence.infi_eq` and `uniform_convergence.comap_eq`, which leaves us to check
-    -- that some square commutes.
-    @Equiv.toUniformEquivOfUniformInducing
-    _ _ 𝒰(α, ∀ i, δ i, PiCat.uniformSpace δ)
-    (@PiCat.uniformSpace ι (fun i => α → δ i) fun i => 𝒰(α, δ i, _)) (Equiv.piComm _)
-    (by
-      constructor
-      change comap (Prod.map Function.swap Function.swap) _ = _
-      rw [← uniformity_comap rfl]
-      congr
-      rw [PiCat.uniformSpace, UniformSpace.of_core_eq_to_core, PiCat.uniformSpace,
-        UniformSpace.of_core_eq_to_core, UniformSpace.comap_infi, UniformFun.infi_eq]
-      refine' infᵢ_congr fun i => _
-      rw [← UniformSpace.comap_comap, UniformFun.comap_eq])
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The natural bijection between `α → Π i, δ i` and `Π i, α → δ i`, upgraded to a uniform\nisomorphism between `α →ᵤ (Π i, δ i)` and `Π i, α →ᵤ δ i`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `uniformEquivPiComm [])
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Term.app
+          `UniformEquiv
+          [(UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+            `α
+            " →ᵤ "
+            (Term.forall "∀" [`i] [] "," (Term.app `δ [`i])))
+           (Term.forall
+            "∀"
+            [`i]
+            []
+            ","
+            (UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ_»
+             `α
+             " →ᵤ "
+             (Term.app `δ [`i])))]))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        (Term.explicit "@" `Equiv.toUniformEquivOfUniformInducing)
+        [(Term.hole "_")
+         (Term.hole "_")
+         (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `α
+          ", "
+          (Term.forall "∀" [`i] [] "," (Term.app `δ [`i]))
+          ", "
+          (Term.app `PiCat.uniformSpace [`δ])
+          ")")
+         (Term.app
+          (Term.explicit "@" `PiCat.uniformSpace)
+          [`ι
+           (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.arrow `α "→" (Term.app `δ [`i]))))
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`i]
+             []
+             "=>"
+             (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+              "𝒰("
+              `α
+              ", "
+              (Term.app `δ [`i])
+              ", "
+              (Term.hole "_")
+              ")")))])
+         (Term.app `Equiv.piComm [(Term.hole "_")])
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.constructor "constructor")
+             []
+             (Tactic.change
+              "change"
+              («term_=_»
+               (Term.app
+                `comap
+                [(Term.app `Prod.map [`Function.swap `Function.swap]) (Term.hole "_")])
+               "="
+               (Term.hole "_"))
+              [])
+             []
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule
+                 [(patternIgnore (token.«← » "←"))]
+                 (Term.app `uniformity_comap [`rfl]))]
+               "]")
+              [])
+             []
+             (Tactic.congr "congr" [])
+             []
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `PiCat.uniformSpace)
+                ","
+                (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+                ","
+                (Tactic.rwRule [] `PiCat.uniformSpace)
+                ","
+                (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+                ","
+                (Tactic.rwRule [] `UniformSpace.comap_infi)
+                ","
+                (Tactic.rwRule [] `UniformFun.infi_eq)]
+               "]")
+              [])
+             []
+             (Tactic.refine'
+              "refine'"
+              (Term.app
+               `infᵢ_congr
+               [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+             []
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)
+                ","
+                (Tactic.rwRule [] `UniformFun.comap_eq)]
+               "]")
+              [])])))])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.explicit "@" `Equiv.toUniformEquivOfUniformInducing)
+       [(Term.hole "_")
+        (Term.hole "_")
+        (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+         "𝒰("
+         `α
+         ", "
+         (Term.forall "∀" [`i] [] "," (Term.app `δ [`i]))
+         ", "
+         (Term.app `PiCat.uniformSpace [`δ])
+         ")")
+        (Term.app
+         (Term.explicit "@" `PiCat.uniformSpace)
+         [`ι
+          (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.arrow `α "→" (Term.app `δ [`i]))))
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`i]
+            []
+            "=>"
+            (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+             "𝒰("
+             `α
+             ", "
+             (Term.app `δ [`i])
+             ", "
+             (Term.hole "_")
+             ")")))])
+        (Term.app `Equiv.piComm [(Term.hole "_")])
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.constructor "constructor")
+            []
+            (Tactic.change
+             "change"
+             («term_=_»
+              (Term.app
+               `comap
+               [(Term.app `Prod.map [`Function.swap `Function.swap]) (Term.hole "_")])
+              "="
+              (Term.hole "_"))
+             [])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule
+                [(patternIgnore (token.«← » "←"))]
+                (Term.app `uniformity_comap [`rfl]))]
+              "]")
+             [])
+            []
+            (Tactic.congr "congr" [])
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `PiCat.uniformSpace)
+               ","
+               (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+               ","
+               (Tactic.rwRule [] `PiCat.uniformSpace)
+               ","
+               (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+               ","
+               (Tactic.rwRule [] `UniformSpace.comap_infi)
+               ","
+               (Tactic.rwRule [] `UniformFun.infi_eq)]
+              "]")
+             [])
+            []
+            (Tactic.refine'
+             "refine'"
+             (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+            []
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)
+               ","
+               (Tactic.rwRule [] `UniformFun.comap_eq)]
+              "]")
+             [])])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.constructor "constructor")
+          []
+          (Tactic.change
+           "change"
+           («term_=_»
+            (Term.app `comap [(Term.app `Prod.map [`Function.swap `Function.swap]) (Term.hole "_")])
+            "="
+            (Term.hole "_"))
+           [])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.app `uniformity_comap [`rfl]))]
+            "]")
+           [])
+          []
+          (Tactic.congr "congr" [])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `PiCat.uniformSpace)
+             ","
+             (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+             ","
+             (Tactic.rwRule [] `PiCat.uniformSpace)
+             ","
+             (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+             ","
+             (Tactic.rwRule [] `UniformSpace.comap_infi)
+             ","
+             (Tactic.rwRule [] `UniformFun.infi_eq)]
+            "]")
+           [])
+          []
+          (Tactic.refine'
+           "refine'"
+           (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)
+             ","
+             (Tactic.rwRule [] `UniformFun.comap_eq)]
+            "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)
+         ","
+         (Tactic.rwRule [] `UniformFun.comap_eq)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformFun.comap_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformSpace.comap_comap
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.refine'
+       "refine'"
+       (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `infᵢ_congr
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `PiCat.uniformSpace)
+         ","
+         (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+         ","
+         (Tactic.rwRule [] `PiCat.uniformSpace)
+         ","
+         (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+         ","
+         (Tactic.rwRule [] `UniformSpace.comap_infi)
+         ","
+         (Tactic.rwRule [] `UniformFun.infi_eq)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformFun.infi_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformSpace.comap_infi
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformSpace.of_core_eq_to_core
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `PiCat.uniformSpace
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformSpace.of_core_eq_to_core
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `PiCat.uniformSpace
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.congr "congr" [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.app `uniformity_comap [`rfl]))]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `uniformity_comap [`rfl])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `uniformity_comap
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.change
+       "change"
+       («term_=_»
+        (Term.app `comap [(Term.app `Prod.map [`Function.swap `Function.swap]) (Term.hole "_")])
+        "="
+        (Term.hole "_"))
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.app `comap [(Term.app `Prod.map [`Function.swap `Function.swap]) (Term.hole "_")])
+       "="
+       (Term.hole "_"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app `comap [(Term.app `Prod.map [`Function.swap `Function.swap]) (Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.app `Prod.map [`Function.swap `Function.swap])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Function.swap
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `Function.swap
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Prod.map
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Prod.map [`Function.swap `Function.swap])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `comap
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.constructor "constructor")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0,
+     tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(Tactic.constructor "constructor")
+         []
+         (Tactic.change
+          "change"
+          («term_=_»
+           (Term.app
+            `comap
+            [(Term.paren "(" (Term.app `Prod.map [`Function.swap `Function.swap]) ")")
+             (Term.hole "_")])
+           "="
+           (Term.hole "_"))
+          [])
+         []
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.app `uniformity_comap [`rfl]))]
+           "]")
+          [])
+         []
+         (Tactic.congr "congr" [])
+         []
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule [] `PiCat.uniformSpace)
+            ","
+            (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+            ","
+            (Tactic.rwRule [] `PiCat.uniformSpace)
+            ","
+            (Tactic.rwRule [] `UniformSpace.of_core_eq_to_core)
+            ","
+            (Tactic.rwRule [] `UniformSpace.comap_infi)
+            ","
+            (Tactic.rwRule [] `UniformFun.infi_eq)]
+           "]")
+          [])
+         []
+         (Tactic.refine'
+          "refine'"
+          (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+         []
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)
+            ","
+            (Tactic.rwRule [] `UniformFun.comap_eq)]
+           "]")
+          [])])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `Equiv.piComm [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Equiv.piComm
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Equiv.piComm [(Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app
+       (Term.explicit "@" `PiCat.uniformSpace)
+       [`ι
+        (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.arrow `α "→" (Term.app `δ [`i]))))
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`i]
+          []
+          "=>"
+          (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `α
+           ", "
+           (Term.app `δ [`i])
+           ", "
+           (Term.hole "_")
+           ")")))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`i]
+        []
+        "=>"
+        (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+         "𝒰("
+         `α
+         ", "
+         (Term.app `δ [`i])
+         ", "
+         (Term.hole "_")
+         ")")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+       "𝒰("
+       `α
+       ", "
+       (Term.app `δ [`i])
+       ", "
+       (Term.hole "_")
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»', expected 'UniformFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒰(_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2005'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      The natural bijection between `α → Π i, δ i` and `Π i, α → δ i`, upgraded to a uniform
+      isomorphism between `α →ᵤ (Π i, δ i)` and `Π i, α →ᵤ δ i`. -/
+    protected
+  def
+    uniformEquivPiComm
+    : UniformEquiv α →ᵤ ∀ i , δ i ∀ i , α →ᵤ δ i
+    :=
+      @ Equiv.toUniformEquivOfUniformInducing
+        _
+          _
+          𝒰( α , ∀ i , δ i , PiCat.uniformSpace δ )
+          @ PiCat.uniformSpace ι fun i => α → δ i fun i => 𝒰( α , δ i , _ )
+          Equiv.piComm _
+          by
+            constructor
+              change comap Prod.map Function.swap Function.swap _ = _
+              rw [ ← uniformity_comap rfl ]
+              congr
+              rw
+                [
+                  PiCat.uniformSpace
+                    ,
+                    UniformSpace.of_core_eq_to_core
+                    ,
+                    PiCat.uniformSpace
+                    ,
+                    UniformSpace.of_core_eq_to_core
+                    ,
+                    UniformSpace.comap_infi
+                    ,
+                    UniformFun.infi_eq
+                  ]
+              refine' infᵢ_congr fun i => _
+              rw [ ← UniformSpace.comap_comap , UniformFun.comap_eq ]
 #align uniform_fun.uniform_equiv_Pi_comm UniformFun.uniformEquivPiComm
 
 -- Like in the previous lemma, the diagram actually commutes by definition
@@ -610,20 +3371,224 @@ protected theorem is_basis_gen (𝔖 : Set (Set α)) (h : 𝔖.Nonempty) (h' : D
 
 variable (α β) [UniformSpace β] (𝔖 : Set (Set α))
 
-/-- Uniform structure of `𝔖`-convergence, i.e uniform convergence on the elements of `𝔖`,
-declared as an instance on `α →ᵤ[𝔖] β`. It is defined as the infimum, for `S ∈ 𝔖`, of the pullback
-by `S.restrict`, the map of restriction to `S`, of the uniform structure `𝒰(s, β, uβ)` on
-`↥S →ᵤ β`. We will denote it `𝒱(α, β, 𝔖, uβ)`, where `uβ` is the uniform structure on `β`. -/
-instance : UniformSpace (α →ᵤ[𝔖] β) :=
-  ⨅ (s : Set α) (hs : s ∈ 𝔖), UniformSpace.comap s.restrict 𝒰(s, β, _)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Uniform structure of `𝔖`-convergence, i.e uniform convergence on the elements of `𝔖`,\ndeclared as an instance on `α →ᵤ[𝔖] β`. It is defined as the infimum, for `S ∈ 𝔖`, of the pullback\nby `S.restrict`, the map of restriction to `S`, of the uniform structure `𝒰(s, β, uβ)` on\n`↥S →ᵤ β`. We will denote it `𝒱(α, β, 𝔖, uβ)`, where `uβ` is the uniform structure on `β`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      []
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `UniformSpace
+         [(UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ[_]_»
+           `α
+           " →ᵤ["
+           `𝔖
+           "] "
+           `β)])))
+      (Command.declValSimple
+       ":="
+       (Order.CompleteLattice.«term⨅_,_»
+        "⨅"
+        (Std.ExtendedBinder.extBinders
+         (Std.ExtendedBinder.extBinderCollection
+          [(Std.ExtendedBinder.extBinderParenthesized
+            "("
+            (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `Set [`α]))])
+            ")")
+           (Std.ExtendedBinder.extBinderParenthesized
+            "("
+            (Std.ExtendedBinder.extBinder
+             (Lean.binderIdent `hs)
+             [(group ":" («term_∈_» `s "∈" `𝔖))])
+            ")")]))
+        ", "
+        (Term.app
+         `UniformSpace.comap
+         [(Term.proj `s "." `restrict)
+          (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+           "𝒰("
+           `s
+           ", "
+           `β
+           ", "
+           (Term.hole "_")
+           ")")]))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.CompleteLattice.«term⨅_,_»
+       "⨅"
+       (Std.ExtendedBinder.extBinders
+        (Std.ExtendedBinder.extBinderCollection
+         [(Std.ExtendedBinder.extBinderParenthesized
+           "("
+           (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `Set [`α]))])
+           ")")
+          (Std.ExtendedBinder.extBinderParenthesized
+           "("
+           (Std.ExtendedBinder.extBinder (Lean.binderIdent `hs) [(group ":" («term_∈_» `s "∈" `𝔖))])
+           ")")]))
+       ", "
+       (Term.app
+        `UniformSpace.comap
+        [(Term.proj `s "." `restrict)
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+          "𝒰("
+          `s
+          ", "
+          `β
+          ", "
+          (Term.hole "_")
+          ")")]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `UniformSpace.comap
+       [(Term.proj `s "." `restrict)
+        (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+         "𝒰("
+         `s
+         ", "
+         `β
+         ", "
+         (Term.hole "_")
+         ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»
+       "𝒰("
+       `s
+       ", "
+       `β
+       ", "
+       (Term.hole "_")
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒰(_,_,_)»', expected 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒰(_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2073'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    Uniform structure of `𝔖`-convergence, i.e uniform convergence on the elements of `𝔖`,
+    declared as an instance on `α →ᵤ[𝔖] β`. It is defined as the infimum, for `S ∈ 𝔖`, of the pullback
+    by `S.restrict`, the map of restriction to `S`, of the uniform structure `𝒰(s, β, uβ)` on
+    `↥S →ᵤ β`. We will denote it `𝒱(α, β, 𝔖, uβ)`, where `uβ` is the uniform structure on `β`. -/
+  instance
+    : UniformSpace α →ᵤ[ 𝔖 ] β
+    := ⨅ ( s : Set α ) ( hs : s ∈ 𝔖 ) , UniformSpace.comap s . restrict 𝒰( s , β , _ )
 
 -- mathport name: «expr𝒱( , , , )»
 local notation "𝒱(" α ", " β ", " 𝔖 ", " u ")" => @UniformOnFun.uniformSpace α β u 𝔖
 
-/-- Topology of `𝔖`-convergence, i.e uniform convergence on the elements of `𝔖`, declared as an
-instance on `α →ᵤ[𝔖] β`. -/
-instance : TopologicalSpace (α →ᵤ[𝔖] β) :=
-  𝒱(α, β, 𝔖, _).toTopologicalSpace
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Topology of `𝔖`-convergence, i.e uniform convergence on the elements of `𝔖`, declared as an\ninstance on `α →ᵤ[𝔖] β`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      []
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `TopologicalSpace
+         [(UniformConvergence.Topology.UniformSpace.UniformConvergenceTopology.«term_→ᵤ[_]_»
+           `α
+           " →ᵤ["
+           `𝔖
+           "] "
+           `β)])))
+      (Command.declValSimple
+       ":="
+       (Term.proj
+        (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+         "𝒱("
+         `α
+         ", "
+         `β
+         ", "
+         `𝔖
+         ", "
+         (Term.hole "_")
+         ")")
+        "."
+        `toTopologicalSpace)
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `β
+        ", "
+        `𝔖
+        ", "
+        (Term.hole "_")
+        ")")
+       "."
+       `toTopologicalSpace)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+       "𝒱("
+       `α
+       ", "
+       `β
+       ", "
+       `𝔖
+       ", "
+       (Term.hole "_")
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»', expected 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒱(_,_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2139'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    Topology of `𝔖`-convergence, i.e uniform convergence on the elements of `𝔖`, declared as an
+    instance on `α →ᵤ[𝔖] β`. -/
+  instance : TopologicalSpace α →ᵤ[ 𝔖 ] β := 𝒱( α , β , 𝔖 , _ ) . toTopologicalSpace
 
 /-- The topology of `𝔖`-convergence is the infimum, for `S ∈ 𝔖`, of topology induced by the map
 of `S.restrict : (α →ᵤ[𝔖] β) → (↥S →ᵤ β)` of restriction to `S`, where `↥S →ᵤ β` is endowed with
@@ -717,14 +3682,268 @@ protected theorem uniform_continuous_restrict (h : s ∈ 𝔖) :
 
 variable {α}
 
-/-- Let `u₁`, `u₂` be two uniform structures on `γ` and `𝔖₁ 𝔖₂ : set (set α)`. If `u₁ ≤ u₂` and
-`𝔖₂ ⊆ 𝔖₁` then `𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₂)`. -/
-protected theorem mono ⦃u₁ u₂ : UniformSpace γ⦄ (hu : u₁ ≤ u₂) ⦃𝔖₁ 𝔖₂ : Set (Set α)⦄
-    (h𝔖 : 𝔖₂ ⊆ 𝔖₁) : 𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₂) :=
-  calc
-    𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₁) := infᵢ_le_infᵢ_of_subset h𝔖
-    _ ≤ 𝒱(α, γ, 𝔖₂, u₂) := infᵢ₂_mono fun i hi => UniformSpace.comap_mono <| UniformFun.mono hu
-    
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Let `u₁`, `u₂` be two uniform structures on `γ` and `𝔖₁ 𝔖₂ : set (set α)`. If `u₁ ≤ u₂` and\n`𝔖₂ ⊆ 𝔖₁` then `𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₂)`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `mono [])
+      (Command.declSig
+       [(Term.strictImplicitBinder "⦃" [`u₁ `u₂] [":" (Term.app `UniformSpace [`γ])] "⦄")
+        (Term.explicitBinder "(" [`hu] [":" («term_≤_» `u₁ "≤" `u₂)] [] ")")
+        (Term.strictImplicitBinder "⦃" [`𝔖₁ `𝔖₂] [":" (Term.app `Set [(Term.app `Set [`α])])] "⦄")
+        (Term.explicitBinder "(" [`h𝔖] [":" («term_⊆_» `𝔖₂ "⊆" `𝔖₁)] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_≤_»
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖₁
+          ", "
+          `u₁
+          ")")
+         "≤"
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖₂
+          ", "
+          `u₂
+          ")"))))
+      (Command.declValSimple
+       ":="
+       (calc
+        "calc"
+        (calcStep
+         («term_≤_»
+          (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+           "𝒱("
+           `α
+           ", "
+           `γ
+           ", "
+           `𝔖₁
+           ", "
+           `u₁
+           ")")
+          "≤"
+          (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+           "𝒱("
+           `α
+           ", "
+           `γ
+           ", "
+           `𝔖₂
+           ", "
+           `u₁
+           ")"))
+         ":="
+         (Term.app `infᵢ_le_infᵢ_of_subset [`h𝔖]))
+        [(calcStep
+          («term_≤_»
+           (Term.hole "_")
+           "≤"
+           (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+            "𝒱("
+            `α
+            ", "
+            `γ
+            ", "
+            `𝔖₂
+            ", "
+            `u₂
+            ")"))
+          ":="
+          (Term.app
+           `infᵢ₂_mono
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`i `hi]
+              []
+              "=>"
+              («term_<|_» `UniformSpace.comap_mono "<|" (Term.app `UniformFun.mono [`hu]))))]))])
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calc
+       "calc"
+       (calcStep
+        («term_≤_»
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖₁
+          ", "
+          `u₁
+          ")")
+         "≤"
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖₂
+          ", "
+          `u₁
+          ")"))
+        ":="
+        (Term.app `infᵢ_le_infᵢ_of_subset [`h𝔖]))
+       [(calcStep
+         («term_≤_»
+          (Term.hole "_")
+          "≤"
+          (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+           "𝒱("
+           `α
+           ", "
+           `γ
+           ", "
+           `𝔖₂
+           ", "
+           `u₂
+           ")"))
+         ":="
+         (Term.app
+          `infᵢ₂_mono
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`i `hi]
+             []
+             "=>"
+             («term_<|_» `UniformSpace.comap_mono "<|" (Term.app `UniformFun.mono [`hu]))))]))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `infᵢ₂_mono
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`i `hi]
+          []
+          "=>"
+          («term_<|_» `UniformSpace.comap_mono "<|" (Term.app `UniformFun.mono [`hu]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`i `hi]
+        []
+        "=>"
+        («term_<|_» `UniformSpace.comap_mono "<|" (Term.app `UniformFun.mono [`hu]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_» `UniformSpace.comap_mono "<|" (Term.app `UniformFun.mono [`hu]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `UniformFun.mono [`hu])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hu
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `UniformFun.mono
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `UniformSpace.comap_mono
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hi
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `infᵢ₂_mono
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_≤_»
+       (Term.hole "_")
+       "≤"
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `γ
+        ", "
+        `𝔖₂
+        ", "
+        `u₂
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+       "𝒱("
+       `α
+       ", "
+       `γ
+       ", "
+       `𝔖₂
+       ", "
+       `u₂
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»', expected 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒱(_,_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2139'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      Let `u₁`, `u₂` be two uniform structures on `γ` and `𝔖₁ 𝔖₂ : set (set α)`. If `u₁ ≤ u₂` and
+      `𝔖₂ ⊆ 𝔖₁` then `𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₂)`. -/
+    protected
+  theorem
+    mono
+    ⦃ u₁ u₂ : UniformSpace γ ⦄ ( hu : u₁ ≤ u₂ ) ⦃ 𝔖₁ 𝔖₂ : Set Set α ⦄ ( h𝔖 : 𝔖₂ ⊆ 𝔖₁ )
+      : 𝒱( α , γ , 𝔖₁ , u₁ ) ≤ 𝒱( α , γ , 𝔖₂ , u₂ )
+    :=
+      calc
+        𝒱( α , γ , 𝔖₁ , u₁ ) ≤ 𝒱( α , γ , 𝔖₂ , u₁ ) := infᵢ_le_infᵢ_of_subset h𝔖
+        _ ≤ 𝒱( α , γ , 𝔖₂ , u₂ )
+          :=
+          infᵢ₂_mono fun i hi => UniformSpace.comap_mono <| UniformFun.mono hu
 #align uniform_on_fun.mono UniformOnFun.mono
 
 /-- If `x : α` is in some `S ∈ 𝔖`, then evaluation at `x` is uniformly continuous on
@@ -737,53 +3956,1112 @@ theorem uniform_continuous_eval_of_mem {x : α} (hxs : x ∈ s) (hs : s ∈ 𝔖
 
 variable {β} {𝔖}
 
-/-- If `u` is a family of uniform structures on `γ`, then
-`𝒱(α, γ, 𝔖, (⨅ i, u i)) = ⨅ i, 𝒱(α, γ, 𝔖, u i)`. -/
-protected theorem infi_eq {u : ι → UniformSpace γ} : 𝒱(α, γ, 𝔖, ⨅ i, u i) = ⨅ i, 𝒱(α, γ, 𝔖, u i) :=
-  by
-  simp_rw [UniformOnFun.uniformSpace, UniformFun.infi_eq, UniformSpace.comap_infi]
-  rw [infᵢ_comm]
-  exact infᵢ_congr fun s => infᵢ_comm
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "If `u` is a family of uniform structures on `γ`, then\n`𝒱(α, γ, 𝔖, (⨅ i, u i)) = ⨅ i, 𝒱(α, γ, 𝔖, u i)`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `infi_eq [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`u] [":" (Term.arrow `ι "→" (Term.app `UniformSpace [`γ]))] "}")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖
+          ", "
+          (Order.CompleteLattice.«term⨅_,_»
+           "⨅"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+           ", "
+           (Term.app `u [`i]))
+          ")")
+         "="
+         (Order.CompleteLattice.«term⨅_,_»
+          "⨅"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+          ", "
+          (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+           "𝒱("
+           `α
+           ", "
+           `γ
+           ", "
+           `𝔖
+           ", "
+           (Term.app `u [`i])
+           ")")))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticSimp_rw__
+            "simp_rw"
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `UniformOnFun.uniformSpace)
+              ","
+              (Tactic.rwRule [] `UniformFun.infi_eq)
+              ","
+              (Tactic.rwRule [] `UniformSpace.comap_infi)]
+             "]")
+            [])
+           []
+           (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `infᵢ_comm)] "]") [])
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`s] [] "=>" `infᵢ_comm))]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticSimp_rw__
+           "simp_rw"
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `UniformOnFun.uniformSpace)
+             ","
+             (Tactic.rwRule [] `UniformFun.infi_eq)
+             ","
+             (Tactic.rwRule [] `UniformSpace.comap_infi)]
+            "]")
+           [])
+          []
+          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `infᵢ_comm)] "]") [])
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`s] [] "=>" `infᵢ_comm))]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`s] [] "=>" `infᵢ_comm))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`s] [] "=>" `infᵢ_comm))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`s] [] "=>" `infᵢ_comm))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `infᵢ_comm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `infᵢ_congr
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `infᵢ_comm)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `infᵢ_comm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticSimp_rw__
+       "simp_rw"
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `UniformOnFun.uniformSpace)
+         ","
+         (Tactic.rwRule [] `UniformFun.infi_eq)
+         ","
+         (Tactic.rwRule [] `UniformSpace.comap_infi)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformSpace.comap_infi
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformFun.infi_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformOnFun.uniformSpace
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `γ
+        ", "
+        `𝔖
+        ", "
+        (Order.CompleteLattice.«term⨅_,_»
+         "⨅"
+         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+         ", "
+         (Term.app `u [`i]))
+        ")")
+       "="
+       (Order.CompleteLattice.«term⨅_,_»
+        "⨅"
+        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+        ", "
+        (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+         "𝒱("
+         `α
+         ", "
+         `γ
+         ", "
+         `𝔖
+         ", "
+         (Term.app `u [`i])
+         ")")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.CompleteLattice.«term⨅_,_»
+       "⨅"
+       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+       ", "
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `γ
+        ", "
+        `𝔖
+        ", "
+        (Term.app `u [`i])
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+       "𝒱("
+       `α
+       ", "
+       `γ
+       ", "
+       `𝔖
+       ", "
+       (Term.app `u [`i])
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»', expected 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒱(_,_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2139'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      If `u` is a family of uniform structures on `γ`, then
+      `𝒱(α, γ, 𝔖, (⨅ i, u i)) = ⨅ i, 𝒱(α, γ, 𝔖, u i)`. -/
+    protected
+  theorem
+    infi_eq
+    { u : ι → UniformSpace γ } : 𝒱( α , γ , 𝔖 , ⨅ i , u i ) = ⨅ i , 𝒱( α , γ , 𝔖 , u i )
+    :=
+      by
+        simp_rw [ UniformOnFun.uniformSpace , UniformFun.infi_eq , UniformSpace.comap_infi ]
+          rw [ infᵢ_comm ]
+          exact infᵢ_congr fun s => infᵢ_comm
 #align uniform_on_fun.infi_eq UniformOnFun.infi_eq
 
-/-- If `u₁` and `u₂` are two uniform structures on `γ`, then
-`𝒱(α, γ, 𝔖, u₁ ⊓ u₂) = 𝒱(α, γ, 𝔖, u₁) ⊓ 𝒱(α, γ, 𝔖, u₂)`. -/
-protected theorem inf_eq {u₁ u₂ : UniformSpace γ} :
-    𝒱(α, γ, 𝔖, u₁ ⊓ u₂) = 𝒱(α, γ, 𝔖, u₁) ⊓ 𝒱(α, γ, 𝔖, u₂) :=
-  by
-  rw [inf_eq_infᵢ, inf_eq_infᵢ, UniformOnFun.infi_eq]
-  refine' infᵢ_congr fun i => _
-  cases i <;> rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "If `u₁` and `u₂` are two uniform structures on `γ`, then\n`𝒱(α, γ, 𝔖, u₁ ⊓ u₂) = 𝒱(α, γ, 𝔖, u₁) ⊓ 𝒱(α, γ, 𝔖, u₂)`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `inf_eq [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`u₁ `u₂] [":" (Term.app `UniformSpace [`γ])] "}")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖
+          ", "
+          (Order.Basic.«term_⊓_» `u₁ " ⊓ " `u₂)
+          ")")
+         "="
+         (Order.Basic.«term_⊓_»
+          (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+           "𝒱("
+           `α
+           ", "
+           `γ
+           ", "
+           `𝔖
+           ", "
+           `u₁
+           ")")
+          " ⊓ "
+          (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+           "𝒱("
+           `α
+           ", "
+           `γ
+           ", "
+           `𝔖
+           ", "
+           `u₂
+           ")")))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `inf_eq_infᵢ)
+              ","
+              (Tactic.rwRule [] `inf_eq_infᵢ)
+              ","
+              (Tactic.rwRule [] `UniformOnFun.infi_eq)]
+             "]")
+            [])
+           []
+           (Tactic.refine'
+            "refine'"
+            (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+           []
+           (Tactic.«tactic_<;>_»
+            (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+            "<;>"
+            (Tactic.tacticRfl "rfl"))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `inf_eq_infᵢ)
+             ","
+             (Tactic.rwRule [] `inf_eq_infᵢ)
+             ","
+             (Tactic.rwRule [] `UniformOnFun.infi_eq)]
+            "]")
+           [])
+          []
+          (Tactic.refine'
+           "refine'"
+           (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+          []
+          (Tactic.«tactic_<;>_»
+           (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+           "<;>"
+           (Tactic.tacticRfl "rfl"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+       "<;>"
+       (Tactic.tacticRfl "rfl"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.cases "cases" [(Tactic.casesTarget [] `i)] [] [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.refine'
+       "refine'"
+       (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `infᵢ_congr [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.hole "_")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `infᵢ_congr
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `inf_eq_infᵢ)
+         ","
+         (Tactic.rwRule [] `inf_eq_infᵢ)
+         ","
+         (Tactic.rwRule [] `UniformOnFun.infi_eq)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformOnFun.infi_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inf_eq_infᵢ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inf_eq_infᵢ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `γ
+        ", "
+        `𝔖
+        ", "
+        (Order.Basic.«term_⊓_» `u₁ " ⊓ " `u₂)
+        ")")
+       "="
+       (Order.Basic.«term_⊓_»
+        (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+         "𝒱("
+         `α
+         ", "
+         `γ
+         ", "
+         `𝔖
+         ", "
+         `u₁
+         ")")
+        " ⊓ "
+        (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+         "𝒱("
+         `α
+         ", "
+         `γ
+         ", "
+         `𝔖
+         ", "
+         `u₂
+         ")")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Order.Basic.«term_⊓_»
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `γ
+        ", "
+        `𝔖
+        ", "
+        `u₁
+        ")")
+       " ⊓ "
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `γ
+        ", "
+        `𝔖
+        ", "
+        `u₂
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+       "𝒱("
+       `α
+       ", "
+       `γ
+       ", "
+       `𝔖
+       ", "
+       `u₂
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»', expected 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒱(_,_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2139'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      If `u₁` and `u₂` are two uniform structures on `γ`, then
+      `𝒱(α, γ, 𝔖, u₁ ⊓ u₂) = 𝒱(α, γ, 𝔖, u₁) ⊓ 𝒱(α, γ, 𝔖, u₂)`. -/
+    protected
+  theorem
+    inf_eq
+    { u₁ u₂ : UniformSpace γ }
+      : 𝒱( α , γ , 𝔖 , u₁ ⊓ u₂ ) = 𝒱( α , γ , 𝔖 , u₁ ) ⊓ 𝒱( α , γ , 𝔖 , u₂ )
+    :=
+      by
+        rw [ inf_eq_infᵢ , inf_eq_infᵢ , UniformOnFun.infi_eq ]
+          refine' infᵢ_congr fun i => _
+          cases i <;> rfl
 #align uniform_on_fun.inf_eq UniformOnFun.inf_eq
 
-/-- If `u` is a uniform structures on `β` and `f : γ → β`, then
-`𝒱(α, γ, 𝔖, comap f u) = comap (λ g, f ∘ g) 𝒱(α, γ, 𝔖, u₁)`. -/
-protected theorem comap_eq {f : γ → β} :
-    𝒱(α, γ, 𝔖, ‹UniformSpace β›.comap f) = 𝒱(α, β, 𝔖, _).comap ((· ∘ ·) f) :=
-  by
-  -- We reduce this to `uniform_convergence.comap_eq` using the fact that `comap` distributes
-  -- on `infi`.
-  simp_rw [UniformOnFun.uniformSpace, UniformSpace.comap_infi, UniformFun.comap_eq, ←
-    UniformSpace.comap_comap]
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "If `u` is a uniform structures on `β` and `f : γ → β`, then\n`𝒱(α, γ, 𝔖, comap f u) = comap (λ g, f ∘ g) 𝒱(α, γ, 𝔖, u₁)`. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `comap_eq [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`f] [":" (Term.arrow `γ "→" `β)] "}")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖
+          ", "
+          (Term.app (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap) [`f])
+          ")")
+         "="
+         (Term.app
+          (Term.proj
+           (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+            "𝒱("
+            `α
+            ", "
+            `β
+            ", "
+            `𝔖
+            ", "
+            (Term.hole "_")
+            ")")
+           "."
+           `comap)
+          [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Mathlib.Tactic.tacticSimp_rw__
+            "simp_rw"
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `UniformOnFun.uniformSpace)
+              ","
+              (Tactic.rwRule [] `UniformSpace.comap_infi)
+              ","
+              (Tactic.rwRule [] `UniformFun.comap_eq)
+              ","
+              (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)]
+             "]")
+            [])
+           []
+           (Tactic.tacticRfl "rfl")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Mathlib.Tactic.tacticSimp_rw__
+           "simp_rw"
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `UniformOnFun.uniformSpace)
+             ","
+             (Tactic.rwRule [] `UniformSpace.comap_infi)
+             ","
+             (Tactic.rwRule [] `UniformFun.comap_eq)
+             ","
+             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)]
+            "]")
+           [])
+          []
+          (Tactic.tacticRfl "rfl")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticSimp_rw__
+       "simp_rw"
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `UniformOnFun.uniformSpace)
+         ","
+         (Tactic.rwRule [] `UniformSpace.comap_infi)
+         ","
+         (Tactic.rwRule [] `UniformFun.comap_eq)
+         ","
+         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `UniformSpace.comap_comap)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformSpace.comap_comap
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformFun.comap_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformSpace.comap_infi
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformOnFun.uniformSpace
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `γ
+        ", "
+        `𝔖
+        ", "
+        (Term.app (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap) [`f])
+        ")")
+       "="
+       (Term.app
+        (Term.proj
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `β
+          ", "
+          `𝔖
+          ", "
+          (Term.hole "_")
+          ")")
+         "."
+         `comap)
+        [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+         "𝒱("
+         `α
+         ", "
+         `β
+         ", "
+         `𝔖
+         ", "
+         (Term.hole "_")
+         ")")
+        "."
+        `comap)
+       [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 90, (some 90, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `β
+        ", "
+        `𝔖
+        ", "
+        (Term.hole "_")
+        ")")
+       "."
+       `comap)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+       "𝒱("
+       `α
+       ", "
+       `β
+       ", "
+       `𝔖
+       ", "
+       (Term.hole "_")
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»', expected 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒱(_,_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2139'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      If `u` is a uniform structures on `β` and `f : γ → β`, then
+      `𝒱(α, γ, 𝔖, comap f u) = comap (λ g, f ∘ g) 𝒱(α, γ, 𝔖, u₁)`. -/
+    protected
+  theorem
+    comap_eq
+    { f : γ → β }
+      : 𝒱( α , γ , 𝔖 , ‹ UniformSpace β › . comap f ) = 𝒱( α , β , 𝔖 , _ ) . comap ( · ∘ · ) f
+    :=
+      by
+        simp_rw
+            [
+              UniformOnFun.uniformSpace
+                ,
+                UniformSpace.comap_infi
+                ,
+                UniformFun.comap_eq
+                ,
+                ← UniformSpace.comap_comap
+              ]
+          rfl
 #align uniform_on_fun.comap_eq UniformOnFun.comap_eq
 
--- by definition, `∀ S ∈ 𝔖, (f ∘ —) ∘ S.restrict = S.restrict ∘ (f ∘ —)`.
-/-- Post-composition by a uniformly continuous function is uniformly continuous for the
-uniform structures of `𝔖`-convergence.
-
-More precisely, if `f : γ → β` is uniformly continuous, then
-`(λ g, f ∘ g) : (α →ᵤ[𝔖] γ) → (α →ᵤ[𝔖] β)` is uniformly continuous. -/
-protected theorem postcomp_uniform_continuous [UniformSpace γ] {f : γ → β}
-    (hf : UniformContinuous f) : UniformContinuous (ofFun 𝔖 ∘ (· ∘ ·) f ∘ toFun 𝔖) :=
-  by
-  -- This is a direct consequence of `uniform_convergence.comap_eq`
-  rw [uniform_continuous_iff]
-  calc
-    𝒱(α, γ, 𝔖, _) ≤ 𝒱(α, γ, 𝔖, ‹UniformSpace β›.comap f) :=
-      UniformOnFun.mono (uniform_continuous_iff.mp hf) subset_rfl
-    _ = 𝒱(α, β, 𝔖, _).comap ((· ∘ ·) f) := UniformOnFun.comap_eq
-    
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "Post-composition by a uniformly continuous function is uniformly continuous for the\nuniform structures of `𝔖`-convergence.\n\nMore precisely, if `f : γ → β` is uniformly continuous, then\n`(λ g, f ∘ g) : (α →ᵤ[𝔖] γ) → (α →ᵤ[𝔖] β)` is uniformly continuous. -/")]
+      []
+      [(Command.protected "protected")]
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `postcomp_uniform_continuous [])
+      (Command.declSig
+       [(Term.instBinder "[" [] (Term.app `UniformSpace [`γ]) "]")
+        (Term.implicitBinder "{" [`f] [":" (Term.arrow `γ "→" `β)] "}")
+        (Term.explicitBinder "(" [`hf] [":" (Term.app `UniformContinuous [`f])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `UniformContinuous
+         [(«term_∘_»
+           (Term.app `ofFun [`𝔖])
+           "∘"
+           («term_∘_»
+            (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+            "∘"
+            (Term.app `toFun [`𝔖])))])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `uniform_continuous_iff)] "]")
+            [])
+           []
+           (calcTactic
+            "calc"
+            (calcStep
+             («term_≤_»
+              (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+               "𝒱("
+               `α
+               ", "
+               `γ
+               ", "
+               `𝔖
+               ", "
+               (Term.hole "_")
+               ")")
+              "≤"
+              (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+               "𝒱("
+               `α
+               ", "
+               `γ
+               ", "
+               `𝔖
+               ", "
+               (Term.app
+                (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap)
+                [`f])
+               ")"))
+             ":="
+             (Term.app
+              `UniformOnFun.mono
+              [(Term.app `uniform_continuous_iff.mp [`hf]) `subset_rfl]))
+            [(calcStep
+              («term_=_»
+               (Term.hole "_")
+               "="
+               (Term.app
+                (Term.proj
+                 (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+                  "𝒱("
+                  `α
+                  ", "
+                  `β
+                  ", "
+                  `𝔖
+                  ", "
+                  (Term.hole "_")
+                  ")")
+                 "."
+                 `comap)
+                [(Term.app
+                  (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                  [`f])]))
+              ":="
+              `UniformOnFun.comap_eq)])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `uniform_continuous_iff)] "]")
+           [])
+          []
+          (calcTactic
+           "calc"
+           (calcStep
+            («term_≤_»
+             (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+              "𝒱("
+              `α
+              ", "
+              `γ
+              ", "
+              `𝔖
+              ", "
+              (Term.hole "_")
+              ")")
+             "≤"
+             (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+              "𝒱("
+              `α
+              ", "
+              `γ
+              ", "
+              `𝔖
+              ", "
+              (Term.app
+               (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap)
+               [`f])
+              ")"))
+            ":="
+            (Term.app `UniformOnFun.mono [(Term.app `uniform_continuous_iff.mp [`hf]) `subset_rfl]))
+           [(calcStep
+             («term_=_»
+              (Term.hole "_")
+              "="
+              (Term.app
+               (Term.proj
+                (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+                 "𝒱("
+                 `α
+                 ", "
+                 `β
+                 ", "
+                 `𝔖
+                 ", "
+                 (Term.hole "_")
+                 ")")
+                "."
+                `comap)
+               [(Term.app
+                 (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+                 [`f])]))
+             ":="
+             `UniformOnFun.comap_eq)])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calcTactic
+       "calc"
+       (calcStep
+        («term_≤_»
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖
+          ", "
+          (Term.hole "_")
+          ")")
+         "≤"
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `γ
+          ", "
+          `𝔖
+          ", "
+          (Term.app (Term.proj («term‹_›» "‹" (Term.app `UniformSpace [`β]) "›") "." `comap) [`f])
+          ")"))
+        ":="
+        (Term.app `UniformOnFun.mono [(Term.app `uniform_continuous_iff.mp [`hf]) `subset_rfl]))
+       [(calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (Term.app
+           (Term.proj
+            (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+             "𝒱("
+             `α
+             ", "
+             `β
+             ", "
+             `𝔖
+             ", "
+             (Term.hole "_")
+             ")")
+            "."
+            `comap)
+           [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))
+         ":="
+         `UniformOnFun.comap_eq)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `UniformOnFun.comap_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.hole "_")
+       "="
+       (Term.app
+        (Term.proj
+         (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+          "𝒱("
+          `α
+          ", "
+          `β
+          ", "
+          `𝔖
+          ", "
+          (Term.hole "_")
+          ")")
+         "."
+         `comap)
+        [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+         "𝒱("
+         `α
+         ", "
+         `β
+         ", "
+         `𝔖
+         ", "
+         (Term.hole "_")
+         ")")
+        "."
+        `comap)
+       [(Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 90 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
+      (Term.cdot "·")
+[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 90, (some 90, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.paren "(" («term_∘_» (Term.cdot "·") "∘" (Term.cdot "·")) ")") [`f])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+        "𝒱("
+        `α
+        ", "
+        `β
+        ", "
+        `𝔖
+        ", "
+        (Term.hole "_")
+        ")")
+       "."
+       `comap)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»
+       "𝒱("
+       `α
+       ", "
+       `β
+       ", "
+       `𝔖
+       ", "
+       (Term.hole "_")
+       ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.«term𝒱(_,_,_,_)»', expected 'UniformOnFun.Topology.UniformSpace.UniformConvergenceTopology.term𝒱(_,_,_,_)._@.Topology.UniformSpace.UniformConvergenceTopology._hyg.2139'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+      Post-composition by a uniformly continuous function is uniformly continuous for the
+      uniform structures of `𝔖`-convergence.
+      
+      More precisely, if `f : γ → β` is uniformly continuous, then
+      `(λ g, f ∘ g) : (α →ᵤ[𝔖] γ) → (α →ᵤ[𝔖] β)` is uniformly continuous. -/
+    protected
+  theorem
+    postcomp_uniform_continuous
+    [ UniformSpace γ ] { f : γ → β } ( hf : UniformContinuous f )
+      : UniformContinuous ofFun 𝔖 ∘ ( · ∘ · ) f ∘ toFun 𝔖
+    :=
+      by
+        rw [ uniform_continuous_iff ]
+          calc
+            𝒱( α , γ , 𝔖 , _ ) ≤ 𝒱( α , γ , 𝔖 , ‹ UniformSpace β › . comap f )
+              :=
+              UniformOnFun.mono uniform_continuous_iff.mp hf subset_rfl
+            _ = 𝒱( α , β , 𝔖 , _ ) . comap ( · ∘ · ) f := UniformOnFun.comap_eq
 #align uniform_on_fun.postcomp_uniform_continuous UniformOnFun.postcomp_uniform_continuous
 
 /-- Post-composition by a uniform inducing is a uniform inducing for the

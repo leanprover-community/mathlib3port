@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.inner
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,10 +52,143 @@ protected theorem im {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) :
   IsROrC.continuous_im.compAeStronglyMeasurable hf
 #align measure_theory.ae_strongly_measurable.im MeasureTheory.AeStronglyMeasurable.im
 
-protected theorem inner {m : MeasurableSpace α} {μ : Measure α} {f g : α → E}
-    (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
-    AeStronglyMeasurable (fun x => ⟪f x, g x⟫) μ :=
-  continuous_inner.compAeStronglyMeasurable (hf.prod_mk hg)
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [(Command.protected "protected")] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `inner [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`m] [":" (Term.app `MeasurableSpace [`α])] "}")
+        (Term.implicitBinder "{" [`μ] [":" (Term.app `Measure [`α])] "}")
+        (Term.implicitBinder "{" [`f `g] [":" (Term.arrow `α "→" `E)] "}")
+        (Term.explicitBinder "(" [`hf] [":" (Term.app `AeStronglyMeasurable [`f `μ])] [] ")")
+        (Term.explicitBinder "(" [`hg] [":" (Term.app `AeStronglyMeasurable [`g `μ])] [] ")")]
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `AeStronglyMeasurable
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`x]
+            []
+            "=>"
+            (MeasureTheory.AeStronglyMeasurable.MeasureTheory.Function.StronglyMeasurable.Inner.«term⟪_,_⟫»
+             "⟪"
+             (Term.app `f [`x])
+             ", "
+             (Term.app `g [`x])
+             "⟫")))
+          `μ])))
+      (Command.declValSimple
+       ":="
+       (Term.app
+        (Term.proj `continuous_inner "." `compAeStronglyMeasurable)
+        [(Term.app (Term.proj `hf "." `prod_mk) [`hg])])
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj `continuous_inner "." `compAeStronglyMeasurable)
+       [(Term.app (Term.proj `hf "." `prod_mk) [`hg])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj `hf "." `prod_mk) [`hg])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hg
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `hf "." `prod_mk)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hf
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `hf "." `prod_mk) [`hg])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `continuous_inner "." `compAeStronglyMeasurable)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `continuous_inner
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `AeStronglyMeasurable
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`x]
+          []
+          "=>"
+          (MeasureTheory.AeStronglyMeasurable.MeasureTheory.Function.StronglyMeasurable.Inner.«term⟪_,_⟫»
+           "⟪"
+           (Term.app `f [`x])
+           ", "
+           (Term.app `g [`x])
+           "⟫")))
+        `μ])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `μ
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`x]
+        []
+        "=>"
+        (MeasureTheory.AeStronglyMeasurable.MeasureTheory.Function.StronglyMeasurable.Inner.«term⟪_,_⟫»
+         "⟪"
+         (Term.app `f [`x])
+         ", "
+         (Term.app `g [`x])
+         "⟫")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (MeasureTheory.AeStronglyMeasurable.MeasureTheory.Function.StronglyMeasurable.Inner.«term⟪_,_⟫»
+       "⟪"
+       (Term.app `f [`x])
+       ", "
+       (Term.app `g [`x])
+       "⟫")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'MeasureTheory.AeStronglyMeasurable.MeasureTheory.Function.StronglyMeasurable.Inner.«term⟪_,_⟫»', expected 'MeasureTheory.AeStronglyMeasurable.MeasureTheory.Function.StronglyMeasurable.Inner.term⟪_,_⟫._@.MeasureTheory.Function.StronglyMeasurable.Inner._hyg.9'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+protected
+  theorem
+    inner
+    { m : MeasurableSpace α }
+        { μ : Measure α }
+        { f g : α → E }
+        ( hf : AeStronglyMeasurable f μ )
+        ( hg : AeStronglyMeasurable g μ )
+      : AeStronglyMeasurable fun x => ⟪ f x , g x ⟫ μ
+    := continuous_inner . compAeStronglyMeasurable hf . prod_mk hg
 #align measure_theory.ae_strongly_measurable.inner MeasureTheory.AeStronglyMeasurable.inner
 
 end AeStronglyMeasurable

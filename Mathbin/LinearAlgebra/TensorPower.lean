@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_power
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,8 +66,65 @@ instance ghasOne : GradedMonoid.GhasOne fun i => (⨂[R]^i) M where one := tprod
 -- mathport name: exprₜ1
 local notation "ₜ1" => @GradedMonoid.GhasOne.one ℕ (fun i => (⨂[R]^i) M) _ _
 
-theorem ghas_one_def : ₜ1 = tprod R Fin.elim0 :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `ghas_one_def [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (TensorPower.LinearAlgebra.TensorPower.termₜ1 "ₜ1")
+         "="
+         (Term.app `tprod [`R `Fin.elim0]))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (TensorPower.LinearAlgebra.TensorPower.termₜ1 "ₜ1")
+       "="
+       (Term.app `tprod [`R `Fin.elim0]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `tprod [`R `Fin.elim0])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Fin.elim0
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `R
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `tprod
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (TensorPower.LinearAlgebra.TensorPower.termₜ1 "ₜ1")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TensorPower.LinearAlgebra.TensorPower.termₜ1', expected 'TensorPower.LinearAlgebra.TensorPower.termₜ1._@.LinearAlgebra.TensorPower._hyg.652'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem ghas_one_def : ₜ1 = tprod R Fin.elim0 := rfl
 #align tensor_power.ghas_one_def TensorPower.ghas_one_def
 
 /-- A variant of `pi_tensor_prod.tmul_equiv` with the result indexed by `fin (n + m)`. -/
@@ -82,8 +139,90 @@ instance ghasMul : GradedMonoid.GhasMul fun i => (⨂[R]^i) M where mul i j a b 
 -- mathport name: «expr ₜ* »
 local infixl:70 " ₜ* " => @GradedMonoid.GhasMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _
 
-theorem ghas_mul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ* b = mulEquiv (a ⊗ₜ b) :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `ghas_mul_def [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`i `j] [] "}")
+        (Term.explicitBinder
+         "("
+         [`a]
+         [":"
+          (Term.app (TensorProduct.LinearAlgebra.TensorPower.tensor_power "⨂[" `R "]^" `i) [`M])]
+         []
+         ")")
+        (Term.explicitBinder
+         "("
+         [`b]
+         [":"
+          (Term.app (TensorProduct.LinearAlgebra.TensorPower.tensor_power "⨂[" `R "]^" `j) [`M])]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (TensorPower.LinearAlgebra.TensorPower.«term_ₜ*_» `a " ₜ* " `b)
+         "="
+         (Term.app
+          `mulEquiv
+          [(TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_» `a " ⊗ₜ " `b)]))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (TensorPower.LinearAlgebra.TensorPower.«term_ₜ*_» `a " ₜ* " `b)
+       "="
+       (Term.app `mulEquiv [(TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_» `a " ⊗ₜ " `b)]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `mulEquiv [(TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_» `a " ⊗ₜ " `b)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_» `a " ⊗ₜ " `b)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `b
+[PrettyPrinter.parenthesize] ...precedences are 101 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 100, term))
+      `a
+[PrettyPrinter.parenthesize] ...precedences are 100 >? 1024, (none,
+     [anonymous]) <=? (some 100, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 100, (some 101,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (TensorProduct.LinearAlgebra.TensorProduct.«term_⊗ₜ_» `a " ⊗ₜ " `b)
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mulEquiv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (TensorPower.LinearAlgebra.TensorPower.«term_ₜ*_» `a " ₜ* " `b)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TensorPower.LinearAlgebra.TensorPower.«term_ₜ*_»', expected 'TensorPower.LinearAlgebra.TensorPower.term_ₜ*_._@.LinearAlgebra.TensorPower._hyg.689'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  ghas_mul_def
+  { i j } ( a : ⨂[ R ]^ i M ) ( b : ⨂[ R ]^ j M ) : a ₜ* b = mulEquiv a ⊗ₜ b
+  := rfl
 #align tensor_power.ghas_mul_def TensorPower.ghas_mul_def
 
 end TensorPower

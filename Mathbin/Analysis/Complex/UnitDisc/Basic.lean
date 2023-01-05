@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.unit_disc.basic
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,19 +213,236 @@ theorem im_neg (z : 𝔻) : (-z).im = -z.im :=
   rfl
 #align complex.unit_disc.im_neg Complex.UnitDisc.im_neg
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "Conjugate point of the unit disc. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `conj [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`z]
+         [":" (UnitDisc.Analysis.Complex.UnitDisc.Basic.term𝔻 "𝔻")]
+         []
+         ")")]
+       [(Term.typeSpec ":" (UnitDisc.Analysis.Complex.UnitDisc.Basic.term𝔻 "𝔻"))])
+      (Command.declValSimple
+       ":="
+       («term_<|_»
+        (Term.app
+         `mk
+         [(Term.app (Analysis.Complex.UnitDisc.Basic.termconj' "conj'") [(coeNotation "↑" `z)])])
+        "<|"
+        (Term.subst
+         (Term.proj (Term.app `abs_conj [`z]) "." `symm)
+         "▸"
+         [(Term.proj `z "." `abs_lt_one)]))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.app
+        `mk
+        [(Term.app (Analysis.Complex.UnitDisc.Basic.termconj' "conj'") [(coeNotation "↑" `z)])])
+       "<|"
+       (Term.subst
+        (Term.proj (Term.app `abs_conj [`z]) "." `symm)
+        "▸"
+        [(Term.proj `z "." `abs_lt_one)]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.subst
+       (Term.proj (Term.app `abs_conj [`z]) "." `symm)
+       "▸"
+       [(Term.proj `z "." `abs_lt_one)])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj `z "." `abs_lt_one)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 75, term))
+      (Term.proj (Term.app `abs_conj [`z]) "." `symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `abs_conj [`z])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `abs_conj
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `abs_conj [`z]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 75, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 75, (some 75, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.app
+       `mk
+       [(Term.app (Analysis.Complex.UnitDisc.Basic.termconj' "conj'") [(coeNotation "↑" `z)])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Analysis.Complex.UnitDisc.Basic.termconj' "conj'") [(coeNotation "↑" `z)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (coeNotation "↑" `z)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 1024,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Analysis.Complex.UnitDisc.Basic.termconj' "conj'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Analysis.Complex.UnitDisc.Basic.termconj'', expected 'Analysis.Complex.UnitDisc.Basic.termconj'._@.Analysis.Complex.UnitDisc.Basic._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Conjugate point of the unit disc. -/
-def conj (z : 𝔻) : 𝔻 :=
-  mk (conj' ↑z) <| (abs_conj z).symm ▸ z.abs_lt_one
+  def conj ( z : 𝔻 ) : 𝔻 := mk conj' ↑ z <| abs_conj z . symm ▸ z . abs_lt_one
 #align complex.unit_disc.conj Complex.UnitDisc.conj
 
-@[simp, norm_cast]
-theorem coe_conj (z : 𝔻) : (z.conj : ℂ) = conj' ↑z :=
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))
+         ","
+         (Term.attrInstance
+          (Term.attrKind [])
+          (Std.Tactic.NormCast.Attr.norm_cast "norm_cast" [] []))]
+        "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `coe_conj [])
+      (Command.declSig
+       [(Term.explicitBinder
+         "("
+         [`z]
+         [":" (UnitDisc.Analysis.Complex.UnitDisc.Basic.term𝔻 "𝔻")]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.typeAscription "(" (Term.proj `z "." `conj) ":" [(Data.Complex.Basic.termℂ "ℂ")] ")")
+         "="
+         (Term.app (Analysis.Complex.UnitDisc.Basic.termconj' "conj'") [(coeNotation "↑" `z)]))))
+      (Command.declValSimple ":=" `rfl [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.typeAscription "(" (Term.proj `z "." `conj) ":" [(Data.Complex.Basic.termℂ "ℂ")] ")")
+       "="
+       (Term.app (Analysis.Complex.UnitDisc.Basic.termconj' "conj'") [(coeNotation "↑" `z)]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Analysis.Complex.UnitDisc.Basic.termconj' "conj'") [(coeNotation "↑" `z)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (coeNotation "↑" `z)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 1024,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Analysis.Complex.UnitDisc.Basic.termconj' "conj'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Analysis.Complex.UnitDisc.Basic.termconj'', expected 'Analysis.Complex.UnitDisc.Basic.termconj'._@.Analysis.Complex.UnitDisc.Basic._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp , norm_cast ] theorem coe_conj ( z : 𝔻 ) : ( z . conj : ℂ ) = conj' ↑ z := rfl
 #align complex.unit_disc.coe_conj Complex.UnitDisc.coe_conj
 
-@[simp]
-theorem conj_zero : conj 0 = 0 :=
-  coe_injective (map_zero conj')
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `conj_zero [])
+      (Command.declSig
+       []
+       (Term.typeSpec ":" («term_=_» (Term.app `conj [(num "0")]) "=" (num "0"))))
+      (Command.declValSimple
+       ":="
+       (Term.app
+        `coe_injective
+        [(Term.app `map_zero [(Analysis.Complex.UnitDisc.Basic.termconj' "conj'")])])
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `coe_injective
+       [(Term.app `map_zero [(Analysis.Complex.UnitDisc.Basic.termconj' "conj'")])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `map_zero [(Analysis.Complex.UnitDisc.Basic.termconj' "conj'")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Analysis.Complex.UnitDisc.Basic.termconj'', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Analysis.Complex.UnitDisc.Basic.termconj'', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Analysis.Complex.UnitDisc.Basic.termconj' "conj'")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Analysis.Complex.UnitDisc.Basic.termconj'', expected 'Analysis.Complex.UnitDisc.Basic.termconj'._@.Analysis.Complex.UnitDisc.Basic._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ] theorem conj_zero : conj 0 = 0 := coe_injective map_zero conj'
 #align complex.unit_disc.conj_zero Complex.UnitDisc.conj_zero
 
 @[simp]

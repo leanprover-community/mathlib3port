@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Tim Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.determinant
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,9 +73,180 @@ theorem det_apply (M : Matrix n n R) : M.det = ∑ σ : Perm n, σ.sign • ∏ 
   MultilinearMap.alternatization_apply _ M
 #align matrix.det_apply Matrix.det_apply
 
--- This is what the old definition was. We use it to avoid having to change the old proofs below
-theorem det_apply' (M : Matrix n n R) : M.det = ∑ σ : Perm n, ε σ * ∏ i, M (σ i) i := by
-  simp [det_apply, Units.smul_def]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `det_apply' [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`M] [":" (Term.app `Matrix [`n `n `R])] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.proj `M "." `det)
+         "="
+         (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+          "∑"
+          (Std.ExtendedBinder.extBinders
+           (Std.ExtendedBinder.extBinder (Lean.binderIdent `σ) [(group ":" (Term.app `Perm [`n]))]))
+          ", "
+          («term_*_»
+           (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+           "*"
+           (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+            "∏"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+            ", "
+            (Term.app `M [(Term.app `σ [`i]) `i])))))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.simp
+            "simp"
+            []
+            []
+            []
+            ["["
+             [(Tactic.simpLemma [] [] `det_apply) "," (Tactic.simpLemma [] [] `Units.smul_def)]
+             "]"]
+            [])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.simp
+           "simp"
+           []
+           []
+           []
+           ["["
+            [(Tactic.simpLemma [] [] `det_apply) "," (Tactic.simpLemma [] [] `Units.smul_def)]
+            "]"]
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       []
+       ["[" [(Tactic.simpLemma [] [] `det_apply) "," (Tactic.simpLemma [] [] `Units.smul_def)] "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Units.smul_def
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `det_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.proj `M "." `det)
+       "="
+       (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+        "∑"
+        (Std.ExtendedBinder.extBinders
+         (Std.ExtendedBinder.extBinder (Lean.binderIdent `σ) [(group ":" (Term.app `Perm [`n]))]))
+        ", "
+        («term_*_»
+         (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+         "*"
+         (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+          "∏"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+          ", "
+          (Term.app `M [(Term.app `σ [`i]) `i])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+       "∑"
+       (Std.ExtendedBinder.extBinders
+        (Std.ExtendedBinder.extBinder (Lean.binderIdent `σ) [(group ":" (Term.app `Perm [`n]))]))
+       ", "
+       («term_*_»
+        (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+        "*"
+        (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+         "∏"
+         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+         ", "
+         (Term.app `M [(Term.app `σ [`i]) `i]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_*_»
+       (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+       "*"
+       (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+        "∏"
+        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+        ", "
+        (Term.app `M [(Term.app `σ [`i]) `i])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+       "∏"
+       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+       ", "
+       (Term.app `M [(Term.app `σ [`i]) `i]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `M [(Term.app `σ [`i]) `i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `σ [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `σ [`i]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `M
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
+      (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Matrix.LinearAlgebra.Matrix.Determinant.termε_', expected 'Matrix.LinearAlgebra.Matrix.Determinant.termε_._@.LinearAlgebra.Matrix.Determinant._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  det_apply'
+  ( M : Matrix n n R ) : M . det = ∑ σ : Perm n , ε σ * ∏ i , M σ i i
+  := by simp [ det_apply , Units.smul_def ]
 #align matrix.det_apply' Matrix.det_apply'
 
 @[simp]
@@ -138,63 +309,3944 @@ theorem det_eq_elem_of_card_eq_one {A : Matrix n n R} (h : Fintype.card n = 1) (
   det_eq_elem_of_subsingleton _ _
 #align matrix.det_eq_elem_of_card_eq_one Matrix.det_eq_elem_of_card_eq_one
 
-theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
-    (∑ σ : Perm n, ε σ * ∏ x, M (σ x) (p x) * N (p x) x) = 0 :=
-  by
-  obtain ⟨i, j, hpij, hij⟩ : ∃ i j, p i = p j ∧ i ≠ j :=
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `det_mul_aux [])
+      (Command.declSig
+       [(Term.implicitBinder "{" [`M `N] [":" (Term.app `Matrix [`n `n `R])] "}")
+        (Term.implicitBinder "{" [`p] [":" (Term.arrow `n "→" `n)] "}")
+        (Term.explicitBinder "(" [`H] [":" («term¬_» "¬" (Term.app `Bijective [`p]))] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+          "∑"
+          (Std.ExtendedBinder.extBinders
+           (Std.ExtendedBinder.extBinder (Lean.binderIdent `σ) [(group ":" (Term.app `Perm [`n]))]))
+          ", "
+          («term_*_»
+           (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+           "*"
+           (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+            "∏"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+            ", "
+            («term_*_»
+             (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+             "*"
+             (Term.app `N [(Term.app `p [`x]) `x])))))
+         "="
+         (num "0"))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Std.Tactic.obtain
+            "obtain"
+            [(Std.Tactic.RCases.rcasesPatMed
+              [(Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `i)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `j)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hpij)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hij)])
+                  [])]
+                "⟩")])]
+            [":"
+             («term∃_,_»
+              "∃"
+              (Lean.explicitBinders
+               (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i) (Lean.binderIdent `j)] []))
+              ","
+              («term_∧_»
+               («term_=_» (Term.app `p [`i]) "=" (Term.app `p [`j]))
+               "∧"
+               («term_≠_» `i "≠" `j)))]
+            [":="
+             [(Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule
+                      [(patternIgnore (token.«← » "←"))]
+                      `Finite.injective_iff_bijective)
+                     ","
+                     (Tactic.rwRule [] `injective)]
+                    "]")
+                   [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+                  []
+                  (Mathlib.Tactic.PushNeg.tacticPush_neg__
+                   "push_neg"
+                   [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+                  []
+                  (Tactic.exact "exact" `H)])))]])
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app
+             `sum_involution
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`σ (Term.hole "_")]
+                []
+                "=>"
+                («term_*_» `σ "*" (Term.app `swap [`i `j]))))
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`σ (Term.hole "_")]
+                []
+                "=>"
+                (Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented
+                   [(Tactic.tacticHave_
+                     "have"
+                     (Term.haveDecl
+                      (Term.haveIdDecl
+                       []
+                       [(Term.typeSpec
+                         ":"
+                         («term_=_»
+                          (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                           "∏"
+                           (Std.ExtendedBinder.extBinders
+                            (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                           ", "
+                           (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+                          "="
+                          (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                           "∏"
+                           (Std.ExtendedBinder.extBinders
+                            (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                           ", "
+                           (Term.app
+                            `M
+                            [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x])
+                             (Term.app `p [`x])]))))]
+                       ":="
+                       (Term.app
+                        `Fintype.prod_equiv
+                        [(Term.app `swap [`i `j])
+                         (Term.hole "_")
+                         (Term.hole "_")
+                         (Term.byTactic
+                          "by"
+                          (Tactic.tacticSeq
+                           (Tactic.tacticSeq1Indented
+                            [(Tactic.simp
+                              "simp"
+                              []
+                              []
+                              []
+                              ["["
+                               [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))]
+                               "]"]
+                              [])])))]))))
+                    []
+                    (Tactic.simp
+                     "simp"
+                     []
+                     []
+                     []
+                     ["["
+                      [(Tactic.simpLemma [] [] `this)
+                       ","
+                       (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+                       ","
+                       (Tactic.simpLemma [] [] `prod_mul_distrib)]
+                      "]"]
+                     [])])))))
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`σ (Term.hole "_") (Term.hole "_")]
+                []
+                "=>"
+                (Term.app (Term.proj (Term.app `not_congr [`mul_swap_eq_iff]) "." `mpr) [`hij])))
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [(Term.hole "_") (Term.hole "_")]
+                []
+                "=>"
+                (Term.app `mem_univ [(Term.hole "_")])))
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`σ (Term.hole "_")]
+                []
+                "=>"
+                (Term.app `mul_swap_involutive [`i `j `σ])))]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.obtain
+           "obtain"
+           [(Std.Tactic.RCases.rcasesPatMed
+             [(Std.Tactic.RCases.rcasesPat.tuple
+               "⟨"
+               [(Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `i)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `j)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hpij)])
+                 [])
+                ","
+                (Std.Tactic.RCases.rcasesPatLo
+                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hij)])
+                 [])]
+               "⟩")])]
+           [":"
+            («term∃_,_»
+             "∃"
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i) (Lean.binderIdent `j)] []))
+             ","
+             («term_∧_»
+              («term_=_» (Term.app `p [`i]) "=" (Term.app `p [`j]))
+              "∧"
+              («term_≠_» `i "≠" `j)))]
+           [":="
+            [(Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule
+                     [(patternIgnore (token.«← » "←"))]
+                     `Finite.injective_iff_bijective)
+                    ","
+                    (Tactic.rwRule [] `injective)]
+                   "]")
+                  [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+                 []
+                 (Mathlib.Tactic.PushNeg.tacticPush_neg__
+                  "push_neg"
+                  [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+                 []
+                 (Tactic.exact "exact" `H)])))]])
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app
+            `sum_involution
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`σ (Term.hole "_")]
+               []
+               "=>"
+               («term_*_» `σ "*" (Term.app `swap [`i `j]))))
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`σ (Term.hole "_")]
+               []
+               "=>"
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.tacticHave_
+                    "have"
+                    (Term.haveDecl
+                     (Term.haveIdDecl
+                      []
+                      [(Term.typeSpec
+                        ":"
+                        («term_=_»
+                         (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                          "∏"
+                          (Std.ExtendedBinder.extBinders
+                           (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                          ", "
+                          (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+                         "="
+                         (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                          "∏"
+                          (Std.ExtendedBinder.extBinders
+                           (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                          ", "
+                          (Term.app
+                           `M
+                           [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x])
+                            (Term.app `p [`x])]))))]
+                      ":="
+                      (Term.app
+                       `Fintype.prod_equiv
+                       [(Term.app `swap [`i `j])
+                        (Term.hole "_")
+                        (Term.hole "_")
+                        (Term.byTactic
+                         "by"
+                         (Tactic.tacticSeq
+                          (Tactic.tacticSeq1Indented
+                           [(Tactic.simp
+                             "simp"
+                             []
+                             []
+                             []
+                             ["["
+                              [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))]
+                              "]"]
+                             [])])))]))))
+                   []
+                   (Tactic.simp
+                    "simp"
+                    []
+                    []
+                    []
+                    ["["
+                     [(Tactic.simpLemma [] [] `this)
+                      ","
+                      (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+                      ","
+                      (Tactic.simpLemma [] [] `prod_mul_distrib)]
+                     "]"]
+                    [])])))))
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`σ (Term.hole "_") (Term.hole "_")]
+               []
+               "=>"
+               (Term.app (Term.proj (Term.app `not_congr [`mul_swap_eq_iff]) "." `mpr) [`hij])))
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [(Term.hole "_") (Term.hole "_")]
+               []
+               "=>"
+               (Term.app `mem_univ [(Term.hole "_")])))
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`σ (Term.hole "_")]
+               []
+               "=>"
+               (Term.app `mul_swap_involutive [`i `j `σ])))]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `sum_involution
+        [(Term.fun
+          "fun"
+          (Term.basicFun [`σ (Term.hole "_")] [] "=>" («term_*_» `σ "*" (Term.app `swap [`i `j]))))
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`σ (Term.hole "_")]
+           []
+           "=>"
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.tacticHave_
+                "have"
+                (Term.haveDecl
+                 (Term.haveIdDecl
+                  []
+                  [(Term.typeSpec
+                    ":"
+                    («term_=_»
+                     (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                      "∏"
+                      (Std.ExtendedBinder.extBinders
+                       (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                      ", "
+                      (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+                     "="
+                     (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                      "∏"
+                      (Std.ExtendedBinder.extBinders
+                       (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                      ", "
+                      (Term.app
+                       `M
+                       [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x])
+                        (Term.app `p [`x])]))))]
+                  ":="
+                  (Term.app
+                   `Fintype.prod_equiv
+                   [(Term.app `swap [`i `j])
+                    (Term.hole "_")
+                    (Term.hole "_")
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.simp
+                         "simp"
+                         []
+                         []
+                         []
+                         ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+                         [])])))]))))
+               []
+               (Tactic.simp
+                "simp"
+                []
+                []
+                []
+                ["["
+                 [(Tactic.simpLemma [] [] `this)
+                  ","
+                  (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+                  ","
+                  (Tactic.simpLemma [] [] `prod_mul_distrib)]
+                 "]"]
+                [])])))))
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`σ (Term.hole "_") (Term.hole "_")]
+           []
+           "=>"
+           (Term.app (Term.proj (Term.app `not_congr [`mul_swap_eq_iff]) "." `mpr) [`hij])))
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [(Term.hole "_") (Term.hole "_")]
+           []
+           "=>"
+           (Term.app `mem_univ [(Term.hole "_")])))
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`σ (Term.hole "_")]
+           []
+           "=>"
+           (Term.app `mul_swap_involutive [`i `j `σ])))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `sum_involution
+       [(Term.fun
+         "fun"
+         (Term.basicFun [`σ (Term.hole "_")] [] "=>" («term_*_» `σ "*" (Term.app `swap [`i `j]))))
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`σ (Term.hole "_")]
+          []
+          "=>"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.tacticHave_
+               "have"
+               (Term.haveDecl
+                (Term.haveIdDecl
+                 []
+                 [(Term.typeSpec
+                   ":"
+                   («term_=_»
+                    (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                     "∏"
+                     (Std.ExtendedBinder.extBinders
+                      (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                     ", "
+                     (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+                    "="
+                    (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                     "∏"
+                     (Std.ExtendedBinder.extBinders
+                      (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                     ", "
+                     (Term.app
+                      `M
+                      [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x])
+                       (Term.app `p [`x])]))))]
+                 ":="
+                 (Term.app
+                  `Fintype.prod_equiv
+                  [(Term.app `swap [`i `j])
+                   (Term.hole "_")
+                   (Term.hole "_")
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.simp
+                        "simp"
+                        []
+                        []
+                        []
+                        ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+                        [])])))]))))
+              []
+              (Tactic.simp
+               "simp"
+               []
+               []
+               []
+               ["["
+                [(Tactic.simpLemma [] [] `this)
+                 ","
+                 (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+                 ","
+                 (Tactic.simpLemma [] [] `prod_mul_distrib)]
+                "]"]
+               [])])))))
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`σ (Term.hole "_") (Term.hole "_")]
+          []
+          "=>"
+          (Term.app (Term.proj (Term.app `not_congr [`mul_swap_eq_iff]) "." `mpr) [`hij])))
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [(Term.hole "_") (Term.hole "_")]
+          []
+          "=>"
+          (Term.app `mem_univ [(Term.hole "_")])))
+        (Term.fun
+         "fun"
+         (Term.basicFun [`σ (Term.hole "_")] [] "=>" (Term.app `mul_swap_involutive [`i `j `σ])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun [`σ (Term.hole "_")] [] "=>" (Term.app `mul_swap_involutive [`i `j `σ])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `mul_swap_involutive [`i `j `σ])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mul_swap_involutive
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [(Term.hole "_") (Term.hole "_")]
+        []
+        "=>"
+        (Term.app `mem_univ [(Term.hole "_")])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `mem_univ [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `mem_univ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [(Term.hole "_") (Term.hole "_")]
+       []
+       "=>"
+       (Term.app `mem_univ [(Term.hole "_")])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`σ (Term.hole "_") (Term.hole "_")]
+        []
+        "=>"
+        (Term.app (Term.proj (Term.app `not_congr [`mul_swap_eq_iff]) "." `mpr) [`hij])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app (Term.proj (Term.app `not_congr [`mul_swap_eq_iff]) "." `mpr) [`hij])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hij
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app `not_congr [`mul_swap_eq_iff]) "." `mpr)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `not_congr [`mul_swap_eq_iff])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mul_swap_eq_iff
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `not_congr
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `not_congr [`mul_swap_eq_iff])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`σ (Term.hole "_") (Term.hole "_")]
+       []
+       "=>"
+       (Term.app
+        (Term.proj (Term.paren "(" (Term.app `not_congr [`mul_swap_eq_iff]) ")") "." `mpr)
+        [`hij])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`σ (Term.hole "_")]
+        []
+        "=>"
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec
+                 ":"
+                 («term_=_»
+                  (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                   "∏"
+                   (Std.ExtendedBinder.extBinders
+                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                   ", "
+                   (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+                  "="
+                  (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                   "∏"
+                   (Std.ExtendedBinder.extBinders
+                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                   ", "
+                   (Term.app
+                    `M
+                    [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x])
+                     (Term.app `p [`x])]))))]
+               ":="
+               (Term.app
+                `Fintype.prod_equiv
+                [(Term.app `swap [`i `j])
+                 (Term.hole "_")
+                 (Term.hole "_")
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.simp
+                      "simp"
+                      []
+                      []
+                      []
+                      ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+                      [])])))]))))
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             []
+             ["["
+              [(Tactic.simpLemma [] [] `this)
+               ","
+               (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+               ","
+               (Tactic.simpLemma [] [] `prod_mul_distrib)]
+              "]"]
+             [])])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                 "∏"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 ", "
+                 (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+                "="
+                (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                 "∏"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 ", "
+                 (Term.app
+                  `M
+                  [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x])
+                   (Term.app `p [`x])]))))]
+             ":="
+             (Term.app
+              `Fintype.prod_equiv
+              [(Term.app `swap [`i `j])
+               (Term.hole "_")
+               (Term.hole "_")
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.simp
+                    "simp"
+                    []
+                    []
+                    []
+                    ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+                    [])])))]))))
+          []
+          (Tactic.simp
+           "simp"
+           []
+           []
+           []
+           ["["
+            [(Tactic.simpLemma [] [] `this)
+             ","
+             (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+             ","
+             (Tactic.simpLemma [] [] `prod_mul_distrib)]
+            "]"]
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       []
+       ["["
+        [(Tactic.simpLemma [] [] `this)
+         ","
+         (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+         ","
+         (Tactic.simpLemma [] [] `prod_mul_distrib)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `prod_mul_distrib
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `sign_swap [`hij])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hij
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `sign_swap
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticHave_
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         []
+         [(Term.typeSpec
+           ":"
+           («term_=_»
+            (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+             "∏"
+             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+             ", "
+             (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+            "="
+            (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+             "∏"
+             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+             ", "
+             (Term.app
+              `M
+              [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x]) (Term.app `p [`x])]))))]
+         ":="
+         (Term.app
+          `Fintype.prod_equiv
+          [(Term.app `swap [`i `j])
+           (Term.hole "_")
+           (Term.hole "_")
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.simp
+                "simp"
+                []
+                []
+                []
+                ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+                [])])))]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Fintype.prod_equiv
+       [(Term.app `swap [`i `j])
+        (Term.hole "_")
+        (Term.hole "_")
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.simp
+             "simp"
+             []
+             []
+             []
+             ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+             [])])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.simp
+           "simp"
+           []
+           []
+           []
+           ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       []
+       ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `apply_swap_eq_self [`hpij])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hpij
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `apply_swap_eq_self
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0,
+     tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(Tactic.simp
+          "simp"
+          []
+          []
+          []
+          ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+          [])])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.app `swap [`i `j])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `swap
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `swap [`i `j]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Fintype.prod_equiv
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+        "∏"
+        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+        ", "
+        (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+       "="
+       (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+        "∏"
+        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+        ", "
+        (Term.app
+         `M
+         [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x]) (Term.app `p [`x])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+       "∏"
+       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+       ", "
+       (Term.app
+        `M
+        [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x]) (Term.app `p [`x])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `M [(Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x]) (Term.app `p [`x])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `p [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `p [`x]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app («term_*_» `σ "*" (Term.app `swap [`i `j])) [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      («term_*_» `σ "*" (Term.app `swap [`i `j]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `swap [`i `j])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `swap
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 70, (some 71, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_*_» `σ "*" (Term.app `swap [`i `j]))
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.paren "(" («term_*_» `σ "*" (Term.app `swap [`i `j])) ")") [`x])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `M
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+       "∏"
+       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+       ", "
+       (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `p [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `p [`x]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `σ [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `σ [`x]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `M
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+      "∏"
+      (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+      ", "
+      (Term.app
+       `M
+       [(Term.paren "(" (Term.app `σ [`x]) ")") (Term.paren "(" (Term.app `p [`x]) ")")]))
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`σ (Term.hole "_")]
+       []
+       "=>"
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              []
+              [(Term.typeSpec
+                ":"
+                («term_=_»
+                 (Term.paren
+                  "("
+                  (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                   "∏"
+                   (Std.ExtendedBinder.extBinders
+                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                   ", "
+                   (Term.app
+                    `M
+                    [(Term.paren "(" (Term.app `σ [`x]) ")")
+                     (Term.paren "(" (Term.app `p [`x]) ")")]))
+                  ")")
+                 "="
+                 (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                  "∏"
+                  (Std.ExtendedBinder.extBinders
+                   (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                  ", "
+                  (Term.app
+                   `M
+                   [(Term.paren
+                     "("
+                     (Term.app
+                      (Term.paren "(" («term_*_» `σ "*" (Term.app `swap [`i `j])) ")")
+                      [`x])
+                     ")")
+                    (Term.paren "(" (Term.app `p [`x]) ")")]))))]
+              ":="
+              (Term.app
+               `Fintype.prod_equiv
+               [(Term.paren "(" (Term.app `swap [`i `j]) ")")
+                (Term.hole "_")
+                (Term.hole "_")
+                (Term.paren
+                 "("
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.simp
+                      "simp"
+                      []
+                      []
+                      []
+                      ["[" [(Tactic.simpLemma [] [] (Term.app `apply_swap_eq_self [`hpij]))] "]"]
+                      [])])))
+                 ")")]))))
+           []
+           (Tactic.simp
+            "simp"
+            []
+            []
+            []
+            ["["
+             [(Tactic.simpLemma [] [] `this)
+              ","
+              (Tactic.simpLemma [] [] (Term.app `sign_swap [`hij]))
+              ","
+              (Tactic.simpLemma [] [] `prod_mul_distrib)]
+             "]"]
+            [])])))))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun [`σ (Term.hole "_")] [] "=>" («term_*_» `σ "*" (Term.app `swap [`i `j]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_*_» `σ "*" (Term.app `swap [`i `j]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `swap [`i `j])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `swap
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun [`σ (Term.hole "_")] [] "=>" («term_*_» `σ "*" (Term.app `swap [`i `j]))))
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `sum_involution
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.Tactic.obtain
+       "obtain"
+       [(Std.Tactic.RCases.rcasesPatMed
+         [(Std.Tactic.RCases.rcasesPat.tuple
+           "⟨"
+           [(Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `i)])
+             [])
+            ","
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `j)])
+             [])
+            ","
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hpij)])
+             [])
+            ","
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hij)])
+             [])]
+           "⟩")])]
+       [":"
+        («term∃_,_»
+         "∃"
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i) (Lean.binderIdent `j)] []))
+         ","
+         («term_∧_»
+          («term_=_» (Term.app `p [`i]) "=" (Term.app `p [`j]))
+          "∧"
+          («term_≠_» `i "≠" `j)))]
+       [":="
+        [(Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Finite.injective_iff_bijective)
+                ","
+                (Tactic.rwRule [] `injective)]
+               "]")
+              [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+             []
+             (Mathlib.Tactic.PushNeg.tacticPush_neg__
+              "push_neg"
+              [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+             []
+             (Tactic.exact "exact" `H)])))]])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Finite.injective_iff_bijective)
+             ","
+             (Tactic.rwRule [] `injective)]
+            "]")
+           [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+          []
+          (Mathlib.Tactic.PushNeg.tacticPush_neg__
+           "push_neg"
+           [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+          []
+          (Tactic.exact "exact" `H)])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact "exact" `H)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `H
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.PushNeg.tacticPush_neg__
+       "push_neg"
+       [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `H
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `Finite.injective_iff_bijective)
+         ","
+         (Tactic.rwRule [] `injective)]
+        "]")
+       [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `H
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `injective
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Finite.injective_iff_bijective
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term∃_,_»
+       "∃"
+       (Lean.explicitBinders
+        (Lean.unbracketedExplicitBinders [(Lean.binderIdent `i) (Lean.binderIdent `j)] []))
+       ","
+       («term_∧_» («term_=_» (Term.app `p [`i]) "=" (Term.app `p [`j])) "∧" («term_≠_» `i "≠" `j)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∧_» («term_=_» (Term.app `p [`i]) "=" (Term.app `p [`j])) "∧" («term_≠_» `i "≠" `j))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_≠_» `i "≠" `j)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 35 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
+      («term_=_» (Term.app `p [`i]) "=" (Term.app `p [`j]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `p [`j])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app `p [`i])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 36 >? 50, (some 51, term) <=? (some 35, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 35, (some 35, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+        "∑"
+        (Std.ExtendedBinder.extBinders
+         (Std.ExtendedBinder.extBinder (Lean.binderIdent `σ) [(group ":" (Term.app `Perm [`n]))]))
+        ", "
+        («term_*_»
+         (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+         "*"
+         (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+          "∏"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+          ", "
+          («term_*_»
+           (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+           "*"
+           (Term.app `N [(Term.app `p [`x]) `x])))))
+       "="
+       (num "0"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+       "∑"
+       (Std.ExtendedBinder.extBinders
+        (Std.ExtendedBinder.extBinder (Lean.binderIdent `σ) [(group ":" (Term.app `Perm [`n]))]))
+       ", "
+       («term_*_»
+        (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+        "*"
+        (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+         "∏"
+         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+         ", "
+         («term_*_»
+          (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+          "*"
+          (Term.app `N [(Term.app `p [`x]) `x])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_*_»
+       (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+       "*"
+       (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+        "∏"
+        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+        ", "
+        («term_*_»
+         (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+         "*"
+         (Term.app `N [(Term.app `p [`x]) `x]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+       "∏"
+       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+       ", "
+       («term_*_»
+        (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+        "*"
+        (Term.app `N [(Term.app `p [`x]) `x])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_*_»
+       (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+       "*"
+       (Term.app `N [(Term.app `p [`x]) `x]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `N [(Term.app `p [`x]) `x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `p [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `p [`x]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `N
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
+      (Term.app `M [(Term.app `σ [`x]) (Term.app `p [`x])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `p [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `p
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `p [`x]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `σ [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `σ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `σ [`x]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `M
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
+      (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Matrix.LinearAlgebra.Matrix.Determinant.termε_', expected 'Matrix.LinearAlgebra.Matrix.Determinant.termε_._@.LinearAlgebra.Matrix.Determinant._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  det_mul_aux
+  { M N : Matrix n n R } { p : n → n } ( H : ¬ Bijective p )
+    : ∑ σ : Perm n , ε σ * ∏ x , M σ x p x * N p x x = 0
+  :=
     by
-    rw [← Finite.injective_iff_bijective, injective] at H
-    push_neg  at H
-    exact H
-  exact
-    sum_involution (fun σ _ => σ * swap i j)
-      (fun σ _ =>
-        by
-        have : (∏ x, M (σ x) (p x)) = ∏ x, M ((σ * swap i j) x) (p x) :=
-          Fintype.prod_equiv (swap i j) _ _ (by simp [apply_swap_eq_self hpij])
-        simp [this, sign_swap hij, prod_mul_distrib])
-      (fun σ _ _ => (not_congr mul_swap_eq_iff).mpr hij) (fun _ _ => mem_univ _) fun σ _ =>
-      mul_swap_involutive i j σ
+      obtain
+          ⟨ i , j , hpij , hij ⟩
+          : ∃ i j , p i = p j ∧ i ≠ j
+          := by rw [ ← Finite.injective_iff_bijective , injective ] at H push_neg at H exact H
+        exact
+          sum_involution
+            fun σ _ => σ * swap i j
+              fun
+                σ _
+                  =>
+                  by
+                    have
+                        : ∏ x , M σ x p x = ∏ x , M σ * swap i j x p x
+                          :=
+                          Fintype.prod_equiv swap i j _ _ by simp [ apply_swap_eq_self hpij ]
+                      simp [ this , sign_swap hij , prod_mul_distrib ]
+              fun σ _ _ => not_congr mul_swap_eq_iff . mpr hij
+              fun _ _ => mem_univ _
+              fun σ _ => mul_swap_involutive i j σ
 #align matrix.det_mul_aux Matrix.det_mul_aux
 
-@[simp]
-theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
-  calc
-    det (M ⬝ N) = ∑ p : n → n, ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i := by
-      simp only [det_apply', mul_apply, prod_univ_sum, mul_sum, Fintype.pi_finset_univ] <;>
-        rw [Finset.sum_comm]
-    _ =
-        ∑ p in (@univ (n → n) _).filter Bijective,
-          ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i :=
-      Eq.symm <|
-        sum_subset (filter_subset _ _) fun f _ hbij =>
-          det_mul_aux <| by simpa only [true_and_iff, mem_filter, mem_univ] using hbij
-    _ = ∑ τ : Perm n, ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (τ i) * N (τ i) i :=
-      sum_bij (fun p h => Equiv.ofBijective p (mem_filter.1 h).2) (fun _ _ => mem_univ _)
-        (fun _ _ => rfl) (fun _ _ _ _ h => by injection h) fun b _ =>
-        ⟨b, mem_filter.2 ⟨mem_univ _, b.Bijective⟩, coe_fn_injective rfl⟩
-    _ = ∑ σ : Perm n, ∑ τ : Perm n, (∏ i, N (σ i) i) * ε τ * ∏ j, M (τ j) (σ j) := by
-      simp only [mul_comm, mul_left_comm, prod_mul_distrib, mul_assoc]
-    _ = ∑ σ : Perm n, ∑ τ : Perm n, (∏ i, N (σ i) i) * (ε σ * ε τ) * ∏ i, M (τ i) i :=
-      sum_congr rfl fun σ _ =>
-        Fintype.sum_equiv (Equiv.mulRight σ⁻¹) _ _ fun τ =>
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `det_mul [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`M `N] [":" (Term.app `Matrix [`n `n `R])] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app `det [(Matrix.Data.Matrix.Basic.matrix.mul `M " ⬝ " `N)])
+         "="
+         («term_*_» (Term.app `det [`M]) "*" (Term.app `det [`N])))))
+      (Command.declValSimple
+       ":="
+       (calc
+        "calc"
+        (calcStep
+         («term_=_»
+          (Term.app `det [(Matrix.Data.Matrix.Basic.matrix.mul `M " ⬝ " `N)])
+          "="
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+           "∑"
+           (Std.ExtendedBinder.extBinders
+            (Std.ExtendedBinder.extBinder
+             (Lean.binderIdent `p)
+             [(group ":" (Term.arrow `n "→" `n))]))
+           ", "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `σ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            («term_*_»
+             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+             "*"
+             (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+              "∏"
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+              ", "
+              («term_*_»
+               (Term.app `M [(Term.app `σ [`i]) (Term.app `p [`i])])
+               "*"
+               (Term.app `N [(Term.app `p [`i]) `i])))))))
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.«tactic_<;>_»
+              (Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `det_apply')
+                 ","
+                 (Tactic.simpLemma [] [] `mul_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `prod_univ_sum)
+                 ","
+                 (Tactic.simpLemma [] [] `mul_sum)
+                 ","
+                 (Tactic.simpLemma [] [] `Fintype.pi_finset_univ)]
+                "]"]
+               [])
+              "<;>"
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Finset.sum_comm)] "]")
+               []))]))))
+        [(calcStep
+          («term_=_»
+           (Term.hole "_")
+           "="
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum
+            "∑"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+            " in "
+            (Term.app
+             (Term.proj
+              (Term.app (Term.explicit "@" `univ) [(Term.arrow `n "→" `n) (Term.hole "_")])
+              "."
+              `filter)
+             [`Bijective])
+            ", "
+            (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+             "∑"
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `σ)
+               [(group ":" (Term.app `Perm [`n]))]))
+             ", "
+             («term_*_»
+              (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+              "*"
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+               "∏"
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+               ", "
+               («term_*_»
+                (Term.app `M [(Term.app `σ [`i]) (Term.app `p [`i])])
+                "*"
+                (Term.app `N [(Term.app `p [`i]) `i])))))))
+          ":="
+          («term_<|_»
+           `Eq.symm
+           "<|"
+           (Term.app
+            `sum_subset
+            [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`f (Term.hole "_") `hbij]
+               []
+               "=>"
+               («term_<|_»
+                `det_mul_aux
+                "<|"
+                (Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented
+                   [(Std.Tactic.Simpa.simpa
+                     "simpa"
+                     []
+                     []
+                     (Std.Tactic.Simpa.simpaArgsRest
+                      []
+                      []
+                      ["only"]
+                      [(Tactic.simpArgs
+                        "["
+                        [(Tactic.simpLemma [] [] `true_and_iff)
+                         ","
+                         (Tactic.simpLemma [] [] `mem_filter)
+                         ","
+                         (Tactic.simpLemma [] [] `mem_univ)]
+                        "]")]
+                      ["using" `hbij]))]))))))])))
+         (calcStep
+          («term_=_»
+           (Term.hole "_")
+           "="
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `τ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+             "∑"
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `σ)
+               [(group ":" (Term.app `Perm [`n]))]))
+             ", "
+             («term_*_»
+              (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+              "*"
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+               "∏"
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+               ", "
+               («term_*_»
+                (Term.app `M [(Term.app `σ [`i]) (Term.app `τ [`i])])
+                "*"
+                (Term.app `N [(Term.app `τ [`i]) `i])))))))
+          ":="
+          (Term.app
+           `sum_bij
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`p `h]
+              []
+              "=>"
+              (Term.app
+               `Equiv.ofBijective
+               [`p
+                (Term.proj
+                 (Term.app (Term.proj `mem_filter "." (fieldIdx "1")) [`h])
+                 "."
+                 (fieldIdx "2"))])))
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [(Term.hole "_") (Term.hole "_")]
+              []
+              "=>"
+              (Term.app `mem_univ [(Term.hole "_")])))
+            (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]
+              []
+              "=>"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented [(Tactic.injection "injection" `h [])])))))
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`b (Term.hole "_")]
+              []
+              "=>"
+              (Term.anonymousCtor
+               "⟨"
+               [`b
+                ","
+                (Term.app
+                 (Term.proj `mem_filter "." (fieldIdx "2"))
+                 [(Term.anonymousCtor
+                   "⟨"
+                   [(Term.app `mem_univ [(Term.hole "_")]) "," (Term.proj `b "." `Bijective)]
+                   "⟩")])
+                ","
+                (Term.app `coe_fn_injective [`rfl])]
+               "⟩")))]))
+         (calcStep
+          («term_=_»
+           (Term.hole "_")
+           "="
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `σ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+             "∑"
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `τ)
+               [(group ":" (Term.app `Perm [`n]))]))
+             ", "
+             («term_*_»
+              («term_*_»
+               (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                "∏"
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                ", "
+                (Term.app `N [(Term.app `σ [`i]) `i]))
+               "*"
+               (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+              "*"
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+               "∏"
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+               ", "
+               (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))))))
+          ":="
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `mul_comm)
+                 ","
+                 (Tactic.simpLemma [] [] `mul_left_comm)
+                 ","
+                 (Tactic.simpLemma [] [] `prod_mul_distrib)
+                 ","
+                 (Tactic.simpLemma [] [] `mul_assoc)]
+                "]"]
+               [])]))))
+         (calcStep
+          («term_=_»
+           (Term.hole "_")
+           "="
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `σ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+             "∑"
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder
+               (Lean.binderIdent `τ)
+               [(group ":" (Term.app `Perm [`n]))]))
+             ", "
+             («term_*_»
+              («term_*_»
+               (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                "∏"
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                ", "
+                (Term.app `N [(Term.app `σ [`i]) `i]))
+               "*"
+               («term_*_»
+                (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                "*"
+                (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))
+              "*"
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+               "∏"
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+               ", "
+               (Term.app `M [(Term.app `τ [`i]) `i]))))))
+          ":="
+          (Term.app
+           `sum_congr
+           [`rfl
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`σ (Term.hole "_")]
+              []
+              "=>"
+              (Term.app
+               `Fintype.sum_equiv
+               [(Term.app `Equiv.mulRight [(«term_⁻¹» `σ "⁻¹")])
+                (Term.hole "_")
+                (Term.hole "_")
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`τ]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.tacticHave_
+                       "have"
+                       (Term.haveDecl
+                        (Term.haveIdDecl
+                         []
+                         [(Term.typeSpec
+                           ":"
+                           («term_=_»
+                            (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                             "∏"
+                             (Std.ExtendedBinder.extBinders
+                              (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                             ", "
+                             (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))
+                            "="
+                            (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                             "∏"
+                             (Std.ExtendedBinder.extBinders
+                              (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                             ", "
+                             (Term.app
+                              `M
+                              [(Term.app («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) [`j]) `j]))))]
+                         ":="
+                         (Term.byTactic
+                          "by"
+                          (Tactic.tacticSeq
+                           (Tactic.tacticSeq1Indented
+                            [(Tactic.rwSeq
+                              "rw"
+                              []
+                              (Tactic.rwRuleSeq
+                               "["
+                               [(Tactic.rwRule
+                                 [(patternIgnore (token.«← » "←"))]
+                                 (Term.proj
+                                  (Term.typeAscription
+                                   "("
+                                   («term_⁻¹» `σ "⁻¹")
+                                   ":"
+                                   [(Logic.Equiv.Defs.«term_≃_»
+                                     (Term.hole "_")
+                                     " ≃ "
+                                     (Term.hole "_"))]
+                                   ")")
+                                  "."
+                                  `prod_comp))]
+                               "]")
+                              [])
+                             []
+                             (Tactic.simp
+                              "simp"
+                              []
+                              []
+                              ["only"]
+                              ["["
+                               [(Tactic.simpLemma [] [] `Equiv.Perm.coe_mul)
+                                ","
+                                (Tactic.simpLemma [] [] `apply_inv_self)]
+                               "]"]
+                              [])]))))))
+                      []
+                      (Tactic.tacticHave_
+                       "have"
+                       (Term.haveDecl
+                        (Term.haveIdDecl
+                         [`h []]
+                         [(Term.typeSpec
+                           ":"
+                           («term_=_»
+                            («term_*_»
+                             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                             "*"
+                             (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                              "ε "
+                              («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                            "="
+                            (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+                         ":="
+                         (calc
+                          "calc"
+                          (calcStep
+                           («term_=_»
+                            («term_*_»
+                             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                             "*"
+                             (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                              "ε "
+                              («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                            "="
+                            (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                             "ε "
+                             («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+                           ":="
+                           (Term.byTactic
+                            "by"
+                            (Tactic.tacticSeq
+                             (Tactic.tacticSeq1Indented
+                              [(Tactic.rwSeq
+                                "rw"
+                                []
+                                (Tactic.rwRuleSeq
+                                 "["
+                                 [(Tactic.rwRule [] `mul_comm)
+                                  ","
+                                  (Tactic.rwRule
+                                   []
+                                   (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                                 "]")
+                                [])
+                               []
+                               (Tactic.simp
+                                "simp"
+                                []
+                                []
+                                ["only"]
+                                ["["
+                                 [(Tactic.simpLemma [] [] `Int.cast_mul)
+                                  ","
+                                  (Tactic.simpLemma [] [] `Units.val_mul)]
+                                 "]"]
+                                [])]))))
+                          [(calcStep
+                            («term_=_»
+                             (Term.hole "_")
+                             "="
+                             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+                            ":="
+                            (Term.byTactic
+                             "by"
+                             (Tactic.tacticSeq
+                              (Tactic.tacticSeq1Indented
+                               [(Tactic.simp
+                                 "simp"
+                                 []
+                                 []
+                                 ["only"]
+                                 ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                                 [])]))))]))))
+                      []
+                      (Mathlib.Tactic.tacticSimp_rw__
+                       "simp_rw"
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)]
+                        "]")
+                       [])
+                      []
+                      (Tactic.simp
+                       "simp"
+                       []
+                       []
+                       ["only"]
+                       ["[" [(Tactic.simpLemma [] [] `this)] "]"]
+                       [])])))))])))]))
+         (calcStep
+          («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `det [`M]) "*" (Term.app `det [`N])))
+          ":="
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `det_apply')
+                 ","
+                 (Tactic.simpLemma [] [] `Finset.mul_sum)
+                 ","
+                 (Tactic.simpLemma [] [] `mul_comm)
+                 ","
+                 (Tactic.simpLemma [] [] `mul_left_comm)]
+                "]"]
+               [])]))))])
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calc
+       "calc"
+       (calcStep
+        («term_=_»
+         (Term.app `det [(Matrix.Data.Matrix.Basic.matrix.mul `M " ⬝ " `N)])
+         "="
+         (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+          "∑"
+          (Std.ExtendedBinder.extBinders
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `p)
+            [(group ":" (Term.arrow `n "→" `n))]))
+          ", "
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+           "∑"
+           (Std.ExtendedBinder.extBinders
+            (Std.ExtendedBinder.extBinder
+             (Lean.binderIdent `σ)
+             [(group ":" (Term.app `Perm [`n]))]))
+           ", "
+           («term_*_»
+            (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+            "*"
+            (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+             "∏"
+             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+             ", "
+             («term_*_»
+              (Term.app `M [(Term.app `σ [`i]) (Term.app `p [`i])])
+              "*"
+              (Term.app `N [(Term.app `p [`i]) `i])))))))
+        ":="
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.«tactic_<;>_»
+             (Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `det_apply')
+                ","
+                (Tactic.simpLemma [] [] `mul_apply)
+                ","
+                (Tactic.simpLemma [] [] `prod_univ_sum)
+                ","
+                (Tactic.simpLemma [] [] `mul_sum)
+                ","
+                (Tactic.simpLemma [] [] `Fintype.pi_finset_univ)]
+               "]"]
+              [])
+             "<;>"
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Finset.sum_comm)] "]")
+              []))]))))
+       [(calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
+           " in "
+           (Term.app
+            (Term.proj
+             (Term.app (Term.explicit "@" `univ) [(Term.arrow `n "→" `n) (Term.hole "_")])
+             "."
+             `filter)
+            [`Bijective])
+           ", "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `σ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            («term_*_»
+             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+             "*"
+             (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+              "∏"
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+              ", "
+              («term_*_»
+               (Term.app `M [(Term.app `σ [`i]) (Term.app `p [`i])])
+               "*"
+               (Term.app `N [(Term.app `p [`i]) `i])))))))
+         ":="
+         («term_<|_»
+          `Eq.symm
+          "<|"
+          (Term.app
+           `sum_subset
+           [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`f (Term.hole "_") `hbij]
+              []
+              "=>"
+              («term_<|_»
+               `det_mul_aux
+               "<|"
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Std.Tactic.Simpa.simpa
+                    "simpa"
+                    []
+                    []
+                    (Std.Tactic.Simpa.simpaArgsRest
+                     []
+                     []
+                     ["only"]
+                     [(Tactic.simpArgs
+                       "["
+                       [(Tactic.simpLemma [] [] `true_and_iff)
+                        ","
+                        (Tactic.simpLemma [] [] `mem_filter)
+                        ","
+                        (Tactic.simpLemma [] [] `mem_univ)]
+                       "]")]
+                     ["using" `hbij]))]))))))])))
+        (calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+           "∑"
+           (Std.ExtendedBinder.extBinders
+            (Std.ExtendedBinder.extBinder
+             (Lean.binderIdent `τ)
+             [(group ":" (Term.app `Perm [`n]))]))
+           ", "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `σ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            («term_*_»
+             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+             "*"
+             (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+              "∏"
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+              ", "
+              («term_*_»
+               (Term.app `M [(Term.app `σ [`i]) (Term.app `τ [`i])])
+               "*"
+               (Term.app `N [(Term.app `τ [`i]) `i])))))))
+         ":="
+         (Term.app
+          `sum_bij
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`p `h]
+             []
+             "=>"
+             (Term.app
+              `Equiv.ofBijective
+              [`p
+               (Term.proj
+                (Term.app (Term.proj `mem_filter "." (fieldIdx "1")) [`h])
+                "."
+                (fieldIdx "2"))])))
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.hole "_") (Term.hole "_")]
+             []
+             "=>"
+             (Term.app `mem_univ [(Term.hole "_")])))
+           (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]
+             []
+             "=>"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented [(Tactic.injection "injection" `h [])])))))
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`b (Term.hole "_")]
+             []
+             "=>"
+             (Term.anonymousCtor
+              "⟨"
+              [`b
+               ","
+               (Term.app
+                (Term.proj `mem_filter "." (fieldIdx "2"))
+                [(Term.anonymousCtor
+                  "⟨"
+                  [(Term.app `mem_univ [(Term.hole "_")]) "," (Term.proj `b "." `Bijective)]
+                  "⟩")])
+               ","
+               (Term.app `coe_fn_injective [`rfl])]
+              "⟩")))]))
+        (calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+           "∑"
+           (Std.ExtendedBinder.extBinders
+            (Std.ExtendedBinder.extBinder
+             (Lean.binderIdent `σ)
+             [(group ":" (Term.app `Perm [`n]))]))
+           ", "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `τ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            («term_*_»
+             («term_*_»
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+               "∏"
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+               ", "
+               (Term.app `N [(Term.app `σ [`i]) `i]))
+              "*"
+              (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+             "*"
+             (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+              "∏"
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+              ", "
+              (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))))))
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `mul_comm)
+                ","
+                (Tactic.simpLemma [] [] `mul_left_comm)
+                ","
+                (Tactic.simpLemma [] [] `prod_mul_distrib)
+                ","
+                (Tactic.simpLemma [] [] `mul_assoc)]
+               "]"]
+              [])]))))
+        (calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+           "∑"
+           (Std.ExtendedBinder.extBinders
+            (Std.ExtendedBinder.extBinder
+             (Lean.binderIdent `σ)
+             [(group ":" (Term.app `Perm [`n]))]))
+           ", "
+           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
+            "∑"
+            (Std.ExtendedBinder.extBinders
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `τ)
+              [(group ":" (Term.app `Perm [`n]))]))
+            ", "
+            («term_*_»
+             («term_*_»
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+               "∏"
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+               ", "
+               (Term.app `N [(Term.app `σ [`i]) `i]))
+              "*"
+              («term_*_»
+               (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+               "*"
+               (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))
+             "*"
+             (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+              "∏"
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+              ", "
+              (Term.app `M [(Term.app `τ [`i]) `i]))))))
+         ":="
+         (Term.app
+          `sum_congr
+          [`rfl
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`σ (Term.hole "_")]
+             []
+             "=>"
+             (Term.app
+              `Fintype.sum_equiv
+              [(Term.app `Equiv.mulRight [(«term_⁻¹» `σ "⁻¹")])
+               (Term.hole "_")
+               (Term.hole "_")
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`τ]
+                 []
+                 "=>"
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.tacticHave_
+                      "have"
+                      (Term.haveDecl
+                       (Term.haveIdDecl
+                        []
+                        [(Term.typeSpec
+                          ":"
+                          («term_=_»
+                           (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                            "∏"
+                            (Std.ExtendedBinder.extBinders
+                             (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                            ", "
+                            (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))
+                           "="
+                           (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                            "∏"
+                            (Std.ExtendedBinder.extBinders
+                             (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                            ", "
+                            (Term.app
+                             `M
+                             [(Term.app («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) [`j]) `j]))))]
+                        ":="
+                        (Term.byTactic
+                         "by"
+                         (Tactic.tacticSeq
+                          (Tactic.tacticSeq1Indented
+                           [(Tactic.rwSeq
+                             "rw"
+                             []
+                             (Tactic.rwRuleSeq
+                              "["
+                              [(Tactic.rwRule
+                                [(patternIgnore (token.«← » "←"))]
+                                (Term.proj
+                                 (Term.typeAscription
+                                  "("
+                                  («term_⁻¹» `σ "⁻¹")
+                                  ":"
+                                  [(Logic.Equiv.Defs.«term_≃_»
+                                    (Term.hole "_")
+                                    " ≃ "
+                                    (Term.hole "_"))]
+                                  ")")
+                                 "."
+                                 `prod_comp))]
+                              "]")
+                             [])
+                            []
+                            (Tactic.simp
+                             "simp"
+                             []
+                             []
+                             ["only"]
+                             ["["
+                              [(Tactic.simpLemma [] [] `Equiv.Perm.coe_mul)
+                               ","
+                               (Tactic.simpLemma [] [] `apply_inv_self)]
+                              "]"]
+                             [])]))))))
+                     []
+                     (Tactic.tacticHave_
+                      "have"
+                      (Term.haveDecl
+                       (Term.haveIdDecl
+                        [`h []]
+                        [(Term.typeSpec
+                          ":"
+                          («term_=_»
+                           («term_*_»
+                            (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                            "*"
+                            (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                             "ε "
+                             («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                           "="
+                           (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+                        ":="
+                        (calc
+                         "calc"
+                         (calcStep
+                          («term_=_»
+                           («term_*_»
+                            (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                            "*"
+                            (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                             "ε "
+                             («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                           "="
+                           (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                            "ε "
+                            («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+                          ":="
+                          (Term.byTactic
+                           "by"
+                           (Tactic.tacticSeq
+                            (Tactic.tacticSeq1Indented
+                             [(Tactic.rwSeq
+                               "rw"
+                               []
+                               (Tactic.rwRuleSeq
+                                "["
+                                [(Tactic.rwRule [] `mul_comm)
+                                 ","
+                                 (Tactic.rwRule
+                                  []
+                                  (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                                "]")
+                               [])
+                              []
+                              (Tactic.simp
+                               "simp"
+                               []
+                               []
+                               ["only"]
+                               ["["
+                                [(Tactic.simpLemma [] [] `Int.cast_mul)
+                                 ","
+                                 (Tactic.simpLemma [] [] `Units.val_mul)]
+                                "]"]
+                               [])]))))
+                         [(calcStep
+                           («term_=_»
+                            (Term.hole "_")
+                            "="
+                            (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+                           ":="
+                           (Term.byTactic
+                            "by"
+                            (Tactic.tacticSeq
+                             (Tactic.tacticSeq1Indented
+                              [(Tactic.simp
+                                "simp"
+                                []
+                                []
+                                ["only"]
+                                ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                                [])]))))]))))
+                     []
+                     (Mathlib.Tactic.tacticSimp_rw__
+                      "simp_rw"
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)]
+                       "]")
+                      [])
+                     []
+                     (Tactic.simp
+                      "simp"
+                      []
+                      []
+                      ["only"]
+                      ["[" [(Tactic.simpLemma [] [] `this)] "]"]
+                      [])])))))])))]))
+        (calcStep
+         («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `det [`M]) "*" (Term.app `det [`N])))
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["["
+               [(Tactic.simpLemma [] [] `det_apply')
+                ","
+                (Tactic.simpLemma [] [] `Finset.mul_sum)
+                ","
+                (Tactic.simpLemma [] [] `mul_comm)
+                ","
+                (Tactic.simpLemma [] [] `mul_left_comm)]
+               "]"]
+              [])]))))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.simp
+           "simp"
+           []
+           []
+           ["only"]
+           ["["
+            [(Tactic.simpLemma [] [] `det_apply')
+             ","
+             (Tactic.simpLemma [] [] `Finset.mul_sum)
+             ","
+             (Tactic.simpLemma [] [] `mul_comm)
+             ","
+             (Tactic.simpLemma [] [] `mul_left_comm)]
+            "]"]
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["["
+        [(Tactic.simpLemma [] [] `det_apply')
+         ","
+         (Tactic.simpLemma [] [] `Finset.mul_sum)
+         ","
+         (Tactic.simpLemma [] [] `mul_comm)
+         ","
+         (Tactic.simpLemma [] [] `mul_left_comm)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mul_left_comm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mul_comm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Finset.mul_sum
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `det_apply'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_» (Term.hole "_") "=" («term_*_» (Term.app `det [`M]) "*" (Term.app `det [`N])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_*_» (Term.app `det [`M]) "*" (Term.app `det [`N]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `det [`N])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `N
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `det
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
+      (Term.app `det [`M])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `M
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `det
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
+      (Term.app
+       `sum_congr
+       [`rfl
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`σ (Term.hole "_")]
+          []
+          "=>"
+          (Term.app
+           `Fintype.sum_equiv
+           [(Term.app `Equiv.mulRight [(«term_⁻¹» `σ "⁻¹")])
+            (Term.hole "_")
+            (Term.hole "_")
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`τ]
+              []
+              "=>"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.tacticHave_
+                   "have"
+                   (Term.haveDecl
+                    (Term.haveIdDecl
+                     []
+                     [(Term.typeSpec
+                       ":"
+                       («term_=_»
+                        (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                         "∏"
+                         (Std.ExtendedBinder.extBinders
+                          (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                         ", "
+                         (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))
+                        "="
+                        (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                         "∏"
+                         (Std.ExtendedBinder.extBinders
+                          (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                         ", "
+                         (Term.app
+                          `M
+                          [(Term.app («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) [`j]) `j]))))]
+                     ":="
+                     (Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq
+                       (Tactic.tacticSeq1Indented
+                        [(Tactic.rwSeq
+                          "rw"
+                          []
+                          (Tactic.rwRuleSeq
+                           "["
+                           [(Tactic.rwRule
+                             [(patternIgnore (token.«← » "←"))]
+                             (Term.proj
+                              (Term.typeAscription
+                               "("
+                               («term_⁻¹» `σ "⁻¹")
+                               ":"
+                               [(Logic.Equiv.Defs.«term_≃_» (Term.hole "_") " ≃ " (Term.hole "_"))]
+                               ")")
+                              "."
+                              `prod_comp))]
+                           "]")
+                          [])
+                         []
+                         (Tactic.simp
+                          "simp"
+                          []
+                          []
+                          ["only"]
+                          ["["
+                           [(Tactic.simpLemma [] [] `Equiv.Perm.coe_mul)
+                            ","
+                            (Tactic.simpLemma [] [] `apply_inv_self)]
+                           "]"]
+                          [])]))))))
+                  []
+                  (Tactic.tacticHave_
+                   "have"
+                   (Term.haveDecl
+                    (Term.haveIdDecl
+                     [`h []]
+                     [(Term.typeSpec
+                       ":"
+                       («term_=_»
+                        («term_*_»
+                         (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                         "*"
+                         (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                          "ε "
+                          («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                        "="
+                        (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+                     ":="
+                     (calc
+                      "calc"
+                      (calcStep
+                       («term_=_»
+                        («term_*_»
+                         (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                         "*"
+                         (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                          "ε "
+                          («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                        "="
+                        (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                         "ε "
+                         («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+                       ":="
+                       (Term.byTactic
+                        "by"
+                        (Tactic.tacticSeq
+                         (Tactic.tacticSeq1Indented
+                          [(Tactic.rwSeq
+                            "rw"
+                            []
+                            (Tactic.rwRuleSeq
+                             "["
+                             [(Tactic.rwRule [] `mul_comm)
+                              ","
+                              (Tactic.rwRule
+                               []
+                               (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                             "]")
+                            [])
+                           []
+                           (Tactic.simp
+                            "simp"
+                            []
+                            []
+                            ["only"]
+                            ["["
+                             [(Tactic.simpLemma [] [] `Int.cast_mul)
+                              ","
+                              (Tactic.simpLemma [] [] `Units.val_mul)]
+                             "]"]
+                            [])]))))
+                      [(calcStep
+                        («term_=_»
+                         (Term.hole "_")
+                         "="
+                         (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+                        ":="
+                        (Term.byTactic
+                         "by"
+                         (Tactic.tacticSeq
+                          (Tactic.tacticSeq1Indented
+                           [(Tactic.simp
+                             "simp"
+                             []
+                             []
+                             ["only"]
+                             ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                             [])]))))]))))
+                  []
+                  (Mathlib.Tactic.tacticSimp_rw__
+                   "simp_rw"
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)]
+                    "]")
+                   [])
+                  []
+                  (Tactic.simp
+                   "simp"
+                   []
+                   []
+                   ["only"]
+                   ["[" [(Tactic.simpLemma [] [] `this)] "]"]
+                   [])])))))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`σ (Term.hole "_")]
+        []
+        "=>"
+        (Term.app
+         `Fintype.sum_equiv
+         [(Term.app `Equiv.mulRight [(«term_⁻¹» `σ "⁻¹")])
+          (Term.hole "_")
+          (Term.hole "_")
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`τ]
+            []
+            "=>"
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.tacticHave_
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   []
+                   [(Term.typeSpec
+                     ":"
+                     («term_=_»
+                      (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                       "∏"
+                       (Std.ExtendedBinder.extBinders
+                        (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                       ", "
+                       (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))
+                      "="
+                      (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                       "∏"
+                       (Std.ExtendedBinder.extBinders
+                        (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                       ", "
+                       (Term.app `M [(Term.app («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) [`j]) `j]))))]
+                   ":="
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.rwSeq
+                        "rw"
+                        []
+                        (Tactic.rwRuleSeq
+                         "["
+                         [(Tactic.rwRule
+                           [(patternIgnore (token.«← » "←"))]
+                           (Term.proj
+                            (Term.typeAscription
+                             "("
+                             («term_⁻¹» `σ "⁻¹")
+                             ":"
+                             [(Logic.Equiv.Defs.«term_≃_» (Term.hole "_") " ≃ " (Term.hole "_"))]
+                             ")")
+                            "."
+                            `prod_comp))]
+                         "]")
+                        [])
+                       []
+                       (Tactic.simp
+                        "simp"
+                        []
+                        []
+                        ["only"]
+                        ["["
+                         [(Tactic.simpLemma [] [] `Equiv.Perm.coe_mul)
+                          ","
+                          (Tactic.simpLemma [] [] `apply_inv_self)]
+                         "]"]
+                        [])]))))))
+                []
+                (Tactic.tacticHave_
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   [`h []]
+                   [(Term.typeSpec
+                     ":"
+                     («term_=_»
+                      («term_*_»
+                       (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                       "*"
+                       (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                        "ε "
+                        («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                      "="
+                      (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+                   ":="
+                   (calc
+                    "calc"
+                    (calcStep
+                     («term_=_»
+                      («term_*_»
+                       (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                       "*"
+                       (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                        "ε "
+                        («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                      "="
+                      (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                       "ε "
+                       («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+                     ":="
+                     (Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq
+                       (Tactic.tacticSeq1Indented
+                        [(Tactic.rwSeq
+                          "rw"
+                          []
+                          (Tactic.rwRuleSeq
+                           "["
+                           [(Tactic.rwRule [] `mul_comm)
+                            ","
+                            (Tactic.rwRule
+                             []
+                             (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                           "]")
+                          [])
+                         []
+                         (Tactic.simp
+                          "simp"
+                          []
+                          []
+                          ["only"]
+                          ["["
+                           [(Tactic.simpLemma [] [] `Int.cast_mul)
+                            ","
+                            (Tactic.simpLemma [] [] `Units.val_mul)]
+                           "]"]
+                          [])]))))
+                    [(calcStep
+                      («term_=_»
+                       (Term.hole "_")
+                       "="
+                       (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+                      ":="
+                      (Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq
+                        (Tactic.tacticSeq1Indented
+                         [(Tactic.simp
+                           "simp"
+                           []
+                           []
+                           ["only"]
+                           ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                           [])]))))]))))
+                []
+                (Mathlib.Tactic.tacticSimp_rw__
+                 "simp_rw"
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)]
+                  "]")
+                 [])
+                []
+                (Tactic.simp
+                 "simp"
+                 []
+                 []
+                 ["only"]
+                 ["[" [(Tactic.simpLemma [] [] `this)] "]"]
+                 [])])))))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `Fintype.sum_equiv
+       [(Term.app `Equiv.mulRight [(«term_⁻¹» `σ "⁻¹")])
+        (Term.hole "_")
+        (Term.hole "_")
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`τ]
+          []
+          "=>"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.tacticHave_
+               "have"
+               (Term.haveDecl
+                (Term.haveIdDecl
+                 []
+                 [(Term.typeSpec
+                   ":"
+                   («term_=_»
+                    (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                     "∏"
+                     (Std.ExtendedBinder.extBinders
+                      (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                     ", "
+                     (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))
+                    "="
+                    (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                     "∏"
+                     (Std.ExtendedBinder.extBinders
+                      (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                     ", "
+                     (Term.app `M [(Term.app («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) [`j]) `j]))))]
+                 ":="
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule
+                         [(patternIgnore (token.«← » "←"))]
+                         (Term.proj
+                          (Term.typeAscription
+                           "("
+                           («term_⁻¹» `σ "⁻¹")
+                           ":"
+                           [(Logic.Equiv.Defs.«term_≃_» (Term.hole "_") " ≃ " (Term.hole "_"))]
+                           ")")
+                          "."
+                          `prod_comp))]
+                       "]")
+                      [])
+                     []
+                     (Tactic.simp
+                      "simp"
+                      []
+                      []
+                      ["only"]
+                      ["["
+                       [(Tactic.simpLemma [] [] `Equiv.Perm.coe_mul)
+                        ","
+                        (Tactic.simpLemma [] [] `apply_inv_self)]
+                       "]"]
+                      [])]))))))
+              []
+              (Tactic.tacticHave_
+               "have"
+               (Term.haveDecl
+                (Term.haveIdDecl
+                 [`h []]
+                 [(Term.typeSpec
+                   ":"
+                   («term_=_»
+                    («term_*_»
+                     (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                     "*"
+                     (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                      "ε "
+                      («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                    "="
+                    (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+                 ":="
+                 (calc
+                  "calc"
+                  (calcStep
+                   («term_=_»
+                    («term_*_»
+                     (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                     "*"
+                     (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                      "ε "
+                      («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                    "="
+                    (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                     "ε "
+                     («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+                   ":="
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.rwSeq
+                        "rw"
+                        []
+                        (Tactic.rwRuleSeq
+                         "["
+                         [(Tactic.rwRule [] `mul_comm)
+                          ","
+                          (Tactic.rwRule
+                           []
+                           (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                         "]")
+                        [])
+                       []
+                       (Tactic.simp
+                        "simp"
+                        []
+                        []
+                        ["only"]
+                        ["["
+                         [(Tactic.simpLemma [] [] `Int.cast_mul)
+                          ","
+                          (Tactic.simpLemma [] [] `Units.val_mul)]
+                         "]"]
+                        [])]))))
+                  [(calcStep
+                    («term_=_»
+                     (Term.hole "_")
+                     "="
+                     (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+                    ":="
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.simp
+                         "simp"
+                         []
+                         []
+                         ["only"]
+                         ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                         [])]))))]))))
+              []
+              (Mathlib.Tactic.tacticSimp_rw__
+               "simp_rw"
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)]
+                "]")
+               [])
+              []
+              (Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["[" [(Tactic.simpLemma [] [] `this)] "]"]
+               [])])))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`τ]
+        []
+        "=>"
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               []
+               [(Term.typeSpec
+                 ":"
+                 («term_=_»
+                  (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                   "∏"
+                   (Std.ExtendedBinder.extBinders
+                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                   ", "
+                   (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))
+                  "="
+                  (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                   "∏"
+                   (Std.ExtendedBinder.extBinders
+                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                   ", "
+                   (Term.app `M [(Term.app («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) [`j]) `j]))))]
+               ":="
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule
+                       [(patternIgnore (token.«← » "←"))]
+                       (Term.proj
+                        (Term.typeAscription
+                         "("
+                         («term_⁻¹» `σ "⁻¹")
+                         ":"
+                         [(Logic.Equiv.Defs.«term_≃_» (Term.hole "_") " ≃ " (Term.hole "_"))]
+                         ")")
+                        "."
+                        `prod_comp))]
+                     "]")
+                    [])
+                   []
+                   (Tactic.simp
+                    "simp"
+                    []
+                    []
+                    ["only"]
+                    ["["
+                     [(Tactic.simpLemma [] [] `Equiv.Perm.coe_mul)
+                      ","
+                      (Tactic.simpLemma [] [] `apply_inv_self)]
+                     "]"]
+                    [])]))))))
+            []
+            (Tactic.tacticHave_
+             "have"
+             (Term.haveDecl
+              (Term.haveIdDecl
+               [`h []]
+               [(Term.typeSpec
+                 ":"
+                 («term_=_»
+                  («term_*_»
+                   (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                   "*"
+                   (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                    "ε "
+                    («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                  "="
+                  (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+               ":="
+               (calc
+                "calc"
+                (calcStep
+                 («term_=_»
+                  («term_*_»
+                   (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                   "*"
+                   (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                    "ε "
+                    («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                  "="
+                  (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                   "ε "
+                   («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+                 ":="
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] `mul_comm)
+                        ","
+                        (Tactic.rwRule
+                         []
+                         (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                       "]")
+                      [])
+                     []
+                     (Tactic.simp
+                      "simp"
+                      []
+                      []
+                      ["only"]
+                      ["["
+                       [(Tactic.simpLemma [] [] `Int.cast_mul)
+                        ","
+                        (Tactic.simpLemma [] [] `Units.val_mul)]
+                       "]"]
+                      [])]))))
+                [(calcStep
+                  («term_=_»
+                   (Term.hole "_")
+                   "="
+                   (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+                  ":="
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.simp
+                       "simp"
+                       []
+                       []
+                       ["only"]
+                       ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                       [])]))))]))))
+            []
+            (Mathlib.Tactic.tacticSimp_rw__
+             "simp_rw"
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)]
+              "]")
+             [])
+            []
+            (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `this)] "]"] [])])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                 "∏"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                 ", "
+                 (Term.app `M [(Term.app `τ [`j]) (Term.app `σ [`j])]))
+                "="
+                (BigOperators.Algebra.BigOperators.Basic.finset.prod_univ
+                 "∏"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                 ", "
+                 (Term.app `M [(Term.app («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) [`j]) `j]))))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule
+                     [(patternIgnore (token.«← » "←"))]
+                     (Term.proj
+                      (Term.typeAscription
+                       "("
+                       («term_⁻¹» `σ "⁻¹")
+                       ":"
+                       [(Logic.Equiv.Defs.«term_≃_» (Term.hole "_") " ≃ " (Term.hole "_"))]
+                       ")")
+                      "."
+                      `prod_comp))]
+                   "]")
+                  [])
+                 []
+                 (Tactic.simp
+                  "simp"
+                  []
+                  []
+                  ["only"]
+                  ["["
+                   [(Tactic.simpLemma [] [] `Equiv.Perm.coe_mul)
+                    ","
+                    (Tactic.simpLemma [] [] `apply_inv_self)]
+                   "]"]
+                  [])]))))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`h []]
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                («term_*_»
+                 (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                 "*"
+                 (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                  "ε "
+                  («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                "="
+                (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+             ":="
+             (calc
+              "calc"
+              (calcStep
+               («term_=_»
+                («term_*_»
+                 (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+                 "*"
+                 (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                  "ε "
+                  («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+                "="
+                (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+                 "ε "
+                 («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+               ":="
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] `mul_comm)
+                      ","
+                      (Tactic.rwRule
+                       []
+                       (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                     "]")
+                    [])
+                   []
+                   (Tactic.simp
+                    "simp"
+                    []
+                    []
+                    ["only"]
+                    ["["
+                     [(Tactic.simpLemma [] [] `Int.cast_mul)
+                      ","
+                      (Tactic.simpLemma [] [] `Units.val_mul)]
+                     "]"]
+                    [])]))))
+              [(calcStep
+                («term_=_»
+                 (Term.hole "_")
+                 "="
+                 (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+                ":="
+                (Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented
+                   [(Tactic.simp
+                     "simp"
+                     []
+                     []
+                     ["only"]
+                     ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                     [])]))))]))))
+          []
+          (Mathlib.Tactic.tacticSimp_rw__
+           "simp_rw"
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)]
+            "]")
+           [])
+          []
+          (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `this)] "]"] [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `this)] "]"] [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticSimp_rw__
+       "simp_rw"
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Equiv.coe_mulRight) "," (Tactic.rwRule [] `h)] "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `h
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Equiv.coe_mulRight
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticHave_
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         [`h []]
+         [(Term.typeSpec
+           ":"
+           («term_=_»
+            («term_*_»
+             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+             "*"
+             (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+              "ε "
+              («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+            "="
+            (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)))]
+         ":="
+         (calc
+          "calc"
+          (calcStep
+           («term_=_»
+            («term_*_»
+             (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+             "*"
+             (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+              "ε "
+              («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+            "="
+            (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+             "ε "
+             («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+           ":="
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `mul_comm)
+                  ","
+                  (Tactic.rwRule [] (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+                 "]")
+                [])
+               []
+               (Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `Int.cast_mul)
+                  ","
+                  (Tactic.simpLemma [] [] `Units.val_mul)]
+                 "]"]
+                [])]))))
+          [(calcStep
+            («term_=_» (Term.hole "_") "=" (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+            ":="
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.simp
+                 "simp"
+                 []
+                 []
+                 ["only"]
+                 ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+                 [])]))))]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calc
+       "calc"
+       (calcStep
+        («term_=_»
+         («term_*_»
+          (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `σ)
+          "*"
+          (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+           "ε "
+           («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))))
+         "="
+         (Matrix.LinearAlgebra.Matrix.Determinant.termε_
+          "ε "
+          («term_*_» («term_*_» `τ "*" («term_⁻¹» `σ "⁻¹")) "*" `σ)))
+        ":="
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `mul_comm)
+               ","
+               (Tactic.rwRule [] (Term.app `sign_mul [(«term_*_» `τ "*" («term_⁻¹» `σ "⁻¹"))]))]
+              "]")
+             [])
+            []
+            (Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `Int.cast_mul) "," (Tactic.simpLemma [] [] `Units.val_mul)]
+              "]"]
+             [])]))))
+       [(calcStep
+         («term_=_» (Term.hole "_") "=" (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.simp
+              "simp"
+              []
+              []
+              ["only"]
+              ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+              [])]))))])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.simp
+           "simp"
+           []
+           []
+           ["only"]
+           ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["[" [(Tactic.simpLemma [] [] `inv_mul_cancel_right)] "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inv_mul_cancel_right
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_» (Term.hole "_") "=" (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Matrix.LinearAlgebra.Matrix.Determinant.termε_ "ε " `τ)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Matrix.LinearAlgebra.Matrix.Determinant.termε_', expected 'Matrix.LinearAlgebra.Matrix.Determinant.termε_._@.LinearAlgebra.Matrix.Determinant._hyg.7'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.haveEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    det_mul
+    ( M N : Matrix n n R ) : det M ⬝ N = det M * det N
+    :=
+      calc
+        det M ⬝ N = ∑ p : n → n , ∑ σ : Perm n , ε σ * ∏ i , M σ i p i * N p i i
+          :=
           by
-          have : (∏ j, M (τ j) (σ j)) = ∏ j, M ((τ * σ⁻¹) j) j :=
-            by
-            rw [← (σ⁻¹ : _ ≃ _).prod_comp]
-            simp only [Equiv.Perm.coe_mul, apply_inv_self]
-          have h : ε σ * ε (τ * σ⁻¹) = ε τ :=
-            calc
-              ε σ * ε (τ * σ⁻¹) = ε (τ * σ⁻¹ * σ) :=
-                by
-                rw [mul_comm, sign_mul (τ * σ⁻¹)]
-                simp only [Int.cast_mul, Units.val_mul]
-              _ = ε τ := by simp only [inv_mul_cancel_right]
-              
-          simp_rw [Equiv.coe_mulRight, h]
-          simp only [this]
-    _ = det M * det N := by simp only [det_apply', Finset.mul_sum, mul_comm, mul_left_comm]
-    
+            simp only [ det_apply' , mul_apply , prod_univ_sum , mul_sum , Fintype.pi_finset_univ ]
+              <;>
+              rw [ Finset.sum_comm ]
+        _
+              =
+              ∑
+                p
+                in
+                @ univ n → n _ . filter Bijective
+                ,
+                ∑ σ : Perm n , ε σ * ∏ i , M σ i p i * N p i i
+            :=
+            Eq.symm
+              <|
+              sum_subset
+                filter_subset _ _
+                  fun
+                    f _ hbij
+                      =>
+                      det_mul_aux
+                        <|
+                        by simpa only [ true_and_iff , mem_filter , mem_univ ] using hbij
+          _ = ∑ τ : Perm n , ∑ σ : Perm n , ε σ * ∏ i , M σ i τ i * N τ i i
+            :=
+            sum_bij
+              fun p h => Equiv.ofBijective p mem_filter . 1 h . 2
+                fun _ _ => mem_univ _
+                fun _ _ => rfl
+                fun _ _ _ _ h => by injection h
+                fun
+                  b _
+                    =>
+                    ⟨ b , mem_filter . 2 ⟨ mem_univ _ , b . Bijective ⟩ , coe_fn_injective rfl ⟩
+          _ = ∑ σ : Perm n , ∑ τ : Perm n , ∏ i , N σ i i * ε τ * ∏ j , M τ j σ j
+            :=
+            by simp only [ mul_comm , mul_left_comm , prod_mul_distrib , mul_assoc ]
+          _ = ∑ σ : Perm n , ∑ τ : Perm n , ∏ i , N σ i i * ε σ * ε τ * ∏ i , M τ i i
+            :=
+            sum_congr
+              rfl
+                fun
+                  σ _
+                    =>
+                    Fintype.sum_equiv
+                      Equiv.mulRight σ ⁻¹
+                        _
+                        _
+                        fun
+                          τ
+                            =>
+                            by
+                              have
+                                  : ∏ j , M τ j σ j = ∏ j , M τ * σ ⁻¹ j j
+                                    :=
+                                    by
+                                      rw [ ← ( σ ⁻¹ : _ ≃ _ ) . prod_comp ]
+                                        simp only [ Equiv.Perm.coe_mul , apply_inv_self ]
+                                have
+                                  h
+                                    : ε σ * ε τ * σ ⁻¹ = ε τ
+                                    :=
+                                    calc
+                                      ε σ * ε τ * σ ⁻¹ = ε τ * σ ⁻¹ * σ
+                                        :=
+                                        by
+                                          rw [ mul_comm , sign_mul τ * σ ⁻¹ ]
+                                            simp only [ Int.cast_mul , Units.val_mul ]
+                                      _ = ε τ := by simp only [ inv_mul_cancel_right ]
+                                simp_rw [ Equiv.coe_mulRight , h ]
+                                simp only [ this ]
+          _ = det M * det N
+            :=
+            by simp only [ det_apply' , Finset.mul_sum , mul_comm , mul_left_comm ]
 #align matrix.det_mul Matrix.det_mul
 
 /-- The determinant of a matrix, as a monoid homomorphism. -/

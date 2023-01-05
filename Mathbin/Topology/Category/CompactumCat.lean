@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Compactum
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,9 +84,48 @@ open Classical TopologicalSpace
 -- mathport name: exprβ
 local notation "β" => ofTypeMonad Ultrafilter
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The type `Compactum` of Compacta, defined as algebras for the ultrafilter monad. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `CompactumCat [])
+      (Command.optDeclSig [] [])
+      (Command.declValSimple
+       ":="
+       (Term.app `Monad.Algebra [(Topology.Category.CompactumCat.termβ "β")])
+       [])
+      ["deriving" [`Category "," `Inhabited]]
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Monad.Algebra [(Topology.Category.CompactumCat.termβ "β")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Category.CompactumCat.termβ', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Category.CompactumCat.termβ', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Topology.Category.CompactumCat.termβ "β")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Category.CompactumCat.termβ', expected 'Topology.Category.CompactumCat.termβ._@.Topology.Category.CompactumCat._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The type `Compactum` of Compacta, defined as algebras for the ultrafilter monad. -/
-def CompactumCat :=
-  Monad.Algebra β deriving Category, Inhabited
+  def CompactumCat := Monad.Algebra β deriving Category , Inhabited
 #align Compactum CompactumCat
 
 namespace CompactumCat
@@ -123,22 +162,297 @@ def str (X : CompactumCat) : Ultrafilter X → X :=
   X.a
 #align Compactum.str CompactumCat.str
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [(Command.docComment "/--" "The monadic join. -/")] [] [] [] [] [])
+     (Command.def
+      "def"
+      (Command.declId `join [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`X] [":" `CompactumCat] [] ")")]
+       [(Term.typeSpec
+         ":"
+         (Term.arrow
+          (Term.app `Ultrafilter [(Term.app `Ultrafilter [`X])])
+          "→"
+          (Term.app `Ultrafilter [`X])))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+        [(Term.hole "_")])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+       [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Topology.Category.CompactumCat.termβ "β")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Category.CompactumCat.termβ', expected 'Topology.Category.CompactumCat.termβ._@.Topology.Category.CompactumCat._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The monadic join. -/
-def join (X : CompactumCat) : Ultrafilter (Ultrafilter X) → Ultrafilter X :=
-  β.μ.app _
+  def join ( X : CompactumCat ) : Ultrafilter Ultrafilter X → Ultrafilter X := β . μ . app _
 #align Compactum.join CompactumCat.join
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "The inclusion of `X` into `ultrafilter X`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `incl [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`X] [":" `CompactumCat] [] ")")]
+       [(Term.typeSpec ":" (Term.arrow `X "→" (Term.app `Ultrafilter [`X])))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+        [(Term.hole "_")])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+       [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Topology.Category.CompactumCat.termβ "β")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Category.CompactumCat.termβ', expected 'Topology.Category.CompactumCat.termβ._@.Topology.Category.CompactumCat._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The inclusion of `X` into `ultrafilter X`. -/
-def incl (X : CompactumCat) : X → Ultrafilter X :=
-  β.η.app _
+  def incl ( X : CompactumCat ) : X → Ultrafilter X := β . η . app _
 #align Compactum.incl CompactumCat.incl
 
-@[simp]
-theorem str_incl (X : CompactumCat) (x : X) : X.str (X.incl x) = x :=
-  by
-  change (β.η.app _ ≫ X.a) _ = _
-  rw [monad.algebra.unit]
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `str_incl [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`X] [":" `CompactumCat] [] ")")
+        (Term.explicitBinder "(" [`x] [":" `X] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app (Term.proj `X "." `str) [(Term.app (Term.proj `X "." `incl) [`x])])
+         "="
+         `x)))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.change
+            "change"
+            («term_=_»
+             (Term.app
+              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+               (Term.app
+                (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+                [(Term.hole "_")])
+               " ≫ "
+               `X.a)
+              [(Term.hole "_")])
+             "="
+             (Term.hole "_"))
+            [])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `monad.algebra.unit)] "]")
+            [])
+           []
+           (Tactic.tacticRfl "rfl")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.change
+           "change"
+           («term_=_»
+            (Term.app
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (Term.app
+               (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+               [(Term.hole "_")])
+              " ≫ "
+              `X.a)
+             [(Term.hole "_")])
+            "="
+            (Term.hole "_"))
+           [])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `monad.algebra.unit)] "]")
+           [])
+          []
+          (Tactic.tacticRfl "rfl")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `monad.algebra.unit)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `monad.algebra.unit
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.change
+       "change"
+       («term_=_»
+        (Term.app
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (Term.app
+           (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+           [(Term.hole "_")])
+          " ≫ "
+          `X.a)
+         [(Term.hole "_")])
+        "="
+        (Term.hole "_"))
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.app
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (Term.app
+          (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+          [(Term.hole "_")])
+         " ≫ "
+         `X.a)
+        [(Term.hole "_")])
+       "="
+       (Term.hole "_"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (Term.app
+         (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+         [(Term.hole "_")])
+        " ≫ "
+        `X.a)
+       [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (Term.app
+        (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+        [(Term.hole "_")])
+       " ≫ "
+       `X.a)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `X.a
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (Term.app
+       (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+       [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η) "." `app)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `η)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Topology.Category.CompactumCat.termβ "β")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Category.CompactumCat.termβ', expected 'Topology.Category.CompactumCat.termβ._@.Topology.Category.CompactumCat._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    str_incl
+    ( X : CompactumCat ) ( x : X ) : X . str X . incl x = x
+    := by change β . η . app _ ≫ X.a _ = _ rw [ monad.algebra.unit ] rfl
 #align Compactum.str_incl CompactumCat.str_incl
 
 @[simp]
@@ -150,13 +464,192 @@ theorem str_hom_commute (X Y : CompactumCat) (f : X ⟶ Y) (xs : Ultrafilter X) 
   rfl
 #align Compactum.str_hom_commute CompactumCat.str_hom_commute
 
-@[simp]
-theorem join_distrib (X : CompactumCat) (uux : Ultrafilter (Ultrafilter X)) :
-    X.str (X.join uux) = X.str (map X.str uux) :=
-  by
-  change (β.μ.app _ ≫ X.a) _ = _
-  rw [monad.algebra.assoc]
-  rfl
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `join_distrib [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`X] [":" `CompactumCat] [] ")")
+        (Term.explicitBinder
+         "("
+         [`uux]
+         [":" (Term.app `Ultrafilter [(Term.app `Ultrafilter [`X])])]
+         []
+         ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app (Term.proj `X "." `str) [(Term.app (Term.proj `X "." `join) [`uux])])
+         "="
+         (Term.app (Term.proj `X "." `str) [(Term.app `map [(Term.proj `X "." `str) `uux])]))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.change
+            "change"
+            («term_=_»
+             (Term.app
+              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+               (Term.app
+                (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+                [(Term.hole "_")])
+               " ≫ "
+               `X.a)
+              [(Term.hole "_")])
+             "="
+             (Term.hole "_"))
+            [])
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `monad.algebra.assoc)] "]")
+            [])
+           []
+           (Tactic.tacticRfl "rfl")])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.change
+           "change"
+           («term_=_»
+            (Term.app
+             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+              (Term.app
+               (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+               [(Term.hole "_")])
+              " ≫ "
+              `X.a)
+             [(Term.hole "_")])
+            "="
+            (Term.hole "_"))
+           [])
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `monad.algebra.assoc)] "]")
+           [])
+          []
+          (Tactic.tacticRfl "rfl")])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticRfl "rfl")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `monad.algebra.assoc)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `monad.algebra.assoc
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.change
+       "change"
+       («term_=_»
+        (Term.app
+         (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+          (Term.app
+           (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+           [(Term.hole "_")])
+          " ≫ "
+          `X.a)
+         [(Term.hole "_")])
+        "="
+        (Term.hole "_"))
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.app
+        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+         (Term.app
+          (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+          [(Term.hole "_")])
+         " ≫ "
+         `X.a)
+        [(Term.hole "_")])
+       "="
+       (Term.hole "_"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+        (Term.app
+         (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+         [(Term.hole "_")])
+        " ≫ "
+        `X.a)
+       [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
+       (Term.app
+        (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+        [(Term.hole "_")])
+       " ≫ "
+       `X.a)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `X.a
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
+      (Term.app
+       (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+       [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ) "." `app)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj (Topology.Category.CompactumCat.termβ "β") "." `μ)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Topology.Category.CompactumCat.termβ "β")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Topology.Category.CompactumCat.termβ', expected 'Topology.Category.CompactumCat.termβ._@.Topology.Category.CompactumCat._hyg.6'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    join_distrib
+    ( X : CompactumCat ) ( uux : Ultrafilter Ultrafilter X )
+      : X . str X . join uux = X . str map X . str uux
+    := by change β . μ . app _ ≫ X.a _ = _ rw [ monad.algebra.assoc ] rfl
 #align Compactum.join_distrib CompactumCat.join_distrib
 
 instance {X : CompactumCat} : TopologicalSpace X

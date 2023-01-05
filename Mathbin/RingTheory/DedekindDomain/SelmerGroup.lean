@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.selmer_group
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,23 +148,959 @@ theorem valuation_of_unit_eq (x : Rˣ) :
 
 attribute [local semireducible] MulOpposite
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The multiplicative `v`-adic valuation on `Kˣ` modulo `n`-th powers. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `valuationOfNeZeroMod [])
+      (Command.optDeclSig
+       [(Term.explicitBinder "(" [`n] [":" (termℕ "ℕ")] [] ")")]
+       [(Term.typeSpec
+         ":"
+         (Algebra.Hom.Group.«term_→*_»
+          (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)
+          " →* "
+          (Term.app `Multiplicative [(Term.app `Zmod [`n])])))])
+      (Command.declValSimple
+       ":="
+       («term_<|_»
+        (Term.proj
+         (Term.proj
+          (Term.proj (Term.app `Int.quotientZmultiplesNatEquivZmod [`n]) "." `toMultiplicative)
+          "."
+          `toMonoidHom)
+         "."
+         `comp)
+        "<|"
+        (Term.app
+         `QuotientGroup.map
+         [(Term.proj
+           (Term.typeAscription
+            "("
+            (Term.app `powMonoidHom [`n])
+            ":"
+            [(Algebra.Hom.Group.«term_→*_»
+              (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+              " →* "
+              (Algebra.Group.Units.«term_ˣ» `K "ˣ"))]
+            ")")
+           "."
+           `range)
+          (Term.proj
+           (Term.app `AddSubgroup.zmultiples [(Term.typeAscription "(" `n ":" [(termℤ "ℤ")] ")")])
+           "."
+           `toSubgroup)
+          (Term.proj `v "." `valuationOfNeZero)
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Std.Tactic.rintro
+               "rintro"
+               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+                (Std.Tactic.RCases.rintroPat.one
+                 (Std.Tactic.RCases.rcasesPat.tuple
+                  "⟨"
+                  [(Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                    [])
+                   ","
+                   (Std.Tactic.RCases.rcasesPatLo
+                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                    [])]
+                  "⟩"))]
+               [])
+              []
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app `v.valuation_of_ne_zero [`x])
+                 ","
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Std.Tactic.Simpa.simpa
+                      "simpa"
+                      []
+                      []
+                      (Std.Tactic.Simpa.simpaArgsRest
+                       []
+                       []
+                       ["only"]
+                       [(Tactic.simpArgs
+                         "["
+                         [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+                          ","
+                          (Tactic.simpLemma [] [] `map_pow)
+                          ","
+                          (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+                         "]")]
+                       []))])))]
+                "⟩"))])))]))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.proj
+        (Term.proj
+         (Term.proj (Term.app `Int.quotientZmultiplesNatEquivZmod [`n]) "." `toMultiplicative)
+         "."
+         `toMonoidHom)
+        "."
+        `comp)
+       "<|"
+       (Term.app
+        `QuotientGroup.map
+        [(Term.proj
+          (Term.typeAscription
+           "("
+           (Term.app `powMonoidHom [`n])
+           ":"
+           [(Algebra.Hom.Group.«term_→*_»
+             (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+             " →* "
+             (Algebra.Group.Units.«term_ˣ» `K "ˣ"))]
+           ")")
+          "."
+          `range)
+         (Term.proj
+          (Term.app `AddSubgroup.zmultiples [(Term.typeAscription "(" `n ":" [(termℤ "ℤ")] ")")])
+          "."
+          `toSubgroup)
+         (Term.proj `v "." `valuationOfNeZero)
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Std.Tactic.rintro
+              "rintro"
+              [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+               (Std.Tactic.RCases.rintroPat.one
+                (Std.Tactic.RCases.rcasesPat.tuple
+                 "⟨"
+                 [(Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                   [])
+                  ","
+                  (Std.Tactic.RCases.rcasesPatLo
+                   (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                   [])]
+                 "⟩"))]
+              [])
+             []
+             (Tactic.exact
+              "exact"
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.app `v.valuation_of_ne_zero [`x])
+                ","
+                (Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented
+                   [(Std.Tactic.Simpa.simpa
+                     "simpa"
+                     []
+                     []
+                     (Std.Tactic.Simpa.simpaArgsRest
+                      []
+                      []
+                      ["only"]
+                      [(Tactic.simpArgs
+                        "["
+                        [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+                         ","
+                         (Tactic.simpLemma [] [] `map_pow)
+                         ","
+                         (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+                        "]")]
+                      []))])))]
+               "⟩"))])))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `QuotientGroup.map
+       [(Term.proj
+         (Term.typeAscription
+          "("
+          (Term.app `powMonoidHom [`n])
+          ":"
+          [(Algebra.Hom.Group.«term_→*_»
+            (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+            " →* "
+            (Algebra.Group.Units.«term_ˣ» `K "ˣ"))]
+          ")")
+         "."
+         `range)
+        (Term.proj
+         (Term.app `AddSubgroup.zmultiples [(Term.typeAscription "(" `n ":" [(termℤ "ℤ")] ")")])
+         "."
+         `toSubgroup)
+        (Term.proj `v "." `valuationOfNeZero)
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Std.Tactic.rintro
+             "rintro"
+             [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+              (Std.Tactic.RCases.rintroPat.one
+               (Std.Tactic.RCases.rcasesPat.tuple
+                "⟨"
+                [(Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                  [])
+                 ","
+                 (Std.Tactic.RCases.rcasesPatLo
+                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                  [])]
+                "⟩"))]
+             [])
+            []
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.app `v.valuation_of_ne_zero [`x])
+               ","
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Std.Tactic.Simpa.simpa
+                    "simpa"
+                    []
+                    []
+                    (Std.Tactic.Simpa.simpaArgsRest
+                     []
+                     []
+                     ["only"]
+                     [(Tactic.simpArgs
+                       "["
+                       [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+                        ","
+                        (Tactic.simpLemma [] [] `map_pow)
+                        ","
+                        (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+                       "]")]
+                     []))])))]
+              "⟩"))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.rintro
+           "rintro"
+           [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+            (Std.Tactic.RCases.rintroPat.one
+             (Std.Tactic.RCases.rcasesPat.tuple
+              "⟨"
+              [(Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+                [])
+               ","
+               (Std.Tactic.RCases.rcasesPatLo
+                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                [])]
+              "⟩"))]
+           [])
+          []
+          (Tactic.exact
+           "exact"
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.app `v.valuation_of_ne_zero [`x])
+             ","
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Std.Tactic.Simpa.simpa
+                  "simpa"
+                  []
+                  []
+                  (Std.Tactic.Simpa.simpaArgsRest
+                   []
+                   []
+                   ["only"]
+                   [(Tactic.simpArgs
+                     "["
+                     [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+                      ","
+                      (Tactic.simpLemma [] [] `map_pow)
+                      ","
+                      (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+                     "]")]
+                   []))])))]
+            "⟩"))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.app `v.valuation_of_ne_zero [`x])
+         ","
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Std.Tactic.Simpa.simpa
+              "simpa"
+              []
+              []
+              (Std.Tactic.Simpa.simpaArgsRest
+               []
+               []
+               ["only"]
+               [(Tactic.simpArgs
+                 "["
+                 [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `map_pow)
+                  ","
+                  (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+                 "]")]
+               []))])))]
+        "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app `v.valuation_of_ne_zero [`x])
+        ","
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Std.Tactic.Simpa.simpa
+             "simpa"
+             []
+             []
+             (Std.Tactic.Simpa.simpaArgsRest
+              []
+              []
+              ["only"]
+              [(Tactic.simpArgs
+                "["
+                [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `map_pow)
+                 ","
+                 (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+                "]")]
+              []))])))]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.Simpa.simpa
+           "simpa"
+           []
+           []
+           (Std.Tactic.Simpa.simpaArgsRest
+            []
+            []
+            ["only"]
+            [(Tactic.simpArgs
+              "["
+              [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+               ","
+               (Tactic.simpLemma [] [] `map_pow)
+               ","
+               (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+              "]")]
+            []))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.Tactic.Simpa.simpa
+       "simpa"
+       []
+       []
+       (Std.Tactic.Simpa.simpaArgsRest
+        []
+        []
+        ["only"]
+        [(Tactic.simpArgs
+          "["
+          [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+           ","
+           (Tactic.simpLemma [] [] `map_pow)
+           ","
+           (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+          "]")]
+        []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Int.toAdd_pow
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_pow
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `pow_monoid_hom_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `v.valuation_of_ne_zero [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `v.valuation_of_ne_zero
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Std.Tactic.rintro
+       "rintro"
+       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+        (Std.Tactic.RCases.rintroPat.one
+         (Std.Tactic.RCases.rcasesPat.tuple
+          "⟨"
+          [(Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+            [])
+           ","
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+            [])]
+          "⟩"))]
+       [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0,
+     tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.byTactic
+      "by"
+      (Tactic.tacticSeq
+       (Tactic.tacticSeq1Indented
+        [(Std.Tactic.rintro
+          "rintro"
+          [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+           (Std.Tactic.RCases.rintroPat.one
+            (Std.Tactic.RCases.rcasesPat.tuple
+             "⟨"
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `x)])
+               [])
+              ","
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+               [])]
+             "⟩"))]
+          [])
+         []
+         (Tactic.exact
+          "exact"
+          (Term.anonymousCtor
+           "⟨"
+           [(Term.app `v.valuation_of_ne_zero [`x])
+            ","
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Std.Tactic.Simpa.simpa
+                 "simpa"
+                 []
+                 []
+                 (Std.Tactic.Simpa.simpaArgsRest
+                  []
+                  []
+                  ["only"]
+                  [(Tactic.simpArgs
+                    "["
+                    [(Tactic.simpLemma [] [] `pow_monoid_hom_apply)
+                     ","
+                     (Tactic.simpLemma [] [] `map_pow)
+                     ","
+                     (Tactic.simpLemma [] [] `Int.toAdd_pow)]
+                    "]")]
+                  []))])))]
+           "⟩"))])))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj `v "." `valuationOfNeZero)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj
+       (Term.app `AddSubgroup.zmultiples [(Term.typeAscription "(" `n ":" [(termℤ "ℤ")] ")")])
+       "."
+       `toSubgroup)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `AddSubgroup.zmultiples [(Term.typeAscription "(" `n ":" [(termℤ "ℤ")] ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription "(" `n ":" [(termℤ "ℤ")] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (termℤ "ℤ")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `AddSubgroup.zmultiples
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `AddSubgroup.zmultiples [(Term.typeAscription "(" `n ":" [(termℤ "ℤ")] ")")])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj
+       (Term.typeAscription
+        "("
+        (Term.app `powMonoidHom [`n])
+        ":"
+        [(Algebra.Hom.Group.«term_→*_»
+          (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+          " →* "
+          (Algebra.Group.Units.«term_ˣ» `K "ˣ"))]
+        ")")
+       "."
+       `range)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.typeAscription
+       "("
+       (Term.app `powMonoidHom [`n])
+       ":"
+       [(Algebra.Hom.Group.«term_→*_»
+         (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+         " →* "
+         (Algebra.Group.Units.«term_ˣ» `K "ˣ"))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Hom.Group.«term_→*_»
+       (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+       " →* "
+       (Algebra.Group.Units.«term_ˣ» `K "ˣ"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `K
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (Algebra.Group.Units.«term_ˣ» `K "ˣ")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `K
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 26 >? 1024, (none, [anonymous]) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `powMonoidHom [`n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `powMonoidHom
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `QuotientGroup.map
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      (Term.proj
+       (Term.proj
+        (Term.proj (Term.app `Int.quotientZmultiplesNatEquivZmod [`n]) "." `toMultiplicative)
+        "."
+        `toMonoidHom)
+       "."
+       `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj
+       (Term.proj (Term.app `Int.quotientZmultiplesNatEquivZmod [`n]) "." `toMultiplicative)
+       "."
+       `toMonoidHom)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj (Term.app `Int.quotientZmultiplesNatEquivZmod [`n]) "." `toMultiplicative)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `Int.quotientZmultiplesNatEquivZmod [`n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Int.quotientZmultiplesNatEquivZmod
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Int.quotientZmultiplesNatEquivZmod [`n])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Algebra.Hom.Group.«term_→*_»
+       (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)
+       " →* "
+       (Term.app `Multiplicative [(Term.app `Zmod [`n])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Multiplicative [(Term.app `Zmod [`n])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Zmod [`n])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Zmod
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Zmod [`n]) ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Multiplicative
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.DedekindDomain.SelmerGroup.quot', expected 'RingTheory.DedekindDomain.SelmerGroup.quot._@.RingTheory.DedekindDomain.SelmerGroup._hyg.5'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The multiplicative `v`-adic valuation on `Kˣ` modulo `n`-th powers. -/
-def valuationOfNeZeroMod (n : ℕ) : (K/n) →* Multiplicative (Zmod n) :=
-  (Int.quotientZmultiplesNatEquivZmod n).toMultiplicative.toMonoidHom.comp <|
-    QuotientGroup.map (powMonoidHom n : Kˣ →* Kˣ).range (AddSubgroup.zmultiples (n : ℤ)).toSubgroup
-      v.valuationOfNeZero
-      (by
-        rintro _ ⟨x, rfl⟩
-        exact
-          ⟨v.valuation_of_ne_zero x, by simpa only [pow_monoid_hom_apply, map_pow, Int.toAdd_pow] ⟩)
+  def
+    valuationOfNeZeroMod
+    ( n : ℕ ) : K / n →* Multiplicative Zmod n
+    :=
+      Int.quotientZmultiplesNatEquivZmod n . toMultiplicative . toMonoidHom . comp
+        <|
+        QuotientGroup.map
+          ( powMonoidHom n : K ˣ →* K ˣ ) . range
+            AddSubgroup.zmultiples ( n : ℤ ) . toSubgroup
+            v . valuationOfNeZero
+            by
+              rintro _ ⟨ x , rfl ⟩
+                exact
+                  ⟨
+                    v.valuation_of_ne_zero x
+                      ,
+                      by simpa only [ pow_monoid_hom_apply , map_pow , Int.toAdd_pow ]
+                    ⟩
 #align
   is_dedekind_domain.height_one_spectrum.valuation_of_ne_zero_mod IsDedekindDomain.HeightOneSpectrum.valuationOfNeZeroMod
 
-@[simp]
-theorem valuation_of_unit_mod_eq (n : ℕ) (x : Rˣ) :
-    v.valuationOfNeZeroMod n (Units.map (algebraMap R K : R →* K) x : K/n) = 1 := by
-  rw [valuation_of_ne_zero_mod, MonoidHom.comp_apply, ← QuotientGroup.coe_mk',
-    QuotientGroup.map_mk', valuation_of_unit_eq, QuotientGroup.coe_one, map_one]
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      []
+      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `valuation_of_unit_mod_eq [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`n] [":" (termℕ "ℕ")] [] ")")
+        (Term.explicitBinder "(" [`x] [":" (Algebra.Group.Units.«term_ˣ» `R "ˣ")] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (Term.app
+          (Term.proj `v "." `valuationOfNeZeroMod)
+          [`n
+           (Term.typeAscription
+            "("
+            (Term.app
+             `Units.map
+             [(Term.typeAscription
+               "("
+               (Term.app `algebraMap [`R `K])
+               ":"
+               [(Algebra.Hom.Group.«term_→*_» `R " →* " `K)]
+               ")")
+              `x])
+            ":"
+            [(RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)]
+            ")")])
+         "="
+         (num "1"))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `valuation_of_ne_zero_mod)
+              ","
+              (Tactic.rwRule [] `MonoidHom.comp_apply)
+              ","
+              (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `QuotientGroup.coe_mk')
+              ","
+              (Tactic.rwRule [] `QuotientGroup.map_mk')
+              ","
+              (Tactic.rwRule [] `valuation_of_unit_eq)
+              ","
+              (Tactic.rwRule [] `QuotientGroup.coe_one)
+              ","
+              (Tactic.rwRule [] `map_one)]
+             "]")
+            [])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `valuation_of_ne_zero_mod)
+             ","
+             (Tactic.rwRule [] `MonoidHom.comp_apply)
+             ","
+             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `QuotientGroup.coe_mk')
+             ","
+             (Tactic.rwRule [] `QuotientGroup.map_mk')
+             ","
+             (Tactic.rwRule [] `valuation_of_unit_eq)
+             ","
+             (Tactic.rwRule [] `QuotientGroup.coe_one)
+             ","
+             (Tactic.rwRule [] `map_one)]
+            "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `valuation_of_ne_zero_mod)
+         ","
+         (Tactic.rwRule [] `MonoidHom.comp_apply)
+         ","
+         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `QuotientGroup.coe_mk')
+         ","
+         (Tactic.rwRule [] `QuotientGroup.map_mk')
+         ","
+         (Tactic.rwRule [] `valuation_of_unit_eq)
+         ","
+         (Tactic.rwRule [] `QuotientGroup.coe_one)
+         ","
+         (Tactic.rwRule [] `map_one)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_one
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `QuotientGroup.coe_one
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `valuation_of_unit_eq
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `QuotientGroup.map_mk'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `QuotientGroup.coe_mk'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `MonoidHom.comp_apply
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `valuation_of_ne_zero_mod
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (Term.app
+        (Term.proj `v "." `valuationOfNeZeroMod)
+        [`n
+         (Term.typeAscription
+          "("
+          (Term.app
+           `Units.map
+           [(Term.typeAscription
+             "("
+             (Term.app `algebraMap [`R `K])
+             ":"
+             [(Algebra.Hom.Group.«term_→*_» `R " →* " `K)]
+             ")")
+            `x])
+          ":"
+          [(RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)]
+          ")")])
+       "="
+       (num "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "1")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       (Term.proj `v "." `valuationOfNeZeroMod)
+       [`n
+        (Term.typeAscription
+         "("
+         (Term.app
+          `Units.map
+          [(Term.typeAscription
+            "("
+            (Term.app `algebraMap [`R `K])
+            ":"
+            [(Algebra.Hom.Group.«term_→*_» `R " →* " `K)]
+            ")")
+           `x])
+         ":"
+         [(RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)]
+         ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (Term.app
+        `Units.map
+        [(Term.typeAscription
+          "("
+          (Term.app `algebraMap [`R `K])
+          ":"
+          [(Algebra.Hom.Group.«term_→*_» `R " →* " `K)]
+          ")")
+         `x])
+       ":"
+       [(RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.DedekindDomain.SelmerGroup.quot', expected 'RingTheory.DedekindDomain.SelmerGroup.quot._@.RingTheory.DedekindDomain.SelmerGroup._hyg.5'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+@[ simp ]
+  theorem
+    valuation_of_unit_mod_eq
+    ( n : ℕ ) ( x : R ˣ )
+      : v . valuationOfNeZeroMod n ( Units.map ( algebraMap R K : R →* K ) x : K / n ) = 1
+    :=
+      by
+        rw
+          [
+            valuation_of_ne_zero_mod
+              ,
+              MonoidHom.comp_apply
+              ,
+              ← QuotientGroup.coe_mk'
+              ,
+              QuotientGroup.map_mk'
+              ,
+              valuation_of_unit_eq
+              ,
+              QuotientGroup.coe_one
+              ,
+              map_one
+            ]
 #align
   is_dedekind_domain.height_one_spectrum.valuation_of_unit_mod_eq IsDedekindDomain.HeightOneSpectrum.valuation_of_unit_mod_eq
 
@@ -176,13 +1112,426 @@ end HeightOneSpectrum
 variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:632:2: warning: expanding binder collection (v «expr ∉ » S) -/
+/- failed to parenthesize: unknown constant 'group'
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "The Selmer group `K⟮S, n⟯`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `selmerGroup [])
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         («term_<|_» `Subgroup "<|" (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `carrier
+           []
+           []
+           ":="
+           (Set.«term{_|_}»
+            "{"
+            (Std.ExtendedBinder.extBinder
+             (Lean.binderIdent `x)
+             [(group ":" (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n))])
+            "|"
+            (Term.forall
+             "∀"
+             [(Term.explicitBinder "(" [`v] [] [] ")")
+              (Term.explicitBinder "(" [(Term.hole "_")] [":" («term_∉_» `v "∉" `S)] [] ")")]
+             []
+             ","
+             («term_=_»
+              (Term.app
+               (Term.proj
+                (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+                "."
+                `valuationOfNeZeroMod)
+               [`n `x])
+              "="
+              (num "1")))
+            "}"))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `one_mem'
+           [(Term.hole "_") (Term.hole "_")]
+           []
+           ":="
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_one)] "]")
+                [])]))))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `mul_mem'
+           [(Term.hole "_") (Term.hole "_") `hx `hy `v `hv]
+           []
+           ":="
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `map_mul)
+                  ","
+                  (Tactic.rwRule [] (Term.app `hx [`v `hv]))
+                  ","
+                  (Tactic.rwRule [] (Term.app `hy [`v `hv]))
+                  ","
+                  (Tactic.rwRule [] `one_mul)]
+                 "]")
+                [])]))))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `inv_mem'
+           [(Term.hole "_") `hx `v `hv]
+           []
+           ":="
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.rwSeq
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `map_inv)
+                  ","
+                  (Tactic.rwRule [] (Term.app `hx [`v `hv]))
+                  ","
+                  (Tactic.rwRule [] `inv_one)]
+                 "]")
+                [])]))))))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `map_inv)
+             ","
+             (Tactic.rwRule [] (Term.app `hx [`v `hv]))
+             ","
+             (Tactic.rwRule [] `inv_one)]
+            "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `map_inv)
+         ","
+         (Tactic.rwRule [] (Term.app `hx [`v `hv]))
+         ","
+         (Tactic.rwRule [] `inv_one)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `inv_one
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `hx [`v `hv])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hv
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_inv
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `map_mul)
+             ","
+             (Tactic.rwRule [] (Term.app `hx [`v `hv]))
+             ","
+             (Tactic.rwRule [] (Term.app `hy [`v `hv]))
+             ","
+             (Tactic.rwRule [] `one_mul)]
+            "]")
+           [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `map_mul)
+         ","
+         (Tactic.rwRule [] (Term.app `hx [`v `hv]))
+         ","
+         (Tactic.rwRule [] (Term.app `hy [`v `hv]))
+         ","
+         (Tactic.rwRule [] `one_mul)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `one_mul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `hy [`v `hv])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hv
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hy
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `hx [`v `hv])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hv
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `hx
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_mul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_one)] "]") [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_one)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `map_one
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Set.«term{_|_}»
+       "{"
+       (Std.ExtendedBinder.extBinder
+        (Lean.binderIdent `x)
+        [(group ":" (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n))])
+       "|"
+       (Term.forall
+        "∀"
+        [(Term.explicitBinder "(" [`v] [] [] ")")
+         (Term.explicitBinder "(" [(Term.hole "_")] [":" («term_∉_» `v "∉" `S)] [] ")")]
+        []
+        ","
+        («term_=_»
+         (Term.app
+          (Term.proj
+           (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+           "."
+           `valuationOfNeZeroMod)
+          [`n `x])
+         "="
+         (num "1")))
+       "}")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [(Term.explicitBinder "(" [`v] [] [] ")")
+        (Term.explicitBinder "(" [(Term.hole "_")] [":" («term_∉_» `v "∉" `S)] [] ")")]
+       []
+       ","
+       («term_=_»
+        (Term.app
+         (Term.proj
+          (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+          "."
+          `valuationOfNeZeroMod)
+         [`n `x])
+        "="
+        (num "1")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       (Term.app
+        (Term.proj
+         (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+         "."
+         `valuationOfNeZeroMod)
+        [`n `x])
+       "="
+       (num "1"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "1")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.app
+       (Term.proj
+        (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+        "."
+        `valuationOfNeZeroMod)
+       [`n `x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+       "."
+       `valuationOfNeZeroMod)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `HeightOneSpectrum [`R])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `R
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `HeightOneSpectrum
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_∉_» `v "∉" `S)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `S
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 50, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.DedekindDomain.SelmerGroup.quot', expected 'RingTheory.DedekindDomain.SelmerGroup.quot._@.RingTheory.DedekindDomain.SelmerGroup._hyg.5'-/-- failed to format: unknown constant 'group'
 /-- The Selmer group `K⟮S, n⟯`. -/
-def selmerGroup : Subgroup <| K/n
+  def
+    selmerGroup
+    : Subgroup <| K / n
     where
-  carrier := { x : K/n | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).valuationOfNeZeroMod n x = 1 }
-  one_mem' _ _ := by rw [map_one]
-  mul_mem' _ _ hx hy v hv := by rw [map_mul, hx v hv, hy v hv, one_mul]
-  inv_mem' _ hx v hv := by rw [map_inv, hx v hv, inv_one]
+      carrier
+          :=
+          {
+            x : K / n
+            |
+            ∀ ( v ) ( _ : v ∉ S ) , ( v : HeightOneSpectrum R ) . valuationOfNeZeroMod n x = 1
+            }
+        one_mem' _ _ := by rw [ map_one ]
+        mul_mem' _ _ hx hy v hv := by rw [ map_mul , hx v hv , hy v hv , one_mul ]
+        inv_mem' _ hx v hv := by rw [ map_inv , hx v hv , inv_one ]
 #align is_dedekind_domain.selmer_group IsDedekindDomain.selmerGroup
 
 -- mathport name: «expr ⟮ , ⟯»
@@ -193,12 +1542,200 @@ namespace SelmerGroup
 theorem monotone (hS : S ≤ S') : K⟮S,n⟯ ≤ K⟮S',n⟯ := fun _ hx v => hx v ∘ mt (@hS v)
 #align is_dedekind_domain.selmer_group.monotone IsDedekindDomain.selmerGroup.monotone
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The multiplicative `v`-adic valuations on `K⟮S, n⟯` for all `v ∈ S`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `valuation [])
+      (Command.optDeclSig
+       []
+       [(Term.typeSpec
+         ":"
+         (Algebra.Hom.Group.«term_→*_»
+          (SelmerGroup.RingTheory.DedekindDomain.SelmerGroup.«term_⟮_,_⟯» `K "⟮" `S "," `n "⟯")
+          " →* "
+          (Term.arrow `S "→" (Term.app `Multiplicative [(Term.app `Zmod [`n])]))))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `toFun
+           [`x `v]
+           []
+           ":="
+           (Term.app
+            (Term.proj
+             (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+             "."
+             `valuationOfNeZeroMod)
+            [`n
+             (Term.typeAscription
+              "("
+              `x
+              ":"
+              [(RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)]
+              ")")]))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `map_one'
+           []
+           []
+           ":="
+           (Term.app
+            `funext
+            [(Term.fun
+              "fun"
+              (Term.basicFun [`v] [] "=>" (Term.app `map_one [(Term.hole "_")])))]))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `map_mul'
+           [`x `y]
+           []
+           ":="
+           (Term.app
+            `funext
+            [(Term.fun
+              "fun"
+              (Term.basicFun [`v] [] "=>" (Term.app `map_mul [(Term.hole "_") `x `y])))]))))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `funext
+       [(Term.fun "fun" (Term.basicFun [`v] [] "=>" (Term.app `map_mul [(Term.hole "_") `x `y])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`v] [] "=>" (Term.app `map_mul [(Term.hole "_") `x `y])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `map_mul [(Term.hole "_") `x `y])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `map_mul
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `funext
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `funext
+       [(Term.fun "fun" (Term.basicFun [`v] [] "=>" (Term.app `map_one [(Term.hole "_")])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`v] [] "=>" (Term.app `map_one [(Term.hole "_")])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `map_one [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `map_one
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `v
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `funext
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.typeAscription "(" `v ":" [(Term.app `HeightOneSpectrum [`R])] ")")
+        "."
+        `valuationOfNeZeroMod)
+       [`n
+        (Term.typeAscription
+         "("
+         `x
+         ":"
+         [(RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)]
+         ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription "(" `x ":" [(RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)] ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (RingTheory.DedekindDomain.SelmerGroup.quot `K "/" `n)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.DedekindDomain.SelmerGroup.quot', expected 'RingTheory.DedekindDomain.SelmerGroup.quot._@.RingTheory.DedekindDomain.SelmerGroup._hyg.5'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The multiplicative `v`-adic valuations on `K⟮S, n⟯` for all `v ∈ S`. -/
-def valuation : K⟮S,n⟯ →* S → Multiplicative (Zmod n)
+  def
+    valuation
+    : K ⟮ S , n ⟯ →* S → Multiplicative Zmod n
     where
-  toFun x v := (v : HeightOneSpectrum R).valuationOfNeZeroMod n (x : K/n)
-  map_one' := funext fun v => map_one _
-  map_mul' x y := funext fun v => map_mul _ x y
+      toFun x v := ( v : HeightOneSpectrum R ) . valuationOfNeZeroMod n ( x : K / n )
+        map_one' := funext fun v => map_one _
+        map_mul' x y := funext fun v => map_mul _ x y
 #align is_dedekind_domain.selmer_group.valuation IsDedekindDomain.selmerGroup.valuation
 
 theorem valuation_ker_eq :
@@ -255,9 +1792,199 @@ theorem from_unit_ker [hn : Fact <| 0 < n] :
         ((QuotientGroup.eq_one_iff _).mpr ⟨_, by simp only [pow_monoid_hom_apply, map_pow]⟩)
 #align is_dedekind_domain.selmer_group.from_unit_ker IsDedekindDomain.selmerGroup.from_unit_ker
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The injection induced by the natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `fromUnitLift [])
+      (Command.optDeclSig
+       [(Term.instBinder "[" [] («term_<|_» `Fact "<|" («term_<_» (num "0") "<" `n)) "]")]
+       [(Term.typeSpec
+         ":"
+         (Algebra.Hom.Group.«term_→*_»
+          (RingTheory.DedekindDomain.SelmerGroup.quot `R "/" `n)
+          " →* "
+          (SelmerGroup.RingTheory.DedekindDomain.SelmerGroup.«term_⟮_,_⟯»
+           `K
+           "⟮"
+           (Term.typeAscription
+            "("
+            («term∅» "∅")
+            ":"
+            [(«term_<|_» `Set "<|" (Term.app `HeightOneSpectrum [`R]))]
+            ")")
+           ","
+           `n
+           "⟯")))])
+      (Command.declValSimple
+       ":="
+       (Term.app
+        (Term.proj (Term.app `QuotientGroup.kerLift [(Term.hole "_")]) "." `comp)
+        [(Term.proj
+          (Term.proj (Term.app `QuotientGroup.quotientMulEquivOfEq [`from_unit_ker]) "." `symm)
+          "."
+          `toMonoidHom)])
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj (Term.app `QuotientGroup.kerLift [(Term.hole "_")]) "." `comp)
+       [(Term.proj
+         (Term.proj (Term.app `QuotientGroup.quotientMulEquivOfEq [`from_unit_ker]) "." `symm)
+         "."
+         `toMonoidHom)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj
+       (Term.proj (Term.app `QuotientGroup.quotientMulEquivOfEq [`from_unit_ker]) "." `symm)
+       "."
+       `toMonoidHom)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj (Term.app `QuotientGroup.quotientMulEquivOfEq [`from_unit_ker]) "." `symm)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `QuotientGroup.quotientMulEquivOfEq [`from_unit_ker])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `from_unit_ker
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `QuotientGroup.quotientMulEquivOfEq
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `QuotientGroup.quotientMulEquivOfEq [`from_unit_ker])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj (Term.app `QuotientGroup.kerLift [(Term.hole "_")]) "." `comp)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `QuotientGroup.kerLift [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `QuotientGroup.kerLift
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `QuotientGroup.kerLift [(Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Algebra.Hom.Group.«term_→*_»
+       (RingTheory.DedekindDomain.SelmerGroup.quot `R "/" `n)
+       " →* "
+       (SelmerGroup.RingTheory.DedekindDomain.SelmerGroup.«term_⟮_,_⟯»
+        `K
+        "⟮"
+        (Term.typeAscription
+         "("
+         («term∅» "∅")
+         ":"
+         [(«term_<|_» `Set "<|" (Term.app `HeightOneSpectrum [`R]))]
+         ")")
+        ","
+        `n
+        "⟯"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (SelmerGroup.RingTheory.DedekindDomain.SelmerGroup.«term_⟮_,_⟯»
+       `K
+       "⟮"
+       (Term.typeAscription
+        "("
+        («term∅» "∅")
+        ":"
+        [(«term_<|_» `Set "<|" (Term.app `HeightOneSpectrum [`R]))]
+        ")")
+       ","
+       `n
+       "⟯")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       («term∅» "∅")
+       ":"
+       [(«term_<|_» `Set "<|" (Term.app `HeightOneSpectrum [`R]))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_» `Set "<|" (Term.app `HeightOneSpectrum [`R]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `HeightOneSpectrum [`R])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `R
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `HeightOneSpectrum
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `Set
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term∅» "∅")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `K
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (RingTheory.DedekindDomain.SelmerGroup.quot `R "/" `n)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'RingTheory.DedekindDomain.SelmerGroup.quot', expected 'RingTheory.DedekindDomain.SelmerGroup.quot._@.RingTheory.DedekindDomain.SelmerGroup._hyg.5'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- The injection induced by the natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/
-def fromUnitLift [Fact <| 0 < n] : (R/n) →* K⟮(∅ : Set <| HeightOneSpectrum R),n⟯ :=
-  (QuotientGroup.kerLift _).comp (QuotientGroup.quotientMulEquivOfEq from_unit_ker).symm.toMonoidHom
+  def
+    fromUnitLift
+    [ Fact <| 0 < n ] : R / n →* K ⟮ ( ∅ : Set <| HeightOneSpectrum R ) , n ⟯
+    :=
+      QuotientGroup.kerLift _ . comp
+        QuotientGroup.quotientMulEquivOfEq from_unit_ker . symm . toMonoidHom
 #align is_dedekind_domain.selmer_group.from_unit_lift IsDedekindDomain.selmerGroup.fromUnitLift
 
 theorem from_unit_lift_injective [Fact <| 0 < n] :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.category.Top.limits
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,21 +55,367 @@ def limitCone (F : J ⥤ TopCat.{max v u}) : Cone F
             show Continuous ((fun u : ∀ j : J, F.obj j => u j) ∘ Subtype.val) by continuity } }
 #align Top.limit_cone TopCat.limitCone
 
-/-- A choice of limit cone for a functor `F : J ⥤ Top` whose topology is defined as an
-infimum of topologies infimum.
-Generally you should just use `limit.cone F`, unless you need the actual definition
-(which is in terms of `types.limit_cone`).
--/
-def limitConeInfi (F : J ⥤ TopCat.{max v u}) : Cone F
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A choice of limit cone for a functor `F : J ⥤ Top` whose topology is defined as an\ninfimum of topologies infimum.\nGenerally you should just use `limit.cone F`, unless you need the actual definition\n(which is in terms of `types.limit_cone`).\n-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `limitConeInfi [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`F]
+         [":"
+          (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+           `J
+           " ⥤ "
+           (Term.explicitUniv `TopCat ".{" [(Level.max "max" [`v `u])] "}"))]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.app `Cone [`F]))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `x
+           []
+           []
+           ":="
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.proj
+              (Term.app
+               `Types.limitCone
+               [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                 `F
+                 " ⋙ "
+                 (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+              "."
+              `x)
+             ","
+             (Order.CompleteLattice.«term⨅_,_»
+              "⨅"
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+              ", "
+              (Term.app
+               (Term.proj (Term.proj (Term.app (Term.proj `F "." `obj) [`j]) "." `str) "." `induced)
+               [(Term.app
+                 (Term.proj
+                  (Term.proj
+                   (Term.app
+                    `Types.limitCone
+                    [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                      `F
+                      " ⋙ "
+                      (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                   "."
+                   `π)
+                  "."
+                  `app)
+                 [`j])]))]
+            "⟩"))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `π
+           []
+           []
+           ":="
+           (Term.structInst
+            "{"
+            []
+            [(Term.structInstField
+              (Term.structInstLVal `app [])
+              ":="
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`j]
+                []
+                "=>"
+                (Term.anonymousCtor
+                 "⟨"
+                 [(Term.app
+                   (Term.proj
+                    (Term.proj
+                     (Term.app
+                      `Types.limitCone
+                      [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                        `F
+                        " ⋙ "
+                        (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                     "."
+                     `π)
+                    "."
+                    `app)
+                   [`j])
+                  ","
+                  (Term.app
+                   (Term.proj `continuous_iff_le_induced "." `mpr)
+                   [(Term.app `infᵢ_le [(Term.hole "_") (Term.hole "_")])])]
+                 "⟩"))))
+             []
+             (Term.structInstField
+              (Term.structInstLVal `naturality' [])
+              ":="
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`j `j' `f]
+                []
+                "=>"
+                (Term.app
+                 `ContinuousMap.coe_injective
+                 [(Term.app
+                   (Term.proj
+                    (Term.proj
+                     (Term.app
+                      `Types.limitCone
+                      [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                        `F
+                        " ⋙ "
+                        (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                     "."
+                     `π)
+                    "."
+                    `naturality)
+                   [`f])]))))]
+            (Term.optEllipsis [])
+            []
+            "}"))))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst
+       "{"
+       []
+       [(Term.structInstField
+         (Term.structInstLVal `app [])
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`j]
+           []
+           "=>"
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.app
+              (Term.proj
+               (Term.proj
+                (Term.app
+                 `Types.limitCone
+                 [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                   `F
+                   " ⋙ "
+                   (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                "."
+                `π)
+               "."
+               `app)
+              [`j])
+             ","
+             (Term.app
+              (Term.proj `continuous_iff_le_induced "." `mpr)
+              [(Term.app `infᵢ_le [(Term.hole "_") (Term.hole "_")])])]
+            "⟩"))))
+        []
+        (Term.structInstField
+         (Term.structInstLVal `naturality' [])
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`j `j' `f]
+           []
+           "=>"
+           (Term.app
+            `ContinuousMap.coe_injective
+            [(Term.app
+              (Term.proj
+               (Term.proj
+                (Term.app
+                 `Types.limitCone
+                 [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                   `F
+                   " ⋙ "
+                   (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                "."
+                `π)
+               "."
+               `naturality)
+              [`f])]))))]
+       (Term.optEllipsis [])
+       []
+       "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`j `j' `f]
+        []
+        "=>"
+        (Term.app
+         `ContinuousMap.coe_injective
+         [(Term.app
+           (Term.proj
+            (Term.proj
+             (Term.app
+              `Types.limitCone
+              [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                `F
+                " ⋙ "
+                (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+             "."
+             `π)
+            "."
+            `naturality)
+           [`f])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `ContinuousMap.coe_injective
+       [(Term.app
+         (Term.proj
+          (Term.proj
+           (Term.app
+            `Types.limitCone
+            [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+              `F
+              " ⋙ "
+              (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+           "."
+           `π)
+          "."
+          `naturality)
+         [`f])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.proj
+         (Term.app
+          `Types.limitCone
+          [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+            `F
+            " ⋙ "
+            (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+         "."
+         `π)
+        "."
+        `naturality)
+       [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.proj
+        (Term.app
+         `Types.limitCone
+         [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+           `F
+           " ⋙ "
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+        "."
+        `π)
+       "."
+       `naturality)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj
+       (Term.app
+        `Types.limitCone
+        [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+          `F
+          " ⋙ "
+          (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+       "."
+       `π)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app
+       `Types.limitCone
+       [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+         `F
+         " ⋙ "
+         (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+       `F
+       " ⋙ "
+       (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A choice of limit cone for a functor `F : J ⥤ Top` whose topology is defined as an
+    infimum of topologies infimum.
+    Generally you should just use `limit.cone F`, unless you need the actual definition
+    (which is in terms of `types.limit_cone`).
+    -/
+  def
+    limitConeInfi
+    ( F : J ⥤ TopCat .{ max v u } ) : Cone F
     where
-  x :=
-    ⟨(Types.limitCone (F ⋙ forget)).x,
-      ⨅ j, (F.obj j).str.induced ((Types.limitCone (F ⋙ forget)).π.app j)⟩
-  π :=
-    { app := fun j =>
-        ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infᵢ_le _ _)⟩
-      naturality' := fun j j' f =>
-        ContinuousMap.coe_injective ((Types.limitCone (F ⋙ forget)).π.naturality f) }
+      x
+          :=
+          ⟨
+            Types.limitCone F ⋙ forget . x
+              ,
+              ⨅ j , F . obj j . str . induced Types.limitCone F ⋙ forget . π . app j
+            ⟩
+        π
+          :=
+          {
+            app
+                :=
+                fun
+                  j
+                    =>
+                    ⟨
+                      Types.limitCone F ⋙ forget . π . app j
+                        ,
+                        continuous_iff_le_induced . mpr infᵢ_le _ _
+                      ⟩
+              naturality'
+                :=
+                fun
+                  j j' f
+                    =>
+                    ContinuousMap.coe_injective Types.limitCone F ⋙ forget . π . naturality f
+            }
 #align Top.limit_cone_infi TopCat.limitConeInfi
 
 /-- The chosen cone `Top.limit_cone F` for a functor `F : J ⥤ Top` is a limit cone.
@@ -90,18 +436,454 @@ def limitConeIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitCone F)
     simpa [← h]
 #align Top.limit_cone_is_limit TopCat.limitConeIsLimit
 
-/-- The chosen cone `Top.limit_cone_infi F` for a functor `F : J ⥤ Top` is a limit cone.
-Generally you should just use `limit.is_limit F`, unless you need the actual definition
-(which is in terms of `types.limit_cone_is_limit`).
--/
-def limitConeInfiIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitConeInfi F) :=
-  by
-  refine' is_limit.of_faithful forget (types.limit_cone_is_limit _) (fun s => ⟨_, _⟩) fun s => rfl
-  exact
-    continuous_iff_coinduced_le.mpr
-      (le_infᵢ fun j =>
-        coinduced_le_iff_le_induced.mp <|
-          (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The chosen cone `Top.limit_cone_infi F` for a functor `F : J ⥤ Top` is a limit cone.\nGenerally you should just use `limit.is_limit F`, unless you need the actual definition\n(which is in terms of `types.limit_cone_is_limit`).\n-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `limitConeInfiIsLimit [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`F]
+         [":"
+          (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+           `J
+           " ⥤ "
+           (Term.explicitUniv `TopCat ".{" [(Level.max "max" [`v `u])] "}"))]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.app `IsLimit [(Term.app `limitConeInfi [`F])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.refine'
+            "refine'"
+            (Term.app
+             `is_limit.of_faithful
+             [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+              (Term.app `types.limit_cone_is_limit [(Term.hole "_")])
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`s]
+                []
+                "=>"
+                (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+              (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))]))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app
+             `continuous_iff_coinduced_le.mpr
+             [(Term.app
+               `le_infᵢ
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`j]
+                  []
+                  "=>"
+                  («term_<|_»
+                   `coinduced_le_iff_le_induced.mp
+                   "<|"
+                   (Term.typeAscription
+                    "("
+                    (Term.app
+                     `continuous_iff_coinduced_le.mp
+                     [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+                    ":"
+                    [(Term.hole "_")]
+                    ")"))))])]))])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.refine'
+           "refine'"
+           (Term.app
+            `is_limit.of_faithful
+            [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+             (Term.app `types.limit_cone_is_limit [(Term.hole "_")])
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`s]
+               []
+               "=>"
+               (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+             (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))]))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app
+            `continuous_iff_coinduced_le.mpr
+            [(Term.app
+              `le_infᵢ
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`j]
+                 []
+                 "=>"
+                 («term_<|_»
+                  `coinduced_le_iff_le_induced.mp
+                  "<|"
+                  (Term.typeAscription
+                   "("
+                   (Term.app
+                    `continuous_iff_coinduced_le.mp
+                    [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+                   ":"
+                   [(Term.hole "_")]
+                   ")"))))])]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `continuous_iff_coinduced_le.mpr
+        [(Term.app
+          `le_infᵢ
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`j]
+             []
+             "=>"
+             («term_<|_»
+              `coinduced_le_iff_le_induced.mp
+              "<|"
+              (Term.typeAscription
+               "("
+               (Term.app
+                `continuous_iff_coinduced_le.mp
+                [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+               ":"
+               [(Term.hole "_")]
+               ")"))))])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `continuous_iff_coinduced_le.mpr
+       [(Term.app
+         `le_infᵢ
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`j]
+            []
+            "=>"
+            («term_<|_»
+             `coinduced_le_iff_le_induced.mp
+             "<|"
+             (Term.typeAscription
+              "("
+              (Term.app
+               `continuous_iff_coinduced_le.mp
+               [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+              ":"
+              [(Term.hole "_")]
+              ")"))))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `le_infᵢ
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`j]
+          []
+          "=>"
+          («term_<|_»
+           `coinduced_le_iff_le_induced.mp
+           "<|"
+           (Term.typeAscription
+            "("
+            (Term.app
+             `continuous_iff_coinduced_le.mp
+             [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+            ":"
+            [(Term.hole "_")]
+            ")"))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`j]
+        []
+        "=>"
+        («term_<|_»
+         `coinduced_le_iff_le_induced.mp
+         "<|"
+         (Term.typeAscription
+          "("
+          (Term.app
+           `continuous_iff_coinduced_le.mp
+           [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+          ":"
+          [(Term.hole "_")]
+          ")"))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `coinduced_le_iff_le_induced.mp
+       "<|"
+       (Term.typeAscription
+        "("
+        (Term.app
+         `continuous_iff_coinduced_le.mp
+         [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+        ":"
+        [(Term.hole "_")]
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (Term.app
+        `continuous_iff_coinduced_le.mp
+        [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+       ":"
+       [(Term.hole "_")]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `continuous_iff_coinduced_le.mp
+       [(Term.proj (Term.app `s.π.app [`j]) "." `Continuous)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj (Term.app `s.π.app [`j]) "." `Continuous)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `s.π.app [`j])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `s.π.app
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `s.π.app [`j]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `continuous_iff_coinduced_le.mp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `coinduced_le_iff_le_induced.mp
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `le_infᵢ
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app
+      `le_infᵢ
+      [(Term.fun
+        "fun"
+        (Term.basicFun
+         [`j]
+         []
+         "=>"
+         («term_<|_»
+          `coinduced_le_iff_le_induced.mp
+          "<|"
+          (Term.typeAscription
+           "("
+           (Term.app
+            `continuous_iff_coinduced_le.mp
+            [(Term.proj (Term.paren "(" (Term.app `s.π.app [`j]) ")") "." `Continuous)])
+           ":"
+           [(Term.hole "_")]
+           ")"))))])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `continuous_iff_coinduced_le.mpr
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.refine'
+       "refine'"
+       (Term.app
+        `is_limit.of_faithful
+        [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+         (Term.app `types.limit_cone_is_limit [(Term.hole "_")])
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`s]
+           []
+           "=>"
+           (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+         (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `is_limit.of_faithful
+       [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+        (Term.app `types.limit_cone_is_limit [(Term.hole "_")])
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`s]
+          []
+          "=>"
+          (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+        (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`s]
+        []
+        "=>"
+        (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`s]
+       []
+       "=>"
+       (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `types.limit_cone_is_limit [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `types.limit_cone_is_limit
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `types.limit_cone_is_limit [(Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    The chosen cone `Top.limit_cone_infi F` for a functor `F : J ⥤ Top` is a limit cone.
+    Generally you should just use `limit.is_limit F`, unless you need the actual definition
+    (which is in terms of `types.limit_cone_is_limit`).
+    -/
+  def
+    limitConeInfiIsLimit
+    ( F : J ⥤ TopCat .{ max v u } ) : IsLimit limitConeInfi F
+    :=
+      by
+        refine'
+            is_limit.of_faithful forget types.limit_cone_is_limit _ fun s => ⟨ _ , _ ⟩ fun s => rfl
+          exact
+            continuous_iff_coinduced_le.mpr
+              le_infᵢ
+                fun
+                  j
+                    =>
+                    coinduced_le_iff_le_induced.mp
+                      <|
+                      ( continuous_iff_coinduced_le.mp s.π.app j . Continuous : _ )
 #align Top.limit_cone_infi_is_limit TopCat.limitConeInfiIsLimit
 
 instance topHasLimitsOfSize : HasLimitsOfSize.{v} TopCat.{max v u}
@@ -117,48 +899,1088 @@ instance Top_has_limits : HasLimits TopCat.{u} :=
   TopCat.topHasLimitsOfSize.{u, u}
 #align Top.Top_has_limits TopCat.Top_has_limits
 
-instance forgetPreservesLimitsOfSize :
-    PreservesLimitsOfSize.{v, v} (forget : TopCat.{max v u} ⥤ Type max v u)
-    where PreservesLimitsOfShape J 𝒥 :=
-    {
-      PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (types.limit_cone_is_limit (F ⋙ forget)) }
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      [(Command.declId `forgetPreservesLimitsOfSize [])]
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         (Term.explicitUniv `PreservesLimitsOfSize ".{" [`v "," `v] "}")
+         [(Term.typeAscription
+           "("
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+           ":"
+           [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+             (Term.explicitUniv `TopCat ".{" [(Level.max "max" [`v `u])] "}")
+             " ⥤ "
+             (Term.type "Type" [(Level.max "max" [`v `u])]))]
+           ")")])))
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `PreservesLimitsOfShape
+           [`J `𝒥]
+           []
+           ":="
+           (Term.structInst
+            "{"
+            []
+            [(Term.structInstField
+              (Term.structInstLVal `PreservesLimit [])
+              ":="
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`F]
+                []
+                "=>"
+                (Term.app
+                 `preserves_limit_of_preserves_limit_cone
+                 [(Term.app `limit_cone_is_limit [`F])
+                  (Term.app
+                   `types.limit_cone_is_limit
+                   [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                     `F
+                     " ⋙ "
+                     (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])]))))]
+            (Term.optEllipsis [])
+            []
+            "}"))))]
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst
+       "{"
+       []
+       [(Term.structInstField
+         (Term.structInstLVal `PreservesLimit [])
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`F]
+           []
+           "=>"
+           (Term.app
+            `preserves_limit_of_preserves_limit_cone
+            [(Term.app `limit_cone_is_limit [`F])
+             (Term.app
+              `types.limit_cone_is_limit
+              [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                `F
+                " ⋙ "
+                (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])]))))]
+       (Term.optEllipsis [])
+       []
+       "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`F]
+        []
+        "=>"
+        (Term.app
+         `preserves_limit_of_preserves_limit_cone
+         [(Term.app `limit_cone_is_limit [`F])
+          (Term.app
+           `types.limit_cone_is_limit
+           [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+             `F
+             " ⋙ "
+             (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `preserves_limit_of_preserves_limit_cone
+       [(Term.app `limit_cone_is_limit [`F])
+        (Term.app
+         `types.limit_cone_is_limit
+         [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+           `F
+           " ⋙ "
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `types.limit_cone_is_limit
+       [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+         `F
+         " ⋙ "
+         (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+       `F
+       " ⋙ "
+       (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+instance
+  forgetPreservesLimitsOfSize
+  : PreservesLimitsOfSize .{ v , v } ( forget : TopCat .{ max v u } ⥤ Type max v u )
+  where
+    PreservesLimitsOfShape
+      J 𝒥
+      :=
+      {
+        PreservesLimit
+          :=
+          fun
+            F
+              =>
+              preserves_limit_of_preserves_limit_cone
+                limit_cone_is_limit F types.limit_cone_is_limit F ⋙ forget
+        }
 #align Top.forget_preserves_limits_of_size TopCat.forgetPreservesLimitsOfSize
 
-instance forgetPreservesLimits : PreservesLimits (forget : TopCat.{u} ⥤ Type u) :=
-  TopCat.forgetPreservesLimitsOfSize.{u, u}
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      [(Command.declId `forgetPreservesLimits [])]
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `PreservesLimits
+         [(Term.typeAscription
+           "("
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+           ":"
+           [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+             (Term.explicitUniv `TopCat ".{" [`u] "}")
+             " ⥤ "
+             (Term.type "Type" [`u]))]
+           ")")])))
+      (Command.declValSimple
+       ":="
+       (Term.explicitUniv `TopCat.forgetPreservesLimitsOfSize ".{" [`u "," `u] "}")
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.explicitUniv `TopCat.forgetPreservesLimitsOfSize ".{" [`u "," `u] "}")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `TopCat.forgetPreservesLimitsOfSize
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `PreservesLimits
+       [(Term.typeAscription
+         "("
+         (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+         ":"
+         [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+           (Term.explicitUniv `TopCat ".{" [`u] "}")
+           " ⥤ "
+           (Term.type "Type" [`u]))]
+         ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+       ":"
+       [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+         (Term.explicitUniv `TopCat ".{" [`u] "}")
+         " ⥤ "
+         (Term.type "Type" [`u]))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+       (Term.explicitUniv `TopCat ".{" [`u] "}")
+       " ⥤ "
+       (Term.type "Type" [`u]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.type "Type" [`u])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024
+[PrettyPrinter.parenthesize] ...precedences are 26 >? 1022, (some 1024,
+     level) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 26, term))
+      (Term.explicitUniv `TopCat ".{" [`u] "}")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `TopCat
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 27 >? 1024, (none, [anonymous]) <=? (some 26, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 26, (some 26, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+instance
+  forgetPreservesLimits
+  : PreservesLimits ( forget : TopCat .{ u } ⥤ Type u )
+  := TopCat.forgetPreservesLimitsOfSize .{ u , u }
 #align Top.forget_preserves_limits TopCat.forgetPreservesLimits
 
-/-- A choice of colimit cocone for a functor `F : J ⥤ Top`.
-Generally you should just use `colimit.coone F`, unless you need the actual definition
-(which is in terms of `types.colimit_cocone`).
--/
-def colimitCocone (F : J ⥤ TopCat.{max v u}) : Cocone F
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "A choice of colimit cocone for a functor `F : J ⥤ Top`.\nGenerally you should just use `colimit.coone F`, unless you need the actual definition\n(which is in terms of `types.colimit_cocone`).\n-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `colimitCocone [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`F]
+         [":"
+          (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+           `J
+           " ⥤ "
+           (Term.explicitUniv `TopCat ".{" [(Level.max "max" [`v `u])] "}"))]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.app `Cocone [`F]))])
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `x
+           []
+           []
+           ":="
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.proj
+              (Term.app
+               `Types.colimitCocone
+               [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                 `F
+                 " ⋙ "
+                 (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+              "."
+              `x)
+             ","
+             (Order.CompleteLattice.«term⨆_,_»
+              "⨆"
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+              ", "
+              (Term.app
+               (Term.proj
+                (Term.proj (Term.app (Term.proj `F "." `obj) [`j]) "." `str)
+                "."
+                `coinduced)
+               [(Term.app
+                 (Term.proj
+                  (Term.proj
+                   (Term.app
+                    `Types.colimitCocone
+                    [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                      `F
+                      " ⋙ "
+                      (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                   "."
+                   `ι)
+                  "."
+                  `app)
+                 [`j])]))]
+            "⟩"))))
+        []
+        (Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `ι
+           []
+           []
+           ":="
+           (Term.structInst
+            "{"
+            []
+            [(Term.structInstField
+              (Term.structInstLVal `app [])
+              ":="
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`j]
+                []
+                "=>"
+                (Term.anonymousCtor
+                 "⟨"
+                 [(Term.app
+                   (Term.proj
+                    (Term.proj
+                     (Term.app
+                      `Types.colimitCocone
+                      [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                        `F
+                        " ⋙ "
+                        (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                     "."
+                     `ι)
+                    "."
+                    `app)
+                   [`j])
+                  ","
+                  (Term.app
+                   (Term.proj `continuous_iff_coinduced_le "." `mpr)
+                   [(Term.app `le_supᵢ [(Term.hole "_") `j])])]
+                 "⟩"))))
+             []
+             (Term.structInstField
+              (Term.structInstLVal `naturality' [])
+              ":="
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`j `j' `f]
+                []
+                "=>"
+                (Term.app
+                 `ContinuousMap.coe_injective
+                 [(Term.app
+                   (Term.proj
+                    (Term.proj
+                     (Term.app
+                      `Types.colimitCocone
+                      [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                        `F
+                        " ⋙ "
+                        (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                     "."
+                     `ι)
+                    "."
+                    `naturality)
+                   [`f])]))))]
+            (Term.optEllipsis [])
+            []
+            "}"))))]
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst
+       "{"
+       []
+       [(Term.structInstField
+         (Term.structInstLVal `app [])
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`j]
+           []
+           "=>"
+           (Term.anonymousCtor
+            "⟨"
+            [(Term.app
+              (Term.proj
+               (Term.proj
+                (Term.app
+                 `Types.colimitCocone
+                 [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                   `F
+                   " ⋙ "
+                   (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                "."
+                `ι)
+               "."
+               `app)
+              [`j])
+             ","
+             (Term.app
+              (Term.proj `continuous_iff_coinduced_le "." `mpr)
+              [(Term.app `le_supᵢ [(Term.hole "_") `j])])]
+            "⟩"))))
+        []
+        (Term.structInstField
+         (Term.structInstLVal `naturality' [])
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`j `j' `f]
+           []
+           "=>"
+           (Term.app
+            `ContinuousMap.coe_injective
+            [(Term.app
+              (Term.proj
+               (Term.proj
+                (Term.app
+                 `Types.colimitCocone
+                 [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                   `F
+                   " ⋙ "
+                   (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+                "."
+                `ι)
+               "."
+               `naturality)
+              [`f])]))))]
+       (Term.optEllipsis [])
+       []
+       "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`j `j' `f]
+        []
+        "=>"
+        (Term.app
+         `ContinuousMap.coe_injective
+         [(Term.app
+           (Term.proj
+            (Term.proj
+             (Term.app
+              `Types.colimitCocone
+              [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                `F
+                " ⋙ "
+                (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+             "."
+             `ι)
+            "."
+            `naturality)
+           [`f])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `ContinuousMap.coe_injective
+       [(Term.app
+         (Term.proj
+          (Term.proj
+           (Term.app
+            `Types.colimitCocone
+            [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+              `F
+              " ⋙ "
+              (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+           "."
+           `ι)
+          "."
+          `naturality)
+         [`f])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj
+        (Term.proj
+         (Term.app
+          `Types.colimitCocone
+          [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+            `F
+            " ⋙ "
+            (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+         "."
+         `ι)
+        "."
+        `naturality)
+       [`f])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj
+       (Term.proj
+        (Term.app
+         `Types.colimitCocone
+         [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+           `F
+           " ⋙ "
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+        "."
+        `ι)
+       "."
+       `naturality)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.proj
+       (Term.app
+        `Types.colimitCocone
+        [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+          `F
+          " ⋙ "
+          (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+       "."
+       `ι)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app
+       `Types.colimitCocone
+       [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+         `F
+         " ⋙ "
+         (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+       `F
+       " ⋙ "
+       (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    A choice of colimit cocone for a functor `F : J ⥤ Top`.
+    Generally you should just use `colimit.coone F`, unless you need the actual definition
+    (which is in terms of `types.colimit_cocone`).
+    -/
+  def
+    colimitCocone
+    ( F : J ⥤ TopCat .{ max v u } ) : Cocone F
     where
-  x :=
-    ⟨(Types.colimitCocone (F ⋙ forget)).x,
-      ⨆ j, (F.obj j).str.coinduced ((Types.colimitCocone (F ⋙ forget)).ι.app j)⟩
-  ι :=
-    { app := fun j =>
-        ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supᵢ _ j)⟩
-      naturality' := fun j j' f =>
-        ContinuousMap.coe_injective ((Types.colimitCocone (F ⋙ forget)).ι.naturality f) }
+      x
+          :=
+          ⟨
+            Types.colimitCocone F ⋙ forget . x
+              ,
+              ⨆ j , F . obj j . str . coinduced Types.colimitCocone F ⋙ forget . ι . app j
+            ⟩
+        ι
+          :=
+          {
+            app
+                :=
+                fun
+                  j
+                    =>
+                    ⟨
+                      Types.colimitCocone F ⋙ forget . ι . app j
+                        ,
+                        continuous_iff_coinduced_le . mpr le_supᵢ _ j
+                      ⟩
+              naturality'
+                :=
+                fun
+                  j j' f
+                    =>
+                    ContinuousMap.coe_injective Types.colimitCocone F ⋙ forget . ι . naturality f
+            }
 #align Top.colimit_cocone TopCat.colimitCocone
 
-/-- The chosen cocone `Top.colimit_cocone F` for a functor `F : J ⥤ Top` is a colimit cocone.
-Generally you should just use `colimit.is_colimit F`, unless you need the actual definition
-(which is in terms of `types.colimit_cocone_is_colimit`).
--/
-def colimitCoconeIsColimit (F : J ⥤ TopCat.{max v u}) : IsColimit (colimitCocone F) :=
-  by
-  refine'
-    is_colimit.of_faithful forget (types.colimit_cocone_is_colimit _) (fun s => ⟨_, _⟩) fun s => rfl
-  exact
-    continuous_iff_le_induced.mpr
-      (supᵢ_le fun j =>
-        coinduced_le_iff_le_induced.mp <|
-          (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "The chosen cocone `Top.colimit_cocone F` for a functor `F : J ⥤ Top` is a colimit cocone.\nGenerally you should just use `colimit.is_colimit F`, unless you need the actual definition\n(which is in terms of `types.colimit_cocone_is_colimit`).\n-/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.def
+      "def"
+      (Command.declId `colimitCoconeIsColimit [])
+      (Command.optDeclSig
+       [(Term.explicitBinder
+         "("
+         [`F]
+         [":"
+          (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+           `J
+           " ⥤ "
+           (Term.explicitUniv `TopCat ".{" [(Level.max "max" [`v `u])] "}"))]
+         []
+         ")")]
+       [(Term.typeSpec ":" (Term.app `IsColimit [(Term.app `colimitCocone [`F])]))])
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.refine'
+            "refine'"
+            (Term.app
+             `is_colimit.of_faithful
+             [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+              (Term.app `types.colimit_cocone_is_colimit [(Term.hole "_")])
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`s]
+                []
+                "=>"
+                (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+              (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))]))
+           []
+           (Tactic.exact
+            "exact"
+            (Term.app
+             `continuous_iff_le_induced.mpr
+             [(Term.app
+               `supᵢ_le
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`j]
+                  []
+                  "=>"
+                  («term_<|_»
+                   `coinduced_le_iff_le_induced.mp
+                   "<|"
+                   (Term.typeAscription
+                    "("
+                    (Term.app
+                     `continuous_iff_coinduced_le.mp
+                     [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+                    ":"
+                    [(Term.hole "_")]
+                    ")"))))])]))])))
+       [])
+      []
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.refine'
+           "refine'"
+           (Term.app
+            `is_colimit.of_faithful
+            [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+             (Term.app `types.colimit_cocone_is_colimit [(Term.hole "_")])
+             (Term.fun
+              "fun"
+              (Term.basicFun
+               [`s]
+               []
+               "=>"
+               (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+             (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))]))
+          []
+          (Tactic.exact
+           "exact"
+           (Term.app
+            `continuous_iff_le_induced.mpr
+            [(Term.app
+              `supᵢ_le
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`j]
+                 []
+                 "=>"
+                 («term_<|_»
+                  `coinduced_le_iff_le_induced.mp
+                  "<|"
+                  (Term.typeAscription
+                   "("
+                   (Term.app
+                    `continuous_iff_coinduced_le.mp
+                    [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+                   ":"
+                   [(Term.hole "_")]
+                   ")"))))])]))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `continuous_iff_le_induced.mpr
+        [(Term.app
+          `supᵢ_le
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`j]
+             []
+             "=>"
+             («term_<|_»
+              `coinduced_le_iff_le_induced.mp
+              "<|"
+              (Term.typeAscription
+               "("
+               (Term.app
+                `continuous_iff_coinduced_le.mp
+                [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+               ":"
+               [(Term.hole "_")]
+               ")"))))])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `continuous_iff_le_induced.mpr
+       [(Term.app
+         `supᵢ_le
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`j]
+            []
+            "=>"
+            («term_<|_»
+             `coinduced_le_iff_le_induced.mp
+             "<|"
+             (Term.typeAscription
+              "("
+              (Term.app
+               `continuous_iff_coinduced_le.mp
+               [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+              ":"
+              [(Term.hole "_")]
+              ")"))))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `supᵢ_le
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`j]
+          []
+          "=>"
+          («term_<|_»
+           `coinduced_le_iff_le_induced.mp
+           "<|"
+           (Term.typeAscription
+            "("
+            (Term.app
+             `continuous_iff_coinduced_le.mp
+             [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+            ":"
+            [(Term.hole "_")]
+            ")"))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`j]
+        []
+        "=>"
+        («term_<|_»
+         `coinduced_le_iff_le_induced.mp
+         "<|"
+         (Term.typeAscription
+          "("
+          (Term.app
+           `continuous_iff_coinduced_le.mp
+           [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+          ":"
+          [(Term.hole "_")]
+          ")"))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `coinduced_le_iff_le_induced.mp
+       "<|"
+       (Term.typeAscription
+        "("
+        (Term.app
+         `continuous_iff_coinduced_le.mp
+         [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+        ":"
+        [(Term.hole "_")]
+        ")"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (Term.app
+        `continuous_iff_coinduced_le.mp
+        [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+       ":"
+       [(Term.hole "_")]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `continuous_iff_coinduced_le.mp
+       [(Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj (Term.app `s.ι.app [`j]) "." `Continuous)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `s.ι.app [`j])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `s.ι.app
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `s.ι.app [`j]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `continuous_iff_coinduced_le.mp
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `coinduced_le_iff_le_induced.mp
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `j
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `supᵢ_le
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app
+      `supᵢ_le
+      [(Term.fun
+        "fun"
+        (Term.basicFun
+         [`j]
+         []
+         "=>"
+         («term_<|_»
+          `coinduced_le_iff_le_induced.mp
+          "<|"
+          (Term.typeAscription
+           "("
+           (Term.app
+            `continuous_iff_coinduced_le.mp
+            [(Term.proj (Term.paren "(" (Term.app `s.ι.app [`j]) ")") "." `Continuous)])
+           ":"
+           [(Term.hole "_")]
+           ")"))))])
+     ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `continuous_iff_le_induced.mpr
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.refine'
+       "refine'"
+       (Term.app
+        `is_colimit.of_faithful
+        [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+         (Term.app `types.colimit_cocone_is_colimit [(Term.hole "_")])
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`s]
+           []
+           "=>"
+           (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+         (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `is_colimit.of_faithful
+       [(TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+        (Term.app `types.colimit_cocone_is_colimit [(Term.hole "_")])
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`s]
+          []
+          "=>"
+          (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+        (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`s] [] "=>" `rfl))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `rfl
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`s]
+        []
+        "=>"
+        (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `s
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.fun
+      "fun"
+      (Term.basicFun
+       [`s]
+       []
+       "=>"
+       (Term.anonymousCtor "⟨" [(Term.hole "_") "," (Term.hole "_")] "⟩")))
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `types.colimit_cocone_is_colimit [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `types.colimit_cocone_is_colimit
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `types.colimit_cocone_is_colimit [(Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+/--
+    The chosen cocone `Top.colimit_cocone F` for a functor `F : J ⥤ Top` is a colimit cocone.
+    Generally you should just use `colimit.is_colimit F`, unless you need the actual definition
+    (which is in terms of `types.colimit_cocone_is_colimit`).
+    -/
+  def
+    colimitCoconeIsColimit
+    ( F : J ⥤ TopCat .{ max v u } ) : IsColimit colimitCocone F
+    :=
+      by
+        refine'
+            is_colimit.of_faithful
+              forget types.colimit_cocone_is_colimit _ fun s => ⟨ _ , _ ⟩ fun s => rfl
+          exact
+            continuous_iff_le_induced.mpr
+              supᵢ_le
+                fun
+                  j
+                    =>
+                    coinduced_le_iff_le_induced.mp
+                      <|
+                      ( continuous_iff_coinduced_le.mp s.ι.app j . Continuous : _ )
 #align Top.colimit_cocone_is_colimit TopCat.colimitCoconeIsColimit
 
 instance topHasColimitsOfSize : HasColimitsOfSize.{v} TopCat.{max v u}
@@ -174,17 +1996,272 @@ instance Top_has_colimits : HasColimits TopCat.{u} :=
   TopCat.topHasColimitsOfSize.{u, u}
 #align Top.Top_has_colimits TopCat.Top_has_colimits
 
-instance forgetPreservesColimitsOfSize :
-    PreservesColimitsOfSize.{v, v} (forget : TopCat.{max v u} ⥤ Type max v u)
-    where PreservesColimitsOfShape J 𝒥 :=
-    {
-      PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
-          (types.colimit_cocone_is_colimit (F ⋙ forget)) }
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      [(Command.declId `forgetPreservesColimitsOfSize [])]
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         (Term.explicitUniv `PreservesColimitsOfSize ".{" [`v "," `v] "}")
+         [(Term.typeAscription
+           "("
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+           ":"
+           [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+             (Term.explicitUniv `TopCat ".{" [(Level.max "max" [`v `u])] "}")
+             " ⥤ "
+             (Term.type "Type" [(Level.max "max" [`v `u])]))]
+           ")")])))
+      (Command.whereStructInst
+       "where"
+       [(Command.whereStructField
+         (Term.letDecl
+          (Term.letIdDecl
+           `PreservesColimitsOfShape
+           [`J `𝒥]
+           []
+           ":="
+           (Term.structInst
+            "{"
+            []
+            [(Term.structInstField
+              (Term.structInstLVal `PreservesColimit [])
+              ":="
+              (Term.fun
+               "fun"
+               (Term.basicFun
+                [`F]
+                []
+                "=>"
+                (Term.app
+                 `preserves_colimit_of_preserves_colimit_cocone
+                 [(Term.app `colimit_cocone_is_colimit [`F])
+                  (Term.app
+                   `types.colimit_cocone_is_colimit
+                   [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                     `F
+                     " ⋙ "
+                     (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])]))))]
+            (Term.optEllipsis [])
+            []
+            "}"))))]
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.structInst
+       "{"
+       []
+       [(Term.structInstField
+         (Term.structInstLVal `PreservesColimit [])
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`F]
+           []
+           "=>"
+           (Term.app
+            `preserves_colimit_of_preserves_colimit_cocone
+            [(Term.app `colimit_cocone_is_colimit [`F])
+             (Term.app
+              `types.colimit_cocone_is_colimit
+              [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+                `F
+                " ⋙ "
+                (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])]))))]
+       (Term.optEllipsis [])
+       []
+       "}")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`F]
+        []
+        "=>"
+        (Term.app
+         `preserves_colimit_of_preserves_colimit_cocone
+         [(Term.app `colimit_cocone_is_colimit [`F])
+          (Term.app
+           `types.colimit_cocone_is_colimit
+           [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+             `F
+             " ⋙ "
+             (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `preserves_colimit_of_preserves_colimit_cocone
+       [(Term.app `colimit_cocone_is_colimit [`F])
+        (Term.app
+         `types.colimit_cocone_is_colimit
+         [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+           `F
+           " ⋙ "
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `types.colimit_cocone_is_colimit
+       [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+         `F
+         " ⋙ "
+         (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
+       `F
+       " ⋙ "
+       (TopCat.Topology.Category.TopCat.Limits.termforget "forget"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+instance
+  forgetPreservesColimitsOfSize
+  : PreservesColimitsOfSize .{ v , v } ( forget : TopCat .{ max v u } ⥤ Type max v u )
+  where
+    PreservesColimitsOfShape
+      J 𝒥
+      :=
+      {
+        PreservesColimit
+          :=
+          fun
+            F
+              =>
+              preserves_colimit_of_preserves_colimit_cocone
+                colimit_cocone_is_colimit F types.colimit_cocone_is_colimit F ⋙ forget
+        }
 #align Top.forget_preserves_colimits_of_size TopCat.forgetPreservesColimitsOfSize
 
-instance forgetPreservesColimits : PreservesColimits (forget : TopCat.{u} ⥤ Type u) :=
-  TopCat.forgetPreservesColimitsOfSize.{u, u}
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.instance
+      (Term.attrKind [])
+      "instance"
+      []
+      [(Command.declId `forgetPreservesColimits [])]
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        (Term.app
+         `PreservesColimits
+         [(Term.typeAscription
+           "("
+           (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+           ":"
+           [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+             (Term.explicitUniv `TopCat ".{" [`u] "}")
+             " ⥤ "
+             (Term.type "Type" [`u]))]
+           ")")])))
+      (Command.declValSimple
+       ":="
+       (Term.explicitUniv `TopCat.forgetPreservesColimitsOfSize ".{" [`u "," `u] "}")
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.explicitUniv `TopCat.forgetPreservesColimitsOfSize ".{" [`u "," `u] "}")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `TopCat.forgetPreservesColimitsOfSize
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      (Term.app
+       `PreservesColimits
+       [(Term.typeAscription
+         "("
+         (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+         ":"
+         [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+           (Term.explicitUniv `TopCat ".{" [`u] "}")
+           " ⥤ "
+           (Term.type "Type" [`u]))]
+         ")")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeAscription', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.typeAscription
+       "("
+       (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+       ":"
+       [(CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+         (Term.explicitUniv `TopCat ".{" [`u] "}")
+         " ⥤ "
+         (Term.type "Type" [`u]))]
+       ")")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_»
+       (Term.explicitUniv `TopCat ".{" [`u] "}")
+       " ⥤ "
+       (Term.type "Type" [`u]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.type "Type" [`u])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024
+[PrettyPrinter.parenthesize] ...precedences are 26 >? 1022, (some 1024,
+     level) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 26, term))
+      (Term.explicitUniv `TopCat ".{" [`u] "}")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `u
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `TopCat
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 27 >? 1024, (none, [anonymous]) <=? (some 26, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 26, (some 26, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (TopCat.Topology.Category.TopCat.Limits.termforget "forget")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'TopCat.Topology.Category.TopCat.Limits.termforget', expected 'TopCat.Topology.Category.TopCat.Limits.termforget._@.Topology.Category.TopCat.Limits._hyg.10'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+instance
+  forgetPreservesColimits
+  : PreservesColimits ( forget : TopCat .{ u } ⥤ Type u )
+  := TopCat.forgetPreservesColimitsOfSize .{ u , u }
 #align Top.forget_preserves_colimits TopCat.forgetPreservesColimits
 
 /-- The projection from the product as a bundled continous map. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_ring
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -490,7 +490,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
              («term_∨_»
               (Term.app `IsLocalization.IsInteger [`R `x])
               "∨"
-              (Term.app `IsLocalization.IsInteger [`R («term_⁻¹_1» `x "⁻¹")])))
+              (Term.app `IsLocalization.IsInteger [`R («term_⁻¹» `x "⁻¹")])))
             ","
             (Term.app
              `IsTotal

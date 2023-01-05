@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.intervals
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,49 +265,1195 @@ open Finset
 -- The partial sum of `g`, starting from zero
 local notation "G " n:80 => ∑ i in range n, g i
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment
+        "/--"
+        "**Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `sum_Ico_by_parts [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`hmn] [":" («term_<_» `m "<" `n)] [] ")")]
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (BigOperators.Algebra.BigOperators.Basic.finset.sum
+          "∑"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+          " in "
+          (Term.app `ico [`m `n])
+          ", "
+          (Algebra.Group.Defs.«term_•_» (Term.app `f [`i]) " • " (Term.app `g [`i])))
+         "="
+         («term_-_»
+          («term_-_»
+           (Algebra.Group.Defs.«term_•_»
+            (Term.app `f [(«term_-_» `n "-" (num "1"))])
+            " • "
+            (Finset.Algebra.BigOperators.Intervals.termG_ "G " `n))
+           "-"
+           (Algebra.Group.Defs.«term_•_»
+            (Term.app `f [`m])
+            " • "
+            (Finset.Algebra.BigOperators.Intervals.termG_ "G " `m)))
+          "-"
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+           " in "
+           (Term.app `ico [`m («term_-_» `n "-" (num "1"))])
+           ", "
+           (Algebra.Group.Defs.«term_•_»
+            («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+            " • "
+            (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              [`h₁ []]
+              [(Term.typeSpec
+                ":"
+                («term_=_»
+                 (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                  "∑"
+                  (Std.ExtendedBinder.extBinders
+                   (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                  " in "
+                  (Term.app `Ico [(«term_+_» `m "+" (num "1")) `n])
+                  ", "
+                  (Algebra.Group.Defs.«term_•_»
+                   (Term.app `f [`i])
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_ "G " `i)))
+                 "="
+                 (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                  "∑"
+                  (Std.ExtendedBinder.extBinders
+                   (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                  " in "
+                  (Term.app `Ico [`m («term_-_» `n "-" (num "1"))])
+                  ", "
+                  (Algebra.Group.Defs.«term_•_»
+                   (Term.app `f [(«term_+_» `i "+" (num "1"))])
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_
+                    "G "
+                    («term_+_» `i "+" (num "1")))))))]
+              ":="
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.Conv.conv
+                   "conv"
+                   []
+                   ["in" [] `n]
+                   "=>"
+                   (Tactic.Conv.convSeq
+                    (Tactic.Conv.convSeq1Indented
+                     [(Tactic.Conv.convRw__
+                       "rw"
+                       []
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule
+                          [(patternIgnore (token.«← » "←"))]
+                          (Term.app `Nat.sub_add_cancel [(Term.app `Nat.one_le_of_lt [`hmn])]))]
+                        "]"))])))
+                  []
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sum_Ico_add')]
+                    "]")
+                   [])]))))))
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              [`h₂ []]
+              [(Term.typeSpec
+                ":"
+                («term_=_»
+                 (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                  "∑"
+                  (Std.ExtendedBinder.extBinders
+                   (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                  " in "
+                  (Term.app `Ico [(«term_+_» `m "+" (num "1")) `n])
+                  ", "
+                  (Algebra.Group.Defs.«term_•_»
+                   (Term.app `f [`i])
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_
+                    "G "
+                    («term_+_» `i "+" (num "1")))))
+                 "="
+                 («term_-_»
+                  («term_+_»
+                   (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                    "∑"
+                    (Std.ExtendedBinder.extBinders
+                     (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                    " in "
+                    (Term.app `Ico [`m («term_-_» `n "-" (num "1"))])
+                    ", "
+                    (Algebra.Group.Defs.«term_•_»
+                     (Term.app `f [`i])
+                     " • "
+                     (Finset.Algebra.BigOperators.Intervals.termG_
+                      "G "
+                      («term_+_» `i "+" (num "1")))))
+                   "+"
+                   (Algebra.Group.Defs.«term_•_»
+                    (Term.app `f [(«term_-_» `n "-" (num "1"))])
+                    " • "
+                    (Finset.Algebra.BigOperators.Intervals.termG_ "G " `n)))
+                  "-"
+                  (Algebra.Group.Defs.«term_•_»
+                   (Term.app `f [`m])
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_
+                    "G "
+                    («term_+_» `m "+" (num "1")))))))]
+              ":="
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule
+                      [(patternIgnore (token.«← » "←"))]
+                      (Term.app `sum_Ico_sub_bot [(Term.hole "_") `hmn]))
+                     ","
+                     (Tactic.rwRule
+                      [(patternIgnore (token.«← » "←"))]
+                      (Term.app
+                       `sum_Ico_succ_sub_top
+                       [(Term.hole "_") (Term.app `Nat.le_pred_of_lt [`hmn])]))
+                     ","
+                     (Tactic.rwRule
+                      []
+                      (Term.app `Nat.sub_add_cancel [(Term.app `pos_of_gt [`hmn])]))
+                     ","
+                     (Tactic.rwRule [] `sub_add_cancel)]
+                    "]")
+                   [])]))))))
+           []
+           (Tactic.rwSeq
+            "rw"
+            []
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] (Term.app `sum_eq_sum_Ico_succ_bot [`hmn]))]
+             "]")
+            [])
+           []
+           (Tactic.Conv.conv
+            "conv"
+            []
+            []
+            "=>"
+            (Tactic.Conv.convSeq
+             (Tactic.Conv.convSeq1Indented
+              [(Tactic.Conv.«conv_<;>_»
+                (Tactic.Conv.pattern
+                 "pattern"
+                 [(Tactic.Conv.occs "(" "occs" ":=" (Tactic.Conv.occsIndexed [(num "2")]) ")")]
+                 (Algebra.Group.Defs.«term_•_»
+                  (Term.app `f [(Term.hole "_")])
+                  " • "
+                  (Term.app `g [(Term.hole "_")])))
+                "<;>"
+                (Tactic.Conv.paren
+                 "("
+                 (Tactic.Conv.convSeq
+                  (Tactic.Conv.convSeq1Indented
+                   [(Tactic.Conv.convRw__
+                     "rw"
+                     []
+                     (Tactic.rwRuleSeq
+                      "["
+                      [(Tactic.rwRule
+                        [(patternIgnore (token.«← » "←"))]
+                        (Term.app `sum_range_succ_sub_sum [`g]))]
+                      "]"))]))
+                 ")"))])))
+           []
+           (Mathlib.Tactic.tacticSimp_rw__
+            "simp_rw"
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `smul_sub)
+              ","
+              (Tactic.rwRule [] `sum_sub_distrib)
+              ","
+              (Tactic.rwRule [] `h₂)
+              ","
+              (Tactic.rwRule [] `h₁)]
+             "]")
+            [])
+           []
+           (Mathlib.Tactic.Conv.convLHS
+            "conv_lhs"
+            []
+            []
+            "=>"
+            (Tactic.Conv.convSeq
+             (Tactic.Conv.convSeq1Indented
+              [(Tactic.Conv.congr "congr")
+               []
+               (Tactic.Conv.skip "skip")
+               []
+               (Tactic.Conv.convRw__
+                "rw"
+                []
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `add_sub)
+                  ","
+                  (Tactic.rwRule [] `add_comm)
+                  ","
+                  (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `add_sub)
+                  ","
+                  (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sum_sub_distrib)]
+                 "]"))])))
+           []
+           (Tactic.tacticHave_
+            "have"
+            (Term.haveDecl
+             (Term.haveIdDecl
+              []
+              [(Term.typeSpec
+                ":"
+                (Term.forall
+                 "∀"
+                 [`i]
+                 []
+                 ","
+                 («term_=_»
+                  («term_-_»
+                   (Algebra.Group.Defs.«term_•_»
+                    (Term.app `f [`i])
+                    " • "
+                    (Finset.Algebra.BigOperators.Intervals.termG_
+                     "G "
+                     («term_+_» `i "+" (num "1"))))
+                   "-"
+                   (Algebra.Group.Defs.«term_•_»
+                    (Term.app `f [(«term_+_» `i "+" (num "1"))])
+                    " • "
+                    (Finset.Algebra.BigOperators.Intervals.termG_
+                     "G "
+                     («term_+_» `i "+" (num "1")))))
+                  "="
+                  («term-_»
+                   "-"
+                   (Algebra.Group.Defs.«term_•_»
+                    («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+                    " • "
+                    (Finset.Algebra.BigOperators.Intervals.termG_
+                     "G "
+                     («term_+_» `i "+" (num "1"))))))))]
+              ":="
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.intro "intro" [`i])
+                  []
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sub_smul)] "]")
+                   [])
+                  []
+                  (Tactic.abel "abel" [] [])]))))))
+           []
+           (Mathlib.Tactic.tacticSimp_rw__
+            "simp_rw"
+            (Tactic.rwRuleSeq
+             "["
+             [(Tactic.rwRule [] `this)
+              ","
+              (Tactic.rwRule [] `sum_neg_distrib)
+              ","
+              (Tactic.rwRule [] `sum_range_succ)
+              ","
+              (Tactic.rwRule [] `smul_add)]
+             "]")
+            [])
+           []
+           (Tactic.abel "abel" [] [])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`h₁ []]
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                 "∑"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 " in "
+                 (Term.app `Ico [(«term_+_» `m "+" (num "1")) `n])
+                 ", "
+                 (Algebra.Group.Defs.«term_•_»
+                  (Term.app `f [`i])
+                  " • "
+                  (Finset.Algebra.BigOperators.Intervals.termG_ "G " `i)))
+                "="
+                (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                 "∑"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 " in "
+                 (Term.app `Ico [`m («term_-_» `n "-" (num "1"))])
+                 ", "
+                 (Algebra.Group.Defs.«term_•_»
+                  (Term.app `f [(«term_+_» `i "+" (num "1"))])
+                  " • "
+                  (Finset.Algebra.BigOperators.Intervals.termG_
+                   "G "
+                   («term_+_» `i "+" (num "1")))))))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.Conv.conv
+                  "conv"
+                  []
+                  ["in" [] `n]
+                  "=>"
+                  (Tactic.Conv.convSeq
+                   (Tactic.Conv.convSeq1Indented
+                    [(Tactic.Conv.convRw__
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule
+                         [(patternIgnore (token.«← » "←"))]
+                         (Term.app `Nat.sub_add_cancel [(Term.app `Nat.one_le_of_lt [`hmn])]))]
+                       "]"))])))
+                 []
+                 (Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sum_Ico_add')]
+                   "]")
+                  [])]))))))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             [`h₂ []]
+             [(Term.typeSpec
+               ":"
+               («term_=_»
+                (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                 "∑"
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 " in "
+                 (Term.app `Ico [(«term_+_» `m "+" (num "1")) `n])
+                 ", "
+                 (Algebra.Group.Defs.«term_•_»
+                  (Term.app `f [`i])
+                  " • "
+                  (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))
+                "="
+                («term_-_»
+                 («term_+_»
+                  (BigOperators.Algebra.BigOperators.Basic.finset.sum
+                   "∑"
+                   (Std.ExtendedBinder.extBinders
+                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                   " in "
+                   (Term.app `Ico [`m («term_-_» `n "-" (num "1"))])
+                   ", "
+                   (Algebra.Group.Defs.«term_•_»
+                    (Term.app `f [`i])
+                    " • "
+                    (Finset.Algebra.BigOperators.Intervals.termG_
+                     "G "
+                     («term_+_» `i "+" (num "1")))))
+                  "+"
+                  (Algebra.Group.Defs.«term_•_»
+                   (Term.app `f [(«term_-_» `n "-" (num "1"))])
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_ "G " `n)))
+                 "-"
+                 (Algebra.Group.Defs.«term_•_»
+                  (Term.app `f [`m])
+                  " • "
+                  (Finset.Algebra.BigOperators.Intervals.termG_
+                   "G "
+                   («term_+_» `m "+" (num "1")))))))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule
+                     [(patternIgnore (token.«← » "←"))]
+                     (Term.app `sum_Ico_sub_bot [(Term.hole "_") `hmn]))
+                    ","
+                    (Tactic.rwRule
+                     [(patternIgnore (token.«← » "←"))]
+                     (Term.app
+                      `sum_Ico_succ_sub_top
+                      [(Term.hole "_") (Term.app `Nat.le_pred_of_lt [`hmn])]))
+                    ","
+                    (Tactic.rwRule [] (Term.app `Nat.sub_add_cancel [(Term.app `pos_of_gt [`hmn])]))
+                    ","
+                    (Tactic.rwRule [] `sub_add_cancel)]
+                   "]")
+                  [])]))))))
+          []
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] (Term.app `sum_eq_sum_Ico_succ_bot [`hmn]))]
+            "]")
+           [])
+          []
+          (Tactic.Conv.conv
+           "conv"
+           []
+           []
+           "=>"
+           (Tactic.Conv.convSeq
+            (Tactic.Conv.convSeq1Indented
+             [(Tactic.Conv.«conv_<;>_»
+               (Tactic.Conv.pattern
+                "pattern"
+                [(Tactic.Conv.occs "(" "occs" ":=" (Tactic.Conv.occsIndexed [(num "2")]) ")")]
+                (Algebra.Group.Defs.«term_•_»
+                 (Term.app `f [(Term.hole "_")])
+                 " • "
+                 (Term.app `g [(Term.hole "_")])))
+               "<;>"
+               (Tactic.Conv.paren
+                "("
+                (Tactic.Conv.convSeq
+                 (Tactic.Conv.convSeq1Indented
+                  [(Tactic.Conv.convRw__
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule
+                       [(patternIgnore (token.«← » "←"))]
+                       (Term.app `sum_range_succ_sub_sum [`g]))]
+                     "]"))]))
+                ")"))])))
+          []
+          (Mathlib.Tactic.tacticSimp_rw__
+           "simp_rw"
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `smul_sub)
+             ","
+             (Tactic.rwRule [] `sum_sub_distrib)
+             ","
+             (Tactic.rwRule [] `h₂)
+             ","
+             (Tactic.rwRule [] `h₁)]
+            "]")
+           [])
+          []
+          (Mathlib.Tactic.Conv.convLHS
+           "conv_lhs"
+           []
+           []
+           "=>"
+           (Tactic.Conv.convSeq
+            (Tactic.Conv.convSeq1Indented
+             [(Tactic.Conv.congr "congr")
+              []
+              (Tactic.Conv.skip "skip")
+              []
+              (Tactic.Conv.convRw__
+               "rw"
+               []
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `add_sub)
+                 ","
+                 (Tactic.rwRule [] `add_comm)
+                 ","
+                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `add_sub)
+                 ","
+                 (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `sum_sub_distrib)]
+                "]"))])))
+          []
+          (Tactic.tacticHave_
+           "have"
+           (Term.haveDecl
+            (Term.haveIdDecl
+             []
+             [(Term.typeSpec
+               ":"
+               (Term.forall
+                "∀"
+                [`i]
+                []
+                ","
+                («term_=_»
+                 («term_-_»
+                  (Algebra.Group.Defs.«term_•_»
+                   (Term.app `f [`i])
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))
+                  "-"
+                  (Algebra.Group.Defs.«term_•_»
+                   (Term.app `f [(«term_+_» `i "+" (num "1"))])
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_
+                    "G "
+                    («term_+_» `i "+" (num "1")))))
+                 "="
+                 («term-_»
+                  "-"
+                  (Algebra.Group.Defs.«term_•_»
+                   («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+                   " • "
+                   (Finset.Algebra.BigOperators.Intervals.termG_
+                    "G "
+                    («term_+_» `i "+" (num "1"))))))))]
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.intro "intro" [`i])
+                 []
+                 (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sub_smul)] "]") [])
+                 []
+                 (Tactic.abel "abel" [] [])]))))))
+          []
+          (Mathlib.Tactic.tacticSimp_rw__
+           "simp_rw"
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `this)
+             ","
+             (Tactic.rwRule [] `sum_neg_distrib)
+             ","
+             (Tactic.rwRule [] `sum_range_succ)
+             ","
+             (Tactic.rwRule [] `smul_add)]
+            "]")
+           [])
+          []
+          (Tactic.abel "abel" [] [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.abel "abel" [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Mathlib.Tactic.tacticSimp_rw__
+       "simp_rw"
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `this)
+         ","
+         (Tactic.rwRule [] `sum_neg_distrib)
+         ","
+         (Tactic.rwRule [] `sum_range_succ)
+         ","
+         (Tactic.rwRule [] `smul_add)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `smul_add
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `sum_range_succ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `sum_neg_distrib
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.tacticHave_
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         []
+         [(Term.typeSpec
+           ":"
+           (Term.forall
+            "∀"
+            [`i]
+            []
+            ","
+            («term_=_»
+             («term_-_»
+              (Algebra.Group.Defs.«term_•_»
+               (Term.app `f [`i])
+               " • "
+               (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))
+              "-"
+              (Algebra.Group.Defs.«term_•_»
+               (Term.app `f [(«term_+_» `i "+" (num "1"))])
+               " • "
+               (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))
+             "="
+             («term-_»
+              "-"
+              (Algebra.Group.Defs.«term_•_»
+               («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+               " • "
+               (Finset.Algebra.BigOperators.Intervals.termG_
+                "G "
+                («term_+_» `i "+" (num "1"))))))))]
+         ":="
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.intro "intro" [`i])
+             []
+             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sub_smul)] "]") [])
+             []
+             (Tactic.abel "abel" [] [])]))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.intro "intro" [`i])
+          []
+          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sub_smul)] "]") [])
+          []
+          (Tactic.abel "abel" [] [])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.abel "abel" [] [])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sub_smul)] "]") [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `sub_smul
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.intro "intro" [`i])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `i
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [`i]
+       []
+       ","
+       («term_=_»
+        («term_-_»
+         (Algebra.Group.Defs.«term_•_»
+          (Term.app `f [`i])
+          " • "
+          (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))
+         "-"
+         (Algebra.Group.Defs.«term_•_»
+          (Term.app `f [(«term_+_» `i "+" (num "1"))])
+          " • "
+          (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))
+        "="
+        («term-_»
+         "-"
+         (Algebra.Group.Defs.«term_•_»
+          («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+          " • "
+          (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_»
+       («term_-_»
+        (Algebra.Group.Defs.«term_•_»
+         (Term.app `f [`i])
+         " • "
+         (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))
+        "-"
+        (Algebra.Group.Defs.«term_•_»
+         (Term.app `f [(«term_+_» `i "+" (num "1"))])
+         " • "
+         (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))
+       "="
+       («term-_»
+        "-"
+        (Algebra.Group.Defs.«term_•_»
+         («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+         " • "
+         (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term-_»
+       "-"
+       (Algebra.Group.Defs.«term_•_»
+        («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+        " • "
+        (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_»
+       («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+       " • "
+       (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Algebra.BigOperators.Intervals.termG_', expected 'Finset.Algebra.BigOperators.Intervals.termG_._@.Algebra.BigOperators.Intervals._hyg.16'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.letPatDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.haveEqnsDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- **Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/
-theorem sum_Ico_by_parts (hmn : m < n) :
-    (∑ i in ico m n, f i • g i) =
-      f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G (i + 1) :=
-  by
-  have h₁ : (∑ i in Ico (m + 1) n, f i • G i) = ∑ i in Ico m (n - 1), f (i + 1) • G (i + 1) :=
-    by
-    conv in n => rw [← Nat.sub_add_cancel (Nat.one_le_of_lt hmn)]
-    rw [← sum_Ico_add']
-  have h₂ :
-    (∑ i in Ico (m + 1) n, f i • G (i + 1)) =
-      (∑ i in Ico m (n - 1), f i • G (i + 1)) + f (n - 1) • G n - f m • G (m + 1) :=
-    by
-    rw [← sum_Ico_sub_bot _ hmn, ← sum_Ico_succ_sub_top _ (Nat.le_pred_of_lt hmn),
-      Nat.sub_add_cancel (pos_of_gt hmn), sub_add_cancel]
-  rw [sum_eq_sum_Ico_succ_bot hmn]
-  conv => pattern (occs := 2) f _ • g _ <;> (rw [← sum_range_succ_sub_sum g])
-  simp_rw [smul_sub, sum_sub_distrib, h₂, h₁]
-  conv_lhs =>
-    congr
-    skip
-    rw [← add_sub, add_comm, ← add_sub, ← sum_sub_distrib]
-  have : ∀ i, f i • G (i + 1) - f (i + 1) • G (i + 1) = -((f (i + 1) - f i) • G (i + 1)) :=
-    by
-    intro i
-    rw [sub_smul]
-    abel
-  simp_rw [this, sum_neg_distrib, sum_range_succ, smul_add]
-  abel
+  theorem
+    sum_Ico_by_parts
+    ( hmn : m < n )
+      :
+        ∑ i in ico m n , f i • g i
+          =
+          f n - 1 • G n - f m • G m - ∑ i in ico m n - 1 , f i + 1 - f i • G i + 1
+    :=
+      by
+        have
+            h₁
+              : ∑ i in Ico m + 1 n , f i • G i = ∑ i in Ico m n - 1 , f i + 1 • G i + 1
+              :=
+              by conv in n => rw [ ← Nat.sub_add_cancel Nat.one_le_of_lt hmn ] rw [ ← sum_Ico_add' ]
+          have
+            h₂
+              :
+                ∑ i in Ico m + 1 n , f i • G i + 1
+                  =
+                  ∑ i in Ico m n - 1 , f i • G i + 1 + f n - 1 • G n - f m • G m + 1
+              :=
+              by
+                rw
+                  [
+                    ← sum_Ico_sub_bot _ hmn
+                      ,
+                      ← sum_Ico_succ_sub_top _ Nat.le_pred_of_lt hmn
+                      ,
+                      Nat.sub_add_cancel pos_of_gt hmn
+                      ,
+                      sub_add_cancel
+                    ]
+          rw [ sum_eq_sum_Ico_succ_bot hmn ]
+          conv => pattern ( occs := 2 ) f _ • g _ <;> ( rw [ ← sum_range_succ_sub_sum g ] )
+          simp_rw [ smul_sub , sum_sub_distrib , h₂ , h₁ ]
+          conv_lhs => congr skip rw [ ← add_sub , add_comm , ← add_sub , ← sum_sub_distrib ]
+          have
+            : ∀ i , f i • G i + 1 - f i + 1 • G i + 1 = - f i + 1 - f i • G i + 1
+              :=
+              by intro i rw [ sub_smul ] abel
+          simp_rw [ this , sum_neg_distrib , sum_range_succ , smul_add ]
+          abel
 #align finset.sum_Ico_by_parts Finset.sum_Ico_by_parts
 
 variable (n)
 
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers
+      [(Command.docComment "/--" "**Summation by parts** for ranges -/")]
+      []
+      []
+      []
+      []
+      [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `sum_range_by_parts [])
+      (Command.declSig
+       []
+       (Term.typeSpec
+        ":"
+        («term_=_»
+         (BigOperators.Algebra.BigOperators.Basic.finset.sum
+          "∑"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+          " in "
+          (Term.app `range [`n])
+          ", "
+          (Algebra.Group.Defs.«term_•_» (Term.app `f [`i]) " • " (Term.app `g [`i])))
+         "="
+         («term_-_»
+          (Algebra.Group.Defs.«term_•_»
+           (Term.app `f [(«term_-_» `n "-" (num "1"))])
+           " • "
+           (Finset.Algebra.BigOperators.Intervals.termG_ "G " `n))
+          "-"
+          (BigOperators.Algebra.BigOperators.Basic.finset.sum
+           "∑"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+           " in "
+           (Term.app `range [(«term_-_» `n "-" (num "1"))])
+           ", "
+           (Algebra.Group.Defs.«term_•_»
+            («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+            " • "
+            (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))))))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Classical.«tacticBy_cases_:_» "by_cases" [`hn ":"] («term_=_» `n "=" (num "0")))
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `hn)] "]"] [])])
+           []
+           (tactic__
+            (cdotTk (patternIgnore (token.«· » "·")))
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] `range_eq_Ico)
+                ","
+                (Tactic.rwRule
+                 []
+                 (Term.app `sum_Ico_by_parts [`f `g (Term.app `Nat.pos_of_ne_zero [`hn])]))
+                ","
+                (Tactic.rwRule [] `sum_range_zero)
+                ","
+                (Tactic.rwRule [] `smul_zero)
+                ","
+                (Tactic.rwRule [] `sub_zero)
+                ","
+                (Tactic.rwRule [] `range_eq_Ico)]
+               "]")
+              [])])])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Classical.«tacticBy_cases_:_» "by_cases" [`hn ":"] («term_=_» `n "=" (num "0")))
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `hn)] "]"] [])])
+          []
+          (tactic__
+           (cdotTk (patternIgnore (token.«· » "·")))
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `range_eq_Ico)
+               ","
+               (Tactic.rwRule
+                []
+                (Term.app `sum_Ico_by_parts [`f `g (Term.app `Nat.pos_of_ne_zero [`hn])]))
+               ","
+               (Tactic.rwRule [] `sum_range_zero)
+               ","
+               (Tactic.rwRule [] `smul_zero)
+               ","
+               (Tactic.rwRule [] `sub_zero)
+               ","
+               (Tactic.rwRule [] `range_eq_Ico)]
+              "]")
+             [])])])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq
+          "["
+          [(Tactic.rwRule [] `range_eq_Ico)
+           ","
+           (Tactic.rwRule
+            []
+            (Term.app `sum_Ico_by_parts [`f `g (Term.app `Nat.pos_of_ne_zero [`hn])]))
+           ","
+           (Tactic.rwRule [] `sum_range_zero)
+           ","
+           (Tactic.rwRule [] `smul_zero)
+           ","
+           (Tactic.rwRule [] `sub_zero)
+           ","
+           (Tactic.rwRule [] `range_eq_Ico)]
+          "]")
+         [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `range_eq_Ico)
+         ","
+         (Tactic.rwRule
+          []
+          (Term.app `sum_Ico_by_parts [`f `g (Term.app `Nat.pos_of_ne_zero [`hn])]))
+         ","
+         (Tactic.rwRule [] `sum_range_zero)
+         ","
+         (Tactic.rwRule [] `smul_zero)
+         ","
+         (Tactic.rwRule [] `sub_zero)
+         ","
+         (Tactic.rwRule [] `range_eq_Ico)]
+        "]")
+       [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `range_eq_Ico
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `sub_zero
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `smul_zero
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `sum_range_zero
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `sum_Ico_by_parts [`f `g (Term.app `Nat.pos_of_ne_zero [`hn])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Nat.pos_of_ne_zero [`hn])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hn
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Nat.pos_of_ne_zero
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Nat.pos_of_ne_zero [`hn])
+     ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `g
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `f
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `sum_Ico_by_parts
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `range_eq_Ico
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (tactic__
+       (cdotTk (patternIgnore (token.«· » "·")))
+       [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `hn)] "]"] [])])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `hn)] "]"] [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hn
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Classical.«tacticBy_cases_:_» "by_cases" [`hn ":"] («term_=_» `n "=" (num "0")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_=_» `n "=" (num "0"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (num "0")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      `n
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+      («term_=_»
+       (BigOperators.Algebra.BigOperators.Basic.finset.sum
+        "∑"
+        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+        " in "
+        (Term.app `range [`n])
+        ", "
+        (Algebra.Group.Defs.«term_•_» (Term.app `f [`i]) " • " (Term.app `g [`i])))
+       "="
+       («term_-_»
+        (Algebra.Group.Defs.«term_•_»
+         (Term.app `f [(«term_-_» `n "-" (num "1"))])
+         " • "
+         (Finset.Algebra.BigOperators.Intervals.termG_ "G " `n))
+        "-"
+        (BigOperators.Algebra.BigOperators.Basic.finset.sum
+         "∑"
+         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+         " in "
+         (Term.app `range [(«term_-_» `n "-" (num "1"))])
+         ", "
+         (Algebra.Group.Defs.«term_•_»
+          («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+          " • "
+          (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_-_»
+       (Algebra.Group.Defs.«term_•_»
+        (Term.app `f [(«term_-_» `n "-" (num "1"))])
+        " • "
+        (Finset.Algebra.BigOperators.Intervals.termG_ "G " `n))
+       "-"
+       (BigOperators.Algebra.BigOperators.Basic.finset.sum
+        "∑"
+        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+        " in "
+        (Term.app `range [(«term_-_» `n "-" (num "1"))])
+        ", "
+        (Algebra.Group.Defs.«term_•_»
+         («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+         " • "
+         (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (BigOperators.Algebra.BigOperators.Basic.finset.sum
+       "∑"
+       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+       " in "
+       (Term.app `range [(«term_-_» `n "-" (num "1"))])
+       ", "
+       (Algebra.Group.Defs.«term_•_»
+        («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+        " • "
+        (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Algebra.Group.Defs.«term_•_»
+       («term_-_» (Term.app `f [(«term_+_» `i "+" (num "1"))]) "-" (Term.app `f [`i]))
+       " • "
+       (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1"))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Finset.Algebra.BigOperators.Intervals.termG_ "G " («term_+_» `i "+" (num "1")))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Finset.Algebra.BigOperators.Intervals.termG_', expected 'Finset.Algebra.BigOperators.Intervals.termG_._@.Algebra.BigOperators.Intervals._hyg.16'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- **Summation by parts** for ranges -/
-theorem sum_range_by_parts :
-    (∑ i in range n, f i • g i) =
-      f (n - 1) • G n - ∑ i in range (n - 1), (f (i + 1) - f i) • G (i + 1) :=
-  by
-  by_cases hn : n = 0
-  · simp [hn]
-  ·
-    rw [range_eq_Ico, sum_Ico_by_parts f g (Nat.pos_of_ne_zero hn), sum_range_zero, smul_zero,
-      sub_zero, range_eq_Ico]
+  theorem
+    sum_range_by_parts
+    : ∑ i in range n , f i • g i = f n - 1 • G n - ∑ i in range n - 1 , f i + 1 - f i • G i + 1
+    :=
+      by
+        by_cases hn : n = 0
+          · simp [ hn ]
+          ·
+            rw
+              [
+                range_eq_Ico
+                  ,
+                  sum_Ico_by_parts f g Nat.pos_of_ne_zero hn
+                  ,
+                  sum_range_zero
+                  ,
+                  smul_zero
+                  ,
+                  sub_zero
+                  ,
+                  range_eq_Ico
+                ]
 #align finset.sum_range_by_parts Finset.sum_range_by_parts
 
 end Module

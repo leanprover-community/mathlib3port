@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit d3e8e0a0237c10c2627bf52c246b15ff8e7df4c0
+! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,7 +195,7 @@ instance : CommRing ℝ := by
         add_comm|apply
         mul_assoc|apply mul_comm|apply left_distrib|apply right_distrib|apply sub_eq_add_neg|skip
 
-instance : HasRatCast ℝ where ratCast q := ⟨q⟩
+instance : RatCast ℝ where ratCast q := ⟨q⟩
 
 theorem of_cauchy_nat_cast (n : ℕ) : (⟨n⟩ : ℝ) = n :=
   rfl
