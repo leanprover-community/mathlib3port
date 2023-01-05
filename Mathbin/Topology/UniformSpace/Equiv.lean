@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Re
 Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.equiv
-! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
+! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

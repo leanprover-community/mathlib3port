@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
+! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ universe u v w x y
 
 variable {α : Type u} {β : Type v} {π : α → Type v} {γ : Type w} {ι : Sort x}
 
-open Function
+open Equiv Equiv.Perm Function
 
 namespace Set
 
@@ -3087,4 +3087,33 @@ theorem antitoneOn_of_rightInvOn_of_mapsTo [PartialOrder α] [LinearOrder β] {�
 #align function.antitone_on_of_right_inv_on_of_maps_to Function.antitoneOn_of_rightInvOn_of_mapsTo
 
 end Function
+
+/-! ### Equivalences, permutations -/
+
+
+namespace Set
+
+variable {p : β → Prop} [DecidablePred p] {f : α ≃ Subtype p} {g : Perm α} {s t : Set α}
+
+protected theorem MapsTo.extend_domain (h : MapsTo g s t) :
+    MapsTo (g.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
+  by
+  rintro _ ⟨a, ha, rfl⟩
+  exact ⟨_, h ha, by rw [extend_domain_apply_image]⟩
+#align set.maps_to.extend_domain Set.MapsTo.extend_domain
+
+protected theorem SurjOn.extend_domain (h : SurjOn g s t) :
+    SurjOn (g.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
+  by
+  rintro _ ⟨a, ha, rfl⟩
+  obtain ⟨b, hb, rfl⟩ := h ha
+  exact ⟨_, ⟨_, hb, rfl⟩, by rw [extend_domain_apply_image]⟩
+#align set.surj_on.extend_domain Set.SurjOn.extend_domain
+
+protected theorem BijOn.extend_domain (h : Set.BijOn g s t) :
+    BijOn (g.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
+  ⟨h.MapsTo.extendDomain, (g.extendDomain f).Injective.InjOn _, h.SurjOn.extendDomain⟩
+#align set.bij_on.extend_domain Set.BijOn.extend_domain
+
+end Set
 

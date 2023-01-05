@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.type
-! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
+! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,7 +146,7 @@ theorem cycle_type_conj {σ τ : Perm α} : (τ * σ * τ⁻¹).cycleType = σ.c
   · intro
     simp
   · intro σ hσ τ
-    rw [hσ.cycle_type, hσ.is_cycle_conj.cycle_type, card_support_conj]
+    rw [hσ.cycle_type, hσ.conj.cycle_type, card_support_conj]
   · intro σ τ hd hc hσ hτ π
     rw [← conj_mul, hd.cycle_type, disjoint.cycle_type, hσ, hτ]
     intro a
@@ -190,8 +190,7 @@ theorem sign_of_cycle_type (f : Perm α) :
 theorem lcm_cycle_type (σ : Perm α) : σ.cycleType.lcm = orderOf σ :=
   cycle_induction_on (fun τ : Perm α => τ.cycleType.lcm = orderOf τ) σ
     (by rw [cycle_type_one, lcm_zero, order_of_one])
-    (fun σ hσ => by
-      rw [hσ.cycle_type, coe_singleton, lcm_singleton, order_of_is_cycle hσ, normalize_eq])
+    (fun σ hσ => by rw [hσ.cycle_type, coe_singleton, lcm_singleton, hσ.order_of, normalize_eq])
     fun σ τ hστ hc hσ hτ => by rw [hστ.cycle_type, lcm_add, lcm_eq_nat_lcm, hστ.order_of, hσ, hτ]
 #align equiv.perm.lcm_cycle_type Equiv.Perm.lcm_cycle_type
 
@@ -210,7 +209,7 @@ theorem order_of_cycle_of_dvd_order_of (f : Perm α) (x : α) : orderOf (cycleOf
     rw [cycle_type, Multiset.mem_map]
     refine' ⟨f.cycle_of x, _, _⟩
     · rwa [← Finset.mem_def, cycle_of_mem_cycle_factors_finset_iff, mem_support]
-    · simp [order_of_is_cycle (is_cycle_cycle_of _ hx)]
+    · simp [(is_cycle_cycle_of _ hx).orderOf]
 #align equiv.perm.order_of_cycle_of_dvd_order_of Equiv.Perm.order_of_cycle_of_dvd_order_of
 
 theorem two_dvd_card_support {σ : Perm α} (hσ : σ ^ 2 = 1) : 2 ∣ σ.support.card :=
@@ -571,7 +570,7 @@ theorem subgroup_eq_top_of_swap_mem [DecidableEq α] {H : Subgroup (Perm α)}
   have hσ1 : orderOf (σ : perm α) = Fintype.card α := (order_of_subgroup σ).trans hσ
   have hσ2 : is_cycle ↑σ := is_cycle_of_prime_order'' h0 hσ1
   have hσ3 : (σ : perm α).support = ⊤ :=
-    Finset.eq_univ_of_card (σ : perm α).support ((order_of_is_cycle hσ2).symm.trans hσ1)
+    Finset.eq_univ_of_card (σ : perm α).support (hσ2.order_of.symm.trans hσ1)
   have hσ4 : Subgroup.closure {↑σ, τ} = ⊤ := closure_prime_cycle_swap h0 hσ2 hσ3 h3
   rw [eq_top_iff, ← hσ4, Subgroup.closure_le, Set.insert_subset, Set.singleton_subset_iff]
   exact ⟨Subtype.mem σ, h2⟩

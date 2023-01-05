@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module group_theory.perm.basic
-! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
+! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -577,6 +577,16 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_doma
 theorem extendDomain_eq_one_iff {e : Perm α} {f : α ≃ Subtype p} : e.extendDomain f = 1 ↔ e = 1 :=
   (injective_iff_map_eq_one' (extendDomainHom f)).mp (extendDomainHom_injective f) e
 #align equiv.perm.extend_domain_eq_one_iff Equiv.Perm.extendDomain_eq_one_iff
+
+@[simp]
+theorem extend_domain_pow (n : ℕ) : (e ^ n).extendDomain f = e.extendDomain f ^ n :=
+  map_pow (extendDomainHom f) _ _
+#align equiv.perm.extend_domain_pow Equiv.Perm.extend_domain_pow
+
+@[simp]
+theorem extend_domain_zpow (n : ℤ) : (e ^ n).extendDomain f = e.extendDomain f ^ n :=
+  map_zpow (extendDomainHom f) _ _
+#align equiv.perm.extend_domain_zpow Equiv.Perm.extend_domain_zpow
 
 end ExtendDomain
 

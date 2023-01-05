@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.directed
-! leanprover-community/mathlib commit 6d0adfa76594f304b4650d098273d4366edeb61b
+! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,9 +242,11 @@ theorem directedOn_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coe : s
 
 alias directedOn_iff_directed ↔ DirectedOn.directed_coe _
 
-theorem directed_on_range {f : β → α} : Directed r f ↔ DirectedOn r (Set.range f) := by
+#print directedOn_range /-
+theorem directedOn_range {f : β → α} : Directed r f ↔ DirectedOn r (Set.range f) := by
   simp_rw [Directed, DirectedOn, Set.forall_range_iff, Set.exists_range_iff]
-#align directed_on_range directed_on_range
+#align directed_on_range directedOn_range
+-/
 
 #print directedOn_image /-
 theorem directedOn_image {s} {f : β → α} : DirectedOn r (f '' s) ↔ DirectedOn (f ⁻¹'o r) s := by
@@ -533,7 +535,7 @@ theorem directedOn_of_sup_mem [SemilatticeSup α] {S : Set α}
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u2 u1} (β -> α) (Pi.hasBot.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (fun (x._@.Mathlib.Order.Directed._hyg.1273 : α) (x._@.Mathlib.Order.Directed._hyg.1275 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1273 x._@.Mathlib.Order.Directed._hyg.1275) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (fun (x._@.Mathlib.Order.Directed._hyg.1292 : α) (x._@.Mathlib.Order.Directed._hyg.1294 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1292 x._@.Mathlib.Order.Directed._hyg.1294) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u1 u2} (β -> α) (Pi.instBotForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {e : ι -> β} {f : ι -> α}, (Directed.{u1, u3} α ι (fun (x._@.Mathlib.Order.Directed._hyg.1319 : α) (x._@.Mathlib.Order.Directed._hyg.1321 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1319 x._@.Mathlib.Order.Directed._hyg.1321) f) -> (Function.Injective.{u3, succ u2} ι β e) -> (Directed.{u1, succ u2} α β (fun (x._@.Mathlib.Order.Directed._hyg.1338 : α) (x._@.Mathlib.Order.Directed._hyg.1340 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Directed._hyg.1338 x._@.Mathlib.Order.Directed._hyg.1340) (Function.extend.{u3, succ u2, succ u1} ι β α e f (Bot.bot.{max u1 u2} (β -> α) (Pi.instBotForAll.{u2, u1} β (fun (ᾰ : β) => α) (fun (i : β) => OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align directed.extend_bot Directed.extend_botₓ'. -/
 theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι → α}
     (hf : Directed (· ≤ ·) f) (he : Function.Injective e) :
@@ -679,16 +681,20 @@ protected theorem IsMax.isTop [IsDirected α (· ≤ ·)] (h : IsMax a) : IsTop 
 #align is_max.is_top IsMax.isTop
 -/
 
+#print DirectedOn.is_bot_of_is_min /-
 theorem DirectedOn.is_bot_of_is_min {s : Set α} (hd : DirectedOn (· ≥ ·) s) {m} (hm : m ∈ s)
     (hmin : ∀ a ∈ s, a ≤ m → m ≤ a) : ∀ a ∈ s, m ≤ a := fun a as =>
   let ⟨x, xs, xm, xa⟩ := hd m hm a as
   (hmin x xs xm).trans xa
 #align directed_on.is_bot_of_is_min DirectedOn.is_bot_of_is_min
+-/
 
+#print DirectedOn.is_top_of_is_max /-
 theorem DirectedOn.is_top_of_is_max {s : Set α} (hd : DirectedOn (· ≤ ·) s) {m} (hm : m ∈ s)
     (hmax : ∀ a ∈ s, m ≤ a → a ≤ m) : ∀ a ∈ s, a ≤ m :=
   @DirectedOn.is_bot_of_is_min αᵒᵈ _ s hd m hm hmax
 #align directed_on.is_top_of_is_max DirectedOn.is_top_of_is_max
+-/
 
 #print isTop_or_exists_gt /-
 theorem isTop_or_exists_gt [IsDirected α (· ≤ ·)] (a : α) : IsTop a ∨ ∃ b, a < b :=
