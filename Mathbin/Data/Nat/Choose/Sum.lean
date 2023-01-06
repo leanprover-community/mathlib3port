@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Patrick Stevens
 
 ! This file was ported from Lean 3 source module data.nat.choose.sum
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ variable [Semiring R] {x y : R} (h : Commute x y) (n : ℕ)
 
 include h
 
-/-- A version of the **binomial theorem** for noncommutative semirings. -/
+/-- A version of the **binomial theorem** for commuting elements in noncommutative semirings. -/
 theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * choose n m :=
   by
   let t : ℕ → ℕ → R := fun n m => x ^ m * y ^ (n - m) * choose n m

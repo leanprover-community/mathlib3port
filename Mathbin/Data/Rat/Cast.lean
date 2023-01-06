@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.cast
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -775,7 +775,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align map_rat_cast map_ratCastₓ'. -/
 @[simp]
 theorem map_ratCast [DivisionRing α] [DivisionRing β] [RingHomClass F α β] (f : F) (q : ℚ) :
-    f q = q := by rw [cast_def, map_div₀, map_int_cast, map_nat_cast, cast_def]
+    f q = q := by rw [cast_def, map_div₀, map_intCast, map_nat_cast, cast_def]
 #align map_rat_cast map_ratCast
 
 /- warning: eq_rat_cast -> eq_ratCast is a dubious translation:

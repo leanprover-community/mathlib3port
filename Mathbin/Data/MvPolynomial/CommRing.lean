@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.comm_ring
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ theorem eval₂_neg : (-p).eval₂ f g = -p.eval₂ f g :=
 #align mv_polynomial.eval₂_neg MvPolynomial.eval₂_neg
 
 theorem hom_C (f : MvPolynomial σ ℤ →+* S) (n : ℤ) : f (c n) = (n : S) :=
-  eq_int_cast (f.comp c) n
+  eq_intCast (f.comp c) n
 #align mv_polynomial.hom_C MvPolynomial.hom_C
 
 /-- A ring homomorphism f : Z[X_1, X_2, ...] → R
@@ -159,7 +159,7 @@ theorem eval₂_hom_X {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
   MvPolynomial.induction_on x
     (fun n => by
       rw [hom_C f, eval₂_C]
-      exact eq_int_cast c n)
+      exact eq_intCast c n)
     (fun p q hp hq => by
       rw [eval₂_add, hp, hq]
       exact (f.map_add _ _).symm)

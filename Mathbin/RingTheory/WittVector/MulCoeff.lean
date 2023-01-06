@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_coeff
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,8 +84,7 @@ theorem witt_poly_prod_remainder_vars (n : ℕ) :
   apply subset.trans (vars_mul _ _)
   apply union_subset
   · apply subset.trans (vars_pow _ _)
-    have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by
-      simp only [Int.cast_ofNat, eq_int_cast]
+    have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_ofNat, eq_intCast]
     rw [this, vars_C]
     apply empty_subset
   · apply subset.trans (vars_pow _ _)
@@ -148,7 +147,7 @@ theorem mul_poly_of_interest_aux1 (n : ℕ) :
       rw [Finsupp.support_eq_singleton]
       simp only [and_true_iff, Finsupp.single_eq_same, eq_self_iff_true, Ne.def]
       exact pow_ne_zero _ hp.out.ne_zero
-    simp only [bind₁_monomial, hsupp, Int.cast_ofNat, prod_singleton, eq_int_cast,
+    simp only [bind₁_monomial, hsupp, Int.cast_ofNat, prod_singleton, eq_intCast,
       Finsupp.single_eq_same, C_pow, mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true]
   · simp only [map_mul, bind₁_X_right]
 #align witt_vector.mul_poly_of_interest_aux1 WittVector.mul_poly_of_interest_aux1
@@ -173,7 +172,7 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   by
   -- a useful auxiliary fact
   have mvpz : (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) = MvPolynomial.c (↑p ^ (n + 1)) := by
-    simp only [Int.cast_ofNat, eq_int_cast, C_pow, eq_self_iff_true]
+    simp only [Int.cast_ofNat, eq_intCast, C_pow, eq_self_iff_true]
   -- unfold definitions and peel off the last entries of the sums.
   rw [witt_poly_prod, wittPolynomial, AlgHom.map_sum, AlgHom.map_sum, sum_range_succ]
   -- these are sums up to `n+2`, so be careful to only unfold to `n+1`.
@@ -189,7 +188,7 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   conv_rhs => rw [sum_range_succ]
   -- the rest is equal with proper unfolding and `ring`
   simp only [rename_monomial, ← C_mul_X_pow_eq_monomial, map_mul, rename_C, pow_one, rename_X]
-  simp only [mvpz, Int.cast_ofNat, map_pow, eq_int_cast, rename_X, pow_one, tsub_self, pow_zero]
+  simp only [mvpz, Int.cast_ofNat, map_pow, eq_intCast, rename_X, pow_one, tsub_self, pow_zero]
   ring1
 #align witt_vector.mul_poly_of_interest_aux3 WittVector.mul_poly_of_interest_aux3
 
@@ -235,7 +234,7 @@ theorem poly_of_interest_vars_eq (n : ℕ) :
             x (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1)))).vars :=
   by
   have : (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p ^ (n + 1) : ℤ) := by
-    simp only [Int.cast_ofNat, eq_int_cast, C_pow, eq_self_iff_true]
+    simp only [Int.cast_ofNat, eq_intCast, C_pow, eq_self_iff_true]
   rw [poly_of_interest, this, vars_C_mul]
   apply pow_ne_zero
   exact_mod_cast hp.out.ne_zero
@@ -398,7 +397,7 @@ theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×�
                    []
                    (Tactic.rwRuleSeq
                     "["
-                    [(Tactic.rwRule [] `eq_int_cast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
+                    [(Tactic.rwRule [] `eq_intCast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
                     "]")
                    [])]))))))
            []
@@ -545,7 +544,7 @@ theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×�
                   []
                   (Tactic.rwRuleSeq
                    "["
-                   [(Tactic.rwRule [] `eq_int_cast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
+                   [(Tactic.rwRule [] `eq_intCast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
                    "]")
                   [])]))))))
           []
@@ -882,7 +881,7 @@ theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×�
               []
               (Tactic.rwRuleSeq
                "["
-               [(Tactic.rwRule [] `eq_int_cast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
+               [(Tactic.rwRule [] `eq_intCast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
                "]")
               [])]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -895,7 +894,7 @@ theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×�
            []
            (Tactic.rwRuleSeq
             "["
-            [(Tactic.rwRule [] `eq_int_cast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
+            [(Tactic.rwRule [] `eq_intCast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
             "]")
            [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -905,7 +904,7 @@ theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×�
        []
        (Tactic.rwRuleSeq
         "["
-        [(Tactic.rwRule [] `eq_int_cast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
+        [(Tactic.rwRule [] `eq_intCast) "," (Tactic.rwRule [] `Int.cast_ofNat)]
         "]")
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -913,7 +912,7 @@ theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×�
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `eq_int_cast
+      `eq_intCast
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -1885,7 +1884,7 @@ theorem
           mvpz
             : ( p : MvPolynomial ℕ ℤ ) = MvPolynomial.c ↑ p
             :=
-            by rw [ eq_int_cast , Int.cast_ofNat ]
+            by rw [ eq_intCast , Int.cast_ofNat ]
         have
           : ∀ ( f : ℤ →+* k ) ( g : ℕ → k ) , eval₂ f g p = f p
             :=

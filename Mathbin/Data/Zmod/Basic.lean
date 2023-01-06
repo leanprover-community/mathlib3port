@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -355,7 +355,7 @@ theorem cast_nat_cast (h : m ∣ n) (k : ℕ) : ((k : Zmod n) : R) = k :=
 
 @[simp, norm_cast]
 theorem cast_int_cast (h : m ∣ n) (k : ℤ) : ((k : Zmod n) : R) = k :=
-  map_int_cast (castHom h R) k
+  map_intCast (castHom h R) k
 #align zmod.cast_int_cast Zmod.cast_int_cast
 
 end CharDvd
@@ -409,7 +409,7 @@ theorem cast_hom_injective : Function.Injective (Zmod.castHom (dvd_refl n) R) :=
   rw [injective_iff_map_eq_zero]
   intro x
   obtain ⟨k, rfl⟩ := Zmod.int_cast_surjective x
-  rw [map_int_cast, CharP.int_cast_eq_zero_iff R n, CharP.int_cast_eq_zero_iff (Zmod n) n]
+  rw [map_intCast, CharP.int_cast_eq_zero_iff R n, CharP.int_cast_eq_zero_iff (Zmod n) n]
   exact id
 #align zmod.cast_hom_injective Zmod.cast_hom_injective
 
@@ -764,7 +764,7 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
   have inv : Function.LeftInverse inv_fun to_fun ∧ Function.RightInverse inv_fun to_fun :=
     if hmn0 : m * n = 0 then by
       rcases h.eq_of_mul_eq_zero hmn0 with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;>
-        simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, eq_int_cast,
+        simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, eq_intCast,
           Prod.ext_iff]
     else by
       haveI : NeZero (m * n) := ⟨hmn0⟩

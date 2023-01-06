@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.zmod.algebra
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ def algebra' (h : m ∣ n) : Algebra (Zmod n) R :=
         by
         rcases Zmod.int_cast_surjective a with ⟨k, rfl⟩
         show Zmod.castHom h R k * r = r * Zmod.castHom h R k
-        rw [map_int_cast]
+        rw [map_intCast]
         exact Commute.cast_int_left r k
     smul_def' := fun a r => rfl }
 #align zmod.algebra' Zmod.algebra'

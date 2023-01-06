@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.cast.lemmas
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -395,28 +395,28 @@ theorem ext_int [AddMonoid A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
 
 variable [AddGroupWithOne A]
 
-/- warning: add_monoid_hom.eq_int_cast_hom -> AddMonoidHom.eq_int_cast_hom is a dubious translation:
+/- warning: add_monoid_hom.eq_int_cast_hom -> AddMonoidHom.eq_int_castAddHom is a dubious translation:
 lean 3 declaration is
   forall {A : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} A] (f : AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))), (Eq.{succ u1} A (coeFn.{succ u1, succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) (fun (_x : AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) => Int -> A) (AddMonoidHom.hasCoeToFun.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) f (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (OfNat.ofNat.{u1} A 1 (OfNat.mk.{u1} A 1 (One.one.{u1} A (AddMonoidWithOne.toOne.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))))) -> (Eq.{succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) f (Int.castAddHom.{u1} A _inst_1))
 but is expected to have type
   forall {A : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} A] (f : AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))), (Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => A) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (FunLike.coe.{succ u1, 1, succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => A) _x) (AddHomClass.toFunLike.{u1, 0, u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) Int A (AddZeroClass.toAdd.{0} Int (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt)) (AddZeroClass.toAdd.{u1} A (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, 0, u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1))) (AddMonoidHom.addMonoidHomClass.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))))) f (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => A) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) 1 (One.toOfNat1.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => A) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (AddMonoidWithOne.toOne.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => A) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (AddGroupWithOne.toAddMonoidWithOne.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => A) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) _inst_1))))) -> (Eq.{succ u1} (AddMonoidHom.{0, u1} Int A (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u1} A (AddMonoidWithOne.toAddMonoid.{u1} A (AddGroupWithOne.toAddMonoidWithOne.{u1} A _inst_1)))) f (Int.castAddHom.{u1} A _inst_1))
-Case conversion may be inaccurate. Consider using '#align add_monoid_hom.eq_int_cast_hom AddMonoidHom.eq_int_cast_homₓ'. -/
-theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :=
+Case conversion may be inaccurate. Consider using '#align add_monoid_hom.eq_int_cast_hom AddMonoidHom.eq_int_castAddHomₓ'. -/
+theorem eq_int_castAddHom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :=
   ext_int <| by simp [h1]
-#align add_monoid_hom.eq_int_cast_hom AddMonoidHom.eq_int_cast_hom
+#align add_monoid_hom.eq_int_cast_hom AddMonoidHom.eq_int_castAddHom
 
 end AddMonoidHom
 
-/- warning: eq_int_cast' -> eq_int_cast' is a dubious translation:
+/- warning: eq_int_cast' -> eq_intCast' is a dubious translation:
 lean 3 declaration is
   forall {F : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddGroupWithOne.{u2} α] [_inst_2 : AddMonoidHomClass.{u1, 0, u2} F Int α (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1)))] (f : F), (Eq.{succ u2} α (coeFn.{succ u1, succ u2} F (fun (_x : F) => Int -> α) (FunLike.hasCoeToFun.{succ u1, 1, succ u2} F Int (fun (_x : Int) => α) (AddHomClass.toFunLike.{u1, 0, u2} F Int α (AddZeroClass.toHasAdd.{0} Int (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid)) (AddZeroClass.toHasAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, 0, u2} F Int α (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1))) _inst_2))) f (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) (OfNat.ofNat.{u2} α 1 (OfNat.mk.{u2} α 1 (One.one.{u2} α (AddMonoidWithOne.toOne.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1)))))) -> (forall (n : Int), Eq.{succ u2} α (coeFn.{succ u1, succ u2} F (fun (_x : F) => Int -> α) (FunLike.hasCoeToFun.{succ u1, 1, succ u2} F Int (fun (_x : Int) => α) (AddHomClass.toFunLike.{u1, 0, u2} F Int α (AddZeroClass.toHasAdd.{0} Int (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid)) (AddZeroClass.toHasAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, 0, u2} F Int α (AddMonoid.toAddZeroClass.{0} Int Int.addMonoid) (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1))) _inst_2))) f n) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Int α (HasLiftT.mk.{1, succ u2} Int α (CoeTCₓ.coe.{1, succ u2} Int α (Int.castCoe.{u2} α (AddGroupWithOne.toHasIntCast.{u2} α _inst_1)))) n))
 but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddGroupWithOne.{u2} α] [_inst_2 : AddMonoidHomClass.{u1, 0, u2} F Int α (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1)))] (f : F), (Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (FunLike.coe.{succ u1, 1, succ u2} F Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) _x) (AddHomClass.toFunLike.{u1, 0, u2} F Int α (AddZeroClass.toAdd.{0} Int (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt)) (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, 0, u2} F Int α (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1))) _inst_2)) f (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) 1 (One.toOfNat1.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (AddMonoidWithOne.toOne.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (AddGroupWithOne.toAddMonoidWithOne.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) _inst_1))))) -> (forall (n : Int), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) n) (FunLike.coe.{succ u1, 1, succ u2} F Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) _x) (AddHomClass.toFunLike.{u1, 0, u2} F Int α (AddZeroClass.toAdd.{0} Int (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt)) (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, 0, u2} F Int α (AddMonoid.toAddZeroClass.{0} Int Int.instAddMonoidInt) (AddMonoid.toAddZeroClass.{u2} α (AddMonoidWithOne.toAddMonoid.{u2} α (AddGroupWithOne.toAddMonoidWithOne.{u2} α _inst_1))) _inst_2)) f n) (Int.cast.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) n) (AddGroupWithOne.toIntCast.{u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Int) => α) n) _inst_1) n))
-Case conversion may be inaccurate. Consider using '#align eq_int_cast' eq_int_cast'ₓ'. -/
-theorem eq_int_cast' [AddGroupWithOne α] [AddMonoidHomClass F ℤ α] (f : F) (h₁ : f 1 = 1) :
+Case conversion may be inaccurate. Consider using '#align eq_int_cast' eq_intCast'ₓ'. -/
+theorem eq_intCast' [AddGroupWithOne α] [AddMonoidHomClass F ℤ α] (f : F) (h₁ : f 1 = 1) :
     ∀ n : ℤ, f n = n :=
   AddMonoidHom.ext_iff.1 <| (f : ℤ →+ α).eq_int_cast_hom h₁
-#align eq_int_cast' eq_int_cast'
+#align eq_int_cast' eq_intCast'
 
 /- warning: int.cast_add_hom_int -> Int.castAddHom_int is a dubious translation:
 lean 3 declaration is
@@ -508,39 +508,39 @@ section NonAssocRing
 
 variable [NonAssocRing α] [NonAssocRing β]
 
-/- warning: eq_int_cast -> eq_int_cast is a dubious translation:
+/- warning: eq_int_cast -> eq_intCast is a dubious translation:
 lean 3 declaration is
   forall {F : Type.{u1}} {α : Type.{u2}} [_inst_1 : NonAssocRing.{u2} α] [_inst_3 : RingHomClass.{u1, 0, u2} F Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1)] (f : F) (n : Int), Eq.{succ u2} α (coeFn.{succ u1, succ u2} F (fun (_x : F) => Int -> α) (FunLike.hasCoeToFun.{succ u1, 1, succ u2} F Int (fun (_x : Int) => α) (MulHomClass.toFunLike.{u1, 0, u2} F Int α (Distrib.toHasMul.{0} Int (NonUnitalNonAssocSemiring.toDistrib.{0} Int (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring))))) (Distrib.toHasMul.{u2} α (NonUnitalNonAssocSemiring.toDistrib.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1)))) (NonUnitalRingHomClass.toMulHomClass.{u1, 0, u2} F Int α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1)) (RingHomClass.toNonUnitalRingHomClass.{u1, 0, u2} F Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1) _inst_3)))) f n) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Int α (HasLiftT.mk.{1, succ u2} Int α (CoeTCₓ.coe.{1, succ u2} Int α (Int.castCoe.{u2} α (AddGroupWithOne.toHasIntCast.{u2} α (NonAssocRing.toAddGroupWithOne.{u2} α _inst_1))))) n)
 but is expected to have type
   forall {F : Type.{u2}} {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] [_inst_3 : RingHomClass.{u2, 0, u1} F Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)] (f : F) (n : Int), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Int) => α) n) (FunLike.coe.{succ u2, 1, succ u1} F Int (fun (_x : Int) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Int) => α) _x) (MulHomClass.toFunLike.{u2, 0, u1} F Int α (NonUnitalNonAssocSemiring.toMul.{0} Int (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)))) (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1))) (NonUnitalRingHomClass.toMulHomClass.{u2, 0, u1} F Int α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} Int (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) (RingHomClass.toNonUnitalRingHomClass.{u2, 0, u1} F Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1) _inst_3))) f n) (Int.cast.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Int) => α) n) (NonAssocRing.toIntCast.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : Int) => α) n) _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align eq_int_cast eq_int_castₓ'. -/
+Case conversion may be inaccurate. Consider using '#align eq_int_cast eq_intCastₓ'. -/
 @[simp]
-theorem eq_int_cast [RingHomClass F ℤ α] (f : F) (n : ℤ) : f n = n :=
-  eq_int_cast' f (map_one _) n
-#align eq_int_cast eq_int_cast
+theorem eq_intCast [RingHomClass F ℤ α] (f : F) (n : ℤ) : f n = n :=
+  eq_intCast' f (map_one _) n
+#align eq_int_cast eq_intCast
 
-/- warning: map_int_cast -> map_int_cast is a dubious translation:
+/- warning: map_int_cast -> map_intCast is a dubious translation:
 lean 3 declaration is
   forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : NonAssocRing.{u2} α] [_inst_2 : NonAssocRing.{u3} β] [_inst_3 : RingHomClass.{u1, u2, u3} F α β (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1) (NonAssocRing.toNonAssocSemiring.{u3} β _inst_2)] (f : F) (n : Int), Eq.{succ u3} β (coeFn.{succ u1, max (succ u2) (succ u3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u1, succ u2, succ u3} F α (fun (_x : α) => β) (MulHomClass.toFunLike.{u1, u2, u3} F α β (Distrib.toHasMul.{u2} α (NonUnitalNonAssocSemiring.toDistrib.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1)))) (Distrib.toHasMul.{u3} β (NonUnitalNonAssocSemiring.toDistrib.{u3} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} β (NonAssocRing.toNonAssocSemiring.{u3} β _inst_2)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u2, u3} F α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} β (NonAssocRing.toNonAssocSemiring.{u3} β _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{u1, u2, u3} F α β (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1) (NonAssocRing.toNonAssocSemiring.{u3} β _inst_2) _inst_3)))) f ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Int α (HasLiftT.mk.{1, succ u2} Int α (CoeTCₓ.coe.{1, succ u2} Int α (Int.castCoe.{u2} α (AddGroupWithOne.toHasIntCast.{u2} α (NonAssocRing.toAddGroupWithOne.{u2} α _inst_1))))) n)) ((fun (a : Type) (b : Type.{u3}) [self : HasLiftT.{1, succ u3} a b] => self.0) Int β (HasLiftT.mk.{1, succ u3} Int β (CoeTCₓ.coe.{1, succ u3} Int β (Int.castCoe.{u3} β (AddGroupWithOne.toHasIntCast.{u3} β (NonAssocRing.toAddGroupWithOne.{u3} β _inst_2))))) n)
 but is expected to have type
   forall {F : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : NonAssocRing.{u2} α] [_inst_2 : NonAssocRing.{u1} β] [_inst_3 : RingHomClass.{u3, u2, u1} F α β (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1) (NonAssocRing.toNonAssocSemiring.{u1} β _inst_2)] (f : F) (n : Int), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) (Int.cast.{u2} α (NonAssocRing.toIntCast.{u2} α _inst_1) n)) (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) _x) (MulHomClass.toFunLike.{u3, u2, u1} F α β (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (NonAssocRing.toNonAssocSemiring.{u1} β _inst_2))) (NonUnitalRingHomClass.toMulHomClass.{u3, u2, u1} F α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (NonAssocRing.toNonAssocSemiring.{u1} β _inst_2)) (RingHomClass.toNonUnitalRingHomClass.{u3, u2, u1} F α β (NonAssocRing.toNonAssocSemiring.{u2} α _inst_1) (NonAssocRing.toNonAssocSemiring.{u1} β _inst_2) _inst_3))) f (Int.cast.{u2} α (NonAssocRing.toIntCast.{u2} α _inst_1) n)) (Int.cast.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) (Int.cast.{u2} α (NonAssocRing.toIntCast.{u2} α _inst_1) n)) (NonAssocRing.toIntCast.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2528 : α) => β) (Int.cast.{u2} α (NonAssocRing.toIntCast.{u2} α _inst_1) n)) _inst_2) n)
-Case conversion may be inaccurate. Consider using '#align map_int_cast map_int_castₓ'. -/
+Case conversion may be inaccurate. Consider using '#align map_int_cast map_intCastₓ'. -/
 @[simp]
-theorem map_int_cast [RingHomClass F α β] (f : F) (n : ℤ) : f n = n :=
-  eq_int_cast ((f : α →+* β).comp (Int.castRingHom α)) n
-#align map_int_cast map_int_cast
+theorem map_intCast [RingHomClass F α β] (f : F) (n : ℤ) : f n = n :=
+  eq_intCast ((f : α →+* β).comp (Int.castRingHom α)) n
+#align map_int_cast map_intCast
 
 namespace RingHom
 
-/- warning: ring_hom.eq_int_cast' -> RingHom.eq_int_cast' is a dubious translation:
+/- warning: ring_hom.eq_int_cast' -> RingHom.eq_intCast' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] (f : RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)), Eq.{succ u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) f (Int.castRingHom.{u1} α _inst_1)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] (f : RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)), Eq.{succ u1} (RingHom.{0, u1} Int α (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) (NonAssocRing.toNonAssocSemiring.{u1} α _inst_1)) f (Int.castRingHom.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align ring_hom.eq_int_cast' RingHom.eq_int_cast'ₓ'. -/
-theorem eq_int_cast' (f : ℤ →+* α) : f = Int.castRingHom α :=
-  RingHom.ext <| eq_int_cast f
-#align ring_hom.eq_int_cast' RingHom.eq_int_cast'
+Case conversion may be inaccurate. Consider using '#align ring_hom.eq_int_cast' RingHom.eq_intCast'ₓ'. -/
+theorem eq_intCast' (f : ℤ →+* α) : f = Int.castRingHom α :=
+  RingHom.ext <| eq_intCast f
+#align ring_hom.eq_int_cast' RingHom.eq_intCast'
 
 /- warning: ring_hom.ext_int -> RingHom.ext_int is a dubious translation:
 lean 3 declaration is
@@ -568,7 +568,7 @@ end NonAssocRing
 
 @[simp, norm_cast]
 theorem Int.cast_id (n : ℤ) : ↑n = n :=
-  (eq_int_cast (RingHom.id ℤ) _).symm
+  (eq_intCast (RingHom.id ℤ) _).symm
 #align int.cast_id Int.cast_idₓ
 
 /- warning: int.cast_ring_hom_int -> Int.castRingHom_int is a dubious translation:
@@ -611,7 +611,7 @@ end Pi
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : IntCast.{u3} γ] (n : Int), Eq.{max (max (succ u1) (succ u2)) (succ u3)} ((Sum.{u1, u2} α β) -> γ) (Sum.elim.{u1, u2, succ u3} α β γ ((fun (a : Type) (b : Sort.{max (succ u1) (succ u3)}) [self : HasLiftT.{1, max (succ u1) (succ u3)} a b] => self.0) Int (α -> γ) (HasLiftT.mk.{1, max (succ u1) (succ u3)} Int (α -> γ) (CoeTCₓ.coe.{1, max (succ u1) (succ u3)} Int (α -> γ) (Int.castCoe.{max u1 u3} (α -> γ) (Pi.hasIntCast.{u1, u3} α (fun (ᾰ : α) => γ) (fun (i : α) => _inst_1))))) n) ((fun (a : Type) (b : Sort.{max (succ u2) (succ u3)}) [self : HasLiftT.{1, max (succ u2) (succ u3)} a b] => self.0) Int (β -> γ) (HasLiftT.mk.{1, max (succ u2) (succ u3)} Int (β -> γ) (CoeTCₓ.coe.{1, max (succ u2) (succ u3)} Int (β -> γ) (Int.castCoe.{max u2 u3} (β -> γ) (Pi.hasIntCast.{u2, u3} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_1))))) n)) ((fun (a : Type) (b : Sort.{max (max (succ u1) (succ u2)) (succ u3)}) [self : HasLiftT.{1, max (max (succ u1) (succ u2)) (succ u3)} a b] => self.0) Int ((Sum.{u1, u2} α β) -> γ) (HasLiftT.mk.{1, max (max (succ u1) (succ u2)) (succ u3)} Int ((Sum.{u1, u2} α β) -> γ) (CoeTCₓ.coe.{1, max (max (succ u1) (succ u2)) (succ u3)} Int ((Sum.{u1, u2} α β) -> γ) (Int.castCoe.{max (max u1 u2) u3} ((Sum.{u1, u2} α β) -> γ) (Pi.hasIntCast.{max u1 u2, u3} (Sum.{u1, u2} α β) (fun (ᾰ : Sum.{u1, u2} α β) => γ) (fun (i : Sum.{u1, u2} α β) => _inst_1))))) n)
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : IntCast.{u1} γ] (n : Int), Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((Sum.{u3, u2} α β) -> γ) (Sum.elim.{u3, u2, succ u1} α β γ (Int.cast.{max u3 u1} (α -> γ) (Pi.intCast.{u3, u1} α (fun (a._@.Mathlib.Data.Int.Cast.Lemmas._hyg.2913 : α) => γ) (fun (i : α) => _inst_1)) n) (Int.cast.{max u2 u1} (β -> γ) (Pi.intCast.{u2, u1} β (fun (a._@.Mathlib.Data.Int.Cast.Lemmas._hyg.2919 : β) => γ) (fun (i : β) => _inst_1)) n)) (Int.cast.{max (max u3 u2) u1} ((Sum.{u3, u2} α β) -> γ) (Pi.intCast.{max u3 u2, u1} (Sum.{u3, u2} α β) (fun (a._@.Mathlib.Data.Sum.Basic._hyg.1613 : Sum.{u3, u2} α β) => γ) (fun (i : Sum.{u3, u2} α β) => _inst_1)) n)
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : IntCast.{u1} γ] (n : Int), Eq.{max (max (succ u3) (succ u2)) (succ u1)} ((Sum.{u3, u2} α β) -> γ) (Sum.elim.{u3, u2, succ u1} α β γ (Int.cast.{max u3 u1} (α -> γ) (Pi.intCast.{u3, u1} α (fun (a._@.Mathlib.Data.Int.Cast.Lemmas._hyg.3015 : α) => γ) (fun (i : α) => _inst_1)) n) (Int.cast.{max u2 u1} (β -> γ) (Pi.intCast.{u2, u1} β (fun (a._@.Mathlib.Data.Int.Cast.Lemmas._hyg.3021 : β) => γ) (fun (i : β) => _inst_1)) n)) (Int.cast.{max (max u3 u2) u1} ((Sum.{u3, u2} α β) -> γ) (Pi.intCast.{max u3 u2, u1} (Sum.{u3, u2} α β) (fun (a._@.Mathlib.Data.Sum.Basic._hyg.1613 : Sum.{u3, u2} α β) => γ) (fun (i : Sum.{u3, u2} α β) => _inst_1)) n)
 Case conversion may be inaccurate. Consider using '#align sum.elim_int_cast_int_cast Sum.elim_intCast_intCastₓ'. -/
 theorem Sum.elim_intCast_intCast {α β γ : Type _} [IntCast γ] (n : ℤ) :
     Sum.elim (n : α → γ) (n : β → γ) = n :=
@@ -630,27 +630,27 @@ namespace MulOpposite
 
 variable [AddGroupWithOne α]
 
-/- warning: mul_opposite.op_int_cast -> MulOpposite.op_int_cast is a dubious translation:
+/- warning: mul_opposite.op_int_cast -> MulOpposite.op_intCast is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (z : Int), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) z)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Int (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Int (MulOpposite.{u1} α) (Int.castCoe.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toHasIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addGroupWithOne.{u1} α _inst_1))))) z)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (z : Int), Eq.{succ u1} (MulOpposite.{u1} α) (MulOpposite.op.{u1} α (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) z)) (Int.cast.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instAddGroupWithOneMulOpposite.{u1} α _inst_1)) z)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.op_int_cast MulOpposite.op_int_castₓ'. -/
+Case conversion may be inaccurate. Consider using '#align mul_opposite.op_int_cast MulOpposite.op_intCastₓ'. -/
 @[simp, norm_cast]
-theorem op_int_cast (z : ℤ) : op (z : α) = z :=
+theorem op_intCast (z : ℤ) : op (z : α) = z :=
   rfl
-#align mul_opposite.op_int_cast MulOpposite.op_int_cast
+#align mul_opposite.op_int_cast MulOpposite.op_intCast
 
-/- warning: mul_opposite.unop_int_cast -> MulOpposite.unop_int_cast is a dubious translation:
+/- warning: mul_opposite.unop_int_cast -> MulOpposite.unop_intCast is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (MulOpposite.unop.{u1} α ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int (MulOpposite.{u1} α) (HasLiftT.mk.{1, succ u1} Int (MulOpposite.{u1} α) (CoeTCₓ.coe.{1, succ u1} Int (MulOpposite.{u1} α) (Int.castCoe.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toHasIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.addGroupWithOne.{u1} α _inst_1))))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α _inst_1)))) n)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} α] (n : Int), Eq.{succ u1} α (MulOpposite.unop.{u1} α (Int.cast.{u1} (MulOpposite.{u1} α) (AddGroupWithOne.toIntCast.{u1} (MulOpposite.{u1} α) (MulOpposite.instAddGroupWithOneMulOpposite.{u1} α _inst_1)) n)) (Int.cast.{u1} α (AddGroupWithOne.toIntCast.{u1} α _inst_1) n)
-Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_int_cast MulOpposite.unop_int_castₓ'. -/
+Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_int_cast MulOpposite.unop_intCastₓ'. -/
 @[simp, norm_cast]
-theorem unop_int_cast (n : ℤ) : unop (n : αᵐᵒᵖ) = n :=
+theorem unop_intCast (n : ℤ) : unop (n : αᵐᵒᵖ) = n :=
   rfl
-#align mul_opposite.unop_int_cast MulOpposite.unop_int_cast
+#align mul_opposite.unop_int_cast MulOpposite.unop_intCast
 
 end MulOpposite
 
@@ -668,18 +668,18 @@ instance [h : AddGroupWithOne α] : AddGroupWithOne αᵒᵈ :=
 instance [h : AddCommGroupWithOne α] : AddCommGroupWithOne αᵒᵈ :=
   h
 
-#print toDual_int_cast /-
+#print toDual_intCast /-
 @[simp]
-theorem toDual_int_cast [IntCast α] (n : ℤ) : toDual (n : α) = n :=
+theorem toDual_intCast [IntCast α] (n : ℤ) : toDual (n : α) = n :=
   rfl
-#align to_dual_int_cast toDual_int_cast
+#align to_dual_int_cast toDual_intCast
 -/
 
-#print ofDual_int_cast /-
+#print ofDual_intCast /-
 @[simp]
-theorem ofDual_int_cast [IntCast α] (n : ℤ) : (ofDual n : α) = n :=
+theorem ofDual_intCast [IntCast α] (n : ℤ) : (ofDual n : α) = n :=
   rfl
-#align of_dual_int_cast ofDual_int_cast
+#align of_dual_int_cast ofDual_intCast
 -/
 
 /-! ### Lexicographic order -/
@@ -694,17 +694,17 @@ instance [h : AddGroupWithOne α] : AddGroupWithOne (Lex α) :=
 instance [h : AddCommGroupWithOne α] : AddCommGroupWithOne (Lex α) :=
   h
 
-#print toLex_int_cast /-
+#print toLex_intCast /-
 @[simp]
-theorem toLex_int_cast [IntCast α] (n : ℤ) : toLex (n : α) = n :=
+theorem toLex_intCast [IntCast α] (n : ℤ) : toLex (n : α) = n :=
   rfl
-#align to_lex_int_cast toLex_int_cast
+#align to_lex_int_cast toLex_intCast
 -/
 
-#print ofLex_int_cast /-
+#print ofLex_intCast /-
 @[simp]
-theorem ofLex_int_cast [IntCast α] (n : ℤ) : (ofLex n : α) = n :=
+theorem ofLex_intCast [IntCast α] (n : ℤ) : (ofLex n : α) = n :=
   rfl
-#align of_lex_int_cast ofLex_int_cast
+#align of_lex_int_cast ofLex_intCast
 -/
 

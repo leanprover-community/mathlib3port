@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 
 ! This file was ported from Lean 3 source module data.list.big_operators.basic
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,7 +274,7 @@ theorem SublistForall₂.prod_le_prod' [Preorder M]
     [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)] [CovariantClass M M (· * ·) (· ≤ ·)]
     {l₁ l₂ : List M} (h : SublistForall₂ (· ≤ ·) l₁ l₂) (h₁ : ∀ a ∈ l₂, (1 : M) ≤ a) :
     l₁.Prod ≤ l₂.Prod :=
-  let ⟨l, hall, hsub⟩ := sublist_forall₂_iff.1 h
+  let ⟨l, hall, hsub⟩ := sublistForall₂_iff.1 h
   hall.prod_le_prod'.trans <| hsub.prod_le_prod' h₁
 #align list.sublist_forall₂.prod_le_prod' List.SublistForall₂.prod_le_prod'
 

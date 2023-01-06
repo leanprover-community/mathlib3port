@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tian Chen, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module number_theory.multiplicity
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -286,7 +286,7 @@ theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 :=
     
   rw [← Zmod.int_coe_eq_int_coe_iff'] at hx⊢
   push_cast
-  rw [← map_int_cast (Zmod.castHom (show 2 ∣ 4 by norm_num) (Zmod 2)) x] at hx
+  rw [← map_intCast (Zmod.castHom (show 2 ∣ 4 by norm_num) (Zmod 2)) x] at hx
   set y : Zmod 4 := x
   -- Now we can just consider each of the 4 possible values for y
         fin_cases y <;>

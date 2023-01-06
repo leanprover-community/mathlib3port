@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.basic
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -281,7 +281,7 @@ theorem int_cyclotomic_rw {n : ℕ} (h : n ≠ 0) :
   by
   simp only [cyclotomic, h, dif_neg, not_false_iff]
   ext i
-  simp only [coeff_map, Int.cast_id, eq_int_cast]
+  simp only [coeff_map, Int.cast_id, eq_intCast]
 #align polynomial.int_cyclotomic_rw Polynomial.int_cyclotomic_rw
 
 /-- `cyclotomic n R` comes from `cyclotomic n ℤ`. -/
@@ -370,7 +370,7 @@ theorem degree_cyclotomic (n : ℕ) (R : Type _) [Ring R] [Nontrivial R] :
     · simp only [cyclotomic, degree_one, dif_pos, Nat.totient_zero, WithTop.coe_zero]
     rw [← degree_cyclotomic' (Complex.is_primitive_root_exp k.succ (Nat.succ_ne_zero k))]
     exact (int_cyclotomic_spec k.succ).2.1
-  simp only [(int_cyclotomic_spec n).right.right, eq_int_cast, monic.leading_coeff, Int.cast_one,
+  simp only [(int_cyclotomic_spec n).right.right, eq_intCast, monic.leading_coeff, Int.cast_one,
     Ne.def, not_false_iff, one_ne_zero]
 #align polynomial.degree_cyclotomic Polynomial.degree_cyclotomic
 

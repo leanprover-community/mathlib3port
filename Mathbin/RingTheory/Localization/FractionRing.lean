@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.fraction_ring
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,14 +53,14 @@ instance Rat.is_fraction_ring : IsFractionRing ℤ ℚ
   map_units := by
     rintro ⟨x, hx⟩
     rw [mem_non_zero_divisors_iff_ne_zero] at hx
-    simpa only [eq_int_cast, isUnit_iff_ne_zero, Int.cast_eq_zero, Ne.def, Subtype.coe_mk] using hx
+    simpa only [eq_intCast, isUnit_iff_ne_zero, Int.cast_eq_zero, Ne.def, Subtype.coe_mk] using hx
   surj := by
     rintro ⟨n, d, hd, h⟩
     refine' ⟨⟨n, ⟨d, _⟩⟩, Rat.mul_den_eq_num⟩
     rwa [mem_non_zero_divisors_iff_ne_zero, Int.coe_nat_ne_zero_iff_pos]
   eq_iff_exists := by
     intro x y
-    rw [eq_int_cast, eq_int_cast, Int.cast_inj]
+    rw [eq_intCast, eq_intCast, Int.cast_inj]
     refine'
       ⟨by
         rintro rfl

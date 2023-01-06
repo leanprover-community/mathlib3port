@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.ring_homs
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem norm_sub_mod_part (h : ‖(r : ℚ_[p])‖ ≤ 1) : ‖(⟨r, h⟩ - mod
   suffices ↑p ∣ r.num - n * r.denom
     by
     convert (Int.castRingHom ℤ_[p]).map_dvd this
-    simp only [sub_mul, Int.cast_ofNat, eq_int_cast, Int.cast_mul, sub_left_inj, Int.cast_sub]
+    simp only [sub_mul, Int.cast_ofNat, eq_intCast, Int.cast_mul, sub_left_inj, Int.cast_sub]
     apply Subtype.coe_injective
     simp only [coe_mul, Subtype.coe_mk, coe_nat_cast]
     rw_mod_cast [@Rat.mul_den_eq_num r]
@@ -183,7 +183,7 @@ theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m �
   simp only [pow_one] at this
   specialize this hm hn
   apply_fun Zmod.castHom (show p ∣ p ^ 1 by rw [pow_one]) (Zmod p)  at this
-  simp only [map_int_cast] at this
+  simp only [map_intCast] at this
   simpa only [Int.cast_ofNat] using this
 #align padic_int.zmod_congr_of_sub_mem_max_ideal PadicInt.zmod_congr_of_sub_mem_max_ideal
 
@@ -670,7 +670,7 @@ theorem lift_sub_val_mem_span (r : R) (n : ℕ) :
   rw [sub_eq_sub_add_sub (lim_nth_hom f_compat r) _ ↑(nth_hom f r (max n k))]
   apply Ideal.add_mem _ _ this
   rw [Ideal.mem_span_singleton]
-  simpa only [eq_int_cast, RingHom.map_pow, Int.cast_sub] using
+  simpa only [eq_intCast, RingHom.map_pow, Int.cast_sub] using
     (Int.castRingHom ℤ_[p]).map_dvd (pow_dvd_nth_hom_sub f_compat r n (max n k) (le_max_left _ _))
 #align padic_int.lift_sub_val_mem_span PadicInt.lift_sub_val_mem_span
 

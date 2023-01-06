@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.basic
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1055,7 +1055,7 @@ def lift {d : ℤ} : { r : R // r * r = ↑d } ≃ (ℤ√d →+* R)
           by ring
         simp [this, r.prop]
         ring }
-  invFun f := ⟨f sqrtd, by rw [← f.map_mul, dmuld, map_int_cast]⟩
+  invFun f := ⟨f sqrtd, by rw [← f.map_mul, dmuld, map_intCast]⟩
   left_inv r := by
     ext
     simp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.admissible_card_pow_degree
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   by
   have hbε : 0 < card_pow_degree b • ε :=
     by
-    rw [Algebra.smul_def, eq_int_cast]
+    rw [Algebra.smul_def, eq_intCast]
     exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
   have one_lt_q : 1 < Fintype.card Fq := Fintype.one_lt_card
   have one_lt_q' : (1 : ℝ) < Fintype.card Fq := by assumption_mod_cast
@@ -143,7 +143,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- In particular, we'll show the degree is less than the following:
   suffices (nat_degree (A i₁ % b - A i₀ % b) : ℝ) < b.nat_degree + log ε / log (Fintype.card Fq) by
     rwa [← Real.log_lt_log_iff (int.cast_pos.mpr (card_pow_degree.pos h')) hbε,
-      card_pow_degree_nonzero _ h', card_pow_degree_nonzero _ hb, Algebra.smul_def, eq_int_cast,
+      card_pow_degree_nonzero _ h', card_pow_degree_nonzero _ hb, Algebra.smul_def, eq_intCast,
       Int.cast_pow, Int.cast_ofNat, Int.cast_pow, Int.cast_ofNat,
       log_mul (pow_ne_zero _ q_pos'.ne') hε.ne', ← rpow_nat_cast, ← rpow_nat_cast, log_rpow q_pos',
       log_rpow q_pos', ← lt_div_iff (log_pos one_lt_q'), add_div,
@@ -195,7 +195,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
   by
   have hbε : 0 < card_pow_degree b • ε :=
     by
-    rw [Algebra.smul_def, eq_int_cast]
+    rw [Algebra.smul_def, eq_intCast]
     exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
   -- We go by induction on the size `A`.
   induction' n with n ih

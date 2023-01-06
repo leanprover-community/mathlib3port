@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.dickson
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,12 +182,12 @@ theorem dickson_one_one_mul (m n : ℕ) :
     dickson 1 (1 : R) (m * n) = (dickson 1 1 m).comp (dickson 1 1 n) :=
   by
   have h : (1 : R) = Int.castRingHom R 1
-  simp only [eq_int_cast, Int.cast_one]
+  simp only [eq_intCast, Int.cast_one]
   rw [h]
   simp only [← map_dickson (Int.castRingHom R), ← map_comp]
   congr 1
   apply map_injective (Int.castRingHom ℚ) Int.cast_injective
-  simp only [map_dickson, map_comp, eq_int_cast, Int.cast_one, dickson_one_one_eq_chebyshev_T,
+  simp only [map_dickson, map_comp, eq_intCast, Int.cast_one, dickson_one_one_eq_chebyshev_T,
     chebyshev.T_mul, two_mul, ← add_comp]
   simp only [← two_mul, ← comp_assoc]
   apply eval₂_congr rfl rfl

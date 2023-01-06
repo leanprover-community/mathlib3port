@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.eval
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ}
   have hn : 1 < n := one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn'.ne', (h Nat.prime_two 0).symm⟩
   rsuffices h | h : eval 1 (cyclotomic n ℤ) = 1 ∨ eval 1 (cyclotomic n ℤ) = -1
   · have := eval_int_cast_map (Int.castRingHom R) (cyclotomic n ℤ) 1
-    simpa only [map_cyclotomic, Int.cast_one, h, eq_int_cast] using this
+    simpa only [map_cyclotomic, Int.cast_one, h, eq_intCast] using this
   · exfalso
     linarith [cyclotomic_nonneg n (le_refl (1 : ℤ))]
   rw [← Int.natAbs_eq_natAbs_iff, Int.natAbs_one, Nat.eq_one_iff_not_exists_prime_dvd]
@@ -350,7 +350,7 @@ theorem sub_one_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq
         linarith)
   norm_cast
   erw [cyclotomic.eval_apply (q + 2 : ℤ) n (algebraMap ℤ ℝ)]
-  simp only [Int.ofNat_succ, eq_int_cast]
+  simp only [Int.ofNat_succ, eq_intCast]
   norm_cast
   rw [Int.coe_nat_abs_eq_normalize, Int.normalize_of_nonneg]
   simp only [Int.ofNat_succ]

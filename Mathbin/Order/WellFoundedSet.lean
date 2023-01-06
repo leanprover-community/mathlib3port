@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.well_founded_set
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1522,7 +1522,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
     rw [if_neg hn, add_comm (g 0) n', add_tsub_cancel_right] at hmn
     split_ifs  at hmn with hm hm
     · apply hf1.2 m (g n') (lt_of_lt_of_le hm (g.monotone n'.zero_le))
-      exact trans hmn (List.tail_sublist_forall₂_self _)
+      exact trans hmn (List.tail_sublistForall₂_self _)
     · rw [← tsub_lt_iff_left (le_of_not_lt hm)] at mn
       apply hf1.2 _ _ (g.lt_iff_lt.2 mn)
       rw [← List.cons_head!_tail (hnil (g (m - g 0))), ← List.cons_head!_tail (hnil (g n'))]

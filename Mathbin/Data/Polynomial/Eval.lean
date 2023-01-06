@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.eval
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -978,7 +978,7 @@ theorem eval_int_cast_map {R S : Type _} [Ring R] [Ring S] (f : R →+* S) (p : 
   · intro p q hp hq
     simp only [hp, hq, Polynomial.map_add, RingHom.map_add, eval_add]
   · intro n r
-    simp only [map_int_cast, eval_monomial, map_monomial, map_pow, map_mul]
+    simp only [map_intCast, eval_monomial, map_monomial, map_pow, map_mul]
 #align polynomial.eval_int_cast_map Polynomial.eval_int_cast_map
 
 end Map
@@ -1221,7 +1221,7 @@ protected theorem map_neg {S} [Ring S] (f : R →+* S) : (-p).map f = -p.map f :
 
 @[simp]
 theorem map_int_cast {S} [Ring S] (f : R →+* S) (n : ℤ) : map f ↑n = ↑n :=
-  map_int_cast (mapRingHom f) n
+  map_intCast (mapRingHom f) n
 #align polynomial.map_int_cast Polynomial.map_int_cast
 
 @[simp]

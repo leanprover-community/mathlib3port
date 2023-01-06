@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.order.floor
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1550,15 +1550,15 @@ theorem ceil_congr (h : ∀ n : ℤ, a ≤ n ↔ b ≤ n) : ⌈a⌉ = ⌈b⌉ :=
 #align int.ceil_congr Int.ceil_congr
 
 theorem map_floor (f : F) (hf : StrictMono f) (a : α) : ⌊f a⌋ = ⌊a⌋ :=
-  floor_congr fun n => by rw [← map_int_cast f, hf.le_iff_le]
+  floor_congr fun n => by rw [← map_intCast f, hf.le_iff_le]
 #align int.map_floor Int.map_floor
 
 theorem map_ceil (f : F) (hf : StrictMono f) (a : α) : ⌈f a⌉ = ⌈a⌉ :=
-  ceil_congr fun n => by rw [← map_int_cast f, hf.le_iff_le]
+  ceil_congr fun n => by rw [← map_intCast f, hf.le_iff_le]
 #align int.map_ceil Int.map_ceil
 
 theorem map_fract (f : F) (hf : StrictMono f) (a : α) : fract (f a) = f (fract a) := by
-  simp_rw [fract, map_sub, map_int_cast, map_floor _ hf]
+  simp_rw [fract, map_sub, map_intCast, map_floor _ hf]
 #align int.map_fract Int.map_fract
 
 end Int

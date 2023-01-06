@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.algebra_map
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiring R] [Semiring 
     f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p :=
   by
   dsimp [eval₂, Sum]
-  simp only [f.map_sum, f.map_mul, f.map_pow, eq_int_cast, map_int_cast, AlgHom.commutes]
+  simp only [f.map_sum, f.map_mul, f.map_pow, eq_intCast, map_intCast, AlgHom.commutes]
 #align polynomial.alg_hom_eval₂_algebra_map Polynomial.alg_hom_eval₂_algebra_map
 
 @[simp]
@@ -134,7 +134,7 @@ theorem eval₂_algebra_map_X {R A : Type _} [CommSemiring R] [Semiring A] [Alge
   by
   conv_rhs => rw [← Polynomial.sum_C_mul_X_pow_eq p]
   dsimp [eval₂, Sum]
-  simp only [f.map_sum, f.map_mul, f.map_pow, eq_int_cast, map_int_cast]
+  simp only [f.map_sum, f.map_mul, f.map_pow, eq_intCast, map_intCast]
   simp [Polynomial.C_eq_algebra_map]
 #align polynomial.eval₂_algebra_map_X Polynomial.eval₂_algebra_map_X
 

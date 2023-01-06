@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.complex.is_R_or_C
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1056,7 +1056,7 @@ theorem nat_cast_im (n : ℕ) : im (n : K) = 0 := by rw [← of_real_nat_cast, o
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_int_cast (n : ℤ) : ((n : ℝ) : K) = n :=
-  map_int_cast (@ofRealHom K _) n
+  map_intCast (@ofRealHom K _) n
 #align is_R_or_C.of_real_int_cast IsROrC.of_real_int_cast
 
 @[simp, is_R_or_C_simps, norm_cast]

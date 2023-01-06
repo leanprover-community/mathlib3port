@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius
-! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
+! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3723,7 +3723,7 @@ def frobeniusPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
               ","
               (Tactic.rwRule [] `map_X)
               ","
-              (Tactic.rwRule [] `eq_int_cast)
+              (Tactic.rwRule [] `eq_intCast)
               ","
               (Tactic.rwRule [] `Int.cast_ofNat)
               ","
@@ -4085,7 +4085,7 @@ def frobeniusPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
             ["["
              [(Tactic.simpLemma [] [] `invOf_eq_inv)
               ","
-              (Tactic.simpLemma [] [] `eq_int_cast)
+              (Tactic.simpLemma [] [] `eq_intCast)
               ","
               (Tactic.simpLemma [] [] `inv_pow)
               ","
@@ -4287,7 +4287,7 @@ def frobeniusPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
              ","
              (Tactic.rwRule [] `map_X)
              ","
-             (Tactic.rwRule [] `eq_int_cast)
+             (Tactic.rwRule [] `eq_intCast)
              ","
              (Tactic.rwRule [] `Int.cast_ofNat)
              ","
@@ -4644,7 +4644,7 @@ def frobeniusPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
            ["["
             [(Tactic.simpLemma [] [] `invOf_eq_inv)
              ","
-             (Tactic.simpLemma [] [] `eq_int_cast)
+             (Tactic.simpLemma [] [] `eq_intCast)
              ","
              (Tactic.simpLemma [] [] `inv_pow)
              ","
@@ -5318,7 +5318,7 @@ theorem
               ,
               map_X
               ,
-              eq_int_cast
+              eq_intCast
               ,
               Int.cast_ofNat
               ,
@@ -5486,7 +5486,7 @@ theorem
         rw [ C_inj ]
         simp
           only
-          [ invOf_eq_inv , eq_int_cast , inv_pow , Int.cast_ofNat , Nat.cast_mul , Int.cast_mul ]
+          [ invOf_eq_inv , eq_intCast , inv_pow , Int.cast_ofNat , Nat.cast_mul , Int.cast_mul ]
         rw [ Rat.coe_nat_div _ _ map_frobenius_poly.key₁ p n - i j hj ]
         simp only [ Nat.cast_pow , pow_add , pow_one ]
         suffices
@@ -5519,7 +5519,7 @@ theorem frobenius_poly_zmod (n : ℕ) :
     MvPolynomial.map (Int.castRingHom (Zmod p)) (frobeniusPoly p n) = x n ^ p :=
   by
   rw [frobenius_poly, RingHom.map_add, RingHom.map_pow, RingHom.map_mul, map_X, map_C]
-  simp only [Int.cast_ofNat, add_zero, eq_int_cast, Zmod.nat_cast_self, zero_mul, C_0]
+  simp only [Int.cast_ofNat, add_zero, eq_intCast, Zmod.nat_cast_self, zero_mul, C_0]
 #align witt_vector.frobenius_poly_zmod WittVector.frobenius_poly_zmod
 
 @[simp]
