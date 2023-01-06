@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.factors
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem prime_of_mem_factors : ∀ {n p}, p ∈ factors n → Prime p
   | n@(k + 2) => fun p h =>
     let m := minFac n
     have : n / m < n := factors_lemma
-    have h₁ : p = m ∨ p ∈ factors (n / m) := (List.mem_cons_iff _ _ _).1 (by rwa [factors] at h)
+    have h₁ : p = m ∨ p ∈ factors (n / m) := (List.mem_cons _ _ _).1 (by rwa [factors] at h)
     Or.cases_on h₁ (fun h₂ => h₂.symm ▸ minFac_prime (by decide)) prime_of_mem_factors
 #align nat.prime_of_mem_factors Nat.prime_of_mem_factors
 

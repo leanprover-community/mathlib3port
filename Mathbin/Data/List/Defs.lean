@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.defs
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1104,13 +1104,11 @@ def permutations' : List α → List (List α)
 
 end Permutations
 
-#print List.erasep /-
 /-- `erasep p l` removes the first element of `l` satisfying the predicate `p`. -/
-def erasep (p : α → Prop) [DecidablePred p] : List α → List α
+def eraseP (p : α → Prop) [DecidablePred p] : List α → List α
   | [] => []
   | a :: l => if p a then l else a :: erasep l
-#align list.erasep List.erasep
--/
+#align list.erasep List.erasePₓ
 
 #print List.extractp /-
 /-- `extractp p l` returns a pair of an element `a` of `l` satisfying the predicate
@@ -1363,15 +1361,15 @@ def ilast' {α} : α → List α → α
 #align list.ilast' List.ilast'
 -/
 
-#print List.last' /-
+#print List.getLast? /-
 /-- `last' xs` returns the last element of `xs` if `xs` is non-empty;
 it returns `none` otherwise -/
 @[simp]
-def last' {α} : List α → Option α
+def getLast? {α} : List α → Option α
   | [] => none
   | [a] => some a
   | b :: l => last' l
-#align list.last' List.last'
+#align list.last' List.getLast?
 -/
 
 #print List.rotate /-

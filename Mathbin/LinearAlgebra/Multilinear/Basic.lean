@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -997,13 +997,13 @@ protected def mkPiAlgebraFin : MultilinearMap R (fun i : Fin n => A) A
   map_add' := by
     intro m i x y
     have : (List.finRange n).indexOf i < n := by
-      simpa using List.index_of_lt_length.2 (List.mem_fin_range i)
+      simpa using List.indexOf_lt_length.2 (List.mem_fin_range i)
     simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, add_mul,
       this, mul_add, add_mul]
   map_smul' := by
     intro m i c x
     have : (List.finRange n).indexOf i < n := by
-      simpa using List.index_of_lt_length.2 (List.mem_fin_range i)
+      simpa using List.indexOf_lt_length.2 (List.mem_fin_range i)
     simp [List.of_fn_eq_map, (List.nodup_fin_range n).map_update, List.prod_update_nth, this]
 #align multilinear_map.mk_pi_algebra_fin MultilinearMap.mkPiAlgebraFin
 

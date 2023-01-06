@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2875,14 +2875,19 @@ def range (n : ℕ) : Finset ℕ :=
 #align finset.range Finset.range
 
 @[simp]
-theorem range_coe (n : ℕ) : (range n).1 = Multiset.range n :=
+theorem range_val (n : ℕ) : (range n).1 = Multiset.range n :=
   rfl
-#align finset.range_coe Finset.range_coe
+#align finset.range_val Finset.range_val
 
 @[simp]
 theorem mem_range : m ∈ range n ↔ m < n :=
   mem_range
 #align finset.mem_range Finset.mem_range
+
+@[simp, norm_cast]
+theorem coe_range (n : ℕ) : (range n : Set ℕ) = Set.Iio n :=
+  Set.ext fun _ => mem_range
+#align finset.coe_range Finset.coe_range
 
 @[simp]
 theorem range_zero : range 0 = ∅ :=
@@ -3264,7 +3269,7 @@ theorem to_list_eq_nil {s : Finset α} : s.toList = [] ↔ s = ∅ :=
 
 @[simp]
 theorem empty_to_list {s : Finset α} : s.toList.Empty ↔ s = ∅ :=
-  List.empty_iff_eq_nil.trans to_list_eq_nil
+  List.isEmpty_iff_eq_nil.trans to_list_eq_nil
 #align finset.empty_to_list Finset.empty_to_list
 
 @[simp]
@@ -3299,7 +3304,7 @@ theorem exists_list_nodup_eq [DecidableEq α] (s : Finset α) :
 
 theorem to_list_cons {a : α} {s : Finset α} (h : a ∉ s) : (cons a s h).toList ~ a :: s.toList :=
   (List.perm_ext (nodup_to_list _) (by simp [h, nodup_to_list s])).2 fun x => by
-    simp only [List.mem_cons_iff, Finset.mem_to_list, Finset.mem_cons]
+    simp only [List.mem_cons, Finset.mem_to_list, Finset.mem_cons]
 #align finset.to_list_cons Finset.to_list_cons
 
 theorem to_list_insert [DecidableEq α] {a : α} {s : Finset α} (h : a ∉ s) :

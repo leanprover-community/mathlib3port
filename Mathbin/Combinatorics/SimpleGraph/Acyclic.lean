@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.acyclic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,12 +97,12 @@ theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p
     specialize h ph
     rw [is_bridge_iff_adj_and_forall_walk_mem_edges] at h
     replace h := h.2 (q.append p.reverse)
-    simp only [walk.edges_append, walk.edges_reverse, List.mem_append, List.mem_reverse] at h
+    simp only [walk.edges_append, walk.edges_reverse, List.mem_append, List.mem_reverse'] at h
     cases h
     · cases q
       · simpa [walk.is_path_def] using hp
       · rw [walk.cons_is_path_iff] at hp hq
-        simp only [walk.edges_cons, List.mem_cons_iff, Sym2.eq_iff] at h
+        simp only [walk.edges_cons, List.mem_cons, Sym2.eq_iff] at h
         obtain (⟨h, rfl⟩ | ⟨rfl, rfl⟩) | h := h
         · rw [ih hp.1 _ hq.1]
         · simpa using hq

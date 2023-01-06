@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module data.list.func
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,9 +161,9 @@ theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = 
 /- warning: list.func.eq_get_of_mem clashes with [anonymous] -> [anonymous]
 warning: list.func.eq_get_of_mem -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] {a : α} {as : List.{u1} α}, (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a as) -> (Exists.{1} Nat (fun (n : Nat) => α -> (Eq.{succ u1} α a (List.Func.get.{u1} α _inst_1 n as))))
+  forall {α : Type.{u}} [_inst_1 : Inhabited.{succ u} α] {a : α} {as : List.{u} α}, (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) a as) -> (Exists.{1} Nat (fun (n : Nat) => α -> (Eq.{succ u} α a (List.Func.get.{u} α _inst_1 n as))))
 but is expected to have type
-  forall {α : Sort.{u1}} {_inst_1 : Nat}, ((Eq.{1} Nat _inst_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) -> (forall (m : Nat), (Eq.{1} Nat _inst_1 (Nat.succ m)) -> α) -> α
+  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align list.func.eq_get_of_mem [anonymous]ₓ'. -/
 theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h

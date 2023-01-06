@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.multiset.fintype
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,7 +231,7 @@ theorem Multiset.map_to_enum_finset_fst (m : Multiset α) : m.toEnumFinset.val.m
   by
   ext x
   simp only [Multiset.count_map, ← Finset.filter_val, Multiset.to_enum_finset_filter_eq,
-    Finset.map_val, Finset.range_coe, Multiset.card_map, Multiset.card_range]
+    Finset.map_val, Finset.range_val, Multiset.card_map, Multiset.card_range]
 #align multiset.map_to_enum_finset_fst Multiset.map_to_enum_finset_fst
 
 @[simp]

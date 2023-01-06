@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1119,7 +1119,7 @@ theorem xy_modeq_yn (n) :
               mul_dvd_mul_right
                 (dvd_mul_of_dvd_right
                   (modeq_zero_iff_dvd.1 <|
-                    (hy.modeq_of_dvd <| by simp [pow_succ']).trans <|
+                    (hy.of_dvd <| by simp [pow_succ']).trans <|
                       modeq_zero_iff_dvd.2 <| by simp [-mul_comm, -mul_assoc])
                   _)
                 _
@@ -1142,7 +1142,7 @@ theorem xy_modeq_yn (n) :
 
 theorem ysq_dvd_yy (n) : yn n * yn n ∣ yn (n * yn n) :=
   modEq_zero_iff_dvd.1 <|
-    ((xy_modeq_yn n (yn n)).right.modeq_of_dvd <| by simp [pow_succ]).trans
+    ((xy_modeq_yn n (yn n)).right.of_dvd <| by simp [pow_succ]).trans
       (modEq_zero_iff_dvd.2 <| by simp [mul_dvd_mul_left, mul_assoc])
 #align pell.ysq_dvd_yy Pell.ysq_dvd_yy
 
@@ -1155,7 +1155,7 @@ theorem dvd_of_ysq_dvd {n t} (h : yn n * yn n ∣ yn t) : yn n ∣ t :=
       Nat.dvd_of_mul_dvd_mul_right (strict_mono_y n0l) <|
         modEq_zero_iff_dvd.1 <| by
           have xm := (xy_modeq_yn a1 n k).right <;> rw [← ke] at xm <;>
-            exact (xm.modeq_of_dvd <| by simp [pow_succ]).symm.trans h.modeq_zero_nat
+            exact (xm.of_dvd <| by simp [pow_succ]).symm.trans h.modeq_zero_nat
     rw [ke] <;>
       exact dvd_mul_of_dvd_right (((xy_coprime _ _).pow_left _).symm.dvd_of_dvd_mul_right this) _
 #align pell.dvd_of_ysq_dvd Pell.dvd_of_ysq_dvd
@@ -1552,7 +1552,7 @@ theorem matiyasevic {a k x y} :
         have tk : t ≡ k [MOD 4 * y] :=
           have : 4 * y ∣ b - 1 :=
             Int.coe_nat_dvd.1 <| by rw [Int.ofNat_sub (le_of_lt b1)] <;> exact bm1.symm.dvd
-          (yn_modeq_a_sub_one _ _).modeq_of_dvd this
+          (yn_modeq_a_sub_one _ _).of_dvd this
         ⟨ky,
           Or.inr
             ⟨u, v, s, t, b, pell_eq _ _, pell_eq _ _, pell_eq _ _, b1, bm1, ba, vp, yv, sx, tk⟩⟩,
@@ -1582,7 +1582,7 @@ theorem matiyasevic {a k x y} :
                 have jk : j ≡ k [MOD 4 * yn a1 i] :=
                   have : 4 * yn a1 i ∣ b - 1 :=
                     Int.coe_nat_dvd.1 <| by rw [Int.ofNat_sub (le_of_lt b1)] <;> exact bm1.symm.dvd
-                  ((yn_modeq_a_sub_one b1 _).modeq_of_dvd this).symm.trans tk
+                  ((yn_modeq_a_sub_one b1 _).of_dvd this).symm.trans tk
                 have ki : k + i < 4 * yn a1 i :=
                   lt_of_le_of_lt (add_le_add ky (yn_ge_n a1 i)) <| by
                     rw [← two_mul] <;>
@@ -1594,9 +1594,8 @@ theorem matiyasevic {a k x y} :
                     fun ji : j + i ≡ 0 [MOD 4 * n] =>
                     not_le_of_gt ki <|
                       Nat.le_of_dvd (lt_of_lt_of_le ipos <| Nat.le_add_left _ _) <|
-                        modeq_zero_iff_dvd.1 <| (jk.symm.add_right i).trans <| ji.modeq_of_dvd yd
-                have : i % (4 * yn a1 i) = k % (4 * yn a1 i) :=
-                    (ji.modeq_of_dvd yd).symm.trans jk <;>
+                        modeq_zero_iff_dvd.1 <| (jk.symm.add_right i).trans <| ji.of_dvd yd
+                have : i % (4 * yn a1 i) = k % (4 * yn a1 i) := (ji.of_dvd yd).symm.trans jk <;>
                   rwa [Nat.mod_eq_of_lt (lt_of_le_of_lt (Nat.le_add_left _ _) ki),
                     Nat.mod_eq_of_lt (lt_of_le_of_lt (Nat.le_add_right _ _) ki)] at this⟩⟩
 #align pell.matiyasevic Pell.matiyasevic

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 
 ! This file was ported from Lean 3 source module data.list.big_operators.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -232,7 +232,7 @@ theorem Commute.list_prod_right (l : List M) (y : M) (h : ∀ x ∈ l, Commute y
     Commute y l.Prod := by
   induction' l with z l IH
   · simp
-  · rw [List.ball_cons] at h
+  · rw [List.forall_mem_cons] at h
     rw [List.prod_cons]
     exact Commute.mul_right h.1 (IH h.2)
 #align commute.list_prod_right Commute.list_prod_right
@@ -462,7 +462,7 @@ theorem one_lt_prod_of_one_lt [OrderedCommMonoid M] :
   | [b], h, _ => by simpa using h
   | a :: b :: l, hl₁, hl₂ =>
     by
-    simp only [forall_eq_or_imp, List.mem_cons_iff _ a] at hl₁
+    simp only [forall_eq_or_imp, List.mem_cons _ a] at hl₁
     rw [List.prod_cons]
     apply one_lt_mul_of_lt_of_le' hl₁.1
     apply le_of_lt ((b :: l).one_lt_prod_of_one_lt hl₁.2 (l.cons_ne_nil b))

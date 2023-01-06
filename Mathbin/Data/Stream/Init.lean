@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.stream.init
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1235,11 +1235,11 @@ theorem length_take (n : ℕ) (s : Stream' α) : (take n s).length = n := by
 #align stream.length_take Stream'.length_take
 -/
 
-#print Stream'.nth_take_succ /-
-theorem nth_take_succ : ∀ (n : Nat) (s : Stream' α), List.nth (take (succ n) s) n = some (nth s n)
+#print Stream'.get?_take_succ /-
+theorem get?_take_succ : ∀ (n : Nat) (s : Stream' α), List.get? (take (succ n) s) n = some (nth s n)
   | 0, s => rfl
-  | n + 1, s => by rw [take_succ, add_one, List.nth, nth_take_succ]; rfl
-#align stream.nth_take_succ Stream'.nth_take_succ
+  | n + 1, s => by rw [take_succ, add_one, List.get?, nth_take_succ]; rfl
+#align stream.nth_take_succ Stream'.get?_take_succ
 -/
 
 #print Stream'.append_take_drop /-

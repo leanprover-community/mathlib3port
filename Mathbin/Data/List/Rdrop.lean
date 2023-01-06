@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.list.rdrop
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,7 +179,7 @@ theorem rdrop_while_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p 
 variable (p) (l)
 
 theorem drop_while_idempotent : dropWhile p (dropWhile p l) = dropWhile p l :=
-  drop_while_eq_self_iff.mpr (drop_while_nth_le_zero_not _ _)
+  drop_while_eq_self_iff.mpr (dropWhile_nthLe_zero_not _ _)
 #align list.drop_while_idempotent List.drop_while_idempotent
 
 theorem rdrop_while_idempotent : rdropWhile p (rdropWhile p l) = rdropWhile p l :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -241,7 +241,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `targetAffineLocally [`P `f])
@@ -1225,7 +1225,7 @@ theorem
   AffineTargetMorphismProperty.IsLocal.affine_open_cover_tfae
   { P : AffineTargetMorphismProperty } ( hP : P . IsLocal ) { X Y : SchemeCat .{ u } } ( f : X ⟶ Y )
     :
-      Tfae
+      TFAE
         [
           targetAffineLocally P f
             ,
@@ -1444,7 +1444,7 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `P [`f])
@@ -2207,7 +2207,7 @@ theorem
       { X Y : SchemeCat .{ u } }
       ( f : X ⟶ Y )
     :
-      Tfae
+      TFAE
         [
           P f
             ,
@@ -2433,7 +2433,7 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app (Term.proj (Term.app `targetAffineLocally [`P]) "." `diagonal) [`f])
@@ -3004,7 +3004,7 @@ theorem
   AffineTargetMorphismProperty.IsLocal.diagonal_affine_open_cover_tfae
   { P : AffineTargetMorphismProperty } ( hP : P . IsLocal ) { X Y : SchemeCat .{ u } } ( f : X ⟶ Y )
     :
-      Tfae
+      TFAE
         [
           targetAffineLocally P . diagonal f
             ,

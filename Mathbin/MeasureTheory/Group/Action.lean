@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `SmulInvariantMeasure [`G `α `μ])
@@ -546,7 +546,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
   theorem
     smul_invariant_measure_tfae
     :
-      Tfae
+      TFAE
         [
           SmulInvariantMeasure G α μ
             ,

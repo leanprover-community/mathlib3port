@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.pgame
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1206,7 +1206,7 @@ instance : NegZeroClass Pgame :=
 theorem neg_of_lists (L R : List Pgame) :
     -ofLists L R = ofLists (R.map fun x => -x) (L.map fun x => -x) :=
   by
-  simp only [of_lists, neg_def, List.length_map, List.nth_le_map', eq_self_iff_true, true_and_iff]
+  simp only [of_lists, neg_def, List.length_map, List.nthLe_map', eq_self_iff_true, true_and_iff]
   constructor;
   all_goals
     apply hfunext

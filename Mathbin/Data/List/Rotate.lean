@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.list.rotate
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -541,7 +541,7 @@ The proof that every cyclic permutant of `l` is in the list is `list.mem_cyclic_
         [2, 4, 1, 2, 3], [4, 1, 2, 3, 2]] -/
 def cyclicPermutations : List α → List (List α)
   | [] => [[]]
-  | l@(_ :: _) => init (zipWith (· ++ ·) (tails l) (inits l))
+  | l@(_ :: _) => dropLast (zipWith (· ++ ·) (tails l) (inits l))
 #align list.cyclic_permutations List.cyclicPermutations
 
 @[simp]
@@ -550,12 +550,12 @@ theorem cyclic_permutations_nil : cyclicPermutations ([] : List α) = [[]] :=
 #align list.cyclic_permutations_nil List.cyclic_permutations_nil
 
 theorem cyclic_permutations_cons (x : α) (l : List α) :
-    cyclicPermutations (x :: l) = init (zipWith (· ++ ·) (tails (x :: l)) (inits (x :: l))) :=
+    cyclicPermutations (x :: l) = dropLast (zipWith (· ++ ·) (tails (x :: l)) (inits (x :: l))) :=
   rfl
 #align list.cyclic_permutations_cons List.cyclic_permutations_cons
 
 theorem cyclic_permutations_of_ne_nil (l : List α) (h : l ≠ []) :
-    cyclicPermutations l = init (zipWith (· ++ ·) (tails l) (inits l)) :=
+    cyclicPermutations l = dropLast (zipWith (· ++ ·) (tails l) (inits l)) :=
   by
   obtain ⟨hd, tl, rfl⟩ := exists_cons_of_ne_nil h
   exact cyclic_permutations_cons _ _

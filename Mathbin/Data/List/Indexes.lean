@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module data.list.indexes
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,12 +30,12 @@ variable {α : Type u} {β : Type v}
 section MapWithIndex
 
 @[simp]
-theorem map_with_index_nil {α β} (f : ℕ → α → β) : mapWithIndex f [] = [] :=
+theorem map_with_index_nil {α β} (f : ℕ → α → β) : mapIdx f [] = [] :=
   rfl
 #align list.map_with_index_nil List.map_with_index_nil
 
 theorem map_with_index_core_eq (l : List α) (f : ℕ → α → β) (n : ℕ) :
-    l.mapWithIndexCore f n = l.mapWithIndex fun i a => f (i + n) a :=
+    l.MapWithIndexCore f n = l.mapWithIndex fun i a => f (i + n) a :=
   by
   induction' l with hd tl hl generalizing f n
   · simpa
@@ -54,7 +54,7 @@ theorem map_with_index_eq_enum_map (l : List α) (f : ℕ → α → β) :
 
 @[simp]
 theorem map_with_index_cons {α β} (l : List α) (f : ℕ → α → β) (a : α) :
-    mapWithIndex f (a :: l) = f 0 a :: mapWithIndex (fun i => f (i + 1)) l := by
+    mapIdx f (a :: l) = f 0 a :: mapIdx (fun i => f (i + 1)) l := by
   simp [map_with_index_eq_enum_map, enum_eq_zip_range, map_uncurry_zip_eq_zip_with,
     range_succ_eq_map, zip_with_map_left]
 #align list.map_with_index_cons List.map_with_index_cons

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.type
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -333,7 +333,7 @@ theorem mem_cycle_type_iff {n : ℕ} {σ : Perm α} :
   · intro h
     obtain ⟨l, rfl, hlc, hld⟩ := trunc_cycle_factors σ
     rw [cycle_type_eq _ rfl hlc hld] at h
-    obtain ⟨c, cl, rfl⟩ := List.exists_of_mem_map h
+    obtain ⟨c, cl, rfl⟩ := List.exists_of_mem_map' h
     rw [(List.perm_cons_erase cl).pairwise_iff fun _ _ hd => _] at hld
     swap
     · exact hd.symm

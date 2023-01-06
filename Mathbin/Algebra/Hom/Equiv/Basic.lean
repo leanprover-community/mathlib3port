@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -227,9 +227,9 @@ variable [Mul M] [Mul N] [Mul P] [Mul Q]
 /- warning: mul_equiv.to_equiv_eq_coe clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.to_equiv_eq_coe -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_6}} {N : Type.{u_7}} [_inst_1 : Mul.{u_6} M] [_inst_2 : Mul.{u_7} N] (f : MulEquiv.{u_6, u_7} M N _inst_1 _inst_2), Eq.{max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} (Equiv.{succ u_6, succ u_7} M N) (MulEquiv.toEquiv.{u_6, u_7} M N _inst_1 _inst_2 f) ((fun (a : Sort.{max (succ u_6) (succ u_7)}) (b : Sort.{max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)}) [self : HasLiftT.{max (succ u_6) (succ u_7), max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} a b] => self.0) (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (Equiv.{succ u_6, succ u_7} M N) (HasLiftT.mk.{max (succ u_6) (succ u_7), max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (Equiv.{succ u_6, succ u_7} M N) (CoeTCₓ.coe.{max (succ u_6) (succ u_7), max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (Equiv.{succ u_6, succ u_7} M N) (Equiv.hasCoeT.{succ u_6, succ u_7, max (succ u_6) (succ u_7)} M N (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (MulEquivClass.toEquivLike.{max u_6 u_7, u_6, u_7} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulEquiv.mulEquivClass.{u_6, u_7} M N _inst_1 _inst_2))))) f)
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] (f : MulEquiv.{u1, u2} M N _inst_1 _inst_2), Eq.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} M N) (MulEquiv.toEquiv.{u1, u2} M N _inst_1 _inst_2 f) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)}) [self : HasLiftT.{max (succ u1) (succ u2), max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} a b] => self.0) (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (Equiv.{succ u1, succ u2} M N) (HasLiftT.mk.{max (succ u1) (succ u2), max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (Equiv.{succ u1, succ u2} M N) (CoeTCₓ.coe.{max (succ u1) (succ u2), max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (Equiv.{succ u1, succ u2} M N) (Equiv.hasCoeT.{succ u1, succ u2, max (succ u1) (succ u2)} M N (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (MulEquivClass.toEquivLike.{max u1 u2, u1, u2} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulEquiv.mulEquivClass.{u1, u2} M N _inst_1 _inst_2))))) f)
 but is expected to have type
-  forall {M : Sort.{u}} {N : Nat}, ((Eq.{1} Nat N (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> M) -> (forall (m : Nat), (Eq.{1} Nat N (Nat.succ m)) -> M) -> M
+  forall {M : Type.{u1}} {N : Type.{u2}}, (Nat -> M -> N) -> Nat -> (List.{u1} M) -> (List.{u2} N)
 Case conversion may be inaccurate. Consider using '#align mul_equiv.to_equiv_eq_coe [anonymous]ₓ'. -/
 @[simp, to_additive]
 theorem [anonymous] (f : M ≃* N) : f.toEquiv = f :=
@@ -239,9 +239,9 @@ theorem [anonymous] (f : M ≃* N) : f.toEquiv = f :=
 /- warning: mul_equiv.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.to_fun_eq_coe -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_6}} {N : Type.{u_7}} [_inst_1 : Mul.{u_6} M] [_inst_2 : Mul.{u_7} N] {f : MulEquiv.{u_6, u_7} M N _inst_1 _inst_2}, Eq.{max (succ u_6) (succ u_7)} (M -> N) (MulEquiv.toFun.{u_6, u_7} M N _inst_1 _inst_2 f) (coeFn.{max (succ u_6) (succ u_7), max (succ u_6) (succ u_7)} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (fun (_x : MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) => M -> N) (MulEquiv.hasCoeToFun.{u_6, u_7} M N _inst_1 _inst_2) f)
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {f : MulEquiv.{u1, u2} M N _inst_1 _inst_2}, Eq.{max (succ u1) (succ u2)} (M -> N) (MulEquiv.toFun.{u1, u2} M N _inst_1 _inst_2 f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulEquiv.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulEquiv.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)
 but is expected to have type
-  forall {M : Sort.{u}} {N : Nat}, ((Eq.{1} Nat N (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> M) -> (forall (m : Nat), (Eq.{1} Nat N (Nat.succ m)) -> M) -> M
+  forall {M : Type.{u1}} {N : Type.{u2}}, (Nat -> M -> N) -> Nat -> (List.{u1} M) -> (List.{u2} N)
 Case conversion may be inaccurate. Consider using '#align mul_equiv.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp, to_additive]
 theorem [anonymous] {f : M ≃* N} : f.toFun = f :=
@@ -251,9 +251,9 @@ theorem [anonymous] {f : M ≃* N} : f.toFun = f :=
 /- warning: mul_equiv.coe_to_equiv clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.coe_to_equiv -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_6}} {N : Type.{u_7}} [_inst_1 : Mul.{u_6} M] [_inst_2 : Mul.{u_7} N] {f : MulEquiv.{u_6, u_7} M N _inst_1 _inst_2}, Eq.{max (succ u_6) (succ u_7)} (M -> N) (coeFn.{max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6), max (succ u_6) (succ u_7)} (Equiv.{succ u_6, succ u_7} M N) (fun (_x : Equiv.{succ u_6, succ u_7} M N) => M -> N) (Equiv.hasCoeToFun.{succ u_6, succ u_7} M N) ((fun (a : Sort.{max (succ u_6) (succ u_7)}) (b : Sort.{max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)}) [self : HasLiftT.{max (succ u_6) (succ u_7), max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} a b] => self.0) (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (Equiv.{succ u_6, succ u_7} M N) (HasLiftT.mk.{max (succ u_6) (succ u_7), max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (Equiv.{succ u_6, succ u_7} M N) (CoeTCₓ.coe.{max (succ u_6) (succ u_7), max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (Equiv.{succ u_6, succ u_7} M N) (Equiv.hasCoeT.{succ u_6, succ u_7, max (succ u_6) (succ u_7)} M N (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (MulEquivClass.toEquivLike.{max u_6 u_7, u_6, u_7} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulEquiv.mulEquivClass.{u_6, u_7} M N _inst_1 _inst_2))))) f)) (coeFn.{max (succ u_6) (succ u_7), max (succ u_6) (succ u_7)} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (fun (_x : MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) => M -> N) (MulEquiv.hasCoeToFun.{u_6, u_7} M N _inst_1 _inst_2) f)
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {f : MulEquiv.{u1, u2} M N _inst_1 _inst_2}, Eq.{max (succ u1) (succ u2)} (M -> N) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} M N) (fun (_x : Equiv.{succ u1, succ u2} M N) => M -> N) (Equiv.hasCoeToFun.{succ u1, succ u2} M N) ((fun (a : Sort.{max (succ u1) (succ u2)}) (b : Sort.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)}) [self : HasLiftT.{max (succ u1) (succ u2), max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} a b] => self.0) (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (Equiv.{succ u1, succ u2} M N) (HasLiftT.mk.{max (succ u1) (succ u2), max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (Equiv.{succ u1, succ u2} M N) (CoeTCₓ.coe.{max (succ u1) (succ u2), max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (Equiv.{succ u1, succ u2} M N) (Equiv.hasCoeT.{succ u1, succ u2, max (succ u1) (succ u2)} M N (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (MulEquivClass.toEquivLike.{max u1 u2, u1, u2} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulEquiv.mulEquivClass.{u1, u2} M N _inst_1 _inst_2))))) f)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulEquiv.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulEquiv.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)
 but is expected to have type
-  forall {M : Sort.{u}} {N : Nat}, ((Eq.{1} Nat N (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> M) -> (forall (m : Nat), (Eq.{1} Nat N (Nat.succ m)) -> M) -> M
+  forall {M : Type.{u1}} {N : Type.{u2}}, (Nat -> M -> N) -> Nat -> (List.{u1} M) -> (List.{u2} N)
 Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_to_equiv [anonymous]ₓ'. -/
 @[simp, to_additive]
 theorem [anonymous] {f : M ≃* N} : ⇑(f : M ≃ N) = f :=
@@ -384,9 +384,9 @@ theorem toEquiv_symm (f : M ≃* N) : f.symm.toEquiv = f.toEquiv.symm :=
 /- warning: mul_equiv.coe_mk clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.coe_mk -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_6}} {N : Type.{u_7}} [_inst_1 : Mul.{u_6} M] [_inst_2 : Mul.{u_7} N] (f : M -> N) (g : N -> M) (h₁ : Function.LeftInverse.{succ u_6, succ u_7} M N g f) (h₂ : Function.RightInverse.{succ u_6, succ u_7} M N g f) (h₃ : forall (x : M) (y : M), Eq.{succ u_7} N (f (HMul.hMul.{u_6, u_6, u_6} M M M (instHMul.{u_6} M _inst_1) x y)) (HMul.hMul.{u_7, u_7, u_7} N N N (instHMul.{u_7} N _inst_2) (f x) (f y))), Eq.{max (succ u_6) (succ u_7)} (M -> N) (coeFn.{max (succ u_6) (succ u_7), max (succ u_6) (succ u_7)} (MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) (fun (_x : MulEquiv.{u_6, u_7} M N _inst_1 _inst_2) => M -> N) (MulEquiv.hasCoeToFun.{u_6, u_7} M N _inst_1 _inst_2) (MulEquiv.mk.{u_6, u_7} M N _inst_1 _inst_2 f g h₁ h₂ h₃)) f
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] (f : M -> N) (g : N -> M) (h₁ : Function.LeftInverse.{succ u1, succ u2} M N g f) (h₂ : Function.RightInverse.{succ u1, succ u2} M N g f) (h₃ : forall (x : M) (y : M), Eq.{succ u2} N (f (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M _inst_1) x y)) (HMul.hMul.{u2, u2, u2} N N N (instHMul.{u2} N _inst_2) (f x) (f y))), Eq.{max (succ u1) (succ u2)} (M -> N) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (MulEquiv.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulEquiv.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulEquiv.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) (MulEquiv.mk.{u1, u2} M N _inst_1 _inst_2 f g h₁ h₂ h₃)) f
 but is expected to have type
-  forall {M : Sort.{u}} {N : Nat}, ((Eq.{1} Nat N (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> M) -> (forall (m : Nat), (Eq.{1} Nat N (Nat.succ m)) -> M) -> M
+  forall {M : Type.{u1}} {N : Type.{u2}}, (Nat -> M -> N) -> Nat -> (List.{u1} M) -> (List.{u2} N)
 Case conversion may be inaccurate. Consider using '#align mul_equiv.coe_mk [anonymous]ₓ'. -/
 @[simp, to_additive]
 theorem [anonymous] (f : M → N) (g h₁ h₂ h₃) : ⇑(MulEquiv.mk f g h₁ h₂ h₃) = f :=
@@ -396,9 +396,9 @@ theorem [anonymous] (f : M → N) (g h₁ h₂ h₃) : ⇑(MulEquiv.mk f g h₁ 
 /- warning: mul_equiv.to_equiv_mk clashes with [anonymous] -> [anonymous]
 warning: mul_equiv.to_equiv_mk -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_6}} {N : Type.{u_7}} [_inst_1 : Mul.{u_6} M] [_inst_2 : Mul.{u_7} N] (f : M -> N) (g : N -> M) (h₁ : Function.LeftInverse.{succ u_6, succ u_7} M N g f) (h₂ : Function.RightInverse.{succ u_6, succ u_7} M N g f) (h₃ : forall (x : M) (y : M), Eq.{succ u_7} N (f (HMul.hMul.{u_6, u_6, u_6} M M M (instHMul.{u_6} M _inst_1) x y)) (HMul.hMul.{u_7, u_7, u_7} N N N (instHMul.{u_7} N _inst_2) (f x) (f y))), Eq.{max 1 (max (succ u_6) (succ u_7)) (succ u_7) (succ u_6)} (Equiv.{succ u_6, succ u_7} M N) (MulEquiv.toEquiv.{u_6, u_7} M N _inst_1 _inst_2 (MulEquiv.mk.{u_6, u_7} M N _inst_1 _inst_2 f g h₁ h₂ h₃)) (Equiv.mk.{succ u_6, succ u_7} M N f g h₁ h₂)
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] (f : M -> N) (g : N -> M) (h₁ : Function.LeftInverse.{succ u1, succ u2} M N g f) (h₂ : Function.RightInverse.{succ u1, succ u2} M N g f) (h₃ : forall (x : M) (y : M), Eq.{succ u2} N (f (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M _inst_1) x y)) (HMul.hMul.{u2, u2, u2} N N N (instHMul.{u2} N _inst_2) (f x) (f y))), Eq.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} M N) (MulEquiv.toEquiv.{u1, u2} M N _inst_1 _inst_2 (MulEquiv.mk.{u1, u2} M N _inst_1 _inst_2 f g h₁ h₂ h₃)) (Equiv.mk.{succ u1, succ u2} M N f g h₁ h₂)
 but is expected to have type
-  forall {M : Sort.{u}} {N : Nat}, ((Eq.{1} Nat N (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> M) -> (forall (m : Nat), (Eq.{1} Nat N (Nat.succ m)) -> M) -> M
+  forall {M : Type.{u1}} {N : Type.{u2}}, (Nat -> M -> N) -> Nat -> (List.{u1} M) -> (List.{u2} N)
 Case conversion may be inaccurate. Consider using '#align mul_equiv.to_equiv_mk [anonymous]ₓ'. -/
 @[simp, to_additive]
 theorem [anonymous] (f : M → N) (g : N → M) (h₁ h₂ h₃) :

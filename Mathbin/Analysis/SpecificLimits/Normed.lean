@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Sébastien Gouëzel, Yury G. Kudryashov, Dylan MacKenzie, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.normed
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Std.ExtendedBinder.«term∃__,_»
@@ -1757,7 +1757,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
     tfae_exists_lt_is_o_pow
     ( f : ℕ → ℝ ) ( R : ℝ )
       :
-        Tfae
+        TFAE
           [
             ∃ a ∈ ioo - R R , f =o[ at_top ] pow a
               ,

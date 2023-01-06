@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johannes Hölzl, Chris Hughes, Jens Wagemaker, Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.group.units
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,9 +101,9 @@ instance : Inv αˣ :=
 /- warning: units.simps.coe clashes with [anonymous] -> [anonymous]
 warning: units.simps.coe -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α], (Units.{u1} α _inst_1) -> α
+  forall {α : Type.{u}} [_inst_1 : Monoid.{u} α], (Units.{u} α _inst_1) -> α
 but is expected to have type
-  forall {α : Sort.{u1}} {_inst_1 : Nat}, ((Eq.{1} Nat _inst_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) -> (forall (m : Nat), (Eq.{1} Nat _inst_1 (Nat.succ m)) -> α) -> α
+  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align units.simps.coe [anonymous]ₓ'. -/
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection] "]
@@ -114,9 +114,9 @@ def [anonymous] (u : αˣ) : α :=
 /- warning: units.simps.coe_inv clashes with [anonymous] -> [anonymous]
 warning: units.simps.coe_inv -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α], (Units.{u1} α _inst_1) -> α
+  forall {α : Type.{u}} [_inst_1 : Monoid.{u} α], (Units.{u} α _inst_1) -> α
 but is expected to have type
-  forall {α : Sort.{u1}} {_inst_1 : Nat}, ((Eq.{1} Nat _inst_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) -> (forall (m : Nat), (Eq.{1} Nat _inst_1 (Nat.succ m)) -> α) -> α
+  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align units.simps.coe_inv [anonymous]ₓ'. -/
 /-- See Note [custom simps projection] -/
 @[to_additive " See Note [custom simps projection] "]
@@ -275,9 +275,9 @@ theorem inv_mk (x y : α) (h₁ h₂) : (mk x y h₁ h₂)⁻¹ = mk y x h₂ h�
 /- warning: units.val_eq_coe clashes with [anonymous] -> [anonymous]
 warning: units.val_eq_coe -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (a : Units.{u1} α _inst_1), Eq.{succ u1} α (Units.val.{u1} α _inst_1 a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) a)
+  forall {α : Type.{u}} [_inst_1 : Monoid.{u} α] (a : Units.{u} α _inst_1), Eq.{succ u} α (Units.val.{u} α _inst_1 a) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) (Units.{u} α _inst_1) α (HasLiftT.mk.{succ u, succ u} (Units.{u} α _inst_1) α (CoeTCₓ.coe.{succ u, succ u} (Units.{u} α _inst_1) α (coeBase.{succ u, succ u} (Units.{u} α _inst_1) α (Units.hasCoe.{u} α _inst_1)))) a)
 but is expected to have type
-  forall {α : Sort.{u1}} {_inst_1 : Nat}, ((Eq.{1} Nat _inst_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) -> (forall (m : Nat), (Eq.{1} Nat _inst_1 (Nat.succ m)) -> α) -> α
+  forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align units.val_eq_coe [anonymous]ₓ'. -/
 @[simp, to_additive]
 theorem [anonymous] : a.val = (↑a : α) :=

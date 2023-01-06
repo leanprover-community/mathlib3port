@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.dnf
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
   · rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h0.right h2.right with ⟨cq, hq1, hq2⟩
     refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
-    simp only [dnf_core, List.mem_map]
+    simp only [dnf_core, List.mem_map']
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption
@@ -146,7 +146,7 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   exists nonnegate c
   have h6 : nonnegate c ∈ dnf p := by
     simp only [dnf]
-    rw [List.mem_map]
+    rw [List.mem_map']
     refine' ⟨c, h4, rfl⟩
   refine' ⟨h6, _⟩
   cases' c with eqs les

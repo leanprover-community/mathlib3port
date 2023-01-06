@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jake Levinson
 
 ! This file was ported from Lean 3 source module combinatorics.young.young_diagram
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -419,8 +419,7 @@ def rowLens (μ : YoungDiagram) : List ℕ :=
 
 @[simp]
 theorem nth_le_row_lens {μ : YoungDiagram} {i : ℕ} {hi : i < μ.rowLens.length} :
-    μ.rowLens.nthLe i hi = μ.rowLen i := by
-  simp only [row_lens, List.nth_le_range, List.nth_le_map']
+    μ.rowLens.nthLe i hi = μ.rowLen i := by simp only [row_lens, List.nth_le_range, List.nthLe_map']
 #align young_diagram.nth_le_row_lens YoungDiagram.nth_le_row_lens
 
 @[simp]
@@ -434,7 +433,7 @@ theorem row_lens_sorted (μ : YoungDiagram) : μ.rowLens.Sorted (· ≥ ·) :=
 
 theorem pos_of_mem_row_lens (μ : YoungDiagram) (x : ℕ) (hx : x ∈ μ.rowLens) : 0 < x :=
   by
-  rw [row_lens, List.mem_map] at hx
+  rw [row_lens, List.mem_map'] at hx
   obtain ⟨i, hi, rfl : μ.row_len i = x⟩ := hx
   rwa [List.mem_range, ← mem_iff_lt_col_len, mem_iff_lt_row_len] at hi
 #align young_diagram.pos_of_mem_row_lens YoungDiagram.pos_of_mem_row_lens
@@ -505,7 +504,7 @@ theorem row_lens_length_of_row_lens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (
   by
   simp only [length_row_lens, col_len, Nat.find_eq_iff, mem_cells, mem_of_row_lens,
     lt_self_iff_false, IsEmpty.exists_iff, not_not]
-  exact ⟨id, fun n hn => ⟨hn, hpos _ (List.nth_le_mem _ _ hn)⟩⟩
+  exact ⟨id, fun n hn => ⟨hn, hpos _ (List.nthLe_mem _ _ hn)⟩⟩
 #align young_diagram.row_lens_length_of_row_lens YoungDiagram.row_lens_length_of_row_lens
 
 /-- The length of the `i`th row in `of_row_lens w hw` is the `i`th entry of `w` -/
@@ -527,7 +526,7 @@ theorem row_lens_of_row_lens_eq_self {w : List ℕ} {hw : w.Sorted (· ≥ ·)} 
     (ofRowLens w hw).rowLens = w := by
   ext (i r)
   cases lt_or_ge i w.length
-  · simp only [Option.mem_def, ← List.nth_le_eq_iff, h, row_lens_length_of_row_lens hpos]
+  · simp only [Option.mem_def, ← List.nthLe_eq_iff, h, row_lens_length_of_row_lens hpos]
     revert r
     simpa only [eq_iff_eq_cancel_right, nth_le_row_lens] using row_len_of_row_lens _ h
   · rw [list.nth_eq_none_iff.mpr h, list.nth_eq_none_iff.mpr]

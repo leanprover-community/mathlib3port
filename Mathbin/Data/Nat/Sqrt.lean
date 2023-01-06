@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.sqrt
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ warning: nat.sqrt_aux_dec -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall {b : Nat}, (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LT.lt.{0} Nat Nat.hasLt (Nat.shiftr b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) b)
 but is expected to have type
-  forall {b : Sort.{u}} {h : Nat}, ((Eq.{1} Nat h (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> b) -> (forall (m : Nat), (Eq.{1} Nat h (Nat.succ m)) -> b) -> b
+  forall {b : Type.{u}} {h : Type.{v}}, (Nat -> b -> h) -> Nat -> (List.{u} b) -> (List.{v} h)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_dec [anonymous]ₓ'. -/
 theorem [anonymous] {b} (h : b ≠ 0) : shiftr b 2 < b :=
   by
@@ -51,7 +51,7 @@ warning: nat.sqrt_aux -> [anonymous] is a dubious translation:
 lean 3 declaration is
   Nat -> Nat -> Nat -> Nat
 but is expected to have type
-  forall {ᾰ : Sort.{u}} {ᾰ_1 : Nat}, ((Eq.{1} Nat ᾰ_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> ᾰ) -> (forall (m : Nat), (Eq.{1} Nat ᾰ_1 (Nat.succ m)) -> ᾰ) -> ᾰ
+  forall {ᾰ : Type.{u}} {ᾰ_1 : Type.{v}}, (Nat -> ᾰ -> ᾰ_1) -> Nat -> (List.{u} ᾰ) -> (List.{v} ᾰ_1)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux [anonymous]ₓ'. -/
 /-- Auxiliary function for `nat.sqrt`. See e.g.
 <https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Binary_numeral_system_(base_2)> -/
@@ -82,7 +82,7 @@ warning: nat.sqrt_aux_0 -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall (r : Nat) (n : Nat), Eq.{1} Nat ([anonymous] (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) r n) r
 but is expected to have type
-  forall {r : Sort.{u}} {n : Nat}, ((Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> r) -> (forall (m : Nat), (Eq.{1} Nat n (Nat.succ m)) -> r) -> r
+  forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_0 [anonymous]ₓ'. -/
 theorem [anonymous] (r n) : [anonymous] 0 r n = r := by rw [sqrt_aux] <;> simp
 #align nat.sqrt_aux_0[anonymous]
@@ -94,7 +94,7 @@ warning: nat.sqrt_aux_1 -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall {r : Nat} {n : Nat} {b : Nat}, (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (forall {n' : Nat}, (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) r b) n') n) -> (Eq.{1} Nat ([anonymous] b r n) ([anonymous] (Nat.shiftr b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Nat.div2 r) b) n')))
 but is expected to have type
-  forall {r : Sort.{u}} {n : Nat}, ((Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> r) -> (forall (m : Nat), (Eq.{1} Nat n (Nat.succ m)) -> r) -> r
+  forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_1 [anonymous]ₓ'. -/
 theorem [anonymous] {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
     [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r + b) n' := by
@@ -107,7 +107,7 @@ warning: nat.sqrt_aux_2 -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall {r : Nat} {n : Nat} {b : Nat}, (Ne.{1} Nat b (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LT.lt.{0} Nat Nat.hasLt n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) r b)) -> (Eq.{1} Nat ([anonymous] b r n) ([anonymous] (Nat.shiftr b (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) (Nat.div2 r) n))
 but is expected to have type
-  forall {r : Sort.{u}} {n : Nat}, ((Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> r) -> (forall (m : Nat), (Eq.{1} Nat n (Nat.succ m)) -> r) -> r
+  forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_2 [anonymous]ₓ'. -/
 theorem [anonymous] {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
     [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r) n :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.fin_range
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem fin_range_succ_eq_map (n : ℕ) : finRange n.succ = 0 :: (finRange n).ma
 
 @[simp]
 theorem map_nth_le (l : List α) : ((finRange l.length).map fun n => l.nthLe n n.2) = l :=
-  (ext_le (by rw [length_map, length_fin_range])) fun n _ h =>
+  (ext_nthLe (by rw [length_map, length_fin_range])) fun n _ h =>
     by
     rw [← nth_le_map_rev]
     congr

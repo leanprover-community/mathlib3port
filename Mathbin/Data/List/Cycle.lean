@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.list.cycle
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ def prev : ∀ (l : List α) (x : α) (h : x ∈ l), α
   | [], _, h => by simpa using h
   | [y], _, _ => y
   | y :: z :: xs, x, h =>
-    if hx : x = y then last (z :: xs) (cons_ne_nil _ _)
+    if hx : x = y then getLast (z :: xs) (cons_ne_nil _ _)
     else if x = z then y else prev (z :: xs) x (by simpa [hx] using h)
 #align list.prev List.prev
 
@@ -170,7 +170,7 @@ theorem next_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) : next (x :: z :: l) 
 #align list.next_cons_cons_eq List.next_cons_cons_eq
 
 theorem next_ne_head_ne_last (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
-    (hx : x ≠ last (y :: l) (cons_ne_nil _ _)) :
+    (hx : x ≠ getLast (y :: l) (cons_ne_nil _ _)) :
     next (y :: l) x h = next l x (by simpa [hy] using h) :=
   by
   rw [next, next, next_or_cons_of_ne _ _ _ _ hy, next_or_eq_next_or_of_mem_of_ne]
@@ -187,7 +187,7 @@ theorem next_cons_concat (y : α) (hy : x ≠ y) (hx : x ∉ l)
 #align list.next_cons_concat List.next_cons_concat
 
 theorem next_last_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
-    (hx : x = last (y :: l) (cons_ne_nil _ _)) (hl : Nodup l) : next (y :: l) x h = y :=
+    (hx : x = getLast (y :: l) (cons_ne_nil _ _)) (hl : Nodup l) : next (y :: l) x h = y :=
   by
   rw [next, nth_le, ← init_append_last (cons_ne_nil y l), hx, next_or_concat]
   subst hx
@@ -204,21 +204,21 @@ theorem next_last_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
 #align list.next_last_cons List.next_last_cons
 
 theorem prev_last_cons' (y : α) (h : x ∈ y :: l) (hx : x = y) :
-    prev (y :: l) x h = last (y :: l) (cons_ne_nil _ _) := by cases l <;> simp [prev, hx]
+    prev (y :: l) x h = getLast (y :: l) (cons_ne_nil _ _) := by cases l <;> simp [prev, hx]
 #align list.prev_last_cons' List.prev_last_cons'
 
 @[simp]
-theorem prev_last_cons (h : x ∈ x :: l) : prev (x :: l) x h = last (x :: l) (cons_ne_nil _ _) :=
+theorem prev_last_cons (h : x ∈ x :: l) : prev (x :: l) x h = getLast (x :: l) (cons_ne_nil _ _) :=
   prev_last_cons' l x x h rfl
 #align list.prev_last_cons List.prev_last_cons
 
 theorem prev_cons_cons_eq' (y z : α) (h : x ∈ y :: z :: l) (hx : x = y) :
-    prev (y :: z :: l) x h = last (z :: l) (cons_ne_nil _ _) := by rw [prev, dif_pos hx]
+    prev (y :: z :: l) x h = getLast (z :: l) (cons_ne_nil _ _) := by rw [prev, dif_pos hx]
 #align list.prev_cons_cons_eq' List.prev_cons_cons_eq'
 
 @[simp]
 theorem prev_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) :
-    prev (x :: z :: l) x h = last (z :: l) (cons_ne_nil _ _) :=
+    prev (x :: z :: l) x h = getLast (z :: l) (cons_ne_nil _ _) :=
   prev_cons_cons_eq' l x x z h rfl
 #align list.prev_cons_cons_eq List.prev_cons_cons_eq
 
@@ -245,7 +245,7 @@ theorem prev_ne_cons_cons (y z : α) (h : x ∈ y :: z :: l) (hy : x ≠ y) (hz 
 include h
 
 theorem next_mem : l.next x h ∈ l :=
-  next_or_mem (nth_le_mem _ _ _)
+  next_or_mem (nthLe_mem _ _ _)
 #align list.next_mem List.next_mem
 
 theorem prev_mem : l.prev x h ∈ l := by
@@ -263,7 +263,7 @@ theorem prev_mem : l.prev x h ∈ l := by
 #align list.prev_mem List.prev_mem
 
 theorem next_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
-    next l (l.nthLe n hn) (nth_le_mem _ _ _) =
+    next l (l.nthLe n hn) (nthLe_mem _ _ _) =
       l.nthLe ((n + 1) % l.length) (Nat.mod_lt _ (n.zero_le.trans_lt hn)) :=
   by
   cases' l with x l
@@ -304,7 +304,7 @@ theorem next_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
 #align list.next_nth_le List.next_nth_le
 
 theorem prev_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
-    prev l (l.nthLe n hn) (nth_le_mem _ _ _) =
+    prev l (l.nthLe n hn) (nthLe_mem _ _ _) =
       l.nthLe ((n + (l.length - 1)) % l.length) (Nat.mod_lt _ (n.zero_le.trans_lt hn)) :=
   by
   cases' l with x l
@@ -345,7 +345,7 @@ theorem prev_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
 
 theorem pmap_next_eq_rotate_one (h : Nodup l) : (l.pmap l.next fun _ h => h) = l.rotate 1 :=
   by
-  apply List.ext_le
+  apply List.ext_nthLe
   · simp
   · intros
     rw [nth_le_pmap, nth_le_rotate, next_nth_le _ h]
@@ -354,7 +354,7 @@ theorem pmap_next_eq_rotate_one (h : Nodup l) : (l.pmap l.next fun _ h => h) = l
 theorem pmap_prev_eq_rotate_length_sub_one (h : Nodup l) :
     (l.pmap l.prev fun _ h => h) = l.rotate (l.length - 1) :=
   by
-  apply List.ext_le
+  apply List.ext_nthLe
   · simp
   · intro n hn hn'
     rw [nth_le_rotate, nth_le_pmap, prev_nth_le _ h]
@@ -383,7 +383,7 @@ theorem next_prev (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
 #align list.next_prev List.next_prev
 
 theorem prev_reverse_eq_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
-    prev l.reverse x (mem_reverse.mpr hx) = next l x hx :=
+    prev l.reverse x (mem_reverse'.mpr hx) = next l x hx :=
   by
   obtain ⟨k, hk, rfl⟩ := nth_le_of_mem hx
   have lpos : 0 < l.length := k.zero_le.trans_lt hk
@@ -402,7 +402,7 @@ theorem prev_reverse_eq_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l)
 #align list.prev_reverse_eq_next List.prev_reverse_eq_next
 
 theorem next_reverse_eq_prev (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
-    next l.reverse x (mem_reverse.mpr hx) = prev l x hx :=
+    next l.reverse x (mem_reverse'.mpr hx) = prev l x hx :=
   by
   convert (prev_reverse_eq_next l.reverse (nodup_reverse.mpr h) x (mem_reverse.mpr hx)).symm
   exact (reverse_reverse l).symm
@@ -535,7 +535,7 @@ theorem reverse_coe (l : List α) : (l : Cycle α).reverse = l.reverse :=
 
 @[simp]
 theorem mem_reverse_iff {a : α} {s : Cycle α} : a ∈ s.reverse ↔ a ∈ s :=
-  Quot.induction_on s fun _ => mem_reverse
+  Quot.induction_on s fun _ => mem_reverse'
 #align cycle.mem_reverse_iff Cycle.mem_reverse_iff
 
 @[simp]
@@ -911,7 +911,7 @@ theorem chain_singleton (r : α → α → Prop) (a : α) : Chain r [a] ↔ r a 
 #align cycle.chain_singleton Cycle.chain_singleton
 
 theorem chain_ne_nil (r : α → α → Prop) {l : List α} :
-    ∀ hl : l ≠ [], Chain r l ↔ List.Chain r (last l hl) l :=
+    ∀ hl : l ≠ [], Chain r l ↔ List.Chain r (getLast l hl) l :=
   by
   apply l.reverse_rec_on
   exact fun hm => hm.irrefl.elim

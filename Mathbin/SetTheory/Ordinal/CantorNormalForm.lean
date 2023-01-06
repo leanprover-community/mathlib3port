@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.cantor_normal_form
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF 
   refine' CNF_rec b _ (fun o ho H => _) o
   · rw [CNF_zero]
     exact False.elim
-  · rw [CNF_ne_zero ho, List.mem_cons_iff]
+  · rw [CNF_ne_zero ho, List.mem_cons]
     rintro (rfl | h)
     · exact le_rfl
     · exact (H h).trans (log_mono_right _ (mod_opow_log_lt_self b ho).le)
@@ -172,7 +172,7 @@ theorem CNF_sorted (b o : Ordinal) : ((cNF b o).map Prod.fst).Sorted (· > ·) :
       · simp [CNF_of_lt ho hob]
       · rw [CNF_ne_zero ho, List.map_cons, List.sorted_cons]
         refine' ⟨fun a H => _, IH⟩
-        rw [List.mem_map] at H
+        rw [List.mem_map'] at H
         rcases H with ⟨⟨a, a'⟩, H, rfl⟩
         exact (CNF_fst_le_log H).trans_lt (log_mod_opow_log_lt_log_self hb ho hbo)
 #align ordinal.CNF_sorted Ordinal.CNF_sorted

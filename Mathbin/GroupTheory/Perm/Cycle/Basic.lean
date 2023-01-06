@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1026,7 +1026,7 @@ def cycleFactorsAux [Fintype α] :
       ⟨cycleOf f x::m, by
         rw [List.prod_cons, hm₁]
         simp, fun g hg =>
-        ((List.mem_cons_iff _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
+        ((List.mem_cons _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
         List.pairwise_cons.2
           ⟨fun g hg y =>
             or_iff_not_imp_left.2 fun hfy =>

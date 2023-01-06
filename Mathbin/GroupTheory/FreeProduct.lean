@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.free_product
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -522,7 +522,7 @@ theorem to_list_head' {i j} (w : Neword M i j) : w.toList.head' = Option.some �
   induction w
   · rw [Option.mem_def]
     rfl
-  · exact List.head'_append w_ih_w₁
+  · exact List.head?_append w_ih_w₁
 #align free_product.neword.to_list_head' FreeProduct.Neword.to_list_head'
 
 @[simp]
@@ -532,7 +532,7 @@ theorem to_list_last' {i j} (w : Neword M i j) : w.toList.last' = Option.some �
   induction w
   · rw [Option.mem_def]
     rfl
-  · exact List.last'_append w_ih_w₂
+  · exact List.getLast?_append w_ih_w₂
 #align free_product.neword.to_list_last' FreeProduct.Neword.to_list_last'
 
 /-- The `word M` represented by a `neword M i j` -/

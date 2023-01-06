@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.tfae
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,10 +75,10 @@ unsafe def tfae_have (h : parse <| optional ident <* tk ":") (i₁ : parse (with
           (tk "↔" <|> tk "<->") *> return Arrow.left_right <|>
             (tk "←" <|> tk "<-") *> return Arrow.left))
     (i₂ : parse (with_desc "j" small_nat)) : tactic Unit := do
-  let q(Tfae $(l)) ← target
+  let q(TFAE $(l)) ← target
   let l ← parse_list l
-  let e₁ ← List.nth l (i₁ - 1) <|> fail f! "index {i₁ } is not between 1 and {l.length}"
-  let e₂ ← List.nth l (i₂ - 1) <|> fail f! "index {i₂ } is not between 1 and {l.length}"
+  let e₁ ← List.get? l (i₁ - 1) <|> fail f! "index {i₁ } is not between 1 and {l.length}"
+  let e₂ ← List.get? l (i₂ - 1) <|> fail f! "index {i₂ } is not between 1 and {l.length}"
   let type ← to_expr (tfae.mk_implication re e₁ e₂)
   let h := h.getOrElse (mk_name re i₁ i₂)
   tactic.assert h type
@@ -92,7 +92,7 @@ unsafe def tfae_finish : tactic Unit :=
   applyc `` tfae_nil <|>
     closure.with_new_closure fun cl => do
       impl_graph.mk_scc cl
-      let q(Tfae $(l)) ← target
+      let q(TFAE $(l)) ← target
       let l ← parse_list l
       let (_, r, _) ← cl.root l.head
       refine ``(tfae_of_forall $(r) _ _)

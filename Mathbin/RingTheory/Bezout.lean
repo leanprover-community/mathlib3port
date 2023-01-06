@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.bezout
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,7 +140,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `IsNoetherianRing [`R])
@@ -1437,7 +1437,7 @@ theorem
   tfae
   [ IsBezout R ] [ IsDomain R ]
     :
-      Tfae
+      TFAE
         [
           IsNoetherianRing R , IsPrincipalIdealRing R , UniqueFactorizationMonoid R , WfDvdMonoid R
           ]

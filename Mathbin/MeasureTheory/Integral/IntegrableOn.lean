@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -292,13 +292,13 @@ theorem integrableIndicatorConstLp {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {
   simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply] using hμs
 #align measure_theory.integrable_indicator_const_Lp MeasureTheory.integrableIndicatorConstLp
 
-theorem integrable_on_iff_integable_of_support_subset {f : α → E} {s : Set α} (h1s : support f ⊆ s)
+theorem integrable_on_iff_integrable_of_support_subset {f : α → E} {s : Set α} (h1s : support f ⊆ s)
     (h2s : MeasurableSet s) : IntegrableOn f s μ ↔ Integrable f μ :=
   by
   refine' ⟨fun h => _, fun h => h.IntegrableOn⟩
   rwa [← indicator_eq_self.2 h1s, integrable_indicator_iff h2s]
 #align
-  measure_theory.integrable_on_iff_integable_of_support_subset MeasureTheory.integrable_on_iff_integable_of_support_subset
+  measure_theory.integrable_on_iff_integrable_of_support_subset MeasureTheory.integrable_on_iff_integrable_of_support_subset
 
 theorem integrableOnLpOfMeasureNeTop {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {s : Set α}
     (f : lp E p μ) (hp : 1 ≤ p) (hμs : μ s ≠ ∞) : IntegrableOn f s μ :=
@@ -332,6 +332,11 @@ def IntegrableAtFilter (f : α → E) (l : Filter α)
 #align measure_theory.integrable_at_filter MeasureTheory.IntegrableAtFilter
 
 variable {l l' : Filter α}
+
+theorem Integrable.integrableAtFilter (h : Integrable f μ) (l : Filter α) :
+    IntegrableAtFilter f l μ :=
+  ⟨univ, Filter.univ_mem, integrable_on_univ.2 h⟩
+#align measure_theory.integrable.integrable_at_filter MeasureTheory.Integrable.integrableAtFilter
 
 protected theorem IntegrableAtFilter.eventually (h : IntegrableAtFilter f l μ) :
     ∀ᶠ s in l.smallSets, IntegrableOn f s μ :=
@@ -481,6 +486,22 @@ theorem ContinuousOn.aeStronglyMeasurable [TopologicalSpace α] [TopologicalSpac
   · exact is_separable_of_separable_space _
 #align continuous_on.ae_strongly_measurable ContinuousOn.aeStronglyMeasurable
 
+/-- A function which is continuous on a compact set `s` is almost everywhere strongly measurable
+with respect to `μ.restrict s`. -/
+theorem ContinuousOn.aeStronglyMeasurableOfIsCompact [TopologicalSpace α] [OpensMeasurableSpace α]
+    [TopologicalSpace β] [PseudoMetrizableSpace β] {f : α → β} {s : Set α} {μ : Measure α}
+    (hf : ContinuousOn f s) (hs : IsCompact s) (h's : MeasurableSet s) :
+    AeStronglyMeasurable f (μ.restrict s) :=
+  by
+  letI := pseudo_metrizable_space_pseudo_metric β
+  borelize β
+  rw [ae_strongly_measurable_iff_ae_measurable_separable]
+  refine' ⟨hf.ae_measurable h's, f '' s, _, _⟩
+  · exact (hs.image_of_continuous_on hf).IsSeparable
+  · exact mem_of_superset (self_mem_ae_restrict h's) (subset_preimage_image _ _)
+#align
+  continuous_on.ae_strongly_measurable_of_is_compact ContinuousOn.aeStronglyMeasurableOfIsCompact
+
 theorem ContinuousOn.integrableAtNhdsWithinOfIsSeparable [TopologicalSpace α]
     [PseudoMetrizableSpace α] [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ]
     {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t) (ht : MeasurableSet t)
@@ -500,6 +521,14 @@ theorem ContinuousOn.integrableAtNhdsWithin [TopologicalSpace α] [SecondCountab
   (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhds_within, hft.ae_strongly_measurable ht⟩
     (μ.finite_at_nhds_within _ _)
 #align continuous_on.integrable_at_nhds_within ContinuousOn.integrableAtNhdsWithin
+
+theorem Continuous.integrableAtNhds [TopologicalSpace α] [SecondCountableTopologyEither α E]
+    [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ] {f : α → E}
+    (hf : Continuous f) (a : α) : IntegrableAtFilter f (𝓝 a) μ :=
+  by
+  rw [← nhds_within_univ]
+  exact hf.continuous_on.integrable_at_nhds_within MeasurableSet.univ (mem_univ a)
+#align continuous.integrable_at_nhds Continuous.integrableAtNhds
 
 /-- If a function is continuous on an open set `s`, then it is strongly measurable at the filter
 `𝓝 x` for all `x ∈ s` if either the source space or the target space is second-countable. -/

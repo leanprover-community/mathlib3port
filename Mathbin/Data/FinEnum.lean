@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.fin_enum
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' :
     where
   card := xs.length
   Equiv :=
-    ⟨fun x => ⟨xs.indexOf x, by rw [List.index_of_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
+    ⟨fun x => ⟨xs.indexOf x, by rw [List.indexOf_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
       xs.nthLe _ h, fun x => by simp [of_nodup_list._match_1], fun ⟨i, h⟩ => by
       simp [of_nodup_list._match_1, *] <;> rw [List.nth_le_index_of] <;> apply List.nodup_dedup⟩
 #align fin_enum.of_nodup_list FinEnum.ofNodupList
@@ -89,7 +89,7 @@ noncomputable def ofInjective {α β} (f : α → β) [DecidableEq α] [FinEnum 
   ofList ((toList β).filterMap (partialInv f))
     (by
       intro x
-      simp only [mem_to_list, true_and_iff, List.mem_filter_map]
+      simp only [mem_to_list, true_and_iff, List.mem_filterMap]
       use f x
       simp only [h, Function.partialInv_left])
 #align fin_enum.of_injective FinEnum.ofInjective

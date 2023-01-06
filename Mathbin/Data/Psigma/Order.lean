@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 
 ! This file was ported from Lean 3 source module data.psigma.order
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,9 +224,9 @@ instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrd
 /- warning: psigma.lex.no_min_order_of_nonempty clashes with [anonymous] -> [anonymous]
 warning: psigma.lex.no_min_order_of_nonempty -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : Preorder.{u_1} ι] [_inst_2 : forall (i : ι), Preorder.{u_2} (α i)] [_inst_3 : NoMaxOrder.{u_1} ι (Preorder.toLT.{u_1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u_2} (α i)], NoMaxOrder.{max u_1 u_2} (Lex.{max u_1 u_2} (PSigma.{succ u_1, succ u_2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u_1, u_2} ι (fun (i : ι) => α i) (Preorder.toLT.{u_1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u_2} (α i) (_inst_2 i)))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toLT.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
 but is expected to have type
-  forall {ι : Sort.{u}} {α : Nat}, ((Eq.{1} Nat α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> ι) -> (forall (i : Nat), (Eq.{1} Nat α (Nat.succ i)) -> ι) -> ι
+  forall {ι : Type.{u1}} {α : Type.{u2}}, (Nat -> ι -> α) -> Nat -> (List.{u1} ι) -> (List.{u2} α)
 Case conversion may be inaccurate. Consider using '#align psigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
 instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀ i, Nonempty (α i)] :
     NoMaxOrder (Σₗ' i, α i) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,9 +112,9 @@ section NoMeasurability
 
 variable [AddGroup G] [TopologicalSpace G]
 
-theorem HasCompactSupport.convolution_integrand_bound_right (hcg : HasCompactSupport g)
-    (hg : Continuous g) {x t : G} {s : Set G} (hx : x ∈ s) :
-    ‖L (f t) (g (x - t))‖ ≤ (-tsupport g + s).indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i, ‖g i‖) t :=
+theorem HasCompactSupport.convolution_integrand_bound_right_of_subset (hcg : HasCompactSupport g)
+    (hg : Continuous g) {x t : G} {s u : Set G} (hx : x ∈ s) (hu : -tsupport g + s ⊆ u) :
+    ‖L (f t) (g (x - t))‖ ≤ u.indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i, ‖g i‖) t :=
   by
   refine' le_indicator (fun t ht => _) (fun t ht => _) t
   · refine' (L.le_op_norm₂ _ _).trans _
@@ -124,9 +124,17 @@ theorem HasCompactSupport.convolution_integrand_bound_right (hcg : HasCompactSup
         (mul_nonneg (norm_nonneg _) (norm_nonneg _))
   · have : x - t ∉ support g := by
       refine' mt (fun hxt => _) ht
+      apply hu
       refine' ⟨_, _, set.neg_mem_neg.mpr (subset_closure hxt), hx, _⟩
       rw [neg_sub, sub_add_cancel]
     rw [nmem_support.mp this, (L _).map_zero, norm_zero]
+#align
+  has_compact_support.convolution_integrand_bound_right_of_subset HasCompactSupport.convolution_integrand_bound_right_of_subset
+
+theorem HasCompactSupport.convolution_integrand_bound_right (hcg : HasCompactSupport g)
+    (hg : Continuous g) {x t : G} {s : Set G} (hx : x ∈ s) :
+    ‖L (f t) (g (x - t))‖ ≤ (-tsupport g + s).indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i, ‖g i‖) t :=
+  hcg.convolution_integrand_bound_right_of_subset L hg hx Subset.rfl
 #align
   has_compact_support.convolution_integrand_bound_right HasCompactSupport.convolution_integrand_bound_right
 
@@ -179,15 +187,17 @@ section Group
 
 variable [AddGroup G]
 
-variable [HasMeasurableAdd₂ G] [HasMeasurableNeg G]
-
-theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrand' [SigmaFinite ν]
-    (hf : AeStronglyMeasurable f ν)
+theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrand' [HasMeasurableAdd₂ G]
+    [HasMeasurableNeg G] [SigmaFinite ν] (hf : AeStronglyMeasurable f ν)
     (hg : AeStronglyMeasurable g <| map (fun p : G × G => p.1 - p.2) (μ.Prod ν)) :
     AeStronglyMeasurable (fun p : G × G => L (f p.2) (g (p.1 - p.2))) (μ.Prod ν) :=
   L.aeStronglyMeasurableComp₂ hf.snd <| hg.compMeasurable measurable_sub
 #align
   measure_theory.ae_strongly_measurable.convolution_integrand' MeasureTheory.AeStronglyMeasurable.convolutionIntegrand'
+
+section
+
+variable [HasMeasurableAdd G] [HasMeasurableNeg G]
 
 theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrandSnd' (hf : AeStronglyMeasurable f μ)
     {x : G} (hg : AeStronglyMeasurable g <| map (fun t => x - t) μ) :
@@ -204,20 +214,19 @@ theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrandSwapSnd' {x : G}
   measure_theory.ae_strongly_measurable.convolution_integrand_swap_snd' MeasureTheory.AeStronglyMeasurable.convolutionIntegrandSwapSnd'
 
 /-- A sufficient condition to prove that `f ⋆[L, μ] g` exists.
-We assume that the integrand has compact support and `g` is bounded on this support (note that
-both properties hold if `g` is continuous with compact support). We also require that `f` is
-integrable on the support of the integrand, and that both functions are strongly measurable.
-
-Note: we could weaken the measurability condition to hold only for `μ.restrict s`. -/
+We assume that `f` is integrable on a set `s` and `g` is bounded and ae strongly measurable
+on `x₀ - s` (note that both properties hold if `g` is continuous with compact support). -/
 theorem BddAbove.convolutionExistsAt' {x₀ : G} {s : Set G}
     (hbg : BddAbove ((fun i => ‖g i‖) '' ((fun t => -t + x₀) ⁻¹' s))) (hs : MeasurableSet s)
     (h2s : (support fun t => L (f t) (g (x₀ - t))) ⊆ s) (hf : IntegrableOn f s μ)
-    (hmf : AeStronglyMeasurable f μ) (hmg : AeStronglyMeasurable g <| map (fun t => x₀ - t) μ) :
+    (hmg : AeStronglyMeasurable g <| map (fun t => x₀ - t) (μ.restrict s)) :
     ConvolutionExistsAt f g x₀ L μ :=
   by
+  rw [ConvolutionExistsAt, ← integrable_on_iff_integrable_of_support_subset h2s hs]
   set s' := (fun t => -t + x₀) ⁻¹' s
   have :
-    ∀ᵐ t : G ∂μ, ‖L (f t) (g (x₀ - t))‖ ≤ s.indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i : s', ‖g i‖) t :=
+    ∀ᵐ t : G ∂μ.restrict s,
+      ‖L (f t) (g (x₀ - t))‖ ≤ s.indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i : s', ‖g i‖) t :=
     by
     refine' eventually_of_forall _
     refine' le_indicator (fun t ht => _) fun t ht => _
@@ -230,8 +239,8 @@ theorem BddAbove.convolutionExistsAt' {x₀ : G} {s : Set G}
       rw [nmem_support.mp this, norm_zero]
   refine' integrable.mono' _ _ this
   · rw [integrable_indicator_iff hs]
-    exact (hf.norm.const_mul _).mul_const _
-  · exact hmf.convolution_integrand_snd' L hmg
+    exact ((hf.norm.const_mul _).mul_const _).IntegrableOn
+  · exact hf.ae_strongly_measurable.convolution_integrand_snd' L hmg
 #align bdd_above.convolution_exists_at' BddAbove.convolutionExistsAt'
 
 /-- If `‖f‖ *[μ] ‖g‖` exists, then `f *[L, μ] g` exists. -/
@@ -246,9 +255,11 @@ theorem ConvolutionExistsAt.ofNorm' {x₀ : G}
   apply L.le_op_norm₂
 #align convolution_exists_at.of_norm' ConvolutionExistsAt.ofNorm'
 
+end
+
 section Left
 
-variable [SigmaFinite μ] [IsAddRightInvariant μ]
+variable [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
 
 theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrandSnd (hf : AeStronglyMeasurable f μ)
     (hg : AeStronglyMeasurable g μ) (x : G) :
@@ -281,7 +292,8 @@ end Left
 
 section Right
 
-variable [SigmaFinite μ] [IsAddRightInvariant μ] [SigmaFinite ν]
+variable [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [SigmaFinite μ] [IsAddRightInvariant μ]
+  [SigmaFinite ν]
 
 theorem MeasureTheory.AeStronglyMeasurable.convolutionIntegrand (hf : AeStronglyMeasurable f ν)
     (hg : AeStronglyMeasurable g μ) :
@@ -324,16 +336,31 @@ theorem MeasureTheory.Integrable.ae_convolution_exists (hf : Integrable f ν) (h
 
 end Right
 
-variable [TopologicalSpace G] [TopologicalAddGroup G] [BorelSpace G] [SecondCountableTopology G]
-  [SigmaCompactSpace G]
+variable [TopologicalSpace G] [TopologicalAddGroup G] [BorelSpace G]
 
 theorem HasCompactSupport.convolutionExistsAt {x₀ : G}
     (h : HasCompactSupport fun t => L (f t) (g (x₀ - t))) (hf : LocallyIntegrable f μ)
     (hg : Continuous g) : ConvolutionExistsAt f g x₀ L μ :=
-  ((((Homeomorph.neg G).trans <| Homeomorph.addRight x₀).is_compact_preimage.mpr h).bdd_above_image
-        hg.norm.ContinuousOn).convolutionExistsAt'
-    L is_closed_closure.MeasurableSet subset_closure (hf h) hf.AeStronglyMeasurable
-    hg.AeStronglyMeasurable
+  by
+  let u := (Homeomorph.neg G).trans (Homeomorph.addRight x₀)
+  let v := (Homeomorph.neg G).trans (Homeomorph.addLeft x₀)
+  apply
+    ((u.is_compact_preimage.mpr h).bdd_above_image hg.norm.continuous_on).convolutionExistsAt' L
+      is_closed_closure.measurable_set subset_closure (hf.integrable_on_is_compact h)
+  have A :
+    ae_strongly_measurable (g ∘ ⇑v) (μ.restrict (tsupport fun t : G => (L (f t)) (g (x₀ - t)))) :=
+    by
+    apply (hg.comp v.continuous).ContinuousOn.aeStronglyMeasurableOfIsCompact h
+    exact (is_closed_tsupport _).MeasurableSet
+  convert
+    ((v.continuous.measurable.measure_preserving
+              (μ.restrict (tsupport fun t => L (f t) (g (x₀ - t))))).ae_strongly_measurable_comp_iff
+          v.to_measurable_equiv.measurable_embedding).1
+      A
+  ext x
+  simp only [Homeomorph.neg, sub_eq_add_neg, coe_toAddUnits, Homeomorph.trans_apply,
+    Equiv.neg_apply, Equiv.to_fun_as_coe, Homeomorph.homeomorph_mk_coe, Equiv.coe_fn_mk,
+    Homeomorph.coe_add_left]
 #align has_compact_support.convolution_exists_at HasCompactSupport.convolutionExistsAt
 
 theorem HasCompactSupport.convolutionExistsRight (hcg : HasCompactSupport g)
@@ -365,7 +392,7 @@ variable [AddCommGroup G]
 
 section MeasurableGroup
 
-variable [HasMeasurableAdd₂ G] [HasMeasurableNeg G] [IsAddLeftInvariant μ]
+variable [HasMeasurableNeg G] [IsAddLeftInvariant μ]
 
 /-- A sufficient condition to prove that `f ⋆[L, μ] g` exists.
 We assume that the integrand has compact support and `g` is bounded on this support (note that
@@ -374,18 +401,21 @@ integrable on the support of the integrand, and that both functions are strongly
 
 This is a variant of `bdd_above.convolution_exists_at'` in an abelian group with a left-invariant
 measure. This allows us to state the boundedness and measurability of `g` in a more natural way. -/
-theorem BddAbove.convolutionExistsAt [SigmaFinite μ] {x₀ : G} {s : Set G}
+theorem BddAbove.convolutionExistsAt [HasMeasurableAdd₂ G] [SigmaFinite μ] {x₀ : G} {s : Set G}
     (hbg : BddAbove ((fun i => ‖g i‖) '' ((fun t => x₀ - t) ⁻¹' s))) (hs : MeasurableSet s)
     (h2s : (support fun t => L (f t) (g (x₀ - t))) ⊆ s) (hf : IntegrableOn f s μ)
-    (hmf : AeStronglyMeasurable f μ) (hmg : AeStronglyMeasurable g μ) :
-    ConvolutionExistsAt f g x₀ L μ :=
+    (hmg : AeStronglyMeasurable g μ) : ConvolutionExistsAt f g x₀ L μ :=
   by
-  refine' BddAbove.convolutionExistsAt' L _ hs h2s hf hmf _
+  refine' BddAbove.convolutionExistsAt' L _ hs h2s hf _
   · simp_rw [← sub_eq_neg_add, hbg]
-  · exact hmg.mono' (quasi_measure_preserving_sub_left_of_right_invariant μ x₀).AbsolutelyContinuous
+  · have : ae_strongly_measurable g (map (fun t : G => x₀ - t) μ) :=
+      hmg.mono' (quasi_measure_preserving_sub_left_of_right_invariant μ x₀).AbsolutelyContinuous
+    apply this.mono_measure
+    exact
+      map_mono_of_ae_measurable restrict_le_self (measurable_const.sub measurable_id').AeMeasurable
 #align bdd_above.convolution_exists_at BddAbove.convolutionExistsAt
 
-variable {L} [IsNegInvariant μ]
+variable {L} [HasMeasurableAdd G] [IsNegInvariant μ]
 
 theorem convolution_exists_at_flip :
     ConvolutionExistsAt g f x L.flip μ ↔ ConvolutionExistsAt f g x L μ := by
@@ -407,8 +437,8 @@ theorem convolution_exists_at_iff_integrable_swap :
 
 end MeasurableGroup
 
-variable [TopologicalSpace G] [TopologicalAddGroup G] [BorelSpace G] [SecondCountableTopology G]
-  [IsAddLeftInvariant μ] [IsNegInvariant μ] [SigmaCompactSpace G]
+variable [TopologicalSpace G] [TopologicalAddGroup G] [BorelSpace G] [IsAddLeftInvariant μ]
+  [IsNegInvariant μ]
 
 theorem HasCompactSupport.convolutionExistsLeft (hcf : HasCompactSupport f) (hf : Continuous f)
     (hg : LocallyIntegrable g μ) : ConvolutionExists f g L μ := fun x₀ =>
@@ -570,30 +600,35 @@ theorem HasCompactSupport.convolution [T2Space G] (hcf : HasCompactSupport f)
       (hcg.IsCompact.add hcf).IsClosed
 #align has_compact_support.convolution HasCompactSupport.convolution
 
-variable [BorelSpace G] [SecondCountableTopology G]
+variable [BorelSpace G]
 
 /-- The convolution is continuous if one function is locally integrable and the other has compact
 support and is continuous. -/
-theorem HasCompactSupport.continuous_convolution_right [LocallyCompactSpace G] [T2Space G]
+theorem HasCompactSupport.continuous_convolution_right [FirstCountableTopology G]
     (hcg : HasCompactSupport g) (hf : LocallyIntegrable f μ) (hg : Continuous g) :
     Continuous (f ⋆[L, μ] g) :=
   by
   refine' continuous_iff_continuous_at.mpr fun x₀ => _
-  obtain ⟨K, hK, h2K⟩ := exists_compact_mem_nhds x₀
-  let K' := -tsupport g + K
-  have hK' : IsCompact K' := hcg.neg.add hK
+  let K' := -tsupport g + {x₀}
+  have hK' : IsCompact K' := hcg.neg.add is_compact_singleton
+  obtain ⟨U, U_open, K'U, hU⟩ : ∃ U, IsOpen U ∧ K' ⊆ U ∧ integrable_on f U μ
+  exact hf.integrable_on_nhds_is_compact hK'
   have :
     ∀ᶠ x in 𝓝 x₀,
-      ∀ᵐ t : G ∂μ, ‖L (f t) (g (x - t))‖ ≤ K'.indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i, ‖g i‖) t :=
-    eventually_of_mem h2K fun x hx =>
-      eventually_of_forall fun t => hcg.convolution_integrand_bound_right L hg hx
+      ∀ᵐ t : G ∂μ, ‖L (f t) (g (x - t))‖ ≤ U.indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i, ‖g i‖) t :=
+    by
+    obtain ⟨V, V_mem, hV⟩ : ∃ (V : Set G)(H : V ∈ 𝓝 (0 : G)), K' + V ⊆ U
+    exact compact_open_separated_add_right hK' U_open K'U
+    have : {x₀} + V ∈ 𝓝 x₀ := singleton_add_mem_nhds_of_nhds_zero x₀ V_mem
+    filter_upwards [this] with x hx
+    apply eventually_of_forall fun t => _
+    apply hcg.convolution_integrand_bound_right_of_subset L hg hx
+    rwa [← add_assoc]
   refine' continuous_at_of_dominated _ this _ _
-  ·
-    exact
-      eventually_of_forall fun x =>
-        hf.ae_strongly_measurable.convolution_integrand_snd' L hg.ae_strongly_measurable
-  · rw [integrable_indicator_iff hK'.measurable_set]
-    exact ((hf hK').norm.const_mul _).mul_const _
+  · apply eventually_of_forall fun x => _
+    exact (HasCompactSupport.convolutionExistsRight L hcg hf hg x).AeStronglyMeasurable
+  · rw [integrable_indicator_iff U_open.measurable_set]
+    exact (hU.norm.const_mul _).mul_const _
   ·
     exact
       eventually_of_forall fun t =>
@@ -604,8 +639,9 @@ theorem HasCompactSupport.continuous_convolution_right [LocallyCompactSpace G] [
 
 /-- The convolution is continuous if one function is integrable and the other is bounded and
 continuous. -/
-theorem BddAbove.continuous_convolution_right_of_integrable (hbg : BddAbove (range fun x => ‖g x‖))
-    (hf : Integrable f μ) (hg : Continuous g) : Continuous (f ⋆[L, μ] g) :=
+theorem BddAbove.continuous_convolution_right_of_integrable [SecondCountableTopology G]
+    (hbg : BddAbove (range fun x => ‖g x‖)) (hf : Integrable f μ) (hg : Continuous g) :
+    Continuous (f ⋆[L, μ] g) :=
   by
   refine' continuous_iff_continuous_at.mpr fun x₀ => _
   have : ∀ᶠ x in 𝓝 x₀, ∀ᵐ t : G ∂μ, ‖L (f t) (g (x - t))‖ ≤ ‖L‖ * ‖f t‖ * ⨆ i, ‖g i‖ :=
@@ -627,16 +663,6 @@ theorem BddAbove.continuous_convolution_right_of_integrable (hbg : BddAbove (ran
             hg.comp <| continuous_id.sub <| by apply continuous_const).ContinuousAt
 #align
   bdd_above.continuous_convolution_right_of_integrable BddAbove.continuous_convolution_right_of_integrable
-
-/-- A version of `has_compact_support.continuous_convolution_right` that works if `G` is
-not locally compact but requires that `g` is integrable. -/
-theorem HasCompactSupport.continuous_convolution_right_of_integrable (hcg : HasCompactSupport g)
-    (hf : Integrable f μ) (hg : Continuous g) : Continuous (f ⋆[L, μ] g) :=
-  (hg.norm.bdd_above_range_of_has_compact_support
-        hcg.norm).continuous_convolution_right_of_integrable
-    L hf hg
-#align
-  has_compact_support.continuous_convolution_right_of_integrable HasCompactSupport.continuous_convolution_right_of_integrable
 
 end Group
 
@@ -710,32 +736,20 @@ variable [TopologicalAddGroup G]
 
 variable [BorelSpace G]
 
-variable [SecondCountableTopology G]
-
-theorem HasCompactSupport.continuous_convolution_left [LocallyCompactSpace G] [T2Space G]
+theorem HasCompactSupport.continuous_convolution_left [FirstCountableTopology G]
     (hcf : HasCompactSupport f) (hf : Continuous f) (hg : LocallyIntegrable g μ) :
     Continuous (f ⋆[L, μ] g) := by
   rw [← convolution_flip]
   exact hcf.continuous_convolution_right L.flip hg hf
 #align has_compact_support.continuous_convolution_left HasCompactSupport.continuous_convolution_left
 
-theorem BddAbove.continuous_convolution_left_of_integrable (hbf : BddAbove (range fun x => ‖f x‖))
-    (hf : Continuous f) (hg : Integrable g μ) : Continuous (f ⋆[L, μ] g) :=
-  by
+theorem BddAbove.continuous_convolution_left_of_integrable [SecondCountableTopology G]
+    (hbf : BddAbove (range fun x => ‖f x‖)) (hf : Continuous f) (hg : Integrable g μ) :
+    Continuous (f ⋆[L, μ] g) := by
   rw [← convolution_flip]
   exact hbf.continuous_convolution_right_of_integrable L.flip hg hf
 #align
   bdd_above.continuous_convolution_left_of_integrable BddAbove.continuous_convolution_left_of_integrable
-
-/-- A version of `has_compact_support.continuous_convolution_left` that works if `G` is
-not locally compact but requires that `g` is integrable. -/
-theorem HasCompactSupport.continuous_convolution_left_of_integrable (hcf : HasCompactSupport f)
-    (hf : Continuous f) (hg : Integrable g μ) : Continuous (f ⋆[L, μ] g) :=
-  by
-  rw [← convolution_flip]
-  exact hcf.continuous_convolution_right_of_integrable L.flip hg hf
-#align
-  has_compact_support.continuous_convolution_left_of_integrable HasCompactSupport.continuous_convolution_left_of_integrable
 
 end CommGroup
 
@@ -783,7 +797,7 @@ theorem dist_convolution_le' {x₀ : G} {R ε : ℝ} {z₀ : E'} (hε : 0 ≤ ε
     by
     refine'
       BddAbove.convolutionExistsAt L _ metric.is_open_ball.measurable_set (subset_trans _ hf)
-        hif.integrable_on hif.ae_strongly_measurable hmg
+        hif.integrable_on hmg
     swap
     · refine' fun t => mt fun ht : f t = 0 => _
       simp_rw [ht, L.map_zero₂]
@@ -1103,22 +1117,18 @@ theorem convolution_assoc (hL : ∀ (x : E) (y : E') (z : E''), L₂ (L x y) z =
 
 end Assoc
 
-variable [NormedAddCommGroup G] [BorelSpace G] [NormedSpace 𝕜 G]
+variable [NormedAddCommGroup G] [BorelSpace G]
 
 theorem convolution_precompR_apply {g : G → E'' →L[𝕜] E'} (hf : LocallyIntegrable f μ)
     (hcg : HasCompactSupport g) (hg : Continuous g) (x₀ : G) (x : E'') :
     (f ⋆[L.precompR E'', μ] g) x₀ x = (f ⋆[L, μ] fun a => g a x) x₀ :=
   by
-  rcases hcg.eq_zero_or_finite_dimensional 𝕜 hg with (rfl | fin_dim)
-  · simp only [convolution, Pi.zero_apply, integral_const, smul_zero, zero_apply, _root_.map_zero]
-  skip
-  have : ProperSpace G := FiniteDimensional.proper_is_R_or_C 𝕜 G
   have := hcg.convolution_exists_right (L.precompR E'' : _) hf hg x₀
   simp_rw [convolution_def, ContinuousLinearMap.integral_apply this]
   rfl
 #align convolution_precompR_apply convolution_precompR_apply
 
-variable [SigmaFinite μ] [IsAddLeftInvariant μ]
+variable [NormedSpace 𝕜 G] [SigmaFinite μ] [IsAddLeftInvariant μ]
 
 /-- Compute the total derivative of `f ⋆ g` if `g` is `C^1` with compact support and `f` is locally
 integrable. To write down the total derivative as a convolution, we use
@@ -1156,7 +1166,7 @@ theorem HasCompactSupport.hasFderivAtConvolutionRight (hcg : HasCompactSupport g
       (hcg.fderiv 𝕜).convolution_integrand_bound_right L' (hg.continuous_fderiv le_rfl)
         (ball_subset_closed_ball hx)
   · rw [integrable_indicator_iff hK'.measurable_set]
-    exact ((hf hK').norm.const_mul _).mul_const _
+    exact ((hf.integrable_on_is_compact hK').norm.const_mul _).mul_const _
   · exact eventually_of_forall fun t x hx => (L _).HasFderivAt.comp x (h3 x t)
 #align
   has_compact_support.has_fderiv_at_convolution_right HasCompactSupport.hasFderivAtConvolutionRight
@@ -1177,7 +1187,6 @@ theorem HasCompactSupport.cont_diff_convolution_right (hcg : HasCompactSupport g
   · simp only [convolution_zero]
     exact cont_diff_zero_fun
   skip
-  have : ProperSpace G := FiniteDimensional.proper_is_R_or_C 𝕜 G
   induction' n using Enat.nat_induction with n ih ih generalizing g
   · rw [cont_diff_zero] at hg⊢
     exact hcg.continuous_convolution_right L hf hg

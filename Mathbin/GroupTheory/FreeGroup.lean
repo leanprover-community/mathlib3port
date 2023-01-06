@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module group_theory.free_group
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ theorem not_step_nil : ¬Step [] L := by
   generalize h' : [] = L'
   intro h
   cases' h with L₁ L₂
-  simp [List.nil_eq_append_iff] at h'
+  simp [List.nil_eq_append] at h'
   contradiction
 #align free_group.red.not_step_nil FreeGroup.Red.not_step_nil
 
@@ -363,7 +363,7 @@ theorem red_iff_irreducible {x1 b1 x2 b2} (h : (x1, b1) ≠ (x2, b2)) :
   generalize eq : [(x1, not b1), (x2, b2)] = L'
   intro L h'
   cases h'
-  simp [List.cons_eq_append_iff, List.nil_eq_append_iff] at eq
+  simp [List.cons_eq_append_iff, List.nil_eq_append] at eq
   rcases Eq with ⟨rfl, ⟨rfl, rfl⟩, ⟨rfl, rfl⟩, rfl⟩; subst_vars
   simp at h
   contradiction

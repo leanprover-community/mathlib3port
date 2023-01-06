@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.partrec_code
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -366,7 +366,7 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]
-  simp [List.nth_map, List.nth_range, hm, m1, m2]
+  simp [List.get?_map, List.nth_range, hm, m1, m2]
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
@@ -468,7 +468,7 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]
-  simp [List.nth_map, List.nth_range, hm, m1, m2]
+  simp [List.get?_map, List.nth_range, hm, m1, m2]
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
@@ -576,7 +576,7 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]
-  simp [List.nth_map, List.nth_range, hm, m1, m2]
+  simp [List.get?_map, List.nth_range, hm, m1, m2]
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
@@ -1016,7 +1016,7 @@ private theorem evaln_map (k c n) :
   by
   by_cases kn : n < k
   · simp [List.nth_range kn]
-  · rw [List.nth_len_le]
+  · rw [List.get?_len_le]
     · cases e : evaln k c n
       · rfl
       exact kn.elim (evaln_bound e)

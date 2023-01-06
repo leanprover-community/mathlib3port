@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.order.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -863,17 +863,17 @@ def Preorder.topology (α : Type _) [Preorder α] : TopologicalSpace α :=
 
 section OrderTopology
 
-instance {α : Type _} [TopologicalSpace α] [PartialOrder α] [OrderTopology α] : OrderTopology αᵒᵈ :=
+section Preorder
+
+variable [TopologicalSpace α] [Preorder α] [t : OrderTopology α]
+
+include t
+
+instance : OrderTopology αᵒᵈ :=
   ⟨by
     convert @OrderTopology.topology_eq_generate_intervals α _ _ _ <;>
         conv in _ ∨ _ => rw [or_comm] <;>
       rfl⟩
-
-section PartialOrder
-
-variable [TopologicalSpace α] [PartialOrder α] [t : OrderTopology α]
-
-include t
 
 theorem is_open_iff_generate_intervals {s : Set α} :
     IsOpen s ↔ GenerateOpen { s | ∃ a, s = Ioi a ∨ s = Iio a } s := by
@@ -981,7 +981,7 @@ theorem tendsto_order_unbounded {f : β → α} {a : α} {x : Filter β} (hu : �
           tendsto_infi.2 fun u => tendsto_infi.2 fun hu => tendsto_principal.2 <| h l u hl hu
 #align tendsto_order_unbounded tendsto_order_unbounded
 
-end PartialOrder
+end Preorder
 
 instance tendsto_Ixx_nhds_within {α : Type _} [Preorder α] [TopologicalSpace α] (a : α)
     {s t : Set α} {Ixx} [TendstoIxxClass Ixx (𝓝 a) (𝓝 a)] [TendstoIxxClass Ixx (𝓟 s) (𝓟 t)] :
@@ -989,7 +989,7 @@ instance tendsto_Ixx_nhds_within {α : Type _} [Preorder α] [TopologicalSpace �
   Filter.tendsto_Ixx_class_inf
 #align tendsto_Ixx_nhds_within tendsto_Ixx_nhds_within
 
-instance tendsto_Icc_class_nhds_pi {ι : Type _} {α : ι → Type _} [∀ i, PartialOrder (α i)]
+instance tendsto_Icc_class_nhds_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)]
     [∀ i, TopologicalSpace (α i)] [∀ i, OrderTopology (α i)] (f : ∀ i, α i) :
     TendstoIxxClass Icc (𝓝 f) (𝓝 f) := by
   constructor
@@ -1002,8 +1002,8 @@ instance tendsto_Icc_class_nhds_pi {ι : Type _} {α : ι → Type _} [∀ i, Pa
   exact fun p hp g hg => hp ⟨hg.1 _, hg.2 _⟩
 #align tendsto_Icc_class_nhds_pi tendsto_Icc_class_nhds_pi
 
-theorem induced_order_topology' {α : Type u} {β : Type v} [PartialOrder α] [ta : TopologicalSpace β]
-    [PartialOrder β] [OrderTopology β] (f : α → β) (hf : ∀ {x y}, f x < f y ↔ x < y)
+theorem induced_order_topology' {α : Type u} {β : Type v} [Preorder α] [ta : TopologicalSpace β]
+    [Preorder β] [OrderTopology β] (f : α → β) (hf : ∀ {x y}, f x < f y ↔ x < y)
     (H₁ : ∀ {a x}, x < f a → ∃ b < a, x ≤ f b) (H₂ : ∀ {a x}, f a < x → ∃ b > a, f b ≤ x) :
     @OrderTopology _ (induced f ta) _ :=
   by
@@ -1037,8 +1037,8 @@ theorem induced_order_topology' {α : Type u} {β : Type v} [PartialOrder α] [t
       exact fun c hc => lt_of_lt_of_le (hf.2 hc) xb
 #align induced_order_topology' induced_order_topology'
 
-theorem induced_order_topology {α : Type u} {β : Type v} [PartialOrder α] [ta : TopologicalSpace β]
-    [PartialOrder β] [OrderTopology β] (f : α → β) (hf : ∀ {x y}, f x < f y ↔ x < y)
+theorem induced_order_topology {α : Type u} {β : Type v} [Preorder α] [ta : TopologicalSpace β]
+    [Preorder β] [OrderTopology β] (f : α → β) (hf : ∀ {x y}, f x < f y ↔ x < y)
     (H : ∀ {x y}, x < y → ∃ a, x < f a ∧ f a < y) : @OrderTopology _ (induced f ta) _ :=
   induced_order_topology' f (@hf)
     (fun a x xa =>
@@ -1096,7 +1096,7 @@ instance order_topology_of_ord_connected {α : Type u} [ta : TopologicalSpace α
       exact fun hx => ht.out a.2 y.2 ⟨le_of_lt h, le_of_not_gt hx⟩
 #align order_topology_of_ord_connected order_topology_of_ord_connected
 
-theorem nhds_within_Ici_eq'' [TopologicalSpace α] [PartialOrder α] [OrderTopology α] (a : α) :
+theorem nhds_within_Ici_eq'' [TopologicalSpace α] [Preorder α] [OrderTopology α] (a : α) :
     𝓝[≥] a = (⨅ (u) (hu : a < u), 𝓟 (Iio u)) ⊓ 𝓟 (Ici a) :=
   by
   rw [nhdsWithin, nhds_eq_order]
@@ -1104,17 +1104,17 @@ theorem nhds_within_Ici_eq'' [TopologicalSpace α] [PartialOrder α] [OrderTopol
   exact inf_le_right.trans (le_infᵢ₂ fun l hl => principal_mono.2 <| Ici_subset_Ioi.2 hl)
 #align nhds_within_Ici_eq'' nhds_within_Ici_eq''
 
-theorem nhds_within_Iic_eq'' [TopologicalSpace α] [PartialOrder α] [OrderTopology α] (a : α) :
+theorem nhds_within_Iic_eq'' [TopologicalSpace α] [Preorder α] [OrderTopology α] (a : α) :
     𝓝[≤] a = (⨅ l < a, 𝓟 (Ioi l)) ⊓ 𝓟 (Iic a) :=
   nhds_within_Ici_eq'' (toDual a)
 #align nhds_within_Iic_eq'' nhds_within_Iic_eq''
 
-theorem nhds_within_Ici_eq' [TopologicalSpace α] [PartialOrder α] [OrderTopology α] {a : α}
+theorem nhds_within_Ici_eq' [TopologicalSpace α] [Preorder α] [OrderTopology α] {a : α}
     (ha : ∃ u, a < u) : 𝓝[≥] a = ⨅ (u) (hu : a < u), 𝓟 (Ico a u) := by
   simp only [nhds_within_Ici_eq'', binfᵢ_inf ha, inf_principal, Iio_inter_Ici]
 #align nhds_within_Ici_eq' nhds_within_Ici_eq'
 
-theorem nhds_within_Iic_eq' [TopologicalSpace α] [PartialOrder α] [OrderTopology α] {a : α}
+theorem nhds_within_Iic_eq' [TopologicalSpace α] [Preorder α] [OrderTopology α] {a : α}
     (ha : ∃ l, l < a) : 𝓝[≤] a = ⨅ l < a, 𝓟 (Ioc l a) := by
   simp only [nhds_within_Iic_eq'', binfᵢ_inf ha, inf_principal, Ioi_inter_Iic]
 #align nhds_within_Iic_eq' nhds_within_Iic_eq'
@@ -1146,11 +1146,11 @@ theorem nhds_within_Iic_basis [TopologicalSpace α] [LinearOrder α] [OrderTopol
   nhds_within_Iic_basis' (exists_lt a)
 #align nhds_within_Iic_basis nhds_within_Iic_basis
 
-theorem nhds_top_order [TopologicalSpace α] [PartialOrder α] [OrderTop α] [OrderTopology α] :
+theorem nhds_top_order [TopologicalSpace α] [Preorder α] [OrderTop α] [OrderTopology α] :
     𝓝 (⊤ : α) = ⨅ (l) (h₂ : l < ⊤), 𝓟 (Ioi l) := by simp [nhds_eq_order (⊤ : α)]
 #align nhds_top_order nhds_top_order
 
-theorem nhds_bot_order [TopologicalSpace α] [PartialOrder α] [OrderBot α] [OrderTopology α] :
+theorem nhds_bot_order [TopologicalSpace α] [Preorder α] [OrderBot α] [OrderTopology α] :
     𝓝 (⊥ : α) = ⨅ (l) (h₂ : ⊥ < l), 𝓟 (Iio l) := by simp [nhds_eq_order (⊥ : α)]
 #align nhds_bot_order nhds_bot_order
 
@@ -1180,7 +1180,7 @@ theorem nhds_bot_basis_Iic [TopologicalSpace α] [LinearOrder α] [OrderBot α] 
   @nhds_top_basis_Ici αᵒᵈ _ _ _ _ _ _
 #align nhds_bot_basis_Iic nhds_bot_basis_Iic
 
-theorem tendsto_nhds_top_mono [TopologicalSpace β] [PartialOrder β] [OrderTop β] [OrderTopology β]
+theorem tendsto_nhds_top_mono [TopologicalSpace β] [Preorder β] [OrderTop β] [OrderTopology β]
     {l : Filter α} {f g : α → β} (hf : Tendsto f l (𝓝 ⊤)) (hg : f ≤ᶠ[l] g) : Tendsto g l (𝓝 ⊤) :=
   by
   simp only [nhds_top_order, tendsto_infi, tendsto_principal] at hf⊢
@@ -1188,17 +1188,17 @@ theorem tendsto_nhds_top_mono [TopologicalSpace β] [PartialOrder β] [OrderTop 
   filter_upwards [hf x hx, hg] with _ using lt_of_lt_of_le
 #align tendsto_nhds_top_mono tendsto_nhds_top_mono
 
-theorem tendsto_nhds_bot_mono [TopologicalSpace β] [PartialOrder β] [OrderBot β] [OrderTopology β]
+theorem tendsto_nhds_bot_mono [TopologicalSpace β] [Preorder β] [OrderBot β] [OrderTopology β]
     {l : Filter α} {f g : α → β} (hf : Tendsto f l (𝓝 ⊥)) (hg : g ≤ᶠ[l] f) : Tendsto g l (𝓝 ⊥) :=
   @tendsto_nhds_top_mono α βᵒᵈ _ _ _ _ _ _ _ hf hg
 #align tendsto_nhds_bot_mono tendsto_nhds_bot_mono
 
-theorem tendsto_nhds_top_mono' [TopologicalSpace β] [PartialOrder β] [OrderTop β] [OrderTopology β]
+theorem tendsto_nhds_top_mono' [TopologicalSpace β] [Preorder β] [OrderTop β] [OrderTopology β]
     {l : Filter α} {f g : α → β} (hf : Tendsto f l (𝓝 ⊤)) (hg : f ≤ g) : Tendsto g l (𝓝 ⊤) :=
   tendsto_nhds_top_mono hf (eventually_of_forall hg)
 #align tendsto_nhds_top_mono' tendsto_nhds_top_mono'
 
-theorem tendsto_nhds_bot_mono' [TopologicalSpace β] [PartialOrder β] [OrderBot β] [OrderTopology β]
+theorem tendsto_nhds_bot_mono' [TopologicalSpace β] [Preorder β] [OrderBot β] [OrderTopology β]
     {l : Filter α} {f g : α → β} (hf : Tendsto f l (𝓝 ⊥)) (hg : g ≤ f) : Tendsto g l (𝓝 ⊥) :=
   tendsto_nhds_bot_mono hf (eventually_of_forall hg)
 #align tendsto_nhds_bot_mono' tendsto_nhds_bot_mono'
@@ -1640,7 +1640,7 @@ intervals to the right or to the left of `a`. We give now these characterization
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(«term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within.gt "𝓝[>] " `a))
@@ -2353,7 +2353,7 @@ intervals to the right or to the left of `a`. We give now these characterization
     tfae_mem_nhds_within_Ioi
     { a b : α } ( hab : a < b ) ( s : Set α )
       :
-        Tfae
+        TFAE
           [
             s ∈ 𝓝[>] a
               ,
@@ -2434,7 +2434,7 @@ theorem mem_nhds_within_Ioi_iff_exists_Ioc_subset [NoMaxOrder α] [DenselyOrdere
 3. `s` includes `(l, b)` for some `l ∈ [a, b)`
 4. `s` includes `(l, b)` for some `l < b` -/
 theorem tfae_mem_nhds_within_Iio {a b : α} (h : a < b) (s : Set α) :
-    Tfae
+    TFAE
       [s ∈ 𝓝[<] b,-- 0 : `s` is a neighborhood of `b` within `(-∞, b)`
           s ∈
           𝓝[Ico a b] b,-- 1 : `s` is a neighborhood of `b` within `[a, b)`
@@ -2498,7 +2498,7 @@ theorem mem_nhds_within_Iio_iff_exists_Ico_subset [NoMinOrder α] [DenselyOrdere
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(«term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within.ge "𝓝[≥] " `a))
@@ -3007,7 +3007,7 @@ theorem mem_nhds_within_Iio_iff_exists_Ico_subset [NoMinOrder α] [DenselyOrdere
     tfae_mem_nhds_within_Ici
     { a b : α } ( hab : a < b ) ( s : Set α )
       :
-        Tfae
+        TFAE
           [
             s ∈ 𝓝[≥] a
               ,
@@ -3095,7 +3095,7 @@ theorem mem_nhds_within_Ici_iff_exists_Icc_subset [NoMaxOrder α] [DenselyOrdere
 3. `s` includes `(l, b]` for some `l ∈ [a, b)`
 4. `s` includes `(l, b]` for some `l < b` -/
 theorem tfae_mem_nhds_within_Iic {a b : α} (h : a < b) (s : Set α) :
-    Tfae
+    TFAE
       [s ∈ 𝓝[≤] b,-- 0 : `s` is a neighborhood of `b` within `(-∞, b]`
           s ∈
           𝓝[Icc a b] b,-- 1 : `s` is a neighborhood of `b` within `[a, b]`

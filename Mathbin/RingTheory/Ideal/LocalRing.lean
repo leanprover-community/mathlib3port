@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,7 +309,7 @@ variable [CommSemiring R] [LocalRing R] [CommSemiring S] [LocalRing S]
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `IsLocalRingHom [`f])
@@ -564,7 +564,7 @@ variable [CommSemiring R] [LocalRing R] [CommSemiring S] [LocalRing S]
     local_hom_tfae
     ( f : R →+* S )
       :
-        Tfae
+        TFAE
           [
             IsLocalRingHom f
               ,

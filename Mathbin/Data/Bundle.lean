@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module data.bundle
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Module.Basic
 
 /-!
 # Bundle
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 Basic data structure to implement fiber bundles, vector bundles (maybe fibrations?), etc. This file
 should contain all possible results that do not involve any topology.
 
@@ -138,9 +141,9 @@ theorem coe_snd {x : B} {y : E x} : (y : TotalSpace E).snd = y :=
 /- warning: bundle.to_total_space_coe clashes with [anonymous] -> [anonymous]
 warning: bundle.to_total_space_coe -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {B : Type.{u_1}} {E : B -> Type.{u_2}} {x : B} (v : E x), Eq.{max (succ u_1) (succ u_2)} (Bundle.TotalSpace.{u_1, u_2} B E) ((fun (a : Type.{u_2}) (b : Sort.{max (succ u_1) (succ u_2)}) [self : HasLiftT.{succ u_2, max (succ u_1) (succ u_2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u_1, u_2} B E) (HasLiftT.mk.{succ u_2, max (succ u_1) (succ u_2)} (E x) (Bundle.TotalSpace.{u_1, u_2} B E) (CoeTCₓ.coe.{succ u_2, max (succ u_1) (succ u_2)} (E x) (Bundle.TotalSpace.{u_1, u_2} B E) (Bundle.TotalSpace.hasCoeT.{u_1, u_2} B E x))) v) (Bundle.totalSpaceMk.{u_1, u_2} B E x v)
+  forall {B : Type.{u1}} {E : B -> Type.{u2}} {x : B} (v : E x), Eq.{max (succ u1) (succ u2)} (Bundle.TotalSpace.{u1, u2} B E) ((fun (a : Type.{u2}) (b : Sort.{max (succ u1) (succ u2)}) [self : HasLiftT.{succ u2, max (succ u1) (succ u2)} a b] => self.0) (E x) (Bundle.TotalSpace.{u1, u2} B E) (HasLiftT.mk.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (CoeTCₓ.coe.{succ u2, max (succ u1) (succ u2)} (E x) (Bundle.TotalSpace.{u1, u2} B E) (Bundle.TotalSpace.hasCoeT.{u1, u2} B E x))) v) (Bundle.totalSpaceMk.{u1, u2} B E x v)
 but is expected to have type
-  forall {B : Sort.{u}} {E : Nat}, ((Eq.{1} Nat E (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> B) -> (forall (m : Nat), (Eq.{1} Nat E (Nat.succ m)) -> B) -> B
+  forall {B : Type.{u1}} {E : Type.{u2}}, (Nat -> B -> E) -> Nat -> (List.{u1} B) -> (List.{u2} E)
 Case conversion may be inaccurate. Consider using '#align bundle.to_total_space_coe [anonymous]ₓ'. -/
 theorem [anonymous] {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk x v :=
   rfl

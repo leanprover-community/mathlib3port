@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.semantics
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -357,8 +357,8 @@ theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs 
   induction' l with φ l ih
   · simp
   ·
-    simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons_iff, or_and_right,
-      exists_or, exists_eq_left]
+    simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons, or_and_right, exists_or,
+      exists_eq_left]
 #align
   first_order.language.bounded_formula.realize_foldr_sup FirstOrder.Language.BoundedFormula.realize_foldr_sup
 
@@ -1138,7 +1138,7 @@ theorem Sentence.realize_card_ge (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ (#
   rw [← lift_mk_fin, ← lift_le, lift_lift, lift_mk_le, sentence.card_ge, sentence.realize,
     bounded_formula.realize_exs]
   simp_rw [bounded_formula.realize_foldr_inf]
-  simp only [Function.comp_apply, List.mem_map, Prod.exists, Ne.def, List.mem_product,
+  simp only [Function.comp_apply, List.mem_map', Prod.exists, Ne.def, List.mem_product,
     List.mem_fin_range, forall_exists_index, and_imp, List.mem_filter, true_and_iff]
   refine' ⟨_, fun xs => ⟨xs.some, _⟩⟩
   · rintro ⟨xs, h⟩

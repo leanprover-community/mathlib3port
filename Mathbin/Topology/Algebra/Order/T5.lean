@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.t5
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,6 +113,6 @@ instance (priority := 100) OrderTopology.t5Space : T5Space X :=
   ⟨fun s t h₁ h₂ =>
     Filter.disjoint_iff.2
       ⟨ordT5Nhd s t, ord_t5_nhd_mem_nhds_set h₂, ordT5Nhd t s, ord_t5_nhd_mem_nhds_set h₁.symm,
-        disjoint_ord_t5_nhd⟩⟩
+        disjoint_ordT5Nhd⟩⟩
 #align order_topology.t5_space OrderTopology.t5Space
 

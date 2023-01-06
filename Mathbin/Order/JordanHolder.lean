@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module order.jordan_holder
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,7 +307,7 @@ theorem of_list_to_list' (s : CompositionSeries X) :
 @[simp]
 theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l) :
     toList (ofList l hl hc) = l := by
-  refine' List.ext_le _ _
+  refine' List.ext_nthLe _ _
   ·
     rw [length_to_list, length_of_list,
       tsub_add_cancel_of_le (Nat.succ_le_of_lt <| List.length_pos_of_ne_nil hl)]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.of_fn
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ theorem length_of_fn {n} (f : Fin n → α) : length (ofFn f) = n :=
 #align list.length_of_fn List.length_of_fn
 
 theorem nth_of_fn_aux {n} (f : Fin n → α) (i) :
-    ∀ m h l, (∀ i, nth l i = ofFnNthVal f (i + m)) → nth (ofFnAux f m h l) i = ofFnNthVal f i
+    ∀ m h l, (∀ i, get? l i = ofFnNthVal f (i + m)) → get? (ofFnAux f m h l) i = ofFnNthVal f i
   | 0, h, l, H => H i
   | succ m, h, l, H =>
     nth_of_fn_aux m _ _
@@ -62,7 +62,7 @@ theorem nth_of_fn_aux {n} (f : Fin n → α) (i) :
 
 /-- The `n`th element of a list -/
 @[simp]
-theorem nth_of_fn {n} (f : Fin n → α) (i) : nth (ofFn f) i = ofFnNthVal f i :=
+theorem nth_of_fn {n} (f : Fin n → α) (i) : get? (ofFn f) i = ofFnNthVal f i :=
   (nth_of_fn_aux f _ _ _ _) fun i => by
     simp only [of_fn_nth_val, dif_neg (not_lt.2 (Nat.le_add_left n i))] <;> rfl
 #align list.nth_of_fn List.nth_of_fn
@@ -82,7 +82,7 @@ theorem nth_le_of_fn' {n} (f : Fin n → α) {i : ℕ} (h : i < (ofFn f).length)
 @[simp]
 theorem map_of_fn {β : Type _} {n : ℕ} (f : Fin n → α) (g : α → β) :
     map g (ofFn f) = ofFn (g ∘ f) :=
-  ext_le (by simp) fun i h h' => by simp
+  ext_nthLe (by simp) fun i h h' => by simp
 #align list.map_of_fn List.map_of_fn
 
 /-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
@@ -136,12 +136,12 @@ theorem of_fn_eq_nil_iff {n : ℕ} {f : Fin n → α} : ofFn f = [] ↔ n = 0 :=
 
 theorem last_of_fn {n : ℕ} (f : Fin n → α) (h : ofFn f ≠ [])
     (hn : n - 1 < n := Nat.pred_lt <| of_fn_eq_nil_iff.Not.mp h) :
-    last (ofFn f) h = f ⟨n - 1, hn⟩ := by simp [last_eq_nth_le]
+    getLast (ofFn f) h = f ⟨n - 1, hn⟩ := by simp [last_eq_nth_le]
 #align list.last_of_fn List.last_of_fn
 
 theorem last_of_fn_succ {n : ℕ} (f : Fin n.succ → α)
     (h : ofFn f ≠ [] := mt of_fn_eq_nil_iff.mp (Nat.succ_ne_zero _)) :
-    last (ofFn f) h = f (Fin.last _) :=
+    getLast (ofFn f) h = f (Fin.last _) :=
   last_of_fn f h
 #align list.last_of_fn_succ List.last_of_fn_succ
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.finsupp.big_operators
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ theorem List.mem_foldr_sup_support_iff [Zero M] {l : List (ι →₀ M)} {x : ι
   simp only [Finset.sup_eq_union, List.foldr_map, Finsupp.mem_support_iff, exists_prop]
   induction' l with hd tl IH
   · simp
-  · simp only [IH, List.foldr_cons, Finset.mem_union, Finsupp.mem_support_iff, List.mem_cons_iff]
+  · simp only [IH, List.foldr_cons, Finset.mem_union, Finsupp.mem_support_iff, List.mem_cons]
     constructor
     · rintro (h | h)
       · exact ⟨hd, Or.inl rfl, h⟩
@@ -100,7 +100,7 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M))
     · rw [← List.foldr_map, ← Finset.bot_eq_empty, List.foldr_sup_eq_sup_to_finset]
       rw [Finset.disjoint_sup_right]
       intro f hf
-      simp only [List.mem_to_finset, List.mem_map] at hf
+      simp only [List.mem_to_finset, List.mem_map'] at hf
       obtain ⟨f, hf, rfl⟩ := hf
       exact hl.left _ hf
 #align list.support_sum_eq List.support_sum_eq

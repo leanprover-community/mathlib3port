@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,7 +16,7 @@ import Mathbin.MeasureTheory.Constructions.Prod
 A kernel from a measurable space `α` to another measurable space `β` is a measurable map
 `α → measure β`, where the measurable space instance on `measure β` is the one defined in
 `measure_theory.measure.measurable_space`. That is, a kernel `κ` verifies that for all measurable
-sets `s` of `β`, `λ a, κ a s` is measurable.
+sets `s` of `β`, `a ↦ κ a s` is measurable.
 
 ## Main definitions
 
@@ -341,6 +341,128 @@ theorem isSFiniteKernelSum [Countable ι] {κs : ι → kernel α β} (hκs : �
 #align probability_theory.kernel.is_s_finite_kernel_sum ProbabilityTheory.kernel.isSFiniteKernelSum
 
 end SFinite
+
+section Deterministic
+
+/-- Kernel which to `a` associates the dirac measure at `f a`. This is a Markov kernel. -/
+noncomputable def deterministic {f : α → β} (hf : Measurable f) : kernel α β
+    where
+  val a := Measure.dirac (f a)
+  property := by
+    refine' measure.measurable_of_measurable_coe _ fun s hs => _
+    simp_rw [measure.dirac_apply' _ hs]
+    refine' Measurable.indicator _ (hf hs)
+    simp only [Pi.one_apply, measurable_const]
+#align probability_theory.kernel.deterministic ProbabilityTheory.kernel.deterministic
+
+theorem deterministic_apply {f : α → β} (hf : Measurable f) (a : α) :
+    deterministic hf a = Measure.dirac (f a) :=
+  rfl
+#align probability_theory.kernel.deterministic_apply ProbabilityTheory.kernel.deterministic_apply
+
+theorem deterministic_apply' {f : α → β} (hf : Measurable f) (a : α) {s : Set β}
+    (hs : MeasurableSet s) : deterministic hf a s = s.indicator (fun _ => 1) (f a) :=
+  by
+  rw [deterministic]
+  change measure.dirac (f a) s = s.indicator 1 (f a)
+  simp_rw [measure.dirac_apply' _ hs]
+#align probability_theory.kernel.deterministic_apply' ProbabilityTheory.kernel.deterministic_apply'
+
+instance isMarkovKernelDeterministic {f : α → β} (hf : Measurable f) :
+    IsMarkovKernel (deterministic hf) :=
+  ⟨fun a => by
+    rw [deterministic_apply hf]
+    infer_instance⟩
+#align
+  probability_theory.kernel.is_markov_kernel_deterministic ProbabilityTheory.kernel.isMarkovKernelDeterministic
+
+end Deterministic
+
+section Const
+
+omit mα mβ
+
+/-- Constant kernel, which always returns the same measure. -/
+def const (α : Type _) {β : Type _} [MeasurableSpace α] {mβ : MeasurableSpace β} (μβ : Measure β) :
+    kernel α β where
+  val _ := μβ
+  property := Measure.measurable_of_measurable_coe _ fun s hs => measurable_const
+#align probability_theory.kernel.const ProbabilityTheory.kernel.const
+
+include mα mβ
+
+instance isFiniteKernelConst {μβ : Measure β} [hμβ : IsFiniteMeasure μβ] :
+    IsFiniteKernel (const α μβ) :=
+  ⟨⟨μβ Set.univ, measure_lt_top _ _, fun a => le_rfl⟩⟩
+#align probability_theory.kernel.is_finite_kernel_const ProbabilityTheory.kernel.isFiniteKernelConst
+
+instance isMarkovKernelConst {μβ : Measure β} [hμβ : IsProbabilityMeasure μβ] :
+    IsMarkovKernel (const α μβ) :=
+  ⟨fun a => hμβ⟩
+#align probability_theory.kernel.is_markov_kernel_const ProbabilityTheory.kernel.isMarkovKernelConst
+
+end Const
+
+omit mα
+
+/-- In a countable space with measurable singletons, every function `α → measure β` defines a
+kernel. -/
+def ofFunOfCountable [MeasurableSpace α] {mβ : MeasurableSpace β} [Countable α]
+    [MeasurableSingletonClass α] (f : α → Measure β) : kernel α β
+    where
+  val := f
+  property := measurable_of_countable f
+#align probability_theory.kernel.of_fun_of_countable ProbabilityTheory.kernel.ofFunOfCountable
+
+include mα
+
+section Restrict
+
+variable {s t : Set β}
+
+/-- Kernel given by the restriction of the measures in the image of a kernel to a set. -/
+protected noncomputable def restrict (κ : kernel α β) (hs : MeasurableSet s) : kernel α β
+    where
+  val a := (κ a).restrict s
+  property := by
+    refine' measure.measurable_of_measurable_coe _ fun t ht => _
+    simp_rw [measure.restrict_apply ht]
+    exact kernel.measurable_coe κ (ht.inter hs)
+#align probability_theory.kernel.restrict ProbabilityTheory.kernel.restrict
+
+theorem restrict_apply (κ : kernel α β) (hs : MeasurableSet s) (a : α) :
+    kernel.restrict κ hs a = (κ a).restrict s :=
+  rfl
+#align probability_theory.kernel.restrict_apply ProbabilityTheory.kernel.restrict_apply
+
+theorem restrict_apply' (κ : kernel α β) (hs : MeasurableSet s) (a : α) (ht : MeasurableSet t) :
+    kernel.restrict κ hs a t = (κ a) (t ∩ s) := by
+  rw [restrict_apply κ hs a, measure.restrict_apply ht]
+#align probability_theory.kernel.restrict_apply' ProbabilityTheory.kernel.restrict_apply'
+
+theorem lintegral_restrict (κ : kernel α β) (hs : MeasurableSet s) (a : α) (f : β → ℝ≥0∞) :
+    (∫⁻ b, f b ∂kernel.restrict κ hs a) = ∫⁻ b in s, f b ∂κ a := by rw [restrict_apply]
+#align probability_theory.kernel.lintegral_restrict ProbabilityTheory.kernel.lintegral_restrict
+
+instance IsFiniteKernel.restrict (κ : kernel α β) [IsFiniteKernel κ] (hs : MeasurableSet s) :
+    IsFiniteKernel (kernel.restrict κ hs) :=
+  by
+  refine' ⟨⟨is_finite_kernel.bound κ, is_finite_kernel.bound_lt_top κ, fun a => _⟩⟩
+  rw [restrict_apply' κ hs a MeasurableSet.univ]
+  exact measure_le_bound κ a _
+#align
+  probability_theory.kernel.is_finite_kernel.restrict ProbabilityTheory.kernel.IsFiniteKernel.restrict
+
+instance IsSFiniteKernel.restrict (κ : kernel α β) [IsSFiniteKernel κ] (hs : MeasurableSet s) :
+    IsSFiniteKernel (kernel.restrict κ hs) :=
+  by
+  refine' ⟨⟨fun n => kernel.restrict (seq κ n) hs, inferInstance, _⟩⟩
+  ext1 a
+  simp_rw [sum_apply, restrict_apply, ← measure.restrict_sum _ hs, ← sum_apply, kernel_sum_seq]
+#align
+  probability_theory.kernel.is_s_finite_kernel.restrict ProbabilityTheory.kernel.IsSFiniteKernel.restrict
+
+end Restrict
 
 end Kernel
 

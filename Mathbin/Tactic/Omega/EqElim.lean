@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.eq_elim
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -425,13 +425,13 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
       constructor
       · apply coeffs_reduce_correct h2 h4
       · intro x h6
-        rw [List.mem_map] at h6
+        rw [List.mem_map'] at h6
         cases' h6 with t h6
         cases' h6 with h6 h7
         rw [← h7, ← subst_correct h2 h4]
         apply h5 _ h6
     · intro x h6
-      rw [List.mem_map] at h6
+      rw [List.mem_map'] at h6
       cases' h6 with t h6
       cases' h6 with h6 h7
       rw [← h7, ← subst_correct h2 h4]
@@ -444,7 +444,7 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
     exists v
     cases' h1 with h1 h2
     rw [List.forall_mem_cons] at h1; cases' h1 with h1 h3
-    constructor <;> intro t h4 <;> rw [List.mem_map] at h4 <;> rcases h4 with ⟨s, h4, h5⟩ <;>
+    constructor <;> intro t h4 <;> rw [List.mem_map'] at h4 <;> rcases h4 with ⟨s, h4, h5⟩ <;>
           rw [← h5] <;>
         simp only [term.val_add, term.val_mul, cancel] <;>
       rw [← h1, mul_zero, zero_add]

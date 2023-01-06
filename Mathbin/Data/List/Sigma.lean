@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Sean Leather
 
 ! This file was ported from Lean 3 source module data.list.sigma
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem mem_keys_of_mem {s : Sigma β} {l : List (Sigma β)} : s ∈ l → s.1 �
 
 theorem exists_of_mem_keys {a} {l : List (Sigma β)} (h : a ∈ l.keys) :
     ∃ b : β a, Sigma.mk a b ∈ l :=
-  let ⟨⟨a', b'⟩, m, e⟩ := exists_of_mem_map h
+  let ⟨⟨a', b'⟩, m, e⟩ := exists_of_mem_map' h
   Eq.recOn e (Exists.intro b' m)
 #align list.exists_of_mem_keys List.exists_of_mem_keys
 
@@ -445,7 +445,7 @@ theorem kerase_of_not_mem_keys {a} {l : List (Sigma β)} (h : a ∉ l.keys) : ke
 #align list.kerase_of_not_mem_keys List.kerase_of_not_mem_keys
 
 theorem kerase_sublist (a : α) (l : List (Sigma β)) : kerase a l <+ l :=
-  erasep_sublist _
+  eraseP_sublist _
 #align list.kerase_sublist List.kerase_sublist
 
 theorem kerase_keys_subset (a) (l : List (Sigma β)) : (kerase a l).keys ⊆ l.keys :=

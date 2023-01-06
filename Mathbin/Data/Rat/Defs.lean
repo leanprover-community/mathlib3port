@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ warning: rat.mk_pnat -> [anonymous] is a dubious translation:
 lean 3 declaration is
   Int -> PNat -> Rat
 but is expected to have type
-  forall {n : Sort.{u}} {ᾰ : Nat}, ((Eq.{1} Nat ᾰ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat ᾰ (Nat.succ m)) -> n) -> n
+  forall {n : Type.{u}} {ᾰ : Type.{v}}, (Nat -> n -> ᾰ) -> Nat -> (List.{u} n) -> (List.{v} ᾰ)
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat [anonymous]ₓ'. -/
 /-- Form the quotient `n / d` where `n:ℤ` and `d:ℕ+` (not necessarily coprime) -/
 def [anonymous] (n : ℤ) : ℕ+ → ℚ
@@ -129,7 +129,7 @@ warning: rat.mk_pnat_eq -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall (n : Int) (d : Nat) (h : LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d), Eq.{1} Rat ([anonymous] n (Subtype.mk.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) d h)) (Rat.mk n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d))
 but is expected to have type
-  forall {n : Sort.{u}} {d : Nat}, ((Eq.{1} Nat d (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat d (Nat.succ m)) -> n) -> n
+  forall {n : Type.{u}} {d : Type.{v}}, (Nat -> n -> d) -> Nat -> (List.{u} n) -> (List.{v} d)
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_eq [anonymous]ₓ'. -/
 theorem [anonymous] (n d h) : [anonymous] n ⟨d, h⟩ = n /. d := by
   change n /. d with dite _ _ _ <;> simp [ne_of_gt h]
@@ -161,7 +161,7 @@ warning: rat.zero_mk_pnat -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall (n : PNat), Eq.{1} Rat ([anonymous] (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) n) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))
 but is expected to have type
-  forall {n : Sort.{u}} {n_1 : Nat}, ((Eq.{1} Nat n_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat n_1 (Nat.succ m)) -> n) -> n
+  forall {n : Type.{u}} {β : Type.{v}}, (Nat -> n -> β) -> Nat -> (List.{u} n) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align rat.zero_mk_pnat [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] (n) : [anonymous] 0 n = 0 :=

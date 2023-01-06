@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -515,7 +515,7 @@ variable {μ : Measure ℝ} [IsLocallyFiniteMeasure μ] [ConditionallyCompleteLi
 theorem MonotoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : MonotoneOn u (interval a b)) :
     IntervalIntegrable u μ a b := by
   rw [interval_integrable_iff]
-  exact (hu.integrable_on_compact is_compact_interval).monoSet Ioc_subset_Icc_self
+  exact (hu.integrable_on_is_compact is_compact_interval).monoSet Ioc_subset_Icc_self
 #align monotone_on.interval_integrable MonotoneOn.intervalIntegrable
 
 theorem AntitoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : AntitoneOn u (interval a b)) :

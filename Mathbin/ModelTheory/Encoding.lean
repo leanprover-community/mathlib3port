@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.encoding
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -285,7 +285,7 @@ def listDecode :
           ⟨k, BoundedFormula.rel R fun i => Eq.mp (by rw [h' i]) (Option.get (h i)).2⟩
         else default
       else default,
-      l.drop n, le_max_of_le_right (le_add_left (le_add_left (List.drop_sizeof_le _ _)))⟩
+      l.drop n, le_max_of_le_right (le_add_left (le_add_left (List.drop_sizeOf_le _ _)))⟩
   | Sum.inr (Sum.inr 0)::l =>
     have :
       (↑(list_decode l).2 :

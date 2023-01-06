@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.vector.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,8 @@ theorem to_list_injective : Function.Injective (@toList α n) :=
 /-- Two `v w : vector α n` are equal iff they are equal at every single index. -/
 @[ext]
 theorem ext : ∀ {v w : Vector α n} (h : ∀ m : Fin n, Vector.nth v m = Vector.nth w m), v = w
-  | ⟨v, hv⟩, ⟨w, hw⟩, h => Subtype.eq (List.ext_le (by rw [hv, hw]) fun m hm hn => h ⟨m, hv ▸ hm⟩)
+  | ⟨v, hv⟩, ⟨w, hw⟩, h =>
+    Subtype.eq (List.ext_nthLe (by rw [hv, hw]) fun m hm hn => h ⟨m, hv ▸ hm⟩)
 #align vector.ext Vector.ext
 
 /-- The empty `vector` is a `subsingleton`. -/
@@ -123,8 +124,7 @@ theorem nth_eq_nth_le :
 #align vector.nth_eq_nth_le Vector.nth_eq_nth_le
 
 @[simp]
-theorem nth_repeat (a : α) (i : Fin n) : (Vector.repeat a n).nth i = a := by
-  apply List.nth_le_repeat
+theorem nth_repeat (a : α) (i : Fin n) : (Vector.repeat a n).nth i = a := by apply List.nthLe_repeat
 #align vector.nth_repeat Vector.nth_repeat
 
 @[simp]
@@ -298,7 +298,7 @@ theorem reverse_nth_zero {v : Vector α (n + 1)} : v.reverse.head = v.last :=
     simp only [Nat.add_succ_sub_one, add_zero, to_list_length, tsub_self, List.length_reverse]
   rw [← nth_zero, last_def, nth_eq_nth_le, nth_eq_nth_le]
   simp_rw [to_list_reverse, Fin.val_eq_coe, Fin.coe_last, Fin.coe_zero, this]
-  rw [List.nth_le_reverse]
+  rw [List.nthLe_reverse]
 #align vector.reverse_nth_zero Vector.reverse_nth_zero
 
 section Scan
@@ -530,7 +530,7 @@ variable {a : α}
 (and shifting later components to the right). -/
 def insertNth (a : α) (i : Fin (n + 1)) (v : Vector α n) : Vector α (n + 1) :=
   ⟨v.1.insertNth i a, by
-    rw [List.length_insert_nth, v.2]
+    rw [List.length_insertNth, v.2]
     rw [v.2, ← Nat.succ_le_succ_iff]
     exact i.2⟩
 #align vector.insert_nth Vector.insertNth
@@ -547,7 +547,7 @@ theorem remove_nth_val {i : Fin n} : ∀ {v : Vector α n}, (removeNth i v).val 
 
 theorem remove_nth_insert_nth {v : Vector α n} {i : Fin (n + 1)} :
     removeNth i (insertNth a i v) = v :=
-  Subtype.eq <| List.remove_nth_insert_nth i.1 v.1
+  Subtype.eq <| List.removeNth_insertNth i.1 v.1
 #align vector.remove_nth_insert_nth Vector.remove_nth_insert_nth
 
 theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
@@ -558,14 +558,14 @@ theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
     dsimp [insert_nth, remove_nth, Fin.succAbove, Fin.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
-    · convert (List.insert_nth_remove_nth_of_ge i (j - 1) _ _ _).symm
+    · convert (List.insertNth_removeNth_of_ge i (j - 1) _ _ _).symm
       · convert (Nat.succ_pred_eq_of_pos _).symm
         exact lt_of_le_of_lt (zero_le _) h
       · apply remove_nth_val
       · convert hi
         exact v.2
       · exact Nat.le_pred_of_lt h
-    · convert (List.insert_nth_remove_nth_of_le i j _ _ _).symm
+    · convert (List.insertNth_removeNth_of_le i j _ _ _).symm
       · apply remove_nth_val
       · convert hi
         exact v.2
@@ -578,7 +578,7 @@ theorem insert_nth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
   | ⟨l, hl⟩ => by
     refine' Subtype.eq _
     simp only [insert_nth_val, Fin.coe_succ, Fin.castSucc, Fin.val_eq_coe, Fin.coe_cast_add]
-    apply List.insert_nth_comm
+    apply List.insertNth_comm
     · assumption
     · rw [hl]
       exact Nat.le_of_succ_le_succ j.2
@@ -590,7 +590,7 @@ section UpdateNth
 
 /-- `update_nth v n a` replaces the `n`th element of `v` with `a` -/
 def updateNth (v : Vector α n) (i : Fin n) (a : α) : Vector α n :=
-  ⟨v.1.updateNth i.1 a, by rw [List.update_nth_length, v.2]⟩
+  ⟨v.1.updateNth i.1 a, by rw [List.length_set, v.2]⟩
 #align vector.update_nth Vector.updateNth
 
 @[simp]
@@ -607,7 +607,7 @@ theorem nth_update_nth_same (v : Vector α n) (i : Fin n) (a : α) : (v.updateNt
 theorem nth_update_nth_of_ne {v : Vector α n} {i j : Fin n} (h : i ≠ j) (a : α) :
     (v.updateNth i a).nth j = v.nth j := by
   cases v <;> cases i <;> cases j <;>
-    simp [Vector.updateNth, Vector.nth_eq_nth_le, List.nth_le_update_nth_of_ne (Fin.vne_of_ne h)]
+    simp [Vector.updateNth, Vector.nth_eq_nth_le, List.nthLe_set_of_ne (Fin.vne_of_ne h)]
 #align vector.nth_update_nth_of_ne Vector.nth_update_nth_of_ne
 
 theorem nth_update_nth_eq_if {v : Vector α n} {i j : Fin n} (a : α) :

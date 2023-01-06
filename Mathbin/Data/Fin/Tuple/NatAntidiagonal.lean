@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.fin.tuple.nat_antidiagonal
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
     · simp
     · simp [eq_comm]
   · intro k x₀ x ih n
-    simp_rw [Fin.sum_cons, antidiagonal_tuple, List.mem_bind, List.mem_map,
+    simp_rw [Fin.sum_cons, antidiagonal_tuple, List.mem_bind, List.mem_map',
       List.Nat.mem_antidiagonal, Fin.cons_eq_cons, exists_eq_right_right, ih,
       @eq_comm _ _ (Prod.snd _), and_comm' (Prod.snd _ = _), ← Prod.mk.inj_iff, Prod.mk.eta,
       exists_prop, exists_eq_right]
@@ -112,11 +112,11 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n
   · exact List.pairwise_singleton _ _
   · rw [List.Nat.antidiagonal_succ]
     refine' List.Pairwise.cons (fun a ha x hx₁ hx₂ => _) (n_ih.map _ fun a b h x hx₁ hx₂ => _)
-    · rw [List.mem_map] at hx₁ hx₂ ha
+    · rw [List.mem_map'] at hx₁ hx₂ ha
       obtain ⟨⟨a, -, rfl⟩, ⟨x₁, -, rfl⟩, ⟨x₂, -, h⟩⟩ := ha, hx₁, hx₂
       rw [Fin.cons_eq_cons] at h
       injection h.1
-    · rw [List.mem_map] at hx₁ hx₂
+    · rw [List.mem_map'] at hx₁ hx₂
       obtain ⟨⟨x₁, hx₁, rfl⟩, ⟨x₂, hx₂, h₁₂⟩⟩ := hx₁, hx₂
       dsimp at h₁₂
       rw [Fin.cons_eq_cons, Nat.succ_inj'] at h₁₂
@@ -163,7 +163,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex :
   | 0, n + 1 => List.Pairwise.nil
   | k + 1, n =>
     by
-    simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map, List.mem_map,
+    simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map, List.mem_map',
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
     simp only [mem_antidiagonal, Prod.forall, and_imp, forall_apply_eq_imp_iff₂]
     simp only [Fin.pi_lex_lt_cons_cons, eq_self_iff_true, true_and_iff, lt_self_iff_false,
@@ -174,7 +174,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex :
       exact List.pairwise_singleton _ _
     · rw [antidiagonal_succ, List.pairwise_cons, List.pairwise_map]
       refine' ⟨fun p hp x hx y hy => _, _⟩
-      · rw [List.mem_map, Prod.exists] at hp
+      · rw [List.mem_map', Prod.exists] at hp
         obtain ⟨a, b, hab, rfl : (Nat.succ a, b) = p⟩ := hp
         exact Or.inl (Nat.zero_lt_succ _)
       dsimp

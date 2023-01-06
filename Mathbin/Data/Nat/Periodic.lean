@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module data.nat.periodic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ equal to the number naturals below `a` for which `p a` is true. -/
 theorem filter_multiset_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p]
     (pp : Periodic p a) : (filter p (ico n (n + a))).card = a.count p :=
   by
-  rw [count_eq_card_filter_range, Finset.card, Finset.filter_val, Finset.range_coe, ←
+  rw [count_eq_card_filter_range, Finset.card, Finset.filter_val, Finset.range_val, ←
     multiset_Ico_map_mod n, ← map_count_true_eq_filter_card, ← map_count_true_eq_filter_card,
     map_map, Function.comp]
   simp only [pp.map_mod_nat]

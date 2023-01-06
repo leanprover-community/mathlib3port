@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module deprecated.subring
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
       match b, ih with
       | _, ⟨L1, h1, rfl⟩ =>
         ⟨L1.map (List.cons (-1)), fun L2 h2 =>
-          match L2, List.mem_map.1 h2 with
+          match L2, List.mem_map'.1 h2 with
           | _, ⟨L3, h3, rfl⟩ => List.forall_mem_cons.2 ⟨Or.inr rfl, h1 L3 h3⟩,
           by
           simp only [List.map_map, (· ∘ ·), List.prod_cons, neg_one_mul] <;>

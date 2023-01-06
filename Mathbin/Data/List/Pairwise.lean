@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.pairwise
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -325,7 +325,7 @@ theorem pairwise_join {L : List (List α)} :
 theorem pairwise_bind {R : β → β → Prop} {l : List α} {f : α → List β} :
     List.Pairwise R (l.bind f) ↔
       (∀ a ∈ l, Pairwise R (f a)) ∧ Pairwise (fun a₁ a₂ => ∀ x ∈ f a₁, ∀ y ∈ f a₂, R x y) l :=
-  by simp [List.bind, List.pairwise_join, List.mem_map, List.pairwise_map]
+  by simp [List.bind, List.pairwise_join, List.mem_map', List.pairwise_map]
 #align list.pairwise_bind List.pairwise_bind
 
 #print List.pairwise_reverse /-

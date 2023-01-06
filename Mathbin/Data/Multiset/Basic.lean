@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ theorem coe_eq_zero (l : List α) : (l : Multiset α) = 0 ↔ l = [] :=
 #align multiset.coe_eq_zero Multiset.coe_eq_zero
 
 theorem coe_eq_zero_iff_empty (l : List α) : (l : Multiset α) = 0 ↔ l.Empty :=
-  Iff.trans (coe_eq_zero l) empty_iff_eq_nil.symm
+  Iff.trans (coe_eq_zero l) isEmpty_iff_eq_nil.symm
 #align multiset.coe_eq_zero_iff_empty Multiset.coe_eq_zero_iff_empty
 
 /-! ### `multiset.cons` -/
@@ -459,7 +459,7 @@ theorem to_list_eq_nil {s : Multiset α} : s.toList = [] ↔ s = 0 := by
 
 @[simp]
 theorem empty_to_list {s : Multiset α} : s.toList.Empty ↔ s = 0 :=
-  empty_iff_eq_nil.trans to_list_eq_nil
+  isEmpty_iff_eq_nil.trans to_list_eq_nil
 #align multiset.empty_to_list Multiset.empty_to_list
 
 @[simp]
@@ -1256,7 +1256,7 @@ theorem map_nsmul (f : α → β) (n : ℕ) (s) : map f (n • s) = n • map f 
 
 @[simp]
 theorem mem_map {f : α → β} {b : β} {s : Multiset α} : b ∈ map f s ↔ ∃ a, a ∈ s ∧ f a = b :=
-  (Quot.induction_on s) fun l => mem_map
+  (Quot.induction_on s) fun l => mem_map'
 #align multiset.mem_map Multiset.mem_map
 
 @[simp]
@@ -1323,7 +1323,7 @@ theorem map_id' (s : Multiset α) : map (fun x => x) s = s :=
 
 @[simp]
 theorem map_const (s : Multiset α) (b : β) : map (Function.const α b) s = repeat b s.card :=
-  (Quot.induction_on s) fun l => congr_arg coe <| map_const _ _
+  (Quot.induction_on s) fun l => congr_arg coe <| map_const' _ _
 #align multiset.map_const Multiset.map_const
 
 theorem eq_of_mem_map_const {b₁ b₂ : β} {l : List α} (h : b₁ ∈ map (Function.const α b₂) l) :
@@ -1541,7 +1541,7 @@ theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Multiset α} (hx : x �
     SizeOf.sizeOf x < SizeOf.sizeOf s :=
   by
   induction' s with l a b
-  exact List.sizeof_lt_sizeof_of_mem hx
+  exact List.sizeOf_lt_sizeOf_of_mem hx
   rfl
 #align multiset.sizeof_lt_sizeof_of_mem Multiset.sizeof_lt_sizeof_of_mem
 
@@ -2157,64 +2157,64 @@ theorem filter_map_zero (f : α → Option β) : filterMap f 0 = 0 :=
 @[simp]
 theorem filter_map_cons_none {f : α → Option β} (a : α) (s : Multiset α) (h : f a = none) :
     filterMap f (a ::ₘ s) = filterMap f s :=
-  (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| filter_map_cons_none a l h
+  (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| filterMap_cons_none a l h
 #align multiset.filter_map_cons_none Multiset.filter_map_cons_none
 
 @[simp]
 theorem filter_map_cons_some (f : α → Option β) (a : α) (s : Multiset α) {b : β}
     (h : f a = some b) : filterMap f (a ::ₘ s) = b ::ₘ filterMap f s :=
-  (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| filter_map_cons_some f a l h
+  (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| filterMap_cons_some f a l h
 #align multiset.filter_map_cons_some Multiset.filter_map_cons_some
 
 theorem filter_map_eq_map (f : α → β) : filterMap (some ∘ f) = map f :=
   funext fun s =>
-    (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| congr_fun (filter_map_eq_map f) l
+    (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| congr_fun (filterMap_eq_map f) l
 #align multiset.filter_map_eq_map Multiset.filter_map_eq_map
 
 theorem filter_map_eq_filter : filterMap (Option.guard p) = filter p :=
   funext fun s =>
-    (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| congr_fun (filter_map_eq_filter p) l
+    (Quot.induction_on s) fun l => @congr_arg _ _ _ _ coe <| congr_fun (filterMap_eq_filter p) l
 #align multiset.filter_map_eq_filter Multiset.filter_map_eq_filter
 
 theorem filter_map_filter_map (f : α → Option β) (g : β → Option γ) (s : Multiset α) :
     filterMap g (filterMap f s) = filterMap (fun x => (f x).bind g) s :=
-  (Quot.induction_on s) fun l => congr_arg coe <| filter_map_filter_map f g l
+  (Quot.induction_on s) fun l => congr_arg coe <| filterMap_filterMap f g l
 #align multiset.filter_map_filter_map Multiset.filter_map_filter_map
 
 theorem map_filter_map (f : α → Option β) (g : β → γ) (s : Multiset α) :
     map g (filterMap f s) = filterMap (fun x => (f x).map g) s :=
-  (Quot.induction_on s) fun l => congr_arg coe <| map_filter_map f g l
+  (Quot.induction_on s) fun l => congr_arg coe <| map_filterMap f g l
 #align multiset.map_filter_map Multiset.map_filter_map
 
 theorem filter_map_map (f : α → β) (g : β → Option γ) (s : Multiset α) :
     filterMap g (map f s) = filterMap (g ∘ f) s :=
-  (Quot.induction_on s) fun l => congr_arg coe <| filter_map_map f g l
+  (Quot.induction_on s) fun l => congr_arg coe <| filterMap_map f g l
 #align multiset.filter_map_map Multiset.filter_map_map
 
 theorem filter_filter_map (f : α → Option β) (p : β → Prop) [DecidablePred p] (s : Multiset α) :
     filter p (filterMap f s) = filterMap (fun x => (f x).filter p) s :=
-  (Quot.induction_on s) fun l => congr_arg coe <| filter_filter_map f p l
+  (Quot.induction_on s) fun l => congr_arg coe <| filter_filterMap f p l
 #align multiset.filter_filter_map Multiset.filter_filter_map
 
 theorem filter_map_filter (f : α → Option β) (s : Multiset α) :
     filterMap f (filter p s) = filterMap (fun x => if p x then f x else none) s :=
-  (Quot.induction_on s) fun l => congr_arg coe <| filter_map_filter p f l
+  (Quot.induction_on s) fun l => congr_arg coe <| filterMap_filter p f l
 #align multiset.filter_map_filter Multiset.filter_map_filter
 
 @[simp]
 theorem filter_map_some (s : Multiset α) : filterMap some s = s :=
-  (Quot.induction_on s) fun l => congr_arg coe <| filter_map_some l
+  (Quot.induction_on s) fun l => congr_arg coe <| filterMap_some l
 #align multiset.filter_map_some Multiset.filter_map_some
 
 @[simp]
 theorem mem_filter_map (f : α → Option β) (s : Multiset α) {b : β} :
     b ∈ filterMap f s ↔ ∃ a, a ∈ s ∧ f a = some b :=
-  (Quot.induction_on s) fun l => mem_filter_map f l
+  (Quot.induction_on s) fun l => mem_filterMap f l
 #align multiset.mem_filter_map Multiset.mem_filter_map
 
 theorem map_filter_map_of_inv (f : α → Option β) (g : β → α) (H : ∀ x : α, (f x).map g = some x)
     (s : Multiset α) : map g (filterMap f s) = s :=
-  (Quot.induction_on s) fun l => congr_arg coe <| map_filter_map_of_inv f g H l
+  (Quot.induction_on s) fun l => congr_arg coe <| map_filterMap_of_inv f g H l
 #align multiset.map_filter_map_of_inv Multiset.map_filter_map_of_inv
 
 theorem filter_map_le_filter_map (f : α → Option β) {s t : Multiset α} (h : s ≤ t) :
@@ -3141,7 +3141,7 @@ def subsingletonEquiv [Subsingleton α] : List α ≃ Multiset α
   toFun := coe
   invFun :=
     (Quot.lift id) fun (a b : List α) (h : a ~ b) =>
-      (List.ext_le h.length_eq) fun n h₁ h₂ => Subsingleton.elim _ _
+      (List.ext_nthLe h.length_eq) fun n h₁ h₂ => Subsingleton.elim _ _
   left_inv l := rfl
   right_inv m := (Quot.induction_on m) fun l => rfl
 #align multiset.subsingleton_equiv Multiset.subsingletonEquiv

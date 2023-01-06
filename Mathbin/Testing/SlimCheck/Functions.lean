@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.functions
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
   mem_support_to_fun := by
     intro a
     rcases tf with ⟨A, y⟩
-    simp only [apply, zero_default_supp, List.mem_map, List.mem_filter, exists_and_right,
+    simp only [apply, zero_default_supp, List.mem_map', List.mem_filter, exists_and_right,
       List.mem_to_finset, exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
@@ -463,7 +463,7 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] :
           rcases xs with ⟨a, b, c, d⟩ <;> dsimp [sizeof_lt] <;> unfold_wf <;>
                 simp only [perm.slice] <;>
               unfold_wf <;>
-            apply List.sizeof_slice_lt _ _ n.2 _ this⟩
+            apply List.sizeOf_dropSlice_lt _ _ n.2 _ this⟩
 #align slim_check.injective_function.shrink_perm SlimCheck.InjectiveFunction.shrinkPerm
 
 instance [SizeOf α] : SizeOf (InjectiveFunction α) :=

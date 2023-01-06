@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.nodup_equiv_fin
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ for a version giving an equivalence when there is decidable equality. -/
 def nthLeBijectionOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
     { f : Fin l.length → α // Function.Bijective f } :=
   ⟨fun i => l.nthLe i i.property, fun i j h => Fin.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
-    let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
+    let ⟨i, hi, hl⟩ := List.mem_iff_nthLe.1 (h x)
     ⟨⟨i, hi⟩, hl⟩⟩
 #align list.nodup.nth_le_bijection_of_forall_mem_list List.Nodup.nthLeBijectionOfForallMemList
 
@@ -56,8 +56,8 @@ the set of elements of `l`. -/
 @[simps]
 def nthLeEquiv (l : List α) (H : Nodup l) : Fin (length l) ≃ { x // x ∈ l }
     where
-  toFun i := ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
-  invFun x := ⟨indexOf (↑x) l, index_of_lt_length.2 x.2⟩
+  toFun i := ⟨nthLe l i i.2, nthLe_mem l i i.2⟩
+  invFun x := ⟨indexOf (↑x) l, indexOf_lt_length.2 x.2⟩
   left_inv i := by simp [H]
   right_inv x := by simp
 #align list.nodup.nth_le_equiv List.Nodup.nthLeEquiv
@@ -71,7 +71,7 @@ decidable equality. -/
 def nthLeEquivOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) : Fin l.length ≃ α
     where
   toFun i := l.nthLe i i.2
-  invFun a := ⟨_, index_of_lt_length.2 (h a)⟩
+  invFun a := ⟨_, indexOf_lt_length.2 (h a)⟩
   left_inv i := by simp [nd]
   right_inv a := by simp
 #align list.nodup.nth_le_equiv_of_forall_mem_list List.Nodup.nthLeEquivOfForallMemList
@@ -126,7 +126,7 @@ theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ)
   induction' l with hd tl IH generalizing l' f
   · simp
   have : some hd = _ := hf 0
-  rw [eq_comm, List.nth_eq_some] at this
+  rw [eq_comm, List.get?_eq_some'] at this
   obtain ⟨w, h⟩ := this
   let f' : ℕ ↪o ℕ :=
     OrderEmbedding.ofMapLeIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by
@@ -134,11 +134,11 @@ theorem sublist_of_order_embedding_nth_eq {l l' : List α} (f : ℕ ↪o ℕ)
   have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).nth (f' ix) :=
     by
     intro ix
-    simp [List.nth_drop, add_tsub_cancel_of_le, Nat.succ_le_iff, ← hf]
+    simp [List.get?_drop, add_tsub_cancel_of_le, Nat.succ_le_iff, ← hf]
   rw [← List.take_append_drop (f 0 + 1) l', ← List.singleton_append]
   apply List.Sublist.append _ (IH _ this)
   rw [List.singleton_sublist, ← h, l'.nth_le_take _ (Nat.lt_succ_self _)]
-  apply List.nth_le_mem
+  apply List.nthLe_mem
 #align list.sublist_of_order_embedding_nth_eq List.sublist_of_order_embedding_nth_eq
 
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff

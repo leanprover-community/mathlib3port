@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.modeq
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,25 +113,7 @@ theorem modEq_iff_dvd : a ≡ b [MOD n] ↔ (n : ℤ) ∣ b - a := by
     Int.emod_eq_emod_iff_emod_sub_eq_zero, Int.dvd_iff_emod_eq_zero]
 #align nat.modeq_iff_dvd Nat.modEq_iff_dvd
 
-/- warning: nat.modeq.dvd -> Nat.ModEq.dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat} {b : Nat}, (Nat.ModEq n a b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a)))
-but is expected to have type
-  forall {n : Nat} {a : Nat} {b : Nat}, (Nat.ModEq n a b) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt a)))
-Case conversion may be inaccurate. Consider using '#align nat.modeq.dvd Nat.ModEq.dvdₓ'. -/
-protected theorem ModEq.dvd : a ≡ b [MOD n] → (n : ℤ) ∣ b - a :=
-  modEq_iff_dvd.1
-#align nat.modeq.dvd Nat.ModEq.dvd
-
-/- warning: nat.modeq_of_dvd -> Nat.modEq_of_dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Nat} {a : Nat} {b : Nat}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a))) -> (Nat.ModEq n a b)
-but is expected to have type
-  forall {n : Nat} {a : Nat} {b : Nat}, (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt n) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt a))) -> (Nat.ModEq n a b)
-Case conversion may be inaccurate. Consider using '#align nat.modeq_of_dvd Nat.modEq_of_dvdₓ'. -/
-theorem modEq_of_dvd : (n : ℤ) ∣ b - a → a ≡ b [MOD n] :=
-  modEq_iff_dvd.2
-#align nat.modeq_of_dvd Nat.modEq_of_dvd
+alias modeq_iff_dvd ↔ modeq.dvd modeq_of_dvd
 
 #print Nat.modEq_iff_dvd' /-
 /-- A variant of `modeq_iff_dvd` with `nat` divisibility -/
@@ -148,11 +130,9 @@ theorem mod_modEq (a n) : a % n ≡ a [MOD n] :=
 
 namespace Modeq
 
-#print Nat.ModEq.modEq_of_dvd /-
-protected theorem modEq_of_dvd (d : m ∣ n) (h : a ≡ b [MOD n]) : a ≡ b [MOD m] :=
+protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [MOD n]) : a ≡ b [MOD m] :=
   modEq_of_dvd ((Int.coe_nat_dvd.2 d).trans h.Dvd)
-#align nat.modeq.modeq_of_dvd Nat.ModEq.modEq_of_dvd
--/
+#align nat.modeq.of_dvd Nat.ModEq.of_dvd
 
 #print Nat.ModEq.mul_left' /-
 protected theorem mul_left' (c : ℕ) (h : a ≡ b [MOD n]) : c * a ≡ c * b [MOD c * n] := by
@@ -162,7 +142,7 @@ protected theorem mul_left' (c : ℕ) (h : a ≡ b [MOD n]) : c * a ≡ c * b [M
 
 #print Nat.ModEq.mul_left /-
 protected theorem mul_left (c : ℕ) (h : a ≡ b [MOD n]) : c * a ≡ c * b [MOD n] :=
-  (h.mul_left' _).modeq_of_dvd (dvd_mul_left _ _)
+  (h.mul_left' _).of_dvd (dvd_mul_left _ _)
 #align nat.modeq.mul_left Nat.ModEq.mul_left
 -/
 
@@ -244,6 +224,9 @@ protected theorem add_right_cancel' (c : ℕ) (h : a + c ≡ b + c [MOD n]) : a 
 -/
 
 #print Nat.ModEq.mul_left_cancel' /-
+/-- Cancel left multiplication on both sides of the `≡` and in the modulus.
+
+For cancelling left multiplication in the modulus, see `nat.modeq.of_mul_left`. -/
 protected theorem mul_left_cancel' {a b c m : ℕ} (hc : c ≠ 0) :
     c * a ≡ c * b [MOD c * m] → a ≡ b [MOD m] := by
   simp [modeq_iff_dvd, ← mul_sub, mul_dvd_mul_iff_left (by simp [hc] : (c : ℤ) ≠ 0)]
@@ -258,6 +241,9 @@ protected theorem mul_left_cancel_iff' {a b c m : ℕ} (hc : c ≠ 0) :
 -/
 
 #print Nat.ModEq.mul_right_cancel' /-
+/-- Cancel right multiplication on both sides of the `≡` and in the modulus.
+
+For cancelling right multiplication in the modulus, see `nat.modeq.of_mul_right`. -/
 protected theorem mul_right_cancel' {a b c m : ℕ} (hc : c ≠ 0) :
     a * c ≡ b * c [MOD m * c] → a ≡ b [MOD m] := by
   simp [modeq_iff_dvd, ← sub_mul, mul_dvd_mul_iff_right (by simp [hc] : (c : ℤ) ≠ 0)]
@@ -271,23 +257,23 @@ protected theorem mul_right_cancel_iff' {a b c m : ℕ} (hc : c ≠ 0) :
 #align nat.modeq.mul_right_cancel_iff' Nat.ModEq.mul_right_cancel_iff'
 -/
 
-theorem of_modeq_mul_left (m : ℕ) (h : a ≡ b [MOD m * n]) : a ≡ b [MOD n] :=
+/-- Cancel left multiplication in the modulus.
+
+For cancelling left multiplication on both sides of the `≡`, see `nat.modeq.mul_left_cancel'`. -/
+theorem of_mul_left (m : ℕ) (h : a ≡ b [MOD m * n]) : a ≡ b [MOD n] :=
   by
   rw [modeq_iff_dvd] at *
   exact (dvd_mul_left (n : ℤ) (m : ℤ)).trans h
-#align nat.modeq.of_modeq_mul_left Nat.ModEq.of_modeq_mul_left
+#align nat.modeq.of_mul_left Nat.ModEq.of_mul_left
 
-theorem of_modeq_mul_right (m : ℕ) : a ≡ b [MOD n * m] → a ≡ b [MOD n] :=
-  mul_comm m n ▸ of_modeq_mul_left _
-#align nat.modeq.of_modeq_mul_right Nat.ModEq.of_modeq_mul_right
+/-- Cancel right multiplication in the modulus.
+
+For cancelling right multiplication on both sides of the `≡`, see `nat.modeq.mul_right_cancel'`. -/
+theorem of_mul_right (m : ℕ) : a ≡ b [MOD n * m] → a ≡ b [MOD n] :=
+  mul_comm m n ▸ of_mul_left _
+#align nat.modeq.of_mul_right Nat.ModEq.of_mul_right
 
 end Modeq
-
-#print Nat.modEq_one /-
-theorem modEq_one : a ≡ b [MOD 1] :=
-  modEq_of_dvd (one_dvd _)
-#align nat.modeq_one Nat.modEq_one
--/
 
 #print Nat.modEq_sub /-
 theorem modEq_sub (h : b ≤ a) : a ≡ b [MOD a - b] :=
@@ -295,24 +281,37 @@ theorem modEq_sub (h : b ≤ a) : a ≡ b [MOD a - b] :=
 #align nat.modeq_sub Nat.modEq_sub
 -/
 
+#print Nat.modEq_one /-
+theorem modEq_one : a ≡ b [MOD 1] :=
+  modeq_of_dvd <| one_dvd _
+#align nat.modeq_one Nat.modEq_one
+-/
+
 #print Nat.modEq_zero_iff /-
 @[simp]
-theorem modEq_zero_iff {a b : ℕ} : a ≡ b [MOD 0] ↔ a = b := by
-  rw [Nat.ModEq, Nat.mod_zero, Nat.mod_zero]
+theorem modEq_zero_iff : a ≡ b [MOD 0] ↔ a = b := by rw [modeq, mod_zero, mod_zero]
 #align nat.modeq_zero_iff Nat.modEq_zero_iff
 -/
 
-#print Nat.add_modEq_left /-
+/- warning: nat.add_modeq_left -> Nat.add_modEq_left is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {a : Nat}, Nat.ModEq n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n a) a
+but is expected to have type
+  forall {n : Nat} {a : Nat}, Nat.ModEq a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a n) n
+Case conversion may be inaccurate. Consider using '#align nat.add_modeq_left Nat.add_modEq_leftₓ'. -/
 @[simp]
-theorem add_modEq_left {a n : ℕ} : n + a ≡ a [MOD n] := by rw [Nat.ModEq, Nat.add_mod_left]
+theorem add_modEq_left : n + a ≡ a [MOD n] := by rw [modeq, add_mod_left]
 #align nat.add_modeq_left Nat.add_modEq_left
--/
 
-#print Nat.add_modEq_right /-
+/- warning: nat.add_modeq_right -> Nat.add_modEq_right is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {a : Nat}, Nat.ModEq n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a n) a
+but is expected to have type
+  forall {n : Nat} {a : Nat}, Nat.ModEq a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n a) n
+Case conversion may be inaccurate. Consider using '#align nat.add_modeq_right Nat.add_modEq_rightₓ'. -/
 @[simp]
-theorem add_modEq_right {a n : ℕ} : a + n ≡ a [MOD n] := by rw [Nat.ModEq, Nat.add_mod_right]
+theorem add_modEq_right : a + n ≡ a [MOD n] := by rw [modeq, add_mod_right]
 #align nat.add_modeq_right Nat.add_modEq_right
--/
 
 namespace Modeq
 
@@ -330,43 +329,39 @@ theorem add_le_of_lt (h1 : a ≡ b [MOD m]) (h2 : a < b) : a + m ≤ b :=
 #align nat.modeq.add_le_of_lt Nat.ModEq.add_le_of_lt
 -/
 
-#print Nat.ModEq.dvd_iff_of_modEq_of_dvd /-
-theorem dvd_iff_of_modEq_of_dvd {a b d m : ℕ} (h : a ≡ b [MOD m]) (hdm : d ∣ m) : d ∣ a ↔ d ∣ b :=
+theorem dvd_iff (h : a ≡ b [MOD m]) (hdm : d ∣ m) : d ∣ a ↔ d ∣ b :=
   by
   simp only [← modeq_zero_iff_dvd]
-  replace h := h.modeq_of_dvd hdm
+  replace h := h.of_dvd hdm
   exact ⟨h.symm.trans, h.trans⟩
-#align nat.modeq.dvd_iff_of_modeq_of_dvd Nat.ModEq.dvd_iff_of_modEq_of_dvd
--/
+#align nat.modeq.dvd_iff Nat.ModEq.dvd_iff
 
-#print Nat.ModEq.gcd_eq_of_modEq /-
-theorem gcd_eq_of_modEq {a b m : ℕ} (h : a ≡ b [MOD m]) : gcd a m = gcd b m :=
+theorem gcd_eq (h : a ≡ b [MOD m]) : gcd a m = gcd b m :=
   by
   have h1 := gcd_dvd_right a m
   have h2 := gcd_dvd_right b m
   exact
-    dvd_antisymm (dvd_gcd ((dvd_iff_of_modeq_of_dvd h h1).mp (gcd_dvd_left a m)) h1)
-      (dvd_gcd ((dvd_iff_of_modeq_of_dvd h h2).mpr (gcd_dvd_left b m)) h2)
-#align nat.modeq.gcd_eq_of_modeq Nat.ModEq.gcd_eq_of_modEq
--/
+    dvd_antisymm (dvd_gcd ((h.dvd_iff h1).mp (gcd_dvd_left a m)) h1)
+      (dvd_gcd ((h.dvd_iff h2).mpr (gcd_dvd_left b m)) h2)
+#align nat.modeq.gcd_eq Nat.ModEq.gcd_eq
 
-/- warning: nat.modeq.eq_of_modeq_of_abs_lt -> Nat.ModEq.eq_of_modEq_of_abs_lt is a dubious translation:
-lean 3 declaration is
-  forall {a : Nat} {b : Nat} {m : Nat}, (Nat.ModEq m a b) -> (LT.lt.{0} Int Int.hasLt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) a))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) m)) -> (Eq.{1} Nat a b)
-but is expected to have type
-  forall {a : Nat} {b : Nat} {m : Nat}, (Nat.ModEq m a b) -> (LT.lt.{0} Int Int.instLTInt (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Nat.cast.{0} Int Int.instNatCastInt b) (Nat.cast.{0} Int Int.instNatCastInt a))) (Nat.cast.{0} Int Int.instNatCastInt m)) -> (Eq.{1} Nat a b)
-Case conversion may be inaccurate. Consider using '#align nat.modeq.eq_of_modeq_of_abs_lt Nat.ModEq.eq_of_modEq_of_abs_ltₓ'. -/
-theorem eq_of_modEq_of_abs_lt {a b m : ℕ} (h : a ≡ b [MOD m]) (h2 : |(b : ℤ) - a| < m) : a = b :=
+theorem eq_of_abs_lt (h : a ≡ b [MOD m]) (h2 : |(b - a : ℤ)| < m) : a = b :=
   by
   apply Int.ofNat.inj
   rw [eq_comm, ← sub_eq_zero]
   exact Int.eq_zero_of_abs_lt_dvd (modeq_iff_dvd.mp h) h2
-#align nat.modeq.eq_of_modeq_of_abs_lt Nat.ModEq.eq_of_modEq_of_abs_lt
+#align nat.modeq.eq_of_abs_lt Nat.ModEq.eq_of_abs_lt
 
-#print Nat.ModEq.modEq_cancel_left_div_gcd /-
+theorem eq_of_lt_of_lt (h : a ≡ b [MOD m]) (ha : a < m) (hb : b < m) : a = b :=
+  h.eq_of_abs_lt <|
+    abs_sub_lt_iff.2
+      ⟨(sub_le_self _ <| Int.coe_nat_nonneg _).trans_lt <| cast_lt.2 hb,
+        (sub_le_self _ <| Int.coe_nat_nonneg _).trans_lt <| cast_lt.2 ha⟩
+#align nat.modeq.eq_of_lt_of_lt Nat.ModEq.eq_of_lt_of_lt
+
 /-- To cancel a common factor `c` from a `modeq` we must divide the modulus `m` by `gcd m c` -/
-theorem modEq_cancel_left_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : c * a ≡ c * b [MOD m]) :
-    a ≡ b [MOD m / gcd m c] := by
+theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [MOD m]) : a ≡ b [MOD m / gcd m c] :=
+  by
   let d := gcd m c
   have hmd := gcd_dvd_left m c
   have hcd := gcd_dvd_right m c
@@ -381,54 +376,38 @@ theorem modEq_cancel_left_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : c * a ≡ c 
   ·
     simp only [← Int.coe_nat_div, Int.coe_nat_gcd (m / d) (c / d), gcd_div hmd hcd,
       Nat.div_self (gcd_pos_of_pos_left c hm)]
-#align nat.modeq.modeq_cancel_left_div_gcd Nat.ModEq.modEq_cancel_left_div_gcd
--/
+#align nat.modeq.cancel_left_div_gcd Nat.ModEq.cancel_left_div_gcd
 
-#print Nat.ModEq.modEq_cancel_right_div_gcd /-
-theorem modEq_cancel_right_div_gcd {a b c m : ℕ} (hm : 0 < m) (h : a * c ≡ b * c [MOD m]) :
-    a ≡ b [MOD m / gcd m c] := by
-  apply modeq_cancel_left_div_gcd hm
-  simpa [mul_comm] using h
-#align nat.modeq.modeq_cancel_right_div_gcd Nat.ModEq.modEq_cancel_right_div_gcd
--/
-
-#print Nat.ModEq.modEq_cancel_left_div_gcd' /-
-theorem modEq_cancel_left_div_gcd' {a b c d m : ℕ} (hm : 0 < m) (hcd : c ≡ d [MOD m])
-    (h : c * a ≡ d * b [MOD m]) : a ≡ b [MOD m / gcd m c] :=
-  modEq_cancel_left_div_gcd hm (h.trans (ModEq.mul_right b hcd).symm)
-#align nat.modeq.modeq_cancel_left_div_gcd' Nat.ModEq.modEq_cancel_left_div_gcd'
--/
-
-#print Nat.ModEq.modEq_cancel_right_div_gcd' /-
-theorem modEq_cancel_right_div_gcd' {a b c d m : ℕ} (hm : 0 < m) (hcd : c ≡ d [MOD m])
-    (h : a * c ≡ b * d [MOD m]) : a ≡ b [MOD m / gcd m c] :=
+theorem cancel_right_div_gcd (hm : 0 < m) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m / gcd m c] :=
   by
-  apply modeq_cancel_left_div_gcd' hm hcd
+  apply cancel_left_div_gcd hm
   simpa [mul_comm] using h
-#align nat.modeq.modeq_cancel_right_div_gcd' Nat.ModEq.modEq_cancel_right_div_gcd'
--/
+#align nat.modeq.cancel_right_div_gcd Nat.ModEq.cancel_right_div_gcd
 
-#print Nat.ModEq.modEq_cancel_left_of_coprime /-
+theorem cancel_left_div_gcd' (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : c * a ≡ d * b [MOD m]) :
+    a ≡ b [MOD m / gcd m c] :=
+  (h.trans (ModEq.mul_right b hcd).symm).cancel_left_div_gcd hm
+#align nat.modeq.cancel_left_div_gcd' Nat.ModEq.cancel_left_div_gcd'
+
+theorem cancel_right_div_gcd' (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : a * c ≡ b * d [MOD m]) :
+    a ≡ b [MOD m / gcd m c] :=
+  hcd.cancel_left_div_gcd' hm <| by simpa [mul_comm] using h
+#align nat.modeq.cancel_right_div_gcd' Nat.ModEq.cancel_right_div_gcd'
+
 /-- A common factor that's coprime with the modulus can be cancelled from a `modeq` -/
-theorem modEq_cancel_left_of_coprime {a b c m : ℕ} (hmc : gcd m c = 1) (h : c * a ≡ c * b [MOD m]) :
-    a ≡ b [MOD m] := by
+theorem cancel_left_of_coprime (hmc : gcd m c = 1) (h : c * a ≡ c * b [MOD m]) : a ≡ b [MOD m] :=
+  by
   rcases m.eq_zero_or_pos with (rfl | hm)
   · simp only [gcd_zero_left] at hmc
     simp only [gcd_zero_left, hmc, one_mul, modeq_zero_iff] at h
     subst h
-  simpa [hmc] using modeq_cancel_left_div_gcd hm h
-#align nat.modeq.modeq_cancel_left_of_coprime Nat.ModEq.modEq_cancel_left_of_coprime
--/
+  simpa [hmc] using h.cancel_left_div_gcd hm
+#align nat.modeq.cancel_left_of_coprime Nat.ModEq.cancel_left_of_coprime
 
-#print Nat.ModEq.modEq_cancel_right_of_coprime /-
 /-- A common factor that's coprime with the modulus can be cancelled from a `modeq` -/
-theorem modEq_cancel_right_of_coprime {a b c m : ℕ} (hmc : gcd m c = 1)
-    (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m] :=
-  by
-  apply modeq_cancel_left_of_coprime hmc
-  simpa [mul_comm] using h
-#align nat.modeq.modeq_cancel_right_of_coprime Nat.ModEq.modEq_cancel_right_of_coprime
--/
+theorem cancel_right_of_coprime (hmc : gcd m c = 1) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m] :=
+  cancel_left_of_coprime hmc <| by simpa [mul_comm] using h
+#align nat.modeq.cancel_right_of_coprime Nat.ModEq.cancel_right_of_coprime
 
 end Modeq
 
@@ -506,8 +485,7 @@ theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℕ} (hmn : Coprime m n) :
     rw [Nat.modEq_iff_dvd, Nat.modEq_iff_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd, ← Int.dvd_natAbs,
       Int.coe_nat_dvd] at h
     rw [Nat.modEq_iff_dvd, ← Int.dvd_natAbs, Int.coe_nat_dvd]
-    exact hmn.mul_dvd_of_dvd_of_dvd h.1 h.2, fun h =>
-    ⟨h.of_modeq_mul_right _, h.of_modeq_mul_left _⟩⟩
+    exact hmn.mul_dvd_of_dvd_of_dvd h.1 h.2, fun h => ⟨h.of_mul_right _, h.of_mul_left _⟩⟩
 #align nat.modeq_and_modeq_iff_modeq_mul Nat.modEq_and_modEq_iff_modEq_mul
 -/
 
@@ -517,7 +495,7 @@ theorem coprime_of_mul_modEq_one (b : ℕ) {a n : ℕ} (h : a * b ≡ 1 [MOD n])
   obtain ⟨g, hh⟩ := Nat.gcd_dvd_right a n
   rw [Nat.coprime_iff_gcd_eq_one, ← Nat.dvd_one, ← Nat.modEq_zero_iff_dvd]
   calc
-    1 ≡ a * b [MOD a.gcd n] := Nat.ModEq.of_modeq_mul_right g (hh.subst h).symm
+    1 ≡ a * b [MOD a.gcd n] := Nat.ModEq.of_mul_right g (hh.subst h).symm
     _ ≡ 0 * b [MOD a.gcd n] := (nat.modeq_zero_iff_dvd.mpr (Nat.gcd_dvd_left _ _)).mul_right b
     _ = 0 := by rw [zero_mul]
     
@@ -527,14 +505,14 @@ theorem coprime_of_mul_modEq_one (b : ℕ) {a n : ℕ} (h : a * b ≡ 1 [MOD n])
 #print Nat.mod_mul_right_mod /-
 @[simp]
 theorem mod_mul_right_mod (a b c : ℕ) : a % (b * c) % b = a % b :=
-  (mod_modEq _ _).of_modeq_mul_right _
+  (mod_modEq _ _).of_mul_right _
 #align nat.mod_mul_right_mod Nat.mod_mul_right_mod
 -/
 
 #print Nat.mod_mul_left_mod /-
 @[simp]
 theorem mod_mul_left_mod (a b c : ℕ) : a % (b * c) % c = a % c :=
-  (mod_modEq _ _).of_modeq_mul_left _
+  (mod_modEq _ _).of_mul_left _
 #align nat.mod_mul_left_mod Nat.mod_mul_left_mod
 -/
 
@@ -677,14 +655,14 @@ theorem odd_mul_odd_div_two {m n : ℕ} (hm1 : m % 2 = 1) (hn1 : n % 2 = 1) :
 
 #print Nat.odd_of_mod_four_eq_one /-
 theorem odd_of_mod_four_eq_one {n : ℕ} : n % 4 = 1 → n % 2 = 1 := by
-  simpa [modeq, show 2 * 2 = 4 by norm_num] using @modeq.of_modeq_mul_left 2 n 1 2
+  simpa [modeq, show 2 * 2 = 4 by norm_num] using @modeq.of_mul_left 2 n 1 2
 #align nat.odd_of_mod_four_eq_one Nat.odd_of_mod_four_eq_one
 -/
 
 #print Nat.odd_of_mod_four_eq_three /-
 theorem odd_of_mod_four_eq_three {n : ℕ} : n % 4 = 3 → n % 2 = 1 := by
   simpa [modeq, show 2 * 2 = 4 by norm_num, show 3 % 4 = 3 by norm_num] using
-    @modeq.of_modeq_mul_left 2 n 3 2
+    @modeq.of_mul_left 2 n 3 2
 #align nat.odd_of_mod_four_eq_three Nat.odd_of_mod_four_eq_three
 -/
 

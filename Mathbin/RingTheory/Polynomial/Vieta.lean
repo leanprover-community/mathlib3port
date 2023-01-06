@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.vieta
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
   by
   classical
     rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp,
-      map_bind, sum_bind, Finset.sum_eq_multiset_sum, Finset.range_coe, map_congr (Eq.refl _)]
+      map_bind, sum_bind, Finset.sum_eq_multiset_sum, Finset.range_val, map_congr (Eq.refl _)]
     intro _ _
     rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
     intro _ ht

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.range
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
     have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_le (Nat.le_add_right _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by
       simpa only [eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
-    (mem_cons_iff _ _ _).trans <| by
+    (mem_cons _ _ _).trans <| by
       simp only [mem_range', or_and_left, or_iff_right_of_imp this, l, add_right_comm] <;> rfl
 #align list.mem_range' List.mem_range'
 -/
@@ -116,7 +116,7 @@ theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ 
     fun h => (range'_sublist_right.2 h).Subset⟩
 #align list.range'_subset_right List.range'_subset_right
 
-theorem nth_range' : ∀ (s) {m n : ℕ}, m < n → nth (range' s n) m = some (s + m)
+theorem nth_range' : ∀ (s) {m n : ℕ}, m < n → get? (range' s n) m = some (s + m)
   | s, 0, n + 1, _ => rfl
   | s, m + 1, n + 1, h =>
     (nth_range' (s + 1) (lt_of_add_lt_add_right h)).trans <| by rw [add_right_comm] <;> rfl
@@ -199,7 +199,7 @@ theorem self_mem_range_succ (n : ℕ) : n ∈ range (n + 1) := by
   simp only [succ_pos', lt_add_iff_pos_right, mem_range]
 #align list.self_mem_range_succ List.self_mem_range_succ
 
-theorem nth_range {m n : ℕ} (h : m < n) : nth (range n) m = some m := by
+theorem nth_range {m n : ℕ} (h : m < n) : get? (range n) m = some m := by
   simp only [range_eq_range', nth_range' _ h, zero_add]
 #align list.nth_range List.nth_range
 
@@ -346,7 +346,7 @@ theorem unzip_enum_eq_prod (l : List α) : l.enum.unzip = (range l.length, l) :=
 #align list.unzip_enum_eq_prod List.unzip_enum_eq_prod
 
 theorem enum_from_eq_zip_range' (l : List α) {n : ℕ} : l.enumFrom n = (range' n l.length).zip l :=
-  zip_of_prod (enum_from_map_fst _ _) (enum_from_map_snd _ _)
+  zip_of_prod (enum_from_map_fst _ _) (enumFrom_map_snd _ _)
 #align list.enum_from_eq_zip_range' List.enum_from_eq_zip_range'
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.lemmas
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,6 +23,7 @@ variable {α β : Type _}
 
 namespace List
 
+#print List.range_map /-
 theorem range_map (f : α → β) : Set.range (map f) = { l | ∀ x ∈ l, x ∈ Set.range f } :=
   by
   refine'
@@ -34,10 +35,13 @@ theorem range_map (f : α → β) : Set.range (map f) = { l | ∀ x ∈ l, x ∈
   rcases hl a (mem_cons_self _ _) with ⟨a, rfl⟩
   exact ⟨a :: l, map_cons _ _ _⟩
 #align list.range_map List.range_map
+-/
 
+#print List.range_map_coe /-
 theorem range_map_coe (s : Set α) : Set.range (map (coe : s → α)) = { l | ∀ x ∈ l, x ∈ s } := by
   rw [range_map, Subtype.range_coe]
 #align list.range_map_coe List.range_map_coe
+-/
 
 /-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
 type. -/
@@ -48,7 +52,8 @@ instance canLift (c) (p) [CanLift α β c p] :
     exact fun a ha => CanLift.prf a (H a ha)
 #align list.can_lift List.canLift
 
-theorem inj_on_insert_nth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
+#print List.injOn_insertNth_index_of_not_mem /-
+theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
     Set.InjOn (fun k => insertNth k x l) { n | n ≤ l.length } :=
   by
   induction' l with hd tl IH
@@ -68,7 +73,8 @@ theorem inj_on_insert_nth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l)
       refine' IH hx.right _ _ h
       · simpa [Nat.succ_le_succ_iff] using hn
       · simpa [Nat.succ_le_succ_iff] using hm
-#align list.inj_on_insert_nth_index_of_not_mem List.inj_on_insert_nth_index_of_not_mem
+#align list.inj_on_insert_nth_index_of_not_mem List.injOn_insertNth_index_of_not_mem
+-/
 
 end List
 

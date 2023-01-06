@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.list.modeq
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem nth_rotate :
             _ = (m + n) % (l.length + 1) + 1 := Nat.mod_eq_of_lt (Nat.succ_lt_succ hml')
             
         have h₂ : (m + n) % (l ++ [a]).length < l.length := by simpa [Nat.add_one] using hml'
-        rw [List.rotate_cons_succ, nth_rotate h₃, List.nth_append h₂, h₁, List.nth] <;> simp)
+        rw [List.rotate_cons_succ, nth_rotate h₃, List.get?_append h₂, h₁, List.get?] <;> simp)
       fun hml' =>
       by
       have h₁ : (m + (n + 1)) % (l.length + 1) = 0 :=
@@ -47,7 +47,7 @@ theorem nth_rotate :
           _ = 0 := by simp
           
       rw [List.length, List.rotate_cons_succ, nth_rotate h₃, List.length_append, List.length_cons,
-          List.length, zero_add, hml', h₁, List.nth_concat_length] <;>
+          List.length, zero_add, hml', h₁, List.get?_concat_length] <;>
         rfl
 #align list.nth_rotate List.nth_rotate
 
@@ -57,9 +57,9 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
   | a :: l =>
     ⟨fun h =>
       ⟨a,
-        (List.ext_le (by simp)) fun n hn h₁ =>
+        (List.ext_nthLe (by simp)) fun n hn h₁ =>
           by
-          rw [← Option.some_inj, ← List.nth_le_nth]
+          rw [← Option.some_inj, ← List.nthLe_get?]
           conv =>
             lhs
             rw [← h (List.length (a :: l) - n)]
@@ -67,12 +67,12 @@ theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
           rfl⟩,
       fun ⟨a, ha⟩ n =>
       ha.symm ▸
-        List.ext_le (by simp) fun m hm h =>
+        List.ext_nthLe (by simp) fun m hm h =>
           by
           have hm' :
             (m + n) % (List.repeat a (List.length (a :: l))).length < List.length (a :: l) := by
             rw [List.length_repeat] <;> exact Nat.mod_lt _ (Nat.succ_pos _)
-          rw [nth_le_repeat, ← Option.some_inj, ← List.nth_le_nth, nth_rotate h, List.nth_le_nth,
+          rw [nth_le_repeat, ← Option.some_inj, ← List.nthLe_get?, nth_rotate h, List.nthLe_get?,
               nth_le_repeat] <;>
             simp_all⟩
 #align list.rotate_eq_self_iff_eq_repeat List.rotate_eq_self_iff_eq_repeat

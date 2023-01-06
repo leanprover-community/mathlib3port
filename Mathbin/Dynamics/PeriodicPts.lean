@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.periodic_pts
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -546,7 +546,7 @@ theorem periodic_orbit_eq_nil_of_not_periodic_pt (h : x ∉ periodicPts f) :
 theorem mem_periodic_orbit_iff (hx : x ∈ periodicPts f) :
     y ∈ periodicOrbit f x ↔ ∃ n, (f^[n]) x = y :=
   by
-  simp only [periodic_orbit, Cycle.mem_coe_iff, List.mem_map, List.mem_range]
+  simp only [periodic_orbit, Cycle.mem_coe_iff, List.mem_map', List.mem_range]
   use fun ⟨a, ha, ha'⟩ => ⟨a, ha'⟩
   rintro ⟨n, rfl⟩
   use n % minimal_period f x, mod_lt _ (minimal_period_pos_of_mem_periodic_pts hx)
@@ -577,7 +577,7 @@ theorem periodic_orbit_apply_iterate_eq (hx : x ∈ periodicPts f) (n : ℕ) :
   Eq.symm <|
     Cycle.coe_eq_coe.2 <|
       ⟨n, by
-        apply List.ext_le _ fun m _ _ => _
+        apply List.ext_nthLe _ fun m _ _ => _
         · simp [minimal_period_apply_iterate hx]
         · rw [List.nth_le_rotate _ n m]
           simp [iterate_add_apply]⟩

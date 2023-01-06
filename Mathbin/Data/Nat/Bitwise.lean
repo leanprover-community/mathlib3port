@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module data.nat.bitwise
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem zero_test_bit (i : ℕ) : testBit 0 i = ff := by simp [test_bit]
 theorem test_bit_eq_inth (n i : ℕ) : n.testBit i = n.bits.inth i :=
   by
   induction' i with i ih generalizing n
-  · simp [test_bit, shiftr, bodd_eq_bits_head, List.inth_zero_eq_head]
+  · simp [test_bit, shiftr, bodd_eq_bits_head, List.getI_zero_eq_head!]
   conv_lhs => rw [← bit_decomp n]
   rw [test_bit_succ, ih n.div2, div2_bits_eq_tail]
   cases n.bits <;> simp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -604,7 +604,7 @@ theorem map_fst_darts_append {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst +
 #align simple_graph.walk.map_fst_darts_append SimpleGraph.Walk.map_fst_darts_append
 
 theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.support.init := by
-  simpa! using congr_arg List.init (map_fst_darts_append p)
+  simpa! using congr_arg List.dropLast (map_fst_darts_append p)
 #align simple_graph.walk.map_fst_darts SimpleGraph.Walk.map_fst_darts
 
 @[simp]
@@ -654,7 +654,7 @@ theorem dart_fst_mem_support_of_mem_darts :
     ∀ {u v : V} (p : G.Walk u v) {d : G.Dart}, d ∈ p.darts → d.fst ∈ p.support
   | u, v, cons h p', d, hd =>
     by
-    simp only [support_cons, darts_cons, List.mem_cons_iff] at hd⊢
+    simp only [support_cons, darts_cons, List.mem_cons] at hd⊢
     rcases hd with (rfl | hd)
     · exact Or.inl rfl
     · exact Or.inr (dart_fst_mem_support_of_mem_darts _ hd)
@@ -1638,7 +1638,7 @@ theorem reverse_transfer :
     (p.transfer H hp).reverse =
       p.reverse.transfer H
         (by
-          simp only [edges_reverse, List.mem_reverse]
+          simp only [edges_reverse, List.mem_reverse']
           exact hp) :=
   by
   induction p <;> simp only [*, transfer_append, transfer, reverse_nil, reverse_cons]
@@ -2146,7 +2146,7 @@ theorem reachable_delete_edges_iff_exists_walk {v w : V} :
   constructor
   · rintro ⟨p⟩
     use p.map (hom.map_spanning_subgraphs (by simp))
-    simp_rw [walk.edges_map, List.mem_map, hom.map_spanning_subgraphs_apply, Sym2.map_id', id.def]
+    simp_rw [walk.edges_map, List.mem_map', hom.map_spanning_subgraphs_apply, Sym2.map_id', id.def]
     rintro ⟨e, h, rfl⟩
     simpa using p.edges_subset_edge_set h
   · rintro ⟨p, h⟩
@@ -2187,7 +2187,7 @@ theorem ReachableDeleteEdgesIffExistsCycle.aux [DecidableEq V] {u v w : V}
   -- so they both contain the edge ⟦(v, w)⟧, but that's a contradiction since c is a trail.
   have hbq := hb (pvu.append puw)
   have hpq' := hb pwv.reverse
-  rw [walk.edges_reverse, List.mem_reverse] at hpq'
+  rw [walk.edges_reverse, List.mem_reverse'] at hpq'
   rw [walk.is_trail_def, this, walk.edges_append, walk.edges_append, List.nodup_append_comm, ←
     List.append_assoc, ← walk.edges_append] at hc
   exact List.disjoint_of_nodup_append hc hbq hpq'
@@ -2207,7 +2207,7 @@ theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
         rw [Sym2.eq_swap]
         intro h
         exact absurd (walk.edges_to_path_subset p h) hp
-      simp only [Sym2.eq_swap, walk.edges_cons, List.mem_cons_iff, eq_self_iff_true, true_or_iff]
+      simp only [Sym2.eq_swap, walk.edges_cons, List.mem_cons, eq_self_iff_true, true_or_iff]
     · rintro ⟨u, c, hc, he⟩
       have hvc : v ∈ c.support := walk.fst_mem_support_of_mem_edges c he
       have hwc : w ∈ c.support := walk.snd_mem_support_of_mem_edges c he

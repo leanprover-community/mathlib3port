@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.hash_map
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -380,12 +380,12 @@ theorem append_of_modify : ∃ u' w', bkts.asList = u' ++ v1 ++ w' ∧ bkts'.asL
   refine' ⟨(bkts.to_list.take bidx).join ++ u, w ++ (bkts.to_list.drop (bidx + 1)).join, _, _⟩
   · conv =>
       lhs
-      rw [← List.take_append_drop bidx bkts.to_list, List.drop_eq_nth_le_cons h]
+      rw [← List.take_append_drop bidx bkts.to_list, List.drop_eq_get_cons h]
       simp [hl]
     simp
   · conv =>
       lhs
-      rw [bkts', Array'.write_to_list, List.update_nth_eq_take_cons_drop _ h]
+      rw [bkts', Array'.write_to_list, List.set_eq_take_cons_drop _ h]
       simp [hfl]
     simp
 #align hash_map.append_of_modify HashMap.append_of_modify

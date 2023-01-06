@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module combinatorics.composition
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ theorem sum_blocks_fun : (∑ i, c.blocksFun i) = n := by
 #align composition.sum_blocks_fun Composition.sum_blocks_fun
 
 theorem blocks_fun_mem_blocks (i : Fin c.length) : c.blocksFun i ∈ c.blocks :=
-  nth_le_mem _ _ _
+  nthLe_mem _ _ _
 #align composition.blocks_fun_mem_blocks Composition.blocks_fun_mem_blocks
 
 @[simp]
@@ -170,7 +170,7 @@ theorem one_le_blocks {i : ℕ} (h : i ∈ c.blocks) : 1 ≤ i :=
 
 @[simp]
 theorem one_le_blocks' {i : ℕ} (h : i < c.length) : 1 ≤ nthLe c.blocks i h :=
-  c.one_le_blocks (nth_le_mem (blocks c) i h)
+  c.one_le_blocks (nthLe_mem (blocks c) i h)
 #align composition.one_le_blocks' Composition.one_le_blocks'
 
 @[simp]

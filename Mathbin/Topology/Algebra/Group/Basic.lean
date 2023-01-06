@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1145,6 +1145,13 @@ theorem subset_interior_smul_right : s • interior t ⊆ interior (s • t) :=
   interior_maximal (Set.smul_subset_smul_left interior_subset) is_open_interior.smul_left
 #align subset_interior_smul_right subset_interior_smul_right
 
+@[to_additive]
+theorem smul_mem_nhds (a : α) {x : β} (ht : t ∈ 𝓝 x) : a • t ∈ 𝓝 (a • x) :=
+  by
+  rcases mem_nhds_iff.1 ht with ⟨u, ut, u_open, hu⟩
+  exact mem_nhds_iff.2 ⟨a • u, smul_set_mono ut, u_open.smul a, smul_mem_smul_set hu⟩
+#align smul_mem_nhds smul_mem_nhds
+
 variable [TopologicalSpace α]
 
 @[to_additive]
@@ -1173,6 +1180,18 @@ theorem subset_interior_mul : interior s * interior t ⊆ interior (s * t) :=
   subset_interior_smul
 #align subset_interior_mul subset_interior_mul
 
+@[to_additive]
+theorem singleton_mul_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : {a} * s ∈ 𝓝 (a * b) :=
+  by
+  have := smul_mem_nhds a h
+  rwa [← singleton_smul] at this
+#align singleton_mul_mem_nhds singleton_mul_mem_nhds
+
+@[to_additive]
+theorem singleton_mul_mem_nhds_of_nhds_one (a : α) (h : s ∈ 𝓝 (1 : α)) : {a} * s ∈ 𝓝 a := by
+  simpa only [mul_one] using singleton_mul_mem_nhds a h
+#align singleton_mul_mem_nhds_of_nhds_one singleton_mul_mem_nhds_of_nhds_one
+
 end HasContinuousConstSmul
 
 section HasContinuousConstSmulOp
@@ -1195,6 +1214,18 @@ theorem subset_interior_mul_left : interior s * t ⊆ interior (s * t) :=
 theorem subset_interior_mul' : interior s * interior t ⊆ interior (s * t) :=
   (Set.mul_subset_mul_left interior_subset).trans subset_interior_mul_left
 #align subset_interior_mul' subset_interior_mul'
+
+@[to_additive]
+theorem mul_singleton_mem_nhds (a : α) {b : α} (h : s ∈ 𝓝 b) : s * {a} ∈ 𝓝 (b * a) :=
+  by
+  simp only [← bUnion_op_smul_set, mem_singleton_iff, Union_Union_eq_left]
+  exact smul_mem_nhds _ h
+#align mul_singleton_mem_nhds mul_singleton_mem_nhds
+
+@[to_additive]
+theorem mul_singleton_mem_nhds_of_nhds_one (a : α) (h : s ∈ 𝓝 (1 : α)) : s * {a} ∈ 𝓝 a := by
+  simpa only [one_mul] using mul_singleton_mem_nhds a h
+#align mul_singleton_mem_nhds_of_nhds_one mul_singleton_mem_nhds_of_nhds_one
 
 end HasContinuousConstSmulOp
 

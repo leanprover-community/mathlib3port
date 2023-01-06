@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.center
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,9 +239,9 @@ def center : Subsemigroup M where
 /- warning: subsemigroup.coe_center clashes with [anonymous] -> [anonymous]
 warning: subsemigroup.coe_center -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall (M : Type.{u1}) [_inst_1 : Semigroup.{u1} M], Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) M (Subsemigroup.setLike.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))))) (Subsemigroup.center.{u1} M _inst_1)) (Set.center.{u1} M (Semigroup.toHasMul.{u1} M _inst_1))
+  forall (M : Type.{u_1}) [_inst_1 : Semigroup.{u_1} M], Eq.{max (succ u_1) 1} (Set.{u_1} M) ((fun (a : Type.{u_1}) (b : Sort.{max (succ u_1) 1}) [self : HasLiftT.{succ u_1, max (succ u_1) 1} a b] => self.0) (Subsemigroup.{u_1} M (Semigroup.toHasMul.{u_1} M _inst_1)) (Set.{u_1} M) (HasLiftT.mk.{succ u_1, max (succ u_1) 1} (Subsemigroup.{u_1} M (Semigroup.toHasMul.{u_1} M _inst_1)) (Set.{u_1} M) (CoeTCₓ.coe.{succ u_1, max (succ u_1) 1} (Subsemigroup.{u_1} M (Semigroup.toHasMul.{u_1} M _inst_1)) (Set.{u_1} M) (SetLike.Set.hasCoeT.{u_1, u_1} (Subsemigroup.{u_1} M (Semigroup.toHasMul.{u_1} M _inst_1)) M (Subsemigroup.setLike.{u_1} M (Semigroup.toHasMul.{u_1} M _inst_1))))) (Subsemigroup.center.{u_1} M _inst_1)) (Set.center.{u_1} M (Semigroup.toHasMul.{u_1} M _inst_1))
 but is expected to have type
-  forall {M : Sort.{u1}} {_inst_1 : Nat}, ((Eq.{1} Nat _inst_1 (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> M) -> (forall (m : Nat), (Eq.{1} Nat _inst_1 (Nat.succ m)) -> M) -> M
+  forall {M : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> M -> _inst_1) -> Nat -> (List.{u} M) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_center [anonymous]ₓ'. -/
 @[to_additive]
 theorem [anonymous] : ↑(center M) = Set.center M :=

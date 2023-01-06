@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.tm_to_partrec
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1287,13 +1287,13 @@ theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ : k
     cases e
     simp [e₂]
     convert @IH (update (update S k₁ Sk) k₂ (a::S k₂)) _ _ using 2 <;>
-      simp [Function.update_noteq, h₁, h₁.symm, e₃, List.reverseCore]
+      simp [Function.update_noteq, h₁, h₁.symm, e₃, List.reverseAux]
     simp [Function.update_comm h₁.symm]
 #align turing.partrec_to_TM2.move_ok Turing.PartrecToTM2.move_ok
 
 theorem unrev_ok {q s} {S : K'Cat → List Γ'} :
     Reaches₁ (TM2Cat.step tr) ⟨some (unrev q), s, S⟩
-      ⟨some q, none, update (update S rev []) main (List.reverseCore (S rev) (S main))⟩ :=
+      ⟨some q, none, update (update S rev []) main (List.reverseAux (S rev) (S main))⟩ :=
   move_ok (by decide) <| split_at_pred_ff _
 #align turing.partrec_to_TM2.unrev_ok Turing.PartrecToTM2.unrev_ok
 
@@ -1308,10 +1308,10 @@ theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ 
     simp only [Function.update_comm h₁.1, Function.update_idem]
     rw [show update S rev [] = S by rw [← h₂, Function.update_eq_self]]
     simp only [Function.update_noteq h₁.2.2.symm, Function.update_noteq h₁.2.1,
-      Function.update_noteq h₁.1.symm, List.reverse_core_eq, h₂, Function.update_same,
+      Function.update_noteq h₁.1.symm, List.reverseAux_eq, h₂, Function.update_same,
       List.append_nil, List.reverse_reverse]
   · convert move_ok h₁.2.1.symm (split_at_pred_ff _) using 2
-    simp only [h₂, Function.update_comm h₁.1, List.reverse_core_eq, Function.update_same,
+    simp only [h₂, Function.update_comm h₁.1, List.reverseAux_eq, Function.update_same,
       List.append_nil, Function.update_idem]
     rw [show update S rev [] = S by rw [← h₂, Function.update_eq_self]]
     simp only [Function.update_noteq h₁.1.symm, Function.update_noteq h₁.2.2.symm,
@@ -1349,7 +1349,7 @@ theorem clear_ok {p k q s L₁ o L₂} {S : K'Cat → List Γ'} (e : splitAtPred
 
 theorem copy_ok (q s a b c d) :
     Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.copy q), s, K'Cat.elim a b c d⟩
-      ⟨some q, none, K'Cat.elim (List.reverseCore b a) [] c (List.reverseCore b d)⟩ :=
+      ⟨some q, none, K'Cat.elim (List.reverseAux b a) [] c (List.reverseAux b d)⟩ :=
   by
   induction' b with x b IH generalizing a d s
   · refine' trans_gen.single _
@@ -1399,7 +1399,7 @@ theorem head_main_ok {q s L} {c d : List Γ'} :
   rw [if_neg (show o ≠ some Γ'.Cons by cases L <;> rintro ⟨⟩)]
   refine' (clear_ok (split_at_pred_eq _ _ _ none [] _ ⟨rfl, rfl⟩)).trans _
   · exact fun x h => Bool.decide_false (tr_list_ne_Cons _ _ h)
-  convert unrev_ok; simp [List.reverse_core_eq]
+  convert unrev_ok; simp [List.reverseAux_eq]
 #align turing.partrec_to_TM2.head_main_ok Turing.PartrecToTM2.head_main_ok
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1433,7 +1433,7 @@ theorem head_stack_ok {q s L₁ L₂ L₃} :
             (fun x h => Bool.decide_false (tr_list_ne_Cons _ _ h)) ⟨rfl, by simp⟩))
         _
     convert unrev_ok
-    simp [List.reverse_core_eq]
+    simp [List.reverseAux_eq]
 #align turing.partrec_to_TM2.head_stack_ok Turing.PartrecToTM2.head_stack_ok
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1459,15 +1459,15 @@ theorem succ_ok {q s n} {c d : List Γ'} :
   suffices
     ∀ l₁,
       ∃ l₁' l₂' s',
-        List.reverseCore l₁ (tr_pos_num a.succ) = List.reverseCore l₁' l₂' ∧
+        List.reverseAux l₁ (tr_pos_num a.succ) = List.reverseAux l₁' l₂' ∧
           reaches₁ (TM2.step tr) ⟨some q.succ, s, K'.elim (tr_pos_num a ++ [Γ'.cons]) l₁ c d⟩
             ⟨some (unrev q), s', K'.elim (l₂' ++ [Γ'.cons]) l₁' c d⟩
     by
     obtain ⟨l₁', l₂', s', e, h⟩ := this []
-    simp [List.reverseCore] at e
+    simp [List.reverseAux] at e
     refine' h.trans _
     convert unrev_ok using 2
-    simp [e, List.reverse_core_eq]
+    simp [e, List.reverseAux_eq]
   induction' a with m IH m IH generalizing s <;> intro l₁
   · refine' ⟨Γ'.bit0::l₁, [Γ'.bit1], some Γ'.cons, rfl, trans_gen.head rfl (trans_gen.single _)⟩
     simp [tr_pos_num]
@@ -1511,16 +1511,16 @@ theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
   suffices
     ∀ l₁,
       ∃ l₁' l₂' s',
-        List.reverseCore l₁ (tr_pos_num a) = List.reverseCore l₁' l₂' ∧
+        List.reverseAux l₁ (tr_pos_num a) = List.reverseAux l₁' l₂' ∧
           reaches₁ (TM2.step tr)
             ⟨some (q₁.pred q₂), s, K'.elim (tr_pos_num a.succ ++ Γ'.cons::tr_list v) l₁ c d⟩
             ⟨some (unrev q₂), s', K'.elim (l₂' ++ Γ'.cons::tr_list v) l₁' c d⟩
     by
     obtain ⟨l₁', l₂', s', e, h⟩ := this []
-    simp [List.reverseCore] at e
+    simp [List.reverseAux] at e
     refine' h.trans _
     convert unrev_ok using 2
-    simp [e, List.reverse_core_eq]
+    simp [e, List.reverseAux_eq]
   induction' a with m IH m IH generalizing s <;> intro l₁
   · refine' ⟨Γ'.bit1::l₁, [], some Γ'.cons, rfl, trans_gen.head rfl (trans_gen.single _)⟩
     simp [tr_pos_num, show pos_num.one.succ = pos_num.one.bit0 from rfl]
@@ -1555,7 +1555,7 @@ theorem tr_normal_respects (c k v s) :
     simp [step_normal]
     refine' (copy_ok _ none [] (tr_list v).reverse _ _).trans _
     convert h₂ using 2
-    simp [List.reverse_core_eq, tr_cont_stack]
+    simp [List.reverseAux_eq, tr_cont_stack]
   case comp f g IHf IHg => exact IHg (cont.comp f k) v s
   case case f g IHf IHg =>
     rw [step_normal]

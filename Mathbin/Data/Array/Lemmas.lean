@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.array.lemmas
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -184,9 +184,9 @@ theorem to_list_nth_le' (a : Array' n α) (i : Fin n) (h') : List.nthLe a.toList
   by cases i <;> apply to_list_nth_le
 #align array.to_list_nth_le' Array'.to_list_nth_le'
 
-theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v :=
+theorem to_list_nth {i v} : List.get? a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v :=
   by
-  rw [List.nth_eq_some]
+  rw [List.get?_eq_some']
   have ll := to_list_length a
   constructor <;> intro h <;> cases' h with h e <;> subst v
   · exact ⟨ll ▸ h, (to_list_nth_le _ _ _).symm⟩
@@ -194,19 +194,19 @@ theorem to_list_nth {i v} : List.nth a.toList i = some v ↔ ∃ h, a.read ⟨i,
 #align array.to_list_nth Array'.to_list_nth
 
 theorem write_to_list {i v} : (a.write i v).toList = a.toList.updateNth i v :=
-  (List.ext_le (by simp)) fun j h₁ h₂ =>
+  (List.ext_nthLe (by simp)) fun j h₁ h₂ =>
     by
     have h₃ : j < n := by simpa using h₁
     rw [to_list_nth_le _ h₃]
     refine'
-      let ⟨_, e⟩ := List.nth_eq_some.1 _
+      let ⟨_, e⟩ := List.get?_eq_some'.1 _
       e.symm
     by_cases ij : (i : ℕ) = j
     · subst j
       rw [show (⟨(i : ℕ), h₃⟩ : Fin _) = i from Fin.eq_of_veq rfl, Array'.read_write,
-        List.nth_update_nth_of_lt]
+        List.get?_set_eq_of_lt]
       simp [h₃]
-    · rw [List.nth_update_nth_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
+    · rw [List.get?_set_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
       exact Fin.ne_of_vne ij
 #align array.write_to_list Array'.write_to_list
 
@@ -218,7 +218,7 @@ section Enum
 variable {n : ℕ} {α : Type u} {a : Array' n α}
 
 theorem mem_to_list_enum {i v} : (i, v) ∈ a.toList.enum ↔ ∃ h, a.read ⟨i, h⟩ = v := by
-  simp [List.mem_iff_nth, to_list_nth, and_comm, and_assoc, and_left_comm]
+  simp [List.mem_iff_get?, to_list_nth, and_comm, and_assoc, and_left_comm]
 #align array.mem_to_list_enum Array'.mem_to_list_enum
 
 end Enum
@@ -241,7 +241,7 @@ theorem to_list_to_array (a : Array' n α) : HEq a.toList.toArray a :=
 
 @[simp]
 theorem to_array_to_list (l : List α) : l.toArray.toList = l :=
-  (List.ext_le (to_list_length _)) fun n h1 h2 => to_list_nth_le _ h2 _
+  (List.ext_nthLe (to_list_length _)) fun n h1 h2 => to_list_nth_le _ h2 _
 #align array.to_array_to_list Array'.to_array_to_list
 
 end ToArray

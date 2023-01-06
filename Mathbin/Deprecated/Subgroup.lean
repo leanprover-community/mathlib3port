@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mitchell Rowett, Scott Morrison, Johan Commelin, Mario
   Michael Howes
 
 ! This file was ported from Lean 3 source module deprecated.subgroup
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -523,8 +523,8 @@ theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ closure s) :
     ⟨[], List.forall_mem_nil _, rfl⟩
     (fun x _ ⟨L, HL1, HL2⟩ =>
       ⟨L.reverse.map Inv.inv, fun x hx =>
-        let ⟨y, hy1, hy2⟩ := List.exists_of_mem_map hx
-        hy2 ▸ Or.imp id (by rw [inv_inv] <;> exact id) (HL1 _ <| List.mem_reverse.1 hy1).symm,
+        let ⟨y, hy1, hy2⟩ := List.exists_of_mem_map' hx
+        hy2 ▸ Or.imp id (by rw [inv_inv] <;> exact id) (HL1 _ <| List.mem_reverse'.1 hy1).symm,
         HL2 ▸
           List.recOn L inv_one.symm fun hd tl ih => by
             rw [List.reverse_cons, List.map_append, List.prod_append, ih, List.map_singleton,

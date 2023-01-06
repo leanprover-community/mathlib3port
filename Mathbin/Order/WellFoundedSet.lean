@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.well_founded_set
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1499,7 +1499,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.headI ∘ f) _
   swap;
   · simp only [Set.range_subset_iff, Function.comp_apply]
-    exact fun n => hf1.1 n _ (List.head_mem_self (hnil n))
+    exact fun n => hf1.1 n _ (List.head!_mem_self (hnil n))
   have hf' :=
     hf2 (g 0) (fun n => if n < g 0 then f n else List.tail (f (g (n - g 0))))
       (fun m hm => (if_pos hm).symm) _
@@ -1525,7 +1525,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
       exact trans hmn (List.tail_sublist_forall₂_self _)
     · rw [← tsub_lt_iff_left (le_of_not_lt hm)] at mn
       apply hf1.2 _ _ (g.lt_iff_lt.2 mn)
-      rw [← List.cons_head_tail (hnil (g (m - g 0))), ← List.cons_head_tail (hnil (g n'))]
+      rw [← List.cons_head!_tail (hnil (g (m - g 0))), ← List.cons_head!_tail (hnil (g n'))]
       exact List.SublistForall₂.cons (hg _ _ (le_of_lt mn)) hmn
 #align
   set.partially_well_ordered_on.partially_well_ordered_on_sublist_forall₂ Set.PartiallyWellOrderedOn.partially_well_ordered_on_sublist_forall₂

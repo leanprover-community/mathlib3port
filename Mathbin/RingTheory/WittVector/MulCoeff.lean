@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_coeff
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2882,7 +2882,7 @@ variable (k)
                      ","
                      (Tactic.simpLemma [] [] `Multiset.mem_cons)
                      ","
-                     (Tactic.simpLemma [] [] `range_coe)
+                     (Tactic.simpLemma [] [] `range_val)
                      ","
                      (Tactic.simpLemma [] [] `product_val)
                      ","
@@ -2963,7 +2963,7 @@ variable (k)
               ","
               (Tactic.simpLemma [] [] `Multiset.mem_cons)
               ","
-              (Tactic.simpLemma [] [] `range_coe)
+              (Tactic.simpLemma [] [] `range_val)
               ","
               (Tactic.simpLemma [] [] `product_val)
               ","
@@ -3107,7 +3107,7 @@ variable (k)
                     ","
                     (Tactic.simpLemma [] [] `Multiset.mem_cons)
                     ","
-                    (Tactic.simpLemma [] [] `range_coe)
+                    (Tactic.simpLemma [] [] `range_val)
                     ","
                     (Tactic.simpLemma [] [] `product_val)
                     ","
@@ -3188,7 +3188,7 @@ variable (k)
              ","
              (Tactic.simpLemma [] [] `Multiset.mem_cons)
              ","
-             (Tactic.simpLemma [] [] `range_coe)
+             (Tactic.simpLemma [] [] `range_val)
              ","
              (Tactic.simpLemma [] [] `product_val)
              ","
@@ -3406,7 +3406,7 @@ variable (k)
          ","
          (Tactic.simpLemma [] [] `Multiset.mem_cons)
          ","
-         (Tactic.simpLemma [] [] `range_coe)
+         (Tactic.simpLemma [] [] `range_val)
          ","
          (Tactic.simpLemma [] [] `product_val)
          ","
@@ -3457,7 +3457,7 @@ variable (k)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `range_coe
+      `range_val
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
@@ -3620,7 +3620,7 @@ variable (k)
                 ","
                 (Tactic.simpLemma [] [] `Multiset.mem_cons)
                 ","
-                (Tactic.simpLemma [] [] `range_coe)
+                (Tactic.simpLemma [] [] `range_val)
                 ","
                 (Tactic.simpLemma [] [] `product_val)
                 ","
@@ -3689,7 +3689,7 @@ variable (k)
              ","
              (Tactic.simpLemma [] [] `Multiset.mem_cons)
              ","
-             (Tactic.simpLemma [] [] `range_coe)
+             (Tactic.simpLemma [] [] `range_val)
              ","
              (Tactic.simpLemma [] [] `product_val)
              ","
@@ -3789,7 +3789,7 @@ variable (k)
          ","
          (Tactic.simpLemma [] [] `Multiset.mem_cons)
          ","
-         (Tactic.simpLemma [] [] `range_coe)
+         (Tactic.simpLemma [] [] `range_val)
          ","
          (Tactic.simpLemma [] [] `product_val)
          ","
@@ -3840,7 +3840,7 @@ variable (k)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `range_coe
+      `range_val
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
@@ -4506,7 +4506,7 @@ theorem
                       ,
                       Multiset.mem_cons
                       ,
-                      range_coe
+                      range_val
                       ,
                       product_val
                       ,
@@ -4537,7 +4537,7 @@ theorem
               ,
               Multiset.mem_cons
               ,
-              range_coe
+              range_val
               ,
               product_val
               ,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.concrete
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -369,7 +369,7 @@ theorem to_list_form_perm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : N
     rintro _ rfl
     simpa [Nat.succ_le_succ_iff] using hl
   rw [to_list, hc.cycle_of_eq (mem_support.mp _), hs, card_to_finset, dedup_eq_self.mpr hn]
-  · refine' List.ext_le (by simp) fun k hk hk' => _
+  · refine' List.ext_nthLe (by simp) fun k hk hk' => _
     simp [form_perm_pow_apply_nth_le _ hn, Nat.mod_eq_of_lt hk']
   · simpa [hs] using nth_le_mem _ _ _
 #align equiv.perm.to_list_form_perm_nontrivial Equiv.Perm.to_list_form_perm_nontrivial

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.primrec
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -773,8 +773,7 @@ theorem dom_fintype [Fintype α] (f : α → σ) : Primrec f :=
   option_some_iff.1 <| by
     haveI := decidable_eq_of_encodable α
     refine' ((list_nth₁ (l.map f)).comp (list_index_of₁ l)).of_eq fun a => _
-    rw [List.nth_map, List.nth_le_nth (List.index_of_lt_length.2 (m _)), List.index_of_nth_le] <;>
-      rfl
+    rw [List.get?_map, List.nthLe_get? (List.indexOf_lt_length.2 (m _)), List.indexOf_nthLe] <;> rfl
 #align primrec.dom_fintype Primrec.dom_fintype
 
 theorem nat_bodd_div2 : Primrec Nat.boddDiv2 :=
@@ -941,9 +940,9 @@ private theorem list_reverse' :
     Primrec (@List.reverse β) :=
   letI := prim H
   (list_foldl' H Primrec.id (const []) <| to₂ <| ((list_cons' H).comp snd fst).comp snd).of_eq
-    (suffices ∀ l r, List.foldl (fun (s : List β) (b : β) => b :: s) r l = List.reverseCore l r from
+    (suffices ∀ l r, List.foldl (fun (s : List β) (b : β) => b :: s) r l = List.reverseAux l r from
       fun l => this l []
-    fun l => by induction l <;> simp [*, List.reverseCore])
+    fun l => by induction l <;> simp [*, List.reverseAux])
 #align list_reverse' list_reverse'
 
 end
@@ -1078,7 +1077,7 @@ theorem list_rec {f : α → List β} {g : α → σ} {h : α → β × List β 
     induction' f a with b l IH <;> simp [*]
 #align primrec.list_rec Primrec.list_rec
 
-theorem list_nth : Primrec₂ (@List.nth α) :=
+theorem list_nth : Primrec₂ (@List.get? α) :=
   let F (l : List α) (n : ℕ) :=
     l.foldl
       (fun (s : Sum ℕ α) (a : α) =>
@@ -1106,12 +1105,12 @@ theorem list_nth : Primrec₂ (@List.nth α) :=
 
 theorem list_nthd (d : α) : Primrec₂ (List.getD d) :=
   by
-  suffices List.getD d = fun l n => (List.nth l n).getOrElse d
+  suffices List.getD d = fun l n => (List.get? l n).getOrElse d
     by
     rw [this]
     exact option_get_or_else.comp₂ list_nth (const _)
   funext
-  exact List.nthd_eq_get_or_else_nth _ _ _
+  exact List.getD_eq_getD_get? _ _ _
 #align primrec.list_nthd Primrec.list_nthd
 
 theorem list_inth [Inhabited α] : Primrec₂ (@List.getI α _) :=
@@ -1328,7 +1327,7 @@ theorem vector_tail {n} : Primrec (@Vector.tail α n) :=
 theorem vector_nth {n} : Primrec₂ (@Vector.nth α n) :=
   option_some_iff.1 <|
     (list_nth.comp (vector_to_list.comp fst) (fin_val.comp snd)).of_eq fun a => by
-      simp [Vector.nth_eq_nth_le] <;> rw [← List.nth_le_nth]
+      simp [Vector.nth_eq_nth_le] <;> rw [← List.nthLe_get?]
 #align primrec.vector_nth Primrec.vector_nth
 
 theorem list_of_fn :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.is_connected
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -352,7 +352,7 @@ theorem zigzag_is_connected [Nonempty J] (h : ∀ j₁ j₂ : J, Zigzag j₁ j�
 #align category_theory.zigzag_is_connected CategoryTheory.zigzag_is_connected
 
 theorem exists_zigzag' [IsConnected J] (j₁ j₂ : J) :
-    ∃ l, List.Chain Zag j₁ l ∧ List.last (j₁ :: l) (List.cons_ne_nil _ _) = j₂ :=
+    ∃ l, List.Chain Zag j₁ l ∧ List.getLast (j₁ :: l) (List.cons_ne_nil _ _) = j₂ :=
   List.exists_chain_of_relation_refl_trans_gen (is_connected_zigzag _ _)
 #align category_theory.exists_zigzag' CategoryTheory.exists_zigzag'
 
@@ -362,7 +362,8 @@ morphisms, then J is connected.
 The converse of `exists_zigzag'`.
 -/
 theorem is_connected_of_zigzag [Nonempty J]
-    (h : ∀ j₁ j₂ : J, ∃ l, List.Chain Zag j₁ l ∧ List.last (j₁ :: l) (List.cons_ne_nil _ _) = j₂) :
+    (h :
+      ∀ j₁ j₂ : J, ∃ l, List.Chain Zag j₁ l ∧ List.getLast (j₁ :: l) (List.cons_ne_nil _ _) = j₂) :
     IsConnected J := by
   apply zigzag_is_connected
   intro j₁ j₂

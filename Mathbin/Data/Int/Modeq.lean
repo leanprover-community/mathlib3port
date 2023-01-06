@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.int.modeq
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,25 +130,7 @@ theorem modEq_iff_add_fac {a b n : ℤ} : a ≡ b [ZMOD n] ↔ ∃ t, b = a + n 
 #align int.modeq_iff_add_fac Int.modEq_iff_add_fac
 -/
 
-/- warning: int.modeq.dvd -> Int.ModEq.dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int} {b : Int}, (Int.ModEq n a b) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a))
-but is expected to have type
-  forall {n : Int} {a : Int} {b : Int}, (Int.ModEq n a b) -> (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
-Case conversion may be inaccurate. Consider using '#align int.modeq.dvd Int.ModEq.dvdₓ'. -/
-theorem ModEq.dvd : a ≡ b [ZMOD n] → n ∣ b - a :=
-  modEq_iff_dvd.1
-#align int.modeq.dvd Int.ModEq.dvd
-
-/- warning: int.modeq_of_dvd -> Int.modEq_of_dvd is a dubious translation:
-lean 3 declaration is
-  forall {n : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) b a)) -> (Int.ModEq n a b)
-but is expected to have type
-  forall {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a)) -> (Int.ModEq n a b)
-Case conversion may be inaccurate. Consider using '#align int.modeq_of_dvd Int.modEq_of_dvdₓ'. -/
-theorem modEq_of_dvd : n ∣ b - a → a ≡ b [ZMOD n] :=
-  modEq_iff_dvd.2
-#align int.modeq_of_dvd Int.modEq_of_dvd
+alias modeq_iff_dvd ↔ modeq.dvd modeq_of_dvd
 
 #print Int.mod_modEq /-
 theorem mod_modEq (a n) : a % n ≡ a [ZMOD n] :=
@@ -158,15 +140,9 @@ theorem mod_modEq (a n) : a % n ≡ a [ZMOD n] :=
 
 namespace Modeq
 
-/- warning: int.modeq.modeq_of_dvd -> Int.ModEq.modEq_of_dvd is a dubious translation:
-lean 3 declaration is
-  forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
-but is expected to have type
-  forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
-Case conversion may be inaccurate. Consider using '#align int.modeq.modeq_of_dvd Int.ModEq.modEq_of_dvdₓ'. -/
-protected theorem modEq_of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
-  modEq_iff_dvd.2 <| d.trans h.Dvd
-#align int.modeq.modeq_of_dvd Int.ModEq.modEq_of_dvd
+protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
+  modeq_of_dvd <| d.trans h.Dvd
+#align int.modeq.of_dvd Int.ModEq.of_dvd
 
 #print Int.ModEq.mul_left' /-
 protected theorem mul_left' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
@@ -260,10 +236,9 @@ protected theorem sub_right (c : ℤ) (h : a ≡ b [ZMOD n]) : a - c ≡ b - c [
 
 #print Int.ModEq.mul_left /-
 protected theorem mul_left (c : ℤ) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD n] :=
-  Or.cases_on (le_total 0 c) (fun hc => (h.mul_left' hc).modeq_of_dvd (dvd_mul_left _ _)) fun hc =>
-    by
+  Or.cases_on (le_total 0 c) (fun hc => (h.mul_left' hc).of_dvd (dvd_mul_left _ _)) fun hc => by
     rw [← neg_neg c, neg_mul, neg_mul _ b] <;>
-      exact ((h.mul_left' <| neg_nonneg.2 hc).modeq_of_dvd (dvd_mul_left _ _)).neg
+      exact ((h.mul_left' <| neg_nonneg.2 hc).of_dvd (dvd_mul_left _ _)).neg
 #align int.modeq.mul_left Int.ModEq.mul_left
 -/
 
@@ -294,17 +269,13 @@ protected theorem pow (m : ℕ) (h : a ≡ b [ZMOD n]) : a ^ m ≡ b ^ m [ZMOD n
   exact h.mul hd
 #align int.modeq.pow Int.ModEq.pow
 
-#print Int.ModEq.of_modEq_mul_left /-
-theorem of_modEq_mul_left (m : ℤ) (h : a ≡ b [ZMOD m * n]) : a ≡ b [ZMOD n] := by
+theorem of_mul_left (m : ℤ) (h : a ≡ b [ZMOD m * n]) : a ≡ b [ZMOD n] := by
   rw [modeq_iff_dvd] at * <;> exact (dvd_mul_left n m).trans h
-#align int.modeq.of_modeq_mul_left Int.ModEq.of_modEq_mul_left
--/
+#align int.modeq.of_mul_left Int.ModEq.of_mul_left
 
-#print Int.ModEq.of_modEq_mul_right /-
-theorem of_modEq_mul_right (m : ℤ) : a ≡ b [ZMOD n * m] → a ≡ b [ZMOD n] :=
-  mul_comm m n ▸ of_modEq_mul_left _
-#align int.modeq.of_modeq_mul_right Int.ModEq.of_modEq_mul_right
--/
+theorem of_mul_right (m : ℤ) : a ≡ b [ZMOD n * m] → a ≡ b [ZMOD n] :=
+  mul_comm m n ▸ of_mul_left _
+#align int.modeq.of_mul_right Int.ModEq.of_mul_right
 
 end Modeq
 
@@ -328,7 +299,7 @@ theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℤ} (hmn : m.natAbs.Coprime n.
     rw [modeq_iff_dvd, ← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd, nat_abs_mul]
     refine' hmn.mul_dvd_of_dvd_of_dvd _ _ <;> rw [← coe_nat_dvd, nat_abs_dvd, dvd_nat_abs] <;>
       tauto,
-    fun h => ⟨h.of_modeq_mul_right _, h.of_modeq_mul_left _⟩⟩
+    fun h => ⟨h.of_mul_right _, h.of_mul_left _⟩⟩
 #align int.modeq_and_modeq_iff_modeq_mul Int.modEq_and_modEq_iff_modEq_mul
 -/
 
@@ -389,14 +360,14 @@ theorem exists_unique_equiv_nat (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℕ, 
 #print Int.mod_mul_right_mod /-
 @[simp]
 theorem mod_mul_right_mod (a b c : ℤ) : a % (b * c) % b = a % b :=
-  (mod_modEq _ _).of_modeq_mul_right _
+  (mod_modEq _ _).of_mul_right _
 #align int.mod_mul_right_mod Int.mod_mul_right_mod
 -/
 
 #print Int.mod_mul_left_mod /-
 @[simp]
 theorem mod_mul_left_mod (a b c : ℤ) : a % (b * c) % c = a % c :=
-  (mod_modEq _ _).of_modeq_mul_left _
+  (mod_modEq _ _).of_mul_left _
 #align int.mod_mul_left_mod Int.mod_mul_left_mod
 -/
 

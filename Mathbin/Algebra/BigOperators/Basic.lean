@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1867,7 +1867,7 @@ theorem disjoint_list_sum_left {a : Multiset α} {l : List (Multiset α)} :
   by
   induction' l with b bs ih
   · simp only [zero_disjoint, List.not_mem_nil, IsEmpty.forall_iff, forall_const, List.sum_nil]
-  · simp_rw [List.sum_cons, disjoint_add_left, List.mem_cons_iff, forall_eq_or_imp]
+  · simp_rw [List.sum_cons, disjoint_add_left, List.mem_cons, forall_eq_or_imp]
     simp [and_congr_left_iff, iff_self_iff, ih]
 #align multiset.disjoint_list_sum_left Multiset.disjoint_list_sum_left
 
@@ -1945,7 +1945,7 @@ theorem sup_powerset_len {α : Type _} [DecidableEq α] (x : Multiset α) :
     (Finset.sup (Finset.range (x.card + 1)) fun k => x.powersetLen k) = x.powerset :=
   by
   convert bind_powerset_len x
-  rw [Multiset.bind, Multiset.join, ← Finset.range_coe, ← Finset.sum_eq_multiset_sum]
+  rw [Multiset.bind, Multiset.join, ← Finset.range_val, ← Finset.sum_eq_multiset_sum]
   exact
     Eq.symm (finset_sum_eq_sup_iff_disjoint.mpr fun _ _ _ _ h => pairwise_disjoint_powerset_len x h)
 #align multiset.sup_powerset_len Multiset.sup_powerset_len

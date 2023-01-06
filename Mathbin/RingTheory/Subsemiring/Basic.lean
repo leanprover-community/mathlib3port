@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -967,7 +967,7 @@ theorem mem_closure_iff_exists_list {R} [Semiring R] {s : Set R} {x} :
     fun ⟨L, HL1, HL2⟩ =>
     HL2 ▸
       list_sum_mem fun r hr =>
-        let ⟨t, ht1, ht2⟩ := List.mem_map.1 hr
+        let ⟨t, ht1, ht2⟩ := List.mem_map'.1 hr
         ht2 ▸ list_prod_mem _ fun y hy => subset_closure <| HL1 t ht1 y hy⟩
 #align subsemiring.mem_closure_iff_exists_list Subsemiring.mem_closure_iff_exists_list
 

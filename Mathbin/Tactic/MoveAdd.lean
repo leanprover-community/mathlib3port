@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Damiano Testa
 
 ! This file was ported from Lean 3 source module tactic.move_add
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,43 +170,43 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
         let sort_all ←
           sort_list fun e => do
               let (e, lu) ← reorder_oper e
-              pure (e, [lu, is_unused].transpose.map List.band)
+              pure (e, [lu, is_unused].transpose.map List.and)
         let (recs, list_unused) := sort_all
         let recs_0 :: recs_rest ← pure recs |
           throwError"internal error: cannot have 0 operands"
         let summed := recs_rest (fun e f => op [e, f]) recs_0
-        return (summed, list_unused List.band)
+        return (summed, list_unused List.and)
       | none => do
         let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mmap <| reorder_oper
-        return <| (expr.app Fn bn, [unused_F, unused_b].transpose.map List.band)
+        return <| (expr.app Fn bn, [unused_F, unused_b].transpose.map List.and)
   | expr.pi na bi e f => do
     let [en, fn] ← [e, f].mmap <| reorder_oper
-    return (expr.pi na bi en.1 fn.1, [en.2, fn.2].transpose.map List.band)
+    return (expr.pi na bi en.1 fn.1, [en.2, fn.2].transpose.map List.and)
   | expr.lam na bi e f => do
     let [en, fn] ← [e, f].mmap <| reorder_oper
-    return (expr.lam na bi en.1 fn.1, [en.2, fn.2].transpose.map List.band)
+    return (expr.lam na bi en.1 fn.1, [en.2, fn.2].transpose.map List.and)
   | expr.mvar na pp e => do
     let en
       ←-- is it really needed to recurse here?
           reorder_oper
           e
-    return (expr.mvar na pp en.1, [en.2].transpose.map List.band)
+    return (expr.mvar na pp en.1, [en.2].transpose.map List.and)
   | expr.local_const na pp bi e => do
     let en
       ←-- is it really needed to recurse here?
           reorder_oper
           e
-    return (expr.local_const na pp bi en.1, [en.2].transpose.map List.band)
+    return (expr.local_const na pp bi en.1, [en.2].transpose.map List.and)
   | expr.elet na e f g => do
     let [en, fn, gn] ← [e, f, g].mmap <| reorder_oper
-    return (expr.elet na en.1 fn.1 gn.1, [en.2, fn.2, gn.2].transpose.map List.band)
+    return (expr.elet na en.1 fn.1 gn.1, [en.2, fn.2, gn.2].transpose.map List.and)
   | expr.macro ma le => do
     let len
       ←-- is it really needed to recurse here?
             le.mmap <|
           reorder_oper
     let (lee, lb) := len.unzip
-    return (expr.macro ma lee, lb List.band)
+    return (expr.macro ma lee, lb List.and)
   | e => pure (e, lp.map fun _ => true)
 #align tactic.move_op.reorder_oper tactic.move_op.reorder_oper
 
@@ -299,7 +299,7 @@ unsafe def move_op (args : parse move_pexpr_list_or_texpr) (locat : parse locati
   let (unch_tgts, unus_vars) := ner.unzip
   let str_unva ←
     match
-        (returnUnused args (unus_vars.transpose.map List.band)).map fun e : Bool × pexpr => e.2 with
+        (returnUnused args (unus_vars.transpose.map List.and)).map fun e : Bool × pexpr => e.2 with
       | [] => pure []
       | [pe] => do
         let nm ← to_expr pe true false >>= fun ex => pp ex.replace_mvars

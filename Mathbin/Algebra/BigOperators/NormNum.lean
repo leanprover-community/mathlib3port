@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.norm_num
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ unsafe def decide_eq (l r : expr) : tactic (Bool × expr) := do
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.not_mem_cons {α : Type _} {x y : α} {ys : List α} (h₁ : x ≠ y) (h₂ : x ∉ ys) :
-    x ∉ y::ys := fun h => ((List.mem_cons_iff _ _ _).mp h).elim h₁ h₂
+    x ∉ y::ys := fun h => ((List.mem_cons _ _ _).mp h).elim h₁ h₂
 #align tactic.norm_num.list.not_mem_cons Tactic.NormNum.List.not_mem_cons
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -83,12 +83,12 @@ unsafe def list.decide_mem (decide_eq : expr → expr → tactic (Bool × expr))
   | x, y::ys => do
     let (is_head, head_pf) ← decide_eq x y
     if is_head then do
-        let pf ← i_to_expr ``((List.mem_cons_iff $(x) $(y) _).mpr (Or.inl $(head_pf)))
+        let pf ← i_to_expr ``((List.mem_cons $(x) $(y) _).mpr (Or.inl $(head_pf)))
         pure (tt, pf)
       else do
         let (mem_tail, tail_pf) ← list.decide_mem x ys
         if mem_tail then do
-            let pf ← i_to_expr ``((List.mem_cons_iff $(x) $(y) _).mpr (Or.inr $(tail_pf)))
+            let pf ← i_to_expr ``((List.mem_cons $(x) $(y) _).mpr (Or.inr $(tail_pf)))
             pure (tt, pf)
           else do
             let pf ← i_to_expr ``(List.not_mem_cons $(head_pf) $(tail_pf))

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: E.W.Ayers
 
 ! This file was ported from Lean 3 source module tactic.interactive_expr
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -458,7 +458,7 @@ unsafe def tactic_view_component {γ} (local_c : tc local_collection γ) (target
     let goal_message : html γ := h "strong" [cn "goal-goals"] [goal_message]
     let goals : html γ :=
       h "ul" [className "list pl0"] <|
-        (List.mapWithIndex fun i x => h "li" [className <| "lh-copy mt2", key i] [x]) <|
+        (List.mapIdx fun i x => h "li" [className <| "lh-copy mt2", key i] [x]) <|
           goal_message :: hs
     pure
         [h "div" [className "fr"]

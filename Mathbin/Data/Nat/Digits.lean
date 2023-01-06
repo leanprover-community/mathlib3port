@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.digits
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -277,7 +277,7 @@ theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l �
         apply w₁
         exact List.mem_cons_of_mem _ m
       · intro h
-        · rw [List.last_cons h] at w₂
+        · rw [List.getLast_cons h] at w₂
           convert w₂
     · exact w₁ d (List.mem_cons_self _ _)
     · by_cases h' : L = []
@@ -290,8 +290,8 @@ theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l �
         apply Nat.pos_of_ne_zero
         contrapose! w₂
         apply digits_zero_of_eq_zero _ w₂
-        · rw [List.last_cons h']
-          exact List.last_mem h'
+        · rw [List.getLast_cons h']
+          exact List.getLast_mem h'
         · exact le_of_lt h
 #align nat.digits_of_digits Nat.digits_of_digits
 
@@ -366,7 +366,7 @@ theorem digits_last {b : ℕ} (m : ℕ) (h : 2 ≤ b) (p q) :
   by_cases hm : m = 0
   · simp [hm]
   simp only [digits_eq_cons_digits_div h (Nat.pos_of_ne_zero hm)]
-  rw [List.last_cons]
+  rw [List.getLast_cons]
 #align nat.digits_last Nat.digits_last
 
 theorem digits.injective (b : ℕ) : Function.Injective b.digits :=
@@ -403,7 +403,7 @@ theorem last_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) :
     · simp
   · cases m
     · cases hm rfl
-    simp_rw [digits_one, List.last_repeat_succ 1 m]
+    simp_rw [digits_one, List.getLast_repeat_succ 1 m]
     norm_num
   revert hm
   apply Nat.strong_induction_on m
@@ -502,9 +502,9 @@ theorem le_digits_len_le (b n m : ℕ) (h : n ≤ m) : (digits b n).length ≤ (
 theorem pow_length_le_mul_of_digits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2 : l.last hl ≠ 0) :
     (b + 2) ^ l.length ≤ (b + 2) * ofDigits (b + 2) l :=
   by
-  rw [← List.init_append_last hl]
-  simp only [List.length_append, List.length, zero_add, List.length_init, of_digits_append,
-    List.length_init, of_digits_singleton, add_comm (l.length - 1), pow_add, pow_one]
+  rw [← List.dropLast_append_getLast hl]
+  simp only [List.length_append, List.length, zero_add, List.length_dropLast, of_digits_append,
+    List.length_dropLast, of_digits_singleton, add_comm (l.length - 1), pow_add, pow_one]
   apply Nat.mul_le_mul_left
   refine' le_trans _ (Nat.le_add_left _ _)
   have : 0 < l.last hl := by rwa [pos_iff_ne_zero]

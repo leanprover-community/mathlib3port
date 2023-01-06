@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.seq.seq
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2804,8 +2804,8 @@ theorem coinduction2 (s) (f g : Seq α → Seq β)
 
 /-- Embed a list as a sequence -/
 def ofList (l : List α) : Seq α :=
-  ⟨List.nth l, fun n h => by
-    rw [List.nth_eq_none_iff] at h⊢
+  ⟨List.get? l, fun n h => by
+    rw [List.get?_eq_none] at h⊢
     exact h.trans (Nat.le_succ n)⟩
 #align seq.of_list Seq.ofList
 

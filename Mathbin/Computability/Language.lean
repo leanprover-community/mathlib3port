@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.language
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,7 +181,7 @@ theorem star_def_nonempty (l : Language α) :
   ext x
   constructor
   · rintro ⟨S, rfl, h⟩
-    refine' ⟨S.filter fun l => ¬List.empty l, by simp, fun y hy => _⟩
+    refine' ⟨S.filter fun l => ¬List.isEmpty l, by simp, fun y hy => _⟩
     rw [mem_filter, empty_iff_eq_nil] at hy
     exact ⟨h y hy.1, hy.2⟩
   · rintro ⟨S, hx, h⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.list
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ end Finset
 
 /-- A listable type with decidable equality is encodable. -/
 def encodableOfList [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encodable α :=
-  ⟨fun a => indexOf a l, l.nth, fun a => index_of_nth (H _)⟩
+  ⟨fun a => indexOf a l, l.nth, fun a => indexOf_get? (H _)⟩
 #align encodable.encodable_of_list Encodable.encodableOfList
 
 /-- A finite type is encodable. Because the encoding is not unique, we wrap it in `trunc` to

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Sean Leather
 
 ! This file was ported from Lean 3 source module control.fold
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,7 +170,7 @@ def Mfoldl.ofFreeMonoid [LawfulMonad m] (f : β → α → m β) : FreeMonoid α
     where
   toFun xs := op <| flip (List.foldlM f) xs.toList
   map_one' := rfl
-  map_mul' := by intros <;> apply unop_injective <;> ext <;> apply List.mfoldl_append
+  map_mul' := by intros <;> apply unop_injective <;> ext <;> apply List.foldlM_append
 #align monoid.mfoldl.of_free_monoid Monoid.Mfoldl.ofFreeMonoid
 
 @[reducible]
@@ -191,7 +191,7 @@ def Mfoldr.ofFreeMonoid [LawfulMonad m] (f : α → β → m β) : FreeMonoid α
     where
   toFun xs := flip (List.foldrM f) xs.toList
   map_one' := rfl
-  map_mul' := by intros <;> ext <;> apply List.mfoldr_append
+  map_mul' := by intros <;> ext <;> apply List.foldrM_append
 #align monoid.mfoldr.of_free_monoid Monoid.Mfoldr.ofFreeMonoid
 
 end Monoid

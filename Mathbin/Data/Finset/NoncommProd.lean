@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.finset.noncomm_prod
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,7 @@ theorem noncomm_prod_cons' (s : Multiset α) (a : α) (comm) :
     · congr 1
       apply comm.of_refl <;> simp
     · intro x hx y hy
-      simp only [quot_mk_to_coe, List.mem_cons_iff, mem_coe, cons_coe] at hx hy
+      simp only [quot_mk_to_coe, List.mem_cons, mem_coe, cons_coe] at hx hy
       apply comm
       · cases hx <;> simp [hx]
       · cases hy <;> simp [hy]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.sort
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,10 +100,10 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
   apply le_antisymm
   · have : s.min' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.min'_mem H)
     obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.min' H :=
-      List.mem_iff_nth_le.1 this
+      List.mem_iff_nthLe.1 this
     rw [← hi]
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.zero_le i)
-  · have : l.nth_le 0 h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l 0 h)
+  · have : l.nth_le 0 h ∈ s := (Finset.mem_sort (· ≤ ·)).1 (List.nthLe_mem l 0 h)
     exact s.min'_le _ this
 #align finset.sorted_zero_eq_min'_aux Finset.sorted_zero_eq_min'_aux
 
@@ -128,11 +128,11 @@ theorem sorted_last_eq_max'_aux (s : Finset α)
   let l := s.sort (· ≤ ·)
   apply le_antisymm
   · have : l.nth_le ((s.sort (· ≤ ·)).length - 1) h ∈ s :=
-      (Finset.mem_sort (· ≤ ·)).1 (List.nth_le_mem l _ h)
+      (Finset.mem_sort (· ≤ ·)).1 (List.nthLe_mem l _ h)
     exact s.le_max' _ this
   · have : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
     obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.max' H :=
-      List.mem_iff_nth_le.1 this
+      List.mem_iff_nthLe.1 this
     rw [← hi]
     have : i ≤ l.length - 1 := Nat.le_pred_of_lt i_lt
     exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.le_pred_of_lt i_lt)

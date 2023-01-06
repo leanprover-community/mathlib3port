@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1090,6 +1090,11 @@ theorem map_range_add [AddZeroClass N] {f : M → N} {hf : f 0 = 0}
   ext fun _ => by simp only [hf', add_apply, map_range_apply]
 #align finsupp.map_range_add Finsupp.map_range_add
 
+theorem map_range_add' [AddZeroClass N] [AddMonoidHomClass β M N] {f : β} (v₁ v₂ : α →₀ M) :
+    mapRange f (map_zero f) (v₁ + v₂) = mapRange f (map_zero f) v₁ + mapRange f (map_zero f) v₂ :=
+  map_range_add (map_add f) v₁ v₂
+#align finsupp.map_range_add' Finsupp.map_range_add'
+
 /-- Bundle `emb_domain f` as an additive map from `α →₀ M` to `β →₀ M`. -/
 @[simps]
 def embDomain.addMonoidHom (f : α ↪ β) : (α →₀ M) →+ β →₀ M
@@ -1147,6 +1152,11 @@ theorem map_range_neg [NegZeroClass G] [NegZeroClass H] {f : G → H} {hf : f 0 
   ext fun _ => by simp only [hf', neg_apply, map_range_apply]
 #align finsupp.map_range_neg Finsupp.map_range_neg
 
+theorem map_range_neg' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β G H] {f : β}
+    (v : α →₀ G) : mapRange f (map_zero f) (-v) = -mapRange f (map_zero f) v :=
+  map_range_neg (map_neg f) v
+#align finsupp.map_range_neg' Finsupp.map_range_neg'
+
 instance [SubNegZeroMonoid G] : Sub (α →₀ G) :=
   ⟨zipWith Sub.sub (sub_zero _)⟩
 
@@ -1164,6 +1174,12 @@ theorem map_range_sub [SubNegZeroMonoid G] [SubNegZeroMonoid H] {f : G → H} {h
     mapRange f hf (v₁ - v₂) = mapRange f hf v₁ - mapRange f hf v₂ :=
   ext fun _ => by simp only [hf', sub_apply, map_range_apply]
 #align finsupp.map_range_sub Finsupp.map_range_sub
+
+theorem map_range_sub' [AddGroup G] [SubtractionMonoid H] [AddMonoidHomClass β G H] {f : β}
+    (v₁ v₂ : α →₀ G) :
+    mapRange f (map_zero f) (v₁ - v₂) = mapRange f (map_zero f) v₁ - mapRange f (map_zero f) v₂ :=
+  map_range_sub (map_sub f) v₁ v₂
+#align finsupp.map_range_sub' Finsupp.map_range_sub'
 
 /-- Note the general `finsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
 unless `β i`'s addition is commutative. -/

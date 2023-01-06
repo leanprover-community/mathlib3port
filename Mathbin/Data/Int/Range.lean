@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.int.range
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,14 +32,14 @@ def range (m n : ℤ) : List ℤ :=
 
 theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
   ⟨fun H =>
-    let ⟨s, h1, h2⟩ := List.mem_map.1 H
+    let ⟨s, h1, h2⟩ := List.mem_map'.1 H
     h2 ▸
       ⟨le_add_of_nonneg_right (ofNat_zero_le s),
         add_lt_of_lt_sub_left <|
           match n - m, h1 with
           | (k : ℕ), h1 => by rwa [List.mem_range, to_nat_coe_nat, ← coe_nat_lt] at h1⟩,
     fun ⟨h1, h2⟩ =>
-    List.mem_map.2
+    List.mem_map'.2
       ⟨toNat (r - m),
         List.mem_range.2 <| by
           rw [← coe_nat_lt, to_nat_of_nonneg (sub_nonneg_of_le h1),

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.list.nodup
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,7 +147,7 @@ theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.le
 @[simp]
 theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) :
     indexOf (nthLe l n h) l = n :=
-  nodup_iff_nth_le_inj.1 H _ _ _ h <| index_of_nth_le <| index_of_lt_length.2 <| nth_le_mem _ _ _
+  nodup_iff_nth_le_inj.1 H _ _ _ h <| index_of_nth_le <| indexOf_lt_length.2 <| nthLe_mem _ _ _
 #align list.nth_le_index_of List.nth_le_index_of
 
 theorem nodup_iff_count_le_one [DecidableEq α] {l : List α} : Nodup l ↔ ∀ a, count a l ≤ 1 :=
@@ -1136,8 +1136,7 @@ protected theorem Nodup.update_nth :
   | b :: l, n + 1, a, hl, ha =>
     nodup_cons.2
       ⟨fun h =>
-        (mem_or_eq_of_mem_update_nth h).elim (nodup_cons.1 hl).1 fun hba =>
-          ha (hba ▸ mem_cons_self _ _),
+        (mem_or_eq_of_mem_set h).elim (nodup_cons.1 hl).1 fun hba => ha (hba ▸ mem_cons_self _ _),
         hl.of_cons.updateNth (mt (mem_cons_of_mem _) ha)⟩
 #align list.nodup.update_nth List.Nodup.update_nth
 

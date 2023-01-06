@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.defs
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,9 +126,9 @@ theorem coe_unone {x : WithOne α} (hx : x ≠ 1) : ↑(unone hx) = x :=
 /- warning: with_one.some_eq_coe clashes with [anonymous] -> [anonymous]
 warning: with_one.some_eq_coe -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {a : α}, Eq.{succ u1} (Option.{u1} α) (Option.some.{u1} α a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (Option.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (Option.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (Option.{u1} α) (coeOption.{u1} α))) a)
+  forall {α : Type.{u}} {a : α}, Eq.{succ u} (Option.{u} α) (Option.some.{u} α a) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (Option.{u} α) (HasLiftT.mk.{succ u, succ u} α (Option.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (Option.{u} α) (coeOption.{u} α))) a)
 but is expected to have type
-  forall {α : Sort.{u1}} {a : Nat}, ((Eq.{1} Nat a (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) -> (forall (m : Nat), (Eq.{1} Nat a (Nat.succ m)) -> α) -> α
+  forall {α : Type.{u}} {a : Type.{v}}, (Nat -> α -> a) -> Nat -> (List.{u} α) -> (List.{v} a)
 Case conversion may be inaccurate. Consider using '#align with_one.some_eq_coe [anonymous]ₓ'. -/
 @[to_additive]
 theorem [anonymous] {a : α} : (some a : WithOne α) = ↑a :=

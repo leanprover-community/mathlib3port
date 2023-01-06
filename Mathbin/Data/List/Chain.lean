@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.chain
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,8 @@ theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :
   rw [chain_split, chain_cons]
 #align list.chain_append_cons_cons List.chain_append_cons_cons
 
-theorem chain_iff_forall₂ : ∀ {a : α} {l : List α}, Chain R a l ↔ l = [] ∨ Forall₂ R (a :: init l) l
+theorem chain_iff_forall₂ :
+    ∀ {a : α} {l : List α}, Chain R a l ↔ l = [] ∨ Forall₂ R (a :: dropLast l) l
   | a, [] => by simp
   | a, [b] => by simp [init]
   | a, b :: c :: l => by simp [@chain_iff_forall₂ b]
@@ -413,7 +414,7 @@ starting from `a` and ending on `b`.
 The converse of `relation_refl_trans_gen_of_exists_chain`.
 -/
 theorem exists_chain_of_relation_refl_trans_gen (h : Relation.ReflTransGen r a b) :
-    ∃ l, Chain r a l ∧ last (a :: l) (cons_ne_nil _ _) = b :=
+    ∃ l, Chain r a l ∧ getLast (a :: l) (cons_ne_nil _ _) = b :=
   by
   apply Relation.ReflTransGen.head_induction_on h
   · exact ⟨[], chain.nil, rfl⟩
@@ -428,7 +429,7 @@ the predicate is true everywhere in the chain and at `a`.
 That is, we can propagate the predicate up the chain.
 -/
 theorem Chain.induction (p : α → Prop) (l : List α) (h : Chain r a l)
-    (hb : last (a :: l) (cons_ne_nil _ _) = b) (carries : ∀ ⦃x y : α⦄, r x y → p y → p x)
+    (hb : getLast (a :: l) (cons_ne_nil _ _) = b) (carries : ∀ ⦃x y : α⦄, r x y → p y → p x)
     (final : p b) : ∀ i ∈ a :: l, p i :=
   by
   induction l generalizing a
@@ -446,7 +447,7 @@ That is, we can propagate the predicate all the way up the chain.
 -/
 @[elab_as_elim]
 theorem Chain.induction_head (p : α → Prop) (l : List α) (h : Chain r a l)
-    (hb : last (a :: l) (cons_ne_nil _ _) = b) (carries : ∀ ⦃x y : α⦄, r x y → p y → p x)
+    (hb : getLast (a :: l) (cons_ne_nil _ _) = b) (carries : ∀ ⦃x y : α⦄, r x y → p y → p x)
     (final : p b) : p a :=
   (Chain.induction p l h hb carries final) _ (mem_cons_self _ _)
 #align list.chain.induction_head List.Chain.induction_head
@@ -456,7 +457,7 @@ If there is an `r`-chain starting from `a` and ending at `b`, then `a` and `b` a
 reflexive transitive closure of `r`. The converse of `exists_chain_of_relation_refl_trans_gen`.
 -/
 theorem relation_refl_trans_gen_of_exists_chain (l) (hl₁ : Chain r a l)
-    (hl₂ : last (a :: l) (cons_ne_nil _ _) = b) : Relation.ReflTransGen r a b :=
+    (hl₂ : getLast (a :: l) (cons_ne_nil _ _) = b) : Relation.ReflTransGen r a b :=
   Chain.induction_head _ l hl₁ hl₂ (fun x y => Relation.ReflTransGen.head)
     Relation.ReflTransGen.refl
 #align list.relation_refl_trans_gen_of_exists_chain List.relation_refl_trans_gen_of_exists_chain

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Aaron Anderson, Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.support
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -464,7 +464,7 @@ theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y :=
 theorem support_swap_mul_swap {x y z : α} (h : List.Nodup [x, y, z]) :
     support (swap x y * swap y z) = {x, y, z} :=
   by
-  simp only [List.not_mem_nil, and_true_iff, List.mem_cons_iff, not_false_iff, List.nodup_cons,
+  simp only [List.not_mem_nil, and_true_iff, List.mem_cons, not_false_iff, List.nodup_cons,
     List.mem_singleton, and_self_iff, List.nodup_nil] at h
   push_neg  at h
   apply le_antisymm
@@ -527,7 +527,7 @@ theorem eq_on_support_mem_disjoint {l : List (Perm α)} (h : f ∈ l) (hl : l.Pa
   · simpa using h
   · intro x hx
     rw [List.pairwise_cons] at hl
-    rw [List.mem_cons_iff] at h
+    rw [List.mem_cons] at h
     rcases h with (rfl | h)
     ·
       rw [List.prod_cons, mul_apply,

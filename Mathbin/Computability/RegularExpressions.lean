@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.regular_expressions
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -320,7 +320,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
         cases' S with t' U
         · exact ⟨[], [], by tauto⟩
         · cases' t' with b t
-          · simp only [forall_eq_or_imp, List.mem_cons_iff] at helem
+          · simp only [forall_eq_or_imp, List.mem_cons] at helem
             simp only [eq_self_iff_true, not_true, Ne.def, false_and_iff] at helem
             cases helem
           simp only [List.join, List.cons_append] at hsum

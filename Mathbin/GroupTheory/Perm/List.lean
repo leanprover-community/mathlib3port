@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.list
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,8 +113,8 @@ theorem mem_of_form_perm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ 
     · replace hx :=
         (Function.Injective.eq_iff (Equiv.injective _)).mp (List.form_perm_apply_of_not_mem _ _ hx)
       simp only [List.form_perm_cons_cons, hx, Equiv.Perm.coe_mul, Function.comp_apply,
-        List.mem_cons_iff, swap_apply_def, ite_eq_left_iff] at h
-      simp only [List.mem_cons_iff]
+        List.mem_cons, swap_apply_def, ite_eq_left_iff] at h
+      simp only [List.mem_cons]
       obtain h | h | h := h <;> · split_ifs  at h <;> cc
 #align list.mem_of_form_perm_apply_mem List.mem_of_form_perm_apply_mem
 
@@ -159,7 +159,7 @@ theorem form_perm_apply_nth_le_zero (l : List α) (h : Nodup l) (hl : 1 < l.leng
 variable (l)
 
 theorem form_perm_eq_head_iff_eq_last (x y : α) :
-    formPerm (y :: l) x = y ↔ x = last (y :: l) (cons_ne_nil _ _) :=
+    formPerm (y :: l) x = y ↔ x = getLast (y :: l) (cons_ne_nil _ _) :=
   Iff.trans (by rw [form_perm_apply_last]) (formPerm (y :: l)).Injective.eq_iff
 #align list.form_perm_eq_head_iff_eq_last List.form_perm_eq_head_iff_eq_last
 
@@ -362,7 +362,7 @@ theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : Nodup (x :: y 
       support_form_perm_of_nodup' _ hd' (by simp)]
     simp only [h]
   use n
-  apply List.ext_le
+  apply List.ext_nthLe
   · rw [length_rotate, hl]
   · intro k hk hk'
     rw [nth_le_rotate]

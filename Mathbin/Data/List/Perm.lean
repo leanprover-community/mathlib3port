@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.perm
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,7 +256,7 @@ theorem Perm.filter_map (f : α → Option β) {l₁ l₂ : List α} (p : l₁ ~
 
 @[congr]
 theorem Perm.map (f : α → β) {l₁ l₂ : List α} (p : l₁ ~ l₂) : map f l₁ ~ map f l₂ :=
-  filter_map_eq_map f ▸ p.filterMap _
+  filterMap_eq_map f ▸ p.filterMap _
 #align list.perm.map List.Perm.map
 
 theorem Perm.pmap {p : α → Prop} (f : ∀ a, p a → β) {l₁ l₂ : List α} (p : l₁ ~ l₂) {H₁ H₂} :
@@ -3630,7 +3630,7 @@ theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
 #align list.perm_lookmap List.perm_lookmap
 
 theorem Perm.erasep (f : α → Prop) [DecidablePred f] {l₁ l₂ : List α}
-    (H : Pairwise (fun a b => f a → f b → False) l₁) (p : l₁ ~ l₂) : erasep f l₁ ~ erasep f l₂ :=
+    (H : Pairwise (fun a b => f a → f b → False) l₁) (p : l₁ ~ l₂) : eraseP f l₁ ~ eraseP f l₂ :=
   by
   let F a b := f a → f b → False
   change Pairwise F l₁ at H

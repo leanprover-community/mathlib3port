@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,13 +160,43 @@ theorem span_singleton_inv (x : K) : (spanSingleton R₁⁰ x)⁻¹ = spanSingle
   one_div_span_singleton x
 #align fractional_ideal.span_singleton_inv FractionalIdeal.span_singleton_inv
 
+@[simp]
+theorem span_singleton_div_span_singleton (x y : K) :
+    spanSingleton R₁⁰ x / spanSingleton R₁⁰ y = spanSingleton R₁⁰ (x / y) := by
+  rw [div_span_singleton, mul_comm, span_singleton_mul_span_singleton, div_eq_mul_inv]
+#align
+  fractional_ideal.span_singleton_div_span_singleton FractionalIdeal.span_singleton_div_span_singleton
+
+theorem span_singleton_div_self {x : K} (hx : x ≠ 0) :
+    spanSingleton R₁⁰ x / spanSingleton R₁⁰ x = 1 := by
+  rw [span_singleton_div_span_singleton, div_self hx, span_singleton_one]
+#align fractional_ideal.span_singleton_div_self FractionalIdeal.span_singleton_div_self
+
+theorem coe_ideal_span_singleton_div_self {x : R₁} (hx : x ≠ 0) :
+    ((Ideal.span {x} : Ideal R₁) : FractionalIdeal R₁⁰ K) / (Ideal.span {x} : Ideal R₁) = 1 := by
+  rw [coe_ideal_span_singleton,
+    span_singleton_div_self K <|
+      (map_ne_zero_iff _ <| NoZeroSMulDivisors.algebra_map_injective R₁ K).mpr hx]
+#align
+  fractional_ideal.coe_ideal_span_singleton_div_self FractionalIdeal.coe_ideal_span_singleton_div_self
+
+theorem span_singleton_mul_inv {x : K} (hx : x ≠ 0) :
+    spanSingleton R₁⁰ x * (spanSingleton R₁⁰ x)⁻¹ = 1 := by
+  rw [span_singleton_inv, span_singleton_mul_span_singleton, mul_inv_cancel hx, span_singleton_one]
+#align fractional_ideal.span_singleton_mul_inv FractionalIdeal.span_singleton_mul_inv
+
 theorem coe_ideal_span_singleton_mul_inv {x : R₁} (hx : x ≠ 0) :
     ((Ideal.span {x} : Ideal R₁) : FractionalIdeal R₁⁰ K) * (Ideal.span {x} : Ideal R₁)⁻¹ = 1 := by
-  rw [coe_ideal_span_singleton, span_singleton_inv, span_singleton_mul_span_singleton,
-    mul_inv_cancel <| (map_ne_zero_iff _ <| NoZeroSMulDivisors.algebra_map_injective R₁ K).mpr hx,
-    span_singleton_one]
+  rw [coe_ideal_span_singleton,
+    span_singleton_mul_inv K <|
+      (map_ne_zero_iff _ <| NoZeroSMulDivisors.algebra_map_injective R₁ K).mpr hx]
 #align
   fractional_ideal.coe_ideal_span_singleton_mul_inv FractionalIdeal.coe_ideal_span_singleton_mul_inv
+
+theorem span_singleton_inv_mul {x : K} (hx : x ≠ 0) :
+    (spanSingleton R₁⁰ x)⁻¹ * spanSingleton R₁⁰ x = 1 := by
+  rw [mul_comm, span_singleton_mul_inv K hx]
+#align fractional_ideal.span_singleton_inv_mul FractionalIdeal.span_singleton_inv_mul
 
 theorem coe_ideal_span_singleton_inv_mul {x : R₁} (hx : x ≠ 0) :
     ((Ideal.span {x} : Ideal R₁) : FractionalIdeal R₁⁰ K)⁻¹ * (Ideal.span {x} : Ideal R₁) = 1 := by

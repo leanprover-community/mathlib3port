@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.perm
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
       split_ifs  at hx
     exacts[hxa (h.symm.trans h_1), hx h]
   suffices f ∈ permsOfList l ∨ ∃ b ∈ l, ∃ g ∈ permsOfList l, swap a b * g = f by
-    simpa only [permsOfList, exists_prop, List.mem_map, mem_append, List.mem_bind]
+    simpa only [permsOfList, exists_prop, List.mem_map', mem_append, List.mem_bind]
   refine' or_iff_not_imp_left.2 fun hfl => ⟨f a, _, swap a (f a) * f, IH this, _⟩
   · exact mem_of_ne_of_mem hfa (h _ hfa')
   · rw [← mul_assoc, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← perm.one_def, one_mul]
@@ -82,7 +82,7 @@ theorem mem_of_mem_perms_of_list :
     (mem_append.1 h).elim (fun h x hx => mem_cons_of_mem _ (mem_of_mem_perms_of_list h hx))
       fun h x hx =>
       let ⟨y, hy, hy'⟩ := List.mem_bind.1 h
-      let ⟨g, hg₁, hg₂⟩ := List.mem_map.1 hy'
+      let ⟨g, hg₁, hg₂⟩ := List.mem_map'.1 hy'
       if hxa : x = a then by simp [hxa]
       else
         if hxy : x = y then mem_cons_of_mem _ <| by rwa [hxy]
@@ -110,8 +110,8 @@ theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).
       exact
         ⟨hln',
           ⟨fun _ _ => hln'.map fun _ _ => mul_left_cancel, fun i j hj hij x hx₁ hx₂ =>
-            let ⟨f, hf⟩ := List.mem_map.1 hx₁
-            let ⟨g, hg⟩ := List.mem_map.1 hx₂
+            let ⟨f, hf⟩ := List.mem_map'.1 hx₁
+            let ⟨g, hg⟩ := List.mem_map'.1 hx₂
             have hix : x a = nth_le l i (lt_trans hij hj) := by
               rw [← hf.2, mul_apply, hmeml hf.1, swap_apply_left]
             have hiy : x a = nth_le l j hj := by rw [← hg.2, mul_apply, hmeml hg.1, swap_apply_left]
@@ -120,7 +120,7 @@ theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).
                 nodup_iff_nth_le_inj.1 hl' i j (lt_trans hij hj) hj <| by rw [← hix, hiy]⟩,
           fun f hf₁ hf₂ =>
           let ⟨x, hx, hx'⟩ := List.mem_bind.1 hf₂
-          let ⟨g, hg⟩ := List.mem_map.1 hx'
+          let ⟨g, hg⟩ := List.mem_map'.1 hx'
           have hgxa : g⁻¹ x = a := f.Injective <| by rw [hmeml hf₁, ← hg.2] <;> simp
           have hxa : x ≠ a := fun h => (List.nodup_cons.1 hl).1 (h ▸ hx)
           (List.nodup_cons.1 hl).1 <|

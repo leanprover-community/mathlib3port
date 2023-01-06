@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module data.vector.mem
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,11 +29,11 @@ variable {α β : Type _} {n : ℕ} (a a' : α)
 theorem nth_mem (i : Fin n) (v : Vector α n) : v.nth i ∈ v.toList :=
   by
   rw [nth_eq_nth_le]
-  exact List.nth_le_mem _ _ _
+  exact List.nthLe_mem _ _ _
 #align vector.nth_mem Vector.nth_mem
 
 theorem mem_iff_nth (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
-  simp only [List.mem_iff_nth_le, Fin.exists_iff, Vector.nth_eq_nth_le] <;>
+  simp only [List.mem_iff_nthLe, Fin.exists_iff, Vector.nth_eq_nth_le] <;>
     exact
       ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ =>
         ⟨i, by rwa [to_list_length], h⟩⟩
@@ -48,7 +48,7 @@ theorem not_mem_zero (v : Vector α 0) : a ∉ v.toList :=
 #align vector.not_mem_zero Vector.not_mem_zero
 
 theorem mem_cons_iff (v : Vector α n) : a' ∈ (a ::ᵥ v).toList ↔ a' = a ∨ a' ∈ v.toList := by
-  rw [Vector.toList_cons, List.mem_cons_iff]
+  rw [Vector.toList_cons, List.mem_cons]
 #align vector.mem_cons_iff Vector.mem_cons_iff
 
 theorem mem_succ_iff (v : Vector α (n + 1)) : a ∈ v.toList ↔ a = v.head ∨ a ∈ v.tail.toList :=
@@ -79,7 +79,7 @@ theorem mem_of_mem_tail (v : Vector α n) (ha : a ∈ v.tail.toList) : a ∈ v.t
 
 theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) :
     b ∈ (v.map f).toList ↔ ∃ a : α, a ∈ v.toList ∧ f a = b := by
-  rw [Vector.to_list_map, List.mem_map]
+  rw [Vector.to_list_map, List.mem_map']
 #align vector.mem_map_iff Vector.mem_map_iff
 
 theorem not_mem_map_zero (b : β) (v : Vector α 0) (f : α → β) : b ∉ (v.map f).toList := by

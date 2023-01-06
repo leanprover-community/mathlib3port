@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_separated
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ theorem quasi_separated_respects_iso : MorphismProperty.RespectsIso @QuasiSepara
   algebraic_geometry.quasi_separated_respects_iso AlgebraicGeometry.quasi_separated_respects_iso
 
 theorem QuasiSeparated.affine_open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
-    Tfae
+    TFAE
       [QuasiSeparated f,
         ∃ (𝒰 : SchemeCat.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i)),
           ∀ i : 𝒰.J, QuasiSeparatedSpace (pullback f (𝒰.map i)).carrier,
@@ -217,7 +217,7 @@ theorem QuasiSeparated.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiSeparated
   algebraic_geometry.quasi_separated.is_local_at_target AlgebraicGeometry.QuasiSeparated.isLocalAtTarget
 
 theorem QuasiSeparated.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
-    Tfae
+    TFAE
       [QuasiSeparated f,
         ∃ 𝒰 : SchemeCat.OpenCover.{u} Y,
           ∀ i : 𝒰.J, QuasiSeparated (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.ring_division
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -654,7 +654,7 @@ theorem roots_list_prod (L : List R[X]) :
     (0 : R[X]) ∉ L → L.Prod.roots = (L : Multiset R[X]).bind roots :=
   (List.recOn L fun _ => roots_one) fun hd tl ih H =>
     by
-    rw [List.mem_cons_iff, not_or] at H
+    rw [List.mem_cons, not_or] at H
     rw [List.prod_cons, roots_mul (mul_ne_zero (Ne.symm H.1) <| List.prod_ne_zero H.2), ←
       Multiset.cons_coe, Multiset.cons_bind, ih H.2]
 #align polynomial.roots_list_prod Polynomial.roots_list_prod

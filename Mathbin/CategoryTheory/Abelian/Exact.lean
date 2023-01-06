@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Adam Topaz, Johan Commelin, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.exact
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `Exact [`f `g])
@@ -216,7 +216,7 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
 theorem
   exact_tfae
   :
-    Tfae
+    TFAE
       [
         Exact f g , f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f = 0 , imageSubobject f = kernelSubobject g
         ]
@@ -384,7 +384,7 @@ variable (Z)
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `Mono [`f])
@@ -500,7 +500,7 @@ variable (Z)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   tfae_mono
-  : Tfae [ Mono f , kernel.ι f = 0 , Exact ( 0 : Z ⟶ X ) f ]
+  : TFAE [ Mono f , kernel.ι f = 0 , Exact ( 0 : Z ⟶ X ) f ]
   :=
     by
       tfae_have 3 → 2
@@ -530,7 +530,7 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
        (Term.typeSpec
         ":"
         (Term.app
-         `Tfae
+         `TFAE
          [(«term[_]»
            "["
            [(Term.app `Epi [`f])
@@ -724,7 +724,7 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   tfae_epi
-  : Tfae [ Epi f , cokernel.π f = 0 , Exact f ( 0 : Y ⟶ Z ) ]
+  : TFAE [ Epi f , cokernel.π f = 0 , Exact f ( 0 : Y ⟶ Z ) ]
   :=
     by
       tfae_have 3 → 2

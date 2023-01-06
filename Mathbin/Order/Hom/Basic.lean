@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.hom.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,9 +297,9 @@ instance : OrderHomClass (α →o β) α β where
 /- warning: order_hom.to_fun_eq_coe clashes with [anonymous] -> [anonymous]
 warning: order_hom.to_fun_eq_coe -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_3}} [_inst_1 : Preorder.{u_2} α] [_inst_2 : Preorder.{u_3} β] {f : OrderHom.{u_2, u_3} α β _inst_1 _inst_2}, Eq.{max (succ u_2) (succ u_3)} (α -> β) (OrderHom.toFun.{u_2, u_3} α β _inst_1 _inst_2 f) (coeFn.{max (succ u_2) (succ u_3), max (succ u_2) (succ u_3)} (OrderHom.{u_2, u_3} α β _inst_1 _inst_2) (fun (_x : OrderHom.{u_2, u_3} α β _inst_1 _inst_2) => α -> β) (OrderHom.hasCoeToFun.{u_2, u_3} α β _inst_1 _inst_2) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : OrderHom.{u1, u2} α β _inst_1 _inst_2}, Eq.{max (succ u1) (succ u2)} (α -> β) (OrderHom.toFun.{u1, u2} α β _inst_1 _inst_2 f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderHom.{u1, u2} α β _inst_1 _inst_2) (fun (_x : OrderHom.{u1, u2} α β _inst_1 _inst_2) => α -> β) (OrderHom.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2) f)
 but is expected to have type
-  forall {α : Sort.{u}} {β : Nat}, ((Eq.{1} Nat β (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> α) -> (forall (m : Nat), (Eq.{1} Nat β (Nat.succ m)) -> α) -> α
+  forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align order_hom.to_fun_eq_coe [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] {f : α →o β} : f.toFun = f :=

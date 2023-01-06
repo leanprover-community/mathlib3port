@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set_like.basic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,9 +204,9 @@ theorem coe_eq_coe {x y : p} : (x : B) = y ↔ x = y :=
 /- warning: set_like.coe_mk clashes with [anonymous] -> [anonymous]
 warning: set_like.coe_mk -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {A : Type.{u_1}} {B : Type.{u_2}} [i : SetLike.{u_1, u_2} A B] {p : A} (x : B) (hx : Membership.Mem.{u_2, u_1} B A (SetLike.hasMem.{u_1, u_2} A B i) x p), Eq.{succ u_2} B ((fun (a : Sort.{max 1 (succ u_2)}) (b : Type.{u_2}) [self : HasLiftT.{max 1 (succ u_2), succ u_2} a b] => self.0) (Subtype.{succ u_2} B (fun (x : B) => Membership.Mem.{u_2, u_1} B A (SetLike.hasMem.{u_1, u_2} A B i) x p)) B (HasLiftT.mk.{max 1 (succ u_2), succ u_2} (Subtype.{succ u_2} B (fun (x : B) => Membership.Mem.{u_2, u_1} B A (SetLike.hasMem.{u_1, u_2} A B i) x p)) B (CoeTCₓ.coe.{max 1 (succ u_2), succ u_2} (Subtype.{succ u_2} B (fun (x : B) => Membership.Mem.{u_2, u_1} B A (SetLike.hasMem.{u_1, u_2} A B i) x p)) B (coeBase.{max 1 (succ u_2), succ u_2} (Subtype.{succ u_2} B (fun (x : B) => Membership.Mem.{u_2, u_1} B A (SetLike.hasMem.{u_1, u_2} A B i) x p)) B (coeSubtype.{succ u_2} B (fun (x : B) => Membership.Mem.{u_2, u_1} B A (SetLike.hasMem.{u_1, u_2} A B i) x p))))) (Subtype.mk.{succ u_2} B (fun (x : B) => Membership.Mem.{u_2, u_1} B A (SetLike.hasMem.{u_1, u_2} A B i) x p) x hx)) x
+  forall {A : Type.{u1}} {B : Type.{u2}} [i : SetLike.{u1, u2} A B] {p : A} (x : B) (hx : Membership.Mem.{u2, u1} B A (SetLike.hasMem.{u1, u2} A B i) x p), Eq.{succ u2} B ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Subtype.{succ u2} B (fun (x : B) => Membership.Mem.{u2, u1} B A (SetLike.hasMem.{u1, u2} A B i) x p)) B (HasLiftT.mk.{succ u2, succ u2} (Subtype.{succ u2} B (fun (x : B) => Membership.Mem.{u2, u1} B A (SetLike.hasMem.{u1, u2} A B i) x p)) B (CoeTCₓ.coe.{succ u2, succ u2} (Subtype.{succ u2} B (fun (x : B) => Membership.Mem.{u2, u1} B A (SetLike.hasMem.{u1, u2} A B i) x p)) B (coeBase.{succ u2, succ u2} (Subtype.{succ u2} B (fun (x : B) => Membership.Mem.{u2, u1} B A (SetLike.hasMem.{u1, u2} A B i) x p)) B (coeSubtype.{succ u2} B (fun (x : B) => Membership.Mem.{u2, u1} B A (SetLike.hasMem.{u1, u2} A B i) x p))))) (Subtype.mk.{succ u2} B (fun (x : B) => Membership.Mem.{u2, u1} B A (SetLike.hasMem.{u1, u2} A B i) x p) x hx)) x
 but is expected to have type
-  forall {A : Sort.{u}} {B : Nat}, ((Eq.{1} Nat B (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> A) -> (forall (m : Nat), (Eq.{1} Nat B (Nat.succ m)) -> A) -> A
+  forall {A : Type.{u1}} {B : Type.{u2}}, (Nat -> A -> B) -> Nat -> (List.{u1} A) -> (List.{u2} B)
 Case conversion may be inaccurate. Consider using '#align set_like.coe_mk [anonymous]ₓ'. -/
 @[simp, norm_cast]
 theorem [anonymous] (x : B) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : B) = x :=

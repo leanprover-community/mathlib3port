@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.perm.sign
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,7 +242,7 @@ def swapFactorsAux :
       ⟨swap x (f x)::m.1, by
         rw [List.prod_cons, m.2.1, ← mul_assoc, mul_def (swap x (f x)), swap_swap, ← one_def,
           one_mul],
-        fun g hg => ((List.mem_cons_iff _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
+        fun g hg => ((List.mem_cons _ _ _).1 hg).elim (fun h => ⟨x, f x, hfx, h⟩) (m.2.2 _)⟩
 #align equiv.perm.swap_factors_aux Equiv.Perm.swapFactorsAux
 
 /-- `swap_factors` represents a permutation as a product of a list of transpositions.
@@ -630,7 +630,7 @@ theorem sign_prod_list_swap {l : List (Perm α)} (hl : ∀ g ∈ l, IsSwap g) :
   have h₁ : l.map sign = List.repeat (-1) l.length :=
     List.eq_repeat.2
       ⟨by simp, fun u hu =>
-        let ⟨g, hg⟩ := List.mem_map.1 hu
+        let ⟨g, hg⟩ := List.mem_map'.1 hu
         hg.2 ▸ (hl _ hg.1).sign_eq⟩
   rw [← List.prod_repeat, ← h₁, List.prod_hom _ (@sign α _ _)]
 #align equiv.perm.sign_prod_list_swap Equiv.Perm.sign_prod_list_swap
@@ -657,7 +657,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) :
         let ⟨g, hg⟩ := hs (-1)
         let ⟨l, hl⟩ := (truncSwapFactors g).out
         have : ∀ a ∈ l.map s, a = (1 : ℤˣ) := fun a ha =>
-          let ⟨g, hg⟩ := List.mem_map.1 ha
+          let ⟨g, hg⟩ := List.mem_map'.1 ha
           hg.2 ▸ this _ (hl.2 _ hg.1)
         have : s l.Prod = 1 := by
           rw [← l.prod_hom s, List.eq_repeat'.2 this, List.prod_repeat, one_pow]
@@ -666,7 +666,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) :
   MonoidHom.ext fun f => by
     let ⟨l, hl₁, hl₂⟩ := (truncSwapFactors f).out
     have hsl : ∀ a ∈ l.map s, a = (-1 : ℤˣ) := fun a ha =>
-      let ⟨g, hg⟩ := List.mem_map.1 ha
+      let ⟨g, hg⟩ := List.mem_map'.1 ha
       hg.2 ▸ this (hl₂ _ hg.1)
     rw [← hl₁, ← l.prod_hom s, List.eq_repeat'.2 hsl, List.length_map, List.prod_repeat,
       sign_prod_list_swap hl₂]
@@ -677,7 +677,7 @@ theorem sign_subtype_perm (f : Perm α) {p : α → Prop} [DecidablePred p] (h�
   by
   let l := (truncSwapFactors (subtypePerm f h₁)).out
   have hl' : ∀ g' ∈ l.1.map ofSubtype, IsSwap g' := fun g' hg' =>
-    let ⟨g, hg⟩ := List.mem_map.1 hg'
+    let ⟨g, hg⟩ := List.mem_map'.1 hg'
     hg.2 ▸ (l.2.2 _ hg.1).of_subtype_is_swap
   have hl'₂ : (l.1.map ofSubtype).Prod = f := by
     rw [l.1.prod_hom of_subtype, l.2.1, of_subtype_subtype_perm _ h₂]
@@ -747,7 +747,7 @@ theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → Perm 
   · rw [← ha'] at *
     refine' Or.inl ⟨l.mem_cons_self a, _⟩
     rw [prod_extend_right_apply_eq]
-  · refine' Or.inr ⟨fun h => not_or_of_not ha' not_mem_l ((List.mem_cons_iff _ _ _).mp h), _⟩
+  · refine' Or.inr ⟨fun h => not_or_of_not ha' not_mem_l ((List.mem_cons _ _ _).mp h), _⟩
     rw [prod_extend_right_apply_ne _ ha']
 #align equiv.perm.prod_prod_extend_right Equiv.Perm.prod_prod_extend_right
 

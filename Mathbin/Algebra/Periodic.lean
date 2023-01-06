@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module algebra.periodic
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem List.periodic_prod [Add α] [CommMonoid β] (l : List (α → β)) (hl :
     Periodic l.Prod c := by
   induction' l with g l ih hl
   · simp
-  · simp only [List.mem_cons_iff, forall_eq_or_imp] at hl
+  · simp only [List.mem_cons, forall_eq_or_imp] at hl
     obtain ⟨hg, hl⟩ := hl
     simp only [List.prod_cons]
     exact hg.mul (ih hl)

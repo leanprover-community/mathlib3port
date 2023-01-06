@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.open_immersion
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
   algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionIsLocalAtTarget
 
 theorem IsOpenImmersion.open_cover_tfae {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
-    Tfae
+    TFAE
       [IsOpenImmersion f,
         ∃ 𝒰 : SchemeCat.OpenCover.{u} Y,
           ∀ i : 𝒰.J, IsOpenImmersion (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),

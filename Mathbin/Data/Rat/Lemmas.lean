@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.lemmas
-! leanprover-community/mathlib commit 5a3e819569b0f12cbec59d740a2613018e7b8eec
+! leanprover-community/mathlib commit 26f081a2fb920140ed5bc5cc5344e84bcc7cb2b2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ warning: rat.mk_pnat_num -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall (n : Int) (d : PNat), Eq.{1} Int (Rat.num ([anonymous] n d)) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Nat.gcd (Int.natAbs n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) d))))
 but is expected to have type
-  forall {n : Sort.{u}} {d : Nat}, ((Eq.{1} Nat d (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat d (Nat.succ m)) -> n) -> n
+  forall {n : Type.{u}} {d : Type.{v}}, (Nat -> n -> d) -> Nat -> (List.{u} n) -> (List.{v} d)
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_num [anonymous]ₓ'. -/
 theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).num = n / Nat.gcd n.natAbs d := by
   cases d <;> rfl
@@ -99,7 +99,7 @@ warning: rat.mk_pnat_denom -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall (n : Int) (d : PNat), Eq.{1} Nat (Rat.den ([anonymous] n d)) (HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) d) (Nat.gcd (Int.natAbs n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) d)))
 but is expected to have type
-  forall {n : Sort.{u}} {d : Nat}, ((Eq.{1} Nat d (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat d (Nat.succ m)) -> n) -> n
+  forall {n : Type.{u}} {d : Type.{v}}, (Nat -> n -> d) -> Nat -> (List.{u} n) -> (List.{v} d)
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_denom [anonymous]ₓ'. -/
 theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).denom = d / Nat.gcd n.natAbs d := by
   cases d <;> rfl
@@ -133,7 +133,7 @@ warning: rat.mk_pnat_denom_dvd -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall (n : Int) (d : PNat), Dvd.Dvd.{0} Nat Nat.hasDvd (Rat.den ([anonymous] n d)) (Subtype.val.{1} Nat (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) d)
 but is expected to have type
-  forall {n : Sort.{u}} {d : Nat}, ((Eq.{1} Nat d (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> n) -> (forall (m : Nat), (Eq.{1} Nat d (Nat.succ m)) -> n) -> n
+  forall {n : Type.{u}} {d : Type.{v}}, (Nat -> n -> d) -> Nat -> (List.{u} n) -> (List.{v} d)
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_denom_dvd [anonymous]ₓ'. -/
 theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).denom ∣ d.1 :=
   by
@@ -508,7 +508,7 @@ warning: rat.mk_pnat_pnat_denom_eq -> [anonymous] is a dubious translation:
 lean 3 declaration is
   forall (x : Rat), Eq.{1} Rat ([anonymous] (Rat.num x) (Rat.pnatDen x)) x
 but is expected to have type
-  forall {x : Sort.{u}} {n : Nat}, ((Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> x) -> (forall (m : Nat), (Eq.{1} Nat n (Nat.succ m)) -> x) -> x
+  forall {x : Type.{u}} {β : Type.{v}}, (Nat -> x -> β) -> Nat -> (List.{u} x) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_pnat_denom_eq [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] (x : ℚ) : [anonymous] x.num x.pnatDenom = x := by
