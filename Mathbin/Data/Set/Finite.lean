@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,12 +103,12 @@ This is the `fintype` projection for a `set.finite`.
 
 Note that because `finite` isn't a typeclass, this definition will not fire if it
 is made into an instance -/
-noncomputable def Finite.fintype {s : Set α} (h : s.Finite) : Fintype s :=
+protected noncomputable def Finite.fintype {s : Set α} (h : s.Finite) : Fintype s :=
   h.nonempty_fintype.some
 #align set.finite.fintype Set.Finite.fintype
 
 /-- Using choice, get the `finset` that represents this `set.` -/
-noncomputable def Finite.toFinset {s : Set α} (h : s.Finite) : Finset α :=
+protected noncomputable def Finite.toFinset {s : Set α} (h : s.Finite) : Finset α :=
   @Set.toFinset _ _ h.Fintype
 #align set.finite.to_finset Set.Finite.toFinset
 
@@ -148,66 +148,160 @@ protected theorem finite_or_infinite (s : Set α) : s.Finite ∨ s.Infinite :=
 /-! ### Basic properties of `set.finite.to_finset` -/
 
 
-section FiniteToFinset
+namespace Finite
 
-variable {s t : Set α}
-
-@[simp]
-theorem Finite.coe_to_finset {s : Set α} (h : s.Finite) : (h.toFinset : Set α) = s :=
-  @Set.coe_to_finset _ s h.Fintype
-#align set.finite.coe_to_finset Set.Finite.coe_to_finset
+variable {s t : Set α} {a : α} {hs : s.Finite} {ht : t.Finite}
 
 @[simp]
-theorem Finite.mem_to_finset {s : Set α} (h : s.Finite) {a : α} : a ∈ h.toFinset ↔ a ∈ s :=
+protected theorem mem_to_finset (h : s.Finite) : a ∈ h.toFinset ↔ a ∈ s :=
   @mem_to_finset _ _ h.Fintype _
 #align set.finite.mem_to_finset Set.Finite.mem_to_finset
 
 @[simp]
-theorem Finite.nonempty_to_finset {s : Set α} (h : s.Finite) : h.toFinset.Nonempty ↔ s.Nonempty :=
-  by rw [← Finset.coe_nonempty, finite.coe_to_finset]
-#align set.finite.nonempty_to_finset Set.Finite.nonempty_to_finset
+protected theorem coe_to_finset (h : s.Finite) : (h.toFinset : Set α) = s :=
+  @coe_to_finset _ _ h.Fintype
+#align set.finite.coe_to_finset Set.Finite.coe_to_finset
 
 @[simp]
-theorem Finite.coe_sort_to_finset {s : Set α} (h : s.Finite) : (h.toFinset : Type _) = s := by
+protected theorem to_finset_nonempty (h : s.Finite) : h.toFinset.Nonempty ↔ s.Nonempty := by
+  rw [← Finset.coe_nonempty, finite.coe_to_finset]
+#align set.finite.to_finset_nonempty Set.Finite.to_finset_nonempty
+
+/-- Note that this is an equality of types not holding definitionally. Use wisely. -/
+theorem coe_sort_to_finset (h : s.Finite) : ↥h.toFinset = ↥s := by
   rw [← Finset.coe_sort_coe _, h.coe_to_finset]
 #align set.finite.coe_sort_to_finset Set.Finite.coe_sort_to_finset
 
 @[simp]
-theorem finite_empty_to_finset (h : (∅ : Set α).Finite) : h.toFinset = ∅ := by
-  rw [← Finset.coe_inj, h.coe_to_finset, Finset.coe_empty]
-#align set.finite_empty_to_finset Set.finite_empty_to_finset
-
-@[simp]
-theorem finite_univ_to_finset [Fintype α] (h : (Set.univ : Set α).Finite) :
-    h.toFinset = Finset.univ :=
-  Finset.ext <| by simp
-#align set.finite_univ_to_finset Set.finite_univ_to_finset
-
-@[simp]
-theorem Finite.to_finset_inj {s t : Set α} {hs : s.Finite} {ht : t.Finite} :
-    hs.toFinset = ht.toFinset ↔ s = t := by simp only [← Finset.coe_inj, finite.coe_to_finset]
+protected theorem to_finset_inj : hs.toFinset = ht.toFinset ↔ s = t :=
+  @to_finset_inj _ _ _ hs.Fintype ht.Fintype
 #align set.finite.to_finset_inj Set.Finite.to_finset_inj
 
-theorem subset_to_finset_iff {s : Finset α} {t : Set α} (ht : t.Finite) :
-    s ⊆ ht.toFinset ↔ ↑s ⊆ t := by rw [← Finset.coe_subset, ht.coe_to_finset]
-#align set.subset_to_finset_iff Set.subset_to_finset_iff
-
 @[simp]
-theorem finite_to_finset_eq_empty_iff {s : Set α} {h : s.Finite} : h.toFinset = ∅ ↔ s = ∅ := by
-  simp only [← Finset.coe_inj, finite.coe_to_finset, Finset.coe_empty]
-#align set.finite_to_finset_eq_empty_iff Set.finite_to_finset_eq_empty_iff
-
-@[simp, mono]
-theorem Finite.to_finset_subset {hs : s.Finite} {ht : t.Finite} :
-    hs.toFinset ⊆ ht.toFinset ↔ s ⊆ t := by simp only [← Finset.coe_subset, finite.coe_to_finset]
+theorem to_finset_subset {t : Finset α} : hs.toFinset ⊆ t ↔ s ⊆ t := by
+  rw [← Finset.coe_subset, finite.coe_to_finset]
 #align set.finite.to_finset_subset Set.Finite.to_finset_subset
 
-@[simp, mono]
-theorem Finite.to_finset_ssubset {hs : s.Finite} {ht : t.Finite} :
-    hs.toFinset ⊂ ht.toFinset ↔ s ⊂ t := by simp only [← Finset.coe_ssubset, finite.coe_to_finset]
+@[simp]
+theorem to_finset_ssubset {t : Finset α} : hs.toFinset ⊂ t ↔ s ⊂ t := by
+  rw [← Finset.coe_ssubset, finite.coe_to_finset]
 #align set.finite.to_finset_ssubset Set.Finite.to_finset_ssubset
 
-end FiniteToFinset
+@[simp]
+theorem subset_to_finset {s : Finset α} : s ⊆ ht.toFinset ↔ ↑s ⊆ t := by
+  rw [← Finset.coe_subset, finite.coe_to_finset]
+#align set.finite.subset_to_finset Set.Finite.subset_to_finset
+
+@[simp]
+theorem ssubset_to_finset {s : Finset α} : s ⊂ ht.toFinset ↔ ↑s ⊂ t := by
+  rw [← Finset.coe_ssubset, finite.coe_to_finset]
+#align set.finite.ssubset_to_finset Set.Finite.ssubset_to_finset
+
+@[mono]
+protected theorem to_finset_subset_to_finset : hs.toFinset ⊆ ht.toFinset ↔ s ⊆ t := by
+  simp only [← Finset.coe_subset, finite.coe_to_finset]
+#align set.finite.to_finset_subset_to_finset Set.Finite.to_finset_subset_to_finset
+
+@[mono]
+protected theorem to_finset_ssubset_to_finset : hs.toFinset ⊂ ht.toFinset ↔ s ⊂ t := by
+  simp only [← Finset.coe_ssubset, finite.coe_to_finset]
+#align set.finite.to_finset_ssubset_to_finset Set.Finite.to_finset_ssubset_to_finset
+
+alias finite.to_finset_subset_to_finset ↔ _ to_finset_mono
+
+alias finite.to_finset_ssubset_to_finset ↔ _ to_finset_strict_mono
+
+attribute [protected] to_finset_mono to_finset_strict_mono
+
+@[simp]
+protected theorem to_finset_set_of [Fintype α] (p : α → Prop) [DecidablePred p]
+    (h : { x | p x }.Finite) : h.toFinset = Finset.univ.filter p :=
+  by
+  ext
+  simp
+#align set.finite.to_finset_set_of Set.Finite.to_finset_set_of
+
+@[simp]
+theorem disjoint_to_finset {hs : s.Finite} {ht : t.Finite} :
+    Disjoint hs.toFinset ht.toFinset ↔ Disjoint s t :=
+  @disjoint_to_finset _ _ _ hs.Fintype ht.Fintype
+#align set.finite.disjoint_to_finset Set.Finite.disjoint_to_finset
+
+protected theorem to_finset_inter [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
+    (h : (s ∩ t).Finite) : h.toFinset = hs.toFinset ∩ ht.toFinset :=
+  by
+  ext
+  simp
+#align set.finite.to_finset_inter Set.Finite.to_finset_inter
+
+protected theorem to_finset_union [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
+    (h : (s ∪ t).Finite) : h.toFinset = hs.toFinset ∪ ht.toFinset :=
+  by
+  ext
+  simp
+#align set.finite.to_finset_union Set.Finite.to_finset_union
+
+protected theorem to_finset_diff [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
+    (h : (s \ t).Finite) : h.toFinset = hs.toFinset \ ht.toFinset :=
+  by
+  ext
+  simp
+#align set.finite.to_finset_diff Set.Finite.to_finset_diff
+
+protected theorem to_finset_symm_diff [DecidableEq α] (hs : s.Finite) (ht : t.Finite)
+    (h : (s ∆ t).Finite) : h.toFinset = hs.toFinset ∆ ht.toFinset :=
+  by
+  ext
+  simp [mem_symm_diff, Finset.mem_symm_diff]
+#align set.finite.to_finset_symm_diff Set.Finite.to_finset_symm_diff
+
+protected theorem to_finset_compl [DecidableEq α] [Fintype α] (hs : s.Finite) (h : sᶜ.Finite) :
+    h.toFinset = hs.toFinsetᶜ := by
+  ext
+  simp
+#align set.finite.to_finset_compl Set.Finite.to_finset_compl
+
+@[simp]
+protected theorem to_finset_empty (h : (∅ : Set α).Finite) : h.toFinset = ∅ :=
+  by
+  ext
+  simp
+#align set.finite.to_finset_empty Set.Finite.to_finset_empty
+
+-- Note: Not `simp` because `set.finite.to_finset_set_of` already proves it
+@[simp]
+protected theorem to_finset_univ [Fintype α] (h : (Set.univ : Set α).Finite) :
+    h.toFinset = Finset.univ := by
+  ext
+  simp
+#align set.finite.to_finset_univ Set.Finite.to_finset_univ
+
+@[simp]
+protected theorem to_finset_eq_empty {h : s.Finite} : h.toFinset = ∅ ↔ s = ∅ :=
+  @to_finset_eq_empty _ _ h.Fintype
+#align set.finite.to_finset_eq_empty Set.Finite.to_finset_eq_empty
+
+@[simp]
+protected theorem to_finset_eq_univ [Fintype α] {h : s.Finite} :
+    h.toFinset = Finset.univ ↔ s = univ :=
+  @to_finset_eq_univ _ _ _ h.Fintype
+#align set.finite.to_finset_eq_univ Set.Finite.to_finset_eq_univ
+
+protected theorem to_finset_image [DecidableEq β] (f : α → β) (hs : s.Finite)
+    (h : (f '' s).Finite) : h.toFinset = hs.toFinset.image f :=
+  by
+  ext
+  simp
+#align set.finite.to_finset_image Set.Finite.to_finset_image
+
+@[simp]
+protected theorem to_finset_range [DecidableEq α] [Fintype β] (f : β → α) (h : (range f).Finite) :
+    h.toFinset = Finset.univ.image f := by
+  ext
+  simp
+#align set.finite.to_finset_range Set.Finite.to_finset_range
+
+end Finite
 
 /-! ### Fintype instances
 
@@ -884,7 +978,7 @@ theorem exists_finite_iff_finset {p : Set α → Prop} :
 /-- There are finitely many subsets of a given finite set -/
 theorem Finite.finite_subsets {α : Type u} {a : Set α} (h : a.Finite) : { b | b ⊆ a }.Finite :=
   ⟨(Fintype.ofFinset ((Finset.powerset h.toFinset).map Finset.coeEmb.1)) fun s => by
-      simpa [← @exists_finite_iff_finset α fun t => t ⊆ a ∧ t = s, subset_to_finset_iff, ←
+      simpa [← @exists_finite_iff_finset α fun t => t ⊆ a ∧ t = s, finite.subset_to_finset, ←
         and_assoc] using h.subset⟩
 #align set.finite.finite_subsets Set.Finite.finite_subsets
 
@@ -1164,8 +1258,8 @@ theorem card_ne_eq [Fintype α] (a : α) [Fintype { x : α | x ≠ a }] :
     Fintype.card { x : α | x ≠ a } = Fintype.card α - 1 :=
   by
   haveI := Classical.decEq α
-  rw [← to_finset_card, to_finset_ne_eq_erase, Finset.card_erase_of_mem (Finset.mem_univ _),
-    Finset.card_univ]
+  rw [← to_finset_card, to_finset_set_of, Finset.filter_ne',
+    Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ]
 #align set.card_ne_eq Set.card_ne_eq
 
 /-! ### Infinite sets -/

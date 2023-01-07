@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Andrew Zipperer, Haitao Zhang, Minchao Wu, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.function
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -298,7 +298,7 @@ theorem injective_codRestrict {f : ι → α} {s : Set α} (h : ∀ x, f x ∈ s
 alias injective_cod_restrict ↔ _ _root_.function.injective.cod_restrict
 
 variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g g₁ g₂ : β → γ}
-  {f' f₁' f₂' : β → α} {g' : γ → β}
+  {f' f₁' f₂' : β → α} {g' : γ → β} {a : α} {b : β}
 
 /-! ### Equality on a set -/
 
@@ -320,6 +320,10 @@ Case conversion may be inaccurate. Consider using '#align set.eq_on_empty Set.eq
 @[simp]
 theorem eqOn_empty (f₁ f₂ : α → β) : EqOn f₁ f₂ ∅ := fun x => False.elim
 #align set.eq_on_empty Set.eqOn_empty
+
+@[simp]
+theorem eq_on_singleton : EqOn f₁ f₂ {a} ↔ f₁ a = f₂ a := by simp [Set.EqOn]
+#align set.eq_on_singleton Set.eq_on_singleton
 
 /- warning: set.restrict_eq_restrict_iff -> Set.restrict_eq_restrict_iff is a dubious translation:
 lean 3 declaration is
@@ -740,22 +744,22 @@ theorem MapsTo.subset_preimage {f : α → β} {s : Set α} {t : Set β} (hf : M
   hf
 #align set.maps_to.subset_preimage Set.MapsTo.subset_preimage
 
-/- warning: set.maps_to_singleton -> Set.mapsTo_singleton is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {t : Set.{u2} β} {f : α -> β} {x : α}, Iff (Set.MapsTo.{u1, u2} α β f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) x) t) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f x) t)
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {t : Set.{u1} β} {f : α -> β} {x : α}, Iff (Set.MapsTo.{u2, u1} α β f (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) x) t) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f x) t)
-Case conversion may be inaccurate. Consider using '#align set.maps_to_singleton Set.mapsTo_singletonₓ'. -/
-@[simp]
-theorem mapsTo_singleton {x : α} : MapsTo f {x} t ↔ f x ∈ t :=
-  singleton_subset_iff
-#align set.maps_to_singleton Set.mapsTo_singleton
-
 #print Set.mapsTo_empty /-
 theorem mapsTo_empty (f : α → β) (t : Set β) : MapsTo f ∅ t :=
   empty_subset _
 #align set.maps_to_empty Set.mapsTo_empty
 -/
+
+/- warning: set.maps_to_singleton -> Set.mapsTo_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {t : Set.{u2} β} {f : α -> β} {a : α}, Iff (Set.MapsTo.{u1, u2} α β f (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) t) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (f a) t)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {t : Set.{u1} β} {f : α -> β} {a : α}, Iff (Set.MapsTo.{u2, u1} α β f (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a) t) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f a) t)
+Case conversion may be inaccurate. Consider using '#align set.maps_to_singleton Set.mapsTo_singletonₓ'. -/
+@[simp]
+theorem mapsTo_singleton : MapsTo f {a} t ↔ f a ∈ t :=
+  singleton_subset_iff
+#align set.maps_to_singleton Set.mapsTo_singleton
 
 /- warning: set.maps_to.image_subset -> Set.MapsTo.image_subset is a dubious translation:
 lean 3 declaration is
@@ -830,6 +834,14 @@ theorem MapsTo.iterate_restrict {f : α → α} {s : Set α} (h : MapsTo f s s) 
   · simp [Nat.iterate, ihn]
 #align set.maps_to.iterate_restrict Set.MapsTo.iterate_restrict
 -/
+
+theorem maps_to_of_subsingleton' [Subsingleton β] (f : α → β) (h : s.Nonempty → t.Nonempty) :
+    MapsTo f s t := fun a ha => Subsingleton.mem_iff_nonempty.2 <| h ⟨a, ha⟩
+#align set.maps_to_of_subsingleton' Set.maps_to_of_subsingleton'
+
+theorem maps_to_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : MapsTo f s s :=
+  maps_to_of_subsingleton' _ id
+#align set.maps_to_of_subsingleton Set.maps_to_of_subsingleton
 
 /- warning: set.maps_to.mono -> Set.MapsTo.mono is a dubious translation:
 lean 3 declaration is
@@ -971,6 +983,14 @@ theorem maps_image_to (f : α → β) (g : γ → α) (s : Set γ) (t : Set β) 
   ⟨fun h c hc => h ⟨c, hc, rfl⟩, fun h d ⟨c, hc⟩ => hc.2 ▸ h hc.1⟩
 #align set.maps_image_to Set.maps_image_to
 -/
+
+theorem MapsTo.comp_left (g : β → γ) (hf : MapsTo f s t) : MapsTo (g ∘ f) s (g '' t) := fun x hx =>
+  ⟨f x, hf hx, rfl⟩
+#align set.maps_to.comp_left Set.MapsTo.comp_left
+
+theorem MapsTo.comp_right {s : Set β} {t : Set γ} (hg : MapsTo g s t) (f : α → β) :
+    MapsTo (g ∘ f) (f ⁻¹' s) t := fun x hx => hg hx
+#align set.maps_to.comp_right Set.MapsTo.comp_right
 
 #print Set.maps_univ_to /-
 @[simp]
@@ -1224,6 +1244,10 @@ theorem injOn_of_injective (h : Injective f) (s : Set α) : InjOn f s := fun x h
 
 alias inj_on_of_injective ← _root_.function.injective.inj_on
 
+theorem inj_on_id (s : Set α) : InjOn id s :=
+  injective_id.InjOn _
+#align set.inj_on_id Set.inj_on_id
+
 /- warning: set.inj_on.comp -> Set.InjOn.comp is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} {g : β -> γ}, (Set.InjOn.{u2, u3} β γ g t) -> (Set.InjOn.{u1, u2} α β f s) -> (Set.MapsTo.{u1, u2} α β f s t) -> (Set.InjOn.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s)
@@ -1233,6 +1257,16 @@ Case conversion may be inaccurate. Consider using '#align set.inj_on.comp Set.In
 theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn (g ∘ f) s :=
   fun x hx y hy heq => hf hx hy <| hg (h hx) (h hy) HEq
 #align set.inj_on.comp Set.InjOn.comp
+
+theorem InjOn.iterate {f : α → α} {s : Set α} (h : InjOn f s) (hf : MapsTo f s s) :
+    ∀ n, InjOn (f^[n]) s
+  | 0 => inj_on_id _
+  | n + 1 => (inj_on.iterate n).comp h hf
+#align set.inj_on.iterate Set.InjOn.iterate
+
+theorem inj_on_of_subsingleton [Subsingleton α] (f : α → β) (s : Set α) : InjOn f s :=
+  (injective_of_subsingleton _).InjOn _
+#align set.inj_on_of_subsingleton Set.inj_on_of_subsingleton
 
 /- warning: function.injective.inj_on_range -> Function.Injective.injOn_range is a dubious translation:
 lean 3 declaration is
@@ -1415,6 +1449,11 @@ theorem surjOn_empty (f : α → β) (s : Set α) : SurjOn f s ∅ :=
   empty_subset _
 #align set.surj_on_empty Set.surjOn_empty
 
+@[simp]
+theorem surj_on_singleton : SurjOn f s {b} ↔ b ∈ f '' s :=
+  singleton_subset_iff
+#align set.surj_on_singleton Set.surj_on_singleton
+
 /- warning: set.surj_on_image -> Set.surjOn_image is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u1} α), Set.SurjOn.{u1, u2} α β f s (Set.image.{u1, u2} α β f s)
@@ -1513,6 +1552,9 @@ theorem SurjOn.inter (h₁ : SurjOn f s₁ t) (h₂ : SurjOn f s₂ t) (h : InjO
   inter_self t ▸ h₁.inter_inter h₂ h
 #align set.surj_on.inter Set.SurjOn.inter
 
+theorem surj_on_id (s : Set α) : SurjOn id s s := by simp [surj_on]
+#align set.surj_on_id Set.surj_on_id
+
 /- warning: set.surj_on.comp -> Set.SurjOn.comp is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {s : Set.{u1} α} {t : Set.{u2} β} {p : Set.{u3} γ} {f : α -> β} {g : β -> γ}, (Set.SurjOn.{u2, u3} β γ g t p) -> (Set.SurjOn.{u1, u2} α β f s t) -> (Set.SurjOn.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s p)
@@ -1522,6 +1564,29 @@ Case conversion may be inaccurate. Consider using '#align set.surj_on.comp Set.S
 theorem SurjOn.comp (hg : SurjOn g t p) (hf : SurjOn f s t) : SurjOn (g ∘ f) s p :=
   Subset.trans hg <| Subset.trans (image_subset g hf) <| image_comp g f s ▸ Subset.refl _
 #align set.surj_on.comp Set.SurjOn.comp
+
+theorem SurjOn.iterate {f : α → α} {s : Set α} (h : SurjOn f s s) : ∀ n, SurjOn (f^[n]) s s
+  | 0 => surj_on_id _
+  | n + 1 => (surj_on.iterate n).comp h
+#align set.surj_on.iterate Set.SurjOn.iterate
+
+theorem SurjOn.comp_left (hf : SurjOn f s t) (g : β → γ) : SurjOn (g ∘ f) s (g '' t) :=
+  by
+  rw [surj_on, image_comp g f]
+  exact image_subset _ hf
+#align set.surj_on.comp_left Set.SurjOn.comp_left
+
+theorem SurjOn.comp_right {s : Set β} {t : Set γ} (hf : Surjective f) (hg : SurjOn g s t) :
+    SurjOn (g ∘ f) (f ⁻¹' s) t := by rwa [surj_on, image_comp g f, image_preimage_eq _ hf]
+#align set.surj_on.comp_right Set.SurjOn.comp_right
+
+theorem surj_on_of_subsingleton' [Subsingleton β] (f : α → β) (h : t.Nonempty → s.Nonempty) :
+    SurjOn f s t := fun a ha => Subsingleton.mem_iff_nonempty.2 <| (h ⟨a, ha⟩).image _
+#align set.surj_on_of_subsingleton' Set.surj_on_of_subsingleton'
+
+theorem surj_on_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : SurjOn f s s :=
+  surj_on_of_subsingleton' _ id
+#align set.surj_on_of_subsingleton Set.surj_on_of_subsingleton
 
 /- warning: set.surjective_iff_surj_on_univ -> Set.surjective_iff_surjOn_univ is a dubious translation:
 lean 3 declaration is
@@ -1679,9 +1744,14 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β), Set.BijOn.{u2, u1} α β f (EmptyCollection.emptyCollection.{u2} (Set.{u2} α) (Set.instEmptyCollectionSet.{u2} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} β) (Set.instEmptyCollectionSet.{u1} β))
 Case conversion may be inaccurate. Consider using '#align set.bij_on_empty Set.bijOn_emptyₓ'. -/
+@[simp]
 theorem bijOn_empty (f : α → β) : BijOn f ∅ ∅ :=
   ⟨mapsTo_empty f ∅, injOn_empty f, surjOn_empty f ∅⟩
 #align set.bij_on_empty Set.bijOn_empty
+
+@[simp]
+theorem bij_on_singleton : BijOn f {a} {b} ↔ f a = b := by simp [bij_on, eq_comm]
+#align set.bij_on_singleton Set.bij_on_singleton
 
 /- warning: set.bij_on.inter_maps_to -> Set.BijOn.inter_mapsTo is a dubious translation:
 lean 3 declaration is
@@ -1780,6 +1850,10 @@ theorem BijOn.image_eq (h : BijOn f s t) : f '' s = t :=
   h.SurjOn.image_eq_of_maps_to h.MapsTo
 #align set.bij_on.image_eq Set.BijOn.image_eq
 
+theorem bij_on_id (s : Set α) : BijOn id s s :=
+  ⟨s.maps_to_id, s.inj_on_id, s.surj_on_id⟩
+#align set.bij_on_id Set.bij_on_id
+
 /- warning: set.bij_on.comp -> Set.BijOn.comp is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {s : Set.{u1} α} {t : Set.{u2} β} {p : Set.{u3} γ} {f : α -> β} {g : β -> γ}, (Set.BijOn.{u2, u3} β γ g t p) -> (Set.BijOn.{u1, u2} α β f s t) -> (Set.BijOn.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) s p)
@@ -1789,6 +1863,20 @@ Case conversion may be inaccurate. Consider using '#align set.bij_on.comp Set.Bi
 theorem BijOn.comp (hg : BijOn g t p) (hf : BijOn f s t) : BijOn (g ∘ f) s p :=
   BijOn.mk (hg.MapsTo.comp hf.MapsTo) (hg.InjOn.comp hf.InjOn hf.MapsTo) (hg.SurjOn.comp hf.SurjOn)
 #align set.bij_on.comp Set.BijOn.comp
+
+theorem BijOn.iterate {f : α → α} {s : Set α} (h : BijOn f s s) : ∀ n, BijOn (f^[n]) s s
+  | 0 => s.bij_on_id
+  | n + 1 => (bij_on.iterate n).comp h
+#align set.bij_on.iterate Set.BijOn.iterate
+
+theorem bij_on_of_subsingleton' [Subsingleton α] [Subsingleton β] (f : α → β)
+    (h : s.Nonempty ↔ t.Nonempty) : BijOn f s t :=
+  ⟨maps_to_of_subsingleton' _ h.1, inj_on_of_subsingleton _ _, surj_on_of_subsingleton' _ h.2⟩
+#align set.bij_on_of_subsingleton' Set.bij_on_of_subsingleton'
+
+theorem bij_on_of_subsingleton [Subsingleton α] (f : α → α) (s : Set α) : BijOn f s s :=
+  bij_on_of_subsingleton' _ Iff.rfl
+#align set.bij_on_of_subsingleton Set.bij_on_of_subsingleton
 
 /- warning: set.bij_on.bijective -> Set.BijOn.bijective is a dubious translation:
 lean 3 declaration is
@@ -1818,6 +1906,8 @@ theorem bijective_iff_bijOn_univ : Bijective f ↔ BijOn f univ univ :=
     ⟨Iff.mpr injective_iff_injOn_univ inj, Iff.mpr surjective_iff_surjOn_univ surj⟩
 #align set.bijective_iff_bij_on_univ Set.bijective_iff_bijOn_univ
 
+alias bijective_iff_bij_on_univ ↔ _root_.function.bijective.bij_on_univ _
+
 /- warning: set.bij_on.compl -> Set.BijOn.compl is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β}, (Set.BijOn.{u1, u2} α β f s t) -> (Function.Bijective.{succ u1, succ u2} α β f) -> (Set.BijOn.{u1, u2} α β f (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s) (HasCompl.compl.{u2} (Set.{u2} β) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)) t))
@@ -1837,6 +1927,16 @@ def LeftInvOn (f' : β → α) (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃x⦄, x ∈ s → f' (f x) = x
 #align set.left_inv_on Set.LeftInvOn
 -/
+
+@[simp]
+theorem left_inv_on_empty (f' : β → α) (f : α → β) : LeftInvOn f' f ∅ :=
+  empty_subset _
+#align set.left_inv_on_empty Set.left_inv_on_empty
+
+@[simp]
+theorem left_inv_on_singleton : LeftInvOn f' f {a} ↔ f' (f a) = a :=
+  singleton_subset_iff
+#align set.left_inv_on_singleton Set.left_inv_on_singleton
 
 /- warning: set.left_inv_on.eq_on -> Set.LeftInvOn.eqOn is a dubious translation:
 lean 3 declaration is
@@ -1913,6 +2013,9 @@ theorem LeftInvOn.mapsTo (h : LeftInvOn f' f s) (hf : SurjOn f s t) : MapsTo f' 
   let ⟨x, hs, hx⟩ := hf hy
   rwa [← hx, h hs]
 #align set.left_inv_on.maps_to Set.LeftInvOn.mapsTo
+
+theorem left_inv_on_id (s : Set α) : LeftInvOn id id s := fun a _ => rfl
+#align set.left_inv_on_id Set.left_inv_on_id
 
 /- warning: set.left_inv_on.comp -> Set.LeftInvOn.comp is a dubious translation:
 lean 3 declaration is
@@ -1997,6 +2100,16 @@ def RightInvOn (f' : β → α) (f : α → β) (t : Set β) : Prop :=
 #align set.right_inv_on Set.RightInvOn
 -/
 
+@[simp]
+theorem right_inv_on_empty (f' : β → α) (f : α → β) : RightInvOn f' f ∅ :=
+  empty_subset _
+#align set.right_inv_on_empty Set.right_inv_on_empty
+
+@[simp]
+theorem right_inv_on_singleton : RightInvOn f' f {b} ↔ f (f' b) = b :=
+  singleton_subset_iff
+#align set.right_inv_on_singleton Set.right_inv_on_singleton
+
 /- warning: set.right_inv_on.eq_on -> Set.RightInvOn.eqOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {t : Set.{u2} β} {f : α -> β} {f' : β -> α}, (Set.RightInvOn.{u1, u2} α β f' f t) -> (Set.EqOn.{u2, u2} β β (Function.comp.{succ u2, succ u1, succ u2} β α β f f') (id.{succ u2} β) t)
@@ -2069,6 +2182,9 @@ theorem RightInvOn.mapsTo (h : RightInvOn f' f t) (hf : SurjOn f' t s) : MapsTo 
   h.MapsTo hf
 #align set.right_inv_on.maps_to Set.RightInvOn.mapsTo
 
+theorem right_inv_on_id (s : Set α) : RightInvOn id id s := fun a _ => rfl
+#align set.right_inv_on_id Set.right_inv_on_id
+
 /- warning: set.right_inv_on.comp -> Set.RightInvOn.comp is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {t : Set.{u2} β} {p : Set.{u3} γ} {f : α -> β} {g : β -> γ} {f' : β -> α} {g' : γ -> β}, (Set.RightInvOn.{u1, u2} α β f' f t) -> (Set.RightInvOn.{u2, u3} β γ g' g p) -> (Set.MapsTo.{u3, u2} γ β g' p t) -> (Set.RightInvOn.{u1, u3} α γ (Function.comp.{succ u3, succ u2, succ u1} γ β α f' g') (Function.comp.{succ u1, succ u2, succ u3} α β γ g f) p)
@@ -2136,6 +2252,14 @@ def InvOn (g : β → α) (f : α → β) (s : Set α) (t : Set β) : Prop :=
 #align set.inv_on Set.InvOn
 -/
 
+@[simp]
+theorem inv_on_empty (f' : β → α) (f : α → β) : InvOn f' f ∅ ∅ := by simp [inv_on]
+#align set.inv_on_empty Set.inv_on_empty
+
+@[simp]
+theorem inv_on_singleton : InvOn f' f {a} {b} ↔ f' (f a) = a ∧ f (f' b) = b := by simp [inv_on]
+#align set.inv_on_singleton Set.inv_on_singleton
+
 /- warning: set.inv_on.symm -> Set.InvOn.symm is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} {t : Set.{u2} β} {f : α -> β} {f' : β -> α}, (Set.InvOn.{u1, u2} α β f' f s t) -> (Set.InvOn.{u2, u1} β α f f' t s)
@@ -2145,6 +2269,15 @@ Case conversion may be inaccurate. Consider using '#align set.inv_on.symm Set.In
 theorem InvOn.symm (h : InvOn f' f s t) : InvOn f f' t s :=
   ⟨h.right, h.left⟩
 #align set.inv_on.symm Set.InvOn.symm
+
+theorem inv_on_id (s : Set α) : InvOn id id s s :=
+  ⟨s.left_inv_on_id, s.right_inv_on_id⟩
+#align set.inv_on_id Set.inv_on_id
+
+theorem InvOn.comp (hf : InvOn f' f s t) (hg : InvOn g' g t p) (fst : MapsTo f s t)
+    (g'pt : MapsTo g' p t) : InvOn (f' ∘ g') (g ∘ f) s p :=
+  ⟨hf.1.comp hg.1 fst, hf.2.comp hg.2 g'pt⟩
+#align set.inv_on.comp Set.InvOn.comp
 
 /- warning: set.inv_on.mono -> Set.InvOn.mono is a dubious translation:
 lean 3 declaration is
@@ -2168,6 +2301,14 @@ into `s`, then `f` is a bijection between `s` and `t`. The `maps_to` arguments c
 theorem InvOn.bijOn (h : InvOn f' f s t) (hf : MapsTo f s t) (hf' : MapsTo f' t s) : BijOn f s t :=
   ⟨hf, h.left.InjOn, h.right.SurjOn hf'⟩
 #align set.inv_on.bij_on Set.InvOn.bijOn
+
+theorem BijOn.symm {g : β → α} (h : InvOn f g t s) (hf : BijOn f s t) : BijOn g t s :=
+  ⟨h.2.MapsTo hf.SurjOn, h.1.InjOn, h.2.SurjOn hf.MapsTo⟩
+#align set.bij_on.symm Set.BijOn.symm
+
+theorem bij_on_comm {g : β → α} (h : InvOn f g t s) : BijOn f s t ↔ BijOn g t s :=
+  ⟨BijOn.symm h, BijOn.symm h.symm⟩
+#align set.bij_on_comm Set.bij_on_comm
 
 end Set
 
@@ -2770,6 +2911,8 @@ theorem univ_pi_piecewise {ι : Type _} {α : ι → Type _} (s : Set ι) (t : �
 
 end Set
 
+open Set
+
 /- warning: strict_mono_on.inj_on -> StrictMonoOn.injOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α}, (StrictMonoOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) _inst_2 f s) -> (Set.InjOn.{u1, u2} α β f s)
@@ -3093,7 +3236,7 @@ end Function
 
 namespace Set
 
-variable {p : β → Prop} [DecidablePred p] {f : α ≃ Subtype p} {g : Perm α} {s t : Set α}
+variable {p : β → Prop} [DecidablePred p] {f : α ≃ Subtype p} {g g₁ g₂ : Perm α} {s t : Set α}
 
 protected theorem MapsTo.extend_domain (h : MapsTo g s t) :
     MapsTo (g.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
@@ -3115,5 +3258,58 @@ protected theorem BijOn.extend_domain (h : Set.BijOn g s t) :
   ⟨h.MapsTo.extendDomain, (g.extendDomain f).Injective.InjOn _, h.SurjOn.extendDomain⟩
 #align set.bij_on.extend_domain Set.BijOn.extend_domain
 
+protected theorem LeftInvOn.extend_domain (h : LeftInvOn g₁ g₂ s) :
+    LeftInvOn (g₁.extendDomain f) (g₂.extendDomain f) (coe ∘ f '' s) :=
+  by
+  rintro _ ⟨a, ha, rfl⟩
+  simp_rw [extend_domain_apply_image, h ha]
+#align set.left_inv_on.extend_domain Set.LeftInvOn.extend_domain
+
+protected theorem RightInvOn.extend_domain (h : RightInvOn g₁ g₂ t) :
+    RightInvOn (g₁.extendDomain f) (g₂.extendDomain f) (coe ∘ f '' t) :=
+  by
+  rintro _ ⟨a, ha, rfl⟩
+  simp_rw [extend_domain_apply_image, h ha]
+#align set.right_inv_on.extend_domain Set.RightInvOn.extend_domain
+
+protected theorem InvOn.extend_domain (h : InvOn g₁ g₂ s t) :
+    InvOn (g₁.extendDomain f) (g₂.extendDomain f) (coe ∘ f '' s) (coe ∘ f '' t) :=
+  ⟨h.1.extendDomain, h.2.extendDomain⟩
+#align set.inv_on.extend_domain Set.InvOn.extend_domain
+
 end Set
+
+namespace Equiv
+
+variable (e : α ≃ β) {s : Set α} {t : Set β}
+
+theorem bij_on' (h₁ : MapsTo e s t) (h₂ : MapsTo e.symm t s) : BijOn e s t :=
+  ⟨h₁, e.Injective.InjOn _, fun b hb => ⟨e.symm b, h₂ hb, apply_symm_apply _ _⟩⟩
+#align equiv.bij_on' Equiv.bij_on'
+
+protected theorem bij_on (h : ∀ a, e a ∈ t ↔ a ∈ s) : BijOn e s t :=
+  (e.bij_on' fun a => (h _).2) fun b hb => (h _).1 <| by rwa [apply_symm_apply]
+#align equiv.bij_on Equiv.bij_on
+
+theorem inv_on : InvOn e e.symm t s :=
+  ⟨e.right_inverse_symm.LeftInvOn _, e.left_inverse_symm.LeftInvOn _⟩
+#align equiv.inv_on Equiv.inv_on
+
+theorem bij_on_image : BijOn e s (e '' s) :=
+  (e.Injective.InjOn _).bij_on_image
+#align equiv.bij_on_image Equiv.bij_on_image
+
+theorem bij_on_symm_image : BijOn e.symm (e '' s) s :=
+  e.bij_on_image.symm e.InvOn
+#align equiv.bij_on_symm_image Equiv.bij_on_symm_image
+
+variable [DecidableEq α] {a b : α}
+
+theorem bij_on_swap (ha : a ∈ s) (hb : b ∈ s) : BijOn (swap a b) s s :=
+  (swap a b).BijOn fun x => by
+    obtain rfl | hxa := eq_or_ne x a <;> obtain rfl | hxb := eq_or_ne x b <;>
+      simp [*, swap_apply_of_ne_of_ne]
+#align equiv.bij_on_swap Equiv.bij_on_swap
+
+end Equiv
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.hash_map
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,101 +275,11 @@ parameter
 -- mathport name: exprL
 local notation "L" => Array'.read bkts bidx
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [(Command.private "private")] [] [] [])
-     (Command.def
-      "def"
-      (Command.declId `bkts' [])
-      (Command.optDeclSig [] [(Term.typeSpec ":" (Term.app `BucketArray [`α `β `n]))])
-      (Command.declValSimple
-       ":="
-       (Term.app `Array'.write [`bkts `bidx (Term.app `f [(HashMap.Data.HashMap.termL "L")])])
-       [])
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `Array'.write [`bkts `bidx (Term.app `f [(HashMap.Data.HashMap.termL "L")])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `f [(HashMap.Data.HashMap.termL "L")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'HashMap.Data.HashMap.termL', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'HashMap.Data.HashMap.termL', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (HashMap.Data.HashMap.termL "L")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'HashMap.Data.HashMap.termL', expected 'HashMap.Data.HashMap.termL._@.Data.HashMap._hyg.12'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-private def bkts' : BucketArray α β n := Array'.write bkts bidx f L
+private def bkts' : BucketArray α β n :=
+  Array'.write bkts bidx (f L)
 #align hash_map.bkts' hash_map.bkts'
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.variable
-     "variable"
-     [(Term.explicitBinder
-       "("
-       [`hl]
-       [":"
-        («term_=_»
-         (HashMap.Data.HashMap.termL "L")
-         "="
-         («term_++_» («term_++_» `u "++" `v1) "++" `w))]
-       []
-       ")")
-      (Term.explicitBinder
-       "("
-       [`hfl]
-       [":"
-        («term_=_»
-         (Term.app `f [(HashMap.Data.HashMap.termL "L")])
-         "="
-         («term_++_» («term_++_» `u "++" `v2) "++" `w))]
-       []
-       ")")])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_»
-       (Term.app `f [(HashMap.Data.HashMap.termL "L")])
-       "="
-       («term_++_» («term_++_» `u "++" `v2) "++" `w))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_++_» («term_++_» `u "++" `v2) "++" `w)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `w
-[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
-      («term_++_» `u "++" `v2)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `v2
-[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
-      `u
-[PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
-[PrettyPrinter.parenthesize] ...precedences are 65 >? 65, (some 66, term) <=? (some 65, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app `f [(HashMap.Data.HashMap.termL "L")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'HashMap.Data.HashMap.termL', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'HashMap.Data.HashMap.termL', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (HashMap.Data.HashMap.termL "L")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'HashMap.Data.HashMap.termL', expected 'HashMap.Data.HashMap.termL._@.Data.HashMap._hyg.12'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'-/-- failed to format: format: uncaught backtrack exception
-variable ( hl : L = u ++ v1 ++ w ) ( hfl : f L = u ++ v2 ++ w )
+variable (hl : L = u ++ v1 ++ w) (hfl : f L = u ++ v2 ++ w)
 
 include hl hfl
 

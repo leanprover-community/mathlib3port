@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.function.basic
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1448,70 +1448,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u1}} {δ : Type.{u2}} (f : α -> β -> γ) (g : γ -> δ), Eq.{max (max (succ u4) (succ u3)) (succ u2)} ((Prod.{u4, u3} α β) -> δ) (Function.uncurry.{u4, u3, u2} α β δ (Function.bicompr.{u4, u3, u1, u2} α β γ δ g f)) (Function.comp.{max (succ u3) (succ u4), succ u1, succ u2} (Prod.{u4, u3} α β) γ δ g (Function.uncurry.{u4, u3, u1} α β γ f))
 Case conversion may be inaccurate. Consider using '#align function.uncurry_bicompr Function.uncurry_bicomprₓ'. -/
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers [] [] [] [] [] [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `uncurry_bicompr [])
-      (Command.declSig
-       [(Term.explicitBinder "(" [`f] [":" (Term.arrow `α "→" (Term.arrow `β "→" `γ))] [] ")")
-        (Term.explicitBinder "(" [`g] [":" (Term.arrow `γ "→" `δ)] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_»
-         (Term.app `uncurry [(Function.Logic.Function.Basic.«term_∘₂_» `g " ∘₂ " `f)])
-         "="
-         («term_∘_» `g "∘" (Term.app `uncurry [`f])))))
-      (Command.declValSimple ":=" `rfl [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `rfl
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      («term_=_»
-       (Term.app `uncurry [(Function.Logic.Function.Basic.«term_∘₂_» `g " ∘₂ " `f)])
-       "="
-       («term_∘_» `g "∘" (Term.app `uncurry [`f])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_∘_» `g "∘" (Term.app `uncurry [`f]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `uncurry [`f])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `uncurry
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 90 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 90, term))
-      `g
-[PrettyPrinter.parenthesize] ...precedences are 91 >? 1024, (none, [anonymous]) <=? (some 90, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 90, (some 90, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app `uncurry [(Function.Logic.Function.Basic.«term_∘₂_» `g " ∘₂ " `f)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Function.Logic.Function.Basic.«term_∘₂_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Function.Logic.Function.Basic.«term_∘₂_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Function.Logic.Function.Basic.«term_∘₂_» `g " ∘₂ " `f)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Function.Logic.Function.Basic.«term_∘₂_»', expected 'Function.Logic.Function.Basic.term_∘₂_._@.Logic.Function.Basic._hyg.17'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem uncurry_bicompr ( f : α → β → γ ) ( g : γ → δ ) : uncurry g ∘₂ f = g ∘ uncurry f := rfl
+theorem uncurry_bicompr (f : α → β → γ) (g : γ → δ) : uncurry (g ∘₂ f) = g ∘ uncurry f :=
+  rfl
 #align function.uncurry_bicompr Function.uncurry_bicompr
 
 /- warning: function.uncurry_bicompl -> Function.uncurry_bicompl is a dubious translation:

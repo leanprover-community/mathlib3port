@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.analytic.inverse
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ theorem left_inv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F
     ext k
     simp [h]
   simp [FormalMultilinearSeries.comp, show n + 2 ≠ 1 by decide, A, Finset.sum_union B,
-    apply_composition_ones, C, D]
+    apply_composition_ones, C, D, -Set.to_finset_set_of]
 #align formal_multilinear_series.left_inv_comp FormalMultilinearSeries.left_inv_comp
 
 /-! ### The right inverse of a formal multilinear series -/
@@ -239,7 +239,7 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
     by
     apply p.congr (Composition.single_length hn) fun j hj1 hj2 => _
     simp [apply_composition_single]
-  simp [FormalMultilinearSeries.comp, A, Finset.sum_union B, C]
+  simp [FormalMultilinearSeries.comp, A, Finset.sum_union B, C, -Set.to_finset_set_of]
 #align formal_multilinear_series.comp_right_inv_aux1 FormalMultilinearSeries.comp_right_inv_aux1
 
 theorem comp_right_inv_aux2 (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (n : ℕ)
@@ -274,7 +274,7 @@ theorem comp_right_inv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] 
       ContinuousLinearEquiv.coe_apply, continuous_multilinear_curry_fin1_symm_apply]
   have N : 0 < n + 2 := by decide
   simp [comp_right_inv_aux1 N, h, right_inv, lt_irrefl n, show n + 2 ≠ 1 by decide, ←
-    sub_eq_add_neg, sub_eq_zero, comp_right_inv_aux2]
+    sub_eq_add_neg, sub_eq_zero, comp_right_inv_aux2, -Set.to_finset_set_of]
 #align formal_multilinear_series.comp_right_inv FormalMultilinearSeries.comp_right_inv
 
 theorem right_inv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (n : ℕ) (hn : 2 ≤ n) :
@@ -292,7 +292,7 @@ theorem right_inv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜]
   ext v
   have N : 0 < n + 2 := by decide
   have : ((p 1) fun i : Fin 1 => 0) = 0 := ContinuousMultilinearMap.map_zero _
-  simp [comp_right_inv_aux1 N, lt_irrefl n, this, comp_right_inv_aux2]
+  simp [comp_right_inv_aux1 N, lt_irrefl n, this, comp_right_inv_aux2, -Set.to_finset_set_of]
 #align formal_multilinear_series.right_inv_coeff FormalMultilinearSeries.right_inv_coeff
 
 /-! ### Coincidence of the left and the right inverse -/

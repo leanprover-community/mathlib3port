@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.nth
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
   apply Finset.card_erase_of_mem
   rw [nth, Set.Finite.mem_to_finset]
   apply cinfₛ_mem
-  rwa [← hp''.nonempty_to_finset, ← Finset.card_pos, hk]
+  rwa [← hp''.to_finset_nonempty, ← Finset.card_pos, hk]
 #align nat.nth_set_card_aux Nat.nth_set_card_aux
 
 theorem nth_set_card {n : ℕ} (hp : (setOf p).Finite)
@@ -111,11 +111,10 @@ theorem nth_set_card {n : ℕ} (hp : (setOf p).Finite)
   obtain hn | hn := le_or_lt n hp.to_finset.card
   · exact nth_set_card_aux p hp _ hn
   rw [Nat.sub_eq_zero_of_le hn.le]
-  simp only [Finset.card_eq_zero, Set.finite_to_finset_eq_empty_iff, ← Set.subset_empty_iff]
+  simp only [Finset.card_eq_zero, Set.Finite.to_finset_eq_empty, ← Set.subset_empty_iff]
   convert_to _ ⊆ { i : ℕ | p i ∧ ∀ k : ℕ, k < hp.to_finset.card → nth p k < i }
   · symm
-    rw [← Set.finite_to_finset_eq_empty_iff, ← Finset.card_eq_zero, ←
-      Nat.sub_self hp.to_finset.card]
+    rw [← Set.Finite.to_finset_eq_empty, ← Finset.card_eq_zero, ← Nat.sub_self hp.to_finset.card]
     · apply nth_set_card_aux p hp _ le_rfl
     · exact hp.subset fun x hx => hx.1
   exact fun x hx => ⟨hx.1, fun k hk => hx.2 _ (hk.trans hn)⟩
@@ -125,7 +124,7 @@ theorem nth_set_nonempty_of_lt_card {n : ℕ} (hp : (setOf p).Finite) (hlt : n <
     { i : ℕ | p i ∧ ∀ k < n, nth p k < i }.Nonempty :=
   by
   have hp' : { i : ℕ | p i ∧ ∀ k : ℕ, k < n → nth p k < i }.Finite := hp.subset fun x hx => hx.1
-  rw [← hp'.nonempty_to_finset, ← Finset.card_pos, nth_set_card p hp]
+  rw [← hp'.to_finset_nonempty, ← Finset.card_pos, nth_set_card p hp]
   exact Nat.sub_pos_of_lt hlt
 #align nat.nth_set_nonempty_of_lt_card Nat.nth_set_nonempty_of_lt_card
 

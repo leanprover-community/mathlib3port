@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.basic
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -352,101 +352,9 @@ def tprod : Representation k G (V ⊗[k] W)
 -- mathport name: «expr ⊗ »
 local notation ρV " ⊗ " ρW => tprod ρV ρW
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (Attr.simp "simp" [] []))] "]")]
-      []
-      []
-      []
-      [])
-     (Command.theorem
-      "theorem"
-      (Command.declId `tprod_apply [])
-      (Command.declSig
-       [(Term.explicitBinder "(" [`g] [":" `G] [] ")")]
-       (Term.typeSpec
-        ":"
-        («term_=_»
-         (Term.app (Representation.RepresentationTheory.Basic.«term_⊗_» `ρV " ⊗ " `ρW) [`g])
-         "="
-         (Term.app `TensorProduct.map [(Term.app `ρV [`g]) (Term.app `ρW [`g])]))))
-      (Command.declValSimple ":=" `rfl [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `rfl
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      («term_=_»
-       (Term.app (Representation.RepresentationTheory.Basic.«term_⊗_» `ρV " ⊗ " `ρW) [`g])
-       "="
-       (Term.app `TensorProduct.map [(Term.app `ρV [`g]) (Term.app `ρW [`g])]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `TensorProduct.map [(Term.app `ρV [`g]) (Term.app `ρW [`g])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ρW [`g])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `g
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `ρW
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `ρW [`g]) ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app `ρV [`g])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `g
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `ρV
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
-     term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `ρV [`g]) ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `TensorProduct.map
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Term.app (Representation.RepresentationTheory.Basic.«term_⊗_» `ρV " ⊗ " `ρW) [`g])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `g
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      (Representation.RepresentationTheory.Basic.«term_⊗_» `ρV " ⊗ " `ρW)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Representation.RepresentationTheory.Basic.«term_⊗_»', expected 'Representation.RepresentationTheory.Basic.term_⊗_._@.RepresentationTheory.Basic._hyg.23'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-@[ simp ] theorem tprod_apply ( g : G ) : ρV ⊗ ρW g = TensorProduct.map ρV g ρW g := rfl
+@[simp]
+theorem tprod_apply (g : G) : (ρV ⊗ ρW) g = TensorProduct.map (ρV g) (ρW g) :=
+  rfl
 #align representation.tprod_apply Representation.tprod_apply
 
 theorem smul_tprod_one_as_module (r : MonoidAlgebra k G) (x : V) (y : W) :

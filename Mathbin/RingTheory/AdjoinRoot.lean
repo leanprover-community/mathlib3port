@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Data.Polynomial.FieldDivision
-import Mathbin.FieldTheory.Minpoly.GcdMonoid
+import Mathbin.FieldTheory.Minpoly.Basic
 import Mathbin.RingTheory.Adjoin.Basic
 import Mathbin.RingTheory.FinitePresentation
 import Mathbin.RingTheory.FiniteType
@@ -517,6 +517,8 @@ theorem minpoly_power_basis_gen_of_monic (hf : f.Monic) (hf' : f ≠ 0 := hf.NeZ
 
 end PowerBasis
 
+section Equiv
+
 section minpoly
 
 variable [CommRing R] [CommRing S] [Algebra R S] (x : S) (R)
@@ -524,7 +526,6 @@ variable [CommRing R] [CommRing S] [Algebra R S] (x : S) (R)
 open Algebra Polynomial
 
 /-- The surjective algebra morphism `R[X]/(minpoly R x) → R[x]`.
-
 If `R` is a GCD domain and `x` is integral, this is an isomorphism,
 see `adjoin_root.minpoly.equiv_adjoin`. -/
 @[simps]
@@ -557,54 +558,7 @@ theorem Minpoly.toAdjoin.surjective : Function.Surjective (Minpoly.toAdjoin R x)
   refine' ⟨mk (minpoly R x) X, by simpa using h.symm⟩
 #align adjoin_root.minpoly.to_adjoin.surjective AdjoinRoot.Minpoly.toAdjoin.surjective
 
-variable {R} {x} [IsDomain R] [NormalizedGCDMonoid R] [IsDomain S] [NoZeroSMulDivisors R S]
-
-theorem Minpoly.toAdjoin.injective (hx : IsIntegral R x) :
-    Function.Injective (Minpoly.toAdjoin R x) :=
-  by
-  refine' (injective_iff_map_eq_zero _).2 fun P₁ hP₁ => _
-  obtain ⟨P, hP⟩ := mk_surjective (minpoly.monic hx) P₁
-  by_cases hPzero : P = 0
-  · simpa [hPzero] using hP.symm
-  have hPcont : P.content ≠ 0 := fun h => hPzero (content_eq_zero_iff.1 h)
-  rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
-    [anonymous], P.eq_C_content_mul_prim_part, aeval_mul, aeval_C] at hP₁
-  replace hP₁ :=
-    eq_zero_of_ne_zero_of_mul_left_eq_zero
-      ((map_ne_zero_iff _ (NoZeroSMulDivisors.algebra_map_injective R S)).2 hPcont) hP₁
-  obtain ⟨Q, hQ⟩ := minpoly.gcd_domain_dvd hx P.is_primitive_prim_part.ne_zero hP₁
-  rw [P.eq_C_content_mul_prim_part] at hP
-  simpa [hQ] using hP.symm
-#align adjoin_root.minpoly.to_adjoin.injective AdjoinRoot.Minpoly.toAdjoin.injective
-
-/-- The algebra isomorphism `adjoin_root (minpoly R x) ≃ₐ[R] adjoin R x` -/
-@[simps]
-def Minpoly.equivAdjoin (hx : IsIntegral R x) :
-    AdjoinRoot (minpoly R x) ≃ₐ[R] adjoin R ({x} : Set S) :=
-  AlgEquiv.ofBijective (Minpoly.toAdjoin R x)
-    ⟨Minpoly.toAdjoin.injective hx, Minpoly.toAdjoin.surjective R x⟩
-#align adjoin_root.minpoly.equiv_adjoin AdjoinRoot.Minpoly.equivAdjoin
-
-/-- The `power_basis` of `adjoin R {x}` given by `x`. See `algebra.adjoin.power_basis` for a version
-over a field. -/
-@[simps]
-def Algebra.adjoin.powerBasis' (hx : IsIntegral R x) :
-    PowerBasis R (Algebra.adjoin R ({x} : Set S)) :=
-  PowerBasis.map (AdjoinRoot.powerBasis' (minpoly.monic hx)) (Minpoly.equivAdjoin hx)
-#align algebra.adjoin.power_basis' Algebra.adjoin.powerBasis'
-
-/-- The power basis given by `x` if `B.gen ∈ adjoin R {x}`. -/
-@[simps]
-noncomputable def PowerBasis.ofGenMemAdjoin' (B : PowerBasis R S) (hint : IsIntegral R x)
-    (hx : B.gen ∈ adjoin R ({x} : Set S)) : PowerBasis R S :=
-  (Algebra.adjoin.powerBasis' hint).map <|
-    (Subalgebra.equivOfEq _ _ <| PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans
-      Subalgebra.topEquiv
-#align power_basis.of_gen_mem_adjoin' PowerBasis.ofGenMemAdjoin'
-
 end minpoly
-
-section Equiv
 
 section IsDomain
 

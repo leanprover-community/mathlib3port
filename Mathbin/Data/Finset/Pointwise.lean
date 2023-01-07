@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1724,7 +1724,7 @@ theorem Nonempty.zero_smul (ht : t.Nonempty) : (0 : Finset α) • t = 0 :=
 
 /-- A nonempty set is scaled by zero to the singleton set containing 0. -/
 theorem zero_smul_finset {s : Finset β} (h : s.Nonempty) : (0 : α) • s = (0 : Finset β) :=
-  coe_injective <| by simpa using Set.zero_smul_set h
+  coe_injective <| by simpa using @Set.zero_smul_set α _ _ _ _ _ h
 #align finset.zero_smul_finset Finset.zero_smul_finset
 
 theorem zero_smul_finset_subset (s : Finset β) : (0 : α) • s ⊆ 0 :=

@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.gcd_monoid
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.FieldDivision
-import Mathbin.RingTheory.IntegralClosure
-import Mathbin.RingTheory.Polynomial.GaussLemma
+import Mathbin.RingTheory.AdjoinRoot
 import Mathbin.FieldTheory.Minpoly.Field
+import Mathbin.RingTheory.Polynomial.GaussLemma
 
 /-!
 # Minimal polynomials over a GCD monoid
@@ -38,12 +38,13 @@ open Polynomial Set Function minpoly
 
 namespace minpoly
 
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain R] [IsDomain S] [Algebra R S]
+
 section GcdDomain
 
-variable {R S : Type _} (K L : Type _) [CommRing R] [IsDomain R] [NormalizedGCDMonoid R] [Field K]
-  [CommRing S] [IsDomain S] [Algebra R K] [IsFractionRing R K] [Algebra R S] [Field L] [Algebra S L]
-  [Algebra K L] [Algebra R L] [IsScalarTower R K L] [IsScalarTower R S L] {s : S}
-  (hs : IsIntegral R s)
+variable (K L : Type _) [NormalizedGCDMonoid R] [Field K] [Algebra R K] [IsFractionRing R K]
+  [Field L] [Algebra S L] [Algebra K L] [Algebra R L] [IsScalarTower R K L] [IsScalarTower R S L]
+  {s : S} (hs : IsIntegral R s)
 
 include hs
 
@@ -128,6 +129,57 @@ theorem gcd_domain_unique {P : R[X]} (hmo : P.Monic) (hP : Polynomial.aeval s P 
 #align minpoly.gcd_domain_unique minpoly.gcd_domain_unique
 
 end GcdDomain
+
+section AdjoinRoot
+
+noncomputable section
+
+open Algebra Polynomial AdjoinRoot
+
+variable {R} {x : S} [NormalizedGCDMonoid R] [NoZeroSMulDivisors R S]
+
+theorem ToAdjoin.injective (hx : IsIntegral R x) : Function.Injective (Minpoly.toAdjoin R x) :=
+  by
+  refine' (injective_iff_map_eq_zero _).2 fun P₁ hP₁ => _
+  obtain ⟨P, hP⟩ := mk_surjective (minpoly.monic hx) P₁
+  by_cases hPzero : P = 0
+  · simpa [hPzero] using hP.symm
+  have hPcont : P.content ≠ 0 := fun h => hPzero (content_eq_zero_iff.1 h)
+  rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
+    [anonymous], P.eq_C_content_mul_prim_part, aeval_mul, aeval_C] at hP₁
+  replace hP₁ :=
+    eq_zero_of_ne_zero_of_mul_left_eq_zero
+      ((map_ne_zero_iff _ (NoZeroSMulDivisors.algebra_map_injective R S)).2 hPcont) hP₁
+  obtain ⟨Q, hQ⟩ := minpoly.gcd_domain_dvd hx P.is_primitive_prim_part.ne_zero hP₁
+  rw [P.eq_C_content_mul_prim_part] at hP
+  simpa [hQ] using hP.symm
+#align minpoly.to_adjoin.injective minpoly.ToAdjoin.injective
+
+/-- The algebra isomorphism `adjoin_root (minpoly R x) ≃ₐ[R] adjoin R x` -/
+@[simps]
+def equivAdjoin (hx : IsIntegral R x) : AdjoinRoot (minpoly R x) ≃ₐ[R] adjoin R ({x} : Set S) :=
+  AlgEquiv.ofBijective (Minpoly.toAdjoin R x)
+    ⟨minpoly.ToAdjoin.injective hx, Minpoly.toAdjoin.surjective R x⟩
+#align minpoly.equiv_adjoin minpoly.equivAdjoin
+
+/-- The `power_basis` of `adjoin R {x}` given by `x`. See `algebra.adjoin.power_basis` for a version
+over a field. -/
+@[simps]
+def Algebra.adjoin.powerBasis' (hx : IsIntegral R x) :
+    PowerBasis R (Algebra.adjoin R ({x} : Set S)) :=
+  PowerBasis.map (AdjoinRoot.powerBasis' (minpoly.monic hx)) (minpoly.equivAdjoin hx)
+#align algebra.adjoin.power_basis' Algebra.adjoin.powerBasis'
+
+/-- The power basis given by `x` if `B.gen ∈ adjoin R {x}`. -/
+@[simps]
+noncomputable def PowerBasis.ofGenMemAdjoin' (B : PowerBasis R S) (hint : IsIntegral R x)
+    (hx : B.gen ∈ adjoin R ({x} : Set S)) : PowerBasis R S :=
+  (Algebra.adjoin.powerBasis' hint).map <|
+    (Subalgebra.equivOfEq _ _ <| PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans
+      Subalgebra.topEquiv
+#align power_basis.of_gen_mem_adjoin' PowerBasis.ofGenMemAdjoin'
+
+end AdjoinRoot
 
 end minpoly
 

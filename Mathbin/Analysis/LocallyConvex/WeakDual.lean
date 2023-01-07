@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.weak_dual
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
     simp only [id.def]
     let U' := hU₁.to_finset
     by_cases hU₃ : U.fst.nonempty
-    · have hU₃' : U'.nonempty := hU₁.nonempty_to_finset.mpr hU₃
+    · have hU₃' : U'.nonempty := hU₁.to_finset_nonempty.mpr hU₃
       refine'
         ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd,
           p.basis_sets_mem _ <|

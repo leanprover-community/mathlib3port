@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.function
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ open Finset LinearMap Set
 
 open BigOperators Classical Convex Pointwise
 
-variable {𝕜 E F β ι : Type _}
+variable {𝕜 E F α β ι : Type _}
 
 section OrderedSemiring
 
@@ -46,11 +46,11 @@ variable [AddCommMonoid E] [AddCommMonoid F]
 
 section OrderedAddCommMonoid
 
-variable [OrderedAddCommMonoid β]
+variable [OrderedAddCommMonoid α] [OrderedAddCommMonoid β]
 
 section HasSmul
 
-variable (𝕜) [HasSmul 𝕜 E] [HasSmul 𝕜 β] (s : Set E) (f : E → β)
+variable (𝕜) [HasSmul 𝕜 E] [HasSmul 𝕜 α] [HasSmul 𝕜 β] (s : Set E) (f : E → β) {g : β → α}
 
 /-- Convexity of functions -/
 def ConvexOn : Prop :=
@@ -141,6 +141,64 @@ theorem StrictConcaveOn.subset {t : Set E} (hf : StrictConcaveOn 𝕜 t f) (hst 
     (hs : Convex 𝕜 s) : StrictConcaveOn 𝕜 s f :=
   ⟨hs, fun x hx y hy => hf.2 (hst hx) (hst hy)⟩
 #align strict_concave_on.subset StrictConcaveOn.subset
+
+theorem ConvexOn.comp (hg : ConvexOn 𝕜 (f '' s) g) (hf : ConvexOn 𝕜 s f)
+    (hg' : MonotoneOn g (f '' s)) : ConvexOn 𝕜 s (g ∘ f) :=
+  ⟨hf.1, fun x hx y hy a b ha hb hab =>
+    (hg' (mem_image_of_mem f <| hf.1 hx hy ha hb hab)
+            (hg.1 (mem_image_of_mem f hx) (mem_image_of_mem f hy) ha hb hab) <|
+          hf.2 hx hy ha hb hab).trans <|
+      hg.2 (mem_image_of_mem f hx) (mem_image_of_mem f hy) ha hb hab⟩
+#align convex_on.comp ConvexOn.comp
+
+theorem ConcaveOn.comp (hg : ConcaveOn 𝕜 (f '' s) g) (hf : ConcaveOn 𝕜 s f)
+    (hg' : MonotoneOn g (f '' s)) : ConcaveOn 𝕜 s (g ∘ f) :=
+  ⟨hf.1, fun x hx y hy a b ha hb hab =>
+    (hg.2 (mem_image_of_mem f hx) (mem_image_of_mem f hy) ha hb hab).trans <|
+      hg' (hg.1 (mem_image_of_mem f hx) (mem_image_of_mem f hy) ha hb hab)
+          (mem_image_of_mem f <| hf.1 hx hy ha hb hab) <|
+        hf.2 hx hy ha hb hab⟩
+#align concave_on.comp ConcaveOn.comp
+
+theorem ConvexOn.comp_concave_on (hg : ConvexOn 𝕜 (f '' s) g) (hf : ConcaveOn 𝕜 s f)
+    (hg' : AntitoneOn g (f '' s)) : ConvexOn 𝕜 s (g ∘ f) :=
+  hg.dual.comp hf hg'
+#align convex_on.comp_concave_on ConvexOn.comp_concave_on
+
+theorem ConcaveOn.comp_convex_on (hg : ConcaveOn 𝕜 (f '' s) g) (hf : ConvexOn 𝕜 s f)
+    (hg' : AntitoneOn g (f '' s)) : ConcaveOn 𝕜 s (g ∘ f) :=
+  hg.dual.comp hf hg'
+#align concave_on.comp_convex_on ConcaveOn.comp_convex_on
+
+theorem StrictConvexOn.comp (hg : StrictConvexOn 𝕜 (f '' s) g) (hf : StrictConvexOn 𝕜 s f)
+    (hg' : StrictMonoOn g (f '' s)) (hf' : s.InjOn f) : StrictConvexOn 𝕜 s (g ∘ f) :=
+  ⟨hf.1, fun x hx y hy hxy a b ha hb hab =>
+    (hg' (mem_image_of_mem f <| hf.1 hx hy ha.le hb.le hab)
+            (hg.1 (mem_image_of_mem f hx) (mem_image_of_mem f hy) ha.le hb.le hab) <|
+          hf.2 hx hy hxy ha hb hab).trans <|
+      hg.2 (mem_image_of_mem f hx) (mem_image_of_mem f hy) (mt (hf' hx hy) hxy) ha hb hab⟩
+#align strict_convex_on.comp StrictConvexOn.comp
+
+theorem StrictConcaveOn.comp (hg : StrictConcaveOn 𝕜 (f '' s) g) (hf : StrictConcaveOn 𝕜 s f)
+    (hg' : StrictMonoOn g (f '' s)) (hf' : s.InjOn f) : StrictConcaveOn 𝕜 s (g ∘ f) :=
+  ⟨hf.1, fun x hx y hy hxy a b ha hb hab =>
+    (hg.2 (mem_image_of_mem f hx) (mem_image_of_mem f hy) (mt (hf' hx hy) hxy) ha hb hab).trans <|
+      hg' (hg.1 (mem_image_of_mem f hx) (mem_image_of_mem f hy) ha.le hb.le hab)
+          (mem_image_of_mem f <| hf.1 hx hy ha.le hb.le hab) <|
+        hf.2 hx hy hxy ha hb hab⟩
+#align strict_concave_on.comp StrictConcaveOn.comp
+
+theorem StrictConvexOn.comp_strict_concave_on (hg : StrictConvexOn 𝕜 (f '' s) g)
+    (hf : StrictConcaveOn 𝕜 s f) (hg' : StrictAntiOn g (f '' s)) (hf' : s.InjOn f) :
+    StrictConvexOn 𝕜 s (g ∘ f) :=
+  hg.dual.comp hf hg' hf'
+#align strict_convex_on.comp_strict_concave_on StrictConvexOn.comp_strict_concave_on
+
+theorem StrictConcaveOn.comp_strict_convex_on (hg : StrictConcaveOn 𝕜 (f '' s) g)
+    (hf : StrictConvexOn 𝕜 s f) (hg' : StrictAntiOn g (f '' s)) (hf' : s.InjOn f) :
+    StrictConcaveOn 𝕜 s (g ∘ f) :=
+  hg.dual.comp hf hg' hf'
+#align strict_concave_on.comp_strict_convex_on StrictConcaveOn.comp_strict_convex_on
 
 end HasSmul
 

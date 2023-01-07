@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module probability.cond_count
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,8 +138,7 @@ theorem pred_true_of_cond_count_eq_one (h : condCount s t = 1) : s ⊆ t :=
     Nat.cast_inj] at h
   suffices s ∩ t = s by exact this ▸ fun x hx => hx.2
   rw [← @Set.Finite.to_finset_inj _ _ _ (hsf.inter_of_left _) hsf]
-  exact
-    Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_subset.2 (s.inter_subset_left t)) h.symm.le
+  exact Finset.eq_of_subset_of_card_le (Set.Finite.to_finset_mono <| s.inter_subset_left t) h.ge
 #align
   probability_theory.pred_true_of_cond_count_eq_one ProbabilityTheory.pred_true_of_cond_count_eq_one
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.local_invariant_properties
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -267,13 +267,14 @@ include hG
 
 /-- `lift_prop_within_at P f s x` is equivalent to a definition where we restrict the set we are
   considering to the domain of the charts at `x` and `f x`. -/
-theorem lift_prop_within_at_iff {f : M → M'} (hf : ContinuousWithinAt f s x) :
+theorem lift_prop_within_at_iff {f : M → M'} :
     LiftPropWithinAt P f s x ↔
-      P (chartAt H' (f x) ∘ f ∘ (chartAt H x).symm)
-        ((chartAt H x).target ∩ (chartAt H x).symm ⁻¹' (s ∩ f ⁻¹' (chartAt H' (f x)).source))
-        (chartAt H x x) :=
+      ContinuousWithinAt f s x ∧
+        P (chartAt H' (f x) ∘ f ∘ (chartAt H x).symm)
+          ((chartAt H x).target ∩ (chartAt H x).symm ⁻¹' (s ∩ f ⁻¹' (chartAt H' (f x)).source))
+          (chartAt H x x) :=
   by
-  rw [lift_prop_within_at, iff_true_intro hf, true_and_iff, hG.congr_set]
+  refine' and_congr_right fun hf => hG.congr_set _
   exact
     LocalHomeomorph.preimage_eventually_eq_target_inter_preimage_inter hf (mem_chart_source H x)
       (chart_source_mem_nhds H' (f x))
@@ -509,13 +510,23 @@ theorem lift_prop_on_congr_iff (h₁ : ∀ y ∈ s, g' y = g y) : LiftPropOn P g
 
 omit hG
 
-theorem lift_prop_within_at_mono (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t ⊆ s → P f s x → P f t x)
-    (h : LiftPropWithinAt P g t x) (hst : s ⊆ t) : LiftPropWithinAt P g s x :=
+theorem lift_prop_within_at_mono_of_mem
+    (mono_of_mem : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, s ∈ 𝓝[t] x → P f s x → P f t x)
+    (h : LiftPropWithinAt P g s x) (hst : s ∈ 𝓝[t] x) : LiftPropWithinAt P g t x :=
   by
-  refine' ⟨h.1.mono hst, _⟩
+  refine' ⟨h.1.mono_of_mem hst, mono_of_mem _ h.2⟩
+  simp_rw [← mem_map, (chart_at H x).symm.map_nhds_within_preimage_eq (mem_chart_target H x),
+    (chart_at H x).left_inv (mem_chart_source H x), hst]
+#align
+  structure_groupoid.local_invariant_prop.lift_prop_within_at_mono_of_mem StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono_of_mem
+
+theorem lift_prop_within_at_mono (mono : ∀ ⦃s x t⦄ ⦃f : H → H'⦄, t ⊆ s → P f s x → P f t x)
+    (h : LiftPropWithinAt P g s x) (hts : t ⊆ s) : LiftPropWithinAt P g t x :=
+  by
+  refine' ⟨h.1.mono hts, _⟩
   apply mono (fun y hy => _) h.2
   simp only [mfld_simps] at hy
-  simp only [hy, hst _, mfld_simps]
+  simp only [hy, hts _, mfld_simps]
 #align
   structure_groupoid.local_invariant_prop.lift_prop_within_at_mono StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono
 

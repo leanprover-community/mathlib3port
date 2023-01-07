@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Jesse Michael Han
 
 ! This file was ported from Lean 3 source module tactic.ext
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -525,645 +525,82 @@ local postfix:1024 "?" => optional
 -- mathport name: parser.many
 local postfix:1024 "*" => many
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment
-        "/--"
-        "`ext1 id` selects and apply one extensionality lemma (with attribute\n`ext`), using `id`, if provided, to name a local constant\nintroduced by the lemma. If `id` is omitted, the local constant is\nnamed automatically, as per `intro`. Placing a `?` after `ext1`\n (e.g. `ext1? i ⟨a,b⟩ : 3`) will display a sequence of tactic\napplications that can replace the call to `ext1`.\n-/")]
-      []
-      []
-      []
-      [(Command.unsafe "unsafe")]
-      [])
-     (Command.def
-      "def"
-      (Command.declId `interactive.ext1 [])
-      (Command.optDeclSig
-       [(Term.explicitBinder
-         "("
-         [`trace]
-         [":"
-          (Term.app
-           `parse
-           [(Tactic.Tactic.Ext.parser.optional (Term.app `tk [(str "\"?\"")]) "?")])]
-         []
-         ")")
-        (Term.explicitBinder
-         "("
-         [`xs]
-         [":" (Term.app `parse [(Tactic.Tactic.Ext.parser.many `rcases_patt_parse_hi "*")])]
-         []
-         ")")]
-       [(Term.typeSpec ":" (Term.app `tactic [`Unit]))])
-      (Command.declValSimple
-       ":="
-       (Init.Control.Functor.«term_$>_»
-        (Term.app
-         `ext1
-         [`xs
-          (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-          (Term.proj `trace "." `isSome)])
-        " $> "
-        (Term.tuple "(" [] ")"))
-       [])
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Control.Functor.«term_$>_»
-       (Term.app
-        `ext1
-        [`xs
-         (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-         (Term.proj `trace "." `isSome)])
-       " $> "
-       (Term.tuple "(" [] ")"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.tuple "(" [] ")")
-[PrettyPrinter.parenthesize] ...precedences are 100 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 100, term))
-      (Term.app
-       `ext1
-       [`xs
-        (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-        (Term.proj `trace "." `isSome)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `trace "." `isSome)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `trace
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      `xs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `ext1
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 101 >? 1022, (some 1023, term) <=? (some 100, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 100, (some 100, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      (Term.app `tactic [`Unit])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Unit
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `tactic
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
-     term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'ident'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.hole'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `parse [(Tactic.Tactic.Ext.parser.many `rcases_patt_parse_hi "*")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.Ext.parser.many', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.Ext.parser.many', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.Tactic.Ext.parser.many `rcases_patt_parse_hi "*")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.Ext.parser.many', expected 'Tactic.Tactic.Ext.parser.many._@.Tactic.Ext._hyg.65'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.explicitBinder', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-      `ext1 id` selects and apply one extensionality lemma (with attribute
-      `ext`), using `id`, if provided, to name a local constant
-      introduced by the lemma. If `id` is omitted, the local constant is
-      named automatically, as per `intro`. Placing a `?` after `ext1`
-       (e.g. `ext1? i ⟨a,b⟩ : 3`) will display a sequence of tactic
-      applications that can replace the call to `ext1`.
-      -/
-    unsafe
-  def
-    interactive.ext1
-    ( trace : parse tk "?" ? ) ( xs : parse rcases_patt_parse_hi * ) : tactic Unit
-    := ext1 xs { } trace . isSome $> ( )
+/-- `ext1 id` selects and apply one extensionality lemma (with attribute
+`ext`), using `id`, if provided, to name a local constant
+introduced by the lemma. If `id` is omitted, the local constant is
+named automatically, as per `intro`. Placing a `?` after `ext1`
+ (e.g. `ext1? i ⟨a,b⟩ : 3`) will display a sequence of tactic
+applications that can replace the call to `ext1`.
+-/
+unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse rcases_patt_parse_hi*) :
+    tactic Unit :=
+  ext1 xs { } trace.isSome $> ()
 #align tactic.interactive.ext1 tactic.interactive.ext1
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment
-        "/--"
-        "- `ext` applies as many extensionality lemmas as possible;\n- `ext ids`, with `ids` a list of identifiers, finds extentionality and applies them\n  until it runs out of identifiers in `ids` to name the local constants.\n- `ext` can also be given an `rcases` pattern in place of an identifier.\n  This will destruct the introduced local constant.\n- Placing a `?` after `ext` (e.g. `ext? i ⟨a,b⟩ : 3`) will display\n  a sequence of tactic applications that can replace the call to `ext`.\n- `set_option trace.ext true` will trace every attempted lemma application,\n  along with the time it takes for the application to succeed or fail.\n  This is useful for debugging slow `ext` calls.\n\nWhen trying to prove:\n\n```lean\nα β : Type,\nf g : α → set β\n⊢ f = g\n```\n\napplying `ext x y` yields:\n\n```lean\nα β : Type,\nf g : α → set β,\nx : α,\ny : β\n⊢ y ∈ f x ↔ y ∈ f x\n```\n\nby applying functional extensionality and set extensionality.\n\nWhen trying to prove:\n\n```lean\nα β γ : Type\nf g : α × β → γ\n⊢ f = g\n```\n\napplying `ext ⟨a, b⟩` yields:\n\n```lean\nα β γ : Type,\nf g : α × β → γ,\na : α,\nb : β\n⊢ f (a, b) = g (a, b)\n```\n\nby applying functional extensionality and destructing the introduced pair.\n\nIn the previous example, applying `ext? ⟨a,b⟩` will produce the trace message:\n\n```lean\nTry this: apply funext, rintro ⟨a, b⟩\n```\n\nA maximum depth can be provided with `ext x y z : 3`.\n-/")]
-      []
-      []
-      []
-      [(Command.unsafe "unsafe")]
-      [])
-     (Command.def
-      "def"
-      (Command.declId `interactive.ext [])
-      (Command.optDeclSig
-       []
-       [(Term.typeSpec
-         ":"
-         (Term.arrow
-          («term_<|_»
-           `parse
-           "<|"
-           (Tactic.Tactic.Ext.parser.optional (Term.app `tk [(str "\"?\"")]) "?"))
-          "→"
-          (Term.arrow
-           (Term.app `parse [(Tactic.Tactic.Ext.parser.many `rintro_patt_parse_hi "*")])
-           "→"
-           (Term.arrow
-            (Term.app
-             `parse
-             [(Tactic.Tactic.Ext.parser.optional
-               («term_*>_» (Term.app `tk [(str "\":\"")]) "*>" `small_nat)
-               "?")])
-            "→"
-            (Term.app `tactic [`Unit])))))])
-      (Command.declValEqns
-       (Term.matchAltsWhereDecls
-        (Term.matchAlts
-         [(Term.matchAlt
-           "|"
-           [[`trace "," («term[_]» "[" [] "]") "," (Term.app `some [`n])]]
-           "=>"
-           (Term.app
-            `iterate_range
-            [(num "1")
-             `n
-             (Init.Control.Functor.«term_$>_»
-              (Term.app
-               `ext1
-               [(«term[_]» "[" [] "]")
-                (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-                (Term.proj `trace "." `isSome)])
-              " $> "
-              (Term.tuple "(" [] ")"))]))
-          (Term.matchAlt
-           "|"
-           [[`trace "," («term[_]» "[" [] "]") "," `none]]
-           "=>"
-           (Term.app
-            `repeat1
-            [(Init.Control.Functor.«term_$>_»
-              (Term.app
-               `ext1
-               [(«term[_]» "[" [] "]")
-                (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-                (Term.proj `trace "." `isSome)])
-              " $> "
-              (Term.tuple "(" [] ")"))]))
-          (Term.matchAlt
-           "|"
-           [[`trace "," `xs "," `n]]
-           "=>"
-           (Init.Control.Functor.«term_$>_»
-            (Term.app
-             `ext
-             [(Term.proj `xs "." `join)
-              `n
-              (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-              (Term.proj `trace "." `isSome)])
-            " $> "
-            (Term.tuple "(" [] ")")))])
-        []))
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValEqns', expected 'Lean.Parser.Command.declValSimple'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Control.Functor.«term_$>_»
-       (Term.app
-        `ext
-        [(Term.proj `xs "." `join)
-         `n
-         (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-         (Term.proj `trace "." `isSome)])
-       " $> "
-       (Term.tuple "(" [] ")"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.tuple "(" [] ")")
-[PrettyPrinter.parenthesize] ...precedences are 100 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 100, term))
-      (Term.app
-       `ext
-       [(Term.proj `xs "." `join)
-        `n
-        (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-        (Term.proj `trace "." `isSome)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `trace "." `isSome)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `trace
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      `n
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.proj `xs "." `join)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `xs
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `ext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 101 >? 1022, (some 1023, term) <=? (some 100, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 100, (some 100, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `n
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `xs
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `trace
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      (Term.app
-       `repeat1
-       [(Init.Control.Functor.«term_$>_»
-         (Term.app
-          `ext1
-          [(«term[_]» "[" [] "]")
-           (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-           (Term.proj `trace "." `isSome)])
-         " $> "
-         (Term.tuple "(" [] ")"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Control.Functor.«term_$>_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Control.Functor.«term_$>_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Control.Functor.«term_$>_»
-       (Term.app
-        `ext1
-        [(«term[_]» "[" [] "]")
-         (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-         (Term.proj `trace "." `isSome)])
-       " $> "
-       (Term.tuple "(" [] ")"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.tuple "(" [] ")")
-[PrettyPrinter.parenthesize] ...precedences are 100 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 100, term))
-      (Term.app
-       `ext1
-       [(«term[_]» "[" [] "]")
-        (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-        (Term.proj `trace "." `isSome)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `trace "." `isSome)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `trace
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      («term[_]» "[" [] "]")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `ext1
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 101 >? 1022, (some 1023, term) <=? (some 100, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 100, (some 100,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Init.Control.Functor.«term_$>_»
-      (Term.app
-       `ext1
-       [(«term[_]» "[" [] "]")
-        (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-        (Term.proj `trace "." `isSome)])
-      " $> "
-      (Term.tuple "(" [] ")"))
-     ")")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `repeat1
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
-     term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `none
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term[_]» "[" [] "]")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `trace
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      (Term.app
-       `iterate_range
-       [(num "1")
-        `n
-        (Init.Control.Functor.«term_$>_»
-         (Term.app
-          `ext1
-          [(«term[_]» "[" [] "]")
-           (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-           (Term.proj `trace "." `isSome)])
-         " $> "
-         (Term.tuple "(" [] ")"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Control.Functor.«term_$>_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Control.Functor.«term_$>_»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Control.Functor.«term_$>_»
-       (Term.app
-        `ext1
-        [(«term[_]» "[" [] "]")
-         (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-         (Term.proj `trace "." `isSome)])
-       " $> "
-       (Term.tuple "(" [] ")"))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.tuple "(" [] ")")
-[PrettyPrinter.parenthesize] ...precedences are 100 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 100, term))
-      (Term.app
-       `ext1
-       [(«term[_]» "[" [] "]")
-        (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-        (Term.proj `trace "." `isSome)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.proj `trace "." `isSome)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `trace
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term[_]»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      («term[_]» "[" [] "]")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `ext1
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 101 >? 1022, (some 1023, term) <=? (some 100, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 100, (some 100,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Init.Control.Functor.«term_$>_»
-      (Term.app
-       `ext1
-       [(«term[_]» "[" [] "]")
-        (Term.structInst "{" [] [] (Term.optEllipsis []) [] "}")
-        (Term.proj `trace "." `isSome)])
-      " $> "
-      (Term.tuple "(" [] ")"))
-     ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `n
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `iterate_range
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023,
-     term) <=? (some 1023, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `some [`n])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `n
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `some
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term[_]» "[" [] "]")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `trace
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      (Term.arrow
-       («term_<|_»
-        `parse
-        "<|"
-        (Tactic.Tactic.Ext.parser.optional (Term.app `tk [(str "\"?\"")]) "?"))
-       "→"
-       (Term.arrow
-        (Term.app `parse [(Tactic.Tactic.Ext.parser.many `rintro_patt_parse_hi "*")])
-        "→"
-        (Term.arrow
-         (Term.app
-          `parse
-          [(Tactic.Tactic.Ext.parser.optional
-            («term_*>_» (Term.app `tk [(str "\":\"")]) "*>" `small_nat)
-            "?")])
-         "→"
-         (Term.app `tactic [`Unit]))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.arrow
-       (Term.app `parse [(Tactic.Tactic.Ext.parser.many `rintro_patt_parse_hi "*")])
-       "→"
-       (Term.arrow
-        (Term.app
-         `parse
-         [(Tactic.Tactic.Ext.parser.optional
-           («term_*>_» (Term.app `tk [(str "\":\"")]) "*>" `small_nat)
-           "?")])
-        "→"
-        (Term.app `tactic [`Unit])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.arrow
-       (Term.app
-        `parse
-        [(Tactic.Tactic.Ext.parser.optional
-          («term_*>_» (Term.app `tk [(str "\":\"")]) "*>" `small_nat)
-          "?")])
-       "→"
-       (Term.app `tactic [`Unit]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `tactic [`Unit])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Unit
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `tactic
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-      (Term.app
-       `parse
-       [(Tactic.Tactic.Ext.parser.optional
-         («term_*>_» (Term.app `tk [(str "\":\"")]) "*>" `small_nat)
-         "?")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.Ext.parser.optional', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.Ext.parser.optional', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.Tactic.Ext.parser.optional
-       («term_*>_» (Term.app `tk [(str "\":\"")]) "*>" `small_nat)
-       "?")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.Ext.parser.optional', expected 'Tactic.Tactic.Ext.parser.optional._@.Tactic.Ext._hyg.16'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-      - `ext` applies as many extensionality lemmas as possible;
-      - `ext ids`, with `ids` a list of identifiers, finds extentionality and applies them
-        until it runs out of identifiers in `ids` to name the local constants.
-      - `ext` can also be given an `rcases` pattern in place of an identifier.
-        This will destruct the introduced local constant.
-      - Placing a `?` after `ext` (e.g. `ext? i ⟨a,b⟩ : 3`) will display
-        a sequence of tactic applications that can replace the call to `ext`.
-      - `set_option trace.ext true` will trace every attempted lemma application,
-        along with the time it takes for the application to succeed or fail.
-        This is useful for debugging slow `ext` calls.
-      
-      When trying to prove:
-      
-      ```lean
-      α β : Type,
-      f g : α → set β
-      ⊢ f = g
-      ```
-      
-      applying `ext x y` yields:
-      
-      ```lean
-      α β : Type,
-      f g : α → set β,
-      x : α,
-      y : β
-      ⊢ y ∈ f x ↔ y ∈ f x
-      ```
-      
-      by applying functional extensionality and set extensionality.
-      
-      When trying to prove:
-      
-      ```lean
-      α β γ : Type
-      f g : α × β → γ
-      ⊢ f = g
-      ```
-      
-      applying `ext ⟨a, b⟩` yields:
-      
-      ```lean
-      α β γ : Type,
-      f g : α × β → γ,
-      a : α,
-      b : β
-      ⊢ f (a, b) = g (a, b)
-      ```
-      
-      by applying functional extensionality and destructing the introduced pair.
-      
-      In the previous example, applying `ext? ⟨a,b⟩` will produce the trace message:
-      
-      ```lean
-      Try this: apply funext, rintro ⟨a, b⟩
-      ```
-      
-      A maximum depth can be provided with `ext x y z : 3`.
-      -/
-    unsafe
-  def
-    interactive.ext
-    : parse <| tk "?" ? → parse rintro_patt_parse_hi * → parse tk ":" *> small_nat ? → tactic Unit
-    | trace , [ ] , some n => iterate_range 1 n ext1 [ ] { } trace . isSome $> ( )
-      | trace , [ ] , none => repeat1 ext1 [ ] { } trace . isSome $> ( )
-      | trace , xs , n => ext xs . join n { } trace . isSome $> ( )
+/-- - `ext` applies as many extensionality lemmas as possible;
+- `ext ids`, with `ids` a list of identifiers, finds extentionality and applies them
+  until it runs out of identifiers in `ids` to name the local constants.
+- `ext` can also be given an `rcases` pattern in place of an identifier.
+  This will destruct the introduced local constant.
+- Placing a `?` after `ext` (e.g. `ext? i ⟨a,b⟩ : 3`) will display
+  a sequence of tactic applications that can replace the call to `ext`.
+- `set_option trace.ext true` will trace every attempted lemma application,
+  along with the time it takes for the application to succeed or fail.
+  This is useful for debugging slow `ext` calls.
+
+When trying to prove:
+
+```lean
+α β : Type,
+f g : α → set β
+⊢ f = g
+```
+
+applying `ext x y` yields:
+
+```lean
+α β : Type,
+f g : α → set β,
+x : α,
+y : β
+⊢ y ∈ f x ↔ y ∈ f x
+```
+
+by applying functional extensionality and set extensionality.
+
+When trying to prove:
+
+```lean
+α β γ : Type
+f g : α × β → γ
+⊢ f = g
+```
+
+applying `ext ⟨a, b⟩` yields:
+
+```lean
+α β γ : Type,
+f g : α × β → γ,
+a : α,
+b : β
+⊢ f (a, b) = g (a, b)
+```
+
+by applying functional extensionality and destructing the introduced pair.
+
+In the previous example, applying `ext? ⟨a,b⟩` will produce the trace message:
+
+```lean
+Try this: apply funext, rintro ⟨a, b⟩
+```
+
+A maximum depth can be provided with `ext x y z : 3`.
+-/
+unsafe def interactive.ext :
+    (parse <| (tk "?")?) → parse rintro_patt_parse_hi* → parse (tk ":" *> small_nat)? → tactic Unit
+  | trace, [], some n => iterate_range 1 n (ext1 [] { } trace.isSome $> ())
+  | trace, [], none => repeat1 (ext1 [] { } trace.isSome $> ())
+  | trace, xs, n => ext xs.join n { } trace.isSome $> ()
 #align tactic.interactive.ext tactic.interactive.ext
 
 /-- * `ext1 id` selects and apply one extensionality lemma (with

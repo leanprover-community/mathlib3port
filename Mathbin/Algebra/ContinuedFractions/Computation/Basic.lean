@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.basic
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,9 +151,8 @@ For example, let `(v : ℚ) := 3.4`. The process goes as follows:
 -/
 protected def stream (v : K) : Stream' <| Option (IntFractPair K)
   | 0 => some (IntFractPair.of v)
-  | n + 1 => do
-    let ap_n ← Stream' n
-    if ap_n = 0 then none else int_fract_pair.of ap_n⁻¹
+  | n + 1 =>
+    (Stream' n).bind fun ap_n => if ap_n.fr = 0 then none else some (IntFractPair.of ap_n.fr⁻¹)
 #align
   generalized_continued_fraction.int_fract_pair.stream GeneralizedContinuedFraction.IntFractPair.stream
 

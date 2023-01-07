@@ -16,15 +16,15 @@
   {"git":
    {"url": "https://github.com/leanprover/doc-gen4",
     "subDir?": null,
-    "rev": "bdf803b1002786b87da7b8db8d2746c0002a715f",
+    "rev": "09dbebed9ca85368152bb5146ef6f1271b1be425",
     "name": "doc-gen4",
     "inputRev?": "main"}},
   {"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "4eea09d73d5c73fd5b5fb7cd80eb7b99dc76c61f",
+    "rev": "d9f593530b3ca73004cee3f8c6ec966241fcc212",
     "name": "lean3port",
-    "inputRev?": "4eea09d73d5c73fd5b5fb7cd80eb7b99dc76c61f"}},
+    "inputRev?": "d9f593530b3ca73004cee3f8c6ec966241fcc212"}},
   {"git":
    {"url": "https://github.com/mhuisi/lean4-cli",
     "subDir?": null,
@@ -34,9 +34,9 @@
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "8fdafc5bac608b49c25740640cc1423db4ece47e",
+    "rev": "c2b7c75691a1894b28a403588144aa9ac1a58c08",
     "name": "mathlib",
-    "inputRev?": "8fdafc5bac608b49c25740640cc1423db4ece47e"}},
+    "inputRev?": "c2b7c75691a1894b28a403588144aa9ac1a58c08"}},
   {"git":
    {"url": "https://github.com/gebner/quote4",
     "subDir?": null,
@@ -46,7 +46,7 @@
   {"git":
    {"url": "https://github.com/JLimperg/aesop",
     "subDir?": null,
-    "rev": "c4477a2a7931e2490339d8087f599a45e89f25e7",
+    "rev": "72610cec1cd686884a08704f5fa91b45262136f9",
     "name": "aesop",
     "inputRev?": "master"}},
   {"git":
@@ -64,6 +64,6 @@
   {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,
-    "rev": "2919713bde15d55e3ea3625a03546531283bcb54",
+    "rev": "a61aa8ea7450c4d27e38dad7604d33891788b1ea",
     "name": "std",
     "inputRev?": "main"}}]}

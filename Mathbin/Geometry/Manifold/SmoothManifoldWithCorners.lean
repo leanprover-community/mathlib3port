@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.smooth_manifold_with_corners
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -311,9 +311,17 @@ theorem map_nhds_eq (x : H) : map I (𝓝 x) = 𝓝[range I] I x :=
   I.ClosedEmbedding.toEmbedding.map_nhds_eq x
 #align model_with_corners.map_nhds_eq ModelWithCorners.map_nhds_eq
 
+theorem map_nhds_within_eq (s : Set H) (x : H) : map I (𝓝[s] x) = 𝓝[I '' s] I x :=
+  I.ClosedEmbedding.toEmbedding.map_nhds_within_eq s x
+#align model_with_corners.map_nhds_within_eq ModelWithCorners.map_nhds_within_eq
+
 theorem image_mem_nhds_within {x : H} {s : Set H} (hs : s ∈ 𝓝 x) : I '' s ∈ 𝓝[range I] I x :=
   I.map_nhds_eq x ▸ image_mem_map hs
 #align model_with_corners.image_mem_nhds_within ModelWithCorners.image_mem_nhds_within
+
+theorem symm_map_nhds_within_image {x : H} {s : Set H} : map I.symm (𝓝[I '' s] I x) = 𝓝[s] x := by
+  rw [← I.map_nhds_within_eq, map_map, I.symm_comp_self, map_id]
+#align model_with_corners.symm_map_nhds_within_image ModelWithCorners.symm_map_nhds_within_image
 
 theorem symm_map_nhds_within_range (x : H) : map I.symm (𝓝[range I] I x) = 𝓝 x := by
   rw [← I.map_nhds_eq, map_map, I.symm_comp_self, map_id]
@@ -334,6 +342,20 @@ theorem unique_diff_preimage_source {β : Type _} [TopologicalSpace β] {e : Loc
 theorem uniqueDiffAtImage {x : H} : UniqueDiffWithinAt 𝕜 (range I) (I x) :=
   I.unique_diff _ (mem_range_self _)
 #align model_with_corners.unique_diff_at_image ModelWithCorners.uniqueDiffAtImage
+
+theorem symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X] {f : H → X} {s : Set H}
+    {x : H} :
+    ContinuousWithinAt (f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) (I x) ↔ ContinuousWithinAt f s x :=
+  by
+  refine' ⟨fun h => _, fun h => _⟩
+  · have := h.comp I.continuous_within_at (maps_to_preimage _ _)
+    simp_rw [preimage_inter, preimage_preimage, I.left_inv, preimage_id', preimage_range,
+      inter_univ] at this
+    rwa [Function.comp.assoc, I.symm_comp_self] at this
+  · rw [← I.left_inv x] at h
+    exact h.comp I.continuous_within_at_symm (inter_subset_left _ _)
+#align
+  model_with_corners.symm_continuous_within_at_comp_right_iff ModelWithCorners.symm_continuous_within_at_comp_right_iff
 
 protected theorem locally_compact [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) :
     LocallyCompactSpace H :=
@@ -890,6 +912,14 @@ theorem continuous_at_extend_symm {x : M} (h : x ∈ f.source) :
 theorem continuous_on_extend_symm : ContinuousOn (f.extend I).symm (f.extend I).target :=
   fun y hy => (continuous_at_extend_symm' _ _ hy).ContinuousWithinAt
 #align local_homeomorph.continuous_on_extend_symm LocalHomeomorph.continuous_on_extend_symm
+
+theorem extend_symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X] {g : M → X}
+    {s : Set M} {x : M} :
+    ContinuousWithinAt (g ∘ (f.extend I).symm) ((f.extend I).symm ⁻¹' s ∩ range I) (f.extend I x) ↔
+      ContinuousWithinAt (g ∘ f.symm) (f.symm ⁻¹' s) (f x) :=
+  by convert I.symm_continuous_within_at_comp_right_iff <;> rfl
+#align
+  local_homeomorph.extend_symm_continuous_within_at_comp_right_iff LocalHomeomorph.extend_symm_continuous_within_at_comp_right_iff
 
 theorem is_open_extend_preimage' {s : Set E} (hs : IsOpen s) :
     IsOpen ((f.extend I).source ∩ f.extend I ⁻¹' s) :=

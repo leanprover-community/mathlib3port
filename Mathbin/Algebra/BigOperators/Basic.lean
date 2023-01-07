@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1893,7 +1893,7 @@ theorem disjoint_finset_sum_left {β : Type _} {i : Finset β} {f : β → Multi
     Multiset.Disjoint (i.Sum f) a ↔ ∀ b ∈ i, Multiset.Disjoint (f b) a :=
   by
   convert (@disjoint_sum_left _ a) (map f i.val)
-  simp [Finset.mem_def, and_congr_left_iff, iff_self_iff]
+  simp [and_congr_left_iff, iff_self_iff]
 #align multiset.disjoint_finset_sum_left Multiset.disjoint_finset_sum_left
 
 theorem disjoint_finset_sum_right {β : Type _} {i : Finset β} {f : β → Multiset α}

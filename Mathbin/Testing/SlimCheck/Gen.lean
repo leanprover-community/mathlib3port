@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.gen
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,102 +78,9 @@ def chooseAny [Random α] : Gen α :=
 variable {α} [Preorder α]
 
 #print SlimCheck.Gen.choose /-
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment "/--" "Lift `random.random_r` to the `gen` monad. -/")]
-      []
-      []
-      []
-      []
-      [])
-     (Command.def
-      "def"
-      (Command.declId `choose [])
-      (Command.optDeclSig
-       [(Term.instBinder "[" [] (Term.app `BoundedRandom [`α]) "]")
-        (Term.explicitBinder "(" [`x `y] [":" `α] [] ")")
-        (Term.explicitBinder "(" [`p] [":" («term_≤_» `x "≤" `y)] [] ")")]
-       [(Term.typeSpec
-         ":"
-         (Term.app `Gen [(SlimCheck.Testing.SlimCheck.Gen.«term_.._» `x " .. " `y)]))])
-      (Command.declValSimple
-       ":="
-       (Term.anonymousCtor
-        "⟨"
-        [(Term.fun
-          "fun"
-          (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Rand.randomR [`x `y `p])))]
-        "⟩")
-       [])
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor
-       "⟨"
-       [(Term.fun
-         "fun"
-         (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Rand.randomR [`x `y `p])))]
-       "⟩")
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Rand.randomR [`x `y `p])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `Rand.randomR [`x `y `p])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `p
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `Rand.randomR
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      (Term.app `Gen [(SlimCheck.Testing.SlimCheck.Gen.«term_.._» `x " .. " `y)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SlimCheck.Testing.SlimCheck.Gen.«term_.._»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SlimCheck.Testing.SlimCheck.Gen.«term_.._»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (SlimCheck.Testing.SlimCheck.Gen.«term_.._» `x " .. " `y)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SlimCheck.Testing.SlimCheck.Gen.«term_.._»', expected 'SlimCheck.Testing.SlimCheck.Gen.term_.._._@.Testing.SlimCheck.Gen._hyg.8'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Lift `random.random_r` to the `gen` monad. -/
-  def
-    choose
-    [ BoundedRandom α ] ( x y : α ) ( p : x ≤ y ) : Gen x .. y
-    := ⟨ fun _ => Rand.randomR x y p ⟩
+def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
+  ⟨fun _ => Rand.randomR x y p⟩
 #align slim_check.gen.choose SlimCheck.Gen.choose
 -/
 
@@ -181,71 +88,9 @@ end Rand
 
 open Nat
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment "/--" "Generate a `nat` example between `x` and `y`. -/")]
-      []
-      []
-      []
-      []
-      [])
-     (Command.def
-      "def"
-      (Command.declId `chooseNat [])
-      (Command.optDeclSig
-       [(Term.explicitBinder "(" [`x `y] [":" (termℕ "ℕ")] [] ")")
-        (Term.explicitBinder "(" [`p] [":" («term_≤_» `x "≤" `y)] [] ")")]
-       [(Term.typeSpec
-         ":"
-         (Term.app `Gen [(SlimCheck.Testing.SlimCheck.Gen.«term_.._» `x " .. " `y)]))])
-      (Command.declValSimple ":=" (Term.app `choose [`x `y `p]) [])
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `choose [`x `y `p])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `p
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `choose
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      (Term.app `Gen [(SlimCheck.Testing.SlimCheck.Gen.«term_.._» `x " .. " `y)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SlimCheck.Testing.SlimCheck.Gen.«term_.._»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SlimCheck.Testing.SlimCheck.Gen.«term_.._»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (SlimCheck.Testing.SlimCheck.Gen.«term_.._» `x " .. " `y)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'SlimCheck.Testing.SlimCheck.Gen.«term_.._»', expected 'SlimCheck.Testing.SlimCheck.Gen.term_.._._@.Testing.SlimCheck.Gen._hyg.8'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- Generate a `nat` example between `x` and `y`. -/
-  def chooseNat ( x y : ℕ ) ( p : x ≤ y ) : Gen x .. y := choose x y p
+def chooseNat (x y : ℕ) (p : x ≤ y) : Gen (x .. y) :=
+  choose x y p
 #align slim_check.gen.choose_nat SlimCheck.Gen.chooseNat
 
 /-- Generate a `nat` example between `x` and `y`. -/

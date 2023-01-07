@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,8 +84,8 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
   {F'' : Type _}
   [NormedAddCommGroup F''] [NormedSpace 𝕜 F'']
   -- declare functions, sets, points and smoothness indices
-  {f f₁ : M → M'}
-  {s s₁ t : Set M} {x : M} {m n : ℕ∞}
+  {e : LocalHomeomorph M H}
+  {e' : LocalHomeomorph M' H'} {f f₁ : M → M'} {s s₁ t : Set M} {x : M} {m n : ℕ∞}
 
 /-- Property in the model space of a model with corners of being `C^n` within at set at a point,
 when read in the model vector space. This property will be lifted to manifolds to define smooth
@@ -164,13 +164,13 @@ theorem cont_diff_within_at_local_invariant_prop (n : ℕ∞) :
         simpa only [hy, mfld_simps] using hs hy.1 }
 #align cont_diff_within_at_local_invariant_prop cont_diff_within_at_local_invariant_prop
 
-theorem cont_diff_within_at_prop_mono (n : ℕ∞) ⦃s x t⦄ ⦃f : H → H'⦄ (hts : t ⊆ s)
+theorem cont_diff_within_at_prop_mono_of_mem (n : ℕ∞) ⦃s x t⦄ ⦃f : H → H'⦄ (hts : s ∈ 𝓝[t] x)
     (h : ContDiffWithinAtProp I I' n f s x) : ContDiffWithinAtProp I I' n f t x :=
   by
-  apply h.mono fun y hy => _
-  simp only [mfld_simps] at hy
-  simp only [hy, hts _, mfld_simps]
-#align cont_diff_within_at_prop_mono cont_diff_within_at_prop_mono
+  refine' h.mono_of_mem _
+  refine' inter_mem _ (mem_of_superset self_mem_nhds_within <| inter_subset_right _ _)
+  rwa [← Filter.mem_map, ← I.image_eq, I.symm_map_nhds_within_image]
+#align cont_diff_within_at_prop_mono_of_mem cont_diff_within_at_prop_mono_of_mem
 
 theorem cont_diff_within_at_prop_id (x : H) : ContDiffWithinAtProp I I ∞ id univ x :=
   by
@@ -397,6 +397,30 @@ theorem smooth_at_iff_target {x : M} :
 
 include Is I's
 
+theorem cont_mdiff_within_at_iff_of_mem_maximal_atlas {x : M} (he : e ∈ maximalAtlas I M)
+    (he' : e' ∈ maximalAtlas I' M') (hx : x ∈ e.source) (hy : f x ∈ e'.source) :
+    ContMdiffWithinAt I I' n f s x ↔
+      ContinuousWithinAt f s x ∧
+        ContDiffWithinAt 𝕜 n (e'.extend I' ∘ f ∘ (e.extend I).symm)
+          ((e.extend I).symm ⁻¹' s ∩ range I) (e.extend I x) :=
+  (cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart he hx he' hy
+#align cont_mdiff_within_at_iff_of_mem_maximal_atlas cont_mdiff_within_at_iff_of_mem_maximal_atlas
+
+/-- An alternative formulation of `cont_mdiff_within_at_iff_of_mem_maximal_atlas`
+  if the set if `s` lies in `e.source`. -/
+theorem cont_mdiff_within_at_iff_image {x : M} (he : e ∈ maximalAtlas I M)
+    (he' : e' ∈ maximalAtlas I' M') (hs : s ⊆ e.source) (hx : x ∈ e.source) (hy : f x ∈ e'.source) :
+    ContMdiffWithinAt I I' n f s x ↔
+      ContinuousWithinAt f s x ∧
+        ContDiffWithinAt 𝕜 n (e'.extend I' ∘ f ∘ (e.extend I).symm) (e.extend I '' s)
+          (e.extend I x) :=
+  by
+  rw [cont_mdiff_within_at_iff_of_mem_maximal_atlas he he' hx hy, and_congr_right_iff]
+  refine' fun hf => cont_diff_within_at_congr_nhds _
+  simp_rw [nhds_within_eq_iff_eventually_eq,
+    e.extend_symm_preimage_inter_range_eventually_eq I hs hx]
+#align cont_mdiff_within_at_iff_image cont_mdiff_within_at_iff_image
+
 /-- One can reformulate smoothness within a set at a point as continuity within this set at this
 point, and smoothness in any chart containing that point. -/
 theorem cont_mdiff_within_at_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (chartAt H x).source)
@@ -405,9 +429,8 @@ theorem cont_mdiff_within_at_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (c
       ContinuousWithinAt f s x' ∧
         ContDiffWithinAt 𝕜 n (extChartAt I' y ∘ f ∘ (extChartAt I x).symm)
           ((extChartAt I x).symm ⁻¹' s ∩ range I) (extChartAt I x x') :=
-  (cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart
-    (StructureGroupoid.chart_mem_maximal_atlas _ x) hx
-    (StructureGroupoid.chart_mem_maximal_atlas _ y) hy
+  cont_mdiff_within_at_iff_of_mem_maximal_atlas (chart_mem_maximal_atlas _ x)
+    (chart_mem_maximal_atlas _ y) hx hy
 #align cont_mdiff_within_at_iff_of_mem_source cont_mdiff_within_at_iff_of_mem_source
 
 theorem cont_mdiff_within_at_iff_of_mem_source' {x' : M} {y : M'} (hx : x' ∈ (chartAt H x).source)
@@ -468,49 +491,29 @@ theorem cont_mdiff_at_iff_target_of_mem_source {x : M} {y : M'} (hy : f x ∈ (c
 
 omit I's
 
-variable (I)
-
-theorem ModelWithCorners.symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X]
-    {f : H → X} {s : Set H} {x : H} :
-    ContinuousWithinAt (f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) (I x) ↔ ContinuousWithinAt f s x :=
-  by
-  refine' ⟨fun h => _, fun h => _⟩
-  · have := h.comp I.continuous_within_at (maps_to_preimage _ _)
-    simp_rw [preimage_inter, preimage_preimage, I.left_inv, preimage_id', preimage_range,
-      inter_univ] at this
-    rwa [Function.comp.assoc, I.symm_comp_self] at this
-  · rw [← I.left_inv x] at h
-    exact h.comp I.continuous_within_at_symm (inter_subset_left _ _)
-#align
-  model_with_corners.symm_continuous_within_at_comp_right_iff ModelWithCorners.symm_continuous_within_at_comp_right_iff
-
-variable {I}
-
-theorem ext_chart_at_symm_continuous_within_at_comp_right_iff {X} [TopologicalSpace X] {f : M → X}
-    {s : Set M} {x x' : M} :
-    ContinuousWithinAt (f ∘ (extChartAt I x).symm) ((extChartAt I x).symm ⁻¹' s ∩ range I)
-        (extChartAt I x x') ↔
-      ContinuousWithinAt (f ∘ (chartAt H x).symm) ((chartAt H x).symm ⁻¹' s) (chartAt H x x') :=
-  by convert I.symm_continuous_within_at_comp_right_iff <;> rfl
-#align
-  ext_chart_at_symm_continuous_within_at_comp_right_iff ext_chart_at_symm_continuous_within_at_comp_right_iff
-
 include Is
+
+theorem cont_mdiff_within_at_iff_source_of_mem_maximal_atlas (he : e ∈ maximalAtlas I M)
+    (hx : x ∈ e.source) :
+    ContMdiffWithinAt I I' n f s x ↔
+      ContMdiffWithinAt 𝓘(𝕜, E) I' n (f ∘ (e.extend I).symm) ((e.extend I).symm ⁻¹' s ∩ range I)
+        (e.extend I x) :=
+  by
+  have h2x := hx; rw [← e.extend_source I] at h2x
+  simp_rw [ContMdiffWithinAt,
+    (cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart_source he hx,
+    StructureGroupoid.lift_prop_within_at_self_source,
+    e.extend_symm_continuous_within_at_comp_right_iff, cont_diff_within_at_prop_self_source,
+    ContDiffWithinAtProp, Function.comp, e.left_inv hx, (e.extend I).left_inv h2x]
+  rfl
+#align
+  cont_mdiff_within_at_iff_source_of_mem_maximal_atlas cont_mdiff_within_at_iff_source_of_mem_maximal_atlas
 
 theorem cont_mdiff_within_at_iff_source_of_mem_source {x' : M} (hx' : x' ∈ (chartAt H x).source) :
     ContMdiffWithinAt I I' n f s x' ↔
       ContMdiffWithinAt 𝓘(𝕜, E) I' n (f ∘ (extChartAt I x).symm)
         ((extChartAt I x).symm ⁻¹' s ∩ range I) (extChartAt I x x') :=
-  by
-  have h2x' := hx'; rw [← ext_chart_at_source I] at h2x'
-  simp_rw [ContMdiffWithinAt,
-    (cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart_source
-      (chart_mem_maximal_atlas I x) hx',
-    StructureGroupoid.lift_prop_within_at_self_source,
-    ext_chart_at_symm_continuous_within_at_comp_right_iff, cont_diff_within_at_prop_self_source,
-    ContDiffWithinAtProp, Function.comp, (chart_at H x).left_inv hx',
-    (extChartAt I x).left_inv h2x']
-  rfl
+  cont_mdiff_within_at_iff_source_of_mem_maximal_atlas (chart_mem_maximal_atlas I x) hx'
 #align cont_mdiff_within_at_iff_source_of_mem_source cont_mdiff_within_at_iff_source_of_mem_source
 
 theorem cont_mdiff_at_iff_source_of_mem_source {x' : M} (hx' : x' ∈ (chartAt H x).source) :
@@ -521,24 +524,16 @@ theorem cont_mdiff_at_iff_source_of_mem_source {x' : M} (hx' : x' ∈ (chartAt H
     univ_inter]
 #align cont_mdiff_at_iff_source_of_mem_source cont_mdiff_at_iff_source_of_mem_source
 
-theorem cont_mdiff_at_ext_chart_at' {x' : M} (h : x' ∈ (chartAt H x).source) :
-    ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) x' :=
-  by
-  refine' (cont_mdiff_at_iff_of_mem_source h (mem_chart_source _ _)).mpr _
-  rw [← ext_chart_at_source I] at h
-  refine' ⟨continuous_at_ext_chart_at' _ _ h, _⟩
-  refine' cont_diff_within_at_id.congr_of_eventually_eq _ _
-  · refine' eventually_eq_of_mem (ext_chart_at_target_mem_nhds_within' I x h) fun x₂ hx₂ => _
-    simp_rw [Function.comp_apply, (extChartAt I x).right_inv hx₂]
-    rfl
-  simp_rw [Function.comp_apply, (extChartAt I x).right_inv ((extChartAt I x).MapsTo h)]; rfl
-#align cont_mdiff_at_ext_chart_at' cont_mdiff_at_ext_chart_at'
-
-theorem cont_mdiff_at_ext_chart_at : ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) x :=
-  cont_mdiff_at_ext_chart_at' <| mem_chart_source H x
-#align cont_mdiff_at_ext_chart_at cont_mdiff_at_ext_chart_at
-
 include I's
+
+theorem cont_mdiff_on_iff_of_mem_maximal_atlas (he : e ∈ maximalAtlas I M)
+    (he' : e' ∈ maximalAtlas I' M') (hs : s ⊆ e.source) (h2s : MapsTo f s e'.source) :
+    ContMdiffOn I I' n f s ↔
+      ContinuousOn f s ∧ ContDiffOn 𝕜 n (e'.extend I' ∘ f ∘ (e.extend I).symm) (e.extend I '' s) :=
+  by
+  simp_rw [ContinuousOn, ContDiffOn, Set.ball_image_iff, ← forall_and, ContMdiffOn]
+  exact forall₂_congr fun x hx => cont_mdiff_within_at_iff_image he he' hs (hs hx) (h2s hx)
+#align cont_mdiff_on_iff_of_mem_maximal_atlas cont_mdiff_on_iff_of_mem_maximal_atlas
 
 /-- If the set where you want `f` to be smooth lies entirely in a single chart, and `f` maps it
   into a single chart, the smoothness of `f` on that set can be expressed by purely looking in
@@ -550,26 +545,8 @@ theorem cont_mdiff_on_iff_of_subset_source {x : M} {y : M'} (hs : s ⊆ (chartAt
     ContMdiffOn I I' n f s ↔
       ContinuousOn f s ∧
         ContDiffOn 𝕜 n (extChartAt I' y ∘ f ∘ (extChartAt I x).symm) (extChartAt I x '' s) :=
-  by
-  constructor
-  · refine' fun H => ⟨fun x hx => (H x hx).1, _⟩
-    rintro _ ⟨x', hx', rfl⟩
-    exact
-      ((cont_mdiff_within_at_iff_of_mem_source (hs hx')
-                  (h2s.image_subset <| mem_image_of_mem f hx')).mp
-              (H _ hx')).2.mono
-        (maps_to_ext_chart_at I x hs).image_subset
-  · rintro ⟨h1, h2⟩ x' hx'
-    refine'
-      (cont_mdiff_within_at_iff_of_mem_source (hs hx')
-            (h2s.image_subset <| mem_image_of_mem f hx')).mpr
-        ⟨h1.continuous_within_at hx', _⟩
-    refine' (h2 _ <| mem_image_of_mem _ hx').mono_of_mem _
-    rw [← ext_chart_at_source I] at hs
-    rw [(extChartAt I x).image_eq_target_inter_inv_preimage hs]
-    refine' inter_mem _ (ext_chart_at_preimage_mem_nhds_within' I x (hs hx') self_mem_nhds_within)
-    have := ext_chart_at_target_mem_nhds_within' I x (hs hx')
-    refine' nhds_within_mono _ (inter_subset_right _ _) this
+  cont_mdiff_on_iff_of_mem_maximal_atlas (chart_mem_maximal_atlas I x)
+    (chart_mem_maximal_atlas I' y) hs h2s
 #align cont_mdiff_on_iff_of_subset_source cont_mdiff_on_iff_of_subset_source
 
 /-- One can reformulate smoothness on a set as continuity on this set, and smoothness in any
@@ -595,9 +572,8 @@ theorem cont_mdiff_on_iff :
     · simp only [w, hz, mfld_simps]
     · mfld_set_tac
   · rintro ⟨hcont, hdiff⟩ x hx
-    refine'
-      ((cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_iff <| hcont x hx).mpr
-        _
+    refine' (cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_iff.mpr _
+    refine' ⟨hcont x hx, _⟩
     dsimp [ContDiffWithinAtProp]
     convert hdiff x (f x) (extChartAt I x x) (by simp only [hx, mfld_simps]) using 1
     mfld_set_tac
@@ -775,11 +751,22 @@ theorem cont_mdiff_within_at_iff_nat :
 /-! ### Restriction to a smaller set -/
 
 
+theorem ContMdiffWithinAt.mono_of_mem (hf : ContMdiffWithinAt I I' n f s x) (hts : s ∈ 𝓝[t] x) :
+    ContMdiffWithinAt I I' n f t x :=
+  StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono_of_mem
+    (cont_diff_within_at_prop_mono_of_mem I I' n) hf hts
+#align cont_mdiff_within_at.mono_of_mem ContMdiffWithinAt.mono_of_mem
+
 theorem ContMdiffWithinAt.mono (hf : ContMdiffWithinAt I I' n f s x) (hts : t ⊆ s) :
     ContMdiffWithinAt I I' n f t x :=
-  StructureGroupoid.LocalInvariantProp.lift_prop_within_at_mono
-    (cont_diff_within_at_prop_mono I I' n) hf hts
+  hf.mono_of_mem <| mem_of_superset self_mem_nhds_within hts
 #align cont_mdiff_within_at.mono ContMdiffWithinAt.mono
+
+theorem cont_mdiff_within_at_congr_nhds (hst : 𝓝[s] x = 𝓝[t] x) :
+    ContMdiffWithinAt I I' n f s x ↔ ContMdiffWithinAt I I' n f t x :=
+  ⟨fun h => h.mono_of_mem <| hst ▸ self_mem_nhds_within, fun h =>
+    h.mono_of_mem <| hst.symm ▸ self_mem_nhds_within⟩
+#align cont_mdiff_within_at_congr_nhds cont_mdiff_within_at_congr_nhds
 
 theorem ContMdiffAt.cont_mdiff_within_at (hf : ContMdiffAt I I' n f x) :
     ContMdiffWithinAt I I' n f s x :=
@@ -833,10 +820,17 @@ theorem SmoothOn.smooth_at (h : SmoothOn I I' f s) (hx : s ∈ 𝓝 x) : SmoothA
 
 include Is
 
-theorem cont_mdiff_on_ext_chart_at :
-    ContMdiffOn I 𝓘(𝕜, E) n (extChartAt I x) (chartAt H x).source := fun x' hx' =>
-  (cont_mdiff_at_ext_chart_at' hx').ContMdiffWithinAt
-#align cont_mdiff_on_ext_chart_at cont_mdiff_on_ext_chart_at
+theorem cont_mdiff_on_iff_source_of_mem_maximal_atlas (he : e ∈ maximalAtlas I M)
+    (hs : s ⊆ e.source) :
+    ContMdiffOn I I' n f s ↔ ContMdiffOn 𝓘(𝕜, E) I' n (f ∘ (e.extend I).symm) (e.extend I '' s) :=
+  by
+  simp_rw [ContMdiffOn, Set.ball_image_iff]
+  refine' forall₂_congr fun x hx => _
+  rw [cont_mdiff_within_at_iff_source_of_mem_maximal_atlas he (hs hx)]
+  apply cont_mdiff_within_at_congr_nhds
+  simp_rw [nhds_within_eq_iff_eventually_eq,
+    e.extend_symm_preimage_inter_range_eventually_eq I hs (hs hx)]
+#align cont_mdiff_on_iff_source_of_mem_maximal_atlas cont_mdiff_on_iff_source_of_mem_maximal_atlas
 
 include I's
 
@@ -1155,7 +1149,15 @@ end Composition
 
 section Atlas
 
-variable {e : LocalHomeomorph M H}
+theorem cont_mdiff_model : ContMdiff I 𝓘(𝕜, E) n I :=
+  by
+  intro x
+  refine' (cont_mdiff_at_iff _ _).mpr ⟨I.continuous_at, _⟩
+  simp only [mfld_simps]
+  refine' cont_diff_within_at_id.congr_of_eventually_eq _ _
+  · exact eventually_eq_of_mem self_mem_nhds_within fun x₂ => I.right_inv
+  simp_rw [Function.comp_apply, I.left_inv, id_def]
+#align cont_mdiff_model cont_mdiff_model
 
 include Is
 
@@ -1177,13 +1179,42 @@ theorem cont_mdiff_on_symm_of_mem_maximal_atlas (h : e ∈ maximalAtlas I M) :
     le_top
 #align cont_mdiff_on_symm_of_mem_maximal_atlas cont_mdiff_on_symm_of_mem_maximal_atlas
 
+theorem cont_mdiff_at_of_mem_maximal_atlas (h : e ∈ maximalAtlas I M) (hx : x ∈ e.source) :
+    ContMdiffAt I I n e x :=
+  (cont_mdiff_on_of_mem_maximal_atlas h).ContMdiffAt <| e.open_source.mem_nhds hx
+#align cont_mdiff_at_of_mem_maximal_atlas cont_mdiff_at_of_mem_maximal_atlas
+
+theorem cont_mdiff_at_symm_of_mem_maximal_atlas {x : H} (h : e ∈ maximalAtlas I M)
+    (hx : x ∈ e.target) : ContMdiffAt I I n e.symm x :=
+  (cont_mdiff_on_symm_of_mem_maximal_atlas h).ContMdiffAt <| e.open_target.mem_nhds hx
+#align cont_mdiff_at_symm_of_mem_maximal_atlas cont_mdiff_at_symm_of_mem_maximal_atlas
+
 theorem cont_mdiff_on_chart : ContMdiffOn I I n (chartAt H x) (chartAt H x).source :=
-  cont_mdiff_on_of_mem_maximal_atlas ((contDiffGroupoid ⊤ I).chart_mem_maximal_atlas x)
+  cont_mdiff_on_of_mem_maximal_atlas <| chart_mem_maximal_atlas I x
 #align cont_mdiff_on_chart cont_mdiff_on_chart
 
 theorem cont_mdiff_on_chart_symm : ContMdiffOn I I n (chartAt H x).symm (chartAt H x).target :=
-  cont_mdiff_on_symm_of_mem_maximal_atlas ((contDiffGroupoid ⊤ I).chart_mem_maximal_atlas x)
+  cont_mdiff_on_symm_of_mem_maximal_atlas <| chart_mem_maximal_atlas I x
 #align cont_mdiff_on_chart_symm cont_mdiff_on_chart_symm
+
+theorem cont_mdiff_at_extend {x : M} (he : e ∈ maximalAtlas I M) (hx : x ∈ e.source) :
+    ContMdiffAt I 𝓘(𝕜, E) n (e.extend I) x :=
+  (cont_mdiff_model _).comp x <| cont_mdiff_at_of_mem_maximal_atlas he hx
+#align cont_mdiff_at_extend cont_mdiff_at_extend
+
+theorem cont_mdiff_at_ext_chart_at' {x' : M} (h : x' ∈ (chartAt H x).source) :
+    ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) x' :=
+  cont_mdiff_at_extend (chart_mem_maximal_atlas I x) h
+#align cont_mdiff_at_ext_chart_at' cont_mdiff_at_ext_chart_at'
+
+theorem cont_mdiff_at_ext_chart_at : ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) x :=
+  cont_mdiff_at_ext_chart_at' <| mem_chart_source H x
+#align cont_mdiff_at_ext_chart_at cont_mdiff_at_ext_chart_at
+
+theorem cont_mdiff_on_ext_chart_at :
+    ContMdiffOn I 𝓘(𝕜, E) n (extChartAt I x) (chartAt H x).source := fun x' hx' =>
+  (cont_mdiff_at_ext_chart_at' hx').ContMdiffWithinAt
+#align cont_mdiff_on_ext_chart_at cont_mdiff_on_ext_chart_at
 
 end Atlas
 

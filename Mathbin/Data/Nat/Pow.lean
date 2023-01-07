@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.pow
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,10 +57,12 @@ theorem pow_lt_pow_succ {p : ℕ} (h : 1 < p) (n : ℕ) : p ^ n < p ^ (n + 1) :=
 #align nat.pow_lt_pow_succ Nat.pow_lt_pow_succ
 -/
 
+#print Nat.le_self_pow /-
 theorem le_self_pow {n : ℕ} (hn : n ≠ 0) : ∀ m : ℕ, m ≤ m ^ n
   | 0 => zero_le _
   | m + 1 => le_self_pow (by decide) hn
 #align nat.le_self_pow Nat.le_self_pow
+-/
 
 #print Nat.lt_pow_self /-
 theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ n : ℕ, n < p ^ n

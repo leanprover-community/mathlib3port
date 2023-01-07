@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.basic
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.RingTheory.IntegralClosure
-import Mathbin.RingTheory.Polynomial.GaussLemma
 
 /-!
 # Minimal polynomials

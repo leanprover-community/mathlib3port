@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.typevec
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -320,141 +320,15 @@ run_cmd
 -- mathport name: «expr♯ »
 local prefix:0 "♯" => cast (by try simp <;> congr 1 <;> try simp)
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment "/--" "cases distinction for 0-length type vector -/")]
-      []
-      [(Command.protected "protected")]
-      []
-      []
-      [])
-     (Command.def
-      "def"
-      (Command.declId `casesNil [])
-      (Command.optDeclSig
-       [(Term.implicitBinder
-         "{"
-         [`β]
-         [":"
-          (Term.arrow (Term.app `Typevec [(num "0")]) "→" (Term.sort "Sort" [(Level.hole "_")]))]
-         "}")
-        (Term.explicitBinder "(" [`f] [":" (Term.app `β [`Fin2.elim0])] [] ")")]
-       [(Term.typeSpec ":" (Term.forall "∀" [`v] [] "," (Term.app `β [`v])))])
-      (Command.declValSimple
-       ":="
-       (Term.fun "fun" (Term.basicFun [`v] [] "=>" (Typevec.Data.Typevec.«term♯_» "♯" `f)))
-       [])
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`v] [] "=>" (Typevec.Data.Typevec.«term♯_» "♯" `f)))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Typevec.Data.Typevec.«term♯_» "♯" `f)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Typevec.Data.Typevec.«term♯_»', expected 'Typevec.Data.Typevec.term♯_._@.Data.Typevec._hyg.2458'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- cases distinction for 0-length type vector -/ protected
-  def casesNil { β : Typevec 0 → Sort _ } ( f : β Fin2.elim0 ) : ∀ v , β v := fun v => ♯ f
+/-- cases distinction for 0-length type vector -/
+protected def casesNil {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : ∀ v, β v := fun v => ♯f
 #align typevec.cases_nil Typevec.casesNil
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment "/--" "cases distinction for (n+1)-length type vector -/")]
-      []
-      [(Command.protected "protected")]
-      []
-      []
-      [])
-     (Command.def
-      "def"
-      (Command.declId `casesCons [])
-      (Command.optDeclSig
-       [(Term.explicitBinder "(" [`n] [":" (termℕ "ℕ")] [] ")")
-        (Term.implicitBinder
-         "{"
-         [`β]
-         [":"
-          (Term.arrow
-           (Term.app `Typevec [(«term_+_» `n "+" (num "1"))])
-           "→"
-           (Term.sort "Sort" [(Level.hole "_")]))]
-         "}")
-        (Term.explicitBinder
-         "("
-         [`f]
-         [":"
-          (Term.forall
-           "∀"
-           [(Term.explicitBinder "(" [`t] [] [] ")")
-            (Term.explicitBinder "(" [`v] [":" (Term.app `Typevec [`n])] [] ")")]
-           []
-           ","
-           (Term.app `β [(Typevec.Data.Typevec.typevec.append_fun `v " ::: " `t)]))]
-         []
-         ")")]
-       [(Term.typeSpec ":" (Term.forall "∀" [`v] [] "," (Term.app `β [`v])))])
-      (Command.declValSimple
-       ":="
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`v]
-         [(Term.typeSpec ":" (Term.app `Typevec [(«term_+_» `n "+" (num "1"))]))]
-         "=>"
-         (Typevec.Data.Typevec.«term♯_»
-          "♯"
-          (Term.app `f [(Term.proj `v "." `last) (Term.proj `v "." `drop)]))))
-       [])
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`v]
-        [(Term.typeSpec ":" (Term.app `Typevec [(«term_+_» `n "+" (num "1"))]))]
-        "=>"
-        (Typevec.Data.Typevec.«term♯_»
-         "♯"
-         (Term.app `f [(Term.proj `v "." `last) (Term.proj `v "." `drop)]))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Typevec.Data.Typevec.«term♯_»
-       "♯"
-       (Term.app `f [(Term.proj `v "." `last) (Term.proj `v "." `drop)]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Typevec.Data.Typevec.«term♯_»', expected 'Typevec.Data.Typevec.term♯_._@.Data.Typevec._hyg.2458'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- cases distinction for (n+1)-length type vector -/ protected
-  def
-    casesCons
-    ( n : ℕ ) { β : Typevec n + 1 → Sort _ } ( f : ∀ ( t ) ( v : Typevec n ) , β v ::: t )
-      : ∀ v , β v
-    := fun v : Typevec n + 1 => ♯ f v . last v . drop
+/-- cases distinction for (n+1)-length type vector -/
+protected def casesCons (n : ℕ) {β : Typevec (n + 1) → Sort _}
+    (f : ∀ (t) (v : Typevec n), β (v ::: t)) : ∀ v, β v := fun v : Typevec (n + 1) =>
+  ♯f v.last v.drop
 #align typevec.cases_cons Typevec.casesCons
 
 protected theorem cases_nil_append1 {β : Typevec 0 → Sort _} (f : β Fin2.elim0) :

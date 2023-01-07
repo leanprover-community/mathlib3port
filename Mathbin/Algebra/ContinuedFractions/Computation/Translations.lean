@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.translations
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,16 +79,8 @@ theorem succ_nth_stream_eq_none_iff :
     IntFractPair.stream v (n + 1) = none ↔
       IntFractPair.stream v n = none ∨ ∃ ifp, IntFractPair.stream v n = some ifp ∧ ifp.fr = 0 :=
   by
-  cases' stream_nth_eq : int_fract_pair.stream v n with ifp
-  case none => simp [stream_nth_eq, int_fract_pair.stream]
-  case some =>
-    cases' ifp with _ fr
-    by_cases h : fr = 0
-    -- `finish [int_fract_pair.stream]` closes both goals
-    · simp [int_fract_pair.stream, h, stream_nth_eq]
-    · suffices ¬(int_fract_pair.of fr⁻¹ : Option <| int_fract_pair K) = none by
-        simp [int_fract_pair.stream, h, stream_nth_eq, this]
-      exact fun h => Option.noConfusion h
+  rw [int_fract_pair.stream]
+  cases int_fract_pair.stream v n <;> simp [imp_false]
 #align
   generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_none_iff GeneralizedContinuedFraction.IntFractPair.succ_nth_stream_eq_none_iff
 
@@ -100,30 +92,7 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
       ∃ ifp_n : IntFractPair K,
         IntFractPair.stream v n = some ifp_n ∧
           ifp_n.fr ≠ 0 ∧ IntFractPair.of ifp_n.fr⁻¹ = ifp_succ_n :=
-  by
-  constructor
-  · intro stream_succ_nth_eq
-    have : int_fract_pair.stream v (n + 1) ≠ none := by simp [stream_succ_nth_eq]
-    have :
-      ¬int_fract_pair.stream v n = none ∧
-        ¬∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
-      haveI not_none_not_fract_zero := (not_congr succ_nth_stream_eq_none_iff).elimLeft this
-      not_or_distrib.elim_left not_none_not_fract_zero
-    cases' this with stream_nth_ne_none nth_fr_ne_zero
-    replace nth_fr_ne_zero : ∀ ifp, int_fract_pair.stream v n = some ifp → ifp.fr ≠ 0
-    · simpa using nth_fr_ne_zero
-    obtain ⟨ifp_n, stream_nth_eq⟩ : ∃ ifp_n, int_fract_pair.stream v n = some ifp_n
-    exact option.ne_none_iff_exists'.mp stream_nth_ne_none
-    exists ifp_n
-    have ifp_n_fr_ne_zero : ifp_n.fr ≠ 0 := nth_fr_ne_zero ifp_n stream_nth_eq
-    cases' ifp_n with _ ifp_n_fr
-    suffices int_fract_pair.of ifp_n_fr⁻¹ = ifp_succ_n by simpa [stream_nth_eq, ifp_n_fr_ne_zero]
-    simp only [int_fract_pair.stream, stream_nth_eq, ifp_n_fr_ne_zero, Option.some_bind,
-      if_false] at stream_succ_nth_eq
-    injection stream_succ_nth_eq
-  · rintro ⟨⟨_⟩, ifp_n_props⟩
-    -- `finish [int_fract_pair.stream, ifp_n_props]` closes this goal
-    simpa only [int_fract_pair.stream, ifp_n_props, Option.some_bind, if_false]
+  by simp [int_fract_pair.stream, ite_eq_iff]
 #align
   generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_some_iff GeneralizedContinuedFraction.IntFractPair.succ_nth_stream_eq_some_iff
 
@@ -134,20 +103,10 @@ theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
   by
   -- get the witness from `succ_nth_stream_eq_some_iff` and prove that it has the additional
   -- properties
-  rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with
-    ⟨ifp_n, stream_nth_eq, nth_fr_ne_zero, _⟩
-  exists ifp_n
-  cases' ifp_n with _ ifp_n_fr
-  suffices ifp_n_fr⁻¹ = ⌊ifp_n_fr⁻¹⌋ by simpa [stream_nth_eq]
-  have : int_fract_pair.of ifp_n_fr⁻¹ = ifp_succ_n := h_right_right
-  cases' ifp_succ_n with _ ifp_succ_n_fr
-  change ifp_succ_n_fr = 0 at succ_nth_fr_eq_zero
-  have : Int.fract ifp_n_fr⁻¹ = ifp_succ_n_fr := by injection this
-  have : Int.fract ifp_n_fr⁻¹ = 0 := by rwa [succ_nth_fr_eq_zero] at this
-  calc
-    ifp_n_fr⁻¹ = Int.fract ifp_n_fr⁻¹ + ⌊ifp_n_fr⁻¹⌋ := by rw [Int.fract_add_floor ifp_n_fr⁻¹]
-    _ = ⌊ifp_n_fr⁻¹⌋ := by simp [‹Int.fract ifp_n_fr⁻¹ = 0›]
-    
+  rcases succ_nth_stream_eq_some_iff.mp stream_succ_nth_eq with
+    ⟨ifp_n, seq_nth_eq, nth_fr_ne_zero, rfl⟩
+  refine' ⟨ifp_n, seq_nth_eq, _⟩
+  simpa only [int_fract_pair.of, Int.fract, sub_eq_zero] using succ_nth_fr_eq_zero
 #align
   generalized_continued_fraction.int_fract_pair.exists_succ_nth_stream_of_fr_zero GeneralizedContinuedFraction.IntFractPair.exists_succ_nth_stream_of_fr_zero
 
@@ -217,11 +176,7 @@ Let's first show how the termination of one sequence implies the termination of 
 
 theorem of_terminated_at_iff_int_fract_pair_seq1_terminated_at :
     (of v).TerminatedAt n ↔ (IntFractPair.seq1 v).snd.TerminatedAt n :=
-  by
-  rw [terminated_at_iff_s_none, of]
-  rcases int_fract_pair.seq1 v with ⟨head, ⟨st⟩⟩
-  cases st_n_eq : st n <;>
-    simp [of, st_n_eq, Seq.map, Seq.nth, Stream'.map, Seq.TerminatedAt, Stream'.nth]
+  Option.map_eq_none
 #align
   generalized_continued_fraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at GeneralizedContinuedFraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at
 
@@ -511,7 +466,6 @@ theorem nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero {ifp_n : IntFract
     by
     cases ifp_n
     simp [int_fract_pair.stream, stream_nth_eq, nth_fr_ne_zero]
-    rfl
   nth_of_eq_some_of_succ_nth_int_fract_pair_stream this
 #align
   generalized_continued_fraction.nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero GeneralizedContinuedFraction.nth_of_eq_some_of_nth_int_fract_pair_stream_fr_ne_zero

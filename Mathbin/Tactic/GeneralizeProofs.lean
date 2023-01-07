@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.generalize_proofs
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,103 +94,21 @@ local postfix:1024 "*" => many
 
 namespace Interactive
 
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
-     (Command.declModifiers
-      [(Command.docComment
-        "/--"
-        "Generalize proofs in the goal, naming them with the provided list.\n\nFor example:\n```lean\nexample : list.nth_le [1, 2] 1 dec_trivial = 2 :=\nbegin\n  -- ⊢ [1, 2].nth_le 1 _ = 2\n  generalize_proofs h,\n  -- h : 1 < [1, 2].length\n  -- ⊢ [1, 2].nth_le 1 h = 2\nend\n```\n-/")]
-      []
-      []
-      []
-      [(Command.unsafe "unsafe")]
-      [])
-     (Command.def
-      "def"
-      (Command.declId `generalize_proofs [])
-      (Command.optDeclSig
-       []
-       [(Term.typeSpec
-         ":"
-         (Term.arrow
-          (Term.app `parse [(Tactic.Tactic.GeneralizeProofs.parser.many `ident_ "*")])
-          "→"
-          (Term.arrow (Term.app `parse [`location]) "→" (Term.app `tactic [`Unit]))))])
-      (Command.declValSimple ":=" `tactic.generalize_proofs [])
-      []
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `tactic.generalize_proofs
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-      (Term.arrow
-       (Term.app `parse [(Tactic.Tactic.GeneralizeProofs.parser.many `ident_ "*")])
-       "→"
-       (Term.arrow (Term.app `parse [`location]) "→" (Term.app `tactic [`Unit])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.arrow (Term.app `parse [`location]) "→" (Term.app `tactic [`Unit]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `tactic [`Unit])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Unit
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `tactic
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 1023,
-     term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-      (Term.app `parse [`location])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `location
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
-     [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-      `parse
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
-     [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 25, term)
-[PrettyPrinter.parenthesize] ...precedences are 25 >? 25, (some 25, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-      (Term.app `parse [(Tactic.Tactic.GeneralizeProofs.parser.many `ident_ "*")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.GeneralizeProofs.parser.many', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.GeneralizeProofs.parser.many', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.Tactic.GeneralizeProofs.parser.many `ident_ "*")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Tactic.Tactic.GeneralizeProofs.parser.many', expected 'Tactic.Tactic.GeneralizeProofs.parser.many._@.Tactic.GeneralizeProofs._hyg.9'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.opaque'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.instance'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.def', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/--
-      Generalize proofs in the goal, naming them with the provided list.
-      
-      For example:
-      ```lean
-      example : list.nth_le [1, 2] 1 dec_trivial = 2 :=
-      begin
-        -- ⊢ [1, 2].nth_le 1 _ = 2
-        generalize_proofs h,
-        -- h : 1 < [1, 2].length
-        -- ⊢ [1, 2].nth_le 1 h = 2
-      end
-      ```
-      -/
-    unsafe
-  def generalize_proofs : parse ident_ * → parse location → tactic Unit := tactic.generalize_proofs
+/-- Generalize proofs in the goal, naming them with the provided list.
+
+For example:
+```lean
+example : list.nth_le [1, 2] 1 dec_trivial = 2 :=
+begin
+  -- ⊢ [1, 2].nth_le 1 _ = 2
+  generalize_proofs h,
+  -- h : 1 < [1, 2].length
+  -- ⊢ [1, 2].nth_le 1 h = 2
+end
+```
+-/
+unsafe def generalize_proofs : parse ident_* → parse location → tactic Unit :=
+  tactic.generalize_proofs
 #align tactic.interactive.generalize_proofs tactic.interactive.generalize_proofs
 
 end Interactive

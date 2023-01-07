@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.terminates_iff_rat
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,8 +208,7 @@ theorem coe_stream_nth_rat_eq :
         · rwa [stream_q_nth_eq] at IH
         have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by norm_cast
         have coe_of_fr := coe_of_rat_eq this
-        simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
-        exact congr_arg some coe_of_fr
+        simpa [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
 #align
   generalized_continued_fraction.int_fract_pair.coe_stream_nth_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream_nth_rat_eq
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.mul_antidiagonal
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,13 +77,13 @@ theorem mem_mul_antidiagonal : x ∈ mulAntidiagonal hs ht a ↔ x.1 ∈ s ∧ x
 @[to_additive]
 theorem mul_antidiagonal_mono_left (h : u ⊆ s) :
     mulAntidiagonal hu ht a ⊆ mulAntidiagonal hs ht a :=
-  Set.Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_left h
+  Set.Finite.to_finset_mono <| Set.mul_antidiagonal_mono_left h
 #align finset.mul_antidiagonal_mono_left Finset.mul_antidiagonal_mono_left
 
 @[to_additive]
 theorem mul_antidiagonal_mono_right (h : u ⊆ t) :
     mulAntidiagonal hs hu a ⊆ mulAntidiagonal hs ht a :=
-  Set.Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_right h
+  Set.Finite.to_finset_mono <| Set.mul_antidiagonal_mono_right h
 #align finset.mul_antidiagonal_mono_right Finset.mul_antidiagonal_mono_right
 
 @[simp, to_additive]

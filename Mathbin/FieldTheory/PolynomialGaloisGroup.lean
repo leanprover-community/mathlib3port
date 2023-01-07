@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.polynomial_galois_group
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -411,10 +411,11 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
         (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
   by
   by_cases hp : p = 0
-  · simp_rw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_add]
-    refine' Eq.symm (le_zero_iff.mp ((Finset.card_le_univ _).trans (le_of_eq _)))
-    simp_rw [hp, root_set_zero, Fintype.card_eq_zero_iff]
-    infer_instance
+  · haveI : IsEmpty (p.root_set ℂ) := by
+      rw [hp, root_set_zero]
+      infer_instance
+    simp_rw [(gal_action_hom p ℂ _).support.eq_empty_of_is_empty, hp, root_set_zero,
+      Set.to_finset_empty, Finset.card_empty]
   have inj : Function.Injective (IsScalarTower.toAlgHom ℚ ℝ ℂ) := (algebraMap ℝ ℂ).Injective
   rw [← Finset.card_image_of_injective _ Subtype.coe_injective, ←
     Finset.card_image_of_injective _ inj]

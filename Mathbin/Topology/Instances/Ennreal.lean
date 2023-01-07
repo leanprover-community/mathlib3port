@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1215,7 +1215,7 @@ theorem finset_card_const_le_le_of_tsum_le {ι : Type _} {a : ι → ℝ≥0∞}
       have oops := (le_trans hi (le_tsum' (@Ennreal.summable _ a) i)).trans tsum_le_c
       rw [h] at oops
       exact c_ne_top (le_antisymm le_top oops)
-    simp only [obs, finite_empty, finite_empty_to_finset, Finset.card_empty, algebraMap.coe_zero,
+    simp only [obs, finite_empty, finite.to_finset_empty, Finset.card_empty, algebraMap.coe_zero,
       zero_le', exists_true_left]
   have hf : { i : ι | ε ≤ a i }.Finite :=
     Ennreal.finite_const_le_of_tsum_ne_top (lt_of_le_of_lt tsum_le_c c_ne_top.lt_top).Ne ε_ne_zero

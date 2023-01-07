@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.terminated_stable
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,22 +39,13 @@ theorem continuants_aux_stable_step_of_terminated (terminated_at_n : g.Terminate
 #align
   generalized_continued_fraction.continuants_aux_stable_step_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_step_of_terminated
 
-theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m)
-    (terminated_at_n : g.TerminatedAt n) : g.continuantsAux m = g.continuantsAux (n + 1) :=
+theorem continuants_aux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : g.TerminatedAt n) :
+    g.continuantsAux m = g.continuantsAux (n + 1) :=
   by
-  induction' succ_n_le_m with m succ_n_le_m IH
-  · rfl
-  · have : g.continuants_aux (m + 1) = g.continuants_aux m :=
-      by
-      have : n ≤ m - 1 := Nat.le_pred_of_lt succ_n_le_m
-      have : g.terminated_at (m - 1) := terminated_stable this terminated_at_n
-      have stable_step : g.continuants_aux (m - 1 + 2) = g.continuants_aux (m - 1 + 1) :=
-        continuants_aux_stable_step_of_terminated this
-      have one_le_m : 1 ≤ m := Nat.one_le_of_lt succ_n_le_m
-      have : m - 1 + 2 = m + 2 - 1 := tsub_add_eq_add_tsub one_le_m
-      have : m - 1 + 1 = m + 1 - 1 := tsub_add_eq_add_tsub one_le_m
-      simpa [*] using stable_step
-    exact Eq.trans this IH
+  refine' Nat.le_induction rfl (fun k hnk hk => _) _ n_lt_m
+  rcases Nat.exists_eq_add_of_lt hnk with ⟨k, rfl⟩
+  refine' (continuants_aux_stable_step_of_terminated _).trans hk
+  exact terminated_stable (Nat.le_add_right _ _) terminated_at_n
 #align
   generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_of_terminated
 
@@ -77,19 +68,10 @@ theorem convergents'_aux_stable_step_of_terminated {s : Seq <| Pair K}
 theorem convergents'_aux_stable_of_terminated {s : Seq <| Pair K} (n_le_m : n ≤ m)
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n :=
   by
-  induction' n_le_m with m n_le_m IH generalizing s
+  induction' n_le_m with m n_le_m IH
   · rfl
-  · cases' s_head_eq : s.head with gp_head
-    case none => cases n <;> simp only [convergents'_aux, s_head_eq]
-    case
-      some =>
-      have : convergents'_aux s (n + 1) = convergents'_aux s n :=
-        convergents'_aux_stable_step_of_terminated terminated_at_n
-      rw [← this]
-      have : s.tail.terminated_at n := by
-        simpa only [Seq.TerminatedAt, Seq.nth_tail] using s.le_stable n.le_succ terminated_at_n
-      have : convergents'_aux s.tail m = convergents'_aux s.tail n := IH this
-      simp only [convergents'_aux, s_head_eq, this]
+  · refine' (convergents'_aux_stable_step_of_terminated _).trans IH
+    exact s.terminated_stable n_le_m terminated_at_n
 #align
   generalized_continued_fraction.convergents'_aux_stable_of_terminated GeneralizedContinuedFraction.convergents'_aux_stable_of_terminated
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Alena Gusakov, Hunter Monroe
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.basic
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1332,7 +1332,7 @@ theorem degree_compl [Fintype (Gᶜ.neighborSet v)] [Fintype V] :
     Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
   classical
     rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.to_finset_union]
-    simp [card_disjoint_union (set.to_finset_disjoint_iff.mpr (compl_neighbor_set_disjoint G v))]
+    simp [card_disjoint_union (set.disjoint_to_finset.mpr (compl_neighbor_set_disjoint G v))]
 #align simple_graph.degree_compl SimpleGraph.degree_compl
 
 instance incidenceSetFintype [DecidableEq V] : Fintype (G.incidenceSet v) :=
@@ -1592,7 +1592,7 @@ theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
     · rw [Finset.insert_subset]
       constructor
       · simpa
-      · rw [neighbor_finset, Set.to_finset_subset]
+      · rw [neighbor_finset, Set.to_finset_subset_to_finset]
         exact G.common_neighbors_subset_neighbor_set_left _ _
 #align
   simple_graph.adj.card_common_neighbors_lt_degree SimpleGraph.Adj.card_common_neighbors_lt_degree
@@ -1603,7 +1603,7 @@ theorem card_common_neighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
   simp only [common_neighbors_top_eq, ← Set.to_finset_card, Set.to_finset_diff]
   rw [Finset.card_sdiff]
   · simp [Finset.card_univ, h]
-  · simp only [Set.to_finset_subset, Set.subset_univ]
+  · simp only [Set.to_finset_subset_to_finset, Set.subset_univ]
 #align simple_graph.card_common_neighbors_top SimpleGraph.card_common_neighbors_top
 
 end Finite
