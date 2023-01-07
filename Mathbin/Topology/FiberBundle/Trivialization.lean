@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.trivialization
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,7 +162,7 @@ theorem preimage_symm_proj_base_set :
     e.toLocalEquiv.symm ⁻¹' (proj ⁻¹' e.baseSet) ∩ e.target = e.target :=
   by
   refine' inter_eq_right_iff_subset.mpr fun x hx => _
-  simp only [mem_preimage, LocalEquiv.inv_fun_as_coe, e.proj_symm_apply hx]
+  simp only [mem_preimage, LocalEquiv.invFun_as_coe, e.proj_symm_apply hx]
   exact e.mem_target.mp hx
 #align pretrivialization.preimage_symm_proj_base_set Pretrivialization.preimage_symm_proj_base_set
 

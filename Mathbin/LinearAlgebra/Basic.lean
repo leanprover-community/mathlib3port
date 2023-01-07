@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -834,11 +834,11 @@ noncomputable def equivMapOfInjective (f : F) (i : Injective f) (p : Submodule R
       i with
     map_add' := by
       intros
-      simp only [coe_add, map_add, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
+      simp only [coe_add, map_add, Equiv.toFun_as_coe, Equiv.Set.image_apply]
       rfl
     map_smul' := by
       intros
-      simp only [coe_smul_of_tower, map_smulₛₗ, Equiv.to_fun_as_coe, Equiv.Set.image_apply]
+      simp only [coe_smul_of_tower, map_smulₛₗ, Equiv.toFun_as_coe, Equiv.Set.image_apply]
       rfl }
 #align submodule.equiv_map_of_injective Submodule.equivMapOfInjective
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro, Reid Barton, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sheaves.presheaf
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -416,7 +416,7 @@ theorem to_pushforward_of_iso_app {X Y : TopCat} (H₁ : X ≅ Y) {ℱ : X.Presh
         H₂.app (op ((Opens.map H₁.inv).obj (unop U))) :=
   by
   delta to_pushforward_of_iso
-  simp only [Equiv.to_fun_as_coe, nat_trans.comp_app, equivalence.equivalence_mk'_unit,
+  simp only [Equiv.toFun_as_coe, nat_trans.comp_app, equivalence.equivalence_mk'_unit,
     eq_to_hom_map, eq_to_hom_op, eq_to_hom_trans, presheaf_equiv_of_iso_unit_iso_hom_app_app,
     equivalence.to_adjunction, equivalence.equivalence_mk'_counit,
     presheaf_equiv_of_iso_inverse_map_app, adjunction.mk_of_unit_counit_hom_equiv_apply]

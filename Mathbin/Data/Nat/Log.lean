@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.log
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : y ≠ 0) : b 
       pow_succ']
   ·
     exact
-      iff_of_false (fun hby => h ⟨(le_self_pow hb.le x.succ_ne_zero).trans hby, hb⟩)
+      iff_of_false (fun hby => h ⟨(le_self_pow x.succ_ne_zero _).trans hby, hb⟩)
         (not_succ_le_zero _)
 #align nat.pow_le_iff_le_log Nat.pow_le_iff_le_log
 -/

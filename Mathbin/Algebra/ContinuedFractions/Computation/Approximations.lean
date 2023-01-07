@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.approximations
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,19 +315,10 @@ theorem le_of_succ_succ_nth_continuants_aux_b {b : K}
     (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
     b * ((of v).continuantsAux <| n + 1).b ≤ ((of v).continuantsAux <| n + 2).b :=
   by
-  set g := of v with g_eq
-  obtain ⟨gp_n, nth_s_eq, gpnb_eq_b⟩ : ∃ gp_n, g.s.nth n = some gp_n ∧ gp_n.b = b
+  obtain ⟨gp_n, nth_s_eq, rfl⟩ : ∃ gp_n, (of v).s.nth n = some gp_n ∧ gp_n.b = b
   exact exists_s_b_of_part_denom nth_part_denom_eq
-  subst gpnb_eq_b
-  let conts := g.continuants_aux (n + 2)
-  set pconts := g.continuants_aux (n + 1) with pconts_eq
-  set ppconts := g.continuants_aux n with ppconts_eq
-  have h1 : 0 ≤ ppconts.b := zero_le_of_continuants_aux_b
-  have h2 : gp_n.b * pconts.b ≤ ppconts.b + gp_n.b * pconts.b := by
-    solve_by_elim [le_add_of_nonneg_of_le, le_refl]
-  -- use the recurrence of continuants_aux and the fact that gp_n.a = 1
-  simp [h1, h2, of_part_num_eq_one (part_num_eq_s_a nth_s_eq),
-    GeneralizedContinuedFraction.continuants_aux_recurrence nth_s_eq ppconts_eq pconts_eq]
+  simp [of_part_num_eq_one (part_num_eq_s_a nth_s_eq), zero_le_of_continuants_aux_b,
+    GeneralizedContinuedFraction.continuants_aux_recurrence nth_s_eq rfl rfl]
 #align
   generalized_continued_fraction.le_of_succ_succ_nth_continuants_aux_b GeneralizedContinuedFraction.le_of_succ_succ_nth_continuants_aux_b
 
@@ -635,6 +626,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
 #align
   generalized_continued_fraction.abs_sub_convergents_le GeneralizedContinuedFraction.abs_sub_convergents_le
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_pos, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (bₙ * Bₙ * Bₙ)`. This bound is worse than the one shown in
 `gcf.abs_sub_convergents_le`, but sometimes it is easier to apply and sufficient for one's use case.
  -/
@@ -642,31 +634,20 @@ theorem abs_sub_convergents_le' {b : K}
     (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
     |v - (of v).convergents n| ≤ 1 / (b * (of v).denominators n * (of v).denominators n) :=
   by
-  let g := of v
-  let B := g.denominators n
-  let nB := g.denominators (n + 1)
-  have not_terminated_at_n : ¬g.terminated_at n :=
-    haveI : g.partial_denominators.nth n ≠ none := by simp [nth_part_denom_eq]
-    (not_congr terminated_at_iff_part_denom_none).elimRight this
-  suffices 1 / (B * nB) ≤ (1 : K) / (b * B * B)
-    by
-    have : |v - g.convergents n| ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
-    trans <;> assumption
-  -- derive some inequalities needed to show the claim
-  have zero_lt_B : 0 < B :=
-    haveI : (fib (n + 1) : K) ≤ B :=
-      succ_nth_fib_le_of_nth_denom (Or.inr <| mt (terminated_stable n.pred_le) not_terminated_at_n)
-    lt_of_lt_of_le (by exact_mod_cast fib_pos (lt_of_le_of_ne n.succ.zero_le n.succ_ne_zero.symm))
-      this
-  have denoms_ineq : b * B * B ≤ B * nB :=
-    by
-    have : b * B ≤ nB := le_of_succ_nth_denom nth_part_denom_eq
-    rwa [mul_comm B nB, mul_le_mul_right zero_lt_B]
-  have : (0 : K) < b * B * B :=
-    by
-    have : 0 < b := lt_of_lt_of_le zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
-    any_goals repeat' apply mul_pos <;> assumption
-  exact div_le_div_of_le_left zero_le_one this denoms_ineq
+  have not_terminated_at_n : ¬(of v).TerminatedAt n := by
+    simp [terminated_at_iff_part_denom_none, nth_part_denom_eq]
+  refine' (abs_sub_convergents_le not_terminated_at_n).trans _
+  -- One can show that `0 < (generalized_continued_fraction.of v).denominators n` but it's easier
+  -- to consider the case `(generalized_continued_fraction.of v).denominators n = 0`.
+  rcases zero_le_of_denom.eq_or_gt with
+    ((hB : (GeneralizedContinuedFraction.of v).denominators n = 0) | hB)
+  · simp only [hB, mul_zero, zero_mul, div_zero]
+  · apply one_div_le_one_div_of_le
+    · have : 0 < b := zero_lt_one.trans_le (of_one_le_nth_part_denom nth_part_denom_eq)
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_pos, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    · conv_rhs => rw [mul_comm]
+      exact mul_le_mul_of_nonneg_right (le_of_succ_nth_denom nth_part_denom_eq) hB.le
 #align
   generalized_continued_fraction.abs_sub_convergents_le' GeneralizedContinuedFraction.abs_sub_convergents_le'
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module field_theory.finite.basic
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -7434,6 +7434,16 @@ theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a �
   have h := pow_card_sub_one_eq_one a ha
   rwa [Zmod.card p] at h
 #align zmod.pow_card_sub_one_eq_one Zmod.pow_card_sub_one_eq_one
+
+theorem order_of_units_dvd_card_sub_one {p : ℕ} [Fact p.Prime] (u : (Zmod p)ˣ) :
+    orderOf u ∣ p - 1 :=
+  order_of_dvd_of_pow_eq_one <| units_pow_card_sub_one_eq_one _ _
+#align zmod.order_of_units_dvd_card_sub_one Zmod.order_of_units_dvd_card_sub_one
+
+theorem order_of_dvd_card_sub_one {p : ℕ} [Fact p.Prime] {a : Zmod p} (ha : a ≠ 0) :
+    orderOf a ∣ p - 1 :=
+  order_of_dvd_of_pow_eq_one <| pow_card_sub_one_eq_one ha
+#align zmod.order_of_dvd_card_sub_one Zmod.order_of_dvd_card_sub_one
 
 open Polynomial
 

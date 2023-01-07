@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.nat.factorization.basic
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -846,9 +846,7 @@ def recOnPosPrimePosCoprime {P : ℕ → Sort _} (hp : ∀ p n : ℕ, Prime p �
     by_cases ha1 : a = 1
     · rw [ha1, mul_one]
       exact hp p n hp' hn
-    refine'
-      h (p ^ n) a (hp'.one_lt.trans_le (le_self_pow (prime.one_lt hp').le hn.ne')) _ _
-        (hp _ _ hp' hn) hPa
+    refine' h (p ^ n) a (hp'.one_lt.trans_le (le_self_pow hn.ne' _)) _ _ (hp _ _ hp' hn) hPa
     · contrapose! hpa
       simp [lt_one_iff.1 (lt_of_le_of_ne hpa ha1)]
     simpa [hn, Prime.coprime_iff_not_dvd hp']

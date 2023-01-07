@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.polish
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -474,11 +474,11 @@ theorem IsClosed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s : Set �
     ext x
     by_cases h : x ∈ s
     ·
-      simp only [Equiv.Set.sumCompl_symm_apply_of_mem, h, mem_preimage, Equiv.to_fun_as_coe,
+      simp only [Equiv.Set.sumCompl_symm_apply_of_mem, h, mem_preimage, Equiv.toFun_as_coe,
         mem_range_self, Equiv.to_homeomorph_of_inducing_apply]
     ·
       simp only [Equiv.Set.sumCompl_symm_apply_of_not_mem, h, not_false_iff, mem_preimage,
-        Equiv.to_homeomorph_of_inducing_apply, Equiv.to_fun_as_coe, mem_range, exists_false]
+        Equiv.to_homeomorph_of_inducing_apply, Equiv.toFun_as_coe, mem_range, exists_false]
   refine' ⟨t', _, f.polish_space_induced, _, _⟩
   · intro u hu
     change ∃ s' : Set (Sum (↥s) ↥t), T.is_open s' ∧ f ⁻¹' s' = u

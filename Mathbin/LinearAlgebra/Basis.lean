@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -732,7 +732,7 @@ theorem prod_apply_inl_fst (i) : (b.Prod b' (Sum.inl i)).1 = b i :=
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.to_fun_as_coe, Finsupp.fst_sum_finsupp_lequiv_prod_finsupp]
+      Equiv.toFun_as_coe, Finsupp.fst_sum_finsupp_lequiv_prod_finsupp]
     apply Finsupp.single_apply_left Sum.inl_injective
 #align basis.prod_apply_inl_fst Basis.prod_apply_inl_fst
 
@@ -741,7 +741,7 @@ theorem prod_apply_inr_fst (i) : (b.Prod b' (Sum.inr i)).1 = 0 :=
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.to_fun_as_coe, Finsupp.fst_sum_finsupp_lequiv_prod_finsupp, LinearEquiv.map_zero,
+      Equiv.toFun_as_coe, Finsupp.fst_sum_finsupp_lequiv_prod_finsupp, LinearEquiv.map_zero,
       Finsupp.zero_apply]
     apply Finsupp.single_eq_of_ne Sum.inr_ne_inl
 #align basis.prod_apply_inr_fst Basis.prod_apply_inr_fst
@@ -751,7 +751,7 @@ theorem prod_apply_inl_snd (i) : (b.Prod b' (Sum.inl i)).2 = 0 :=
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.to_fun_as_coe, Finsupp.snd_sum_finsupp_lequiv_prod_finsupp, LinearEquiv.map_zero,
+      Equiv.toFun_as_coe, Finsupp.snd_sum_finsupp_lequiv_prod_finsupp, LinearEquiv.map_zero,
       Finsupp.zero_apply]
     apply Finsupp.single_eq_of_ne Sum.inl_ne_inr
 #align basis.prod_apply_inl_snd Basis.prod_apply_inl_snd
@@ -761,7 +761,7 @@ theorem prod_apply_inr_snd (i) : (b.Prod b' (Sum.inr i)).2 = b' i :=
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.to_fun_as_coe, Finsupp.snd_sum_finsupp_lequiv_prod_finsupp]
+      Equiv.toFun_as_coe, Finsupp.snd_sum_finsupp_lequiv_prod_finsupp]
     apply Finsupp.single_apply_left Sum.inr_injective
 #align basis.prod_apply_inr_snd Basis.prod_apply_inr_snd
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.defs
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,15 +224,19 @@ protected def trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : α ≃ γ :=
 #align equiv.trans Equiv.trans
 -/
 
+#print Equiv.toFun_as_coe /-
 @[simp]
-theorem to_fun_as_coe (e : α ≃ β) : e.toFun = e :=
+theorem toFun_as_coe (e : α ≃ β) : e.toFun = e :=
   rfl
-#align equiv.to_fun_as_coe Equiv.to_fun_as_coe
+#align equiv.to_fun_as_coe Equiv.toFun_as_coe
+-/
 
+#print Equiv.invFun_as_coe /-
 @[simp]
-theorem inv_fun_as_coe (e : α ≃ β) : e.invFun = e.symm :=
+theorem invFun_as_coe (e : α ≃ β) : e.invFun = e.symm :=
   rfl
-#align equiv.inv_fun_as_coe Equiv.inv_fun_as_coe
+#align equiv.inv_fun_as_coe Equiv.invFun_as_coe
+-/
 
 #print Equiv.injective /-
 protected theorem injective (e : α ≃ β) : Injective e :=

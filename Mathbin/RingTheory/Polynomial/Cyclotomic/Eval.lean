@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.eval
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -252,7 +252,15 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
 #align
   polynomial.sub_one_pow_totient_lt_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_cyclotomic_eval
 
-theorem cyclotomic_eval_lt_sub_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ n) (hq' : 1 < q) :
+theorem sub_one_pow_totient_le_cyclotomic_eval {q : ℝ} (hq' : 1 < q) :
+    ∀ n, (q - 1) ^ totient n ≤ (cyclotomic n ℝ).eval q
+  | 0 => by simp only [totient_zero, pow_zero, cyclotomic_zero, eval_one]
+  | 1 => by simp only [totient_one, pow_one, cyclotomic_one, eval_sub, eval_X, eval_one]
+  | n + 2 => (sub_one_pow_totient_lt_cyclotomic_eval (by decide) hq').le
+#align
+  polynomial.sub_one_pow_totient_le_cyclotomic_eval Polynomial.sub_one_pow_totient_le_cyclotomic_eval
+
+theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ n) (hq' : 1 < q) :
     (cyclotomic n ℝ).eval q < (q + 1) ^ totient n :=
   by
   have hn : 0 < n := pos_of_gt hn'
@@ -322,39 +330,36 @@ theorem cyclotomic_eval_lt_sub_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     obtain ⟨ζ, hζ, hhζ : Complex.abs _ < _⟩ := hex
     exact ⟨ζ, hζ, by simp [hhζ]⟩
 #align
-  polynomial.cyclotomic_eval_lt_sub_one_pow_totient Polynomial.cyclotomic_eval_lt_sub_one_pow_totient
+  polynomial.cyclotomic_eval_lt_add_one_pow_totient Polynomial.cyclotomic_eval_lt_add_one_pow_totient
 
-theorem sub_one_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq' : q ≠ 1) :
-    q - 1 < ((cyclotomic n ℤ).eval ↑q).natAbs :=
+theorem cyclotomic_eval_le_add_one_pow_totient {q : ℝ} (hq' : 1 < q) :
+    ∀ n, (cyclotomic n ℝ).eval q ≤ (q + 1) ^ totient n
+  | 0 => by simp
+  | 1 => by simp [add_assoc, add_nonneg, zero_le_one]
+  | 2 => by simp
+  | n + 3 => (cyclotomic_eval_lt_add_one_pow_totient (by decide) hq').le
+#align
+  polynomial.cyclotomic_eval_le_add_one_pow_totient Polynomial.cyclotomic_eval_le_add_one_pow_totient
+
+theorem sub_one_pow_totient_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq : q ≠ 1) :
+    (q - 1) ^ totient n < ((cyclotomic n ℤ).eval ↑q).natAbs :=
   by
-  rcases q with (_ | _ | q)
-  iterate 2 
-    rw [pos_iff_ne_zero, Ne.def, Int.natAbs_eq_zero]
-    intro h
-    have := degree_eq_one_of_irreducible_of_root (cyclotomic.irreducible (pos_of_gt hn')) h
-    rw [degree_cyclotomic, WithTop.coe_eq_one, totient_eq_one_iff] at this
-    rcases this with (rfl | rfl) <;> simpa using h
-  suffices (q.succ : ℝ) < (eval (↑q + 1 + 1) (cyclotomic n ℤ)).natAbs by exact_mod_cast this
+  rcases hq.lt_or_lt.imp_left nat.lt_one_iff.mp with (rfl | hq')
+  · rw [zero_tsub, zero_pow (Nat.totient_pos (pos_of_gt hn')), pos_iff_ne_zero, Int.natAbs_ne_zero,
+      Nat.cast_zero, ← coeff_zero_eq_eval_zero, cyclotomic_coeff_zero _ hn']
+    exact one_ne_zero
+  rw [← @Nat.cast_lt ℝ, Nat.cast_pow, Nat.cast_sub hq'.le, Nat.cast_one, Int.cast_natAbs]
+  refine' (sub_one_pow_totient_lt_cyclotomic_eval hn' (Nat.one_lt_cast.2 hq')).trans_le _
+  exact (cyclotomic.eval_apply (q : ℤ) n (algebraMap ℤ ℝ)).trans_le (le_abs_self _)
+#align
+  polynomial.sub_one_pow_totient_lt_nat_abs_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_nat_abs_cyclotomic_eval
+
+theorem sub_one_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq : q ≠ 1) :
+    q - 1 < ((cyclotomic n ℤ).eval ↑q).natAbs :=
   calc
-    _ ≤ ((q + 2 - 1) ^ n.totient : ℝ) := _
-    _ < _ := _
+    q - 1 ≤ (q - 1) ^ totient n := Nat.le_self_pow (Nat.totient_pos <| pos_of_gt hn').ne' _
+    _ < ((cyclotomic n ℤ).eval ↑q).natAbs := sub_one_pow_totient_lt_nat_abs_cyclotomic_eval hn' hq
     
-  · norm_num
-    convert pow_mono (by simp : 1 ≤ (q : ℝ) + 1) (totient_pos (pos_of_gt hn') : 1 ≤ n.totient)
-    · simp
-    · ring
-  convert
-    sub_one_pow_totient_lt_cyclotomic_eval (show 2 ≤ n by linarith)
-      (show (1 : ℝ) < q + 2 by
-        norm_cast
-        linarith)
-  norm_cast
-  erw [cyclotomic.eval_apply (q + 2 : ℤ) n (algebraMap ℤ ℝ)]
-  simp only [Int.ofNat_succ, eq_intCast]
-  norm_cast
-  rw [Int.coe_nat_abs_eq_normalize, Int.normalize_of_nonneg]
-  simp only [Int.ofNat_succ]
-  exact cyclotomic_nonneg n (by linarith)
 #align polynomial.sub_one_lt_nat_abs_cyclotomic_eval Polynomial.sub_one_lt_nat_abs_cyclotomic_eval
 
 end Polynomial

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,9 +48,9 @@ that the sets one uses are nonempty and bounded above as these are only conditio
 -/
 
 
-open BigOperators Nnreal Ennreal
+open BigOperators Nnreal Ennreal TopologicalSpace UniformConvergence
 
-open Set MeasureTheory
+open Set MeasureTheory Filter
 
 variable {α β : Type _} [LinearOrder α] [LinearOrder β] {E F : Type _} [PseudoEmetricSpace E]
   [PseudoEmetricSpace F] {V : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -218,6 +218,52 @@ theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y �
   convert sum_le f 1 hu us
   simp [u, edist_comm]
 #align evariation_on.edist_le evariationOn.edist_le
+
+theorem lower_continuous_aux {ι : Type _} {F : ι → α → E} {p : Filter ι} {f : α → E} {s : Set α}
+    (Ffs : ∀ x ∈ s, Tendsto (fun i => F i x) p (𝓝 (f x))) {v : ℝ≥0∞} (hv : v < evariationOn f s) :
+    ∀ᶠ n : ι in p, v < evariationOn (F n) s :=
+  by
+  obtain ⟨⟨n, ⟨u, um, us⟩⟩, hlt⟩ :
+    ∃ p : ℕ × { u : ℕ → α // Monotone u ∧ ∀ i, u i ∈ s },
+      v < ∑ i in Finset.range p.1, edist (f ((p.2 : ℕ → α) (i + 1))) (f ((p.2 : ℕ → α) i)) :=
+    lt_supr_iff.mp hv
+  have :
+    tendsto (fun j => ∑ i : ℕ in Finset.range n, edist (F j (u (i + 1))) (F j (u i))) p
+      (𝓝 (∑ i : ℕ in Finset.range n, edist (f (u (i + 1))) (f (u i)))) :=
+    by
+    apply tendsto_finset_sum
+    exact fun i hi => tendsto.edist (Ffs (u i.succ) (us i.succ)) (Ffs (u i) (us i))
+  exact
+    (eventually_gt_of_tendsto_gt hlt this).mono fun i h => lt_of_lt_of_le h (sum_le (F i) n um us)
+#align evariation_on.lower_continuous_aux evariationOn.lower_continuous_aux
+
+/-- The map `λ f, evariation_on f s` is lower semicontinuous for pointwise convergence *on `s`*.
+Pointwise convergence on `s` is encoded here as uniform convergence on the family consisting of the
+singletons of elements of `s`.
+-/
+@[protected]
+theorem lower_semicontinuous (s : Set α) :
+    LowerSemicontinuous fun f : α →ᵤ[s.image singleton] E => evariationOn f s :=
+  by
+  intro f
+  apply @lower_continuous_aux _ _ _ _ (UniformOnFun α E (s.image singleton)) id (𝓝 f) f s _
+  simpa only [UniformOnFun.tendsto_iff_tendsto_uniformly_on, mem_image, forall_exists_index,
+    and_imp, forall_apply_eq_imp_iff₂, tendsto_uniformly_on_singleton_iff_tendsto] using
+    @tendsto_id _ (𝓝 f)
+#align evariation_on.lower_semicontinuous evariationOn.lower_semicontinuous
+
+/-- The map `λ f, evariation_on f s` is lower semicontinuous for uniform convergence on `s`.
+-/
+theorem lower_semicontinuous_uniform_on (s : Set α) :
+    LowerSemicontinuous fun f : α →ᵤ[{s}] E => evariationOn f s :=
+  by
+  intro f
+  apply @lower_continuous_aux _ _ _ _ (UniformOnFun α E {s}) id (𝓝 f) f s _
+  have := @tendsto_id _ (𝓝 f)
+  rw [UniformOnFun.tendsto_iff_tendsto_uniformly_on] at this
+  simp_rw [← tendsto_uniformly_on_singleton_iff_tendsto]
+  exact fun x xs => (this s rfl).mono (singleton_subset_iff.mpr xs)
+#align evariation_on.lower_semicontinuous_uniform_on evariationOn.lower_semicontinuous_uniform_on
 
 theorem HasBoundedVariationOn.dist_le {E : Type _} [PseudoMetricSpace E] {f : α → E} {s : Set α}
     (h : HasBoundedVariationOn f s) {x y : α} (hx : x ∈ s) (hy : y ∈ s) :

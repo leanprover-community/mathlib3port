@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_equiv
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,16 +13,16 @@ import Mathbin.Analysis.NormedSpace.PiLp
 import Mathbin.Topology.ContinuousFunction.Bounded
 
 /-!
-# Equivalences among $$L^p$$ spaces
+# Equivalences among $L^p$ spaces
 
-In this file we collect a variety of equivalences among various $$L^p$$ spaces.  In particular,
+In this file we collect a variety of equivalences among various $L^p$ spaces.  In particular,
 when `α` is a `fintype`, given `E : α → Type u` and `p : ℝ≥0∞`, there is a natural linear isometric
 equivalence `lp_pi_Lpₗᵢ : lp E p ≃ₗᵢ pi_Lp p E`. In addition, when `α` is a discrete topological
 space, the bounded continuous functions `α →ᵇ β` correspond exactly to `lp (λ _, β) ∞`. Here there
 can be more structure, including ring and algebra structures, and we implement these equivalences
 accordingly as well.
 
-We keep this as a separate file so that the various $$L^p$$ space files don't import the others.
+We keep this as a separate file so that the various $L^p$ space files don't import the others.
 
 Recall that `pi_Lp` is just a type synonym for `Π i, E i` but given a different metric and norm
 structure, although the topological, uniform and bornological structures coincide definitionally.

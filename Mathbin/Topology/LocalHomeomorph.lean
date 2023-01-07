@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.local_homeomorph
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,7 @@ protected theorem surj_on : SurjOn e e.source e.target :=
 #align local_homeomorph.surj_on LocalHomeomorph.surj_on
 
 /-- A homeomorphism induces a local homeomorphism on the whole space -/
-@[simps (config := { mfldCfg with simpRhs := true })]
+@[simps (config := { mfld_cfg with simpRhs := true })]
 def Homeomorph.toLocalHomeomorph (e : α ≃ₜ β) : LocalHomeomorph α β :=
   { e.toEquiv.toLocalEquiv with
     open_source := is_open_univ
@@ -715,7 +715,7 @@ theorem restr_open_source (s : Set α) (hs : IsOpen s) : (e.restrOpen s hs).sour
 sure that the restriction is well defined whatever the set s, since local homeomorphisms are by
 definition defined on open sets. In applications where `s` is open, this coincides with the
 restriction of local equivalences -/
-@[simps (config := mfldCfg) apply symmApply, simps (config := { attrs := [] }) source target]
+@[simps (config := mfld_cfg) apply symmApply, simps (config := { attrs := [] }) source target]
 protected def restr (s : Set α) : LocalHomeomorph α β :=
   e.restrOpen (interior s) is_open_interior
 #align local_homeomorph.restr LocalHomeomorph.restr
@@ -755,7 +755,7 @@ theorem restr_source_inter (s : Set α) : e.restr (e.source ∩ s) = e.restr s :
 #align local_homeomorph.restr_source_inter LocalHomeomorph.restr_source_inter
 
 /-- The identity on the whole space as a local homeomorphism. -/
-@[simps (config := mfldCfg) apply, simps (config := { attrs := [] }) source target]
+@[simps (config := mfld_cfg) apply, simps (config := { attrs := [] }) source target]
 protected def refl (α : Type _) [TopologicalSpace α] : LocalHomeomorph α α :=
   (Homeomorph.refl α).toLocalHomeomorph
 #align local_homeomorph.refl LocalHomeomorph.refl
@@ -775,7 +775,7 @@ section
 variable {s : Set α} (hs : IsOpen s)
 
 /-- The identity local equiv on a set `s` -/
-@[simps (config := mfldCfg) apply, simps (config := { attrs := [] }) source target]
+@[simps (config := mfld_cfg) apply, simps (config := { attrs := [] }) source target]
 def ofSet (s : Set α) (hs : IsOpen s) : LocalHomeomorph α α :=
   { LocalEquiv.ofSet s with
     open_source := hs
@@ -940,7 +940,7 @@ def transHomeomorph (e' : β ≃ₜ γ) : LocalHomeomorph α γ
 #align local_homeomorph.trans_homeomorph LocalHomeomorph.transHomeomorph
 
 theorem trans_equiv_eq_trans (e' : β ≃ₜ γ) : e.transHomeomorph e' = e.trans e'.toLocalHomeomorph :=
-  to_local_equiv_injective <| LocalEquiv.trans_equiv_eq_trans _ _
+  to_local_equiv_injective <| LocalEquiv.transEquiv_eq_trans _ _
 #align local_homeomorph.trans_equiv_eq_trans LocalHomeomorph.trans_equiv_eq_trans
 
 /-- Precompose a local homeomorphism with an homeomorphism.
@@ -957,7 +957,7 @@ def Homeomorph.transLocalHomeomorph (e : α ≃ₜ β) : LocalHomeomorph α γ
 
 theorem Homeomorph.trans_local_homeomorph_eq_trans (e : α ≃ₜ β) :
     e.transLocalHomeomorph e' = e.toLocalHomeomorph.trans e' :=
-  to_local_equiv_injective <| Equiv.trans_local_equiv_eq_trans _ _
+  to_local_equiv_injective <| Equiv.trans_localEquiv_eq_trans _ _
 #align homeomorph.trans_local_homeomorph_eq_trans Homeomorph.trans_local_homeomorph_eq_trans
 
 /-- `eq_on_source e e'` means that `e` and `e'` have the same source, and coincide there. They
@@ -1053,7 +1053,7 @@ theorem eq_of_eq_on_source_univ {e e' : LocalHomeomorph α β} (h : e ≈ e') (s
 section Prod
 
 /-- The product of two local homeomorphisms, as a local homeomorphism on the product space. -/
-@[simps (config := mfldCfg) toLocalEquiv apply,
+@[simps (config := mfld_cfg) toLocalEquiv apply,
   simps (config := { attrs := [] }) source target symmApply]
 def prod (e : LocalHomeomorph α β) (e' : LocalHomeomorph γ δ) : LocalHomeomorph (α × γ) (β × δ)
     where
@@ -1310,7 +1310,7 @@ theorem second_countable_topology_source [SecondCountableTopology β] (e : Local
 
 /-- If a local homeomorphism has source and target equal to univ, then it induces a homeomorphism
 between the whole spaces, expressed in this definition. -/
-@[simps (config := mfldCfg) apply symmApply]
+@[simps (config := mfld_cfg) apply symmApply]
 def toHomeomorphOfSourceEqUnivTargetEqUniv (h : e.source = (univ : Set α)) (h' : e.target = univ) :
     α ≃ₜ β where
   toFun := e
@@ -1370,7 +1370,7 @@ theorem symm_to_local_homeomorph : e.symm.toLocalHomeomorph = e.toLocalHomeomorp
 @[simp, mfld_simps]
 theorem trans_to_local_homeomorph :
     (e.trans e').toLocalHomeomorph = e.toLocalHomeomorph.trans e'.toLocalHomeomorph :=
-  LocalHomeomorph.eq_of_local_equiv_eq <| Equiv.trans_to_local_equiv _ _
+  LocalHomeomorph.eq_of_local_equiv_eq <| Equiv.trans_toLocalEquiv _ _
 #align homeomorph.trans_to_local_homeomorph Homeomorph.trans_to_local_homeomorph
 
 end Homeomorph
@@ -1381,7 +1381,7 @@ variable (f : α → β) (h : OpenEmbedding f)
 
 /-- An open embedding of `α` into `β`, with `α` nonempty, defines a local homeomorphism whose source
 is all of `α`.  The converse is also true; see `local_homeomorph.to_open_embedding`. -/
-@[simps (config := mfldCfg) apply source target]
+@[simps (config := mfld_cfg) apply source target]
 noncomputable def toLocalHomeomorph [Nonempty α] : LocalHomeomorph α β :=
   LocalHomeomorph.ofContinuousOpen ((h.toEmbedding.inj.InjOn univ).toLocalEquiv _ _)
     h.Continuous.ContinuousOn h.IsOpenMap is_open_univ

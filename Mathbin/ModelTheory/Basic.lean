@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.basic
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -740,14 +740,14 @@ def symm (f : M ≃[L] N) : N ≃[L] M :=
   {
     f.toEquiv.symm with
     map_fun' := fun n f' x => by
-      simp only [Equiv.to_fun_as_coe]
+      simp only [Equiv.toFun_as_coe]
       rw [Equiv.symm_apply_eq]
       refine' Eq.trans _ (f.map_fun' f' (f.to_equiv.symm ∘ x)).symm
-      rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id]
+      rw [← Function.comp.assoc, Equiv.toFun_as_coe, Equiv.self_comp_symm, Function.comp.left_id]
     map_rel' := fun n r x => by
-      simp only [Equiv.to_fun_as_coe]
+      simp only [Equiv.toFun_as_coe]
       refine' (f.map_rel' r (f.to_equiv.symm ∘ x)).symm.trans _
-      rw [← Function.comp.assoc, Equiv.to_fun_as_coe, Equiv.self_comp_symm, Function.comp.left_id] }
+      rw [← Function.comp.assoc, Equiv.toFun_as_coe, Equiv.self_comp_symm, Function.comp.left_id] }
 #align first_order.language.equiv.symm FirstOrder.Language.Equiv.symm
 
 instance hasCoeToFun : CoeFun (M ≃[L] N) fun _ => M → N :=

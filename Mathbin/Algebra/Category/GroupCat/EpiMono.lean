@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.epi_mono
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2341,7 +2341,7 @@ theorem g_apply_infinity ( x : B ) : g x ∞ = ∞ := rfl
               ","
               (Tactic.simpLemma [] [] `MonoidHom.coe_mk)
               ","
-              (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+              (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
               ","
               (Tactic.simpLemma [] [] `Equiv.coe_trans)
               ","
@@ -2391,7 +2391,7 @@ theorem g_apply_infinity ( x : B ) : g x ∞ = ∞ := rfl
              ","
              (Tactic.simpLemma [] [] `MonoidHom.coe_mk)
              ","
-             (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+             (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
              ","
              (Tactic.simpLemma [] [] `Equiv.coe_trans)
              ","
@@ -2497,7 +2497,7 @@ theorem g_apply_infinity ( x : B ) : g x ∞ = ∞ := rfl
          ","
          (Tactic.simpLemma [] [] `MonoidHom.coe_mk)
          ","
-         (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+         (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
          ","
          (Tactic.simpLemma [] [] `Equiv.coe_trans)
          ","
@@ -2519,7 +2519,7 @@ theorem g_apply_infinity ( x : B ) : g x ∞ = ∞ := rfl
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Equiv.to_fun_as_coe
+      `Equiv.toFun_as_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
@@ -2560,7 +2560,7 @@ theorem
     by
       simp
           only
-          [ H , MonoidHom.coe_mk , Equiv.to_fun_as_coe , Equiv.coe_trans , Function.comp_apply ]
+          [ H , MonoidHom.coe_mk , Equiv.toFun_as_coe , Equiv.coe_trans , Function.comp_apply ]
         rw [ τ_symm_apply_infinity , g_apply_from_coset ]
         simpa only [ ← Subtype.val_eq_coe ] using τ_apply_from_coset' f x hx
 #align Group.surjective_of_epi_auxs.h_apply_infinity GroupCat.SurjectiveOfEpiAuxs.h_apply_infinity
@@ -3257,7 +3257,7 @@ theorem
               ","
               (Tactic.simpLemma [] [] `MonoidHom.coe_mk)
               ","
-              (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+              (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
               ","
               (Tactic.simpLemma [] [] `Equiv.coe_trans)
               ","
@@ -3375,7 +3375,7 @@ theorem
              ","
              (Tactic.simpLemma [] [] `MonoidHom.coe_mk)
              ","
-             (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+             (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
              ","
              (Tactic.simpLemma [] [] `Equiv.coe_trans)
              ","
@@ -3884,7 +3884,7 @@ theorem
       simp
           only
           [
-            H , tau , MonoidHom.coe_mk , Equiv.to_fun_as_coe , Equiv.coe_trans , Function.comp_apply
+            H , tau , MonoidHom.coe_mk , Equiv.toFun_as_coe , Equiv.coe_trans , Function.comp_apply
             ]
         rw
           [
@@ -5693,7 +5693,7 @@ theorem
               ","
               (Tactic.simpLemma [] [] `Equiv.symm_swap)
               ","
-              (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+              (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
               ","
               (Tactic.simpLemma [] [] `Equiv.coe_trans)
               ","
@@ -5777,7 +5777,7 @@ theorem
              ","
              (Tactic.simpLemma [] [] `Equiv.symm_swap)
              ","
-             (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+             (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
              ","
              (Tactic.simpLemma [] [] `Equiv.coe_trans)
              ","
@@ -5870,7 +5870,7 @@ theorem
          ","
          (Tactic.simpLemma [] [] `Equiv.symm_swap)
          ","
-         (Tactic.simpLemma [] [] `Equiv.to_fun_as_coe)
+         (Tactic.simpLemma [] [] `Equiv.toFun_as_coe)
          ","
          (Tactic.simpLemma [] [] `Equiv.coe_trans)
          ","
@@ -5897,7 +5897,7 @@ theorem
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      `Equiv.to_fun_as_coe
+      `Equiv.toFun_as_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
      [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
@@ -6133,7 +6133,7 @@ theorem
               ,
               Equiv.symm_swap
               ,
-              Equiv.to_fun_as_coe
+              Equiv.toFun_as_coe
               ,
               Equiv.coe_trans
               ,

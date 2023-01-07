@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.lattice
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -880,20 +880,6 @@ theorem inf_le_sup : a ⊓ b ≤ a ⊔ b :=
 #align inf_le_sup inf_le_sup
 -/
 
-#print inf_lt_sup /-
-@[simp]
-theorem inf_lt_sup : a ⊓ b < a ⊔ b ↔ a ≠ b :=
-  by
-  constructor
-  · rintro H rfl
-    simpa using H
-  · refine' fun Hne => lt_iff_le_and_ne.2 ⟨inf_le_sup, fun Heq => Hne _⟩
-    refine' le_antisymm _ _
-    exacts[le_sup_left.trans (Heq.symm.trans_le inf_le_right),
-      le_sup_right.trans (Heq.symm.trans_le inf_le_left)]
-#align inf_lt_sup inf_lt_sup
--/
-
 #print sup_le_inf /-
 @[simp]
 theorem sup_le_inf : a ⊔ b ≤ a ⊓ b ↔ a = b :=
@@ -904,6 +890,36 @@ theorem sup_le_inf : a ⊔ b ≤ a ⊓ b ↔ a = b :=
     rintro rfl
     simp⟩
 #align sup_le_inf sup_le_inf
+-/
+
+#print inf_eq_sup /-
+@[simp]
+theorem inf_eq_sup : a ⊓ b = a ⊔ b ↔ a = b := by rw [← inf_le_sup.ge_iff_eq, sup_le_inf]
+#align inf_eq_sup inf_eq_sup
+-/
+
+#print sup_eq_inf /-
+@[simp]
+theorem sup_eq_inf : a ⊔ b = a ⊓ b ↔ a = b :=
+  eq_comm.trans inf_eq_sup
+#align sup_eq_inf sup_eq_inf
+-/
+
+#print inf_lt_sup /-
+@[simp]
+theorem inf_lt_sup : a ⊓ b < a ⊔ b ↔ a ≠ b := by rw [inf_le_sup.lt_iff_ne, Ne.def, inf_eq_sup]
+#align inf_lt_sup inf_lt_sup
+-/
+
+#print inf_eq_and_sup_eq_iff /-
+theorem inf_eq_and_sup_eq_iff : a ⊓ b = c ∧ a ⊔ b = c ↔ a = c ∧ b = c :=
+  by
+  refine' ⟨fun h => _, _⟩
+  · obtain rfl := sup_eq_inf.1 (h.2.trans h.1.symm)
+    simpa using h
+  · rintro ⟨rfl, rfl⟩
+    exact ⟨inf_idem, sup_idem⟩
+#align inf_eq_and_sup_eq_iff inf_eq_and_sup_eq_iff
 -/
 
 /-!

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.fin
-! leanprover-community/mathlib commit 18a5306c091183ac90884daa9373fa3b178e8607
+! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ theorem prod_univ_add {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) �
   by
   rw [Fintype.prod_equiv fin_sum_fin_equiv.symm f fun i => f (fin_sum_fin_equiv.to_fun i)]; swap
   · intro x
-    simp only [Equiv.to_fun_as_coe, Equiv.apply_symm_apply]
+    simp only [Equiv.toFun_as_coe, Equiv.apply_symm_apply]
   apply Fintype.prod_sum_type
 #align fin.prod_univ_add Fin.prod_univ_add
 
