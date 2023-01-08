@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.support
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,9 +68,9 @@ theorem mul_tsupport_eq_empty_iff {f : X → α} : mulTsupport f = ∅ ↔ f = 1
 #align mul_tsupport_eq_empty_iff mul_tsupport_eq_empty_iff
 
 @[to_additive]
-theorem image_eq_zero_of_nmem_mul_tsupport {f : X → α} {x : X} (hx : x ∉ mulTsupport f) : f x = 1 :=
+theorem image_eq_one_of_nmem_mul_tsupport {f : X → α} {x : X} (hx : x ∉ mulTsupport f) : f x = 1 :=
   mul_support_subset_iff'.mp (subset_mul_tsupport f) x hx
-#align image_eq_zero_of_nmem_mul_tsupport image_eq_zero_of_nmem_mul_tsupport
+#align image_eq_one_of_nmem_mul_tsupport image_eq_one_of_nmem_mul_tsupport
 
 @[to_additive]
 theorem range_subset_insert_image_mul_tsupport (f : X → α) :

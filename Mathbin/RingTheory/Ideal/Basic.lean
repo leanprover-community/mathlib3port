@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,6 +177,13 @@ theorem mem_span_singleton' {x y : α} : x ∈ span ({y} : Set α) ↔ ∃ a, a 
 theorem span_singleton_le_iff_mem {x : α} : span {x} ≤ I ↔ x ∈ I :=
   Submodule.span_singleton_le_iff_mem _ _
 #align ideal.span_singleton_le_iff_mem Ideal.span_singleton_le_iff_mem
+
+theorem span_singleton_mul_left_unit {a : α} (h2 : IsUnit a) (x : α) :
+    span ({a * x} : Set α) = span {x} :=
+  by
+  apply le_antisymm <;> rw [span_singleton_le_iff_mem, mem_span_singleton']
+  exacts[⟨a, rfl⟩, ⟨_, h2.unit.inv_mul_cancel_left x⟩]
+#align ideal.span_singleton_mul_left_unit Ideal.span_singleton_mul_left_unit
 
 theorem span_insert (x) (s : Set α) : span (insert x s) = span ({x} : Set α) ⊔ span s :=
   Submodule.span_insert x s
@@ -507,17 +514,8 @@ theorem span_singleton_eq_span_singleton {α : Type u} [CommRing α] [IsDomain �
 #align ideal.span_singleton_eq_span_singleton Ideal.span_singleton_eq_span_singleton
 
 theorem span_singleton_mul_right_unit {a : α} (h2 : IsUnit a) (x : α) :
-    span ({x * a} : Set α) = span {x} := by
-  apply le_antisymm
-  · rw [span_singleton_le_span_singleton]
-    use a
-  · rw [span_singleton_le_span_singleton]
-    rw [IsUnit.mul_right_dvd h2]
+    span ({x * a} : Set α) = span {x} := by rw [mul_comm, span_singleton_mul_left_unit h2]
 #align ideal.span_singleton_mul_right_unit Ideal.span_singleton_mul_right_unit
-
-theorem span_singleton_mul_left_unit {a : α} (h2 : IsUnit a) (x : α) :
-    span ({a * x} : Set α) = span {x} := by rw [mul_comm, span_singleton_mul_right_unit h2]
-#align ideal.span_singleton_mul_left_unit Ideal.span_singleton_mul_left_unit
 
 theorem span_singleton_eq_top {x} : span ({x} : Set α) = ⊤ ↔ IsUnit x := by
   rw [isUnit_iff_dvd_one, ← span_singleton_le_span_singleton, span_singleton_one, eq_top_iff]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module deprecated.group
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Algebra.Hom.Units
 
 /-!
 # Unbundled monoid and group homomorphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is deprecated, and is no longer imported by anything in mathlib other than other
 deprecated files, and test files. You should not need to import it.

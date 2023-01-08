@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.equiv.local_equiv
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -348,15 +348,15 @@ protected theorem bijOn : BijOn e e.source e.target :=
   e.InvOn.BijOn e.MapsTo e.symm_maps_to
 #align local_equiv.bij_on LocalEquiv.bijOn
 
-/- warning: local_equiv.surj_on -> LocalEquiv.surj_on is a dubious translation:
+/- warning: local_equiv.surj_on -> LocalEquiv.surjOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (e : LocalEquiv.{u1, u2} α β), Set.SurjOn.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (fun (_x : LocalEquiv.{u1, u2} α β) => α -> β) (LocalEquiv.hasCoeToFun.{u1, u2} α β) e) (LocalEquiv.source.{u1, u2} α β e) (LocalEquiv.target.{u1, u2} α β e)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), Set.SurjOn.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e)
-Case conversion may be inaccurate. Consider using '#align local_equiv.surj_on LocalEquiv.surj_onₓ'. -/
-protected theorem surj_on : SurjOn e e.source e.target :=
+Case conversion may be inaccurate. Consider using '#align local_equiv.surj_on LocalEquiv.surjOnₓ'. -/
+protected theorem surjOn : SurjOn e e.source e.target :=
   e.BijOn.SurjOn
-#align local_equiv.surj_on LocalEquiv.surj_on
+#align local_equiv.surj_on LocalEquiv.surjOn
 
 #print Equiv.toLocalEquiv /-
 /-- Associating a local_equiv to an equiv-/
@@ -685,25 +685,25 @@ theorem leftInvOn_piecewise {e' : LocalEquiv α β} [∀ i, Decidable (i ∈ s)]
       e'.left_inv he]
 #align local_equiv.is_image.left_inv_on_piecewise LocalEquiv.IsImage.leftInvOn_piecewise
 
-/- warning: local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on -> LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eq_on is a dubious translation:
+/- warning: local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on -> LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eqOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {e : LocalEquiv.{u1, u2} α β} {s : Set.{u1} α} {t : Set.{u2} β} {e' : LocalEquiv.{u1, u2} α β}, (LocalEquiv.IsImage.{u1, u2} α β e s t) -> (LocalEquiv.IsImage.{u1, u2} α β e' s t) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) s) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e') s)) -> (Set.EqOn.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (fun (_x : LocalEquiv.{u1, u2} α β) => α -> β) (LocalEquiv.hasCoeToFun.{u1, u2} α β) e) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (fun (_x : LocalEquiv.{u1, u2} α β) => α -> β) (LocalEquiv.hasCoeToFun.{u1, u2} α β) e') (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) s)) -> (Eq.{succ u2} (Set.{u2} β) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (LocalEquiv.target.{u1, u2} α β e) t) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (LocalEquiv.target.{u1, u2} α β e') t))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β} {e' : LocalEquiv.{u2, u1} α β}, (LocalEquiv.IsImage.{u2, u1} α β e s t) -> (LocalEquiv.IsImage.{u2, u1} α β e' s t) -> (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e') s)) -> (Set.EqOn.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.toFun.{u2, u1} α β e') (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s)) -> (Eq.{succ u1} (Set.{u1} β) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (LocalEquiv.target.{u2, u1} α β e) t) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (LocalEquiv.target.{u2, u1} α β e') t))
-Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eq_onₓ'. -/
-theorem inter_eq_of_inter_eq_of_eq_on {e' : LocalEquiv α β} (h : e.IsImage s t)
-    (h' : e'.IsImage s t) (hs : e.source ∩ s = e'.source ∩ s) (Heq : EqOn e e' (e.source ∩ s)) :
+Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eqOnₓ'. -/
+theorem inter_eq_of_inter_eq_of_eqOn {e' : LocalEquiv α β} (h : e.IsImage s t) (h' : e'.IsImage s t)
+    (hs : e.source ∩ s = e'.source ∩ s) (Heq : EqOn e e' (e.source ∩ s)) :
     e.target ∩ t = e'.target ∩ t := by rw [← h.image_eq, ← h'.image_eq, ← hs, Heq.image_eq]
 #align
-  local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eq_on
+  local_equiv.is_image.inter_eq_of_inter_eq_of_eq_on LocalEquiv.IsImage.inter_eq_of_inter_eq_of_eqOn
 
-/- warning: local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on -> LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eq_on is a dubious translation:
+/- warning: local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on -> LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {e : LocalEquiv.{u1, u2} α β} {s : Set.{u1} α} {t : Set.{u2} β} {e' : LocalEquiv.{u1, u2} α β}, (LocalEquiv.IsImage.{u1, u2} α β e s t) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) s) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e') s)) -> (Set.EqOn.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (fun (_x : LocalEquiv.{u1, u2} α β) => α -> β) (LocalEquiv.hasCoeToFun.{u1, u2} α β) e) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (fun (_x : LocalEquiv.{u1, u2} α β) => α -> β) (LocalEquiv.hasCoeToFun.{u1, u2} α β) e') (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (LocalEquiv.source.{u1, u2} α β e) s)) -> (Set.EqOn.{u2, u1} β α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} β α) (fun (_x : LocalEquiv.{u2, u1} β α) => β -> α) (LocalEquiv.hasCoeToFun.{u2, u1} β α) (LocalEquiv.symm.{u1, u2} α β e)) (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} β α) (fun (_x : LocalEquiv.{u2, u1} β α) => β -> α) (LocalEquiv.hasCoeToFun.{u2, u1} β α) (LocalEquiv.symm.{u1, u2} α β e')) (Inter.inter.{u2} (Set.{u2} β) (Set.hasInter.{u2} β) (LocalEquiv.target.{u1, u2} α β e) t))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β} {e' : LocalEquiv.{u2, u1} α β}, (LocalEquiv.IsImage.{u2, u1} α β e s t) -> (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e') s)) -> (Set.EqOn.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.toFun.{u2, u1} α β e') (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet_1.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s)) -> (Set.EqOn.{u1, u2} β α (LocalEquiv.toFun.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e)) (LocalEquiv.toFun.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e')) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet_1.{u1} β) (LocalEquiv.target.{u2, u1} α β e) t))
-Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eq_onₓ'. -/
-theorem symm_eq_on_of_inter_eq_of_eq_on {e' : LocalEquiv α β} (h : e.IsImage s t)
+Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOnₓ'. -/
+theorem symm_eq_on_of_inter_eq_of_eqOn {e' : LocalEquiv α β} (h : e.IsImage s t)
     (hs : e.source ∩ s = e'.source ∩ s) (Heq : EqOn e e' (e.source ∩ s)) :
     EqOn e.symm e'.symm (e.target ∩ t) :=
   by
@@ -712,7 +712,7 @@ theorem symm_eq_on_of_inter_eq_of_eq_on {e' : LocalEquiv α β} (h : e.IsImage s
   have hx' := hx; rw [hs] at hx'
   rw [e.left_inv hx.1, Heq hx, e'.left_inv hx'.1]
 #align
-  local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eq_on
+  local_equiv.is_image.symm_eq_on_of_inter_eq_of_eq_on LocalEquiv.IsImage.symm_eq_on_of_inter_eq_of_eqOn
 
 end IsImage
 
@@ -1321,16 +1321,16 @@ def Equiv.transLocalEquiv (e : α ≃ β) : LocalEquiv α γ :=
 #align equiv.trans_local_equiv Equiv.transLocalEquiv
 -/
 
-/- warning: equiv.trans_local_equiv_eq_trans -> Equiv.trans_localEquiv_eq_trans is a dubious translation:
+/- warning: equiv.trans_local_equiv_eq_trans -> Equiv.transLocalEquiv_eq_trans is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (e' : LocalEquiv.{u2, u3} β γ) (e : Equiv.{succ u1, succ u2} α β), Eq.{max (succ u1) (succ u3)} (LocalEquiv.{u1, u3} α γ) (Equiv.transLocalEquiv.{u1, u2, u3} α β γ e' e) (LocalEquiv.trans.{u1, u2, u3} α β γ (Equiv.toLocalEquiv.{u1, u2} α β e) e')
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (e' : LocalEquiv.{u2, u1} β γ) (e : Equiv.{succ u3, succ u2} α β), Eq.{max (succ u3) (succ u1)} (LocalEquiv.{u3, u1} α γ) (Equiv.transLocalEquiv.{u3, u2, u1} α β γ e' e) (LocalEquiv.trans.{u3, u2, u1} α β γ (Equiv.toLocalEquiv.{u3, u2} α β e) e')
-Case conversion may be inaccurate. Consider using '#align equiv.trans_local_equiv_eq_trans Equiv.trans_localEquiv_eq_transₓ'. -/
-theorem Equiv.trans_localEquiv_eq_trans (e : α ≃ β) :
+Case conversion may be inaccurate. Consider using '#align equiv.trans_local_equiv_eq_trans Equiv.transLocalEquiv_eq_transₓ'. -/
+theorem Equiv.transLocalEquiv_eq_trans (e : α ≃ β) :
     e.transLocalEquiv e' = e.toLocalEquiv.trans e' :=
   copy_eq _ _ _ _ _ _ _ _ _
-#align equiv.trans_local_equiv_eq_trans Equiv.trans_localEquiv_eq_trans
+#align equiv.trans_local_equiv_eq_trans Equiv.transLocalEquiv_eq_trans
 
 #print LocalEquiv.EqOnSource /-
 /-- `eq_on_source e e'` means that `e` and `e'` have the same source, and coincide there. Then `e`
@@ -1682,20 +1682,20 @@ def disjointUnion (e e' : LocalEquiv α β) (hs : Disjoint e.source e'.source)
     _ rfl _ rfl (e.source ∪ e'.source) (ite_left _ _) (e.target ∪ e'.target) (ite_left _ _)
 #align local_equiv.disjoint_union LocalEquiv.disjointUnion
 
-/- warning: local_equiv.disjoint_union_eq_piecewise -> LocalEquiv.disjoint_union_eq_piecewise is a dubious translation:
+/- warning: local_equiv.disjoint_union_eq_piecewise -> LocalEquiv.disjointUnion_eq_piecewise is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} (e : LocalEquiv.{u1, u2} α β) (e' : LocalEquiv.{u1, u2} α β) (hs : Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (LocalEquiv.source.{u1, u2} α β e) (LocalEquiv.source.{u1, u2} α β e')) (ht : Disjoint.{u2} (Set.{u2} β) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (Lattice.toSemilatticeInf.{u2} (Set.{u2} β) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} β) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β))) (LocalEquiv.target.{u1, u2} α β e) (LocalEquiv.target.{u1, u2} α β e')) [_inst_1 : forall (x : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (LocalEquiv.source.{u1, u2} α β e))] [_inst_2 : forall (y : β), Decidable (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) y (LocalEquiv.target.{u1, u2} α β e))], Eq.{max (succ u1) (succ u2)} (LocalEquiv.{u1, u2} α β) (LocalEquiv.disjointUnion.{u1, u2} α β e e' hs ht (fun (x : α) => _inst_1 x) (fun (y : β) => _inst_2 y)) (LocalEquiv.piecewise.{u1, u2} α β e e' (LocalEquiv.source.{u1, u2} α β e) (LocalEquiv.target.{u1, u2} α β e) (fun (x : α) => _inst_1 x) (fun (y : β) => _inst_2 y) (LocalEquiv.isImage_source_target.{u1, u2} α β e) (LocalEquiv.isImage_source_target_of_disjoint.{u1, u2} α β e' e (Disjoint.symm.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (LocalEquiv.source.{u1, u2} α β e) (LocalEquiv.source.{u1, u2} α β e') hs) (Disjoint.symm.{u2} (Set.{u2} β) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (Lattice.toSemilatticeInf.{u2} (Set.{u2} β) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} β) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} β) (Set.booleanAlgebra.{u2} β))) (LocalEquiv.target.{u1, u2} α β e) (LocalEquiv.target.{u1, u2} α β e') ht)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β) (e' : LocalEquiv.{u2, u1} α β) (hs : Disjoint.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e')) (ht : Disjoint.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} β) (Preorder.toLE.{u1} (Set.{u1} β) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))) (LocalEquiv.target.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e')) [_inst_1 : forall (x : α), Decidable (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (LocalEquiv.source.{u2, u1} α β e))] [_inst_2 : forall (y : β), Decidable (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) y (LocalEquiv.target.{u2, u1} α β e))], Eq.{max (succ u2) (succ u1)} (LocalEquiv.{u2, u1} α β) (LocalEquiv.disjointUnion.{u2, u1} α β e e' hs ht (fun (x : α) => _inst_1 x) (fun (y : β) => _inst_2 y)) (LocalEquiv.piecewise.{u2, u1} α β e e' (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e) (fun (x : α) => _inst_1 x) (fun (y : β) => _inst_2 y) (LocalEquiv.isImage_source_target.{u1, u2} α β e) (LocalEquiv.isImage_source_target_of_disjoint.{u1, u2} α β e' e (Disjoint.symm.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeInf.{u2} (Set.{u2} α) (GeneralizedCoheytingAlgebra.toLattice.{u2} (Set.{u2} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (Set.{u2} α) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (Set.{u2} α) (BooleanAlgebra.toBiheytingAlgebra.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))))))))) (BooleanAlgebra.toBoundedOrder.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α))) (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e') hs) (Disjoint.symm.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} β) (Preorder.toLE.{u1} (Set.{u1} β) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (Lattice.toSemilatticeInf.{u1} (Set.{u1} β) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} β) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} β) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β))) (LocalEquiv.target.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e') ht)))
-Case conversion may be inaccurate. Consider using '#align local_equiv.disjoint_union_eq_piecewise LocalEquiv.disjoint_union_eq_piecewiseₓ'. -/
-theorem disjoint_union_eq_piecewise (e e' : LocalEquiv α β) (hs : Disjoint e.source e'.source)
+Case conversion may be inaccurate. Consider using '#align local_equiv.disjoint_union_eq_piecewise LocalEquiv.disjointUnion_eq_piecewiseₓ'. -/
+theorem disjointUnion_eq_piecewise (e e' : LocalEquiv α β) (hs : Disjoint e.source e'.source)
     (ht : Disjoint e.target e'.target) [∀ x, Decidable (x ∈ e.source)]
     [∀ y, Decidable (y ∈ e.target)] :
     e.disjointUnion e' hs ht =
       e.piecewise e' e.source e.target e.is_image_source_target
         (e'.is_image_source_target_of_disjoint _ hs.symm ht.symm) :=
   copy_eq _ _ _ _ _ _ _ _ _
-#align local_equiv.disjoint_union_eq_piecewise LocalEquiv.disjoint_union_eq_piecewise
+#align local_equiv.disjoint_union_eq_piecewise LocalEquiv.disjointUnion_eq_piecewise
 
 section Pi
 

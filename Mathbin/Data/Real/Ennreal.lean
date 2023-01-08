@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1659,6 +1659,18 @@ theorem mul_inv {a b : ℝ≥0∞} (ha : a ≠ 0 ∨ b ≠ ∞) (hb : a ≠ ∞ 
     Ennreal.coe_mul, mul_inv_rev, mul_comm]
   simp [h'a, h'b]
 #align ennreal.mul_inv Ennreal.mul_inv
+
+protected theorem mul_div_mul_left (a b : ℝ≥0∞) (hc : c ≠ 0) (hc' : c ≠ ⊤) :
+    c * a / (c * b) = a / b := by
+  rw [div_eq_mul_inv, div_eq_mul_inv, mul_inv (Or.inl hc) (Or.inl hc'), mul_mul_mul_comm,
+    Ennreal.mul_inv_cancel hc hc', one_mul]
+#align ennreal.mul_div_mul_left Ennreal.mul_div_mul_left
+
+protected theorem mul_div_mul_right (a b : ℝ≥0∞) (hc : c ≠ 0) (hc' : c ≠ ⊤) :
+    a * c / (b * c) = a / b := by
+  rw [div_eq_mul_inv, div_eq_mul_inv, mul_inv (Or.inr hc') (Or.inr hc), mul_mul_mul_comm,
+    Ennreal.mul_inv_cancel hc hc', mul_one]
+#align ennreal.mul_div_mul_right Ennreal.mul_div_mul_right
 
 protected theorem sub_div (h : 0 < b → b < a → c ≠ 0) : (a - b) / c = a / c - b / c :=
   by

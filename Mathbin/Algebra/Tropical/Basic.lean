@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.basic
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,16 +123,16 @@ theorem untrop_trop (x : R) : untrop (trop x) = x :=
 #align tropical.untrop_trop Tropical.untrop_trop
 -/
 
-#print Tropical.left_inverse_trop /-
-theorem left_inverse_trop : Function.LeftInverse (trop : R → Tropical R) untrop :=
+#print Tropical.leftInverse_trop /-
+theorem leftInverse_trop : Function.LeftInverse (trop : R → Tropical R) untrop :=
   trop_untrop
-#align tropical.left_inverse_trop Tropical.left_inverse_trop
+#align tropical.left_inverse_trop Tropical.leftInverse_trop
 -/
 
-#print Tropical.right_inverse_trop /-
-theorem right_inverse_trop : Function.RightInverse (trop : R → Tropical R) untrop :=
+#print Tropical.rightInverse_trop /-
+theorem rightInverse_trop : Function.RightInverse (trop : R → Tropical R) untrop :=
   trop_untrop
-#align tropical.right_inverse_trop Tropical.right_inverse_trop
+#align tropical.right_inverse_trop Tropical.rightInverse_trop
 -/
 
 #print Tropical.tropEquiv /-
@@ -221,11 +221,11 @@ theorem untrop_le_iff [LE R] {x y : Tropical R} : untrop x ≤ untrop y ↔ x �
 #align tropical.untrop_le_iff Tropical.untrop_le_iff
 -/
 
-#print Tropical.decidableLe /-
-instance decidableLe [LE R] [DecidableRel ((· ≤ ·) : R → R → Prop)] :
+#print Tropical.decidableLE /-
+instance decidableLE [LE R] [DecidableRel ((· ≤ ·) : R → R → Prop)] :
     DecidableRel ((· ≤ ·) : Tropical R → Tropical R → Prop) := fun x y =>
   ‹DecidableRel (· ≤ ·)› (untrop x) (untrop y)
-#align tropical.decidable_le Tropical.decidableLe
+#align tropical.decidable_le Tropical.decidableLE
 -/
 
 instance [LT R] : LT (Tropical R) where lt x y := untrop x < untrop y
@@ -237,11 +237,11 @@ theorem untrop_lt_iff [LT R] {x y : Tropical R} : untrop x < untrop y ↔ x < y 
 #align tropical.untrop_lt_iff Tropical.untrop_lt_iff
 -/
 
-#print Tropical.decidableLt /-
-instance decidableLt [LT R] [DecidableRel ((· < ·) : R → R → Prop)] :
+#print Tropical.decidableLT /-
+instance decidableLT [LT R] [DecidableRel ((· < ·) : R → R → Prop)] :
     DecidableRel ((· < ·) : Tropical R → Tropical R → Prop) := fun x y =>
   ‹DecidableRel (· < ·)› (untrop x) (untrop y)
-#align tropical.decidable_lt Tropical.decidableLt
+#align tropical.decidable_lt Tropical.decidableLT
 -/
 
 instance [Preorder R] : Preorder (Tropical R) :=
@@ -257,27 +257,27 @@ def tropOrderIso [Preorder R] : R ≃o Tropical R :=
 #align tropical.trop_order_iso Tropical.tropOrderIso
 -/
 
-/- warning: tropical.trop_order_iso_coe_fn -> Tropical.trop_order_iso_coe_fn is a dubious translation:
+/- warning: tropical.trop_order_iso_coe_fn -> Tropical.tropOrderIso_coe_fn is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} ((fun (_x : RelIso.{u1, u1} R (Tropical.{u1} R) (LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1)) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1)))) => R -> (Tropical.{u1} R)) (Tropical.tropOrderIso.{u1} R _inst_1)) (coeFn.{succ u1, succ u1} (OrderIso.{u1, u1} R (Tropical.{u1} R) (Preorder.toLE.{u1} R _inst_1) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1))) (fun (_x : RelIso.{u1, u1} R (Tropical.{u1} R) (LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1)) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1)))) => R -> (Tropical.{u1} R)) (RelIso.hasCoeToFun.{u1, u1} R (Tropical.{u1} R) (LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1)) (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1)))) (Tropical.tropOrderIso.{u1} R _inst_1)) (Tropical.trop.{u1} R)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} (forall (a : R), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : R) => Tropical.{u1} R) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} R (Tropical.{u1} R)) R (fun (_x : R) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : R) => Tropical.{u1} R) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} R (Tropical.{u1} R)) R (Tropical.{u1} R) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} R (Tropical.{u1} R))) (RelEmbedding.toEmbedding.{u1, u1} R (Tropical.{u1} R) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u1, u1} R (Tropical.{u1} R) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (Tropical.tropOrderIso.{u1} R _inst_1)))) (Tropical.trop.{u1} R)
-Case conversion may be inaccurate. Consider using '#align tropical.trop_order_iso_coe_fn Tropical.trop_order_iso_coe_fnₓ'. -/
+Case conversion may be inaccurate. Consider using '#align tropical.trop_order_iso_coe_fn Tropical.tropOrderIso_coe_fnₓ'. -/
 @[simp]
-theorem trop_order_iso_coe_fn [Preorder R] : (tropOrderIso : R → Tropical R) = trop :=
+theorem tropOrderIso_coe_fn [Preorder R] : (tropOrderIso : R → Tropical R) = trop :=
   rfl
-#align tropical.trop_order_iso_coe_fn Tropical.trop_order_iso_coe_fn
+#align tropical.trop_order_iso_coe_fn Tropical.tropOrderIso_coe_fn
 
-/- warning: tropical.trop_order_iso_symm_coe_fn -> Tropical.trop_order_iso_symm_coe_fn is a dubious translation:
+/- warning: tropical.trop_order_iso_symm_coe_fn -> Tropical.tropOrderIso_symm_coe_fn is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} ((fun (_x : RelIso.{u1, u1} (Tropical.{u1} R) R (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1))) (LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1))) => (Tropical.{u1} R) -> R) (OrderIso.symm.{u1, u1} R (Tropical.{u1} R) (Preorder.toLE.{u1} R _inst_1) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1)) (Tropical.tropOrderIso.{u1} R _inst_1))) (coeFn.{succ u1, succ u1} (OrderIso.{u1, u1} (Tropical.{u1} R) R (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1)) (Preorder.toLE.{u1} R _inst_1)) (fun (_x : RelIso.{u1, u1} (Tropical.{u1} R) R (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1))) (LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1))) => (Tropical.{u1} R) -> R) (RelIso.hasCoeToFun.{u1, u1} (Tropical.{u1} R) R (LE.le.{u1} (Tropical.{u1} R) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1))) (LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1))) (OrderIso.symm.{u1, u1} R (Tropical.{u1} R) (Preorder.toLE.{u1} R _inst_1) (Tropical.hasLe.{u1} R (Preorder.toLE.{u1} R _inst_1)) (Tropical.tropOrderIso.{u1} R _inst_1))) (Tropical.untrop.{u1} R)
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Preorder.{u1} R], Eq.{succ u1} (forall (a : Tropical.{u1} R), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Tropical.{u1} R) => R) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (Tropical.{u1} R) R) (Tropical.{u1} R) (fun (_x : Tropical.{u1} R) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Tropical.{u1} R) => R) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (Tropical.{u1} R) R) (Tropical.{u1} R) R (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (Tropical.{u1} R) R)) (RelEmbedding.toEmbedding.{u1, u1} (Tropical.{u1} R) R (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (RelIso.toRelEmbedding.{u1, u1} (Tropical.{u1} R) R (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1411 : Tropical.{u1} R) (x._@.Mathlib.Order.Hom.Basic._hyg.1413 : Tropical.{u1} R) => LE.le.{u1} (Tropical.{u1} R) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1411 x._@.Mathlib.Order.Hom.Basic._hyg.1413) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1426 : R) (x._@.Mathlib.Order.Hom.Basic._hyg.1428 : R) => LE.le.{u1} R (Preorder.toLE.{u1} R _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1426 x._@.Mathlib.Order.Hom.Basic._hyg.1428) (OrderIso.symm.{u1, u1} R (Tropical.{u1} R) (Preorder.toLE.{u1} R _inst_1) (Tropical.instLETropical.{u1} R (Preorder.toLE.{u1} R _inst_1)) (Tropical.tropOrderIso.{u1} R _inst_1))))) (Tropical.untrop.{u1} R)
-Case conversion may be inaccurate. Consider using '#align tropical.trop_order_iso_symm_coe_fn Tropical.trop_order_iso_symm_coe_fnₓ'. -/
+Case conversion may be inaccurate. Consider using '#align tropical.trop_order_iso_symm_coe_fn Tropical.tropOrderIso_symm_coe_fnₓ'. -/
 @[simp]
-theorem trop_order_iso_symm_coe_fn [Preorder R] : (tropOrderIso.symm : Tropical R → R) = untrop :=
+theorem tropOrderIso_symm_coe_fn [Preorder R] : (tropOrderIso.symm : Tropical R → R) = untrop :=
   rfl
-#align tropical.trop_order_iso_symm_coe_fn Tropical.trop_order_iso_symm_coe_fn
+#align tropical.trop_order_iso_symm_coe_fn Tropical.tropOrderIso_symm_coe_fn
 
 /- warning: tropical.trop_monotone -> Tropical.trop_monotone is a dubious translation:
 lean 3 declaration is
@@ -407,8 +407,8 @@ instance : LinearOrder (Tropical R) :=
   {
     Tropical.partialOrder with
     le_total := fun a b => le_total (untrop a) (untrop b)
-    decidableLe := Tropical.decidableLe
-    decidableLt := Tropical.decidableLt
+    decidableLe := Tropical.decidableLE
+    decidableLt := Tropical.decidableLT
     DecidableEq := Tropical.decidableEq
     max := fun a b => trop (max (untrop a) (untrop b))
     max_def := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.sections
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.List.Forall2
 
 /-!
 # List sections
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves some stuff about `list.sections` (definition in `data.list.defs`). A section of a
 list of lists `[l₁, ..., lₙ]` is a list whose `i`-th element comes from the `i`-th list.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.extension.linear
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,10 +28,10 @@ open Set Classical
 
 open Classical
 
-#print extend_partial_order /-
+#print extend_partialOrder /-
 /-- Any partial order can be extended to a linear order.
 -/
-theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
+theorem extend_partialOrder {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
     ∃ (s : α → α → Prop)(_ : IsLinearOrder α s), r ≤ s :=
   by
   let S := { s | IsPartialOrder α s }
@@ -81,7 +81,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
       · exact (h.2 (trans ya (trans ab bx))).elim
       · exact (h.2 (trans yb (trans ba ax))).elim
       · exact (h.2 (trans yb bx)).elim
-#align extend_partial_order extend_partial_order
+#align extend_partial_order extend_partialOrder
 -/
 
 #print LinearExtension /-
@@ -93,11 +93,11 @@ def LinearExtension (α : Type u) : Type u :=
 
 noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExtension α)
     where
-  le := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some
-  le_refl := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.1.1
-  le_trans := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.2.1
-  le_antisymm := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.1.2.1
-  le_total := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some.2.1
+  le := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some
+  le_refl := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.1.1
+  le_trans := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.2.1
+  le_antisymm := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.1.2.1
+  le_total := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.2.1
   decidableLe := Classical.decRel _
 
 /- warning: to_linear_extension -> toLinearExtension is a dubious translation:
@@ -111,7 +111,7 @@ def toLinearExtension {α : Type u} [PartialOrder α] :
     ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop)
     where
   toFun x := x
-  map_rel' a b := (extend_partial_order ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
+  map_rel' a b := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
 #align to_linear_extension toLinearExtension
 
 instance {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=

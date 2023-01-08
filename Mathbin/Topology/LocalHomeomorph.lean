@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.local_homeomorph
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -957,7 +957,7 @@ def Homeomorph.transLocalHomeomorph (e : α ≃ₜ β) : LocalHomeomorph α γ
 
 theorem Homeomorph.trans_local_homeomorph_eq_trans (e : α ≃ₜ β) :
     e.transLocalHomeomorph e' = e.toLocalHomeomorph.trans e' :=
-  to_local_equiv_injective <| Equiv.trans_localEquiv_eq_trans _ _
+  to_local_equiv_injective <| Equiv.transLocalEquiv_eq_trans _ _
 #align homeomorph.trans_local_homeomorph_eq_trans Homeomorph.trans_local_homeomorph_eq_trans
 
 /-- `eq_on_source e e'` means that `e` and `e'` have the same source, and coincide there. They
@@ -1161,7 +1161,7 @@ def disjointUnion (e e' : LocalHomeomorph α β) [∀ x, Decidable (x ∈ e.sour
           rw [e.open_source.inter_frontier_eq]
           exact eq_on_empty _ _)).replaceEquiv
     (e.toLocalEquiv.disjointUnion e'.toLocalEquiv Hs Ht)
-    (LocalEquiv.disjoint_union_eq_piecewise _ _ _ _).symm
+    (LocalEquiv.disjointUnion_eq_piecewise _ _ _ _).symm
 #align local_homeomorph.disjoint_union LocalHomeomorph.disjointUnion
 
 end Piecewise

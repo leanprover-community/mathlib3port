@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl, Dami
 Yuyang Zhao
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.lemmas
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

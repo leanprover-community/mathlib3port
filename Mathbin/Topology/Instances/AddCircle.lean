@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,71 @@ noncomputable section
 
 open Set Function AddSubgroup TopologicalSpace
 
-variable {𝕜 : Type _} {B : Type _}
+open TopologicalSpace
+
+variable {𝕜 B : Type _}
+
+section Continuity
+
+variable [LinearOrderedAddCommGroup 𝕜] [Archimedean 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜]
+  (a : 𝕜) {p : 𝕜} (hp : 0 < p) (x : 𝕜)
+
+theorem continuous_right_to_Ico_mod : ContinuousWithinAt (toIcoMod a hp) (Ici x) x :=
+  by
+  intro s h
+  rw [Filter.mem_map, mem_nhds_within_iff_exists_mem_nhds_inter]
+  haveI : Nontrivial 𝕜 := ⟨⟨0, p, hp.ne⟩⟩
+  simp_rw [mem_nhds_iff_exists_Ioo_subset] at h⊢
+  obtain ⟨l, u, hxI, hIs⟩ := h
+  let d := toIcoDiv a hp x • p
+  have hd := to_Ico_mod_mem_Ico a hp x
+  simp_rw [subset_def, mem_inter_iff]
+  refine' ⟨_, ⟨l - d, min (a + p) u - d, _, fun x => id⟩, fun y => _⟩ <;>
+    simp_rw [← add_mem_Ioo_iff_left, mem_Ioo, lt_min_iff]
+  · exact ⟨hxI.1, hd.2, hxI.2⟩
+  · rintro ⟨h, h'⟩
+    apply hIs
+    rw [← to_Ico_mod_add_zsmul, (to_Ico_mod_eq_self _).2]
+    exacts[⟨h.1, h.2.2⟩, ⟨hd.1.trans (add_le_add_right h' _), h.2.1⟩]
+#align continuous_right_to_Ico_mod continuous_right_to_Ico_mod
+
+theorem continuous_left_to_Ioc_mod : ContinuousWithinAt (toIocMod a hp) (Iic x) x :=
+  by
+  rw [(funext fun y => Eq.trans (by rw [neg_neg]) <| to_Ioc_mod_neg _ _ _ :
+      toIocMod a hp = (fun x => p - x) ∘ toIcoMod (-a) hp ∘ Neg.neg)]
+  exact
+    (continuous_sub_left _).ContinuousAt.comp_continuous_within_at <|
+      ((continuous_right_to_Ico_mod _ _ _).comp continuous_neg.continuous_within_at) fun y =>
+        neg_le_neg
+#align continuous_left_to_Ioc_mod continuous_left_to_Ioc_mod
+
+variable {x} (hx : (x : 𝕜 ⧸ zmultiples p) ≠ a)
+
+theorem to_Ico_mod_eventually_eq_to_Ioc_mod : toIcoMod a hp =ᶠ[𝓝 x] toIocMod a hp :=
+  IsOpen.mem_nhds
+      (by
+        rw [Ico_eq_locus_Ioc_eq_Union_Ioo]
+        exact is_open_Union fun i => is_open_Ioo) <|
+    (mem_Ioo_mod_iff_to_Ico_mod_eq_to_Ioc_mod hp).1 ((mem_Ioo_mod_iff_eq_mod_zmultiples hp).2 hx)
+#align to_Ico_mod_eventually_eq_to_Ioc_mod to_Ico_mod_eventually_eq_to_Ioc_mod
+
+theorem continuous_at_to_Ico_mod : ContinuousAt (toIcoMod a hp) x :=
+  let h := to_Ico_mod_eventually_eq_to_Ioc_mod a hp hx
+  continuous_at_iff_continuous_left_right.2 <|
+    ⟨(continuous_left_to_Ioc_mod a hp x).congr_of_eventually_eq (h.filter_mono nhds_within_le_nhds)
+        h.eq_of_nhds,
+      continuous_right_to_Ico_mod a hp x⟩
+#align continuous_at_to_Ico_mod continuous_at_to_Ico_mod
+
+theorem continuous_at_to_Ioc_mod : ContinuousAt (toIocMod a hp) x :=
+  let h := to_Ico_mod_eventually_eq_to_Ioc_mod a hp hx
+  continuous_at_iff_continuous_left_right.2 <|
+    ⟨continuous_left_to_Ioc_mod a hp x,
+      (continuous_right_to_Ico_mod a hp x).congr_of_eventually_eq
+        (h.symm.filter_mono nhds_within_le_nhds) h.symm.eq_of_nhds⟩
+#align continuous_at_to_Ioc_mod continuous_at_to_Ioc_mod
+
+end Continuity
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜 -/
 /-- The "additive circle": `𝕜 ⧸ (ℤ ∙ p)`. See also `circle` and `real.angle`. -/
@@ -130,15 +194,29 @@ include hp
 
 variable (a : 𝕜) [Archimedean 𝕜]
 
-/-- The natural equivalence between `add_circle p` and the half-open interval `[a, a + p)`. -/
+/-- The equivalence between `add_circle p` and the half-open interval `[a, a + p)`, whose inverse
+is the natural quotient map. -/
 def equivIco : AddCircle p ≃ Ico a (a + p) :=
   QuotientAddGroup.equivIcoMod a hp.out
 #align add_circle.equiv_Ico AddCircle.equivIco
 
-/-- Given a function on `[a, a + p)`, lift it to `add_circle p`. -/
+/-- The equivalence between `add_circle p` and the half-open interval `(a, a + p]`, whose inverse
+is the natural quotient map. -/
+def equivIoc : AddCircle p ≃ Ioc a (a + p) :=
+  QuotientAddGroup.equivIocMod a hp.out
+#align add_circle.equiv_Ioc AddCircle.equivIoc
+
+/-- Given a function on `𝕜`, return the unique function on `add_circle p` agreeing with `f` on
+`[a, a + p)`. -/
 def liftIco (f : 𝕜 → B) : AddCircle p → B :=
   restrict _ f ∘ AddCircle.equivIco p a
 #align add_circle.lift_Ico AddCircle.liftIco
+
+/-- Given a function on `𝕜`, return the unique function on `add_circle p` agreeing with `f` on
+`(a, a + p]`. -/
+def liftIoc (f : 𝕜 → B) : AddCircle p → B :=
+  restrict _ f ∘ AddCircle.equivIoc p a
+#align add_circle.lift_Ioc AddCircle.liftIoc
 
 variable {p a}
 
@@ -162,12 +240,49 @@ theorem lift_Ico_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ico a (a + p)
   rfl
 #align add_circle.lift_Ico_coe_apply AddCircle.lift_Ico_coe_apply
 
+theorem lift_Ioc_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ioc a (a + p)) : liftIoc p a f ↑x = f x :=
+  by
+  have : (equiv_Ioc p a) x = ⟨x, hx⟩ :=
+    by
+    rw [Equiv.apply_eq_iff_eq_symm_apply]
+    rfl
+  rw [lift_Ioc, comp_apply, this]
+  rfl
+#align add_circle.lift_Ioc_coe_apply AddCircle.lift_Ioc_coe_apply
+
 variable (p a)
+
+section Continuity
 
 @[continuity]
 theorem continuous_equiv_Ico_symm : Continuous (equivIco p a).symm :=
   continuous_quotient_mk.comp continuous_subtype_coe
 #align add_circle.continuous_equiv_Ico_symm AddCircle.continuous_equiv_Ico_symm
+
+@[continuity]
+theorem continuous_equiv_Ioc_symm : Continuous (equivIoc p a).symm :=
+  continuous_quotient_mk.comp continuous_subtype_coe
+#align add_circle.continuous_equiv_Ioc_symm AddCircle.continuous_equiv_Ioc_symm
+
+variable {x : AddCircle p} (hx : x ≠ a)
+
+include hx
+
+theorem continuous_at_equiv_Ico : ContinuousAt (equivIco p a) x :=
+  by
+  induction x using QuotientAddGroup.induction_on'
+  rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
+  apply ContinuousAt.cod_restrict; exact continuous_at_to_Ico_mod a hp.out hx
+#align add_circle.continuous_at_equiv_Ico AddCircle.continuous_at_equiv_Ico
+
+theorem continuous_at_equiv_Ioc : ContinuousAt (equivIoc p a) x :=
+  by
+  induction x using QuotientAddGroup.induction_on'
+  rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
+  apply ContinuousAt.cod_restrict; exact continuous_at_to_Ioc_mod a hp.out hx
+#align add_circle.continuous_at_equiv_Ioc AddCircle.continuous_at_equiv_Ioc
+
+end Continuity
 
 /-- The image of the closed-open interval `[a, a + p)` under the quotient map `𝕜 → add_circle p` is
 the entire space. -/
@@ -177,6 +292,15 @@ theorem coe_image_Ico_eq : (coe : 𝕜 → AddCircle p) '' Ico a (a + p) = univ 
   rw [image_eq_range]
   exact (equiv_Ico p a).symm.range_eq_univ
 #align add_circle.coe_image_Ico_eq AddCircle.coe_image_Ico_eq
+
+/-- The image of the closed-open interval `[a, a + p)` under the quotient map `𝕜 → add_circle p` is
+the entire space. -/
+@[simp]
+theorem coe_image_Ioc_eq : (coe : 𝕜 → AddCircle p) '' Ioc a (a + p) = univ :=
+  by
+  rw [image_eq_range]
+  exact (equiv_Ioc p a).symm.range_eq_univ
+#align add_circle.coe_image_Ioc_eq AddCircle.coe_image_Ioc_eq
 
 /-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
 entire space. -/
@@ -429,14 +553,12 @@ abbrev UnitAddCircle :=
 
 section IdentifyIccEnds
 
-/-! This section proves that for any `a`, the natural map from `[a, a + p] ⊂ ℝ` to `add_circle p`
+/-! This section proves that for any `a`, the natural map from `[a, a + p] ⊂ 𝕜` to `add_circle p`
 gives an identification of `add_circle p`, as a topological space, with the quotient of `[a, a + p]`
 by the equivalence relation identifying the endpoints. -/
 
 
 namespace AddCircle
-
-section LinearOrderedAddCommGroup
 
 variable [LinearOrderedAddCommGroup 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p a : 𝕜)
   [hp : Fact (0 < p)]
@@ -460,7 +582,7 @@ variable [Archimedean 𝕜]
 identifying the endpoints. -/
 def equivIccQuot : 𝕋 ≃ Quot (EndpointIdent p a)
     where
-  toFun x := Quot.mk _ <| Subtype.map id Ico_subset_Icc_self (equivIco _ _ x)
+  toFun x := Quot.mk _ <| inclusion Ico_subset_Icc_self (equivIco _ _ x)
   invFun x :=
     Quot.liftOn x coe <| by
       rintro _ _ ⟨_⟩
@@ -481,65 +603,78 @@ def equivIccQuot : 𝕋 ≃ Quot (EndpointIdent p a)
       apply congr_arg Subtype.val ((equiv_Ico p a).right_inv ⟨x, hx.1, hx.2.lt_of_ne h⟩)
 #align add_circle.equiv_Icc_quot AddCircle.equivIccQuot
 
-end LinearOrderedAddCommGroup
+theorem equiv_Icc_quot_comp_mk_eq_to_Ico_mod :
+    equivIccQuot p a ∘ Quotient.mk' = fun x =>
+      Quot.mk _ ⟨toIcoMod a hp.out x, Ico_subset_Icc_self <| to_Ico_mod_mem_Ico a _ x⟩ :=
+  rfl
+#align
+  add_circle.equiv_Icc_quot_comp_mk_eq_to_Ico_mod AddCircle.equiv_Icc_quot_comp_mk_eq_to_Ico_mod
 
-section Real
+theorem equiv_Icc_quot_comp_mk_eq_to_Ioc_mod :
+    equivIccQuot p a ∘ Quotient.mk' = fun x =>
+      Quot.mk _ ⟨toIocMod a hp.out x, Ioc_subset_Icc_self <| to_Ioc_mod_mem_Ioc a _ x⟩ :=
+  by
+  rw [equiv_Icc_quot_comp_mk_eq_to_Ico_mod]; funext
+  by_cases MemIooMod a p x
+  · simp_rw [(mem_Ioo_mod_iff_to_Ico_mod_eq_to_Ioc_mod hp.out).1 h]
+  · simp_rw [not_imp_comm.1 (mem_Ioo_mod_iff_to_Ico_mod_ne_left hp.out).2 h,
+      not_imp_comm.1 (mem_Ioo_mod_iff_to_Ioc_mod_ne_right hp.out).2 h]
+    exact Quot.sound endpoint_ident.mk
+#align
+  add_circle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod AddCircle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod
 
-variable {p a : ℝ} [hp : Fact (0 < p)]
-
-include hp
-
--- mathport name: expr𝕋
-local notation "𝕋" => AddCircle p
-
--- doesn't work if inlined in `homeo_of_equiv_compact_to_t2` -- why?
-private theorem continuous_equiv_Icc_quot_symm : Continuous (equivIccQuot p a).symm :=
-  continuous_quot_lift _ <| (AddCircle.continuous_mk' p).comp continuous_subtype_coe
-#align add_circle.continuous_equiv_Icc_quot_symm add_circle.continuous_equiv_Icc_quot_symm
-
-/-- The natural map from `[a, a + p] ⊂ ℝ` with endpoints identified to `ℝ / ℤ • p`, as a
+/-- The natural map from `[a, a + p] ⊂ 𝕜` with endpoints identified to `𝕜 / ℤ • p`, as a
 homeomorphism of topological spaces. -/
-def homeoIccQuot : 𝕋 ≃ₜ Quot (EndpointIdent p a) :=
-  (Continuous.homeoOfEquivCompactToT2 continuous_equiv_Icc_quot_symm).symm
+def homeoIccQuot : 𝕋 ≃ₜ Quot (EndpointIdent p a)
+    where
+  toEquiv := equivIccQuot p a
+  continuous_to_fun :=
+    by
+    simp_rw [quotient_map_quotient_mk.continuous_iff, continuous_iff_continuous_at,
+      continuous_at_iff_continuous_left_right]
+    intro x; constructor
+    on_goal 1 => erw [equiv_Icc_quot_comp_mk_eq_to_Ioc_mod]
+    on_goal 2 => erw [equiv_Icc_quot_comp_mk_eq_to_Ico_mod]
+    all_goals
+      apply continuous_quot_mk.continuous_at.comp_continuous_within_at
+      rw [inducing_coe.continuous_within_at_iff]
+    · apply continuous_left_to_Ioc_mod
+    · apply continuous_right_to_Ico_mod
+  continuous_inv_fun :=
+    continuous_quot_lift _ ((AddCircle.continuous_mk' p).comp continuous_subtype_coe)
 #align add_circle.homeo_Icc_quot AddCircle.homeoIccQuot
 
-/-! We now show that a continuous function on `[a, a + p]` satisfying `f a = f (a + p)` is
-the pullback of a continuous function on `unit_add_circle`. -/
+/-! We now show that a continuous function on `[a, a + p]` satisfying `f a = f (a + p)` is the
+pullback of a continuous function on `add_circle p`. -/
 
 
-theorem eq_of_end_ident {f : ℝ → B} (hf : f a = f (a + p)) (x y : Icc a (a + p)) :
-    EndpointIdent p a x y → f x = f y := by
-  rintro ⟨_⟩
-  exact hf
-#align add_circle.eq_of_end_ident AddCircle.eq_of_end_ident
+variable {p a}
 
-theorem lift_Ico_eq_lift_Icc {f : ℝ → B} (h : f a = f (a + p)) :
+theorem lift_Ico_eq_lift_Icc {f : 𝕜 → B} (h : f a = f (a + p)) :
     liftIco p a f =
-      (Quot.lift (restrict (Icc a <| a + p) f) <| eq_of_end_ident h) ∘ equivIccQuot p a :=
-  funext fun x => by rfl
+      Quot.lift (restrict (Icc a <| a + p) f)
+          (by
+            rintro _ _ ⟨_⟩
+            exact h) ∘
+        equivIccQuot p a :=
+  rfl
 #align add_circle.lift_Ico_eq_lift_Icc AddCircle.lift_Ico_eq_lift_Icc
 
-theorem lift_Ico_continuous [TopologicalSpace B] {f : ℝ → B} (hf : f a = f (a + p))
+theorem lift_Ico_continuous [TopologicalSpace B] {f : 𝕜 → B} (hf : f a = f (a + p))
     (hc : ContinuousOn f <| Icc a (a + p)) : Continuous (liftIco p a f) :=
   by
   rw [lift_Ico_eq_lift_Icc hf]
-  refine' Continuous.comp _ homeo_Icc_quot.continuous_to_fun
+  refine' Continuous.comp _ (homeo_Icc_quot p a).continuous_to_fun
   exact continuous_coinduced_dom.mpr (continuous_on_iff_continuous_restrict.mp hc)
 #align add_circle.lift_Ico_continuous AddCircle.lift_Ico_continuous
 
-end Real
-
 section ZeroBased
 
-variable {p : ℝ} [hp : Fact (0 < p)]
-
-include hp
-
-theorem lift_Ico_zero_coe_apply {f : ℝ → B} {x : ℝ} (hx : x ∈ Ico 0 p) : liftIco p 0 f ↑x = f x :=
+theorem lift_Ico_zero_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ico 0 p) : liftIco p 0 f ↑x = f x :=
   lift_Ico_coe_apply (by rwa [zero_add])
 #align add_circle.lift_Ico_zero_coe_apply AddCircle.lift_Ico_zero_coe_apply
 
-theorem lift_Ico_zero_continuous [TopologicalSpace B] {f : ℝ → B} (hf : f 0 = f p)
+theorem lift_Ico_zero_continuous [TopologicalSpace B] {f : 𝕜 → B} (hf : f 0 = f p)
     (hc : ContinuousOn f <| Icc 0 p) : Continuous (liftIco p 0 f) :=
   lift_Ico_continuous (by rwa [zero_add] : f 0 = f (0 + p)) (by rwa [zero_add])
 #align add_circle.lift_Ico_zero_continuous AddCircle.lift_Ico_zero_continuous

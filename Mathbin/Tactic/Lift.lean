@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.lift
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,15 +22,18 @@ lift, tactic
 -/
 
 
+#print CanLift /-
 /-- A class specifying that you can lift elements from `α` to `β` assuming `cond` is true.
   Used by the tactic `lift`. -/
 class CanLift (α β : Sort _) (coe : outParam <| β → α) (cond : outParam <| α → Prop) where
   prf : ∀ x : α, cond x → ∃ y : β, coe y = x
 #align can_lift CanLift
+-/
 
 instance : CanLift ℤ ℕ coe ((· ≤ ·) 0) :=
   ⟨fun n hn => ⟨n.natAbs, Int.natAbs_of_nonneg hn⟩⟩
 
+#print Pi.canLift /-
 /-- Enable automatic handling of pi types in `can_lift`. -/
 instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i → α i) (P : ∀ i, α i → Prop)
     [∀ i : ι, CanLift (α i) (β i) (coe i) (P i)] :
@@ -39,7 +42,14 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
     ⟨fun i => Classical.choose (CanLift.prf (f i) (hf i)),
       funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
 #align pi.can_lift Pi.canLift
+-/
 
+/- warning: subtype.exists_pi_extension -> Subtype.exists_pi_extension is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} {α : ι -> Sort.{u2}} [ne : forall (i : ι), Nonempty.{u2} (α i)] {p : ι -> Prop} (f : forall (i : Subtype.{u1} ι p), α ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} ι p) ι (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} ι p) ι (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeBase.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeSubtype.{u1} ι (fun (x : ι) => p x))))) i)), Exists.{imax u1 u2} (forall (i : ι), α i) (fun (g : forall (i : ι), α i) => Eq.{imax (max 1 u1) u2} (forall (i : Subtype.{u1} ι p), α ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} ι p) ι (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} ι p) ι (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeBase.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeSubtype.{u1} ι (fun (x : ι) => p x))))) i)) (fun (i : Subtype.{u1} ι p) => g ((fun (a : Sort.{max 1 u1}) (b : Sort.{u1}) [self : HasLiftT.{max 1 u1, u1} a b] => self.0) (Subtype.{u1} ι p) ι (HasLiftT.mk.{max 1 u1, u1} (Subtype.{u1} ι p) ι (CoeTCₓ.coe.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeBase.{max 1 u1, u1} (Subtype.{u1} ι p) ι (coeSubtype.{u1} ι (fun (x : ι) => p x))))) i)) f)
+but is expected to have type
+  forall {ι : Sort.{u2}} {α : ι -> Sort.{u1}} [ne : forall (i : ι), Nonempty.{u1} (α i)] {p : ι -> Prop} (f : forall (i : Subtype.{u2} ι p), α (Subtype.val.{u2} ι p i)), Exists.{imax u2 u1} (forall (i : ι), α i) (fun (g : forall (i : ι), α i) => Eq.{imax (max 1 u2) u1} (forall (i : Subtype.{u2} ι p), α (Subtype.val.{u2} ι p i)) (fun (i : Subtype.{u2} ι p) => g (Subtype.val.{u2} ι p i)) f)
+Case conversion may be inaccurate. Consider using '#align subtype.exists_pi_extension Subtype.exists_pi_extensionₓ'. -/
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)]
     {p : ι → Prop} (f : ∀ i : Subtype p, α i) :
     ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
@@ -49,19 +59,25 @@ theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀
     exact dif_pos hi
 #align subtype.exists_pi_extension Subtype.exists_pi_extension
 
+#print PiSubtype.canLift /-
 instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
     CanLift (∀ i : Subtype p, α i) (∀ i, α i) (fun f i => f i) fun _ => True
     where prf f _ := Subtype.exists_pi_extension f
 #align pi_subtype.can_lift PiSubtype.canLift
+-/
 
+#print PiSubtype.canLift' /-
 instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : ι → Prop) :
     CanLift (Subtype p → α) (ι → α) (fun f i => f i) fun _ => True :=
   PiSubtype.canLift ι (fun _ => α) p
 #align pi_subtype.can_lift' PiSubtype.canLift'
+-/
 
+#print Subtype.canLift /-
 instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } coe p
     where prf a ha := ⟨⟨a, ha⟩, rfl⟩
 #align subtype.can_lift Subtype.canLift
+-/
 
 open Tactic
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -463,6 +463,11 @@ theorem start_mem_support {u v : V} (p : G.Walk u v) : u ∈ p.support := by cas
 @[simp]
 theorem end_mem_support {u v : V} (p : G.Walk u v) : v ∈ p.support := by induction p <;> simp [*]
 #align simple_graph.walk.end_mem_support SimpleGraph.Walk.end_mem_support
+
+@[simp]
+theorem support_nonempty {u v : V} (p : G.Walk u v) : { w | w ∈ p.support }.Nonempty :=
+  ⟨u, by simp⟩
+#align simple_graph.walk.support_nonempty SimpleGraph.Walk.support_nonempty
 
 theorem mem_support_iff {u v w : V} (p : G.Walk u v) : w ∈ p.support ↔ w = u ∨ w ∈ p.support.tail :=
   by cases p <;> simp
@@ -1972,6 +1977,90 @@ theorem Connected.set_univ_walk_nonempty (hconn : G.Connected) (u v : V) :
     (Set.univ : Set (G.Walk u v)).Nonempty :=
   hconn.Preconnected.set_univ_walk_nonempty u v
 #align simple_graph.connected.set_univ_walk_nonempty SimpleGraph.Connected.set_univ_walk_nonempty
+
+/-! ### Walks as subgraphs -/
+
+
+namespace Walk
+
+variable {G G'} {u v w : V}
+
+/-- The subgraph consisting of the vertices and edges of the walk. -/
+@[simp]
+protected def toSubgraph : ∀ {u v : V}, G.Walk u v → G.Subgraph
+  | u, _, nil => G.singletonSubgraph u
+  | _, _, cons h p => G.subgraphOfAdj h ⊔ p.toSubgraph
+#align simple_graph.walk.to_subgraph SimpleGraph.Walk.toSubgraph
+
+theorem to_subgraph_cons_nil_eq_subgraph_of_adj (h : G.Adj u v) :
+    (cons h nil).toSubgraph = G.subgraphOfAdj h := by simp
+#align
+  simple_graph.walk.to_subgraph_cons_nil_eq_subgraph_of_adj SimpleGraph.Walk.to_subgraph_cons_nil_eq_subgraph_of_adj
+
+theorem mem_verts_to_subgraph (p : G.Walk u v) : w ∈ p.toSubgraph.verts ↔ w ∈ p.support :=
+  by
+  induction' p with _ x y z h p' ih
+  · simp
+  · have : w = y ∨ w ∈ p'.support ↔ w ∈ p'.support :=
+      ⟨by rintro (rfl | h) <;> simp [*], by simp (config := { contextual := true })⟩
+    simp [ih, or_assoc', this]
+#align simple_graph.walk.mem_verts_to_subgraph SimpleGraph.Walk.mem_verts_to_subgraph
+
+@[simp]
+theorem verts_to_subgraph (p : G.Walk u v) : p.toSubgraph.verts = { w | w ∈ p.support } :=
+  Set.ext fun _ => p.mem_verts_to_subgraph
+#align simple_graph.walk.verts_to_subgraph SimpleGraph.Walk.verts_to_subgraph
+
+theorem mem_edges_to_subgraph (p : G.Walk u v) {e : Sym2 V} :
+    e ∈ p.toSubgraph.edgeSet ↔ e ∈ p.edges := by induction p <;> simp [*]
+#align simple_graph.walk.mem_edges_to_subgraph SimpleGraph.Walk.mem_edges_to_subgraph
+
+@[simp]
+theorem edge_set_to_subgraph (p : G.Walk u v) : p.toSubgraph.edgeSet = { e | e ∈ p.edges } :=
+  Set.ext fun _ => p.mem_edges_to_subgraph
+#align simple_graph.walk.edge_set_to_subgraph SimpleGraph.Walk.edge_set_to_subgraph
+
+@[simp]
+theorem to_subgraph_append (p : G.Walk u v) (q : G.Walk v w) :
+    (p.append q).toSubgraph = p.toSubgraph ⊔ q.toSubgraph := by induction p <;> simp [*, sup_assoc]
+#align simple_graph.walk.to_subgraph_append SimpleGraph.Walk.to_subgraph_append
+
+@[simp]
+theorem to_subgraph_reverse (p : G.Walk u v) : p.reverse.toSubgraph = p.toSubgraph :=
+  by
+  induction p
+  · simp
+  · simp only [*, walk.to_subgraph, reverse_cons, to_subgraph_append, subgraph_of_adj_symm]
+    rw [sup_comm]
+    congr
+    ext <;> simp [-Set.bot_eq_empty]
+#align simple_graph.walk.to_subgraph_reverse SimpleGraph.Walk.to_subgraph_reverse
+
+@[simp]
+theorem to_subgraph_rotate [DecidableEq V] (c : G.Walk v v) (h : u ∈ c.support) :
+    (c.rotate h).toSubgraph = c.toSubgraph := by
+  rw [rotate, to_subgraph_append, sup_comm, ← to_subgraph_append, take_spec]
+#align simple_graph.walk.to_subgraph_rotate SimpleGraph.Walk.to_subgraph_rotate
+
+@[simp]
+theorem to_subgraph_map (f : G →g G') (p : G.Walk u v) :
+    (p.map f).toSubgraph = p.toSubgraph.map f := by induction p <;> simp [*, subgraph.map_sup]
+#align simple_graph.walk.to_subgraph_map SimpleGraph.Walk.to_subgraph_map
+
+@[simp]
+theorem finite_neighbor_set_to_subgraph (p : G.Walk u v) : (p.toSubgraph.neighborSet w).Finite :=
+  by
+  induction p
+  · rw [walk.to_subgraph, neighbor_set_singleton_subgraph]
+    apply Set.to_finite
+  · rw [walk.to_subgraph, subgraph.neighbor_set_sup]
+    refine' Set.Finite.union _ p_ih
+    refine' Set.Finite.subset _ (neighbor_set_subgraph_of_adj_subset p_h)
+    apply Set.to_finite
+#align
+  simple_graph.walk.finite_neighbor_set_to_subgraph SimpleGraph.Walk.finite_neighbor_set_to_subgraph
+
+end Walk
 
 /-! ### Walks of a given length -/
 

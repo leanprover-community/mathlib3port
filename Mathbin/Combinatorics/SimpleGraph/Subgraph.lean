@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hunter Monroe, Kyle Miller, Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.subgraph
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -407,6 +407,30 @@ theorem sup_adj {H₁ H₂ : Subgraph G} {v w : V} : (H₁ ⊔ H₂).Adj v w ↔
 #align simple_graph.subgraph.sup_adj SimpleGraph.Subgraph.sup_adj
 
 @[simp]
+theorem verts_sup {H H' : G.Subgraph} : (H ⊔ H').verts = H.verts ∪ H'.verts :=
+  rfl
+#align simple_graph.subgraph.verts_sup SimpleGraph.Subgraph.verts_sup
+
+@[simp]
+theorem verts_inf {H H' : G.Subgraph} : (H ⊓ H').verts = H.verts ∩ H'.verts :=
+  rfl
+#align simple_graph.subgraph.verts_inf SimpleGraph.Subgraph.verts_inf
+
+theorem neighbor_set_sup {H H' : G.Subgraph} (v : V) :
+    (H ⊔ H').neighborSet v = H.neighborSet v ∪ H'.neighborSet v :=
+  by
+  ext w
+  simp
+#align simple_graph.subgraph.neighbor_set_sup SimpleGraph.Subgraph.neighbor_set_sup
+
+theorem neighbor_set_inf {H H' : G.Subgraph} (v : V) :
+    (H ⊓ H').neighborSet v = H.neighborSet v ∩ H'.neighborSet v :=
+  by
+  ext w
+  simp
+#align simple_graph.subgraph.neighbor_set_inf SimpleGraph.Subgraph.neighbor_set_inf
+
+@[simp]
 theorem edge_set_top : (⊤ : Subgraph G).edgeSet = G.edgeSet :=
   rfl
 #align simple_graph.subgraph.edge_set_top SimpleGraph.Subgraph.edge_set_top
@@ -520,6 +544,21 @@ theorem map_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.m
   · rintro _ _ ⟨u, v, ha, rfl, rfl⟩
     exact ⟨_, _, h.2 ha, rfl, rfl⟩
 #align simple_graph.subgraph.map_monotone SimpleGraph.Subgraph.map_monotone
+
+theorem map_sup {G : SimpleGraph V} {G' : SimpleGraph W} (f : G →g G') {H H' : G.Subgraph} :
+    (H ⊔ H').map f = H.map f ⊔ H'.map f := by
+  ext1
+  · simp only [Set.image_union, map_verts, verts_sup]
+  · ext
+    simp only [Relation.Map, map_adj, sup_adj]
+    constructor
+    · rintro ⟨a, b, h | h, rfl, rfl⟩
+      · exact Or.inl ⟨_, _, h, rfl, rfl⟩
+      · exact Or.inr ⟨_, _, h, rfl, rfl⟩
+    · rintro (⟨a, b, h, rfl, rfl⟩ | ⟨a, b, h, rfl, rfl⟩)
+      · exact ⟨_, _, Or.inl h, rfl, rfl⟩
+      · exact ⟨_, _, Or.inr h, rfl, rfl⟩
+#align simple_graph.subgraph.map_sup SimpleGraph.Subgraph.map_sup
 
 /-- Graph homomorphisms induce a contravariant function on subgraphs. -/
 @[simps]

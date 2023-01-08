@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected_component
-! leanprover-community/mathlib commit 134625f523e737f650a6ea7f0c82a6177e45e622
+! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,20 +160,20 @@ theorem ordConnectedProj_mem_ordConnectedComponent (s : Set α) (x : s) :
   set.ord_connected_proj_mem_ord_connected_component Set.ordConnectedProj_mem_ordConnectedComponent
 -/
 
-#print Set.mem_ordConnectedComponent_ord_connected_proj /-
-theorem mem_ordConnectedComponent_ord_connected_proj (s : Set α) (x : s) :
+#print Set.mem_ordConnectedComponent_ordConnectedProj /-
+theorem mem_ordConnectedComponent_ordConnectedProj (s : Set α) (x : s) :
     ↑x ∈ ordConnectedComponent s (ordConnectedProj s x) :=
   mem_ordConnectedComponent_comm.2 <| ordConnectedProj_mem_ordConnectedComponent s x
 #align
-  set.mem_ord_connected_component_ord_connected_proj Set.mem_ordConnectedComponent_ord_connected_proj
+  set.mem_ord_connected_component_ord_connected_proj Set.mem_ordConnectedComponent_ordConnectedProj
 -/
 
-#print Set.ordConnectedComponent_ord_connected_proj /-
+#print Set.ordConnectedComponent_ordConnectedProj /-
 @[simp]
-theorem ordConnectedComponent_ord_connected_proj (s : Set α) (x : s) :
+theorem ordConnectedComponent_ordConnectedProj (s : Set α) (x : s) :
     ordConnectedComponent s (ordConnectedProj s x) = ordConnectedComponent s x :=
-  ord_connected_component_eq <| mem_ordConnectedComponent_ord_connected_proj _ _
-#align set.ord_connected_component_ord_connected_proj Set.ordConnectedComponent_ord_connected_proj
+  ord_connected_component_eq <| mem_ordConnectedComponent_ordConnectedProj _ _
+#align set.ord_connected_component_ord_connected_proj Set.ordConnectedComponent_ordConnectedProj
 -/
 
 #print Set.ordConnectedProj_eq /-
