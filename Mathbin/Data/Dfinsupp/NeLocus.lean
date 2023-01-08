@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.ne_locus
-! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
+! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ variable {M P : α → Type _} [∀ a, Zero (N a)] [∀ a, Zero (M a)] [∀ a, Z
 
 theorem subset_map_range_ne_locus [∀ a, DecidableEq (N a)] [∀ a, DecidableEq (M a)]
     (f g : Π₀ a, N a) {F : ∀ a, N a → M a} (F0 : ∀ a, F a 0 = 0) :
-    (f.map_range F F0).neLocus (g.map_range F F0) ⊆ f.neLocus g := fun a => by
+    (f.mapRange F F0).neLocus (g.mapRange F F0) ⊆ f.neLocus g := fun a => by
   simpa only [mem_ne_locus, map_range_apply, not_imp_not] using congr_arg (F a)
 #align dfinsupp.subset_map_range_ne_locus Dfinsupp.subset_map_range_ne_locus
 
@@ -115,7 +115,7 @@ theorem zip_with_ne_locus_eq_right [∀ a, DecidableEq (M a)] [∀ a, DecidableE
 
 theorem map_range_ne_locus_eq [∀ a, DecidableEq (N a)] [∀ a, DecidableEq (M a)] (f g : Π₀ a, N a)
     {F : ∀ a, N a → M a} (F0 : ∀ a, F a 0 = 0) (hF : ∀ a, Function.Injective (F a)) :
-    (f.map_range F F0).neLocus (g.map_range F F0) = f.neLocus g :=
+    (f.mapRange F F0).neLocus (g.mapRange F F0) = f.neLocus g :=
   by
   ext
   simpa only [mem_ne_locus] using (hF a).ne_iff

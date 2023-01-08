@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.chevalley_warning
-! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
+! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,8 +22,8 @@ and `q` is notation for the cardinality of `K`.
 1. Let `f` be a multivariate polynomial in finitely many variables (`X s`, `s : σ`)
    such that the total degree of `f` is less than `(q-1)` times the cardinality of `σ`.
    Then the evaluation of `f` on all points of `σ → K` (aka `K^σ`) sums to `0`.
-   (`sum_mv_polynomial_eq_zero`)
-2. The Chevalley–Warning theorem (`char_dvd_card_solutions`).
+   (`sum_eval_eq_zero`)
+2. The Chevalley–Warning theorem (`char_dvd_card_solutions_of_sum_lt`).
    Let `f i` be a finite family of multivariate polynomials
    in finitely many variables (`X s`, `s : σ`) such that
    the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
@@ -51,12 +51,12 @@ open Function hiding eval
 
 open Finset FiniteField
 
-variable {K : Type _} {σ : Type _} [Fintype K] [Field K] [Fintype σ]
+variable {K σ ι : Type _} [Fintype K] [Field K] [Fintype σ] [DecidableEq σ]
 
 -- mathport name: exprq
 local notation "q" => Fintype.card K
 
-theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomial σ K)
+theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
     (h : f.totalDegree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 :=
   by
   haveI : DecidableEq K := Classical.decEq K
@@ -112,17 +112,17 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
     rintro ⟨j, hj⟩
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
     rw [Equiv.subtypeEquivCodomain_symm_apply_ne]
-#align mv_polynomial.sum_mv_polynomial_eq_zero MvPolynomial.sum_mv_polynomial_eq_zero
+#align mv_polynomial.sum_eval_eq_zero MvPolynomial.sum_eval_eq_zero
 
-variable [DecidableEq K] [DecidableEq σ]
+variable [DecidableEq K] (p : ℕ) [CharP K p]
 
-/-- The Chevalley–Warning theorem.
+/-- The **Chevalley–Warning theorem**, finitary version.
 Let `(f i)` be a finite family of multivariate polynomials
 in finitely many variables (`X s`, `s : σ`) over a finite field of characteristic `p`.
 Assume that the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
 Then the number of common solutions of the `f i` is divisible by `p`. -/
-theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : Finset ι}
-    {f : ι → MvPolynomial σ K} (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
+theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomial σ K}
+    (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
     p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } :=
   by
   have hq : 0 < q - 1 := by
@@ -165,7 +165,7 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
   rw [← CharP.cast_eq_zero_iff K, ← key]
   show (∑ x, eval x F) = 0
   -- We are now ready to apply the main machine, proven before.
-  apply F.sum_mv_polynomial_eq_zero
+  apply F.sum_eval_eq_zero
   -- It remains to verify the crucial assumption of this machine
   show F.total_degree < (q - 1) * Fintype.card σ
   calc
@@ -186,24 +186,47 @@ theorem char_dvd_card_solutions_family (p : ℕ) [CharP K p] {ι : Type _} {s : 
     _ ≤ (f i ^ (q - 1)).totalDegree := by simp only [max_eq_right, Nat.zero_le, total_degree_one]
     _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
     
-#align char_dvd_card_solutions_family char_dvd_card_solutions_family
+#align char_dvd_card_solutions_of_sum_lt char_dvd_card_solutions_of_sum_lt
 
-/-- The Chevalley–Warning theorem.
+/-- The **Chevalley–Warning theorem**, fintype version.
+Let `(f i)` be a finite family of multivariate polynomials
+in finitely many variables (`X s`, `s : σ`) over a finite field of characteristic `p`.
+Assume that the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
+Then the number of common solutions of the `f i` is divisible by `p`. -/
+theorem char_dvd_card_solutions_of_fintype_sum_lt [Fintype ι] {f : ι → MvPolynomial σ K}
+    (h : (∑ i, (f i).totalDegree) < Fintype.card σ) :
+    p ∣ Fintype.card { x : σ → K // ∀ i, eval x (f i) = 0 } := by
+  simpa using char_dvd_card_solutions_of_sum_lt p h
+#align char_dvd_card_solutions_of_fintype_sum_lt char_dvd_card_solutions_of_fintype_sum_lt
+
+/-- The **Chevalley–Warning theorem**, unary version.
 Let `f` be a multivariate polynomial in finitely many variables (`X s`, `s : σ`)
 over a finite field of characteristic `p`.
 Assume that the total degree of `f` is less than the cardinality of `σ`.
 Then the number of solutions of `f` is divisible by `p`.
-See `char_dvd_card_solutions_family` for a version that takes a family of polynomials `f i`. -/
-theorem char_dvd_card_solutions (p : ℕ) [CharP K p] {f : MvPolynomial σ K}
-    (h : f.totalDegree < Fintype.card σ) : p ∣ Fintype.card { x : σ → K // eval x f = 0 } :=
+See `char_dvd_card_solutions_of_sum_lt` for a version that takes a family of polynomials `f i`. -/
+theorem char_dvd_card_solutions {f : MvPolynomial σ K} (h : f.totalDegree < Fintype.card σ) :
+    p ∣ Fintype.card { x : σ → K // eval x f = 0 } :=
   by
   let F : Unit → MvPolynomial σ K := fun _ => f
-  have : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ := by
-    simpa only [Fintype.univ_punit, sum_singleton] using h
-  have key := char_dvd_card_solutions_family p this
-  simp only [F, Fintype.univ_punit, forall_eq, mem_singleton] at key
-  convert key
+  have : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ := h
+  simpa only [F, Fintype.univ_punit, forall_eq, mem_singleton] using
+    char_dvd_card_solutions_of_sum_lt p this
 #align char_dvd_card_solutions char_dvd_card_solutions
+
+/-- The **Chevalley–Warning theorem**, binary version.
+Let `f₁`, `f₂` be two multivariate polynomials in finitely many variables (`X s`, `s : σ`) over a
+finite field of characteristic `p`.
+Assume that the sum of the total degrees of `f₁` and `f₂` is less than the cardinality of `σ`.
+Then the number of common solutions of the `f₁` and `f₂` is divisible by `p`. -/
+theorem char_dvd_card_solutions_of_add_lt {f₁ f₂ : MvPolynomial σ K}
+    (h : f₁.totalDegree + f₂.totalDegree < Fintype.card σ) :
+    p ∣ Fintype.card { x : σ → K // eval x f₁ = 0 ∧ eval x f₂ = 0 } :=
+  by
+  let F : Bool → MvPolynomial σ K := fun b => cond b f₂ f₁
+  have : (∑ b : Bool, (F b).totalDegree) < Fintype.card σ := (add_comm _ _).trans_lt h
+  simpa only [F, Bool.forall_bool] using char_dvd_card_solutions_of_fintype_sum_lt p this
+#align char_dvd_card_solutions_of_add_lt char_dvd_card_solutions_of_add_lt
 
 end FiniteField
 

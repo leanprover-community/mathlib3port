@@ -6,7 +6,7 @@ Authors: Simon Hudon
 The writer monad transformer for passing immutable state.
 
 ! This file was ported from Lean 3 source module control.monad.writer
-! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
+! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

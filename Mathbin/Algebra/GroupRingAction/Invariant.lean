@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.group_ring_action.invariant
-! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
+! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.RingTheory.Subring.Pointwise
 
 /-! # Subrings invariant under an action -/
@@ -40,4 +41,30 @@ instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSe
 #align is_invariant_subring.to_mul_semiring_action IsInvariantSubring.toMulSemiringAction
 
 end Ring
+
+section
+
+variable (M : Type _) [Monoid M]
+
+variable {R' : Type _} [Ring R'] [MulSemiringAction M R']
+
+variable (U : Subring R') [IsInvariantSubring M U]
+
+/-- The canonical inclusion from an invariant subring. -/
+def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
+  { U.Subtype with map_smul' := fun m s => rfl }
+#align is_invariant_subring.subtype_hom IsInvariantSubring.subtypeHom
+
+@[simp]
+theorem IsInvariantSubring.coe_subtype_hom : (IsInvariantSubring.subtypeHom M U : U → R') = coe :=
+  rfl
+#align is_invariant_subring.coe_subtype_hom IsInvariantSubring.coe_subtype_hom
+
+@[simp]
+theorem IsInvariantSubring.coe_subtype_hom' :
+    (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=
+  rfl
+#align is_invariant_subring.coe_subtype_hom' IsInvariantSubring.coe_subtype_hom'
+
+end
 

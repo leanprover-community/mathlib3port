@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.dfinsupp.basic
-! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
+! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -251,7 +251,7 @@ instance [∀ i, AddZeroClass (β i)] : AddZeroClass (Π₀ i, β i) :=
 /-- Note the general `dfinsupp.has_smul` instance doesn't apply as `ℕ` is not distributive
 unless `β i`'s addition is commutative. -/
 instance hasNatScalar [∀ i, AddMonoid (β i)] : HasSmul ℕ (Π₀ i, β i) :=
-  ⟨fun c v => v.map_range (fun _ => (· • ·) c) fun _ => nsmul_zero _⟩
+  ⟨fun c v => v.mapRange (fun _ => (· • ·) c) fun _ => nsmul_zero _⟩
 #align dfinsupp.has_nat_scalar Dfinsupp.hasNatScalar
 
 theorem nsmul_apply [∀ i, AddMonoid (β i)] (b : ℕ) (v : Π₀ i, β i) (i : ι) : (b • v) i = b • v i :=
@@ -296,7 +296,7 @@ theorem finset_sum_apply {α} [∀ i, AddCommMonoid (β i)] (s : Finset α) (g :
 #align dfinsupp.finset_sum_apply Dfinsupp.finset_sum_apply
 
 instance [∀ i, AddGroup (β i)] : Neg (Π₀ i, β i) :=
-  ⟨fun f => f.map_range (fun _ => Neg.neg) fun _ => neg_zero⟩
+  ⟨fun f => f.mapRange (fun _ => Neg.neg) fun _ => neg_zero⟩
 
 theorem neg_apply [∀ i, AddGroup (β i)] (g : Π₀ i, β i) (i : ι) : (-g) i = -g i :=
   rfl
@@ -322,7 +322,7 @@ theorem coe_sub [∀ i, AddGroup (β i)] (g₁ g₂ : Π₀ i, β i) : ⇑(g₁ 
 /-- Note the general `dfinsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
 unless `β i`'s addition is commutative. -/
 instance hasIntScalar [∀ i, AddGroup (β i)] : HasSmul ℤ (Π₀ i, β i) :=
-  ⟨fun c v => v.map_range (fun _ => (· • ·) c) fun _ => zsmul_zero _⟩
+  ⟨fun c v => v.mapRange (fun _ => (· • ·) c) fun _ => zsmul_zero _⟩
 #align dfinsupp.has_int_scalar Dfinsupp.hasIntScalar
 
 theorem zsmul_apply [∀ i, AddGroup (β i)] (b : ℤ) (v : Π₀ i, β i) (i : ι) : (b • v) i = b • v i :=
@@ -346,7 +346,7 @@ instance [∀ i, AddCommGroup (β i)] : AddCommGroup (Π₀ i, β i) :=
 coordinate. -/
 instance [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] :
     HasSmul γ (Π₀ i, β i) :=
-  ⟨fun c v => v.map_range (fun _ => (· • ·) c) fun _ => smul_zero _⟩
+  ⟨fun c v => v.mapRange (fun _ => (· • ·) c) fun _ => smul_zero _⟩
 
 theorem smul_apply [Monoid γ] [∀ i, AddMonoid (β i)] [∀ i, DistribMulAction γ (β i)] (b : γ)
     (v : Π₀ i, β i) (i : ι) : (b • v) i = b • v i :=

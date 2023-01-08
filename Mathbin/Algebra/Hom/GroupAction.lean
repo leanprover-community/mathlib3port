@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.hom.group_action
-! leanprover-community/mathlib commit 940d371319c6658e526349d2c3e1daeeabfae0fd
+! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.GroupRingAction.Invariant
-import Mathbin.GroupTheory.GroupAction.Defs
-import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.Algebra.GroupRingAction.Basic
+import Mathbin.Algebra.Module.Basic
 
 /-!
 # Equivariant homomorphisms
@@ -41,6 +40,8 @@ The above types have corresponding classes:
 -/
 
 
+assert_not_exists Submonoid
+
 variable (M' : Type _)
 
 variable (X : Type _) [HasSmul M' X]
@@ -70,8 +71,6 @@ variable (S : Type _) [Semiring S] [MulSemiringAction M S]
 variable (S' : Type _) [Ring S'] [MulSemiringAction M S']
 
 variable (T : Type _) [Semiring T] [MulSemiringAction M T]
-
-variable (G : Type _) [Group G] (H : Subgroup G)
 
 /-- Equivariant functions. -/
 @[nolint has_nonempty_instance]
@@ -517,26 +516,4 @@ theorem comp_id (f : R →+*[M] S) : f.comp (MulSemiringActionHom.id M) = f :=
 #align mul_semiring_action_hom.comp_id MulSemiringActionHom.comp_id
 
 end MulSemiringActionHom
-
-section
-
-variable (M) {R'} (U : Subring R') [IsInvariantSubring M U]
-
-/-- The canonical inclusion from an invariant subring. -/
-def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
-  { U.Subtype with map_smul' := fun m s => rfl }
-#align is_invariant_subring.subtype_hom IsInvariantSubring.subtypeHom
-
-@[simp]
-theorem IsInvariantSubring.coe_subtype_hom : (IsInvariantSubring.subtypeHom M U : U → R') = coe :=
-  rfl
-#align is_invariant_subring.coe_subtype_hom IsInvariantSubring.coe_subtype_hom
-
-@[simp]
-theorem IsInvariantSubring.coe_subtype_hom' :
-    (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=
-  rfl
-#align is_invariant_subring.coe_subtype_hom' IsInvariantSubring.coe_subtype_hom'
-
-end
 
