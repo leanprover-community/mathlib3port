@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.set.lattice
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -786,17 +786,77 @@ theorem interᵢ_congr_of_surjective {f : ι → Set α} {g : ι₂ → Set α} 
   h1.infi_congr h h2
 #align set.Inter_congr_of_surjective Set.interᵢ_congr_of_surjective
 
+/- warning: set.Union_congr -> Set.unionᵢ_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Eq.{succ u1} (Set.{u1} α) (s i) (t i)) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Eq.{succ u2} (Set.{u2} α) (s i) (t i)) -> (Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
+Case conversion may be inaccurate. Consider using '#align set.Union_congr Set.unionᵢ_congrₓ'. -/
+theorem unionᵢ_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋃ i, s i) = ⋃ i, t i :=
+  supᵢ_congr h
+#align set.Union_congr Set.unionᵢ_congr
+
+/- warning: set.Inter_congr -> Set.interᵢ_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Eq.{succ u1} (Set.{u1} α) (s i) (t i)) -> (Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Eq.{succ u2} (Set.{u2} α) (s i) (t i)) -> (Eq.{succ u2} (Set.{u2} α) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
+Case conversion may be inaccurate. Consider using '#align set.Inter_congr Set.interᵢ_congrₓ'. -/
+theorem interᵢ_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋂ i, s i) = ⋂ i, t i :=
+  infᵢ_congr h
+#align set.Inter_congr Set.interᵢ_congr
+
+/- warning: set.Union₂_congr -> Set.unionᵢ₂_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {s : forall (i : ι), (κ i) -> (Set.{u1} α)} {t : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), Eq.{succ u1} (Set.{u1} α) (s i j) (t i j)) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => s i j))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => t i j))))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {s : forall (i : ι), (κ i) -> (Set.{u3} α)} {t : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), Eq.{succ u3} (Set.{u3} α) (s i j) (t i j)) -> (Eq.{succ u3} (Set.{u3} α) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => s i j))) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => t i j))))
+Case conversion may be inaccurate. Consider using '#align set.Union₂_congr Set.unionᵢ₂_congrₓ'. -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+theorem unionᵢ₂_congr {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j = t i j) :
+    (⋃ (i) (j), s i j) = ⋃ (i) (j), t i j :=
+  Union_congr fun i => Union_congr <| h i
+#align set.Union₂_congr Set.unionᵢ₂_congr
+
+/- warning: set.Inter₂_congr -> Set.interᵢ₂_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {s : forall (i : ι), (κ i) -> (Set.{u1} α)} {t : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), Eq.{succ u1} (Set.{u1} α) (s i j) (t i j)) -> (Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => s i j))) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => t i j))))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {s : forall (i : ι), (κ i) -> (Set.{u3} α)} {t : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), Eq.{succ u3} (Set.{u3} α) (s i j) (t i j)) -> (Eq.{succ u3} (Set.{u3} α) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => s i j))) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => t i j))))
+Case conversion may be inaccurate. Consider using '#align set.Inter₂_congr Set.interᵢ₂_congrₓ'. -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+theorem interᵢ₂_congr {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j = t i j) :
+    (⋂ (i) (j), s i j) = ⋂ (i) (j), t i j :=
+  Inter_congr fun i => Inter_congr <| h i
+#align set.Inter₂_congr Set.interᵢ₂_congr
+
+section Nonempty
+
+variable [Nonempty ι] {f : ι → Set α} {s : Set α}
+
 #print Set.unionᵢ_const /-
-theorem unionᵢ_const [Nonempty ι] (s : Set β) : (⋃ i : ι, s) = s :=
+theorem unionᵢ_const (s : Set β) : (⋃ i : ι, s) = s :=
   supᵢ_const
 #align set.Union_const Set.unionᵢ_const
 -/
 
 #print Set.interᵢ_const /-
-theorem interᵢ_const [Nonempty ι] (s : Set β) : (⋂ i : ι, s) = s :=
+theorem interᵢ_const (s : Set β) : (⋂ i : ι, s) = s :=
   infᵢ_const
 #align set.Inter_const Set.interᵢ_const
 -/
+
+theorem Union_eq_const (hf : ∀ i, f i = s) : (⋃ i, f i) = s :=
+  (unionᵢ_congr hf).trans <| unionᵢ_const _
+#align set.Union_eq_const Set.Union_eq_const
+
+theorem Inter_eq_const (hf : ∀ i, f i = s) : (⋂ i, f i) = s :=
+  (interᵢ_congr hf).trans <| interᵢ_const _
+#align set.Inter_eq_const Set.Inter_eq_const
+
+end Nonempty
 
 /- warning: set.compl_Union -> Set.compl_unionᵢ is a dubious translation:
 lean 3 declaration is
@@ -1586,52 +1646,6 @@ theorem binterᵢ_mono {s s' : Set α} {t t' : α → Set β} (hs : s ⊆ s') (h
     (⋂ x ∈ s', t x) ⊆ ⋂ x ∈ s, t' x :=
   (binterᵢ_subset_binterᵢ_left hs).trans <| interᵢ₂_mono h
 #align set.bInter_mono Set.binterᵢ_mono
-
-/- warning: set.Union_congr -> Set.unionᵢ_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Eq.{succ u1} (Set.{u1} α) (s i) (t i)) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Eq.{succ u2} (Set.{u2} α) (s i) (t i)) -> (Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align set.Union_congr Set.unionᵢ_congrₓ'. -/
-theorem unionᵢ_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋃ i, s i) = ⋃ i, t i :=
-  supᵢ_congr h
-#align set.Union_congr Set.unionᵢ_congr
-
-/- warning: set.Inter_congr -> Set.interᵢ_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (i : ι), Eq.{succ u1} (Set.{u1} α) (s i) (t i)) -> (Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => t i)))
-but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (i : ι), Eq.{succ u2} (Set.{u2} α) (s i) (t i)) -> (Eq.{succ u2} (Set.{u2} α) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => s i)) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => t i)))
-Case conversion may be inaccurate. Consider using '#align set.Inter_congr Set.interᵢ_congrₓ'. -/
-theorem interᵢ_congr {s t : ι → Set α} (h : ∀ i, s i = t i) : (⋂ i, s i) = ⋂ i, t i :=
-  infᵢ_congr h
-#align set.Inter_congr Set.interᵢ_congr
-
-/- warning: set.Union₂_congr -> Set.unionᵢ₂_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {s : forall (i : ι), (κ i) -> (Set.{u1} α)} {t : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), Eq.{succ u1} (Set.{u1} α) (s i j) (t i j)) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => s i j))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => t i j))))
-but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {s : forall (i : ι), (κ i) -> (Set.{u3} α)} {t : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), Eq.{succ u3} (Set.{u3} α) (s i j) (t i j)) -> (Eq.{succ u3} (Set.{u3} α) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => s i j))) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => t i j))))
-Case conversion may be inaccurate. Consider using '#align set.Union₂_congr Set.unionᵢ₂_congrₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem unionᵢ₂_congr {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j = t i j) :
-    (⋃ (i) (j), s i j) = ⋃ (i) (j), t i j :=
-  Union_congr fun i => Union_congr <| h i
-#align set.Union₂_congr Set.unionᵢ₂_congr
-
-/- warning: set.Inter₂_congr -> Set.interᵢ₂_congr is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {s : forall (i : ι), (κ i) -> (Set.{u1} α)} {t : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), Eq.{succ u1} (Set.{u1} α) (s i j) (t i j)) -> (Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => s i j))) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => t i j))))
-but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {s : forall (i : ι), (κ i) -> (Set.{u3} α)} {t : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), Eq.{succ u3} (Set.{u3} α) (s i j) (t i j)) -> (Eq.{succ u3} (Set.{u3} α) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => s i j))) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => t i j))))
-Case conversion may be inaccurate. Consider using '#align set.Inter₂_congr Set.interᵢ₂_congrₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem interᵢ₂_congr {s t : ∀ i, κ i → Set α} (h : ∀ i j, s i j = t i j) :
-    (⋂ (i) (j), s i j) = ⋂ (i) (j), t i j :=
-  Inter_congr fun i => Inter_congr <| h i
-#align set.Inter₂_congr Set.interᵢ₂_congr
 
 /- warning: set.bUnion_eq_Union -> Set.bunionᵢ_eq_unionᵢ is a dubious translation:
 lean 3 declaration is

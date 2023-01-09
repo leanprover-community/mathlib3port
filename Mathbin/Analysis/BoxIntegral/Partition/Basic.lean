@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.basic
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -830,7 +830,7 @@ theorem Union_bUnion_partition (h : ∀ J ∈ π, (πi J).IsPartition) : (π.bUn
   box_integral.prepartition.Union_bUnion_partition BoxIntegral.Prepartition.Union_bUnion_partition
 
 theorem isPartitionDisjUnionOfEqDiff (h : π₂.union = I \ π₁.union) :
-    IsPartition (π₁.disjUnion π₂ (h.symm ▸ disjoint_diff)) :=
+    IsPartition (π₁.disjUnion π₂ <| h.symm ▸ disjoint_sdiff_self_right) :=
   is_partition_iff_Union_eq.2 <| (Union_disj_union _).trans <| by simp [h, π₁.Union_subset]
 #align
   box_integral.prepartition.is_partition_disj_union_of_eq_diff BoxIntegral.Prepartition.isPartitionDisjUnionOfEqDiff

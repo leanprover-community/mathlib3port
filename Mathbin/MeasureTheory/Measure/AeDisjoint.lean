@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.ae_disjoint
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ set `u`. -/
 theorem exists_disjoint_diff (h : AeDisjoint μ s t) :
     ∃ u, MeasurableSet u ∧ μ u = 0 ∧ Disjoint (s \ u) t :=
   ⟨toMeasurable μ (s ∩ t), measurable_set_to_measurable _ _, (measure_to_measurable _).trans h,
-    disjoint_diff.symm.mono_left fun x hx =>
+    disjoint_sdiff_self_left.mono_left fun x hx =>
       ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
 #align measure_theory.ae_disjoint.exists_disjoint_diff MeasureTheory.AeDisjoint.exists_disjoint_diff
 

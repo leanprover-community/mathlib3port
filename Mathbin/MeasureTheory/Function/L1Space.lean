@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1026,39 +1026,6 @@ theorem integrable_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) :
   and_congr (ae_strongly_measurable_const_smul_iff₀ hc) (has_finite_integral_smul_iff hc f)
 #align measure_theory.integrable_smul_iff MeasureTheory.integrable_smul_iff
 
-theorem Integrable.constMul {f : α → ℝ} (h : Integrable f μ) (c : ℝ) :
-    Integrable (fun x => c * f x) μ :=
-  Integrable.smul c h
-#align measure_theory.integrable.const_mul MeasureTheory.Integrable.constMul
-
-theorem Integrable.constMul' {f : α → ℝ} (h : Integrable f μ) (c : ℝ) :
-    Integrable ((fun x : α => c) * f) μ :=
-  Integrable.smul c h
-#align measure_theory.integrable.const_mul' MeasureTheory.Integrable.constMul'
-
-theorem Integrable.mulConst {f : α → ℝ} (h : Integrable f μ) (c : ℝ) :
-    Integrable (fun x => f x * c) μ := by simp_rw [mul_comm, h.const_mul _]
-#align measure_theory.integrable.mul_const MeasureTheory.Integrable.mulConst
-
-theorem Integrable.mulConst' {f : α → ℝ} (h : Integrable f μ) (c : ℝ) :
-    Integrable (f * fun x : α => c) μ :=
-  Integrable.mulConst h c
-#align measure_theory.integrable.mul_const' MeasureTheory.Integrable.mulConst'
-
-theorem Integrable.divConst {f : α → ℝ} (h : Integrable f μ) (c : ℝ) :
-    Integrable (fun x => f x / c) μ := by simp_rw [div_eq_mul_inv, h.mul_const]
-#align measure_theory.integrable.div_const MeasureTheory.Integrable.divConst
-
-theorem Integrable.bddMul' {f g : α → ℝ} {c : ℝ} (hg : Integrable g μ)
-    (hf : AeStronglyMeasurable f μ) (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :
-    Integrable (fun x => f x * g x) μ :=
-  by
-  refine' integrable.mono' (hg.norm.smul c) (hf.mul hg.1) _
-  filter_upwards [hf_bound] with x hx
-  rw [Pi.smul_apply, smul_eq_mul]
-  exact (norm_mul_le _ _).trans (mul_le_mul_of_nonneg_right hx (norm_nonneg _))
-#align measure_theory.integrable.bdd_mul' MeasureTheory.Integrable.bddMul'
-
 end NormedSpace
 
 section NormedSpaceOverCompleteField
@@ -1082,6 +1049,39 @@ end NormedSpaceOverCompleteField
 section IsROrC
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {f : α → 𝕜}
+
+theorem Integrable.constMul {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
+    Integrable (fun x => c * f x) μ :=
+  Integrable.smul c h
+#align measure_theory.integrable.const_mul MeasureTheory.Integrable.constMul
+
+theorem Integrable.constMul' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
+    Integrable ((fun x : α => c) * f) μ :=
+  Integrable.smul c h
+#align measure_theory.integrable.const_mul' MeasureTheory.Integrable.constMul'
+
+theorem Integrable.mulConst {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
+    Integrable (fun x => f x * c) μ := by simp_rw [mul_comm, h.const_mul _]
+#align measure_theory.integrable.mul_const MeasureTheory.Integrable.mulConst
+
+theorem Integrable.mulConst' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
+    Integrable (f * fun x : α => c) μ :=
+  Integrable.mulConst h c
+#align measure_theory.integrable.mul_const' MeasureTheory.Integrable.mulConst'
+
+theorem Integrable.divConst {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
+    Integrable (fun x => f x / c) μ := by simp_rw [div_eq_mul_inv, h.mul_const]
+#align measure_theory.integrable.div_const MeasureTheory.Integrable.divConst
+
+theorem Integrable.bddMul' {f g : α → 𝕜} {c : ℝ} (hg : Integrable g μ)
+    (hf : AeStronglyMeasurable f μ) (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :
+    Integrable (fun x => f x * g x) μ :=
+  by
+  refine' integrable.mono' (hg.norm.smul c) (hf.mul hg.1) _
+  filter_upwards [hf_bound] with x hx
+  rw [Pi.smul_apply, smul_eq_mul]
+  exact (norm_mul_le _ _).trans (mul_le_mul_of_nonneg_right hx (norm_nonneg _))
+#align measure_theory.integrable.bdd_mul' MeasureTheory.Integrable.bddMul'
 
 theorem Integrable.ofReal {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun x => (f x : 𝕜)) μ :=
   by

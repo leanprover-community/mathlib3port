@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem integral_diff (ht : MeasurableSet t) (hfs : IntegrableOn f s μ) (hft : 
     (hts : t ⊆ s) : (∫ x in s \ t, f x ∂μ) = (∫ x in s, f x ∂μ) - ∫ x in t, f x ∂μ :=
   by
   rw [eq_sub_iff_add_eq, ← integral_union, diff_union_of_subset hts]
-  exacts[disjoint_diff.symm, ht, hfs.mono_set (diff_subset _ _), hft]
+  exacts[disjoint_sdiff_self_left, ht, hfs.mono_set (diff_subset _ _), hft]
 #align measure_theory.integral_diff MeasureTheory.integral_diff
 
 theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
@@ -258,7 +258,7 @@ theorem set_integral_union_eq_left {f : α → E} (hf : StronglyMeasurable f) (h
   by
   rw [← Set.union_diff_self, union_comm, integral_union,
     set_integral_eq_zero_of_forall_eq_zero _ fun x hx => ht_eq x (diff_subset _ _ hx), zero_add]
-  exacts[hf, disjoint_diff.symm, hs, hfi.integrable_on, hfi.integrable_on]
+  exacts[hf, disjoint_sdiff_self_left, hs, hfi.integrable_on, hfi.integrable_on]
 #align measure_theory.set_integral_union_eq_left MeasureTheory.set_integral_union_eq_left
 
 theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] [OrderClosedTopology E] {f : α → E}

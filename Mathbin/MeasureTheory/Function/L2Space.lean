@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.l2_space
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,8 +266,8 @@ theorem BoundedContinuousFunction.inner_to_Lp (f g : α →ᵇ 𝕜) :
       ∫ x, conj (f x) * g x ∂μ :=
   by
   apply integral_congr_ae
-  have hf_ae := f.coe_fn_to_Lp μ
-  have hg_ae := g.coe_fn_to_Lp μ
+  have hf_ae := f.coe_fn_to_Lp 2 μ 𝕜
+  have hg_ae := g.coe_fn_to_Lp 2 μ 𝕜
   filter_upwards [hf_ae, hg_ae] with _ hf hg
   rw [hf, hg]
   simp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.subbox_induction
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -246,7 +246,8 @@ a function `r : ℝⁿ → (0, ∞)`, returns the union of `π₁` and `π₂.to
 -/
 def unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
     (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → Ioi (0 : ℝ)) : TaggedPrepartition I :=
-  π₁.disjUnion (π₂.toSubordinate r) (((π₂.Union_to_subordinate r).trans hU).symm ▸ disjoint_diff)
+  π₁.disjUnion (π₂.toSubordinate r)
+    (((π₂.Union_to_subordinate r).trans hU).symm ▸ disjoint_sdiff_self_right)
 #align
   box_integral.tagged_prepartition.union_compl_to_subordinate BoxIntegral.TaggedPrepartition.unionComplToSubordinate
 

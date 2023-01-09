@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.outer_measure
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1610,7 +1610,9 @@ include m0 mU
 theorem extend_mono {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (hs : s₁ ⊆ s₂) :
     extend m s₁ ≤ extend m s₂ := by
   refine' le_infᵢ _; intro h₂
-  have := extend_union MeasurableSet.empty m0 MeasurableSet.Union mU disjoint_diff h₁ (h₂.diff h₁)
+  have :=
+    extend_union MeasurableSet.empty m0 MeasurableSet.Union mU disjoint_sdiff_self_right h₁
+      (h₂.diff h₁)
   rw [union_diff_cancel hs] at this
   rw [← extend_eq m]
   exact le_iff_exists_add.2 ⟨_, this⟩

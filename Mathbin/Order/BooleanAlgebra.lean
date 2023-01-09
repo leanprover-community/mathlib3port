@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module order.boolean_algebra
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -308,6 +308,18 @@ Case conversion may be inaccurate. Consider using '#align disjoint_sdiff_self_ri
 theorem disjoint_sdiff_self_right : Disjoint x (y \ x) :=
   disjoint_iff_inf_le.mpr inf_sdiff_self_right.le
 #align disjoint_sdiff_self_right disjoint_sdiff_self_right
+
+theorem le_sdiff : x ≤ y \ z ↔ x ≤ y ∧ Disjoint x z :=
+  ⟨fun h => ⟨h.trans sdiff_le, disjoint_sdiff_self_left.mono_left h⟩, fun h =>
+    by
+    rw [← h.2.sdiff_eq_left]
+    exact sdiff_le_sdiff_right h.1⟩
+#align le_sdiff le_sdiff
+
+@[simp]
+theorem sdiff_eq_left : x \ y = x ↔ Disjoint x y :=
+  ⟨fun h => disjoint_sdiff_self_left.mono_left h.ge, Disjoint.sdiff_eq_left⟩
+#align sdiff_eq_left sdiff_eq_left
 
 /- warning: disjoint.sdiff_eq_of_sup_eq -> Disjoint.sdiff_eq_of_sup_eq is a dubious translation:
 lean 3 declaration is

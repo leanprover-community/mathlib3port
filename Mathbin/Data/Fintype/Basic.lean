@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.basic
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ class Fintype (α : Type _) where
 
 namespace Finset
 
-variable [Fintype α] {s : Finset α}
+variable [Fintype α] {s t : Finset α}
 
 #print Finset.univ /-
 /-- `univ` is the universal finite set of type `finset α` implied from
@@ -146,6 +146,14 @@ theorem top_eq_univ : (⊤ : Finset α) = univ :=
 theorem ssubset_univ_iff {s : Finset α} : s ⊂ univ ↔ s ≠ univ :=
   @lt_top_iff_ne_top _ _ _ s
 #align finset.ssubset_univ_iff Finset.ssubset_univ_iff
+
+theorem codisjoint_left : Codisjoint s t ↔ ∀ ⦃a⦄, a ∉ s → a ∈ t := by
+  classical simp [codisjoint_iff, eq_univ_iff_forall, or_iff_not_imp_left]
+#align finset.codisjoint_left Finset.codisjoint_left
+
+theorem codisjoint_right : Codisjoint s t ↔ ∀ ⦃a⦄, a ∉ t → a ∈ s :=
+  Codisjoint.comm.trans codisjoint_left
+#align finset.codisjoint_right Finset.codisjoint_right
 
 section BooleanAlgebra
 
@@ -451,6 +459,20 @@ def ofSurjective [DecidableEq β] [Fintype α] (f : α → β) (H : Function.Sur
 #align fintype.of_surjective Fintype.ofSurjective
 
 end Fintype
+
+namespace Finset
+
+variable [Fintype α] [DecidableEq α] {s t : Finset α}
+
+instance decidableCodisjoint : Decidable (Codisjoint s t) :=
+  decidable_of_iff _ codisjoint_left.symm
+#align finset.decidable_codisjoint Finset.decidableCodisjoint
+
+instance decidableIsCompl : Decidable (IsCompl s t) :=
+  decidable_of_iff' _ isCompl_iff
+#align finset.decidable_is_compl Finset.decidableIsCompl
+
+end Finset
 
 section Inv
 
@@ -988,6 +1010,11 @@ instance PLift.fintypeProp (p : Prop) [Decidable p] : Fintype (PLift p) :=
 instance PropCat.fintype : Fintype Prop :=
   ⟨⟨{True, False}, by simp [true_ne_false]⟩, Classical.cases (by simp) (by simp)⟩
 #align Prop.fintype PropCat.fintype
+
+@[simp]
+theorem Fintype.univ_Prop : (Finset.univ : Finset Prop) = {True, False} :=
+  Finset.eq_of_veq <| by simp <;> rfl
+#align fintype.univ_Prop Fintype.univ_Prop
 
 instance Subtype.fintype (p : α → Prop) [DecidablePred p] [Fintype α] : Fintype { x // p x } :=
   Fintype.subtype (univ.filter p) (by simp)

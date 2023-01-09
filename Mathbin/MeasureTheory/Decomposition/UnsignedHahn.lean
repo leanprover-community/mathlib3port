@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.unsigned_hahn
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,11 +196,9 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
       (add_le_add_iff_left γ).1 <|
         calc
           γ + d t ≤ d s + d t := add_le_add γ_le_d_s le_rfl
-          _ = d (s ∪ t) :=
-            by
+          _ = d (s ∪ t) := by
             rw [d_split _ _ (hs.union ht) ht, union_diff_right, union_inter_cancel_right,
-              diff_eq_self.2]
-            exact fun a ⟨hat, has⟩ => hts hat has
+              (subset_compl_iff_disjoint_left.1 hts).sdiff_eq_left]
           _ ≤ γ + 0 := by rw [add_zero] <;> exact d_le_γ _ (hs.union ht)
           
     rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← Nnreal.coe_le_coe]

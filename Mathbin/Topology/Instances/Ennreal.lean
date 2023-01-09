@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1134,7 +1134,7 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
       apply tsum_congr_subtype
       rw [union_diff_self]
     _ = (∑' x : s, f x) + ∑' x : t \ s, f x :=
-      tsum_union_disjoint disjoint_diff Ennreal.summable Ennreal.summable
+      tsum_union_disjoint disjoint_sdiff_self_right Ennreal.summable Ennreal.summable
     _ ≤ (∑' x : s, f x) + ∑' x : t, f x := add_le_add le_rfl (tsum_mono_subtype _ (diff_subset _ _))
     
 #align ennreal.tsum_union_le Ennreal.tsum_union_le

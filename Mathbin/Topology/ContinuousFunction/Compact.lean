@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.compact
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -286,6 +286,14 @@ def linearIsometryBoundedOfCompact : C(α, E) ≃ₗᵢ[𝕜] α →ᵇ E :=
     norm_map' := fun f => rfl }
 #align
   continuous_map.linear_isometry_bounded_of_compact ContinuousMap.linearIsometryBoundedOfCompact
+
+variable {α E}
+
+-- to match bounded_continuous_function.eval_clm
+/-- The evaluation at a point, as a continuous linear map from `C(α, 𝕜)` to `𝕜`. -/
+def evalClm (x : α) : C(α, E) →L[𝕜] E :=
+  (evalClm 𝕜 x).comp (linearIsometryBoundedOfCompact α E 𝕜).toLinearIsometry.toContinuousLinearMap
+#align continuous_map.eval_clm ContinuousMap.evalClm
 
 end
 

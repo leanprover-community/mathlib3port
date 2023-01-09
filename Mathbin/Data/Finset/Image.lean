@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.image
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -334,6 +334,10 @@ theorem mem_image : b ∈ s.image f ↔ ∃ a ∈ s, f a = b := by
 theorem mem_image_of_mem (f : α → β) {a} (h : a ∈ s) : f a ∈ s.image f :=
   mem_image.2 ⟨_, h, rfl⟩
 #align finset.mem_image_of_mem Finset.mem_image_of_mem
+
+theorem forall_image {p : β → Prop} : (∀ b ∈ s.image f, p b) ↔ ∀ a ∈ s, p (f a) := by
+  simp only [mem_image, forall_exists_index, forall_apply_eq_imp_iff₂]
+#align finset.forall_image Finset.forall_image
 
 @[simp]
 theorem mem_image_const : c ∈ s.image (const α b) ↔ s.Nonempty ∧ b = c :=

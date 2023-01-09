@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.finset.card
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,6 +274,14 @@ theorem eq_of_subset_of_card_le {s t : Finset α} (h : s ⊆ t) (h₂ : t.card �
   eq_of_veq <| Multiset.eq_of_le_of_card_le (val_le_iff.mpr h) h₂
 #align finset.eq_of_subset_of_card_le Finset.eq_of_subset_of_card_le
 
+theorem eq_of_superset_of_card_ge (hst : s ⊆ t) (hts : t.card ≤ s.card) : t = s :=
+  (eq_of_subset_of_card_le hst hts).symm
+#align finset.eq_of_superset_of_card_ge Finset.eq_of_superset_of_card_ge
+
+theorem subset_iff_eq_of_card_le (h : t.card ≤ s.card) : s ⊆ t ↔ s = t :=
+  ⟨fun hst => eq_of_subset_of_card_le hst h, Eq.subset'⟩
+#align finset.subset_iff_eq_of_card_le Finset.subset_iff_eq_of_card_le
+
 theorem map_eq_of_subset {f : α ↪ α} (hs : s.map f ⊆ s) : s.map f = s :=
   eq_of_subset_of_card_le hs (card_map _).ge
 #align finset.map_eq_of_subset Finset.map_eq_of_subset
@@ -414,6 +422,10 @@ theorem card_union_add_card_inter (s t : Finset α) :
   (Finset.induction_on t (by simp)) fun a r har => by by_cases a ∈ s <;> simp [*] <;> cc
 #align finset.card_union_add_card_inter Finset.card_union_add_card_inter
 
+theorem card_inter_add_card_union (s t : Finset α) :
+    (s ∩ t).card + (s ∪ t).card = s.card + t.card := by rw [add_comm, card_union_add_card_inter]
+#align finset.card_inter_add_card_union Finset.card_inter_add_card_union
+
 theorem card_union_le (s t : Finset α) : (s ∪ t).card ≤ s.card + t.card :=
   card_union_add_card_inter s t ▸ Nat.le_add_right _ _
 #align finset.card_union_le Finset.card_union_le
@@ -445,6 +457,10 @@ theorem le_card_sdiff (s t : Finset α) : t.card - s.card ≤ card (t \ s) :=
     _ ≤ card (t \ s) := by rw [sdiff_inter_self_right t s]
     
 #align finset.le_card_sdiff Finset.le_card_sdiff
+
+theorem card_le_card_sdiff_add_card : s.card ≤ (s \ t).card + t.card :=
+  tsub_le_iff_right.1 <| le_card_sdiff _ _
+#align finset.card_le_card_sdiff_add_card Finset.card_le_card_sdiff_add_card
 
 theorem card_sdiff_add_card : (s \ t).card + t.card = (s ∪ t).card := by
   rw [← card_disjoint_union sdiff_disjoint, sdiff_union_self_eq_union]

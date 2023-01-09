@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,7 +234,7 @@ theorem measure_diff_null (h : μ s₂ = 0) : μ (s₁ \ s₂) = μ s₁ :=
 #align measure_theory.measure_diff_null MeasureTheory.measure_diff_null
 
 theorem measure_add_diff (hs : MeasurableSet s) (t : Set α) : μ s + μ (t \ s) = μ (s ∪ t) := by
-  rw [← measure_union' disjoint_diff hs, union_diff_self]
+  rw [← measure_union' disjoint_sdiff_right hs, union_diff_self]
 #align measure_theory.measure_add_diff MeasureTheory.measure_add_diff
 
 theorem measure_diff' (s : Set α) (hm : MeasurableSet t) (h_fin : μ t ≠ ∞) :
@@ -541,7 +541,7 @@ theorem measure_Inter_eq_infi [Countable ι] {s : ι → Set α} (h : ∀ i, Mea
       use j
       rw [← measure_diff hjk (h _) (this _ hjk)]
       exact measure_mono (diff_subset_diff_right hji)
-    · rw [tsub_le_iff_right, ← measure_union disjoint_diff.symm (h i), Set.union_comm]
+    · rw [tsub_le_iff_right, ← measure_union disjoint_sdiff_left (h i), Set.union_comm]
       exact measure_mono (diff_subset_iff.1 <| subset.refl _)
   · exact hd.mono_comp _ fun _ _ => diff_subset_diff_right
 #align measure_theory.measure_Inter_eq_infi MeasureTheory.measure_Inter_eq_infi

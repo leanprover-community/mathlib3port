@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ def sup (s : Finset β) (f : β → α) : α :=
   s.fold (· ⊔ ·) ⊥ f
 #align finset.sup Finset.sup
 
-variable {s s₁ s₂ : Finset β} {f g : β → α}
+variable {s s₁ s₂ : Finset β} {f g : β → α} {a : α}
 
 theorem sup_def : s.sup f = (s.1.map f).sup :=
   rfl
@@ -102,6 +102,10 @@ protected theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀ b ∈ s, f b ≤ a
 alias Finset.sup_le_iff ↔ _ sup_le
 
 attribute [protected] sup_le
+
+theorem sup_const_le : (s.sup fun _ => a) ≤ a :=
+  Finset.sup_le fun _ _ => le_rfl
+#align finset.sup_const_le Finset.sup_const_le
 
 theorem le_sup {b : β} (hb : b ∈ s) : f b ≤ s.sup f :=
   Finset.sup_le_iff.1 le_rfl _ hb
@@ -303,7 +307,7 @@ def inf (s : Finset β) (f : β → α) : α :=
   s.fold (· ⊓ ·) ⊤ f
 #align finset.inf Finset.inf
 
-variable {s s₁ s₂ : Finset β} {f g : β → α}
+variable {s s₁ s₂ : Finset β} {f g : β → α} {a : α}
 
 theorem inf_def : s.inf f = (s.1.map f).inf :=
   rfl
@@ -373,6 +377,10 @@ protected theorem le_inf_iff {a : α} : a ≤ s.inf f ↔ ∀ b ∈ s, a ≤ f b
 alias Finset.le_inf_iff ↔ _ le_inf
 
 attribute [protected] le_inf
+
+theorem le_inf_const_le : a ≤ s.inf fun _ => a :=
+  Finset.le_inf fun _ _ => le_rfl
+#align finset.le_inf_const_le Finset.le_inf_const_le
 
 theorem inf_le {b : β} (hb : b ∈ s) : s.inf f ≤ f b :=
   Finset.le_inf_iff.1 le_rfl _ hb

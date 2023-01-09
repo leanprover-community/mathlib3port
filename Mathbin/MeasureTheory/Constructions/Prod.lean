@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.prod
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1069,8 +1069,8 @@ theorem Integrable.integralNormProdRight [SigmaFinite μ] ⦃f : α × β → E�
 #align
   measure_theory.integrable.integral_norm_prod_right MeasureTheory.Integrable.integralNormProdRight
 
-theorem integrableProdMul {f : α → ℝ} {g : β → ℝ} (hf : Integrable f μ) (hg : Integrable g ν) :
-    Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) :=
+theorem integrableProdMul {L : Type _} [IsROrC L] {f : α → L} {g : β → L} (hf : Integrable f μ)
+    (hg : Integrable g ν) : Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) :=
   by
   refine' (integrable_prod_iff _).2 ⟨_, _⟩
   · exact hf.1.fst.mul hg.1.snd
@@ -1273,7 +1273,7 @@ theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β}
   exact integral_prod f hf
 #align measure_theory.set_integral_prod MeasureTheory.set_integral_prod
 
-theorem integral_prod_mul (f : α → ℝ) (g : β → ℝ) :
+theorem integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) :
     (∫ z, f z.1 * g z.2 ∂μ.Prod ν) = (∫ x, f x ∂μ) * ∫ y, g y ∂ν :=
   by
   by_cases h : integrable (fun z : α × β => f z.1 * g z.2) (μ.prod ν)
@@ -1287,7 +1287,8 @@ theorem integral_prod_mul (f : α → ℝ) (g : β → ℝ) :
 #align measure_theory.integral_prod_mul MeasureTheory.integral_prod_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem set_integral_prod_mul (f : α → ℝ) (g : β → ℝ) (s : Set α) (t : Set β) :
+theorem set_integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) (s : Set α)
+    (t : Set β) :
     (∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν) = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν := by
   simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
 #align measure_theory.set_integral_prod_mul MeasureTheory.set_integral_prod_mul

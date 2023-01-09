@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.variance
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -369,7 +369,7 @@ theorem IndepFun.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Ty
           · apply mem_ℒp.integrable_sq
             exact mem_ℒp_finset_sum' _ fun i hi => hs _ (mem_insert_of_mem hi)
         · rw [mul_assoc]
-          apply integrable.const_mul _ 2
+          apply integrable.const_mul _ (2 : ℝ)
           simp only [mul_sum, sum_apply, Pi.mul_apply]
           apply integrable_finset_sum _ fun i hi => _
           apply
@@ -389,7 +389,7 @@ theorem IndepFun.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Ty
         simp only [mul_assoc, integral_mul_left, Pi.mul_apply, Pi.bit0_apply, Pi.one_apply,
           sum_apply, add_right_eq_self, mul_sum]
         rw [integral_finset_sum s fun i hi => _]; swap
-        · apply integrable.const_mul _ 2
+        · apply integrable.const_mul _ (2 : ℝ)
           apply
             indep_fun.integrable_mul _ (mem_ℒp.integrable one_le_two (hs _ (mem_insert_self _ _)))
               (mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)))

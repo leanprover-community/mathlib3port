@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.bochner
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -947,18 +947,21 @@ theorem integral_smul (c : 𝕜) (f : α → E) : (∫ a, c • f a ∂μ) = c �
   set_to_fun_smul (dominatedFinMeasAdditiveWeightedSmul μ) weighted_smul_smul c f
 #align measure_theory.integral_smul MeasureTheory.integral_smul
 
-theorem integral_mul_left (r : ℝ) (f : α → ℝ) : (∫ a, r * f a ∂μ) = r * ∫ a, f a ∂μ :=
+theorem integral_mul_left {L : Type _} [IsROrC L] (r : L) (f : α → L) :
+    (∫ a, r * f a ∂μ) = r * ∫ a, f a ∂μ :=
   integral_smul r f
 #align measure_theory.integral_mul_left MeasureTheory.integral_mul_left
 
-theorem integral_mul_right (r : ℝ) (f : α → ℝ) : (∫ a, f a * r ∂μ) = (∫ a, f a ∂μ) * r :=
+theorem integral_mul_right {L : Type _} [IsROrC L] (r : L) (f : α → L) :
+    (∫ a, f a * r ∂μ) = (∫ a, f a ∂μ) * r :=
   by
   simp only [mul_comm]
   exact integral_mul_left r f
 #align measure_theory.integral_mul_right MeasureTheory.integral_mul_right
 
-theorem integral_div (r : ℝ) (f : α → ℝ) : (∫ a, f a / r ∂μ) = (∫ a, f a ∂μ) / r :=
-  integral_mul_right r⁻¹ f
+theorem integral_div {L : Type _} [IsROrC L] (r : L) (f : α → L) :
+    (∫ a, f a / r ∂μ) = (∫ a, f a ∂μ) / r := by
+  simpa only [← div_eq_mul_inv] using integral_mul_right r⁻¹ f
 #align measure_theory.integral_div MeasureTheory.integral_div
 
 theorem integral_congr_ae (h : f =ᵐ[μ] g) : (∫ a, f a ∂μ) = ∫ a, g a ∂μ :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.signed_hahn
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -440,7 +440,7 @@ theorem bdd_below_measure_of_negatives : BddBelow s.measureOfNegatives :=
     intro n
     refine' le_trans _ (le_of_lt (h_lt _))
     rw [hA, ← Set.diff_union_of_subset (Set.subset_unionᵢ _ n),
-      of_union (Disjoint.comm.1 Set.disjoint_diff) _ (hmeas n)]
+      of_union Set.disjoint_sdiff_left _ (hmeas n)]
     · refine' add_le_of_nonpos_left _
       have : s ≤[A] 0 := restrict_le_restrict_Union _ _ hmeas hr
       refine' nonpos_of_restrict_le_zero _ (restrict_le_zero_subset _ _ (Set.diff_subset _ _) this)
@@ -470,7 +470,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
     apply le_antisymm
     · refine' le_of_tendsto_of_tendsto tendsto_const_nhds hf₂ (eventually_of_forall fun n => _)
       rw [← (hB n).2, hA, ← Set.diff_union_of_subset (Set.subset_unionᵢ _ n),
-        of_union (Disjoint.comm.1 Set.disjoint_diff) _ (hB₁ n)]
+        of_union Set.disjoint_sdiff_left _ (hB₁ n)]
       · refine' add_le_of_nonpos_left _
         have : s ≤[A] 0 :=
           restrict_le_restrict_Union _ _ hB₁ fun m =>

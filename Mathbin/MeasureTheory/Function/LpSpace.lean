@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3145,20 +3145,24 @@ theorem range_to_Lp_hom [Fact (1 ≤ p)] :
         exact mem_Lp f : _ ≤ Lp E p μ)
 #align bounded_continuous_function.range_to_Lp_hom BoundedContinuousFunction.range_to_Lp_hom
 
-variable (𝕜 : Type _)
+variable (𝕜 : Type _) [Fact (1 ≤ p)]
 
 /-- The bounded linear map of considering a bounded continuous function on a finite-measure space
 as an element of `Lp`. -/
-def toLp [NormedField 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] : (α →ᵇ E) →L[𝕜] lp E p μ :=
+def toLp [NormedField 𝕜] [NormedSpace 𝕜 E] : (α →ᵇ E) →L[𝕜] lp E p μ :=
   LinearMap.mkContinuous
     (LinearMap.codRestrict (lp.lpSubmodule E p μ 𝕜)
       ((ContinuousMap.toAeEqFunLinearMap μ).comp (toContinuousMapLinearMap α E 𝕜)) mem_Lp)
     _ Lp_norm_le
 #align bounded_continuous_function.to_Lp BoundedContinuousFunction.toLp
 
+theorem coe_fn_to_Lp [NormedField 𝕜] [NormedSpace 𝕜 E] (f : α →ᵇ E) : toLp p μ 𝕜 f =ᵐ[μ] f :=
+  AeEqFun.coe_fn_mk f _
+#align bounded_continuous_function.coe_fn_to_Lp BoundedContinuousFunction.coe_fn_to_Lp
+
 variable {𝕜}
 
-theorem range_to_Lp [NormedField 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] :
+theorem range_to_Lp [NormedField 𝕜] [NormedSpace 𝕜 E] :
     (LinearMap.range (toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ)).toAddSubgroup =
       MeasureTheory.lp.boundedContinuousFunction E p μ :=
   range_to_Lp_hom p μ
@@ -3166,15 +3170,24 @@ theorem range_to_Lp [NormedField 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] :
 
 variable {p}
 
-theorem coe_fn_to_Lp [NormedField 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] (f : α →ᵇ E) :
-    toLp p μ 𝕜 f =ᵐ[μ] f :=
-  AeEqFun.coe_fn_mk f _
-#align bounded_continuous_function.coe_fn_to_Lp BoundedContinuousFunction.coe_fn_to_Lp
-
-theorem to_Lp_norm_le [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] :
+theorem to_Lp_norm_le [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] :
     ‖(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ)‖ ≤ measureUnivNnreal μ ^ p.toReal⁻¹ :=
   LinearMap.mk_continuous_norm_le _ (measureUnivNnreal μ ^ p.toReal⁻¹).coe_nonneg _
 #align bounded_continuous_function.to_Lp_norm_le BoundedContinuousFunction.to_Lp_norm_le
+
+theorem to_Lp_inj {f g : α →ᵇ E} [μ.IsOpenPosMeasure] [NormedField 𝕜] [NormedSpace 𝕜 E] :
+    toLp p μ 𝕜 f = toLp p μ 𝕜 g ↔ f = g :=
+  by
+  refine' ⟨fun h => _, by tauto⟩
+  rw [← FunLike.coe_fn_eq, ← (map_continuous f).ae_eq_iff_eq μ (map_continuous g)]
+  refine' (coe_fn_to_Lp p μ 𝕜 f).symm.trans (eventually_eq.trans _ <| coe_fn_to_Lp p μ 𝕜 g)
+  rw [h]
+#align bounded_continuous_function.to_Lp_inj BoundedContinuousFunction.to_Lp_inj
+
+theorem to_Lp_injective [μ.IsOpenPosMeasure] [NormedField 𝕜] [NormedSpace 𝕜 E] :
+    Function.Injective ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ) := fun f g hfg =>
+  (to_Lp_inj μ).mp hfg
+#align bounded_continuous_function.to_Lp_injective BoundedContinuousFunction.to_Lp_injective
 
 end BoundedContinuousFunction
 
@@ -3229,7 +3242,30 @@ theorem coe_to_Lp [NormedField 𝕜] [NormedSpace 𝕜 E] (f : C(α, E)) :
   rfl
 #align continuous_map.coe_to_Lp ContinuousMap.coe_to_Lp
 
-variable [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
+theorem to_Lp_injective [μ.IsOpenPosMeasure] [NormedField 𝕜] [NormedSpace 𝕜 E] :
+    Function.Injective ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ) :=
+  (BoundedContinuousFunction.to_Lp_injective _).comp
+    (linearIsometryBoundedOfCompact α E 𝕜).Injective
+#align continuous_map.to_Lp_injective ContinuousMap.to_Lp_injective
+
+theorem to_Lp_inj {f g : C(α, E)} [μ.IsOpenPosMeasure] [NormedField 𝕜] [NormedSpace 𝕜 E] :
+    toLp p μ 𝕜 f = toLp p μ 𝕜 g ↔ f = g :=
+  (to_Lp_injective μ).eq_iff
+#align continuous_map.to_Lp_inj ContinuousMap.to_Lp_inj
+
+variable {μ}
+
+/-- If a sum of continuous functions `g n` is convergent, and the same sum converges in `Lᵖ` to `h`,
+then in fact `g n` converges uniformly to `h`.  -/
+theorem has_sum_of_has_sum_Lp {β : Type _} [μ.IsOpenPosMeasure] [NormedField 𝕜] [NormedSpace 𝕜 E]
+    {g : β → C(α, E)} {f : C(α, E)} (hg : Summable g)
+    (hg2 : HasSum (toLp p μ 𝕜 ∘ g) (toLp p μ 𝕜 f)) : HasSum g f :=
+  by
+  convert Summable.has_sum hg
+  exact to_Lp_injective μ (hg2.unique ((to_Lp p μ 𝕜).HasSum <| Summable.has_sum hg))
+#align continuous_map.has_sum_of_has_sum_Lp ContinuousMap.has_sum_of_has_sum_Lp
+
+variable (μ) [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
 
 theorem to_Lp_norm_eq_to_Lp_norm_coe :
     ‖(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ)‖ =

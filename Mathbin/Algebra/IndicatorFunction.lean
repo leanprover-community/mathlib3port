@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module algebra.indicator_function
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -503,9 +503,11 @@ theorem indicator_compl {G} [AddGroup G] (s : Set α) (f : α → G) :
 @[to_additive indicator_diff']
 theorem mul_indicator_diff (h : s ⊆ t) (f : α → G) :
     mulIndicator (t \ s) f = mulIndicator t f * (mulIndicator s f)⁻¹ :=
-  eq_mul_inv_of_mul_eq <| by
-    rw [Pi.mul_def, ← mul_indicator_union_of_disjoint disjoint_diff.symm f, diff_union_self,
+  eq_mul_inv_of_mul_eq <|
+    by
+    rw [Pi.mul_def, ← mul_indicator_union_of_disjoint, diff_union_self,
       union_eq_self_of_subset_right h]
+    exact disjoint_sdiff_self_left
 #align set.mul_indicator_diff Set.mul_indicator_diff
 
 theorem indicator_diff {G : Type _} [AddGroup G] {s t : Set α} (h : s ⊆ t) (f : α → G) :

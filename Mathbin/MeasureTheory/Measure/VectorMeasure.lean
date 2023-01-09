@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.vector_measure
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ theorem of_union {A B : Set α} (h : Disjoint A B) (hA : MeasurableSet A) (hB : 
 theorem of_add_of_diff {A B : Set α} (hA : MeasurableSet A) (hB : MeasurableSet B) (h : A ⊆ B) :
     v A + v (B \ A) = v B :=
   by
-  rw [← of_union disjoint_diff hA (hB.diff hA), union_diff_cancel h]
+  rw [← of_union disjoint_sdiff_right hA (hB.diff hA), union_diff_cancel h]
   infer_instance
 #align measure_theory.vector_measure.of_add_of_diff MeasureTheory.VectorMeasure.of_add_of_diff
 
@@ -221,13 +221,13 @@ theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : Meas
     _ = v (A \ B) + v (A ∩ B) := by
       rw [of_union]
       · rw [Disjoint.comm]
-        exact Set.disjoint_of_subset_left (A.inter_subset_right B) Set.disjoint_diff
+        exact Set.disjoint_of_subset_left (A.inter_subset_right B) disjoint_sdiff_self_right
       · exact hA.diff hB
       · exact hA.inter hB
     _ = v (A \ B) + v (A ∩ B ∪ B \ A) :=
       by
       rw [of_union, h', add_zero]
-      · exact Set.disjoint_of_subset_left (A.inter_subset_left B) Set.disjoint_diff
+      · exact Set.disjoint_of_subset_left (A.inter_subset_left B) disjoint_sdiff_self_right
       · exact hA.inter hB
       · exact hB.diff hA
     _ = v (A \ B) + v B := by rw [Set.union_comm, Set.inter_comm, Set.diff_union_inter]
@@ -1354,7 +1354,7 @@ theorem addLeft [T2Space N] [HasContinuousAdd M] (h₁ : v₁ ⊥ᵥ w) (h₂ : 
     · exact subset.trans (inter_subset_left _ _) (diff_subset _ _)
     · exact inter_subset_left _ _
     · infer_instance
-    · exact Disjoint.mono (inter_subset_left _ _) (inter_subset_left _ _) disjoint_diff
+    · exact disjoint_sdiff_self_right.mono (inter_subset_left _ _) (inter_subset_left _ _)
     · apply subset.antisymm <;> intro x hx
       · by_cases hxu' : x ∈ uᶜ
         · exact Or.inl ⟨hxu', hx⟩

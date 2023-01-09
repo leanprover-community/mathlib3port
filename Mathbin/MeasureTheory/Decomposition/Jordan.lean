@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.jordan
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,7 +297,7 @@ theorem subset_positive_null_set (hu : MeasurableSet u) (hv : MeasurableSet v)
   by
   have : s v + s (w \ v) = 0 :=
     by
-    rw [← hw₁, ← of_union Set.disjoint_diff hv (hw.diff hv), Set.union_diff_self,
+    rw [← hw₁, ← of_union Set.disjoint_sdiff_right hv (hw.diff hv), Set.union_diff_self,
       Set.union_eq_self_of_subset_left hwt]
     infer_instance
   have h₁ := nonneg_of_zero_le_restrict _ (restrict_le_restrict_subset _ _ hu hsu (hwt.trans hw₂))
@@ -327,8 +327,8 @@ theorem of_diff_eq_zero_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv
   rw [restrict_le_restrict_iff] at hsu hsv
   have a := hsu (hu.diff hv) (u.diff_subset v)
   have b := hsv (hv.diff hu) (v.diff_subset u)
-  erw [of_union (Set.disjoint_of_subset_left (u.diff_subset v) Set.disjoint_diff) (hu.diff hv)
-      (hv.diff hu)] at
+  erw [of_union (Set.disjoint_of_subset_left (u.diff_subset v) disjoint_sdiff_self_right)
+      (hu.diff hv) (hv.diff hu)] at
     hs
   rw [zero_apply] at a b
   constructor
