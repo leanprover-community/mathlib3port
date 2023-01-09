@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Bryan Gin-ge Chen, Robert Y. Lewis, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.lean_core_docs
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

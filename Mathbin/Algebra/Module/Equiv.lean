@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.equiv
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,8 +40,6 @@ linear equiv, linear equivalences, linear isomorphism, linear isomorphic
 
 
 open Function
-
-open BigOperators
 
 universe u u' v w x y z
 
@@ -539,11 +537,6 @@ theorem map_smul (e : N₁ ≃ₗ[R₁] N₂) (c : R₁) (x : N₁) : e (c • x
 #align linear_equiv.map_smul LinearEquiv.map_smul
 
 omit module_N₁ module_N₂
-
-@[simp]
-theorem map_sum {s : Finset ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
-  e.toLinearMap.map_sum
-#align linear_equiv.map_sum LinearEquiv.map_sum
 
 @[simp]
 theorem map_eq_zero_iff {x : M} : e x = 0 ↔ x = 0 :=

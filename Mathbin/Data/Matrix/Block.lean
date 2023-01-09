@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.block
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,8 +132,8 @@ theorem from_blocks_transpose (A : Matrix n l α) (B : Matrix n m α) (C : Matri
   rcases i with ⟨⟩ <;> rcases j with ⟨⟩ <;> simp [from_blocks]
 #align matrix.from_blocks_transpose Matrix.from_blocks_transpose
 
-theorem from_blocks_conj_transpose [HasStar α] (A : Matrix n l α) (B : Matrix n m α)
-    (C : Matrix o l α) (D : Matrix o m α) : (fromBlocks A B C D)ᴴ = fromBlocks Aᴴ Cᴴ Bᴴ Dᴴ := by
+theorem from_blocks_conj_transpose [Star α] (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α)
+    (D : Matrix o m α) : (fromBlocks A B C D)ᴴ = fromBlocks Aᴴ Cᴴ Bᴴ Dᴴ := by
   simp only [conj_transpose, from_blocks_transpose, from_blocks_map]
 #align matrix.from_blocks_conj_transpose Matrix.from_blocks_conj_transpose
 

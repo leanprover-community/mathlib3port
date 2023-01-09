@@ -5,7 +5,7 @@ Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, M
 Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.lattice
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

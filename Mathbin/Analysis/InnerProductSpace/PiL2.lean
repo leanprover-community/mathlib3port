@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -929,7 +929,7 @@ local notation "⟪" x ", " y "⟫ₙ" => @inner 𝕜 (EuclideanSpace 𝕜 (Fin 
 /-- The inner product of a row of A and a row of B is an entry of B ⬝ Aᴴ. -/
 theorem inner_matrix_row_row (A B : Matrix (Fin n) (Fin m) 𝕜) (i j : Fin n) :
     ⟪A i, B j⟫ₘ = (B ⬝ Aᴴ) j i := by
-  simp only [inner, Matrix.mul_apply, star_ring_end_apply, Matrix.conj_transpose_apply, mul_comm]
+  simp only [inner, Matrix.mul_apply, starRingEnd_apply, Matrix.conj_transpose_apply, mul_comm]
 #align inner_matrix_row_row inner_matrix_row_row
 
 /-- The inner product of a column of A and a column of B is an entry of Aᴴ ⬝ B -/

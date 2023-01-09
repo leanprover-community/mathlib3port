@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.complex.is_R_or_C
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -374,7 +374,7 @@ theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
 #align is_R_or_C.eq_conj_iff_real IsROrC.eq_conj_iff_real
 
 @[simp]
-theorem star_def : (HasStar.star : K → K) = conj :=
+theorem star_def : (Star.star : K → K) = conj :=
   rfl
 #align is_R_or_C.star_def IsROrC.star_def
 
@@ -1047,7 +1047,7 @@ noncomputable instance Real.isROrC : IsROrC ℝ :=
     mul_re_ax := fun z w => by
       simp only [sub_zero, mul_zero, AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
     mul_im_ax := fun z w => by simp only [add_zero, zero_mul, mul_zero, AddMonoidHom.zero_apply]
-    conj_re_ax := fun z => by simp only [star_ring_end_apply, star_id_of_comm]
+    conj_re_ax := fun z => by simp only [starRingEnd_apply, star_id_of_comm]
     conj_im_ax := fun z => by simp only [neg_zero, AddMonoidHom.zero_apply]
     conj_I_ax := by simp only [RingHom.map_zero, neg_zero]
     norm_sq_eq_def_ax := fun z => by
@@ -1055,8 +1055,8 @@ noncomputable instance Real.isROrC : IsROrC ℝ :=
         AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
     mul_im_I_ax := fun z => by simp only [mul_zero, AddMonoidHom.zero_apply]
     inv_def_ax := fun z => by
-      simp only [star_ring_end_apply, star, sq, Real.norm_eq_abs, abs_mul_abs_self, ←
-        div_eq_mul_inv, Algebra.id.map_eq_id, id.def, RingHom.id_apply, div_self_mul_self']
+      simp only [starRingEnd_apply, star, sq, Real.norm_eq_abs, abs_mul_abs_self, ← div_eq_mul_inv,
+        Algebra.id.map_eq_id, id.def, RingHom.id_apply, div_self_mul_self']
     div_I_ax := fun z => by simp only [div_zero, mul_zero, neg_zero] }
 #align real.is_R_or_C Real.isROrC
 

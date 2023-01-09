@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -367,7 +367,7 @@ theorem injective_subtype : Injective p.Subtype :=
 /-- Note the `add_submonoid` version of this lemma is called `add_submonoid.coe_finset_sum`. -/
 @[simp]
 theorem coe_sum (x : ι → p) (s : Finset ι) : ↑(∑ i in s, x i) = ∑ i in s, (x i : M) :=
-  p.Subtype.map_sum
+  map_sum p.Subtype _ _
 #align submodule.coe_sum Submodule.coe_sum
 
 section RestrictScalars

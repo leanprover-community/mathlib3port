@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
 
 ! This file was ported from Lean 3 source module set_theory.game.nim
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -415,7 +415,7 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
       -- same value again.
       intro h
       rw [Ordinal.nat_cast_inj] at h
-      try rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h
+      try rw [Nat.lxor'_comm n k, Nat.lxor'_comm n m] at h
       exact hk.ne (Nat.lxor_left_injective h)
   have h₁ :
     ∀ u : Ordinal,
@@ -428,17 +428,17 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
     -- Our goal is to produce a move that gives the Grundy value `u`.
     rw [Set.mem_range]
     -- By a lemma about xor, either `u xor m < n` or `u xor n < m`.
-    cases' Nat.lt_lxor_cases hu with h h
+    cases' Nat.lt_lxor'_cases hu with h h
     -- Therefore, we can play the corresponding move, and by the inductive hypothesis the new state
     -- is `(u xor m) xor m = u` or `n xor (u xor n) = u` as required.
     · obtain ⟨i, hi⟩ := exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
       refine' ⟨to_left_moves_add (Sum.inl i), _⟩
       simp only [hi, add_move_left_inl]
-      rw [hn _ h, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
+      rw [hn _ h, Nat.lxor'_assoc, Nat.lxor'_self, Nat.lxor'_zero]
     · obtain ⟨i, hi⟩ := exists_move_left_eq (Ordinal.nat_cast_lt.2 h)
       refine' ⟨to_left_moves_add (Sum.inr i), _⟩
       simp only [hi, add_move_left_inr]
-      rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
+      rw [hm _ h, Nat.lxor'_comm, Nat.lxor'_assoc, Nat.lxor'_self, Nat.lxor'_zero]
   -- We are done!
   apply (Ordinal.mex_le_of_ne.{u, u} h₀).antisymm
   contrapose! h₁

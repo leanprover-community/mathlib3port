@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,7 @@ def transpose (M : Matrix m n α) : Matrix n m α
 scoped postfix:1024 "ᵀ" => Matrix.transpose
 
 /-- The conjugate transpose of a matrix defined in term of `star`. -/
-def conjTranspose [HasStar α] (M : Matrix m n α) : Matrix n m α :=
+def conjTranspose [Star α] (M : Matrix m n α) : Matrix n m α :=
   M.transpose.map star
 #align matrix.conj_transpose Matrix.conjTranspose
 
@@ -2060,13 +2060,13 @@ open Matrix
   Compare with `mul_apply`, `diagonal_apply_eq`, etc.
 -/
 @[simp]
-theorem conj_transpose_apply [HasStar α] (M : Matrix m n α) (i j) :
+theorem conj_transpose_apply [Star α] (M : Matrix m n α) (i j) :
     M.conjTranspose j i = star (M i j) :=
   rfl
 #align matrix.conj_transpose_apply Matrix.conj_transpose_apply
 
 @[simp]
-theorem conj_transpose_conj_transpose [HasInvolutiveStar α] (M : Matrix m n α) : Mᴴᴴ = M :=
+theorem conj_transpose_conj_transpose [InvolutiveStar α] (M : Matrix m n α) : Mᴴᴴ = M :=
   Matrix.ext <| by simp
 #align matrix.conj_transpose_conj_transpose Matrix.conj_transpose_conj_transpose
 
@@ -2105,13 +2105,13 @@ variants which this lemma would not apply to:
 * `matrix.conj_transpose_rat_cast_smul`
 -/
 @[simp]
-theorem conj_transpose_smul [HasStar R] [HasStar α] [HasSmul R α] [StarModule R α] (c : R)
+theorem conj_transpose_smul [Star R] [Star α] [HasSmul R α] [StarModule R α] (c : R)
     (M : Matrix m n α) : (c • M)ᴴ = star c • Mᴴ :=
   Matrix.ext fun i j => star_smul _ _
 #align matrix.conj_transpose_smul Matrix.conj_transpose_smul
 
 @[simp]
-theorem conj_transpose_smul_non_comm [HasStar R] [HasStar α] [HasSmul R α] [HasSmul Rᵐᵒᵖ α] (c : R)
+theorem conj_transpose_smul_non_comm [Star R] [Star α] [HasSmul R α] [HasSmul Rᵐᵒᵖ α] (c : R)
     (M : Matrix m n α) (h : ∀ (r : R) (a : α), star (r • a) = MulOpposite.op (star r) • star a) :
     (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
   Matrix.ext <| by simp [h]
@@ -2182,7 +2182,7 @@ theorem conj_transpose_neg [AddGroup α] [StarAddMonoid α] (M : Matrix m n α) 
   Matrix.ext <| by simp
 #align matrix.conj_transpose_neg Matrix.conj_transpose_neg
 
-theorem conj_transpose_map [HasStar α] [HasStar β] {A : Matrix m n α} (f : α → β)
+theorem conj_transpose_map [Star α] [Star β] {A : Matrix m n α} (f : α → β)
     (hf : Function.Semiconj f star star) : Aᴴ.map f = (A.map f)ᴴ :=
   Matrix.ext fun i j => hf _
 #align matrix.conj_transpose_map Matrix.conj_transpose_map
@@ -2275,18 +2275,18 @@ section Star
 
 /-- When `α` has a star operation, square matrices `matrix n n α` have a star
 operation equal to `matrix.conj_transpose`. -/
-instance [HasStar α] : HasStar (Matrix n n α) where star := conjTranspose
+instance [Star α] : Star (Matrix n n α) where star := conjTranspose
 
-theorem star_eq_conj_transpose [HasStar α] (M : Matrix m m α) : star M = Mᴴ :=
+theorem star_eq_conj_transpose [Star α] (M : Matrix m m α) : star M = Mᴴ :=
   rfl
 #align matrix.star_eq_conj_transpose Matrix.star_eq_conj_transpose
 
 @[simp]
-theorem star_apply [HasStar α] (M : Matrix n n α) (i j) : (star M) i j = star (M j i) :=
+theorem star_apply [Star α] (M : Matrix n n α) (i j) : (star M) i j = star (M j i) :=
   rfl
 #align matrix.star_apply Matrix.star_apply
 
-instance [HasInvolutiveStar α] : HasInvolutiveStar (Matrix n n α)
+instance [InvolutiveStar α] : InvolutiveStar (Matrix n n α)
     where star_involutive := conj_transpose_conj_transpose
 
 /-- When `α` is a `*`-additive monoid, `matrix.has_star` is also a `*`-additive monoid. -/
@@ -2340,7 +2340,7 @@ theorem transpose_submatrix (A : Matrix m n α) (r_reindex : l → m) (c_reindex
 #align matrix.transpose_submatrix Matrix.transpose_submatrix
 
 @[simp]
-theorem conj_transpose_submatrix [HasStar α] (A : Matrix m n α) (r_reindex : l → m)
+theorem conj_transpose_submatrix [Star α] (A : Matrix m n α) (r_reindex : l → m)
     (c_reindex : o → n) : (A.submatrix r_reindex c_reindex)ᴴ = Aᴴ.submatrix c_reindex r_reindex :=
   ext fun _ _ => rfl
 #align matrix.conj_transpose_submatrix Matrix.conj_transpose_submatrix
@@ -2501,7 +2501,7 @@ theorem transpose_reindex (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) 
   rfl
 #align matrix.transpose_reindex Matrix.transpose_reindex
 
-theorem conj_transpose_reindex [HasStar α] (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) :
+theorem conj_transpose_reindex [Star α] (eₘ : m ≃ l) (eₙ : n ≃ o) (M : Matrix m n α) :
     (reindex eₘ eₙ M)ᴴ = reindex eₙ eₘ Mᴴ :=
   rfl
 #align matrix.conj_transpose_reindex Matrix.conj_transpose_reindex
@@ -2628,14 +2628,14 @@ theorem transpose_row (v : m → α) : (Matrix.row v)ᵀ = Matrix.col v :=
 #align matrix.transpose_row Matrix.transpose_row
 
 @[simp]
-theorem conj_transpose_col [HasStar α] (v : m → α) : (col v)ᴴ = row (star v) :=
+theorem conj_transpose_col [Star α] (v : m → α) : (col v)ᴴ = row (star v) :=
   by
   ext
   rfl
 #align matrix.conj_transpose_col Matrix.conj_transpose_col
 
 @[simp]
-theorem conj_transpose_row [HasStar α] (v : m → α) : (row v)ᴴ = col (star v) :=
+theorem conj_transpose_row [Star α] (v : m → α) : (row v)ᴴ = col (star v) :=
   by
   ext
   rfl
@@ -2774,7 +2774,7 @@ theorem update_column_transpose [DecidableEq m] : updateColumn Mᵀ i b = (updat
   rfl
 #align matrix.update_column_transpose Matrix.update_column_transpose
 
-theorem update_row_conj_transpose [DecidableEq n] [HasStar α] :
+theorem update_row_conj_transpose [DecidableEq n] [Star α] :
     updateRow Mᴴ j (star c) = (updateColumn M j c)ᴴ :=
   by
   rw [conj_transpose, conj_transpose, transpose_map, transpose_map, update_row_transpose,
@@ -2782,7 +2782,7 @@ theorem update_row_conj_transpose [DecidableEq n] [HasStar α] :
   rfl
 #align matrix.update_row_conj_transpose Matrix.update_row_conj_transpose
 
-theorem update_column_conj_transpose [DecidableEq m] [HasStar α] :
+theorem update_column_conj_transpose [DecidableEq m] [Star α] :
     updateColumn Mᴴ i (star b) = (updateRow M i b)ᴴ :=
   by
   rw [conj_transpose, conj_transpose, transpose_map, transpose_map, update_column_transpose,

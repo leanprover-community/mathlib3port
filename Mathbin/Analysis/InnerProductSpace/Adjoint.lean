@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.adjoint
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -214,10 +214,10 @@ theorem Submodule.adjoint_orthogonal_projection (U : Submodule 𝕜 E) [Complete
 #align submodule.adjoint_orthogonal_projection Submodule.adjoint_orthogonal_projection
 
 /-- `E →L[𝕜] E` is a star algebra with the adjoint as the star operation. -/
-instance : HasStar (E →L[𝕜] E) :=
+instance : Star (E →L[𝕜] E) :=
   ⟨adjoint⟩
 
-instance : HasInvolutiveStar (E →L[𝕜] E) :=
+instance : InvolutiveStar (E →L[𝕜] E) :=
   ⟨adjoint_adjoint⟩
 
 instance : StarSemigroup (E →L[𝕜] E) :=
@@ -460,10 +460,10 @@ theorem eq_adjoint_iff_basis_right {ι : Type _} (b : Basis ι 𝕜 F) (A : E �
 #align linear_map.eq_adjoint_iff_basis_right LinearMap.eq_adjoint_iff_basis_right
 
 /-- `E →ₗ[𝕜] E` is a star algebra with the adjoint as the star operation. -/
-instance : HasStar (E →ₗ[𝕜] E) :=
+instance : Star (E →ₗ[𝕜] E) :=
   ⟨adjoint⟩
 
-instance : HasInvolutiveStar (E →ₗ[𝕜] E) :=
+instance : InvolutiveStar (E →ₗ[𝕜] E) :=
   ⟨adjoint_adjoint⟩
 
 instance : StarSemigroup (E →ₗ[𝕜] E) :=
@@ -543,7 +543,7 @@ theorem conj_transpose_eq_adjoint (A : Matrix m n 𝕜) :
   rw [@LinearMap.eq_adjoint_iff _ (EuclideanSpace 𝕜 m) (EuclideanSpace 𝕜 n)]
   intro x y
   convert dot_product_assoc (conj ∘ (id x : m → 𝕜)) y A using 1
-  simp [dot_product, mul_vec, RingHom.map_sum, ← star_ring_end_apply, mul_comm]
+  simp [dot_product, mul_vec, RingHom.map_sum, ← starRingEnd_apply, mul_comm]
 #align matrix.conj_transpose_eq_adjoint Matrix.conj_transpose_eq_adjoint
 
 end Matrix

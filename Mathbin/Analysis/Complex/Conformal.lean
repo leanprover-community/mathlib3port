@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.complex.conformal
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem is_conformal_map_iff_is_complex_or_conj_linear :
         by
         ext1
         simp only [hmap, coe_comp', ContinuousLinearEquiv.coe_coe, Function.comp_apply,
-          conj_cle_apply, star_ring_end_self_apply]
+          conj_cle_apply, starRingEnd_self_apply]
       rw [minor₁] at h₂⊢
       refine' isConformalMapComplexLinearConj _
       contrapose! h₂ with w

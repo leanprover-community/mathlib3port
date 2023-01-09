@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.module
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,8 +85,8 @@ def starLinearEquiv (R : Type _) {A : Type _} [CommRing R] [StarRing R] [Semirin
     map_smul' := star_smul }
 #align star_linear_equiv starLinearEquiv
 
-variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [HasTrivialStar R]
-  [AddCommGroup A] [Module R A] [StarAddMonoid A] [StarModule R A]
+variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [TrivialStar R] [AddCommGroup A]
+  [Module R A] [StarAddMonoid A] [StarModule R A]
 
 /-- The self-adjoint elements of a star module, as a submodule. -/
 def selfAdjoint.submodule : Submodule R A :=
@@ -107,7 +107,7 @@ def selfAdjointPart : A →ₗ[R] selfAdjoint A
   toFun x :=
     ⟨(⅟ 2 : R) • (x + star x), by
       simp only [selfAdjoint.mem_iff, star_smul, add_comm, StarAddMonoid.star_add, star_inv',
-        star_bit0, star_one, star_star, star_inv_of (2 : R), star_trivial]⟩
+        star_bit0, star_one, star_star, star_invOf (2 : R), star_trivial]⟩
   map_add' x y := by
     ext
     simp [add_add_add_comm]

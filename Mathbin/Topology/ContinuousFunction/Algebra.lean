@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.algebra
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -890,11 +890,11 @@ variable {R α β : Type _}
 
 variable [TopologicalSpace α] [TopologicalSpace β]
 
-section HasStar
+section Star
 
-variable [HasStar β] [HasContinuousStar β]
+variable [Star β] [HasContinuousStar β]
 
-instance : HasStar C(α, β) where star f := starContinuousMap.comp f
+instance : Star C(α, β) where star f := starContinuousMap.comp f
 
 @[simp]
 theorem coe_star (f : C(α, β)) : ⇑(star f) = star f :=
@@ -906,9 +906,9 @@ theorem star_apply (f : C(α, β)) (x : α) : star f x = star (f x) :=
   rfl
 #align continuous_map.star_apply ContinuousMap.star_apply
 
-end HasStar
+end Star
 
-instance [HasInvolutiveStar β] [HasContinuousStar β] : HasInvolutiveStar C(α, β)
+instance [InvolutiveStar β] [HasContinuousStar β] : InvolutiveStar C(α, β)
     where star_involutive f := ext fun x => star_star _
 
 instance [AddMonoid β] [HasContinuousAdd β] [StarAddMonoid β] [HasContinuousStar β] :
@@ -921,7 +921,7 @@ instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [HasConti
     StarRing C(α, β) :=
   { ContinuousMap.starAddMonoid with }
 
-instance [HasStar R] [HasStar β] [HasSmul R β] [StarModule R β] [HasContinuousStar β]
+instance [Star R] [Star β] [HasSmul R β] [StarModule R β] [HasContinuousStar β]
     [HasContinuousConstSmul R β] : StarModule R C(α, β)
     where star_smul k f := ext fun x => star_smul _ _
 

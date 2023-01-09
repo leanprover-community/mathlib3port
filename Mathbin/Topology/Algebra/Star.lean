@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.algebra.star
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ universe u
 variable {ι α R S : Type _}
 
 /-- Basic hypothesis to talk about a topological space with a continuous `star` operator. -/
-class HasContinuousStar (R : Type u) [TopologicalSpace R] [HasStar R] : Prop where
+class HasContinuousStar (R : Type u) [TopologicalSpace R] [Star R] : Prop where
   continuous_star : Continuous (star : R → R)
 #align has_continuous_star HasContinuousStar
 
@@ -38,7 +38,7 @@ export HasContinuousStar (continuous_star)
 
 section Continuity
 
-variable [TopologicalSpace R] [HasStar R] [HasContinuousStar R]
+variable [TopologicalSpace R] [Star R] [HasContinuousStar R]
 
 theorem continuous_on_star {s : Set R} : ContinuousOn star s :=
   continuous_star.ContinuousOn
@@ -91,15 +91,15 @@ end Continuity
 
 section Instances
 
-instance [HasStar R] [HasStar S] [TopologicalSpace R] [TopologicalSpace S] [HasContinuousStar R]
+instance [Star R] [Star S] [TopologicalSpace R] [TopologicalSpace S] [HasContinuousStar R]
     [HasContinuousStar S] : HasContinuousStar (R × S) :=
   ⟨(continuous_star.comp continuous_fst).prod_mk (continuous_star.comp continuous_snd)⟩
 
-instance {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, HasStar (C i)]
+instance {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, Star (C i)]
     [∀ i, HasContinuousStar (C i)] : HasContinuousStar (∀ i, C i)
     where continuous_star := continuous_pi fun i => Continuous.star (continuous_apply i)
 
-instance [HasStar R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rᵐᵒᵖ :=
+instance [Star R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.star⟩
 
 instance [Monoid R] [StarSemigroup R] [TopologicalSpace R] [HasContinuousStar R] :

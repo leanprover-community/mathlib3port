@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1682,10 +1682,12 @@ theorem range_quotient_lift_on' {s : Setoid ι} (hf) :
 #align set.range_quotient_lift_on' Set.range_quotient_lift_on'
 -/
 
+#print Set.canLift /-
 instance canLift (c) (p) [CanLift α β c p] :
     CanLift (Set α) (Set β) ((· '' ·) c) fun s => ∀ x ∈ s, p x
     where prf s hs := subset_range_iff_exists_image_eq.mp fun x hx => CanLift.prf _ (hs x hx)
 #align set.can_lift Set.canLift
+-/
 
 /- warning: set.range_const_subset -> Set.range_const_subset is a dubious translation:
 lean 3 declaration is

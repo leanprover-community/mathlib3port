@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.basic
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -4044,44 +4044,44 @@ def foldlRecOn {C : β → Sort _} (l : List α) (op : β → α → β) (b : β
 #align list.foldl_rec_on List.foldlRecOn
 -/
 
-/- warning: list.foldr_rec_on_nil -> List.foldr_rec_on_nil is a dubious translation:
+/- warning: list.foldr_rec_on_nil -> List.foldrRecOn_nil is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {C : β -> Sort.{u3}} (op : α -> β -> β) (b : β) (hb : C b) (hl : forall (b : β), (C b) -> (forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (List.nil.{u1} α)) -> (C (op a b)))), Eq.{u3} (C (List.foldr.{u1, u2} α β op b (List.nil.{u1} α))) (List.foldrRecOn.{u1, u2, u3} α β (fun (b : β) => C b) (List.nil.{u1} α) op b hb hl) hb
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {C : β -> Sort.{u1}} (op : α -> β -> β) (b : β) (hb : C b) (hl : forall (b : β), (C b) -> (forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a (List.nil.{u2} α)) -> (C (op a b)))), Eq.{u1} (C (List.foldr.{u2, u3} α β op b (List.nil.{u2} α))) (List.foldrRecOn.{u2, u3, u1} α β C (List.nil.{u2} α) op b hb hl) hb
-Case conversion may be inaccurate. Consider using '#align list.foldr_rec_on_nil List.foldr_rec_on_nilₓ'. -/
+Case conversion may be inaccurate. Consider using '#align list.foldr_rec_on_nil List.foldrRecOn_nilₓ'. -/
 @[simp]
-theorem foldr_rec_on_nil {C : β → Sort _} (op : α → β → β) (b) (hb : C b) (hl) :
+theorem foldrRecOn_nil {C : β → Sort _} (op : α → β → β) (b) (hb : C b) (hl) :
     foldrRecOn [] op b hb hl = hb :=
   rfl
-#align list.foldr_rec_on_nil List.foldr_rec_on_nil
+#align list.foldr_rec_on_nil List.foldrRecOn_nil
 
-/- warning: list.foldr_rec_on_cons -> List.foldr_rec_on_cons is a dubious translation:
+/- warning: list.foldr_rec_on_cons -> List.foldrRecOn_cons is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {C : β -> Sort.{u3}} (x : α) (l : List.{u1} α) (op : α -> β -> β) (b : β) (hb : C b) (hl : forall (b : β), (C b) -> (forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (List.cons.{u1} α x l)) -> (C (op a b)))), Eq.{u3} (C (List.foldr.{u1, u2} α β op b (List.cons.{u1} α x l))) (List.foldrRecOn.{u1, u2, u3} α β (fun (b : β) => C b) (List.cons.{u1} α x l) op b hb hl) (hl (List.foldr.{u1, u2} α β op b l) (List.foldrRecOn.{u1, u2, u3} α β C l op b hb (fun (b : β) (hb : C b) (a : α) (ha : Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l) => hl b hb a (List.mem_cons_of_mem.{u1} α x a l ha))) x (List.mem_cons_self.{u1} α x l))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {C : β -> Sort.{u1}} (x : α) (l : List.{u2} α) (op : α -> β -> β) (b : β) (hb : C b) (hl : forall (b : β), (C b) -> (forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a (List.cons.{u2} α x l)) -> (C (op a b)))), Eq.{u1} (C (List.foldr.{u2, u3} α β op b (List.cons.{u2} α x l))) (List.foldrRecOn.{u2, u3, u1} α β C (List.cons.{u2} α x l) op b hb hl) (hl (List.foldr.{u2, u3} α β op b l) (List.foldrRecOn.{u2, u3, u1} α β C l op b hb (fun (b : β) (hb : C b) (a : α) (ha : Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) => hl b hb a (List.mem_cons_of_mem.{u2} α x a l ha))) x (List.mem_cons_self.{u2} α x l))
-Case conversion may be inaccurate. Consider using '#align list.foldr_rec_on_cons List.foldr_rec_on_consₓ'. -/
+Case conversion may be inaccurate. Consider using '#align list.foldr_rec_on_cons List.foldrRecOn_consₓ'. -/
 @[simp]
-theorem foldr_rec_on_cons {C : β → Sort _} (x : α) (l : List α) (op : α → β → β) (b) (hb : C b)
+theorem foldrRecOn_cons {C : β → Sort _} (x : α) (l : List α) (op : α → β → β) (b) (hb : C b)
     (hl : ∀ (b : β) (hb : C b) (a : α) (ha : a ∈ x :: l), C (op a b)) :
     foldrRecOn (x :: l) op b hb hl =
       hl _ (foldrRecOn l op b hb fun b hb a ha => hl b hb a (mem_cons_of_mem _ ha)) x
         (mem_cons_self _ _) :=
   rfl
-#align list.foldr_rec_on_cons List.foldr_rec_on_cons
+#align list.foldr_rec_on_cons List.foldrRecOn_cons
 
-/- warning: list.foldl_rec_on_nil -> List.foldl_rec_on_nil is a dubious translation:
+/- warning: list.foldl_rec_on_nil -> List.foldlRecOn_nil is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {C : β -> Sort.{u3}} (op : β -> α -> β) (b : β) (hb : C b) (hl : forall (b : β), (C b) -> (forall (a : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (List.nil.{u1} α)) -> (C (op b a)))), Eq.{u3} (C (List.foldl.{u2, u1} β α op b (List.nil.{u1} α))) (List.foldlRecOn.{u1, u2, u3} α β (fun (b : β) => C b) (List.nil.{u1} α) op b hb hl) hb
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {C : β -> Sort.{u1}} (op : β -> α -> β) (b : β) (hb : C b) (hl : forall (b : β), (C b) -> (forall (a : α), (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a (List.nil.{u2} α)) -> (C (op b a)))), Eq.{u1} (C (List.foldl.{u3, u2} β α op b (List.nil.{u2} α))) (List.foldlRecOn.{u2, u3, u1} α β C (List.nil.{u2} α) op b hb hl) hb
-Case conversion may be inaccurate. Consider using '#align list.foldl_rec_on_nil List.foldl_rec_on_nilₓ'. -/
+Case conversion may be inaccurate. Consider using '#align list.foldl_rec_on_nil List.foldlRecOn_nilₓ'. -/
 @[simp]
-theorem foldl_rec_on_nil {C : β → Sort _} (op : β → α → β) (b) (hb : C b) (hl) :
+theorem foldlRecOn_nil {C : β → Sort _} (op : β → α → β) (b) (hb : C b) (hl) :
     foldlRecOn [] op b hb hl = hb :=
   rfl
-#align list.foldl_rec_on_nil List.foldl_rec_on_nil
+#align list.foldl_rec_on_nil List.foldlRecOn_nil
 
 -- scanl
 section Scanl
@@ -7160,9 +7160,9 @@ theorem getI_eq_iget_get? (n : ℕ) : l.inth n = (l.nth n).iget := by
 #align list.inth_eq_iget_nth List.getI_eq_iget_get?
 -/
 
-#print List.getI_zero_eq_head! /-
-theorem getI_zero_eq_head! : l.inth 0 = l.head := by cases l <;> rfl
-#align list.inth_zero_eq_head List.getI_zero_eq_head!
+#print List.getI_zero_eq_headI /-
+theorem getI_zero_eq_headI : l.inth 0 = l.head := by cases l <;> rfl
+#align list.inth_zero_eq_head List.getI_zero_eq_headI
 -/
 
 end Inth

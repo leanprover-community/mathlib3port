@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.basic
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,15 +195,19 @@ alias lt_iff_ssubset ↔ _root_.has_lt.lt.ssubset _root_.has_ssubset.ssubset.lt
 instance {α : Type u} : CoeSort (Set α) (Type u) :=
   ⟨fun s => { x // x ∈ s }⟩
 
+#print Set.PiSetCoe.canLift /-
 instance PiSetCoe.canLift (ι : Type u) (α : ∀ i : ι, Type v) [ne : ∀ i, Nonempty (α i)]
     (s : Set ι) : CanLift (∀ i : s, α i) (∀ i, α i) (fun f i => f i) fun _ => True :=
   PiSubtype.canLift ι α s
 #align set.pi_set_coe.can_lift Set.PiSetCoe.canLift
+-/
 
+#print Set.PiSetCoe.canLift' /-
 instance PiSetCoe.canLift' (ι : Type u) (α : Type v) [ne : Nonempty α] (s : Set ι) :
     CanLift (s → α) (ι → α) (fun f i => f i) fun _ => True :=
   PiSetCoe.canLift ι (fun _ => α) s
 #align set.pi_set_coe.can_lift' Set.PiSetCoe.canLift'
+-/
 
 end Set
 
@@ -1178,7 +1182,7 @@ theorem union_assoc (a b c : Set α) : a ∪ b ∪ c = a ∪ (b ∪ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7025 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7027 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7025 x._@.Mathlib.Data.Set.Basic._hyg.7027)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7137 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7139 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7137 x._@.Mathlib.Data.Set.Basic._hyg.7139)
 Case conversion may be inaccurate. Consider using '#align set.union_is_assoc Set.union_isAssocₓ'. -/
 instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
   ⟨union_assoc⟩
@@ -1188,7 +1192,7 @@ instance union_isAssoc : IsAssociative (Set α) (· ∪ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7062 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7064 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7062 x._@.Mathlib.Data.Set.Basic._hyg.7064)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.7174 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.7176 : Set.{u1} α) => Union.union.{u1} (Set.{u1} α) (Set.instUnionSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.7174 x._@.Mathlib.Data.Set.Basic._hyg.7176)
 Case conversion may be inaccurate. Consider using '#align set.union_is_comm Set.union_isCommₓ'. -/
 instance union_isComm : IsCommutative (Set α) (· ∪ ·) :=
   ⟨union_comm⟩
@@ -1531,7 +1535,7 @@ theorem inter_assoc (a b c : Set α) : a ∩ b ∩ c = a ∩ (b ∩ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8461 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8463 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8461 x._@.Mathlib.Data.Set.Basic._hyg.8463)
+  forall {α : Type.{u1}}, IsAssociative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8573 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8575 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8573 x._@.Mathlib.Data.Set.Basic._hyg.8575)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_assoc Set.inter_isAssocₓ'. -/
 instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
   ⟨inter_assoc⟩
@@ -1541,7 +1545,7 @@ instance inter_isAssoc : IsAssociative (Set α) (· ∩ ·) :=
 lean 3 declaration is
   forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α))
 but is expected to have type
-  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8498 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8500 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8498 x._@.Mathlib.Data.Set.Basic._hyg.8500)
+  forall {α : Type.{u1}}, IsCommutative.{u1} (Set.{u1} α) (fun (x._@.Mathlib.Data.Set.Basic._hyg.8610 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.8612 : Set.{u1} α) => Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet_1.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.8610 x._@.Mathlib.Data.Set.Basic._hyg.8612)
 Case conversion may be inaccurate. Consider using '#align set.inter_is_comm Set.inter_isCommₓ'. -/
 instance inter_isComm : IsCommutative (Set α) (· ∩ ·) :=
   ⟨inter_comm⟩

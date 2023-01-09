@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.lemmas
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,6 +46,7 @@ theorem range_map_coe (s : Set α) : Set.range (map (coe : s → α)) = { l | �
 #align list.range_map_coe List.range_map_coe
 -/
 
+#print List.canLift /-
 /-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
 type. -/
 instance canLift (c) (p) [CanLift α β c p] :
@@ -54,6 +55,7 @@ instance canLift (c) (p) [CanLift α β c p] :
     rw [← Set.mem_range, range_map]
     exact fun a ha => CanLift.prf a (H a ha)
 #align list.can_lift List.canLift
+-/
 
 #print List.injOn_insertNth_index_of_not_mem /-
 theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :

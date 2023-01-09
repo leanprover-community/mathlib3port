@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Weiser
 
 ! This file was ported from Lean 3 source module algebra.star.free
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ instance : StarRing (FreeAlgebra R X)
     where
   star := MulOpposite.unop ∘ lift R (MulOpposite.op ∘ ι R)
   star_involutive x := by
-    unfold HasStar.star
+    unfold Star.star
     simp only [Function.comp_apply]
     refine' FreeAlgebra.induction R X _ _ _ _ x
     · intros
@@ -69,12 +69,12 @@ instance : StarRing (FreeAlgebra R X)
   star_add a b := by simp only [Function.comp_apply, map_add, MulOpposite.unop_add]
 
 @[simp]
-theorem star_ι (x : X) : star (ι R x) = ι R x := by simp [star, HasStar.star]
+theorem star_ι (x : X) : star (ι R x) = ι R x := by simp [star, Star.star]
 #align free_algebra.star_ι FreeAlgebra.star_ι
 
 @[simp]
 theorem star_algebra_map (r : R) : star (algebraMap R (FreeAlgebra R X) r) = algebraMap R _ r := by
-  simp [star, HasStar.star]
+  simp [star, Star.star]
 #align free_algebra.star_algebra_map FreeAlgebra.star_algebra_map
 
 /-- `star` as an `alg_equiv` -/

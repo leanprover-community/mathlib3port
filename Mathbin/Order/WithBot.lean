@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.with_bot
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -240,9 +240,11 @@ theorem unbot_coe (x : α) (h : (x : WithBot α) ≠ ⊥ := coe_ne_bot) : (x : W
 #align with_bot.unbot_coe WithBot.unbot_coe
 -/
 
+#print WithBot.canLift /-
 instance canLift : CanLift (WithBot α) α coe fun r => r ≠ ⊥
     where prf x h := ⟨x.unbot h, coe_unbot _ _⟩
 #align with_bot.can_lift WithBot.canLift
+-/
 
 section LE
 
@@ -628,7 +630,7 @@ instance [DistribLattice α] : DistribLattice (WithBot α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LE.le.{u1} α _inst_1)], DecidableRel.{succ u1} (WithBot.{u1} α) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.3804 : α) (x._@.Mathlib.Order.WithBot._hyg.3806 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.3804 x._@.Mathlib.Order.WithBot._hyg.3806)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.3824 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.3826 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.3824 x._@.Mathlib.Order.WithBot._hyg.3826)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.3852 : α) (x._@.Mathlib.Order.WithBot._hyg.3854 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.3852 x._@.Mathlib.Order.WithBot._hyg.3854)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.3872 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.3874 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.3872 x._@.Mathlib.Order.WithBot._hyg.3874)
 Case conversion may be inaccurate. Consider using '#align with_bot.decidable_le WithBot.decidableLEₓ'. -/
 instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithBot α) (· ≤ ·)
   | none, x => is_true fun a h => Option.noConfusion h
@@ -640,7 +642,7 @@ instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (Wit
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α _inst_1)], DecidableRel.{succ u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.3966 : α) (x._@.Mathlib.Order.WithBot._hyg.3968 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.3966 x._@.Mathlib.Order.WithBot._hyg.3968)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.3986 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.3988 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.3986 x._@.Mathlib.Order.WithBot._hyg.3988)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4014 : α) (x._@.Mathlib.Order.WithBot._hyg.4016 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4014 x._@.Mathlib.Order.WithBot._hyg.4016)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4034 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4036 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4034 x._@.Mathlib.Order.WithBot._hyg.4036)
 Case conversion may be inaccurate. Consider using '#align with_bot.decidable_lt WithBot.decidableLTₓ'. -/
 instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithBot α) (· < ·)
   | none, some x => is_true <| by exists x, rfl <;> rintro _ ⟨⟩
@@ -652,7 +654,7 @@ instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithB
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α _inst_1)], IsTotal.{u1} (WithBot.{u1} α) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4165 : α) (x._@.Mathlib.Order.WithBot._hyg.4167 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4165 x._@.Mathlib.Order.WithBot._hyg.4167)], IsTotal.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4185 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4187 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4185 x._@.Mathlib.Order.WithBot._hyg.4187)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4213 : α) (x._@.Mathlib.Order.WithBot._hyg.4215 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4213 x._@.Mathlib.Order.WithBot._hyg.4215)], IsTotal.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4233 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4235 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4233 x._@.Mathlib.Order.WithBot._hyg.4235)
 Case conversion may be inaccurate. Consider using '#align with_bot.is_total_le WithBot.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithBot α) (· ≤ ·) :=
   ⟨fun a b =>
@@ -1070,9 +1072,11 @@ theorem untop_coe (x : α) (h : (x : WithTop α) ≠ ⊤ := coe_ne_top) : (x : W
 #align with_top.untop_coe WithTop.untop_coe
 -/
 
+#print WithTop.canLift /-
 instance canLift : CanLift (WithTop α) α coe fun r => r ≠ ⊤
     where prf x h := ⟨x.untop h, coe_untop _ _⟩
 #align with_top.can_lift WithTop.canLift
+-/
 
 section LE
 
@@ -1777,7 +1781,7 @@ instance [DistribLattice α] : DistribLattice (WithTop α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LE.le.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9597 : α) (x._@.Mathlib.Order.WithBot._hyg.9599 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9597 x._@.Mathlib.Order.WithBot._hyg.9599)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9617 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9619 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9617 x._@.Mathlib.Order.WithBot._hyg.9619)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9687 : α) (x._@.Mathlib.Order.WithBot._hyg.9689 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9687 x._@.Mathlib.Order.WithBot._hyg.9689)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9707 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9709 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9707 x._@.Mathlib.Order.WithBot._hyg.9709)
 Case conversion may be inaccurate. Consider using '#align with_top.decidable_le WithTop.decidableLEₓ'. -/
 instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithTop α) (· ≤ ·) :=
   fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLE _ _) toDual_le_toDual_iff
@@ -1787,7 +1791,7 @@ instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (Wit
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9652 : α) (x._@.Mathlib.Order.WithBot._hyg.9654 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9652 x._@.Mathlib.Order.WithBot._hyg.9654)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9672 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9674 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9672 x._@.Mathlib.Order.WithBot._hyg.9674)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9742 : α) (x._@.Mathlib.Order.WithBot._hyg.9744 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9742 x._@.Mathlib.Order.WithBot._hyg.9744)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9762 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9764 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9762 x._@.Mathlib.Order.WithBot._hyg.9764)
 Case conversion may be inaccurate. Consider using '#align with_top.decidable_lt WithTop.decidableLTₓ'. -/
 instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithTop α) (· < ·) :=
   fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLT _ _) toDual_lt_toDual_iff
@@ -1797,7 +1801,7 @@ instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithT
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α _inst_1)], IsTotal.{u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9707 : α) (x._@.Mathlib.Order.WithBot._hyg.9709 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9707 x._@.Mathlib.Order.WithBot._hyg.9709)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9727 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9729 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9727 x._@.Mathlib.Order.WithBot._hyg.9729)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.9797 : α) (x._@.Mathlib.Order.WithBot._hyg.9799 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.9797 x._@.Mathlib.Order.WithBot._hyg.9799)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.9817 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.9819 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.9817 x._@.Mathlib.Order.WithBot._hyg.9819)
 Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
   ⟨fun _ _ => by

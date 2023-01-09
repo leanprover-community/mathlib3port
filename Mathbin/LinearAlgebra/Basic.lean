@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,6 +189,11 @@ variable [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄] [RingHomCompTriple σ₁
 variable (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₃] M₃)
 
 include R R₂
+
+@[simp]
+theorem map_sum {ι : Type _} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ i in t, f (g i) :=
+  f.toAddMonoidHom.map_sum _ _
+#align linear_map.map_sum LinearMap.map_sum
 
 theorem comp_assoc (h : M₃ →ₛₗ[σ₃₄] M₄) :
     ((h.comp g : M₂ →ₛₗ[σ₂₄] M₄).comp f : M →ₛₗ[σ₁₄] M₄) = h.comp (g.comp f : M →ₛₗ[σ₁₃] M₃) :=
@@ -2000,6 +2005,11 @@ variable {σ₁₂ : R →+* R₂} {σ₂₁ : R₂ →+* R}
 variable {re₁₂ : RingHomInvPair σ₁₂ σ₂₁} {re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
 
 variable (e e' : M ≃ₛₗ[σ₁₂] M₂)
+
+@[simp]
+theorem map_sum {s : Finset ι} (u : ι → M) : e (∑ i in s, u i) = ∑ i in s, e (u i) :=
+  e.toLinearMap.map_sum
+#align linear_equiv.map_sum LinearEquiv.map_sum
 
 theorem map_eq_comap {p : Submodule R M} :
     (p.map (e : M →ₛₗ[σ₁₂] M₂) : Submodule R₂ M₂) = p.comap (e.symm : M₂ →ₛₗ[σ₂₁] M) :=

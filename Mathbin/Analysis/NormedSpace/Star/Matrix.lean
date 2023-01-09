@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hans Parshall
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.matrix
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,8 +45,8 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
       simp only [eq_self_iff_true, Finset.mem_univ_val, and_self_iff, sq_eq_sq]
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ
   have diag_eq_norm_sum : (U ⬝ Uᴴ) i i = ∑ x : n, ‖U i x‖ ^ 2 := by
-    simp only [Matrix.mul_apply, Matrix.conj_transpose_apply, ← star_ring_end_apply,
-      IsROrC.mul_conj, IsROrC.norm_sq_eq_def', IsROrC.of_real_pow]
+    simp only [Matrix.mul_apply, Matrix.conj_transpose_apply, ← starRingEnd_apply, IsROrC.mul_conj,
+      IsROrC.norm_sq_eq_def', IsROrC.of_real_pow]
   -- The L2 norm of a row is a diagonal entry of U ⬝ Uᴴ, real part
   have re_diag_eq_norm_sum : IsROrC.re ((U ⬝ Uᴴ) i i) = ∑ x : n, ‖U i x‖ ^ 2 :=
     by

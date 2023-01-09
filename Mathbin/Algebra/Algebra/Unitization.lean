@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.unitization
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -514,27 +514,27 @@ section Star
 
 variable {R A : Type _}
 
-instance [HasStar R] [HasStar A] : HasStar (Unitization R A) :=
+instance [Star R] [Star A] : Star (Unitization R A) :=
   ⟨fun ra => (star ra.fst, star ra.snd)⟩
 
 @[simp]
-theorem fst_star [HasStar R] [HasStar A] (x : Unitization R A) : (star x).fst = star x.fst :=
+theorem fst_star [Star R] [Star A] (x : Unitization R A) : (star x).fst = star x.fst :=
   rfl
 #align unitization.fst_star Unitization.fst_star
 
 @[simp]
-theorem snd_star [HasStar R] [HasStar A] (x : Unitization R A) : (star x).snd = star x.snd :=
+theorem snd_star [Star R] [Star A] (x : Unitization R A) : (star x).snd = star x.snd :=
   rfl
 #align unitization.snd_star Unitization.snd_star
 
 @[simp]
-theorem inl_star [HasStar R] [AddMonoid A] [StarAddMonoid A] (r : R) :
+theorem inl_star [Star R] [AddMonoid A] [StarAddMonoid A] (r : R) :
     inl (star r) = star (inl r : Unitization R A) :=
   ext rfl (by simp only [snd_star, star_zero, snd_inl])
 #align unitization.inl_star Unitization.inl_star
 
 @[simp]
-theorem coe_star [AddMonoid R] [StarAddMonoid R] [HasStar A] (a : A) :
+theorem coe_star [AddMonoid R] [StarAddMonoid R] [Star A] (a : A) :
     ↑(star a) = star (a : Unitization R A) :=
   ext (by simp only [fst_star, star_zero, fst_coe]) rfl
 #align unitization.coe_star Unitization.coe_star

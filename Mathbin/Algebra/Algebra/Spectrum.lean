@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.spectrum
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,7 +270,7 @@ theorem preimage_units_mul_eq_swap_mul {a b : A} :
 
 section Star
 
-variable [HasInvolutiveStar R] [StarRing A] [StarModule R A]
+variable [InvolutiveStar R] [StarRing A] [StarModule R A]
 
 theorem star_mem_resolvent_set_iff {r : R} {a : A} :
     star r ∈ resolventSet R a ↔ r ∈ resolventSet R (star a) := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.defs
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,9 +156,11 @@ theorem ne_one_iff_exists {x : WithOne α} : x ≠ 1 ↔ ∃ a : α, ↑a = x :=
 #align with_one.ne_one_iff_exists WithOne.ne_one_iff_exists
 -/
 
+#print WithOne.canLift /-
 @[to_additive]
 instance canLift : CanLift (WithOne α) α coe fun a => a ≠ 1 where prf a := ne_one_iff_exists.1
 #align with_one.can_lift WithOne.canLift
+-/
 
 #print WithOne.coe_inj /-
 @[simp, norm_cast, to_additive]

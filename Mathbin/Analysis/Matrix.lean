@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.matrix
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -548,7 +548,7 @@ theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
   have :=
     @nnnorm_inner_le_nnnorm α _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))
       ((PiLp.equiv 2 fun i => α).symm fun k => B k j)
-  simpa only [PiLp.equiv_symm_apply, PiLp.inner_apply, IsROrC.inner_apply, star_ring_end_apply,
+  simpa only [PiLp.equiv_symm_apply, PiLp.inner_apply, IsROrC.inner_apply, starRingEnd_apply,
     Pi.nnnorm_def, PiLp.nnnorm_eq_of_L2, star_star, nnnorm_star, Nnreal.sqrt_eq_rpow,
     Nnreal.rpow_two] using this
 #align matrix.frobenius_nnnorm_mul Matrix.frobenius_nnnorm_mul

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.circulant
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem transpose_circulant [AddGroup n] (v : n → α) : (circulant v)ᵀ = cir
   by ext <;> simp
 #align matrix.transpose_circulant Matrix.transpose_circulant
 
-theorem conj_transpose_circulant [HasStar α] [AddGroup n] (v : n → α) :
+theorem conj_transpose_circulant [Star α] [AddGroup n] (v : n → α) :
     (circulant v)ᴴ = circulant (star fun i => v (-i)) := by ext <;> simp
 #align matrix.conj_transpose_circulant Matrix.conj_transpose_circulant
 
@@ -90,7 +90,7 @@ theorem Fin.transpose_circulant : ∀ {n} (v : Fin n → α), (circulant v)ᵀ =
   | n + 1 => transpose_circulant
 #align matrix.fin.transpose_circulant Matrix.Fin.transpose_circulant
 
-theorem Fin.conj_transpose_circulant [HasStar α] :
+theorem Fin.conj_transpose_circulant [Star α] :
     ∀ {n} (v : Fin n → α), (circulant v)ᴴ = circulant (star fun i => v (-i))
   | 0 => by decide
   | n + 1 => conj_transpose_circulant

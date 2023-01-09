@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -253,7 +253,7 @@ theorem finrank_real_of_complex (E : Type _) [AddCommGroup E] [Module ℂ E] :
   rw [← FiniteDimensional.finrank_mul_finrank ℝ ℂ E, Complex.finrank_real_complex]
 #align finrank_real_of_complex finrank_real_of_complex
 
-instance (priority := 900) StarModule.complex_to_real {E : Type _} [AddCommGroup E] [HasStar E]
+instance (priority := 900) StarModule.complex_to_real {E : Type _} [AddCommGroup E] [Star E]
     [Module ℂ E] [StarModule ℂ E] : StarModule ℝ E :=
   ⟨fun r a => by
     rw [star_trivial r, restrict_scalars_smul_def, restrict_scalars_smul_def, star_smul,

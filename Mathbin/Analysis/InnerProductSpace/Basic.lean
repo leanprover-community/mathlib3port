@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.basic
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2152,7 +2152,7 @@ instance IsROrC.innerProductSpace : InnerProductSpace 𝕜 𝕜
   norm_sq_eq_inner x := by
     unfold inner
     rw [mul_comm, mul_conj, of_real_re, norm_sq_eq_def']
-  conj_sym x y := by simp only [mul_comm, map_mul, star_ring_end_self_apply]
+  conj_sym x y := by simp only [mul_comm, map_mul, starRingEnd_self_apply]
   add_left x y z := by simp only [add_mul, map_add]
   smul_left x y z := by simp only [mul_assoc, smul_eq_mul, map_mul]
 #align is_R_or_C.inner_product_space IsROrC.innerProductSpace

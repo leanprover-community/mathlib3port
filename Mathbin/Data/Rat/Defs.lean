@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.defs
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1042,9 +1042,11 @@ theorem den_eq_one_iff (r : ℚ) : r.denom = 1 ↔ ↑r.num = r :=
 #align rat.denom_eq_one_iff Rat.den_eq_one_iff
 -/
 
+#print Rat.canLift /-
 instance canLift : CanLift ℚ ℤ coe fun q => q.denom = 1 :=
   ⟨fun q hq => ⟨q.num, coe_int_num_of_den_eq_one hq⟩⟩
 #align rat.can_lift Rat.canLift
+-/
 
 /- warning: rat.coe_nat_eq_mk -> Rat.coe_nat_eq_divInt is a dubious translation:
 lean 3 declaration is

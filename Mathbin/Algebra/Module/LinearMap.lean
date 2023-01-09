@@ -5,11 +5,10 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.Star.Basic
@@ -59,9 +58,11 @@ linear map
 -/
 
 
-open Function
+assert_not_exists Submonoid
 
-open BigOperators
+assert_not_exists finset
+
+open Function
 
 universe u u' v w x y z
 
@@ -471,11 +472,6 @@ theorem restrict_scalars_inj (fₗ gₗ : M →ₗ[S] M₂) :
 end RestrictScalars
 
 variable {R}
-
-@[simp]
-theorem map_sum {ι} {t : Finset ι} {g : ι → M} : f (∑ i in t, g i) = ∑ i in t, f (g i) :=
-  f.toAddMonoidHom.map_sum _ _
-#align linear_map.map_sum LinearMap.map_sum
 
 theorem to_add_monoid_hom_injective :
     Function.Injective (toAddMonoidHom : (M →ₛₗ[σ] M₃) → M →+ M₃) := fun f g h =>

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.pos_def
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
   InnerProductSpace.ofCore
     { inner := fun x y => dotProduct (star x) (M.mulVec y)
       conj_sym := fun x y => by
-        rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec,
+        rw [star_dot_product, starRingEnd_apply, star_star, star_mul_vec, dot_product_mul_vec,
           hM.is_hermitian.eq]
       nonneg_re := fun x => by
         by_cases h : x = 0
@@ -166,7 +166,7 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
         simpa [hx, lt_self_iff_false] using hM.2 x h
       add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const]
       smul_left := fun x y r => by
-        rw [← smul_eq_mul, ← smul_dot_product, star_ring_end_apply, ← star_smul] }
+        rw [← smul_eq_mul, ← smul_dot_product, starRingEnd_apply, ← star_smul] }
 #align matrix.inner_product_space.of_matrix Matrix.InnerProductSpace.ofMatrix
 
 end Matrix

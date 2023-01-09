@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.matrix
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,12 +96,12 @@ theorem Continuous.matrix_transpose {A : X → Matrix m n R} (hA : Continuous A)
   continuous_matrix fun i j => hA.matrix_elem j i
 #align continuous.matrix_transpose Continuous.matrix_transpose
 
-theorem Continuous.matrix_conj_transpose [HasStar R] [HasContinuousStar R] {A : X → Matrix m n R}
+theorem Continuous.matrix_conj_transpose [Star R] [HasContinuousStar R] {A : X → Matrix m n R}
     (hA : Continuous A) : Continuous fun x => (A x)ᴴ :=
   hA.matrix_transpose.matrix_map continuous_star
 #align continuous.matrix_conj_transpose Continuous.matrix_conj_transpose
 
-instance [HasStar R] [HasContinuousStar R] : HasContinuousStar (Matrix m m R) :=
+instance [Star R] [HasContinuousStar R] : HasContinuousStar (Matrix m m R) :=
   ⟨continuous_id.matrix_conj_transpose⟩
 
 @[continuity]

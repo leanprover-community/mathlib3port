@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -712,7 +712,7 @@ theorem Memℓp.star_iff {f : ∀ i, E i} : Memℓp (star f) p ↔ Memℓp f p :
   ⟨fun h => star_star f ▸ Memℓp.star_mem h, Memℓp.star_mem⟩
 #align mem_ℓp.star_iff Memℓp.star_iff
 
-instance : HasStar (lp E p) where star f := ⟨(star f : ∀ i, E i), f.property.star_mem⟩
+instance : Star (lp E p) where star f := ⟨(star f : ∀ i, E i), f.property.star_mem⟩
 
 @[simp]
 theorem coe_fn_star (f : lp E p) : ⇑(star f) = star f :=
@@ -724,7 +724,7 @@ protected theorem star_apply (f : lp E p) (i : α) : star f i = star (f i) :=
   rfl
 #align lp.star_apply lp.star_apply
 
-instance : HasInvolutiveStar (lp E p)
+instance : InvolutiveStar (lp E p)
     where star_involutive x := by
     ext
     simp
@@ -740,7 +740,7 @@ instance [hp : Fact (1 ≤ p)] : NormedStarGroup (lp E p)
     · simp only [lp.norm_eq_csupr, lp.star_apply, norm_star]
     · simp only [lp.norm_eq_tsum_rpow h, lp.star_apply, norm_star]
 
-variable {𝕜 : Type _} [HasStar 𝕜] [NormedField 𝕜]
+variable {𝕜 : Type _} [Star 𝕜] [NormedField 𝕜]
 
 variable [∀ i, NormedSpace 𝕜 (E i)] [∀ i, StarModule 𝕜 (E i)]
 

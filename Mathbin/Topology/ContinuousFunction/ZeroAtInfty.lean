@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -549,7 +549,7 @@ counterparts on `α →ᵇ β`. Ultimately, when `β` is a C⋆-ring, then so is
 
 variable [TopologicalSpace β] [AddMonoid β] [StarAddMonoid β] [HasContinuousStar β]
 
-instance : HasStar C₀(α, β)
+instance : Star C₀(α, β)
     where star f :=
     { toFun := fun x => star (f x)
       continuous_to_fun := (map_continuous f).star
@@ -582,7 +582,7 @@ end NormedStar
 
 section StarModule
 
-variable {𝕜 : Type _} [Zero 𝕜] [HasStar 𝕜] [AddMonoid β] [StarAddMonoid β] [TopologicalSpace β]
+variable {𝕜 : Type _} [Zero 𝕜] [Star 𝕜] [AddMonoid β] [StarAddMonoid β] [TopologicalSpace β]
   [HasContinuousStar β] [SMulWithZero 𝕜 β] [HasContinuousConstSmul 𝕜 β] [StarModule 𝕜 β]
 
 instance : StarModule 𝕜 C₀(α, β) where star_smul k f := ext fun x => star_smul k (f x)

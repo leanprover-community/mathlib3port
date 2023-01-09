@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.unitary
-! leanprover-community/mathlib commit 247a102b14f3cebfee126293341af5f6bed00237
+! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem star_mem_iff {U : R} : star U ∈ unitary R ↔ U ∈ unitary R :=
   ⟨fun h => star_star U ▸ star_mem h, star_mem⟩
 #align unitary.star_mem_iff unitary.star_mem_iff
 
-instance : HasStar (unitary R) :=
+instance : Star (unitary R) :=
   ⟨fun U => ⟨star U, star_mem U.Prop⟩⟩
 
 @[simp, norm_cast]
@@ -112,7 +112,7 @@ instance : Group (unitary R) :=
     inv := star
     mul_left_inv := star_mul_self }
 
-instance : HasInvolutiveStar (unitary R) :=
+instance : InvolutiveStar (unitary R) :=
   ⟨fun _ => by
     ext
     simp only [coe_star, star_star]⟩
