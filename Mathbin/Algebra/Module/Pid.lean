@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.pid
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,11 +162,11 @@ theorem exists_smul_eq_zero_and_mk_eq {z : M} (hz : Module.IsTorsionBy R M (p ^ 
     convert f.map_zero
     change _ • Submodule.Quotient.mk _ = _
     rw [← mk_smul, quotient.mk_eq_zero, Algebra.id.smul_eq_mul, mul_one]
-    exact mem_span_singleton_self _
+    exact Submodule.mem_span_singleton_self _
   obtain ⟨a, ha⟩ := p_pow_smul_lift hp hM hz this
   refine' ⟨f1.some - a • z, by rw [smul_sub, sub_eq_zero, ha], _⟩
-  rw [mk_sub, mk_smul, (quotient.mk_eq_zero _).mpr <| mem_span_singleton_self _, smul_zero,
-    sub_zero, f1.some_spec]
+  rw [mk_sub, mk_smul, (quotient.mk_eq_zero _).mpr <| Submodule.mem_span_singleton_self _,
+    smul_zero, sub_zero, f1.some_spec]
 #align module.exists_smul_eq_zero_and_mk_eq Module.exists_smul_eq_zero_and_mk_eq
 
 open Finset Multiset
@@ -244,7 +244,8 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
         simp only [s']
         rw [Set.range_comp (_ ∘ s), Fin.range_succ_above]
         rw [← Set.range_comp, ← Set.insert_image_compl_eq_range _ j, Function.comp_apply,
-          (quotient.mk_eq_zero _).mpr (mem_span_singleton_self _), span_insert_zero] at hs'
+          (quotient.mk_eq_zero _).mpr (Submodule.mem_span_singleton_self _), span_insert_zero] at
+          hs'
         exact hs'
 #align module.torsion_by_prime_power_decomposition Module.torsion_by_prime_power_decomposition
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.complete_lattice
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3522,6 +3522,70 @@ instance [SupSet α] [SupSet β] : SupSet (α × β) :=
 instance [InfSet α] [InfSet β] : InfSet (α × β) :=
   ⟨fun s => (infₛ (Prod.fst '' s), infₛ (Prod.snd '' s))⟩
 
+variable {α β}
+
+theorem fst_Inf [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).fst = infₛ (Prod.fst '' s) :=
+  rfl
+#align prod.fst_Inf Prod.fst_Inf
+
+theorem snd_Inf [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).snd = infₛ (Prod.snd '' s) :=
+  rfl
+#align prod.snd_Inf Prod.snd_Inf
+
+theorem swap_Inf [InfSet α] [InfSet β] (s : Set (α × β)) : (infₛ s).swap = infₛ (Prod.swap '' s) :=
+  ext (congr_arg infₛ <| image_comp Prod.fst swap s : _)
+    (congr_arg infₛ <| image_comp Prod.snd swap s : _)
+#align prod.swap_Inf Prod.swap_Inf
+
+theorem fst_Sup [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).fst = supₛ (Prod.fst '' s) :=
+  rfl
+#align prod.fst_Sup Prod.fst_Sup
+
+theorem snd_Sup [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).snd = supₛ (Prod.snd '' s) :=
+  rfl
+#align prod.snd_Sup Prod.snd_Sup
+
+theorem swap_Sup [SupSet α] [SupSet β] (s : Set (α × β)) : (supₛ s).swap = supₛ (Prod.swap '' s) :=
+  ext (congr_arg supₛ <| image_comp Prod.fst swap s : _)
+    (congr_arg supₛ <| image_comp Prod.snd swap s : _)
+#align prod.swap_Sup Prod.swap_Sup
+
+theorem fst_infi [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).fst = ⨅ i, (f i).fst :=
+  congr_arg infₛ (range_comp _ _).symm
+#align prod.fst_infi Prod.fst_infi
+
+theorem snd_infi [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).snd = ⨅ i, (f i).snd :=
+  congr_arg infₛ (range_comp _ _).symm
+#align prod.snd_infi Prod.snd_infi
+
+theorem swap_infi [InfSet α] [InfSet β] (f : ι → α × β) : (infᵢ f).swap = ⨅ i, (f i).swap := by
+  simp_rw [infᵢ, swap_Inf, range_comp]
+#align prod.swap_infi Prod.swap_infi
+
+theorem infi_mk [InfSet α] [InfSet β] (f : ι → α) (g : ι → β) :
+    (⨅ i, (f i, g i)) = (⨅ i, f i, ⨅ i, g i) :=
+  congr_arg₂ Prod.mk (fst_infi _) (snd_infi _)
+#align prod.infi_mk Prod.infi_mk
+
+theorem fst_supr [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).fst = ⨆ i, (f i).fst :=
+  congr_arg supₛ (range_comp _ _).symm
+#align prod.fst_supr Prod.fst_supr
+
+theorem snd_supr [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).snd = ⨆ i, (f i).snd :=
+  congr_arg supₛ (range_comp _ _).symm
+#align prod.snd_supr Prod.snd_supr
+
+theorem swap_supr [SupSet α] [SupSet β] (f : ι → α × β) : (supᵢ f).swap = ⨆ i, (f i).swap := by
+  simp_rw [supᵢ, swap_Sup, range_comp]
+#align prod.swap_supr Prod.swap_supr
+
+theorem supr_mk [SupSet α] [SupSet β] (f : ι → α) (g : ι → β) :
+    (⨆ i, (f i, g i)) = (⨆ i, f i, ⨆ i, g i) :=
+  congr_arg₂ Prod.mk (fst_supr _) (snd_supr _)
+#align prod.supr_mk Prod.supr_mk
+
+variable (α β)
+
 instance [CompleteLattice α] [CompleteLattice β] : CompleteLattice (α × β) :=
   { Prod.lattice α β, Prod.boundedOrder α β, Prod.hasSup α β,
     Prod.hasInf α
@@ -3536,6 +3600,18 @@ instance [CompleteLattice α] [CompleteLattice β] : CompleteLattice (α × β) 
         le_infₛ <| ball_image_of_ball fun p hp => (h p hp).2⟩ }
 
 end Prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Inf_prod [InfSet α] [InfSet β] {s : Set α} {t : Set β} (hs : s.Nonempty) (ht : t.Nonempty) :
+    infₛ (s ×ˢ t) = (infₛ s, infₛ t) :=
+  congr_arg₂ Prod.mk (congr_arg infₛ <| fst_image_prod _ ht) (congr_arg infₛ <| snd_image_prod hs _)
+#align Inf_prod Inf_prod
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Sup_prod [SupSet α] [SupSet β] {s : Set α} {t : Set β} (hs : s.Nonempty) (ht : t.Nonempty) :
+    supₛ (s ×ˢ t) = (supₛ s, supₛ t) :=
+  congr_arg₂ Prod.mk (congr_arg supₛ <| fst_image_prod _ ht) (congr_arg supₛ <| snd_image_prod hs _)
+#align Sup_prod Sup_prod
 
 section CompleteLattice
 

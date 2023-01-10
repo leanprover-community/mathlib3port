@@ -4,19 +4,21 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module order.partial_sups
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Order.Hom.Basic
+import Mathbin.Order.ConditionallyCompleteLattice.Finset
 
 /-!
 # The monotone sequence of partial supremums of a sequence
 
 We define `partial_sups : (ℕ → α) → ℕ →o α` inductively. For `f : ℕ → α`, `partial_sups f` is
 the sequence `f 0 `, `f 0 ⊔ f 1`, `f 0 ⊔ f 1 ⊔ f 2`, ... The point of this definition is that
-* it doesn't need a `⨆`, as opposed to `⨆ (i ≤ n), f i`.
+* it doesn't need a `⨆`, as opposed to `⨆ (i ≤ n), f i` (which also means the wrong thing on
+  `conditionally_complete_lattice`s).
 * it doesn't need a `⊥`, as opposed to `(finset.range (n + 1)).sup f`.
 * it avoids needing to prove that `finset.range (n + 1)` is nonempty to use `finset.sup'`.
 
@@ -79,6 +81,18 @@ theorem partial_sups_le (f : ℕ → α) (n : ℕ) (a : α) (w : ∀ m, m ≤ n 
   · apply w 0 le_rfl
   · exact sup_le (ih fun m p => w m (Nat.le_succ_of_le p)) (w (n + 1) le_rfl)
 #align partial_sups_le partial_sups_le
+
+@[simp]
+theorem bdd_above_range_partial_sups {f : ℕ → α} :
+    BddAbove (Set.range (partialSups f)) ↔ BddAbove (Set.range f) :=
+  by
+  apply exists_congr fun a => _
+  constructor
+  · rintro h b ⟨i, rfl⟩
+    exact (le_partial_sups _ _).trans (h (Set.mem_range_self i))
+  · rintro h b ⟨i, rfl⟩
+    exact (partial_sups_le _ _ _) fun _ _ => h (Set.mem_range_self _)
+#align bdd_above_range_partial_sups bdd_above_range_partial_sups
 
 theorem Monotone.partial_sups_eq {f : ℕ → α} (hf : Monotone f) : (partialSups f : ℕ → α) = f :=
   by
@@ -144,24 +158,40 @@ theorem partial_sups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f :
     exact ⟨ih (Nat.lt_of_succ_lt hmn), h hmn.ne⟩
 #align partial_sups_disjoint_of_disjoint partial_sups_disjoint_of_disjoint
 
+section ConditionallyCompleteLattice
+
+variable [ConditionallyCompleteLattice α]
+
+theorem partial_sups_eq_csupr_Iic (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆ i : Set.Iic n, f i :=
+  by
+  have : Set.Iio (n + 1) = Set.Iic n := Set.ext fun _ => Nat.lt_succ_iff
+  rw [partial_sups_eq_sup'_range, Finset.sup'_eq_cSup_image, Finset.coe_range, supᵢ, Set.range_comp,
+    Subtype.range_coe, this]
+#align partial_sups_eq_csupr_Iic partial_sups_eq_csupr_Iic
+
+@[simp]
+theorem csupr_partial_sups_eq {f : ℕ → α} (h : BddAbove (Set.range f)) :
+    (⨆ n, partialSups f n) = ⨆ n, f n :=
+  by
+  refine' (csupᵢ_le fun n => _).antisymm (csupᵢ_mono _ <| le_partial_sups f)
+  · rw [partial_sups_eq_csupr_Iic]
+    exact csupᵢ_le fun i => le_csupᵢ h _
+  · rwa [bdd_above_range_partial_sups]
+#align csupr_partial_sups_eq csupr_partial_sups_eq
+
+end ConditionallyCompleteLattice
+
 section CompleteLattice
 
 variable [CompleteLattice α]
 
-theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆ i ≤ n, f i :=
-  by
-  rw [partial_sups_eq_sup_range, Finset.sup_eq_supr]
-  congr
-  ext a
-  exact supᵢ_congr_Prop (by rw [Finset.mem_range, Nat.lt_succ_iff]) fun _ => rfl
+theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆ i ≤ n, f i := by
+  simpa only [supᵢ_subtype] using partial_sups_eq_csupr_Iic f n
 #align partial_sups_eq_bsupr partial_sups_eq_bsupr
 
 @[simp]
 theorem supr_partial_sups_eq (f : ℕ → α) : (⨆ n, partialSups f n) = ⨆ n, f n :=
-  by
-  refine' (supᵢ_le fun n => _).antisymm (supᵢ_mono <| le_partial_sups f)
-  rw [partial_sups_eq_bsupr]
-  exact supᵢ₂_le_supᵢ _ _
+  csupr_partial_sups_eq <| OrderTop.bddAbove _
 #align supr_partial_sups_eq supr_partial_sups_eq
 
 theorem supr_le_supr_of_partial_sups_le_partial_sups {f g : ℕ → α}

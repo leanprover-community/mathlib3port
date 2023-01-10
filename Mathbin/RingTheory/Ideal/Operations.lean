@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -565,6 +565,37 @@ theorem span_singleton_mul_le_span_singleton_mul {x y : R} {I J : Ideal R} :
   simp only [span_singleton_mul_le_iff, mem_span_singleton_mul, eq_comm]
 #align ideal.span_singleton_mul_le_span_singleton_mul Ideal.span_singleton_mul_le_span_singleton_mul
 
+theorem span_singleton_mul_right_mono [IsDomain R] {x : R} (hx : x ≠ 0) :
+    span {x} * I ≤ span {x} * J ↔ I ≤ J := by
+  simp_rw [span_singleton_mul_le_span_singleton_mul, mul_right_inj' hx, exists_prop,
+    exists_eq_right', SetLike.le_def]
+#align ideal.span_singleton_mul_right_mono Ideal.span_singleton_mul_right_mono
+
+theorem span_singleton_mul_left_mono [IsDomain R] {x : R} (hx : x ≠ 0) :
+    I * span {x} ≤ J * span {x} ↔ I ≤ J := by
+  simpa only [mul_comm I, mul_comm J] using span_singleton_mul_right_mono hx
+#align ideal.span_singleton_mul_left_mono Ideal.span_singleton_mul_left_mono
+
+theorem span_singleton_mul_right_inj [IsDomain R] {x : R} (hx : x ≠ 0) :
+    span {x} * I = span {x} * J ↔ I = J := by
+  simp only [le_antisymm_iff, span_singleton_mul_right_mono hx]
+#align ideal.span_singleton_mul_right_inj Ideal.span_singleton_mul_right_inj
+
+theorem span_singleton_mul_left_inj [IsDomain R] {x : R} (hx : x ≠ 0) :
+    I * span {x} = J * span {x} ↔ I = J := by
+  simp only [le_antisymm_iff, span_singleton_mul_left_mono hx]
+#align ideal.span_singleton_mul_left_inj Ideal.span_singleton_mul_left_inj
+
+theorem span_singleton_mul_right_injective [IsDomain R] {x : R} (hx : x ≠ 0) :
+    Function.Injective ((· * ·) (span {x} : Ideal R)) := fun _ _ =>
+  (span_singleton_mul_right_inj hx).mp
+#align ideal.span_singleton_mul_right_injective Ideal.span_singleton_mul_right_injective
+
+theorem span_singleton_mul_left_injective [IsDomain R] {x : R} (hx : x ≠ 0) :
+    Function.Injective fun I : Ideal R => I * span {x} := fun _ _ =>
+  (span_singleton_mul_left_inj hx).mp
+#align ideal.span_singleton_mul_left_injective Ideal.span_singleton_mul_left_injective
+
 theorem eq_span_singleton_mul {x : R} (I J : Ideal R) :
     I = span {x} * J ↔ (∀ zI ∈ I, ∃ zJ ∈ J, x * zJ = zI) ∧ ∀ z ∈ J, x * z ∈ I := by
   simp only [le_antisymm_iff, le_span_singleton_mul_iff, span_singleton_mul_le_iff]
@@ -798,6 +829,11 @@ theorem prod_eq_bot {R : Type _} [CommRing R] [IsDomain R] {s : Multiset (Ideal 
     s.Prod = ⊥ ↔ ∃ I ∈ s, I = ⊥ :=
   prod_zero_iff_exists_zero
 #align ideal.prod_eq_bot Ideal.prod_eq_bot
+
+theorem span_pair_mul_span_pair (w x y z : R) :
+    (span {w, x} : Ideal R) * span {y, z} = span {w * y, w * z, x * y, x * z} := by
+  simp_rw [span_insert, sup_mul, mul_sup, span_singleton_mul_span_singleton, sup_assoc]
+#align ideal.span_pair_mul_span_pair Ideal.span_pair_mul_span_pair
 
 /-- The radical of an ideal `I` consists of the elements `r` such that `r^n ∈ I` for some `n`. -/
 def radical (I : Ideal R) : Ideal R

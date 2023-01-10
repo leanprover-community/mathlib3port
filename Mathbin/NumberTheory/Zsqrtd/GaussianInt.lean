@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.gaussian_int
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,13 +165,13 @@ theorem norm_pos {x : ℤ[i]} : 0 < norm x ↔ x ≠ 0 := by
   rw [lt_iff_le_and_ne, Ne.def, eq_comm, norm_eq_zero] <;> simp [norm_nonneg]
 #align gaussian_int.norm_pos GaussianInt.norm_pos
 
-theorem coe_nat_abs_norm (x : ℤ[i]) : (x.norm.natAbs : ℤ) = x.norm :=
+theorem abs_coe_nat_norm (x : ℤ[i]) : (x.norm.natAbs : ℤ) = x.norm :=
   Int.natAbs_of_nonneg (norm_nonneg _)
-#align gaussian_int.coe_nat_abs_norm GaussianInt.coe_nat_abs_norm
+#align gaussian_int.abs_coe_nat_norm GaussianInt.abs_coe_nat_norm
 
 @[simp]
 theorem nat_cast_nat_abs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.natAbs : α) = x.norm := by
-  rw [← Int.cast_ofNat, coe_nat_abs_norm]
+  rw [← Int.cast_ofNat, abs_coe_nat_norm]
 #align gaussian_int.nat_cast_nat_abs_norm GaussianInt.nat_cast_nat_abs_norm
 
 theorem nat_abs_norm_eq (x : ℤ[i]) :
@@ -259,7 +259,7 @@ theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
   rw [Zsqrtd.norm_mul, Int.natAbs_mul] <;>
     exact
       le_mul_of_one_le_right (Nat.zero_le _)
-        (Int.ofNat_le.1 (by rw [coe_nat_abs_norm] <;> exact Int.add_one_le_of_lt (norm_pos.2 hy)))
+        (Int.ofNat_le.1 (by rw [abs_coe_nat_norm] <;> exact Int.add_one_le_of_lt (norm_pos.2 hy)))
 #align gaussian_int.norm_le_norm_mul_left GaussianInt.norm_le_norm_mul_left
 
 instance : Nontrivial ℤ[i] :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.int.basic
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,28 +105,24 @@ theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z :=
   show z * ↑(ite _ _ _) = z by rw [if_pos h, Units.val_one, mul_one]
 #align int.normalize_of_nonneg Int.normalize_of_nonneg
 
-theorem normalize_of_neg {z : ℤ} (h : z < 0) : normalize z = -z :=
-  show z * ↑(ite _ _ _) = -z by
+theorem normalize_of_nonpos {z : ℤ} (h : z ≤ 0) : normalize z = -z :=
+  by
+  obtain rfl | h := h.eq_or_lt
+  · simp
+  · change z * ↑(ite _ _ _) = -z
     rw [if_neg (not_le_of_gt h), Units.val_neg, Units.val_one, mul_neg_one]
-#align int.normalize_of_neg Int.normalize_of_neg
+#align int.normalize_of_nonpos Int.normalize_of_nonpos
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
   normalize_of_nonneg (coe_nat_le_coe_nat_of_le <| Nat.zero_le n)
 #align int.normalize_coe_nat Int.normalize_coe_nat
 
-theorem coe_nat_abs_eq_normalize (z : ℤ) : (z.natAbs : ℤ) = normalize z :=
-  by
-  by_cases 0 ≤ z
-  · simp [nat_abs_of_nonneg h, normalize_of_nonneg h]
-  · simp [of_nat_nat_abs_of_nonpos (le_of_not_ge h), normalize_of_neg (lt_of_not_ge h)]
-#align int.coe_nat_abs_eq_normalize Int.coe_nat_abs_eq_normalize
+theorem abs_eq_normalize (z : ℤ) : |z| = normalize z := by
+  cases le_total 0 z <;> simp [normalize_of_nonneg, normalize_of_nonpos, *]
+#align int.abs_eq_normalize Int.abs_eq_normalize
 
 theorem nonneg_of_normalize_eq_self {z : ℤ} (hz : normalize z = z) : 0 ≤ z :=
-  calc
-    0 ≤ (z.natAbs : ℤ) := ofNat_zero_le _
-    _ = normalize z := coe_nat_abs_eq_normalize _
-    _ = z := hz
-    
+  abs_eq_self.1 <| by rw [abs_eq_normalize, hz]
 #align int.nonneg_of_normalize_eq_self Int.nonneg_of_normalize_eq_self
 
 theorem nonneg_iff_normalize_eq_self (z : ℤ) : normalize z = z ↔ 0 ≤ z :=
@@ -148,8 +144,9 @@ instance : GCDMonoid ℤ where
   gcd_dvd_left a b := Int.gcd_dvd_left _ _
   gcd_dvd_right a b := Int.gcd_dvd_right _ _
   dvd_gcd a b c := dvd_gcd
-  gcd_mul_lcm a b := by
-    rw [← Int.ofNat_mul, gcd_mul_lcm, coe_nat_abs_eq_normalize]
+  gcd_mul_lcm a b :=
+    by
+    rw [← Int.ofNat_mul, gcd_mul_lcm, coe_nat_abs, abs_eq_normalize]
     exact normalize_associated (a * b)
   lcm_zero_left a := coe_nat_eq_zero.2 <| Nat.lcm_zero_left _
   lcm_zero_right a := coe_nat_eq_zero.2 <| Nat.lcm_zero_right _
@@ -272,10 +269,10 @@ def associatesIntEquivNat : Associates ℤ ≃ ℕ :=
       (Quotient.inductionOn' a) fun a =>
         Associates.mk_eq_mk_iff_associated.2 <| Associated.symm <| ⟨norm_unit a, _⟩
     show normalize a = Int.natAbs (normalize a)
-    rw [Int.coe_nat_abs_eq_normalize, normalize_idem]
+    rw [Int.coe_natAbs, Int.abs_eq_normalize, normalize_idem]
   · intro n
     dsimp
-    rw [← normalize_apply, ← Int.coe_nat_abs_eq_normalize, Int.natAbs_ofNat, Int.natAbs_ofNat]
+    rw [← normalize_apply, ← Int.abs_eq_normalize, Int.natAbs_abs, Int.natAbs_ofNat]
 #align associates_int_equiv_nat associatesIntEquivNat
 
 theorem Int.Prime.dvd_mul {m n : ℤ} {p : ℕ} (hp : Nat.Prime p) (h : (p : ℤ) ∣ m * n) :

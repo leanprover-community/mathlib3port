@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -501,6 +501,10 @@ theorem mem_span_singleton {x y : α} : x ∈ span ({y} : Set α) ↔ y ∣ x :=
   mem_span_singleton'.trans <| exists_congr fun _ => by rw [eq_comm, mul_comm]
 #align ideal.mem_span_singleton Ideal.mem_span_singleton
 
+theorem mem_span_singleton_self (x : α) : x ∈ span ({x} : Set α) :=
+  mem_span_singleton.mpr dvd_rfl
+#align ideal.mem_span_singleton_self Ideal.mem_span_singleton_self
+
 theorem span_singleton_le_span_singleton {x y : α} :
     span ({x} : Set α) ≤ span ({y} : Set α) ↔ y ∣ x :=
   span_le.trans <| singleton_subset_iff.trans mem_span_singleton
@@ -679,6 +683,14 @@ protected theorem sub_mem : a ∈ I → b ∈ I → a - b ∈ I :=
 theorem mem_span_insert' {s : Set α} {x y} : x ∈ span (insert y s) ↔ ∃ a, x + a * y ∈ span s :=
   Submodule.mem_span_insert'
 #align ideal.mem_span_insert' Ideal.mem_span_insert'
+
+@[simp]
+theorem span_singleton_neg (x : α) : (span {-x} : Ideal α) = span {x} :=
+  by
+  ext
+  simp only [mem_span_singleton']
+  exact ⟨fun ⟨y, h⟩ => ⟨-y, h ▸ neg_mul_comm y x⟩, fun ⟨y, h⟩ => ⟨-y, h ▸ neg_mul_neg y x⟩⟩
+#align ideal.span_singleton_neg Ideal.span_singleton_neg
 
 end Ideal
 

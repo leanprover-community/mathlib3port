@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.dvd.basic
-! leanprover-community/mathlib commit 40acfb6aa7516ffe6f91136691df012a64683390
+! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ but is expected to have type
   forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int Int.instNatCastInt n) z) (Dvd.dvd.{0} Nat Nat.instDvdNat n (Int.natAbs z))
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd_left Int.coe_nat_dvd_leftₓ'. -/
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
-  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [coe_nat_dvd]
+  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
 #align int.coe_nat_dvd_left Int.coe_nat_dvd_left
 
 /- warning: int.coe_nat_dvd_right -> Int.coe_nat_dvd_right is a dubious translation:
@@ -60,7 +60,7 @@ but is expected to have type
   forall {n : Nat} {z : Int}, Iff (Dvd.dvd.{0} Int Int.instDvdInt z (Nat.cast.{0} Int Int.instNatCastInt n)) (Dvd.dvd.{0} Nat Nat.instDvdNat (Int.natAbs z) n)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_dvd_right Int.coe_nat_dvd_rightₓ'. -/
 theorem coe_nat_dvd_right {n : ℕ} {z : ℤ} : z ∣ (↑n : ℤ) ↔ z.natAbs ∣ n := by
-  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [coe_nat_dvd]
+  rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
 #align int.coe_nat_dvd_right Int.coe_nat_dvd_right
 
 /- warning: int.le_of_dvd -> Int.le_of_dvd is a dubious translation:
