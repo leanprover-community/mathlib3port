@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.factorization
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,8 +102,7 @@ theorem finite_mul_support_coe {I : Ideal R} (hI : I ≠ 0) :
           ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ)).Finite :=
   by
   rw [mul_support]
-  simp_rw [Ne.def, zpow_ofNat, ← FractionalIdeal.coe_ideal_pow,
-    FractionalIdeal.coe_ideal_eq_one_iff]
+  simp_rw [Ne.def, zpow_ofNat, ← FractionalIdeal.coe_ideal_pow, FractionalIdeal.coe_ideal_eq_one]
   exact finite_mul_support hI
 #align ideal.finite_mul_support_coe Ideal.finite_mul_support_coe
 

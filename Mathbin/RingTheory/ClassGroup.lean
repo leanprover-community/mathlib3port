@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.class_group
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,6 +115,52 @@ noncomputable def ClassGroup.mk : (FractionalIdeal R⁰ K)ˣ →* ClassGroup R :
     (Units.map (FractionalIdeal.canonicalEquiv R⁰ K (FractionRing R)))
 #align class_group.mk ClassGroup.mk
 
+theorem ClassGroup.mk_eq_mk {I J : (FractionalIdeal R⁰ <| FractionRing R)ˣ} :
+    ClassGroup.mk I = ClassGroup.mk J ↔
+      ∃ x : (FractionRing R)ˣ, I * toPrincipalIdeal R (FractionRing R) x = J :=
+  by
+  erw [QuotientGroup.mk'_eq_mk', canonical_equiv_self, Units.map_id, Set.exists_range_iff]
+  rfl
+#align class_group.mk_eq_mk ClassGroup.mk_eq_mk
+
+theorem ClassGroup.mk_eq_mk_of_coe_ideal {I J : (FractionalIdeal R⁰ <| FractionRing R)ˣ}
+    {I' J' : Ideal R} (hI : (I : FractionalIdeal R⁰ <| FractionRing R) = I')
+    (hJ : (J : FractionalIdeal R⁰ <| FractionRing R) = J') :
+    ClassGroup.mk I = ClassGroup.mk J ↔
+      ∃ x y : R, x ≠ 0 ∧ y ≠ 0 ∧ Ideal.span {x} * I' = Ideal.span {y} * J' :=
+  by
+  rw [ClassGroup.mk_eq_mk]
+  constructor
+  · rintro ⟨x, rfl⟩
+    rw [Units.val_mul, hI, coe_to_principal_ideal, mul_comm,
+      span_singleton_mul_coe_ideal_eq_coe_ideal] at hJ
+    exact ⟨_, _, sec_fst_ne_zero le_rfl x.ne_zero, sec_snd_ne_zero le_rfl ↑x, hJ⟩
+  · rintro ⟨x, y, hx, hy, h⟩
+    constructor
+    rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_to_principal_ideal]
+    convert
+      (mk'_mul_coe_ideal_eq_coe_ideal (FractionRing R) <| mem_non_zero_divisors_of_ne_zero hy).2 h
+    apply (Ne.isUnit _).unit_spec
+    rwa [Ne, mk'_eq_zero_iff_eq_zero]
+#align class_group.mk_eq_mk_of_coe_ideal ClassGroup.mk_eq_mk_of_coe_ideal
+
+theorem ClassGroup.mk_eq_one_of_coe_ideal {I : (FractionalIdeal R⁰ <| FractionRing R)ˣ}
+    {I' : Ideal R} (hI : (I : FractionalIdeal R⁰ <| FractionRing R) = I') :
+    ClassGroup.mk I = 1 ↔ ∃ x : R, x ≠ 0 ∧ I' = Ideal.span {x} :=
+  by
+  rw [← map_one ClassGroup.mk, ClassGroup.mk_eq_mk_of_coe_ideal hI (_ : _ = ↑⊤)]
+  any_goals rfl
+  constructor
+  · rintro ⟨x, y, hx, hy, h⟩
+    rw [Ideal.mul_top] at h
+    rcases ideal.mem_span_singleton_mul.mp ((Ideal.span_singleton_le_iff_mem _).mp h.ge) with
+      ⟨i, hi, rfl⟩
+    rw [← Ideal.span_singleton_mul_span_singleton, Ideal.span_singleton_mul_right_inj hx] at h
+    exact ⟨i, right_ne_zero_of_mul hy, h⟩
+  · rintro ⟨x, hx, rfl⟩
+    exact ⟨1, x, one_ne_zero, hx, by rw [Ideal.span_singleton_one, Ideal.top_mul, Ideal.mul_top]⟩
+#align class_group.mk_eq_one_of_coe_ideal ClassGroup.mk_eq_one_of_coe_ideal
+
 variable (K)
 
 /-- Induction principle for the class group: to show something holds for all `x : class_group R`,
@@ -182,10 +228,7 @@ theorem ClassGroup.mk_canonical_equiv (K' : Type _) [Field K'] [Algebra R K'] [I
 /-- Send a nonzero integral ideal to an invertible fractional ideal. -/
 noncomputable def FractionalIdeal.mk0 [IsDedekindDomain R] : (Ideal R)⁰ →* (FractionalIdeal R⁰ K)ˣ
     where
-  toFun I :=
-    Units.mk0 I
-      ((FractionalIdeal.coe_to_fractional_ideal_ne_zero (le_refl R⁰)).mpr
-        (mem_non_zero_divisors_iff_ne_zero.mp I.2))
+  toFun I := Units.mk0 I (coe_ideal_ne_zero.mpr <| mem_non_zero_divisors_iff_ne_zero.mp I.2)
   map_one' := by simp
   map_mul' x y := by simp
 #align fractional_ideal.mk0 FractionalIdeal.mk0

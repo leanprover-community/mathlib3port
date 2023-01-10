@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.span
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -495,6 +495,10 @@ theorem mem_span_insert {y} : x ∈ span R (insert y s) ↔ ∃ a : R, ∃ z ∈
   rw [exists_comm]
   simp only [eq_comm, add_comm, exists_and_left]
 #align submodule.mem_span_insert Submodule.mem_span_insert
+
+theorem mem_span_pair {x y z : M} : z ∈ span R ({x, y} : Set M) ↔ ∃ a b : R, a • x + b • y = z := by
+  simp_rw [mem_span_insert, mem_span_singleton, exists_prop, exists_exists_eq_and, eq_comm]
+#align submodule.mem_span_pair Submodule.mem_span_pair
 
 theorem span_insert (x) (s : Set M) : span R (insert x s) = span R ({x} : Set M) ⊔ span R s := by
   rw [insert_eq, span_union]

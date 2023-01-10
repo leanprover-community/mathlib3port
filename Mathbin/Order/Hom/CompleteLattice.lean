@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.complete_lattice
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1300,4 +1300,24 @@ def Equiv.toOrderIsoSet (e : α ≃ β) : Set α ≃o Set β
   map_rel_iff' s t :=
     ⟨fun h => by simpa using @monotone_image _ _ e.symm _ _ h, fun h => monotone_image h⟩
 #align equiv.to_order_iso_set Equiv.toOrderIsoSet
+
+section
+
+variable (α) [CompleteLattice α]
+
+/-- The map `(a, b) ↦ a ⊓ b` as an `Inf_hom`. -/
+@[simps]
+def infInfHom : InfHom (α × α) α where
+  toFun x := x.1 ⊓ x.2
+  map_Inf' s := by simp_rw [Prod.fst_Inf, Prod.snd_Inf, infₛ_image, infᵢ_inf_eq]
+#align inf_Inf_hom infInfHom
+
+/-- The map `(a, b) ↦ a ⊔ b` as a `Sup_hom`. -/
+@[simps]
+def supSupHom : SupHom (α × α) α where
+  toFun x := x.1 ⊔ x.2
+  map_Sup' := (infInfHom αᵒᵈ).map_Inf'
+#align sup_Sup_hom supSupHom
+
+end
 

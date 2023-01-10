@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.ring.seminorm
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,6 +26,11 @@ For a ring `R`:
 * `mul_ring_seminorm`: A multiplicative seminorm on a ring `R` is a ring seminorm that preserves
   multiplication.
 * `mul_ring_norm`: A multiplicative norm on a ring `R` is a ring norm that preserves multiplication.
+
+## Notes
+
+The corresponding hom classes are defined in `analysis.order.hom.basic` to be used by absolute
+values.
 
 ## References
 
@@ -66,54 +71,13 @@ structure MulRingNorm (R : Type _) [NonAssocRing R] extends MulRingSeminorm R, A
 attribute [nolint doc_blame]
   RingSeminorm.toAddGroupSeminorm RingNorm.toAddGroupNorm RingNorm.toRingSeminorm MulRingSeminorm.toAddGroupSeminorm MulRingSeminorm.toMonoidWithZeroHom MulRingNorm.toAddGroupNorm MulRingNorm.toMulRingSeminorm
 
-/-- `ring_seminorm_class F α` states that `F` is a type of seminorms on the ring `α`.
-
-You should extend this class when you extend `ring_seminorm`. -/
-class RingSeminormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends
-  AddGroupSeminormClass F α, SubmultiplicativeHomClass F α ℝ
-#align ring_seminorm_class RingSeminormClass
-
-/-- `ring_norm_class F α` states that `F` is a type of norms on the ring `α`.
-
-You should extend this class when you extend `ring_norm`. -/
-class RingNormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends
-  RingSeminormClass F α, AddGroupNormClass F α
-#align ring_norm_class RingNormClass
-
-/-- `mul_ring_seminorm_class F α` states that `F` is a type of multiplicative seminorms on the ring
-`α`.
-
-You should extend this class when you extend `mul_ring_seminorm`. -/
-class MulRingSeminormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends
-  AddGroupSeminormClass F α, MonoidWithZeroHomClass F α ℝ
-#align mul_ring_seminorm_class MulRingSeminormClass
-
-/-- `mul_ring_norm_class F α` states that `F` is a type of multiplicative norms on the ring `α`.
-
-You should extend this class when you extend `mul_ring_norm`. -/
-class MulRingNormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends
-  MulRingSeminormClass F α, AddGroupNormClass F α
-#align mul_ring_norm_class MulRingNormClass
-
--- See note [lower instance priority]
-instance (priority := 100) MulRingSeminormClass.toRingSeminormClass [NonAssocRing R]
-    [MulRingSeminormClass F R] : RingSeminormClass F R :=
-  { ‹MulRingSeminormClass F R› with map_mul_le_mul := fun f a b => (map_mul _ _ _).le }
-#align mul_ring_seminorm_class.to_ring_seminorm_class MulRingSeminormClass.toRingSeminormClass
-
--- See note [lower instance priority]
-instance (priority := 100) MulRingNormClass.toRingNormClass [NonAssocRing R]
-    [MulRingNormClass F R] : RingNormClass F R :=
-  { ‹MulRingNormClass F R›, MulRingSeminormClass.toRingSeminormClass with }
-#align mul_ring_norm_class.to_ring_norm_class MulRingNormClass.toRingNormClass
-
 namespace RingSeminorm
 
 section NonUnitalRing
 
 variable [NonUnitalRing R]
 
-instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R
+instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R ℝ
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
@@ -206,7 +170,7 @@ namespace RingNorm
 
 variable [NonUnitalRing R]
 
-instance ringNormClass : RingNormClass (RingNorm R) R
+instance ringNormClass : RingNormClass (RingNorm R) R ℝ
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
@@ -252,7 +216,7 @@ namespace MulRingSeminorm
 
 variable [NonAssocRing R]
 
-instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R
+instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R ℝ
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
@@ -305,7 +269,7 @@ namespace MulRingNorm
 
 variable [NonAssocRing R]
 
-instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R
+instance mulRingNormClass : MulRingNormClass (MulRingNorm R) R ℝ
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr

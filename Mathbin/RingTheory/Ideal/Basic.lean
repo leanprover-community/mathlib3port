@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -363,8 +363,8 @@ theorem span_pair_comm {x y : α} : (span {x, y} : Ideal α) = span {y, x} := by
   simp only [span_insert, sup_comm]
 #align ideal.span_pair_comm Ideal.span_pair_comm
 
-theorem mem_span_pair {x y z : α} : z ∈ span ({x, y} : Set α) ↔ ∃ a b, a * x + b * y = z := by
-  simp [mem_span_insert, mem_span_singleton', @eq_comm _ _ z]
+theorem mem_span_pair {x y z : α} : z ∈ span ({x, y} : Set α) ↔ ∃ a b, a * x + b * y = z :=
+  Submodule.mem_span_pair
 #align ideal.mem_span_pair Ideal.mem_span_pair
 
 @[simp]

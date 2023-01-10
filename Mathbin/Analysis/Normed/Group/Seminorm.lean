@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.seminorm
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,6 +25,11 @@ is positive-semidefinite and subadditive. A norm further only maps zero to zero.
   nonnegative values, is submultiplicative and such that `f x⁻¹ = f x` for all `x`.
 * `add_group_norm`: A seminorm `f` such that `f x = 0 → x = 0` for all `x`.
 * `group_norm`: A seminorm `f` such that `f x = 0 → x = 1` for all `x`.
+
+## Notes
+
+The corresponding hom classes are defined in `analysis.order.hom.basic` to be used by absolute
+values.
 
 ## References
 
@@ -76,136 +81,7 @@ structure GroupNorm (G : Type _) [Group G] extends GroupSeminorm G where
 attribute [nolint doc_blame]
   AddGroupSeminorm.toZeroHom AddGroupNorm.toAddGroupSeminorm GroupNorm.toGroupSeminorm
 
-/-- `add_group_seminorm_class F α` states that `F` is a type of seminorms on the additive group `α`.
-
-You should extend this class when you extend `add_group_seminorm`. -/
-class AddGroupSeminormClass (F : Type _) (α : outParam <| Type _) [AddGroup α] extends
-  SubadditiveHomClass F α ℝ where
-  map_zero (f : F) : f 0 = 0
-  map_neg_eq_map (f : F) (a : α) : f (-a) = f a
-#align add_group_seminorm_class AddGroupSeminormClass
-
-/-- `group_seminorm_class F α` states that `F` is a type of seminorms on the group `α`.
-
-You should extend this class when you extend `group_seminorm`. -/
-@[to_additive]
-class GroupSeminormClass (F : Type _) (α : outParam <| Type _) [Group α] extends
-  MulLEAddHomClass F α ℝ where
-  map_one_eq_zero (f : F) : f 1 = 0
-  map_inv_eq_map (f : F) (a : α) : f a⁻¹ = f a
-#align group_seminorm_class GroupSeminormClass
-
-/-- `add_group_norm_class F α` states that `F` is a type of norms on the additive group `α`.
-
-You should extend this class when you extend `add_group_norm`. -/
-class AddGroupNormClass (F : Type _) (α : outParam <| Type _) [AddGroup α] extends
-  AddGroupSeminormClass F α where
-  eq_zero_of_map_eq_zero (f : F) {a : α} : f a = 0 → a = 0
-#align add_group_norm_class AddGroupNormClass
-
-/-- `group_norm_class F α` states that `F` is a type of norms on the group `α`.
-
-You should extend this class when you extend `group_norm`. -/
-@[to_additive]
-class GroupNormClass (F : Type _) (α : outParam <| Type _) [Group α] extends
-  GroupSeminormClass F α where
-  eq_one_of_map_eq_zero (f : F) {a : α} : f a = 0 → a = 1
-#align group_norm_class GroupNormClass
-
-export AddGroupSeminormClass (map_neg_eq_map)
-
-export GroupSeminormClass (map_one_eq_zero map_inv_eq_map)
-
-export AddGroupNormClass (eq_zero_of_map_eq_zero)
-
-export GroupNormClass (eq_one_of_map_eq_zero)
-
-attribute [simp, to_additive map_zero] map_one_eq_zero
-
-attribute [simp] map_neg_eq_map
-
-attribute [simp, to_additive] map_inv_eq_map
-
-attribute [to_additive] GroupSeminormClass.toMulLeAddHomClass
-
 attribute [to_additive] GroupNorm.toGroupSeminorm
-
-attribute [to_additive] GroupNormClass.toGroupSeminormClass
-
--- See note [lower instance priority]
-instance (priority := 100) AddGroupSeminormClass.toZeroHomClass [AddGroup E]
-    [AddGroupSeminormClass F E] : ZeroHomClass F E ℝ :=
-  { ‹AddGroupSeminormClass F E› with }
-#align add_group_seminorm_class.to_zero_hom_class AddGroupSeminormClass.toZeroHomClass
-
-section GroupSeminormClass
-
-variable [Group E] [GroupSeminormClass F E] (f : F) (x y : E)
-
-include E
-
-@[to_additive]
-theorem map_div_le_add : f (x / y) ≤ f x + f y :=
-  by
-  rw [div_eq_mul_inv, ← map_inv_eq_map f y]
-  exact map_mul_le_add _ _ _
-#align map_div_le_add map_div_le_add
-
-@[to_additive]
-theorem map_div_rev : f (x / y) = f (y / x) := by rw [← inv_div, map_inv_eq_map]
-#align map_div_rev map_div_rev
-
-@[to_additive]
-theorem le_map_add_map_div' : f x ≤ f y + f (y / x) := by
-  simpa only [add_comm, map_div_rev, div_mul_cancel'] using map_mul_le_add f (x / y) y
-#align le_map_add_map_div' le_map_add_map_div'
-
-@[to_additive]
-theorem abs_sub_map_le_div : |f x - f y| ≤ f (x / y) :=
-  by
-  rw [abs_sub_le_iff, sub_le_iff_le_add', sub_le_iff_le_add']
-  exact ⟨le_map_add_map_div _ _ _, le_map_add_map_div' _ _ _⟩
-#align abs_sub_map_le_div abs_sub_map_le_div
-
-end GroupSeminormClass
-
--- See note [lower instance priority]
-@[to_additive]
-instance (priority := 100) GroupSeminormClass.toNonnegHomClass [Group E] [GroupSeminormClass F E] :
-    NonnegHomClass F E ℝ :=
-  { ‹GroupSeminormClass F E› with
-    map_nonneg := fun f a =>
-      nonneg_of_mul_nonneg_right
-        (by
-          rw [two_mul, ← map_one_eq_zero f, ← div_self' a]
-          exact map_div_le_add _ _ _)
-        two_pos }
-#align group_seminorm_class.to_nonneg_hom_class GroupSeminormClass.toNonnegHomClass
-
-section GroupNormClass
-
-variable [Group E] [GroupNormClass F E] (f : F) {x : E}
-
-include E
-
-@[to_additive]
-theorem map_pos_of_ne_one (hx : x ≠ 1) : 0 < f x :=
-  (map_nonneg _ _).lt_of_ne fun h => hx <| eq_one_of_map_eq_zero _ h.symm
-#align map_pos_of_ne_one map_pos_of_ne_one
-
-@[simp, to_additive]
-theorem map_eq_zero_iff_eq_one : f x = 0 ↔ x = 1 :=
-  ⟨eq_one_of_map_eq_zero _, by
-    rintro rfl
-    exact map_one_eq_zero _⟩
-#align map_eq_zero_iff_eq_one map_eq_zero_iff_eq_one
-
-@[to_additive]
-theorem map_ne_zero_iff_ne_one : f x ≠ 0 ↔ x ≠ 1 :=
-  (map_eq_zero_iff_eq_one _).Not
-#align map_ne_zero_iff_ne_one map_ne_zero_iff_ne_one
-
-end GroupNormClass
 
 /-! ### Seminorms -/
 
@@ -217,7 +93,7 @@ section Group
 variable [Group E] [Group F] [Group G] {p q : GroupSeminorm E}
 
 @[to_additive]
-instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E
+instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E ℝ
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
@@ -575,7 +451,7 @@ section Group
 variable [Group E] [Group F] [Group G] {p q : GroupNorm E}
 
 @[to_additive]
-instance groupNormClass : GroupNormClass (GroupNorm E) E
+instance groupNormClass : GroupNormClass (GroupNorm E) E ℝ
     where
   coe f := f.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr

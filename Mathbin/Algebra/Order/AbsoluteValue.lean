@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.order.absolute_value
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -405,6 +405,13 @@ protected theorem map_sub (a b : R) : abv (a - b) = abv (b - a) := by rw [← ne
 #align absolute_value.map_sub AbsoluteValue.map_sub
 
 end OrderedCommRing
+
+instance {R S : Type _} [Ring R] [OrderedCommRing S] [Nontrivial R] [IsDomain S] :
+    MulRingNormClass (AbsoluteValue R S) R S :=
+  { AbsoluteValue.subadditiveHomClass,
+    AbsoluteValue.monoidWithZeroHomClass with
+    map_neg_eq_map := fun f => f.map_neg
+    eq_zero_of_map_eq_zero := fun f a => f.eq_zero.1 }
 
 section LinearOrderedRing
 

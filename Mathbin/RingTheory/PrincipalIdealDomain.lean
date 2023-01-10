@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Morenikeji Neri
 
 ! This file was ported from Lean 3 source module ring_theory.principal_ideal_domain
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -381,19 +381,19 @@ theorem span_gcd (x y : R) : span ({gcd x y} : Set R) = span ({x, y} : Set R) :=
     exact span_singleton_mul_right_unit D.is_unit _
   apply associated_of_dvd_dvd
   · rw [dvd_gcd_iff]
-    constructor <;> rw [← Ideal.mem_span_singleton, ← hd, mem_span_pair]
+    constructor <;> rw [← Ideal.mem_span_singleton, ← hd, Ideal.mem_span_pair]
     · use 1, 0
       rw [one_mul, zero_mul, add_zero]
     · use 0, 1
       rw [one_mul, zero_mul, zero_add]
   · obtain ⟨r, s, rfl⟩ : ∃ r s, r * x + s * y = d := by
-      rw [← mem_span_pair, hd, Ideal.mem_span_singleton]
+      rw [← Ideal.mem_span_pair, hd, Ideal.mem_span_singleton]
     apply dvd_add <;> apply dvd_mul_of_dvd_right
     exacts[gcd_dvd_left x y, gcd_dvd_right x y]
 #align span_gcd span_gcd
 
 theorem gcd_dvd_iff_exists (a b : R) {z} : gcd a b ∣ z ↔ ∃ x y, z = a * x + b * y := by
-  simp_rw [mul_comm a, mul_comm b, @eq_comm _ z, ← mem_span_pair, ← span_gcd,
+  simp_rw [mul_comm a, mul_comm b, @eq_comm _ z, ← Ideal.mem_span_pair, ← span_gcd,
     Ideal.mem_span_singleton]
 #align gcd_dvd_iff_exists gcd_dvd_iff_exists
 
@@ -403,7 +403,7 @@ theorem exists_gcd_eq_mul_add_mul (a b : R) : ∃ x y, gcd a b = a * x + b * y :
 #align exists_gcd_eq_mul_add_mul exists_gcd_eq_mul_add_mul
 
 theorem gcd_is_unit_iff (x y : R) : IsUnit (gcd x y) ↔ IsCoprime x y := by
-  rw [IsCoprime, ← mem_span_pair, ← span_gcd, ← span_singleton_eq_top, eq_top_iff_one]
+  rw [IsCoprime, ← Ideal.mem_span_pair, ← span_gcd, ← span_singleton_eq_top, eq_top_iff_one]
 #align gcd_is_unit_iff gcd_is_unit_iff
 
 -- this should be proved for UFDs surely?

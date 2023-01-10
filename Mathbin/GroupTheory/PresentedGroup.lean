@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Howes
 
 ! This file was ported from Lean 3 source module group_theory.presented_group
-! leanprover-community/mathlib commit dd71334db81d0bd444af1ee339a29298bef40734
+! leanprover-community/mathlib commit 7b78d1776212a91ecc94cf601f83bdcc46b04213
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,11 +31,11 @@ generators, relations, group presentations
 -/
 
 
-variable {α : Type}
+variable {α : Type _}
 
 /-- Given a set of relations, rels, over a type `α`, presented_group constructs the group with
 generators `x : α` and relations `rels` as a quotient of free_group `α`.-/
-def PresentedGroup (rels : Set (FreeGroup α)) : Type :=
+def PresentedGroup (rels : Set (FreeGroup α)) :=
   FreeGroup α ⧸ Subgroup.normalClosure rels
 #align presented_group PresentedGroup
 
@@ -57,7 +57,7 @@ Presented groups satisfy a universal property. If `G` is a group and `f : α →
 the images of `f` satisfy all the given relations, then `f` extends uniquely to a group homomorphism
 from `presented_group rels` to `G`.
 -/
-variable {G : Type} [Group G] {f : α → G} {rels : Set (FreeGroup α)}
+variable {G : Type _} [Group G] {f : α → G} {rels : Set (FreeGroup α)}
 
 -- mathport name: exprF
 local notation "F" => FreeGroup.lift f
