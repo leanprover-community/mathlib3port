@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -692,7 +692,7 @@ protected theorem Finset.is_closed [T1Space α] (s : Finset α) : IsClosed (s : 
                    []
                    ["only"]
                    ["["
-                    [(Tactic.simpLemma [] [] `Disjoint.comm) "," (Tactic.simpLemma [] [] `ne_comm)]
+                    [(Tactic.simpLemma [] [] `disjoint_comm) "," (Tactic.simpLemma [] [] `ne_comm)]
                     "]"]
                    [])])))]))
            []
@@ -916,7 +916,7 @@ protected theorem Finset.is_closed [T1Space α] (s : Finset α) : IsClosed (s : 
                   []
                   ["only"]
                   ["["
-                   [(Tactic.simpLemma [] [] `Disjoint.comm) "," (Tactic.simpLemma [] [] `ne_comm)]
+                   [(Tactic.simpLemma [] [] `disjoint_comm) "," (Tactic.simpLemma [] [] `ne_comm)]
                    "]"]
                   [])])))]))
           []
@@ -1161,7 +1161,7 @@ theorem
         · simp only [ ← principal_singleton , disjoint_principal_right ]
         tfae_have 8 ↔ 9
         ;
-        exact forall_swap.trans by simp only [ Disjoint.comm , ne_comm ]
+        exact forall_swap.trans by simp only [ disjoint_comm , ne_comm ]
         tfae_have 1 → 4
         ·
           simp only [ continuous_def , CofiniteTopology.is_open_iff' ]
@@ -3186,7 +3186,7 @@ theorem disjoint_nhds_set_nhds : Disjoint (𝓝ˢ s) (𝓝 a) ↔ a ∉ closure 
 #align disjoint_nhds_set_nhds disjoint_nhds_set_nhds
 
 theorem disjoint_nhds_nhds_set : Disjoint (𝓝 a) (𝓝ˢ s) ↔ a ∉ closure s :=
-  Disjoint.comm.trans disjoint_nhds_set_nhds
+  disjoint_comm.trans disjoint_nhds_set_nhds
 #align disjoint_nhds_nhds_set disjoint_nhds_nhds_set
 
 theorem exists_mem_nhds_is_closed_subset {a : α} {s : Set α} (h : s ∈ 𝓝 a) :
@@ -3234,7 +3234,7 @@ theorem disjoint_nhds_nhds_iff_not_specializes {a b : α} : Disjoint (𝓝 a) (�
 #align disjoint_nhds_nhds_iff_not_specializes disjoint_nhds_nhds_iff_not_specializes
 
 theorem specializes_comm {a b : α} : a ⤳ b ↔ b ⤳ a := by
-  simp only [← disjoint_nhds_nhds_iff_not_specializes.not_left, Disjoint.comm]
+  simp only [← disjoint_nhds_nhds_iff_not_specializes.not_left, disjoint_comm]
 #align specializes_comm specializes_comm
 
 alias specializes_comm ↔ Specializes.symm _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.signed_hahn
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -527,7 +527,7 @@ theorem of_symm_diff_compl_positive_negative {s : SignedMeasure α} {i j : Set �
       exact
         Set.disjoint_of_subset_left (Set.inter_subset_left _ _)
           (Set.disjoint_of_subset_right (Set.inter_subset_right _ _)
-            (Disjoint.comm.1 (IsCompl.disjoint isCompl_compl)))
+            (disjoint_comm.1 (IsCompl.disjoint isCompl_compl)))
     · exact hj.compl.inter hi
     · exact hi.compl.inter hj
   · rw [symmDiff_def, Set.diff_eq_compl_inter, Set.diff_eq_compl_inter, compl_compl, compl_compl,

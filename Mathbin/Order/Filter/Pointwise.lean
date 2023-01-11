@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.pointwise
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,6 +132,11 @@ theorem tendsto_one {a : Filter β} {f : β → α} : Tendsto f a 1 ↔ ∀ᶠ x
   tendsto_pure
 #align filter.tendsto_one Filter.tendsto_one
 
+@[simp, to_additive]
+theorem one_prod_one [One β] : (1 : Filter α) ×ᶠ (1 : Filter β) = 1 :=
+  prod_pure_pure
+#align filter.one_prod_one Filter.one_prod_one
+
 /-- `pure` as a `one_hom`. -/
 @[to_additive "`pure` as a `zero_hom`."]
 def pureOneHom : OneHom α (Filter α) :=
@@ -207,7 +212,7 @@ end Inv
 
 section InvolutiveInv
 
-variable [InvolutiveInv α] {f : Filter α} {s : Set α}
+variable [InvolutiveInv α] {f g : Filter α} {s : Set α}
 
 @[to_additive]
 theorem inv_mem_inv (hs : s ∈ f) : s⁻¹ ∈ f⁻¹ := by rwa [mem_inv, inv_preimage, inv_inv]
@@ -219,6 +224,22 @@ protected def hasInvolutiveInv : InvolutiveInv (Filter α) :=
   { Filter.hasInv with
     inv_inv := fun f => map_map.trans <| by rw [inv_involutive.comp_self, map_id] }
 #align filter.has_involutive_inv Filter.hasInvolutiveInv
+
+scoped[Pointwise] attribute [instance] Filter.hasInvolutiveInv Filter.hasInvolutiveNeg
+
+@[simp, to_additive]
+protected theorem inv_le_inv_iff : f⁻¹ ≤ g⁻¹ ↔ f ≤ g :=
+  ⟨fun h => inv_inv f ▸ inv_inv g ▸ Filter.inv_le_inv h, Filter.inv_le_inv⟩
+#align filter.inv_le_inv_iff Filter.inv_le_inv_iff
+
+@[to_additive]
+theorem inv_le_iff_le_inv : f⁻¹ ≤ g ↔ f ≤ g⁻¹ := by rw [← Filter.inv_le_inv_iff, inv_inv]
+#align filter.inv_le_iff_le_inv Filter.inv_le_iff_le_inv
+
+@[simp, to_additive]
+theorem inv_le_self : f⁻¹ ≤ f ↔ f⁻¹ = f :=
+  ⟨fun h => h.antisymm <| inv_le_iff_le_inv.1 h, Eq.le⟩
+#align filter.inv_le_self Filter.inv_le_self
 
 end InvolutiveInv
 

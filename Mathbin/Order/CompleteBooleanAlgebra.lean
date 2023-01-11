@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.complete_boolean_algebra
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,7 +211,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Order.Frame.{u1} α] {a : α} {f : ι -> α}, Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) a (supᵢ.{u1, u2} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) ι (fun (i : ι) => f i))) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) a (f i))
 Case conversion may be inaccurate. Consider using '#align disjoint_supr_iff disjoint_supᵢ_iffₓ'. -/
 theorem disjoint_supᵢ_iff {f : ι → α} : Disjoint a (⨆ i, f i) ↔ ∀ i, Disjoint a (f i) := by
-  simpa only [Disjoint.comm] using supᵢ_disjoint_iff
+  simpa only [disjoint_comm] using supᵢ_disjoint_iff
 #align disjoint_supr_iff disjoint_supᵢ_iff
 
 /- warning: supr₂_disjoint_iff -> supᵢ₂_disjoint_iff is a dubious translation:
@@ -253,7 +253,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Order.Frame.{u1} α] {a : α} {s : Set.{u1} α}, Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) a (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) s)) (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))))) (CompleteLattice.toBoundedOrder.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) a b))
 Case conversion may be inaccurate. Consider using '#align disjoint_Sup_iff disjoint_supₛ_iffₓ'. -/
 theorem disjoint_supₛ_iff {s : Set α} : Disjoint a (supₛ s) ↔ ∀ b ∈ s, Disjoint a b := by
-  simpa only [Disjoint.comm] using supₛ_disjoint_iff
+  simpa only [disjoint_comm] using supₛ_disjoint_iff
 #align disjoint_Sup_iff disjoint_supₛ_iff
 
 /- warning: supr_inf_of_monotone -> supᵢ_inf_of_monotone is a dubious translation:

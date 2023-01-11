@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ open Pointwise
 /-- The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational
 numbers. -/
 structure Real where of_cauchy ::
-  cauchy : @CauSeq.Completion.CauchyCat ℚ _ _ _ abs _
+  cauchy : CauSeq.Completion.CauchyCat (abs : ℚ → ℚ)
 #align real Real
 
 -- mathport name: exprℝ
@@ -67,7 +67,7 @@ theorem ext_cauchy {x y : Real} : x.cauchy = y.cauchy → x = y :=
 #align real.ext_cauchy Real.ext_cauchy
 
 /-- The real numbers are isomorphic to the quotient of Cauchy sequences on the rationals. -/
-def equivCauchy : ℝ ≃ CauSeq.Completion.CauchyCat :=
+def equivCauchy : ℝ ≃ CauSeq.Completion.CauchyCat abs :=
   ⟨Real.cauchy, Real.of_cauchy, fun ⟨_⟩ => rfl, fun _ => rfl⟩
 #align real.equiv_Cauchy Real.equivCauchy
 
@@ -111,6 +111,9 @@ instance : Neg ℝ :=
 instance : Mul ℝ :=
   ⟨mul⟩
 
+instance : Sub ℝ :=
+  ⟨fun a b => a + -b⟩
+
 noncomputable instance : Inv ℝ :=
   ⟨inv'⟩
 
@@ -129,6 +132,12 @@ theorem of_cauchy_add (a b) : (⟨a + b⟩ : ℝ) = ⟨a⟩ + ⟨b⟩ :=
 theorem of_cauchy_neg (a) : (⟨-a⟩ : ℝ) = -⟨a⟩ :=
   show _ = neg _ by rw [neg]
 #align real.of_cauchy_neg Real.of_cauchy_neg
+
+theorem of_cauchy_sub (a b) : (⟨a - b⟩ : ℝ) = ⟨a⟩ - ⟨b⟩ :=
+  by
+  rw [sub_eq_add_neg, of_cauchy_add, of_cauchy_neg]
+  rfl
+#align real.of_cauchy_sub Real.of_cauchy_sub
 
 theorem of_cauchy_mul (a b) : (⟨a * b⟩ : ℝ) = ⟨a⟩ * ⟨b⟩ :=
   show _ = mul _ _ by rw [mul]
@@ -158,42 +167,19 @@ theorem cauchy_mul : ∀ a b, (a * b : ℝ).cauchy = a.cauchy * b.cauchy
   | ⟨a⟩, ⟨b⟩ => show (mul _ _).cauchy = _ by rw [mul]
 #align real.cauchy_mul Real.cauchy_mul
 
+theorem cauchy_sub : ∀ a b, (a - b : ℝ).cauchy = a.cauchy - b.cauchy
+  | ⟨a⟩, ⟨b⟩ => by
+    rw [sub_eq_add_neg, ← cauchy_neg, ← cauchy_add]
+    rfl
+#align real.cauchy_sub Real.cauchy_sub
+
 theorem cauchy_inv : ∀ f, (f⁻¹ : ℝ).cauchy = f.cauchy⁻¹
   | ⟨f⟩ => show (inv' _).cauchy = _ by rw [inv']
 #align real.cauchy_inv Real.cauchy_inv
 
-/-- `real.equiv_Cauchy` as a ring equivalence. -/
-@[simps]
-def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.CauchyCat :=
-  { equivCauchy with
-    toFun := cauchy
-    invFun := of_cauchy
-    map_add' := cauchy_add
-    map_mul' := cauchy_mul }
-#align real.ring_equiv_Cauchy Real.ringEquivCauchy
+instance : NatCast ℝ where natCast n := ⟨n⟩
 
-instance : CommRing ℝ := by
-  refine_struct
-            { zero := (0 : ℝ)
-              one := (1 : ℝ)
-              mul := (· * ·)
-              add := (· + ·)
-              neg := @Neg.neg ℝ _
-              sub := fun a b => a + -b
-              natCast := fun n => ⟨n⟩
-              intCast := fun n => ⟨n⟩
-              npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩
-              nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩
-              zsmul := @zsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@Neg.neg ℝ _⟩ } <;>
-          repeat' rintro ⟨_⟩ <;>
-        try rfl <;>
-      simp [← of_cauchy_zero, ← of_cauchy_one, ← of_cauchy_add, ← of_cauchy_neg, ← of_cauchy_mul,
-        fun n => show @coe ℕ ℝ ⟨_⟩ n = ⟨n⟩ from rfl] <;>
-    first
-      |apply
-        add_assoc|apply
-        add_comm|apply
-        mul_assoc|apply mul_comm|apply left_distrib|apply right_distrib|apply sub_eq_add_neg|skip
+instance : IntCast ℝ where intCast z := ⟨z⟩
 
 instance : RatCast ℝ where ratCast q := ⟨q⟩
 
@@ -220,6 +206,39 @@ theorem cauchy_int_cast (z : ℤ) : (z : ℝ).cauchy = z :=
 theorem cauchy_rat_cast (q : ℚ) : (q : ℝ).cauchy = q :=
   rfl
 #align real.cauchy_rat_cast Real.cauchy_rat_cast
+
+instance : CommRing ℝ := by
+  refine_struct
+            { Real.hasNatCast,
+              Real.hasIntCast with
+              zero := (0 : ℝ)
+              one := (1 : ℝ)
+              mul := (· * ·)
+              add := (· + ·)
+              neg := @Neg.neg ℝ _
+              sub := @Sub.sub ℝ _
+              npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩
+              nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩
+              zsmul := @zsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@Neg.neg ℝ _⟩ } <;>
+          repeat' rintro ⟨_⟩ <;>
+        try rfl <;>
+      simp [← of_cauchy_zero, ← of_cauchy_one, ← of_cauchy_add, ← of_cauchy_neg, ← of_cauchy_mul,
+        fun n => show @coe ℕ ℝ ⟨_⟩ n = ⟨n⟩ from rfl, NatCast.natCast, IntCast.intCast] <;>
+    first
+      |apply
+        add_assoc|apply
+        add_comm|apply
+        mul_assoc|apply mul_comm|apply left_distrib|apply right_distrib|apply sub_eq_add_neg|skip
+
+/-- `real.equiv_Cauchy` as a ring equivalence. -/
+@[simps]
+def ringEquivCauchy : ℝ ≃+* CauSeq.Completion.CauchyCat abs :=
+  { equivCauchy with
+    toFun := cauchy
+    invFun := of_cauchy
+    map_add' := cauchy_add
+    map_mul' := cauchy_mul }
+#align real.ring_equiv_Cauchy Real.ringEquivCauchy
 
 /-! Extra instances to short-circuit type class resolution.
 
@@ -261,8 +280,6 @@ instance : Monoid ℝ := by infer_instance
 instance : CommSemigroup ℝ := by infer_instance
 
 instance : Semigroup ℝ := by infer_instance
-
-instance : Sub ℝ := by infer_instance
 
 instance : Inhabited ℝ :=
   ⟨0⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.vector_measure
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : Meas
     v A = v (A \ B ∪ A ∩ B) := by simp only [Set.diff_union_inter]
     _ = v (A \ B) + v (A ∩ B) := by
       rw [of_union]
-      · rw [Disjoint.comm]
+      · rw [disjoint_comm]
         exact Set.disjoint_of_subset_left (A.inter_subset_right B) disjoint_sdiff_self_right
       · exact hA.diff hB
       · exact hA.inter hB

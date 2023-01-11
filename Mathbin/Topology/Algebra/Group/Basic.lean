@@ -4,14 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.Order.Filter.Pointwise
 import Mathbin.Topology.Algebra.Monoid
 import Mathbin.Topology.Algebra.Constructions
 
@@ -749,6 +748,15 @@ theorem map_mul_left_nhds (x y : G) : map ((· * ·) x) (𝓝 y) = 𝓝 (x * y) 
 @[to_additive]
 theorem map_mul_left_nhds_one (x : G) : map ((· * ·) x) (𝓝 1) = 𝓝 x := by simp
 #align map_mul_left_nhds_one map_mul_left_nhds_one
+
+@[simp, to_additive]
+theorem map_mul_right_nhds (x y : G) : map (fun z => z * x) (𝓝 y) = 𝓝 (y * x) :=
+  (Homeomorph.mulRight x).map_nhds_eq y
+#align map_mul_right_nhds map_mul_right_nhds
+
+@[to_additive]
+theorem map_mul_right_nhds_one (x : G) : map (fun y => y * x) (𝓝 1) = 𝓝 x := by simp
+#align map_mul_right_nhds_one map_mul_right_nhds_one
 
 @[to_additive]
 theorem Filter.HasBasis.nhds_of_one {ι : Sort _} {p : ι → Prop} {s : ι → Set G}
@@ -1546,35 +1554,18 @@ end
 
 section
 
-variable [TopologicalSpace G] [CommGroup G] [TopologicalGroup G]
+variable [TopologicalSpace G] [Group G] [TopologicalGroup G]
 
 @[to_additive]
 theorem nhds_mul (x y : G) : 𝓝 (x * y) = 𝓝 x * 𝓝 y :=
-  filter_eq <|
-    Set.ext fun s =>
-      by
-      rw [← nhds_translation_mul_inv x, ← nhds_translation_mul_inv y, ←
-        nhds_translation_mul_inv (x * y)]
-      constructor
-      · rintro ⟨t, ht, ts⟩
-        rcases exists_nhds_one_split ht with ⟨V, V1, h⟩
-        refine'
-          ⟨(fun a => a * x⁻¹) ⁻¹' V, (fun a => a * y⁻¹) ⁻¹' V, ⟨V, V1, subset.refl _⟩,
-            ⟨V, V1, subset.refl _⟩, _⟩
-        rintro a ⟨v, w, v_mem, w_mem, rfl⟩
-        apply ts
-        simpa [mul_comm, mul_assoc, mul_left_comm] using h (v * x⁻¹) v_mem (w * y⁻¹) w_mem
-      · rintro ⟨a, c, ⟨b, hb, ba⟩, ⟨d, hd, dc⟩, ac⟩
-        refine' ⟨b ∩ d, inter_mem hb hd, fun v => _⟩
-        simp only [preimage_subset_iff, mul_inv_rev, mem_preimage] at *
-        rintro ⟨vb, vd⟩
-        refine' ac ⟨v * y⁻¹, y, _, _, _⟩
-        · rw [← mul_assoc _ _ _] at vb
-          exact ba _ vb
-        · apply dc y
-          rw [mul_right_inv]
-          exact mem_of_mem_nhds hd
-        · simp only [inv_mul_cancel_right]
+  calc
+    𝓝 (x * y) = map ((· * ·) x) (map (fun a => a * y) (𝓝 1 * 𝓝 1)) := by simp
+    _ = map₂ (fun a b => x * (a * b * y)) (𝓝 1) (𝓝 1) := by rw [← map₂_mul, map_map₂, map_map₂]
+    _ = map₂ (fun a b => x * a * (b * y)) (𝓝 1) (𝓝 1) := by simp only [mul_assoc]
+    _ = 𝓝 x * 𝓝 y := by
+      rw [← map_mul_left_nhds_one x, ← map_mul_right_nhds_one y, ← map₂_mul, map₂_map_left,
+        map₂_map_right]
+    
 #align nhds_mul nhds_mul
 
 /-- On a topological group, `𝓝 : G → filter G` can be promoted to a `mul_hom`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.subset_properties
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,7 +239,7 @@ theorem IsCompact.disjoint_nhds_set_left {l : Filter α} (hs : IsCompact s) :
 disjoint with the neighborhood filter of each point of this set. -/
 theorem IsCompact.disjoint_nhds_set_right {l : Filter α} (hs : IsCompact s) :
     Disjoint l (𝓝ˢ s) ↔ ∀ x ∈ s, Disjoint l (𝓝 x) := by
-  simpa only [Disjoint.comm] using hs.disjoint_nhds_set_left
+  simpa only [disjoint_comm] using hs.disjoint_nhds_set_left
 #align is_compact.disjoint_nhds_set_right IsCompact.disjoint_nhds_set_right
 
 /-- For every family of closed sets whose intersection avoids a compact set,

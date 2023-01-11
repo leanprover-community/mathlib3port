@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.symm_diff
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -901,7 +901,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_symm_diff_iff_right le_symmDiff_iff_rightₓ'. -/
 @[simp]
 theorem le_symmDiff_iff_right : b ≤ a ∆ b ↔ Disjoint a b := by
-  rw [symmDiff_comm, le_symmDiff_iff_left, Disjoint.comm]
+  rw [symmDiff_comm, le_symmDiff_iff_left, disjoint_comm]
 #align le_symm_diff_iff_right le_symmDiff_iff_right
 
 /- warning: symm_diff_symm_diff_left -> symmDiff_symmDiff_left is a dubious translation:

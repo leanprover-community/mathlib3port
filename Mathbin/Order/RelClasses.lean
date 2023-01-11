@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.rel_classes
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -733,11 +733,15 @@ section Subset
 
 variable [HasSubset α] {a b c : α}
 
+#print subset_of_eq_of_subset /-
 theorem subset_of_eq_of_subset (hab : a = b) (hbc : b ⊆ c) : a ⊆ c := by rwa [hab]
 #align subset_of_eq_of_subset subset_of_eq_of_subset
+-/
 
+#print subset_of_subset_of_eq /-
 theorem subset_of_subset_of_eq (hab : a ⊆ b) (hbc : b = c) : a ⊆ c := by rwa [← hbc]
 #align subset_of_subset_of_eq subset_of_subset_of_eq
+-/
 
 #print subset_refl /-
 @[refl]
@@ -796,8 +800,8 @@ theorem superset_antisymm [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ 
 alias subset_of_eq_of_subset ← Eq.trans_subset
 #align eq.trans_subset Eq.trans_subset
 
-alias subset_of_subset_of_eq ← HasSubset.Subset.trans_eq
-#align has_subset.subset.trans_eq HasSubset.Subset.trans_eq
+alias subset_of_subset_of_eq ← HasSubset.subset.trans_eq
+#align has_subset.subset.trans_eq HasSubset.subset.trans_eq
 
 alias subset_of_eq ← Eq.subset'
 #align eq.subset' Eq.subset'
@@ -833,11 +837,15 @@ section Ssubset
 
 variable [HasSSubset α] {a b c : α}
 
+#print ssubset_of_eq_of_ssubset /-
 theorem ssubset_of_eq_of_ssubset (hab : a = b) (hbc : b ⊂ c) : a ⊂ c := by rwa [hab]
 #align ssubset_of_eq_of_ssubset ssubset_of_eq_of_ssubset
+-/
 
+#print ssubset_of_ssubset_of_eq /-
 theorem ssubset_of_ssubset_of_eq (hab : a ⊂ b) (hbc : b = c) : a ⊂ c := by rwa [← hbc]
 #align ssubset_of_ssubset_of_eq ssubset_of_ssubset_of_eq
+-/
 
 #print ssubset_irrefl /-
 theorem ssubset_irrefl [IsIrrefl α (· ⊂ ·)] (a : α) : ¬a ⊂ a :=

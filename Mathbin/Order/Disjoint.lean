@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.disjoint
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,16 +49,16 @@ def Disjoint (a b : α) : Prop :=
 #align disjoint Disjoint
 -/
 
-#print Disjoint.comm /-
-theorem Disjoint.comm : Disjoint a b ↔ Disjoint b a :=
+#print disjoint_comm /-
+theorem disjoint_comm : Disjoint a b ↔ Disjoint b a :=
   forall_congr' fun _ => forall_swap
-#align disjoint.comm Disjoint.comm
+#align disjoint.comm disjoint_comm
 -/
 
 #print Disjoint.symm /-
 @[symm]
 theorem Disjoint.symm ⦃a b : α⦄ : Disjoint a b → Disjoint b a :=
-  Disjoint.comm.1
+  disjoint_comm.1
 #align disjoint.symm Disjoint.symm
 -/
 
@@ -355,16 +355,16 @@ def Codisjoint (a b : α) : Prop :=
 #align codisjoint Codisjoint
 -/
 
-#print Codisjoint.comm /-
-theorem Codisjoint.comm : Codisjoint a b ↔ Codisjoint b a :=
+#print Codisjoint_comm /-
+theorem Codisjoint_comm : Codisjoint a b ↔ Codisjoint b a :=
   forall_congr' fun _ => forall_swap
-#align codisjoint.comm Codisjoint.comm
+#align codisjoint.comm Codisjoint_comm
 -/
 
 #print Codisjoint.symm /-
 @[symm]
 theorem Codisjoint.symm ⦃a b : α⦄ : Codisjoint a b → Codisjoint b a :=
-  Codisjoint.comm.1
+  Codisjoint_comm.1
 #align codisjoint.symm Codisjoint.symm
 -/
 

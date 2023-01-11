@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.algebra.monoid
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Finprod
-import Mathbin.Data.Set.Pointwise.Basic
+import Mathbin.Order.Filter.Pointwise
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Algebra.BigOperators.Pi
 
@@ -121,6 +121,27 @@ theorem Filter.Tendsto.mul_const (b : M) {c : M} {f : α → M} {l : Filter α}
     (h : Tendsto (fun k : α => f k) l (𝓝 c)) : Tendsto (fun k : α => f k * b) l (𝓝 (c * b)) :=
   h.mul tendsto_const_nhds
 #align filter.tendsto.mul_const Filter.Tendsto.mul_const
+
+@[to_additive]
+theorem le_nhds_mul (a b : M) : 𝓝 a * 𝓝 b ≤ 𝓝 (a * b) :=
+  by
+  rw [← map₂_mul, ← map_uncurry_prod, ← nhds_prod_eq]
+  exact continuous_mul.tendsto _
+#align le_nhds_mul le_nhds_mul
+
+@[simp, to_additive]
+theorem nhds_one_mul_nhds {M} [MulOneClass M] [TopologicalSpace M] [HasContinuousMul M] (a : M) :
+    𝓝 (1 : M) * 𝓝 a = 𝓝 a :=
+  ((le_nhds_mul _ _).trans_eq <| congr_arg _ (one_mul a)).antisymm <|
+    le_mul_of_one_le_left' <| pure_le_nhds 1
+#align nhds_one_mul_nhds nhds_one_mul_nhds
+
+@[simp, to_additive]
+theorem nhds_mul_nhds_one {M} [MulOneClass M] [TopologicalSpace M] [HasContinuousMul M] (a : M) :
+    𝓝 a * 𝓝 1 = 𝓝 a :=
+  ((le_nhds_mul _ _).trans_eq <| congr_arg _ (mul_one a)).antisymm <|
+    le_mul_of_one_le_right' <| pure_le_nhds 1
+#align nhds_mul_nhds_one nhds_mul_nhds_one
 
 section tendsto_nhds
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module group_theory.double_coset
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem mem_doset_of_not_disjoint {H K : Subgroup G} {a b : G}
 theorem eq_of_not_disjoint {H K : Subgroup G} {a b : G}
     (h : ¬Disjoint (doset a H K) (doset b H K)) : doset a H K = doset b H K :=
   by
-  rw [Disjoint.comm] at h
+  rw [disjoint_comm] at h
   have ha : a ∈ doset b H K := mem_doset_of_not_disjoint h
   apply doset_eq_of_mem ha
 #align doset.eq_of_not_disjoint doset.eq_of_not_disjoint

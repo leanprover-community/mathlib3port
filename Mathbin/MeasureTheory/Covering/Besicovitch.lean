@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -533,7 +533,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
     wlog (discharger := tactic.skip) jxy : jx ≤ jy := le_total jx jy using jx jy, jy jx
     swap
     · intro h1 h2 h3 h4 h5 h6 h7
-      rw [Function.onFun, Disjoint.comm]
+      rw [Function.onFun, disjoint_comm]
       exact this h4 h5 h6 h1 h2 h3 h7.symm
     replace jxy : jx < jy
     · rcases lt_or_eq_of_le jxy with (H | rfl)
@@ -786,7 +786,7 @@ theorem exists_disjoint_closed_ball_covering_ae_of_finite_measure_aux (μ : Meas
           lt_min ((B_closed.not_mem_iff_inf_dist_pos hB).1 ((mem_diff x).1 hx).2) zero_lt_one
         rcases hf x xs _ this with ⟨r, hr, h'r⟩
         refine' ⟨r, ⟨hr, ⟨h'r.1, h'r.2.trans_le (min_le_right _ _)⟩⟩, _⟩
-        rw [Disjoint.comm]
+        rw [disjoint_comm]
         exact disjoint_closed_ball_of_lt_inf_dist (h'r.2.trans_le (min_le_left _ _))
     choose! r hr using this
     obtain ⟨v, vs', hμv, hv⟩ :

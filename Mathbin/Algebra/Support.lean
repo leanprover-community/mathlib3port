@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.support
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem mul_support_disjoint_iff {f : α → M} {s : Set α} : Disjoint (mulSupp
 
 @[to_additive]
 theorem disjoint_mul_support_iff {f : α → M} {s : Set α} : Disjoint s (mulSupport f) ↔ EqOn f 1 s :=
-  by rw [Disjoint.comm, mul_support_disjoint_iff]
+  by rw [disjoint_comm, mul_support_disjoint_iff]
 #align function.disjoint_mul_support_iff Function.disjoint_mul_support_iff
 
 @[simp, to_additive]

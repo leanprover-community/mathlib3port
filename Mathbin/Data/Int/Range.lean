@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.int.range
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,11 +25,14 @@ This could be unified with `data.list.intervals`. See the TODOs there.
 
 namespace Int
 
+#print Int.range /-
 /-- List enumerating `[m, n)`. This is the ℤ variant of `list.Ico`. -/
 def range (m n : ℤ) : List ℤ :=
   (List.range (toNat (n - m))).map fun r => m + r
 #align int.range Int.range
+-/
 
+#print Int.mem_range_iff /-
 theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
   ⟨fun H =>
     let ⟨s, h1, h2⟩ := List.mem_map'.1 H
@@ -47,27 +50,36 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
             exact sub_lt_sub_right h2 _,
         show m + _ = _ by rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
 #align int.mem_range_iff Int.mem_range_iff
+-/
 
+#print Int.decidableLeLt /-
 instance decidableLeLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m ≤ r → r < n → P r) :=
   decidable_of_iff (∀ r ∈ range m n, P r) <| by simp only [mem_range_iff, and_imp]
 #align int.decidable_le_lt Int.decidableLeLt
+-/
 
+#print Int.decidableLeLe /-
 instance decidableLeLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m ≤ r → r ≤ n → P r) :=
   decidable_of_iff (∀ r ∈ range m (n + 1), P r) <| by
     simp only [mem_range_iff, and_imp, lt_add_one_iff]
 #align int.decidable_le_le Int.decidableLeLe
+-/
 
+#print Int.decidableLtLt /-
 instance decidableLtLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m < r → r < n → P r) :=
   Int.decidableLeLt P _ _
 #align int.decidable_lt_lt Int.decidableLtLt
+-/
 
+#print Int.decidableLtLe /-
 instance decidableLtLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m < r → r ≤ n → P r) :=
   Int.decidableLeLe P _ _
 #align int.decidable_lt_le Int.decidableLtLe
+-/
 
 end Int
 

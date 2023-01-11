@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.dedup
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem mem_dedup {a : α} {l : List α} : a ∈ dedup l ↔ a ∈ l := by
   simpa only [dedup, forall_mem_ne, not_not] using
     not_congr
       (@forall_mem_pw_filter α (· ≠ ·) _
-        (fun x y z xz => not_and_or.1 <| mt (And.ndrec Eq.trans) xz) a l)
+        (fun x y z xz => not_and_or.1 <| mt (fun h => Eq.trans h.1 h.2) xz) a l)
 #align list.mem_dedup List.mem_dedup
 -/
 

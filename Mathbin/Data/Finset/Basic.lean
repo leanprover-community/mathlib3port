@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.basic
-! leanprover-community/mathlib commit a2d2e18906e2b62627646b5d5be856e6a642062f
+! leanprover-community/mathlib commit ccad6d5093bd2f5c6ca621fc74674cce51355af6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -903,7 +903,7 @@ theorem disjoint_left : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ s → a ∉ t :=
     fun h x hs ht a ha => h (hs ha) (ht ha)⟩
 #align finset.disjoint_left Finset.disjoint_left
 
-theorem disjoint_right : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ t → a ∉ s := by rw [Disjoint.comm, disjoint_left]
+theorem disjoint_right : Disjoint s t ↔ ∀ ⦃a⦄, a ∈ t → a ∉ s := by rw [disjoint_comm, disjoint_left]
 #align finset.disjoint_right Finset.disjoint_right
 
 theorem disjoint_iff_ne : Disjoint s t ↔ ∀ a ∈ s, ∀ b ∈ t, a ≠ b := by
@@ -948,7 +948,7 @@ theorem disjoint_singleton_left : Disjoint (singleton a) s ↔ a ∉ s := by
 
 @[simp]
 theorem disjoint_singleton_right : Disjoint s (singleton a) ↔ a ∉ s :=
-  Disjoint.comm.trans disjoint_singleton_left
+  disjoint_comm.trans disjoint_singleton_left
 #align finset.disjoint_singleton_right Finset.disjoint_singleton_right
 
 @[simp]
@@ -1277,7 +1277,7 @@ theorem disjoint_insert_left : Disjoint (insert a s) t ↔ a ∉ t ∧ Disjoint 
 
 @[simp]
 theorem disjoint_insert_right : Disjoint s (insert a t) ↔ a ∉ s ∧ Disjoint s t :=
-  Disjoint.comm.trans <| by rw [disjoint_insert_left, Disjoint.comm]
+  disjoint_comm.trans <| by rw [disjoint_insert_left, disjoint_comm]
 #align finset.disjoint_insert_right Finset.disjoint_insert_right
 
 end Insert
@@ -3630,7 +3630,7 @@ theorem disjoint_bUnion_left (s : Finset α) (f : α → Finset β) (t : Finset 
 
 theorem disjoint_bUnion_right (s : Finset β) (t : Finset α) (f : α → Finset β) :
     Disjoint s (t.bUnion f) ↔ ∀ i ∈ t, Disjoint s (f i) := by
-  simpa only [Disjoint.comm] using disjoint_bUnion_left t f s
+  simpa only [disjoint_comm] using disjoint_bUnion_left t f s
 #align finset.disjoint_bUnion_right Finset.disjoint_bUnion_right
 
 end BUnion
