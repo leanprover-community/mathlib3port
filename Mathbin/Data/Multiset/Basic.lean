@@ -62,7 +62,7 @@ instance hasDecidableEq [DecidableEq α] : DecidableEq (Multiset α)
 
 /-- defines a size for a multiset by referring to the size of the underlying list -/
 protected def sizeof [SizeOf α] (s : Multiset α) : ℕ :=
-  (Quot.liftOn s SizeOf.sizeOf) fun l₁ l₂ => Perm.sizeof_eq_sizeof
+  (Quot.liftOn s SizeOf.sizeOf) fun l₁ l₂ => Perm.sizeOf_eq_sizeOf
 #align multiset.sizeof Multiset.sizeof
 
 instance hasSizeof [SizeOf α] : SizeOf (Multiset α) :=
